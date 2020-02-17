@@ -10,8 +10,13 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /(node_modules|bower_components)/,
         loader: "babel-loader",
-        options: { presets: ["@babel/env"] }
+        options: {presets: ["@babel/env"]}
       },
+      // {
+      //   test: /\.(js|jsx)$/,
+      //   use: 'react-hot-loader/webpack',
+      //   include: /node_modules/
+      // },
       {
         test: /\.s[ac]ss$/i,
         use: [
@@ -25,7 +30,9 @@ module.exports = {
       },
     ]
   },
-  resolve: { extensions: ["*", ".js", ".jsx"] },
+  resolve: {
+    extensions: ["*", ".js", ".jsx"],
+  },
   output: {
     path: path.resolve(__dirname, "dist/"),
     publicPath: "/dist/",

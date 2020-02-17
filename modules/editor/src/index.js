@@ -1,10 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App.js";
+import Editor from "./Editor.js";
 
 if (process.env.NODE_ENV !== 'production') {
   console.log('Looks like we are in development mode!');
+} else {
+  console.log('%cWelcome to Altrp Builder', 'color: red; font-size: 24px; font-weight: 900;');
 }
 
-ReactDOM.render(<App/>, document.getElementById("root"));
+ReactDOM.render(<Editor/>, document.getElementById("root"));
 
