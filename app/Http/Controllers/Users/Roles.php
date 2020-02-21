@@ -4,84 +4,115 @@ namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
+use App\Http\Requests\ApiRequest;
+
 
 use App\Role;
 
 class Roles extends ApiController
 {
+    /**
+     * Получение списка ролей
+     * @return type
+     */
     function getRoles() {
         $roles = Role::all();
         return response()->json($roles, 200, [],JSON_UNESCAPED_UNICODE);
     }
     
+    /**
+     * Получение роли по идентификатору
+     * @param Request $request
+     * @return type
+     */
     function getRole(Request $request) {
         
         $id = $request->role;
         $role = Role::find($id);
         
-        $response = response()->json($role, 200, [],JSON_UNESCAPED_UNICODE);
-        
         if(!$role) {
-            $response = response()->json($role, 204, [],JSON_UNESCAPED_UNICODE);
+            return response()->json(trans("responses.not_found.role"), 404, [],JSON_UNESCAPED_UNICODE);
         }
         
-        return $response;
+        return response()->json($role, 200, [],JSON_UNESCAPED_UNICODE);
+        
     }
     
-    function save(Request $request) {
+    /**
+     * Добавление роли
+     * @param Request $request
+     * @return type
+     */
+    function insert(ApiRequest $request) {
         
+        $request->validate([
+            "name" => ["string", "required", "unique:roles,name"],
+            "display_name" => ["string", "required"],
+            "description" => ["string", "required"],
+        ]);
         
-        /*$request->validate([
-            "name" => ["string", "required", "size:191"],
-            "display_name" => ["string", "required", "size:191"],
-            "description" => ["string", "required", "size:191"],
-        ]);*/
-        
-       
-        
-        if($request->role) {
-            $role = Permission::find($request->role);
-        }
-        else {
-            $role = new Role();
-        }
-        
+        $role = new Role();
         $role->name = $request->name;
         $role->display_name = $request->display_name;
         $role->description = $request->description;
         
-        $state = $role->save();
-        
-        if($state) {
-            $response = response()->json($role, 200, [],JSON_UNESCAPED_UNICODE);
-        }
-        else {
-            $response = response()->json($role, 401, [],JSON_UNESCAPED_UNICODE);
+        if($role->save()){
+            return response()->json($role, 200, [],JSON_UNESCAPED_UNICODE);
         }
         
-        return $response;
+        return response()->json(trans("responses.dberror"), 400, [],JSON_UNESCAPED_UNICODE);
         
     }
     
-    function delete(Request $request) {
+    /**
+     * Обновление роли
+     * @param ApiRequest $request
+     * @return type
+     */
+    function update(ApiRequest $request) {
         
-        $id = $request->permission;
-        $permission = Permission::find($id);
+        $request->validate([
+            "name" => ["string","unique:roles,name", ],
+            "display_name" => ["string"],
+            "description" => ["string"],
+        ]);
         
-        if(!$permission) {
-            $response = response()->json(false, 204, [],JSON_UNESCAPED_UNICODE);
+        $role = Role::find($request->role);
+        
+        if(!$role) {
+            return response()->json(trans("responses.not_found.role"), 404, [],JSON_UNESCAPED_UNICODE);
         }
         
-        $state = $permission->delete();
+        if($request->name) $role->name = $request->name;
+        if($request->display_name) $role->display_name = $request->display_name;
+        if($request->description) $role->description = $request->description;
         
-        if($state) {
-            $response = response()->json(true, 200, [],JSON_UNESCAPED_UNICODE);
-        }
-        else {
-            $response = response()->json(false, 400, [],JSON_UNESCAPED_UNICODE);
+        if($role->save()){
+            return response()->json($role, 200, [],JSON_UNESCAPED_UNICODE);
         }
         
-        return $response;
+        return response()->json(trans("responses.dberror"), 400, [],JSON_UNESCAPED_UNICODE);
         
     }
+    
+    /**
+     * Удаление роли
+     * @param ApiRequest $request
+     * @return type
+     */
+    function delete(ApiRequest $request) {
+        
+        $role = Role::find($request->role);
+        
+        if(!$role) {
+            return response()->json(trans("responses.not_found.role"), 404, [],JSON_UNESCAPED_UNICODE);
+        }
+        
+        if($role->delete()) {
+            return response()->json(trans("responses.delete.role"), 200, [],JSON_UNESCAPED_UNICODE);
+        }
+        
+        return response()->json(trans("deleteerror"), 400, [],JSON_UNESCAPED_UNICODE);
+    }
+    
 }

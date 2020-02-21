@@ -27,6 +27,12 @@ Route::group(['prefix' => 'users'], function () {
     Route::put('/permissions/{permission}', "Users\Permissions@update");
     Route::delete('/permissions/{permission}', "Users\Permissions@delete");
     
+    Route::get('/roles', "Users\Roles@getRoles");
+    Route::get('/roles/{role}', "Users\Roles@getRole");
+    Route::post('/roles', "Users\Roles@insert");
+    Route::put('/roles/{role}', "Users\Roles@update");
+    Route::delete('/roles/{role}', "Users\Roles@delete");
+    
     //Route::get('/permissions/{permission}', "Users\Permissions@getPermission");
     
     /*
