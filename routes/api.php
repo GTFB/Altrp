@@ -33,6 +33,12 @@ Route::group(['prefix' => 'users'], function () {
     Route::put('/roles/{role}', "Users\Roles@update");
     Route::delete('/roles/{role}', "Users\Roles@delete");
     
+    Route::get('/users', "Users\Users@getUsers");
+    Route::get('/users/{user}', "Users\Users@getUser");
+    Route::post('/users', "Users\Users@insert");
+    Route::put('/users/{user}', "Users\Users@update");
+    Route::delete('/users/{user}', "Users\Users@delete");
+    
     //Route::get('/permissions/{permission}', "Users\Permissions@getPermission");
     
     /*

@@ -25,7 +25,7 @@ class Roles extends ApiController
      * @param Request $request
      * @return type
      */
-    function getRole(Request $request) {
+    function getRole(ApiRequest $request) {
         
         $id = $request->role;
         $role = Role::find($id);
