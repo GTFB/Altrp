@@ -8,5 +8,5 @@ if (process.env.NODE_ENV !== 'production') {
   console.log('%cWelcome to Altrp Builder', 'color: red; font-size: 24px; font-weight: 900;');
 }
 
-ReactDOM.render(<Editor/>, document.getElementById("root"));
+ReactDOM.render(<Editor/>, document.getElementById("editor"));
 

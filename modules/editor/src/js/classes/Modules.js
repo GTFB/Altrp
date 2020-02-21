@@ -15,13 +15,6 @@ class Modules {
     this.templateSettingsChangeModule =new  TemplateSettingsChangeModule();
     this.templateDataStorage = new TemplateDataStorage();
     this.renderer = new Renderer();
-    console.log(this.elementsFabric.parseData( {
-      name: 'input',
-      children: [
-        {name: 'input',}
-      ]
-    } ));
   }
 }
-console.log(module.hot);
 export default Modules;

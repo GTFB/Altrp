@@ -10,7 +10,7 @@
   <title>Builder</title>
 
   <!-- Scripts -->
-  <script src="/js/editor.js" defer></script>
+  <script src="/editor/editor.js" defer></script>
 
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -18,7 +18,7 @@
 
 </head>
 <body>
-<div id="root">
+<div id="editor">
 
 </div>
 </body>

@@ -1,5 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   entry: "./src/index.js",
@@ -10,7 +11,10 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /(node_modules|bower_components)/,
         loader: "babel-loader",
-        options: {presets: ["@babel/env"]}
+        options: {
+          presets: [
+            "@babel/env",
+          ]}
       },
       // {
       //   test: /\.(js|jsx)$/,
@@ -28,21 +32,45 @@ module.exports = {
           'sass-loader',
         ],
       },
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: "babel-loader"
+          },
+          {
+            loader: "react-svg-loader",
+            options: {
+              jsx: true // true outputs JSX tags
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
+        loader:'file-loader',
+        options: {
+          name: '[path][name].[ext]',
+        }
+      },
     ]
   },
   resolve: {
     extensions: ["*", ".js", ".jsx"],
   },
   output: {
-    path: path.resolve(__dirname, "dist/"),
-    publicPath: "/dist/",
+    path: path.resolve(__dirname, "editor/"),
+    publicPath: "/editor/",
     filename: "bundle.js"
   },
   devServer: {
     contentBase: path.join(__dirname, "public/"),
     port: 3000,
-    publicPath: "http://localhost:3000/dist/",
+    publicPath: "http://localhost:3000/editor/",
     hotOnly: true
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()]
+  plugins: [
+      new webpack.HotModuleReplacementPlugin(),
+      new CleanWebpackPlugin(),
+  ]
 };
