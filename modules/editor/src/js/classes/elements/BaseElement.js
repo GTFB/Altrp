@@ -1,6 +1,5 @@
-import  { Component } from "react";
 
-class BaseElement extends Component{
+class BaseElement {
 
   getId(){
     if(! this.id){

@@ -1,12 +1,13 @@
 import BaseElement from './BaseElement';
+import IconComponent from '../../../img/heading__icon.svg'
+import InputComponent from '../../components/widgets/Input';
 
 class Input extends BaseElement{
-  constructor(props){
-    super(props);
-    this.title = 'Поле ввода';
-  }
-  render(){
-   return(<input value={props.value}/>);
+  constructor(){
+    super();
+    this.title = 'Input';
+    this.iconComponent = IconComponent;
+    this.component = InputComponent;
   }
   static getName(){
     return 'input';
