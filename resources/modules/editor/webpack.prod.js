@@ -6,7 +6,7 @@ module.exports = merge(common, {
   mode: 'production',
   devtool: 'source-map',
   output: {
-    path: path.resolve(__dirname, "../../../modules/public/editor/"),
+    path: path.resolve(__dirname, "../../../public/modules/editor/"),
     filename: "editor.js"
   },
 });
