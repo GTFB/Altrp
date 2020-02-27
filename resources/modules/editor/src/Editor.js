@@ -1,19 +1,19 @@
 import React, {Component} from "react";
-import './sass/style.scss';
+import './sass/editor-style.scss';
 import {hot} from "react-hot-loader";
 import Modules from "./js/classes/Modules";
 import WidgetsPanel from "./js/components/WidgetsPanel";
 import SettingsPanel from "./js/components/SettingsPanel";
 import EditorWindow from "./js/components/EditorWindow";
-import DesktopIcon from './img/desktop.svg';
-import Logo from './img/logo.svg';
-import Navigation from './img/navigation.svg';
-import Chevron from './img/chevron.svg';
-import History from './img/history.svg';
-import Preview from './img/preview.svg';
-import Settings from './img/settings.svg';
-import Dots from './img/dots.svg';
-import Hamburger from './img/hamburger.svg';
+import DesktopIcon from './svgs/desktop.svg';
+import Logo from './svgs/logo.svg';
+import Navigation from './svgs/navigation.svg';
+import Chevron from './svgs/chevron.svg';
+import History from './svgs/history.svg';
+import Preview from './svgs/preview.svg';
+import Settings from './svgs/settings.svg';
+import Dots from './svgs/dots.svg';
+import Hamburger from './svgs/hamburger.svg';
 import HistoryPanel from "./js/components/HistoryPanel";
 
 class Editor extends Component {

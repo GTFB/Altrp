@@ -1,31 +1,4 @@
-@import "vars";
-
-body,
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  outline: none;
-}
-body{
-  font-family: Roboto, sans-serif;
-}
-
-a,
-button,
-svg,
-path{
-  -webkit-transition-duration: .2s;
-  -moz-transition-duration: .2s;
-  -ms-transition-duration: .2s;
-  -o-transition-duration: .2s;
-  transition-duration: .2s;
-}
-
-body {
-  margin: 0;
-  overflow: hidden;
-}
+@import "../../../../sass/common";
 
 .editor {
   display: flex;

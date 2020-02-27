@@ -10,14 +10,14 @@
   <title>Builder</title>
 
   <!-- Scripts -->
-  <script src="/modules/editor/editor.js" defer></script>
+  <script src="/modules/admin/admin.js" defer></script>
 
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">
 
 </head>
 <body>
-<div id="editor">
+<div id="admin">
 
 </div>
 </body>
