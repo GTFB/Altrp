@@ -20,26 +20,31 @@ class Editor extends Component {
 
   constructor(props) {
     super(props);
-    this.initModules();
     this.state = {
       activePanel: 'widgets',
     };
-    }
-
-  initModules() {
-    this.modules = new Modules();
+    this.editorWindow = React.createRef();
+    window.altrpEditor = this;
   }
 
-  showWidgetsPanel(){
+  initModules() {
+    this.modules = new Modules(this);
+  }
+
+  showWidgetsPanel() {
     this.setState({
       activePanel: 'widgets'
     })
   }
 
-  showSettingsPanel(){
+  showSettingsPanel() {
     this.setState({
       activePanel: 'settings'
     })
+  }
+
+  componentDidMount(){
+    this.initModules();
   }
 
   render() {
@@ -58,28 +63,28 @@ class Editor extends Component {
             <div className="left-panel-main">
               {
                 (this.state.activePanel === 'widgets') &&
-                <WidgetsPanel />
+                <WidgetsPanel/>
               }
               {
                 (this.state.activePanel === 'settings') &&
-                <SettingsPanel />
+                <SettingsPanel/>
               }
             </div>
             <div className="editor-bottom-panel d-flex align-items-center justify-center">
               <button className="btn btn_settings">
-                <Settings className="icon" />
+                <Settings className="icon"/>
               </button>
               <button className="btn ">
-                <Navigation className="icon" />
+                <Navigation className="icon"/>
               </button>
               <button className="btn ">
-                <History className="icon" />
+                <History className="icon"/>
               </button>
               <button className="btn ">
-                <DesktopIcon className="icon" />
+                <DesktopIcon className="icon"/>
               </button>
               <button className="btn ">
-                <Preview className="icon" />
+                <Preview className="icon"/>
               </button>
               <div className="control-group d-flex">
                 <button className="btn btn_disabled btn_grey font_montserrat font_500">
@@ -92,7 +97,7 @@ class Editor extends Component {
             </div>
           </div>
           <div className="right-panel">
-            <EditorWindow parent={this}/>
+            <EditorWindow ref={this.editorWindow} parent={this}/>
           </div>
         </div>
     );

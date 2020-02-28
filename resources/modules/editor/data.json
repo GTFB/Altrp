@@ -1,0 +1,20 @@
+{
+  "template":{
+    "id": 1,
+    "data" : {
+      "settings":{},
+      "children":[
+        {
+          "name": "root-element",
+          "title": "",
+          "data": {
+            "settings": {},
+            "children": []
+          }
+        }
+      ]
+    },
+    "name": "template",
+    "title": "TEST TEMPLATE"
+  }
+}
