@@ -1,4 +1,4 @@
-import React , {Component} from 'react';
+import React, {Component} from 'react';
 import './sass/admin-style.scss';
 import {hot} from "react-hot-loader";
 import AdminLogo from './svgs/admin__logo.svg';
@@ -11,9 +11,10 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import Users from "./components/Users";
 
-class Admin extends Component{
-  render(){
+class Admin extends Component {
+  render() {
     return <div className="admin">
       <Router>
         <nav className="admin-nav">
@@ -27,6 +28,9 @@ class Admin extends Component{
             <li>
               <Link to="/admin/settings">Settings</Link>
             </li>
+            <li>
+              <Link to="/admin/users">Users</Link>
+            </li>
           </ul>
         </nav>
         <div className="admin-content">
@@ -36,6 +40,9 @@ class Admin extends Component{
             </Route>
             <Route path="/admin/settings">
               <AdminSettings/>
+            </Route>
+            <Route path="/admin/users">
+              <Users/>
             </Route>
           </Switch>
         </div>

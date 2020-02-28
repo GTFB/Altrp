@@ -1,11 +1,20 @@
 @import "../../../../sass/common";
+@import "../../../../sass/vars";
+@import "components/admin-heading";
+@import "components/elements";
 
-.admin{
+.admin {
   display: flex;
   min-height: 100vh;
-  &-nav{
-    &-top{
+
+  &-nav {
+    &-top {
       background-color: $dark-purple;
     }
   }
+
+  &-content {
+    width: 100%;
+  }
 }
+

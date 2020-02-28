@@ -1,0 +1,30 @@
+.admin-heading {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px 10px 25px;
+}
+
+.admin-breadcrumbs {
+  margin-right: 20px;
+  font-size: 28px;
+  font-family: Montserrat, Arial, sans-serif;
+  &__link {
+    font-weight: 500;
+    font-size: 28px;
+    text-decoration: none;
+    color: $grey;
+    &:hover {
+      color: $blue;
+    }
+  }
+  &__separator {
+    font-weight: bold;
+    font-size: 28px;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  &__current {
+    font-weight: bold;
+    font-size: 28px;
+  }
+}
