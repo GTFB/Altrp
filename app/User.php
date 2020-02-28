@@ -38,4 +38,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    
+    /**
+     * Получение данных о пользователе
+     * @return type
+     */
+    function usermeta() {
+        return $this->hasOne(UserMeta::class);
+    }
 }

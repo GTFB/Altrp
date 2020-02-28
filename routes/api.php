@@ -51,6 +51,10 @@ Route::group(['prefix' => 'users'], function () {
     Route::post('/users/{user}/roles', "Users\Users@attachRole");
     Route::delete('/users/{user}/roles', "Users\Users@detachRole");
     
+    Route::get('/users/{user}/usermeta', "Users\UsersMeta@getUserMeta");
+    Route::post('/users/{user}/usermeta', "Users\UsersMeta@saveUserMeta");
+    Route::delete('/users/{user}/roles', "Users\Users@detachRole");
+    
     //Route::get('/permissions/{permission}', "Users\Permissions@getPermission");
     
     /*
