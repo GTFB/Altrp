@@ -43,6 +43,10 @@ Route::group(['prefix' => 'users'], function () {
     Route::put('/users/{user}', "Users\Users@update");
     Route::delete('/users/{user}', "Users\Users@delete");
     
+    Route::get('/users/{user}/permissions', "Users\Users@getPermissions");
+    Route::post('/users/{user}/permissions', "Users\Users@attachPermission");
+    Route::delete('/users/{user}/permissions', "Users\Users@detachPermission");
+    
     //Route::get('/permissions/{permission}', "Users\Permissions@getPermission");
     
     /*

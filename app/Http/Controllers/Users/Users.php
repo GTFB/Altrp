@@ -8,6 +8,7 @@ use App\Http\Requests\ApiRequest;
 use Illuminate\Support\Facades\Hash;
 
 use App\User;
+use App\Permission;
 
 class Users extends Controller
 {
@@ -114,6 +115,68 @@ class Users extends Controller
         }
         
         return response()->json(trans("deleteerror"), 400, [],JSON_UNESCAPED_UNICODE);
+    }
+    
+    /**
+     * Получение прав доступа для конкретного пользователя
+     * @return type
+     */
+    function getPermissions(ApiRequest $request) {
+        
+        $user = User::find($request->user);
+        
+        if(!$user) {
+            return response()->json(trans("responses.not_found.user"), 404, [],JSON_UNESCAPED_UNICODE);
+        }
+        
+        $permissions = $user->permissions;
+        return response()->json($permissions, 200, [],JSON_UNESCAPED_UNICODE);
+    }
+    
+    /**
+     * Добавление прав доступа для конкретного пользователя
+     * @return type
+     */
+    function attachPermission(ApiRequest $request) {
+        
+        $user = User::find($request->user);
+        
+        if(!$user) {
+            return response()->json(trans("responses.not_found.user"), 404, [],JSON_UNESCAPED_UNICODE);
+        }
+        
+        $permission = Permission::find($request->permission);
+        
+        if(!$permission) {
+            return response()->json(trans("responses.not_found.permission"), 404, [],JSON_UNESCAPED_UNICODE);
+        }
+        
+        $result = $user->attachPermission($permission);
+        
+        return response()->json($result, 200, [],JSON_UNESCAPED_UNICODE);
+    }
+    
+    /**
+     * Удаление прав доступа для конкретного пользователя
+     * @return type
+     */
+    function detachPermission(ApiRequest $request) {
+        
+        $user = User::find($request->user);
+        
+        if(!$user) {
+            return response()->json(trans("responses.not_found.user"), 404, [],JSON_UNESCAPED_UNICODE);
+        }
+        
+        $permission = Permission::find($request->permission);
+        
+        if(!$permission) {
+            return response()->json(trans("responses.not_found.permission"), 404, [],JSON_UNESCAPED_UNICODE);
+        }
+        
+        $result = $user->detachPermission($permission);
+        
+        return response()->json($result, 200, [],JSON_UNESCAPED_UNICODE);
     }
     
 }
