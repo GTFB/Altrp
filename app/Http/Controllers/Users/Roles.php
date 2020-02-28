@@ -8,6 +8,7 @@ use App\Http\Requests\ApiRequest;
 
 
 use App\Role;
+use App\Permission;
 
 class Roles extends ApiController
 {
@@ -115,4 +116,65 @@ class Roles extends ApiController
         return response()->json(trans("deleteerror"), 400, [],JSON_UNESCAPED_UNICODE);
     }
     
+    /**
+     * Получение прав доступа для конкретной роли
+     * @return type
+     */
+    function getPermissions(ApiRequest $request) {
+        
+        $role = Role::find($request->role);
+        
+        if(!$role) {
+            return response()->json(trans("responses.not_found.role"), 404, [],JSON_UNESCAPED_UNICODE);
+        }
+        
+        $permissions = $role->permissions;
+        return response()->json($permissions, 200, [],JSON_UNESCAPED_UNICODE);
+    }
+    
+    /**
+     * Получение прав доступа для конкретной роли
+     * @return type
+     */
+    function attachPermission(ApiRequest $request) {
+        
+        $role = Role::find($request->role);
+        
+        if(!$role) {
+            return response()->json(trans("responses.not_found.role"), 404, [],JSON_UNESCAPED_UNICODE);
+        }
+        
+        $permission = Permission::find($request->permission);
+        
+        if(!$permission) {
+            return response()->json(trans("responses.not_found.permission"), 404, [],JSON_UNESCAPED_UNICODE);
+        }
+        
+        $result = $role->attachPermission($permission);
+        
+        return response()->json($result, 200, [],JSON_UNESCAPED_UNICODE);
+    }
+    
+    /**
+     * Удаление прав доступа для конкретной роли
+     * @return type
+     */
+    function detachPermission(ApiRequest $request) {
+        
+        $role = Role::find($request->role);
+        
+        if(!$role) {
+            return response()->json(trans("responses.not_found.role"), 404, [],JSON_UNESCAPED_UNICODE);
+        }
+        
+        $permission = Permission::find($request->permission);
+        
+        if(!$permission) {
+            return response()->json(trans("responses.not_found.permission"), 404, [],JSON_UNESCAPED_UNICODE);
+        }
+        
+        $result = $role->detachPermission($permission);
+        
+        return response()->json($result, 200, [],JSON_UNESCAPED_UNICODE);
+    }
 }
