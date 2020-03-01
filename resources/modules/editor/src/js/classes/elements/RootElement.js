@@ -10,6 +10,9 @@ class RootElement extends BaseElement{
   static getTitle(){
     return 'Page';
   }
+  static getType(){
+    return 'root-element';
+  }
 }
 
 export default RootElement;

@@ -53,6 +53,7 @@ button{
 }
 .left-panel-main{
   flex-grow: 1;
+  display: flex;
 }
 
 .d-flex{
@@ -126,4 +127,25 @@ button{
 
 .icon{
   display: inline-block;
+}
+
+.widget-panel{
+  background-color: $light-gray;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  padding: 5px;
+}
+.widget-icon{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  width: calc(50% - 10px);
+  margin: 5px;
+  padding: 12px;
+  background-color: #fff;
+  cursor: pointer;
 }

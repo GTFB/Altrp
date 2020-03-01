@@ -1,4 +1,5 @@
 import BaseElement from "./BaseElement";
+import HeadingIcon from '../../../svgs/widget_heading.svg';
 
 class Heading extends BaseElement{
   static getName(){
@@ -6,6 +7,12 @@ class Heading extends BaseElement{
   }
   static getTitle(){
     return'Heading';
+  }
+  static getIconComponent(){
+    return HeadingIcon;
+  }
+  static getType(){
+    return 'widget';
   }
 }
 
