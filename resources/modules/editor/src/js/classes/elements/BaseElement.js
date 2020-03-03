@@ -1,3 +1,4 @@
+import ElementSettings from "../ElementSettings";
 
 class BaseElement {
 
@@ -58,6 +59,23 @@ class BaseElement {
 
   insertAfter(childId, child){
 
+  }
+
+  getSettings(settingName){
+    if(! settingName){
+      return this.settings;
+    }
+    if(! this.settings[settingName]){
+      return '';
+    }
+    return this.settings[settingName];
+  }
+
+  setSettings(settingName, value){
+    if(! this.settings[settingName]){
+      this.settings[settingName] = new ElementSettings(settingName);
+    }
+    this.settings[settingName].setValue(value);
   }
 }
 

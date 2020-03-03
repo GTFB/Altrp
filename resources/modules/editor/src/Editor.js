@@ -25,7 +25,8 @@ class Editor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activePanel: 'widgets',
+      // activePanel: 'widgets',
+      activePanel: 'settings',
     };
     this.editorWindow = React.createRef();
     window.altrpEditor = this;

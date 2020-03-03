@@ -8,7 +8,7 @@ import NewSection from "./js/components/NewSection";
 
 class EditorContent extends Component {
   render() {
-    console.log(window.parent);
+    // console.log(window.parent);
     return <DndProvider backend={Backend} context={window.parent}>
       <div className="editor-content">
         <NewSection/>

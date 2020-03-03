@@ -13,7 +13,7 @@ export default function DropTarget(props) {
       monitor
     }),
   });
-  console.log(status);
+  // console.log(status);
   return <div className="drop-target" ref={drop}>
     {/*<TemplateContent/>*/}
     {/*<NewSection/>*/}

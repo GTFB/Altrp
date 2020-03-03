@@ -13,6 +13,5 @@ export function currentElementReducer(state, action) {
       };
     }break;
   }
-  console.log(state.currentElement);
   return state;
 }
