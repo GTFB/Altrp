@@ -16,6 +16,7 @@ class TemplateDataStorage extends BaseModule{
     if(! templateId){
       this.rootElement = new RootElement();
       this.modules.renderer.renderRootElement(this.rootElement);
+      this.setCurrentRootElement();
     }
   }
 

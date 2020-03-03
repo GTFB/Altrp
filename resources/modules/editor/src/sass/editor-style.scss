@@ -10,6 +10,7 @@
   display: flex;
   flex-direction: column;
   background-color: $light-gray;
+  box-shadow: 0 0 5px 0 rgba(0,0,0,.25);
 }
 
 .editor-top-panel{
@@ -206,4 +207,74 @@ button{
       }
     }
   }
+}
+.panel{
+  width: 100%;
+  flex-wrap: wrap;
+  flex-direction: column;
+  &-tabs{
+    margin-bottom: 11px;
+  }
+  &-tab{
+    flex-direction: column;
+    align-items: center;
+    width: 33.33%;
+    padding: 8px 0 6px;
+    background-color: #fff;
+    border-bottom: 3px solid #fff;
+    font-size: 10px;
+    &.active{
+      background-color: #F7F8F9;
+      border-bottom-color: $purple;
+    }
+    & svg{
+      width: 20px;
+      height: 20px;
+    }
+    &__icon{
+      margin-bottom: 4px;
+    }
+  }
+}
+.settings-controllers{
+  flex-grow: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: #fff;
+}
+.controller-container{
+  display: flex;
+  flex-wrap: wrap;
+  &__textarea{
+    //resize: none;
+    width: 100%!important;
+    height: 150px;
+    padding: 10px;
+    border-radius: 3px;
+    border: 1px solid $border-gray;
+  }
+  &__dynamic{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    cursor: pointer;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    color: $button-grey;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    & svg{
+      margin-left: 5px;
+    }
+  }
+  &__label{
+    flex-grow: 1;
+    font-size: 14px;
+  }
+}
+.controllers-wrapper{
+  padding-left: 13px;
+  padding-right: 13px;
 }

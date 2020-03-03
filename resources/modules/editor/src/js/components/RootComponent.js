@@ -8,8 +8,15 @@ class RootComponent extends Component {
     };
     props.element.component = this;
   }
+  changeSetting(settingName, value){
+    let newState = this.state;
+    newState[settingName] = value;
+    this.setState(newState)
+  }
   render(){
-    return<div className="sections-wrapper">
+    return<div className="sections-wrapper">{
+      this.state.text
+    }
       {this.state.children.map(section=>{
         React.createElement(section.componentClass,
           {

@@ -4,6 +4,8 @@ class BaseElement {
 
   constructor(){
     this.settings = {};
+    this.controllers = {};
+    this.controllersRegistered = false;
     this.children = [];
     this.componentClass = window.elementsManager.getComponentClass(this.getName())
   }
@@ -71,11 +73,20 @@ class BaseElement {
     return this.settings[settingName];
   }
 
-  setSettings(settingName, value){
+  setSettingValue(settingName, value){
     if(! this.settings[settingName]){
       this.settings[settingName] = new ElementSettings(settingName);
     }
     this.settings[settingName].setValue(value);
+    this.component.changeSetting(settingName, value);
+  }
+
+  _registerControllers(){
+    this.controllersRegistered = true;
+  }
+  getControllers(tab){
+    this._registerControllers();
+    return this.controllers[tab];
   }
 }
 
