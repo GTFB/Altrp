@@ -14,6 +14,8 @@ import Preview from './svgs/preview.svg';
 import Settings from './svgs/settings.svg';
 import Dots from './svgs/dots.svg';
 import Hamburger from './svgs/hamburger.svg';
+import {DndProvider} from 'react-dnd'
+import Backend from 'react-dnd-html5-backend'
 import HistoryPanel from "./js/components/HistoryPanel";
 
 class Editor extends Component {
@@ -43,63 +45,65 @@ class Editor extends Component {
     })
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.initModules();
   }
 
   render() {
     return (
-        <div className="editor">
-          <div className="left-panel">
-            <div className="editor-top-panel">
-              <button className="btn btn_hamburger" onClick={this.showSettingsPanel.bind(this)}>
-                <Hamburger className="icon"/>
-              </button>
-              <div className="logo"><Logo viewBox="0 0 97 35"/></div>
-              <button className="btn btn_dots" onClick={this.showWidgetsPanel.bind(this)}>
-                <Dots className="icon"/>
-              </button>
-            </div>
-            <div className="left-panel-main">
-              {
-                (this.state.activePanel === 'widgets') &&
-                <WidgetsPanel/>
-              }
-              {
-                (this.state.activePanel === 'settings') &&
-                <SettingsPanel/>
-              }
-            </div>
-            <div className="editor-bottom-panel d-flex align-items-center justify-center">
-              <button className="btn btn_settings">
-                <Settings className="icon"/>
-              </button>
-              <button className="btn ">
-                <Navigation className="icon"/>
-              </button>
-              <button className="btn ">
-                <History className="icon"/>
-              </button>
-              <button className="btn ">
-                <DesktopIcon className="icon"/>
-              </button>
-              <button className="btn ">
-                <Preview className="icon"/>
-              </button>
-              <div className="control-group d-flex">
-                <button className="btn btn_disabled btn_grey font_montserrat font_500">
-                  UPDATE
+        <DndProvider backend={Backend}>
+          <div className="editor">
+            <div className="left-panel">
+              <div className="editor-top-panel">
+                <button className="btn btn_hamburger" onClick={this.showSettingsPanel.bind(this)}>
+                  <Hamburger className="icon"/>
                 </button>
-                <button className="btn btn_grey">
-                  <Chevron className="icon"/>
+                <div className="logo"><Logo viewBox="0 0 97 35"/></div>
+                <button className="btn btn_dots" onClick={this.showWidgetsPanel.bind(this)}>
+                  <Dots className="icon"/>
                 </button>
               </div>
+              <div className="left-panel-main">
+                {
+                  (this.state.activePanel === 'widgets') &&
+                  <WidgetsPanel/>
+                }
+                {
+                  (this.state.activePanel === 'settings') &&
+                  <SettingsPanel/>
+                }
+              </div>
+              <div className="editor-bottom-panel d-flex align-items-center justify-center">
+                <button className="btn btn_settings">
+                  <Settings className="icon"/>
+                </button>
+                <button className="btn ">
+                  <Navigation className="icon"/>
+                </button>
+                <button className="btn ">
+                  <History className="icon"/>
+                </button>
+                <button className="btn ">
+                  <DesktopIcon className="icon"/>
+                </button>
+                <button className="btn ">
+                  <Preview className="icon"/>
+                </button>
+                <div className="control-group d-flex">
+                  <button className="btn btn_disabled btn_grey font_montserrat font_500">
+                    UPDATE
+                  </button>
+                  <button className="btn btn_grey">
+                    <Chevron className="icon"/>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="right-panel">
+              <EditorWindow ref={this.editorWindow} parent={this}/>
             </div>
           </div>
-          <div className="right-panel">
-            <EditorWindow ref={this.editorWindow} parent={this}/>
-          </div>
-        </div>
+        </DndProvider>
     );
   }
 }

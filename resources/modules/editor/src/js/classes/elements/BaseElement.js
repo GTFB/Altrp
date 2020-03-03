@@ -4,7 +4,7 @@ class BaseElement {
   constructor(){
     this.settings = {};
     this.children = [];
-    this.componentClass = window.elementClasses.getComponentClass(this.getName())
+    this.componentClass = window.elementsManager.getComponentClass(this.getName())
   }
 
   getId(){

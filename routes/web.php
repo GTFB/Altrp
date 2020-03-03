@@ -25,6 +25,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get( '/admin/editor', function (){
   return view( 'editor' );
 } )->name('editor');
+Route::get( '/admin/editor-content', function (){
+  return view( 'editor-content' );
+} )->name('editor-content');
 
 Route::view('/admin/{path?}', 'admin')
   ->where('path', '.*')

@@ -1,20 +1,22 @@
 import Input from "../elements/Input";
 import RootElement from "../elements/RootElement";
 import RootComponent from "../../components/RootComponent";
-import Heading from "../elements/Heading";
+import HeadingElement from "../elements/Heading";
+import HeadingComponent from '../../components/widgets/Heading';
 
 
-class ElementClasses {
+export default class ElementsManger {
 
   constructor(){
     this.elements = {};
     // this.elements[Input.getName()] = Input;
     //список элементов
     this.elements[RootElement.getName()] = RootElement;
-    this.elements[Heading.getName()] = Heading;
+    this.elements[HeadingElement.getName()] = HeadingElement;
     //список компонентов
     this.components = {};
     this.components[RootElement.getName()] = RootComponent;
+    this.components[HeadingElement.getName()] = HeadingComponent;
   }
 
   getElementClass(name){
@@ -35,7 +37,6 @@ class ElementClasses {
     if(! this.widgetList){
       this.widgetList = [];
       for(let elementName in this.elements){
-        console.log(this.elements[elementName]);
         if(this.elements.hasOwnProperty(elementName)
             && this.elements[elementName].getType() === 'widget' ){
           this.widgetList.push(this.elements[elementName]);
@@ -46,5 +47,3 @@ class ElementClasses {
   }
 
 }
-
-window.elementClasses = new ElementClasses();

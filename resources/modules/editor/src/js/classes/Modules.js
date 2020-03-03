@@ -1,5 +1,4 @@
 import ElementsFabric from './modules/ElementsFabric';
-import ElementClasses from "./modules/ElementClasses";
 import SaveImportModule from "./modules/SaveImportModule";
 import SettingsChangeModule from "./modules/SettingsChangeModule";
 import TemplateSettingsChangeModule from "./modules/TemplateSettingsChangeModule";

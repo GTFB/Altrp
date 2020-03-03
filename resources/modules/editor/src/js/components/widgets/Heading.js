@@ -10,7 +10,10 @@ class Heading extends Component {
     };
   }
   render(){
-    return<div className="widget-container {getClassNames(this.state.classNames)}">
+    console.log(this.props.element);
+    let className = 'widget-container';
+    className += ' widget' + this.props.element.getId();
+    return<div className={className}>
       <div className="heading">{this.state.name}</div>
     </div>;
   }

@@ -5,7 +5,7 @@ import WidgetIcon from "./WidgetIcon";
 class WidgetsPanel extends Component {
   constructor(props){
     super(props);
-    this.state = {widgets: window.elementClasses.getWidgetsList()};
+    this.state = {widgets: window.elementsManager.getWidgetsList()};
     console.log(this.state);
   }
   render() {

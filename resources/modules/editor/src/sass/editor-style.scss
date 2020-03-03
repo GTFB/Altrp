@@ -149,3 +149,60 @@ button{
   background-color: #fff;
   cursor: pointer;
 }
+
+.right-panel{
+  flex-grow: 1;
+  display: flex;
+}
+.editor-window {
+  flex-grow: 1;
+  & iframe{
+    width: 100%;
+    height: 100%;
+  }
+}
+.editor-content{
+  height: 100%;
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+}
+.new-section{
+  width: 822px;
+  max-width: 85%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 70px;
+  padding-top: 44px;
+  padding-bottom: 44px;
+  border: 2px dashed rgba(144, 153, 182, 0.5);
+  &-buttons{
+    margin-bottom: 18px;
+  }
+  &__button{
+    height: 52px;
+    width: 52px;
+    margin-left: 9px;
+    margin-right: 9px;
+    border-radius: 50%;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    &_add{
+      background-color: #FF4E6E;
+      & svg{
+        position: relative;
+        left: 1px;
+        top: 1px;
+      }
+    }
+    &_library{
+      background-color: $blue;
+      & svg{
+        position: relative;
+        left: 2px;
+      }
+    }
+  }
+}

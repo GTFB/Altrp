@@ -5,8 +5,11 @@
     "build": "webpack --config webpack.prod.js"
   },
   "dependencies": {
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
+    "react": "^16.8.5",
+    "react-dnd": "^10.0.2",
+    "react-dnd-html5-backend": "^10.0.2",
+    "react-dom": "^16.8.5",
+    "react-frame-component": "^4.1.1",
     "renamer": "^1.1.4"
   },
   "devDependencies": {
