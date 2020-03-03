@@ -10,6 +10,7 @@
     "react-dnd-html5-backend": "^10.0.2",
     "react-dom": "^16.8.5",
     "react-frame-component": "^4.1.1",
+    "react-redux": "^7.2.0",
     "renamer": "^1.1.4"
   },
   "devDependencies": {
@@ -32,7 +33,7 @@
     "svg-inline-loader": "^0.8.2",
     "webpack": "^4.41.6",
     "webpack-cli": "^3.1.1",
-    "webpack-dev-server": "^3.1.8",
+    "webpack-dev-server": "^3.1.11",
     "webpack-merge": "^4.2.2"
   },
   "repository": {

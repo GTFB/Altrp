@@ -1,6 +1,9 @@
 import RootElement from "../elements/RootElement";
 import {getTemplateId} from "../../helpers";
 import BaseModule from "./BaseModule";
+import store from '../../store/store';
+import {setCurrentElement, SET_CURRENT_ELEMENT} from '../../store/current-element/actions'
+import BaseElement from "../elements/BaseElement";
 
 class TemplateDataStorage extends BaseModule{
 
@@ -29,11 +32,21 @@ class TemplateDataStorage extends BaseModule{
 
   setCurrentRootElement(){
     this.currentElement = this.rootElement;
+    store.dispatch(setCurrentElement(this.currentElement));
+    return this.currentElement;
+  }
+
+  setCurrentElement(element){
+    if(! element instanceof BaseElement){
+      throw 'Only Base Element Can Be Set as Default'
+    }
+    store.dispatch(setCurrentElement(element));
+    return this.currentElement = element;
   }
 
   getCurrentElement(){
     if(!this.currentElement){
-      this.setCurrentRootElement();
+      return this.setCurrentRootElement();
     }
     return this.currentElement;
   }
