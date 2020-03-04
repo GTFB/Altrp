@@ -19,6 +19,10 @@ export default class ElementsManger {
     this.components[HeadingElement.getName()] = HeadingComponent;
   }
 
+  getElements(){
+    return this.elements;
+  }
+
   getElementClass(name){
     if(! this.elements[name] ){
       throw 'Не найден элемент с именем ' + name;

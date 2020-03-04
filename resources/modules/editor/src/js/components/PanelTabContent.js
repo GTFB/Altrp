@@ -7,8 +7,13 @@ class PanelTabContent extends Component {
       console.log(this.props.sections);
       return <div className="settings-controllers">
         {
-          sections.map((section) =>
-            React.createElement(SettingSection, {...section, key: section.sectionName})
+          sections.map((section, idx) =>{
+            return React.createElement(SettingSection, {
+              ...section,
+              key: section.sectionId,
+              open: idx === 0,
+            });
+              }
           )
         }
       </div>

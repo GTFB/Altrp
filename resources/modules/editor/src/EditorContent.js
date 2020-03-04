@@ -7,10 +7,25 @@ import NewSection from "./js/components/NewSection";
 
 
 class EditorContent extends Component {
+  log(e){
+    e.preventDefault();
+    console.log(e);
+  }
+
+  onDragOver (e) {
+    let event = e ;
+    event.stopPropagation();
+  }
+
+  onDragEnter  (e) {
+    let event = e ;
+    event.stopPropagation();
+  }
   render() {
     // console.log(window.parent);
     return <DndProvider backend={Backend} context={window.parent}>
-      <div className="editor-content">
+      <div className="editor-content" onDrop={this.log} onDragEnter={this.onDragEnter}
+           onDragOver={this.onDragOver}  onClick={this.log}>
         <NewSection/>
       </div>
     </DndProvider>;

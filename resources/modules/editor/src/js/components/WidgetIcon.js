@@ -10,8 +10,8 @@ export default function WidgetIcon(props) {
     }),
     end:(item, monitor)=>{
       const dropResult = monitor.getDropResult();
-      console.log(monitor.internalMonitor.registry);
-      console.log(monitor.internalMonitor.registry);
+      // console.log(monitor.internalMonitor.registry);
+      // console.log(monitor.internalMonitor.registry);
       // console.log(monitor.canDrag());
     }
   });

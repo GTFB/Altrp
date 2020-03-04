@@ -1,10 +1,11 @@
-import ElementSettings from "../ElementSettings";
+import {TAB_CONTENT, TAB_STYLE} from "../modules/ControllersManager";
 
 class BaseElement {
 
   constructor(){
     this.settings = {};
-    this.controllers = {};
+    this.controls = {};
+    this.controlsIds = [];
     this.controllersRegistered = false;
     this.children = [];
     this.componentClass = window.elementsManager.getComponentClass(this.getName())
@@ -68,25 +69,96 @@ class BaseElement {
       return this.settings;
     }
     if(! this.settings[settingName]){
-      return '';
+      return null;
     }
     return this.settings[settingName];
   }
 
   setSettingValue(settingName, value){
-    if(! this.settings[settingName]){
-      this.settings[settingName] = new ElementSettings(settingName);
-    }
-    this.settings[settingName].setValue(value);
+    // if(! this.settings[settingName]){
+    //   this.settings[settingName] = new ElementSettings(settingName);
+    // }
+    this.settings[settingName] = value;
     this.component.changeSetting(settingName, value);
   }
 
-  _registerControllers(){
+  _registerControls(){
     this.controllersRegistered = true;
   }
   getControllers(tab){
-    this._registerControllers();
-    return this.controllers[tab];
+    // this._registerControls();
+    // return this.controllers[tab];
+  }
+   /**
+    * @param {string} sectionId
+    * @param {object} args{
+    *   @member {string} tab
+    *   @member {string} label
+    * }
+    * */
+  startControlSection(sectionId, args){
+     if(this.controlsIds.indexOf(sectionId) !== -1){
+       throw 'Control with id' + sectionId + ' Already Exists in ' + this.getName();
+     }
+    this.currentSection = {...args, sectionId};
+     this.controlsIds.push(sectionId);
+   }
+
+  endControlSection(){
+    this.currentSection = null;
+  }
+
+
+  /**
+   * @param {string} controlId
+   * @param {object} args{
+   *   @member {string} type
+   *   @member {any} default
+   * }
+   * */
+  addControl(controlId, args){
+    if(!this.currentSection){
+      throw 'Controls Can only be Added Inside the Section!'
+    }
+    if(this.controlsIds.indexOf(controlId) !== -1){
+      throw 'Control with id' + controlId + ' Already Exists in ' + this.getName();
+    }
+
+    let section = this._getCurrentSection();
+
+    section.controls.push({...args, controlId});
+    this.controlsIds.push(controlId);
+  }
+
+  _getCurrentTab(){
+    let tabName = this.currentSection.tab || TAB_STYLE;
+    let tab = this.controls[tabName];
+    if(! tab){
+      tab = this.controls[tabName] = [];
+    }
+    return tab;
+  }
+  _getCurrentSection(){
+    let tab = this._getCurrentTab();
+    let sectionId = this.currentSection.sectionId;
+    for(let _section of tab){
+      if(this.currentSection.sectionId=== _section.sectionId){
+         return _section
+      }
+    }
+    let section ;
+    section = {
+      ...this.currentSection,
+      controls: [],
+    };
+    tab.push(section);
+
+    return section;
+  }
+
+  getControls(){
+    this._registerControls();
+    return this.controls;
   }
 }
 

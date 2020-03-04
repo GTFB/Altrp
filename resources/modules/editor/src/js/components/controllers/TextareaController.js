@@ -7,13 +7,22 @@ class TextareaController extends Component {
   constructor(props){
     super(props);
     this.changeValue = this.changeValue.bind(this);
-    let setting = this.props.currentElement.getSettings(this.props.settingName);
-    this.state = settingToState(setting)
-
+    let value = this.props.currentElement.getSettings(this.props.controlId);
+    // console.log(value);
+    if(value === null && this.props.default){
+      value = this.props.default ;
+    }
+    value = value || '';
+    this.state = {value};
 
   }
+  componentDidUpdate(){
+    this.props.currentElement.setSettingValue(this.props.controlId, this.state.value);
+  }
+  componentDidMount(){
+    this.props.currentElement.setSettingValue(this.props.controlId, this.state.value);
+  }
   changeValue(e){
-    this.props.currentElement.setSettingValue(this.props.settingName, e.target.value);
     this.setState({
       value:e.target.value
     })

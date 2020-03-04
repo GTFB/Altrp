@@ -236,15 +236,43 @@ button{
     }
   }
 }
+.settings-section{
+  background-color: #fff;
+  padding-bottom: 14px;
+  &__title{
+    align-items: center;
+    padding: 13px;
+    cursor: pointer;
+    font-size: 12px;
+    color: $purple;
+    font-family: Montserrat, sans-serif;
+    font-weight: 500;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border-bottom: 1px solid $light-gray;
+  }
+  &__label{
+    margin-left: 8px;
+  }
+  &.open{
+    .controller-container{
+      display: flex;
+    }
+    & .settings-section__icon{
+      transform: scale(1, -1);
+    }
+  }
+}
 .settings-controllers{
   flex-grow: 1;
   overflow-x: hidden;
   overflow-y: auto;
-  background-color: #fff;
 }
 .controller-container{
-  display: flex;
   flex-wrap: wrap;
+  display: none;
   &__textarea{
     //resize: none;
     width: 100%!important;

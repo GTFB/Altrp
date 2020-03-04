@@ -4,9 +4,11 @@ import Editor from "./Editor.js";
 import ElementsManager from './js/classes/modules/ElementsManager';
 import ControllersManager from './js/classes/modules/ControllersManager';
 import EditorContent from "./EditorContent";
+import store from '../src/js/store/store'
 
 window.elementsManager = new ElementsManager();
 window.controllersManager = new ControllersManager();
+window.editorStore = store;
 
 if (process.env.NODE_ENV !== 'production') {
   console.log('Looks like we are in development mode!');
