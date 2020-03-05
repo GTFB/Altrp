@@ -1,24 +1,32 @@
 import React, {Component} from "react";
 import BaseElement from "../classes/elements/BaseElement";
-import {useDrag} from 'react-dnd'
 
-export default function WidgetIcon(props) {
+export default class WidgetIcon  extends  Component{
+  constructor(props){
+    super(props);
 
-
-  if (!props.element instanceof BaseElement) {
-    throw 'Widget Component must has Element in props';
+    this.state = {
+      element: this.props.element,
+    };
+    this.onDragStart = this.onDragStart.bind(this);
   }
-  let state = {
-    element: props.element,
-  };
-  return <div className='widget-icon' draggable="true">
-    {
-      React.createElement(state.element.getIconComponent())
+  onDragStart(e){
+    console.log(e.dataTransfer);
+    e.dataTransfer.effectAllowed = "copy";
+    e.dataTransfer.setData('text/plain', this.state.element.getName());
+  }
+  render() {
+    if (!this.state.element instanceof BaseElement) {
+      throw 'Widget Component must has Element in props';
     }
-    <div className="widget-icon__title">
-      {state.element.getTitle()}
+    return <div className='widget-icon' draggable="true" onDragStart={this.onDragStart}>
+      {
+        React.createElement(this.state.element.getIconComponent())
+      }
+      <div className="widget-icon__title">
+        {this.state.element.getTitle()}
+      </div>
     </div>
-  </div>
-
+  }
 }
 

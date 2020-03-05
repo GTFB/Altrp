@@ -9,6 +9,7 @@ class BaseElement {
     this.controllersRegistered = false;
     this.children = [];
     this.componentClass = window.elementsManager.getComponentClass(this.getName())
+    this.initiatedDefaults = null;
   }
 
   getId(){
@@ -65,29 +66,53 @@ class BaseElement {
   }
 
   getSettings(settingName){
+    this._initDefaultSettings();
     if(! settingName){
       return this.settings;
     }
-    if(! this.settings[settingName]){
-      return null;
+    if(this.settings[settingName] === undefined){
+      let control = window.controllersManager.getElementControl(this.getName(), settingName);
+      if(! control || !control.default){
+        return null;
+      }
+      this.settings[settingName] = control.default;
     }
     return this.settings[settingName];
   }
 
+  _initDefaultSettings(){
+    if(!window.controllersManager || this.initiatedDefaults){
+      return;
+    }
+    let controls = window.controllersManager.getControls(this.getName());
+
+    for (let tabName in controls){
+      if(controls.hasOwnProperty(tabName)){
+        if(!controls[tabName].length){
+          continue;
+        }
+        for (let section of controls[tabName]) {
+          if(!section.controls.length){
+            continue;
+          }
+          for (let control of section.controls){
+            if(control.default !== undefined){
+              this.settings[control.controlId] = control.default;
+
+            }
+          }
+        }
+      }
+    }
+  }
+
   setSettingValue(settingName, value){
-    // if(! this.settings[settingName]){
-    //   this.settings[settingName] = new ElementSettings(settingName);
-    // }
     this.settings[settingName] = value;
     this.component.changeSetting(settingName, value);
   }
 
   _registerControls(){
     this.controllersRegistered = true;
-  }
-  getControllers(tab){
-    // this._registerControls();
-    // return this.controllers[tab];
   }
    /**
     * @param {string} sectionId
@@ -127,6 +152,7 @@ class BaseElement {
     let section = this._getCurrentSection();
 
     section.controls.push({...args, controlId});
+    window.controllersManager.setControlsCache(this.getName() + controlId, {...args, controlId});
     this.controlsIds.push(controlId);
   }
 

@@ -13,6 +13,12 @@ class ControllersManager {
     this.conttrollers[CONTROLLER_TEXTAREA] = TextareaController;
     this.conttrollers[CONTROLLER_TEXT] = TextController;
     this.elementsControls = null;
+    this._cache = {
+      controls: {},
+    };
+  }
+  init(){
+    this.registerControls();
   }
   getController(controllerName){
     if(! this.conttrollers[controllerName]){
@@ -37,6 +43,38 @@ class ControllersManager {
       this.registerControls();
     }
     return this.elementsControls[elementName];
+  }
+
+
+  getElementControl(elementName, controlId){
+    let controls = this.getControls(elementName);
+    let control;
+    control = this._cache.controls[elementName + controlId];
+    if(control){
+      return control;
+    }
+    for (let tabName in controls){
+      if(controls.hasOwnProperty(tabName)){
+        if(!controls[tabName].length){
+          continue;
+        }
+        for (let section of controls[tabName]) {
+          if(!section.controls.length){
+            continue;
+          }
+          for (let _control of section.controls){
+            if(_control.controlId === controlId){
+              control = _control;
+            }
+          }
+        }
+      }
+    }
+    return control;
+  }
+
+  setControlsCache(controlsCacheName, args) {
+    this._cache.controls[controlsCacheName] = args;
   }
 }
 

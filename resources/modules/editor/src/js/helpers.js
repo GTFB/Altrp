@@ -25,3 +25,12 @@ export function settingToState(setting) {
     label: setting.getLabel(),
   };
 }
+
+export function getEditorContent(){
+  return window.frames[0].window.altrpEditorContent;
+}
+
+export function getEditor() {
+  console.log(window.parent);
+  return window.altrpEditor || window.parent.altrpEditor;
+}

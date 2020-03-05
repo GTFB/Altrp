@@ -3,13 +3,16 @@ import DropTarget from './js/components/DropTarget'
 import {hot} from "react-hot-loader/index";
 import Backend from "react-dnd-html5-backend";
 import NewSection from "./js/components/NewSection";
+import {getEditor} from "./js/helpers";
 
 
 class EditorContent extends Component {
   constructor(props) {
     super(props);
-    this.myRef = React.createRef();
-    console.log(this.myRef);
+    this.state = {};
+    this.editorWindow = React.createRef();
+
+    window.altrpEditorContent = this;
   }
 
   // log(e){
@@ -26,25 +29,50 @@ class EditorContent extends Component {
   //   let event = e ;
   //   event.stopPropagation();
   // }
+  onDragOver(e) {
+    // console.log(e);
+    e.preventDefault();
+  }
+
+  onDragEnter(e) {
+    // console.log(e);
+    e.preventDefault();
+  }
+
+  onDrop(e) {
+    // console.log(e);
+    // console.log(e.target);
+    console.log(e.screenX);
+    console.log(e.clientX);
+    e.preventDefault();
+
+    return false;
+  }
+
   componentDidMount() {
-    console.log(this.myRef.current.__proto__);
-    this.myRef.current.ondrop = e => {
-      console.log(e);
-    };
-    this.myRef.current.onmouseup = e => {
-      console.log(e);
-    };
+    let rootElement = getEditor().modules.templateDataStorage.getRootElement();
+    this.setState({
+      rootElement
+    })
   }
 
   render() {
-    // console.log(window.parent);
-    return <div ref={this.myRef} >
-          <div className="editor-content"
-            // onDrop={this.log} onDragEnter={this.onDragEnter}
-            // onDragOver={this.onDragOver}  onClick={this.log}
-        >
-          <NewSection/>
-        </div>
+    return <div className="editor-content d-flex flex-column justify-center align-content-center"
+                ref={this.editorWindow}
+                onDragOver={this.onDragOver}
+                onDrop={this.onDrop}
+                onDragEnter={this.onDragEnter}>
+      {
+        this.state.rootElement ? React.createElement(
+            this.state.rootElement.componentClass,{
+              settings: {},
+              children: this.state.rootElement.children,
+              element:this.state.rootElement,
+            }
+
+        ) : ''
+      }
+      <NewSection/>
     </div>;
   }
 }

@@ -26,6 +26,7 @@
     padding: 0;
     display: flex;
     justify-content: center;
+    align-items: center;
   }
 }
 
@@ -62,14 +63,16 @@ button{
   display: flex;
 }
 
-.align-items-center{
+.align-content-center{
   align-items: center;
 }
 
 .justify-center{
   justify-content: center;
 }
-
+.flex-column{
+  flex-direction: column;
+}
 .editor-bottom-panel{
   height: 50px;
   background-color: $purple;
@@ -148,7 +151,7 @@ button{
   margin: 5px;
   padding: 12px;
   background-color: #fff;
-  cursor: pointer;
+  cursor: move;
 }
 
 .right-panel{
@@ -165,8 +168,6 @@ button{
 .editor-content{
   height: 100%;
   overflow-x: hidden;
-  display: flex;
-  justify-content: center;
 }
 .new-section{
   width: 822px;

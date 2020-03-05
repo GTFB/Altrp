@@ -15,7 +15,6 @@ class TemplateDataStorage extends BaseModule{
     let templateId = getTemplateId();
     if(! templateId){
       this.rootElement = new RootElement();
-      this.modules.renderer.renderRootElement(this.rootElement);
       this.setCurrentRootElement();
     }
   }
@@ -50,6 +49,10 @@ class TemplateDataStorage extends BaseModule{
       return this.setCurrentRootElement();
     }
     return this.currentElement;
+  }
+
+  getRootElement(){
+    return this.rootElement
   }
 
 }
