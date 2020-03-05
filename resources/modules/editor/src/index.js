@@ -39,11 +39,4 @@ window.onload = () =>{
   if(editorContentTarget){
     ReactDOM.render(<EditorContent/>, editorContentTarget);
   }
-  // iframe.contentWindow.onload = function() {
-  //   alert( "iframe onload" );
-  //   console.log(this);
-  // };
-  // console.log(iframe.contentWindow.onload);
-};
-document.children[0].onload = () => {
 };

@@ -15,16 +15,7 @@ class RootComponent extends Component {
     this.setState(newState);
   }
   render(){
-    return<div className="sections-wrapper">{
-      this.state.settings.text
-    }<br/>
-    {
-      this.state.settings.text_
-    }
-    <br/>
-    {
-      this.state.settings.text__
-    }
+    return<div className="sections-wrapper">
       {this.state.children.map(section=>{
         React.createElement(section.componentClass,
           {

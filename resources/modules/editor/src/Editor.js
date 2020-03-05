@@ -23,8 +23,8 @@ class Editor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // activePanel: 'widgets',
-      activePanel: 'settings',
+      activePanel: 'widgets',
+      // activePanel: 'settings',
     };
     this.openPageSettings = this.openPageSettings.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);

@@ -32,8 +32,6 @@ class RootElement extends BaseElement{
     this.addControl('text', {
       type: CONTROLLER_TEXT,
       label: 'Text Content',
-      default: 'Default Text!',
-
     });
 
 
@@ -47,7 +45,6 @@ class RootElement extends BaseElement{
     this.addControl('text_', {
       type: CONTROLLER_TEXTAREA,
       label: 'Text Content',
-      default: 'Default Text!!!',
     });
 
     this.endControlSection();
@@ -60,7 +57,6 @@ class RootElement extends BaseElement{
     this.addControl('text__', {
       type: CONTROLLER_TEXT,
       label: 'Text Content',
-      default: 'Default Advanced Text!!!',
     });
 
     this.endControlSection();

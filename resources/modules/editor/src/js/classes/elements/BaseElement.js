@@ -186,6 +186,10 @@ class BaseElement {
     this._registerControls();
     return this.controls;
   }
+
+  setElementAsCurrent(){
+    window.altrpEditor.modules.templateDataStorage.setCurrentElement(this);
+  }
 }
 
 export default BaseElement
