@@ -1,0 +1,11 @@
+@import "../../../../sass/common";
+
+.admin{
+  display: flex;
+  min-height: 100vh;
+  &-nav{
+    &-top{
+      background-color: $dark-purple;
+    }
+  }
+}

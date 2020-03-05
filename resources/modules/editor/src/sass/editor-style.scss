@@ -1,0 +1,129 @@
+@import "../../../../sass/common";
+
+.editor {
+  display: flex;
+  min-height: 100vh;
+}
+
+.left-panel {
+  width: 270px;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-top-panel{
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: $purple;
+  & .btn{
+    height: 40px;
+    width: 40px;
+    background: transparent;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.logo {
+  width: 63px;
+  height: 20px;
+  & svg{
+    width: 63px;
+    height: 20px;
+  }
+}
+
+.btn,
+button{
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+}
+.btn{
+  &_grey{
+    background-color: $button-grey;
+  }
+  &_disabled{
+    background-color: $button-grey;
+    cursor: default;
+  }
+}
+.left-panel-main{
+  flex-grow: 1;
+}
+
+.d-flex{
+  display: flex;
+}
+
+.align-items-center{
+  align-items: center;
+}
+
+.justify-center{
+  justify-content: center;
+}
+
+.editor-bottom-panel{
+  height: 50px;
+  background-color: $purple;
+  & .btn:not(.btn_grey){
+    margin: 9px;
+    padding: 0;
+    background-color: transparent;
+    text-align: center;
+    height: 15px;
+    line-height: 15px;
+    .icon path{
+      fill: $button-grey;
+    }
+    &:hover{
+      .icon path{
+        fill: #fff;
+      }
+    }
+  }
+  .btn_grey{
+    height: 20px;
+    padding: 0 5px;
+    font-size: 10px;
+  }
+  .control-group{
+    margin-left: 10px;
+    margin-right: 10px;
+    line-height: 20px;
+    & > .btn{
+      &:first-child{
+        margin-right: 2px;
+      }
+    }
+  }
+}
+
+.font{
+  &_500{
+    font-weight: 500;
+  }
+  &_montserrat{
+    font-family: Montserrat, sans-serif;
+  }
+}
+
+.control-group{
+  & > .btn{
+    border-radius: 0;
+    &:first-child{
+      border-radius: 2px 0 0 2px;
+    }
+    &:last-child{
+      border-radius: 0 2px  2px 0;
+    }
+  }
+}
+
+.icon{
+  display: inline-block;
+}

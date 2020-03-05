@@ -11,6 +11,9 @@
 |
 */
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -18,3 +21,11 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get( '/admin/editor', function (){
+  return view( 'editor' );
+} )->name('editor');
+
+Route::view('/admin/{path?}', 'admin')
+  ->where('path', '.*')
+  ->name('admin');
