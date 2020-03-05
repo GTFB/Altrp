@@ -1,5 +1,11 @@
 import BaseElement from "./BaseElement";
-import {CONTROLLER_TEXTAREA, TAB_CONTENT, TAB_STYLE} from "../modules/ControllersManager";
+import {
+  CONTROLLER_TEXT,
+  CONTROLLER_TEXTAREA,
+  TAB_ADVANCED,
+  TAB_CONTENT,
+  TAB_STYLE
+} from "../modules/ControllersManager";
 
 class RootElement extends BaseElement{
   constructor(){
@@ -36,8 +42,16 @@ class RootElement extends BaseElement{
     });
 
     this.addControl('text', {
-      type: CONTROLLER_TEXTAREA,
+      type: CONTROLLER_TEXT,
       label: 'Text Content',
+    });
+
+
+    this.endControlSection();
+
+    this.startControlSection('text_style', {
+      tab: TAB_STYLE,
+      label: 'Text Section',
     });
 
     this.addControl('text_', {
@@ -47,6 +61,20 @@ class RootElement extends BaseElement{
     });
 
     this.endControlSection();
+
+    this.startControlSection('text_advanced', {
+      tab: TAB_ADVANCED,
+      label: 'Text Section',
+    });
+
+    this.addControl('text__', {
+      type: CONTROLLER_TEXT,
+      label: 'Text Content',
+      default: 'Default Advanced Text!!!',
+    });
+
+    this.endControlSection();
+
   }
 }
 

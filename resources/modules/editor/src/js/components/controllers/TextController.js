@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {settingToState} from "../../helpers";
 import DynamicIcon from '../../../svgs/dynamic.svg'
 
-class TextareaController extends Component {
+class TextController extends Component {
   constructor(props){
     super(props);
     this.changeValue = this.changeValue.bind(this);
@@ -29,15 +29,16 @@ class TextareaController extends Component {
   }
   render(){
 
-    return <div className="controller-container controller-container_textarea">
+    return <div className="controller-container controller-container_text">
       <div className="controller-container__label">
         {this.props.label}
       </div>
-      <div className="controller-container__dynamic">
-        Dynamic
-        <DynamicIcon/>
+      <div className="control-group">
+        <input className="control-field" onChange={this.changeValue} value={this.state.value}/>
+        <div className="control-group__append">
+          <DynamicIcon/>
+        </div>
       </div>
-      <textarea className="controller-container__textarea" onChange={this.changeValue} value={this.state.value}/>
     </div>
   }
 }
@@ -47,4 +48,4 @@ function mapStateToProps(state) {
     currentElement:state.currentElement.currentElement,
   };
 }
-export default connect(mapStateToProps)(TextareaController);
+export default connect(mapStateToProps)(TextController);

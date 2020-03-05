@@ -11,7 +11,7 @@ class RootComponent extends Component {
   changeSetting(settingName, value){
     let newState = this.state;
     newState[settingName] = value;
-    this.setState(newState)
+    this.setState(newState);
   }
   render(){
     return<div className="sections-wrapper">{
@@ -19,6 +19,10 @@ class RootComponent extends Component {
     }<br/>
     {
       this.state.text_
+    }
+    <br/>
+    {
+      this.state.text__
     }
       {this.state.children.map(section=>{
         React.createElement(section.componentClass,

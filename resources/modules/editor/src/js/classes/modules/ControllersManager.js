@@ -1,14 +1,17 @@
 import TextareaController from "../../components/controllers/TextareaController";
+import TextController from "../../components/controllers/TextController";
 
 export const TAB_CONTENT = 'content';
 export const TAB_STYLE = 'style';
 export const TAB_ADVANCED = 'advanced';
 export const CONTROLLER_TEXTAREA = 'textarea';
+export const CONTROLLER_TEXT = 'text';
 
 class ControllersManager {
   constructor(){
     this.conttrollers = {};
     this.conttrollers[CONTROLLER_TEXTAREA] = TextareaController;
+    this.conttrollers[CONTROLLER_TEXT] = TextController;
     this.elementsControls = null;
   }
   getController(controllerName){
@@ -24,7 +27,6 @@ class ControllersManager {
     for(let elementClassName in elementClasses ){
 
         if(elementClasses.hasOwnProperty(elementClassName)){
-        console.log((new  elementClasses[elementClassName]).getControls());
         this.elementsControls[elementClassName] = (new  elementClasses[elementClassName]).getControls()
       }
     }
