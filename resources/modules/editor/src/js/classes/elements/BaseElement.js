@@ -96,9 +96,9 @@ class BaseElement {
             continue;
           }
           for (let control of section.controls){
-            if(control.default !== undefined){
+            if(control.default !== undefined
+                && this.settings[control.controlId] === undefined){
               this.settings[control.controlId] = control.default;
-
             }
           }
         }
