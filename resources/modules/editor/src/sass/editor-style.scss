@@ -74,11 +74,10 @@ button{
   height: 50px;
   background-color: $purple;
   & .btn:not(.btn_grey){
-    margin: 9px;
-    padding: 0;
+    padding: 9px;
     background-color: transparent;
     text-align: center;
-    height: 15px;
+    height: 33px;
     line-height: 15px;
     .icon path{
       fill: $button-grey;

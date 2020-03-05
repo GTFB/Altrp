@@ -25,7 +25,8 @@ class EditorWindow extends Component {
 
   render() {
 
-    return <div className="editor-window">
+    return <DropTarget>
+    <div className="editor-window">
       {
         this.state.rootElement ? React.createElement(
             this.state.rootElement.componentClass,{
@@ -48,6 +49,7 @@ class EditorWindow extends Component {
       <iframe src="/admin/editor-content" />
       {/*</FrameContextConsumer>*/}
     </div>
+    </DropTarget>
   }
 }
 

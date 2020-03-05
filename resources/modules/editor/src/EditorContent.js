@@ -7,28 +7,50 @@ import NewSection from "./js/components/NewSection";
 
 
 class EditorContent extends Component {
-  log(e){
-    e.preventDefault();
-    console.log(e);
+  constructor(props) {
+    super(props);
+    this.myRef = React.createRef();
+    console.log(this.myRef);
   }
 
-  onDragOver (e) {
-    let event = e ;
-    event.stopPropagation();
+  // log(e){
+  //   e.preventDefault();
+  //   console.log(e);
+  // }
+  //
+  // onDragOver (e) {
+  //   let event = e ;
+  //   event.stopPropagation();
+  // }
+  //
+  // onDragEnter  (e) {
+  //   let event = e ;
+  //   event.stopPropagation();
+  // }
+  componentDidMount() {
+    console.log(this.myRef.current.__proto__);
+    this.myRef.current.ondrop = e => {
+      console.log(e);
+    };
+    this.myRef.current.onmouseup = e => {
+      console.log(e);
+    };
   }
 
-  onDragEnter  (e) {
-    let event = e ;
-    event.stopPropagation();
-  }
   render() {
     // console.log(window.parent);
-    return <DndProvider backend={Backend} context={window.parent}>
-      <div className="editor-content" onDrop={this.log} onDragEnter={this.onDragEnter}
-           onDragOver={this.onDragOver}  onClick={this.log}>
-        <NewSection/>
-      </div>
-    </DndProvider>;
+    return <div ref={this.myRef} >
+      <DndProvider backend={Backend} context={window.parent}>
+        <DropTarget>
+          <div className="editor-content"
+            // onDrop={this.log} onDragEnter={this.onDragEnter}
+            // onDragOver={this.onDragOver}  onClick={this.log}
+        >
+          <NewSection/>
+        </div>
+        </DropTarget>
+      </DndProvider>
+    </div>;
   }
 }
 
