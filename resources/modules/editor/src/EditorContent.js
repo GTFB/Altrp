@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import DropTarget from './js/components/DropTarget'
 import {hot} from "react-hot-loader/index";
 import Backend from "react-dnd-html5-backend";
-import {DndProvider} from 'react-dnd'
 import NewSection from "./js/components/NewSection";
 
 
@@ -40,16 +39,12 @@ class EditorContent extends Component {
   render() {
     // console.log(window.parent);
     return <div ref={this.myRef} >
-      <DndProvider backend={Backend} context={window.parent}>
-        <DropTarget>
           <div className="editor-content"
             // onDrop={this.log} onDragEnter={this.onDragEnter}
             // onDragOver={this.onDragOver}  onClick={this.log}
         >
           <NewSection/>
         </div>
-        </DropTarget>
-      </DndProvider>
     </div>;
   }
 }

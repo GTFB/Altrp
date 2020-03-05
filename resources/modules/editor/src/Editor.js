@@ -14,8 +14,6 @@ import Preview from './svgs/preview.svg';
 import Settings from './svgs/settings.svg';
 import Dots from './svgs/dots.svg';
 import Hamburger from './svgs/hamburger.svg';
-import {DndProvider} from 'react-dnd'
-import Backend from 'react-dnd-html5-backend'
 import {Provider} from 'react-redux'
 import store from '../src/js/store/store'
 import HistoryPanel from "./js/components/HistoryPanel";
@@ -63,7 +61,6 @@ class Editor extends Component {
   render() {
     return (
         <Provider store={store}>
-          <DndProvider backend={Backend}>
             <div className="editor">
               <div className="left-panel">
                 <div className="editor-top-panel">
@@ -115,7 +112,6 @@ class Editor extends Component {
                 <EditorWindow ref={this.editorWindow} parent={this}/>
               </div>
             </div>
-          </DndProvider>
         </Provider>
     );
   }
