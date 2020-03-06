@@ -19,7 +19,6 @@ class RootComponent extends Component {
     this.setState(newState);
   }
   render(){
-    console.log(this.state.settings.text);
     return<div className="sections-wrapper">{
       this.state.settings.text
     }<br/>
