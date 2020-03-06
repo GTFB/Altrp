@@ -17,7 +17,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
+Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], function () {
+    
+    Route::group(['prefix' => 'ajax'], function () {
+        Route::get('/templates', "Constructor\Templates@getTemplates");
+        Route::get('/templates/{template}', "Constructor\Templates@getTemplate");
+        Route::post('/templates', "Constructor\Templates@insert");
+        Route::put('/templates/{template}', "Constructor\Templates@update");
+        Route::delete('/templates/{template}', "Constructor\Templates@delete");
+    });
+    
+});
 
 Route::group(['prefix' => 'users'], function () {
     
