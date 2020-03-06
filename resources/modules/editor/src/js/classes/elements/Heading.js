@@ -1,5 +1,6 @@
 import BaseElement from "./BaseElement";
 import HeadingIcon from '../../../svgs/widget_heading.svg';
+import {CONTROLLER_TEXTAREA, TAB_CONTENT} from "../modules/ControllersManager";
 
 class Heading extends BaseElement{
   static getName(){
@@ -13,6 +14,23 @@ class Heading extends BaseElement{
   }
   static getType(){
     return 'widget';
+  }
+  _registerControls() {
+    if (this.controllersRegistered) {
+      return
+    }
+    this.startControlSection('text_section', {
+      tab: TAB_CONTENT,
+      label: 'Text Section',
+    });
+
+    this.addControl('text', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Switcher Content',
+      default: 'I Am Advanced Heading'
+    });
+
+    this.endControlSection();
   }
 }
 

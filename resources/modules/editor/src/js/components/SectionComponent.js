@@ -1,4 +1,6 @@
 import React, {Component} from "react";
+import decorate from "../decorators/element-component";
+import ElementWrapper from "./ElementWrapper";
 
 class SectionComponent extends Component {
   constructor(props){
@@ -10,12 +12,13 @@ class SectionComponent extends Component {
       children: props.children,
     };
     props.element.component = this;
+    decorate(this);
   }
   render(){
 
     return <div className="altrp-section">
       {this.state.children.map(
-          section => <ElementWrapper component={section.componentClass} element={section}/>
+          column => <ElementWrapper key={column.getId()} component={column.componentClass} element={column}/>
       )}
     </div>
   }

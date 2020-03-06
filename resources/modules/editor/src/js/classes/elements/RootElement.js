@@ -25,18 +25,6 @@ class RootElement extends BaseElement{
     if(this.controllersRegistered){
       return
     }
-    // this.controllers[TAB_CONTENT] = [{
-    //   sectionName: 'content',
-    //   sectionLabel: 'Text Section',
-    //   controllers: [
-    //     {
-    //       type: CONTROLLER_TEXTAREA,
-    //       settingName: 'text',
-    //       controllerLabel: 'Text Content'
-    //     }
-    //   ]
-    // }];
-    // this.controllersRegistered = true;
     this.startControlSection('text_section', {
       tab: TAB_CONTENT,
       label: 'Text Section',
@@ -117,6 +105,12 @@ class RootElement extends BaseElement{
     //
     // this.endControlSection();
 
+  }
+  appendNewSection(newSection){
+    if(newSection.getType() !== 'section'){
+      throw 'Only Section can be a Child of Template';
+    }
+    this.appendChild(newSection);
   }
 }
 

@@ -1,4 +1,5 @@
 import BaseElement from "./BaseElement";
+import Column from "./Column";
 
 class Section extends BaseElement{
 
@@ -13,6 +14,13 @@ class Section extends BaseElement{
   }
   _registerControls(){
 
+  }
+
+  appendColumn(newColumn) {
+    if(!newColumn instanceof Column){
+      throw 'Only Column can be a Child of Section';
+    }
+    this.appendChild(newColumn);
   }
 }
 

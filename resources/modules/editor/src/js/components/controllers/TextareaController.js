@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {settingToState} from "../../helpers";
 import DynamicIcon from '../../../svgs/dynamic.svg'
 
 class TextareaController extends Component {

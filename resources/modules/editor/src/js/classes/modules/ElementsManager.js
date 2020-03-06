@@ -2,7 +2,7 @@ import Input from "../elements/Input";
 import RootElement from "../elements/RootElement";
 import RootComponent from "../../components/RootComponent";
 import HeadingElement from "../elements/Heading";
-import HeadingComponent from '../../components/widgets/Heading';
+import HeadingWidget from '../../components/widgets/HeadingWidget';
 import Column from "../elements/Column";
 import Section from "../elements/Section";
 import SectionComponent from "../../components/SectionComponent";
@@ -22,7 +22,7 @@ export default class ElementsManger {
     //список компонентов
     this.components = {};
     this.components[RootElement.getName()] = RootComponent;
-    this.components[HeadingElement.getName()] = HeadingComponent;
+    this.components[HeadingElement.getName()] = HeadingWidget;
     this.components[Section.getName()] = SectionComponent;
     this.components[Column.getName()] = ColumnComponent;
   }

@@ -23,8 +23,8 @@ class Editor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // activePanel: 'widgets',
-      activePanel: 'settings',
+      activePanel: 'widgets',
+      // activePanel: 'settings',
     };
     this.openPageSettings = this.openPageSettings.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
@@ -58,12 +58,22 @@ class Editor extends Component {
   }
 
   render() {
+    console.log(store);
+    let settingsActive = '';
+    if(store.getState().currentElement.currentElement.getType &&
+        store.getState().currentElement.currentElement.getType() === 'root-element' &&
+      this.state.activePanel === 'settings'
+    ){
+      settingsActive = ' active';
+    }
     return (
         <Provider store={store}>
             <div className="editor">
               <div className="left-panel">
                 <div className="editor-top-panel">
-                  <button className="btn btn_hamburger" onClick={this.showSettingsPanel}>
+                  <button className="btn btn_hamburger"
+                          // onClick={this.showSettingsPanel}
+                  >
                     <Hamburger className="icon"/>
                   </button>
                   <div className="logo"><Logo viewBox="0 0 97 35"/></div>
@@ -82,7 +92,7 @@ class Editor extends Component {
                   }
                 </div>
                 <div className="editor-bottom-panel d-flex align-content-center justify-center">
-                  <button className="btn btn_settings" onClick={this.openPageSettings}>
+                  <button className={'btn btn_settings' + settingsActive} onClick={this.openPageSettings}>
                     <Settings className="icon"/>
                   </button>
                   <button className="btn ">

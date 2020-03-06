@@ -4,7 +4,9 @@
   display: flex;
   min-height: 100vh;
 }
+.editor-content-body{
 
+}
 .left-panel {
   width: 270px;
   display: flex;
@@ -85,6 +87,7 @@ button{
     .icon path{
       fill: $button-grey;
     }
+    &.active,
     &:hover{
       .icon path{
         fill: #fff;
@@ -176,6 +179,7 @@ button{
   flex-direction: column;
   align-items: center;
   margin-top: 70px;
+  margin-bottom: 70px;
   padding-top: 44px;
   padding-bottom: 44px;
   border: 2px dashed rgba(144, 153, 182, 0.5);
@@ -381,6 +385,12 @@ button{
   -ms-transition-duration: 0.2s;
   -o-transition-duration: 0.2s;
   transition-duration: 0.2s;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-weight: bold;
   &_off{
     background: $light-gray;
     box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.15), inset -1px -1px 2px rgba(0, 0, 0, 0.15);

@@ -2,17 +2,22 @@ import React, {Component} from "react";
 import PlusIcon from '../../svgs/plus.svg'
 import FolderIcon from '../../svgs/folder.svg'
 import DropTarget from "./DropTarget";
+import {getEditor} from "../helpers";
 
 class NewSection extends Component {
 
   onDragOver(e) {
     // console.log(e);
     e.preventDefault();
+    e.stopPropagation();
+    return false;
   }
 
   onDragEnter(e) {
     // console.log(e);
     e.preventDefault();
+    e.stopPropagation();
+    return false;
   }
 
   onDrop(e) {
@@ -21,11 +26,10 @@ class NewSection extends Component {
     /**
      * @member {HTMLElement} target
      * */
-    let target = e.target;
-    console.log(e.screenX);
-    console.log(target.parentElement);
+    let newWidgetName = e.dataTransfer.getData('text/plain');
     e.preventDefault();
-
+    e.stopPropagation();
+    getEditor().modules.templateDataStorage.addWidgetInSection(newWidgetName);
     return false;
   }
 

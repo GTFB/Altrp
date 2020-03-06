@@ -6,7 +6,6 @@ class WidgetsPanel extends Component {
   constructor(props){
     super(props);
     this.state = {widgets: window.elementsManager.getWidgetsList()};
-    console.log(this.state);
   }
   render() {
     return <div className="widget-panel">

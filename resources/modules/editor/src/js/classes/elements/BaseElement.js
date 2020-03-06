@@ -44,16 +44,16 @@ class BaseElement {
     data.id = this.getId();
     data.name = this.getName();
     data.data.settings = this.settings;
-    let children = this.getChildren();
+    let children = this.getChildrenForImport();
     if(children){
       data.data.children = children;
     }
     return data;
   }
 
-  getChildren() {
+  getChildrenForImport() {
     if(! this.children.length){
-      return;
+      return[];
     }
     let children = [];
     for( let _c of this.children ){
@@ -62,8 +62,18 @@ class BaseElement {
     return children;
   }
 
+  getChildren(){
+    if(! this.children.length){
+      return[];
+    }
+    return this.children;
+  }
+
   appendChild(child){
     this.children.push(child);
+    if(this.component && typeof this.component.setChildren === 'function'){
+      this.component.setChildren(this.children);
+    }
   }
 
   insertAfter(childId, child){

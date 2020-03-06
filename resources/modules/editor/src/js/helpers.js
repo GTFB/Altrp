@@ -29,11 +29,16 @@ export function settingToState(setting) {
 export function getEditorContent(){
   return window.frames[0].window.altrpEditorContent;
 }
-
+/**
+ * @return {Editor}
+ * */
 export function getEditor() {
   return window.altrpEditor || window.parent.altrpEditor;
 }
 
+/**
+ * @return {boolean}
+ * */
 export function isEditor() {
   return !!(window.altrpEditor || window.parent.altrpEditor);
 }

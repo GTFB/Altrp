@@ -1,33 +1,28 @@
 import React, {Component} from "react";
 import ElementWrapper from "./ElementWrapper";
-import {isEditor} from "../helpers";
+import decorate, {changeSetting, setChildren} from "../decorators/element-component";
 
 class RootComponent extends Component {
   constructor(props){
     super(props);
     this.state = {
       children: props.children,
-      settings: {
-
-      }
+      settings: props.element.getSettings()
     };
     props.element.component = this;
+    decorate(this);
   }
-  changeSetting(settingName, value){
-    let newState = this.state;
-    newState.settings[settingName] = value;
-    this.setState(newState);
-  }
+
   render(){
     return<div className="sections-wrapper">{
-      this.state.settings.text
+      this.state.settings.number
     }<br/>
 
       {this.state.children.map(
-          section => <ElementWrapper component={section.componentClass} element={section}/>
+          section => <ElementWrapper key={section.getId()} component={section.componentClass} element={section}/>
       )}
     </div>
   }
 }
 
-export default RootComponent
+export default RootComponent;
