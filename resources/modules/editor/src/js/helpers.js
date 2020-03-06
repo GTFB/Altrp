@@ -31,6 +31,9 @@ export function getEditorContent(){
 }
 
 export function getEditor() {
-  console.log(window.parent);
   return window.altrpEditor || window.parent.altrpEditor;
+}
+
+export function isEditor() {
+  return !!(window.altrpEditor || window.parent.altrpEditor);
 }

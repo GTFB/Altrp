@@ -1,4 +1,5 @@
 import {TAB_CONTENT, TAB_STYLE} from "../modules/ControllersManager";
+import {isEditor} from "../../helpers";
 
 class BaseElement {
 
@@ -8,7 +9,7 @@ class BaseElement {
     this.controlsIds = [];
     this.controllersRegistered = false;
     this.children = [];
-    this.componentClass = window.elementsManager.getComponentClass(this.getName())
+    this.componentClass = window.elementsManager.getComponentClass(this.getName());
     this.initiatedDefaults = null;
   }
 
@@ -21,6 +22,10 @@ class BaseElement {
 
   getName(){
     return this.constructor.getName();
+  }
+
+  getType(){
+    return this.constructor.getType();
   }
 
   getTitle(){
@@ -189,6 +194,10 @@ class BaseElement {
 
   setElementAsCurrent(){
     window.altrpEditor.modules.templateDataStorage.setCurrentElement(this);
+  }
+
+  isEditor(){
+    return isEditor();
   }
 }
 

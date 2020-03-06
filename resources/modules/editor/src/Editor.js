@@ -29,7 +29,7 @@ class Editor extends Component {
     this.openPageSettings = this.openPageSettings.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
     this.showWidgetsPanel = this.showWidgetsPanel.bind(this);
-    window.altrpEditor = this
+    window.altrpEditor = this;
   }
 
   initModules() {

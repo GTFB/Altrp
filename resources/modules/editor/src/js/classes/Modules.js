@@ -13,7 +13,7 @@ class Modules {
     this.elementsFabric = new ElementsFabric(this);
     this.saveImportModule = new SaveImportModule(this);
     this.settingsChangeModule = new SettingsChangeModule(this);
-    this.templateSettingsChangeModule =new  TemplateSettingsChangeModule(this);
+    this.templateSettingsChangeModule = new  TemplateSettingsChangeModule(this);
     this.templateDataStorage = new TemplateDataStorage(this);
     this.renderer = new Renderer(editor);
     this.loaded();

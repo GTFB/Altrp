@@ -29,15 +29,6 @@ class EditorContent extends Component {
   //   let event = e ;
   //   event.stopPropagation();
   // }
-  onDragOver(e) {
-    // console.log(e);
-    e.preventDefault();
-  }
-
-  onDragEnter(e) {
-    // console.log(e);
-    e.preventDefault();
-  }
 
 
   componentDidMount() {
@@ -49,18 +40,13 @@ class EditorContent extends Component {
 
   render() {
     return <div className="editor-content d-flex flex-column justify-center align-content-center"
-                ref={this.editorWindow}
-                onDragOver={this.onDragOver}
-
-                onDragEnter={this.onDragEnter}>
+                ref={this.editorWindow}>
       {
         this.state.rootElement ? React.createElement(
             this.state.rootElement.componentClass,{
-              settings: {},
               children: this.state.rootElement.children,
               element:this.state.rootElement,
             }
-
         ) : ''
       }
       <NewSection />

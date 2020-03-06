@@ -22,17 +22,12 @@ let editorTarget = document.getElementById("editor");
 if(editorTarget){
   ReactDOM.render(<Editor/>, editorTarget);
 }
-// let editorContentTarget = document.getElementById("editor-content");
-//
-// if(editorContentTarget){
-//   ReactDOM.render(<EditorContent/>, editorContentTarget);
-// }
+
 window.onload = () =>{
   let iframe = document.getElementsByTagName('iframe')[0];
   if(!iframe){
     return
   }
-  console.log(iframe.contentWindow.document);
 
   let editorContentTarget = iframe.contentWindow.document.getElementById("editor-content");
 

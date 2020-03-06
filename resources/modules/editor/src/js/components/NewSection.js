@@ -5,6 +5,16 @@ import DropTarget from "./DropTarget";
 
 class NewSection extends Component {
 
+  onDragOver(e) {
+    // console.log(e);
+    e.preventDefault();
+  }
+
+  onDragEnter(e) {
+    // console.log(e);
+    e.preventDefault();
+  }
+
   onDrop(e) {
     // console.log(e);
     // console.log(e.target);
@@ -20,7 +30,10 @@ class NewSection extends Component {
   }
 
   render() {
-    return <div className="new-section"  onDrop={this.onDrop} data-element-type="new-section">
+    return <div className="new-section"
+                onDragOver={this.onDragOver}
+                onDragEnter={this.onDragEnter}
+                onDrop={this.onDrop} data-element-type="new-section">
         <div className="new-section-buttons d-flex">
           <button draggable="true" className="new-section__button new-section__button_add d-flex "><PlusIcon/></button>
           <button className="new-section__button new-section__button_library d-flex"><FolderIcon/></button>

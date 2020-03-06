@@ -22,7 +22,7 @@ class ControllersManager {
   }
   getController(controllerName){
     if(! this.conttrollers[controllerName]){
-      throw 'Controller with Name ' + controllerName + ' not Found!';
+      throw `Controller with Name ${controllerName} not Found!`;
     }
     return  this.conttrollers[controllerName];
   }
@@ -31,7 +31,6 @@ class ControllersManager {
     let elementClasses = window.elementsManager.getElements();
     this.elementsControls = {};
     for(let elementClassName in elementClasses ){
-
         if(elementClasses.hasOwnProperty(elementClassName)){
         this.elementsControls[elementClassName] = (new  elementClasses[elementClassName]).getControls()
       }

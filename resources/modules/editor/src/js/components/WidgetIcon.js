@@ -11,7 +11,6 @@ export default class WidgetIcon  extends  Component{
     this.onDragStart = this.onDragStart.bind(this);
   }
   onDragStart(e){
-    console.log(e.dataTransfer);
     e.dataTransfer.effectAllowed = "copy";
     e.dataTransfer.setData('text/plain', this.state.element.getName());
   }

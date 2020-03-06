@@ -1,11 +1,12 @@
 import React, {Component} from "react";
+import ElementWrapper from "./ElementWrapper";
+import {isEditor} from "../helpers";
 
 class RootComponent extends Component {
   constructor(props){
     super(props);
     this.state={
       children: props.children,
-      settings: props.element.getSettings()
     };
     props.element.component = this;
   }
@@ -16,15 +17,9 @@ class RootComponent extends Component {
   }
   render(){
     return<div className="sections-wrapper">
-      {this.state.children.map(section=>{
-        React.createElement(section.componentClass,
-          {
-            settings: section.settings,
-            children: section.children,
-            element: section
-          }
-          );
-      })}
+      {this.state.children.map(
+          section => <ElementWrapper component={section.componentClass} element={section}/>
+      )}
     </div>
   }
 }

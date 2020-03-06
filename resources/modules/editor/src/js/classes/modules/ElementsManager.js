@@ -3,6 +3,10 @@ import RootElement from "../elements/RootElement";
 import RootComponent from "../../components/RootComponent";
 import HeadingElement from "../elements/Heading";
 import HeadingComponent from '../../components/widgets/Heading';
+import Column from "../elements/Column";
+import Section from "../elements/Section";
+import SectionComponent from "../../components/SectionComponent";
+import ColumnComponent from "../../components/ColumnComponent";
 
 
 export default class ElementsManger {
@@ -13,10 +17,14 @@ export default class ElementsManger {
     //список элементов
     this.elements[RootElement.getName()] = RootElement;
     this.elements[HeadingElement.getName()] = HeadingElement;
+    this.elements[Column.getName()] = Column;
+    this.elements[Section.getName()] = Section;
     //список компонентов
     this.components = {};
     this.components[RootElement.getName()] = RootComponent;
     this.components[HeadingElement.getName()] = HeadingComponent;
+    this.components[Section.getName()] = SectionComponent;
+    this.components[Column.getName()] = ColumnComponent;
   }
 
   getElements(){
