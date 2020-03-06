@@ -15,7 +15,7 @@ class RootComponent extends Component {
   }
   render(){
     return<div className="sections-wrapper">{
-      this.state.text
+      this.state.number
     }<br/>
     {
       this.state.text_

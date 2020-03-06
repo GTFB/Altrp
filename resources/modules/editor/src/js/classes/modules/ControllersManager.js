@@ -1,17 +1,20 @@
 import TextareaController from "../../components/controllers/TextareaController";
 import TextController from "../../components/controllers/TextController";
+import NumberController from "../../components/controllers/NumberController";
 
 export const TAB_CONTENT = 'content';
 export const TAB_STYLE = 'style';
 export const TAB_ADVANCED = 'advanced';
 export const CONTROLLER_TEXTAREA = 'textarea';
 export const CONTROLLER_TEXT = 'text';
+export const CONTROLLER_NUMBER = 'number';
 
 class ControllersManager {
   constructor(){
     this.conttrollers = {};
     this.conttrollers[CONTROLLER_TEXTAREA] = TextareaController;
     this.conttrollers[CONTROLLER_TEXT] = TextController;
+    this.conttrollers[CONTROLLER_NUMBER] = NumberController;
     this.elementsControls = null;
   }
   getController(controllerName){

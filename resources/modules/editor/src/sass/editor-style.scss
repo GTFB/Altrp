@@ -309,6 +309,9 @@ button{
     width: 65%;
     min-width: 145px;
   }
+  &:not(:last-child){
+    margin-bottom: 8px;
+  }
 }
 .control-group{
   display: flex;
@@ -352,4 +355,5 @@ button{
 .controllers-wrapper{
   display: none;
   padding: 13px;
+  flex-direction: column;
 }
