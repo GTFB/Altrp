@@ -80,6 +80,42 @@ class RootElement extends BaseElement{
     });
 
     this.endControlSection();
+    // this.startControlSection('text_section', {
+    //   tab: TAB_CONTENT,
+    //   label: 'Text Section',
+    // });
+    //
+    // this.addControl('text', {
+    //   type: CONTROLLER_TEXT,
+    //   label: 'Text Content',
+    // });
+    //
+    //
+    // this.endControlSection();
+    //
+    // this.startControlSection('text_style', {
+    //   tab: TAB_STYLE,
+    //   label: 'Text Section',
+    // });
+    //
+    // this.addControl('text_', {
+    //   type: CONTROLLER_TEXTAREA,
+    //   label: 'Text Content',
+    // });
+    //
+    // this.endControlSection();
+    //
+    // this.startControlSection('text_advanced', {
+    //   tab: TAB_ADVANCED,
+    //   label: 'Text Section',
+    // });
+    //
+    // this.addControl('text__', {
+    //   type: CONTROLLER_TEXT,
+    //   label: 'Text Content',
+    // });
+    //
+    // this.endControlSection();
 
   }
 }

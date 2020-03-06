@@ -16,10 +16,16 @@ class ControllersManager {
     this.conttrollers[CONTROLLER_TEXT] = TextController;
     this.conttrollers[CONTROLLER_NUMBER] = NumberController;
     this.elementsControls = null;
+    this._cache = {
+      controls: {},
+    };
+  }
+  init(){
+    this.registerControls();
   }
   getController(controllerName){
     if(! this.conttrollers[controllerName]){
-      throw 'Controller with Name ' + controllerName + ' not Found!';
+      throw `Controller with Name ${controllerName} not Found!`;
     }
     return  this.conttrollers[controllerName];
   }
@@ -28,7 +34,6 @@ class ControllersManager {
     let elementClasses = window.elementsManager.getElements();
     this.elementsControls = {};
     for(let elementClassName in elementClasses ){
-
         if(elementClasses.hasOwnProperty(elementClassName)){
         this.elementsControls[elementClassName] = (new  elementClasses[elementClassName]).getControls()
       }
@@ -40,6 +45,38 @@ class ControllersManager {
       this.registerControls();
     }
     return this.elementsControls[elementName];
+  }
+
+
+  getElementControl(elementName, controlId){
+    let controls = this.getControls(elementName);
+    let control;
+    control = this._cache.controls[elementName + controlId];
+    if(control){
+      return control;
+    }
+    for (let tabName in controls){
+      if(controls.hasOwnProperty(tabName)){
+        if(!controls[tabName].length){
+          continue;
+        }
+        for (let section of controls[tabName]) {
+          if(!section.controls.length){
+            continue;
+          }
+          for (let _control of section.controls){
+            if(_control.controlId === controlId){
+              control = _control;
+            }
+          }
+        }
+      }
+    }
+    return control;
+  }
+
+  setControlsCache(controlsCacheName, args) {
+    this._cache.controls[controlsCacheName] = args;
   }
 }
 

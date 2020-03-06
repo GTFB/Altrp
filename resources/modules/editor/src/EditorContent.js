@@ -2,33 +2,55 @@ import React, {Component} from "react";
 import DropTarget from './js/components/DropTarget'
 import {hot} from "react-hot-loader/index";
 import Backend from "react-dnd-html5-backend";
-import {DndProvider} from 'react-dnd'
 import NewSection from "./js/components/NewSection";
+import {getEditor} from "./js/helpers";
 
 
 class EditorContent extends Component {
-  log(e){
-    e.preventDefault();
-    console.log(e);
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.editorWindow = React.createRef();
+
+    window.altrpEditorContent = this;
   }
 
-  onDragOver (e) {
-    let event = e ;
-    event.stopPropagation();
+  // log(e){
+  //   e.preventDefault();
+  //   console.log(e);
+  // }
+  //
+  // onDragOver (e) {
+  //   let event = e ;
+  //   event.stopPropagation();
+  // }
+  //
+  // onDragEnter  (e) {
+  //   let event = e ;
+  //   event.stopPropagation();
+  // }
+
+
+  componentDidMount() {
+    let rootElement = getEditor().modules.templateDataStorage.getRootElement();
+    this.setState({
+      rootElement
+    })
   }
 
-  onDragEnter  (e) {
-    let event = e ;
-    event.stopPropagation();
-  }
   render() {
-    // console.log(window.parent);
-    return <DndProvider backend={Backend} context={window.parent}>
-      <div className="editor-content" onDrop={this.log} onDragEnter={this.onDragEnter}
-           onDragOver={this.onDragOver}  onClick={this.log}>
-        <NewSection/>
-      </div>
-    </DndProvider>;
+    return <div className="editor-content d-flex flex-column justify-center align-content-center"
+                ref={this.editorWindow}>
+      {
+        this.state.rootElement ? React.createElement(
+            this.state.rootElement.componentClass,{
+              children: this.state.rootElement.children,
+              element:this.state.rootElement,
+            }
+        ) : ''
+      }
+      <NewSection />
+    </div>;
   }
 }
 

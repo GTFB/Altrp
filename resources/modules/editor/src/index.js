@@ -8,6 +8,7 @@ import store from '../src/js/store/store'
 
 window.elementsManager = new ElementsManager();
 window.controllersManager = new ControllersManager();
+window.controllersManager.init();
 window.editorStore = store;
 
 if (process.env.NODE_ENV !== 'production') {
@@ -21,11 +22,16 @@ let editorTarget = document.getElementById("editor");
 if(editorTarget){
   ReactDOM.render(<Editor/>, editorTarget);
 }
-let editorContentTarget = document.getElementById("editor-content");
 
-if(editorContentTarget){
-  ReactDOM.render(<EditorContent/>, editorContentTarget);
+window.onload = () =>{
+  let iframe = document.getElementsByTagName('iframe')[0];
+  if(!iframe){
+    return
+  }
 
-}
+  let editorContentTarget = iframe.contentWindow.document.getElementById("editor-content");
 
-
+  if(editorContentTarget){
+    ReactDOM.render(<EditorContent/>, editorContentTarget);
+  }
+};

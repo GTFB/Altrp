@@ -1,38 +1,31 @@
 import React, {Component} from "react";
+import ElementWrapper from "./ElementWrapper";
+import {isEditor} from "../helpers";
 
 class RootComponent extends Component {
   constructor(props){
     super(props);
     this.state={
       children: props.children,
+      settings: {
+
+      }
     };
     props.element.component = this;
   }
   changeSetting(settingName, value){
     let newState = this.state;
-    newState[settingName] = value;
+    newState.settings[settingName] = value;
     this.setState(newState);
   }
   render(){
     return<div className="sections-wrapper">{
-      this.state.number
+      this.state.settings.number
     }<br/>
-    {
-      this.state.text_
-    }
-    <br/>
-    {
-      this.state.text__
-    }
-      {this.state.children.map(section=>{
-        React.createElement(section.componentClass,
-          {
-            settings: section.settings,
-            children: section.children,
-            element: section
-          }
-          );
-      })}
+
+      {this.state.children.map(
+          section => <ElementWrapper component={section.componentClass} element={section}/>
+      )}
     </div>
   }
 }

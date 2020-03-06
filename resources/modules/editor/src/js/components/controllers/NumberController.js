@@ -19,9 +19,6 @@ class NumberController extends Component {
   componentDidUpdate(){
     this.props.currentElement.setSettingValue(this.props.controlId, this.state.value);
   }
-  componentDidMount(){
-    this.props.currentElement.setSettingValue(this.props.controlId, this.state.value);
-  }
   changeValue(e){
     this.setState({
       value:e.target.value
@@ -29,15 +26,12 @@ class NumberController extends Component {
   }
   render(){
 
-    return <div className="controller-container controller-container_text">
+    return <div className="controller-container controller-container_number">
       <div className="controller-container__label">
         {this.props.label}
       </div>
       <div className="control-group">
-        <input className="control-field" onChange={this.changeValue} value={this.state.value}/>
-        <div className="control-group__append">
-          <DynamicIcon/>
-        </div>
+        <input className="control-field" onChange={this.changeValue} value={this.state.value} type="number"/>
       </div>
     </div>
   }

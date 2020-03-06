@@ -20,7 +20,7 @@ class TextareaController extends Component {
     this.props.currentElement.setSettingValue(this.props.controlId, this.state.value);
   }
   componentDidMount(){
-    this.props.currentElement.setSettingValue(this.props.controlId, this.state.value);
+    // this.props.currentElement.setSettingValue(this.props.controlId, this.state.value);
   }
   changeValue(e){
     this.setState({

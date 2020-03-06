@@ -14,8 +14,6 @@ import Preview from './svgs/preview.svg';
 import Settings from './svgs/settings.svg';
 import Dots from './svgs/dots.svg';
 import Hamburger from './svgs/hamburger.svg';
-import {DndProvider} from 'react-dnd'
-import Backend from 'react-dnd-html5-backend'
 import {Provider} from 'react-redux'
 import store from '../src/js/store/store'
 import HistoryPanel from "./js/components/HistoryPanel";
@@ -28,11 +26,10 @@ class Editor extends Component {
       // activePanel: 'widgets',
       activePanel: 'settings',
     };
-    this.editorWindow = React.createRef();
-    window.altrpEditor = this;
     this.openPageSettings = this.openPageSettings.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
     this.showWidgetsPanel = this.showWidgetsPanel.bind(this);
+    window.altrpEditor = this;
   }
 
   initModules() {
@@ -63,7 +60,6 @@ class Editor extends Component {
   render() {
     return (
         <Provider store={store}>
-          <DndProvider backend={Backend}>
             <div className="editor">
               <div className="left-panel">
                 <div className="editor-top-panel">
@@ -85,7 +81,7 @@ class Editor extends Component {
                     <SettingsPanel/>
                   }
                 </div>
-                <div className="editor-bottom-panel d-flex align-items-center justify-center">
+                <div className="editor-bottom-panel d-flex align-content-center justify-center">
                   <button className="btn btn_settings" onClick={this.openPageSettings}>
                     <Settings className="icon"/>
                   </button>
@@ -112,10 +108,9 @@ class Editor extends Component {
                 </div>
               </div>
               <div className="right-panel">
-                <EditorWindow ref={this.editorWindow} parent={this}/>
+                <EditorWindow  />
               </div>
             </div>
-          </DndProvider>
         </Provider>
     );
   }

@@ -1,4 +1,5 @@
 import RootElement from "../elements/RootElement";
+import {getEditorContent} from "../../helpers";
 
 
 class Renderer {
@@ -8,7 +9,7 @@ class Renderer {
    * */
   constructor(editor){
     this.editor = editor;
-    this.editorWindow = editor.editorWindow.current;
+    // this.editorWindow = getEditorContent().editorWindow.current;
     // let rootElement = new RootElement();
     // editor.editorWindow.current.setState({
     //   rootElement
