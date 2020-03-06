@@ -1,6 +1,6 @@
 import BaseElement from "./BaseElement";
 import {
-  CONTROLLER_NUMBER,
+  CONTROLLER_NUMBER, CONTROLLER_SWITCHER,
   CONTROLLER_TEXT,
   CONTROLLER_TEXTAREA,
   TAB_ADVANCED,
@@ -43,8 +43,8 @@ class RootElement extends BaseElement{
     });
 
     this.addControl('text', {
-      type: CONTROLLER_TEXT,
-      label: 'Text Content',
+      type: CONTROLLER_SWITCHER,
+      label: 'Switcher Content',
     });
 
     this.addControl('number', {
