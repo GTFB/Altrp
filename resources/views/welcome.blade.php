@@ -96,5 +96,73 @@
                 </div>
             </div>
         </div>
+        <form action="{{route('createTemplate') }}" method="POST" class="form-horizontal" enctype="multipart/form-data">
+            {{ csrf_field() }}
+
+            <div class="form-group">
+                <label for="task" class="col-sm-3 control-label">name</label>
+                <div class="col-sm-6">
+                    <input type="text" name="name" id="task-name" class="form-control">
+                </div>
+                <label for="task" class="col-sm-3 control-label">title</label>
+                <div class="col-sm-6">
+                    <input type="text" name="title" id="task-name" class="form-control">
+                </div>
+                <label for="task" class="col-sm-3 control-label">data</label>
+                <div class="col-sm-6">
+                    <textarea rows="3" name="data" class="form-control"></textarea>
+                </div>
+                <label for="task" class="col-sm-3 control-label">author</label>
+                <div class="col-sm-6">
+                    <input type="text" name="author" id="task-name" class="form-control">
+                </div>
+
+
+            </div></div>
+
+            <br>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-6">
+                    <button type="submit" class="btn btn-primary float-right btn-block">
+                        <i class="fa fa-plus"></i> Создать шаблон
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <form action="{{ url('/admin/ajax/templates/update/1') }}" method="POST" class="form-horizontal" enctype="multipart/form-data">
+            {{ csrf_field() }}
+
+            <div class="form-group">
+                <label for="task" class="col-sm-3 control-label">name</label>
+                <div class="col-sm-6">
+                    <input type="text" name="name" id="task-name" class="form-control">
+                </div>
+                <label for="task" class="col-sm-3 control-label">title</label>
+                <div class="col-sm-6">
+                    <input type="text" name="title" id="task-name" class="form-control">
+                </div>
+                <label for="task" class="col-sm-3 control-label">data</label>
+                <div class="col-sm-6">
+                    <textarea rows="3" name="data" class="form-control"></textarea>
+                </div>
+                <label for="task" class="col-sm-3 control-label">author</label>
+                <div class="col-sm-6">
+                    <input type="text" name="author" id="task-name" class="form-control">
+                </div>
+
+
+            </div></div>
+
+            <br>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-6">
+                    <button type="submit" class="btn btn-primary float-right btn-block">
+                        <i class="fa fa-plus"></i> Изменить шаблон
+                    </button>
+                </div>
+            </div>
+        </form>
+    <a href="/admin/ajax/template/1">смотреть</a>
     </body>
 </html>
