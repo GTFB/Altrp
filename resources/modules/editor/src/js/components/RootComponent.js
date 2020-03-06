@@ -7,6 +7,9 @@ class RootComponent extends Component {
     super(props);
     this.state = {
       children: props.children,
+      settings: {
+
+      }
     };
     props.element.component = this;
   }
@@ -16,7 +19,10 @@ class RootComponent extends Component {
     this.setState(newState);
   }
   render(){
-    return<div className="sections-wrapper">
+    return<div className="sections-wrapper">{
+      this.state.settings.text
+    }<br/>
+
       {this.state.children.map(
           section => <ElementWrapper component={section.componentClass} element={section}/>
       )}
