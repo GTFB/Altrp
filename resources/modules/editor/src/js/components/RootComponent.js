@@ -5,7 +5,7 @@ import {isEditor} from "../helpers";
 class RootComponent extends Component {
   constructor(props){
     super(props);
-    this.state={
+    this.state = {
       children: props.children,
     };
     props.element.component = this;
