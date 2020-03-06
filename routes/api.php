@@ -25,6 +25,13 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::post('/templates', "Constructor\Templates@insert");
         Route::put('/templates/{template}', "Constructor\Templates@update");
         Route::delete('/templates/{template}', "Constructor\Templates@delete");
+        
+        Route::get('/global-elements', "Constructor\GlobalElements@getElements");
+        Route::get('/global-elements/{element}', "Constructor\GlobalElements@getElement");
+        Route::post('/global-elements', "Constructor\GlobalElements@insert");
+        Route::put('/global-elements/{element}', "Constructor\GlobalElements@update");
+        Route::delete('/global-elements/{element}', "Constructor\GlobalElements@trashed");
+        
     });
     
 });
