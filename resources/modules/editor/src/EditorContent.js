@@ -4,6 +4,8 @@ import {hot} from "react-hot-loader/index";
 import Backend from "react-dnd-html5-backend";
 import NewSection from "./js/components/NewSection";
 import {getEditor} from "./js/helpers";
+import {Provider} from 'react-redux'
+import store from '../src/js/store/store'
 
 
 class EditorContent extends Component {
@@ -39,18 +41,20 @@ class EditorContent extends Component {
   }
 
   render() {
-    return <div className="editor-content d-flex flex-column justify-center align-content-center"
-                ref={this.editorWindow}>
-      {
-        this.state.rootElement ? React.createElement(
-            this.state.rootElement.componentClass,{
-              children: this.state.rootElement.children,
-              element:this.state.rootElement,
-            }
-        ) : ''
-      }
-      <NewSection />
-    </div>;
+    return <Provider store={store}>
+      <div className="editor-content d-flex flex-column justify-center align-content-center"
+                  ref={this.editorWindow}>
+        {
+          this.state.rootElement ? React.createElement(
+              this.state.rootElement.componentClass,{
+                children: this.state.rootElement.children,
+                element:this.state.rootElement,
+              }
+          ) : ''
+        }
+        <NewSection />
+      </div>
+    </Provider>;
   }
 }
 

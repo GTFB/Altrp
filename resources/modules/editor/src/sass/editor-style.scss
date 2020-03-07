@@ -1,4 +1,5 @@
 @import "../../../../sass/common";
+@import "./elements-style";
 
 .editor {
   display: flex;
@@ -424,5 +425,194 @@ button{
     -ms-transition-duration: 0.2s;
     -o-transition-duration: 0.2s;
     transition-duration: 0.2s;
+  }
+}
+
+.overlay{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  -webkit-transition-duration: .3s;
+  -moz-transition-duration: .3s;
+  -ms-transition-duration: .3s;
+  -o-transition-duration: .3s;
+  transition-duration: .3s;
+  outline: 2px solid transparent;
+  display: none;
+  pointer-events: none;
+}
+.altrp-element:hover{
+  & .overlay{
+    display: block;
+  }
+}
+.altrp-element_section:hover{
+  & > .overlay{
+    outline: 2px solid $turquoise;
+    & .overlay-settings{
+      transform: translate(-50% , 0);
+      display: flex;
+      &__button{
+        background-color: $turquoise;
+        &:hover{
+          background-color: $blue;
+        }
+      }
+    }
+  }
+}
+.overlay-settings{
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translate(-50% , 0);
+  display: none;
+  //display: flex;
+  pointer-events: all;
+  &__button{
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    background-color: transparent;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -ms-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+  }
+}
+
+.altrp-element_section{
+  & > .overlay {
+    & .overlay-settings__button {
+      &:first-child {
+        border-radius: 5px 0 0 0;
+        &::before {
+          content: '';
+          position: absolute;
+          border: solid transparent;
+          top: 2px;
+          border-right-color: $turquoise;
+          border-width: 23px 12px 0 0;
+          right: -webkit-calc(100% - 1px);
+          right: calc(100% - 1px);
+          -webkit-transition-duration: 0.3s;
+          -moz-transition-duration: 0.3s;
+          -ms-transition-duration: 0.3s;
+          -o-transition-duration: 0.3s;
+          transition-duration: 0.3s;
+        }
+        &:hover::before {
+          border-right-color: $blue;
+        }
+      }
+      &:last-child {
+        border-radius: 0 5px 0 0;
+        &::after {
+          content: '';
+          position: absolute;
+          border: solid transparent;
+          top: 2px;
+          border-left-color: $turquoise;
+          border-width: 23px 0 0 12px;
+          left: -webkit-calc(100% - 1px);
+          left: calc(100% - 1px);
+          -webkit-transition-duration: 0.3s;
+          -moz-transition-duration: 0.3s;
+          -ms-transition-duration: 0.3s;
+          -o-transition-duration: 0.3s;
+          transition-duration: 0.3s;
+        }
+        &:hover::after {
+          border-left-color: $blue;
+        }
+      }
+    }
+  }
+}
+
+.altrp-element_section:first-of-type{
+  & > .overlay{
+    z-index: 100;
+    & .overlay-settings{
+      bottom: auto;
+      top: 0;
+    }
+    & .overlay-settings__button{
+      &:first-child{
+        border-radius: 0 0 0 5px;
+        &::before {
+          top: 0;
+          border-width: 0 12px 23px 0 ;
+        }
+      }
+      &:last-child{
+        border-radius: 0 0  5px 0;
+        &::after {
+          top: 0;
+          border-width: 0  0 23px 12px;
+        }
+      }
+    }
+  }
+}
+.altrp-element_column:hover{
+  & > .overlay {
+    outline: 1px dashed #6d7882;
+    .overlay-settings{
+      top: 0;
+      left: 0;
+      bottom: auto;
+      display: block;
+      transform: none;
+      z-index: 100;
+      &__button{
+        background-color: $grey;
+        &_add{
+          display: none;
+        }
+        &_delete{
+          display: none;
+        }
+        &_duplicate{
+          display: none;
+        }
+      }
+    }
+  }
+}
+.altrp-element_widget:hover{
+  & > .overlay {
+    outline: 1px solid $turquoise;
+    z-index: 9998;
+
+    .overlay-settings {
+      top: 0;
+      left: auto;
+      right: 0;
+      bottom: auto;
+      display: flex;
+      flex-direction: row-reverse;
+      transform: none;
+      z-index: 100;
+      &__button {
+        background-color: $turquoise;
+        &:hover{
+          background-color: $blue;
+        }
+        &_add {
+          display: none;
+        }
+        &_delete {
+          display: none;
+        }
+      }
+    }
   }
 }

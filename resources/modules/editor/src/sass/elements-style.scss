@@ -1,0 +1,21 @@
+.sections-wrapper{
+  display: flex;
+  flex-direction: column;
+  width: 1440px;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.altrp-element{
+  width: 100%;
+  position: relative;
+}
+
+.heading{
+  text-align: center;
+  margin: 0;
+}
+.altrp-column{
+  padding: 10px;
+}
