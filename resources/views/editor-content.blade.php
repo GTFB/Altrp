@@ -10,7 +10,6 @@
   <title>Builder</title>
 
   <!-- Scripts -->
-  <script src="/modules/editor/editor.js" defer></script>
 
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">

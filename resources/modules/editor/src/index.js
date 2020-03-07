@@ -34,4 +34,17 @@ window.onload = () =>{
   if(editorContentTarget){
     ReactDOM.render(<EditorContent/>, editorContentTarget);
   }
+  if (process.env.NODE_ENV === 'production') {
+    let head = iframe.contentWindow.document.getElementsByTagName('head')[0];
+    let styleLink = iframe.contentWindow.document.createElement('link');
+    styleLink.rel = 'stylesheet';
+    styleLink.href = '/modules/editor/editor.css';
+    head.appendChild(styleLink);
+  } else {
+    let head = iframe.contentWindow.document.getElementsByTagName('head')[0];
+    let script = iframe.contentWindow.document.createElement('script');
+    script.src = '/modules/editor/editor.js';
+    script.defer = '/modules/editor/editor.js';
+    head.appendChild(script);
+  }
 };

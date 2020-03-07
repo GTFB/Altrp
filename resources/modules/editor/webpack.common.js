@@ -1,6 +1,8 @@
 const path = require("path");
 const webpack = require("webpack");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   entry: "./src/index.js",
@@ -31,6 +33,11 @@ module.exports = {
           // Compiles Sass to CSS
           'sass-loader',
         ],
+
+        // loader: ExtractTextPlugin.extract({
+        //   fallback: 'style-loader',
+        //   use: ['css-loader', 'sass-loader'],
+        // }),
       },
       {
         test: /\.svg$/,
@@ -72,5 +79,12 @@ module.exports = {
   plugins: [
       new webpack.HotModuleReplacementPlugin(),
       new CleanWebpackPlugin(),
+      // new ExtractTextPlugin('style.css'),
+    // new MiniCssExtractPlugin({
+    //   // Options similar to the same options in webpackOptions.output
+    //   // both options are optional
+    //   filename: '[name].css',
+    //   chunkFilename: '[id].css',
+    // }),
   ]
 };

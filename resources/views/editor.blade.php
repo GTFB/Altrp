@@ -13,6 +13,7 @@
   <script src="/modules/editor/editor.js" defer></script>
 
   <!-- Fonts -->
+  <link rel="stylesheet" href="/modules/editor/editor.css">
   <link rel="dns-prefetch" href="//fonts.gstatic.com">
 
 </head>
