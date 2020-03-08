@@ -58,7 +58,6 @@ class Editor extends Component {
   }
 
   render() {
-    console.log(store);
     let settingsActive = '';
     if(store.getState().currentElement.currentElement.getType &&
         store.getState().currentElement.currentElement.getType() === 'root-element' &&

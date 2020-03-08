@@ -446,17 +446,17 @@ button{
 }
 .altrp-element_section:hover{
   & > .overlay{
-    -webkit-transition-duration: .3s;
-    -moz-transition-duration: .3s;
-    -ms-transition-duration: .3s;
-    -o-transition-duration: .3s;
-    transition-duration: .3s;
     outline: 2px solid $turquoise;
     & .overlay-settings{
       transform: translate(-50% , 0);
       display: flex;
       &__button{
         background-color: $turquoise;
+        -webkit-transition-duration: 0s;
+        -moz-transition-duration: 0s;
+        -ms-transition-duration: 0s;
+        -o-transition-duration: 0s;
+        transition-duration: 0s;
         &:hover{
           background-color: $blue;
         }
@@ -480,11 +480,6 @@ button{
     align-items: center;
     padding: 0;
     background-color: transparent;
-    -webkit-transition-duration: 0.3s;
-    -moz-transition-duration: 0.3s;
-    -ms-transition-duration: 0.3s;
-    -o-transition-duration: 0.3s;
-    transition-duration: 0.3s;
   }
 }
 
@@ -502,11 +497,6 @@ button{
           border-width: 23px 12px 0 0;
           right: -webkit-calc(100% - 1px);
           right: calc(100% - 1px);
-          -webkit-transition-duration: 0.3s;
-          -moz-transition-duration: 0.3s;
-          -ms-transition-duration: 0.3s;
-          -o-transition-duration: 0.3s;
-          transition-duration: 0.3s;
         }
         &:hover::before {
           border-right-color: $blue;
@@ -523,11 +513,6 @@ button{
           border-width: 23px 0 0 12px;
           left: -webkit-calc(100% - 1px);
           left: calc(100% - 1px);
-          -webkit-transition-duration: 0.3s;
-          -moz-transition-duration: 0.3s;
-          -ms-transition-duration: 0.3s;
-          -o-transition-duration: 0.3s;
-          transition-duration: 0.3s;
         }
         &:hover::after {
           border-left-color: $blue;
@@ -590,15 +575,13 @@ button{
 .altrp-element_widget:hover{
   & > .overlay {
     outline: 1px solid $turquoise;
-    z-index: 9998;
-
+    z-index: 999;
     .overlay-settings {
       top: 0;
       left: auto;
       right: 0;
       bottom: auto;
       display: flex;
-      flex-direction: row-reverse;
       transform: none;
       z-index: 100;
       &__button {
@@ -607,9 +590,6 @@ button{
           background-color: $blue;
         }
         &_add {
-          display: none;
-        }
-        &_delete {
           display: none;
         }
       }

@@ -6,6 +6,7 @@ class ElementWrapper extends Component {
   constructor(props){
     super(props);
     this.chooseElement = this.chooseElement.bind(this);
+    this.deleteElement = this.deleteElement.bind(this);
   }
 
   render() {
@@ -16,6 +17,7 @@ class ElementWrapper extends Component {
     }
     let editText = `Edit ${this.props.element.getTitle()}`;
     let duplicateText = `Duplicate ${this.props.element.getTitle()}`;
+    let deleteText = `Delete ${this.props.element.getTitle()}`;
     return <div className={classes}>
       <div className={overlayClasses}>
         <div className="overlay-settings">
@@ -24,7 +26,9 @@ class ElementWrapper extends Component {
                   onClick={this.chooseElement}
                   title={editText}/>
           <button className="overlay-settings__button overlay-settings__button_duplicate " title={duplicateText}/>
-          <button className="overlay-settings__button overlay-settings__button_delete " title="Delete Section"/>
+          <button className="overlay-settings__button overlay-settings__button_delete "
+                  onClick={this.deleteElement}
+                  title={deleteText}/>
         </div>
       </div>
       {
@@ -38,7 +42,11 @@ class ElementWrapper extends Component {
   }
 
   chooseElement() {
-    editorSetCurrentElement(this.props.element)
+    editorSetCurrentElement(this.props.element);
+  }
+
+  deleteElement() {
+    this.props.element.parent.deleteChild(this.props.element);
   }
 }
 

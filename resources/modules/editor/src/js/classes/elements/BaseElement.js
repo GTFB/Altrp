@@ -11,6 +11,7 @@ class BaseElement {
     this.children = [];
     this.componentClass = window.elementsManager.getComponentClass(this.getName());
     this.initiatedDefaults = null;
+    this.parent = null;
   }
 
   getId(){
@@ -69,8 +70,12 @@ class BaseElement {
     return this.children;
   }
 
+  /**
+   * @param {BaseElement} child
+   * */
   appendChild(child){
     this.children.push(child);
+    child.parent = this;
     if(this.component && typeof this.component.setChildren === 'function'){
       this.component.setChildren(this.children);
     }
@@ -78,6 +83,34 @@ class BaseElement {
 
   insertAfter(childId, child){
 
+  }
+
+  /**
+   * @param {BaseElement | string} child
+   * @throws
+   * */
+  deleteChild(child){
+    let childExist = false;
+    let childId ;
+    if(typeof child === 'string'){
+      childId = child;
+    } else if(child instanceof BaseElement){
+      childId = child.getId();
+    } else {
+      throw 'Delete Child can only by ia or Instance';
+    }
+    let newChildren = this.children.filter(item => {
+      if(item.getId() === childId){
+        childExist = true;
+        return false;
+      }
+      return true
+    });
+    if(!childExist){
+      throw 'Element not Found for Delete'
+    }
+    this.children = newChildren;
+    this.component.setChildren(this.children);
   }
 
   getSettings(settingName){
