@@ -435,11 +435,6 @@ button{
   right: 0;
   bottom: 0;
   z-index: 9999;
-  -webkit-transition-duration: .3s;
-  -moz-transition-duration: .3s;
-  -ms-transition-duration: .3s;
-  -o-transition-duration: .3s;
-  transition-duration: .3s;
   outline: 2px solid transparent;
   display: none;
   pointer-events: none;
@@ -451,6 +446,11 @@ button{
 }
 .altrp-element_section:hover{
   & > .overlay{
+    -webkit-transition-duration: .3s;
+    -moz-transition-duration: .3s;
+    -ms-transition-duration: .3s;
+    -o-transition-duration: .3s;
+    transition-duration: .3s;
     outline: 2px solid $turquoise;
     & .overlay-settings{
       transform: translate(-50% , 0);

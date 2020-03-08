@@ -1,7 +1,12 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
+import {editorSetCurrentElement} from "../helpers";
 
 class ElementWrapper extends Component {
+  constructor(props){
+    super(props);
+    this.chooseElement = this.chooseElement.bind(this);
+  }
 
   render() {
     let classes = `altrp-element altrp-element${this.props.element.getId()} altrp-element_${this.props.element.getType()}`;
@@ -15,7 +20,9 @@ class ElementWrapper extends Component {
       <div className={overlayClasses}>
         <div className="overlay-settings">
           <button className="overlay-settings__button overlay-settings__button_add " title="Add Section"/>
-          <button className="overlay-settings__button overlay-settings__button_edit " title={editText}/>
+          <button className="overlay-settings__button overlay-settings__button_edit "
+                  onClick={this.chooseElement}
+                  title={editText}/>
           <button className="overlay-settings__button overlay-settings__button_duplicate " title={duplicateText}/>
           <button className="overlay-settings__button overlay-settings__button_delete " title="Delete Section"/>
         </div>
@@ -28,6 +35,10 @@ class ElementWrapper extends Component {
       }
     </div>
 
+  }
+
+  chooseElement() {
+    editorSetCurrentElement(this.props.element)
   }
 }
 

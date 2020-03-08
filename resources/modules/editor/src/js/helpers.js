@@ -42,3 +42,7 @@ export function getEditor() {
 export function isEditor() {
   return !!(window.altrpEditor || window.parent.altrpEditor);
 }
+
+export function editorSetCurrentElement(element){
+  getEditor().modules.templateDataStorage.setCurrentElement(element);
+}
