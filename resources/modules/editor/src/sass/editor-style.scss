@@ -439,11 +439,13 @@ button{
   display: none;
   pointer-events: none;
 }
+.altrp-element.altrp-element_current,
 .altrp-element:hover{
   & .overlay{
     display: block;
   }
 }
+.altrp-element_section.altrp-element_current,
 .altrp-element_section:hover{
   & > .overlay{
     outline: 2px solid $turquoise;
@@ -547,6 +549,7 @@ button{
     }
   }
 }
+.altrp-element_column.altrp-element_current,
 .altrp-element_column:hover{
   & > .overlay {
     outline: 1px dashed #6d7882;
@@ -572,6 +575,7 @@ button{
     }
   }
 }
+.altrp-element_widget.altrp-element_current,
 .altrp-element_widget:hover{
   & > .overlay {
     outline: 1px solid $turquoise;

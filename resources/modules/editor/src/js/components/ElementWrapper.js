@@ -12,7 +12,7 @@ class ElementWrapper extends Component {
   render() {
     let classes = `altrp-element altrp-element${this.props.element.getId()} altrp-element_${this.props.element.getType()}`;
     let overlayClasses = `overlay`;
-    if (this.props.element.getType() === 'widget' && this.props.currentElement === this.props.element) {
+    if (this.props.currentElement === this.props.element) {
       classes += ' altrp-element_current';
     }
     let editText = `Edit ${this.props.element.getTitle()}`;
