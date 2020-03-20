@@ -33,11 +33,13 @@ class RootElement extends BaseElement{
     this.addControl('text', {
       type: CONTROLLER_SWITCHER,
       label: 'Switcher Content',
+      default: 'Switcher Content'
     });
 
     this.addControl('number', {
       type: CONTROLLER_NUMBER,
       label: 'Number Content',
+      default: 'Number Content'
     });
 
 

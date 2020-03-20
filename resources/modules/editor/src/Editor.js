@@ -22,6 +22,7 @@ class Editor extends Component {
 
   constructor(props) {
     super(props);
+    window.altrpEditor = this;
     this.state = {
       activePanel: 'widgets',
       // activePanel: 'settings',
@@ -29,11 +30,11 @@ class Editor extends Component {
     this.openPageSettings = this.openPageSettings.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
     this.showWidgetsPanel = this.showWidgetsPanel.bind(this);
-    window.altrpEditor = this;
   }
 
   initModules() {
     this.modules = new Modules(this);
+    this.modules.loaded();
   }
 
   showWidgetsPanel() {
@@ -47,7 +48,9 @@ class Editor extends Component {
       activePanel: 'settings'
     })
   }
-
+  endLoading(){
+    console.log('editor loaded');
+  }
   componentDidMount() {
     this.initModules();
   }

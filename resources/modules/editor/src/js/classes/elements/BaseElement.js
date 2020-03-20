@@ -38,9 +38,9 @@ class BaseElement {
   }
 
   toObject(){
-    if(!this.component){
-      throw 'Element Must Composites with Some Component';
-    }
+    // if(!this.component){
+    //   throw 'Element Must Composites with Some Component';
+    // }
     let data = {data:{}};
     data.id = this.getId();
     data.name = this.getName();
@@ -261,6 +261,13 @@ class BaseElement {
 
   isEditor(){
     return isEditor();
+  }
+  getIds(){
+    let ids = [this.getId()];
+    this.children.map(item => {
+      ids.push(item.getIds())
+    });
+    return ids;
   }
 }
 

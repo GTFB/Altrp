@@ -14,23 +14,17 @@ class TemplateDataStorage extends BaseModule{
     this.elementsIds = [];
   }
 
-  load(){
-    let templateId = getTemplateId();
-    if(! templateId){
-      this.rootElement = new RootElement();
-      this.elementsIds.push(this.rootElement.getId());
-      this.setCurrentRootElement();
-    }
-  }
-
   replaceAll(element) {
     if(! element instanceof RootElement ){
       throw 'Expect Root Element as root element;)';
     }
     this.rootElement = element;
+    this.elementsIds = element.getIds();
+    this.setCurrentRootElement();
   }
 
   getTemplateData() {
+    console.log(this.rootElement);
     return this.rootElement.toObject();
   }
 
@@ -45,6 +39,7 @@ class TemplateDataStorage extends BaseModule{
       throw 'Only Base Element Can Be Set as Default'
     }
     store.dispatch(setCurrentElement(element));
+    console.log('set');
     return this.currentElement = element;
   }
 

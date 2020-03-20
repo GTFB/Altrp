@@ -1,6 +1,7 @@
 import BaseModule from "./BaseModule";
 import Resource from "../Resource";
-import {getTemplateId} from "../../helpers";
+import {getEditor, getTemplateId} from "../../helpers";
+import RootElement from "../elements/RootElement";
 
 class SaveImportModule extends BaseModule{
 
@@ -23,12 +24,13 @@ class SaveImportModule extends BaseModule{
       }).then(templateData => {
         let parsedData = this.modules.elementsFabric.parseData(templateData.template.data.children[0]);
         console.log(parsedData);
+        getEditor().endLoading();
       });
-
-      // let templateData = this.modules.templateDataStorage.getTemplateData();
-      // console.log(templateData);
-      // this.resource.create();
-
+    } else {
+      getEditor().modules.templateDataStorage.replaceAll(new RootElement());
+      let templateData = getEditor().modules.templateDataStorage.getTemplateData();
+      console.log(templateData);
+      // this.resource.create()
     }
   }
 
