@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import DynamicIcon from '../../../svgs/dynamic.svg'
+import controllerDecorate from "../../decorators/controller";
 
 class TextController extends Component {
   constructor(props){
@@ -13,18 +14,16 @@ class TextController extends Component {
     }
     value = value || '';
     this.state = {value};
-
-  }
-  componentDidUpdate(){
-    this.props.currentElement.setSettingValue(this.props.controlId, this.state.value);
-  }
-  componentDidMount(){
-    // this.props.currentElement.setSettingValue(this.props.controlId, this.state.value);
+    controllerDecorate(this);
   }
   changeValue(e){
     this.setState({
       value:e.target.value
-    })
+    });
+    this.props.currentElement.setSettingValue(this.props.controlId, e.target.value);
+  }
+  getDefaultValue(){
+    return '';
   }
   render(){
 

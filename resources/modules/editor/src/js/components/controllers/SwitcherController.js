@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
+import controllerDecorate from "../../decorators/controller";
 
 class SwitcherController extends Component {
   constructor(props){
@@ -12,18 +13,16 @@ class SwitcherController extends Component {
     }
     value = value || false;
     this.state = {value};
-
-  }
-  componentDidUpdate(){
-    this.props.currentElement.setSettingValue(this.props.controlId, this.state.value);
-  }
-  componentDidMount(){
-    // this.props.currentElement.setSettingValue(this.props.controlId, this.state.value);
+    controllerDecorate(this);
   }
   toggle(){
     this.setState({
       value:!this.state.value
-    })
+    });
+    this.props.currentElement.setSettingValue(this.props.controlId, !this.state.value);
+  }
+  getDefaultValue(){
+    return false;
   }
   render(){
     let switcherClasses=`control-switcher control-switcher_${ this.state.value ? 'on' : 'off' }`;

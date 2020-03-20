@@ -52,7 +52,7 @@ class ControllersManager {
 
 
   getElementControl(elementName, controlId){
-    let controls = this.getControls(elementName);
+    let controls = {...this.getControls(elementName)};
     let control;
     control = this._cache.controls[elementName + controlId];
     if(control){
