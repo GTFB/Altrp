@@ -1,4 +1,4 @@
-import {TAB_CONTENT, TAB_STYLE} from "../modules/ControllersManager";
+import {CONTROLLER_TEXT, CONTROLLER_TEXTAREA, TAB_CONTENT, TAB_STYLE} from "../modules/ControllersManager";
 import {getTemplateDataStorage, isEditor, getEditor} from "../../helpers";
 
 class BaseElement {
@@ -185,7 +185,10 @@ class BaseElement {
      if(this.controlsIds.indexOf(sectionId) !== -1){
        throw 'Control with id' + sectionId + ' Already Exists in ' + this.getName();
      }
-    this.currentSection = {...args, sectionId};
+     let defaults = {
+       tab: TAB_CONTENT,
+     };
+     this.currentSection = {...defaults, ...args, sectionId};
      this.controlsIds.push(sectionId);
    }
 
@@ -211,7 +214,11 @@ class BaseElement {
 
     let section = this._getCurrentSection();
 
-    section.controls.push({...args, controlId});
+    let defaults = {
+      type: CONTROLLER_TEXT,
+    };
+
+    section.controls.push({...defaults, ...args, controlId});
     window.controllersManager.setControlsCache(this.getName() + controlId, {...args, controlId});
     this.controlsIds.push(controlId);
   }

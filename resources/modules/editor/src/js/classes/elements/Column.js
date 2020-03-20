@@ -12,6 +12,13 @@ class Column  extends BaseElement {
     return 'column';
   }
   _registerControls(){
+    this.startControlSection('content',{
+      label: 'Column'
+    });
+    this.addControl('text',{
+      label: 'Column'
+    });
+    this.endControlSection();
 
   }
 

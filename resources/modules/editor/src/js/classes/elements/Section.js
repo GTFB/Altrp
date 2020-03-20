@@ -13,7 +13,13 @@ class Section extends BaseElement{
     return 'section';
   }
   _registerControls(){
-
+    this.startControlSection('content',{
+      label: 'Section'
+    });
+    this.addControl('text',{
+      label: 'Section',
+    });
+    this.endControlSection();
   }
 
   appendColumn(newColumn) {

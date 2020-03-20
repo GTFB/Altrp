@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {editorSetCurrentElement} from "../helpers";
+import {editorSetCurrentElement, getEditor} from "../helpers";
 
 class ElementWrapper extends Component {
   constructor(props){
@@ -43,6 +43,7 @@ class ElementWrapper extends Component {
 
   chooseElement() {
     this.props.element.setElementAsCurrent();
+    getEditor().showSettingsPanel();
   }
 
   deleteElement() {

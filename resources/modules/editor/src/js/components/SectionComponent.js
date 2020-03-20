@@ -10,6 +10,7 @@ class SectionComponent extends Component {
     }
     this.state={
       children: props.children,
+      settings: props.element.getSettings()
     };
     props.element.component = this;
     decorate(this);
