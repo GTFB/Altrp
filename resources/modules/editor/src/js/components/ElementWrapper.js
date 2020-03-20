@@ -42,7 +42,7 @@ class ElementWrapper extends Component {
   }
 
   chooseElement() {
-    editorSetCurrentElement(this.props.element);
+    this.props.element.setElementAsCurrent();
   }
 
   deleteElement() {

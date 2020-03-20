@@ -46,3 +46,9 @@ export function isEditor() {
 export function editorSetCurrentElement(element){
   getEditor().modules.templateDataStorage.setCurrentElement(element);
 }
+/**
+ * @return {TemplateDataStorage}
+ * */
+export function getTemplateDataStorage() {
+  return window.altrpEditor.modules.templateDataStorage
+}

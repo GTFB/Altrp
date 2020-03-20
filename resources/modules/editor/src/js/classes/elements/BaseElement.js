@@ -1,5 +1,5 @@
 import {TAB_CONTENT, TAB_STYLE} from "../modules/ControllersManager";
-import {isEditor} from "../../helpers";
+import {getTemplateDataStorage, isEditor, getEditor} from "../../helpers";
 
 class BaseElement {
 
@@ -102,6 +102,7 @@ class BaseElement {
     let newChildren = this.children.filter(item => {
       if(item.getId() === childId){
         childExist = true;
+        item.beforeDelete();
         return false;
       }
       return true
@@ -111,6 +112,17 @@ class BaseElement {
     }
     this.children = newChildren;
     this.component.setChildren(this.children);
+
+  }
+
+  beforeDelete() {
+    this.children.map(item => {
+      item.beforeDelete();
+    });
+    if(getTemplateDataStorage().getCurrentElement().getId() === this.getId()){
+      getTemplateDataStorage().setCurrentRootElement();
+      getEditor().showWidgetsPanel();
+    }
   }
 
   getSettings(settingName){
