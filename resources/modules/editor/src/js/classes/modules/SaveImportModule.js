@@ -23,14 +23,14 @@ class SaveImportModule extends BaseModule{
         return res.json()
       }).then(templateData => {
         let parsedData = this.modules.elementsFabric.parseData(templateData.template.data.children[0]);
-        console.log(parsedData);
+        getEditor().modules.templateDataStorage.replaceAll(parsedData);
         getEditor().endLoading();
       });
     } else {
       getEditor().modules.templateDataStorage.replaceAll(new RootElement());
       let templateData = getEditor().modules.templateDataStorage.getTemplateData();
       console.log(templateData);
-      // this.resource.create()
+      this.resource.create(templateData)
     }
   }
 

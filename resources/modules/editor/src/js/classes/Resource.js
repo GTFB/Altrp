@@ -38,15 +38,15 @@ class Resource {
    * @return {Promise}
    * */
   create(data){
-    if( this.routes.post === undefined ){
-      throw '"post" url expected in ' + this.constructor.name;
+    if( this.routes.create === undefined ){
+      throw '"create" url expected in ' + this.constructor.name;
     }
 
     let options = {
       method: 'post',
       data,
     };
-    return fetch(this.routes.post, options);
+    return fetch(this.routes.create, options);
   }
 }
 

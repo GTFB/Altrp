@@ -600,3 +600,12 @@ button{
     }
   }
 }
+
+.overlay-settings__button{
+  & svg{
+    transform: scale(.6,.6);
+    & path{
+      fill: #fff;
+    }
+  }
+}

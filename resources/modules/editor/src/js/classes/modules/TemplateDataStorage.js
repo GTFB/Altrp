@@ -24,7 +24,6 @@ class TemplateDataStorage extends BaseModule{
   }
 
   getTemplateData() {
-    console.log(this.rootElement);
     return this.rootElement.toObject();
   }
 
@@ -39,7 +38,6 @@ class TemplateDataStorage extends BaseModule{
       throw 'Only Base Element Can Be Set as Default'
     }
     store.dispatch(setCurrentElement(element));
-    console.log('set');
     return this.currentElement = element;
   }
 

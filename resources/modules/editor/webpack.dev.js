@@ -22,6 +22,14 @@ module.exports = merge(common, {
         } );
         // res.json({});
       });
+      app.post('/admin/ajax/templates/create', function(req, res) {
+        fs.readFile( './data.json', (err, data) => {
+          if (err) throw err;
+          let _data = JSON.parse( data.toString() );
+          res.json({template:_data.new_template, _:app});
+        } );
+        // res.json({});
+      });
       //content for editor window
       app.get('/admin/editor-content', function(req, res) {
         fs.readFile( '../../views/editor-content.blade.php', (err, data) => {

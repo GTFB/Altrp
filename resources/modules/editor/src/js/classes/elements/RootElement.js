@@ -39,7 +39,6 @@ class RootElement extends BaseElement{
     this.addControl('number', {
       type: CONTROLLER_NUMBER,
       label: 'Number Content',
-      default: 'Number Content'
     });
 
 

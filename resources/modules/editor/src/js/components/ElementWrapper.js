@@ -1,6 +1,12 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import {editorSetCurrentElement, getEditor} from "../helpers";
+import EditIcon from '../../svgs/edit.svg';
+import DeleteIcon from '../../svgs/delete.svg';
+import DotsIcon from '../../svgs/dots_section.svg';
+import ColumnIcon from '../../svgs/columns.svg';
+import AddIcon from '../../svgs/add.svg';
+import DuplicateIcon from '../../svgs/duplicate.svg';
 
 class ElementWrapper extends Component {
   constructor(props){
@@ -18,17 +24,37 @@ class ElementWrapper extends Component {
     let editText = `Edit ${this.props.element.getTitle()}`;
     let duplicateText = `Duplicate ${this.props.element.getTitle()}`;
     let deleteText = `Delete ${this.props.element.getTitle()}`;
+    let _EditIcon = EditIcon;
+    console.log(_EditIcon);
+    switch (this.props.element.getType()){
+      case 'section':{
+        _EditIcon = DotsIcon;
+      }
+      break;
+      case 'column':{
+        _EditIcon = ColumnIcon;
+      }
+      break;
+    }
     return <div className={classes}>
       <div className={overlayClasses}>
         <div className="overlay-settings">
-          <button className="overlay-settings__button overlay-settings__button_add " title="Add Section"/>
+          <button className="overlay-settings__button overlay-settings__button_add " title="Add Section">
+            <AddIcon className="icon"/>
+          </button>
           <button className="overlay-settings__button overlay-settings__button_edit "
                   onClick={this.chooseElement}
-                  title={editText}/>
-          <button className="overlay-settings__button overlay-settings__button_duplicate " title={duplicateText}/>
+                  title={editText}>
+            <_EditIcon className="icon"/>
+          </button>
+          <button className="overlay-settings__button overlay-settings__button_duplicate " title={duplicateText}>
+            <DuplicateIcon className="icon"/>
+          </button>
           <button className="overlay-settings__button overlay-settings__button_delete "
                   onClick={this.deleteElement}
-                  title={deleteText}/>
+                  title={deleteText}>
+            <DeleteIcon className="icon"/>
+          </button>
         </div>
       </div>
       {
