@@ -8,7 +8,6 @@ import EditorWindow from "./js/components/EditorWindow";
 import DesktopIcon from './svgs/desktop.svg';
 import Logo from './svgs/logo.svg';
 import Navigation from './svgs/navigation.svg';
-import Chevron from './svgs/chevron.svg';
 import History from './svgs/history.svg';
 import Preview from './svgs/preview.svg';
 import Settings from './svgs/settings.svg';
@@ -17,6 +16,8 @@ import Hamburger from './svgs/hamburger.svg';
 import {Provider} from 'react-redux'
 import store from '../src/js/store/store'
 import HistoryPanel from "./js/components/HistoryPanel";
+import UpdateButton from "./js/components/UpdateButton";
+import {CONSTANTS} from "./js/helpers";
 
 class Editor extends Component {
 
@@ -30,8 +31,12 @@ class Editor extends Component {
     this.openPageSettings = this.openPageSettings.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
     this.showWidgetsPanel = this.showWidgetsPanel.bind(this);
+    store.subscribe(this.templateStatus.bind(this));
   }
-
+  templateStatus(){
+    let templateStatus = store.getState().templateStatus.status;
+    this.setState({...this.state, templateStatus})
+  }
   initModules() {
     this.modules = new Modules(this);
     this.modules.loaded();
@@ -62,6 +67,10 @@ class Editor extends Component {
 
   render() {
     let settingsActive = '';
+    let templateClasses = 'editor ';
+    if(this.state.templateStatus === CONSTANTS.TEMPLATE_SAVING){
+      templateClasses += ' editor_saving';
+    }
     if(store.getState().currentElement.currentElement.getType &&
         store.getState().currentElement.currentElement.getType() === 'root-element' &&
       this.state.activePanel === 'settings'
@@ -70,7 +79,7 @@ class Editor extends Component {
     }
     return (
         <Provider store={store}>
-            <div className="editor">
+            <div className={templateClasses}>
               <div className="left-panel">
                 <div className="editor-top-panel">
                   <button className="btn btn_hamburger"
@@ -109,14 +118,7 @@ class Editor extends Component {
                   <button className="btn ">
                     <Preview className="icon"/>
                   </button>
-                  <div className="control-group d-flex">
-                    <button className="btn btn_disabled btn_grey font_montserrat font_500">
-                      UPDATE
-                    </button>
-                    <button className="btn btn_grey">
-                      <Chevron className="icon"/>
-                    </button>
-                  </div>
+                  <UpdateButton/>
                 </div>
               </div>
               <div className="right-panel">

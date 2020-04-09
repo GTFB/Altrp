@@ -22,20 +22,18 @@ class Resource {
    * @return {Promise}
    * */
   get(id){
-    if(! id ){
+    if(! id){
       throw 'Get only by "id"';
     }
 
     let options = {
       method: 'get',
-      body: JSON.stringify({_token}),
       headers: {
         'Content-Type': 'application/json'
       },
     };
 
     let url = this.route + '/' + id;
-    console.log(url);
     return fetch(url, options);
   }
 

@@ -2,7 +2,9 @@ import React, {Component} from "react";
 import PlusIcon from '../../svgs/plus.svg'
 import FolderIcon from '../../svgs/folder.svg'
 import DropTarget from "./DropTarget";
-import {getEditor} from "../helpers";
+import {CONSTANTS, getEditor} from "../helpers";
+import store from '../store/store';
+import {changeTemplateStatus} from "../store/template-status/actions";
 
 class NewSection extends Component {
 
@@ -30,6 +32,7 @@ class NewSection extends Component {
     e.preventDefault();
     e.stopPropagation();
     getEditor().modules.templateDataStorage.addWidgetInSection(newWidgetName);
+    store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
     return false;
   }
 

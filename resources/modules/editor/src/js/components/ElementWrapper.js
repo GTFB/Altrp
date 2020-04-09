@@ -25,7 +25,6 @@ class ElementWrapper extends Component {
     let duplicateText = `Duplicate ${this.props.element.getTitle()}`;
     let deleteText = `Delete ${this.props.element.getTitle()}`;
     let _EditIcon = EditIcon;
-    console.log(_EditIcon);
     switch (this.props.element.getType()){
       case 'section':{
         _EditIcon = DotsIcon;

@@ -6,15 +6,24 @@ import NewSection from "./js/components/NewSection";
 import {getEditor} from "./js/helpers";
 import {Provider} from 'react-redux'
 import store from '../src/js/store/store'
-
+import RootElement from "./js/classes/elements/RootElement";
 
 class EditorContent extends Component {
   constructor(props) {
     super(props);
     this.state = {};
     this.editorWindow = React.createRef();
-
+    store.subscribe(this.currentElementListener.bind(this));
     window.altrpEditorContent = this;
+  }
+
+  currentElementListener(data){
+    let currentElement = store.getState().currentElement.currentElement;
+    if(currentElement instanceof RootElement && currentElement !== this.state.rootElement){
+      this.setState({
+        rootElement: currentElement,
+      })
+    }
   }
 
   // log(e){

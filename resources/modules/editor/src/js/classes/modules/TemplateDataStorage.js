@@ -30,8 +30,8 @@ class TemplateDataStorage extends BaseModule{
     let data = {};
 
     data.data = this.getTemplateData();
-    data.title = 'test';
-    data.name = 'test';
+    data.title = this.title || 'testtitle';
+    data.name = this.name || 'testname';
 
     return data;
   }
@@ -74,6 +74,7 @@ class TemplateDataStorage extends BaseModule{
     newColumn.appendWidget(newWidget);
     newSection.appendColumn(newColumn);
     this.rootElement.appendNewSection(newSection);
+    console.log(this.rootElement);
     this.setCurrentElement(newWidget);
     getEditor().showSettingsPanel();
   }

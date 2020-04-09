@@ -53,6 +53,8 @@ export function getTemplateDataStorage() {
   return window.altrpEditor.modules.templateDataStorage
 }
 
-function getToken() {
-
-}
+export const CONSTANTS = {
+  TEMPLATE_UPDATED: 'TEMPLATE_UPDATED',
+  TEMPLATE_NEED_UPDATE: 'TEMPLATE_NEED_UPDATE',
+  TEMPLATE_SAVING: 'TEMPLATE_SAVING',
+};

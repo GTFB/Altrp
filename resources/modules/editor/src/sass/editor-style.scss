@@ -4,6 +4,9 @@
 .editor {
   display: flex;
   min-height: 100vh;
+  &_saving{
+    pointer-events: none;
+  }
 }
 .editor-content-body{
 
@@ -47,6 +50,10 @@ button{
   padding: 10px 15px;
   border: none;
   cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .btn{
   &_grey{
@@ -55,6 +62,7 @@ button{
   &_disabled{
     background-color: $button-grey;
     cursor: default;
+    pointer-events: none;
   }
 }
 .left-panel-main{
@@ -99,6 +107,9 @@ button{
     height: 20px;
     padding: 0 5px;
     font-size: 10px;
+    &.btn_active{
+      background-color: $green;
+    }
   }
   .control-group{
     margin-left: 10px;
@@ -161,6 +172,10 @@ button{
 .right-panel{
   flex-grow: 1;
   display: flex;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .editor-window {
   flex-grow: 1;

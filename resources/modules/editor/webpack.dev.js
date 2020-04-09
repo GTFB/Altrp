@@ -21,7 +21,8 @@ module.exports = merge(common, {
           path: req.url,
           method: 'GET',
         };
-        http.request(options, (data ) =>{
+        console.log('http://altrp.nz' + req.url);
+        http.get('http://altrp.nz' + req.url, (data ) =>{
           let bodyChunks = [];
           data.on('data', function(chunk) {
             // You can process streamed parts here...
@@ -30,15 +31,17 @@ module.exports = merge(common, {
             let body = Buffer.concat(bodyChunks);
             res.end(body);
           })
+        }).on('error', err=>{
+          console.error(err.message);
         });
       });
       app.post('/admin/ajax/templates', function(req, res) {
         let options = {
-          host: 'altrp.nz',
+          hostname: 'altrp.nz',
           path: req.url,
           method: 'POST',
         };
-        console.log(options);
+        console.log( req.url);
         http.request(options, (data ) =>{
           let bodyChunks = [];
           console.log(bodyChunks);
@@ -56,7 +59,7 @@ module.exports = merge(common, {
       });
       app.put('/admin/ajax/templates/:id', function(req, res) {
         let options = {
-          host: 'altrp.nz',
+          hostname: 'altrp.nz',
           path: req.url,
           method: 'PUT',
         };
