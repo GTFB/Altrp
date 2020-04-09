@@ -176,6 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         
         Laratrust\LaratrustServiceProvider::class,
+        Laravel\Passport\PassportServiceProvider::class,
 
     ],
 

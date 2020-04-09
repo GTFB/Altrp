@@ -17,7 +17,24 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
+Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], function () {
+    
+    Route::group(['prefix' => 'ajax'], function () {
+        Route::get('/templates', "Constructor\Templates@getTemplates");
+        Route::get('/templates/{template}', "Constructor\Templates@getTemplate");
+        Route::post('/templates', "Constructor\Templates@insert");
+        Route::put('/templates/{template}', "Constructor\Templates@update");
+        Route::delete('/templates/{template}', "Constructor\Templates@delete");
+        
+        Route::get('/global-elements', "Constructor\GlobalElements@getElements");
+        Route::get('/global-elements/{element}', "Constructor\GlobalElements@getElement");
+        Route::post('/global-elements', "Constructor\GlobalElements@insert");
+        Route::put('/global-elements/{element}', "Constructor\GlobalElements@update");
+        Route::delete('/global-elements/{element}', "Constructor\GlobalElements@trashed");
+        
+    });
+    
+});
 
 Route::group(['prefix' => 'users'], function () {
     
@@ -33,11 +50,27 @@ Route::group(['prefix' => 'users'], function () {
     Route::put('/roles/{role}', "Users\Roles@update");
     Route::delete('/roles/{role}', "Users\Roles@delete");
     
+    Route::get('/roles/{role}/permissions', "Users\Roles@getPermissions");
+    Route::post('/roles/{role}/permissions', "Users\Roles@attachPermission");
+    Route::delete('/roles/{role}/permissions', "Users\Roles@detachPermission");
+    
     Route::get('/users', "Users\Users@getUsers");
     Route::get('/users/{user}', "Users\Users@getUser");
     Route::post('/users', "Users\Users@insert");
     Route::put('/users/{user}', "Users\Users@update");
     Route::delete('/users/{user}', "Users\Users@delete");
+    
+    Route::get('/users/{user}/permissions', "Users\Users@getPermissions");
+    Route::post('/users/{user}/permissions', "Users\Users@attachPermission");
+    Route::delete('/users/{user}/permissions', "Users\Users@detachPermission");
+    
+    Route::get('/users/{user}/roles', "Users\Users@getRoles");
+    Route::post('/users/{user}/roles', "Users\Users@attachRole");
+    Route::delete('/users/{user}/roles', "Users\Users@detachRole");
+    
+    Route::get('/users/{user}/usermeta', "Users\UsersMeta@getUserMeta");
+    Route::post('/users/{user}/usermeta', "Users\UsersMeta@saveUserMeta");
+    Route::delete('/users/{user}/roles', "Users\Users@detachRole");
     
     //Route::get('/permissions/{permission}', "Users\Permissions@getPermission");
     
