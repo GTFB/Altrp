@@ -30,9 +30,7 @@ class Templates extends ApiController
         
         $id = $request->template;
         $template = Template::find($id);
-        
-        $template->history;
-        
+
         if(!$template) {
             return response()->json(trans("responses.not_found.template"), 404, [],JSON_UNESCAPED_UNICODE);
         }
@@ -47,32 +45,21 @@ class Templates extends ApiController
      * @return type
      */
     function insert(ApiRequest $request) {
-        
+
         $request->validate([
             "name" => ["string", "required"],
             "title" => ["string", "required"],
-            "data" => ["string", "required"],
-            "type" => ["integer", "required"],
+            "data" => ["array", "required"],
         ]);
         
         $template = new Template();
         $template->name = $request->name;
         $template->title = $request->title;
-        $template->data = $request->data;
-        $template->type = $request->type; //1
+        $template->data = json_encode( $request->data );
+        $template->type = 'template'; //1
         $template->user_id = auth()->user()->id;
         
         if($template->save()){
-            
-            $history = $template->history()->create([
-                "name" => $template->name,
-                "title" => $template->title,
-                "data" => $template->data,
-                "type" => $template->type,
-                "user_id" => auth()->user()->id,
-                "template_id" => $template->id
-            ]);
-            
             return response()->json($template, 200, [],JSON_UNESCAPED_UNICODE);
         }
         
@@ -87,40 +74,35 @@ class Templates extends ApiController
      */
     function update(ApiRequest $request) {
         
-        $request->validate([
-            "name" => ["string", "required"],
-            "title" => ["string", "required"],
-            "data" => ["string", "required"],
-            "type" => ["integer", "required"],
-        ]);
-        
-        $template = Template::find($request->template);
-        
-        if(!$template) {
-            return response()->json(trans("responses.not_found.template"), 404, [],JSON_UNESCAPED_UNICODE);
-        }
-        
-        $template->name = $request->name;
-        $template->title = $request->title;
-        $template->data = $request->data;
-        $template->type = $request->type; //1
-        $template->user_id = auth()->user()->id;
-        
-        if($template->save()){
-            
-            $history = $template->history()->create([
-                "name" => $template->name,
-                "title" => $template->title,
-                "data" => $template->data,
-                "type" => $template->type,
-                "user_id" => auth()->user()->id,
-                "template_id" => $template->id
-            ]);
-            
-            return response()->json($template, 200, [],JSON_UNESCAPED_UNICODE);
-        }
-        
+      $request->validate([
+        "name" => ["string", "required"],
+        "title" => ["string", "required"],
+        "data" => ["array", "required"],
+      ]);
+
+      $old_template = Template::find( $request->template );
+
+      if( ! $old_template ) {
+        return response()->json(trans("responses.not_found.template"), 404, [],JSON_UNESCAPED_UNICODE);
+      }
+
+      $review = new Template( $old_template->toArray() );
+      $review->parent_template = $old_template->id;
+      $review->type = 'review';
+      if( ! $review->save() ){
         return response()->json(trans("responses.dberror"), 400, [],JSON_UNESCAPED_UNICODE);
+      }
+      $old_template->name = $request->name;
+      $old_template->title = $request->title;
+      $old_template->data = json_encode( $request->data );
+      $old_template->type = 'template'; //1
+      $old_template->user_id = auth()->user()->id;
+
+      if( $old_template->save() ){
+          return response()->json($old_template, 200, [],JSON_UNESCAPED_UNICODE);
+      }
+
+      return response()->json(trans("responses.dberror"), 400, [],JSON_UNESCAPED_UNICODE);
         
     }
     

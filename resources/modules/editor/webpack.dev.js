@@ -8,27 +8,68 @@ module.exports = merge(common, {
   mode: 'development',
   devtool: 'inline-source-map',
   devServer: {
+    disableHostCheck: true,
     contentBase: path.join(__dirname, "public/"),
     port: 3000,
     publicPath: "http://localhost:3000/editor/",
     hotOnly: true,
     before: function(app, server, compiler) {
       //json data for template import export
-      app.get('/admin/ajax/template/:id', function(req, res) {
-        fs.readFile( './data.json', (err, data) => {
-          if (err) throw err;
-          let _data = JSON.parse( data.toString() );
-          res.json({template:_data.template, _:app});
-        } );
-        // res.json({});
+      app.get('/admin/ajax/templates/:id', function(req, res) {
+        let options = {
+          host: 'altrp.nz',
+          path: req.url,
+          method: 'GET',
+        };
+        http.request(options, (data ) =>{
+          let bodyChunks = [];
+          data.on('data', function(chunk) {
+            // You can process streamed parts here...
+            bodyChunks.push(chunk);
+          }).on('end', function() {
+            let body = Buffer.concat(bodyChunks);
+            res.end(body);
+          })
+        });
       });
-      app.post('/admin/ajax/templates/create', function(req, res) {
-        fs.readFile( './data.json', (err, data) => {
-          if (err) throw err;
-          let _data = JSON.parse( data.toString() );
-          res.json({template:_data.new_template, _:app});
-        } );
-        // res.json({});
+      app.post('/admin/ajax/templates', function(req, res) {
+        let options = {
+          host: 'altrp.nz',
+          path: req.url,
+          method: 'POST',
+        };
+        console.log(options);
+        http.request(options, (data ) =>{
+          let bodyChunks = [];
+          console.log(bodyChunks);
+          data.on('data', function(chunk) {
+            // You can process streamed parts here...
+            bodyChunks.push(chunk);
+            console.log(chunk);
+          }).on('end', function() {
+            let body = Buffer.concat(bodyChunks);
+            res.end(body);
+          })
+        }).on('error', err=>{
+          console.error(err.message);
+        });
+      });
+      app.put('/admin/ajax/templates/:id', function(req, res) {
+        let options = {
+          host: 'altrp.nz',
+          path: req.url,
+          method: 'PUT',
+        };
+        http.request(options, (data ) =>{
+          let bodyChunks = [];
+          data.on('data', function(chunk) {
+            // You can process streamed parts here...
+            bodyChunks.push(chunk);
+          }).on('end', function() {
+            let body = Buffer.concat(bodyChunks);
+            res.end(body);
+          })
+        });
       });
       //content for editor window
       app.get('/admin/editor-content', function(req, res) {

@@ -11,42 +11,79 @@ class Resource {
    * @member {string} routes.create
    * @member {string} routes.getAll
    */
-  constructor(routes){
+  constructor(data){
 
-    this.routes = routes;
+    this.route = data.route;
+    if(! this.route){
+      throw 'Нужен URL';
+    }
   }
   /**
    * @return {Promise}
    * */
   get(id){
-    if( this.routes.get === undefined ){
-      throw '"get" url expected in ' + this.constructor.name;
-    }
     if(! id ){
       throw 'Get only by "id"';
     }
 
     let options = {
       method: 'get',
+      body: JSON.stringify({_token}),
+      headers: {
+        'Content-Type': 'application/json'
+      },
     };
 
-    let url = this.routes.get.replace('{id}', id);
+    let url = this.route + '/' + id;
+    console.log(url);
     return fetch(url, options);
   }
 
   /**
    * @return {Promise}
    * */
-  create(data){
-    if( this.routes.create === undefined ){
-      throw '"create" url expected in ' + this.constructor.name;
-    }
-
+  post(data){
+    data._token = _token;
     let options = {
       method: 'post',
-      data,
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      },
     };
-    return fetch(this.routes.create, options);
+    return fetch(this.route, options);
+  }
+
+  /**
+   * @return {Promise}
+   * */
+  put(id, data){
+    data._token = _token;
+    let options = {
+      method: 'put',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    };
+    let url = this.route + '/' + id;
+    return fetch(url, options);
+  }
+  /**
+   * @return {Promise}
+   * */
+  delete(data){
+
+    let options = {
+      method: 'delete',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+
+    };
+    let url = this.route + '/' + id;
+    return fetch(url, options);
   }
 }
 

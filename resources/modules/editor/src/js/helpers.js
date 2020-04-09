@@ -52,3 +52,7 @@ export function editorSetCurrentElement(element){
 export function getTemplateDataStorage() {
   return window.altrpEditor.modules.templateDataStorage
 }
+
+function getToken() {
+
+}

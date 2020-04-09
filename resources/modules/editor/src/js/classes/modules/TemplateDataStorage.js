@@ -26,6 +26,15 @@ class TemplateDataStorage extends BaseModule{
   getTemplateData() {
     return this.rootElement.toObject();
   }
+  getTemplateDataForSave(){
+    let data = {};
+
+    data.data = this.getTemplateData();
+    data.title = 'test';
+    data.name = 'test';
+
+    return data;
+  }
 
   setCurrentRootElement(){
     this.currentElement = this.rootElement;

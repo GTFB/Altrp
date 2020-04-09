@@ -10,6 +10,9 @@
   <title>Builder</title>
 
   <!-- Scripts -->
+  <script>
+    let _token = '{{ csrf_token() }}';
+  </script>
   <script src="/modules/editor/editor.js" defer></script>
 
   <!-- Fonts -->
