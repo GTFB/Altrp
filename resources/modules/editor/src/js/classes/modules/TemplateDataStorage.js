@@ -74,7 +74,6 @@ class TemplateDataStorage extends BaseModule{
     newColumn.appendWidget(newWidget);
     newSection.appendColumn(newColumn);
     this.rootElement.appendNewSection(newSection);
-    console.log(this.rootElement);
     this.setCurrentElement(newWidget);
     getEditor().showSettingsPanel();
   }

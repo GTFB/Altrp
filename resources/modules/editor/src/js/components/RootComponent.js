@@ -16,8 +16,7 @@ class RootComponent extends Component {
   render(){
     return<div className="sections-wrapper">{
       this.state.settings.number
-    }<br/>
-
+    }
       {this.state.children.map(
           section => <ElementWrapper key={section.getId()} component={section.componentClass} element={section}/>
       )}

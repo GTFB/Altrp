@@ -63,7 +63,6 @@ class SaveImportModule extends BaseModule{
       }
       return res.text()
     }).then(res=>{
-      console.log(res);
       store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
     }).catch(err=>{
       console.error(err);
