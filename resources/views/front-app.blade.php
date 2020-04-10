@@ -19,6 +19,6 @@
 <div id="front-app">
 
 </div>
-<script src="http://localhost:3001/bundle.js"></script>
+<script src="/modules/front-app/front-app.js"></script>
 </body>
 </html>

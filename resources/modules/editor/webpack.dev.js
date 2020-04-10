@@ -64,7 +64,7 @@ module.exports = merge(common, {
           method: 'PUT',
         };
         console.log(req);
-        res.send('ok');
+        res.send(['ok']);
         // http.request(options, (data ) =>{
         //   let bodyChunks = [];
         //   data.on('data', function(chunk) {

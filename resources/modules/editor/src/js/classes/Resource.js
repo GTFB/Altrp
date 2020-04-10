@@ -37,6 +37,21 @@ class Resource {
     let url = this.route + '/' + id;
     return fetch(url, options);
   }
+  /**
+   * @return {Promise}
+   * */
+  getAll(){
+
+    let options = {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    };
+
+    let url = this.route;
+    return fetch(url, options);
+  }
 
   /**
    * @return {Promise}

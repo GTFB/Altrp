@@ -1,20 +1,23 @@
 import React, {Component} from "react";
 import {hot} from "react-hot-loader";
-import {getTemplates} from "./js/helpers";
+import {getRoutes, getTemplates} from "./js/helpers";
 
 class FrontApp extends Component {
   constructor(props){
     super(props);
     window.frontApp = this;
-    this.getTemplates().then(Templates => {
-      this.templates = Templates.default
-    });
-    this.getTemplates().then(Templates => {
-    console.log(this.templates === Templates.default);
-    });
+    this.getTemplates();
+    this.getRoutes();
   }
   getTemplates(){
-    return getTemplates();
+    return getTemplates().then(res => {
+      this.templates = res.default
+    });
+  }
+  getRoutes(){
+    return getRoutes().then(res => {
+      this.routes = res.default;
+    });
   }
   onClick(){
     this.getTemplates().then(Templates => {

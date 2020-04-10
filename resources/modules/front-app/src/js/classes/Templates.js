@@ -1,7 +1,10 @@
 class Templates {
   constructor(){
-    console.log(this);
+  }
+  getTemplate(templateId){
+
   }
 }
+
 Templates.instance  = new Templates();
 export default Templates.instance

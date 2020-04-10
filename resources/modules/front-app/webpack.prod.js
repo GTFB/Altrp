@@ -30,6 +30,7 @@ module.exports = merge(common, {
   },
   output: {
     path: path.resolve(__dirname, "../../../public/modules/front-app/"),
+    publicPath: "/modules/front-app/",
     filename: "front-app.js"
   },
 
