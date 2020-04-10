@@ -41,13 +41,13 @@ class BaseElement {
     // if(!this.component){
     //   throw 'Element Must Composites with Some Component';
     // }
-    let data = {data:{}};
+    let data = {};
     data.id = this.getId();
     data.name = this.getName();
-    data.data.settings = this.settings;
+    data.settings = this.settings;
     let children = this.getChildrenForImport();
     if(children){
-      data.data.children = children;
+      data.children = children;
     }
     return data;
   }

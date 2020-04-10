@@ -20,10 +20,12 @@ class SaveImportModule extends BaseModule{
     // console.log(this.template_id);
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_SAVING));
     if(this.template_id){
-      this.resource.get(this.template_id).then(res => {
+      let res = this.resource.get(this.template_id).then(res => {
+        if(res.ok === false){
+          return Promise.reject(res.text(), res.status);
+        }
         return res.json()
       }).then(templateData => {
-        console.log(templateData);
         let data = JSON.parse(templateData.data);
         let parsedData = this.modules.elementsFabric.parseData(data);
         getEditor().modules.templateDataStorage.replaceAll(parsedData);
@@ -56,6 +58,9 @@ class SaveImportModule extends BaseModule{
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_SAVING));
     let templateData = getEditor().modules.templateDataStorage.getTemplateDataForSave();
     this.resource.put(this.template_id, templateData).then(res => {
+      if(res.ok === false){
+        return Promise.reject(res.text(), res.status);
+      }
       return res.json()
     }).then(res=>{
       console.log(res);

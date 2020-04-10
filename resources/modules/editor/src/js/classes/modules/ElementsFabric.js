@@ -8,13 +8,14 @@ class ElementsFabric extends BaseModule{
      * @member {BaseElement} element
      * */
     let element = new (elementsManager.getElementClass(object.name));
-    if( object.data.children && object.data.children.length ){
-      for( let child of object.data.children){
+    if( object.children && object.children.length ){
+      for( let child of object.children){
         children.push( this.parseData( child ) );
       }
     }
     element.id = object.id;
     element.children = children;
+    element.settings = object.settings;
     return element;
   }
 }

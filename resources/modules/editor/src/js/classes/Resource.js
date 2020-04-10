@@ -17,6 +17,7 @@ class Resource {
     if(! this.route){
       throw 'Нужен URL';
     }
+
   }
   /**
    * @return {Promise}

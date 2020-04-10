@@ -13,7 +13,7 @@ class HeadingWidget extends Component {
   }
 
   render(){
-    return<h1 className="heading">{this.state.settings.text}</h1>;
+    return <h1 className="heading">{this.state.settings.text}</h1>;
   }
 }
 
