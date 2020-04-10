@@ -63,16 +63,18 @@ module.exports = merge(common, {
           path: req.url,
           method: 'PUT',
         };
-        http.request(options, (data ) =>{
-          let bodyChunks = [];
-          data.on('data', function(chunk) {
-            // You can process streamed parts here...
-            bodyChunks.push(chunk);
-          }).on('end', function() {
-            let body = Buffer.concat(bodyChunks);
-            res.end(body);
-          })
-        });
+        console.log(req);
+        res.send('ok');
+        // http.request(options, (data ) =>{
+        //   let bodyChunks = [];
+        //   data.on('data', function(chunk) {
+        //     // You can process streamed parts here...
+        //     bodyChunks.push(chunk);
+        //   }).on('end', function() {
+        //     let body = Buffer.concat(bodyChunks);
+        //     res.end(body);
+        //   })
+        // });
       });
       //content for editor window
       app.get('/admin/editor-content', function(req, res) {

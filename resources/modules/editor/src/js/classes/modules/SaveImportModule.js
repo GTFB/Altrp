@@ -61,7 +61,7 @@ class SaveImportModule extends BaseModule{
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);
       }
-      return res.json()
+      return res.text()
     }).then(res=>{
       console.log(res);
       store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
