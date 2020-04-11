@@ -45,6 +45,7 @@ class BaseElement {
     data.id = this.getId();
     data.name = this.getName();
     data.settings = this.settings;
+    data.type = this.getType();
     let children = this.getChildrenForImport();
     if(children){
       data.children = children;

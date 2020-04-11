@@ -1,6 +1,9 @@
 import React, {Component} from "react";
 import {hot} from "react-hot-loader";
 import {getRoutes, getTemplates} from "./js/helpers";
+import appStore from "./js/store/store";
+import AppContent from "./js/components/AppContent";
+import {Provider} from 'react-redux'
 
 class FrontApp extends Component {
   constructor(props){
@@ -25,7 +28,9 @@ class FrontApp extends Component {
     });
   }
   render(){
-    return <h1 onClick={this.onClick.bind(this)}>FRONT APP</h1>;
+    return <Provider store={appStore}>
+      <AppContent/>
+    </Provider>;
   }
 }
 

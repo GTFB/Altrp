@@ -1,5 +1,7 @@
 import Resource from "../../../../editor/src/js/classes/Resource";
 import Route from "./Route";
+import appStore from "../store/store";
+import {changeAppRoutes} from "../store/routes/actions";
 
 class Routes {
 
@@ -15,7 +17,7 @@ class Routes {
       for(let _data of routesData){
         routes.push(Route.routeFabric(_data));
       }
-      console.log(routes);
+      appStore.dispatch(changeAppRoutes(routes))
     }).catch(err=>{
       console.error(err);
     });
