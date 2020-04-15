@@ -1,5 +1,6 @@
 import BaseElement from "./BaseElement";
 import {
+  CONTROLLER_DIMENSIONS,
   CONTROLLER_NUMBER, CONTROLLER_SWITCHER,
   CONTROLLER_TEXT,
   CONTROLLER_TEXTAREA,
@@ -39,6 +40,11 @@ class RootElement extends BaseElement{
     this.addControl('number', {
       type: CONTROLLER_NUMBER,
       label: 'Number Content',
+    });
+
+    this.addControl('dimensions', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Dimensions',
     });
 
 
