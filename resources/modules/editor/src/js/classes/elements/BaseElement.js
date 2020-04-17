@@ -1,5 +1,5 @@
 import {CONTROLLER_TEXT, CONTROLLER_TEXTAREA, TAB_CONTENT, TAB_STYLE} from "../modules/ControllersManager";
-import {getTemplateDataStorage, isEditor, getEditor} from "../../helpers";
+import {getTemplateDataStorage, isEditor, getEditor, CONSTANTS} from "../../helpers";
 
 class BaseElement {
 
@@ -166,6 +166,7 @@ class BaseElement {
         }
       }
     }
+    this.updateStyles();
   }
 
   setSettingValue(settingName, value){
@@ -271,16 +272,66 @@ class BaseElement {
     });
     return ids;
   }
+
+  getSelector(){
+    return `.altrp-element${this.getId()}`;
+  }
   /**
    * @param {string} settingName
    * @param {CSSRule[]} rules
+   * @param {string} breakpoint
    * */
-  addStyles(settingName, rules){
+  addStyles(settingName, rules, breakpoint = CONSTANTS.DEFAULT_BREAKPOINT){
     this.settings.styles = this.settings.styles || {};
-    this.settings.styles[settingName] = this.settings.styles[settingName] || {};
+    this.settings.styles[breakpoint] = this.settings.styles[breakpoint] || {};
+
+    this.settings.styles[breakpoint][settingName] = this.settings.styles[breakpoint][settingName] || {};
     rules.forEach(rule => {
-      this.settings.styles[settingName][rule.selector] = rule.properies;
+      let finalSelector = rule.selector;
+      finalSelector = finalSelector.replace('{{ELEMENT}}', '.' + this.getSelector());
+      this.settings.styles[breakpoint][settingName][finalSelector] = rule.properties;
     });
+    this.updateStyles();
+  }
+
+  updateStyles(){
+    window.stylesModulePromise.then(stylesModule => {
+      /**
+       * @member {Styles} stylesModule
+       * */
+      stylesModule.addElementStyles(this.getId(), this.getStringifyStyles());
+    });
+  }
+
+  getStringifyStyles(){
+    let styles = '';
+    if(typeof this.settings.styles !== 'object'){
+      return styles
+    }
+    for(let breakpoint in this.settings.styles){
+      let rules = {};
+      if(this.settings.styles.hasOwnProperty(breakpoint)){
+        for(let settingName in this.settings.styles[breakpoint]){
+          if(this.settings.styles[breakpoint].hasOwnProperty(settingName)) {
+            for(let selector in this.settings.styles[breakpoint][settingName]){
+              if(this.settings.styles[breakpoint][settingName].hasOwnProperty(selector)) {
+                rules[selector] = rules[selector] || [];
+                // console.log(this.settings.styles[breakpoint][settingName][selector]);
+                rules[selector] = rules[selector].concat(this.settings.styles[breakpoint][settingName][selector])
+              }
+            }
+          }
+        }
+      }
+      if(breakpoint === CONSTANTS.DEFAULT_BREAKPOINT){
+        for(let selector in rules){
+          if(rules.hasOwnProperty(selector)){
+            styles += `${selector} {` + rules[selector].join('') + '}';
+          }
+        }
+      }
+    }
+    return styles;
   }
 }
 

@@ -5,6 +5,7 @@ import {changeTemplateStatus} from "../store/template-status/actions";
 
 class Controller {
   constructor(data){
+    let currentElement = getCurrentElement();
     this.data = data;
     this.rules = [];
     if(data.rules){
@@ -12,13 +13,13 @@ class Controller {
         if(data.rules.hasOwnProperty(selector)){
           let newRule = new CSSRule(selector, data.rules[selector]);
           this.rules.push(newRule);
-          if(data.default){
-            newRule.insertValue(data.default);
+          let value = currentElement.getSettings(this.getSettingName());
+          if(value){
+            newRule.insertValue(value);
           }
         }
       }
     }
-    let currentElement = getCurrentElement();
     if(this.rules.length){
       currentElement.addStyles(this.getSettingName(), this.rules);
     }

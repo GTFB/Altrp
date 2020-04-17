@@ -6,6 +6,10 @@ import ControllersManager from './js/classes/modules/ControllersManager';
 import EditorContent from "./EditorContent";
 import store from '../src/js/store/store'
 
+window.stylesModulePromise = new Promise(function (resolve) {
+  window.stylesModuleResolve = resolve;
+});
+
 window.elementsManager = new ElementsManager();
 window.controllersManager = new ControllersManager();
 window.controllersManager.init();

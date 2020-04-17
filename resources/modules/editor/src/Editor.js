@@ -26,8 +26,8 @@ class Editor extends Component {
     super(props);
     window.altrpEditor = this;
     this.state = {
-      // activePanel: 'widgets',
-      activePanel: 'settings',
+      activePanel: 'widgets',
+      // activePanel: 'settings',
       templateStatus: CONSTANTS.TEMPLATE_UPDATED,
     };
     this.openPageSettings = this.openPageSettings.bind(this);
@@ -131,7 +131,6 @@ class Editor extends Component {
                 <EditorWindow  />
               </div>
             </div>
-          <Styles/>
         </Provider>
     );
   }

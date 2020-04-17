@@ -14,7 +14,8 @@ class RootComponent extends Component {
   }
 
   render(){
-    return<div className="sections-wrapper">{
+    let classes = `sections-wrapper ${this.props.element.getSelector()}`;
+    return<div className={classes}>{
       this.state.settings.number
     }
       {this.state.children.map(

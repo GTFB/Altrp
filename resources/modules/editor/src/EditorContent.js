@@ -7,6 +7,7 @@ import {getEditor} from "./js/helpers";
 import {Provider} from 'react-redux'
 import store from '../src/js/store/store'
 import RootElement from "./js/classes/elements/RootElement";
+import Styles from "./js/components/Styles";
 
 class EditorContent extends Component {
   constructor(props) {
@@ -63,6 +64,7 @@ class EditorContent extends Component {
         }
         <NewSection />
       </div>
+      <Styles/>
     </Provider>;
   }
 }

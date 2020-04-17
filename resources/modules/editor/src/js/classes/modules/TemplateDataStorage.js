@@ -77,6 +77,7 @@ class TemplateDataStorage extends BaseModule{
     this.rootElement.appendNewSection(newSection);
     this.setCurrentElement(newWidget);
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
+    getEditor().showSettingsPanel();
   }
 
 }

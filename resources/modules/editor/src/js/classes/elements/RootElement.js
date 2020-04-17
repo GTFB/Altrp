@@ -8,21 +8,25 @@ import {
   TAB_STYLE
 } from "../modules/ControllersManager";
 
-class RootElement extends BaseElement{
-  constructor(){
+class RootElement extends BaseElement {
+  constructor() {
     super();
   }
-  static getName(){
+
+  static getName() {
     return 'root-element';
   }
-  static getTitle(){
+
+  static getTitle() {
     return 'Page';
   }
-  static getType(){
+
+  static getType() {
     return 'root-element';
   }
-  _registerControls(){
-    if(this.controllersRegistered){
+
+  _registerControls() {
+    if (this.controllersRegistered) {
       return
     }
     this.startControlSection('text_section', {
@@ -41,9 +45,9 @@ class RootElement extends BaseElement{
       label: 'Font Size',
       default: 16,
       rules: {
-        '{{ELEMENT}}' : [
+        '{{ELEMENT}}': [
           'font-size: {{VALUE}}px;',
-          'padding: {{VALUE}}px;',
+          'line-height: {{VALUE}}px',
         ],
       },
     });
@@ -53,10 +57,7 @@ class RootElement extends BaseElement{
       label: 'Padding All',
       default: 17,
       rules: {
-        '{{ELEMENT}}' : [
-          'font-size: {{VALUE}}px;',
-          'padding: {{VALUE}}px;',
-        ],
+        '{{ELEMENT}}': 'padding: {{VALUE}}px;',
       },
     });
 
@@ -126,11 +127,15 @@ class RootElement extends BaseElement{
     // this.endControlSection();
 
   }
-  appendNewSection(newSection){
-    if(newSection.getType() !== 'section'){
+
+  appendNewSection(newSection) {
+    if (newSection.getType() !== 'section') {
       throw 'Only Section can be a Child of Template';
     }
     this.appendChild(newSection);
+  }
+  getSelector(){
+    return `altrp-template-root${this.getId()}`;
   }
 }
 

@@ -6,6 +6,12 @@ class CSSRule {
     } else if((typeof property === 'object') && property.length){
       this.defaultPoperties = property;
     }
+    this.defaultPoperties = this.defaultPoperties.map(property=>{
+      if(property[property.length - 1] !== ';'){
+        property = property.concat(';');
+      }
+      return property;
+    });
   }
   setValue(value){
     this.value = value;
@@ -17,10 +23,14 @@ class CSSRule {
          this.insertValueString(value);
       }
       break;
+      case 'number':{
+         this.insertValueString(value);
+      }
+      break;
     }
   }
   insertValueString(value){
-    this.properies = this.defaultPoperties.map(property => property.replace('{{VALUE}}', value));
+    this.properties = this.defaultPoperties.map(property => property.replace('{{VALUE}}', value));
   }
 }
 
