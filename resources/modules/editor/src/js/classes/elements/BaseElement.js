@@ -147,12 +147,12 @@ class BaseElement {
     }
     let controls = window.controllersManager.getControls(this.getName());
 
-    for (let tabName in controls){
-      if(controls.hasOwnProperty(tabName)){
-        if(!controls[tabName].length){
+    for (let tabName in controls.data){
+      if(controls.data.hasOwnProperty(tabName)){
+        if(!controls.data[tabName].length){
           continue;
         }
-        for (let section of controls[tabName]) {
+        for (let section of controls.data[tabName]) {
           if(!section.controls.length){
             continue;
           }

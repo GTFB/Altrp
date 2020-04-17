@@ -2,6 +2,7 @@ import TextareaController from "../../components/controllers/TextareaController"
 import TextController from "../../components/controllers/TextController";
 import NumberController from "../../components/controllers/NumberController";
 import SwitcherController from "../../components/controllers/SwitcherController";
+import Controller from "../Controller";
 
 export const TAB_CONTENT = 'content';
 export const TAB_STYLE = 'style';
@@ -38,7 +39,11 @@ class ControllersManager {
     this.elementsControls = {};
     for(let elementClassName in elementClasses ){
         if(elementClasses.hasOwnProperty(elementClassName)){
-        this.elementsControls[elementClassName] = (new  elementClasses[elementClassName]).getControls()
+          let controls = (new  elementClasses[elementClassName]).getControls();
+          let controller = new Controller(controls);
+          console.log(controller);
+          // this.elementsControls[elementClassName] = (new  elementClasses[elementClassName]).getControls()
+          this.elementsControls[elementClassName] = controller;
       }
     }
   }
@@ -58,12 +63,12 @@ class ControllersManager {
     if(control){
       return control;
     }
-    for (let tabName in controls){
-      if(controls.hasOwnProperty(tabName)){
-        if(!controls[tabName].length){
+    for (let tabName in controls.data){
+      if(controls.data.hasOwnProperty(tabName)){
+        if(!controls.data[tabName].length){
           continue;
         }
-        for (let section of controls[tabName]) {
+        for (let section of controls.data[tabName]) {
           if(!section.controls.length){
             continue;
           }

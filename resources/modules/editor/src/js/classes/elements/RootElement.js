@@ -38,7 +38,10 @@ class RootElement extends BaseElement{
 
     this.addControl('number', {
       type: CONTROLLER_NUMBER,
-      label: 'Number Content',
+      label: 'Font Size',
+      rules: {
+        '{{ELEMENT}}' : 'font-size: {{VALUE}}px;',
+      },
     });
 
 
