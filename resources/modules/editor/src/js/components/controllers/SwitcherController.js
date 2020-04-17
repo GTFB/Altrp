@@ -7,7 +7,6 @@ class SwitcherController extends Component {
     super(props);
     this.toggle = this.toggle.bind(this);
     let value = this.props.currentElement.getSettings(this.props.controlId);
-    // console.log(value);
     if(value === null && this.props.default){
       value = this.props.default ;
     }

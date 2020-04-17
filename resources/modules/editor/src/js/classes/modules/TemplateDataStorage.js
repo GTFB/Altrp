@@ -1,11 +1,12 @@
 import RootElement from "../elements/RootElement";
-import {getEditor, getTemplateId} from "../../helpers";
+import {CONSTANTS, getEditor, getTemplateId} from "../../helpers";
 import BaseModule from "./BaseModule";
 import store from '../../store/store';
 import {setCurrentElement, SET_CURRENT_ELEMENT} from '../../store/current-element/actions'
 import BaseElement from "../elements/BaseElement";
 import Section from "../elements/Section";
 import Column from "../elements/Column";
+import {changeTemplateStatus} from "../../store/template-status/actions";
 
 class TemplateDataStorage extends BaseModule{
 
@@ -46,8 +47,8 @@ class TemplateDataStorage extends BaseModule{
     if(! element instanceof BaseElement){
       throw 'Only Base Element Can Be Set as Default'
     }
+    this.currentElement = element;
     store.dispatch(setCurrentElement(element));
-    return this.currentElement = element;
   }
 
   getCurrentElement(){
@@ -75,7 +76,7 @@ class TemplateDataStorage extends BaseModule{
     newSection.appendColumn(newColumn);
     this.rootElement.appendNewSection(newSection);
     this.setCurrentElement(newWidget);
-    getEditor().showSettingsPanel();
+    store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
   }
 
 }

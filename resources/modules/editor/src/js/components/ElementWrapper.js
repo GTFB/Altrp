@@ -13,6 +13,7 @@ class ElementWrapper extends Component {
     super(props);
     this.chooseElement = this.chooseElement.bind(this);
     this.deleteElement = this.deleteElement.bind(this);
+    getEditor().showSettingsPanel();
   }
 
   render() {

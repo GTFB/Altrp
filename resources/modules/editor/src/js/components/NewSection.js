@@ -32,7 +32,6 @@ class NewSection extends Component {
     e.preventDefault();
     e.stopPropagation();
     getEditor().modules.templateDataStorage.addWidgetInSection(newWidgetName);
-    store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
     return false;
   }
 

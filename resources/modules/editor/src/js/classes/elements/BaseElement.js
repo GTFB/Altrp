@@ -12,6 +12,7 @@ class BaseElement {
     this.componentClass = window.elementsManager.getComponentClass(this.getName());
     this.initiatedDefaults = null;
     this.parent = null;
+    this._initDefaultSettings();
   }
 
   getId(){
@@ -147,12 +148,12 @@ class BaseElement {
     }
     let controls = window.controllersManager.getControls(this.getName());
 
-    for (let tabName in controls.data){
-      if(controls.data.hasOwnProperty(tabName)){
-        if(!controls.data[tabName].length){
+    for (let tabName in controls){
+      if(controls.hasOwnProperty(tabName)){
+        if(!controls[tabName].length){
           continue;
         }
-        for (let section of controls.data[tabName]) {
+        for (let section of controls[tabName]) {
           if(!section.controls.length){
             continue;
           }

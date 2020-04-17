@@ -28,6 +28,7 @@ class Editor extends Component {
     this.state = {
       // activePanel: 'widgets',
       activePanel: 'settings',
+      templateStatus: CONSTANTS.TEMPLATE_UPDATED,
     };
     this.openPageSettings = this.openPageSettings.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
@@ -36,23 +37,26 @@ class Editor extends Component {
   }
   templateStatus(){
     let templateStatus = store.getState().templateStatus.status;
-    this.setState({...this.state, templateStatus})
+    if(templateStatus !== this.state.templateStatus){
+      this.setState({...this.state, templateStatus});
+    }
   }
   initModules() {
     this.modules = new Modules(this);
     this.modules.loaded();
   }
-
   showWidgetsPanel() {
     this.setState({
+      ...this.state,
       activePanel: 'widgets'
     })
   }
 
   showSettingsPanel() {
     this.setState({
+      ...this.state,
       activePanel: 'settings'
-    })
+    });
   }
   endLoading(){
     console.log('editor loaded');
@@ -78,6 +82,7 @@ class Editor extends Component {
     ){
       settingsActive = ' active';
     }
+
     return (
         <Provider store={store}>
             <div className={templateClasses}>
