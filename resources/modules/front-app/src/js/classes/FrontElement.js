@@ -1,3 +1,4 @@
+import {CONSTANTS} from "../../../../editor/src/js/helpers";
 
 class FrontElement {
 
@@ -27,6 +28,45 @@ class FrontElement {
   }
   getSettings(){
     return this.settings;
+  }
+  updateStyles(){
+    window.stylesModulePromise.then(stylesModule => {
+      /**
+       * @member {Styles} stylesModule
+       * */
+      stylesModule.addElementStyles(this.getId(), this.getStringifyStyles());
+    });
+  }
+
+  getStringifyStyles(){
+    let styles = '';
+    if(typeof this.settings.styles !== 'object'){
+      return styles
+    }
+    for(let breakpoint in this.settings.styles){
+      let rules = {};
+      if(this.settings.styles.hasOwnProperty(breakpoint)){
+        for(let settingName in this.settings.styles[breakpoint]){
+          if(this.settings.styles[breakpoint].hasOwnProperty(settingName)) {
+            for(let selector in this.settings.styles[breakpoint][settingName]){
+              if(this.settings.styles[breakpoint][settingName].hasOwnProperty(selector)) {
+                rules[selector] = rules[selector] || [];
+                // console.log(this.settings.styles[breakpoint][settingName][selector]);
+                rules[selector] = rules[selector].concat(this.settings.styles[breakpoint][settingName][selector])
+              }
+            }
+          }
+        }
+      }
+      if(breakpoint === CONSTANTS.DEFAULT_BREAKPOINT){
+        for(let selector in rules){
+          if(rules.hasOwnProperty(selector)){
+            styles += `${selector} {` + rules[selector].join('') + '}';
+          }
+        }
+      }
+    }
+    return styles;
   }
 }
 

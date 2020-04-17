@@ -5,6 +5,10 @@ import FrontElementsManager from './js/classes/FrontElementsManager';
 import FrontElementsFabric from './js/classes/FrontElementsFabric';
 import './sass/front-style.scss';
 
+window.stylesModulePromise = new Promise(function (resolve) {
+  window.stylesModuleResolve = resolve;
+});
+
 if (process.env.NODE_ENV !== 'production') {
   console.log('Looks like we are in development mode!');
 } else {

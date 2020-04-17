@@ -12,7 +12,8 @@ class RootComponent extends Component {
   }
 
   render(){
-    return<div className="sections-wrapper">{
+    let classes = `sections-wrapper altrp-template-root${this.props.element.getId()}`;
+    return<div className={classes}>{
       this.state.settings.number
     }
       {this.state.children.map(

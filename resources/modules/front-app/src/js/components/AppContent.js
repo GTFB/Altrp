@@ -7,10 +7,10 @@ import {
 } from "react-router-dom";
 import {connect} from "react-redux";
 import RouteContent from "./RouteContent";
+import Styles from "./Styles";
 
 class AppContent extends Component {
   render(){
-    console.log(this.props);
     return <div className="front-app-content">
       <Router>
         <Switch>
@@ -19,6 +19,7 @@ class AppContent extends Component {
           </Route>)}
         </Switch>
       </Router>
+      <Styles/>
     </div>;
   }
 }

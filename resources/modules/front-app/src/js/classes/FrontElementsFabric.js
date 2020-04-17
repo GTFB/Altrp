@@ -17,6 +17,7 @@ class FrontElementsFabric {
     element.settings = object.settings;
     element.name = object.name;
     element.type = object.type;
+    element.updateStyles();
     return element;
   }
 }
