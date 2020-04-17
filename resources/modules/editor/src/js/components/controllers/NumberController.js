@@ -8,7 +8,6 @@ class NumberController extends Component {
     super(props);
     this.changeValue = this.changeValue.bind(this);
     let value = this.props.currentElement.getSettings(this.props.controlId);
-    // console.log(value);
     if(value === null && this.props.default){
       value = this.props.default ;
     }
@@ -20,7 +19,8 @@ class NumberController extends Component {
     this.setState({
       value:e.target.value
     });
-    this.props.currentElement.setSettingValue(this.props.controlId, e.target.value);
+    this.props.controller.changeValue(e.target.value);
+    // this.props.currentElement.setSettingValue(this.props.controlId, e.target.value);
   }
   getDefaultValue(){
     return 0;

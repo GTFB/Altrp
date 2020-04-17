@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import ChevronIcon from '../../svgs/chevron.svg'
+import Controller from "../classes/Controller";
 
 class SettingSection extends Component {
   constructor(props){
@@ -30,7 +31,7 @@ class SettingSection extends Component {
         {
           controllers.map((controller) => {
                 let ControllerComponent = window.controllersManager.getController(controller.type);
-                return React.createElement(ControllerComponent, {...controller, key: controller.controlId});
+                return React.createElement(ControllerComponent, {...controller, key: controller.controlId, controller: new Controller(controller)});
               }
           )
         }

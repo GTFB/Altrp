@@ -39,11 +39,7 @@ class ControllersManager {
     this.elementsControls = {};
     for(let elementClassName in elementClasses ){
         if(elementClasses.hasOwnProperty(elementClassName)){
-          let controls = (new  elementClasses[elementClassName]).getControls();
-          let controller = new Controller(controls);
-          console.log(controller);
-          // this.elementsControls[elementClassName] = (new  elementClasses[elementClassName]).getControls()
-          this.elementsControls[elementClassName] = controller;
+          this.elementsControls[elementClassName] = (new  elementClasses[elementClassName]).getControls();
       }
     }
   }

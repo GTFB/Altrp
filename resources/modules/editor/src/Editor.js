@@ -18,6 +18,7 @@ import store from '../src/js/store/store'
 import HistoryPanel from "./js/components/HistoryPanel";
 import UpdateButton from "./js/components/UpdateButton";
 import {CONSTANTS} from "./js/helpers";
+import Styles from "./js/components/Styles";
 
 class Editor extends Component {
 
@@ -25,8 +26,8 @@ class Editor extends Component {
     super(props);
     window.altrpEditor = this;
     this.state = {
-      activePanel: 'widgets',
-      // activePanel: 'settings',
+      // activePanel: 'widgets',
+      activePanel: 'settings',
     };
     this.openPageSettings = this.openPageSettings.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
@@ -125,6 +126,7 @@ class Editor extends Component {
                 <EditorWindow  />
               </div>
             </div>
+          <Styles/>
         </Provider>
     );
   }

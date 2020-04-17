@@ -27,7 +27,7 @@ class SettingsPanel extends Component {
 
     let sections = [];
     if(this.props.currentElement.getName){
-      sections = controllersManager.getControls(this.props.currentElement.getName()).data[this.state.activeTab] || [];
+      sections = controllersManager.getControls(this.props.currentElement.getName())[this.state.activeTab] || [];
     }
 
     // let sections = this.props.currentElement.getControllers ?

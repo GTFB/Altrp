@@ -36,11 +36,27 @@ class RootElement extends BaseElement{
       default: 'Switcher Content'
     });
 
-    this.addControl('number', {
+    this.addControl('font-size', {
       type: CONTROLLER_NUMBER,
       label: 'Font Size',
+      default: 16,
       rules: {
-        '{{ELEMENT}}' : 'font-size: {{VALUE}}px;',
+        '{{ELEMENT}}' : [
+          'font-size: {{VALUE}}px;',
+          'padding: {{VALUE}}px;',
+        ],
+      },
+    });
+
+    this.addControl('padding', {
+      type: CONTROLLER_NUMBER,
+      label: 'Padding All',
+      default: 17,
+      rules: {
+        '{{ELEMENT}}' : [
+          'font-size: {{VALUE}}px;',
+          'padding: {{VALUE}}px;',
+        ],
       },
     });
 

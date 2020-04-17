@@ -270,6 +270,17 @@ class BaseElement {
     });
     return ids;
   }
+  /**
+   * @param {string} settingName
+   * @param {CSSRule[]} rules
+   * */
+  addStyles(settingName, rules){
+    this.settings.styles = this.settings.styles || {};
+    this.settings.styles[settingName] = this.settings.styles[settingName] || {};
+    rules.forEach(rule => {
+      this.settings.styles[settingName][rule.selector] = rule.properies;
+    });
+  }
 }
 
 export default BaseElement
