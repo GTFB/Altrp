@@ -3,6 +3,7 @@ import TextController from "../../components/controllers/TextController";
 import NumberController from "../../components/controllers/NumberController";
 import SwitcherController from "../../components/controllers/SwitcherController";
 import Controller from "../Controller";
+import DimensionsController from "../../components/controllers/DimensionsController";
 
 export const TAB_CONTENT = 'content';
 export const TAB_STYLE = 'style';
@@ -11,6 +12,7 @@ export const CONTROLLER_TEXTAREA = 'textarea';
 export const CONTROLLER_TEXT = 'text';
 export const CONTROLLER_NUMBER = 'number';
 export const CONTROLLER_SWITCHER = 'switcher';
+export const CONTROLLER_DIMENSIONS = 'dimensions';
 
 class ControllersManager {
   constructor(){
@@ -19,6 +21,7 @@ class ControllersManager {
     this.conttrollers[CONTROLLER_TEXT] = TextController;
     this.conttrollers[CONTROLLER_NUMBER] = NumberController;
     this.conttrollers[CONTROLLER_SWITCHER] = SwitcherController;
+    this.conttrollers[CONTROLLER_DIMENSIONS] = DimensionsController;
     this.elementsControls = null;
     this._cache = {
       controls: {},
