@@ -3,6 +3,7 @@ import {
   CONTROLLER_NUMBER, CONTROLLER_SWITCHER,
   CONTROLLER_TEXT,
   CONTROLLER_TEXTAREA,
+  CONTROLLER_SELECT,
   TAB_ADVANCED,
   TAB_CONTENT,
   TAB_STYLE
@@ -41,6 +42,20 @@ class RootElement extends BaseElement{
       label: 'Number Content',
     });
 
+    this.addControl('select', {
+      type: CONTROLLER_SELECT,
+      label: 'Select Content',
+      select: [
+        {
+          value: 'select1',
+          label: 'Select Content 1'
+        },
+        {
+          value: 'select2',
+          label: 'Select Content 2'
+        }
+      ]
+    });
 
     this.endControlSection();
 
