@@ -64,6 +64,29 @@ function (_BaseElement) {
         type: _ControllersManager.CONTROLLER_SELECT,
         label: 'Select Content',
         select: [{
+          id: 1,
+          value: 'select1',
+          label: 'Select Content 1'
+        }, {
+          id: 2,
+          value: 'select2',
+          label: 'Select Content 2'
+        }]
+      });
+      this.addControl('choose', {
+        type: _ControllersManager.CONTROLLER_CHOOSE,
+        label: 'Choose Content',
+        value: 0
+      });
+      this.addControl('slider', {
+        type: _ControllersManager.CONTROLLER_SLIDER,
+        label: 'Slider Content',
+        value: 0
+      });
+      this.addControl('select2', {
+        type: _ControllersManager.CONTROLLER_SELECT2,
+        label: 'Select2 Content',
+        select: [{
           value: 'select',
           label: 'Select Content 1'
         }, {

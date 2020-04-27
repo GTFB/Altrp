@@ -4,6 +4,9 @@ import {
   CONTROLLER_TEXT,
   CONTROLLER_TEXTAREA,
   CONTROLLER_SELECT,
+  CONTROLLER_CHOOSE,
+  CONTROLLER_SLIDER,
+  CONTROLLER_SELECT2,
   TAB_ADVANCED,
   TAB_CONTENT,
   TAB_STYLE
@@ -47,16 +50,46 @@ class RootElement extends BaseElement{
       label: 'Select Content',
       select: [
         {
+          id: 1,
           value: 'select1',
           label: 'Select Content 1'
         },
         {
+          id: 2,
           value: 'select2',
           label: 'Select Content 2'
         }
       ]
     });
 
+    this.addControl('choose', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Choose Content',
+      value: 0
+    });
+
+    this.addControl('slider', {
+      type: CONTROLLER_SLIDER,
+      label: 'Slider Content',
+      value: 0
+    });
+
+    this.addControl('select2', {
+      type: CONTROLLER_SELECT2,
+      label: 'Select2 Content',
+      select: [ 
+        {
+          value: 'select',
+          label:'Select Content 1'
+        }, 
+        {
+          value: 'select',
+          label:'Select Content 2'
+        }
+      ]
+    });
+
+    
     this.endControlSection();
 
     this.startControlSection('text_style', {
