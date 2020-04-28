@@ -633,6 +633,12 @@ button{
     display: block;
   }
 }
+.altrp-element{
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 .altrp-element_section.altrp-element_current,
 .altrp-element_section:hover{
   & > .overlay{

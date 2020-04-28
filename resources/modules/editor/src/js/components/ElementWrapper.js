@@ -36,7 +36,7 @@ class ElementWrapper extends Component {
       }
       break;
     }
-    return <div className={classes}>
+    return <div className={classes} onClick={this.chooseElement}>
       <div className={overlayClasses}>
         <div className="overlay-settings">
           <button className="overlay-settings__button overlay-settings__button_add " title="Add Section">
@@ -69,15 +69,18 @@ class ElementWrapper extends Component {
 
   }
 
-  chooseElement() {
+  chooseElement(e) {
+    e.stopPropagation();
     this.props.element.setElementAsCurrent();
     getEditor().showSettingsPanel();
   }
 
-  deleteElement() {
+  deleteElement(e) {
+    e.stopPropagation();
     this.props.element.parent.deleteChild(this.props.element);
   }
-  duplicateElement(){
+  duplicateElement(e){
+    e.stopPropagation();
     let factory = getFactory();
     factory.duplicateElement(this.props.element, this.props.element.parent);
   }
