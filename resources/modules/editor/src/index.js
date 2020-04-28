@@ -5,6 +5,8 @@ import ElementsManager from './js/classes/modules/ElementsManager';
 import ControllersManager from './js/classes/modules/ControllersManager';
 import EditorContent from "./EditorContent";
 import store from '../src/js/store/store'
+import _  from'lodash';
+window._ = _;
 
 window.stylesModulePromise = new Promise(function (resolve) {
   window.stylesModuleResolve = resolve;

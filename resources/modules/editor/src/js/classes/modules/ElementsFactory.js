@@ -1,4 +1,5 @@
 import BaseModule from './BaseModule';
+import {getEditor} from "../../helpers";
 
 class ElementsFactory extends BaseModule{
   parseData(object, parent){
@@ -15,15 +16,50 @@ class ElementsFactory extends BaseModule{
     }
     element.id = object.id;
     element.children = children;
-    element.settings = object.settings;
+    /**
+     * Если настройки пустый то с сервера приходит пустой массив -- меняем на пустой объект
+     * */
+    element.settings = (object.settings.length === 0) ? {} : object.settings;
+
     if(parent){
       element.parent = parent;
     }
     return element;
   }
 
-  duplicateElement(element){
+  /**
+   * @param {BaseElement} element
+   * @param {BaseElement} target
+   * */
+  duplicateElement(element, target){
 
+    let newElement = this._duplicateElement(element);
+    target.insertAfter(element.getId(), newElement);
+    /**
+     * @member {TemplateDataStorage} templateDataStorage
+     * */
+    let templateDataStorage = getEditor().modules.templateDataStorage;
+    templateDataStorage.elementsIds = _.union(templateDataStorage.elementsIds, newElement.getIds());
+  }
+  /**
+   * @param {BaseElement} element
+   * */
+  _duplicateElement(element){
+    /**
+     * @member {BaseElement} newElement
+     * */
+    let newElement = new (elementsManager.getElementClass(element.getName()));
+    let newChildren = [];
+    element.children.map((childrenItem)=>{
+      let newChild = this._duplicateElement(childrenItem);
+      newChild.setParent(newElement);
+      newChildren.push(newChild);
+    });
+    newElement.component = new
+    newElement.setChildren(newChildren);
+    newElement.settings = _.cloneDeep(element.settings);
+    newElement.children = newChildren;
+    return newElement;
   }
 }
 

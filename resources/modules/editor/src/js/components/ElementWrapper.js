@@ -77,11 +77,9 @@ class ElementWrapper extends Component {
   deleteElement() {
     this.props.element.parent.deleteChild(this.props.element);
   }
-
   duplicateElement(){
     let factory = getFactory();
-    console.log(factory);
-    console.log(this.props.element.parent);
+    factory.duplicateElement(this.props.element, this.props.element.parent);
   }
 }
 

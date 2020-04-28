@@ -1,4 +1,3 @@
-// import store from './store/store';
 
 export function getTemplateId(){
   return (new URL(window.location)).searchParams.get('template_id');

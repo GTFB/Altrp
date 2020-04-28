@@ -1,5 +1,7 @@
 import {CONTROLLER_TEXT, CONTROLLER_TEXTAREA, TAB_CONTENT, TAB_STYLE} from "../modules/ControllersManager";
-import {getTemplateDataStorage, isEditor, getEditor, CONSTANTS} from "../../helpers";
+import {getTemplateDataStorage, isEditor, getEditor, CONSTANTS, templateNeedUpdate} from "../../helpers";
+import {changeTemplateStatus} from "../../store/template-status/actions";
+import store from "../../store/store";
 
 class BaseElement {
 
@@ -83,8 +85,41 @@ class BaseElement {
     }
   }
 
-  insertAfter(childId, child){
+  /**
+   * @param {string} childId
+   * @param {BaseElement} newChild
+   * */
+  insertAfter(childId, newChild){
+    let index;
+    this.children.map((childItem, idx)=>{
+      if(childItem.getId() === childId){
+        index = idx;
+      }
+    });
+    if(index === undefined){
+      throw 'childId not found when insertAfter'
+    }
+    newChild.setParent(this);
+    this.children.splice(index, 0, newChild);
+    this.updateChildren(this.children);
+    this.templateNeedUpdate();
+  }
 
+  templateNeedUpdate(){
+    store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
+  }
+  /**
+   * @param {BaseElement[]} newChildren
+   * */
+  setChildren(newChildren){
+    this.children = newChildren;
+  }
+  /**
+   * @param {BaseElement[]} newChildren
+   * */
+  updateChildren(newChildren){
+    this.children = newChildren;
+    this.component.setChildren(this.children);
   }
 
   /**
@@ -112,8 +147,7 @@ class BaseElement {
     if(!childExist){
       throw 'Element not Found for Delete'
     }
-    this.children = newChildren;
-    this.component.setChildren(this.children);
+    this.updateChildren(newChildren);
   }
 
   beforeDelete() {
@@ -331,6 +365,12 @@ class BaseElement {
       }
     }
     return styles;
+  }
+  /**
+   * @param {BaseElement} parent
+   * */
+  setParent(parent){
+    this.parent = parent;
   }
 }
 
