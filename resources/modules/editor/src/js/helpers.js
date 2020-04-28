@@ -60,3 +60,7 @@ export const CONSTANTS = {
   TEMPLATE_SAVING: 'TEMPLATE_SAVING',
   DEFAULT_BREAKPOINT: 'DEFAULT_BREAKPOINT',
 };
+
+export function getFactory() {
+  return getEditor().modules.elementsFactory;
+}

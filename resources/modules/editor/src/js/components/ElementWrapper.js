@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {editorSetCurrentElement, getEditor} from "../helpers";
+import {editorSetCurrentElement, getEditor, getFactory} from "../helpers";
 import EditIcon from '../../svgs/edit.svg';
 import DeleteIcon from '../../svgs/delete.svg';
 import DotsIcon from '../../svgs/dots_section.svg';
@@ -79,6 +79,8 @@ class ElementWrapper extends Component {
   }
 
   duplicateElement(){
+    let factory = getFactory();
+    console.log(factory);
     console.log(this.props.element.parent);
   }
 }

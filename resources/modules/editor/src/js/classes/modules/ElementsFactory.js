@@ -21,6 +21,10 @@ class ElementsFactory extends BaseModule{
     }
     return element;
   }
+
+  duplicateElement(element){
+
+  }
 }
 
 export default ElementsFactory;
