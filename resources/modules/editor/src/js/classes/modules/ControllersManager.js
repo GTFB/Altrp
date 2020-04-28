@@ -4,6 +4,10 @@ import NumberController from "../../components/controllers/NumberController";
 import SwitcherController from "../../components/controllers/SwitcherController";
 import Controller from "../Controller";
 import DimensionsController from "../../components/controllers/DimensionsController";
+import SelectController from "../../components/controllers/SelectController";
+import ChooseController from "../../components/controllers/ChooseController";
+import SliderController from "../../components/controllers/SliderController";
+import Select2Controller from "../../components/controllers/Select2Controller";
 
 export const TAB_CONTENT = 'content';
 export const TAB_STYLE = 'style';
@@ -13,6 +17,10 @@ export const CONTROLLER_TEXT = 'text';
 export const CONTROLLER_NUMBER = 'number';
 export const CONTROLLER_SWITCHER = 'switcher';
 export const CONTROLLER_DIMENSIONS = 'dimensions';
+export const CONTROLLER_SELECT = 'select';
+export const CONTROLLER_CHOOSE = 'choose';
+export const CONTROLLER_SLIDER = 'slider';
+export const CONTROLLER_SELECT2 = 'select2';
 
 class ControllersManager {
   constructor(){
@@ -22,6 +30,10 @@ class ControllersManager {
     this.conttrollers[CONTROLLER_NUMBER] = NumberController;
     this.conttrollers[CONTROLLER_SWITCHER] = SwitcherController;
     this.conttrollers[CONTROLLER_DIMENSIONS] = DimensionsController;
+    this.conttrollers[CONTROLLER_SELECT] = SelectController;
+    this.conttrollers[CONTROLLER_CHOOSE] = ChooseController;
+    this.conttrollers[CONTROLLER_SLIDER] = SliderController;
+    this.conttrollers[CONTROLLER_SELECT2] = Select2Controller;
     this.elementsControls = null;
     this._cache = {
       controls: {},
