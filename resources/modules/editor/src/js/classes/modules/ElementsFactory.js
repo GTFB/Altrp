@@ -1,6 +1,6 @@
 import BaseModule from './BaseModule';
 
-class ElementsFabric extends BaseModule{
+class ElementsFactory extends BaseModule{
   parseData(object, parent){
     let children = [];
     const elementsManager = window.elementsManager;
@@ -23,4 +23,4 @@ class ElementsFabric extends BaseModule{
   }
 }
 
-export default ElementsFabric;
+export default ElementsFactory;

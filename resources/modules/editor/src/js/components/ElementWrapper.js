@@ -13,6 +13,7 @@ class ElementWrapper extends Component {
     super(props);
     this.chooseElement = this.chooseElement.bind(this);
     this.deleteElement = this.deleteElement.bind(this);
+    this.duplicateElement = this.duplicateElement.bind(this);
   }
 
   render() {
@@ -46,7 +47,9 @@ class ElementWrapper extends Component {
                   title={editText}>
             <_EditIcon className="icon"/>
           </button>
-          <button className="overlay-settings__button overlay-settings__button_duplicate " title={duplicateText}>
+          <button className="overlay-settings__button overlay-settings__button_duplicate "
+                  onClick={this.duplicateElement}
+                  title={duplicateText}>
             <DuplicateIcon className="icon"/>
           </button>
           <button className="overlay-settings__button overlay-settings__button_delete "
@@ -73,6 +76,10 @@ class ElementWrapper extends Component {
 
   deleteElement() {
     this.props.element.parent.deleteChild(this.props.element);
+  }
+
+  duplicateElement(){
+    console.log(this.props.element.parent);
   }
 }
 

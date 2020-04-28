@@ -1,4 +1,4 @@
-import ElementsFabric from './modules/ElementsFabric';
+import ElementsFactory from './modules/ElementsFactory';
 import SaveImportModule from "./modules/SaveImportModule";
 import SettingsChangeModule from "./modules/SettingsChangeModule";
 import TemplateSettingsChangeModule from "./modules/TemplateSettingsChangeModule";
@@ -9,7 +9,7 @@ class Modules {
    * @param {Editor} editor
    * */
   constructor(editor){
-    this.elementsFabric = new ElementsFabric(this);
+    this.elementsFactory = new ElementsFactory(this);
     this.saveImportModule = new SaveImportModule(this);
     this.settingsChangeModule = new SettingsChangeModule(this);
     this.templateSettingsChangeModule = new  TemplateSettingsChangeModule(this);

@@ -66,10 +66,10 @@ class RootElement extends BaseElement {
       },
     });
 
-    this.addControl('dimensions', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Dimensions',
-    });
+    // this.addControl('dimensions', {
+    //   type: CONTROLLER_DIMENSIONS,
+    //   label: 'Dimensions',
+    // });
 
     this.addControl('select', {
       type: CONTROLLER_SELECT,

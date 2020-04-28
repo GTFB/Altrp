@@ -114,7 +114,6 @@ class BaseElement {
     }
     this.children = newChildren;
     this.component.setChildren(this.children);
-
   }
 
   beforeDelete() {
