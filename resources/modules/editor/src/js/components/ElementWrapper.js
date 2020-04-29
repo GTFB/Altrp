@@ -14,6 +14,9 @@ class ElementWrapper extends Component {
     this.chooseElement = this.chooseElement.bind(this);
     this.deleteElement = this.deleteElement.bind(this);
     this.duplicateElement = this.duplicateElement.bind(this);
+    this.state = {
+      children: this.props.element.getChildren(),
+    };
   }
 
   render() {
@@ -35,6 +38,10 @@ class ElementWrapper extends Component {
         _EditIcon = ColumnIcon;
       }
       break;
+    }
+    let emptyColumn = '';
+    if(this.props.element.getType() === 'column' && ! this.state.children.length){
+      emptyColumn = <div className="column-empty-plus" onClick={this.showWidgetsPanel}><AddIcon/></div>;
     }
     return <div className={classes} onClick={this.chooseElement}>
       <div className={overlayClasses}>
@@ -62,11 +69,14 @@ class ElementWrapper extends Component {
       {
         React.createElement(this.props.component, {
           element: this.props.element,
-          children: this.props.element.getChildren(),
+          children: this.state.children,
+          wrapper: this,
         })
       }
+      {
+        emptyColumn
+      }
     </div>
-
   }
 
   chooseElement(e) {
@@ -83,6 +93,10 @@ class ElementWrapper extends Component {
     e.stopPropagation();
     let factory = getFactory();
     factory.duplicateElement(this.props.element, this.props.element.parent);
+  }
+  showWidgetsPanel(e){
+    e.stopPropagation();
+    getEditor().showWidgetsPanel();
   }
 }
 

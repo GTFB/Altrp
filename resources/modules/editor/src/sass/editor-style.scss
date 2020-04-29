@@ -769,6 +769,27 @@ button{
     }
   }
 }
+.column-empty-plus{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  padding: 5px;
+  border: 1px dashed $grey;
+  width: calc(100% - 20px);
+  cursor: pointer;
+  & svg{
+    -webkit-transform: scale(0.7);
+    -moz-transform: scale(0.7);
+    -ms-transform: scale(0.7);
+    -o-transform: scale(0.7);
+    transform: scale(0.7);
+    & path{
+      fill: $grey;
+    }
+  }
+}
 .altrp-element_widget.altrp-element_current,
 .altrp-element_widget:hover{
   & > .overlay {
