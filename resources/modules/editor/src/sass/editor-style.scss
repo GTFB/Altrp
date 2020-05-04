@@ -15,7 +15,9 @@
   width: 270px;
   display: flex;
   flex-direction: column;
+  max-height: 100vh;
   background-color: $light-gray;
+  overflow: hidden;
   box-shadow: 0 0 5px 0 rgba(0,0,0,.25);
 }
 
@@ -68,6 +70,8 @@ button{
 .left-panel-main{
   flex-grow: 1;
   display: flex;
+  flex-wrap: nowrap;
+  max-height: calc( 100% - 50px - 40px);
 }
 
 .d-flex{
@@ -230,7 +234,6 @@ button{
 }
 .panel{
   width: 100%;
-  flex-wrap: wrap;
   flex-direction: column;
   &-tabs{
     margin-bottom: 11px;

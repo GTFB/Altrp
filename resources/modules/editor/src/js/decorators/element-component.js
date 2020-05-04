@@ -12,8 +12,7 @@ export function setChildren(children) {
       ...this.state,
     children
   });
-  console.log(this.props.wrapper || this.props.wrapper.setState);
-  if(this.props.wrapper || this.props.wrapper.setState){
+  if(this.props.wrapper && this.props.wrapper.setState){
     this.props.wrapper.setState(()=> ({
       ...this.state,
       children

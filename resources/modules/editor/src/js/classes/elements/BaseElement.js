@@ -167,6 +167,7 @@ class BaseElement {
     }
     if(this.settings[settingName] === undefined){
       let control = window.controllersManager.getElementControl(this.getName(), settingName);
+
       if(! control || !control.default){
         return null;
       }

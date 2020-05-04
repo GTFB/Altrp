@@ -14,7 +14,12 @@ class SelectController extends Component {
     value = value || '';
     this.state = {value};
     controllerDecorate(this);
-  };
+    this.changeValue = this.changeValue.bind(this);
+  }
+
+  changeValue(e){
+    this._changeValue(e.target.value);
+  }
 
   render() {
 
@@ -24,13 +29,13 @@ class SelectController extends Component {
         <DesktopIcon className="conntroller-container__label-svg" width="12"/>
       </div>
       <div className="control-container_select-wrapper">
-        <select className="control-select control-field">
-          {this.props.select.map(option => {return <option value={option.value} key={option.id}>{option.label}</option>})}
+        <select className="control-select control-field" onChange={this.changeValue}>
+          {this.props.select.map(option => {return <option value={option.value} key={option.value}>{option.label}</option>})}
         </select>
       </div>
     </div>
   }
-};
+}
 
 function mapStateToProps(state) {
   return{

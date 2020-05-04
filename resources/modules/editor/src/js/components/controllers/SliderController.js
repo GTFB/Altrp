@@ -15,24 +15,18 @@ class SliderController extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {value: this.props.value};
+    this.state = {value};
     controllerDecorate(this);
   };
   sliderChange(e) {
-      this.setState({
-        value: e.target.value,
-      });
-      this.props.currentElement.setSettingValue(this.props.controlId, e.target.value);
+    this._changeValue(e.target.value);
     // console.log(this.state.value)
   };
   inputUpdate (e) {
-    this.setState({
-      value: e.target.value,
-    });
-    this.props.currentElement.setSettingValue(this.props.controlId, e.target.value);
+    this._changeValue(e.target.value);
   }
   render() {
-
+    console.log(this.state.value);
     return <div className="controller-container controller-container_slider">
       <div className="control-slider-header">
         <div className="control-slider-label">
@@ -63,7 +57,7 @@ class SliderController extends Component {
         </div>
       </div>
   }
-};
+}
 
 function mapStateToProps(state) {
   return{

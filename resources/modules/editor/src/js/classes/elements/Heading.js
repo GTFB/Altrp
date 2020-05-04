@@ -26,7 +26,7 @@ class Heading extends BaseElement{
 
     this.addControl('text', {
       type: CONTROLLER_TEXTAREA,
-      label: 'Switcher Content',
+      label: 'Text',
       default: 'I Am Advanced Heading'
     });
 

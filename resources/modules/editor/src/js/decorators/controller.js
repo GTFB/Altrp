@@ -11,7 +11,18 @@ function componentDidUpdate() {
   }
 }
 
+function _changeValue(value) {
+  if(typeof value === 'object'){
+    value = {...value};
+  }
+  this.setState({
+    value:value
+  });
+  this.props.controller.changeValue(value);
+}
+
 let controllerDecorate = function elementWrapperDecorate(component) {
   component.componentDidUpdate = componentDidUpdate.bind(component);
+  component._changeValue = _changeValue.bind(component);
 };
 export default controllerDecorate;

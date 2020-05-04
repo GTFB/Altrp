@@ -15,10 +15,7 @@ class SwitcherController extends Component {
     controllerDecorate(this);
   }
   toggle(){
-    this.setState({
-      value:!this.state.value
-    });
-    this.props.currentElement.setSettingValue(this.props.controlId, !this.state.value);
+    this._changeValue(!this.state.value);
   }
   getDefaultValue(){
     return false;
