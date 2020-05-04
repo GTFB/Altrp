@@ -5,16 +5,46 @@
 
 .admin {
   display: flex;
-  min-height: 100vh;
-
+  height: 100px;
   &-nav {
     &-top {
       background-color: $dark-purple;
+      width: 270px;
+      height: 100vh;
+    }
+    &-list {
     }
   }
-
   &-content {
     width: 100%;
   }
 }
-
+.icon {
+    width: 16px;
+    height: 16px;
+    fill: white;
+    margin-right: 15px;
+    display: inline-block;
+    align-items: center;
+}
+li {
+    list-style-type: none;
+    padding: 0px 20px 0px 20px;
+    background-color: $dark-purple;
+    &:hover{
+        background-color: $purple;
+    }
+}
+ul {
+    margin-left: 0;
+    padding-left: 0;
+}
+p{
+    display: inline-block;
+    color: white;
+    font-weight: 500;
+    font-family: Montserrat, Arial, sans-serif;
+}
+a{
+    text-decoration: none;
+}
