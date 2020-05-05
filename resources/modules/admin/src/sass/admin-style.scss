@@ -13,6 +13,23 @@
       height: 100vh;
     }
     &-list {
+      &__link{
+        display: flex;
+        padding: 10px 20px;
+        color: #fff;
+        font-size: 17px;
+        font-weight: 500;
+        &:hover{
+          color: $green;
+          & path{
+            fill: $green;
+          }
+        }
+        & svg{
+          position: relative;
+          top: 1px;
+        }
+      }
     }
   }
   &-content {
@@ -29,7 +46,6 @@
 }
 li {
     list-style-type: none;
-    padding: 0px 20px 0px 20px;
     background-color: $dark-purple;
     &:hover{
         background-color: $purple;

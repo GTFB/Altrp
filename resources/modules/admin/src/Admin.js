@@ -38,54 +38,54 @@ class Admin extends Component {
           <div className="admin-nav-top">
             <AdminLogo/>
             <ul className="admin-nav-list">
-            <Link to="/admin/dashboard">
               <li>
-                <svg className="icon"><DashboardSvg/></svg>
-                <p>Dashboard</p>
+                <Link to="/admin/dashboard" className="admin-nav-list__link">
+                  <DashboardSvg className="icon"/>
+                  <span>Dashboard</span>
+                </Link>
               </li>
-            </Link>
-            <Link to="/admin/assets">
               <li>
-                <svg className="icon"><AssetSvg/></svg>
-                <p>Assets</p>
+                <Link to="/admin/assets" className="admin-nav-list__link">
+                  <AssetSvg className="icon"/>
+                  <span>Assets</span>
+                </Link>
               </li>
-            </Link>
-            <Link to="/admin/tables">
               <li>
-                <svg className="icon"><TableSvg/></svg>
-                <p>Tables</p>
+                <Link to="/admin/tables" className="admin-nav-list__link">
+                  <TableSvg className="icon"/>
+                  <span>Tables</span>
+                </Link>
               </li>
-            </Link>
-            <Link to="/admin/templates">
               <li>
-                <svg className="icon"><TemplateSvg/></svg>
-                <p>Templates</p>
+                <Link to="/admin/templates" className="admin-nav-list__link">
+                  <TemplateSvg className="icon"/>
+                  <span>Templates</span>
+                </Link>
               </li>
-            </Link>
-            <Link to="/admin/reports">
               <li>
-                <svg className="icon"><ReportSvg/></svg>
-                 <p>Reports</p>
+                <Link to="/admin/reports" className="admin-nav-list__link">
+                  <ReportSvg className="icon"/>
+                  <span>Reports</span>
+                </Link>
               </li>
-            </Link>
-            <Link to="/admin/users">
               <li>
-                <svg className="icon"><UserSvg/></svg>
-                <p>Users</p>
+                <Link to="/admin/users" className="admin-nav-list__link">
+                  <UserSvg className="icon"/>
+                  <span>Users</span>
+                </Link>
               </li>
-            </Link>
-            <Link to="/admin/plugins">
               <li>
-                <svg className="icon"><PluginSvg/></svg>
-                <p>Plugins</p>
+                <Link to="/admin/plugins" className="admin-nav-list__link">
+                  <PluginSvg  className="icon"/>
+                  <span>Plugins</span>
+                </Link>
               </li>
-            </Link>
-            <Link to="/admin/settings">
               <li>
-                <svg className="icon"><SettingSvg/></svg>
-                <p>Settings</p>
+                <Link to="/admin/settings" className="admin-nav-list__link">
+                  <SettingSvg  className="icon"/>
+                  <span>Settings</span>
+                </Link>
               </li>
-            </Link>
             </ul>
           </div>
         </nav>
