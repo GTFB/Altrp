@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import PlusIcon from '../../svgs/plus.svg'
 import FolderIcon from '../../svgs/folder.svg'
-import DropTarget from "./DropTarget";
 import {CONSTANTS, getEditor} from "../helpers";
 import store from '../store/store';
 import {changeTemplateStatus} from "../store/template-status/actions";
@@ -9,14 +8,14 @@ import {changeTemplateStatus} from "../store/template-status/actions";
 class NewSection extends Component {
 
   onDragOver(e) {
-    // console.log(e);
+    console.log(e);
     e.preventDefault();
     e.stopPropagation();
     return false;
   }
 
   onDragEnter(e) {
-    // console.log(e);
+    console.log(e);
     e.preventDefault();
     e.stopPropagation();
     return false;
@@ -39,7 +38,8 @@ class NewSection extends Component {
     return <div className="new-section"
                 onDragOver={this.onDragOver}
                 onDragEnter={this.onDragEnter}
-                onDrop={this.onDrop} data-element-type="new-section">
+                onDrop={this.onDrop}
+                data-element-type="new-section">
         <div className="new-section-buttons d-flex">
           <button draggable="true" className="new-section__button new-section__button_add d-flex "><PlusIcon/></button>
           <button className="new-section__button new-section__button_library d-flex"><FolderIcon/></button>

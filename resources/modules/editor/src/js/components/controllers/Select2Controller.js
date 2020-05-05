@@ -28,7 +28,7 @@ class Select2Controller extends Component {
       </div>
     </div>
   }
-};
+}
 
 function mapStateToProps(state) {
   return{

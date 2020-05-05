@@ -34,7 +34,7 @@ class ElementsFactory extends BaseModule{
   duplicateElement(element, target){
 
     let newElement = this._duplicateElement(element);
-    target.insertAfter(element.getId(), newElement);
+    target.insertNewAfter(element.getId(), newElement);
     /**
      * @member {TemplateDataStorage} templateDataStorage
      * */

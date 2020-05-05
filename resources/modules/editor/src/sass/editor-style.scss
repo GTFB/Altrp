@@ -641,6 +641,16 @@ button{
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  &_drag-over{
+    & .column-empty-plus{
+      &::after{
+        height: 10px;
+      }
+      svg{
+        opacity: 0;
+      }
+    }
+  }
 }
 .altrp-element_section.altrp-element_current,
 .altrp-element_section:hover{
@@ -773,6 +783,7 @@ button{
   }
 }
 .column-empty-plus{
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -791,6 +802,26 @@ button{
     & path{
       fill: $grey;
     }
+  }
+  &::after{
+    position: absolute;
+    left: 10px;
+    content: '';
+    display: block;
+    top: 50%;
+    width: calc(100% - 20px);
+    background-color: $turquoise;
+    height: 0;
+    -webkit-transition-duration: .3s;
+    -moz-transition-duration: .3s;
+    -ms-transition-duration: .3s;
+    -o-transition-duration: .3s;
+    transition-duration: .3s;
+    -webkit-transform: translate(0, -50%);
+    -moz-transform: translate(0, -50%);
+    -ms-transform: translate(0, -50%);
+    -o-transform: translate(0, -50%);
+    transform: translate(0, -50%);
   }
 }
 .altrp-element_widget.altrp-element_current,

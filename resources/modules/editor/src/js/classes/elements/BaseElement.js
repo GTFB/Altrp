@@ -89,7 +89,7 @@ class BaseElement {
    * @param {string} childId
    * @param {BaseElement} newChild
    * */
-  insertAfter(childId, newChild){
+  insertNewAfter(childId, newChild){
     let index;
     this.children.map((childItem, idx)=>{
       if(childItem.getId() === childId){
@@ -97,13 +97,23 @@ class BaseElement {
       }
     });
     if(index === undefined){
-      throw 'childId not found when insertAfter'
+      throw 'childId not found when insertNewAfter'
     }
     newChild.setParent(this);
     this.children.splice(index, 0, newChild);
     this.updateChildren(this.children);
     this.templateNeedUpdate();
   }
+
+  /**
+   * @param {BaseElement} target
+   * */
+  insertAfter(target){
+    target.parent.insertNewAfter(target.getId(), this);
+    this.parent.deleteChild(this.getId());
+  }
+
+
 
   templateNeedUpdate(){
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
