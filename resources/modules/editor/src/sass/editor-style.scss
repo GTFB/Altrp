@@ -642,7 +642,7 @@ button{
   -ms-user-select: none;
   user-select: none;
   &_drag-over{
-    & .column-empty-plus{
+    &.altrp-element_column .column-empty-plus{
       &::after{
         height: 10px;
       }
@@ -651,6 +651,33 @@ button{
       }
     }
   }
+}
+.altrp-element_section::after,
+.altrp-element_section::before,
+.altrp-element_widget::after,
+.altrp-element_widget::before{
+  content: '';
+  display: block;
+  width: 100%;
+  height: 0;
+  background-color: $turquoise;
+  -webkit-transition-duration: .2s;
+  -moz-transition-duration: .2s;
+  -ms-transition-duration: .2s;
+  -o-transition-duration: .2s;
+  transition-duration: .2s;
+}
+.altrp-element_widget.altrp-element_drag-over.altrp-element_drag-top::before{
+  height: 10px;
+}
+.altrp-element_widget.altrp-element_drag-over.altrp-element_drag-bottom::after{
+  height: 10px;
+}
+.altrp-element_section.altrp-element_drag-over.altrp-element_drag-top::before{
+  height: 20px;
+}
+.altrp-element_section.altrp-element_drag-over.altrp-element_drag-bottom::after{
+  height: 20px;
 }
 .altrp-element_section.altrp-element_current,
 .altrp-element_section:hover{
@@ -858,3 +885,4 @@ button{
     }
   }
 }
+

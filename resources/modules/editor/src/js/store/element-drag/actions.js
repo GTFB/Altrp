@@ -5,9 +5,10 @@ export const CHANGE_DRAG_STATE = 'CHANGE_DRAG_STATE';
 export function startDrag(element) {
   return {
     type: START_DRAG,
+    element
   };
 }
-export function stopDrag(element) {
+export function stopDrag() {
   return {
     type: STOP_DRAG,
   };

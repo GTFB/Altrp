@@ -63,3 +63,12 @@ export const CONSTANTS = {
 export function getFactory() {
   return getEditor().modules.elementsFactory;
 }
+/**
+ * @param {Event} e
+ * @param {HTMLElement} element
+ * */
+export function topOrBottomHover(e, element) {
+  let rect = element.getBoundingClientRect();
+  let y = e.clientY - rect.top;
+  return (y < (rect.height / 2)) ? 'top' : 'bottom';
+}

@@ -19,6 +19,7 @@ import HistoryPanel from "./js/components/HistoryPanel";
 import UpdateButton from "./js/components/UpdateButton";
 import {CONSTANTS} from "./js/helpers";
 import Styles from "./js/components/Styles";
+import {stopDrag} from "./js/store/element-drag/actions";
 
 class Editor extends Component {
 
@@ -33,6 +34,7 @@ class Editor extends Component {
     this.openPageSettings = this.openPageSettings.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
     this.showWidgetsPanel = this.showWidgetsPanel.bind(this);
+    this.onDragEnd = this.onDragEnd.bind(this);
     store.subscribe(this.templateStatus.bind(this));
   }
   templateStatus(){
@@ -57,6 +59,13 @@ class Editor extends Component {
       ...this.state,
       activePanel: 'settings'
     });
+  }
+  onDragEnd(){
+    let draggableElement = store.getState().elementDrag.element;
+    if(draggableElement && draggableElement.stopDrag){
+      draggableElement.stopDrag();
+    }
+    store.dispatch(stopDrag());
   }
   endLoading(){
     console.log('editor loaded');
@@ -85,7 +94,7 @@ class Editor extends Component {
 
     return (
         <Provider store={store}>
-            <div className={templateClasses}>
+            <div className={templateClasses} onDragEnd={this.onDragEnd}>
               <div className="left-panel">
                 <div className="editor-top-panel">
                   <button className="btn btn_hamburger"

@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {editorSetCurrentElement, getEditor, getFactory} from "../helpers";
+import {editorSetCurrentElement, getEditor, getFactory, topOrBottomHover} from "../helpers";
 import EditIcon from '../../svgs/edit.svg';
 import DeleteIcon from '../../svgs/delete.svg';
 import DotsIcon from '../../svgs/dots_section.svg';
@@ -25,17 +25,34 @@ class ElementWrapper extends Component {
     this.onDragOver = this.onDragOver.bind(this);
     this.onDrop = this.onDrop.bind(this);
     this.onDragStart = this.onDragStart.bind(this);
+    this.wrapper = React.createRef();
   }
   onDragLeave(e){
     this.setState(state => {
-      return {...state, dragOver: false}}
+      return {...state, dragOver: false, cursorPos: false}}
     );
   }
   onDragOver(e) {
+    let draggableElement = store.getState().elementDrag.element;
     e.preventDefault();
-    e.stopPropagation();
+    let cursorPos = topOrBottomHover(e, this.wrapper.current);
+    //если перетаскивается уже созданный элемент
+    if(draggableElement && typeof draggableElement.getType === 'function'){
+      //перетаскивание секции в секцию не всплывает
+      if(draggableElement.getType() === 'section' && this.props.element.getType() === 'section'){
+        e.stopPropagation();
+      }
+      //перетаскивание виджета в колонку не всплывает
+      if(draggableElement.getType() === 'widget' && this.props.element.getType() === 'column'){
+        e.stopPropagation();
+      }
+    }
+    //если перетаскивается из панели вджетов, то не всплываем
+    if(! draggableElement){
+      e.stopPropagation();
+    }
     this.setState(state => {
-      return {...state, dragOver: true}}
+      return {...state, dragOver: true, cursorPos}}
     );
     return false;
   }
@@ -54,9 +71,9 @@ class ElementWrapper extends Component {
      * */
     e.stopPropagation();
     let newWidgetName = e.dataTransfer.getData('text/plain');
-    console.log(newWidgetName);
+    // console.log(newWidgetName);
     this.setState(state => {
-      return {...state, dragOver: false}}
+      return {...state, dragOver: false, cursorPos:false}}
     );
     // e.preventDefault();
     // e.stopPropagation();
@@ -65,26 +82,47 @@ class ElementWrapper extends Component {
     return false;
   }
   onDragStart(e){
-    store.dispatch(startDrag());
+    store.dispatch(startDrag(this.props.element));
     e.dataTransfer.effectAllowed = "copy";
     e.dataTransfer.setData('altrp-element', this.props.element);
     this.setState(state=>{
       return{...state, isDrag:true};
-    })
+    });
   }
-
-  getOverClasses(){
+  stopDrag(){
+    this.setState(state=>{
+      return{...state, isDrag:false, cursorPos: false};
+    });
+  }
+  getClasses(){
     let classes = '';
-
-    if(!this.state.dragOver){
+    let draggableElement = store.getState().elementDrag.element;
+    // console.log(draggableElement);
+    if(this.state.isDrag){
+      classes += ' altrp-element_is-drag';
       return classes;
     }
-    classes += ' altrp-element_drag-over';
+    if(this.state.dragOver){
+      if(draggableElement && typeof draggableElement.getType === 'function'){
+        if(this.props.element.getType() === 'section' && draggableElement.getType() === 'section'){
+          classes += ' altrp-element_drag-over';
+        }
+        if( draggableElement.getType() === 'widget'){
+          classes += ' altrp-element_drag-over';
+        }
+      }
+      if(!draggableElement){
+        classes += ' altrp-element_drag-over';
+      }
+    }
+    if(this.state.cursorPos){
+      classes += ` altrp-element_drag-${this.state.cursorPos}`;
+    }
     return classes;
   }
 
   render() {
-    let classes = `altrp-element ${this.props.element.getSelector()} altrp-element_${this.props.element.getType()}`;
+    let classes = `altrp-element ${this.props.element.getSelector().replace('.','')} altrp-element_${this.props.element.getType()}`;
     let overlayClasses = `overlay`;
     if (this.props.currentElement === this.props.element) {
       classes += ' altrp-element_current';
@@ -93,8 +131,7 @@ class ElementWrapper extends Component {
     let duplicateText = `Duplicate ${this.props.element.getTitle()}`;
     let deleteText = `Delete ${this.props.element.getTitle()}`;
     let _EditIcon = EditIcon;
-    classes += this.getOverClasses();
-    console.log(classes);
+    classes += this.getClasses();
     switch (this.props.element.getType()){
       case 'section':{
         _EditIcon = DotsIcon;
@@ -110,6 +147,7 @@ class ElementWrapper extends Component {
       emptyColumn = <div className="column-empty-plus" onClick={this.showWidgetsPanel}><AddIcon className="no-transition"/></div>;
     }
     return <div className={classes}
+                ref={this.wrapper}
                 onDragOver={this.onDragOver}
                 onClick={this.chooseElement}
                 onDrop={this.onDrop}

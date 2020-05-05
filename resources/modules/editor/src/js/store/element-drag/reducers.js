@@ -15,11 +15,13 @@ export function elementDragReducer(state, action) {
     case STOP_DRAG:{
       state = {
         dragState: STOP_DRAG,
+        element:null,
       };
     }break;
     case START_DRAG:{
       state = {
         dragState: START_DRAG,
+        element: action.element
       };
     }break;
   }

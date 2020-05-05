@@ -8,14 +8,12 @@ import {changeTemplateStatus} from "../store/template-status/actions";
 class NewSection extends Component {
 
   onDragOver(e) {
-    console.log(e);
     e.preventDefault();
     e.stopPropagation();
     return false;
   }
 
   onDragEnter(e) {
-    console.log(e);
     e.preventDefault();
     e.stopPropagation();
     return false;
