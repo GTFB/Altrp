@@ -17,7 +17,7 @@ class CreateTemplatesTable extends Migration
             $table->bigIncrements('id');
             $table->string('name')->nullable();
             $table->string('title')->nullable();
-            $table->text('data')->nullable();
+            $table->longText('data')->nullable();
             $table->string('type')->nullable(); // может сделать boolean?
             $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();

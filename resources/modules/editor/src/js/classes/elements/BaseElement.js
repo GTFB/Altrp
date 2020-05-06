@@ -79,17 +79,25 @@ class BaseElement {
    * */
   appendChild(child){
     this.children.push(child);
-    child.parent = this;
+    child.setParent(this);
     if(this.component && typeof this.component.setChildren === 'function'){
       this.component.setChildren(this.children);
     }
+    this.templateNeedUpdate();
   }
 
+  insertSiblingAfter(newSibling){
+    this.parent.insertNewChildAfter(this.getId(), newSibling);
+  }
+
+  insertSiblingBefore(newSibling){
+    this.parent.insertNewChildBefore(this.getId(), newSibling);
+  }
   /**
    * @param {string} childId
    * @param {BaseElement} newChild
    * */
-  insertNewAfter(childId, newChild){
+  insertNewChildAfter(childId, newChild){
     let index;
     this.children.map((childItem, idx)=>{
       if(childItem.getId() === childId){
@@ -97,11 +105,30 @@ class BaseElement {
       }
     });
     if(index === undefined){
-      throw 'childId not found when insertNewAfter'
+      throw 'childId not found when insertNewChildAfter'
+    }
+    newChild.setParent(this);
+    this.children.splice(index+1, 0, newChild);
+    this.component.setChildren(this.children);
+    this.templateNeedUpdate();
+  }
+  /**
+   * @param {string} childId
+   * @param {BaseElement} newChild
+   * */
+  insertNewChildBefore(childId, newChild){
+    let index;
+    this.children.map((childItem, idx)=>{
+      if(childItem.getId() === childId){
+        index = idx;
+      }
+    });
+    if(index === undefined){
+      throw 'childId not found when insertNewChildBefore'
     }
     newChild.setParent(this);
     this.children.splice(index, 0, newChild);
-    this.updateChildren(this.children);
+    this.component.setChildren(this.children);
     this.templateNeedUpdate();
   }
 
@@ -109,11 +136,14 @@ class BaseElement {
    * @param {BaseElement} target
    * */
   insertAfter(target){
-    target.parent.insertNewAfter(target.getId(), this);
-    this.parent.deleteChild(this.getId());
+    target.insertSiblingAfter(this);
   }
-
-
+  /**
+   * @param {BaseElement} target
+   * */
+  insertBefore(target){
+    target.insertSiblingBefore(this);
+  }
 
   templateNeedUpdate(){
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
@@ -128,7 +158,9 @@ class BaseElement {
    * @param {BaseElement[]} newChildren
    * */
   updateChildren(newChildren){
-    this.children = newChildren;
+    if(newChildren){
+      this.children = newChildren;
+    }
     this.component.setChildren(this.children);
   }
 
@@ -158,6 +190,10 @@ class BaseElement {
       throw 'Element not Found for Delete'
     }
     this.updateChildren(newChildren);
+  }
+
+  removeFromParent(){
+    this.parent.deleteChild(this);
   }
 
   beforeDelete() {
@@ -381,6 +417,9 @@ class BaseElement {
    * @param {BaseElement} parent
    * */
   setParent(parent){
+    if(this.parent instanceof BaseElement){
+      this.parent.deleteChild(this);
+    }
     this.parent = parent;
   }
 }

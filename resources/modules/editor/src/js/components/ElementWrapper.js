@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {editorSetCurrentElement, getEditor, getFactory, topOrBottomHover} from "../helpers";
+import {editorSetCurrentElement, getEditor, getFactory, getTemplateDataStorage, topOrBottomHover} from "../helpers";
 import EditIcon from '../../svgs/edit.svg';
 import DeleteIcon from '../../svgs/delete.svg';
 import DotsIcon from '../../svgs/dots_section.svg';
@@ -9,6 +9,7 @@ import AddIcon from '../../svgs/add.svg';
 import DuplicateIcon from '../../svgs/duplicate.svg';
 import store from '../store/store'
 import {START_DRAG, startDrag} from "../store/element-drag/actions";
+import {setCurrentElement} from "../store/current-element/actions";
 
 class ElementWrapper extends Component {
   constructor(props){
@@ -25,6 +26,7 @@ class ElementWrapper extends Component {
     this.onDragOver = this.onDragOver.bind(this);
     this.onDrop = this.onDrop.bind(this);
     this.onDragStart = this.onDragStart.bind(this);
+    this.onDragEnd = this.onDragEnd.bind(this);
     this.wrapper = React.createRef();
   }
   onDragLeave(e){
@@ -33,6 +35,7 @@ class ElementWrapper extends Component {
     );
   }
   onDragOver(e) {
+    // console.log('over');
     let draggableElement = store.getState().elementDrag.element;
     e.preventDefault();
     let cursorPos = topOrBottomHover(e, this.wrapper.current);
@@ -64,21 +67,53 @@ class ElementWrapper extends Component {
   }
 
   onDrop(e) {
-    // console.log(e);
-    // console.log(e.target);
     /**
      * @member {HTMLElement} target
+     * @member {ElementsManger} elementsManager
      * */
-    e.stopPropagation();
+    // e.stopPropagation();
     let newWidgetName = e.dataTransfer.getData('text/plain');
-    // console.log(newWidgetName);
+    if(newWidgetName){
+      e.stopPropagation();
+      let newElement = new (elementsManager.getElementClass(newWidgetName));
+      if(this.props.element.getType() === 'widget'){
+        switch (this.state.cursorPos) {
+          case 'top':{
+            this.props.element.insertSiblingBefore(newElement);
+          }break;
+          case 'bottom':{
+            this.props.element.insertSiblingAfter(newElement);
+          }break;
+        }
+      }
+      if(this.props.element.getType() === 'column'){
+        this.props.element.appendChild(newElement);
+      }
+    }
+    /**
+     * @member {BaseElement} draggableElement
+     * */
+    let draggableElement = store.getState().elementDrag.element;
+    if(draggableElement && typeof draggableElement.getType === 'function'){
+      if(this.props.element.getType() === 'widget' && draggableElement.getType() === 'widget') {
+        draggableElement.insertAfter(this.props.element);
+        e.stopPropagation();
+      }else
+      if(this.props.element.getType() === 'column' && draggableElement.getType() === 'widget') {
+        this.props.element.appendChild(draggableElement);
+        e.stopPropagation();
+      } else
+      if(this.props.element.getType() === 'section' && draggableElement.getType() === 'section') {
+        draggableElement.insertAfter(this.props.element);
+        e.stopPropagation();
+      }
+    }
     this.setState(state => {
-      return {...state, dragOver: false, cursorPos:false}}
+      return {...state, dragOver: false, cursorPos:false, isDrag:false}}
     );
     // e.preventDefault();
     // e.stopPropagation();
     // getEditor().modules.templateDataStorage.addWidgetInSection(newWidgetName);
-
     return false;
   }
   onDragStart(e){
@@ -89,9 +124,12 @@ class ElementWrapper extends Component {
       return{...state, isDrag:true};
     });
   }
+  onDragEnd(){
+    this.stopDrag();
+  }
   stopDrag(){
     this.setState(state=>{
-      return{...state, isDrag:false, cursorPos: false};
+      return{...state, isDrag:false,dragOver: false, cursorPos: false};
     });
   }
   getClasses(){
@@ -100,6 +138,7 @@ class ElementWrapper extends Component {
     // console.log(draggableElement);
     if(this.state.isDrag){
       classes += ' altrp-element_is-drag';
+      console.log(classes);
       return classes;
     }
     if(this.state.dragOver){
@@ -151,6 +190,7 @@ class ElementWrapper extends Component {
                 onDragOver={this.onDragOver}
                 onClick={this.chooseElement}
                 onDrop={this.onDrop}
+                onDragEnd={this.onDragEnd}
                 onDragLeave={this.onDragLeave}
                 onDragEnter={this.onDragEnter}>
       <div className={overlayClasses}>
@@ -203,7 +243,9 @@ class ElementWrapper extends Component {
   duplicateElement(e){
     e.stopPropagation();
     let factory = getFactory();
-    factory.duplicateElement(this.props.element, this.props.element.parent);
+    let newElement = factory.duplicateElement(this.props.element, this.props.element.parent);
+    getTemplateDataStorage().setCurrentElement(newElement);
+    getEditor().showSettingsPanel();
   }
   showWidgetsPanel(e){
     e.stopPropagation();

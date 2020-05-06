@@ -30,16 +30,18 @@ class ElementsFactory extends BaseModule{
   /**
    * @param {BaseElement} element
    * @param {BaseElement} target
+   * @return{BaseElement}
    * */
   duplicateElement(element, target){
 
     let newElement = this._duplicateElement(element);
-    target.insertNewAfter(element.getId(), newElement);
+    target.insertNewChildAfter(element.getId(), newElement);
     /**
      * @member {TemplateDataStorage} templateDataStorage
      * */
     let templateDataStorage = getEditor().modules.templateDataStorage;
     templateDataStorage.elementsIds = _.union(templateDataStorage.elementsIds, newElement.getIds());
+    return newElement;
   }
   /**
    * @param {BaseElement} element

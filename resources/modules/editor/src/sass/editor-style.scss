@@ -679,6 +679,9 @@ button{
 .altrp-element_section.altrp-element_drag-over.altrp-element_drag-bottom::after{
   height: 20px;
 }
+//.altrp-element_is-drag{
+//  opacity: .7;
+//}
 .altrp-element_section.altrp-element_current,
 .altrp-element_section:hover{
   & > .overlay{

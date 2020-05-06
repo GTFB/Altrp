@@ -63,6 +63,7 @@ class Editor extends Component {
   onDragEnd(){
     let draggableElement = store.getState().elementDrag.element;
     if(draggableElement && draggableElement.stopDrag){
+      console.log('stop');
       draggableElement.stopDrag();
     }
     store.dispatch(stopDrag());

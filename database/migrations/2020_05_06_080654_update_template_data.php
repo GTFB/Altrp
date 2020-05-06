@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class TemplateUpdate extends Migration
+class UpdateTemplateData extends Migration
 {
     /**
      * Run the migrations.
@@ -15,8 +15,7 @@ class TemplateUpdate extends Migration
     {
         //
       Schema::table( 'templates', function ( Blueprint $table ){
-        $table->softDeletes();
-        $table->bigInteger( 'parent_template' )->nullable()->index();
+        $table->longText( 'data' )->change();
 
       } );
     }
