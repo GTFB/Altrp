@@ -111,6 +111,11 @@ function (_BaseElement) {
           label: 'Select Content 2'
         }]
       });
+      this.addControl('link', {
+        type: _ControllersManager.CONTROLLER_LINK,
+        label: 'link content',
+        isActive: false
+      });
       this.endControlSection();
       this.startControlSection('text_style', {
         tab: _ControllersManager.TAB_STYLE,

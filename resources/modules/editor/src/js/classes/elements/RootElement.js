@@ -8,6 +8,7 @@ import {
   CONTROLLER_CHOOSE,
   CONTROLLER_SLIDER,
   CONTROLLER_SELECT2,
+  CONTROLLER_LINK,
   TAB_ADVANCED,
   TAB_CONTENT,
   TAB_STYLE
@@ -104,7 +105,7 @@ class RootElement extends BaseElement {
       type: CONTROLLER_SELECT2,
       label: 'Select2 Content',
       placeholder: 'placeholder',
-      select: [ 
+      select: [
         {
           value: '1',
           label:'Select Content 1'
@@ -112,8 +113,14 @@ class RootElement extends BaseElement {
         {
           value: '2',
           label:'Select Content 2'
-        }
+        },
       ]
+    });
+
+    this.addControl('link', {
+      type: CONTROLLER_LINK,
+      label: 'link content',
+      isActive: false
     });
 
     

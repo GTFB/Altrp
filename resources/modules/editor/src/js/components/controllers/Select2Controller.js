@@ -15,7 +15,6 @@ class Select2Controller extends Component {
     value = value || '';
     this.state = {value};
     controllerDecorate(this);
-    console.log(this.state.options)
   };
 
   render() {
@@ -25,7 +24,7 @@ class Select2Controller extends Component {
     function change() {
       this.setState({
         value: selectValue
-      });
+      })
     };
 
     const customStyles = {
@@ -37,6 +36,7 @@ class Select2Controller extends Component {
         color: state.isFocused ? '#FFF' : "#8E94AA",
         fontSize: 13,
         padding: 5,
+        height: 20
       }),
 
       menu: () => ({
@@ -65,8 +65,9 @@ class Select2Controller extends Component {
       }),
 
       placeholder: () => ({
-        color: "#8E94AA !important",
-        fontSize: 13
+        color: "#8E94AA",
+        fontSize: 13,
+        opacity: 1
       }),
       
       indicatorSeparator: () => ({
@@ -76,7 +77,7 @@ class Select2Controller extends Component {
       singleValue: () => ({
         color: "#8E94AA",
       })
-    }
+    };
 
     return <div className="controller-container controller-container_select2">
       <div className="control-select2-header">
