@@ -103,13 +103,14 @@ class RootElement extends BaseElement {
     this.addControl('select2', {
       type: CONTROLLER_SELECT2,
       label: 'Select2 Content',
+      placeholder: 'placeholder',
       select: [ 
         {
-          value: 'select',
+          value: '1',
           label:'Select Content 1'
         }, 
         {
-          value: 'select',
+          value: '2',
           label:'Select Content 2'
         }
       ]

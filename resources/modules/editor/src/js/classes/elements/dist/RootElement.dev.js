@@ -56,9 +56,25 @@ function (_BaseElement) {
         label: 'Switcher Content',
         "default": 'Switcher Content'
       });
-      this.addControl('number', {
+      this.addControl('font-size', {
         type: _ControllersManager.CONTROLLER_NUMBER,
-        label: 'Number Content'
+        label: 'Font Size',
+        "default": 16,
+        rules: {
+          '{{ELEMENT}}': ['font-size: {{VALUE}}px;', 'line-height: {{VALUE}}px']
+        }
+      });
+      this.addControl('padding', {
+        type: _ControllersManager.CONTROLLER_NUMBER,
+        label: 'Padding All',
+        "default": 17,
+        rules: {
+          '{{ELEMENT}}': 'padding: {{VALUE}}px;'
+        }
+      });
+      this.addControl('dimensions', {
+        type: _ControllersManager.CONTROLLER_DIMENSIONS,
+        label: 'Dimensions'
       });
       this.addControl('select', {
         type: _ControllersManager.CONTROLLER_SELECT,
@@ -86,11 +102,12 @@ function (_BaseElement) {
       this.addControl('select2', {
         type: _ControllersManager.CONTROLLER_SELECT2,
         label: 'Select2 Content',
+        placeholder: 'placeholder',
         select: [{
-          value: 'select',
+          value: '1',
           label: 'Select Content 1'
         }, {
-          value: 'select',
+          value: '2',
           label: 'Select Content 2'
         }]
       });
@@ -159,6 +176,11 @@ function (_BaseElement) {
       }
 
       this.appendChild(newSection);
+    }
+  }, {
+    key: "getSelector",
+    value: function getSelector() {
+      return "altrp-template-root".concat(this.getId());
     }
   }], [{
     key: "getName",
