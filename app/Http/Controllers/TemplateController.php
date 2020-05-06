@@ -16,7 +16,18 @@ class TemplateController extends Controller
    */
   public function index( Request $request )
   {
-    $templates = Template::all()->toArray();
+    $_templates = Template::where( 'type', '!=', 'review' )->get();
+    $templates = [];
+    foreach ( $_templates as $template ) {
+      $templates[] = [
+        'user' => $template->user,
+        'name' => $template->name,
+        'title' => $template->title,
+        'id' => $template->id,
+        'author' => $template->user->name,
+      ];
+    }
+
     return \response()->json( $templates );
   }
 

@@ -1,0 +1,41 @@
+
+.admin-table{
+  width: 100%;
+  border: 1px solid $border-gray;
+  border-radius: 3px;
+  overflow: hidden;
+  & .admin-table__td{
+    height: 65px;
+    &_check{
+      width: 45px;
+      text-align: center;
+    }
+  }
+  & table{
+    border-collapse: collapse;
+    width: 100%;
+  }
+  &-head{
+    background-color: #fff;
+    border-bottom: 1px solid $border-gray;
+    & .admin-table__td{
+      height: 45px;
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 20px;
+      color: $purple;
+    }
+  }
+  &-body{
+    & .admin-table-row{
+      &:nth-child(2n){
+        background-color: $light-light-gray;
+      }
+      &:nth-child(2n+1){
+        background-color: #fff;
+      }
+    }
+  }
+}

@@ -89,7 +89,6 @@ class Admin extends Component {
             </ul>
           </div>
         </nav>
-        <div className="admin-content">
           <Switch>
             <Route path="/admin/pages">
               <AllPages/>
@@ -119,7 +118,6 @@ class Admin extends Component {
               <Templates/>
             </Route>
           </Switch>
-        </div>
       </Router>
     </div>;
   }
