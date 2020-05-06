@@ -19,14 +19,13 @@ class SliderController extends Component {
     controllerDecorate(this);
   };
   sliderChange(e) {
-    this._changeValue(e.target.value);
+    this._changeValue({size:e.target.value, unit:'px'});
     // console.log(this.state.value)
   };
   inputUpdate (e) {
-    this._changeValue(e.target.value);
+    this._changeValue({size:e.target.value, unit:'px'});
   }
   render() {
-    console.log(this.state.value);
     return <div className="controller-container controller-container_slider">
       <div className="control-slider-header">
         <div className="control-slider-label">
@@ -50,9 +49,9 @@ class SliderController extends Component {
         </div>
       </div>
         <div className="control-slider-input-wrapper">
-          <input type="range" min="0" max="100" className="control-slider" value={this.state.value} onChange={this.inputUpdate} onInput={this.sliderChange}></input>
+          <input type="range" min="0" max="100" className="control-slider" value={this.state.value.size} onChange={this.inputUpdate} onInput={this.sliderChange}></input>
           <div className="control-slider-input-box">
-            <input className="control-slider-input" type="number" min="0" max="100" value={this.state.value} onChange={this.inputUpdate} onInput={this.sliderChange}></input>
+            <input className="control-slider-input" type="number" min="0" max="100" value={this.state.value.size} onChange={this.inputUpdate} onInput={this.sliderChange}></input>
           </div>
         </div>
       </div>

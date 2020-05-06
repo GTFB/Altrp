@@ -95,7 +95,10 @@ class RootElement extends BaseElement {
     this.addControl('slider', {
       type: CONTROLLER_SLIDER,
       label: 'Slider Content',
-      default: 0
+      default:{size:12, unit:'px'},
+      rules: {
+        '{{ELEMENT}}': 'padding: {{SIZE}}{{UNIT}};',
+      },
     });
 
     this.addControl('select2', {
@@ -107,7 +110,7 @@ class RootElement extends BaseElement {
           label:'Select Content 1'
         }, 
         {
-          value: 'select',
+          value: 'select1',
           label:'Select Content 2'
         }
       ]
