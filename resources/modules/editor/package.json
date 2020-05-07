@@ -5,6 +5,8 @@
     "build": "webpack --config webpack.prod.js"
   },
   "dependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
     "lodash": "^4.17.15",
     "react": "^16.13.1",
     "react-dnd": "^10.0.2",
