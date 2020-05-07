@@ -554,9 +554,16 @@ button{
   color: #8E94AA;
 }
 .control-slider-type-label{
+  padding: 0;
+  display: inline;
   cursor: pointer;
+  background-color: #fff;
+  border: none;
+  color: $grey;
+  font-size: 12px;
 }
 // active px % vw or em
+.control-slider-type-label:hover,
 .control-slider-type-label:active{
   text-decoration: underline;
 }
@@ -566,6 +573,15 @@ button{
   display: flex;
   align-items: center;
   justify-content: center;
+  &_active{
+    & .control-slider-type-label{
+      color: $black;
+      &:hover{
+        text-decoration: none;
+        cursor: default;
+      }
+    }
+  }
 }
 .control-container-choose-block{
   width: 27px;

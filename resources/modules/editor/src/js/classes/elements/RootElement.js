@@ -96,7 +96,17 @@ class RootElement extends BaseElement {
     this.addControl('slider', {
       type: CONTROLLER_SLIDER,
       label: 'Slider Content',
-      default:{size:12, unit:'px'},
+      default:{
+        size:12,
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 10,
+      min: -10,
       rules: {
         '{{ELEMENT}}': 'padding: {{SIZE}}{{UNIT}};',
       },
