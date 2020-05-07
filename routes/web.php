@@ -40,18 +40,19 @@ Route::get( '/admin/editor-content', function (){
 Route::group(['prefix' => 'admin'], function () {
 
   Route::group(['prefix' => 'ajax'], function () {
-    Route::get('/templates', "Constructor\Templates@getTemplates");
-    Route::get('/templates/{template}', "Constructor\Templates@getTemplate");
-    Route::post('/templates', "Constructor\Templates@insert");
-    Route::put('/templates/{template}', "Constructor\Templates@update");
-    Route::delete('/templates/{template}', "Constructor\Templates@delete");
+//    Route::get('/templates', "Constructor\Templates@getTemplates");
+//    Route::get('/templates/{template}', "Constructor\Templates@getTemplate");
+//    Route::post('/templates', "Constructor\Templates@insert");
+//    Route::put('/templates/{template}', "Constructor\Templates@update");
+//    Route::delete('/templates/{template}', "Constructor\Templates@delete");
 
     Route::get('/global-elements', "Constructor\GlobalElements@getElements");
     Route::get('/global-elements/{element}', "Constructor\GlobalElements@getElement");
     Route::post('/global-elements', "Constructor\GlobalElements@insert");
     Route::put('/global-elements/{element}', "Constructor\GlobalElements@update");
     Route::delete('/global-elements/{element}', "Constructor\GlobalElements@trashed");
-
+    Route::resource( 'templates', 'TemplateController' );
+    Route::get( '/template/{template_id}/reviews', 'TemplateController@reviews' );
   });
 
 });

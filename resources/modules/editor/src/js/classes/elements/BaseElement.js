@@ -1,5 +1,7 @@
 import {CONTROLLER_TEXT, CONTROLLER_TEXTAREA, TAB_CONTENT, TAB_STYLE} from "../modules/ControllersManager";
-import {getTemplateDataStorage, isEditor, getEditor, CONSTANTS} from "../../helpers";
+import {getTemplateDataStorage, isEditor, getEditor, CONSTANTS, templateNeedUpdate} from "../../helpers";
+import {changeTemplateStatus} from "../../store/template-status/actions";
+import store from "../../store/store";
 
 class BaseElement {
 
@@ -77,14 +79,89 @@ class BaseElement {
    * */
   appendChild(child){
     this.children.push(child);
-    child.parent = this;
+    child.setParent(this);
     if(this.component && typeof this.component.setChildren === 'function'){
       this.component.setChildren(this.children);
     }
+    this.templateNeedUpdate();
   }
 
-  insertAfter(childId, child){
+  insertSiblingAfter(newSibling){
+    this.parent.insertNewChildAfter(this.getId(), newSibling);
+  }
 
+  insertSiblingBefore(newSibling){
+    this.parent.insertNewChildBefore(this.getId(), newSibling);
+  }
+  /**
+   * @param {string} childId
+   * @param {BaseElement} newChild
+   * */
+  insertNewChildAfter(childId, newChild){
+    let index;
+    this.children.map((childItem, idx)=>{
+      if(childItem.getId() === childId){
+        index = idx;
+      }
+    });
+    if(index === undefined){
+      throw 'childId not found when insertNewChildAfter'
+    }
+    newChild.setParent(this);
+    this.children.splice(index+1, 0, newChild);
+    this.component.setChildren(this.children);
+    this.templateNeedUpdate();
+  }
+  /**
+   * @param {string} childId
+   * @param {BaseElement} newChild
+   * */
+  insertNewChildBefore(childId, newChild){
+    let index;
+    this.children.map((childItem, idx)=>{
+      if(childItem.getId() === childId){
+        index = idx;
+      }
+    });
+    if(index === undefined){
+      throw 'childId not found when insertNewChildBefore'
+    }
+    newChild.setParent(this);
+    this.children.splice(index, 0, newChild);
+    this.component.setChildren(this.children);
+    this.templateNeedUpdate();
+  }
+
+  /**
+   * @param {BaseElement} target
+   * */
+  insertAfter(target){
+    target.insertSiblingAfter(this);
+  }
+  /**
+   * @param {BaseElement} target
+   * */
+  insertBefore(target){
+    target.insertSiblingBefore(this);
+  }
+
+  templateNeedUpdate(){
+    store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
+  }
+  /**
+   * @param {BaseElement[]} newChildren
+   * */
+  setChildren(newChildren){
+    this.children = newChildren;
+  }
+  /**
+   * @param {BaseElement[]} newChildren
+   * */
+  updateChildren(newChildren){
+    if(newChildren){
+      this.children = newChildren;
+    }
+    this.component.setChildren(this.children);
   }
 
   /**
@@ -112,9 +189,11 @@ class BaseElement {
     if(!childExist){
       throw 'Element not Found for Delete'
     }
-    this.children = newChildren;
-    this.component.setChildren(this.children);
+    this.updateChildren(newChildren);
+  }
 
+  removeFromParent(){
+    this.parent.deleteChild(this);
   }
 
   beforeDelete() {
@@ -134,6 +213,7 @@ class BaseElement {
     }
     if(this.settings[settingName] === undefined){
       let control = window.controllersManager.getElementControl(this.getName(), settingName);
+
       if(! control || !control.default){
         return null;
       }
@@ -332,6 +412,15 @@ class BaseElement {
       }
     }
     return styles;
+  }
+  /**
+   * @param {BaseElement} parent
+   * */
+  setParent(parent){
+    if(this.parent instanceof BaseElement){
+      this.parent.deleteChild(this);
+    }
+    this.parent = parent;
   }
 }
 

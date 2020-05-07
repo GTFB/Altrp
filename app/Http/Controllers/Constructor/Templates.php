@@ -38,12 +38,12 @@ class Templates extends ApiController
         return response()->json($template, 200, [],JSON_UNESCAPED_UNICODE);
         
     }
-    
-    /**
-     * Добавление права действия
-     * @param Request $request
-     * @return type
-     */
+
+  /**
+   * Добавление права действия
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   */
     function insert(ApiRequest $request) {
 
         $request->validate([

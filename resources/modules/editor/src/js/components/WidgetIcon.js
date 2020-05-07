@@ -1,5 +1,7 @@
 import React, {Component} from "react";
 import BaseElement from "../classes/elements/BaseElement";
+import store from '../store/store'
+import {startDrag} from "../store/element-drag/actions";
 
 export default class WidgetIcon  extends  Component{
   constructor(props){
@@ -11,6 +13,7 @@ export default class WidgetIcon  extends  Component{
     this.onDragStart = this.onDragStart.bind(this);
   }
   onDragStart(e){
+    store.dispatch(startDrag(null));
     e.dataTransfer.effectAllowed = "copy";
     e.dataTransfer.setData('text/plain', this.state.element.getName());
   }

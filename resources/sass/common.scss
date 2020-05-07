@@ -30,3 +30,11 @@ iframe{
   display: block;
   border: none;
 }
+
+.no-transition{
+  -webkit-transition-duration: 0s!important;
+  -moz-transition-duration: 0s!important;
+  -ms-transition-duration: 0s!important;
+  -o-transition-duration: 0s!important;
+  transition-duration: 0s!important;
+}

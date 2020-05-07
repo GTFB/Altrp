@@ -2,19 +2,76 @@
 @import "../../../../sass/vars";
 @import "components/admin-heading";
 @import "components/elements";
+@import "components/admin-table";
 
 .admin {
   display: flex;
-  min-height: 100vh;
-
+  height: 100vh;
   &-nav {
     &-top {
       background-color: $dark-purple;
+      width: 270px;
+      height: 100vh;
+    }
+    &-list {
+      &__link{
+        display: flex;
+        padding: 10px 20px;
+        color: #fff;
+        font-size: 17px;
+        font-weight: 500;
+        &:hover{
+          color: $green;
+          & path{
+            fill: $green;
+          }
+        }
+        & svg{
+          position: relative;
+          top: 1px;
+        }
+      }
     }
   }
-
   &-content {
     width: 100%;
   }
 }
-
+.icon {
+    width: 16px;
+    height: 16px;
+    fill: white;
+    margin-right: 15px;
+    display: inline-block;
+    align-items: center;
+}
+li {
+    list-style-type: none;
+    background-color: $dark-purple;
+    &:hover{
+        background-color: $purple;
+    }
+}
+ul {
+    margin-left: 0;
+    padding-left: 0;
+}
+p{
+    display: inline-block;
+    color: white;
+    font-weight: 500;
+    font-family: Montserrat, Arial, sans-serif;
+}
+a{
+    text-decoration: none;
+}
+.admin-page{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.admin-content{
+  background-color: $light-light-gray;
+  flex-grow: 1;
+  padding: 13px 25px;
+}

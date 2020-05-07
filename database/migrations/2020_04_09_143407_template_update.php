@@ -17,6 +17,7 @@ class TemplateUpdate extends Migration
       Schema::table( 'templates', function ( Blueprint $table ){
         $table->softDeletes();
         $table->bigInteger( 'parent_template' )->nullable()->index();
+
       } );
     }
 

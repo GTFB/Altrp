@@ -1,4 +1,3 @@
-// import store from './store/store';
 
 export function getTemplateId(){
   return (new URL(window.location)).searchParams.get('template_id');
@@ -60,3 +59,16 @@ export const CONSTANTS = {
   TEMPLATE_SAVING: 'TEMPLATE_SAVING',
   DEFAULT_BREAKPOINT: 'DEFAULT_BREAKPOINT',
 };
+
+export function getFactory() {
+  return getEditor().modules.elementsFactory;
+}
+/**
+ * @param {Event} e
+ * @param {HTMLElement} element
+ * */
+export function topOrBottomHover(e, element) {
+  let rect = element.getBoundingClientRect();
+  let y = e.clientY - rect.top;
+  return (y < (rect.height / 2)) ? 'top' : 'bottom';
+}

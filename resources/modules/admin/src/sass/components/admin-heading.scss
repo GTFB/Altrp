@@ -28,3 +28,24 @@
     font-size: 28px;
   }
 }
+
+.admin-filters {
+    margin-left: 20px;
+    margin-right: 20px;
+    font-size: 15px;
+    font-family: Roboto, Arial, sans-serif;
+    &__link {
+        text-decoration: none;
+        color: $grey;
+        &:hover {
+            color: $blue;
+        }
+    }
+    &__separator {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    &__current {
+        font-size: 15px;
+    }
+}

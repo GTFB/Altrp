@@ -4,6 +4,17 @@ import {hot} from "react-hot-loader";
 import AdminLogo from './svgs/admin__logo.svg';
 import AllPages from './components/AllPages';
 import AdminSettings from './components/AdminSettings';
+import AssetSvg from './svgs/assets.svg';
+import BurgerSvg from './svgs/burger.svg';
+import CloseBurgerSvg from './svgs/closeburger.svg';
+import DashboardSvg from './svgs/dashboard.svg';
+import PageSvg from './svgs/pages.svg';
+import PluginSvg from './svgs/plugins.svg';
+import ReportSvg from './svgs/reports.svg';
+import SettingSvg from './svgs/settings.svg';
+import TableSvg from './svgs/tables.svg';
+import TemplateSvg from './svgs/templates.svg';
+import UserSvg from './svgs/users.svg';
 
 import {
   BrowserRouter as Router,
@@ -12,6 +23,12 @@ import {
   Link
 } from "react-router-dom";
 import Users from "./components/Users";
+import Assets from "./components/Assets";
+import Dashboard from "./components/Dashboard";
+import Plugins from "./components/Plugins";
+import Reports from "./components/Reports";
+import Tables from "./components/Tables";
+import Templates from "./components/Templates";
 
 class Admin extends Component {
   render() {
@@ -20,20 +37,58 @@ class Admin extends Component {
         <nav className="admin-nav">
           <div className="admin-nav-top">
             <AdminLogo/>
+            <ul className="admin-nav-list">
+              <li>
+                <Link to="/admin/dashboard" className="admin-nav-list__link">
+                  <DashboardSvg className="icon"/>
+                  <span>Dashboard</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/admin/assets" className="admin-nav-list__link">
+                  <AssetSvg className="icon"/>
+                  <span>Assets</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/admin/tables" className="admin-nav-list__link">
+                  <TableSvg className="icon"/>
+                  <span>Tables</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/admin/templates" className="admin-nav-list__link">
+                  <TemplateSvg className="icon"/>
+                  <span>Templates</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/admin/reports" className="admin-nav-list__link">
+                  <ReportSvg className="icon"/>
+                  <span>Reports</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/admin/users" className="admin-nav-list__link">
+                  <UserSvg className="icon"/>
+                  <span>Users</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/admin/plugins" className="admin-nav-list__link">
+                  <PluginSvg  className="icon"/>
+                  <span>Plugins</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/admin/settings" className="admin-nav-list__link">
+                  <SettingSvg  className="icon"/>
+                  <span>Settings</span>
+                </Link>
+              </li>
+            </ul>
           </div>
-          <ul className="admin-nav-list">
-            <li>
-              <Link to="/admin/pages">All Pages</Link>
-            </li>
-            <li>
-              <Link to="/admin/settings">Settings</Link>
-            </li>
-            <li>
-              <Link to="/admin/users">Users</Link>
-            </li>
-          </ul>
         </nav>
-        <div className="admin-content">
           <Switch>
             <Route path="/admin/pages">
               <AllPages/>
@@ -44,8 +99,25 @@ class Admin extends Component {
             <Route path="/admin/users">
               <Users/>
             </Route>
+            <Route path="/admin/assets">
+              <Assets/>
+            </Route>
+            <Route path="/admin/dashboard">
+              <Dashboard/>
+            </Route>
+            <Route path="/admin/plugins">
+              <Plugins/>
+            </Route>
+            <Route path="/admin/reports">
+              <Reports/>
+            </Route>
+            <Route path="/admin/tables">
+              <Tables/>
+            </Route>
+            <Route path="/admin/templates">
+              <Templates/>
+            </Route>
           </Switch>
-        </div>
       </Router>
     </div>;
   }

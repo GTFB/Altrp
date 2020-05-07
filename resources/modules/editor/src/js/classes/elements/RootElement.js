@@ -43,7 +43,6 @@ class RootElement extends BaseElement {
     this.addControl('text', {
       type: CONTROLLER_SWITCHER,
       label: 'Switcher Content',
-      default: 'Switcher Content'
     });
 
     this.addControl('font-size', {
@@ -67,22 +66,21 @@ class RootElement extends BaseElement {
       },
     });
 
-    this.addControl('dimensions', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Dimensions',
-    });
+    // this.addControl('dimensions', {
+    //   type: CONTROLLER_DIMENSIONS,
+    //   label: 'Dimensions',
+    // });
 
     this.addControl('select', {
       type: CONTROLLER_SELECT,
       label: 'Select Content',
+      default: 'select1',
       select: [
         {
-          id: 1,
           value: 'select1',
           label: 'Select Content 1'
         },
         {
-          id: 2,
           value: 'select2',
           label: 'Select Content 2'
         }
@@ -92,13 +90,16 @@ class RootElement extends BaseElement {
     this.addControl('choose', {
       type: CONTROLLER_CHOOSE,
       label: 'Choose Content',
-      value: 0
+      default: 1
     });
 
     this.addControl('slider', {
       type: CONTROLLER_SLIDER,
       label: 'Slider Content',
-      value: 0
+      default:{size:12, unit:'px'},
+      rules: {
+        '{{ELEMENT}}': 'padding: {{SIZE}}{{UNIT}};',
+      },
     });
 
     this.addControl('select2', {

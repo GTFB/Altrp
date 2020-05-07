@@ -25,15 +25,13 @@ class Select2Controller extends Component {
       this.setState({
         value: selectValue
       })
-    };
+    }
 
     const customStyles = {
       option: (provided, state) => ({
         ...provided,
         color: state.isSelected ? "#FFF" : "#8E94AA",
         backgroundColor: state.isSelected ? "#5897fb" : "#FFF",
-        backgroundColor: state.isFocused ? "#5897fb" : "#FFF",
-        color: state.isFocused ? '#FFF' : "#8E94AA",
         fontSize: 13,
         padding: 5,
         height: 20
@@ -96,7 +94,8 @@ class Select2Controller extends Component {
       </div>
     </div>
   }
-};
+}
+
 function mapStateToProps(state) {
   return{
     currentElement:state.currentElement.currentElement,

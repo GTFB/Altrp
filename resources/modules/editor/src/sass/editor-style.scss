@@ -15,7 +15,9 @@
   width: 270px;
   display: flex;
   flex-direction: column;
+  max-height: 100vh;
   background-color: $light-gray;
+  overflow: hidden;
   box-shadow: 0 0 5px 0 rgba(0,0,0,.25);
 }
 
@@ -68,6 +70,8 @@ button{
 .left-panel-main{
   flex-grow: 1;
   display: flex;
+  flex-wrap: nowrap;
+  max-height: calc( 100% - 50px - 40px);
 }
 
 .d-flex{
@@ -230,7 +234,6 @@ button{
 }
 .panel{
   width: 100%;
-  flex-wrap: wrap;
   flex-direction: column;
   &-tabs{
     margin-bottom: 11px;
@@ -718,6 +721,52 @@ button{
     display: block;
   }
 }
+.altrp-element{
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  &_drag-over{
+    &.altrp-element_column .column-empty-plus{
+      &::after{
+        height: 10px;
+      }
+      svg{
+        opacity: 0;
+      }
+    }
+  }
+}
+.altrp-element_section::after,
+.altrp-element_section::before,
+.altrp-element_widget::after,
+.altrp-element_widget::before{
+  content: '';
+  display: block;
+  width: 100%;
+  height: 0;
+  background-color: $turquoise;
+  -webkit-transition-duration: .2s;
+  -moz-transition-duration: .2s;
+  -ms-transition-duration: .2s;
+  -o-transition-duration: .2s;
+  transition-duration: .2s;
+}
+.altrp-element_widget.altrp-element_drag-over.altrp-element_drag-top::before{
+  height: 10px;
+}
+.altrp-element_widget.altrp-element_drag-over.altrp-element_drag-bottom::after{
+  height: 10px;
+}
+.altrp-element_section.altrp-element_drag-over.altrp-element_drag-top::before{
+  height: 20px;
+}
+.altrp-element_section.altrp-element_drag-over.altrp-element_drag-bottom::after{
+  height: 20px;
+}
+//.altrp-element_is-drag{
+//  opacity: .7;
+//}
 .altrp-element_section.altrp-element_current,
 .altrp-element_section:hover{
   & > .overlay{
@@ -848,6 +897,48 @@ button{
     }
   }
 }
+.column-empty-plus{
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  padding: 5px;
+  border: 1px dashed $grey;
+  width: calc(100% - 20px);
+  cursor: pointer;
+  & svg{
+    -webkit-transform: scale(0.7);
+    -moz-transform: scale(0.7);
+    -ms-transform: scale(0.7);
+    -o-transform: scale(0.7);
+    transform: scale(0.7);
+    & path{
+      fill: $grey;
+    }
+  }
+  &::after{
+    position: absolute;
+    left: 10px;
+    content: '';
+    display: block;
+    top: 50%;
+    width: calc(100% - 20px);
+    background-color: $turquoise;
+    height: 0;
+    -webkit-transition-duration: .3s;
+    -moz-transition-duration: .3s;
+    -ms-transition-duration: .3s;
+    -o-transition-duration: .3s;
+    transition-duration: .3s;
+    -webkit-transform: translate(0, -50%);
+    -moz-transform: translate(0, -50%);
+    -ms-transform: translate(0, -50%);
+    -o-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+  }
+}
 .altrp-element_widget.altrp-element_current,
 .altrp-element_widget:hover{
   & > .overlay {
@@ -882,3 +973,4 @@ button{
     }
   }
 }
+

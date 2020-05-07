@@ -5,6 +5,7 @@
     "build": "webpack --config webpack.prod.js"
   },
   "dependencies": {
+    "lodash": "^4.17.15",
     "react": "^16.13.1",
     "react-dnd": "^10.0.2",
     "react-dnd-html5-backend": "^10.0.2",
@@ -16,8 +17,6 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.6",
-    "@babel/preset-env": "^7.9.6",
     "@babel/preset-es2017": "^7.0.0-beta.53",
     "@babel/preset-react": "^7.9.4",
     "@hot-loader/react-dom": "^16.13.0",

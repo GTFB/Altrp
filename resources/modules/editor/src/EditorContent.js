@@ -1,7 +1,5 @@
 import React, {Component} from "react";
-import DropTarget from './js/components/DropTarget'
 import {hot} from "react-hot-loader/index";
-import Backend from "react-dnd-html5-backend";
 import NewSection from "./js/components/NewSection";
 import {getEditor} from "./js/helpers";
 import {Provider} from 'react-redux'

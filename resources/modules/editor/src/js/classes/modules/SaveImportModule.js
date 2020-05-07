@@ -27,7 +27,7 @@ class SaveImportModule extends BaseModule{
         return res.json()
       }).then(templateData => {
         let data = JSON.parse(templateData.data);
-        let parsedData = this.modules.elementsFabric.parseData(data);
+        let parsedData = this.modules.elementsFactory.parseData(data);
         getEditor().modules.templateDataStorage.replaceAll(parsedData);
         getEditor().endLoading();
         getEditor().modules.templateDataStorage.title = data.title;
@@ -75,12 +75,12 @@ class SaveImportModule extends BaseModule{
    * */
   loadTemplateData(templateId) {
 
-    const elementsFabric = this.modules.elementsFabric;
+    const elementsFactory = this.modules.ElementsFactory;
     const templateDataStorage = this.modules.templateDataStorage;
 
     this.resource.get().json(function (data) {
 
-      let element = elementsFabric.parseData(data);
+      let element = elementsFactory.parseData(data);
       switch (action) {
         case 'replace': {
           templateDataStorage.replaceAll(element);
