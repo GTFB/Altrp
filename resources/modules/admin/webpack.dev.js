@@ -15,17 +15,6 @@ module.exports = merge(common, {
     historyApiFallback: true,
 
     before: function(app, server, compiler) {
-      //json data for template import export
-      // http.get('http://altrp.nz',(data ) =>{
-      //   let bodyChunks = [];
-      //   data.on('data', function(chunk) {
-      //     // You can process streamed parts here...
-      //     bodyChunks.push(chunk);
-      //   }).on('end', function() {
-      //     let body = Buffer.concat(bodyChunks);
-      //     console.log(body);
-      //   })
-      // });
       app.get('/admin/ajax/templates', function(req, res) {
         let options = {
           host: 'altrp.nz',

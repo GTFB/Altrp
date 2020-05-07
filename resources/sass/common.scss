@@ -31,6 +31,10 @@ iframe{
   border: none;
 }
 
+input[type="checkbox"]{
+  cursor: pointer;
+}
+
 .no-transition{
   -webkit-transition-duration: 0s!important;
   -moz-transition-duration: 0s!important;
