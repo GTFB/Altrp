@@ -15,6 +15,13 @@ module.exports = merge(common, {
     historyApiFallback: true,
 
     before: function(app, server, compiler) {
+      app.post('/admin/ajax/templates', function(req, res) {
+        let data = {
+          redirect:true,
+          url: '/admin/editor?template_id=1'
+        };
+        res.json(data);
+      });
       app.get('/admin/ajax/templates', function(req, res) {
         let options = {
           host: 'altrp.nz',

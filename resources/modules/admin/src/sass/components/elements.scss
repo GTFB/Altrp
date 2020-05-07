@@ -14,4 +14,45 @@
     background: $dark-grey;
     color: white;
   }
+  &_success{
+    background-color: $green;
+    border-color: $green;
+    &:hover{
+      border-color: $purple
+    }
+  }
+}
+
+.form{
+  &-bottom{
+    display: flex;
+    justify-content: flex-end;
+  }
+  &-label{
+    position: relative;
+    margin-bottom: 13px;
+    font-size: 13px;
+    display: block;
+    width: 100%;
+    & .form__input[type="text"]{
+      margin-top: 5px;
+      font-size: 13px;
+    }
+    &__error{
+      position: absolute;
+      left: 0;
+      top: 100%;
+      font-size: 12px;
+      line-height: 13px;
+      color: $red;
+    }
+  }
+  &__input{
+    &[type="text"]{
+      width: 100%;
+      padding: 10px;
+      line-height: 16px;
+      font-size: 14px;
+    }
+  }
 }
