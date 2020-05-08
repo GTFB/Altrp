@@ -15,8 +15,11 @@ function _changeValue(value) {
   if(typeof value === 'object'){
     value = {...value};
   }
-  this.setState({
-    value:value
+  this.setState((state)=>{
+    return {
+      ...state,
+      value: value
+    }
   });
   this.props.controller.changeValue(value);
 }

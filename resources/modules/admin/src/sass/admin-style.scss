@@ -3,6 +3,7 @@
 @import "components/admin-heading";
 @import "components/elements";
 @import "components/admin-table";
+@import "components/admin-modal";
 
 .admin {
   display: flex;
@@ -10,7 +11,7 @@
   &-nav {
     &-top {
       background-color: $dark-purple;
-      width: 270px;
+      width: 271px;
       height: 100vh;
     }
     &-list {
@@ -35,6 +36,11 @@
   }
   &-content {
     width: 100%;
+  }
+  &-caption{
+    margin-bottom: 15px;
+    font-weight: 600;
+    font-size: 18px;
   }
 }
 .icon {

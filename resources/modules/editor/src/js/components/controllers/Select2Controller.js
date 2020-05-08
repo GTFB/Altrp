@@ -86,7 +86,7 @@ class Select2Controller extends Component {
         <Select
           onChange={selectValue}
           onInputChange={this.change}
-          options={this.props.select}
+          options={this.props.options}
           styles={customStyles}
           placeholder={this.props.placeholder}
           noOptionsMessage={() => "тут пусто"}

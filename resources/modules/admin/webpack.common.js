@@ -60,7 +60,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "admin/"),
-    publicPath: "/admin/",
+    publicPath: "/src/",
     filename: "bundle.js"
   },
   devServer: {

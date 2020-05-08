@@ -1,6 +1,9 @@
 import React, {Component} from "react";
 import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
+import store from "../js/store/store";
+import {setModalSettings, toggleModal} from "../js/store/modal-settings/actions";
+import {generateId, redirect} from "../js/helpers";
 
 
 export default class Templates extends Component{
@@ -12,9 +15,46 @@ export default class Templates extends Component{
     this.resource = new Resource({
       route: '/admin/ajax/templates'
     });
-    this.resource.getAll().then(res=>res.json()).then(templates=>{
+    this.resource.getAll().then(templates=>{
       this.setTemplates(templates);
     });
+    this.onClick = this.onClick.bind(this);
+  }
+  onClick(){
+    let modalSettings = {
+      title: 'Add New Template',
+      submitButton: 'Add',
+      submit: function(formData){
+        // let rootElement = new RootElement();
+        let data = {
+          name: formData.title,
+          title: formData.title,
+          data:{
+            children: [],
+            id: generateId(),
+            name: "root-element",
+            settings: {},
+            type: "root-element",
+          }
+        };
+        return (new Resource({route:'/admin/ajax/templates'})).post(data)
+      },
+      fields: [
+        {
+          name: 'title',
+          label: 'Template Name',
+          required: true,
+        }
+      ],
+      success: function(res){
+        console.log(res);
+        if(res.redirect && res.url){
+          redirect(res.url)
+        }
+      }
+    };
+    store.dispatch(setModalSettings(modalSettings));
+    store.dispatch(toggleModal());
   }
   setTemplates(templates){
     this.setState(state=>{
@@ -29,7 +69,7 @@ export default class Templates extends Component{
           <span className="admin-breadcrumbs__separator">/</span>
           <span className="admin-breadcrumbs__current">All Templates</span>
         </div>
-        <a href="#" className="btn">Add New</a>
+        <button onClick={this.onClick} className="btn">Add New</button>
         <div className="admin-filters">
           <span className="admin-filters__current">All ({this.state.templates.length || ''})</span>
         </div>
