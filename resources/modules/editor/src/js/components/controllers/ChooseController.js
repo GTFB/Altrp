@@ -6,6 +6,7 @@ import Right from '../../../svgs/right.svg';
 import InWidth from '../../../svgs/in_width.svg';
 import DesktopIcon from '../../../svgs/desktopNew.svg'
 import controllerDecorate from "../../decorators/controller";
+import {iconsManager} from "../../helpers";
 
 class ChooseController extends Component {
   constructor(props) {
@@ -41,18 +42,15 @@ class ChooseController extends Component {
         <DesktopIcon className="conntroller-container__label-svg" width="12"/>
       </div>
       <div className="control-container-choose">
-        <div className="control-container-choose-block control-container-choose-border-left" data-change="1" onClick={this.change}>
-          <Left fill="#8E94AA"/>
-        </div>
-        <div className="control-container-choose-block control-container-choose-border-center-left" data-change="2" onClick={this.change}>
-          <Center fill="#8E94AA"/>
-        </div>
-        <div className="control-container-choose-block" data-change="3" onClick={this.change}>
-          <Right fill="#8E94AA"/>
-        </div>
-        <div className="control-container-choose-block control-container-choose-border-right" data-change="4" onClick={this.change}>
-          <InWidth fill="#8E94AA"/>
-        </div>
+        {
+          this.props.options.map(option =>{
+            let Icon = iconsManager().getIconComponent(option.icon);
+            return<div className="control-container-choose-block" data-change="1" onClick={this.change}>
+              <Icon fill="#8E94AA"/>
+            </div>
+          }
+              )
+        }
       </div>
     </div>
   }

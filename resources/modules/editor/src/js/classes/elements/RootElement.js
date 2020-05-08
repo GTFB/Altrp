@@ -91,7 +91,13 @@ class RootElement extends BaseElement {
     this.addControl('choose', {
       type: CONTROLLER_CHOOSE,
       label: 'Choose Content',
-      default: 1
+      default: 1,
+      options:[
+        {
+          icon: 'add',
+          value: 'add',
+        }
+      ],
     });
 
     this.addControl('slider', {

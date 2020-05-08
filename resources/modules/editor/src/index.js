@@ -6,7 +6,10 @@ import ControllersManager from './js/classes/modules/ControllersManager';
 import EditorContent from "./EditorContent";
 import store from '../src/js/store/store'
 import _  from'lodash';
+import IconsManger from "./js/classes/modules/IconsManger";
+
 window._ = _;
+window.iconsManager = new IconsManger();
 
 window.stylesModulePromise = new Promise(function (resolve) {
   window.stylesModuleResolve = resolve;
