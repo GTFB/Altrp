@@ -75,10 +75,10 @@ class RootElement extends BaseElement {
       type: CONTROLLER_SELECT,
       label: 'Select Content',
       default: 'select1',
-      select: [
+      options: [
         {
           value: 'select1',
-          label: 'Select Content 1'
+          label: 'Select Content 231'
         },
         {
           value: 'select2',
@@ -116,10 +116,10 @@ class RootElement extends BaseElement {
       type: CONTROLLER_SELECT2,
       label: 'Select2 Content',
       placeholder: 'placeholder',
-      select: [
+      options: [
         {
           value: '1',
-          label:'Select Content 1'
+          label:'Select sd  Content 1'
         }, 
         {
           value: '2',
