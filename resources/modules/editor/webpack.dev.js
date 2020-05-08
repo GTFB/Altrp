@@ -16,13 +16,8 @@ module.exports = merge(common, {
     before: function(app, server, compiler) {
       //json data for template import export
       app.get('/admin/ajax/templates/:id', function(req, res) {
-        let options = {
-          host: 'altrp.nz',
-          path: req.url,
-          method: 'GET',
-        };
         console.log('http://altrp.nz' + req.url);
-        http.get('http://altrp.nz' + req.url, (data ) =>{
+        http.get('http://altrp.nz' + req.url, (data) =>{
           let bodyChunks = [];
           data.on('data', function(chunk) {
             // You can process streamed parts here...
@@ -44,11 +39,9 @@ module.exports = merge(common, {
         console.log( req.url);
         http.request(options, (data ) =>{
           let bodyChunks = [];
-          console.log(bodyChunks);
           data.on('data', function(chunk) {
             // You can process streamed parts here...
             bodyChunks.push(chunk);
-            console.log(chunk);
           }).on('end', function() {
             let body = Buffer.concat(bodyChunks);
             res.end(body);
@@ -63,7 +56,7 @@ module.exports = merge(common, {
           path: req.url,
           method: 'PUT',
         };
-        console.log(req);
+        console.log(req.url);
         res.send(['ok']);
         // http.request(options, (data ) =>{
         //   let bodyChunks = [];

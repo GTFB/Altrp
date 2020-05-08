@@ -30,7 +30,7 @@ class SelectController extends Component {
       </div>
       <div className="control-container_select-wrapper">
         <select className="control-select control-field" onChange={this.changeValue}>
-          {this.props.select.map(option => {return <option value={option.value} key={option.value}>{option.label}</option>})}
+          {this.props.options.map(option => {return <option value={option.value} key={option.value}>{option.label}</option>})}
         </select>
       </div>
     </div>

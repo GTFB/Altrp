@@ -35,7 +35,12 @@ class Resource {
     };
 
     let url = this.route + '/' + id;
-    return fetch(url, options);
+    return fetch(url, options).then(res => {
+      if(res.ok === false){
+        return Promise.reject(res.text(), res.status);
+      }
+      return res.json()
+    });
   }
   /**
    * @return {Promise}
@@ -50,7 +55,12 @@ class Resource {
     };
 
     let url = this.route;
-    return fetch(url, options);
+    return fetch(url, options).then(res => {
+      if(res.ok === false){
+        return Promise.reject(res.text(), res.status);
+      }
+      return res.json()
+    });
   }
 
   /**
@@ -59,13 +69,18 @@ class Resource {
   post(data){
     data._token = _token;
     let options = {
-      method: 'post',
+      method: 'POST',
       body: JSON.stringify(data),
       headers: {
         'Content-Type': 'application/json'
       },
     };
-    return fetch(this.route, options);
+    return fetch(this.route, options).then(res => {
+      if(res.ok === false){
+        return Promise.reject(res.text(), res.status);
+      }
+      return res.json()
+    });
   }
 
   /**
@@ -81,7 +96,12 @@ class Resource {
       },
     };
     let url = this.route + '/' + id;
-    return fetch(url, options);
+    return fetch(url, options).then(res => {
+      if(res.ok === false){
+        return Promise.reject(res.text(), res.status);
+      }
+      return res.json()
+    });
   }
   /**
    * @return {Promise}
@@ -97,7 +117,12 @@ class Resource {
 
     };
     let url = this.route + '/' + id;
-    return fetch(url, options);
+    return fetch(url, options).then(res => {
+      if(res.ok === false){
+        return Promise.reject(res.text(), res.status);
+      }
+      return res.json()
+    });
   }
 }
 

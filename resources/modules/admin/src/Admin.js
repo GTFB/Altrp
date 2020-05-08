@@ -15,7 +15,8 @@ import SettingSvg from './svgs/settings.svg';
 import TableSvg from './svgs/tables.svg';
 import TemplateSvg from './svgs/templates.svg';
 import UserSvg from './svgs/users.svg';
-
+import store from './js/store/store';
+import {Provider} from 'react-redux'
 import {
   BrowserRouter as Router,
   Switch,
@@ -29,66 +30,68 @@ import Plugins from "./components/Plugins";
 import Reports from "./components/Reports";
 import Tables from "./components/Tables";
 import Templates from "./components/Templates";
+import AdminModal from "./components/AdminModal";
 
 class Admin extends Component {
   render() {
-    return <div className="admin">
-      <Router>
-        <nav className="admin-nav">
-          <div className="admin-nav-top">
-            <AdminLogo/>
-            <ul className="admin-nav-list">
-              <li>
-                <Link to="/admin/dashboard" className="admin-nav-list__link">
-                  <DashboardSvg className="icon"/>
-                  <span>Dashboard</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/admin/assets" className="admin-nav-list__link">
-                  <AssetSvg className="icon"/>
-                  <span>Assets</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/admin/tables" className="admin-nav-list__link">
-                  <TableSvg className="icon"/>
-                  <span>Tables</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/admin/templates" className="admin-nav-list__link">
-                  <TemplateSvg className="icon"/>
-                  <span>Templates</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/admin/reports" className="admin-nav-list__link">
-                  <ReportSvg className="icon"/>
-                  <span>Reports</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/admin/users" className="admin-nav-list__link">
-                  <UserSvg className="icon"/>
-                  <span>Users</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/admin/plugins" className="admin-nav-list__link">
-                  <PluginSvg  className="icon"/>
-                  <span>Plugins</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/admin/settings" className="admin-nav-list__link">
-                  <SettingSvg  className="icon"/>
-                  <span>Settings</span>
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </nav>
+    return <Provider store={store}>
+      <div className="admin">
+        <Router>
+          <nav className="admin-nav">
+            <div className="admin-nav-top">
+              <AdminLogo/>
+              <ul className="admin-nav-list">
+                <li>
+                  <Link to="/admin/dashboard" className="admin-nav-list__link">
+                    <DashboardSvg className="icon"/>
+                    <span>Dashboard</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/assets" className="admin-nav-list__link">
+                    <AssetSvg className="icon"/>
+                    <span>Assets</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/tables" className="admin-nav-list__link">
+                    <TableSvg className="icon"/>
+                    <span>Tables</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/templates" className="admin-nav-list__link">
+                    <TemplateSvg className="icon"/>
+                    <span>Templates</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/reports" className="admin-nav-list__link">
+                    <ReportSvg className="icon"/>
+                    <span>Reports</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/users" className="admin-nav-list__link">
+                    <UserSvg className="icon"/>
+                    <span>Users</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/plugins" className="admin-nav-list__link">
+                    <PluginSvg className="icon"/>
+                    <span>Plugins</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/settings" className="admin-nav-list__link">
+                    <SettingSvg className="icon"/>
+                    <span>Settings</span>
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </nav>
           <Switch>
             <Route path="/admin/pages">
               <AllPages/>
@@ -118,8 +121,10 @@ class Admin extends Component {
               <Templates/>
             </Route>
           </Switch>
-      </Router>
-    </div>;
+        </Router>
+        <AdminModal/>
+      </div>
+    </Provider>;
   }
 }
 

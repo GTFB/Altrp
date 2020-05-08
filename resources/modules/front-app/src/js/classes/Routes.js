@@ -12,7 +12,7 @@ class Routes {
     this.loadRoutes();
   }
   loadRoutes(){
-    this.resource.getAll().then(res => res.json()).then(routesData=>{
+    this.resource.getAll().then(routesData=>{
       let routes = [];
       for(let _data of routesData){
         routes.push(Route.routeFabric(_data));
