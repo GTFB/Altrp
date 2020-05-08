@@ -21,7 +21,7 @@ class LinkController extends Component {
     controllerDecorate(this);
   }
 
-  settings(e) {
+  settings() {
     let settings = document.getElementById("settings");
     settings.classList.toggle("settingBlock-none");
   };

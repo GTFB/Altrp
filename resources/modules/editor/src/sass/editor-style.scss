@@ -460,7 +460,7 @@ button{
   flex-direction: row;
 }
 .conntroller-container__label-svg{
-  margin-left: 8px;
+  margin-left: 5px;
 }
 .control-container_select-wrapper{
   margin-left: auto;
@@ -490,7 +490,7 @@ button{
 }
 .control-slider-input{
   border: 1px solid;
-  border-color: #d5dadf;
+  border-color: #E5E6EA;
   min-width: 0;
   padding: 5px;
   font-size: 12px;
@@ -747,6 +747,82 @@ button{
   color: #8E94AA;
   line-height: 1.4;
   width: 240px;
+}
+.sketchPicker-none{
+  display: none;
+}
+.controller-newColor{
+  width: 15px;
+  height: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.controller-newColor::after{
+  content: "";
+  position: relative;
+  height: 15px;
+  width: 1.5px;
+  left: -1.5px;
+  background-color: #8E94AA;
+}
+.controller-newColor::before{
+  content: "";
+  height: 15px;
+  width: 1.5px;
+  background-color: #8E94AA;
+  transform: rotate(90deg);
+}
+.control-color-wrapper{
+  width: 100%;
+}
+.control-color-input{
+  height: 27px;
+  width: 60%;
+  margin: 0px;
+  float: left;
+  border-width: 1px 0px 1px 1px;
+  border-color: #E5E6EA;
+  border-style: solid;
+  border-radius: 3px 0px 0px 3px;
+  display: flex;
+  flex-direction: row;
+}
+.control-color-colorPicked{
+  width: 16px;
+  height: 16px;
+  margin-top: 5px;
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+.control-color-hex{
+  font-size: 13px;
+  position: relative;
+  right: -10px;
+  width: 58px;
+  height: 15px;
+  color: #8E94AA;
+  margin: 0px;
+  border: none;
+  top: 5.5px;
+}
+.control-color-opacity-container{
+  position: relative;
+  width: 45px;
+  height: 27px;
+  border: 1px solid #E5E6EA;
+  display: flex;
+  border-radius: 0px 3px 3px 0px;
+  justify-content: center;
+  align-items: center;
+}
+.control-color-opacity{
+  font-size: 12px;
+}
+.control-color-colorPicker{
+  position: absolute;
+  margin-top: -300px;
 }
 .overlay{
   position: absolute;

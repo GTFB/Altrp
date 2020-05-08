@@ -9,6 +9,7 @@ import {
   CONTROLLER_SLIDER,
   CONTROLLER_SELECT2,
   CONTROLLER_LINK,
+  CONTROLLER_COLOR,
   TAB_ADVANCED,
   TAB_CONTENT,
   TAB_STYLE
@@ -124,6 +125,11 @@ class RootElement extends BaseElement {
       isActive: false
     });
 
+    this.addControl('color', {
+      type: CONTROLLER_COLOR,
+      label: 'color content',
+      colorPickedHex: "#274BC8"
+    });
     
     this.endControlSection();
 
