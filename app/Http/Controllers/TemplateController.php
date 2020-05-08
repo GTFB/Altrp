@@ -50,10 +50,20 @@ class TemplateController extends Controller
   public function store( Request $request )
   {
     //
-    $template = new Template( $request->toArray() );
+    $template_data = $request->toArray();
+    $template_data['data'] = json_encode( $template_data['data'] );
+    $template = new Template( $template_data );
     $template->user_id  = Auth::user()->id;
+    $template->type  = 'template';
     if( $template->save() ){
-      return \response()->json( ['message'=>'Success'] );
+
+      return \response()->json(
+        [
+          'message' => 'Success',
+          'redirect' => true,
+          'url' =>  url( '/admin/editor?template_id=' . $template->id )
+        ]
+      );
     }
     return \response()->json( ['message'=>'Error Save'], 500);
   }
