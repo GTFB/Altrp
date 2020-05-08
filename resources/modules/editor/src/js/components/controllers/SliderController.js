@@ -36,6 +36,13 @@ class SliderController extends Component {
     });
     // console.log(this.state.value)
   };
+
+  getDefaultValue(){
+    return {
+      size:'',
+      unit: 'px',
+    };
+  }
   inputUpdate (e) {
     this._changeValue({
       ...this.state.value,

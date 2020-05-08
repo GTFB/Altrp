@@ -46,3 +46,19 @@ input[type="checkbox"]{
   -o-transition-duration: 0s!important;
   transition-duration: 0s!important;
 }
+.caption{
+  margin-bottom: 15px;
+  font-weight: 600;
+  font-size: 18px;
+}
+.btn{
+  &_bare{
+    border: none;
+    background-color: transparent;
+  }
+  &_success{
+    background-color: $green;
+    color: #fff;
+    font-weight: bold;
+  }
+}

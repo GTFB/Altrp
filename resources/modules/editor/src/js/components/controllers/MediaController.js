@@ -1,39 +1,32 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import DynamicIcon from '../../../svgs/dynamic.svg'
+import AddIcon from '../../../svgs/add.svg'
 import controllerDecorate from "../../decorators/controller";
 
-class NumberController extends Component {
+class MediaController extends Component {
   constructor(props){
     super(props);
-    this.changeValue = this.changeValue.bind(this);
     let value = this.props.currentElement.getSettings(this.props.controlId);
+    // console.log(value);
     if(value === null && this.props.default){
       value = this.props.default ;
     }
-    value = value || '';
+    value = value || {};
     this.state = {value};
     controllerDecorate(this);
   }
-  changeValue(e){
-    // this.setState({
-    //   value:e.target.value
-    // });
-    // this.props.controller.changeValue(e.target.value);
-    // this.props.currentElement.setSettingValue(this.props.controlId, e.target.value);
-    this._changeValue(e.target.value);
-  }
   getDefaultValue(){
-    return '';
+    return {};
   }
   render(){
 
-    return <div className="controller-container controller-container_number">
+    return <div className="controller-container controller-container_media">
       <div className="controller-container__label">
         {this.props.label}
       </div>
-      <div className="control-group">
-        <input className="control-field" onChange={this.changeValue} value={this.state.value} type="number"/>
+      <div className="controller-media-choose">
+        <AddIcon className="icon"/>
       </div>
     </div>
   }
@@ -44,4 +37,4 @@ function mapStateToProps(state) {
     currentElement:state.currentElement.currentElement,
   };
 }
-export default connect(mapStateToProps)(NumberController);
+export default connect(mapStateToProps)(MediaController);

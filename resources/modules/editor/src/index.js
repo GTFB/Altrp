@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Component} from "react";
 import ReactDOM from "react-dom";
 import Editor from "./Editor.js";
 import ElementsManager from './js/classes/modules/ElementsManager';
@@ -7,6 +7,10 @@ import EditorContent from "./EditorContent";
 import store from '../src/js/store/store'
 import _  from'lodash';
 import IconsManger from "./js/classes/modules/IconsManger";
+
+window.React = React;
+window.ReactDOM = ReactDOM;
+window.Component = Component;
 
 window._ = _;
 window.iconsManager = new IconsManger();
@@ -29,7 +33,7 @@ if (process.env.NODE_ENV !== 'production') {
 let editorTarget = document.getElementById("editor");
 
 if(editorTarget){
-  ReactDOM.render(<Editor/>, editorTarget);
+  window.ReactDOM.render(<Editor/>, editorTarget);
 }
 
 window.onload = () =>{

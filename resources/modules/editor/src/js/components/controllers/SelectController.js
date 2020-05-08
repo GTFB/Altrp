@@ -17,6 +17,9 @@ class SelectController extends Component {
     this.changeValue = this.changeValue.bind(this);
   }
 
+  getDefaultValue(){
+    return '';
+  }
   changeValue(e){
     this._changeValue(e.target.value);
   }

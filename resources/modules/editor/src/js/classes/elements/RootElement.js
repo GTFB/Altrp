@@ -12,7 +12,7 @@ import {
   CONTROLLER_COLOR,
   TAB_ADVANCED,
   TAB_CONTENT,
-  TAB_STYLE
+  TAB_STYLE, CONTROLLER_MEDIA
 } from "../modules/ControllersManager";
 
 class RootElement extends BaseElement {
@@ -142,8 +142,8 @@ class RootElement extends BaseElement {
     });
 
     this.addControl('color', {
-      type: CONTROLLER_COLOR,
-      label: 'color content',
+      type: CONTROLLER_MEDIA,
+      label: 'media content',
       colorPickedHex: "#274BC8"
     });
     

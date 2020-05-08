@@ -20,6 +20,7 @@ import UpdateButton from "./js/components/UpdateButton";
 import {CONSTANTS} from "./js/helpers";
 import Styles from "./js/components/Styles";
 import {stopDrag} from "./js/store/element-drag/actions";
+import AssetsBrowser from "./js/classes/modules/AssetsBrowser";
 
 class Editor extends Component {
 
@@ -94,54 +95,55 @@ class Editor extends Component {
     }
 
     return (
-        <Provider store={store}>
-            <div className={templateClasses} onDragEnd={this.onDragEnd}>
-              <div className="left-panel">
-                <div className="editor-top-panel">
-                  <button className="btn btn_hamburger"
-                          // onClick={this.showSettingsPanel}
-                  >
-                    <Hamburger className="icon"/>
-                  </button>
-                  <div className="logo"><Logo viewBox="0 0 97 35"/></div>
-                  <button className="btn btn_dots" onClick={this.showWidgetsPanel}>
-                    <Dots className="icon"/>
-                  </button>
-                </div>
-                <div className="left-panel-main">
-                  {
-                    (this.state.activePanel === 'widgets') &&
-                    <WidgetsPanel/>
-                  }
-                  {
-                    (this.state.activePanel === 'settings') &&
-                    <SettingsPanel/>
-                  }
-                </div>
-                <div className="editor-bottom-panel d-flex align-content-center justify-center">
-                  <button className={'btn btn_settings' + settingsActive} onClick={this.openPageSettings}>
-                    <Settings className="icon"/>
-                  </button>
-                  <button className="btn ">
-                    <Navigation className="icon"/>
-                  </button>
-                  <button className="btn ">
-                    <History className="icon"/>
-                  </button>
-                  <button className="btn ">
-                    <DesktopIcon className="icon"/>
-                  </button>
-                  <button className="btn ">
-                    <Preview className="icon"/>
-                  </button>
-                  <UpdateButton/>
-                </div>
-              </div>
-              <div className="right-panel">
-                <EditorWindow  />
-              </div>
+      <Provider store={store}>
+        <div className={templateClasses} onDragEnd={this.onDragEnd}>
+          <div className="left-panel">
+            <div className="editor-top-panel">
+              <button className="btn btn_hamburger"
+                      // onClick={this.showSettingsPanel}
+              >
+                <Hamburger className="icon"/>
+              </button>
+              <div className="logo"><Logo viewBox="0 0 97 35"/></div>
+              <button className="btn btn_dots" onClick={this.showWidgetsPanel}>
+                <Dots className="icon"/>
+              </button>
             </div>
-        </Provider>
+            <div className="left-panel-main">
+              {
+                (this.state.activePanel === 'widgets') &&
+                <WidgetsPanel/>
+              }
+              {
+                (this.state.activePanel === 'settings') &&
+                <SettingsPanel/>
+              }
+            </div>
+            <div className="editor-bottom-panel d-flex align-content-center justify-center">
+              <button className={'btn btn_settings' + settingsActive} onClick={this.openPageSettings}>
+                <Settings className="icon"/>
+              </button>
+              <button className="btn ">
+                <Navigation className="icon"/>
+              </button>
+              <button className="btn ">
+                <History className="icon"/>
+              </button>
+              <button className="btn ">
+                <DesktopIcon className="icon"/>
+              </button>
+              <button className="btn ">
+                <Preview className="icon"/>
+              </button>
+              <UpdateButton/>
+            </div>
+          </div>
+          <div className="right-panel">
+            <EditorWindow  />
+          </div>
+        </div>
+        <AssetsBrowser/>
+      </Provider>
     );
   }
 

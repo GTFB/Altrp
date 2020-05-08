@@ -1,5 +1,6 @@
 @import "../../../../sass/common";
 @import "./elements-style";
+@import "./assets-browser";
 
 .editor {
   display: flex;
@@ -341,6 +342,19 @@ button{
       width: 54px;
       min-width: 54px;
     }
+  }
+}
+.controller-media{
+  &-choose{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    height: 90px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background-color: $light-gray;
+    cursor: pointer;
   }
 }
 .control-group{
@@ -1110,4 +1124,3 @@ button{
     }
   }
 }
-

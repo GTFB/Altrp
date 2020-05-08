@@ -23,7 +23,13 @@ class DimensionsController extends Component {
     this.props.currentElement.setSettingValue(this.props.controlId, e.target.value);
   }
   getDefaultValue(){
-    return 0;
+    return {
+      left: '',
+      top: '',
+      bottom: '',
+      right: '',
+      unit: 'px',
+    };
   }
   render(){
 

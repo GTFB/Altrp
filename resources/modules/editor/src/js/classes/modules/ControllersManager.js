@@ -10,6 +10,7 @@ import SliderController from "../../components/controllers/SliderController";
 import Select2Controller from "../../components/controllers/Select2Controller";
 import LinkController from "../../components/controllers/LinkController";
 import ColorController from "../../components/controllers/ColorController";
+import MediaController from "../../components/controllers/MediaController";
 
 export const TAB_CONTENT = 'content';
 export const TAB_STYLE = 'style';
@@ -25,6 +26,7 @@ export const CONTROLLER_SLIDER = 'slider';
 export const CONTROLLER_SELECT2 = 'select2';
 export const CONTROLLER_LINK = 'link';
 export const CONTROLLER_COLOR = 'color';
+export const CONTROLLER_MEDIA = 'media';
 
 class ControllersManager {
   constructor(){
@@ -40,6 +42,7 @@ class ControllersManager {
     this.conttrollers[CONTROLLER_SELECT2] = Select2Controller;
     this.conttrollers[CONTROLLER_LINK] = LinkController;
     this.conttrollers[CONTROLLER_COLOR] = ColorController;
+    this.conttrollers[CONTROLLER_MEDIA] = MediaController;
     this.elementsControls = null;
     this._cache = {
       controls: {},

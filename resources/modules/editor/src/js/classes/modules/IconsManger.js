@@ -23,6 +23,12 @@ class IconsManger {
     }
     return iconComponent;
   }
+  /**
+   * @return {array}
+   * */
+  getIconsList(){
+    return this.icons;
+  }
 }
 
 export default IconsManger

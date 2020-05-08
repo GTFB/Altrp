@@ -17,6 +17,9 @@ class Select2Controller extends Component {
     controllerDecorate(this);
   };
 
+  getDefaultValue(){
+    return '';
+  }
   render() {
 
     const {selectValue} = useState;

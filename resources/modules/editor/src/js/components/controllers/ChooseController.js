@@ -45,7 +45,9 @@ class ChooseController extends Component {
         {
           this.props.options.map(option =>{
             let Icon = iconsManager().getIconComponent(option.icon);
-            return<div className="control-container-choose-block" data-change="1" onClick={this.change}>
+            return<div className="control-container-choose-block"
+                       key={option.value}
+                       data-change={option.value} onClick={this.change}>
               <Icon fill="#8E94AA"/>
             </div>
           }
