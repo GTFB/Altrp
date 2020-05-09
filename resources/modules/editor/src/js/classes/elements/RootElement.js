@@ -57,7 +57,7 @@ class RootElement extends BaseElement {
         ],
       },
     });
-
+    
     this.addControl('padding', {
       type: CONTROLLER_NUMBER,
       label: 'Padding All',
@@ -138,7 +138,14 @@ class RootElement extends BaseElement {
     this.addControl('color', {
       type: CONTROLLER_COLOR,
       label: 'color content',
-      colorPickedHex: "#274BC8"
+      colorPickedHex: "#274BC8",
+      presetColors: [
+        "#eaeaea",
+        "#9c18a8"
+      ],
+      rules: {
+        '{{ELEMENT}}': 'background: {{VALUE}};',
+      },
     });
     
     this.endControlSection();

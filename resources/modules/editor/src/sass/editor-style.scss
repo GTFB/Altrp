@@ -767,6 +767,9 @@ button{
 .sketchPicker-none{
   display: none;
 }
+.sketchPicker{
+  z-index: 9999;
+}
 .controller-newColor{
   width: 15px;
   height: 15px;
@@ -794,10 +797,11 @@ button{
   width: 100%;
 }
 .control-color-input{
+  position: relative;
+  float: left;
   height: 27px;
   width: 60%;
   margin: 0px;
-  float: left;
   border-width: 1px 0px 1px 1px;
   border-color: #E5E6EA;
   border-style: solid;
@@ -808,9 +812,16 @@ button{
 .control-color-colorPicked{
   width: 16px;
   height: 16px;
+}
+.control-color-colorPicked-container{
+  width: 16px;
+  height: 16px;
   margin-top: 5px;
   margin-left: 5px;
   margin-bottom: 5px;
+  background-image: linear-gradient(45deg,#ddd 25%,transparent 0,transparent 75%,#ddd 0,#ddd),linear-gradient(45deg,#ddd 25%,transparent 0,transparent 75%,#ddd 0,#ddd);
+  background-size: 32px 32px;
+  background-position: 0 0,8px 8px;
 }
 .control-color-hex{
   font-size: 13px;
@@ -827,18 +838,17 @@ button{
   position: relative;
   width: 45px;
   height: 27px;
-  border: 1px solid #E5E6EA;
   display: flex;
-  border-radius: 0px 3px 3px 0px;
   justify-content: center;
   align-items: center;
+  border-radius: 0px 3px 3px 0px;
+  border: 1px solid #E5E6EA;
 }
 .control-color-opacity{
   font-size: 12px;
 }
 .control-color-colorPicker{
   position: absolute;
-  margin-top: -300px;
 }
 .overlay{
   position: absolute;
