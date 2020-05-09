@@ -15,23 +15,13 @@ class ColorController extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {value, colorPickedHex: this.props.colorPickedHex, opacity: 1, pickerPosition: "-300px", colorRGB: {r: "0", g: "0", b: "0", a: "1"}, colorPickedRGB: "rgb(39,75,200,1)"};
+    this.state = {value, colorPickedHex: this.props.colorPickedHex, opacity: 1, pickerPosition: "0px", colorRGB: {r: "0", g: "0", b: "0", a: "1"}, colorPickedRGB: "rgb(39,75,200,1)"};
     controllerDecorate(this);
   }
 
   openColorPicker(){
     let colorPicker = document.getElementById("colorPicker");
     let topPicker = colorPicker.offsetTop;
-
-    if(topPicker > 200) {
-      this.setState({
-        pickerPosition: "-300px"
-      })
-    } else {
-      this.setState({
-        pickerPosition: "100px"
-      })
-    }
 
     console.log(topPicker)
     colorPicker.classList.toggle("sketchPicker-none");
@@ -86,9 +76,6 @@ class ColorController extends Component {
     };
 
     return <div className="controller-container controller-container_color">
-        <div id="colorPicker" className=" control-color-colorPicker sketchPicker-none" style={colorPickerPosition}>
-          <SketchPicker width="225px" presetColors={this.props.presetColors} color={this.state.colorRGB} onChange={this.colorChange} name="colorPicker" className="sketchPicker" />
-        </div>
         <div className="control-link-header">
             <div className="controller-container__label">{this.props.label}</div>
             {/* <div className="controller-newColor"></div> */}
@@ -103,6 +90,9 @@ class ColorController extends Component {
             <div className="control-color-opacity-container">
               <label className="control-color-opacity" >{(this.state.opacity * 100).toFixed() + "%"}</label>
             </div>
+        </div>
+        <div id="colorPicker" className=" control-color-colorPicker sketchPicker-none" style={colorPickerPosition}>
+          <SketchPicker width="90%" presetColors={this.props.presetColors} color={this.state.colorRGB} onChange={this.colorChange} name="colorPicker" className="sketchPicker" />
         </div>
           {/* sketchPicker-none */}
     </div>

@@ -57,7 +57,7 @@ class RootElement extends BaseElement {
         ],
       },
     });
-    
+
     this.addControl('padding', {
       type: CONTROLLER_NUMBER,
       label: 'Padding All',
@@ -147,6 +147,11 @@ class RootElement extends BaseElement {
         '{{ELEMENT}}': 'background: {{VALUE}};',
       },
     });
+
+    this.addControl('dimensions'), {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'dimensions content',
+    }
     
     this.endControlSection();
 

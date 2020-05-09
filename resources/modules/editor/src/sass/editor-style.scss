@@ -848,7 +848,10 @@ button{
   font-size: 12px;
 }
 .control-color-colorPicker{
-  position: absolute;
+  z-index: 9999;
+  position: relative;
+  margin: 10px;
+  top: 10px;
 }
 .overlay{
   position: absolute;
