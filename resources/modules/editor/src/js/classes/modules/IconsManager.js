@@ -4,7 +4,7 @@ import AddIcon from '../../../svgs/add.svg';
 class IconsManager {
   constructor(){
     this.icons = [];
-    this.icons.push(new Icon('add', AddIcon))
+    this.icons.push(new Icon('icon_add', AddIcon))
   }
   /**
    * @param {string} iconName

@@ -94,7 +94,7 @@ class RootElement extends BaseElement {
       default: 1,
       options:[
         {
-          icon: 'add',
+          icon: 'icon_add',
           value: 'add',
         }
       ],
