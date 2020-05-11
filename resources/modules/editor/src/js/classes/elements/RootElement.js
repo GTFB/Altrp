@@ -10,6 +10,8 @@ import {
   CONTROLLER_SELECT2,
   CONTROLLER_LINK,
   CONTROLLER_COLOR,
+  CONTROLLER_BUTTON,
+  CONTROLLER_HEADING,
   TAB_ADVANCED,
   TAB_CONTENT,
   TAB_STYLE
@@ -167,6 +169,25 @@ class RootElement extends BaseElement {
         '{{ELEMENT}}': 'background: {{VALUE}};',
       },
     });
+
+    this.addControl('button', {
+      type: CONTROLLER_BUTTON,
+      label: 'button content',
+      default: {
+        label: 'button'
+      },
+      classes: {
+        backgroundColor: '#20c74c',
+        color: '#FFF'
+      }
+    });
+
+    this.addControl('heading', {
+      type: CONTROLLER_HEADING,
+      default: {
+        label: 'heading'
+      }
+    })
     
     this.endControlSection();
 

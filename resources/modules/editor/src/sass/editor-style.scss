@@ -929,6 +929,17 @@ button{
   flex-direction: column;
   align-items: center;
 }
+.controller-container_button{
+  display: flex;
+  flex-direction: column;
+}
+.control-button-label{
+  margin-bottom: 8px;
+}
+.control-heading{
+  margin: 5px;
+  font-size: 18px;
+}
 .overlay{
   position: absolute;
   top: 0;
