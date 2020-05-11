@@ -67,10 +67,30 @@ class RootElement extends BaseElement {
       },
     });
 
-    // this.addControl('dimensions', {
-    //   type: CONTROLLER_DIMENSIONS,
-    //   label: 'Dimensions',
-    // });
+    this.addControl('dimensions', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Dimensions',
+      default:{
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}}': [ 
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
 
     this.addControl('select', {
       type: CONTROLLER_SELECT,
@@ -147,11 +167,6 @@ class RootElement extends BaseElement {
         '{{ELEMENT}}': 'background: {{VALUE}};',
       },
     });
-
-    this.addControl('dimensions'), {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'dimensions content',
-    }
     
     this.endControlSection();
 

@@ -15,7 +15,13 @@ class ColorController extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {value, colorPickedHex: this.props.colorPickedHex, opacity: 1, pickerPosition: "0px", colorRGB: {r: "0", g: "0", b: "0", a: "1"}, colorPickedRGB: "rgb(39,75,200,1)"};
+    this.state = {value, 
+      colorPickedHex: this.props.colorPickedHex, 
+      opacity: 1, 
+      pickerPosition: "0px", 
+      colorRGB: {r: "0", g: "0", b: "0", a: "1"}, 
+      colorPickedRGB: "rgb(39,75,200,1)"
+    };
     controllerDecorate(this);
   }
 

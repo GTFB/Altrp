@@ -459,7 +459,7 @@ button{
   display: flex;
   flex-direction: row;
 }
-.conntroller-container__label-svg{
+.controller-container__label-svg{
   margin-left: 5px;
 }
 .control-container_select-wrapper{
@@ -613,7 +613,7 @@ button{
 .control-container-choose-border-center-left{
   border-width: 1px 0px 1px 1px;
 }
-.control-slider__label-select2{
+.control-select2__label{
   font-size: 12px;
   line-height: 1;
   margin: 0;
@@ -852,6 +852,82 @@ button{
   position: relative;
   margin: 10px;
   top: 10px;
+}
+.control-dimensions-header{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 8px;
+}
+.controller-dimensions__label{
+  font-size: 12px;
+  line-height: 1;
+  margin: 0;
+  box-sizing: border-box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+.control-field-dimensions{
+  width: 45px;
+  height: 27px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  &::-webkit-inner-spin-button{
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    display: none;
+  }
+}
+.control-field-bind{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 27px;
+  padding-left: 17px;
+  padding-right: 17px;
+}
+.control-field-top-l{
+  border-width: 1px 0px 1px 1px;
+}
+.control-field-top-r{
+  border-width: 1px 0px 1px 1px;
+}
+.control-field-bot-l{
+  border-width: 1px 0px 1px 1px;
+}
+.control-field-bot-r{
+  border-width: 1px 0px 1px 1px;
+}
+.control-field-bind-active{
+  transition: 0s;
+  background-color: #8E94AA;
+  border-color: #8E94AA;
+}
+.control-field-bind svg{
+  transition: 0s;
+}
+.control-field-dimensions-label{
+  font-size: 10px;
+  line-height: 12px;
+  color: #C4C4C4;
+  font-style: normal;
+  font-weight: normal;
+  text-align: center;
+  margin-top: 5px;
+}
+.control-dimensions-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .overlay{
   position: absolute;
