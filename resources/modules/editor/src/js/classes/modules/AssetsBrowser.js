@@ -1,10 +1,13 @@
-import React, {Component} from "react";
+// import React, {Component} from "react";
 import {connect} from "react-redux";
 import Times from '../../../svgs/times.svg';
+import {assetsToggle} from "../../store/assets-browser/actions";
+import {iconsManager} from "../../helpers";
 class AssetsBrowser extends Component {
   constructor(){
     super();
     this.tabClick = this.tabClick.bind(this);
+    this.toggleBrowser = this.toggleBrowser.bind(this);
     this.state = {
       activeTab: 'icons',
       tabs: [
@@ -21,10 +24,24 @@ class AssetsBrowser extends Component {
           title: 'Media Library',
         },
       ],
+      assets: this.getAssets('icons'),
+      selectedAsset: null,
     };
   }
+
+  getAssets(tab){
+    if(! tab){
+      tab = this.state.activeTab;
+    }
+    switch (tab){
+      case 'icons':{
+        return iconsManager().getIconsList();
+      }
+    }
+    return [];
+  }
+
   tabClick(e){
-    let tab = e.target.dataset.tab;
     this.setActiveTab(e.target.dataset.tab)
   }
   setActiveTab(tab){
@@ -32,20 +49,27 @@ class AssetsBrowser extends Component {
       return{...state, activeTab: tab}
     })
   }
+  toggleBrowser(){
+    // console.log(this.props);
+    this.props.dispatch(assetsToggle())
+  }
   render(){
     console.log(this.props);
     let classes = 'assets-browser';
     if(this.props.active){
       classes += ' assets-browser_active';
     }
-
+    let buttonClasses = 'btn btn_success';
+    if(! this.state.selectedAsset){
+      buttonClasses += ' btn_disabled';
+    }
     return<div className={classes}>
-      <div className="assets-browser__bg"/>
+      <div className="assets-browser__bg" onClick={this.toggleBrowser}/>
       <div className="assets-browser-content">
         <div className="assets-browser-top">
           <div className="caption">Append Media</div>
           <button className="btn btn_bare assets-browser__close">
-            <Times className="icon"/>
+            <Times className="icon" onClick={this.toggleBrowser}/>
           </button>
           <div className="assets-browser-nav">
             {this.state.tabs.map(tab=>{
@@ -62,13 +86,15 @@ class AssetsBrowser extends Component {
           </div>
         </div>
         {
-          (this.state.activeTab === 'icons') ?
-              <div className="assets-browser-choose-frame assets-browser-choose-frame_icons" >
-
-              </div> : ''
+          (this.state.assets.length) ?
+            <div className="assets-browser-choose-frame" >
+              {
+                this.state.assets.map()
+              }
+            </div> : ''
         }
         <div className="assets-browser-bottom">
-          <button className="btn btn_success">Choose</button>
+          <button className={buttonClasses}>Choose</button>
         </div>
       </div>
     </div>

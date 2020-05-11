@@ -1,7 +1,7 @@
 import Icon from "../Icon";
 import AddIcon from '../../../svgs/add.svg';
 
-class IconsManger {
+class IconsManager {
   constructor(){
     this.icons = [];
     this.icons.push(new Icon('add', AddIcon))
@@ -31,4 +31,4 @@ class IconsManger {
   }
 }
 
-export default IconsManger
+export default IconsManager

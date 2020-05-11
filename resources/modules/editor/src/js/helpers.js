@@ -72,7 +72,9 @@ export function topOrBottomHover(e, element) {
   let y = e.clientY - rect.top;
   return (y < (rect.height / 2)) ? 'top' : 'bottom';
 }
-
+/**
+ * @return {IconsManager}
+ * */
 export function iconsManager() {
   return window.iconsManager;
 }

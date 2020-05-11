@@ -5,6 +5,7 @@ const defaultState = {
     console.log(media);
   },
   active: true,
+  controller: null,
 };
 
 export function assetsSettingsReducer(state, action) {
@@ -16,9 +17,10 @@ export function assetsSettingsReducer(state, action) {
       };
     }break;
     case ASSETS_TOGGLE:{
-      state = state.settings || defaultState.settings;
       state = {...state};
+      console.log(state);
       state.active = !state.active;
+      console.log(state);
     }break;
   }
   return state;
