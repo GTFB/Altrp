@@ -4,8 +4,7 @@ const defaultState = {
   onChoose: function (media) {
     console.log(media);
   },
-  active: true,
-  controller: null,
+  active: false,
 };
 
 export function assetsSettingsReducer(state, action) {
@@ -18,9 +17,7 @@ export function assetsSettingsReducer(state, action) {
     }break;
     case ASSETS_TOGGLE:{
       state = {...state};
-      console.log(state);
       state.active = !state.active;
-      console.log(state);
     }break;
   }
   return state;

@@ -15,7 +15,8 @@ import {
   CONTROLLER_CSSEDITOR,
   TAB_ADVANCED,
   TAB_CONTENT,
-  TAB_STYLE, CONTROLLER_MEDIA
+  TAB_STYLE,
+  CONTROLLER_MEDIA,
 } from "../modules/ControllersManager";
 
 class RootElement extends BaseElement {

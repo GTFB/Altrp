@@ -18,7 +18,7 @@ function _changeValue(value) {
   this.setState((state)=>{
     return {
       ...state,
-      value: value
+      value,
     }
   });
   this.props.controller.changeValue(value);

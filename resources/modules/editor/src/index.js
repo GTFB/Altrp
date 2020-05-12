@@ -1,12 +1,11 @@
 import React, {Component} from "react";
 import ReactDOM from "react-dom";
-// import Editor from "./Editor.js";
 import ElementsManager from './js/classes/modules/ElementsManager';
 import ControllersManager from './js/classes/modules/ControllersManager';
-// import EditorContent from "./EditorContent";
 import store from '../src/js/store/store'
 import _  from'lodash';
 import IconsManager from "./js/classes/modules/IconsManager";
+import './sass/editor-style.scss'
 import * as ace from 'ace-builds'; // ace module ..
 ace.config.set('basePath', '/addons/ace');
 

@@ -9,21 +9,22 @@ class AssetsBrowser extends Component {
     this.tabClick = this.tabClick.bind(this);
     this.toggleBrowser = this.toggleBrowser.bind(this);
     this.selectAsset = this.selectAsset.bind(this);
+    this.chooseAsset = this.chooseAsset.bind(this);
     this.state = {
       activeTab: 'icons',
       tabs: [
-        {
-          name: 'upload',
-          title: 'Upload Media File',
-        },
+        // {
+        //   name: 'upload',
+        //   title: 'Upload Media File',
+        // },
         {
           name: 'icons',
           title: 'Icons Library',
         },
-        {
-          name: 'media',
-          title: 'Media Library',
-        },
+        // {
+        //   name: 'media',
+        //   title: 'Media Library',
+        // },
       ],
       assets: this.getAssets('icons'),
       selectedAsset: null,
@@ -59,12 +60,32 @@ class AssetsBrowser extends Component {
       return{...state, activeTab: tab}
     })
   }
+
   toggleBrowser(){
-    // console.log(this.props);
+    this.setState(state=>{
+      return{...state, selectedAsset:null};
+    });
     this.props.dispatch(assetsToggle())
   }
+
+  chooseAsset(){
+    let asset;
+    this.state.assets.forEach(item=>{
+      if(item.name === this.state.selectedAsset){
+        asset = item;
+      }
+    });
+    if(!asset){
+      throw `Asset with name ${this.state.selectedAsset} not found in Assets Browser (${this.state.activeTab})!`
+    }
+    this.props.onChoose(asset);
+    this.setState(state=>{
+      return{...state, selectedAsset: null}
+    });
+    this.props.dispatch(assetsToggle());
+  }
+
   render(){
-    console.log(this.props);
     let classes = 'assets-browser';
     if(this.props.active){
       classes += ' assets-browser_active';
@@ -119,7 +140,7 @@ class AssetsBrowser extends Component {
             </div> : ''
         }
         <div className="assets-browser-bottom">
-          <button className={buttonClasses}>Choose</button>
+          <button className={buttonClasses} onClick={this.chooseAsset}>Choose</button>
         </div>
       </div>
     </div>

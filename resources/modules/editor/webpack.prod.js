@@ -30,7 +30,8 @@ module.exports = merge(common, {
   },
   output: {
     path: path.resolve(__dirname, "../../../public/modules/editor/"),
-    filename: "editor.js"
+    publicPath: "/modules/editor/",
+    filename: "editor.js",
   },
 
   plugins: [
