@@ -1,10 +1,13 @@
 import Icon from "../Icon";
 import AddIcon from '../../../svgs/add.svg';
+import AdvancedIcon from '../../../svgs/advanced.svg';
 
 class IconsManager {
   constructor(){
     this.icons = [];
-    this.icons.push(new Icon('icon_add', AddIcon))
+    this.icons.push(new Icon('add', AddIcon));
+    this.icons.push(new Icon('advanced', AdvancedIcon));
+    this.icons.push(new Icon('default', AddIcon));
   }
   /**
    * @param {string} iconName
@@ -19,7 +22,7 @@ class IconsManager {
       }
     });
     if(! iconComponent){
-      throw `Icon ${iconName} not found`;
+      console.error( `Icon ${iconName} not found`);
     }
     return iconComponent;
   }
@@ -53,6 +56,9 @@ class IconsManager {
    * */
   renderIcon(iconName){
     let iconComponent = this.getIconComponent(iconName);
+    if(! iconComponent) {
+      iconComponent = this.getIconComponent('default');
+    }
     return React.createElement(iconComponent);
   }
 }
