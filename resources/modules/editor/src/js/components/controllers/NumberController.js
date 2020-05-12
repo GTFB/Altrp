@@ -20,7 +20,7 @@ class NumberController extends Component {
     //   value:e.target.value
     // });
     // this.props.controller.changeValue(e.target.value);
-    // this.props.currentElement.setSettingValue(this.props.controlId, e.target.value);
+    // this.props.currentElement.setSettingValue(this.props.conarolId, e.target.value);
     this._changeValue(e.target.value);
   }
   getDefaultValue(){

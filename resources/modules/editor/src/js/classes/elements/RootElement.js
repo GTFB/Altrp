@@ -12,6 +12,7 @@ import {
   CONTROLLER_COLOR,
   CONTROLLER_BUTTON,
   CONTROLLER_HEADING,
+  CONTROLLER_CSSEDITOR,
   TAB_ADVANCED,
   TAB_CONTENT,
   TAB_STYLE
@@ -187,8 +188,12 @@ class RootElement extends BaseElement {
       default: {
         label: 'heading'
       }
-    })
+    });
     
+    this.addControl('css editor', {
+      type: CONTROLLER_CSSEDITOR,
+    });
+
     this.endControlSection();
 
     this.startControlSection('text_style', {
