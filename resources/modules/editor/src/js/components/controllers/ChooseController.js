@@ -39,7 +39,7 @@ class ChooseController extends Component {
     return <div className="controller-container controller-container_choose">
       <div className="controller-container__label">
         {this.props.label}
-        <DesktopIcon className="conntroller-container__label-svg" width="12"/>
+        <DesktopIcon className="controller-container__label-svg" width="12"/>
       </div>
       <div className="control-container-choose">
         {

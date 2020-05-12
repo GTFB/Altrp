@@ -9,61 +9,96 @@ class ColorController extends Component {
     super(props);
     this.openColorPicker = this.openColorPicker.bind(this)
     this.colorChange = this.colorChange.bind(this)
-    this.inputHex = this.inputHex.bind(this)
+    // this.inputHex = this.inputHex.bind(this)
     let value = this.props.currentElement.getSettings(this.props.controlId);
     if(value === null && this.props.default){
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {value, colorPickedHex: this.props.colorPickedHex, opacity: 1, colorPickedRGB: "rgb(39,75,200,1)"};
+    this.state = {value, 
+      colorPickedHex: this.props.colorPickedHex, 
+      opacity: 1, 
+      pickerPosition: "0px", 
+      colorRGB: {r: "0", g: "0", b: "0", a: "1"}, 
+      colorPickedRGB: "rgb(39,75,200,1)"
+    };
     controllerDecorate(this);
   }
 
   openColorPicker(){
     let colorPicker = document.getElementById("colorPicker");
+    let topPicker = colorPicker.offsetTop;
+
+    console.log(topPicker)
     colorPicker.classList.toggle("sketchPicker-none");
+
+    this.props.currentElement.setSettingValue(this.props.controlId, topPicker);
   }
   
   colorChange(color){
     this.setState({
       colorPickedHex: color.hex,
       colorPickedRGB: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
-      opacity: color.rgb.a
+      opacity: color.rgb.a,
+      colorRGB: color.rgb
     });
+
+    this._changeValue(
+      `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
+    )
+
     // console.log(this.state.colorPickedRGB)
-    this.props.currentElement.setSettingValue(this.props.controlId, color.hex, color.rgb);
+    this.props.currentElement.setSettingValue(this.props.controlId, color.rgb);
   };
 
-  inputHex(e, color){
-    this.setState({
-      colorPickedHex: e.target.value,
-      colorPickedRGB: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
-    })
-    this.props.currentElement.setSettingValue(this.props.controlId, e.target.value, color.rgb, color);
-  };
+  // inputHex(e){
+  //   let hexToRGB = parseInt(this.state.colorPickedHex.split("#")[1], 16)
+  //   let r = (hexToRGB >> 16) & 0xFF;
+  //   let g = (hexToRGB >> 8) & 0xFF;
+  //   let b = hexToRGB & 0xFF;
+  // // let hexToRGB = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(this.state.colorPickedHex);
+  // // let r = parseInt(hexToRGB[1], 16);
+  // // let g = parseInt(hexToRGB[2], 16);
+  // // let b = parseInt(hexToRGB[3], 16);
+    
+  //   console.log(r, g, b)
 
+  //   this.setState({
+  //     colorPickedHex: e.target.value,
+  //     colorPickedRGB: `rgb(${r}, ${g}, ${b}, ${this.state.opacity})`,
+  //   });
+  //   console.log(this.state.colorPickedRGB)
+  //   this.props.currentElement.setSettingValue(this.props.controlId, e.target.value);
+  // };
+  
   render(){
 
     let colorPickedStyle = {
       backgroundColor: this.state.colorPickedRGB
-    }
+    };
+
+    let colorPickerPosition = {
+      marginTop: this.state.pickerPosition
+    };
 
     return <div className="controller-container controller-container_color">
-        <div id="colorPicker" className=" control-color-colorPicker">
-          <SketchPicker color={this.state.colorPickedHex} onChange={this.colorChange} name="colorPicker" className="sketchPicker" />
-        </div>
         <div className="control-link-header">
             <div className="controller-container__label">{this.props.label}</div>
-            <div className="controller-newColor"></div>
+            {/* <div className="controller-newColor"></div> */}
         </div>
         <div className="control-color-wrapper" onClick={this.openColorPicker}>
             <div className="control-color-input">
-                <div className="control-color-colorPicked" style={colorPickedStyle}></div>
-                <input className="control-color-hex" onChange={this.inputHex} value={this.state.colorPickedHex}></input>
+                <div className="control-color-colorPicked-container">
+                  <div className="control-color-colorPicked" style={colorPickedStyle}></div>
+                </div>
+                <label className="control-color-hex">{this.state.colorPickedHex}</label>
             </div>
             <div className="control-color-opacity-container">
-                    <label className="control-color-opacity">{this.state.opacity}</label>
+              <label className="control-color-opacity" >{(this.state.opacity * 100).toFixed() + "%"}</label>
             </div>
+        </div>
+        <div id="colorPicker" className=" control-color-colorPicker sketchPicker-none" style={colorPickerPosition}>
+          <SketchPicker width="90%" presetColors={this.props.presetColors} color={this.state.colorRGB} onChange={this.colorChange} name="colorPicker" className="sketchPicker" />
         </div>
           {/* sketchPicker-none */}
     </div>

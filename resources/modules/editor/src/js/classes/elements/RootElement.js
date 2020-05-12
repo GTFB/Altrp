@@ -10,6 +10,9 @@ import {
   CONTROLLER_SELECT2,
   CONTROLLER_LINK,
   CONTROLLER_COLOR,
+  CONTROLLER_BUTTON,
+  CONTROLLER_HEADING,
+  CONTROLLER_CSSEDITOR,
   TAB_ADVANCED,
   TAB_CONTENT,
   TAB_STYLE, CONTROLLER_MEDIA
@@ -67,10 +70,30 @@ class RootElement extends BaseElement {
       },
     });
 
-    // this.addControl('dimensions', {
-    //   type: CONTROLLER_DIMENSIONS,
-    //   label: 'Dimensions',
-    // });
+    this.addControl('dimensions', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Dimensions',
+      default:{
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}}': [ 
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
 
     this.addControl('select', {
       type: CONTROLLER_SELECT,
@@ -143,10 +166,41 @@ class RootElement extends BaseElement {
 
     this.addControl('color', {
       type: CONTROLLER_MEDIA,
-      label: 'media content',
-      colorPickedHex: "#274BC8"
+      label: 'color content',
+      colorPickedHex: "#274BC8",
+      presetColors: [
+        "#eaeaea",
+        "#9c18a8"
+      ],
+      rules: {
+        '{{ELEMENT}}': 'background: {{VALUE}};',
+      },
+    });
+
+    this.addControl('button', {
+      type: CONTROLLER_BUTTON,
+      label: 'button content',
+      default: {
+        label: 'button'
+      },
+      classes: {
+        backgroundColor: '#20c74c',
+        color: '#FFF'
+      }
+    });
+
+    this.addControl('heading', {
+      type: CONTROLLER_HEADING,
+      default: {
+        label: 'heading'
+      }
+>>>>>>> origin/dsavelyev
     });
     
+    this.addControl('css editor', {
+      type: CONTROLLER_CSSEDITOR,
+    });
+
     this.endControlSection();
 
     this.startControlSection('text_style', {

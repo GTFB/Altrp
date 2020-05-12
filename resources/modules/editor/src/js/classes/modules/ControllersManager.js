@@ -11,6 +11,9 @@ import Select2Controller from "../../components/controllers/Select2Controller";
 import LinkController from "../../components/controllers/LinkController";
 import ColorController from "../../components/controllers/ColorController";
 import MediaController from "../../components/controllers/MediaController";
+import ButtonController from "../../components/controllers/ButtonController";
+import HeadingController from "../../components/controllers/HeadingController";
+import CssEditorController from "../../components/controllers/CssEditorController";
 
 export const TAB_CONTENT = 'content';
 export const TAB_STYLE = 'style';
@@ -27,6 +30,9 @@ export const CONTROLLER_SELECT2 = 'select2';
 export const CONTROLLER_LINK = 'link';
 export const CONTROLLER_COLOR = 'color';
 export const CONTROLLER_MEDIA = 'media';
+export const CONTROLLER_BUTTON = 'button';
+export const CONTROLLER_HEADING = 'heading';
+export const CONTROLLER_CSSEDITOR = 'css editor';
 
 class ControllersManager {
   constructor(){
@@ -43,6 +49,9 @@ class ControllersManager {
     this.conttrollers[CONTROLLER_LINK] = LinkController;
     this.conttrollers[CONTROLLER_COLOR] = ColorController;
     this.conttrollers[CONTROLLER_MEDIA] = MediaController;
+    this.conttrollers[CONTROLLER_BUTTON] = ButtonController;
+    this.conttrollers[CONTROLLER_HEADING] = HeadingController;
+    this.conttrollers[CONTROLLER_CSSEDITOR] = CssEditorController;
     this.elementsControls = null;
     this._cache = {
       controls: {},

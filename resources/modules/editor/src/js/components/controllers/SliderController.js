@@ -55,7 +55,7 @@ class SliderController extends Component {
         <div className="control-slider-label">
           {this.props.label}
         </div>
-        <DesktopIcon className="conntroller-container__label-svg" width="12"/>
+        <DesktopIcon className="controller-container__label-svg" width="12"/>
 
         <div className="control-slider-type">
           {
