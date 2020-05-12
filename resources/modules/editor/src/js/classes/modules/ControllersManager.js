@@ -32,7 +32,7 @@ export const CONTROLLER_COLOR = 'color';
 export const CONTROLLER_MEDIA = 'media';
 export const CONTROLLER_BUTTON = 'button';
 export const CONTROLLER_HEADING = 'heading';
-export const CONTROLLER_CSSEDITOR = 'css editor';
+export const CONTROLLER_CSSEDITOR = 'css-editor';
 
 class ControllersManager {
   constructor(){

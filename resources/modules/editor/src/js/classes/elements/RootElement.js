@@ -194,7 +194,6 @@ class RootElement extends BaseElement {
       default: {
         label: 'heading'
       }
->>>>>>> origin/dsavelyev
     });
     
     this.addControl('css editor', {

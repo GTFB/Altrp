@@ -7,6 +7,10 @@ import ControllersManager from './js/classes/modules/ControllersManager';
 import store from '../src/js/store/store'
 import _  from'lodash';
 import IconsManager from "./js/classes/modules/IconsManager";
+import * as ace from 'ace-builds'; // ace module ..
+ace.config.set('basePath', '/addons/ace');
+
+
 
 window.React = React;
 window.ReactDOM = ReactDOM;
@@ -37,13 +41,14 @@ import('./Editor.js').then(Editor=>{
 
   let editorTarget = document.getElementById("editor");
   if(editorTarget) {
-    console.log(window.ReactDOM.render(<Editor/>, editorTarget));
+    window.ReactDOM.render(<Editor/>, editorTarget);
   }
 
-  import('./EditorContent').then(EditorContent=>{
-    EditorContent = EditorContent.default;
+  return import('./EditorContent');
+}).then(EditorContent=>{
+  EditorContent = EditorContent.default;
 
-    window.onload = () =>{
+  window.onload = () =>{
     let iframe = document.getElementsByTagName('iframe')[0];
     if(!iframe){
       return
@@ -68,8 +73,7 @@ import('./Editor.js').then(Editor=>{
       head.appendChild(script);
     }
 
-    };
-  });
+  };
 });
 
 
