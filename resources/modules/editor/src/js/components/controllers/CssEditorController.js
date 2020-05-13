@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import { split as AceEditor } from "react-ace";
-import DynamicIcon from '../../../svgs/dynamic.svg';
 import "ace-builds/src-min-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/snippets/css";
 import "ace-builds/src-noconflict/snippets/json"
@@ -66,7 +65,7 @@ class CssEditorController extends Component {
       </div>
       <div className="control-css-editor-description">
         Use "selector" to target wrapper element. 
-        <br />Examples:<br />
+        <br />Examples:
         selector "color: red;" // For main element
         selector .child-element "margin: 10px;" // For <br />child element<br />
         .my-class "text-align: center;" // Or use any custom selector

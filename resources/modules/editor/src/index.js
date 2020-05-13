@@ -6,8 +6,7 @@ import store from '../src/js/store/store'
 import _  from'lodash';
 import IconsManager from "./js/classes/modules/IconsManager";
 import './sass/editor-style.scss'
-import * as ace from 'ace-builds'; // ace module ..
-ace.config.set('basePath', '/addons/ace');
+import './installing'
 
 
 
