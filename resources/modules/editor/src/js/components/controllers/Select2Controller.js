@@ -20,14 +20,13 @@ class Select2Controller extends Component {
   getDefaultValue(){
     return '';
   }
+
   render() {
 
     const {selectValue} = useState;
 
     function change() {
-      this.setState({
-        value: selectValue
-      })
+      this._changeValue(selectValue)
     }
 
     const customStyles = {

@@ -44,6 +44,11 @@ class RootElement extends BaseElement {
       label: 'Text Section',
     });
 
+    this.addControl('textContainer', {
+      type: CONTROLLER_TEXT,
+      label: "textContainer"  
+    });
+
     this.addControl('text', {
       type: CONTROLLER_SWITCHER,
       label: 'Switcher Content',
@@ -160,8 +165,12 @@ class RootElement extends BaseElement {
 
     this.addControl('link', {
       type: CONTROLLER_LINK,
+      default: {
+        url: "",
+        atributes: "",
+        noFollow: false
+      },
       label: 'link content',
-      isActive: false
     });
 
     this.addControl('color', {
@@ -180,9 +189,7 @@ class RootElement extends BaseElement {
     this.addControl('button', {
       type: CONTROLLER_BUTTON,
       label: 'button content',
-      default: {
-        label: 'button'
-      },
+      button: 'button',
       classes: {
         backgroundColor: '#20c74c',
         color: '#FFF'
@@ -198,6 +205,10 @@ class RootElement extends BaseElement {
     
     this.addControl('css editor', {
       type: CONTROLLER_CSSEDITOR,
+      default: {
+        value: null
+      },
+      rules: '{{VALUE}}'
     });
 
     this.endControlSection();

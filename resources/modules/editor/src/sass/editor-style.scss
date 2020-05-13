@@ -469,15 +469,31 @@ button{
     box-sizing: border-box;
   }
 }
+.controller-container_select{
+  width: auto;
+  display: flex;
+  flex-direction: row;
+}
+.control-select__label{
+  display: flex;
+  justify-content: left;
+  align-items: left;
+  margin-right: auto;
+  margin-bottom: 10px;
+}
+.red {
+background-color: red;
+}
+.control-container_select-wrapper{
+  position: relative;
+  float: right;
+}
 .control-slider-label-select{
   display: flex;
   flex-direction: row;
 }
 .controller-container__label-svg{
   margin-left: 5px;
-}
-.control-container_select-wrapper{
-  margin-left: auto;
 }
 .control-slider-label{
   font-size: 12px;
@@ -954,6 +970,23 @@ button{
 .control-heading{
   margin: 5px;
   font-size: 18px;
+}
+.control-css-editor-wrapper{
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 15px;
+  border: 1px solid #E5E6EA;
+}
+.control-css-editor__label{
+  font-size: 13px;
+  color: #8E94AA;
+}
+.control-css-editor-description{
+  font-size: 11px;
+  font-style: italic;
+  line-height: 1.4;
+  color: #a4afb7;
+  margin-top: 15px;
 }
 .overlay{
   position: absolute;

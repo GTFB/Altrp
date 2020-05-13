@@ -17,7 +17,7 @@ class LinkController extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {value, settingsNewPage: false, SettingsNoFollow: false, settingsAttribute: "", urlInput: ""};
+    this.state = {value};
     controllerDecorate(this);
   }
 
@@ -27,47 +27,55 @@ class LinkController extends Component {
   };
 
   toggleSettingsNewPage(){
-    let toggleSettingsNewPageCheckbox= document.getElementById("toggleSettingsNewPageCheckbox")
+    let toggleSettingsNewPageCheckbox= document.getElementById("toggleSettingsNewPageCheckbox");
 
-    this.setState({
-      settingsNewPage:!this.state.settingsNewPage
-    });
-    this.props.currentElement.setSettingValue(this.props.controlId, !this.state.settingsNewPage);
-
+    let changeCheckBox = togglesettingsNoFollowCheckbox.hasAttribute("checked")
     if(toggleSettingsNewPageCheckbox.hasAttribute("checked") == false) {
+      this._changeValue({
+        openInNew: changeCheckBox
+      })
       toggleSettingsNewPageCheckbox.setAttribute("checked", "checked");
     } else {
+      this._changeValue({
+        openInNew: changeCheckBox
+      })
       toggleSettingsNewPageCheckbox.removeAttribute("checked");
     };
   };
 
   toggleSettingsNoFollow(){
     let togglesettingsNoFollowCheckbox = document.getElementById("togglesettingsNoFollowCheckbox")
-    this.setState({
-      settingsNoFollow:!this.state.SettingsNoFollow
-    });
-    this.props.currentElement.setSettingValue(this.props.controlId, !this.state.SettingsNoFollow);
 
-    if(togglesettingsNoFollowCheckbox.hasAttribute("checked") == false) {
+    let changeCheckBox = togglesettingsNoFollowCheckbox.hasAttribute("checked")
+    if(changeCheckBox == false) {
+      this._changeValue({
+        noFollow: changeCheckBox
+      })
       togglesettingsNoFollowCheckbox.setAttribute("checked", "checked");
     } else {
       togglesettingsNoFollowCheckbox.removeAttribute("checked");
+      this._changeValue({
+        noFollow: changeCheckBox
+      })
     };
+
   };
 
   changeAttribute(e){
-    this.setState({
-      settingsAttribute: e.target.value
-    });
-    this.props.currentElement.setSettingValue(this.props.controlId, e.target.value);
+    this._changeValue({
+      atributes:e.target.value
+    })
+    console.log(this.state.value.atributes)
   }
 
   changeInput(e){
-    this.setState({
-      urlInput: e.target.value
-    });
-    this.props.currentElement.setSettingValue(this.props.controlId, e.target.value);
-    console.log(this.state.urlInput)
+    this._changeValue({
+      url:e.target.value
+    })
+  }
+
+  getDefaultValue(){
+    return '';
   }
 
   render(){
@@ -77,7 +85,7 @@ class LinkController extends Component {
         <div className="controller-container__label">{this.props.label}</div>
       </div>
       <div className="control-link-input-wrapper">
-        <input onChange={this.changeInput} value={this.state.urlInput} type="text" className="control-link" placeholder="введите ссылку"></input>
+        <input onChange={this.changeInput} value={this.state.value.url} type="text" className="control-link" placeholder="введите ссылку"></input>
         <div className="control-link-settings control-link-button" onClick={this.settings}>
         {/* тут есть проблема с размерами, просто нужно убрать width и height в самой svg но есть одна проблема*/}
           <SettingsIcon width="12"/>
@@ -101,7 +109,7 @@ class LinkController extends Component {
             <div className="control-link-header">
               <label className="controller-container__label">Произвольные атрибуты</label>
             </div>
-            <input onChange={this.changeAttribute} value={this.state.settingsAttribute} type="text" placeholder="key|value, key|value..." className="settings-input-attribute"></input>
+            <input onChange={this.changeAttribute} value={this.state.value.atributes} type="text" placeholder="key|value, key|value..." className="settings-input-attribute"></input>
             <a className="settings-attribute-description">Задайте пользовательские атрибуты для ссылки. Отделяйте ключи атрибута от значений с помощью символа | (труба). Разделите пары ключ-значение запятой.</a>
           </div>
       </div>

@@ -6,13 +6,19 @@ import controllerDecorate from "../../decorators/controller";
 class ButtonController extends Component {
   constructor(props){
     super(props);
+    this.changeValue = this.changeValue.bind(this)
     let value = this.props.currentElement.getSettings(this.props.controlId);
     if(value === null && this.props.default){
       value = this.props.default ;
     }
-    value = value || '';
+    value = value || false;
     this.state = {value};
     controllerDecorate(this);
+  }
+
+  changeValue(){
+    this._changeValue(!this.state.value);
+    // console.log(this.state.value)
   }
 
   render(){
@@ -22,7 +28,7 @@ class ButtonController extends Component {
         {this.props.label}
       </div>
       <div className="control-group">
-        <button className="btn" style={this.props.classes}>{this.state.value.label}</button>
+        <button className="btn" onClick={this.changeValue} style={this.props.classes}>{this.props.button}</button>
       </div>
     </div>
   }
