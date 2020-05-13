@@ -6,7 +6,6 @@ import * as ace from "ace-builds";
 ace.config.set('basePath', '/addons/ace');
 
 let langTools = ace.require('ace/ext/language_tools');
-console.log(langTools);
 
 var selectorCompleter = {
   getCompletions: function getCompletions(editor, session, pos, prefix, callback) {
