@@ -2,14 +2,13 @@ import * as ace from "ace-builds";
 /**
  * ACE Settings
  * */
-
 ace.config.set('basePath', '/addons/ace');
 
 let langTools = ace.require('ace/ext/language_tools');
 
-var selectorCompleter = {
+let selectorCompleter = {
   getCompletions: function getCompletions(editor, session, pos, prefix, callback) {
-    var list = [],
+    let list = [],
         token = session.getTokenAt(pos.row, pos.column);
 
     if (0 < prefix.length && 'selector'.match(prefix) && 'constant' === token.type) {

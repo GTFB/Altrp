@@ -15,8 +15,19 @@ module.exports = merge(common, {
     hotOnly: true,
     before: function(app, server, compiler) {
       app.get('/ajax/routes', function (req, res) {
-        data = data || JSON.parse(fs.readFileSync('./data.json').toString());
-        res.send(data.routes);
+        console.log('http://altrp.nz' + req.url);
+        http.get('http://altrp.nz' + req.url, (data) =>{
+          let bodyChunks = [];
+          data.on('data', function(chunk) {
+            // You can process streamed parts here...
+            bodyChunks.push(chunk);
+          }).on('end', function() {
+            let body = Buffer.concat(bodyChunks);
+            res.end(body);
+          })
+        }).on('error', err=>{
+          console.error(err.message);
+        });
       });
     }
   },

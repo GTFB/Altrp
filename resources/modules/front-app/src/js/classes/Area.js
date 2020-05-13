@@ -8,7 +8,7 @@ class Area {
     let area = new Area();
     area.settings = areaData.settings;
     area.template = new Template();
-    area.template.data = areaData.template.data;
+    area.template.data = JSON.parse(areaData.template.data);
     area.template.id = areaData.template.id;
     return area;
   }
