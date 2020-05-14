@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+  import React, {Component} from "react";
 import ReactDOM from "react-dom";
 import ElementsManager from './js/classes/modules/ElementsManager';
 import ControllersManager from './js/classes/modules/ControllersManager';

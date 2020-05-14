@@ -8,7 +8,9 @@
     "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
     "prod": "npm run production",
     "front-start": "webpack-dev-server --config webpack.front.dev.js",
+    "editor-start": "webpack-dev-server --config webpack.editor.dev.js",
     "front-build": "webpack --config webpack.front.prod.js",
+    "editor-build": "webpack --config webpack.editor.prod.js",
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
   "dependencies": {
