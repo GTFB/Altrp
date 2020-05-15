@@ -169,7 +169,7 @@ class RootElement extends BaseElement {
       type: CONTROLLER_LINK,
       default: {
         url: "",
-        atributes: "",
+        attributes: "",
         noFollow: false
       },
       label: 'link content',
@@ -210,7 +210,6 @@ class RootElement extends BaseElement {
       default: {
         value: null
       },
-      rules: '{{VALUE}}'
     });
 
     this.endControlSection();
@@ -286,7 +285,7 @@ class RootElement extends BaseElement {
     this.appendChild(newSection);
   }
   getSelector(){
-    return `altrp-template-root${this.getId()}`;
+    return `.altrp-template-root${this.getId()}`;
   }
 }
 

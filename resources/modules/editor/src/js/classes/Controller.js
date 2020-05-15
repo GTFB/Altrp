@@ -28,8 +28,6 @@ class Controller {
     /**
      * @member {BaseElement} currentElement
      * */
-    console.log(value);
-    console.log(this.getSettingName());
     let currentElement = getCurrentElement();
     currentElement.setSettingValue(this.getSettingName(), value);
     this.rules.forEach(rule => {

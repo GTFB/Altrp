@@ -30,24 +30,36 @@ module.exports = merge(common, {
           console.error(err.message);
         });
       });
-      app.post('/admin/ajax/templates', function(req, res) {
-        let options = {
-          hostname: 'altrp.nz',
-          path: req.url,
-          method: 'POST',
-        };
-        console.log( req.url);
-        http.request(options, (data ) =>{
-          let bodyChunks = [];
-          data.on('data', function(chunk) {
-            // You can process streamed parts here...
-            bodyChunks.push(chunk);
-          }).on('end', function() {
-            let body = Buffer.concat(bodyChunks);
-            res.end(body);
-          })
-        }).on('error', err=>{
-          console.error(err.message);
+      app.put('/admin/ajax/templates/:id', function(req, res) {
+        console.log(req.method);
+        console.log('http://altrp.nz' + req.url);
+        let body = '';
+        req.on('data', chunk=>{
+          body += chunk;
+        });
+        req.on('end', ()=>{
+          let options = {
+            host:'altrp.nz',
+            protocol:'http:',
+            path: req.url,
+            method: 'PUT',
+            body: body,
+          };
+          res.end(JSON.stringify(options));
+          http.request( options, (data) =>{
+            let bodyChunks = [];
+            console.log(data);
+            data.on('data', function(chunk) {
+              // You can process streamed parts here...
+              bodyChunks.push(chunk);
+            }).on('end', function() {
+              let body = Buffer.concat(bodyChunks);
+              res.end(body);
+              console.log(body);
+            })
+          }).on('error', err=>{
+            console.error(err.message);
+          });
         });
       });
       app.put('/admin/ajax/templates/:id', function(req, res) {

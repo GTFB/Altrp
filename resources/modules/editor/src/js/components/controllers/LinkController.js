@@ -63,9 +63,9 @@ class LinkController extends Component {
 
   changeAttribute(e){
     this._changeValue({
-      atributes:e.target.value
+      attributes:e.target.value
     })
-    console.log(this.state.value.atributes)
+    console.log(this.state.value.attributes)
   }
 
   changeInput(e){
@@ -85,7 +85,7 @@ class LinkController extends Component {
         <div className="controller-container__label">{this.props.label}</div>
       </div>
       <div className="control-link-input-wrapper">
-        <input onChange={this.changeInput} value={this.state.value.url} type="text" className="control-link" placeholder="введите ссылку"></input>
+        <input onChange={this.changeInput} value={this.state.value.url || ''} type="text" className="control-link" placeholder="введите ссылку"></input>
         <div className="control-link-settings control-link-button" onClick={this.settings}>
         {/* тут есть проблема с размерами, просто нужно убрать width и height в самой svg но есть одна проблема*/}
           <SettingsIcon width="12"/>
@@ -96,20 +96,24 @@ class LinkController extends Component {
       </div>
         <div id="settings" className="settingBlock settingBlock-none">
           <div className="settings-checkbox-option" onClick={this.toggleSettingsNewPage}>
-            <input id="toggleSettingsNewPageCheckbox" type="checkbox" className="settings-checkbox"></input>
-            <span className="settings-checkbox-container"></span>
+            <input id="toggleSettingsNewPageCheckbox" type="checkbox" className="settings-checkbox"/>
+            <span className="settings-checkbox-container"/>
             <label className="settings-checkbox__label">Открывать в новом окне</label>
           </div>
           <div className="settings-checkbox-option" onClick={this.toggleSettingsNoFollow}>
-            <input id="togglesettingsNoFollowCheckbox" type="checkbox" className="settings-checkbox"></input>
-            <span className="settings-checkbox-container"></span>
+            <input id="togglesettingsNoFollowCheckbox" type="checkbox" className="settings-checkbox"/>
+            <span className="settings-checkbox-container"/>
             <label className="settings-checkbox__label">Добавить nofollow</label>
           </div>
           <div className="customAttributes">
             <div className="control-link-header">
               <label className="controller-container__label">Произвольные атрибуты</label>
             </div>
-            <input onChange={this.changeAttribute} value={this.state.value.atributes} type="text" placeholder="key|value, key|value..." className="settings-input-attribute"></input>
+            <input onChange={this.changeAttribute}
+                   value={this.state.value.attributes || ''}
+                   type="text"
+                   placeholder="key|value, key|value..."
+                   className="settings-input-attribute"/>
             <a className="settings-attribute-description">Задайте пользовательские атрибуты для ссылки. Отделяйте ключи атрибута от значений с помощью символа | (труба). Разделите пары ключ-значение запятой.</a>
           </div>
       </div>

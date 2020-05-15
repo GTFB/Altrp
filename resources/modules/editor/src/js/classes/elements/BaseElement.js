@@ -260,10 +260,7 @@ class BaseElement {
   }
    /**
     * @param {string} sectionId
-    * @param {object} args{
-    *   @member {string} tab
-    *   @member {string} label
-    * }
+    * @param {object} args
     * */
   startControlSection(sectionId, args){
      if(this.controlsIds.indexOf(sectionId) !== -1){
@@ -283,17 +280,14 @@ class BaseElement {
 
   /**
    * @param {string} controlId
-   * @param {object} args{
-   *   @member {string} type
-   *   @member {any} default
-   * }
+   * @param {object} args
    * */
   addControl(controlId, args){
     if(!this.currentSection){
       throw 'Controls Can only be Added Inside the Section!'
     }
     if(this.controlsIds.indexOf(controlId) !== -1){
-      throw 'Control with id' + controlId + ' Already Exists in ' + this.getName();
+      throw 'Control with id \'' + controlId + '\' Already Exists in ' + this.getName();
     }
 
     let section = this._getCurrentSection();
@@ -368,7 +362,7 @@ class BaseElement {
     this.settings.styles[breakpoint][settingName] = this.settings.styles[breakpoint][settingName] || {};
     rules.forEach(rule => {
       let finalSelector = rule.selector;
-      finalSelector = finalSelector.replace('{{ELEMENT}}', '.' + this.getSelector());
+      finalSelector = finalSelector.replace('{{ELEMENT}}', this.getSelector());
       this.settings.styles[breakpoint][settingName][finalSelector] = rule.properties;
     });
     this.updateStyles();

@@ -1,6 +1,7 @@
 import BaseElement from "./BaseElement";
 import HeadingIcon from '../../../svgs/widget_heading.svg';
 import {CONTROLLER_TEXTAREA, TAB_CONTENT} from "../modules/ControllersManager";
+import {advancedTabControllers} from "../../decorators/register-controllers";
 
 class Heading extends BaseElement{
   static getName(){
@@ -31,6 +32,8 @@ class Heading extends BaseElement{
     });
 
     this.endControlSection();
+
+    advancedTabControllers(this);
   }
 }
 

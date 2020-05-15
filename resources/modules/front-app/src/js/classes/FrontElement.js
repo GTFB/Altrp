@@ -71,7 +71,7 @@ class FrontElement {
 
   getSelector(){
     if(this.type === 'root-element'){
-      return `altrp-template-root${this.getId()}`;
+      return `.altrp-template-root${this.getId()}`;
     }
     return `.altrp-element${this.getId()}`;
   }

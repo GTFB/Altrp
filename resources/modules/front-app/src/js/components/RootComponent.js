@@ -14,7 +14,7 @@ class RootComponent extends Component {
 
 
   render(){
-    let classes = `sections-wrapper ${this.props.element.getSelector()}`;
+    let classes = `sections-wrapper ${this.props.element.getSelector().replace('.', '')}`;
     return<div className={classes}>{
       this.state.settings.slider.size }<br/>{
       this.state.settings.slider.unit + ''
