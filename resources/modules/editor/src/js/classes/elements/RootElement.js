@@ -152,6 +152,7 @@ class RootElement extends BaseElement {
       type: CONTROLLER_SELECT2,
       label: 'Select2 Content',
       placeholder: 'placeholder',
+      default: '1',
       options: [
         {
           value: '1',
