@@ -19,8 +19,8 @@ class ColorController extends Component {
       colorPickedHex: this.props.colorPickedHex, 
       opacity: 1, 
       pickerPosition: "0px", 
-      colorRGB: {r: "0", g: "0", b: "0", a: "1"}, 
-      colorPickedRGB: "rgb(39,75,200,1)"
+      colorRGB: this.props.colorPickedRGB, 
+      colorPickedRGB: this.props.colorPickedRGB
     };
     controllerDecorate(this);
   }

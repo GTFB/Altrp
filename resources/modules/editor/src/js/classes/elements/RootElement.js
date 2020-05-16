@@ -200,9 +200,10 @@ class RootElement extends BaseElement {
     });
 
     this.addControl('color', {
-      type: CONTROLLER_MEDIA,
+      type: CONTROLLER_COLOR,
       label: 'color content',
-      colorPickedHex: "#274BC8",
+      colorPickedHex: "#EAEAEA",
+      colorPickedRGB: "rgb(234, 234, 234)",
       presetColors: [
         "#eaeaea",
         "#9c18a8"
