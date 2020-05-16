@@ -1,4 +1,6 @@
 import * as ace from "ace-builds";
+import decorate from "./js/decorators/element-component";
+import ElementWrapper from "./js/components/ElementWrapper";
 /**
  * ACE Settings
  * */
@@ -24,3 +26,14 @@ let selectorCompleter = {
   }
 };
 langTools.addCompleter(selectorCompleter);
+
+/**
+ * Elements Decorator for Editor
+* */
+
+window.elementDecorator = decorate;
+/**
+ * Elements Wrapper
+* */
+
+window.ElementWrapper = ElementWrapper;

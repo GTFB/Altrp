@@ -3,8 +3,7 @@ import ReactDOM from "react-dom";
 import './sass/front-style.scss';
 import './js/classes/FrontElementsFabric';
 import './js/classes/FrontElementsManager';
-// import '../../editor/src/js/classes/modules/IconsManager';
-
+import './installing';
 window.React = React;
 window.ReactDOM = ReactDOM;
 window.Component = Component;
@@ -23,6 +22,5 @@ import('../../editor/src/js/classes/modules/IconsManager').then(IconsManager=>{
 });
 import('./FrontApp').then(FrontApp=>{
   FrontApp = FrontApp.default;
-  console.log(FrontApp);
   ReactDOM.render(<FrontApp/>, document.getElementById("front-app"));
 });
