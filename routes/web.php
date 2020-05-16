@@ -60,3 +60,13 @@ Route::group(['prefix' => 'admin'], function () {
 Route::view('/admin/{path?}', 'admin')
   ->where('path', '.*')
   ->name('admin');
+
+/**
+ * AJAX routes for frontend
+*/
+
+Route::group(['prefix' => 'ajax'], function(){
+
+  Route::resource( 'routes', 'Frontend\RouteController' );
+
+});

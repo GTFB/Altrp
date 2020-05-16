@@ -1,6 +1,6 @@
 const path = require("path");
 const merge = require('webpack-merge');
-const common = require('./webpack.common.js');
+const common = require('./webpack.front.common.js');
 const fs = require('fs');
 const http = require('http');
 let data;
@@ -9,7 +9,7 @@ module.exports = merge(common, {
   devtool: 'inline-source-map',
   devServer: {
     disableHostCheck: true,
-    contentBase: path.join(__dirname, "public/"),
+    contentBase: path.join(__dirname, "resources/modules/front-app/public/"),
     port: 3001,
     publicPath: "http://localhost:3001/",
     hotOnly: true,

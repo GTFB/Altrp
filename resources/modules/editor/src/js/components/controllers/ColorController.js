@@ -25,11 +25,14 @@ class ColorController extends Component {
     controllerDecorate(this);
   }
 
+  getDefaultValue(){
+    return '';
+  }
+
   openColorPicker(){
     let colorPicker = document.getElementById("colorPicker");
     let topPicker = colorPicker.offsetTop;
 
-    console.log(topPicker)
     colorPicker.classList.toggle("sketchPicker-none");
 
     this.props.currentElement.setSettingValue(this.props.controlId, topPicker);
@@ -45,7 +48,7 @@ class ColorController extends Component {
 
     this._changeValue(
       `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
-    )
+    );
 
     // console.log(this.state.colorPickedRGB)
     this.props.currentElement.setSettingValue(this.props.controlId, color.rgb);

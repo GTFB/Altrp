@@ -431,6 +431,7 @@ button{
   display: none;
   padding: 13px;
   flex-direction: column;
+  border-bottom: 1px solid $border-gray;
 }
 .control-switcher{
   display: flex;

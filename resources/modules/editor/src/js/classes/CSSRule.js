@@ -40,7 +40,7 @@ class CSSRule {
     let pairs = _.toPairs(object);
     this.properties = this.defaultPoperties.map(property => {
       pairs.forEach(pair => {
-        property = property.replace(`{{${pair[0].toUpperCase()}}}`, pair[1]);
+        property = property.split(`{{${pair[0].toUpperCase()}}}`).join(pair[1]);
       });
       return property;
     });

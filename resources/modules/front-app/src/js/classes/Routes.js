@@ -14,7 +14,7 @@ class Routes {
   loadRoutes(){
     this.resource.getAll().then(routesData=>{
       let routes = [];
-      for(let _data of routesData){
+      for(let _data of routesData.routes){
         routes.push(Route.routeFabric(_data));
       }
       appStore.dispatch(changeAppRoutes(routes))

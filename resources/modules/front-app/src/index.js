@@ -1,9 +1,12 @@
-import React from "react";
+import React, {Component}from "react";
 import ReactDOM from "react-dom";
-import FrontApp from './FrontApp'
-import FrontElementsManager from './js/classes/FrontElementsManager';
-import FrontElementsFabric from './js/classes/FrontElementsFabric';
 import './sass/front-style.scss';
+import './js/classes/FrontElementsFabric';
+import './js/classes/FrontElementsManager';
+import './installing';
+window.React = React;
+window.ReactDOM = ReactDOM;
+window.Component = Component;
 
 window.stylesModulePromise = new Promise(function (resolve) {
   window.stylesModuleResolve = resolve;
@@ -14,4 +17,10 @@ if (process.env.NODE_ENV !== 'production') {
 } else {
   console.log('%cWelcome to Altrp Front App', 'color: blue; font-size: 24px; font-weight: 900;');
 }
-ReactDOM.render(<FrontApp/>, document.getElementById("front-app"));
+import('../../editor/src/js/classes/modules/IconsManager').then(IconsManager=>{
+  window.iconsManager = new IconsManager.default;
+});
+import('./FrontApp').then(FrontApp=>{
+  FrontApp = FrontApp.default;
+  ReactDOM.render(<FrontApp/>, document.getElementById("front-app"));
+});

@@ -1,6 +1,4 @@
 import React, {Component} from "react";
-import ElementWrapper from './ElementWrapper'
-import decorate from "../decorators/element-component";
 
 class ColumnComponent extends Component {
   constructor(props){
@@ -10,7 +8,9 @@ class ColumnComponent extends Component {
       settings: props.element.getSettings()
     };
     props.element.component = this;
-    decorate(this);
+    if(window.elementDecorator){
+      window.elementDecorator(this);
+    }
   }
   render(){
     return <div className="altrp-column">

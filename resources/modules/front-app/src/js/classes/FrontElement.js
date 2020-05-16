@@ -68,6 +68,13 @@ class FrontElement {
     }
     return styles;
   }
+
+  getSelector(){
+    if(this.type === 'root-element'){
+      return `.altrp-template-root${this.getId()}`;
+    }
+    return `.altrp-element${this.getId()}`;
+  }
 }
 
 export default FrontElement
