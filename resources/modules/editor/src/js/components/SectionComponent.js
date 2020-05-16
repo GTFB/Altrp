@@ -1,6 +1,4 @@
 import React, {Component} from "react";
-import decorate from "../decorators/element-component";
-import ElementWrapper from "./ElementWrapper";
 
 class SectionComponent extends Component {
   constructor(props){
@@ -13,7 +11,9 @@ class SectionComponent extends Component {
       settings: props.element.getSettings()
     };
     props.element.component = this;
-    decorate(this);
+    if(window.elementDecorator){
+      window.elementDecorator(this);
+    }
   }
   render(){
 

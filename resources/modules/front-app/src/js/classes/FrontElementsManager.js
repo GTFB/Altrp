@@ -1,7 +1,7 @@
-import RootComponent from "../components/RootComponent";
-import HeadingWidget from "../components/widgets/HeadingWidget";
-import SectionComponent from "../components/SectionComponent";
-import ColumnComponent from "../components/ColumnComponent";
+import RootComponent from "../../../../editor/src/js/components/RootComponent";
+import HeadingWidget from "../../../../editor/src/js/components/widgets/HeadingWidget";
+import SectionComponent from "../../../../editor/src/js/components/SectionComponent";
+import ColumnComponent from "../../../../editor/src/js/components/ColumnComponent";
 
 export default class FrontElementsManager {
 
