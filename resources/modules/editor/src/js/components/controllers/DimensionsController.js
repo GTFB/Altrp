@@ -21,6 +21,11 @@ class DimensionsController extends Component {
       value,
       fill: "#FFF", 
       active: true,
+      styles: {
+        transition: "0s",
+        backgroundColor: "#8E94AA",
+        borderColor: "#8E94AA",
+      },
       // active: this.state.value.active,
       units: this.props.units || ['px'],
     };
@@ -100,20 +105,24 @@ class DimensionsController extends Component {
 
   }
   
-  changeBind(){
+  changeBind(e){
     let bind = document.getElementById("bind");
-
-    bind.classList.toggle("control-field-bind-active");
 
     if(this.state.fill == "#FFF") {
       this.setState({
         fill: "#8E94AA",
-        active: false
+        active: false,
+        styles: null
       })
     } else {
       this.setState({
         fill: "#FFF",
-        active: true
+        active: true,
+        styles: {
+          transition: "0s",
+          backgroundColor: "#8E94AA",
+          borderColor: "#8E94AA",
+        }
       })
     };
   }
@@ -128,7 +137,7 @@ class DimensionsController extends Component {
     };
   }
   render(){
-
+    let styleBind = this.state.styles
     return <div className="controller-container controller-container_dimensions">
       <div className="control-dimensions-header">
         <div className="controller-dimensions__label">{this.props.label}</div>
@@ -168,7 +177,7 @@ class DimensionsController extends Component {
           <input className="control-field control-field-dimensions control-field-bot-r" onChange={this.changeValue} data-active="left" value={this.state.value.left} type="number"/>
           <label className="control-field-bot-r-label control-field-dimensions-label">LEFT</label>
         </div>
-        <div id="bind" className="control-field control-field-bind control-field-bind-active" onClick={this.changeBind}>
+        <div id="bind" className="control-field control-field-bind" style={styleBind} onClick={this.changeBind}>
           <BindIcon width="12" height="12" fill={this.state.fill}/>
         </div>
       </div>
