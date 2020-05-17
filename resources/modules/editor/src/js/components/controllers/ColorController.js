@@ -8,13 +8,14 @@ class ColorController extends Component {
   constructor(props){
     super(props);
     this.openColorPicker = this.openColorPicker.bind(this)
-    this.colorChange = this.colorChange.bind(this)
+    this.colorChange = this.colorChange.bind(this);
     // this.inputHex = this.inputHex.bind(this)
     let value = this.props.currentElement.getSettings(this.props.controlId);
     if(value === null && this.props.default){
       value = this.props.default ;
     }
     value = value || '';
+    console.log(value);
     this.state = {value, 
       colorPickedHex: this.props.colorPickedHex, 
       opacity: 1, 
