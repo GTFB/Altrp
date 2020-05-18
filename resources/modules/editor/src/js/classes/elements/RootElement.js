@@ -218,12 +218,55 @@ class RootElement extends BaseElement {
 
     this.addControl('button', {
       type: CONTROLLER_BUTTON,
-      label: 'button content',
-      button: 'button',
-      classes: {
-        backgroundColor: '#20c74c',
-        color: '#FFF'
-      }
+      label: 'Normal',
+      value: 'Normal',
+      buttons: [
+        {
+          label: 'Content',
+          key: 1,
+          styles: {
+            background: 'none',
+            color: '#FFF',
+            borderRadius: '3px',
+            border: '1.5px solid #3C455B',
+            color: '#3C455B',
+            margin: '6px',
+            marginTop: '3px',
+            marginBottom: '3px',
+            paddingTop: '0px',
+            paddingBottom: '0px',
+            paddingLeft: '7px',
+            paddingRight: '7px',
+            fontSize: '12px',
+            fontFamily: 'Montserrat',
+            lineHeight: '15px',
+            fontWeight: 'bold'
+          },     
+        },
+
+        {
+          label: 'Hover',
+          key: 2,
+          styles: {
+            background: 'none',
+            color: '#FFF',
+            borderRadius: '3px',
+            border: '1.5px solid #3C455B',
+            color: '#3C455B',
+            marginRight: '6px',
+            marginTop: '3px',
+            marginBottom: '3px',
+            paddingTop: '6px',
+            paddingBottom: '6px',
+            paddingLeft: '7px',
+            paddingRight: '7px',
+            fontSize: '12px',
+            fontFamily: 'Montserrat',
+            lineHeight: '15px',
+            fontWeight: 'bold'
+          }
+        }
+      ],
     });
 
     this.addControl('heading', {

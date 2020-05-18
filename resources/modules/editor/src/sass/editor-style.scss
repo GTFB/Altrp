@@ -991,22 +991,26 @@ background-color: red;
   display: flex;
   flex-direction: column;
 }
-.control-button-label{
-  margin-bottom: 8px;
-}
-.control-heading{
-  margin: 5px;
-  font-size: 18px;
-}
 .control-css-editor-wrapper{
   border-radius: 3px;
   overflow: hidden;
   margin-top: 15px;
   border: 1px solid #E5E6EA;
 }
+.controller-container_button{
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
+  height: 100% !important;
+  display: flex;
+  justify-content: center;
+}
 .control-css-editor__label{
   font-size: 13px;
   color: #8E94AA;
+}
+.control-heading{
+  margin: 5px;
+  font-size: 18px;
 }
 .control-css-editor-description{
   font-size: 11px;

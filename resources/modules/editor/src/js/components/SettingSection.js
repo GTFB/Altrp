@@ -6,7 +6,7 @@ class SettingSection extends Component {
   constructor(props){
     super(props);
     this.state = {
-      open: props.open
+      open: props.open,
     };
     this.toggle = this.toggle.bind(this);
   }
