@@ -1,17 +1,19 @@
-import BaseElement from './BaseElement';
-import FromIcon from '../../../svgs/form.svg';
+import BaseElement from "./BaseElement";
+import ButtonIcon from '../../../svgs/button.svg';
 import {advancedTabControllers} from "../../decorators/register-controllers";
 import {CONTROLLER_TEXTAREA, TAB_CONTENT} from "../modules/ControllersManager";
 
-class Input extends BaseElement{
+class Button extends BaseElement{
+
   static getName(){
-    return 'input';
+    return'button';
   }
   static getTitle(){
-    return'Inout';
+    return'Button';
   }
+
   static getIconComponent(){
-    return FromIcon;
+    return ButtonIcon;
   }
   static getType(){
     return 'widget';
@@ -25,9 +27,10 @@ class Input extends BaseElement{
       label: 'Content',
     });
 
-    this.addControl('default_value', {
+    this.addControl('button_text', {
       type: CONTROLLER_TEXTAREA,
-      label: 'Default Value',
+      label: 'Button Text',
+      default: 'Click Me'
     });
 
     this.endControlSection();
@@ -35,4 +38,5 @@ class Input extends BaseElement{
     advancedTabControllers(this);
   }
 }
-export default Input;
+
+export default Button

@@ -23,7 +23,7 @@ export default class WidgetIcon  extends  Component{
     }
     return <div className='widget-icon' draggable="true" onDragStart={this.onDragStart}>
       {
-        React.createElement(this.state.element.getIconComponent())
+        React.createElement(this.state.element.getIconComponent(), {height: 35})
       }
       <div className="widget-icon__title">
         {this.state.element.getTitle()}

@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-class Input extends Component {
+class InputWidget extends Component {
 
   constructor(props){
     super(props);
@@ -13,8 +13,9 @@ class Input extends Component {
     }
   }
   render(){
-    return<input/>;
+    return<input type="text"
+                 value={this.state.settings.default_value || ''}/>;
   }
 }
 
-export default Input
+export default InputWidget

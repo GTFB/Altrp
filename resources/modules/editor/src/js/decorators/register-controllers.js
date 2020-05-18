@@ -127,5 +127,5 @@ export function advancedTabControllers(element) {
     }
   );
 
-  element.endControlSection();
+
 }
