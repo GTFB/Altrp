@@ -15,9 +15,8 @@ class ColorController extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    console.log(value);
-    this.state = {value, 
-      colorPickedHex: this.props.colorPickedHex, 
+    this.state = {value,
+      colorPickedHex: this.props.colorPickedHex,
       opacity: 1, 
       pickerPosition: "0px", 
       colorRGB: this.props.colorPickedRGB, 
@@ -46,13 +45,12 @@ class ColorController extends Component {
       opacity: color.rgb.a,
       colorRGB: color.rgb
     });
-
-    this._changeValue(
-      `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
-    );
+    this._changeValue({
+      color: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+      colorPickedHex: color.hex
+    });
 
     // console.log(this.state.colorPickedRGB)
-    this.props.currentElement.setSettingValue(this.props.controlId, color.rgb);
   };
 
   // inputHex(e){
@@ -78,13 +76,12 @@ class ColorController extends Component {
   render(){
 
     let colorPickedStyle = {
-      backgroundColor: this.state.colorPickedRGB
+      backgroundColor: this.state.value.color
     };
 
     let colorPickerPosition = {
       marginTop: this.state.pickerPosition
     };
-
     return <div className="controller-container controller-container_color">
         <div className="control-link-header">
             <div className="controller-container__label">{this.props.label}</div>
@@ -95,7 +92,7 @@ class ColorController extends Component {
                 <div className="control-color-colorPicked-container">
                   <div className="control-color-colorPicked" style={colorPickedStyle}></div>
                 </div>
-                <label className="control-color-hex">{this.state.colorPickedHex}</label>
+                <label className="control-color-hex">{this.state.value.colorPickedHex}</label>
             </div>
             <div className="control-color-opacity-container">
               <label className="control-color-opacity" >{(this.state.opacity * 100).toFixed() + "%"}</label>

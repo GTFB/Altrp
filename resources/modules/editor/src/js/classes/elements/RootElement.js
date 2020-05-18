@@ -203,14 +203,16 @@ class RootElement extends BaseElement {
     this.addControl('color', {
       type: CONTROLLER_COLOR,
       label: 'color content',
-      colorPickedHex: "#EAEAEA",
-      colorPickedRGB: "rgb(234, 234, 234)",
+      default: {
+        color: "rgb(234, 234, 234)",
+        colorPickedHex: "#EAEAEA",
+      },
       presetColors: [
         "#eaeaea",
         "#9c18a8"
       ],
       rules: {
-        '{{ELEMENT}}': 'background: {{VALUE}};',
+        '{{ELEMENT}}': 'background: {{COLOR}};',
       },
     });
 

@@ -121,8 +121,12 @@ export function advancedTabControllers(element) {
     'element_border_color', {
       type: CONTROLLER_COLOR,
       label: 'Border Color',
+      default: {
+        color: "rgb(234, 234, 234)",
+        colorPickedHex: "#EAEAEA",
+      },
       rules: {
-        '{{ELEMENT}}': 'border-color: {{VALUE}};',
+        '{{ELEMENT}}': 'border-color: {{COLOR}};',
       },
     }
   );
