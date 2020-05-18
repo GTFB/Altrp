@@ -48,7 +48,7 @@ class MediaController extends Component {
     if(this.state.value.name){
       assetClasses = `asset asset_${this.state.value.assetType}`;
       if(this.state.value.assetType === 'icon'){
-        Asset = this.state.value.iconComponent;
+        Asset = iconsManager().getIconComponent(this.state.value.name);
       }
       width = 90;
       height = 90;

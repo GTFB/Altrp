@@ -14,7 +14,6 @@ class ColorController extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    console.log(value);
     this.state = {value,
       colorPickedHex: this.props.colorPickedHex,
       opacity: 1, 
