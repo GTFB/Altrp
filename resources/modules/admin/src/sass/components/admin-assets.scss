@@ -1,0 +1,30 @@
+.uploader{
+  padding: 48px;
+  background-color: #fff;
+  border: 1px solid $border-gray;
+  border-radius: 5px;
+  -webkit-transition-duration: .5s;
+  -moz-transition-duration: .5s;
+  -ms-transition-duration: .5s;
+  -o-transition-duration: .5s;
+  transition-duration: .5s;
+  color: $grey;
+  & .icon {
+    width: auto;
+    height: auto;
+    fill: $grey;
+    margin: 0;
+    transition-duration: inherit;
+  }
+  &__input{
+    display: none;
+  }
+  &_drag-over{
+    padding: 44px;
+    border: 5px solid $turquoise;
+    color: $turquoise;
+    & .icon{
+      fill: $turquoise;
+    }
+  }
+}

@@ -53,6 +53,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::delete('/global-elements/{element}', "Constructor\GlobalElements@trashed");
     Route::resource( 'templates', 'TemplateController' );
     Route::get( '/template/{template_id}/reviews', 'TemplateController@reviews' );
+    Route::resource( 'media', 'Admin\MediaController' );
   });
 
 });

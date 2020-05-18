@@ -1,6 +1,7 @@
 import Icon from "../Icon";
 import AddIcon from '../../../svgs/add.svg';
 import AdvancedIcon from '../../../svgs/advanced.svg';
+import UploadIcon from '../../../svgs/upload.svg';
 
 class IconsManager {
   constructor(){
@@ -8,6 +9,7 @@ class IconsManager {
     this.icons.push(new Icon('add', AddIcon));
     this.icons.push(new Icon('advanced', AdvancedIcon));
     this.icons.push(new Icon('default', AddIcon));
+    this.icons.push(new Icon('upload', UploadIcon));
   }
   /**
    * @param {string} iconName
@@ -15,16 +17,8 @@ class IconsManager {
    * @throws
    * */
   getIconComponent(iconName){
-    let iconComponent;
-    this.icons.forEach(icon=>{
-      if(icon.name === iconName){
-        iconComponent = icon.iconComponent;
-      }
-    });
-    if(! iconComponent){
-      console.error( `Icon ${iconName} not found`);
-    }
-    return iconComponent;
+    let icon = this.getIcon(iconName);
+    return icon.iconComponent;
   }
   /**
    * @param {string} iconName
@@ -51,15 +45,16 @@ class IconsManager {
   }
   /**
    * @param {string} iconName
+   * @param {object} props || null
    * @return {React.DetailedReactHTMLElement<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> | React.DetailedReactHTMLElement<React.HTMLAttributes<T>, HTMLElement> | React.ReactSVGElement | React.DOMElement<React.DOMAttributes<T>, Element> | React.FunctionComponentElement<{}> | React.CElement<{}, React.ClassicComponent<{}, React.ComponentState>> | React.CElement<{}, React.Component<P, React.ComponentState>> | React.ReactElement<{}>}
    * @throws
    * */
-  renderIcon(iconName){
+  renderIcon(iconName, props){
     let iconComponent = this.getIconComponent(iconName);
     if(! iconComponent) {
       iconComponent = this.getIconComponent('default');
     }
-    return React.createElement(iconComponent);
+    return React.createElement(iconComponent, props);
   }
 }
 

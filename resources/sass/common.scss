@@ -1,4 +1,5 @@
 @import "vars";
+@import "~bootstrap/dist/css/bootstrap-grid.min.css";
 
 body,
 *,
@@ -59,6 +60,11 @@ input[type="checkbox"]{
   &_success{
     background-color: $green;
     color: #fff;
+    font-weight: bold;
+  }
+}
+.text{
+  &_bold{
     font-weight: bold;
   }
 }

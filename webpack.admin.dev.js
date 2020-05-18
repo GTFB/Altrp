@@ -15,7 +15,7 @@ module.exports = merge(common, {
     historyApiFallback: true,
 
     before: function(app, server, compiler) {
-      app.get('/admin/ajax/', function(req, res) {
+      app.get('/admin/ajax/*', function(req, res) {
         console.log('http://altrp.nz' + req.url);
         http.get('http://altrp.nz' + req.url, (data ) =>{
           let bodyChunks = [];
@@ -30,26 +30,19 @@ module.exports = merge(common, {
           console.error(err.message);
         });
       });
-      app.post('/admin/ajax/templates', function(req, res) {
+      app.post('/admin/ajax/*', function(req, res) {
         let options = {
           hostname: 'altrp.nz',
           path: req.url,
           method: 'POST',
         };
-        console.log( req.url);
-        http.request(options, (data ) =>{
-          let bodyChunks = [];
-          console.log(bodyChunks);
-          data.on('data', function(chunk) {
-            // You can process streamed parts here...
-            bodyChunks.push(chunk);
-            console.log(chunk);
-          }).on('end', function() {
-            let body = Buffer.concat(bodyChunks);
-            res.end(body);
-          })
-        }).on('error', err=>{
-          console.error(err.message);
+        console.log(req.url);
+        let reqData = '';
+        req.on('data', chunk=>{
+          console.log(reqData);
+          reqData += chunk
+        }).on('end',()=>{
+          res.send(reqData);
         });
       });
       app.put('/admin/ajax/templates/:id', function(req, res) {

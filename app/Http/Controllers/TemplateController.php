@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Constructor\Template;
-use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
