@@ -28,7 +28,10 @@ class ButtonController extends Component {
         {this.props.label}
       </div>
       <div className="control-group">
-        <button className="btn" onClick={this.changeValue} style={this.props.classes}>{this.props.button}</button>
+        {this.props.buttons.map((buttons) => {
+          return <button key={buttons.key} data-key={buttons.key} onClick={this.changeValue} style={buttons.styles}>{buttons.label}</button>
+        })
+      }
       </div>
     </div>
   }
