@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import { SketchPicker } from "react-color"
-import DynamicIcon from '../../../svgs/dynamic.svg'
 import controllerDecorate from "../../decorators/controller";
 
 class ColorController extends Component {
@@ -15,6 +14,7 @@ class ColorController extends Component {
       value = this.props.default ;
     }
     value = value || '';
+    console.log(value);
     this.state = {value,
       colorPickedHex: this.props.colorPickedHex,
       opacity: 1, 
@@ -47,7 +47,6 @@ class ColorController extends Component {
     });
     this._changeValue({
       color: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
-      colorPickedHex: color.hex
     });
 
     // console.log(this.state.colorPickedRGB)
