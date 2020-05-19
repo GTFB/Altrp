@@ -9,6 +9,7 @@ export default class Assets extends Component {
     this.onDragOver = this.onDragOver.bind(this);
     this.onDragLeave = this.onDragLeave.bind(this);
     this.onDrop = this.onDrop.bind(this);
+    this.onChange = this.onChange.bind(this);
     this.state = {
       uploaderClasses: 'admin-assets__uploader uploader'
     };
@@ -17,12 +18,17 @@ export default class Assets extends Component {
   async onDrop(e){
     e.preventDefault();
     e.stopPropagation();
-    console.log(e.dataTransfer.files);
-    let res = await this.resource.postFiles(e.dataTransfer.files[0]);
+    let res = await this.resource.postFiles(e.dataTransfer.files);
     console.log(res);
     this.setState(state=>{
       return {...state, uploaderClasses: 'admin-assets__uploader uploader'}
     });
+  }
+  async onChange(e){
+    console.log(e.target.files);
+
+    let res = await this.resource.postFiles(e.target.files);
+    console.log(res);
   }
   onDragOver(e){
     e.preventDefault();
@@ -56,6 +62,7 @@ export default class Assets extends Component {
             <input type="file"
                    accept="image/*"
                    multiple={true}
+                   onChange={this.onChange}
                    className="uploader__input"/>
             <span className="uploader__text text text_bold">
               Drag or Choose File

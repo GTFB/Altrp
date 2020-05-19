@@ -9,4 +9,9 @@ class Media extends Model
 {
     //
   use SoftDeletes;
+  protected $fillable = [
+    'author',
+    'filename',
+    'media_type',
+  ];
 }

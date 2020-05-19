@@ -1,6 +1,8 @@
 /**
  * @class
  * */
+
+export const MAX_FILE_SIZE = 10485760;
 class Resource {
 
 
@@ -87,18 +89,25 @@ class Resource {
   }
   /**
    * @param {FileList} files
+   * @param {string} fileType
    * @return {Promise}
    * */
-  postFiles(files){
+  postFiles(files, fileType){
     // data._token = _token;
     let boundary = String(Math.random()).slice(2);
+    fileType = fileType || 'image';
     let headers = {
       'X-CSRF-TOKEN': _token,
-      'Content-Type': 'multipart/form-data; boundary=' + boundary
+      // 'Content-Type': 'multipart/form-data; boundary=' + boundary
     };
     let formData = new FormData();
+    console.log(files);
     for (let i = 0; i < files.length; i++) {
-      formData.append('files', files[i]);
+      if(files[i].size > MAX_FILE_SIZE || files[i].type.indexOf(fileType) !== 0){
+        console.log(files[i]);
+        continue;
+      }
+      formData.append(`files[${i}]`, files[i]);
     }
     let options = {
       method: 'POST',
