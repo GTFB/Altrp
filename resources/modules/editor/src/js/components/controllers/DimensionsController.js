@@ -48,10 +48,10 @@ class DimensionsController extends Component {
       if( e.target.value <= 9999){
         this._changeValue({
           ...this.state.value,
-          left: e.target.value,
-          bottom: e.target.value,
-          top: e.target.value,
-          right: e.target.value
+          left: e.target.value|| 0,
+          bottom: e.target.value|| 0,
+          top: e.target.value|| 0,
+          right: e.target.value|| 0
         })
       }
     } else {
@@ -59,40 +59,40 @@ class DimensionsController extends Component {
 
       if(active == "top"){
         this._changeValue({
-          top:e.target.value,
-          right: this.state.value.right,
-          bottom: this.state.value.bottom,
-          left: this.state.value.left,
+          top:e.target.value|| 0,
+          right: this.state.value.right || 0,
+          bottom: this.state.value.bottom || 0,
+          left: this.state.value.left || 0,
           unit: this.state.value.unit
         });
       }
 
       if(active == "right"){
         this._changeValue({
-          right:e.target.value,
-          bottom: this.state.value.bottom,
-          left: this.state.value.left,
-          top: this.state.value.top,
+          right:e.target.value|| 0,
+          bottom: this.state.value.bottom || 0,
+          left: this.state.value.left || 0,
+          top: this.state.value.top || 0,
           unit: this.state.value.unit
         });
       }
 
       if(active == "bottom"){
         this._changeValue({
-          bottom:e.target.value,
-          right: this.state.value.right,
-          left: this.state.value.left,
-          top: this.state.value.top,
+          bottom:e.target.value|| 0,
+          right: this.state.value.right || 0,
+          left: this.state.value.left || 0,
+          top: this.state.value.top || 0,
           unit: this.state.value.unit
         });
       }
 
       if(active == "left"){
         this._changeValue({
-          left:e.target.value,
-          right: this.state.value.right,
-          bottom: this.state.value.bottom,
-          top: this.state.value.top,
+          left:e.target.value|| 0,
+          right: this.state.value.right || 0,
+          bottom: this.state.value.bottom || 0,
+          top: this.state.value.top || 0,
           unit: this.state.value.unit
         });
       }
