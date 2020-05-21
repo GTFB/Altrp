@@ -13,6 +13,7 @@ import {
   CONTROLLER_BUTTON,
   CONTROLLER_HEADING,
   CONTROLLER_CSSEDITOR,
+  CONTROLLER_SHADOW,
   TAB_ADVANCED,
   TAB_CONTENT,
   TAB_STYLE,
@@ -280,6 +281,25 @@ class RootElement extends BaseElement {
       type: CONTROLLER_CSSEDITOR,
       default: {
         value: null
+      },
+    });
+
+    this.addControl('box-shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'box shadow',
+      default:{
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        color: 'rgb(0, 0, 0)',
+        colorPickedHex: '#000000',
+      },
+      presetColors: [
+        "#eaeaea",
+        "#9c18a8"
+      ],
+      rules: {
+        '{{ELEMENT}}': 'box-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
       },
     });
 

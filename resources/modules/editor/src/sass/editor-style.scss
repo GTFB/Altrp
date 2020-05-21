@@ -916,6 +916,13 @@ background-color: red;
   margin: 10px;
   top: 10px;
 }
+.control-color-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 10px;
+}
 .control-dimensions-header{
   display: flex;
   flex-direction: row;
@@ -1018,6 +1025,59 @@ background-color: red;
   line-height: 1.4;
   color: #a4afb7;
   margin-top: 15px;
+}
+.control-shadow-toggle{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 27px;
+  height: 27px;
+  border-radius: 3px;
+  border: 1px solid #E5E6EA;
+  float: right;
+}
+.control-shadow-svg-history-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 27px;
+  height: 27px;
+  float: right;
+}
+.control-group-shadow{
+  position: relative;
+  display: block;
+}
+.control-shadow-wrapper{ 
+  display: none;
+  position: absolute;
+  background-color: #FFFFFF;
+  box-shadow: 0px 2px 15px rgba(0,0,0,.3);
+  border-radius: 3px;
+  left: -100px;
+  padding: 15px;
+  right: 0;
+  margin-top: 35px;
+  margin-left: 15px;
+  width: 240px;
+  z-index: 10000;
+  box-sizing: border-box;
+  background-color: #fff;
+  flex-direction: column;
+}
+.control-shadow-wrapper::before{
+  content: "";
+  position: absolute;
+  top: -16px;
+  right: 22px;
+  border: 8px solid transparent;
+  border-bottom-color: #fff;
+}
+.control-shadow-active{
+  display: flex;
+}
+.control-shadow-blur-header{
+  margin-top: 10px;
 }
 .overlay{
   position: absolute;

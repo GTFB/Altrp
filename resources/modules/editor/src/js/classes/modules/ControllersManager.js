@@ -14,6 +14,7 @@ import MediaController from "../../components/controllers/MediaController";
 import ButtonController from "../../components/controllers/ButtonController";
 import HeadingController from "../../components/controllers/HeadingController";
 import CssEditorController from "../../components/controllers/CssEditorController";
+import ShadowController from "../../components/controllers/ShadowController";
 
 export const TAB_CONTENT = 'content';
 export const TAB_STYLE = 'style';
@@ -33,6 +34,7 @@ export const CONTROLLER_MEDIA = 'media';
 export const CONTROLLER_BUTTON = 'button';
 export const CONTROLLER_HEADING = 'heading';
 export const CONTROLLER_CSSEDITOR = 'css-editor';
+export const CONTROLLER_SHADOW = 'shadow';
 
 class ControllersManager {
   constructor(){
@@ -52,6 +54,7 @@ class ControllersManager {
     this.conttrollers[CONTROLLER_BUTTON] = ButtonController;
     this.conttrollers[CONTROLLER_HEADING] = HeadingController;
     this.conttrollers[CONTROLLER_CSSEDITOR] = CssEditorController;
+    this.conttrollers[CONTROLLER_SHADOW] = ShadowController;
     this.elementsControls = null;
     this._cache = {
       controls: {},
