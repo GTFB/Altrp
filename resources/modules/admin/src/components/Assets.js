@@ -15,24 +15,27 @@ export default class Assets extends Component {
     this.state = {
       uploaderClasses: 'admin-assets__uploader uploader',
       assets: [],
+      itemDeleteClasses: 'item__delete',
     };
     this.resource  = new Resource({route: '/admin/ajax/media'});
   }
-  async deleteClick(e){
+  deleteClick(e){
     let assetId = e.currentTarget.dataset.assetid;
+    this.setState(state=>{
+      return{...state, itemDeleteClasses: 'item__delete altrp-disabled'}
+    });
     this.resource.delete(assetId).then(res=>{
       if(res.success){
         let newAssets = [...this.state.assets];
         newAssets = _.filter(newAssets, item => !(item.id===Number(assetId)));
         this.setState(state=>{
-          return{...state, assets: newAssets};
+          return{...state, assets: newAssets, itemDeleteClasses: 'item__delete'};
         })
       }
     });
   }
   updateAssets(files){
     this.resource.postFiles(files).then(res=>{
-      console.log(res);
       if(res.length){
         let newAssets = res.concat(this.state.assets);
         this.setState(state=>{
@@ -51,7 +54,6 @@ export default class Assets extends Component {
   }
   componentDidMount(){
     this.resource.getAll().then(res=>{
-      console.log(res);
       this.setState(state=>{
         return {...state, assets: res}
       })
@@ -106,7 +108,7 @@ export default class Assets extends Component {
               return<div className="assets-list__item item col-1" key={asset.id} >
                 <div className="item__background"
                      style={{'backgroundImage': `url('${asset.url}')`}}/>
-                <button className="item__delete"
+                <button className={this.state.itemDeleteClasses}
                         data-assetid={asset.id}
                         title="Delete"
                         onClick={this.deleteClick}>
