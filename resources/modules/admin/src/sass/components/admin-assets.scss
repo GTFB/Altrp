@@ -28,3 +28,37 @@
     }
   }
 }
+
+.item{
+  position: relative;
+  &__delete{
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    border: none;
+    background-color: transparent;
+    &-icon{
+      transform: scale(1.2);
+    }
+  }
+  &__background{
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    background-position: center;
+    -webkit-background-size: contain;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+}
+
+.assets-list{
+  background-color: #fff;
+  &__item{
+    padding-top: 8.333333%;
+  }
+}
+

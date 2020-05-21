@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
@@ -19,7 +20,7 @@ class MediaController extends Controller
   public function index()
   {
     //
-    return response()->json( Media::all()->toArray() );
+    return response()->json( Media::all()->sortByDesc( 'id' )->values()->toArray() );
   }
 
   /**
@@ -51,28 +52,24 @@ class MediaController extends Controller
     $files = [];
 
     foreach ( $_files as $file ) {
-      $res[] = $file->getBasename();
-      $res[] = $file->getClientOriginalName();
-      $res[] = $file->getClientMimeType();
-      $res[] = $file->getMimeType();
-
       if( strpos(  $file->getClientMimeType(), 'image' ) === 0 &&
         $file->getSize() < config( 'filesystems', 'max_file_size' )
       ){
         $files[] = $file;
       }
-      $file_name = $file->getBasename();
     }
-    $res[] = $_FILES;
-    $res[] = $files;
+
     foreach ( $files as $file ) {
       $media = new Media();
       $media->media_type = $file->getClientMimeType();
       $media->author = Auth::user()->id;
-      $media->filename = $file->store( 'media/' .  date("Y") . '/' .  date("m") );
+      $media->filename =  $file->store( 'media/' .  date("Y") . '/' .  date("m" ) ,
+        ['disk' => 'public'] );
+      $media->url =  Storage::url( $media->filename );
       $media->save();
       $res[] = $media;
     }
+    $res = array_reverse( $res );
     return response()->json( $res );
 
   }
@@ -116,11 +113,22 @@ class MediaController extends Controller
   /**
    * Remove the specified resource from storage.
    *
-   * @param  int $id
+   * @param Media $media
+   * @param string $id
    * @return \Illuminate\Http\Response
+   * @throws \Exception
    */
-  public function destroy( $id )
+  public function destroy( Media $media, $id )
   {
     //
+    $media = $media->find($id);
+
+    if( Storage::delete( 'public/' . $media->filename ) ){
+      if( $media->delete() ){
+        return response()->json( ['success' => true] );
+      }
+      return response()->json( ['success' => false, 'message'=> 'Error deleting media' ], 500 );
+    }
+    return response()->json( ['success' => false, 'message'=> 'Error deleting file' ], 500 );
   }
 }

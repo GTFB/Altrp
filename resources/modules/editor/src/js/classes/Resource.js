@@ -131,6 +131,7 @@ class Resource {
       method: 'put',
       body: JSON.stringify(data),
       headers: {
+        'X-CSRF-TOKEN': _token,
         'Content-Type': 'application/json'
       },
     };
@@ -145,15 +146,14 @@ class Resource {
   /**
    * @return {Promise}
    * */
-  delete(data){
+  delete(id){
 
     let options = {
       method: 'delete',
-      body: JSON.stringify(data),
       headers: {
+        'X-CSRF-TOKEN': _token,
         'Content-Type': 'application/json'
       },
-
     };
     let url = this.route + '/' + id;
     return fetch(url, options).then(res => {

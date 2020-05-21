@@ -30,6 +30,24 @@ module.exports = merge(common, {
           console.error(err.message);
         });
       });
+      app.delete('/admin/ajax/*', function (req,res) {
+        res.send(JSON.stringify({success:true}));
+      });
+      app.get('/storage/*', function(req, res) {
+        console.log('http://altrp.nz' + req.url);
+        http.get('http://altrp.nz' + req.url, (data ) =>{
+          let bodyChunks = [];
+          data.on('data', function(chunk) {
+            // You can process streamed parts here...
+            bodyChunks.push(chunk);
+          }).on('end', function() {
+            let body = Buffer.concat(bodyChunks);
+            res.end(body);
+          })
+        }).on('error', err=>{
+          console.error(err.message);
+        });
+      });
       app.post('/admin/ajax/*', function(req, res) {
         let options = {
           hostname: 'altrp.nz',

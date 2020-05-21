@@ -2,6 +2,7 @@ import Icon from "../Icon";
 import AddIcon from '../../../svgs/add.svg';
 import AdvancedIcon from '../../../svgs/advanced.svg';
 import UploadIcon from '../../../svgs/upload.svg';
+import TimesIcon from '../../../svgs/times.svg';
 
 class IconsManager {
   constructor(){
@@ -10,6 +11,8 @@ class IconsManager {
     this.icons.push(new Icon('advanced', AdvancedIcon));
     this.icons.push(new Icon('default', AddIcon));
     this.icons.push(new Icon('upload', UploadIcon));
+    this.icons.push(new Icon('times', TimesIcon));
+    this.icons.push(new Icon('close', TimesIcon));
   }
   /**
    * @param {string} iconName
