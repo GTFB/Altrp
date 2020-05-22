@@ -14,6 +14,7 @@ import {
   CONTROLLER_HEADING,
   CONTROLLER_CSSEDITOR,
   CONTROLLER_SHADOW,
+  CONTROLLER_TRANSFORM,
   TAB_ADVANCED,
   TAB_CONTENT,
   TAB_STYLE,
@@ -303,6 +304,57 @@ class RootElement extends BaseElement {
       },
     });
 
+    this.addControl('transform Header', {
+      type: CONTROLLER_HEADING,
+      default: {
+        label: 'transform'
+      }
+    })
+
+    this.addControl('transform', {
+      type: CONTROLLER_TRANSFORM,
+      label: 'transform',
+      default: {
+        size: 0
+      },
+      options: [
+        {
+          label: 'none',
+          value: ''
+        },
+        {
+          label: 'rotate',
+          value: 'rotate',
+        },
+        {
+          label: 'scaleX',
+          value: 'scaleX',
+        },
+        {
+          label: 'scaleY',
+          value: 'scaleY',
+        },
+        {
+          label: 'skewY',
+          value: 'skewY',
+        },
+        {
+          label: 'skewX',
+          value: 'skewX',
+        },
+        {
+          label: 'translateX',
+          value: 'translateX',
+        },
+        {
+          label: 'translateY',
+          value: 'translateY',
+        }
+      ],
+      rules: {
+        '{{ELEMENT}}': 'transform: {{FUNCTION}}( {{SIZE}}{{UNIT}} )'
+      }
+    })
     this.endControlSection();
 
     this.startControlSection('text_style', {
