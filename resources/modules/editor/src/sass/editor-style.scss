@@ -507,11 +507,8 @@ button{
   flex-direction: row;
 }
 .control-select__label{
-  display: flex;
-  justify-content: left;
-  align-items: left;
   margin-right: auto;
-  margin-bottom: 10px;
+  height: 27px;
 }
 .red {
 background-color: red;
@@ -1069,7 +1066,7 @@ background-color: red;
   content: "";
   position: absolute;
   top: -16px;
-  right: 22px;
+  right: 5px;
   border: 8px solid transparent;
   border-bottom-color: #fff;
 }
