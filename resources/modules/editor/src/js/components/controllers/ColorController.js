@@ -81,7 +81,7 @@ class ColorController extends Component {
       marginTop: this.state.pickerPosition
     };
     return <div className="controller-container controller-container_color">
-        <div className="control-link-header">
+        <div className="control-color-header">
             <div className="controller-container__label">{this.props.label}</div>
             {/* <div className="controller-newColor"></div> */}
         </div>
