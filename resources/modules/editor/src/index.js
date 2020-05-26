@@ -51,7 +51,6 @@ import('./Editor.js').then(Editor=>{
     if(!iframe){
       return
     }
-    console.log(iframe.contentWindow.document);
     let editorContentTarget = iframe.contentWindow.document.getElementById("editor-content");
 
     if(editorContentTarget){

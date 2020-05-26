@@ -48,7 +48,7 @@ class MediaController extends Component {
     let assetClasses = 'icon';
     let viewBox = '0 0 20 20';
     let assetsProps = {
-      width: 90,
+      width: 227,
       height: 90,
     };
     if (this.state.value.name) {
@@ -68,7 +68,6 @@ class MediaController extends Component {
     } else {
       Asset = AddIcon
     }
-    console.log(this.state.value);
     return <div className="controller-container controller-container_media">
       <div className="controller-container__label">
         {this.props.label}

@@ -541,7 +541,8 @@ export function advancedTabControllers(element) {
         '{{ELEMENT}}': 'align-content: {{VALUE}};',
       },
     }
-  )
+  );
+
   element.endControlSection();
 
   element.startControlSection(
