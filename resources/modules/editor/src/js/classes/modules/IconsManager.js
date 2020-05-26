@@ -48,11 +48,11 @@ class IconsManager {
   }
   /**
    * @param {string} iconName
-   * @param {object} props || null
+   * @param {object} props
    * @return {React.DetailedReactHTMLElement<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> | React.DetailedReactHTMLElement<React.HTMLAttributes<T>, HTMLElement> | React.ReactSVGElement | React.DOMElement<React.DOMAttributes<T>, Element> | React.FunctionComponentElement<{}> | React.CElement<{}, React.ClassicComponent<{}, React.ComponentState>> | React.CElement<{}, React.Component<P, React.ComponentState>> | React.ReactElement<{}>}
    * @throws
    * */
-  renderIcon(iconName, props){
+  renderIcon(iconName, props = null){
     let iconComponent = this.getIconComponent(iconName);
     if(! iconComponent) {
       iconComponent = this.getIconComponent('default');

@@ -7,12 +7,12 @@ import {assetsShow} from "../../store/assets-browser/actions";
 import {iconsManager} from "../../helpers";
 
 class MediaController extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     let value = this.props.currentElement.getSettings(this.props.controlId);
     // console.log(value);
-    if(value === null && this.props.default && this.props.default.name){
-      value = iconsManager().getIcon(this.props.default.name) ;
+    if (value === null && this.props.default && this.props.default.name) {
+      value = iconsManager().getIcon(this.props.default.name);
     }
     value = value || {};
     this.state = {value};
@@ -20,55 +20,67 @@ class MediaController extends Component {
     this.deleteAsset = this.deleteAsset.bind(this);
     controllerDecorate(this);
   }
-  openAssetsBrowser(e){
+
+  openAssetsBrowser(e) {
     e.preventDefault();
     e.stopPropagation();
     let assetsSettings = {
-      active:true,
-      onChoose:  (assetValue)=> {
+      active: true,
+      onChoose: (assetValue) => {
         this._changeValue(assetValue);
       },
     };
     this.props.dispatch(assetsShow(assetsSettings));
   }
-  deleteAsset(e){
+
+  deleteAsset(e) {
     e.preventDefault();
     e.stopPropagation();
     this._changeValue({});
   }
-  getDefaultValue(){
+
+  getDefaultValue() {
     return {};
   }
-  render(){
+
+  render() {
     let Asset = '';
     let assetClasses = 'icon';
-    let width = 20;
-    let height = 20;
     let viewBox = '0 0 20 20';
-    if(this.state.value.name){
-      assetClasses = `asset asset_${this.state.value.assetType}`;
-      if(this.state.value.assetType === 'icon'){
-        Asset = iconsManager().getIconComponent(this.state.value.name);
+    let assetsProps = {
+      width: 90,
+      height: 90,
+    };
+    if (this.state.value.name) {
+      assetsProps.className = `asset asset_${this.state.value.assetType}`;
+
+      switch (this.state.value.assetType) {
+        case 'icon': {
+          Asset = iconsManager().getIconComponent(this.state.value.name);
+        }
+          break;
+        case 'media': {
+          Asset = 'img';
+          assetsProps.src = this.state.value.url;
+        }
+          break;
       }
-      width = 90;
-      height = 90;
-      let viewBox = '0 0 90 90';
     } else {
       Asset = AddIcon
     }
+    console.log(this.state.value);
     return <div className="controller-container controller-container_media">
       <div className="controller-container__label">
         {this.props.label}
       </div>
       <div className="controller-media-choose" onClick={this.openAssetsBrowser}>
-        {Asset ? <Asset className={assetClasses}
-                        height={height}
-                        viewBox={viewBox}
-                        width={width}/> : Asset}
+        {Asset ? <Asset {...assetsProps}/> : ''}
         {
           this.state.value.name ?
-            <button className="controller-media-choose__button controller-media-choose__button_delete" onClick={this.deleteAsset}>Delete</button> :
-            <button className="controller-media-choose__button controller-media-choose__button_choose">Choose Media</button>
+              <button className="controller-media-choose__button controller-media-choose__button_delete"
+                      onClick={this.deleteAsset}>Delete</button> :
+              <button className="controller-media-choose__button controller-media-choose__button_choose">Choose
+                Media</button>
         }
       </div>
     </div>
@@ -76,8 +88,9 @@ class MediaController extends Component {
 }
 
 function mapStateToProps(state) {
-  return{
-    currentElement:state.currentElement.currentElement,
+  return {
+    currentElement: state.currentElement.currentElement,
   };
 }
+
 export default connect(mapStateToProps)(MediaController);

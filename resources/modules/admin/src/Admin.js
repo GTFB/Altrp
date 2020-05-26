@@ -8,7 +8,7 @@ import AssetSvg from './svgs/assets.svg';
 import BurgerSvg from './svgs/burger.svg';
 import CloseBurgerSvg from './svgs/closeburger.svg';
 import DashboardSvg from './svgs/dashboard.svg';
-import PageSvg from './svgs/pages.svg';
+import PagesSvg from './svgs/pages.svg';
 import PluginSvg from './svgs/plugins.svg';
 import ReportSvg from './svgs/reports.svg';
 import SettingSvg from './svgs/settings.svg';
@@ -87,6 +87,12 @@ class Admin extends Component {
                   <Link to="/admin/settings" className="admin-nav-list__link">
                     <SettingSvg className="icon"/>
                     <span>Settings</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/pages" className="admin-nav-list__link">
+                    <PagesSvg className="icon"/>
+                    <span>Pages</span>
                   </Link>
                 </li>
               </ul>

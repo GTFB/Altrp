@@ -357,8 +357,9 @@ button{
     background-color: $light-gray;
     cursor: pointer;
     overflow: hidden;
-    & .asset_icon{
-
+    & .asset_media{
+      object-position: center;
+      object-fit: contain;
     }
     &__button{
       position: absolute;

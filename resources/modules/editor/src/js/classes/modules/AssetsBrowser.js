@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import Times from '../../../svgs/times.svg';
 import {assetsToggle} from "../../store/assets-browser/actions";
 import {iconsManager} from "../../helpers";
+import Resource from "../Resource";
 class AssetsBrowser extends Component {
   constructor(){
     super();
@@ -11,7 +12,8 @@ class AssetsBrowser extends Component {
     this.selectAsset = this.selectAsset.bind(this);
     this.chooseAsset = this.chooseAsset.bind(this);
     this.state = {
-      activeTab: 'icons',
+      // activeTab: 'icons',
+      activeTab: 'media',
       tabs: [
         // {
         //   name: 'upload',
@@ -21,16 +23,28 @@ class AssetsBrowser extends Component {
           name: 'icons',
           title: 'Icons Library',
         },
-        // {
-        //   name: 'media',
-        //   title: 'Media Library',
-        // },
+        {
+          name: 'media',
+          title: 'Media Library',
+        },
       ],
-      assets: this.getAssets('icons'),
+      assets: this.getAssets('media'),
+      // assets: this.getAssets('icons'),
       selectedAsset: null,
+      mediaAssets: [],
     };
+    this.mediaResource = new Resource({route: '/admin/ajax/media'})
   }
-
+  async componentDidMount(){
+     let res = await this.mediaResource.getAll();
+    this.setState(state => {
+      state = {...state, mediaAssets: res};
+      if(state.activeTab === 'media'){
+        state.assets = res;
+      }
+      return state;
+    });
+  }
   getAssets(tab){
     if(! tab){
       tab = this.state.activeTab;
@@ -39,6 +53,9 @@ class AssetsBrowser extends Component {
     switch (tab){
       case 'icons':{
         return iconsManager().getIconsList();
+      }
+      case 'media':{
+        return this.state ? this.state.mediaAssets : [];
       }
     }
     return [];
@@ -57,7 +74,7 @@ class AssetsBrowser extends Component {
 
   setActiveTab(tab){
     this.setState(state=>{
-      return{...state, activeTab: tab}
+      return{...state, activeTab: tab, assets: this.getAssets(tab)}
     })
   }
 
@@ -123,9 +140,23 @@ class AssetsBrowser extends Component {
                 this.state.assets.map(asset=>{
                   let AssetContent;
                   let classes = 'asset-choose';
+                  let assetProps = {
+                    className: 'asset-choose__content',
+                  };
                   if(this.state.activeTab === 'icons'){
                     AssetContent = asset.iconComponent;
                     classes += ' asset-choose_icon';
+                    // assetProps.viewBox = '0 0 20 20';
+                    // assetProps.viewport = '0 0 10 10';
+                    assetProps.width = '20';
+                    assetProps.height = '20';
+                  }
+                  if(this.state.activeTab === 'media'){
+                    AssetContent ='img';
+                    assetProps.src = asset.url;
+                    classes += ' asset-choose_media';
+                    asset.name = asset.filename;
+                    asset.assetType = 'media';
                   }
                   if(this.state.selectedAsset === asset.name){
                     classes += ' asset-choose_selected';
@@ -134,7 +165,7 @@ class AssetsBrowser extends Component {
                               data-assetname={asset.name}
                               key={asset.name}
                               onClick={this.selectAsset}>
-                    <AssetContent className="asset-choose__content"/>
+                    <AssetContent {...assetProps}/>
                   </div>})
               }
             </div> : ''
