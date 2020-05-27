@@ -31,6 +31,7 @@ import Reports from "./components/Reports";
 import Tables from "./components/Tables";
 import Templates from "./components/Templates";
 import AdminModal from "./components/AdminModal";
+import AddPage from "./components/AddPage";
 
 class Admin extends Component {
   render() {
@@ -99,9 +100,6 @@ class Admin extends Component {
             </div>
           </nav>
           <Switch>
-            <Route path="/admin/pages">
-              <AllPages/>
-            </Route>
             <Route path="/admin/settings">
               <AdminSettings/>
             </Route>
@@ -125,6 +123,15 @@ class Admin extends Component {
             </Route>
             <Route path="/admin/templates">
               <Templates/>
+            </Route>
+            <Route path="/admin/pages/add">
+              <AddPage/>
+            </Route>
+            <Route path="/admin/pages/edit/:id">
+              <AddPage/>
+            </Route>
+            <Route path="/admin/pages">
+              <AllPages/>
             </Route>
           </Switch>
         </Router>
