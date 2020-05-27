@@ -131,5 +131,5 @@ export function advancedTabControllers(element) {
     }
   );
 
-
+  
 }
