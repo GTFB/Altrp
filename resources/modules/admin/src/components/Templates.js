@@ -57,6 +57,10 @@ export default class Templates extends Component{
     store.dispatch(toggleModal());
   }
   setTemplates(templates){
+    templates = templates.map(template=>{
+      console.log(template);
+      return template;
+    });
     this.setState(state=>{
       return{...state, templates};
     });
@@ -78,7 +82,9 @@ export default class Templates extends Component{
       <AdminTable columns={[
         {
           name: 'title',
-          title: 'Title'
+          title: 'Title',
+          url: true,
+          target: '_blank',
         },
         {
           name: 'author',

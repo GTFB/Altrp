@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Constructor\Template;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 
 class TemplateController extends Controller
 {
@@ -24,6 +25,7 @@ class TemplateController extends Controller
         'title' => $template->title,
         'id' => $template->id,
         'author' => $template->user->name,
+        'url' => \url('/admin/editor?template_id=' . $template->id),
       ];
     }
 
