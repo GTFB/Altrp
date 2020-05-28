@@ -357,6 +357,26 @@ class Text extends BaseElement{
         },
       }
     );
+    
+    this.addControl('text_style_border_radius', {
+      type: CONTROLLER_SLIDER,
+      label: 'Border radius',
+      default:{
+        size: 1,
+        unit: 'px',
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 1,
+      min: 0,
+      step: 0.01,
+      rules: {
+        '{{ELEMENT}} .altrp-text': 'border-radius: {{SIZE}}{{UNIT}}',
+      },
+    });
 
     this.endControlSection();
 
