@@ -91,13 +91,17 @@ class PagesController extends Controller
   /**
    * Display the specified resource.
    *
-   * @param Media $media
+   * @param string $id
    * @return \Illuminate\Http\Response
    */
-  public function show( Media $media )
+  public function show(  $id )
   {
     //
-    return response()->json( $media->toArray() );
+    $page = Page::find( $id );
+    if( $page ){
+      $page->template_id = $page->get_content_template()->id;
+    }
+    return response()->json( $page->toArray() );
 
   }
 

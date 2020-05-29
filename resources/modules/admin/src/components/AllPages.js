@@ -38,6 +38,7 @@ export default class AllPages extends Component{
             name: 'title',
             title: 'Title',
             editUrl: true,
+            tag: 'Link'
           },
           {
             name: 'author',

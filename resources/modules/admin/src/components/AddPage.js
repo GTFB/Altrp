@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import Resource from "../../../editor/src/js/classes/Resource";
-import {Redirect} from "react-router";
+import {Redirect, withRouter} from "react-router";
 
 /**
  * @class
@@ -19,17 +19,32 @@ class AddPage extends Component {
     };
     this.resource = new Resource({route: '/admin/ajax/pages'});
     this.templateResource = new Resource({route: '/admin/ajax/templates'});
-    this.addPage = this.addPage.bind(this);
+    this.savePage = this.savePage.bind(this);
   }
   async componentDidMount(){
     let res = await this.templateResource.getOptions();
     this.setState(state=>{
       return{...state, templates: res}
-    })
+    });
+    let id = this.props.location.pathname.split('/');
+    id = id[id.length - 1];
+    id = parseInt(id);
+    if(typeof id === 'number'){
+      let pageData = await this.resource.get(id);
+      this.setState(state=>{
+        return{...state, value:pageData}
+      });
+      this.id = id;
+    }
   }
-  async addPage(e){
+  async savePage(e){
     e.preventDefault();
-    let res = await this.resource.post(this.state.value);
+    let res;
+    if(this.id){
+      res = await this.resource.put(this.id, this.state.value);
+    } else {
+      res = await this.resource.post(this.state.value);
+    }
     if(res.success){
       this.setState(state=>{
         return {...state, redirectAfterSave: true}
@@ -60,7 +75,7 @@ class AddPage extends Component {
         </div>
       </div>
       <div className="admin-content">
-        <form className="admin-form" onSubmit={this.addPage}>
+        <form className="admin-form" onSubmit={this.savePage}>
           <div className="form-group">
             <label htmlFor="page-title">Title</label>
             <input type="text" id="page-title" required={1}
@@ -96,4 +111,4 @@ class AddPage extends Component {
   }
 }
 
-export default AddPage
+export default withRouter(AddPage);

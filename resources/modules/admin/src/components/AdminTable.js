@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import {Link} from 'react-router-dom'
 
 class AdminTable extends Component {
   render(){
@@ -32,8 +33,14 @@ class AdminTable extends Component {
                   }
                 }
                 if(column.editUrl && row.editUrl){
-                  tag = 'a';
+                  tag = (column.tag === 'Link') ? Link : 'a';
                   props.href = row.editUrl;
+                  if(column.tag === 'Link'){
+                    props.to = {
+                      pathname: row.editUrl,
+                      data: row
+                    }
+                  }
                   if(column.target){
                     props.target = column.target;
                   }
