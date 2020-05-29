@@ -33,6 +33,27 @@ class TemplateController extends Controller
   }
 
   /**
+   * Send array for frontend <option> tags ({
+   *     id,
+   *    title
+   * }).
+   *
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function options(){
+    $_templates = Template::where( 'type', '!=', 'review' )->get();
+    $options = [];
+
+    foreach ( $_templates as $template ) {
+      $options[] = [
+        'id' => $template->id,
+        'title' => $template->title,
+      ];
+    }
+    return \response()->json( $options );
+  }
+
+  /**
    * Show the form for creating a new resource.
    *
    * @return \Illuminate\Http\Response

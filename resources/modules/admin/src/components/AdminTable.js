@@ -31,6 +31,13 @@ class AdminTable extends Component {
                     props.target = column.target;
                   }
                 }
+                if(column.editUrl && row.editUrl){
+                  tag = 'a';
+                  props.href = row.editUrl;
+                  if(column.target){
+                    props.target = column.target;
+                  }
+                }
                 return<td className="admin-table__td td"  key={column.name + row.id}>
                   {React.createElement(tag, props)}
 

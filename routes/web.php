@@ -14,10 +14,6 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('front-app');
-});
-
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -51,9 +47,11 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('/global-elements', "Constructor\GlobalElements@insert");
     Route::put('/global-elements/{element}', "Constructor\GlobalElements@update");
     Route::delete('/global-elements/{element}', "Constructor\GlobalElements@trashed");
+    Route::get( 'templates/options', 'TemplateController@options' );
     Route::resource( 'templates', 'TemplateController' );
     Route::get( '/template/{template_id}/reviews', 'TemplateController@reviews' );
     Route::resource( 'media', 'Admin\MediaController' );
+    Route::resource( 'pages', 'Admin\PagesController' );
   });
 
 });
@@ -61,6 +59,24 @@ Route::group(['prefix' => 'admin'], function () {
 Route::view('/admin/{path?}', 'admin')
   ->where('path', '.*')
   ->name('admin');
+
+/**
+ * Frontend
+*/
+
+$frontend_routes = \App\Page::get_frontend_routes();
+
+Route::get('/', function () {
+  return view('front-app');
+});
+
+foreach ( $frontend_routes as $frontend_route ) {
+
+  Route::get($frontend_route, function () {
+    return view('front-app');
+  });
+
+}
 
 /**
  * AJAX routes for frontend

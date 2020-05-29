@@ -124,14 +124,14 @@ class Admin extends Component {
             <Route path="/admin/templates">
               <Templates/>
             </Route>
-            <Route path="/admin/pages/add">
-              <AddPage/>
+            <Route path="/admin/pages" exact>
+              <AllPages/>
             </Route>
             <Route path="/admin/pages/edit/:id">
               <AddPage/>
             </Route>
-            <Route path="/admin/pages">
-              <AllPages/>
+            <Route path="/admin/pages/add">
+              <AddPage/>
             </Route>
           </Switch>
         </Router>

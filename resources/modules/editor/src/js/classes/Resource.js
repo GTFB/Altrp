@@ -163,6 +163,26 @@ class Resource {
       return res.json()
     });
   }
+  /**
+   * @return {Promise}
+   * */
+  getOptions(){
+
+    let options = {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    };
+    let url = this.route + '/options';
+    return fetch(url, options).then(res => {
+      if(res.ok === false){
+        return Promise.reject(res.text(), res.status);
+      }
+      return res.json()
+    });
+  }
+
 }
 
 export default Resource;

@@ -29,6 +29,7 @@ class CreatePagesTable extends Migration
       $table->bigInteger( 'page_id' )->index();
       $table->bigInteger( 'template_id' )->index();
       $table->unique( ['template_id', 'page_id'] );
+      $table->string( 'template_type' )->index();
     } );
   }
 

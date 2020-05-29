@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Media;
 use App\Page;
+use App\PagesTemplate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -19,7 +20,32 @@ class PagesController extends Controller
   public function index()
   {
     //
-    return response()->json( Page::all()->sortByDesc( 'id' )->values()->toArray() );
+
+    $_pages = Page::all();
+    $pages = [];
+//    echo '<pre style="padding-left: 200px;">';
+//    var_dump( $_pages );
+//    echo '</pre>';
+
+    foreach ( $_pages as $page ) {
+//      echo '<pre style="padding-left: 200px;">';
+//      var_dump( $page );
+//      echo '</pre>';
+
+      $content_template = $page->get_content_template();
+      $pages[] = [
+        'user' => $page->user,
+        'title' => $page->title,
+        'id' => $page->id,
+        'author' => $page->user->name,
+        'template_content' => $content_template,
+        'template_content_title' => $content_template ? $content_template->title : '',
+        'url' => \url( $page->path),
+        'editUrl' => '/admin/pages/edit/' . $page->id,
+        'path' => $page->path,
+      ];
+    }
+    return response()->json( $pages );
   }
 
   /**
@@ -37,17 +63,29 @@ class PagesController extends Controller
    *
    * @param  \Illuminate\Http\Request $request
    * @return \Illuminate\Http\Response
-   * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
    */
   public function store( Request $request )
   {
-    //
-//      return  response()->json( $request->get('files') );
-    /**
-     * @var \Illuminate\Http\UploadedFile[] $files
-     */
-    return response()->json( $res );
-
+    $res = ['success' => false,];
+    $page = new Page( $request->toArray() );
+    $page->author = auth()->user()->id;
+    $page->content = '';
+    if( $page->save() ){
+      if( $request->template_id ){
+        $pages_templates = new PagesTemplate([
+          'page_id' => $page->id,
+          'template_id' =>  $request->template_id,
+          'template_type' => 'content',
+        ]);
+        $pages_templates->save();
+        $res['pages_templates'] = $pages_templates->toArray();
+      }
+      $res['success'] = true;
+      $res['page'] = $page->toArray();
+      return response()->json( $res );
+    }
+    $res['message'] = 'Page not saved';
+    return response()->json( $res, 500 );
   }
 
   /**
