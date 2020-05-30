@@ -1087,6 +1087,11 @@ background-color: red;
 .control-slider-input-wrapper-transform-none{
   display: none;
 }
+//control-button
+.control-button-active{
+  background-color: #3C455B !important;
+  color: #FFF !important;
+}
 .overlay{
   position: absolute;
   top: 0;
