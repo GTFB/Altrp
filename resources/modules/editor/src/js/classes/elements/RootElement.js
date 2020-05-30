@@ -223,6 +223,7 @@ class RootElement extends BaseElement {
       value: 'normal',
       buttons: [
         {
+          value: 'normal',
           label: 'normal',
           key: 0,
           styles: {
@@ -246,6 +247,7 @@ class RootElement extends BaseElement {
           },     
         },
         {
+          value: 'Hover',
           label: 'Hover',
           key: 1,
           styles: {
@@ -269,6 +271,7 @@ class RootElement extends BaseElement {
           }
         },
         {
+          value: 'active',
           label: 'active',
           key: 2,
           styles: {
@@ -292,6 +295,7 @@ class RootElement extends BaseElement {
           }
         },
         {
+          value: 'disabled',
           label: 'disabled',
           key: 3,
           styles: {

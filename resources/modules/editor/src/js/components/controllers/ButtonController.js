@@ -20,7 +20,7 @@ class ButtonController extends Component {
 
   changeValue(e){
     this._changeValue({
-      value: e.currentTarget.dataset.key
+      value: e.currentTarget.dataset.value
     });
     let noActive = [];
     let buttonList = document.getElementById("buttonList");
@@ -37,7 +37,7 @@ class ButtonController extends Component {
     return <div className="controller-container controller-container_button">
       <div className="control-group" id="buttonList">
         {this.props.buttons.map((buttons) => {
-          return <button key={buttons.key} id={"activeButton" + buttons.key} data-key={buttons.key} onClick={this.changeValue} style={buttons.styles}>{buttons.label}</button>
+          return <button key={buttons.key} data-value={buttons.value} id={"activeButton" + buttons.key} data-key={buttons.key} onClick={this.changeValue} style={buttons.styles}>{buttons.label}</button>
         })
       }
       </div>
