@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Constructor\Template;
 use App\Http\Controllers\Controller;
+use App\Page;
 use Illuminate\Http\Request;
 
 class RouteController extends Controller
@@ -15,26 +16,9 @@ class RouteController extends Controller
    */
   public function index()
   {
-    //
-    $template = Template::find( 1 );
+    $res['pages'] = Page::get_pages_for_frontend();
 
-    $routes = [
-      "routes" => [
-        [
-          "id" => 1,
-          "location" => "/test",
-          "areas" => [
-            [
-              "id" => 1,
-              "settings" => [],
-              "template" => $template,
-            ]
-          ]
-        ]
-      ]
-    ];
-
-    return response()->json( $routes );
+    return response()->json( $res );
   }
 
   /**

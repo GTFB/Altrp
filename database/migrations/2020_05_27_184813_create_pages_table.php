@@ -20,7 +20,7 @@ class CreatePagesTable extends Migration
       $table->string( 'title', 255 )->index();
       $table->bigInteger( 'author' )->index();
       $table->longText( 'content' );
-      $table->string( 'path' );
+      $table->string( 'path' )->unique();
 
     } );
     Schema::create( 'pages_templates', function ( Blueprint $table ) {

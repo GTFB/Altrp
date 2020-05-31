@@ -14,7 +14,7 @@ class AppContent extends Component {
     return <div className="front-app-content">
       <Router>
         <Switch>
-          {this.props.routes.map(route=><Route key={'appRoute_' + route.id} path={route.location}>
+          {this.props.routes.map(route=><Route key={'appRoute_' + route.id} path={route.path}>
             <RouteContent areas={route.areas}/>
           </Route>)}
         </Switch>

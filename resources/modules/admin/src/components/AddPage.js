@@ -29,19 +29,23 @@ class AddPage extends Component {
     let id = this.props.location.pathname.split('/');
     id = id[id.length - 1];
     id = parseInt(id);
-    if(typeof id === 'number'){
+    if(id){
       let pageData = await this.resource.get(id);
       this.setState(state=>{
-        return{...state, value:pageData}
+        return{...state, value:pageData, id}
       });
-      this.id = id;
     }
   }
   async savePage(e){
     e.preventDefault();
     let res;
-    if(this.id){
-      res = await this.resource.put(this.id, this.state.value);
+    let path = this.state.value.path;
+
+    path = path.split('\\').join('/');
+    path = (path[0] !== '/') ? `/${path}` : path;
+    this.state.value.path = path;
+    if(this.state.id){
+      res = await this.resource.put(this.state.id, this.state.value);
     } else {
       res = await this.resource.post(this.state.value);
     }
@@ -56,6 +60,10 @@ class AddPage extends Component {
     }
   }
   changeValue(value, field){
+    if(field === 'path'){
+      value = value.split('\\').join('/');
+      value = (value[0] !== '/') ? `/${value}` : value;
+    }
     this.setState(state=>{
       state = {...state};
       state.value[field] = value;
@@ -104,7 +112,7 @@ class AddPage extends Component {
               }
             </select>
           </div>
-          <button className="btn btn_success">Add</button>
+          <button className="btn btn_success">{this.state.id ? 'Save' : 'Add'}</button>
         </form>
       </div>
     </div>;

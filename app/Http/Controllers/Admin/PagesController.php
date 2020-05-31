@@ -109,11 +109,12 @@ class PagesController extends Controller
    * Show the form for editing the specified resource.
    *
    * @param  int $id
+   * @param Request $request
    * @return \Illuminate\Http\Response
    */
-  public function edit( $id )
+  public function edit( $id, $request )
   {
-    //
+
   }
 
   /**
@@ -125,7 +126,39 @@ class PagesController extends Controller
    */
   public function update( Request $request, $id )
   {
-    //
+
+    $res = [
+      'success' => false
+    ];
+    $page = Page::find( $id );
+    $page->path = $request->path;
+    $page->title = $request->title;
+    $res['page'] = $page->toArray();
+
+    $pages_template = PagesTemplate::where( 'page_id', $id )->where( 'template_type', 'content' )->first();
+    if( $request->template_id && $pages_template ){
+      $pages_template->template_id = $request->template_id;
+      $pages_template->save();
+      $res['pages_template'] = $pages_template->toArray();
+    }
+    if( ( ! $request->template_id ) && $pages_template ){
+      $pages_template->delete();
+    }
+    if( $request->template_id && ! $pages_template ){
+      $pages_template = new PagesTemplate([
+        'page_id' => $id,
+        'template_id' => $request->template_id,
+        'template_type' => 'content',
+      ]);
+      $pages_template->save();
+      $res['pages_template'] = $pages_template->toArray();
+    }
+
+    if($page->save()){
+      $res['success'] = true;
+    }
+
+    return response()->json( $res );
   }
 
   /**
