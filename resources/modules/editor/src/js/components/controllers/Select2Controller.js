@@ -7,6 +7,7 @@ import controllerDecorate from "../../decorators/controller";
 class Select2Controller extends Component {
   constructor(props) {
     super(props);
+    this.change = this.change.bind(this);
     let value = this.props.currentElement.getSettings(this.props.controlId);
     // console.log(value);
     if(value === null && this.props.default){
@@ -21,13 +22,13 @@ class Select2Controller extends Component {
     return '';
   }
 
+  change(value){
+    this._changeValue(
+      value
+    )
+  };
+
   render() {
-
-    const {selectValue} = useState;
-
-    function change() {
-      this._changeValue(selectValue)
-    }
 
     const customStyles = {
       option: (provided, state) => ({
@@ -42,15 +43,17 @@ class Select2Controller extends Component {
       menu: () => ({
         margin: 0,
         padding: 0,
+        width: "100%",
         borderRadius: "0px 0px 3px 3px",
         borderWidth: "0px 1px 1px 1px",
         borderStyle: "solid",
         borderColor: "#E5E6EA",
+        position: 'absolute'
       }),
 
       menuList: () => ({
         margin: 0,
-        padding: 0
+        padding: 0,
       }),
 
       control: (state) => ({
@@ -86,7 +89,8 @@ class Select2Controller extends Component {
       </div>
       <div className="control-container_select2-wrapper">
         <Select
-          onChange={selectValue}
+          onChange={this.change}
+          value={this.props.default.value}
           onInputChange={this.change}
           options={this.props.options}
           styles={customStyles}

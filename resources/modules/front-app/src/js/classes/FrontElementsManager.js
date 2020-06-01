@@ -4,6 +4,7 @@ import SectionComponent from "../../../../editor/src/js/components/SectionCompon
 import ColumnComponent from "../../../../editor/src/js/components/ColumnComponent";
 import InputWidget from "../../../../editor/src/js/components/widgets/InputWidget";
 import ButtonWidget from "../../../../editor/src/js/components/widgets/ButtonWidget";
+import TextWidget from "../../../../editor/src/js/components/widgets/TextWidget";
 
 export default class FrontElementsManager {
 
@@ -16,6 +17,7 @@ export default class FrontElementsManager {
     this.components['column'] = ColumnComponent;
     this.components['input'] = InputWidget;
     this.components['button'] = ButtonWidget;
+    this.components['text'] = TextWidget;
   }
 
   getComponentClass(name){

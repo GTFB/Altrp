@@ -385,7 +385,7 @@ export function advancedTabControllers(element) {
         '{{ELEMENT}}': 'display: {{VALUE}};',
       },
     }
-  )
+  );
 
   element.addControl(
     'element_display_flex_direction', {
@@ -413,7 +413,7 @@ export function advancedTabControllers(element) {
         '{{ELEMENT}}': 'flex-direction: {{VALUE}};',
       },
     }
-  )
+  );
 
   element.addControl(
     'element_display_flex_wrap', {
@@ -441,7 +441,7 @@ export function advancedTabControllers(element) {
         '{{ELEMENT}}': 'flex-direction: {{VALUE}};',
       },
     }
-  )
+  );
 
   element.addControl(
     'element_display_flex_justify_content', {
@@ -473,7 +473,7 @@ export function advancedTabControllers(element) {
         '{{ELEMENT}}': 'justify-content: {{VALUE}};',
       },
     }
-  )
+  );
 
   element.addControl(
     'element_display_flex_align_items', {
@@ -505,7 +505,7 @@ export function advancedTabControllers(element) {
         '{{ELEMENT}}': 'align-items: {{VALUE}};',
       },
     }
-  )
+  );
 
   element.addControl(
     'element_display_flex_align_content', {
@@ -562,4 +562,5 @@ export function advancedTabControllers(element) {
   );
 
   element.endControlSection();
+
 }

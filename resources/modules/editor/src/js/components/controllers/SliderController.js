@@ -13,13 +13,15 @@ class SliderController extends Component {
     if(value === null && this.props.default){
       value = this.props.default ;
     }
+    this.step = this.props.step || 1;
     value = value || {};
     this.state = {
       value,
       units: this.props.units || ['px'],
-      max: this.props.max || 100,
-      min: this.props.min || 0,
+      max: (this.props.max || 100)/this.step,
+      min: (this.props.min || 0)/this.step,
     };
+    console.log(this.step)
     controllerDecorate(this);
   }
   changeUnit(e){
@@ -32,7 +34,7 @@ class SliderController extends Component {
   sliderChange(e) {
     this._changeValue({
       ...this.state.value,
-      size:e.target.value
+      size:e.target.value*this.step
     });
     // console.log(this.state.value)
   };
@@ -46,7 +48,7 @@ class SliderController extends Component {
   inputUpdate (e) {
     this._changeValue({
       ...this.state.value,
-      size:e.target.value
+      size:e.target.value*this.step
     });
   }
   render() {
@@ -78,7 +80,7 @@ class SliderController extends Component {
           <input type="range"
                  min={this.state.min}
                  max={this.state.max}
-                 className="control-slider" value={this.state.value.size} onChange={this.inputUpdate} onInput={this.sliderChange}/>
+                 className="control-slider" value={this.state.value.size/this.step} onChange={this.inputUpdate} onInput={this.sliderChange}/>
           <div className="control-slider-input-box">
             <input className="control-slider-input" type="number"
                    min={this.state.min}
