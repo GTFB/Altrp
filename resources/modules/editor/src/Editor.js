@@ -21,9 +21,16 @@ import {CONSTANTS} from "./js/helpers";
 import Styles from "./js/components/Styles";
 import {stopDrag} from "./js/store/element-drag/actions";
 import AssetsBrowser from "./js/classes/modules/AssetsBrowser";
-
+/**
+ * Главный класс редактора
+ * Реакт-Компонент
+ * Синглтон, который хранится в глобальной переменной altrpEditor
+ *
+ * */
 class Editor extends Component {
-
+  /**
+   * Конструктор
+   * */
   constructor(props) {
     super(props);
     window.altrpEditor = this;
@@ -38,16 +45,28 @@ class Editor extends Component {
     this.onDragEnd = this.onDragEnd.bind(this);
     store.subscribe(this.templateStatus.bind(this));
   }
+  /**
+   * Метод подписчик на изменение состояния Редактора из Редакс хранилища
+   * */
   templateStatus(){
     let templateStatus = store.getState().templateStatus.status;
     if(templateStatus !== this.state.templateStatus){
       this.setState({...this.state, templateStatus});
     }
   }
+
+  /**
+   * Инициализация модулей
+   */
+
   initModules() {
     this.modules = new Modules(this);
     this.modules.loaded();
   }
+
+  /**
+   * Показывает панель со списком виджетов
+   */
   showWidgetsPanel() {
     this.setState({
       ...this.state,
@@ -55,32 +74,55 @@ class Editor extends Component {
     })
   }
 
+  /**
+   * Показывает панель с настройками текущего виджета
+   */
   showSettingsPanel() {
     this.setState({
       ...this.state,
       activePanel: 'settings'
     });
   }
+
+  /**
+   * Обработчик события конец переноса вызывает метод stopDrag переносимого элемента
+   * @see ElementWrapper.stopDrag
+   */
   onDragEnd(){
     let draggableElement = store.getState().elementDrag.element;
     if(draggableElement && draggableElement.stopDrag){
-      console.log('stop');
       draggableElement.stopDrag();
     }
     store.dispatch(stopDrag());
   }
+  /**
+   * Вызывается после загрузки шаблона
+   * @see SaveImportModule.load
+   * */
   endLoading(){
     console.log('editor loaded');
   }
+
+  /**
+   * Вызывается после загрузки компонента
+   * @see @link https://ru.reactjs.org/docs/react-component.html#componentdidmount
+   * */
   componentDidMount() {
     this.initModules();
   }
+
+  /**
+   * Выбирает корневой элемент текущим и открывает панель настроек
+   */
 
   openPageSettings() {
     this.modules.templateDataStorage.setCurrentRootElement();
     this.showSettingsPanel();
   }
 
+  /**
+   * Отрисовка Компонента
+   */
   render() {
     let settingsActive = '';
     let templateClasses = 'editor ';
@@ -149,6 +191,11 @@ class Editor extends Component {
 
 }
 
+/**
+ * @member _export
+ * Если разработка то включается HMR
+ * По умолчанию просто компонент
+ */
 let _export;
 if (process.env.NODE_ENV === 'production') {
   _export = Editor;
