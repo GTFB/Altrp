@@ -23,10 +23,11 @@ class SaveImportModule extends BaseModule{
       let res = this.resource.get(this.template_id).then(templateData => {
         let data = JSON.parse(templateData.data);
         let parsedData = this.modules.elementsFactory.parseData(data);
-        getEditor().modules.templateDataStorage.replaceAll(parsedData);
+        let templateDataStorage = getEditor().modules.templateDataStorage;
+        templateDataStorage.replaceAll(parsedData);
+        templateDataStorage.setTitle(templateData.title);
+        templateDataStorage.setName(templateData.name);
         getEditor().endLoading();
-        getEditor().modules.templateDataStorage.title = data.title;
-        getEditor().modules.templateDataStorage.name = data.name;
         store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
       }).catch(err=>{
         console.error(err);

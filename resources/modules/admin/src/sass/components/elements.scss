@@ -37,6 +37,7 @@
     & .form__input[type="text"]{
       margin-top: 5px;
       font-size: 13px;
+      border: 1px solid $border-gray;
     }
     &__error{
       position: absolute;

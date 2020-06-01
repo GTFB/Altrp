@@ -16,7 +16,7 @@ class TemplateController extends Controller
    */
   public function index( Request $request )
   {
-    $_templates = Template::where( 'type', '!=', 'review' )->get();
+    $_templates = Template::where( 'type', '!=', 'review' )->get()->sortByDesc( 'id' )->values();
     $templates = [];
     foreach ( $_templates as $template ) {
       $templates[] = [
