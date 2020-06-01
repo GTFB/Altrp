@@ -66,8 +66,8 @@ class Resource {
   }
 
   /**
-   * @param {*} data
-   * @param {object || null} headers
+   * @param {any} data
+   * @param {object | null} headers
    * @return {Promise}
    * */
   post(data, headers){

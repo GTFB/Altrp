@@ -166,7 +166,7 @@ class BaseElement {
 
   /**
    * @param {BaseElement | string} child
-   * @throws
+   * @throws Если не указан IG или сам элемент
    * */
   deleteChild(child){
     let childExist = false;
@@ -176,7 +176,7 @@ class BaseElement {
     } else if(child instanceof BaseElement){
       childId = child.getId();
     } else {
-      throw 'Delete Child can only by ia or Instance';
+      throw 'Delete Child can only by id or Instance';
     }
     let newChildren = this.children.filter(item => {
       if(item.getId() === childId){

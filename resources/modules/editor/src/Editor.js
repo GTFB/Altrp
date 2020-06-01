@@ -22,14 +22,14 @@ import Styles from "./js/components/Styles";
 import {stopDrag} from "./js/store/element-drag/actions";
 import AssetsBrowser from "./js/classes/modules/AssetsBrowser";
 /**
- * Главный класс редактора
- * Реакт-Компонент
- * Синглтон, который хранится в глобальной переменной altrpEditor
+ * Главный класс редактора.<br/>
+ * Реакт-Компонент.<br/>
+ * Синглтон, который хранится в глобальной переменной altrpEditor.
  *
  * */
 class Editor extends Component {
   /**
-   * Конструктор
+   * @constructor
    * */
   constructor(props) {
     super(props);
@@ -97,7 +97,7 @@ class Editor extends Component {
   }
   /**
    * Вызывается после загрузки шаблона
-   * @see SaveImportModule.load
+   * @see {@link SaveImportModule}
    * */
   endLoading(){
     console.log('editor loaded');
@@ -105,7 +105,7 @@ class Editor extends Component {
 
   /**
    * Вызывается после загрузки компонента
-   * @see @link https://ru.reactjs.org/docs/react-component.html#componentdidmount
+   * @see {@link https://ru.reactjs.org/docs/react-component.html#componentdidmount}
    * */
   componentDidMount() {
     this.initModules();
@@ -192,9 +192,9 @@ class Editor extends Component {
 }
 
 /**
- * @member _export
- * Если разработка то включается HMR
+ * Если разработка то включается HMR <br/>
  * По умолчанию просто компонент
+ * @member _export
  */
 let _export;
 if (process.env.NODE_ENV === 'production') {

@@ -17,7 +17,7 @@ class IconsManager {
   /**
    * @param {string} iconName
    * @return {function}
-   * @throws
+   * @throws Исключение если иконка не найдена
    * */
   getIconComponent(iconName){
     let icon = this.getIcon(iconName);
@@ -26,7 +26,7 @@ class IconsManager {
   /**
    * @param {string} iconName
    * @return {Icon}
-   * @throws
+   * @throws Исключение если иконка не найдена
    * */
   getIcon(iconName){
     let _icon;
@@ -50,7 +50,7 @@ class IconsManager {
    * @param {string} iconName
    * @param {object} props
    * @return {React.DetailedReactHTMLElement<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> | React.DetailedReactHTMLElement<React.HTMLAttributes<T>, HTMLElement> | React.ReactSVGElement | React.DOMElement<React.DOMAttributes<T>, Element> | React.FunctionComponentElement<{}> | React.CElement<{}, React.ClassicComponent<{}, React.ComponentState>> | React.CElement<{}, React.Component<P, React.ComponentState>> | React.ReactElement<{}>}
-   * @throws
+   * @throws Исключение если иконка не найдена
    * */
   renderIcon(iconName, props = null){
     let iconComponent = this.getIconComponent(iconName);
