@@ -161,7 +161,7 @@ class RootElement extends BaseElement {
       label: 'Slider Content',
       default:{
         size:12,
-        unit:'px'
+        unit:'px',
       },
       units:[
         'px',
@@ -170,6 +170,7 @@ class RootElement extends BaseElement {
       ],
       max: 10,
       min: -10,
+      step: 10,
       rules: {
         '{{ELEMENT}}': 'padding: {{SIZE}}{{UNIT}};',
       },

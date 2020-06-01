@@ -19,6 +19,7 @@ class SliderController extends Component {
       units: this.props.units || ['px'],
       max: this.props.max || 100,
       min: this.props.min || 0,
+      step: this.props.step || 1
     };
     controllerDecorate(this);
   }
@@ -78,6 +79,7 @@ class SliderController extends Component {
           <input type="range"
                  min={this.state.min}
                  max={this.state.max}
+                 step={this.state.step}
                  className="control-slider" value={this.state.value.size} onChange={this.inputUpdate} onInput={this.sliderChange}/>
           <div className="control-slider-input-box">
             <input className="control-slider-input" type="number"
