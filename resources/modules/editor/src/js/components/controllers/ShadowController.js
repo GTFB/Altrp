@@ -26,14 +26,9 @@ class ShadowController extends Component {
     this.state = {
       value,
       //color
-      colorPickedHex: this.props.colorPickedHex,
-      opacity: 1, 
-      pickerPosition: "0px", 
-      color: this.props.color,
-      colorRGB: this.props.colorPickedRGB, 
-      colorPickedRGB: this.props.colorPickedRGB,
+      active: false,
       //blur
-      blur: this.props.blur,
+      blur: this.props.default.blur,
       blurMax: this.props.blurMax || 100,
       blurMin: this.props.blurMin || 0,
       //verHor
@@ -45,9 +40,6 @@ class ShadowController extends Component {
 
   getDefaultValue(){
     return {
-      horizontal: "",
-      vertical: "",
-      blur: "",
     };
   }
 
@@ -68,27 +60,25 @@ class ShadowController extends Component {
   }
 
   colorChange(color){
-    this.setState({
-      colorPickedHex: color.hex,
-      colorPickedRGB: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
-      opacity: color.rgb.a,
-      colorRGB: color.rgb
-    });
+    // this.setState({
+    //   colorPickedHex: color.hex,
+    //   colorPickedRGB: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+    //   opacity: color.rgb.a,
+    //   colorRGB: color.rgb
+    // });
     this._changeValue({
+      ...this.state.value,
       color: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
-      colorPickedHex: color.hex
+      colorRGB: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+      colorPickedHex: color.hex,
+      opacity: color.rgb.a,
     });
-
-    // console.log(this.state.colorPickedRGB)
   };
 
   openColorPicker(){
-    let colorPicker = document.getElementById("colorPicker");
-    let topPicker = colorPicker.offsetTop;
-
-    colorPicker.classList.toggle("sketchPicker-none");
-
-    this.props.currentElement.setSettingValue(this.props.controlId, topPicker);
+    this.setState({
+      active: !this.state.active
+    })
   }
   //конец color
   //начало blur
@@ -145,10 +135,6 @@ class ShadowController extends Component {
       backgroundColor: this.state.value.color
     };
 
-    let colorPickerPosition = {
-      marginTop: this.state.pickerPosition
-    };
-
     return <div className="controller-container controller-container_shadow">
       <div className="controller-container__label control-shadow-label">
         {this.props.label}
@@ -171,12 +157,16 @@ class ShadowController extends Component {
                 <label className="control-color-hex">{this.state.value.colorPickedHex}</label>
               </div>
               <div className="control-color-opacity-container">
-                <label className="control-color-opacity" >{(this.state.opacity * 100).toFixed() + "%"}</label>
+                <label className="control-color-opacity" >{(this.state.value.opacity * 100).toFixed() + "%"}</label>
               </div>
             </div>
-            <div id="colorPicker" className=" control-color-colorPicker sketchPicker-none" style={colorPickerPosition}>
-            <SketchPicker width="90%" presetColors={this.props.presetColors} color={this.state.colorRGB} onChange={this.colorChange} name="shadowPicker" className="sketchPicker" />
-          </div>
+            {
+            this.state.active ?
+              <div id="colorPicker" className="control-color-colorPicker">
+                <SketchPicker width="90%" presetColors={this.props.presetColors} color={this.state.value.colorRGB} onChange={this.colorChange} className="sketchPicker" />
+              </div>
+            : <div></div>
+            }
           {/* конец color */}
           {/* начало slider blur */}
           <div className="control-slider-header control-shadow-blur-header">
@@ -207,31 +197,31 @@ class ShadowController extends Component {
             <input type="range"
               min={this.state.horVerMin}
               max={this.state.horVerMax}
-              className="control-slider" value={this.state.value.horizontal} onChange={this.inputHorUpdate} onInput={this.horChange}/>
+              className="control-slider" value={this.state.value.horizontal} onChange={this.inputHorUpdate} name="horizontal"/>
             <div className="control-slider-input-box">
             <input className="control-slider-input" type="number"
                    min={this.state.horVerMin}
                    max={this.state.horVerMax}
-                   value={this.state.value.horizontal} onChange={this.inputHorUpdate} onInput={this.horChange}/>
+                   value={this.state.value.horizontal} name="horizontalNumber" onChange={this.horChange}/>
             </div>
           </div>
           {/* конец slider horizontal displacement */}
           {/* начало slider vertical displacement */}
           <div className="control-slider-header">
             <div className="control-slider-label">
-            vertical displacement
+              vertical displacement
             </div>
           </div>
           <div className="control-slider-input-wrapper">
             <input type="range"
               min={this.state.horVerMin}
               max={this.state.horVerMax}
-              className="control-slider" value={this.state.value.vertical} onChange={this.inputVerUpdate} onInput={this.verChange}/>
+              className="control-slider" value={this.state.value.vertical} onChange={this.inputVerUpdate} name="vertical"/>
             <div className="control-slider-input-box">
             <input className="control-slider-input" type="number"
                    min={this.state.horVerMin}
                    max={this.state.horVerMax}
-                   value={this.state.value.vertical} onChange={this.inputVerUpdate} onInput={this.verChange}/>
+                   value={this.state.value.vertical} name="verticalNumber" onChange={this.verChange}/>
             </div>
           </div>
           {/* конец slider vertical displacement */}

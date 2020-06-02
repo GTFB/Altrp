@@ -824,9 +824,6 @@ background-color: red;
   line-height: 1.4;
   width: 240px;
 }
-.sketchPicker-none{
-  display: none;
-}
 .sketchPicker{
   z-index: 9999;
 }
@@ -909,11 +906,15 @@ background-color: red;
 }
 .control-color-colorPicker{
   z-index: 9999;
-  position: relative;
-  margin: 10px;
-  top: 10px;
+  position: absolute;
+  margin: 0px;
+  margin-right: 10px;
+  transform: translateY(60px);
 }
-.control-color-header {
+.sketchPicker-none{
+display: none;
+}
+.control-color-header{
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -1091,6 +1092,9 @@ background-color: red;
 .control-button-active{
   background-color: #3C455B !important;
   color: #FFF !important;
+}
+.control-button-container{
+  display: flex;
 }
 .overlay{
   position: absolute;

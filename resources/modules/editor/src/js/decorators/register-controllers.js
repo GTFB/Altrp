@@ -137,12 +137,14 @@ export function advancedTabControllers(element) {
         blur: 0,
         horizontal: 0,
         vertical: 0,
+        opacity: 1,
+        colorRGB: 'rgb(0, 0, 0)',
         color: 'rgb(0, 0, 0)',
         colorPickedHex: '#000000',
       },
       presetColors: [
-        "#eaeaea",
-        "#9c18a8"
+        '#eaeaea',
+        '#9c18a8'
       ],
       rules: {
         '{{ELEMENT}}': 'box-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',

@@ -13,12 +13,15 @@ class CssEditorController extends Component {
     super(props);
     this.changeValue = this.changeValue.bind(this)
     let value = this.props.currentElement.getSettings(this.props.controlId);
-    console.log(value)
+    // console.log(value)
     if(value === null && this.props.default){
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {value, editorValue: null};
+    this.state = {
+      value,
+      editorValue: null
+    };
     controllerDecorate(this);
   }
 

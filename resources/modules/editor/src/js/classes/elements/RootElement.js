@@ -219,9 +219,12 @@ class RootElement extends BaseElement {
       },
     });
 
-    this.addControl('button', {
+    this.addControl('buttonContrainer', {
       type: CONTROLLER_BUTTON,
-      value: 'normal',
+      default: {
+        activeClass: 'control-button-active',
+        button: 'normal'
+      },
       buttons: [
         {
           value: 'normal',
@@ -305,9 +308,9 @@ class RootElement extends BaseElement {
             borderRadius: '3px',
             border: '1.5px solid #3C455B',
             color: '#3C455B',
-            margin: '6px',
             marginLeft: '2px',
             marginTop: '3px',
+            marginRight: '0',
             marginBottom: '3px',
             paddingTop: '5px',
             paddingBottom: '5px',
@@ -336,24 +339,27 @@ class RootElement extends BaseElement {
       },
     });
 
-    this.addControl('box-shadow', {
-      type: CONTROLLER_SHADOW,
-      label: 'box shadow',
-      default:{
-        blur: 0,
-        horizontal: 0,
-        vertical: 0,
-        color: 'rgb(0, 0, 0)',
-        colorPickedHex: '#000000',
-      },
-      presetColors: [
-        "#eaeaea",
-        "#9c18a8"
-      ],
-      rules: {
-        '{{ELEMENT}}': 'box-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
-      },
-    });
+    this.addControl('shadow', {
+        type: CONTROLLER_SHADOW,
+        label: 'box shadow',
+        default:{
+          blur: 0,
+          horizontal: 0,
+          vertical: 0,
+          opacity: 1,
+          colorRGB: 'rgb(0, 0, 0)',
+          color: 'rgb(0, 0, 0)',
+          colorPickedHex: '#000000',
+        },
+        presetColors: [
+          '#eaeaea',
+          '#9c18a8'
+        ],
+        rules: {
+          '{{ELEMENT}}': 'box-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
+        },
+      }
+    );
 
     this.addControl('transform Header', {
       type: CONTROLLER_HEADING,

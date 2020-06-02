@@ -15,13 +15,13 @@ class ColorController extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    console.log(value)
+    // console.log(value)
     this.state = {value,
       colorPickedHex: this.props.colorPickedHex, 
       opacity: 1, 
-      pickerPosition: "0px", 
       colorRGB: this.props.colorPickedRGB, 
-      colorPickedRGB: this.props.colorPickedRGB
+      colorPickedRGB: this.props.colorPickedRGB,
+      active: false
     };
     controllerDecorate(this);
   }
@@ -31,12 +31,9 @@ class ColorController extends Component {
   }
 
   openColorPicker(){
-    let colorPicker = document.getElementById("colorPicker");
-    let topPicker = colorPicker.offsetTop;
-
-    colorPicker.classList.toggle("sketchPicker-none");
-
-    this.props.currentElement.setSettingValue(this.props.controlId, topPicker);
+    this.setState({
+      active: !this.state.active
+    })
   }
   
   colorChange(color){
@@ -99,9 +96,14 @@ class ColorController extends Component {
               <label className="control-color-opacity" >{(this.state.opacity * 100).toFixed() + "%"}</label>
             </div>
         </div>
-        <div id="colorPicker" className=" control-color-colorPicker sketchPicker-none" style={colorPickerPosition}>
+        {
+          this.state.active ?
+          <div id="colorPicker" className="control-color-colorPicker" style={colorPickerPosition}>
           <SketchPicker width="90%" presetColors={this.props.presetColors} color={this.state.colorRGB} onChange={this.colorChange} name="colorPicker" className="sketchPicker" />
-        </div>
+          </div>
+          : <div></div>
+        }
+        
           {/* sketchPicker-none */}
     </div>
   }
