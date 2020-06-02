@@ -19,6 +19,7 @@ class CreateMediaTable extends Migration
       $table->softDeletes();
       $table->bigInteger( 'author' )->nullable()->index();
       $table->string( 'filename' );
+      $table->string( 'url' );
       $table->string( 'media_type', 55 )->index()->default( 'image' );
     } );
   }
