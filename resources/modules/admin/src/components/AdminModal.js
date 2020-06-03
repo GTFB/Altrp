@@ -10,6 +10,7 @@ class AdminModal extends Component {
     super(props);
     this.toggleModal = this.toggleModal.bind(this);
     this.changeValue = this.changeValue.bind(this);
+    this.storeSubscribe = this.storeSubscribe.bind(this);
     this.submit = this.submit.bind(this);
     this.formData = {};
     props.fields.forEach(field=>{
@@ -20,6 +21,14 @@ class AdminModal extends Component {
     this.state = {
       errors: [],
     };
+    store.subscribe(this.storeSubscribe);
+  }
+  storeSubscribe(){
+    store.getState().modalSettings.fields.forEach(field=>{
+      if(field.defaultValue){
+        this.formData[field.name] = field.defaultValue;
+      }
+    });
   }
   submit() {
     let valid = true;

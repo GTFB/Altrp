@@ -60,6 +60,7 @@ export default class Templates extends Component{
         let data = {
           name: formData.title,
           title: formData.title,
+          area: formData.area,
           data:{
             children: [],
             id: generateId(),
@@ -89,10 +90,10 @@ export default class Templates extends Component{
         if(res.redirect && res.url){
           redirect(res.url)
         }
-      }
+      },
+      active: true,
     };
     store.dispatch(setModalSettings(modalSettings));
-    store.dispatch(toggleModal());
   }
   getAreasOptions(){
     return this.state.templateAreas;

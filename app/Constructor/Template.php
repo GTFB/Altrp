@@ -18,7 +18,12 @@ class Template extends Model
 {
   use SoftDeletes;
   protected $fillable =
-    [ 'name', 'title', 'data', 'type', 'user_id' ];
+    [ 'name',
+      'title',
+      'data',
+      'type',
+      'area',
+      'user_id' ];
 
 
   public function user(){

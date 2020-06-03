@@ -15,7 +15,6 @@ const defaultState = {
 
 export function modalSettingsReducer(state, action) {
   state = state || defaultState;
-
   switch (action.type){
     case SET_MODAL_SETTINGS:{
       state = {
@@ -24,12 +23,12 @@ export function modalSettingsReducer(state, action) {
         submit: action.submit || defaultState.submit,
         submitButton: action.submitButton || defaultState.submitButton,
         success: action.success || defaultState.success,
-        active: state.active,
+        active: action.active,
       };
     }break;
     case TOGGLE_MODAL:{
       state = {
-        ...state,
+        ...defaultState,
         active: ! state.active,
       };
     }break;
