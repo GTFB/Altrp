@@ -5,7 +5,14 @@ namespace App;
 use App\Constructor\Template;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Schema;
 use Mockery\Exception;
+
+/**
+ * Class Page
+ * @package App
+ * @property User $user
+ */
 
 class Page extends Model
 {
@@ -24,12 +31,15 @@ class Page extends Model
   static function get_frontend_routes()
   {
     $pages = [];
+//    static::getConnection();
+    if( ! Schema::hasTable( 'pages' ) ){
+      return $pages;
+    }
     try{
       $pages = Page::all()->map->only( [ 'path' ] )->map( function ( $path ) {
         return $path['path'];
       } )->toArray();
     } catch (Exception $e){
-      $pages = [];
     }
     return $pages;
   }

@@ -3,6 +3,7 @@
 
 body,
 *,
+*:focus,
 *::before,
 *::after {
   box-sizing: border-box;
@@ -27,6 +28,10 @@ path{
   font-family: Roboto, sans-serif;
 }
 
+a:focus,
+button:focus{
+  outline: none;
+}
 button{
   cursor: pointer;
 }

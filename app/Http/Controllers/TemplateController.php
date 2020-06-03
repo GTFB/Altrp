@@ -20,6 +20,9 @@ class TemplateController extends Controller
     $_templates = Template::where( 'type', '!=', 'review' )->get()->sortByDesc( 'id' )->values();
     $templates = [];
     foreach ( $_templates as $template ) {
+      /**
+       * @var Template $template
+      */
       $templates[] = [
         'user' => $template->user,
         'name' => $template->name,
@@ -27,7 +30,10 @@ class TemplateController extends Controller
         'id' => $template->id,
         'author' => $template->user->name,
         'url' => \url('/admin/editor?template_id=' . $template->id),
+        'area' => $template->area()->name,
+
       ];
+
     }
 
     return \response()->json( $templates );

@@ -11,21 +11,52 @@ export default class Templates extends Component{
     super(props);
     this.state = {
       templates: [],
+      allTemplates: [],
+      templateAreas: [],
+      activeTemplateArea: {}
     };
     this.resource = new Resource({
       route: '/admin/ajax/templates'
     });
+    this.emplateTypesResource = new Resource({
+      route: '/admin/ajax/areas'
+    });
+    this.onClick = this.onClick.bind(this);
+    this.changeActiveArea = this.changeActiveArea.bind(this);
+  }
+  changeActiveArea(e){
+    let areaId = parseInt(e.target.dataset.area);
+    let activeTemplateArea = {};
+    this.state.templateAreas.forEach(area=>{
+      if(area.id === areaId){
+        activeTemplateArea = area;
+      }
+    });
+    this.setActiveArea(activeTemplateArea)
+  }
+  setActiveArea(activeTemplateArea){
+    let templates = this.state.allTemplates.filter(template=>{
+      return template.area === activeTemplateArea.name;
+    });
+    this.setState(state=>{
+      return{...state, activeTemplateArea, templates};
+    })
+  }
+  async componentDidMount(){
+    let templateAreas = await this.emplateTypesResource.getAll();
+    this.setActiveArea(templateAreas[0]);
+    this.setState(state=>{
+      return{...state,templateAreas}
+    });
     this.resource.getAll().then(templates=>{
       this.setTemplates(templates);
     });
-    this.onClick = this.onClick.bind(this);
   }
   onClick(){
     let modalSettings = {
       title: 'Add New Template',
       submitButton: 'Add',
       submit: function(formData){
-        // let rootElement = new RootElement();
         let data = {
           name: formData.title,
           title: formData.title,
@@ -44,10 +75,17 @@ export default class Templates extends Component{
           name: 'title',
           label: 'Template Name',
           required: true,
+        },
+        {
+          name: 'area',
+          label: 'Area Name',
+          required: true,
+          type: 'select',
+          options: this.getAreasOptions(),
+          defaultValue: this.state.activeTemplateArea.id
         }
       ],
       success: function(res){
-        console.log(res);
         if(res.redirect && res.url){
           redirect(res.url)
         }
@@ -56,13 +94,16 @@ export default class Templates extends Component{
     store.dispatch(setModalSettings(modalSettings));
     store.dispatch(toggleModal());
   }
+  getAreasOptions(){
+    return this.state.templateAreas;
+  }
   setTemplates(templates){
-    templates = templates.map(template=>{
-      console.log(template);
-      return template;
+    let allTemplates = templates;
+    templates = templates.filter(template=>{
+      return template.area === this.state.activeTemplateArea.name;
     });
     this.setState(state=>{
-      return{...state, templates};
+      return{...state, templates, allTemplates};
     });
   }
   render(){
@@ -75,10 +116,23 @@ export default class Templates extends Component{
         </div>
         <button onClick={this.onClick} className="btn">Add New</button>
         <div className="admin-filters">
-          <span className="admin-filters__current">All ({this.state.templates.length || ''})</span>
+          <span className="admin-filters__current">All ({this.state.allTemplates.length || ''})</span>
         </div>
       </div>
       <div className="admin-content">
+        <ul className="nav nav-pills admin-pills">
+          {this.state.templateAreas.map(area=>{
+            let tabClasses = ['nav-link',];
+            if(this.state.activeTemplateArea.name === area.name){
+              tabClasses.push('active');
+            }
+            return<li className="nav-item" key={area.id}>
+              <button className={tabClasses.join(' ')}
+                      onClick={this.changeActiveArea}
+                      data-area={area.id}>{area.name}</button>
+            </li>
+          })}
+        </ul>
       <AdminTable columns={[
         {
           name: 'title',
@@ -88,7 +142,7 @@ export default class Templates extends Component{
         },
         {
           name: 'author',
-          title: 'Author'
+          title: 'Author',
         },
       ]} rows={this.state.templates}/>
       </div>

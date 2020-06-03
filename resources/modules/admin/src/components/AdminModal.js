@@ -5,37 +5,42 @@ import store from "../js/store/store";
 import {toggleModal} from "../js/store/modal-settings/actions";
 
 
-
 class AdminModal extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.toggleModal = this.toggleModal.bind(this);
     this.changeValue = this.changeValue.bind(this);
     this.submit = this.submit.bind(this);
     this.formData = {};
-    this.state= {
+    props.fields.forEach(field=>{
+      if(field.defaultValue){
+        this.formData[field.name] = field.defaultValue;
+      }
+    });
+    this.state = {
       errors: [],
     };
   }
-  submit(){
+  submit() {
     let valid = true;
     let errors = this.props.fields.map(field => {
-      if(field.required &&
-        ! this.formData[field.name]){
+      if (field.required &&
+          !this.formData[field.name]) {
         valid = false;
         return field.errorMessage || `Need complete this field`;
       }
     });
-    if(! valid){
+    if (! valid) {
       this.setState(state => {
-        return{...state, errors}
+        return {...state, errors}
       });
       return;
     }
     this.props.submit(this.formData).then(this.props.success)
   }
+
   changeValue(e) {
-    let target =  e.target;
+    let target = e.target;
     this.formData[target.dataset.field] = target.value;
     let errors = [...this.state.errors];
     errors[target.dataset.error] = '';
@@ -43,14 +48,17 @@ class AdminModal extends Component {
       return {...state, errors}
     });
   }
-  toggleModal(){
+
+  toggleModal() {
     store.dispatch(toggleModal());
   }
+
   render() {
     let modalClasses = 'admin-modal';
     if (this.props.active) {
       modalClasses += ' admin-modal_active';
     }
+    console.log(this.props.fields);
     return <div className={modalClasses}>
       <div className="admin-modal__bg" onClick={this.toggleModal}/>
       <div className="admin-modal-content">
@@ -59,13 +67,29 @@ class AdminModal extends Component {
         <div className="admin-modal-form form">
           {
             this.props.fields.map((field, idx) => <label className="form-label"
-                                                  data-field={field.name}
-                                                  key={field.name}>{field.label}
-                <input type={field.type || 'text'}
-                       className="form__input"
-                       data-field={field.name}
-                       data-error={idx}
-                       onChange={this.changeValue}/>
+                                                         data-field={field.name}
+                                                         key={field.name}>{field.label}
+              {(field.type !== 'select') ?
+                  <input type={field.type || 'text'}
+                         className="form__input"
+                         data-field={field.name}
+                         data-error={idx}
+                         defaultValue={field.defaultValue || ''}
+                         onChange={this.changeValue}/> :
+                  <select className="form__input"
+                          data-field={field.name}
+                          data-error={idx}
+                          defaultValue={field.defaultValue || ''}
+                          onChange={this.changeValue}>
+                    <option value=""/>
+                    {
+                      field.options.map(option =>
+                          <option key={option.id}
+                                  value={option.id}
+                                  children={option.title || option.name}/>)
+                    }
+                  </select>
+              }
               {this.state.errors[idx] ? <span className="form-label__error">{this.state.errors[idx]}</span> : ''}
             </label>)
           }

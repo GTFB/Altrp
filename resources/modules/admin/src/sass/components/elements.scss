@@ -34,6 +34,7 @@
     font-size: 13px;
     display: block;
     width: 100%;
+    & select.form__input,
     & .form__input[type="text"]{
       margin-top: 5px;
       font-size: 13px;
@@ -48,12 +49,31 @@
       color: $red;
     }
   }
-  &__input{
-    &[type="text"]{
-      width: 100%;
-      padding: 10px;
-      line-height: 16px;
-      font-size: 14px;
+}
+select.form__input,
+input[type="text"].form__input{
+  width: 100%;
+  padding: 10px;
+  line-height: 16px;
+  font-size: 14px;
+}
+.admin-pills{
+  & .nav-item{
+    background-color: transparent;
+  }
+  & .nav-link{
+    border: 1px solid $border-gray;
+    border-radius: 3px 3px 0 0 ;
+    margin-bottom: -1px;
+    background-color: $light-gray;
+    font-family: Montserrat, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: $button-grey;
+    &.active{
+      background-color: #fff;
+      border-bottom-color: #fff;
+      color: $purple;
     }
   }
 }

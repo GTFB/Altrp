@@ -52,6 +52,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get( '/template/{template_id}/reviews', 'TemplateController@reviews' );
     Route::resource( 'media', 'Admin\MediaController' );
     Route::resource( 'pages', 'Admin\PagesController' );
+    Route::resource( 'areas', 'Admin\AreasController' );
   });
 
 });

@@ -94,7 +94,7 @@ class PagesController extends Controller
    * @param string $id
    * @return \Illuminate\Http\Response
    */
-  public function show(  $id )
+  public function show( $id )
   {
     //
     $page = Page::find( $id );
@@ -172,14 +172,5 @@ class PagesController extends Controller
   public function destroy( Media $media, $id )
   {
     //
-    $media = $media->find($id);
-
-    if( Storage::delete( 'public/' . $media->filename ) ){
-      if( $media->delete() ){
-        return response()->json( ['success' => true] );
-      }
-      return response()->json( ['success' => false, 'message'=> 'Error deleting media' ], 500 );
-    }
-    return response()->json( ['success' => false, 'message'=> 'Error deleting file' ], 500 );
   }
 }
