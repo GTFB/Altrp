@@ -71,6 +71,15 @@ class Page extends Model
   public static function get_areas_for_page( $page_id ){
     $areas = [];
 
+    $header = Template::where( 'area', 2 )->first();
+    if( $header ){
+      $areas[] = [
+        'area_name' => 'header',
+        'id' => 'header',
+        'settings' => [],
+        'template' => $header
+      ];
+    }
     $areas[] = [
       'area_name' => 'content',
       'id' => 'content',
@@ -78,6 +87,16 @@ class Page extends Model
       'template' => PagesTemplate::where( 'page_id', $page_id )
         ->where( 'template_type', 'content' )->first()->template
     ];
+
+    $footer = Template::where( 'area', 3 )->first();
+    if( $footer ){
+      $areas[] = [
+        'area_name' => 'footer',
+        'id' => 'footer',
+        'settings' => [],
+        'template' => $footer
+      ];
+    }
 
     return $areas;
   }
