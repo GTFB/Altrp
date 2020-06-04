@@ -10,6 +10,8 @@ import SectionComponent from "../../components/SectionComponent";
 import ColumnComponent from "../../components/ColumnComponent";
 import Button from "../elements/Button";
 import Text from "../elements/Text";
+import Image from "../elements/Image";
+import ImageWidget from '../../components/widgets/ImageWidget';
 import TextWidget from '../../components/widgets/TextWidget';
 import InputWidget from "../../components/widgets/InputWidget";
 
@@ -27,6 +29,7 @@ export default class ElementsManger {
     this.elements[Button.getName()] = Button;
     this.elements[Input.getName()] = Input;
     this.elements[Text.getName()] = Text;
+    this.elements[Image.getName()] = Image;
     //список компонентов
     this.components = {};
     this.components[RootElement.getName()] = RootComponent;
@@ -36,6 +39,7 @@ export default class ElementsManger {
     this.components[Button.getName()] = ButtonWidget;
     this.components[Input.getName()] = InputWidget;
     this.components[Text.getName()] = TextWidget;
+    this.components[Image.getName()] = ImageWidget;
   }
 
   getElements(){

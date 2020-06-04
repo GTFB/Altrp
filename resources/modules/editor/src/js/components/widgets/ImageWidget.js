@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-class ButtonWidget extends Component {
+class ImageWidget extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -13,13 +13,8 @@ class ButtonWidget extends Component {
   }
 
   render(){
-    return <button  
-      className={"altrp-btn " + this.state.settings.position_css_classes}
-      id={this.state.settings.position_css_id}
-    >
-      {this.state.settings.button_text || ''}
-    </button>;
+    return <div>aaaaaa</div>;
   }
 }
 
-export default ButtonWidget
+export default ImageWidget

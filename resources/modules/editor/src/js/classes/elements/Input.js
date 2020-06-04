@@ -63,41 +63,25 @@ class Input extends BaseElement{
           label: 'text'
         },
         {
-          value: 'button',
-          label: 'button'
+          value: 'number',
+          label: 'number'
         },
         {
-          value: 'checkbox',
-          label: 'checkbox'
+          value: 'date',
+          label: 'date'
+        },
+        {
+          value: 'email',
+          label: 'email'
+        },
+        {
+          value: 'tel',
+          label: 'tel'
         },
         {
           value: 'file',
           label: 'file'
-        },
-        {
-          value: 'hidden',
-          label: 'hidden'
-        },
-        {
-          value: 'image',
-          label: 'image'
-        },
-        {
-          value: 'password',
-          label: 'password'
-        },
-        {
-          value: 'radio',
-          label: 'radio'
-        },
-        {
-          value: 'reset',
-          label: 'reset'
-        },
-        {
-          value: 'submit',
-          label: 'submit'
-        },
+        }
       ]
     });
 
@@ -109,6 +93,7 @@ class Input extends BaseElement{
     this.addControl('content_placeholder', {
       type: CONTROLLER_TEXT,
       label: 'Placeholder',
+      default: 'placeholder'
     });
 
     this.addControl('content_mask', {
