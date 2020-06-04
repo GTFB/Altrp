@@ -36,14 +36,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::put('/global-elements/{element}', "Constructor\GlobalElements@update");
     Route::delete('/global-elements/{element}', "Constructor\GlobalElements@trashed");
     Route::get( 'templates/options', 'TemplateController@options' );
-    Route::resource( 'templates', 'TemplateController' );
     Route::get( '/template/{template_id}/reviews', 'TemplateController@reviews' );
-    Route::resource( 'media', 'Admin\MediaController' );
     Route::resource( 'pages', 'Admin\PagesController' );
     Route::resource( 'areas', 'Admin\AreasController' );
   });
 
 });
+Route::resource( 'admin/ajax/templates', 'TemplateController' );
+Route::resource( 'admin/ajax/media', 'Admin\MediaController' );
 
 Route::view('/admin/{path?}', 'admin')
   ->where('path', '.*')
