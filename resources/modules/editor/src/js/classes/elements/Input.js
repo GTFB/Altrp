@@ -109,6 +109,7 @@ class Input extends BaseElement{
     this.addControl('content_placeholder', {
       type: CONTROLLER_TEXT,
       label: 'Placeholder',
+      default: 'placeholder'
     });
 
     this.addControl('content_mask', {

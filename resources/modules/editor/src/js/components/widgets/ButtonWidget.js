@@ -13,7 +13,12 @@ class ButtonWidget extends Component {
   }
 
   render(){
-    return <button className="altrp-btn">{this.state.settings.button_text || ''}</button>;
+    return <button  
+      className={"altrp-btn " + this.state.settings.position_css_classes}
+      id={this.state.settings.position_css_id}
+    >
+      {this.state.settings.button_text || ''}
+    </button>;
   }
 }
 

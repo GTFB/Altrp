@@ -73,7 +73,7 @@ class Text extends BaseElement{
     this.addControl('text_settings_html_tag', {
       type: CONTROLLER_SELECT,
       label: 'html tag',
-      default: 'select1',
+      default: 'p',
       options: [
         {
           value: 'p',

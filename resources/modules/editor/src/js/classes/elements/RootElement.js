@@ -1,7 +1,7 @@
 import BaseElement from "./BaseElement";
 import {
   CONTROLLER_DIMENSIONS,
-  CONTROLLER_NUMBER, 
+  CONTROLLER_NUMBER,
   CONTROLLER_SWITCHER,
   CONTROLLER_TEXT,
   CONTROLLER_TEXTAREA,
@@ -14,8 +14,6 @@ import {
   CONTROLLER_BUTTON,
   CONTROLLER_HEADING,
   CONTROLLER_CSSEDITOR,
-  CONTROLLER_SHADOW,
-  CONTROLLER_TRANSFORM,
   TAB_ADVANCED,
   TAB_CONTENT,
   TAB_STYLE,
@@ -49,8 +47,8 @@ class RootElement extends BaseElement {
     });
 
     this.addControl('textContainer', {
-      type: CONTROLLER_MEDIA,
-      label: "textContainer"  
+      type: CONTROLLER_TEXT,
+      label: "textContainer"
     });
 
     this.addControl('text', {
@@ -95,7 +93,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}}': [ 
+        '{{ELEMENT}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -120,7 +118,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}}': [ 
+        '{{ELEMENT}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -162,7 +160,7 @@ class RootElement extends BaseElement {
       label: 'Slider Content',
       default:{
         size:12,
-        unit:'px',
+        unit:'px'
       },
       units:[
         'px',
@@ -171,7 +169,6 @@ class RootElement extends BaseElement {
       ],
       max: 10,
       min: -10,
-      step: 10,
       rules: {
         '{{ELEMENT}}': 'padding: {{SIZE}}{{UNIT}};',
       },
@@ -186,7 +183,7 @@ class RootElement extends BaseElement {
         {
           value: '1',
           label:'Select sd  Content 1'
-        }, 
+        },
         {
           value: '2',
           label:'Select Content 2'
@@ -220,110 +217,14 @@ class RootElement extends BaseElement {
       },
     });
 
-    this.addControl('buttonContrainer', {
+    this.addControl('button', {
       type: CONTROLLER_BUTTON,
-      default: {
-        activeClass: 'control-button-active',
-        button: 'normal'
-      },
-      buttons: [
-        {
-          value: 'normal',
-          label: 'normal',
-          key: 0,
-          styles: {
-            background: 'none',
-            color: '#FFF',
-            borderRadius: '3px',
-            border: '1.5px solid #3C455B',
-            color: '#3C455B',
-            margin: '6px',
-            marginLeft: '0',
-            marginTop: '3px',
-            marginBottom: '3px',
-            paddingTop: '5px',
-            paddingBottom: '5px',
-            paddingLeft: '3px',
-            paddingRight: '3px',
-            fontSize: '12px',
-            fontFamily: 'Montserrat',
-            lineHeight: '15px',
-            fontWeight: 'bold'
-          },     
-        },
-        {
-          value: 'Hover',
-          label: 'Hover',
-          key: 1,
-          styles: {
-            background: 'none',
-            color: '#FFF',
-            borderRadius: '3px',
-            border: '1.5px solid #3C455B',
-            color: '#3C455B',
-            margin: '6px',
-            marginLeft: '2px',
-            marginTop: '3px',
-            marginBottom: '3px',
-            paddingTop: '5px',
-            paddingBottom: '5px',
-            paddingLeft: '3px',
-            paddingRight: '3px',
-            fontSize: '12px',
-            fontFamily: 'Montserrat',
-            lineHeight: '15px',
-            fontWeight: 'bold'
-          }
-        },
-        {
-          value: 'active',
-          label: 'active',
-          key: 2,
-          styles: {
-            background: 'none',
-            color: '#FFF',
-            borderRadius: '3px',
-            border: '1.5px solid #3C455B',
-            color: '#3C455B',
-            margin: '6px',
-            marginLeft: '2px',
-            marginTop: '3px',
-            marginBottom: '3px',
-            paddingTop: '5px',
-            paddingBottom: '5px',
-            paddingLeft: '3px',
-            paddingRight: '3px',
-            fontSize: '12px',
-            fontFamily: 'Montserrat',
-            lineHeight: '15px',
-            fontWeight: 'bold'
-          }
-        },
-        {
-          value: 'disabled',
-          label: 'disabled',
-          key: 3,
-          styles: {
-            background: 'none',
-            color: '#FFF',
-            borderRadius: '3px',
-            border: '1.5px solid #3C455B',
-            color: '#3C455B',
-            marginLeft: '2px',
-            marginTop: '3px',
-            marginRight: '0',
-            marginBottom: '3px',
-            paddingTop: '5px',
-            paddingBottom: '5px',
-            paddingLeft: '3px',
-            paddingRight: '3px',
-            fontSize: '12px',
-            fontFamily: 'Montserrat',
-            lineHeight: '15px',
-            fontWeight: 'bold'
-          }
-        }
-      ],
+      label: 'button content',
+      button: 'button',
+      classes: {
+        backgroundColor: '#20c74c',
+        color: '#FFF'
+      }
     });
 
     this.addControl('heading', {
@@ -332,7 +233,7 @@ class RootElement extends BaseElement {
         label: 'heading'
       }
     });
-    
+
     this.addControl('css editor', {
       type: CONTROLLER_CSSEDITOR,
       default: {
@@ -340,79 +241,6 @@ class RootElement extends BaseElement {
       },
     });
 
-    this.addControl('shadow', {
-        type: CONTROLLER_SHADOW,
-        label: 'box shadow',
-        default:{
-          blur: 0,
-          horizontal: 0,
-          vertical: 0,
-          opacity: 1,
-          colorRGB: 'rgb(0, 0, 0)',
-          color: 'rgb(0, 0, 0)',
-          colorPickedHex: '#000000',
-        },
-        presetColors: [
-          '#eaeaea',
-          '#9c18a8'
-        ],
-        rules: {
-          '{{ELEMENT}}': 'box-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
-        },
-      }
-    );
-
-    this.addControl('transform Header', {
-      type: CONTROLLER_HEADING,
-      default: {
-        label: 'transform'
-      }
-    })
-
-    this.addControl('transform', {
-      type: CONTROLLER_TRANSFORM,
-      label: 'transform',
-      default: {
-        size: 0
-      },
-      options: [
-        {
-          label: 'none',
-          value: ''
-        },
-        {
-          label: 'rotate',
-          value: 'rotate',
-        },
-        {
-          label: 'scaleX',
-          value: 'scaleX',
-        },
-        {
-          label: 'scaleY',
-          value: 'scaleY',
-        },
-        {
-          label: 'skewY',
-          value: 'skewY',
-        },
-        {
-          label: 'skewX',
-          value: 'skewX',
-        },
-        {
-          label: 'translateX',
-          value: 'translateX',
-        },
-        {
-          label: 'translateY',
-          value: 'translateY',
-        }
-      ],
-      rules: {
-        '{{ELEMENT}}': 'transform: {{FUNCTION}}( {{SIZE}}{{UNIT}} )'
-      }
-    })
     this.endControlSection();
 
     this.startControlSection('text_style', {

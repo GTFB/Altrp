@@ -13,7 +13,8 @@ class TextWidget extends Component {
   }
 
   render(){
-    return <p className="altrp-text">{this.state.settings.text}</p>;
+    return React.createElement(this.state.settings.text_settings_html_tag, {className: "altrp-text"}, this.state.settings.text);
+    
   }
 }
 
