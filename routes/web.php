@@ -22,12 +22,18 @@ Route::group([
   'middleware' => ['web', 'installation.checker'],
   'prefix'     => 'install',
 ], function () {
-  Route::get('/', 'InstallationController@starting');
-  Route::get('process', 'InstallationController@process');
-  Route::post('process', 'InstallationController@process');
+  Route::get('/', 'InstallationController@starting')->name(  'installation.start' );
+  Route::get('process', 'InstallationController@process')->name(  'installation.input' );
+  Route::post('process', 'InstallationController@process')->name(  'installation.post' );
 });
 
-Auth::routes();
+Route::group([
+  'middleware' => [ 'installation.checker'],
+], function () {
+  Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+  Route::post('login', 'Auth\LoginController@login');
+  Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+});
 
 
 Route::get( '/admin/editor', function (){
