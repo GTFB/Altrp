@@ -31,8 +31,10 @@ class Page extends Model
   static function get_frontend_routes()
   {
     $pages = [];
-//    static::getConnection();
-    if( ! Schema::hasTable( 'pages' ) ){
+    if( ! appIsInstalled()  ){
+      return $pages;
+    }
+    if( ! Schema::hasTable( 'pages' )  ){
       return $pages;
     }
     try{

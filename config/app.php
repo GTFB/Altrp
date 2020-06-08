@@ -126,7 +126,7 @@ return [
     |
     */
 
-    'key' => env('APP_KEY'),
+    'key' => (function_exists('env')) ? env('APP_KEY', 'SomeRandomStringWith32Characters') : 'SomeRandomStringWith32Characters',
 
     'cipher' => 'AES-256-CBC',
 

@@ -89,6 +89,7 @@ function getPerms( $path )
 function appIsInstalled()
 {
   // Check if the app's installation files exist
+
   if ( ! appInstallFilesExist() ) {
     return false;
   }
@@ -137,6 +138,7 @@ function appIsInstalled()
 function appInstallFilesExist()
 {
   // Check if the '.env' and 'storage/installed' files exist
+
   if ( file_exists( base_path( '.env' ) ) && file_exists( storage_path( 'installed' ) ) ) {
     return true;
   }
@@ -175,4 +177,60 @@ function isValidJson( $string )
   }
 
   return ( json_last_error() == JSON_ERROR_NONE );
+}
+
+/**
+ * @param $array
+ * @return mixed|string
+ */
+function httpBuildQuery( $array )
+{
+  if ( ! is_array( $array ) && ! is_object( $array ) ) {
+    return $array;
+  }
+
+  $queryString = http_build_query( $array );
+  $queryString = str_replace( [ '%5B', '%5D' ], [ '[', ']' ], $queryString );
+
+  return $queryString;
+}
+
+
+/**
+ * Get the app latest version
+ *
+ * @return \Illuminate\Config\Repository|mixed|string
+ */
+function getLatestVersion()
+{
+  return checkAndUseSemVer( config( 'app.altrp_version' ) );
+}
+
+/**
+ * Check and use semver version num format
+ *
+ * @param $version
+ * @return string
+ */
+function checkAndUseSemVer( $version )
+{
+  $semver = '0.0.0';
+  if ( ! empty( $version ) ) {
+    $numPattern = '([0-9]+)';
+    if ( preg_match( '#^' . $numPattern . '\.' . $numPattern . '\.' . $numPattern . '$#', $version ) ) {
+      $semver = $version;
+    } else {
+      if ( preg_match( '#^' . $numPattern . '\.' . $numPattern . '$#', $version ) ) {
+        $semver = $version . '.0';
+      } else {
+        if ( preg_match( '#^' . $numPattern . '$#', $version ) ) {
+          $semver = $version . '.0.0';
+        } else {
+          $semver = '0.0.0';
+        }
+      }
+    }
+  }
+
+  return $semver;
 }

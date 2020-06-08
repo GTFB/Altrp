@@ -14,7 +14,26 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Auth::routes();
+/**
+ * Installation
+ */
+
+Route::group([
+  'middleware' => ['web', 'installation.checker'],
+  'prefix'     => 'install',
+], function () {
+  Route::get('/', 'InstallationController@starting')->name(  'installation.start' );
+  Route::get('process', 'InstallationController@process')->name(  'installation.input' );
+  Route::post('process', 'InstallationController@process')->name(  'installation.post' );
+});
+
+Route::group([
+  'middleware' => [ 'installation.checker'],
+], function () {
+  Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+  Route::post('login', 'Auth\LoginController@login');
+  Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+});
 
 
 Route::get( '/admin/editor', function (){
@@ -86,33 +105,15 @@ Route::view('/admin/{path?}', 'admin')
   ->name('admin');
 
 /**
- * Installation
-*/
-
-Route::group([
-  'middleware' => ['web', 'installation.checker'],
-  'prefix'     => 'install',
-], function () {
-  Route::get('/', 'InstallationController@starting');
-  Route::get('site_info', 'InstallationController@siteInfo');
-  Route::post('site_info', 'InstallationController@siteInfo');
-  Route::get('system_compatibility', 'InstallationController@systemCompatibility');
-  Route::get('database', 'InstallationController@database');
-  Route::post('database', 'InstallationController@database');
-  Route::get('database_import', 'InstallationController@databaseImport');
-  Route::get('cron_jobs', 'InstallationController@cronJobs');
-  Route::get('finish', 'InstallationController@finish');
-});
-
-/**
  * Frontend
 */
 
 $frontend_routes = \App\Page::get_frontend_routes();
 
 Route::get('/', function () {
+
   return view('front-app');
-});
+})->middleware( ['web', 'installation.checker'] );
 
 foreach ( $frontend_routes as $frontend_route ) {
 
