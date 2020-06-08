@@ -321,6 +321,12 @@ class InstallationController extends Controller
     return $step;
   }
 
+  public function process(){
+
+
+    return view( 'installation' );
+  }
+
   /**
    * STEP 2 - Set Site Info
    *
