@@ -77,7 +77,7 @@ class InstallationController extends Controller
     // Get the Query String
     $queryString = ( request()->all() ? ( '?' . httpBuildQuery( request()->all() ) ) : '' );
 
-    return redirect( $this->installUrl . '/system_compatibility' . $queryString );
+    return redirect( $this->installUrl . '/process' . $queryString );
   }
 
   /**
@@ -321,259 +321,32 @@ class InstallationController extends Controller
     return $step;
   }
 
-  public function process(){
-
-
-    return view( 'installation' );
-  }
-
-  /**
-   * STEP 2 - Set Site Info
-   *
-   * @param Request $request
-   * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
-   */
-  public function siteInfo( Request $request )
-  {
-    if ( $this->step( $request ) < 1 ) {
-      return redirect( $this->installUrl . '/system_compatibility' );
-    }
-
+  public function process( Request $request ){
     // Make sure session is working
     $rules = [
       'site_name' => 'required',
       'site_slogan' => 'required',
+      'database_username' => 'required',
+      'database_password' => 'required',
+      'database_name' => 'required',
+      'database_prefix' => 'required',
       'name' => 'required',
-      'purchase_code' => 'required',
+      'last_name' => 'required',
       'email' => 'required|email',
-      'password' => 'required',
-      'default_country' => 'required',
+      'passwrod' => 'required',
     ];
-    $sendmail_rules = [
-      'sendmail_path' => 'required',
-    ];
-    $smtp_rules = [
-      'smtp_hostname' => 'required',
-      'smtp_port' => 'required',
-      'smtp_username' => 'required',
-      'smtp_password' => 'required',
-      'smtp_encryption' => 'required',
-    ];
-    $mailgun_rules = [
-      'mailgun_domain' => 'required',
-      'mailgun_secret' => 'required',
-    ];
-    $mandrill_rules = [
-      'mandrill_secret' => 'required',
-    ];
-    $ses_rules = [
-      'ses_key' => 'required',
-      'ses_secret' => 'required',
-      'ses_region' => 'required',
-    ];
-    $sparkpost_rules = [
-      'sparkpost_secret' => 'required',
-    ];
-
-    // Validate and save posted data
     if ( $request->isMethod( 'post' ) ) {
-      $request->session()->forget( 'site_info' );
-
-      // Check purchase code
-      $messages = [];
-      $purchase_code_data = $this->purchaseCodeChecker( $request );
-      if ( $purchase_code_data->valid == false ) {
-        $rules['purchase_code_valid'] = 'required';
-        if ( $purchase_code_data->message != '' ) {
-          $messages = [ 'purchase_code_valid.required' => 'The :attribute field is required. ERROR: <strong>' . $purchase_code_data->message . '</strong>' ];
-        }
+      if( ! $request->validate( $rules ) ){
+        return redirect( '/' );
       }
 
-      if ( $request->mail_driver == 'sendmail' ) {
-        $rules = array_merge( $rules, $sendmail_rules );
-      }
-      if ( $request->mail_driver == 'smtp' ) {
-        $rules = array_merge( $rules, $smtp_rules );
-      }
-      if ( $request->mail_driver == 'mailgun' ) {
-        $rules = array_merge( $rules, $mailgun_rules );
-      }
-      if ( $request->mail_driver == 'mandrill' ) {
-        $rules = array_merge( $rules, $mandrill_rules );
-      }
-      if ( $request->mail_driver == 'ses' ) {
-        $rules = array_merge( $rules, $ses_rules );
-      }
-      if ( $request->mail_driver == 'sparkpost' ) {
-        $rules = array_merge( $rules, $sparkpost_rules );
-      }
 
-      if ( ! empty( $messages ) ) {
-        $this->validate( $request, $rules, $messages );
-      } else {
-        $this->validate( $request, $rules );
-      }
+      $this->writeEnv($request);
 
-      // Check SMTP connection
-      if ( $request->mail_driver == 'smtp' ) {
-        $rules = [];
-        $messages = [];
-        try {
-          $transport = new \Swift_SmtpTransport( $request->smtp_hostname, $request->smtp_port, $request->smtp_encryption );
-          $transport->setUsername( $request->smtp_username );
-          $transport->setPassword( $request->smtp_password );
-          $mailer = new \Swift_Mailer( $transport );
-          $mailer->getTransport()->start();
-        } catch ( \Swift_TransportException $e ) {
-          $rules['smtp_valid'] = 'required';
-          if ( $e->getMessage() != '' ) {
-            $messages = [ 'smtp_valid.required' => 'Can\'t connect to SMTP server. ERROR: <strong>' . $e->getMessage() . '</strong>' ];
-          }
-        } catch ( \Exception $e ) {
-          $rules['smtp_valid'] = 'required';
-          if ( $e->getMessage() != '' ) {
-            $messages = [ 'smtp_valid.required' => 'Can\'t connect to SMTP server. ERROR: <strong>' . $e->getMessage() . '</strong>' ];
-          }
-        }
-        if ( ! empty( $messages ) ) {
-          $this->validate( $request, $rules, $messages );
-        } else {
-          $this->validate( $request, $rules );
-        }
-      }
-
-      // Save data in session
-      $siteInfo = $request->all();
-      $request->session()->put( 'site_info', $siteInfo );
-
-      return redirect( $this->installUrl . '/database' );
     }
-
-    $siteInfo = $request->session()->get( 'site_info' );
-    if ( ! empty( $request->old() ) ) {
-      $siteInfo = $request->old();
-    }
-
-    return view( 'install.site_info', [
-      'site_info' => $siteInfo,
-      'rules' => $rules,
-      'sendmail_rules' => $sendmail_rules,
-      'smtp_rules' => $smtp_rules,
-      'mailgun_rules' => $mailgun_rules,
-      'mandrill_rules' => $mandrill_rules,
-      'ses_rules' => $ses_rules,
-      'sparkpost_rules' => $sparkpost_rules,
-      'step' => $this->step( $request ),
-      'current' => 2,
-    ] );
+    return view( 'installation' );
   }
 
-  /**
-   * IMPORTANT: Do not change this part of the code to prevent any data losing issue.
-   *
-   * @param Request $request
-   * @return mixed|string
-   */
-  private function purchaseCodeChecker( Request $request )
-  {
-    $data = json_encode( [ 'valid' => true ] );
-    // Format object data
-    $data = json_decode( $data );
-
-    return $data;
-  }
-
-
-
-  // PRIVATE METHODS
-
-  /**
-   * STEP 3 - Database configuration
-   *
-   * @param Request $request
-   * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
-   */
-  public function database( Request $request )
-  {
-    if ( $this->step( $request ) < 2 ) {
-      return redirect( $this->installUrl . '/site_info' );
-    }
-
-    // Check required fields
-    $rules = [
-      'host' => 'required',
-      'port' => 'required',
-      'username' => 'required',
-      //'password' => 'required', // Comment this line for local server
-      'database' => 'required',
-    ];
-
-    // Validate and save posted data
-    if ( $request->isMethod( 'post' ) ) {
-      $request->session()->forget( 'database' );
-
-      $this->validate( $request, $rules );
-
-      // Check the Database Connection
-      $messages = [];
-      try {
-        // Database Parameters
-        $driver = config( 'database.connections.' . config( 'database.default' ) . '.driver', 'mysql' );
-        $port = (int)$request->port;
-        $options = [
-          \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ,
-          \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-          \PDO::ATTR_EMULATE_PREPARES => true,
-          \PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY,
-        ];
-
-        // Get the Connexion's DSN
-        if ( empty( $request->socket ) ) {
-          $dsn = $driver . ':host=' . $request->host . ';port=' . $port . ';dbname=' . $request->database . ';charset=utf8';
-        } else {
-          $dsn = $driver . ':unix_socket=' . $request->socket . ';dbname=' . $request->database . ';charset=utf8';
-        }
-
-        // Connect to the Database Server
-        $pdo = new \PDO( $dsn, $request->username, $request->password, $options );
-
-      } catch ( \PDOException $e ) {
-        $rules['database_connection'] = 'required';
-        $messages = [ 'database_connection.required' => 'Can\'t connect to the database server. ERROR: <strong>' . $e->getMessage() . '</strong>' ];
-      } catch ( \Exception $e ) {
-        $rules['database_connection'] = 'required';
-        $messages = [ 'database_connection.required' => 'The database connection failed. ERROR: <strong>' . $e->getMessage() . '</strong>' ];
-      }
-
-      if ( ! empty( $messages ) ) {
-        $this->validate( $request, $rules, $messages );
-      } else {
-        $this->validate( $request, $rules );
-      }
-
-      // Get database info and Save it in session
-      $database = $request->all();
-      $request->session()->put( 'database', $database );
-
-      // Write config file
-      $this->writeEnv( $request );
-
-      // Return to Import Database page
-      return redirect( $this->installUrl . '/database_import' );
-    }
-
-    $database = $request->session()->get( 'database' );
-    if ( ! empty( $request->old() ) ) {
-      $database = $request->old();
-    }
-
-    return view( 'install.database', [
-      'database' => $database,
-      'rules' => $rules,
-      'step' => $this->step( $request ),
-      'current' => 3,
-    ] );
-  }
 
   /**
    * Write configuration values to file
@@ -582,10 +355,8 @@ class InstallationController extends Controller
    */
   private function writeEnv( $request )
   {
-    // Get .env file path
     $filePath = base_path( '.env' );
 
-    // Remove the old .env file (If exists)
     if ( File::exists( $filePath ) ) {
       File::delete( $filePath );
     }
@@ -594,15 +365,10 @@ class InstallationController extends Controller
     $key = 'base64:' . base64_encode( $this->randomString( 32 ) );
     $key = config( 'app.key', $key );
 
-    // Get app host
-    $appHost = getHostByUrl( $this->baseUrl );
 
     // Get app version
     $version = getLatestVersion();
 
-    // Get database & site info
-    $database = $request->session()->get( 'database' );
-    $siteInfo = $request->session()->get( 'site_info' );
 
     // Generate .env file content
     $content = '';
@@ -613,24 +379,21 @@ class InstallationController extends Controller
     $content .= 'APP_LOCALE=en' . "\n";
     $content .= 'APP_VERSION=' . $version . "\n";
     $content .= "\n";
-    $content .= 'PURCHASE_CODE=' . ( isset( $siteInfo['purchase_code'] ) ? $siteInfo['purchase_code'] : '' ) . "\n";
     $content .= 'FORCE_HTTPS=' . ( Str::startsWith( $this->baseUrl, 'https://' ) ? 'true' : 'false' ) . "\n";
     $content .= "\n";
-    $content .= 'DB_HOST=' . ( isset( $database['host'] ) ? $database['host'] : '' ) . "\n";
-    $content .= 'DB_PORT=' . ( isset( $database['port'] ) ? $database['port'] : '' ) . "\n";
-    $content .= 'DB_DATABASE=' . ( isset( $database['database'] ) ? $database['database'] : '' ) . "\n";
-    $content .= 'DB_USERNAME=' . ( isset( $database['username'] ) ? $database['username'] : '' ) . "\n";
-    $content .= 'DB_PASSWORD="' . ( isset( $database['password'] ) ? addcslashes( $database['password'], '"' ) : '' ) . '"' . "\n";
-    $content .= 'DB_SOCKET=' . ( isset( $database['socket'] ) ? $database['socket'] : '' ) . "\n";
-    $content .= 'DB_TABLES_PREFIX=' . ( isset( $database['prefix'] ) ? $database['prefix'] : '' ) . "\n";
+    $content .= 'DB_HOST=127.0.0.1' . "\n";
+    $content .= 'DB_PORT=3306'. "\n";
+    $content .= 'DB_DATABASE=' . ( isset( $request->database_name ) ? $request->database_name : '' ) . "\n";
+    $content .= 'DB_USERNAME=' . ( isset( $request->database_username ) ? $request->database_username : '' ) . "\n";
+    $content .= 'DB_PASSWORD="' . ( isset( $request->database_password ) ? addcslashes( $request->database_password, '"' ) : '' ) . '"' . "\n";
+    $content .= 'DB_TABLES_PREFIX=' . ( isset( $request->database_prefix ) ? $request->database_prefix : '' ) . "\n";
     $content .= 'DB_CHARSET=utf8' . "\n";
     $content .= 'DB_COLLATION=utf8_unicode_ci' . "\n";
     $content .= 'DB_DUMP_BINARY_PATH=' . "\n";
     $content .= "\n";
-    $content .= 'IMAGE_DRIVER=gd' . "\n";
     $content .= "\n";
     $content .= 'CACHE_DRIVER=file' . "\n";
-    $content .= 'CACHE_PREFIX=lc_' . "\n";
+    $content .= 'CACHE_PREFIX=altrp_' . "\n";
     $content .= 'QUEUE_CONNECTION=sync' . "\n";
     $content .= 'SESSION_DRIVER=file' . "\n";
     $content .= 'SESSION_LIFETIME=10080' . "\n";
@@ -639,9 +402,6 @@ class InstallationController extends Controller
     $content .= 'LOG_LEVEL=debug' . "\n";
     $content .= 'LOG_DAYS=2' . "\n";
     $content .= "\n";
-    $content .= 'DISABLE_PHONE=false' . "\n";
-    $content .= 'DISABLE_EMAIL=false' . "\n";
-    $content .= 'DISABLE_USERNAME=true' . "\n";
 
     // Save the new .env file
     File::put( $filePath, $content );

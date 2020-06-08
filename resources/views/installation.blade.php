@@ -16,7 +16,7 @@
   </svg>
 </div>
 <div class="flex-center">
-  <div class="contain-wide">
+  <form class="contain-wide">
     <div class="row-heading">
       General
     </div>
@@ -24,13 +24,13 @@
       <div class="col-1">
         <label>
           <span class="label">Site name</span>
-          <input class="line">
+          <input class="line" name="site_name" required>
         </label>
       </div>
       <div class="col-2">
         <label>
           <span class="label">Description</span>
-          <input class="line">
+          <input class="line" name="site_description" required>
         </label>
       </div>
     </div>
@@ -41,21 +41,21 @@
       <div class="col-1">
         <label>
           <span class="label">Username</span>
-          <input class="line">
+          <input class="line" name="database_username" required>
         </label>
         <label>
           <span class="label">Database name</span>
-          <input class="line">
+          <input class="line" name="database_name" required>
         </label>
       </div>
       <div class="col-2">
         <label>
           <span class="label">Password</span>
-          <input class="line">
+          <input class="line" name="database_password" required>
         </label>
         <label>
           <span class="label">Tables Prefix</span>
-          <input class="line">
+          <input class="line" name="database_prefix" required>
         </label>
       </div>
     </div>
@@ -66,28 +66,28 @@
       <div class="col-1">
         <label>
           <span class="label">Name</span>
-          <input class="line">
+          <input class="line" name="name" required>
         </label>
         <label>
           <span class="label">Email</span>
-          <input class="line">
+          <input class="line" name="email" required>
         </label>
       </div>
       <div class="col-2">
         <label>
           <span class="label">LastName</span>
-          <input class="line">
+          <input class="line" name="last_name" required>
         </label>
         <label>
           <span class="label">Password</span>
-          <input class="line">
+          <input class="line" name="password" required>
         </label>
       </div>
     </div>
     <div class="row-heading">
       <button class="but">Install</button>
     </div>
-  </div>
+  </form>
 </div>
 </body>
 </html>
