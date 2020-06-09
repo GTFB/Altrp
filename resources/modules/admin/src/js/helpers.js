@@ -20,9 +20,5 @@ export function iconsManager(){
 
 export async function logout() {
   let res = await (new Resource({route: '/logout'})).post();
-  goTo(res.location)
-}
-
-export function goTo( location = '/' ) {
-  window.location.href = location;
+  redirect(res.location)
 }
