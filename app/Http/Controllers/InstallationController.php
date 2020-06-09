@@ -404,7 +404,8 @@ class InstallationController extends Controller
 
   private function migrate( Request $request )
   {
-    $migrate = Artisan::call( 'migrate', [ '--force' => true ] );
+    Artisan::call( 'storage:link', [ '--force' => true ] );
+    Artisan::call( 'migrate', [ '--force' => true ] );
 
     $user = new User( [
       'last_name' => $request->last_name,
