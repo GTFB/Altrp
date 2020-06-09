@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import DynamicIcon from "../../../svgs/dynamic.svg";
 import controllerDecorate from "../../decorators/controller";
-// import ReactQuill from "react-quill";
+import ReactQuill from "react-quill";
 
 class WysiwygController extends Component {
   constructor(props) {
@@ -30,11 +30,11 @@ class WysiwygController extends Component {
           Dynamic
           <DynamicIcon />
         </div>
-        {/*<ReactQuill*/}
-          {/*className="controller-container__wysiwyg"*/}
-          {/*theme="snow"*/}
-          {/*onChange={this.changeValue}*/}
-          {/*value={this.state.value}*/}
+        <ReactQuill
+          className="controller-container__wysiwyg"
+          theme="snow"
+          onChange={this.changeValue}
+          value={this.state.value}
         />
       </div>
     );
