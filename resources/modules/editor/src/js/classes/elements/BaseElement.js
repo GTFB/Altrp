@@ -252,7 +252,9 @@ class BaseElement {
   setSettingValue(settingName, value){
     // console.log(settingName);
     this.settings[settingName] = value;
-    this.component.changeSetting(settingName, value);
+    if(this.component){
+      this.component.changeSetting(settingName, value);
+    }
   }
 
   _registerControls(){
