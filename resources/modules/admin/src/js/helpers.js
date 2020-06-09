@@ -1,4 +1,5 @@
 import IconsManager from "../../../editor/src/js/classes/modules/IconsManager";
+import Resource from "../../../editor/src/js/classes/Resource";
 
 export function redirect(url) {
   url = url || '/';
@@ -15,4 +16,13 @@ export function iconsManager(){
     window.iconsManager = new IconsManager();
   }
   return window.iconsManager;
+}
+
+export async function logout() {
+  let res = await (new Resource({route: '/logout'})).post();
+  goTo(res.location)
+}
+
+export function goTo( location = '/' ) {
+  window.location.href = location;
 }

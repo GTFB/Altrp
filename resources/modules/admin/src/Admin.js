@@ -32,6 +32,7 @@ import Tables from "./components/Tables";
 import Templates from "./components/Templates";
 import AdminModal from "./components/AdminModal";
 import AddPage from "./components/AddPage";
+import UserTopPanel from "./components/UserTopPanel";
 
 class Admin extends Component {
   render() {
@@ -136,6 +137,7 @@ class Admin extends Component {
           </Switch>
         </Router>
         <AdminModal/>
+        <UserTopPanel/>
       </div>
     </Provider>;
   }
