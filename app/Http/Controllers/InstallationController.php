@@ -39,11 +39,6 @@ class InstallationController extends Controller
       return $next( $request );
     } );
 
-    // Create SQL destination path if not exists
-    if ( ! File::exists( storage_path( 'app/database/geonames/countries' ) ) ) {
-      File::makeDirectory( storage_path( 'app/database/geonames/countries' ), 0755, true );
-    }
-
     // Base URL
     $this->baseUrl = getRawBaseUrl();
     view()->share( 'baseUrl', $this->baseUrl );
@@ -404,7 +399,7 @@ class InstallationController extends Controller
 
   private function migrate( Request $request )
   {
-    Artisan::call( 'storage:link', [ '--force' => true ] );
+    Artisan::call( 'config:cache');
     Artisan::call( 'migrate', [ '--force' => true ] );
 
     $user = new User( [
@@ -422,5 +417,6 @@ class InstallationController extends Controller
     $user->attachRole( $admin );
     $request->session()->put('install_finish', true);
     Auth::loginUsingId( $user->id, true );
+    Artisan::call( 'storage:link' );
   }
 }

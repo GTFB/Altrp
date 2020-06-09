@@ -65,6 +65,9 @@
     "webpack": "^4.41.6",
     "webpack-cli": "^3.1.1",
     "webpack-dev-server": "^3.1.11",
-    "webpack-merge": "^4.2.2"
+    "webpack-merge": "^4.2.2",
+    "gulp": "^4.0.2",
+    "gulp-zip": "^5.0.1",
+    "gulp-clean": "^0.4.0"
   }
 }

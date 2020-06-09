@@ -100,7 +100,7 @@ Route::resource( 'admin/ajax/media', 'Admin\MediaController' );
 
 Route::view('/admin/{path?}', 'admin')
   ->where('path', '.*')
-  ->middleware( 'auth' )
+  ->middleware( [ 'auth','web', 'installation.checker',]  )
   ->name('admin');
 
 /**
