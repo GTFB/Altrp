@@ -3,6 +3,10 @@ import AddIcon from '../../../svgs/add.svg';
 import AdvancedIcon from '../../../svgs/advanced.svg';
 import UploadIcon from '../../../svgs/upload.svg';
 import TimesIcon from '../../../svgs/times.svg';
+import LeftIcon from '../../../svgs/left.svg';
+import CenterIcon from '../../../svgs/center.svg';
+import RightIcon from '../../../svgs/right.svg';
+import InWidthIcon from '../../../svgs/in_width.svg';
 
 class IconsManager {
   constructor(){
@@ -13,6 +17,10 @@ class IconsManager {
     this.icons.push(new Icon('upload', UploadIcon));
     this.icons.push(new Icon('times', TimesIcon));
     this.icons.push(new Icon('close', TimesIcon));
+    this.icons.push(new Icon('left', LeftIcon));
+    this.icons.push(new Icon('center', CenterIcon));
+    this.icons.push(new Icon('right', RightIcon));
+    this.icons.push(new Icon('in_width', InWidthIcon));
   }
   /**
    * @param {string} iconName

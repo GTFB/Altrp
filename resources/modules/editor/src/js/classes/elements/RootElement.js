@@ -145,17 +145,32 @@ class RootElement extends BaseElement {
     //   ]
     // });
 
-    // this.addControl('choose', {
-    //   type: CONTROLLER_CHOOSE,
-    //   label: 'Choose Content',
-    //   default: 1,
-    //   options:[
-    //     {
-    //       icon: 'add',
-    //       value: 'add',
-    //     }
-    //   ],
-    // });
+    this.addControl('choose', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Choose Content',
+      default: 'right',
+      options:[
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+        {
+          icon: 'in_width',
+          value: 'justify',
+        }
+      ],
+      rules: {
+            '{{ELEMENT}}': 'text-align: {{VALUE}};',
+      },
+    });
 
     // this.addControl('slider', {
     //   type: CONTROLLER_SLIDER,
