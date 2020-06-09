@@ -17,7 +17,7 @@ class Resource {
 
     this.route = data.route;
     if(! this.route){
-      throw 'Нужен URL';
+      throw 'Нужен route';
     }
 
   }
@@ -70,7 +70,7 @@ class Resource {
    * @param {object | null} headers
    * @return {Promise}
    * */
-  post(data, headers){
+  post(data = {}, headers){
     data._token = _token;
     headers = headers || {
       'Content-Type': 'application/json'

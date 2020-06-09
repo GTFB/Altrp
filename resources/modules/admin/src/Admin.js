@@ -32,6 +32,8 @@ import Tables from "./components/Tables";
 import Templates from "./components/Templates";
 import AdminModal from "./components/AdminModal";
 import AddPage from "./components/AddPage";
+import UserTopPanel from "./components/UserTopPanel";
+import {Redirect} from "react-router";
 
 class Admin extends Component {
   render() {
@@ -100,6 +102,9 @@ class Admin extends Component {
             </div>
           </nav>
           <Switch>
+            <Route path="/admin/" exact>
+              <Redirect to="/admin/dashboard"/>
+            </Route>
             <Route path="/admin/settings">
               <AdminSettings/>
             </Route>
@@ -136,6 +141,7 @@ class Admin extends Component {
           </Switch>
         </Router>
         <AdminModal/>
+        <UserTopPanel/>
       </div>
     </Provider>;
   }

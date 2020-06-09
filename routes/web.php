@@ -56,9 +56,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get( 'templates/options', 'TemplateController@options' );
     Route::get( '/template/{template_id}/reviews', 'TemplateController@reviews' );
     Route::resource( 'pages', 'Admin\PagesController' );
-    Route::resource( 'areas', 'Admin\AreasController' );
-
-
     Route::get('/permissions', "Users\Permissions@getPermissions");
     Route::get('/permissions/{permission}', "Users\Permissions@getPermission");
     Route::post('/permissions', "Users\Permissions@insert");
@@ -96,12 +93,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
   });
 
 });
+Route::resource( 'admin/ajax/areas', 'Admin\AreasController' );
+
 Route::resource( 'admin/ajax/templates', 'TemplateController' );
 Route::resource( 'admin/ajax/media', 'Admin\MediaController' );
 
 Route::view('/admin/{path?}', 'admin')
   ->where('path', '.*')
-  ->middleware( 'auth' )
+  ->middleware( [ 'auth','web', 'installation.checker',]  )
   ->name('admin');
 
 /**

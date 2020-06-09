@@ -77,3 +77,29 @@ input[type="text"].form__input{
     }
   }
 }
+
+.admin-user-top-panel{
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 62px;
+  padding-right: 27px;
+}
+.top-panel{
+  &-notification{
+    margin-right: 19px;
+  }
+  &__portrait{
+    margin-right: 7px;
+  }
+  &__greeting{
+    margin-right: 14px;
+    font-size: 15px;
+    color: $grey;
+  }
+  &-logout{
+    background-color: transparent;
+    border: none;
+    padding: 0;
+  }
+}
