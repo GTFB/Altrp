@@ -1,34 +1,34 @@
 import BaseElement from "./BaseElement";
-import HeadingIcon from '../../../svgs/widget_heading.svg';
-import {CONTROLLER_TEXTAREA, TAB_CONTENT} from "../modules/ControllersManager";
-import {advancedTabControllers} from "../../decorators/register-controllers";
+import HeadingIcon from "../../../svgs/widget_heading.svg";
+import { CONTROLLER_WYSIWYG, TAB_CONTENT } from "../modules/ControllersManager";
+import { advancedTabControllers } from "../../decorators/register-controllers";
 
-class Heading extends BaseElement{
-  static getName(){
-    return'heading';
+class Heading extends BaseElement {
+  static getName() {
+    return "heading";
   }
-  static getTitle(){
-    return'Heading';
+  static getTitle() {
+    return "Heading";
   }
-  static getIconComponent(){
+  static getIconComponent() {
     return HeadingIcon;
   }
-  static getType(){
-    return 'widget';
+  static getType() {
+    return "widget";
   }
   _registerControls() {
     if (this.controllersRegistered) {
-      return
+      return;
     }
-    this.startControlSection('text_section', {
+    this.startControlSection("text_section", {
       tab: TAB_CONTENT,
-      label: 'Text Section',
+      label: "Text Section",
     });
 
-    this.addControl('text', {
-      type: CONTROLLER_TEXTAREA,
-      label: 'Text',
-      default: 'I Am Advanced Heading'
+    this.addControl("text", {
+      type: CONTROLLER_WYSIWYG,
+      label: "Text",
+      default: "I Am Advanced Heading",
     });
 
     this.endControlSection();
@@ -37,4 +37,4 @@ class Heading extends BaseElement{
   }
 }
 
-export default Heading
+export default Heading;
