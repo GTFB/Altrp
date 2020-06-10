@@ -48,7 +48,7 @@ module.exports = merge(common, {
           console.error(err.message);
         });
       });
-      app.post('/admin/ajax/*', function(req, res) {
+      app.post('/*', function(req, res) {
         let options = {
           hostname: 'altrp.nz',
           path: req.url,

@@ -13,7 +13,8 @@
     "front-build": "webpack --config webpack.front.prod.js",
     "editor-build": "webpack --config webpack.editor.prod.js",
     "admin-build": "webpack --config webpack.admin.prod.js",
-    "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "pack": "gulp pack"
   },
   "dependencies": {
     "ace-builds": "^1.4.11",
@@ -66,7 +67,10 @@
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.41.6",
     "webpack-cli": "^3.1.1",
-    "webpack-dev-server": "^3.11.0",
-    "webpack-merge": "^4.2.2"
+    "webpack-dev-server": "^3.1.11",
+    "webpack-merge": "^4.2.2",
+    "gulp": "^4.0.2",
+    "gulp-zip": "^5.0.1",
+    "gulp-clean": "^0.4.0"
   }
 }

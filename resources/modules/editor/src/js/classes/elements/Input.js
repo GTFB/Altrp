@@ -235,11 +235,10 @@ class Input extends BaseElement{
       type: CONTROLLER_SLIDER,
       label: 'Opacity',
       default:{
-        size: 1,
+        size: 0,
       },
       max: 1,
       min: 0,
-      step: 0.01,
       rules: {
         '{{ELEMENT}} input': 'opacity: {{SIZE}}',
       },
@@ -360,6 +359,13 @@ class Input extends BaseElement{
       rules: {
         '{{ELEMENT}} input': 'border-radius: {{SIZE}}{{UNIT}}',
       },
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('transform_section', {
+      tab: TAB_STYLE,
+      label: 'Transform'
     });
 
     this.endControlSection();

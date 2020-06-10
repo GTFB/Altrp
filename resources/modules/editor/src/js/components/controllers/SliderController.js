@@ -34,7 +34,7 @@ class SliderController extends Component {
   sliderChange(e) {
     this._changeValue({
       ...this.state.value,
-      size:e.target.value*this.step
+      size:e.target.value
     });
     // console.log(this.state.value)
   };
@@ -48,8 +48,9 @@ class SliderController extends Component {
   inputUpdate (e) {
     this._changeValue({
       ...this.state.value,
-      size:e.target.value*this.step
+      size:e.target.value
     });
+    console.log(e.target.value)
   }
   render() {
     return <div className="controller-container controller-container_slider">

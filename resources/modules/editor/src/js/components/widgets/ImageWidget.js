@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import { renderAsset } from "../../helpers"
 
 class ImageWidget extends Component {
   constructor(props){
@@ -10,10 +11,14 @@ class ImageWidget extends Component {
     if(window.elementDecorator){
       window.elementDecorator(this);
     }
+    
   }
 
   render(){
-    return <div>aaaaaa</div>;
+    return renderAsset(this.state.settings.content_media, {
+      className: this.state.settings.position_css_classes || "",
+      id: this.state.settings.position_css_id || "", 
+    });
   }
 }
 

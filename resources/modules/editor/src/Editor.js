@@ -9,7 +9,6 @@ import EditorWindow from "./js/components/EditorWindow";
 import HistoryPanel from "./js/components/HistoryPanel";
 import UpdateButton from "./js/components/UpdateButton";
 import { CONSTANTS } from "./js/helpers";
-import Styles from "./js/components/Styles";
 import { stopDrag } from "./js/store/element-drag/actions";
 import AssetsBrowser from "./js/classes/modules/AssetsBrowser";
 
@@ -39,8 +38,8 @@ class Editor extends Component {
     super(props);
     window.altrpEditor = this;
     this.state = {
-      // activePanel: 'widgets',
-      activePanel: "settings",
+      activePanel: 'widgets',
+      // activePanel: "settings",
       templateStatus: CONSTANTS.TEMPLATE_UPDATED,
     };
     this.openPageSettings = this.openPageSettings.bind(this);

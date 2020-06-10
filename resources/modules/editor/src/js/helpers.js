@@ -93,6 +93,12 @@ export function renderAsset(asset, props = null) {
     case 'image': {
       return React.createElement('img', {...props, src: asset.url})
     }
+    case 'media': {
+      return React.createElement('img', {...props, src: asset.url})
+    }
+    case undefined: {
+      return ""
+    }
   }
   return '';
 }

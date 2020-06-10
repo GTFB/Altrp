@@ -1,19 +1,20 @@
 import BaseElement from "./BaseElement";
 import TextIcon from '../../../svgs/widget_text.svg';
 import {
-  CONTROLLER_TEXTAREA, 
-  CONTROLLER_SWITCHER, 
-  CONTROLLER_COLOR, 
-  TAB_ADVANCED, 
-  CONTROLLER_DIMENSIONS, 
-  CONTROLLER_SELECT2, 
-  CONTROLLER_SELECT, 
-  CONTROLLER_TEXT, 
-  CONTROLLER_SLIDER, 
-  TAB_CONTENT, 
-  CONTROLLER_LINK, 
-  TAB_STYLE, CONTROLLER_CHOOSE, 
-  CONTROLLER_NUMBER
+  CONTROLLER_TEXTAREA,
+  CONTROLLER_SWITCHER,
+  CONTROLLER_COLOR,
+  TAB_ADVANCED,
+  CONTROLLER_DIMENSIONS,
+  CONTROLLER_SELECT2,
+  CONTROLLER_SELECT,
+  CONTROLLER_TEXT,
+  CONTROLLER_SLIDER,
+  TAB_CONTENT,
+  CONTROLLER_LINK,
+  TAB_STYLE,
+  CONTROLLER_CHOOSE,
+  CONTROLLER_NUMBER, CONTROLLER_WYSIWYG
 } from "../modules/ControllersManager";
 import {advancedTabControllers} from "../../decorators/register-controllers";
 
@@ -47,73 +48,7 @@ class Text extends BaseElement{
 
     this.addControl('text_drop_cap', {
       type: CONTROLLER_SWITCHER,
-      label: 'drop cap',
-    });
-
-    this.endControlSection();
-
-    this.startControlSection('text_settings', {
-      tab: TAB_CONTENT,
-      label: 'Text Settings',
-    });
-
-    this.addControl('text_settings_alignment', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Alignment',
-      default: 1,
-      options:[
-        {
-          icon: 'add',
-          value: 'add',
-        }
-      ],
-    });
-
-
-    this.addControl('text_settings_html_tag', {
-      type: CONTROLLER_SELECT,
-      label: 'html tag',
-      default: 'p',
-      options: [
-        {
-          value: 'p',
-          label: 'default'
-        },
-        {
-          value: 'h1',
-          label: 'h1'
-        },
-        {
-          value: 'h2',
-          label: 'h2'
-        },
-        {
-          value: 'h3',
-          label: 'h3'
-        },
-        {
-          value: 'h4',
-          label: 'h4'
-        },
-        {
-          value: 'h5',
-          label: 'h5'
-        },
-        {
-          value: 'h6',
-          label: 'h6'
-        }
-      ]
-    });
-
-    this.addControl('text_link', {
-      type: CONTROLLER_LINK,
-      default: {
-        url: "",
-        attributes: "",
-        noFollow: false
-      },
-      label: 'link',
+      label: 'Drop Cap',
     });
 
     this.endControlSection();
