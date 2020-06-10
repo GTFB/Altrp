@@ -60,13 +60,18 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "admin/"),
-    publicPath: "/src/",
+    publicPath: "http://localhost:3002/src/",
     filename: "bundle.js"
   },
   devServer: {
     contentBase: path.join(__dirname, "public/"),
     port: 3000,
     publicPath: "http://localhost:3000/admin/",
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+    },
     hotOnly: true
   },
   plugins: [

@@ -14,6 +14,7 @@ class TextWidget extends Component {
 
   render(){
     return <div className="altrp-text" dangerouslySetInnerHTML={{__html: this.state.settings.text}}/>;
+
     
   }
 }

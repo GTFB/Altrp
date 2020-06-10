@@ -90,13 +90,17 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::post('/users/{user}/usermeta', "Users\UsersMeta@saveUserMeta");
     Route::delete('/users/{user}/roles', "Users\Users@detachRole");
 
+    Route::resource( 'areas', 'Admin\AreasController' );
+
+    Route::resource( 'templates', 'TemplateController' );
+    Route::resource( 'media', 'Admin\MediaController' );
   });
 
 });
-Route::resource( 'admin/ajax/areas', 'Admin\AreasController' );
 
-Route::resource( 'admin/ajax/templates', 'TemplateController' );
-Route::resource( 'admin/ajax/media', 'Admin\MediaController' );
+//Route::resource( 'admin/ajax/areas', 'Admin\AreasController' );
+//Route::resource( 'admin/ajax/templates', 'TemplateController' );
+//Route::resource( 'admin/ajax/media', 'Admin\MediaController' );
 
 Route::view('/admin/{path?}', 'admin')
   ->where('path', '.*')

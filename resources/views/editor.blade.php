@@ -13,11 +13,11 @@
   <script>
     let _token = '{{ csrf_token() }}';
   </script>
-  <script src="/modules/editor/editor.js" defer></script>
+{{--  <script src="{{ asset( '/modules/editor/editor.js' ) }}" defer></script>--}}
+  <script src="{{ altrp_asset( '/modules/editor/editor.js', 'http://localhost:3000/' ) }}" defer></script>
 
-  <!-- Fonts -->
   <link rel="stylesheet" href="/modules/editor/editor.css">
-  <link rel="dns-prefetch" href="//fonts.gstatic.com">
+  {{--<link rel="dns-prefetch" href="//fonts.gstatic.com">--}}
 
 </head>
 <body>
