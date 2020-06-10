@@ -9,6 +9,7 @@ function altrpZip() {
     './**/.htaccess',
     '!./public/storage',
     '!./public/storage/**',
+    '!./resources/modules/**',
     '!./.git/**',
     '!./.idea/**',
     '!./node_modules/**',
