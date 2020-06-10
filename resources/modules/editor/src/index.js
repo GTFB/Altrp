@@ -68,13 +68,14 @@ import("./Editor.js")
         styleLink.rel = "stylesheet";
         styleLink.href = "/modules/editor/editor.css";
         head.appendChild(styleLink);
-      } else {
+      } else
+        {
         let head = iframe.contentWindow.document.getElementsByTagName(
           "head"
         )[0];
         let script = iframe.contentWindow.document.createElement("script");
-        script.src = "/modules/editor/editor.js";
-        script.defer = "/modules/editor/editor.js";
+        script.src = "http://localhost:3000/src/bundle.js";
+        script.defer = "http://localhost:3000/src/bundle.js";
         head.appendChild(script);
       }
     };

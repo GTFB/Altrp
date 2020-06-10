@@ -67,13 +67,13 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "editor/"),
-    publicPath: "/editor/",
+    publicPath: "http://localhost:3000/src/",
     filename: "bundle.js"
   },
   devServer: {
     contentBase: path.join(__dirname, "public/"),
     port: 3000,
-    publicPath: "http://localhost:3000/editor/",
+    publicPath: "http://localhost:3000/src/",
     hotOnly: true
   },
   plugins: [

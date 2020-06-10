@@ -234,3 +234,23 @@ function checkAndUseSemVer( $version )
 
   return $semver;
 }
+
+/**
+ * Возвращает адрес статики в зависимости от среды разработки
+ * @param string $path
+ * @param string $domain
+ * @return string
+ */
+function altrp_asset( $path, $domain = 'http://localhost:3002/'){
+  if( env( 'APP_ENV', 'production' ) !== 'local' ){
+    return asset( $path ) . '?' . config( 'app.altrp_version' ) ;
+  }
+  $client = new \GuzzleHttp\Client();
+  try{
+    $client->get( $domain )->getStatusCode() ;
+  } catch (Exception $e){
+    return asset( $path );
+  }
+
+  return  $domain . 'src/bundle.js' ;
+}
