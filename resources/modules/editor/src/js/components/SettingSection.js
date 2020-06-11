@@ -1,25 +1,40 @@
 import React, {Component} from "react";
 import ChevronIcon from '../../svgs/chevron.svg'
 import Controller from "../classes/Controller";
+import { set } from "lodash";
 
 class SettingSection extends Component {
   constructor(props){
     super(props);
     this.state = {
       open: props.open,
+      active: props.open
     };
     this.toggle = this.toggle.bind(this);
+    const open = props.open;
   }
-  toggle(){
+  toggle(e){
     this.setState({
-      open: !this.state.open
+      open: !this.state.open,
+      active: e.currentTarget.dataset.key
     });
-  }
+
+    let settingsControllers = document.getElementById('settingsControllers');
+
+    if(document.getElementById("settingsSection" + this.props.active).classList.contains('open') == false) {
+      for(let count = 0; count < settingsControllers.children.length; count++) {
+        document.getElementById("settingsSection" + count).classList.remove('open')
+      }
+      document.getElementById("settingsSection" + this.props.active).classList.add('open')
+    } else {
+      document.getElementById("settingsSection" + this.props.active).classList.remove('open');
+    };
+  };
   render() {
     let controllers = this.props.controls || [];
-    let sectionClasses = 'settings-section ' + (this.state.open ? 'open' : '');
-    return <div className={sectionClasses}>
-      <div className="settings-section__title d-flex " onClick={this.toggle}>
+    return <div className="settings-section" id={"settingsSection" + this.props.active}>
+    <div className="settings-section">
+      <div className="settings-section__title d-flex " data-open={true} data-key={this.props.active} onClick={this.toggle}>
         <div className="settings-section__icon d-flex ">
           <ChevronIcon/>
         </div>
@@ -36,6 +51,7 @@ class SettingSection extends Component {
           )
         }
       </div>
+    </div>
     </div>
   }
 }

@@ -49,6 +49,7 @@ class SliderController extends Component {
       ...this.state.value,
       size:e.target.value
     });
+    // console.log(e.target.value)
   }
   render() {
     return <div className="controller-container controller-container_slider">

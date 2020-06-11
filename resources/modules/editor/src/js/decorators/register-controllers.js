@@ -24,6 +24,9 @@ export function advancedTabControllers(element) {
       'element_margin', {
         type: CONTROLLER_DIMENSIONS,
         label: 'Margin',
+        default: {
+          bind: true
+        },
         units:[
           'px',
           '%',
@@ -39,6 +42,9 @@ export function advancedTabControllers(element) {
     'element_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
+      default: {
+        bind: true
+      },
       units:[
         'px',
         '%',
@@ -104,6 +110,9 @@ export function advancedTabControllers(element) {
     'element_border_width', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Width',
+      default: {
+        bind: true
+      },
       units:[
         'px',
         '%',
@@ -285,6 +294,9 @@ export function advancedTabControllers(element) {
     'element_position_top_bottom_right_left', {
       type: CONTROLLER_DIMENSIONS,
       label: 'position',
+      default: {
+        bind: true
+      },
       units:[
         'px',
         '%',

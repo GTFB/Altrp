@@ -16,14 +16,28 @@ class DimensionsController extends Component {
     if(value === null && this.props.default){
       value = this.props.default ;
     }
+    const fillBind = null;
+    const stylesBind = {
+      transition: "0s",
+      backgroundColor: "#8E94AA",
+      borderColor: "#8E94AA",
+    };
+    console.log(this.value)
+    const bind = this.props.default.bind || true;
+    if(bind == false) {
+      this.fillBind = "#8E94AA";
+      this.stylesBind = {
+        backgroundColor: "none"
+      };
+    }
     value = value || {};
     let units = this.props.units || ['px'];
     value.unit = value.unit || units[0];
     this.state = {
       value,
-      fill: "#FFF", 
+      fill: this.fillBind || "#FFF", 
       active: true,
-      styles: {
+      styles: this.stylesBind || {
         transition: "0s",
         backgroundColor: "#8E94AA",
         borderColor: "#8E94AA",
@@ -126,6 +140,9 @@ class DimensionsController extends Component {
         }
       })
     };
+    this._changeValue({
+      bind: !this.state.value.bind
+    })
   }
 
   getDefaultValue(){
