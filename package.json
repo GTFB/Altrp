@@ -21,6 +21,7 @@
     "react": "^16.8.5",
     "react-ace": "^8.1.0",
     "react-color": "^2.18.1",
+    "react-contexify": "^4.1.1",
     "react-custom-scrollbars": "^4.2.1",
     "react-dnd": "^10.0.2",
     "react-dnd-html5-backend": "^10.0.2",
