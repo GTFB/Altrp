@@ -36,9 +36,9 @@ class AssetsBrowser extends Component {
     this.mediaResource = new Resource({ route: "/admin/ajax/media" });
   }
   async componentDidMount() {
-    let res = await this.mediaResource.getAll();
+    try {
+      let res = await this.mediaResource.getAll();
 
-    if (res) {
       this.setState(state => {
         state = { ...state, mediaAssets: res };
         if (state.activeTab === "media") {
@@ -46,6 +46,8 @@ class AssetsBrowser extends Component {
         }
         return state;
       });
+    } catch (error) {
+      console.log("error", error);
     }
   }
   getAssets(tab) {

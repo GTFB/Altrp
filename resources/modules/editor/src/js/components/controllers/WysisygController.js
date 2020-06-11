@@ -1,12 +1,13 @@
-import React, {Component, Suspense} from "react";
-import {connect} from "react-redux";
+import React, { Component, Suspense } from "react";
+import { connect } from "react-redux";
 import DynamicIcon from "../../../svgs/dynamic.svg";
 import controllerDecorate from "../../decorators/controller";
-// import ReactQuill from "react-quill";
-let ReactQuill = React.lazy(() => import('react-quill'));
-console.log(ReactQuill);
-console.log(Suspense);
+//import ReactQuill from "react-quill";
+let ReactQuill = React.lazy(() => import("react-quill"));
+//console.log(ReactQuill);
+//console.log(Suspense);
 
+import "../../../sass/wysiwyg.scss";
 
 class WysiwygController extends Component {
   constructor(props) {
@@ -17,7 +18,7 @@ class WysiwygController extends Component {
       value = this.props.default;
     }
     value = value || "";
-    this.state = {value};
+    this.state = { value };
     controllerDecorate(this);
   }
 
@@ -31,28 +32,27 @@ class WysiwygController extends Component {
 
   render() {
     return (
-        <div className="controller-container controller-container_wysiwyg">
-          <div className="controller-container__label">{this.props.label}</div>
-          <div className="controller-container__dynamic">
-            Dynamic
-            <DynamicIcon/>
-          </div>
-          <Suspense fallback={<div>Loading...</div>}>
-            <ReactQuill
-                className="controller-container__wysiwyg"
-                theme="snow"
-                onChange={this.changeValue}
-                value={this.state.value}
-            />
-          </Suspense>
+      <div className="controller-container controller-container_wysiwyg">
+        <div className="controller-container__label">{this.props.label}</div>
+        <div className="controller-container__dynamic">
+          Dynamic
+          <DynamicIcon />
         </div>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ReactQuill
+            theme="snow"
+            onChange={this.changeValue}
+            value={this.state.value}
+          />
+        </Suspense>
+      </div>
     );
   }
 }
 
 function mapStateToProps(state) {
   return {
-    currentElement: state.currentElement.currentElement,
+    currentElement: state.currentElement.currentElement
   };
 }
 
