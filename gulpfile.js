@@ -10,6 +10,8 @@ function altrpZip() {
     '!./public/storage',
     '!./public/storage/**',
     '!./resources/modules/**',
+    '!./resources/sass/**',
+    '!./resources/out/**',
     '!./.git/**',
     '!./.idea/**',
     '!./node_modules/**',

@@ -94,6 +94,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
 
     Route::resource( 'templates', 'TemplateController' );
     Route::resource( 'media', 'Admin\MediaController' );
+
+    /**
+     * Updates Check
+     */
+    Route::post( 'check_update', 'Admin\UpdateController@check_update' )->name( 'admin.check_update' );
   });
 
 });
