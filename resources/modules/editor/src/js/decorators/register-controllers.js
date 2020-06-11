@@ -295,7 +295,8 @@ export function advancedTabControllers(element) {
       type: CONTROLLER_DIMENSIONS,
       label: 'position',
       default: {
-        bind: true
+        bind: true,
+        unit:'px'
       },
       units:[
         'px',

@@ -141,7 +141,12 @@ class DimensionsController extends Component {
       })
     };
     this._changeValue({
-      bind: !this.state.value.bind
+      bind: !this.state.value.bind,
+      right: this.state.value.right,
+      bottom: this.state.value.bottom,
+      top: this.state.value.top,
+      left: this.state.value.left,
+      unit: this.state.value.unit
     })
   }
 
