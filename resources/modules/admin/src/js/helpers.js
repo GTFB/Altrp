@@ -22,3 +22,7 @@ export async function logout() {
   let res = await (new Resource({route: '/logout'})).post();
   redirect(res.location)
 }
+
+export function pageReload() {
+  document.location.reload(true);
+}

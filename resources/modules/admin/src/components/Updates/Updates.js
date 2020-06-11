@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import {setAdminDisable, setAdminEnable} from "../../js/store/admin-state/actions";
 import store from '../../js/store/store';
+import {pageReload} from "../../js/helpers";
 
 /**
  * Компонент вкладки обновления админки
@@ -13,7 +14,7 @@ class Updates extends Component {
     this.state = {
       needUpdate: false,
     };
-    this.updateAltrp = this.updateAltrp.bind();
+    this.updateAltrp = this.updateAltrp.bind(this);
   }
   async componentDidMount(){
     store.dispatch(setAdminDisable());
@@ -48,7 +49,7 @@ class Updates extends Component {
   async updateAltrp(){
     store.dispatch(setAdminDisable());
     let res = await (new Resource({route:'/admin/ajax/update_altrp'})).post( {});
-    console.log(res);
+    res.result ? pageReload() : this.setNeedUpdate();
     store.dispatch(setAdminEnable());
   }
 
