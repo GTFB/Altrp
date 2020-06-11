@@ -36,9 +36,35 @@ import UserTopPanel from "./components/UserTopPanel";
 import {Redirect} from "react-router";
 
 class Admin extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      adminState: {
+        adminEnable: true,
+      }
+    };
+  }
+
+  componentDidMount(){
+    store.subscribe(this.updateAdminState.bind(this));
+  }
+
+  /**
+   * Срабатвыает, когда меняется adminState в store
+   */
+  updateAdminState(){
+    let adminState = store.getState().adminState;
+    this.setState(state=>{
+      return{...state,adminState:{...adminState}}
+    })
+  }
   render() {
+    let adminClasses = ['admin'];
+    if(!this.state.adminState.adminEnable){
+      adminClasses.push('pointer-event-none');
+    }
     return <Provider store={store}>
-      <div className="admin">
+      <div className={adminClasses.join(' ')}>
         <Router>
           <nav className="admin-nav">
             <div className="admin-nav-top">

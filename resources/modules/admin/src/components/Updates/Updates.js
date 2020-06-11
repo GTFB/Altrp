@@ -1,5 +1,7 @@
 import React, {Component} from "react";
 import Resource from "../../../../editor/src/js/classes/Resource";
+import {setAdminDisable, setAdminEnable} from "../../js/store/admin-state/actions";
+import store from '../../js/store/store';
 
 /**
  * Компонент вкладки обновления админки
@@ -11,13 +13,15 @@ class Updates extends Component {
     this.state = {
       needUpdate: false,
     };
+    this.updateAltrp = this.updateAltrp.bind();
   }
   async componentDidMount(){
+    store.dispatch(setAdminDisable());
     let res = await (new Resource({route:'/admin/ajax/check_update'})).post( {});
-    console.log(res);
-    if(res.result){
+    if(!res.result){
       this.setNeedUpdate();
     }
+    store.dispatch(setAdminEnable());
   }
 
   /**
@@ -38,6 +42,16 @@ class Updates extends Component {
     })
   }
 
+  /**
+   * Отправляет запрос на обноление приложения
+   */
+  async updateAltrp(){
+    store.dispatch(setAdminDisable());
+    let res = await (new Resource({route:'/admin/ajax/update_altrp'})).post( {});
+    console.log(res);
+    store.dispatch(setAdminEnable());
+  }
+
   render() {
     let data = {
       updateMessage: 'You have the latest version of Altrp.',
@@ -51,7 +65,7 @@ class Updates extends Component {
       </div>
       {
         this.state.needUpdate ?
-          <button className="btn_success btn">Update</button>
+          <button className="btn_success btn" onClick={this.updateAltrp}>Update</button>
           :  <button className="btn">Re-install Now</button>}
     </div>
 

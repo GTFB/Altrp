@@ -99,6 +99,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
      * Updates Check
      */
     Route::post( 'check_update', 'Admin\UpdateController@check_update' )->name( 'admin.check_update' );
+    Route::post( 'update_altrp', 'Admin\UpdateController@update_altrp' )->name( 'admin.update_altrp' );
   });
 
 });
