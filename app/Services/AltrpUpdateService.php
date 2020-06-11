@@ -4,6 +4,7 @@ namespace App\Services;
 
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -11,8 +12,8 @@ use ZipArchive;
 
 class AltrpUpdateService
 {
-//  const UPDATE_DOMAIN = 'https://up.altrp.com/';
-  const UPDATE_DOMAIN = 'http://altrp-servise.nz/';
+  const UPDATE_DOMAIN = 'https://up.altrp.com/';
+//  const UPDATE_DOMAIN = 'http://altrp-servise.nz/';
   const PRODUCT_NAME = 'altrp';
   private $client;
 
@@ -74,6 +75,7 @@ class AltrpUpdateService
    * @return bool
    */
   private function update_files(){
+    Artisan::call( 'config:cache');
     if( env( 'APP_ENV', 'local' ) === 'local' ){
       return true;
     }

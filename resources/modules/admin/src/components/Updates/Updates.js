@@ -19,7 +19,7 @@ class Updates extends Component {
   async componentDidMount(){
     store.dispatch(setAdminDisable());
     let res = await (new Resource({route:'/admin/ajax/check_update'})).post( {});
-    if(!res.result){
+    if(res.result){
       this.setNeedUpdate();
     }
     store.dispatch(setAdminEnable());

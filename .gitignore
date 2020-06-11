@@ -13,3 +13,4 @@ yarn-error.log
 /nbproject
 .idea
 storage/installed
+gulpfile.js

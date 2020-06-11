@@ -333,12 +333,9 @@ class InstallationController extends Controller
 
     // Set app key
     $key = 'base64:' . base64_encode( $this->randomString( 32 ) );
-    $key = config( 'app.key', $key );
-
 
     // Get app version
     $version = getLatestVersion();
-
 
     // Generate .env file content
     $content = '';

@@ -14,7 +14,7 @@
     "editor-build": "webpack --config webpack.editor.prod.js",
     "admin-build": "webpack --config webpack.admin.prod.js",
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "pack": "gulp pack"
+    "pack": "npm run front-build && npm run editor-build && npm run admin-build && gulp pack"
   },
   "dependencies": {
     "ace-builds": "^1.4.11",

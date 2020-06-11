@@ -34,6 +34,9 @@ function altrpZip() {
     '!./.env',
     '!./.babelrc',
     '!./.env.example',
+    '!./.gitattributes',
+    '!./.gitignore',
+    '!./.editorconfig',
   ]).pipe(zip('altrp.zip'))
       .pipe(gulp.dest('../'));
 }
