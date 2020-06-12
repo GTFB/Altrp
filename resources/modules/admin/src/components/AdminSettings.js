@@ -11,15 +11,13 @@ export default class AdminSettings extends Component {
     super(props);
     this.switchTab = this.switchTab.bind(this);
     this.state = {
-      activeTab: 3,
+      activeTab: parseInt(window.location.hash[1]),
     };
   }
 
-  switchTab(e){
-    let activeTab = e.target.dataset.hash;
-    this.setState(state=>{
-      return{...state, activeTab}
-    })
+  switchTab(activeTab){
+    window.location.hash = activeTab + '';
+    this.setState(state=>{return{ ...state,activeTab }})
   }
 
   render() {
@@ -31,21 +29,23 @@ export default class AdminSettings extends Component {
             className="admin-breadcrumbs__current">Builder</span></div>
       </div>
       <div className="admin-content">
-        <Tabs>
+        <Tabs selectedIndex={this.state.activeTab}
+              onSelect={this.switchTab}
+        >
           <TabList className="nav nav-pills admin-pills">
-            <Tab data-hash={1} onClick={this.switchTab} selected={this.state.activeTab === 1}>
+            <Tab>
               GENERAL
             </Tab>
-            <Tab data-hash={2} onClick={this.switchTab} selected={this.state.activeTab === 2}>
+            <Tab>
               STYLE
             </Tab>
-            <Tab data-hash={3} onClick={this.switchTab} selected={this.state.activeTab === 3}>
+            <Tab >
               INTEGRATIONS
             </Tab>
-            <Tab data-hash={4} onClick={this.switchTab} selected={this.state.activeTab === 4}>
+            <Tab >
               ADVANCED
             </Tab>
-            <Tab data-hash={5} onClick={this.switchTab} selected={this.state.activeTab === 5}>
+            <Tab >
               UPDATES
             </Tab>
           </TabList>
