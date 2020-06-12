@@ -1,54 +1,41 @@
-import React, { Component, Suspense } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import DynamicIcon from "../../../svgs/dynamic.svg";
-import controllerDecorate from "../../decorators/controller";
-//import ReactQuill from "react-quill";
-let ReactQuill = React.lazy(() => import("react-quill"));
-//console.log(ReactQuill);
-//console.log(Suspense);
 
-import "../../../sass/wysiwyg.scss";
+const JoditEditor = React.lazy(() => import("jodit-react"));
 
-class WysiwygController extends Component {
-  constructor(props) {
-    super(props);
-    this.changeValue = this.changeValue.bind(this);
-    let value = this.props.currentElement.getSettings(this.props.controlId);
-    if (value === null && this.props.default) {
-      value = this.props.default;
-    }
-    value = value || "";
-    this.state = { value };
-    controllerDecorate(this);
-  }
+const WysiwygController = ({
+  currentElement,
+  controller,
+  controlId,
+  label
+}) => {
+  const value = currentElement.getSettings(controlId);
+  const [content, setContent] = useState(value);
 
-  changeValue(value) {
-    this._changeValue(value);
-  }
+  // Изменяем контент в предпросмотре
+  useEffect(() => {
+    controller.changeValue(content);
+  }, [content]);
 
-  getDefaultValue() {
-    return "";
-  }
+  // Изменяем содержимое wysiwyg если был выбран другой элемент
+  useEffect(() => {
+    setContent(value);
+  }, [currentElement]);
 
-  render() {
-    return (
-      <div className="controller-container controller-container_wysiwyg">
-        <div className="controller-container__label">{this.props.label}</div>
-        <div className="controller-container__dynamic">
-          Dynamic
-          <DynamicIcon />
-        </div>
-        <Suspense fallback={<div>Loading...</div>}>
-          <ReactQuill
-            theme="snow"
-            onChange={this.changeValue}
-            value={this.state.value}
-          />
-        </Suspense>
+  return (
+    <div className="controller-container controller-container_wysiwyg">
+      <div className="controller-container__label">{label}</div>
+      <div className="controller-container__dynamic">
+        Dynamic
+        <DynamicIcon />
       </div>
-    );
-  }
-}
+      <Suspense fallback={<div>Loading...</div>}>
+        <JoditEditor onChange={value => setContent(value)} value={content} />
+      </Suspense>
+    </div>
+  );
+};
 
 function mapStateToProps(state) {
   return {

@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,18 +12,20 @@
 
   <!-- Scripts -->
   <script>
-    let _token = '{{ csrf_token() }}';
+  let _token = '{{ csrf_token() }}';
   </script>
-{{--  <script src="{{ asset( '/modules/editor/editor.js' ) }}" defer></script>--}}
-  <script src="{{ altrp_asset( '/modules/editor/editor.js', 'http://localhost:3000/' ) }}" defer></script>
+  {{--  <script src="{{ asset( '/modules/editor/editor.js' ) }}" defer></script>--}}
+  <script src="{{ altrp_asset( '/modules/editor/editor.js', 'http://localhost:3000/' ) }}" crossorigin defer></script>
 
   <link rel="stylesheet" href="/modules/editor/editor.css">
   {{--<link rel="dns-prefetch" href="//fonts.gstatic.com">--}}
 
 </head>
-<body>
-<div id="editor">
 
-</div>
+<body>
+  <div id="editor">
+
+  </div>
 </body>
+
 </html>
