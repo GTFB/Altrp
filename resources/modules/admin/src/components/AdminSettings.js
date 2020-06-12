@@ -2,10 +2,28 @@ import React, {Component} from "react";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import 'react-tabs/style/react-tabs.scss';
 import Updates from "./Updates/Updates";
+import AdminTab from "./AdminTab/AdminTab";
+import cx from 'clsx';
 
 
 export default class AdminSettings extends Component {
+  constructor(props){
+    super(props);
+    this.switchTab = this.switchTab.bind(this);
+    this.state = {
+      activeTab: 3,
+    };
+  }
+
+  switchTab(e){
+    let activeTab = e.target.dataset.hash;
+    this.setState(state=>{
+      return{...state, activeTab}
+    })
+  }
+
   render() {
+    console.log(this.state.activeTab);
     return <div className="admin-settings admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs"><a className="admin-breadcrumbs__link" href="#">Settings</a><span
@@ -15,19 +33,19 @@ export default class AdminSettings extends Component {
       <div className="admin-content">
         <Tabs>
           <TabList className="nav nav-pills admin-pills">
-            <Tab>
+            <Tab data-hash={1} onClick={this.switchTab} selected={this.state.activeTab === 1}>
               GENERAL
             </Tab>
-            <Tab>
+            <Tab data-hash={2} onClick={this.switchTab} selected={this.state.activeTab === 2}>
               STYLE
             </Tab>
-            <Tab>
+            <Tab data-hash={3} onClick={this.switchTab} selected={this.state.activeTab === 3}>
               INTEGRATIONS
             </Tab>
-            <Tab>
+            <Tab data-hash={4} onClick={this.switchTab} selected={this.state.activeTab === 4}>
               ADVANCED
             </Tab>
-            <Tab>
+            <Tab data-hash={5} onClick={this.switchTab} selected={this.state.activeTab === 5}>
               UPDATES
             </Tab>
           </TabList>
