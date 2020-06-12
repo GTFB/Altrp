@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "ace-builds": "^1.4.11",
+    "ftp": "^0.3.10",
     "react": "^16.8.5",
     "react-ace": "^8.1.0",
     "react-color": "^2.18.1",
