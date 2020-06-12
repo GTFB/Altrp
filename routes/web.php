@@ -14,6 +14,14 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+
+/**
+ * Upgrade
+ */
+Route::group(['namespace' => 'App\Http\Controllers', 'middleware' => ['web']], function () {
+  Route::get('upgrade', 'UpgradeController@version');
+});
+
 /**
  * Installation
  */

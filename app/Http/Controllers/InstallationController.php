@@ -244,11 +244,6 @@ class InstallationController extends Controller
         ( is_writable( storage_path( 'app/public/app' ) ) ) &&
         getPerms( storage_path( 'app/public/app' ) ) >= 755 )
       &&
-      ( file_exists( storage_path( 'app/public/app/categories/custom' ) ) &&
-        is_dir( storage_path( 'app/public/app/categories/custom' ) ) &&
-        ( is_writable( storage_path( 'app/public/app/categories/custom' ) ) ) &&
-        getPerms( storage_path( 'app/public/app/categories/custom' ) ) >= 755 )
-      &&
       ( file_exists( storage_path( 'app/public/app/logo' ) ) &&
         is_dir( storage_path( 'app/public/app/logo' ) ) &&
         ( is_writable( storage_path( 'app/public/app/logo' ) ) ) &&
@@ -396,7 +391,7 @@ class InstallationController extends Controller
 
   private function migrate( Request $request )
   {
-    Artisan::call( 'config:cache');
+    Artisan::call( 'config:clear');
     Artisan::call( 'migrate', [ '--force' => true ] );
 
     $user = new User( [
@@ -415,5 +410,11 @@ class InstallationController extends Controller
     $request->session()->put('install_finish', true);
     Auth::loginUsingId( $user->id, true );
     Artisan::call( 'storage:link' );
+
+    // Clear all Cache
+    Artisan::call('cache:clear');
+    sleep(2);
+    Artisan::call('view:clear');
+    sleep(1);
   }
 }

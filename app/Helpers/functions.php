@@ -51,7 +51,27 @@ function admin_uri($path = '')
 }
 
 function updateIsAvailable(){
-  return false;
+
+  // Check if the '.env' file exists
+  if( env( 'APP_ENV', 'local' ) === 'local' ){
+    return false;
+  }
+  if ( ! file_exists( base_path( '.env' ) ) ) {
+    return false;
+  }
+
+  $updateIsAvailable = false;
+
+  // Get eventual new version value & the current (installed) version value
+  $lastVersion = getLatestVersion();
+  $currentVersion = getCurrentVersion();
+
+  // Check the update
+  if ( version_compare( $lastVersion, $currentVersion, '>' ) ) {
+    $updateIsAvailable = true;
+  }
+
+  return $updateIsAvailable;
 }
 
 /**
@@ -236,6 +256,26 @@ function checkAndUseSemVer( $version )
 }
 
 /**
+ * Get the current version value
+ *
+ * @return null|string
+ */
+function getCurrentVersion()
+{
+  // Get the Current Version
+  $version = null;
+  if ( \Jackiedo\DotenvEditor\Facades\DotenvEditor::keyExists( 'APP_VERSION' ) ) {
+    try {
+      $version = \Jackiedo\DotenvEditor\Facades\DotenvEditor::getValue( 'APP_VERSION' );
+    } catch ( \Exception $e ) {
+    }
+  }
+  $version = checkAndUseSemVer( $version );
+
+  return $version;
+}
+
+/**
  * Возвращает адрес статики в зависимости от среды разработки
  * @param string $path
  * @param string $domain
@@ -243,7 +283,7 @@ function checkAndUseSemVer( $version )
  */
 function altrp_asset( $path, $domain = 'http://localhost:3002/'){
   if( env( 'APP_ENV', 'production' ) !== 'local' ){
-    return asset( $path ) . '?' . config( 'app.altrp_version' ) ;
+    return asset( $path ) . '?' . getCurrentVersion() ;
   }
   $client = new \GuzzleHttp\Client();
   try{
