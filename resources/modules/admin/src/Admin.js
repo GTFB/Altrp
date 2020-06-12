@@ -39,8 +39,9 @@ class Admin extends Component {
       <div className="admin">
         <Router>
           <nav className="admin-nav">
-            <div className="admin-nav-top">
-              <AdminLogo/>
+            <div className="admin-nav-top nav-logo">
+                <AdminLogo/>
+            </div>
               <ul className="admin-nav-list">
                 <li>
                   <Link to="/admin/dashboard" className="admin-nav-list__link">
@@ -97,7 +98,6 @@ class Admin extends Component {
                   </Link>
                 </li>
               </ul>
-            </div>
           </nav>
           <Switch>
             <Route path="/admin/settings">

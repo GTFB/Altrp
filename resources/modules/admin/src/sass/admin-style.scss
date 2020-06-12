@@ -7,21 +7,26 @@
 @import "components/admin-modal";
 @import "components/admin-assets";
 @import "components/admin-settings";
+@import "components/admin-users";
 
 
 .admin {
   display: flex;
   height: 100vh;
+    .nav-logo{
+        background-color: #2A2D36;
+    }
   &-nav {
-    &-top {
-      background-color: $dark-purple;
+      background-color: #343B4C;
       width: 271px;
       height: 100vh;
+    &-top {
+      padding: 8px;
     }
     &-list {
       &__link{
         display: flex;
-        padding: 10px 20px;
+        padding: 6px;
         color: #fff;
         font-size: 17px;
         font-weight: 500;
@@ -34,6 +39,7 @@
         & svg{
           position: relative;
           top: 1px;
+          margin: 3px 16px 0 7px;
         }
       }
     }
@@ -57,7 +63,7 @@
 }
 li {
     list-style-type: none;
-    background-color: $dark-purple;
+
     &:hover{
         background-color: $purple;
     }
