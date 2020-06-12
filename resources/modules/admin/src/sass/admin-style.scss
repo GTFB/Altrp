@@ -14,6 +14,8 @@
   display: flex;
   height: 100vh;
   &-nav {
+    position: relative;
+    overflow: hidden;
     &-top {
       background-color: $dark-purple;
       width: 271px;
@@ -37,6 +39,16 @@
           top: 1px;
         }
       }
+      &_pages{
+        position: absolute;
+        top: 30px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: $dark-purple;
+        transform: translate(100%, 0);
+        transition-duration: .3s;
+      }
     }
   }
   &-content {
@@ -46,6 +58,14 @@
     margin-bottom: 15px;
     font-weight: 600;
     font-size: 18px;
+  }
+  &__bars{
+    cursor: pointer;
+  }
+  &_pages-show{
+    & .admin-nav-list_pages{
+      transform: translate(0, 0);
+    }
   }
 }
 .icon {
