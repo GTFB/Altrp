@@ -69,7 +69,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "editor/"),
-    publicPath: "http://localhost:3001/",
+    publicPath: "http://localhost:3001/src/",
     chunkFilename: '[name].bundle.js',
     filename: "bundle.js"
   },
