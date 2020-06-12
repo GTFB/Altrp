@@ -67,6 +67,7 @@
     "resolve-url-loader": "^2.3.1",
     "sass": "^1.26.8",
     "sass-loader": "^8.0.2",
+    "ssh2-sftp-client": "^5.1.2",
     "style-loader": "^0.23.0",
     "svg-inline-loader": "^0.8.2",
     "vue": "^2.5.17",
