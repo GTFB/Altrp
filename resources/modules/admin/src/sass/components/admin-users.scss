@@ -45,23 +45,43 @@
    }
    & .table{
         border-bottom: 1px solid #D5D7DE;
-        font-family: Montserrat;
+        font-family: Roboto;
         font-style: normal;
-        font-weight: 600;
-        font-size: 16px;
-        line-height: 20px;
-        /* identical to box height */
-
-        text-transform: uppercase;
+        font-size: 15px;
+        line-height: 15px;
+        & thead{
+            text-transform: uppercase;
+            font-weight: 600;
+            font-family: Montserrat;
+        }
+        & td{
+            vertical-align: middle;
+            & a{
+                font-family: Roboto;
+                color: #274BC8;
+                cursor: pointer;
+            }
+        }
         & .input-users{
             margin-right: 10px;
         }
-        & .users-svg{
+        & .vector-svg{
             position: relative;
-            top: 1px;
-            margin: 3px 16px 0 7px;
+            margin-left: 8px;
             width: 16px;
             height: 16px;
+            display: inline-block;
+            align-items: center;
+            fill: red;
+        }
+        .role-svg{
+            transform: rotate(180deg);
+        }
+        .users-svg{
+            position: relative;
+            margin-right: 5px;
+            max-width: 36px;
+            max-height: 36px;
             display: inline-block;
             align-items: center;
         }
