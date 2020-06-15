@@ -59,16 +59,30 @@ class Text extends BaseElement{
 
     this.addControl('text_settings_alignment', {
       type: CONTROLLER_CHOOSE,
-      label: 'Alignment',
-      default: 1,
+      label: 'Choose Content',
+      default: 'left',
       options:[
         {
-          icon: 'add',
-          value: 'add',
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+        {
+          icon: 'in_width',
+          value: 'justify',
         }
       ],
+      rules: {
+            '{{ELEMENT}}': 'text-align: {{VALUE}};',
+      },
     });
-
 
     this.addControl('text_settings_html_tag', {
       type: CONTROLLER_SELECT,
@@ -211,6 +225,31 @@ class Text extends BaseElement{
       },
     });
 
+    this.addControl('text_style_position_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'margin',
+      default:{
+        top: 5,
+        right: 0,
+        bottom: 5,
+        left: 0,
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-text': [ 
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
     this.addControl('text_position_z_index', {
       type: CONTROLLER_NUMBER,
       label: 'z-index',
@@ -231,8 +270,8 @@ class Text extends BaseElement{
       type: CONTROLLER_COLOR,
       label: 'background color',
       default: {
-        color: "rgb(234, 234, 234)",
-        colorPickedHex: "#EAEAEA",
+        color: "",
+        colorPickedHex: "",
       },
       presetColors: [
         "#eaeaea",
@@ -362,7 +401,7 @@ class Text extends BaseElement{
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
       default:{
-        size: 1,
+        size: 0,
         unit: 'px',
       },
       units:[
@@ -370,9 +409,8 @@ class Text extends BaseElement{
         '%',
         'vh',
       ],
-      max: 1,
+      max: 100,
       min: 0,
-      step: 0.01,
       rules: {
         '{{ELEMENT}} .altrp-text': 'border-radius: {{SIZE}}{{UNIT}}',
       },
@@ -385,11 +423,145 @@ class Text extends BaseElement{
       label: 'Tooltip'
     });
 
-    this.addControl('tex_advanced_tooltip_font', {
+    this.addControl('text_advanced_tooltip_active', {
+      type: CONTROLLER_SWITCHER,
+      label: 'tooltip active',
+      default: false
+    });
+    
+    this.addControl('text_advanced_tooltip_label', {
+      type: CONTROLLER_TEXT,
+      default: "tooltip",
+      label: 'label'
+    })
+
+    this.addControl('text_advanced_tooltip_color', {
+      type: CONTROLLER_COLOR,
+      label: 'background color',
+      default: {
+        color: "rgb(206,205,237)",
+        colorPickedHex: "#CECDED",
+      },
+      presetColors: [
+        "#eaeaea",
+        "#9c18a8"
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-tooltip': 'background: {{COLOR}};',
+        '{{ELEMENT}} .altrp-tooltip::after': 'border-color: transparent transparent {{COLOR}};'
+      },
+    });
+
+    this.addControl('text_advanced_tooltip_font_color', {
+      type: CONTROLLER_COLOR,
+      label: 'font color',
+      default: {
+        color: "rgb(0,0,0)",
+        colorPickedHex: "#000000",
+      },
+      presetColors: [
+        "#eaeaea",
+        "#9c18a8"
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-tooltip': 'color: {{COLOR}};',
+      },
+    });
+
+    this.addControl(
+      'text_advanced_tooltip_border_type', {
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        units:[
+          'px',
+          '%',
+          'vh',
+        ],
+        options:[
+          {
+            'value' : 'none',
+            'label' : 'None',
+          },
+          {
+            'value' : 'solid',
+            'label' : 'Solid',
+          },
+          {
+            'value' : 'double',
+            'label' : 'Double',
+          },
+          {
+            'value' : 'dotted',
+            'label' : 'Dotted',
+          },
+          {
+            'value' : 'dashed',
+            'label' : 'Dashed',
+          },
+          {
+            'value' : 'groove',
+            'label' : 'Groove',
+          },
+        ],
+        rules: {
+          '{{ELEMENT}} .altrp-tooltip': 'border-style: {{VALUE}};',
+        },
+      }
+    );
+  
+    this.addControl(
+      'text_advanced_tooltip_border_width', {
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        units:[
+          'px',
+          '%',
+          'vh',
+        ],
+        rules: {
+          '{{ELEMENT}} .altrp-tooltip': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        },
+      }
+    );
+  
+    this.addControl(
+      'text_advanced_tooltip_border_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+        default: {
+          color: "rgb(50,168,82)",
+          colorPickedHex: "#32a852",
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-tooltip': 'border-color: {{COLOR}};',
+        },
+      }
+    );
+    
+    this.addControl('text_advanced_tooltip_border_radius', {
+      type: CONTROLLER_SLIDER,
+      label: 'Border radius',
+      default:{
+        size: 0,
+        unit: 'px',
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-tooltip': 'border-radius: {{SIZE}}{{UNIT}}',
+      },
+    });
+
+    this.addControl('text_advanced_tooltip_font', {
       type: CONTROLLER_SELECT2,
       label: 'font',
-      placeholder: 'placeholder',
-      default: '"Roboto"',
+      placeholder: 'Lato',
+      default: '"Lato"',
       options: [
         {
           value: '"Roboto"',
@@ -401,7 +573,7 @@ class Text extends BaseElement{
         },
       ],
       rules: {
-        '{{ELEMENT}}': 'font-family: {{VALUE}}'
+        '{{ELEMENT}} .altrp-tooltip': 'font-family: {{VALUE}}'
       }
     });
 

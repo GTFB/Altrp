@@ -21,8 +21,9 @@
 }
 
 .altrp-text {
-  display: block;
-  font-size: 60%;
+  display: inline-flex;
+  justify-content: center;
+  font-size: 37px;
 }
 
 .heading {
@@ -46,4 +47,62 @@
 
 .altrp-column {
   padding: 10px;
+}
+
+.altrp-tooltip {
+  background-color: rgb(104, 102, 222);
+  color: rgb(255, 255, 255);
+  font-family: Poppins, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  box-shadow: rgba(119, 119, 147, 0.2) 0px 20px 100px 0px;
+  text-align: center;
+  display: block;
+  color: #fff;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  padding: 2px;
+  position: absolute;
+  z-index: 1;
+  font-size: .83rem;
+  line-height: 1.3;
+  box-sizing: border-box;
+  line-height: 1;
+  margin-top: -20px;
+  text-transform: none;
+  transition: 0.5s;
+  animation: altrpTooltipAnimation 0.2s forwards;
+}
+
+@keyframes altrpTooltipAnimation {
+  0% {
+    margin-top: -20px;
+    opacity: 0;
+  }
+  100% {
+    margin-top: 0;
+    opacity: 1;
+  }
+}
+.altrp-tooltip-none {
+  display: none;
+  opacity: 0;
+}
+.altrp-tooltip::after {
+  border-width: 10px;
+  left: calc(50% - 10px);
+
+  margin-top: 0;
+  top: 100%;
+  transform: rotate(180deg);
+  left: -webkit-calc(50% - 5px);
+  left: calc(50% - 5px);
+  border-color: transparent transparent rgb(104, 102, 222);
+
+  content: "";
+  position: absolute;
+  border-width: 5px;
+  border-style: solid;
+
+  box-sizing: border-box;
 }
