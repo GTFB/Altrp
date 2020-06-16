@@ -3,6 +3,7 @@ import { Menu, Item, Separator } from "react-contexify";
 
 import "react-contexify/scss/main.scss";
 import {connect} from "react-redux";
+import Column from "../classes/elements/Column";
 
 class ElementContextMenu extends Component{
   constructor(props) {
@@ -10,6 +11,7 @@ class ElementContextMenu extends Component{
     this.onSelectItem = this.onSelectItem.bind(this);
     this.deleteElement = this.deleteElement.bind(this);
     this.duplicateElement = this.duplicateElement.bind(this);
+    this.addNewColumn = this.addNewColumn.bind(this);
   }
   // Событие вызова контекстного меню
    onSelectItem(event)  {
@@ -24,6 +26,13 @@ class ElementContextMenu extends Component{
   }
 
   /**
+   * Добавляет новую колонку
+   */
+  addNewColumn(){
+    this.props.element.insertSiblingAfter(new Column());
+  }
+
+  /**
    * Дублирует элемент используя контекстоное меню
    */
   duplicateElement(){
@@ -35,6 +44,13 @@ class ElementContextMenu extends Component{
    */
   showDeleteItem(){
     return (!this.props.element.getType) || (this.props.element.getType() !== 'column') || this.props.element.canDeleteThis();
+  }
+  /**
+   * Отборажает пункт удалить, если можно удалить текущую колонку (в секции обязательна одна колонка)
+   * @return {boolean}
+   */
+  showAddNewColumnItem(){
+    return (!this.props.element.getType) || (this.props.element.getType() === 'column');
   }
   render() {
     let elementTitle =  this.props.element.getTitle ? this.props.element.getTitle() : '';
@@ -52,6 +68,11 @@ class ElementContextMenu extends Component{
           <Item disabled onClick={this.onSelectItem}>
             Paste Styles
           </Item>
+          <Separator/>
+          {
+            this.showAddNewColumnItem() ?
+              <Item onClick={this.addNewColumn}>Add New Column</Item> : ''
+          }
           <Separator/>
           <Item onClick={this.onSelectItem}>Navigator</Item>
           {this.showDeleteItem() ? <Item onClick={this.deleteElement}>Delete {elementTitle}</Item> : ''}

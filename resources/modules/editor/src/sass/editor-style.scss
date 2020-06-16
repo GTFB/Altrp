@@ -1293,13 +1293,14 @@ display: none;
 .column-empty-plus{
   position: relative;
   display: flex;
+  width: calc(100% - 20px);
+  height: 100%;
   align-items: center;
   justify-content: center;
   margin-top: -10px;
   margin-bottom: 10px;
   padding: 5px;
   border: 1px dashed $grey;
-  width: calc(100% - 20px);
   cursor: pointer;
   & svg{
     -webkit-transform: scale(0.7);
