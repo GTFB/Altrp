@@ -21,7 +21,7 @@ import { advancedTabControllers } from "../../decorators/register-controllers";
 
 class Text extends BaseElement {
   static getName() {
-    return "Text";
+    return "text";
   }
   static getTitle() {
     return "Text";
