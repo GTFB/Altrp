@@ -49,8 +49,11 @@ class Updates extends Component {
   async updateAltrp(){
     store.dispatch(setAdminDisable());
     let res = await (new Resource({route:'/admin/ajax/update_altrp'})).post( {});
-    res.result ? pageReload() : this.setNeedUpdate();
-    store.dispatch(setAdminEnable());
+    setTimeout(()=>{
+          res.result ? pageReload() : this.setNeedUpdate();
+        }
+    ,1300);
+    // store.dispatch(setAdminEnable());
   }
 
   render() {

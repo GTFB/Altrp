@@ -52,10 +52,10 @@ function admin_uri($path = '')
 
 function updateIsAvailable(){
 
-  // Check if the '.env' file exists
-  if( env( 'APP_ENV', 'local' ) === 'local' ){
+  if( env( 'APP_ENV' ) === 'local' ){
     return false;
   }
+  // Check if the '.env' file exists
   if ( ! file_exists( base_path( '.env' ) ) ) {
     return false;
   }
