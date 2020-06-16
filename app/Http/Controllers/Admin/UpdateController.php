@@ -16,7 +16,7 @@ class UpdateController extends Controller
    * @return \Illuminate\Http\JsonResponse
    */
   public function check_update( AltrpUpdateService $updateService ){
-    Artisan::call( 'config:cache');
+    Artisan::call( 'config:clear');
     try {
       $new_version = $updateService->get_version();
     } catch ( NotFoundHttpException $e ){
