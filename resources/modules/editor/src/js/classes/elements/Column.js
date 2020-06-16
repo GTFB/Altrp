@@ -28,6 +28,24 @@ class Column  extends BaseElement {
     }
     this.appendChild(newWidget);
   }
+
+  /**
+   * Вставляет новую колонку после текущей колонки
+   */
+  insertNewColumnAfter(){
+    let column = new Column();
+    this.insertSiblingAfter(column);
+  }
+
+  /**
+   * Проверяет можно ли удалить текущую колонку (в секции обязательна одна колонка)
+   * @return {boolean}
+   */
+  canDeleteThis(){
+    return this.parent.children.length > 1
+  }
+
+
 }
 
 export default Column

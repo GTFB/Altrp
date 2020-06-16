@@ -24,11 +24,22 @@ class Section extends BaseElement{
     this.endControlSection();
   }
 
+  /**
+   * Добавлйет новую колонку в конец
+   */
   appendColumn(newColumn) {
     if(!newColumn instanceof Column){
       throw 'Only Column can be a Child of Section';
     }
     this.appendChild(newColumn);
+  }
+
+  /**
+   * Возвращает количество колонок в секции
+   * @return {int}
+   */
+  getColumnsCount(){
+    return this.children.length;
   }
 }
 

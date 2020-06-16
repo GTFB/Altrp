@@ -1,8 +1,12 @@
 import {CONTROLLER_TEXT, CONTROLLER_TEXTAREA, TAB_CONTENT, TAB_STYLE} from "../modules/ControllersManager";
-import {getTemplateDataStorage, isEditor, getEditor, CONSTANTS, templateNeedUpdate} from "../../helpers";
+import {getTemplateDataStorage, isEditor, getEditor, CONSTANTS} from "../../helpers";
 import {changeTemplateStatus} from "../../store/template-status/actions";
 import store from "../../store/store";
 
+/**
+ * Базовый класс для методов элемента для редактора
+ *
+ */
 class BaseElement {
 
   constructor(){
@@ -13,6 +17,12 @@ class BaseElement {
     this.children = [];
     this.componentClass = window.elementsManager.getComponentClass(this.getName());
     this.initiatedDefaults = null;
+
+    /**
+     * someProperty is an example property that is set to `true`
+     * @type {BaseElement}
+     * @public
+     */
     this.parent = null;
     this._initDefaultSettings();
   }
@@ -75,6 +85,7 @@ class BaseElement {
   }
 
   /**
+   * добавлйет новый  дочерний элемент в конец
    * @param {BaseElement} child
    * */
   appendChild(child){
@@ -162,6 +173,14 @@ class BaseElement {
       this.children = newChildren;
     }
     this.component.setChildren(this.children);
+    store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
+  }
+
+  /**
+   * Удаляет текущий элемент у родителя
+   */
+  deleteThisElement(){
+    this.parent.deleteChild(this);
   }
 
   /**

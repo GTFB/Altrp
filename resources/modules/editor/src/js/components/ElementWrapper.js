@@ -16,6 +16,8 @@ import DuplicateIcon from "../../svgs/duplicate.svg";
 import store from "../store/store";
 import { START_DRAG, startDrag } from "../store/element-drag/actions";
 import { setCurrentElement } from "../store/current-element/actions";
+import {contextMenu} from "react-contexify/lib/index";
+import {setCurrentContextElement} from "../store/current-context-element/actions";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -33,6 +35,7 @@ class ElementWrapper extends Component {
     this.onDrop = this.onDrop.bind(this);
     this.onDragStart = this.onDragStart.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
+    this.handleContext = this.handleContext.bind(this);
     this.wrapper = React.createRef();
   }
   onDragLeave(e) {
@@ -76,6 +79,24 @@ class ElementWrapper extends Component {
     e.preventDefault();
     e.stopPropagation();
     return false;
+  }
+
+  /**
+   * Срабатывает при вызывании контекстоного меню
+   * @param e - событие
+   */
+  handleContext(e) {
+    store.dispatch(setCurrentContextElement(this.props.element));
+    e.persist();
+    e.preventDefault();
+    e.stopPropagation();
+    contextMenu.show({
+      id: 'element-menu',
+      event: e,
+      props: {
+        element: this.props.element,
+      }
+    });
   }
 
   onDrop(e) {
@@ -229,6 +250,7 @@ class ElementWrapper extends Component {
       <div
         className={classes}
         ref={this.wrapper}
+        onContextMenu={this.handleContext}
         onDragOver={this.onDragOver}
         onClick={this.chooseElement}
         onDrop={this.onDrop}
@@ -236,6 +258,7 @@ class ElementWrapper extends Component {
         onDragLeave={this.onDragLeave}
         onDragEnter={this.onDragEnter}
       >
+
         <div className={overlayClasses}>
           <div className="overlay-settings">
             <button

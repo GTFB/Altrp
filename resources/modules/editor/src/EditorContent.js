@@ -6,6 +6,7 @@ import {Provider} from 'react-redux'
 import store from '../src/js/store/store'
 import RootElement from "./js/classes/elements/RootElement";
 import Styles from "./js/components/Styles";
+import {contextMenu} from "react-contexify/lib/index";
 
 class EditorContent extends Component {
   constructor(props) {
@@ -48,9 +49,17 @@ class EditorContent extends Component {
     })
   }
 
+  /**
+   * Сработывает при клике
+   */
+  onClick() {
+    contextMenu.hideAll();
+  }
+
   render() {
     return <Provider store={store}>
       <div className="editor-content d-flex flex-column justify-center align-content-center"
+           onClick={this.onClick}
                   ref={this.editorWindow}>
         {
           this.state.rootElement ? React.createElement(
