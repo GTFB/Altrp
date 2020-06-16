@@ -239,9 +239,6 @@ class Input extends BaseElement{
       },
       max: 1,
       min: 0,
-      rules: {
-        '{{ELEMENT}} input': 'opacity: {{SIZE}}',
-      },
     });
 
     this.endControlSection();

@@ -15,10 +15,13 @@ class ImageWidget extends Component {
   }
 
   render(){
-    return renderAsset(this.state.settings.content_media, {
+    return <div>
+    {  renderAsset(this.state.settings.content_media, {
       className: this.state.settings.position_css_classes || "",
       id: this.state.settings.position_css_id || "", 
-    });
+    })
+    }
+    </div>
   }
 }
 
