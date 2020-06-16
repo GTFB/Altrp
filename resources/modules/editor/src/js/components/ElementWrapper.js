@@ -190,6 +190,9 @@ class ElementWrapper extends Component {
     let classes = `altrp-element ${this.props.element
       .getSelector()
       .replace(".", "")} altrp-element_${this.props.element.getType()}`;
+    if(this.props.element.getType() === 'widget'){
+      classes += ` altrp-widget_${this.props.element.getName()}`;
+    }
     let overlayClasses = `overlay`;
     if (this.props.currentElement === this.props.element) {
       classes += " altrp-element_current";

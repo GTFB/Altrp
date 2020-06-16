@@ -1,30 +1,35 @@
-import React from "react";
+import React, {Component} from "react";
 import { Menu, Item, Separator } from "react-contexify";
 
 import "react-contexify/scss/main.scss";
 
-const SectionContextMenu = () => {
+class SectionContextMenu extends Component{
+  constructor(props){
+    super(props);
+    this.onSelectItem = this.onSelectItem.bind(this);
+  }
   // Событие вызова контекстного меню
-  const onSelectItem = ({ event, props }) => {
-    console.log("event, props", event, props);
+   onSelectItem({ event, props })  {
+    console.log(props);
   };
-
-  return (
-    <Menu id="SectionContextMenu">
-      <Item onClick={onSelectItem}>Копировать</Item>
-      <Item onClick={onSelectItem}>Дублировать</Item>
-      <Item onClick={onSelectItem}>Вставить</Item>
-      <Separator />
-      <Item onClick={onSelectItem}>Сбросить стили</Item>
-      <Item onClick={onSelectItem}>Копировать стили</Item>
-      <Item disabled onClick={onSelectItem}>
-        Вставить стили
-      </Item>
-      <Separator />
-      <Item onClick={onSelectItem}>Навигатор</Item>
-      <Item onClick={onSelectItem}>Удалить</Item>
-    </Menu>
-  );
-};
+  render() {
+    return (
+        <Menu id="SectionContextMenu">
+          <Item onClick={this.onSelectItem}>Копировать</Item>
+          <Item onClick={this.onSelectItem}>Дублировать</Item>
+          <Item onClick={this.onSelectItem}>Вставить</Item>
+          <Separator/>
+          <Item onClick={this.onSelectItem}>Сбросить стили</Item>
+          <Item onClick={this.onSelectItem}>Копировать стили</Item>
+          <Item disabled onClick={this.onSelectItem}>
+            Вставить стили
+          </Item>
+          <Separator/>
+          <Item onClick={this.onSelectItem}>Навигатор</Item>
+          <Item onClick={this.onSelectItem}>Удалить</Item>
+        </Menu>
+    );
+  }
+}
 
 export default SectionContextMenu;

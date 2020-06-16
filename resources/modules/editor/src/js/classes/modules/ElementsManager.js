@@ -73,4 +73,8 @@ export default class ElementsManger {
     return this.widgetList;
   }
 
+  checkElementExists(elementName){
+    return ! ! this.elements[elementName];
+  }
+
 }
