@@ -7,6 +7,7 @@ import store from '../src/js/store/store'
 import RootElement from "./js/classes/elements/RootElement";
 import Styles from "./js/components/Styles";
 import {contextMenu} from "react-contexify/lib/index";
+import ElementContextMenu from "./js/components/ElementContextMenu";
 
 class EditorContent extends Component {
   constructor(props) {
@@ -72,6 +73,7 @@ class EditorContent extends Component {
         <NewSection />
       </div>
       <Styles/>
+      <ElementContextMenu/>
     </Provider>;
   }
 }

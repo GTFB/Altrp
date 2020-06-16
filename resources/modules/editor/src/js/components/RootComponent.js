@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import ElementContextMenu from "./ElementContextMenu";
 
 class RootComponent extends Component {
   constructor(props) {
@@ -28,7 +27,6 @@ class RootComponent extends Component {
                     element={section}
                 />
             ))}
-          <ElementContextMenu/>
         </div>
     );
   }

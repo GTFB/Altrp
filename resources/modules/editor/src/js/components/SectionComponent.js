@@ -1,6 +1,5 @@
-import React, {useState, Component} from "react";
-
-import {contextMenu, MenuProvider} from "react-contexify";
+import React, {Component} from "react";
+import '../../sass/section.scss'
 
 // const SectionComponent = ({ children, element }) => {
 //   if (!children.length) {

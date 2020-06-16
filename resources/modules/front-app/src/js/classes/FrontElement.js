@@ -75,6 +75,9 @@ class FrontElement {
     }
     return `.altrp-element${this.getId()}`;
   }
+  getColumnsCount(){
+    return this.children.length;
+  }
 }
 
 export default FrontElement

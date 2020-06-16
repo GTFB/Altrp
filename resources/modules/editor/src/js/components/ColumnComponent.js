@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import '../../sass/column.scss'
 
 class ColumnComponent extends Component {
   constructor(props){
