@@ -59,69 +59,6 @@ class Text extends BaseElement {
       label: 'Text Settings',
     });
 
-    this.addControl('text_settings_alignment', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Choose Content',
-      default: 'left',
-      options:[
-        {
-          icon: 'left',
-          value: 'left',
-        },
-        {
-          icon: 'center',
-          value: 'center',
-        },
-        {
-          icon: 'right',
-          value: 'right',
-        },
-        {
-          icon: 'in_width',
-          value: 'justify',
-        }
-      ],
-      rules: {
-            '{{ELEMENT}}': 'text-align: {{VALUE}};',
-      },
-    });
-
-    this.addControl('text_settings_html_tag', {
-      type: CONTROLLER_SELECT,
-      label: 'html tag',
-      default: 'p',
-      options: [
-        {
-          value: 'p',
-          label: 'default'
-        },
-        {
-          value: 'h1',
-          label: 'h1'
-        },
-        {
-          value: 'h2',
-          label: 'h2'
-        },
-        {
-          value: 'h3',
-          label: 'h3'
-        },
-        {
-          value: 'h4',
-          label: 'h4'
-        },
-        {
-          value: 'h5',
-          label: 'h5'
-        },
-        {
-          value: 'h6',
-          label: 'h6'
-        }
-      ]
-    });
-
     this.addControl('text_link', {
       type: CONTROLLER_LINK,
       default: {
