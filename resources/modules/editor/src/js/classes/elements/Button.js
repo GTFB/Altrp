@@ -18,7 +18,7 @@ import {
 class Button extends BaseElement{
 
   static getName(){
-    return'Button';
+    return'button';
   }
   static getTitle(){
     return'Button';

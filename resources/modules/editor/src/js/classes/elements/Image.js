@@ -16,7 +16,7 @@ import {
 
 class Image extends BaseElement{
 	static getName(){
-    return'Image';
+    return'image';
   }
   static getTitle(){
     return'Image';
