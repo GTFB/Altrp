@@ -32,6 +32,8 @@ import Tables from "./components/Tables";
 import Templates from "./components/Templates";
 import AdminModal from "./components/AdminModal";
 import AddPage from "./components/AddPage";
+import AddTable from "./components/tables/AddTable";
+import EditTable from "./components/tables/EditTable";
 
 class Admin extends Component {
   render() {
@@ -118,8 +120,14 @@ class Admin extends Component {
             <Route path="/admin/reports">
               <Reports/>
             </Route>
-            <Route path="/admin/tables">
+            <Route path="/admin/tables" exact>
               <Tables/>
+            </Route>
+						<Route path="/admin/tables/edit/:id">
+              <EditTable/>
+            </Route>
+						<Route path="/admin/pages/edit/:id">
+              <AddPage/>
             </Route>
             <Route path="/admin/templates">
               <Templates/>
