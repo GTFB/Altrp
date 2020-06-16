@@ -67,7 +67,6 @@ class AdminModal extends Component {
     if (this.props.active) {
       modalClasses += ' admin-modal_active';
     }
-    console.log(this.props.fields);
     return <div className={modalClasses}>
       <div className="admin-modal__bg" onClick={this.toggleModal}/>
       <div className="admin-modal-content">

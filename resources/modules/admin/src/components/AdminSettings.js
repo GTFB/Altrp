@@ -11,7 +11,7 @@ export default class AdminSettings extends Component {
     super(props);
     this.switchTab = this.switchTab.bind(this);
     this.state = {
-      activeTab: parseInt(window.location.hash[1]),
+      activeTab: parseInt(window.location.hash[1]) || 0,
     };
   }
 
@@ -21,7 +21,6 @@ export default class AdminSettings extends Component {
   }
 
   render() {
-    console.log(this.state.activeTab);
     return <div className="admin-settings admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs"><a className="admin-breadcrumbs__link" href="#">Settings</a><span
