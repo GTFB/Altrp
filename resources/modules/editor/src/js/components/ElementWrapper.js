@@ -314,13 +314,7 @@ class ElementWrapper extends Component {
   }
   duplicateElement(e) {
     e.stopPropagation();
-    let factory = getFactory();
-    let newElement = factory.duplicateElement(
-      this.props.element,
-      this.props.element.parent
-    );
-    getTemplateDataStorage().setCurrentElement(newElement);
-    getEditor().showSettingsPanel();
+    this.props.element.duplicate();
   }
   showWidgetsPanel(e) {
     e.stopPropagation();

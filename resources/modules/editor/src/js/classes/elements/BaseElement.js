@@ -1,5 +1,5 @@
 import {CONTROLLER_TEXT, CONTROLLER_TEXTAREA, TAB_CONTENT, TAB_STYLE} from "../modules/ControllersManager";
-import {getTemplateDataStorage, isEditor, getEditor, CONSTANTS} from "../../helpers";
+import {getTemplateDataStorage, isEditor, getEditor, CONSTANTS, getFactory} from "../../helpers";
 import {changeTemplateStatus} from "../../store/template-status/actions";
 import store from "../../store/store";
 
@@ -183,6 +183,25 @@ class BaseElement {
     this.parent.deleteChild(this);
   }
 
+  /**
+   * Дублирует элемент и вставляет после текущего
+   */
+  duplicate(){
+    let factory = getFactory();
+    let newElement = factory.duplicateElement(
+        this,
+        this.parent
+    );
+    getTemplateDataStorage().setCurrentElement(newElement);
+    getEditor().showSettingsPanel();
+  }
+
+  deleteAllIds(){
+    this.id= null;
+    this.children.forEach(child=>{
+      child.deleteAllIds();
+    })
+  }
   /**
    * @param {BaseElement | string} child
    * @throws Если не указан IG или сам элемент

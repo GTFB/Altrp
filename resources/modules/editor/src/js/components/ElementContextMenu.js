@@ -9,6 +9,7 @@ class ElementContextMenu extends Component{
     super(props);
     this.onSelectItem = this.onSelectItem.bind(this);
     this.deleteElement = this.deleteElement.bind(this);
+    this.duplicateElement = this.duplicateElement.bind(this);
   }
   // Событие вызова контекстного меню
    onSelectItem(event)  {
@@ -16,14 +17,20 @@ class ElementContextMenu extends Component{
   };
 
   /**
-   * Удаляет элемент из контекстоного меню
+   * Удаляет элемент используя контекстоное меню
    */
   deleteElement(){
-    console.log(this.props.element);
     this.props.element.deleteThisElement()
   }
+
   /**
-   * Отборажает пункт удалить если можно удалить текущую колонку (в секции обязательна одна колонка)
+   * Дублирует элемент используя контекстоное меню
+   */
+  duplicateElement(){
+    this.props.element.duplicate();
+  }
+  /**
+   * Отборажает пункт удалить, если можно удалить текущую колонку (в секции обязательна одна колонка)
    * @return {boolean}
    */
   showDeleteItem(){
@@ -33,11 +40,11 @@ class ElementContextMenu extends Component{
     let elementTitle =  this.props.element.getTitle ? this.props.element.getTitle() : '';
 
     return (
-        <Menu  id="element-menu">
+        <Menu id="element-menu">
           <Item onClick={this.onSelectItem}>Edit {elementTitle}</Item>
           <Separator/>
           <Item onClick={this.onSelectItem}>Copy</Item>
-          <Item onClick={this.onSelectItem}>Duplicate</Item>
+          <Item onClick={this.duplicateElement}>Duplicate {elementTitle}</Item>
           <Item onClick={this.onSelectItem}>Paste</Item>
           <Separator/>
           <Item onClick={this.onSelectItem}>Reset Styles</Item>

@@ -59,8 +59,12 @@ class SectionComponent extends Component {
   }
 
   render() {
+    let sectionClasses = [
+        'altrp-section',
+        `altrp-section_columns-${this.props.element.getColumnsCount()}`
+    ];
     return (
-        <div className="altrp-section">
+        <div className={sectionClasses.join(' ')}>
           {this.state.children.map(column => (
               <ElementWrapper
                   key={column.getId()}
