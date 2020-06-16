@@ -27,6 +27,9 @@ export default class FrontElementsManager {
     return this.components[name];
   }
 
+  checkElementExists(elementName){
+    return ! ! this.components[elementName];
+  }
 }
 window.frontElementsManager = new FrontElementsManager();
 

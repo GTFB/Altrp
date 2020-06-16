@@ -9,8 +9,8 @@ class FrontElementsFabric {
     let element = new FrontElement(object);
     if( object.children && object.children.length ){
       for( let child of object.children){
-        children.push( this.parseData( child ) );
-      }
+        frontElementsManager.checkElementExists(child.name) ?
+            children.push( this.parseData(child, element) ) : '';      }
     }
     element.id = object.id;
     element.children = children;
