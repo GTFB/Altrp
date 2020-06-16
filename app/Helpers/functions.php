@@ -289,7 +289,7 @@ function altrp_asset( $path, $domain = 'http://localhost:3002/'){
   try{
     $client->get( $domain )->getStatusCode() ;
   } catch (Exception $e){
-    return asset( $path );
+    return asset( $path ) . '?' . getCurrentVersion();
   }
 
   return  $domain . 'src/bundle.js' ;
