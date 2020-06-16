@@ -1,0 +1,67 @@
+
+.admin-settings{
+    width: 100%;
+    border: 1px solid $border-gray;
+    border-radius: 3px;
+    overflow: hidden;
+    & .admin-settings-table__td{
+        height: 65px;
+        padding: 8px 16px;
+        &_check{
+            width: 45px;
+            text-align: center;
+        }
+    }
+    & .header-text{
+        text-transform: uppercase;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 20px;
+    }
+    & .row-text{
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 15px;
+        line-height: 18px;
+    }
+    & .admin-settings-button{
+        position: absolute;
+        width: 123px;
+        height: 30px;
+        left: 315px;
+        top: 448px;
+
+        background: #87CA00;
+        border: 1.5px solid #87CA00;
+        box-sizing: border-box;
+        border-radius: 2px;
+    }
+    & table{
+        border-collapse: collapse;
+        width: 100%;
+    }
+    &-head{
+        background-color: #fff;
+        border-bottom: 1px solid $border-gray;
+        & .admin-settings-table__td{
+            height: 45px;
+            font-family: Montserrat;
+            font-style: normal;
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 20px;
+            color: $purple;
+        }
+    }
+    &-body{
+        & .admin-settings-table-row{
+            &:nth-child(2n){
+                background-color: $light-light-gray;
+            }
+            &:nth-child(2n+1){
+                background-color: #fff;
+            }
+        }
+    }
+}

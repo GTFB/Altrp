@@ -1,26 +1,29 @@
-import React, {Component} from "react";
-import './sass/editor-style.scss';
-import {hot} from "react-hot-loader";
+import React, { Component } from "react";
+import { hot } from "react-hot-loader";
+import { Provider } from "react-redux";
+
 import Modules from "./js/classes/Modules";
 import WidgetsPanel from "./js/components/WidgetsPanel";
 import SettingsPanel from "./js/components/SettingsPanel";
 import EditorWindow from "./js/components/EditorWindow";
-import DesktopIcon from './svgs/desktop.svg';
-import Logo from './svgs/logo.svg';
-import Navigation from './svgs/navigation.svg';
-import History from './svgs/history.svg';
-import Preview from './svgs/preview.svg';
-import Settings from './svgs/settings.svg';
-import Dots from './svgs/dots.svg';
-import Hamburger from './svgs/hamburger.svg';
-import {Provider} from 'react-redux'
-import store from '../src/js/store/store'
 import HistoryPanel from "./js/components/HistoryPanel";
 import UpdateButton from "./js/components/UpdateButton";
-import {CONSTANTS} from "./js/helpers";
-import Styles from "./js/components/Styles";
-import {stopDrag} from "./js/store/element-drag/actions";
+import { CONSTANTS } from "./js/helpers";
+import { stopDrag } from "./js/store/element-drag/actions";
 import AssetsBrowser from "./js/classes/modules/AssetsBrowser";
+
+import store from "../src/js/store/store";
+
+import "./sass/editor-style.scss";
+
+import DesktopIcon from "./svgs/desktop.svg";
+import Logo from "./svgs/logo.svg";
+import Navigation from "./svgs/navigation.svg";
+import History from "./svgs/history.svg";
+import Preview from "./svgs/preview.svg";
+import Settings from "./svgs/settings.svg";
+import Dots from "./svgs/dots.svg";
+import Hamburger from "./svgs/hamburger.svg";
 /**
  * Главный класс редактора.<br/>
  * Реакт-Компонент.<br/>
@@ -35,8 +38,8 @@ class Editor extends Component {
     super(props);
     window.altrpEditor = this;
     this.state = {
-      // activePanel: 'widgets',
-      activePanel: 'settings',
+      activePanel: 'widgets',
+      // activePanel: "settings",
       templateStatus: CONSTANTS.TEMPLATE_UPDATED,
     };
     this.openPageSettings = this.openPageSettings.bind(this);
@@ -48,10 +51,10 @@ class Editor extends Component {
   /**
    * Метод подписчик на изменение состояния Редактора из Редакс хранилища
    * */
-  templateStatus(){
+  templateStatus() {
     let templateStatus = store.getState().templateStatus.status;
-    if(templateStatus !== this.state.templateStatus){
-      this.setState({...this.state, templateStatus});
+    if (templateStatus !== this.state.templateStatus) {
+      this.setState({ ...this.state, templateStatus });
     }
   }
 
@@ -70,8 +73,8 @@ class Editor extends Component {
   showWidgetsPanel() {
     this.setState({
       ...this.state,
-      activePanel: 'widgets'
-    })
+      activePanel: "widgets",
+    });
   }
 
   /**
@@ -80,7 +83,7 @@ class Editor extends Component {
   showSettingsPanel() {
     this.setState({
       ...this.state,
-      activePanel: 'settings'
+      activePanel: "settings",
     });
   }
 
@@ -88,9 +91,9 @@ class Editor extends Component {
    * Обработчик события конец переноса вызывает метод stopDrag переносимого элемента
    * @see ElementWrapper.stopDrag
    */
-  onDragEnd(){
+  onDragEnd() {
     let draggableElement = store.getState().elementDrag.element;
-    if(draggableElement && draggableElement.stopDrag){
+    if (draggableElement && draggableElement.stopDrag) {
       draggableElement.stopDrag();
     }
     store.dispatch(stopDrag());
@@ -99,8 +102,8 @@ class Editor extends Component {
    * Вызывается после загрузки шаблона
    * @see {@link SaveImportModule}
    * */
-  endLoading(){
-    console.log('editor loaded');
+  endLoading() {
+    console.log("editor loaded");
   }
 
   /**
@@ -124,16 +127,18 @@ class Editor extends Component {
    * Отрисовка Компонента
    */
   render() {
-    let settingsActive = '';
-    let templateClasses = 'editor ';
-    if(this.state.templateStatus === CONSTANTS.TEMPLATE_SAVING){
-      templateClasses += ' editor_saving';
+    let settingsActive = "";
+    let templateClasses = "editor ";
+    if (this.state.templateStatus === CONSTANTS.TEMPLATE_SAVING) {
+      templateClasses += " editor_saving";
     }
-    if(store.getState().currentElement.currentElement.getType &&
-        store.getState().currentElement.currentElement.getType() === 'root-element' &&
-      this.state.activePanel === 'settings'
-    ){
-      settingsActive = ' active';
+    if (
+      store.getState().currentElement.currentElement.getType &&
+      store.getState().currentElement.currentElement.getType() ===
+        "root-element" &&
+      this.state.activePanel === "settings"
+    ) {
+      settingsActive = " active";
     }
 
     return (
@@ -141,54 +146,53 @@ class Editor extends Component {
         <div className={templateClasses} onDragEnd={this.onDragEnd}>
           <div className="left-panel">
             <div className="editor-top-panel">
-              <button className="btn btn_hamburger"
-                      // onClick={this.showSettingsPanel}
+              <button
+                className="btn btn_hamburger"
+                // onClick={this.showSettingsPanel}
               >
-                <Hamburger className="icon"/>
+                <Hamburger className="icon" />
               </button>
-              <div className="logo"><Logo viewBox="0 0 97 35"/></div>
+              <div className="logo">
+                <Logo viewBox="0 0 97 35" />
+              </div>
               <button className="btn btn_dots" onClick={this.showWidgetsPanel}>
-                <Dots className="icon"/>
+                <Dots className="icon" />
               </button>
             </div>
             <div className="left-panel-main">
-              {
-                (this.state.activePanel === 'widgets') &&
-                <WidgetsPanel/>
-              }
-              {
-                (this.state.activePanel === 'settings') &&
-                <SettingsPanel/>
-              }
+              {this.state.activePanel === "widgets" && <WidgetsPanel />}
+              {this.state.activePanel === "settings" && <SettingsPanel />}
             </div>
             <div className="editor-bottom-panel d-flex align-content-center justify-center">
-              <button className={'btn btn_settings' + settingsActive} onClick={this.openPageSettings}>
-                <Settings className="icon"/>
+              <button
+                className={"btn btn_settings" + settingsActive}
+                onClick={this.openPageSettings}
+              >
+                <Settings className="icon" />
               </button>
               <button className="btn ">
-                <Navigation className="icon"/>
+                <Navigation className="icon" />
               </button>
               <button className="btn ">
-                <History className="icon"/>
+                <History className="icon" />
               </button>
               <button className="btn ">
-                <DesktopIcon className="icon"/>
+                <DesktopIcon className="icon" />
               </button>
               <button className="btn ">
-                <Preview className="icon"/>
+                <Preview className="icon" />
               </button>
-              <UpdateButton/>
+              <UpdateButton />
             </div>
           </div>
           <div className="right-panel">
-            <EditorWindow  />
+            <EditorWindow />
           </div>
         </div>
-        <AssetsBrowser/>
+        <AssetsBrowser />
       </Provider>
     );
   }
-
 }
 
 /**
@@ -197,7 +201,7 @@ class Editor extends Component {
  * @member _export
  */
 let _export;
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === "production") {
   _export = Editor;
 } else {
   _export = hot(module)(Editor);

@@ -11,10 +11,13 @@
         "php": "^7.2",
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
+        "jackiedo/dotenv-editor": "1.*",
+        "jenssegers/date": "^3.2",
         "laravel/framework": "^6.2",
         "laravel/passport": "^8.4",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^1.2",
+        "pulkitjalan/geoip": "^4.1",
         "santigarcor/laratrust": "5.2.*"
     },
     "require-dev": {
@@ -36,6 +39,9 @@
         }
     },
     "autoload": {
+        "files": [
+            "app/Helpers/functions.php"
+        ],
         "psr-4": {
             "App\\": "app/"
         },

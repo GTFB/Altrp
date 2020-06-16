@@ -3,6 +3,34 @@ import AddIcon from '../../../svgs/add.svg';
 import AdvancedIcon from '../../../svgs/advanced.svg';
 import UploadIcon from '../../../svgs/upload.svg';
 import TimesIcon from '../../../svgs/times.svg';
+import LeftIcon from '../../../svgs/left.svg';
+import CenterIcon from '../../../svgs/center.svg';
+import RightIcon from '../../../svgs/right.svg';
+import InWidthIcon from '../../../svgs/in_width.svg';
+import bindIcon from '../../../svgs/bind.svg';
+import buttonIcon from '../../../svgs/button.svg';
+import chevronIcon from '../../../svgs/chevron.svg';
+import columnsIcon from '../../../svgs/columns.svg';
+import contentIcon from '../../../svgs/content.svg';
+import deleteIcon from '../../../svgs/delete.svg';
+import desktopIcon from '../../../svgs/desktop.svg';
+import desktopNewIcon from '../../../svgs/desktopNew.svg';
+import dotsSectionIcon from '../../../svgs/dots_section.svg';
+import dotsIcon from '../../../svgs/dots.svg';
+import duplicateIcon from '../../../svgs/duplicate.svg';
+import dynamicIcon from '../../../svgs/dynamic.svg';
+import editIcon from '../../../svgs/edit.svg';
+import folderIcon from '../../../svgs/folder.svg';
+import formIcon from '../../../svgs/form.svg';
+import hamburgerIcon from '../../../svgs/hamburger.svg';
+import historyIcon from '../../../svgs/history.svg';
+import imageIcon from '../../../svgs/image.svg';
+import logoIcon from '../../../svgs/logo.svg';
+import navigationIcon from '../../../svgs/navigation.svg';
+import plusIcon from '../../../svgs/plus.svg';
+import previewIcon from '../../../svgs/preview.svg';
+import settingsIcon from '../../../svgs/settings.svg';
+import styleIcon from '../../../svgs/style.svg';
 
 class IconsManager {
   constructor(){
@@ -13,6 +41,34 @@ class IconsManager {
     this.icons.push(new Icon('upload', UploadIcon));
     this.icons.push(new Icon('times', TimesIcon));
     this.icons.push(new Icon('close', TimesIcon));
+    this.icons.push(new Icon('left', LeftIcon));
+    this.icons.push(new Icon('center', CenterIcon));
+    this.icons.push(new Icon('right', RightIcon));
+    this.icons.push(new Icon('in_width', InWidthIcon));
+    this.icons.push(new Icon('bind', bindIcon));
+    this.icons.push(new Icon('button', buttonIcon));
+    this.icons.push(new Icon('chevron', chevronIcon));
+    this.icons.push(new Icon('columns', columnsIcon));
+    this.icons.push(new Icon('content', contentIcon));
+    this.icons.push(new Icon('delete', deleteIcon));
+    this.icons.push(new Icon('desktop', desktopIcon));
+    this.icons.push(new Icon('desktopNew', desktopNewIcon));
+    this.icons.push(new Icon('dots_section', dotsSectionIcon));
+    this.icons.push(new Icon('dots', dotsIcon));
+    this.icons.push(new Icon('duplicate', duplicateIcon));
+    this.icons.push(new Icon('dynamic', dynamicIcon));
+    this.icons.push(new Icon('edit', editIcon));
+    this.icons.push(new Icon('folder', folderIcon));
+    this.icons.push(new Icon('form', formIcon));
+    this.icons.push(new Icon('hamburger', hamburgerIcon));
+    this.icons.push(new Icon('history', historyIcon));
+    this.icons.push(new Icon('image', imageIcon));
+    this.icons.push(new Icon('logo', logoIcon));
+    this.icons.push(new Icon('navigation', navigationIcon));
+    this.icons.push(new Icon('plus', plusIcon));
+    this.icons.push(new Icon('preview', previewIcon));
+    this.icons.push(new Icon('settings', settingsIcon));
+    this.icons.push(new Icon('style', styleIcon));
   }
   /**
    * @param {string} iconName

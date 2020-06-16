@@ -1,18 +1,15 @@
-import {CHANGE_TEMPLATE_STATUS} from './actions'
-import {CONSTANTS} from "../../helpers";
+import { CHANGE_TEMPLATE_STATUS } from "./actions";
+import { CONSTANTS } from "../../helpers";
 
 const defaultState = {
   status: CONSTANTS.TEMPLATE_UPDATED,
 };
 
-export function templateStatusReducer(state, action) {
-  state = state || defaultState;
+export function templateStatusReducer(state = defaultState, action) {
   switch (action.type) {
-    case CHANGE_TEMPLATE_STATUS:{
-      state = {
-        status: action.status,
-      };
-    }break;
+    case CHANGE_TEMPLATE_STATUS:
+      return { ...state, status: action.status };
+    default:
+      return state;
   }
-  return state;
 }

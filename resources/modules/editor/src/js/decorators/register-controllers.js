@@ -245,7 +245,7 @@ export function advancedTabControllers(element) {
   element.startControlSection(
     'element_position', {
       tab: TAB_ADVANCED,
-      label: 'position',
+      label: 'Position',
     }
   );
   
@@ -306,7 +306,7 @@ export function advancedTabControllers(element) {
   element.startControlSection(
     'element_sizes', {
       tab: TAB_ADVANCED,
-      label: 'sizes',
+      label: 'Sizes',
     }
   );
   
@@ -357,7 +357,7 @@ export function advancedTabControllers(element) {
   element.startControlSection(
     'element_display', {
       tab: TAB_ADVANCED,
-      label: 'display',
+      label: 'Display',
     }
   );
 
@@ -550,7 +550,7 @@ export function advancedTabControllers(element) {
   element.startControlSection(
     'element_css', {
       tab: TAB_ADVANCED,
-      label: 'css editor',
+      label: 'CSS editor',
     }
   );
 

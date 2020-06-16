@@ -20,6 +20,6 @@
 <div id="front-app">
 
 </div>
-<script src="/modules/front-app/front-app.js"></script>
+<script src="{{ altrp_asset( '/modules/front-app/front-app.js', 'http://localhost:3001/' ) }}" defer></script>
 </body>
 </html>

@@ -69,7 +69,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "editor/"),
-    publicPath: "http://localhost:3001/",
+    publicPath: "http://localhost:3001/src/",
     chunkFilename: '[name].bundle.js',
     filename: "bundle.js"
   },
@@ -77,6 +77,11 @@ module.exports = {
     contentBase: path.join(__dirname, "resources/modules/front-app/public/"),
     port: 3000,
     publicPath: "http://localhost:3000/",
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+    },
     hotOnly: true
   },
   plugins: [

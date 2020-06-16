@@ -11,7 +11,7 @@ module.exports = merge(common, {
     disableHostCheck: true,
     contentBase: path.join(__dirname, "resources/modules/front-app/public/"),
     port: 3001,
-    publicPath: "http://localhost:3001/",
+    publicPath: "http://localhost:3001/src/",
     hotOnly: true,
     before: function(app, server, compiler) {
       app.get('/ajax/routes', function (req, res) {

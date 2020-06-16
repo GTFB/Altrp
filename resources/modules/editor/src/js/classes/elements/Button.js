@@ -18,7 +18,7 @@ import {
 class Button extends BaseElement{
 
   static getName(){
-    return'button';
+    return'Button';
   }
   static getTitle(){
     return'Button';
@@ -54,7 +54,7 @@ class Button extends BaseElement{
 
     this.addControl('position_margin', {
       type: CONTROLLER_DIMENSIONS,
-      label: 'margin',
+      label: 'Margin',
       default:{
         top: 10,
         right: 10,
@@ -79,7 +79,7 @@ class Button extends BaseElement{
 
     this.addControl('position_padding', {
       type: CONTROLLER_DIMENSIONS,
-      label: 'padding',
+      label: 'Padding',
       default:{
         top: 10,
         right: 15,
@@ -104,7 +104,7 @@ class Button extends BaseElement{
 
     this.addControl('position_z_index', {
       type: CONTROLLER_NUMBER,
-      label: 'z-index',
+      label: 'Z-index',
       default: 0,
       rules: {
         '{{ELEMENT}} .altrp-btn': 'z-index: {{VALUE}}'
@@ -131,7 +131,7 @@ class Button extends BaseElement{
 
     this.addControl('font_type', {
       type: CONTROLLER_SELECT2,
-      label: 'font',
+      label: 'Font',
       placeholder: 'Lato',
       default: '"Lato"',
       options: [
@@ -151,7 +151,7 @@ class Button extends BaseElement{
 
     this.addControl('font_weight', {
       type: CONTROLLER_SLIDER,
-      label: 'font weight',
+      label: 'Font weight',
       default:{
         size:900,
         unit:'px',
@@ -166,7 +166,7 @@ class Button extends BaseElement{
 
     this.addControl('font_size', {
       type: CONTROLLER_SLIDER,
-      label: 'font size',
+      label: 'Font size',
       default:{
         size:16,
         unit:'px',
@@ -186,7 +186,7 @@ class Button extends BaseElement{
 
     this.addControl('font_color', {
       type: CONTROLLER_COLOR,
-      label: 'color',
+      label: 'Color',
       default: {
         color: "rgb(255,255,255)",
         colorPickedHex: "#FFF",
@@ -201,7 +201,7 @@ class Button extends BaseElement{
 
     this.startControlSection('border_section', {
       tab: TAB_STYLE,
-      label: 'border'
+      label: 'Border'
     });
 
     this.addControl(
@@ -296,12 +296,12 @@ class Button extends BaseElement{
 
     this.startControlSection('background_section', {
       tab: TAB_STYLE,
-      label: 'background'
+      label: 'Background'
     });
 
     this.addControl('background_color', {
       type: CONTROLLER_COLOR,
-      label: 'background color',
+      label: 'Background color',
       default: {
         color: "rgb(52,59,76)",
         colorPickedHex: "#343B4C",
@@ -321,7 +321,7 @@ class Button extends BaseElement{
 
     this.addControl('button_advanced_tooltip_font', {
       type: CONTROLLER_SELECT2,
-      label: 'font',
+      label: 'Font',
       placeholder: 'Lato',
       default: '"Lato"',
       options: [

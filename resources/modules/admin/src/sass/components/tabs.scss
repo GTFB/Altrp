@@ -1,0 +1,30 @@
+.react-tabs{
+  &__tab-panel{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #D5D7DE;
+    border-radius: 3px;
+    overflow: hidden;
+    background-color: #fff;
+  }
+}
+.nav-pills{
+  & .react-tabs{
+    &__tab{
+      margin-right: 16px;
+      padding: 0.5rem 1rem;
+      border: 1px solid #D5D7DE;
+      border-radius: 3px 3px 0 0;
+      background-color: #E6E9EC;
+      font-family: Montserrat, sans-serif;
+      font-size: 16px;
+      font-weight: bold;
+      color: #8E94AA;
+      &--selected{
+        background-color: #fff;
+        border-bottom-color: #fff;
+        color: #343B4C;
+      }
+    }
+  }
+}
