@@ -75,7 +75,7 @@ class UpgradeController extends Controller
     // Success message
 
     // Redirection
-    return redirect( '/' );
+    return redirect( '/admin/settings' );
   }
 
   /**

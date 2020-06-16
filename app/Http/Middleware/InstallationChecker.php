@@ -56,6 +56,9 @@ class InstallationChecker
 	public function alreadyInstalled($request)
 	{
 		// Check if installation has just finished
+    if( env( 'APP_ENV' ) === 'local' ){
+      return true;
+    }
 		if (!empty($request->session()->get('install_finish'))) {
 			// Write file
 			File::put(storage_path('installed'), '');
