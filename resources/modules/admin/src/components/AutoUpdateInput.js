@@ -25,6 +25,10 @@ class AutoUpdateInput extends Component {
     });
   }
 
+  /**
+   * При нажатии на enter тоже обновдем данные
+   * @param e
+   */
   onKeyDown(e){
     if(e.keyCode === 13){
       this.changeValue(e);

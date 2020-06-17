@@ -14,6 +14,11 @@
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">
   <link rel="stylesheet" href={{ asset( '/modules/front-app/front-app.css' ) }}/>
+  <style>
+    .app-area > .sections-wrapper{
+      width: {{ get_altrp_setting( 'container_width', '1440' ) }}px;
+    }
+  </style>
 
 </head>
 <body>

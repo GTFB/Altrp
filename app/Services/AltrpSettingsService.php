@@ -16,19 +16,22 @@ class AltrpSettingsService{
 
   /**
    * @param string $setting_name
+   * @param string $default
    * @return string
    */
-  public function get_setting_value( $setting_name )
+  public function get_setting_value( $setting_name = '', $default = '' )
   {
-    $value = '';
-
+    $value = $default;
+    if( ! $setting_name ){
+      return $value;
+    }
     $settings_key = $this->get_setting_key( $setting_name );
 
     if( DotenvEditor::keyExists( $settings_key ) ){
       $value = DotenvEditor::getValue( $settings_key );
     }
 
-    return $value;
+    return $value ? $value : $default;
   }
 
   /**
@@ -44,9 +47,12 @@ class AltrpSettingsService{
    * @param string $value
    * @return bool
    */
-  public function set_setting_value( $setting_name, $value = '' )
+  public function set_setting_value( $setting_name = '', $value = '' )
   {
     $settings_key = $this->get_setting_key( $setting_name );
+    if( ! $setting_name ){
+      return false;
+    }
     try{
       DotenvEditor::setKey( $settings_key, $value );
       DotenvEditor::save();

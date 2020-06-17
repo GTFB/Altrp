@@ -8,25 +8,25 @@
 function getRawBaseUrl()
 {
   // Get the Laravel's App public path name
-  $laravelPublicPath = trim(public_path(), '/');
-  $laravelPublicPathLabel = last(explode('/', $laravelPublicPath));
+  $laravelPublicPath = trim( public_path(), '/' );
+  $laravelPublicPathLabel = last( explode( '/', $laravelPublicPath ) );
 
   // Get Server Variables
-  $httpHost = (trim(request()->server('HTTP_HOST')) != '') ? request()->server('HTTP_HOST') : (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '');
-  $requestUri = (trim(request()->server('REQUEST_URI')) != '') ? request()->server('REQUEST_URI') : (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '');
+  $httpHost = ( trim( request()->server( 'HTTP_HOST' ) ) != '' ) ? request()->server( 'HTTP_HOST' ) : ( isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '' );
+  $requestUri = ( trim( request()->server( 'REQUEST_URI' ) ) != '' ) ? request()->server( 'REQUEST_URI' ) : ( isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '' );
 
   // Clear the Server Variables
-  $httpHost = trim($httpHost, '/');
-  $requestUri = trim($requestUri, '/');
-  $requestUri = (mb_substr($requestUri, 0, strlen($laravelPublicPathLabel)) === $laravelPublicPathLabel) ? '/' . $laravelPublicPathLabel : '';
+  $httpHost = trim( $httpHost, '/' );
+  $requestUri = trim( $requestUri, '/' );
+  $requestUri = ( mb_substr( $requestUri, 0, strlen( $laravelPublicPathLabel ) ) === $laravelPublicPathLabel ) ? '/' . $laravelPublicPathLabel : '';
 
   // Get the Current URL
-  $currentUrl = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ? 'https://' : 'http://') . $httpHost . strtok($requestUri, '?');
-  $currentUrl = head(explode('/' . admin_uri(), $currentUrl));
+  $currentUrl = ( ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] != 'off' ) ? 'https://' : 'http://' ) . $httpHost . strtok( $requestUri, '?' );
+  $currentUrl = head( explode( '/' . admin_uri(), $currentUrl ) );
 
   // Get the Base URL
-  $baseUrl = head(explode('/install', $currentUrl));
-  $baseUrl = rtrim($baseUrl, '/');
+  $baseUrl = head( explode( '/install', $currentUrl ) );
+  $baseUrl = rtrim( $baseUrl, '/' );
 
   return $baseUrl;
 }
@@ -36,23 +36,24 @@ function getRawBaseUrl()
  * @param string $path
  * @return string
  */
-function admin_uri($path = '')
+function admin_uri( $path = '' )
 {
-  $path = str_replace(url(config('altrp.admin.route_prefix', 'admin')), '', $path);
-  $path = ltrim($path, '/');
+  $path = str_replace( url( config( 'altrp.admin.route_prefix', 'admin' ) ), '', $path );
+  $path = ltrim( $path, '/' );
 
-  if (!empty($path)) {
-    $path = config('altrp.admin.route_prefix', 'admin') . '/' . $path;
+  if ( ! empty( $path ) ) {
+    $path = config( 'altrp.admin.route_prefix', 'admin' ) . '/' . $path;
   } else {
-    $path = config('altrp.admin.route_prefix', 'admin');
+    $path = config( 'altrp.admin.route_prefix', 'admin' );
   }
 
   return $path;
 }
 
-function updateIsAvailable(){
+function updateIsAvailable()
+{
 
-  if( env( 'APP_ENV' ) === 'local' ){
+  if ( env( 'APP_ENV' ) === 'local' ) {
     return false;
   }
   // Check if the '.env' file exists
@@ -80,12 +81,12 @@ function updateIsAvailable(){
  * @param $url
  * @param int $code (301 => Moved Permanently | 302 => Moved Temporarily)
  */
-function headerLocation($url, $code = 301)
+function headerLocation( $url, $code = 301 )
 {
-  header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-  header("Cache-Control: post-check=0, pre-check=0", false);
-  header("Pragma: no-cache");
-  header("Location: " . $url, true, $code);
+  header( "Cache-Control: no-store, no-cache, must-revalidate, max-age=0" );
+  header( "Cache-Control: post-check=0, pre-check=0", false );
+  header( "Pragma: no-cache" );
+  header( "Location: " . $url, true, $code );
 
   exit();
 }
@@ -165,6 +166,7 @@ function appInstallFilesExist()
 
   return false;
 }
+
 /**
  * Check if function is enabled
  *
@@ -281,16 +283,32 @@ function getCurrentVersion()
  * @param string $domain
  * @return string
  */
-function altrp_asset( $path, $domain = 'http://localhost:3002/'){
-  if( env( 'APP_ENV', 'production' ) !== 'local' ){
-    return asset( $path ) . '?' . getCurrentVersion() ;
+function altrp_asset( $path, $domain = 'http://localhost:3002/' )
+{
+  if ( env( 'APP_ENV', 'production' ) !== 'local' ) {
+    return asset( $path ) . '?' . getCurrentVersion();
   }
   $client = new \GuzzleHttp\Client();
-  try{
-    $client->get( $domain )->getStatusCode() ;
-  } catch (Exception $e){
+  try {
+    $client->get( $domain )->getStatusCode();
+  } catch ( Exception $e ) {
     return asset( $path ) . '?' . getCurrentVersion();
   }
 
-  return  $domain . 'src/bundle.js' ;
+  return $domain . 'src/bundle.js';
+}
+
+/**
+ * @param string $setting_name
+ * @param string $default
+ * @return string
+ */
+function get_altrp_setting( $setting_name, $default = '' )
+{
+  /**
+   * @var \App\Services\AltrpSettingsService $settings_service
+   */
+  $settings_service = app( 'App\Services\AltrpSettingsService' );
+  return $settings_service->get_setting_value( $setting_name, $default );
+
 }
