@@ -5,9 +5,12 @@ import {
   CONTROLLER_NUMBER,
   CONTROLLER_COLOR,
   CONTROLLER_SELECT,
+  CONTROLLER_CSSEDITOR,
   CONTROLLER_SLIDER,
-  TAB_STYLE
+  TAB_STYLE,
+  TAB_ADVANCED
 } from "../modules/ControllersManager";
+import { advancedTabControllers } from "../../decorators/register-controllers";
 
 class Column  extends BaseElement {
 
@@ -45,82 +48,6 @@ class Column  extends BaseElement {
       rules: {
         "{{ELEMENT}} .altrp-column": "background-color: {{COLOR}};"
       }
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("column_style_advanced", {
-      tab: TAB_STYLE,
-      label: "advanced"
-    });
-
-    this.addControl('column_style_advanced_margin', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'margin',
-      default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit:'px'
-      },
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-column': [ 
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
-    });
-
-    this.addControl('column_style_advanced_padding', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'padding',
-      default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit:'px'
-      },
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-column': [ 
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
-    });
-
-    this.addControl('column_advanced_z_index', {
-      type: CONTROLLER_NUMBER,
-      label: "z-index",
-      default: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-text": "z-index: {{VALUE}}"
-      }
-    });
-
-    this.addControl("column_advanced_attributes_css_id", {
-      type: CONTROLLER_TEXT,
-      label: "CSS ID"
-    });
-
-    this.addControl("column_advanced_attributes_css_classes", {
-      type: CONTROLLER_TEXT,
-      label: "CSS Classes"
     });
 
     this.endControlSection();
@@ -207,7 +134,8 @@ class Column  extends BaseElement {
     });
 
     this.endControlSection();
-
+    
+    advancedTabControllers(this);
   }
 
   appendWidget(newWidget) {

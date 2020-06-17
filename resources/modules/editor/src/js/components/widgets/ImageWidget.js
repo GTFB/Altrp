@@ -19,7 +19,7 @@ class ImageWidget extends Component {
     {  renderAsset(this.state.settings.content_media || {
       assetType: "image",
       name: "null",
-      url: "../../../img/nullImage.png"
+      url: "/img/nullImage.png"
     }
     , {
       className: this.state.settings.position_css_classes || "altrp-image",
