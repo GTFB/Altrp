@@ -95,7 +95,7 @@ class Select2Controller extends Component {
           options={this.props.options}
           styles={customStyles}
           placeholder={this.props.placeholder}
-          noOptionsMessage={() => "тут пусто"}
+          noOptionsMessage={() => "no found"}
         />
       </div>
     </div>

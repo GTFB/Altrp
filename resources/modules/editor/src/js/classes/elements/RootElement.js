@@ -14,6 +14,7 @@ import {
   CONTROLLER_BUTTON,
   CONTROLLER_HEADING,
   CONTROLLER_CSSEDITOR,
+  CONTROLLER_TYPOGRAPHIC,
   TAB_ADVANCED,
   TAB_CONTENT,
   TAB_STYLE,
@@ -46,226 +47,377 @@ class RootElement extends BaseElement {
       label: 'Text Section',
     });
 
-    this.addControl('textContainer', {
-      type: CONTROLLER_TEXT,
-      label: "textContainer"
-    });
-
-    this.addControl('text', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Switcher Content',
-    });
-
-    this.addControl('font-size', {
-      type: CONTROLLER_NUMBER,
-      label: 'Font Size',
-      default: 16,
-      rules: {
-        '{{ELEMENT}}': [
-          'font-size: {{VALUE}}px;',
-          'line-height: {{VALUE}}px',
+    this.addControl(
+      'adsasd', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'box shadow',
+        default:{
+          lineHeight: 0.1,
+          spacing: 0,
+          size: 36,
+          weight: "normal",
+          family: '"lato"',
+          decoration: ""
+        },
+        familyOptions: [
+              {
+                value: '1',
+                label:'Select sd  Content 1'
+              },
+              {
+                value: '2',
+                label:'Select Content 2'
+              },
+            ],
+        weightOptions: [
+          {
+            value: '100',
+            label:'100'
+          },
+          {
+            value: '200',
+            label:'200'
+          },
+          {
+            value: '300',
+            label:'300'
+          },
+          {
+            value: '400',
+            label:'400'
+          },
+          {
+            value: '500',
+            label:'500'
+          },
+          {
+            value: '600',
+            label:'600'
+          },
+          {
+            value: '700',
+            label:'700'
+          },
+          {
+            value: '800',
+            label:'800'
+          },
+          {
+            value: '900',
+            label:'900'
+          },
+          {
+            value: 'bold',
+            label:'bold'
+          },
+          {
+            value: 'normal',
+            label:'normal'
+          },
+          {
+            value: 'bolder',
+            label:'bolder'
+          },
+          {
+            value: 'lighter',
+            label:'lighter'
+          },
         ],
-      },
-    });
-
-    this.addControl('padding', {
-      type: CONTROLLER_NUMBER,
-      label: 'Padding All',
-      default: 17,
-      rules: {
-        '{{ELEMENT}}': 'padding: {{VALUE}}px;',
-      },
-    });
-
-    this.addControl('dimensions', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Dimensions',
-      default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit:'px'
-      },
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
-    });
-
-    this.addControl('dimenssions', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Dimensions',
-      default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit:'px'
-      },
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
-    });
-
-    this.addControl('select', {
-      type: CONTROLLER_SELECT,
-      label: 'Select Content',
-      default: 'select1',
-      options: [
-        {
-          value: 'select1',
-          label: 'Select Content 231'
+        transformOptions: [
+          {
+            value: 'none',
+            label:'default',
+            key: 0
+          },
+          {
+            value: 'capitalize',
+            label:'capitalize',
+            key: 1
+          },
+          {
+            value: 'uppercase',
+            label:'uppercase',
+            key: 2
+          },
+          {
+            value: 'lowercase',
+            label:'lowercase',
+            key: 3
+          },
+        ],
+        styleOptions: [
+          {
+            value: 'normal',
+            label:'normal',
+            key: 0
+          },
+          {
+            value: 'italic',
+            label:'italic',
+            key: 1
+          },
+          {
+            value: 'oblique',
+            label:'oblique',
+            key: 2
+          },
+        ],
+        decorationOptions: [
+          {
+            value: 'none',
+            label:'none',
+            key: 0
+          },
+          {
+            value: 'underline',
+            label:'underline',
+            key: 1
+          },
+          {
+            value: 'overline',
+            label:'overline',
+            key: 3
+          },
+          {
+            value: 'line-through',
+            label:'line-through',
+            key: 4
+          },
+        ],
+        rules: {
+          '{{ELEMENT}}': [
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
         },
-        {
-          value: 'select2',
-          label: 'Select Content 2'
-        }
-      ]
-    });
-
-    this.addControl('choose', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Choose Content',
-      default: 1,
-      options:[
-        {
-          icon: 'add',
-          value: 'add',
-        }
-      ],
-    });
-
-    this.addControl('slider', {
-      type: CONTROLLER_SLIDER,
-      label: 'Slider Content',
-      default:{
-        size:12,
-        unit:'px'
-      },
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-      max: 10,
-      min: -10,
-      rules: {
-        '{{ELEMENT}}': 'padding: {{SIZE}}{{UNIT}};',
-      },
-    });
-
-    this.addControl('select2', {
-      type: CONTROLLER_SELECT2,
-      label: 'Select2 Content',
-      placeholder: 'placeholder',
-      default: '1',
-      options: [
-        {
-          value: '1',
-          label:'Select sd  Content 1'
-        },
-        {
-          value: '2',
-          label:'Select Content 2'
-        },
-      ]
-    });
-
-    this.addControl('link', {
-      type: CONTROLLER_LINK,
-      default: {
-        url: "",
-        attributes: "",
-        noFollow: false
-      },
-      label: 'link content',
-    });
-
-    this.addControl('color', {
-      type: CONTROLLER_COLOR,
-      label: 'color content',
-      default: {
-        color: "rgb(234, 234, 234)",
-        colorPickedHex: "#EAEAEA",
-      },
-      presetColors: [
-        "#eaeaea",
-        "#9c18a8"
-      ],
-      rules: {
-        '{{ELEMENT}}': 'background: {{COLOR}};',
-      },
-    });
-
-    this.addControl('button', {
-      type: CONTROLLER_BUTTON,
-      label: 'button content',
-      button: 'button',
-      classes: {
-        backgroundColor: '#20c74c',
-        color: '#FFF'
       }
-    });
+    );
 
-    this.addControl('heading', {
-      type: CONTROLLER_HEADING,
-      default: {
-        label: 'heading'
-      }
-    });
+    // this.addControl('textContainer', {
+    //   type: CONTROLLER_TEXT,
+    //   label: "textContainer"
+    // });
 
-    this.addControl('css editor', {
-      type: CONTROLLER_CSSEDITOR,
-      default: {
-        value: null
-      },
-    });
+    // this.addControl('text', {
+    //   type: CONTROLLER_SWITCHER,
+    //   label: 'Switcher Content',
+    // });
 
-    this.endControlSection();
+    // this.addControl('font-size', {
+    //   type: CONTROLLER_NUMBER,
+    //   label: 'Font Size',
+    //   default: 16,
+    //   rules: {
+    //     '{{ELEMENT}}': [
+    //       'font-size: {{VALUE}}px;',
+    //       'line-height: {{VALUE}}px',
+    //     ],
+    //   },
+    // });
 
-    this.startControlSection('text_style', {
-      tab: TAB_STYLE,
-      label: 'Text Section',
-    });
+    // this.addControl('padding', {
+    //   type: CONTROLLER_NUMBER,
+    //   label: 'Padding All',
+    //   default: 17,
+    //   rules: {
+    //     '{{ELEMENT}}': 'padding: {{VALUE}}px;',
+    //   },
+    // });
 
-    this.addControl('text_', {
-      type: CONTROLLER_TEXTAREA,
-      label: 'Text Content',
-      default: 'Default Text!!!',
-    });
+    // this.addControl('dimensions', {
+    //   type: CONTROLLER_DIMENSIONS,
+    //   label: 'Dimensions',
+    //   default:{
+    //     top: 0,
+    //     right: 0,
+    //     bottom: 0,
+    //     left: 0,
+    //     unit:'px'
+    //   },
+    //   units:[
+    //     'px',
+    //     '%',
+    //     'vh',
+    //   ],
+    //   rules: {
+    //     '{{ELEMENT}}': [
+    //       'padding-top: {{TOP}}{{UNIT}};',
+    //       'padding-right: {{RIGHT}}{{UNIT}};',
+    //       'padding-bottom: {{BOTTOM}}{{UNIT}};',
+    //       'padding-left: {{LEFT}}{{UNIT}};'
+    //     ]
+    //   },
+    // });
 
-    this.endControlSection();
+    // this.addControl('dimenssions', {
+    //   type: CONTROLLER_DIMENSIONS,
+    //   label: 'Dimensions',
+    //   default:{
+    //     top: 0,
+    //     right: 0,
+    //     bottom: 0,
+    //     left: 0,
+    //     unit:'px'
+    //   },
+    //   units:[
+    //     'px',
+    //     '%',
+    //     'vh',
+    //   ],
+    //   rules: {
+    //     '{{ELEMENT}}': [
+    //       'padding-top: {{TOP}}{{UNIT}};',
+    //       'padding-right: {{RIGHT}}{{UNIT}};',
+    //       'padding-bottom: {{BOTTOM}}{{UNIT}};',
+    //       'padding-left: {{LEFT}}{{UNIT}};'
+    //     ]
+    //   },
+    // });
 
-    this.startControlSection('text_advanced', {
-      tab: TAB_ADVANCED,
-      label: 'Text Section',
-    });
+    // this.addControl('select', {
+    //   type: CONTROLLER_SELECT,
+    //   label: 'Select Content',
+    //   default: 'select1',
+    //   options: [
+    //     {
+    //       value: 'select1',
+    //       label: 'Select Content 231'
+    //     },
+    //     {
+    //       value: 'select2',
+    //       label: 'Select Content 2'
+    //     }
+    //   ]
+    // });
 
-    this.addControl('text__', {
-      type: CONTROLLER_TEXT,
-      label: 'Text Content',
-      default: 'Default Advanced Text!!!',
-    });
+    // this.addControl('choose', {
+    //   type: CONTROLLER_CHOOSE,
+    //   label: 'Choose Content',
+    //   default: 1,
+    //   options:[
+    //     {
+    //       icon: 'add',
+    //       value: 'add',
+    //     }
+    //   ],
+    // });
+
+    // this.addControl('slider', {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Slider Content',
+    //   default:{
+    //     size:12,
+    //     unit:'px'
+    //   },
+    //   units:[
+    //     'px',
+    //     '%',
+    //     'vh',
+    //   ],
+    //   max: 10,
+    //   min: -10,
+    //   rules: {
+    //     '{{ELEMENT}}': 'padding: {{SIZE}}{{UNIT}};',
+    //   },
+    // });
+
+    // this.addControl('select2', {
+    //   type: CONTROLLER_SELECT2,
+    //   label: 'Select2 Content',
+    //   placeholder: 'placeholder',
+    //   default: '1',
+    //   options: [
+    //     {
+    //       value: '1',
+    //       label:'Select sd  Content 1'
+    //     },
+    //     {
+    //       value: '2',
+    //       label:'Select Content 2'
+    //     },
+    //   ]
+    // });
+
+    // this.addControl('link', {
+    //   type: CONTROLLER_LINK,
+    //   default: {
+    //     url: "",
+    //     attributes: "",
+    //     noFollow: false
+    //   },
+    //   label: 'link content',
+    // });
+
+    // this.addControl('color', {
+    //   type: CONTROLLER_COLOR,
+    //   label: 'color content',
+    //   default: {
+    //     color: "rgb(234, 234, 234)",
+    //     colorPickedHex: "#EAEAEA",
+    //   },
+    //   presetColors: [
+    //     "#eaeaea",
+    //     "#9c18a8"
+    //   ],
+    //   rules: {
+    //     '{{ELEMENT}}': 'background: {{COLOR}};',
+    //   },
+    // });
+
+    // this.addControl('button', {
+    //   type: CONTROLLER_BUTTON,
+    //   label: 'button content',
+    //   button: 'button',
+    //   classes: {
+    //     backgroundColor: '#20c74c',
+    //     color: '#FFF'
+    //   }
+    // });
+
+    // this.addControl('heading', {
+    //   type: CONTROLLER_HEADING,
+    //   default: {
+    //     label: 'heading'
+    //   }
+    // });
+
+    // this.addControl('css editor', {
+    //   type: CONTROLLER_CSSEDITOR,
+    //   default: {
+    //     value: null
+    //   },
+    // });
+
+    // this.endControlSection();
+
+    // this.startControlSection('text_style', {
+    //   tab: TAB_STYLE,
+    //   label: 'Text Section',
+    // });
+
+    // this.addControl('text_', {
+    //   type: CONTROLLER_TEXTAREA,
+    //   label: 'Text Content',
+    //   default: 'Default Text!!!',
+    // });
+
+    // this.endControlSection();
+
+    // this.startControlSection('text_advanced', {
+    //   tab: TAB_ADVANCED,
+    //   label: 'Text Section',
+    // });
+
+    // this.addControl('text__', {
+    //   type: CONTROLLER_TEXT,
+    //   label: 'Text Content',
+    //   default: 'Default Advanced Text!!!',
+    // });
 
     this.endControlSection();
     // this.startControlSection('text_section', {

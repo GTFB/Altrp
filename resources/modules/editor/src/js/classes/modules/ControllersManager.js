@@ -16,6 +16,7 @@ import HeadingController from "../../components/controllers/HeadingController";
 import CssEditorController from "../../components/controllers/CssEditorController";
 import ShadowController from "../../components/controllers/ShadowController";
 import TransformController from "../../components/controllers/TransformController";
+import TypographicController from "../../components/controllers/TypographicController";
 import WysiwygController from "../../components/controllers/WysisygController";
 
 export const TAB_CONTENT = 'content';
@@ -39,6 +40,8 @@ export const CONTROLLER_HEADING = 'heading';
 export const CONTROLLER_CSSEDITOR = 'css-editor';
 export const CONTROLLER_SHADOW = 'shadow';
 export const CONTROLLER_TRANSFORM = 'transform';
+export const CONTROLLER_TYPOGRAPHIC = 'typographic';
+
 
 class ControllersManager {
   constructor(){
@@ -61,6 +64,7 @@ class ControllersManager {
     this.conttrollers[CONTROLLER_CSSEDITOR] = CssEditorController;
     this.conttrollers[CONTROLLER_SHADOW] = ShadowController;
     this.conttrollers[CONTROLLER_TRANSFORM] = TransformController;
+    this.conttrollers[CONTROLLER_TYPOGRAPHIC] = TypographicController;
     this.elementsControls = null;
     this._cache = {
       controls: {},
