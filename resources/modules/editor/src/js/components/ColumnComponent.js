@@ -14,7 +14,7 @@ class ColumnComponent extends Component {
     }
   }
   render(){
-    return <div className="altrp-column">
+    return <div className={"altrp-column " + this.state.settings.column_advanced_attributes_css_classes || ""} id={this.state.settings.column_advanced_attributes_css_id || ""}>
       {this.state.children.map(
           section => <ElementWrapper key={section.getId()} component={section.componentClass} element={section}/>
       )}

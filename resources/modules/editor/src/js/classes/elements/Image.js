@@ -41,9 +41,7 @@ class Image extends BaseElement{
     this.addControl('content_media', {
       type: CONTROLLER_MEDIA,
       label: 'Choose image',
-      default: {
-      	assetType: 'img'
-      }
+      default: null
     });
 
     this.endControlSection();

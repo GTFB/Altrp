@@ -11,8 +11,9 @@ import {
   CONTROLLER_TEXT,
   CONTROLLER_SLIDER,
   TAB_CONTENT,
+  TAB_STYLE,
   CONTROLLER_LINK,
-  TAB_STYLE, CONTROLLER_CHOOSE,
+  CONTROLLER_CHOOSE,
   CONTROLLER_NUMBER
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
@@ -47,36 +48,46 @@ class Heading extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection('text_settings', {
+    this.startControlSection('heading_settings', {
       tab: TAB_CONTENT,
       label: 'Text Settings',
     });
 
-    this.addControl('text_settings_alignment', {
+    this.addControl('heading_settings_alignment', {
       type: CONTROLLER_CHOOSE,
-      label: 'Alignment',
-      default: 1,
+      label: 'Choose Content',
+      default: 'left',
       options:[
         {
-          icon: 'add',
-          value: 'add',
-        }
-      ],
-    });
-
-
-    this.addControl('text_settings_html_tag', {
-      type: CONTROLLER_SELECT,
-      label: 'html tag',
-      default: 'p',
-      options: [
-        {
-          value: 'p',
-          label: 'default'
+          icon: 'left',
+          value: 'left',
         },
         {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+        {
+          icon: 'in_width',
+          value: 'justify',
+        }
+      ],
+      rules: {
+            '{{ELEMENT}}': 'text-align: {{VALUE}};',
+      },
+    });
+
+    this.addControl('heading_settings_html_tag', {
+      type: CONTROLLER_SELECT,
+      label: 'html tag',
+      default: 'h1',
+      options: [
+        {
           value: 'h1',
-          label: 'h1'
+          label: 'default'
         },
         {
           value: 'h2',
@@ -109,6 +120,39 @@ class Heading extends BaseElement {
         noFollow: false
       },
       label: 'link',
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('heading_style_font', {
+      tab: TAB_STYLE,
+      label: 'Font',
+    });
+    
+    this.addControl("heading_style_color", {
+      type: CONTROLLER_COLOR,
+      label: "color",
+      default: {
+        color: "",
+        colorPickedHex: "#000",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}} .altrp-heading": "color: {{COLOR}};"
+      }
+    });
+    
+    this.addControl("heading_style_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "background color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}} .altrp-heading": "background-color: {{COLOR}};"
+      }
     });
 
     this.endControlSection();
