@@ -99,9 +99,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::delete('/users/{user}/roles', "Users\Users@detachRole");
 
     Route::resource( 'areas', 'Admin\AreasController' );
-
     Route::resource( 'templates', 'TemplateController' );
     Route::resource( 'media', 'Admin\MediaController' );
+    Route::resource( 'settings', 'Admin\SettingsController' );
 
     /**
      * Updates Check

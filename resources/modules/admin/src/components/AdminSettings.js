@@ -1,9 +1,8 @@
 import React, {Component} from "react";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import 'react-tabs/style/react-tabs.scss';
-import Updates from "./Updates/Updates";
-import AdminTab from "./AdminTab/AdminTab";
-import cx from 'clsx';
+import Updates from "./Updates";
+import StylesSettings from "./StylesSettings";
 
 
 export default class AdminSettings extends Component {
@@ -92,6 +91,7 @@ export default class AdminSettings extends Component {
             </table>
           </TabPanel>
           <TabPanel>
+            <StylesSettings/>
           </TabPanel>
           <TabPanel>
           </TabPanel>

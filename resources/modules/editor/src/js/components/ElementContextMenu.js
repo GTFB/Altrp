@@ -68,7 +68,10 @@ class ElementContextMenu extends Component{
           <Item disabled onClick={this.onSelectItem}>
             Paste Styles
           </Item>
-          <Separator/>
+          {
+            this.showAddNewColumnItem() ?
+                <Separator/> : ''
+          }
           {
             this.showAddNewColumnItem() ?
               <Item onClick={this.addNewColumn}>Add New Column</Item> : ''

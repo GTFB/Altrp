@@ -14,6 +14,9 @@
   <script>
   let _token = '{{ csrf_token() }}';
   </script>
+  <script>
+  let _altrpVersion = '{{ getCurrentVersion() }}';
+  </script>
   {{--  <script src="{{ asset( '/modules/editor/editor.js' ) }}" defer></script>--}}
   <script src="{{ altrp_asset( '/modules/editor/editor.js', 'http://localhost:3000/' ) }}" crossorigin defer></script>
 
