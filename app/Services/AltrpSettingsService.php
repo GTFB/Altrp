@@ -48,7 +48,9 @@ class AltrpSettingsService{
   {
     $settings_key = $this->get_setting_key( $setting_name );
     try{
-      $file = DotenvEditor::setKey( $settings_key, $value );
+      DotenvEditor::setKey( $settings_key, $value );
+      DotenvEditor::save();
+
     } catch (Exception $e){
       return false;
     }

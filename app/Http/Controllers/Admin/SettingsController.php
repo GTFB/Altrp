@@ -75,7 +75,7 @@ class SettingsController extends Controller
    * @param AltrpSettingsService $settings_service
    * @return \Illuminate\Http\Response
    */
-  public function update( $setting_name, $request, AltrpSettingsService $settings_service )
+  public function update( $setting_name, Request $request, AltrpSettingsService $settings_service )
   {
 
     if( ! $settings_service->set_setting_value( $setting_name, $request->value ) ){

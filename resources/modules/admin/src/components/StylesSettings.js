@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import AutoUpdateInput from "./AutoUpdateInput";
 
 class StylesSettings extends Component {
   render() {
@@ -12,7 +13,11 @@ class StylesSettings extends Component {
             </label>
           </td>
           <td className="admin-settings-table__td">
-            <input type="text" id="settings-container-width" className="form__input w-25"/>
+            <AutoUpdateInput type="number"
+                             route="/admin/ajax/settings"
+                             resourceid="container_width"
+                             id="settings-container-width"
+                             className="form__input w-25"/>
           </td>
         </tr>
         </tbody>
