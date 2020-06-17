@@ -18,6 +18,7 @@ class RootComponent extends Component {
     let classes = `sections-wrapper ${this.props.element
         .getSelector()
         .replace(".", "")}`;
+
     return (
         <div className={classes}>
             {this.state.children.map(section => (

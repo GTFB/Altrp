@@ -43,6 +43,13 @@
 
 .altrp-btn {
   width: auto;
+  &_gray{
+    background-color: $grey;
+    color: #fff;
+  }
+  &__icon{
+    transform: scale(.6);
+  }
 }
 
 .altrp-section {

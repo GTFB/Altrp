@@ -40,7 +40,6 @@ class TypographicController extends Component {
       spacingMin: this.props.spacingMin || -5,
     };
     controllerDecorate(this);
-    console.log(this.state.value)
   }
 
   getDefaultValue(){
@@ -196,7 +195,7 @@ class TypographicController extends Component {
         fontSize: 13,
         opacity: 1
       }),
-      
+
       indicatorSeparator: () => ({
         display: "none !important"
       }),

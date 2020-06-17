@@ -2,7 +2,13 @@ import store, {getCurrentElement} from '../store/store';
 import {CONSTANTS} from "../helpers";
 import CSSRule from "../classes/CSSRule";
 import {changeTemplateStatus} from "../store/template-status/actions";
+import {CONTROLLER_REPEATER} from "./modules/ControllersManager";
 
+/**
+ * Класс-контроллер
+ * @member {object} data
+ * @property {RepeaterController} data.repeater
+ */
 class Controller {
   constructor(data){
     let currentElement = getCurrentElement();
@@ -28,13 +34,25 @@ class Controller {
     /**
      * @member {BaseElement} currentElement
      * */
-    let currentElement = getCurrentElement();
-    currentElement.setSettingValue(this.getSettingName(), value);
-    this.rules.forEach(rule => {
-      rule.insertValue(value);
-    });
-    if(this.rules.length){
-      currentElement.addStyles(this.getSettingName(), this.rules);
+    if(! this.data.repeater) {
+      let currentElement = getCurrentElement();
+      currentElement.setSettingValue(this.getSettingName(), value);
+      this.rules.forEach(rule => {
+        rule.insertValue(value);
+      });
+      if (this.rules.length) {
+        currentElement.addStyles(this.getSettingName(), this.rules);
+      }
+    } else {
+
+      /**
+       * @type {RepeaterController}
+       * @public
+       */
+      this.data.repeater.changeValue(
+          this.data.itemIndex,
+          this.data.controlId,
+          value );
     }
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
   }

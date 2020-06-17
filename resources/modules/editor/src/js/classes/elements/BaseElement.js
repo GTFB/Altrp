@@ -2,14 +2,15 @@ import {CONTROLLER_TEXT, CONTROLLER_TEXTAREA, TAB_CONTENT, TAB_STYLE} from "../m
 import {getTemplateDataStorage, isEditor, getEditor, CONSTANTS, getFactory} from "../../helpers";
 import {changeTemplateStatus} from "../../store/template-status/actions";
 import store from "../../store/store";
+import ControlStack from "./ControlStack";
 
 /**
  * Базовый класс для методов элемента для редактора
- *
  */
-class BaseElement {
+class BaseElement extends ControlStack{
 
   constructor(){
+    super();
     this.settings = {};
     this.controls = {};
     this.controlsIds = [];
@@ -19,7 +20,6 @@ class BaseElement {
     this.initiatedDefaults = null;
 
     /**
-     * someProperty is an example property that is set to `true`
      * @type {BaseElement}
      * @public
      */
@@ -320,28 +320,6 @@ class BaseElement {
   }
 
 
-  /**
-   * @param {string} controlId
-   * @param {object} args
-   * */
-  addControl(controlId, args){
-    if(!this.currentSection){
-      throw 'Controls Can only be Added Inside the Section!'
-    }
-    if(this.controlsIds.indexOf(controlId) !== -1){
-      throw 'Control with id \'' + controlId + '\' Already Exists in ' + this.getName();
-    }
-
-    let section = this._getCurrentSection();
-
-    let defaults = {
-      type: CONTROLLER_TEXT,
-    };
-
-    section.controls.push({...defaults, ...args, controlId});
-    window.controllersManager.setControlsCache(this.getName() + controlId, {...args, controlId});
-    this.controlsIds.push(controlId);
-  }
 
   _getCurrentTab(){
     let tabName = this.currentSection.tab || TAB_STYLE;
