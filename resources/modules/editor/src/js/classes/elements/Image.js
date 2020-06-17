@@ -235,8 +235,7 @@ class Image extends BaseElement{
       label: 'Border'
     });
 
-    this.addControl(
-      'border_type', {
+    this.addControl('border_type', {
         type: CONTROLLER_SELECT,
         label: 'Border Type',
         units:[
@@ -276,8 +275,7 @@ class Image extends BaseElement{
       }
     );
   
-    this.addControl(
-      'border_width', {
+    this.addControl('border_width', {
         type: CONTROLLER_DIMENSIONS,
         label: 'Border Width',
         units:[
@@ -291,8 +289,7 @@ class Image extends BaseElement{
       }
     );
   
-    this.addControl(
-      'border_color', {
+    this.addControl('border_color', {
         type: CONTROLLER_COLOR,
         label: 'Border Color',
         default: {

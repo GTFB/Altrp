@@ -78,7 +78,7 @@ class Text extends BaseElement {
 
     this.addControl("text_style_column-count", {
       type: CONTROLLER_NUMBER,
-      label: "column count",
+      label: "Column count",
       default: 1,
       rules: {
         "{{ELEMENT}} .altrp-text": "column-count: {{VALUE}}"
@@ -87,7 +87,7 @@ class Text extends BaseElement {
 
     this.addControl("text_style_column-width", {
       type: CONTROLLER_SLIDER,
-      label: "column width",
+      label: "Column width",
       default: {
         size: 0,
         unit: "px"
@@ -102,7 +102,7 @@ class Text extends BaseElement {
 
     this.addControl("text_style_column-gap", {
       type: CONTROLLER_SLIDER,
-      label: "column width",
+      label: "Column width",
       default: {
         size: 0,
         unit: "px"
@@ -117,7 +117,7 @@ class Text extends BaseElement {
 
     this.addControl("text_transition", {
       type: CONTROLLER_NUMBER,
-      label: "transition",
+      label: "Transition",
       default: 0,
       rules: {
         "{{ELEMENT}} .altrp-text": "transition: {{VALUE}}s"
@@ -128,12 +128,12 @@ class Text extends BaseElement {
 
     this.startControlSection("text_style_position", {
       tab: TAB_STYLE,
-      label: "position"
+      label: "Position"
     });
 
     this.addControl("text_style_position_padding", {
       type: CONTROLLER_DIMENSIONS,
-      label: "padding",
+      label: "Padding",
       default: {
         top: 0,
         right: 0,
@@ -154,7 +154,7 @@ class Text extends BaseElement {
 
     this.addControl('text_style_position_margin', {
       type: CONTROLLER_DIMENSIONS,
-      label: 'margin',
+      label: 'Margin',
       default:{
         top: 5,
         right: 0,
@@ -179,7 +179,7 @@ class Text extends BaseElement {
 
     this.addControl('text_position_z_index', {
       type: CONTROLLER_NUMBER,
-      label: "z-index",
+      label: "Z-index",
       default: 0,
       rules: {
         "{{ELEMENT}} .altrp-text": "z-index: {{VALUE}}"
@@ -190,12 +190,12 @@ class Text extends BaseElement {
 
     this.startControlSection("text_style_background", {
       tab: TAB_STYLE,
-      label: "background"
+      label: "Background"
     });
 
     this.addControl("text_style_background_color", {
       type: CONTROLLER_COLOR,
-      label: "background color",
+      label: "Background color",
       default: {
         color: "",
         colorPickedHex: "",
@@ -208,7 +208,7 @@ class Text extends BaseElement {
 
     this.addControl("text_style_background_opacity", {
       type: CONTROLLER_SLIDER,
-      label: "opacity",
+      label: "Opacity",
       default: {
         size: 1
       },
@@ -224,12 +224,12 @@ class Text extends BaseElement {
 
     this.startControlSection("text_style_font", {
       tab: TAB_STYLE,
-      label: "font"
+      label: "Font"
     });
 
     this.addControl("text_style_font_color", {
       type: CONTROLLER_COLOR,
-      label: "color",
+      label: "Color",
       default: {
         color: "rgb(0, 0, 1)",
         colorPickedHex: "#000000"
@@ -244,12 +244,12 @@ class Text extends BaseElement {
 
     this.startControlSection("text_style_border", {
       tab: TAB_STYLE,
-      label: "border"
+      label: "Border"
     });
 
     this.addControl("text_style_border_type", {
       type: CONTROLLER_SELECT,
-      label: "Border Type",
+      label: "Border type",
       units: ["px", "%", "vh"],
       options: [
         {
@@ -284,7 +284,7 @@ class Text extends BaseElement {
 
     this.addControl("text_style_border_width", {
       type: CONTROLLER_DIMENSIONS,
-      label: "Border Width",
+      label: "Border width",
       units: ["px", "%", "vh"],
       rules: {
         "{{ELEMENT}} .altrp-text":
@@ -294,7 +294,7 @@ class Text extends BaseElement {
 
     this.addControl("text_style_border_color", {
       type: CONTROLLER_COLOR,
-      label: "Border Color",
+      label: "Border color",
       default: {
         color: "rgb(50,168,82)",
         colorPickedHex: "#32a852"
@@ -332,19 +332,19 @@ class Text extends BaseElement {
 
     this.addControl('text_advanced_tooltip_active', {
       type: CONTROLLER_SWITCHER,
-      label: 'tooltip active',
+      label: 'Tooltip active',
       default: false
     });
     
     this.addControl('text_advanced_tooltip_label', {
       type: CONTROLLER_TEXT,
       default: "tooltip",
-      label: 'label'
+      label: 'Label'
     })
 
     this.addControl('text_advanced_tooltip_color', {
       type: CONTROLLER_COLOR,
-      label: 'background color',
+      label: 'Background color',
       default: {
         color: "rgb(206,205,237)",
         colorPickedHex: "#CECDED",
@@ -361,7 +361,7 @@ class Text extends BaseElement {
 
     this.addControl('text_advanced_tooltip_font_color', {
       type: CONTROLLER_COLOR,
-      label: 'font color',
+      label: 'Font color',
       default: {
         color: "rgb(0,0,0)",
         colorPickedHex: "#000000",
@@ -466,7 +466,7 @@ class Text extends BaseElement {
 
     this.addControl('text_advanced_tooltip_font', {
       type: CONTROLLER_SELECT2,
-      label: 'font',
+      label: 'Font',
       placeholder: 'Lato',
       default: '"Lato"',
       options: [
@@ -488,7 +488,7 @@ class Text extends BaseElement {
 
     this.startControlSection("text_advanced_attributes", {
       tab: TAB_ADVANCED,
-      label: "attributes"
+      label: "Attributes"
     });
 
     this.addControl("text_advanced_attributes_css_id", {

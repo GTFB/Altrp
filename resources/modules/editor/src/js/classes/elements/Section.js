@@ -33,12 +33,12 @@ class Section extends BaseElement{
 
     this.startControlSection("section_style_background", {
       tab: TAB_STYLE,
-      label: "background"
+      label: "Background"
     });
 
     this.addControl("section_style_background_color", {
       type: CONTROLLER_COLOR,
-      label: "background color",
+      label: "Background color",
       default: {
         color: "",
         colorPickedHex: "",
@@ -58,7 +58,7 @@ class Section extends BaseElement{
 
     this.addControl("section_style_border_type", {
       type: CONTROLLER_SELECT,
-      label: "border Type",
+      label: "Border type",
       units: ["px", "%", "vh"],
       options: [
         {
@@ -93,7 +93,7 @@ class Section extends BaseElement{
 
     this.addControl("section_style_border_width", {
       type: CONTROLLER_DIMENSIONS,
-      label: "Border Width",
+      label: "Border width",
       units: ["px", "%", "vh"],
       rules: {
         "{{ELEMENT}} .altrp-section":
@@ -103,7 +103,7 @@ class Section extends BaseElement{
 
     this.addControl("section_style_border_color", {
       type: CONTROLLER_COLOR,
-      label: "Border Color",
+      label: "Border color",
       default: {
         color: "rgb(50,168,82)",
         colorPickedHex: "#32a852"
