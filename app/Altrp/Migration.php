@@ -5,10 +5,17 @@ namespace App\Altrp;
 use Illuminate\Database\Eloquent\Model;
 use App\Altrp\Column;
 
+
+use App\Altrp\Commands\MigrationBuilder;
+
+use Artisan;
+
 class Migration extends Model
 {
     
     protected $table = 'altrp_migrations';
+    
+    protected $appends = ['full'];
     
     public function table(){
         return $this->belongsTo('App\Altrp\Table');
@@ -22,28 +29,47 @@ class Migration extends Model
      * Создание файла миграции
      */
     public function createFile() {
-        return true;
+        $migration = new MigrationBuilder($this->table()->first()->name, $this);
+        return $migration->build();
     }
     
     /**
      * Выполнение миграции
      */
     public function run() {
+        $data = json_decode($this->data);
+        
+        //$this->table();
+        
+        
+        
+        
+        
         
         //1 Записать колонки
-        if(!$this->writeColumns()) return false;
+        if(!$this->writeColumns()) {
+            $this->clearMigration();
+            return false;
+        }
         
         //2. Записать ключи
-        if(!$this->writeKeys()) return false;
+        if(!$this->writeKeys()) {
+            $this->clearMigration();
+            return false;
+        }
         
         //3. Создать файл
         if(!$this->createFile()) return false;
         
         //4. Запустить миграцию
-        if(!$this->migrationRun()) return false;
+        if(!$this->migrationRun()) {
+            $this->clearMigration();
+            return false;
+        }
         
         //5. Обновить статус.
         $this->status = "complete";
+        //dd($this->save());
         return $this->save();
         
     }
@@ -90,17 +116,16 @@ class Migration extends Model
         
         foreach ($data->keys as $key => $value) {
             
-            
             $key = new Key();
             
             $key->onDelete = $value->onDelete;
             $key->onUpdate = $value->onUpdate;
             
-            $key->source_table_id = $this->table()->first()->id;
-            $key->target_table_id = $value->target_table_id;
+            $key->source_table = $this->table()->first()->name;
+            $key->target_table = $value->target_table;
             
-            $key->source_column_id = $value->source_column_id;
-            $key->target_column_id = $value->target_column_id;
+            $key->source_column = $value->source_column;
+            $key->target_column = $value->target_column;
             
             $key->user_id = auth()->user()->id;
             $key->altrp_migration_id = $this->id;
@@ -116,7 +141,45 @@ class Migration extends Model
      * Запустить файл миграции
      */
     public function migrationRun() {
-        //Artisan::call('migrate');
+        try {
+            Artisan::call('migrate', array('--force' => true));
+        }
+        catch (\Exception $e) {
+            return false;
+        }
         return true;
+    }
+    
+    /**
+     * Запустить файл миграции
+     */
+    protected function clearMigration() {
+        
+        Column::where('altrp_migration_id', $this->id)->delete();
+        Key::where('altrp_migration_id', $this->id)->delete();
+        
+        return true;
+    }
+    
+    
+    /**
+     * Получаем предыдущаю миграцию
+     *
+     * @return string
+     */
+    public function getFullDataAttribute($value)
+    {
+        //dd($value);
+        $data = json_decode($this->data);
+        
+        foreach ($data->columns as &$value) {
+            $column = new Column();
+            $column->fromObject($value);
+            
+            $value = $column;
+        }
+        
+        //$this->attributes['full'] = $data;
+        return $data;
     }
 }
