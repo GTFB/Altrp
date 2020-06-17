@@ -82,7 +82,7 @@ class Heading extends BaseElement {
 
     this.addControl('heading_settings_html_tag', {
       type: CONTROLLER_SELECT,
-      label: 'html tag',
+      label: 'Html tag',
       default: 'h1',
       options: [
         {
@@ -131,7 +131,7 @@ class Heading extends BaseElement {
     
     this.addControl("heading_style_color", {
       type: CONTROLLER_COLOR,
-      label: "color",
+      label: "Color",
       default: {
         color: "",
         colorPickedHex: "#000",
@@ -144,7 +144,7 @@ class Heading extends BaseElement {
     
     this.addControl("heading_style_background_color", {
       type: CONTROLLER_COLOR,
-      label: "background color",
+      label: "Background color",
       default: {
         color: "",
         colorPickedHex: "",
