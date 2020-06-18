@@ -1,10 +1,28 @@
 import {useTable} from "react-table";
+import {useQuery} from "react-query";
 import namor from 'namor'
+import {useState, useCallback, useEffect} from "react";
 
+/**
+ *
+ * @param settings
+ * @param {Query} query
+ * @return {*}
+ * @constructor
+ */
+const AltrpTable = ({settings, query}) => {
 
-const AltrpTable = () => {
-  // console.log(data);
-  const {
+  const { status, data, error, isFetching } = useQuery(query.modelName, ()=>{return query.getResource().getQueried()});
+  let columns = [];
+  /**
+   * Если в колонке пустые поля, то мы их игнорируем, чтобы не было ошибки
+   */
+  settings.tables_columns.forEach(_column=>{
+    if(_column.column_name && _column.accessor){
+      columns.push(_column);
+    }
+  });
+  let {
     getTableProps,
     getTableBodyProps,
     headerGroups,
@@ -12,49 +30,29 @@ const AltrpTable = () => {
     prepareRow,
   } = useTable({
     columns: React.useMemo(
-        () => [
-          {
-            Header: 'First Name',
-            accessor: 'firstName',
-          },
-          {
-            Header: 'Last Name',
-            accessor: 'lastName',
-          },
-          {
-            Header: 'Age',
-            accessor: 'age',
-          },
-          {
-            Header: 'Visits',
-            accessor: 'visits',
-          },
-          {
-            Header: 'Status',
-            accessor: 'status',
-          },
-          {
-            Header: 'Profile Progress',
-            accessor: 'progress',
-          },
-        ],
-        []
+        () => (
+            columns || []
+        ),
+        [settings.tables_columns]
     ),
-    data: React.useMemo(() => makeData(20), []),
+    data: React.useMemo(() => (data || []), [data]),
   });
+
 
   return <table className="altrp-table" {...getTableProps()}>
     <thead className="altrp-table-head">
     {headerGroups.map(headerGroup => (
         <tr {...headerGroup.getHeaderGroupProps()} className="altrp-table-tr">
           {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()} className="altrp-table-th">{column.render('Header')}</th>
+              <th {...column.getHeaderProps()} className="altrp-table-th">{column.render('column_name')}</th>
           ))}
         </tr>
     ))}
     </thead>
     <tbody {...getTableBodyProps()} className="altrp-table-tbody">
-    {rows.map((row, i) => {
+    {(error) ? <tr><td>error</td></tr>
+        : isFetching ? <tr><td>Loading</td></tr>
+        : rows.map((row, i) => {
       prepareRow(row);
       return (
           <tr {...row.getRowProps()} className="altrp-table-tr">

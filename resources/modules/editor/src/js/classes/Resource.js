@@ -183,6 +183,26 @@ class Resource {
     });
   }
 
+  /**
+   * @return {Promise}
+   * */
+  async getQueried(){
+    let options = {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    };
+    let url = this.route;
+    let res =  await fetch(url, options).then(res => {
+      if(res.ok === false){
+        return Promise.reject(res.text(), res.status);
+      }
+      return res.json()
+    });
+    // console.log(res);
+    return res;
+  }
 }
 
 export default Resource;

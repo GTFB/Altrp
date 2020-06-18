@@ -24,7 +24,9 @@ function componentDidUpdate() {
  * @property {Controller} props.controller
  */
 function _changeValue(value) {
-  if(typeof value === 'object'){
+  if(typeof value === 'object' && value.length !== undefined){
+    value = [...value];
+  }else if(typeof value === 'object'){
     value = {...value};
   }
   this.setState((state)=>{

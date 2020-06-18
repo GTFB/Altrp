@@ -137,10 +137,10 @@ class Table extends BaseElement {
 
     let repeater = new Repeater();
 
-    repeater.addControl('column_name',{
+    repeater.addControl('accessor',{
       label: 'Column Name',
     });
-    repeater.addControl('column_heading',{
+    repeater.addControl('column_name',{
       label: 'Column Heading',
     });
 

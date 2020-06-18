@@ -152,5 +152,6 @@ foreach ( $frontend_routes as $frontend_route ) {
 Route::group( ['prefix' => 'ajax'], function(){
 
   Route::resource( 'routes', 'Frontend\RouteController' );
+  Route::get( 'models/{model_name}', 'Admin\ModelsController@models' )->name( 'front.models' );
 
 } );

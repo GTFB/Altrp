@@ -5,6 +5,10 @@
 
 
 
+### 0.2.2
++ Typography Controller
++ Query Controller
+
 ### 0.2.1
 + Repeater Controller
 
