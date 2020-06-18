@@ -13,8 +13,10 @@ class TableWidget extends Component {
   }
 
   render(){
+    console.log(this.state.settings);
     return React.createElement(this.state.settings.heading_settings_html_tag || 'h1', {className: "altrp-heading"}, this.state.settings.text);
   }
 }
 
 export default TableWidget
+

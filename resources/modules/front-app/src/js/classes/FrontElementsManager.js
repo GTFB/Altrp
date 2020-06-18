@@ -6,6 +6,7 @@ import InputWidget from "../../../../editor/src/js/components/widgets/InputWidge
 import ButtonWidget from "../../../../editor/src/js/components/widgets/ButtonWidget";
 import TextWidget from "../../../../editor/src/js/components/widgets/TextWidget";
 import ImageWidget from "../../../../editor/src/js/components/widgets/ImageWidget";
+import TableWidget from "../../../../editor/src/js/components/widgets/TableWidget";
 
 export default class FrontElementsManager {
 
@@ -20,6 +21,7 @@ export default class FrontElementsManager {
     this.components['button'] = ButtonWidget;
     this.components['text'] = TextWidget;
     this.components['image'] = ImageWidget;
+    this.components['table'] = TableWidget;
   }
 
   getComponentClass(name){

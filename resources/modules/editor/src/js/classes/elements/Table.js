@@ -15,7 +15,7 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_NUMBER,
-  CONTROLLER_WYSIWYG
+  CONTROLLER_WYSIWYG, CONTROLLER_QUERY
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 
@@ -123,120 +123,8 @@ class Table extends BaseElement {
         label: "Query"
     });
 
-    this.addControl("table_content_query_source", {
-      type: CONTROLLER_SELECT,
-      label: "Source",
-      options: [
-        {
-          value: "posts",
-          label: "Posts"
-        },
-        {
-          value: "pages",
-          label: "Pages"
-        },
-        {
-          value: "clients",
-          label: "Clients"
-        },
-        {
-          value: "form_database",
-          label: "Form database"
-        },
-        {
-          value: "manual_selection",
-          label: "manual selection"
-        },
-        {
-          value: "current_query",
-          label: "Current query"
-        },
-        {
-          value: "related",
-          label: "Related"
-        }
-      ],
-      rules: {
-      }
-    });
-
-    this.addControl("table_content_query_date", {
-      type: CONTROLLER_SELECT,
-      label: "Date",
-      options: [
-        {
-          value: "all",
-          label: "All"
-        },
-        {
-          value: "past_day",
-          label: "Past day"
-        },
-        {
-          value: "past_week",
-          label: "Past week"
-        },
-        {
-          value: "past_month",
-          label: "Past month"
-        },
-        {
-          value: "past_quarter",
-          label: "Past quarter"
-        },
-        {
-          value: "past_year",
-          label: "Past year"
-        },
-        {
-          value: "custom",
-          label: "Custom"
-        }
-      ],
-      rules: {
-      }
-    });
-
-    this.addControl("table_content_query_order_by", {
-      type: CONTROLLER_SELECT,
-      label: "Order by",
-      options: [
-        {
-          value: "date",
-          label: "Date"
-        },
-        {
-          value: "title",
-          label: "Title"
-        },
-        {
-          value: "menu_order",
-          label: "Menu order"
-        },
-        {
-          value: "random",
-          label: "Random"
-        }
-      ],
-      rules: {
-      }
-    });
-
-    this.addControl("table_content_query_order", {
-      type: CONTROLLER_SELECT,
-      label: "Order",
-      options: [
-        {
-          value: "DESC",
-          label: "DESC"
-        },
-        {
-          value: "ASC",
-          label: "ASC"
-        }
-      ],
-      rules: {
-      }
+    this.addControl("table_query", {
+      type: CONTROLLER_QUERY,
     });
 
     this.endControlSection();

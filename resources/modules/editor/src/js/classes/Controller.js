@@ -2,7 +2,6 @@ import store, {getCurrentElement} from '../store/store';
 import {CONSTANTS} from "../helpers";
 import CSSRule from "../classes/CSSRule";
 import {changeTemplateStatus} from "../store/template-status/actions";
-import {CONTROLLER_REPEATER} from "./modules/ControllersManager";
 
 /**
  * Класс-контроллер
@@ -30,6 +29,11 @@ class Controller {
       currentElement.addStyles(this.getSettingName(), this.rules);
     }
   }
+
+  /**
+   * Изменение значения либо в текущем элементе либо в репитере
+   * @param {*} value
+   */
   changeValue(value){
     /**
      * @member {BaseElement} currentElement

@@ -1,5 +1,3 @@
-import {CONTROLLER_REPEATER} from "../classes/modules/ControllersManager";
-
 /**
  * Обновление значения в компоненте контроллера при загрузке нового экземпляра того же элемента
  */
@@ -22,6 +20,8 @@ function componentDidUpdate() {
 /**
  * @function _changeValue
  * Обновление значения в  контроллере
+ * @member {object} props
+ * @property {Controller} props.controller
  */
 function _changeValue(value) {
   if(typeof value === 'object'){

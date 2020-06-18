@@ -19,6 +19,7 @@ import TransformController from "../../components/controllers/TransformControlle
 import TypographicController from "../../components/controllers/TypographicController";
 import WysiwygController from "../../components/controllers/WysisygController";
 import RepetaerController from "../../components/controllers/RepeaterController";
+import QueryController from "../../components/controllers/QueryController";
 
 export const TAB_CONTENT = 'content';
 export const TAB_STYLE = 'style';
@@ -43,6 +44,7 @@ export const CONTROLLER_SHADOW = 'shadow';
 export const CONTROLLER_TRANSFORM = 'transform';
 export const CONTROLLER_TYPOGRAPHIC = 'typographic';
 export const CONTROLLER_REPEATER = 'repeater';
+export const CONTROLLER_QUERY = 'query';
 
 
 class ControllersManager {
@@ -68,6 +70,7 @@ class ControllersManager {
     this.conttrollers[CONTROLLER_TRANSFORM] = TransformController;
     this.conttrollers[CONTROLLER_TYPOGRAPHIC] = TypographicController;
     this.conttrollers[CONTROLLER_REPEATER] = RepetaerController;
+    this.conttrollers[CONTROLLER_QUERY] = QueryController;
     this.elementsControls = null;
     this._cache = {
       controls: {},

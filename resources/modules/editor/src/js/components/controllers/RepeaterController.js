@@ -5,12 +5,11 @@ import {iconsManager} from "../../helpers";
 import Controller from "../../classes/Controller";
 /**
  * @method _changeValue
- * @see {@link ../../decorators/controller.js#_changeValue}
+ * @see {@link controller.js#_changeValue}
  * @member {object] props
  * @property {BaseElement} props.currentElement
  * @property {string} props.controlId
  */
-
 class RepeaterController extends Component {
   constructor(props) {
     super(props);

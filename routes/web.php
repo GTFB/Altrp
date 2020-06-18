@@ -108,6 +108,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
      */
     Route::post( 'check_update', 'Admin\UpdateController@check_update' )->name( 'admin.check_update' );
     Route::post( 'update_altrp', 'Admin\UpdateController@update_altrp' )->name( 'admin.update_altrp' );
+
+    /**
+     * Роуты для теста запросов для виджета таблицы todo: удалить, после того как модели будут готовы
+     */
+    Route::get( 'models_list', 'Admin\ModelsController@models_list' )->name( 'admin.models_list' );
   });
 
 });
