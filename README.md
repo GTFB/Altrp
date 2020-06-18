@@ -5,6 +5,9 @@
 
 
 
+### 0.2.1
++ Repeater Controller
+
 ### 0.2.0
 + Upgrader
 * Fix Update from server Issues
