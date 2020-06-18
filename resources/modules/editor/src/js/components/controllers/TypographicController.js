@@ -48,7 +48,7 @@ class TypographicController extends Component {
   }
 
   openTypographic(){
-    let shadowContainer = document.getElementById("shadowContainer")
+    let shadowContainer = document.getElementById("typographicContainer")
     let shadowContentIcon = document.getElementById("shadowContentIcon");
 
     shadowContainer.classList.toggle("control-shadow-active");
@@ -215,7 +215,7 @@ class TypographicController extends Component {
           <div className="control-shadow-toggle control-shadow-toggle-active" onClick={this.openTypographic} fill="#8E94AA">
               <ContentIcon id="shadowContentIcon" className="control-shadow-svg-content" fill="#8E94AA" width="16" height="16"/>
           </div>
-          <div id="shadowContainer" className="control-shadow-wrapper control-shadow-wrapper-none">
+          <div id="typographicContainer" className="control-shadow-wrapper control-shadow-wrapper-none">
           {/* начало select2 */}
             <div className="controller-container controller-container_select2">
               <div className="control-select2-header">
