@@ -15,9 +15,10 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_NUMBER,
-  CONTROLLER_WYSIWYG, CONTROLLER_QUERY
+  CONTROLLER_WYSIWYG, CONTROLLER_QUERY, CONTROLLER_REPEATER
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
+import Repeater from "../Repeater";
 
 class Table extends BaseElement {
   static getName() {
@@ -125,6 +126,28 @@ class Table extends BaseElement {
 
     this.addControl("table_query", {
       type: CONTROLLER_QUERY,
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("table_content_table_settings", {
+      tab: TAB_CONTENT,
+      label: "Table Settings",
+    });
+
+    let repeater = new Repeater();
+
+    repeater.addControl('column_name',{
+      label: 'Column Name',
+    });
+    repeater.addControl('column_heading',{
+      label: 'Column Heading',
+    });
+
+    this.addControl('tables_columns', {
+      label: 'Columns',
+      type: CONTROLLER_REPEATER,
+      fields: repeater.getControls(),
     });
 
     this.endControlSection();

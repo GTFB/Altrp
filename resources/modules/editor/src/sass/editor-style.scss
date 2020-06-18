@@ -393,6 +393,14 @@ button{
       padding-bottom: 0;
     }
   }
+
+}
+.control-header{
+  & > .controller-container__label{
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
 }
 .controller-media{
   &-choose{

@@ -31,6 +31,14 @@ class RepeaterController extends Component {
     this.setActiveItem = this.setActiveItem.bind(this);
     this.changeValue = this.changeValue.bind(this);
   }
+
+  /**
+   * Значение по умолчанию для @see {../../decorators/controller.js}
+   * @return {array}
+   */
+  getDefaultValue(){
+    return [];
+  }
   /**
    * Изменяем знавение в итеме и передаем в текущий элемент
    */
