@@ -1,8 +1,8 @@
 /**
- * @class
+ * @class Resource
  * */
-
 export const MAX_FILE_SIZE = 10485760;
+
 class Resource {
 
 

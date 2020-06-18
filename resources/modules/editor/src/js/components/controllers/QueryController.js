@@ -61,6 +61,7 @@ class QueryController extends Component {
       pageSize: 10,
       paginationType: 'pages',
       orderingField: '',
+      order: 'ASC',
     };
   }
   render(){

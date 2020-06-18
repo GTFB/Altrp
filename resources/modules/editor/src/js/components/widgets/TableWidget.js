@@ -1,4 +1,6 @@
-import React, {Component} from "react";
+import React, {Component, Suspense} from "react";
+import Query from "../../classes/Query";
+const AltrpTable = React.lazy(() => import("../altrp-table/component"));
 
 class TableWidget extends Component {
   constructor(props){
@@ -13,8 +15,10 @@ class TableWidget extends Component {
   }
 
   render(){
-    console.log(this.state.settings);
-    return React.createElement(this.state.settings.heading_settings_html_tag || 'h1', {className: "altrp-heading"}, this.state.settings.text);
+    let query = new Query(this.state.settings.table_query);
+    return <Suspense fallback={<div>Loading...</div>}>
+      <AltrpTable setting={this.state.settings} query={query} />
+    </Suspense>;
   }
 }
 

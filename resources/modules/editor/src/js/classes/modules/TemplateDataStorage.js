@@ -33,7 +33,6 @@ class TemplateDataStorage extends BaseModule{
     data.data = this.getTemplateData();
     data.title = this.title || 'testtitle';
     data.name = this.name || 'testname';
-    console.log(this);
     return data;
   }
 

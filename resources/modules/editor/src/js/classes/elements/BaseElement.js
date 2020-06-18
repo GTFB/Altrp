@@ -383,6 +383,12 @@ class BaseElement extends ControlStack{
     rules.forEach(rule => {
       let finalSelector = rule.selector;
       finalSelector = finalSelector.replace('{{ELEMENT}}', this.getSelector());
+      /**
+       * если this.settings.styles[breakpoint][settingName] массив, то преобразуем в объект
+       */
+      if(_.isArray(this.settings.styles[breakpoint][settingName])){
+        this.settings.styles[breakpoint][settingName] = _.toPlainObject(this.settings.styles[breakpoint][settingName]);
+      }
       this.settings.styles[breakpoint][settingName][finalSelector] = rule.properties;
     });
     this.updateStyles();

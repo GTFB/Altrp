@@ -82,12 +82,12 @@ class SliderController extends Component {
                  max={this.state.max}
 
                  step={this.state.step}
-                 className="control-slider" value={this.state.value.size} onChange={this.inputUpdate} onInput={this.sliderChange}/>
+                 className="control-slider" value={this.state.value.size || ''} onChange={this.inputUpdate} onInput={this.sliderChange}/>
           <div className="control-slider-input-box">
             <input className="control-slider-input" type="number"
                    min={this.state.min}
                    max={this.state.max}
-                   value={this.state.value.size} onChange={this.inputUpdate} onInput={this.sliderChange}/>
+                   value={this.state.value.size || ''} onChange={this.inputUpdate} onInput={this.sliderChange}/>
           </div>
         </div>
       </div>

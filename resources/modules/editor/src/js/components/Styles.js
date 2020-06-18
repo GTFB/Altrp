@@ -33,7 +33,7 @@ class Styles extends Component {
     }
     this.setState({
       ...this.state,
-      elementStyles: elementStyles
+      elementStyles
     })
   }
   render(){

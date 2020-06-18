@@ -1,6 +1,9 @@
+import {useTable} from "react-table";
 
 
-export default function AltrpTable({ columns, data }) {
+export default function AltrpTable(data) {
+  console.log(data);
+  let columns = [];
   const {
     getTableProps,
     getTableBodyProps,
@@ -8,8 +11,8 @@ export default function AltrpTable({ columns, data }) {
     rows,
     prepareRow,
   } = useTable({
-    columns,
-    data,
+    columns: [],
+    data: {},
   });
   return  <table className="altrp-table" {...getTableProps()}>
     <thead>
