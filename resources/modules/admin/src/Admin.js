@@ -168,11 +168,11 @@ class Admin extends Component {
             <Route path="/admin/tables" exact>
               <Tables/>
             </Route>
-						<Route path="/admin/tables/edit/:id">
+            <Route path="/admin/tables/edit/:id">
               <EditTable/>
             </Route>
-						<Route path="/admin/pages/edit/:id">
-              <AddPage/>
+            <Route path="/admin/tables/add">
+              <AddTable/>
             </Route>
             <Route path="/admin/templates">
               <Templates/>
