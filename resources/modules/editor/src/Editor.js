@@ -1,3 +1,4 @@
+import "./sass/editor-style.scss";
 import React, { Component } from "react";
 import { hot } from "react-hot-loader";
 import { Provider } from "react-redux";
@@ -14,7 +15,6 @@ import AssetsBrowser from "./js/classes/modules/AssetsBrowser";
 
 import store from "../src/js/store/store";
 
-import "./sass/editor-style.scss";
 
 import DesktopIcon from "./svgs/desktop.svg";
 import Logo from "./svgs/logo.svg";

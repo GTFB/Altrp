@@ -1,3 +1,5 @@
+@import "../../../../sass/vars";
+@import "../../../../sass/common";
 
 .assets-browser{
   display: none;
@@ -41,6 +43,12 @@
     -ms-transform: scale(2);
     -o-transform: scale(2);
     transform: scale(2);
+    background-color: transparent;
+    & .icon{
+      margin: 0;
+      width: auto;
+      height: auto;
+    }
   }
   &-top{
     padding: 20px 20px 0;

@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
 import './sass/admin-style.scss';
 import {hot} from "react-hot-loader";
-import AdminLogo from './svgs/admin__logo.svg';
+import AdminLogo from './components/AdminLogo';
 import Bars from './svgs/bars.svg';
 import AllPages from './components/AllPages';
 import AdminSettings from './components/AdminSettings';
 import AssetSvg from './svgs/assets.svg';
-import BurgerSvg from './svgs/burger.svg';
-import CloseBurgerSvg from './svgs/closeburger.svg';
 import DashboardSvg from './svgs/dashboard.svg';
 import PagesSvg from './svgs/pages.svg';
 import PluginSvg from './svgs/plugins.svg';
@@ -35,6 +33,7 @@ import AdminModal from "./components/AdminModal";
 import AddPage from "./components/AddPage";
 import UserTopPanel from "./components/UserTopPanel";
 import {Redirect} from "react-router";
+import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 
 class Admin extends Component {
   constructor(props){
@@ -81,7 +80,10 @@ class Admin extends Component {
             <div className="admin-nav-top">
               <AdminLogo/>
               <Bars className="admin__bars" onClick={this.toggleMenu}/>
-              <ul className="admin-nav-list">
+            </div>
+            <div className="admin-nav-main">
+
+            <ul className="admin-nav-list">
                 <li>
                   <Link to="/admin/dashboard" className="admin-nav-list__link">
                     <DashboardSvg className="icon"/>
@@ -182,6 +184,7 @@ class Admin extends Component {
         </Router>
         <AdminModal/>
         <UserTopPanel/>
+        <AssetsBrowser/>
       </div>
     </Provider>;
   }

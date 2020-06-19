@@ -13,10 +13,11 @@ const AltrpTable = ({settings, query}) => {
   if (!settings.tables_columns) {
     return <div children="Please add Column"/>
   }
-  const {data, error, isFetching} = useQuery(query.modelName, () => {
+  const {status, data, error, isFetching} = useQuery(query.modelName, () => {
     return query.getResource().getQueried()
-  });
+  },[query.modelName]);
   let columns = [];
+  console.log(status);
   /**
    * Если в колонке пустые поля, то мы их игнорируем, чтобы не было ошибки
    */
@@ -25,7 +26,6 @@ const AltrpTable = ({settings, query}) => {
       columns.push(_column);
     }
   });
-
   let {
     getTableProps,
     getTableBodyProps,
@@ -56,7 +56,7 @@ const AltrpTable = ({settings, query}) => {
     {(error) ? <tr>
           <td>error</td>
         </tr>
-        : isFetching ? <tr>
+        : status === "loading" ? <tr>
               <td>Loading</td>
             </tr>
             : rows.map((row, i) => {

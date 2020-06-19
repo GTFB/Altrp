@@ -126,6 +126,7 @@ class ElementWrapper extends Component {
       if (this.props.element.getType() === "column") {
         this.props.element.appendChild(newElement);
       }
+      editorSetCurrentElement(newElement);
     }
     /**
      * @member {BaseElement} draggableElement
@@ -151,6 +152,7 @@ class ElementWrapper extends Component {
         draggableElement.insertAfter(this.props.element);
         e.stopPropagation();
       }
+      editorSetCurrentElement(draggableElement);
     }
     this.setState(state => {
       return { ...state, dragOver: false, cursorPos: false, isDrag: false };

@@ -13,13 +13,33 @@
 .admin {
   display: flex;
   height: 100vh;
+  &__logo{
+    width: 120px;
+    height: 44px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    & img{
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
   &-nav {
     position: relative;
-    overflow: hidden;
+    //overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100vh;
+    background-color: $dark-purple;
+    width: 271px;
+    flex-shrink: 0;
     &-top {
-      background-color: $dark-purple;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       width: 271px;
-      height: 100vh;
+      padding-right: 20px;
     }
     &-list {
       &__link{
@@ -41,7 +61,7 @@
       }
       &_pages{
         position: absolute;
-        top: 30px;
+        top: 44px;
         left: 0;
         right: 0;
         bottom: 0;

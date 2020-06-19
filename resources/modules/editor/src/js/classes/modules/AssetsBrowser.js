@@ -1,9 +1,12 @@
-// import React, {Component} from "react";
+import React, {Component} from "react";
 import { connect } from "react-redux";
 import Times from "../../../svgs/times.svg";
 import { assetsToggle } from "../../store/assets-browser/actions";
 import { iconsManager } from "../../helpers";
 import Resource from "../Resource";
+import '../../../sass/assets-browser.scss';
+
+
 class AssetsBrowser extends Component {
   constructor() {
     super();
@@ -112,9 +115,11 @@ class AssetsBrowser extends Component {
     if (this.props.active) {
       classes += " assets-browser_active";
     }
-    let buttonClasses = "btn btn_success";
+    let buttonClasses = "btn";
     if (!this.state.selectedAsset) {
       buttonClasses += " btn_disabled";
+    } else {
+      buttonClasses += " btn_success";
     }
     return (
       <div className={classes}>
@@ -122,8 +127,8 @@ class AssetsBrowser extends Component {
         <div className="assets-browser-content">
           <div className="assets-browser-top">
             <div className="caption">Append Media</div>
-            <button className="btn btn_bare assets-browser__close">
-              <Times className="icon" onClick={this.toggleBrowser} />
+            <button className="btn btn_bare assets-browser__close" onClick={this.toggleBrowser} >
+              <Times className="icon"/>
             </button>
             <div className="assets-browser-nav">
               {this.state.tabs.map(tab => {
