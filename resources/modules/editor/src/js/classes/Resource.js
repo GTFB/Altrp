@@ -1,3 +1,4 @@
+import queryString from 'query-string';
 /**
  * @class Resource
  * */
@@ -71,7 +72,6 @@ class Resource {
    * @return {Promise}
    * */
   post(data = {}, headers){
-    data._token = _token;
     headers = headers || {
       'Content-Type': 'application/json'
     };
@@ -126,7 +126,6 @@ class Resource {
    * @return {Promise}
    * */
   put(id, data){
-    data._token = _token;
     let options = {
       method: 'put',
       body: JSON.stringify(data),
@@ -184,16 +183,17 @@ class Resource {
   }
 
   /**
+   * @param {object} params
    * @return {Promise}
    * */
-  async getQueried(){
+  async getQueried(params){
     let options = {
       method: 'get',
       headers: {
         'Content-Type': 'application/json'
       },
     };
-    let url = this.route;
+    let url = `${this.route}?${queryString.stringify(params)}`;
     let res =  await fetch(url, options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);

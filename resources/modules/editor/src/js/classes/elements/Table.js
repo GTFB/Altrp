@@ -137,6 +137,22 @@ class Table extends BaseElement {
       label: "Table Settings",
     });
 
+    this.addControl('next_text', {
+      label: 'Next Page Text',
+      type: CONTROLLER_TEXT,
+    });
+
+    this.addControl('prev_text', {
+      label: 'Previous Page Text',
+      type: CONTROLLER_TEXT,
+    });
+
+    this.addControl('current_page_text', {
+      label: 'Current Page Text',
+      type: CONTROLLER_TEXT,
+    });
+
+
     let repeater = new Repeater();
 
     repeater.addControl('accessor',{

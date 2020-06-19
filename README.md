@@ -7,6 +7,7 @@
 
 ### 0.2.3
 + Add Change Logo in Admin
++ Add Simple Prev/Next Pagination in Table
 
 ### 0.2.2
 + Typography Controller

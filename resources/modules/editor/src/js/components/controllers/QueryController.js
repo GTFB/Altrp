@@ -21,9 +21,20 @@ class QueryController extends Component {
       value,
       modelsList: [],
       orderingFieldsOptions: [],
+      paginationTypeOption: [
+        {
+          name:'pages',
+          title: 'Pages',
+        },
+        {
+          name:'prev-next',
+          title: 'Prev/Next',
+        },
+      ]
     };
     this.changeModelName = this.changeModelName.bind(this);
     this.changePageSize = this.changePageSize.bind(this);
+    this.changePaginationType = this.changePaginationType.bind(this);
     controllerDecorate(this);
   }
 
@@ -50,7 +61,19 @@ class QueryController extends Component {
    * @param e
    */
   changePageSize(e){
+    let newValue = {...this.state.value};
+    newValue.pageSize = parseInt(e.target.value);
+    this._changeValue(newValue)
+  }
 
+  /**
+   * обработчик события изменения типа пагинации
+   * @param e
+   */
+  changePaginationType(e){
+    let newValue = {...this.state.value};
+    newValue.paginationType = e.target.value;
+    this._changeValue(newValue)
   }
   /**
    * смена названия модели для запроса
@@ -79,6 +102,7 @@ class QueryController extends Component {
   }
 
   render() {
+    console.log(this.state.value);
     return <div className="controller-container controller-container_query">
       <div className="controller-field-group">
         <div className="controller-container__label">
@@ -104,6 +128,21 @@ class QueryController extends Component {
                  type="number"
                  value={this.state.value.pageSize || 10}
                  onChange={this.changePageSize}/>
+        </div>
+      </div>
+      <div className="controller-field-group">
+        <div className="controller-container__label">
+          Pagination Type
+        </div>
+        <div className="control-container_select-wrapper">
+          <select className="control-select control-field"
+                  value={this.state.value.paginationType || ''}
+                  onChange={this.changePaginationType}>
+            {this.state.paginationTypeOption.map(option => {
+              return <option value={option.name}
+                             key={option.name}>{option.title}</option>
+            })}
+          </select>
         </div>
       </div>
     </div>

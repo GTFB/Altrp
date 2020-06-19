@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 
 class ModelsController extends Controller
@@ -14,6 +15,7 @@ class ModelsController extends Controller
   public function models_list()
   {
     $test_res = [
+
       [
         'name' => 'post',
         'title' => 'Post',
@@ -35,12 +37,15 @@ class ModelsController extends Controller
     ];
     return response()->json( $test_res );
   }
-  public function models( $model_name ){
-    $res = [[
-      'firstName' => 'john'
-    ]];
-    sleep(.2);
-    return response()->json( json_decode('[
+
+  /**
+   * @param string $model_name
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function models( $model_name, Request $request ){
+    $res = [];
+    $data = json_decode('[
   {
     "userId": 1,
     "id": 1,
@@ -641,6 +646,14 @@ class ModelsController extends Controller
     "title": "at nam consequatur ea labore ea harum",
     "body": "cupiditate quo est a modi nesciunt soluta\nipsa voluptas error itaque dicta in\nautem qui minus magnam et distinctio eum\naccusamus ratione error aut"
   }
-]') );
+]');
+
+    if(! $request->get( 'page' ) ){
+      return response()->json( $data );
+    }
+
+    $res[$model_name] = array_slice( $data, $request->get( 'page' ) * $request->get( 'pageSize' ), $request->get( 'pageSize' ) );
+    $res['hasMore'] = count( $data ) > ( ($request->get( 'page' ) + 1 ) * $request->get( 'pageSize' ) );
+    return response()->json( $res );
   }
 }
