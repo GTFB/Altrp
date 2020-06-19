@@ -25,6 +25,7 @@ import {
   Link
 } from "react-router-dom";
 import Users from "./components/Users";
+import UsersTools from "./components/UsersTools";
 import Assets from "./components/Assets";
 import Dashboard from "./components/Dashboard";
 import Plugins from "./components/Plugins";
@@ -35,6 +36,7 @@ import AdminModal from "./components/AdminModal";
 import AddPage from "./components/AddPage";
 import UserTopPanel from "./components/UserTopPanel";
 import {Redirect} from "react-router";
+
 
 class Admin extends Component {
   constructor(props){
@@ -79,8 +81,11 @@ class Admin extends Component {
         <Router>
           <nav className="admin-nav">
             <div className="admin-nav-top">
-              <AdminLogo/>
-              <Bars className="admin__bars" onClick={this.toggleMenu}/>
+              <div className="admin-logo">
+                <AdminLogo className="logo"/>
+                <Bars className="admin__bars" onClick={this.toggleMenu}/>
+              </div>
+
               <ul className="admin-nav-list">
                 <li>
                   <Link to="/admin/dashboard" className="admin-nav-list__link">
@@ -119,6 +124,11 @@ class Admin extends Component {
                   </Link>
                 </li>
                 <li>
+                  <Link to="/admin/tools" className="admin-nav-list__link">
+                    <span>Tools</span>
+                  </Link>
+                </li>
+                <li>
                   <Link to="/admin/plugins" className="admin-nav-list__link">
                     <PluginSvg className="icon"/>
                     <span>Plugins</span>
@@ -150,6 +160,9 @@ class Admin extends Component {
             </Route>
             <Route path="/admin/users">
               <Users/>
+            </Route>
+            <Route path="/admin/tools">
+              <UsersTools/>
             </Route>
             <Route path="/admin/assets">
               <Assets/>
