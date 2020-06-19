@@ -8,6 +8,7 @@ import {
   CONTROLLER_SELECT2,
   CONTROLLER_SELECT,
   CONTROLLER_TEXT,
+  CONTROLLER_TYPOGRAPHIC,
   CONTROLLER_SLIDER,
   CONTROLLER_COLOR,
   TAB_CONTENT,
@@ -18,7 +19,7 @@ import {
 class Button extends BaseElement{
 
   static getName(){
-    return'Button';
+    return'button';
   }
   static getTitle(){
     return'Button';
@@ -81,10 +82,10 @@ class Button extends BaseElement{
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default:{
-        top: 10,
-        right: 15,
-        bottom: 10,
-        left: 15,
+        top: 20,
+        right: 25,
+        bottom: 20,
+        left: 25,
         unit:'px'
       },
       units:[
@@ -129,60 +130,156 @@ class Button extends BaseElement{
       label: 'Font',
     });
 
-    this.addControl('font_type', {
-      type: CONTROLLER_SELECT2,
-      label: 'Font',
-      placeholder: 'Lato',
-      default: '"Lato"',
-      options: [
-        {
-          value: '"Roboto"',
-          label:'Roboto'
-        }, 
-        {
-          value: '"Lato"',
-          label:'Lato'
+    this.addControl(
+      'font_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'typographic',
+        default:{
+          lineHeight: 0.1,
+          spacing: 0,
+          size: 16,
+          weight: "normal",
+          family: '"lato"',
+          decoration: ""
         },
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-btn': 'font-family: {{VALUE}}'
+        familyOptions: [
+              {
+                value: '1',
+                label:'Select sd  Content 1'
+              },
+              {
+                value: '2',
+                label:'Select Content 2'
+              },
+            ],
+        weightOptions: [
+          {
+            value: '100',
+            label:'100'
+          },
+          {
+            value: '200',
+            label:'200'
+          },
+          {
+            value: '300',
+            label:'300'
+          },
+          {
+            value: '400',
+            label:'400'
+          },
+          {
+            value: '500',
+            label:'500'
+          },
+          {
+            value: '600',
+            label:'600'
+          },
+          {
+            value: '700',
+            label:'700'
+          },
+          {
+            value: '800',
+            label:'800'
+          },
+          {
+            value: '900',
+            label:'900'
+          },
+          {
+            value: 'bold',
+            label:'bold'
+          },
+          {
+            value: 'normal',
+            label:'normal'
+          },
+          {
+            value: 'bolder',
+            label:'bolder'
+          },
+          {
+            value: 'lighter',
+            label:'lighter'
+          },
+        ],
+        transformOptions: [
+          {
+            value: 'none',
+            label:'default',
+            key: 0
+          },
+          {
+            value: 'capitalize',
+            label:'capitalize',
+            key: 1
+          },
+          {
+            value: 'uppercase',
+            label:'uppercase',
+            key: 2
+          },
+          {
+            value: 'lowercase',
+            label:'lowercase',
+            key: 3
+          },
+        ],
+        styleOptions: [
+          {
+            value: 'normal',
+            label:'normal',
+            key: 0
+          },
+          {
+            value: 'italic',
+            label:'italic',
+            key: 1
+          },
+          {
+            value: 'oblique',
+            label:'oblique',
+            key: 2
+          },
+        ],
+        decorationOptions: [
+          {
+            value: 'none',
+            label:'none',
+            key: 0
+          },
+          {
+            value: 'underline',
+            label:'underline',
+            key: 1
+          },
+          {
+            value: 'overline',
+            label:'overline',
+            key: 3
+          },
+          {
+            value: 'line-through',
+            label:'line-through',
+            key: 4
+          },
+        ],
+        rules: {
+          '{{ELEMENT}} .altrp-btn': [
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
       }
-    });
-
-    this.addControl('font_weight', {
-      type: CONTROLLER_SLIDER,
-      label: 'Font weight',
-      default:{
-        size:900,
-        unit:'px',
-      },
-      max: 900,
-      min: 100,
-      step: 100,
-      rules: {
-        '{{ELEMENT}} .altrp-btn': 'font-weight: {{SIZE}};',
-      },
-    });
-
-    this.addControl('font_size', {
-      type: CONTROLLER_SLIDER,
-      label: 'Font size',
-      default:{
-        size:16,
-        unit:'px',
-      },
-      units:[
-        'px',
-        '%',
-        'vh'
-
-      ],
-      max: 100,
-      min: 5,
-      rules: {
-        '{{ELEMENT}} .altrp-btn': 'font-size: {{SIZE}}{{UNIT}};',
-      },
-    });
+    );
 
     this.addControl('font_color', {
       type: CONTROLLER_COLOR,

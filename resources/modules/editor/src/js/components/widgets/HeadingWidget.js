@@ -13,7 +13,7 @@ class HeadingWidget extends Component {
   }
 
   render(){
-    return React.createElement(this.state.settings.text_settings_html_tag || 'h1', {className: "altrp-heading"}, this.state.settings.text);
+    return React.createElement(this.state.settings.heading_settings_html_tag || 'h1', {className: "altrp-heading"}, this.state.settings.text);
   }
 }
 

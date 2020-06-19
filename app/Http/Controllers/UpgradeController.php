@@ -52,7 +52,7 @@ class UpgradeController extends Controller
 
 
     // Go to maintenance with DOWN status
-    $exitCode = Artisan::call( 'down' );
+    Artisan::call( 'down' );
 
     // Clear all the cache
     $this->clearCache();

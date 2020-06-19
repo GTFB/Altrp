@@ -9,6 +9,7 @@
 
 .altrp-element {
   width: 100%;
+  min-height: 1px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -20,11 +21,13 @@
   width: 100%;
 }
 
-.altrp-text {
-  display: inline-flex;
-  justify-content: center;
-  font-size: 37px;
+.altrp-image {
+  max-width: 100%;
 }
+//
+//.altrp-text {
+//
+//}
 
 .heading {
   text-align: center;
@@ -38,6 +41,13 @@
 
 .altrp-btn {
   width: auto;
+  &_gray{
+    background-color: $grey;
+    color: #fff;
+  }
+  &__icon{
+    transform: scale(.6);
+  }
 }
 
 .altrp-section {

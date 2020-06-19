@@ -326,7 +326,7 @@ export function advancedTabControllers(element) {
       max: 1920,
       min: 0,
       rules: {
-        '{{ELEMENT}}': 'width: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}}.altrp-element': 'width: {{SIZE}}{{UNIT}};',
       },
     }
   );

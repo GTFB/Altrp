@@ -66,7 +66,7 @@ import("./Editor.js")
         )[0];
         let styleLink = iframe.contentWindow.document.createElement("link");
         styleLink.rel = "stylesheet";
-        styleLink.href = "/modules/editor/editor.css";
+        styleLink.href = `/modules/editor/editor.css?${_altrpVersion}`;
         head.appendChild(styleLink);
       } else
         {

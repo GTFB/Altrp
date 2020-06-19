@@ -6,7 +6,7 @@ import controllerDecorate from "../../decorators/controller";
 class ButtonController extends Component {
   constructor(props){
     super(props);
-    this.changeValue = this.changeValue.bind(this)
+    this.changeValue = this.changeValue.bind(this);
     let value = this.props.currentElement.getSettings(this.props.controlId);
     if(value === null && this.props.default){
       value = this.props.default ;
@@ -28,16 +28,16 @@ class ButtonController extends Component {
     for(let i=0; i < buttonList.children.length; i++) {
       if( i != e.currentTarget.dataset.key) {
         buttonList.children[i].classList.remove(this.state.value.activeClass);
-      };
+      }
     }
     e.currentTarget.classList.add(this.state.value.activeClass);
   }
 
   render(){
-
+    let buttons = this.props.buttons || [];
     return <div className="controller-container controller-container_button">
       <div className="control-group control-button-container" id="buttonList">
-        {this.props.buttons.map((buttons) => {
+        {buttons.map((buttons) => {
           return <button key={buttons.key} data-value={buttons.value} id={"activeButton" + buttons.key} data-key={buttons.key} onClick={this.changeValue} className={this.state.value.button === buttons.value ? this.state.value.activeClass : ""} style={buttons.styles}>{buttons.label}</button>
         })
       }

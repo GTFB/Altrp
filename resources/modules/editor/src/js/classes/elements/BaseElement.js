@@ -1,11 +1,16 @@
 import {CONTROLLER_TEXT, CONTROLLER_TEXTAREA, TAB_CONTENT, TAB_STYLE} from "../modules/ControllersManager";
-import {getTemplateDataStorage, isEditor, getEditor, CONSTANTS, templateNeedUpdate} from "../../helpers";
+import {getTemplateDataStorage, isEditor, getEditor, CONSTANTS, getFactory} from "../../helpers";
 import {changeTemplateStatus} from "../../store/template-status/actions";
 import store from "../../store/store";
+import ControlStack from "./ControlStack";
 
-class BaseElement {
+/**
+ * Базовый класс для методов элемента для редактора
+ */
+class BaseElement extends ControlStack{
 
   constructor(){
+    super();
     this.settings = {};
     this.controls = {};
     this.controlsIds = [];
@@ -13,6 +18,11 @@ class BaseElement {
     this.children = [];
     this.componentClass = window.elementsManager.getComponentClass(this.getName());
     this.initiatedDefaults = null;
+
+    /**
+     * @type {BaseElement}
+     * @public
+     */
     this.parent = null;
     this._initDefaultSettings();
   }
@@ -75,6 +85,7 @@ class BaseElement {
   }
 
   /**
+   * добавлйет новый  дочерний элемент в конец
    * @param {BaseElement} child
    * */
   appendChild(child){
@@ -110,6 +121,8 @@ class BaseElement {
     newChild.setParent(this);
     this.children.splice(index+1, 0, newChild);
     this.component.setChildren(this.children);
+    console.log(this.children);
+    console.log(newChild);
     this.templateNeedUpdate();
   }
   /**
@@ -162,8 +175,35 @@ class BaseElement {
       this.children = newChildren;
     }
     this.component.setChildren(this.children);
+    store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
   }
 
+  /**
+   * Удаляет текущий элемент у родителя
+   */
+  deleteThisElement(){
+    this.parent.deleteChild(this);
+  }
+
+  /**
+   * Дублирует элемент и вставляет после текущего
+   */
+  duplicate(){
+    let factory = getFactory();
+    let newElement = factory.duplicateElement(
+        this,
+        this.parent
+    );
+    getTemplateDataStorage().setCurrentElement(newElement);
+    getEditor().showSettingsPanel();
+  }
+
+  deleteAllIds(){
+    this.id= null;
+    this.children.forEach(child=>{
+      child.deleteAllIds();
+    })
+  }
   /**
    * @param {BaseElement | string} child
    * @throws Если не указан IG или сам элемент
@@ -280,28 +320,6 @@ class BaseElement {
   }
 
 
-  /**
-   * @param {string} controlId
-   * @param {object} args
-   * */
-  addControl(controlId, args){
-    if(!this.currentSection){
-      throw 'Controls Can only be Added Inside the Section!'
-    }
-    if(this.controlsIds.indexOf(controlId) !== -1){
-      throw 'Control with id \'' + controlId + '\' Already Exists in ' + this.getName();
-    }
-
-    let section = this._getCurrentSection();
-
-    let defaults = {
-      type: CONTROLLER_TEXT,
-    };
-
-    section.controls.push({...defaults, ...args, controlId});
-    window.controllersManager.setControlsCache(this.getName() + controlId, {...args, controlId});
-    this.controlsIds.push(controlId);
-  }
 
   _getCurrentTab(){
     let tabName = this.currentSection.tab || TAB_STYLE;
@@ -365,6 +383,12 @@ class BaseElement {
     rules.forEach(rule => {
       let finalSelector = rule.selector;
       finalSelector = finalSelector.replace('{{ELEMENT}}', this.getSelector());
+      /**
+       * если this.settings.styles[breakpoint][settingName] массив, то преобразуем в объект
+       */
+      if(_.isArray(this.settings.styles[breakpoint][settingName])){
+        this.settings.styles[breakpoint][settingName] = _.toPlainObject(this.settings.styles[breakpoint][settingName]);
+      }
       this.settings.styles[breakpoint][settingName][finalSelector] = rule.properties;
     });
     this.updateStyles();

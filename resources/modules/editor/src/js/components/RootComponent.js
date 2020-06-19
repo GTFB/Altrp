@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-import SectionContextMenu from "./SectionContextMenu";
+import React, {Component} from "react";
 
 class RootComponent extends Component {
   constructor(props) {
@@ -14,21 +13,22 @@ class RootComponent extends Component {
     }
   }
 
+
   render() {
     let classes = `sections-wrapper ${this.props.element
-      .getSelector()
-      .replace(".", "")}`;
+        .getSelector()
+        .replace(".", "")}`;
+
     return (
-      <div className={classes}>
-        {this.state.children.map(section => (
-          <ElementWrapper
-            key={section.getId()}
-            component={section.componentClass}
-            element={section}
-          />
-        ))}
-        <SectionContextMenu />
-      </div>
+        <div className={classes}>
+            {this.state.children.map(section => (
+                <ElementWrapper
+                    key={section.getId()}
+                    component={section.componentClass}
+                    element={section}
+                />
+            ))}
+        </div>
     );
   }
 }

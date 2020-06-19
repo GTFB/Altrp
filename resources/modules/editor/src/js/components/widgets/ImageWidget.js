@@ -11,13 +11,16 @@ class ImageWidget extends Component {
     if(window.elementDecorator){
       window.elementDecorator(this);
     }
-    
   }
 
   render(){
+    let contentMedia = {...this.state.settings.content_media};
+    contentMedia.url = contentMedia.url || '/img/nullImage.png';
+    contentMedia.name = contentMedia.name || 'null';
+    contentMedia.assetType = contentMedia.assetType || 'image';
     return <div>
-    {  renderAsset(this.state.settings.content_media, {
-      className: this.state.settings.position_css_classes || "",
+    {  renderAsset( contentMedia, {
+      className: this.state.settings.position_css_classes || "altrp-image",
       id: this.state.settings.position_css_id || "", 
     })
     }

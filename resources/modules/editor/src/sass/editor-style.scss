@@ -343,6 +343,64 @@ button{
       min-width: 54px;
     }
   }
+  &_repeater{
+    flex-direction: column;
+  }
+}
+.repeater{
+  &-item{
+    margin-bottom: 5px;
+    &-tools{
+      display: flex;
+      align-items: stretch;
+      align-content: stretch;
+      border: 1px solid $border-gray;
+    }
+    &__delete{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background-color: transparent;
+      border-left: 1px solid $border-gray;
+    }
+    &__caption{
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      padding-right: 10px;
+      cursor: pointer;
+    }
+    &-content{
+      display: none;
+      padding: 10px;
+      border-bottom: 1px solid $border-gray;
+      border-left: 1px solid $border-gray;
+      border-right: 1px solid $border-gray;
+    }
+    &_open{
+      & .repeater-item-content{
+        display: block;
+      }
+    }
+  }
+  &-bottom{
+    & .altrp-btn{
+      padding-left: 5px;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
+
+}
+.control-header{
+  & > .controller-container__label{
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
 }
 .controller-media{
   &-choose{
@@ -746,7 +804,7 @@ background-color: red;
   margin-right: 5px;
   width: 15px;
   height: 15px;
-  outline: none; 
+  outline: none;
 }
 .settings-checkbox-option{
   padding-bottom: 10px;
@@ -1047,7 +1105,7 @@ display: none;
   position: relative;
   display: block;
 }
-.control-shadow-wrapper{ 
+.control-shadow-wrapper{
   display: none;
   position: absolute;
   background-color: #FFFFFF;
@@ -1096,6 +1154,13 @@ display: none;
 }
 .control-button-container{
   display: flex;
+}
+.controller-container_select_typographic{
+  margin-top: 15px;
+  margin-bottom: 0 !important;
+}
+.controller-container_slider_typographic_top{
+  margin-top: 15px;
 }
 .overlay{
   position: absolute;
@@ -1293,13 +1358,14 @@ display: none;
 .column-empty-plus{
   position: relative;
   display: flex;
+  width: calc(100% - 20px);
+  height: 100%;
   align-items: center;
   justify-content: center;
   margin-top: -10px;
   margin-bottom: 10px;
   padding: 5px;
   border: 1px dashed $grey;
-  width: calc(100% - 20px);
   cursor: pointer;
   & svg{
     -webkit-transform: scale(0.7);
@@ -1365,4 +1431,15 @@ display: none;
       fill: #fff;
     }
   }
+}
+
+.align-items-center{
+  align-items: center;
+}
+.py-0{
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.pl-0{
+  padding-left: 0;
 }

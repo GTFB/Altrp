@@ -34,10 +34,10 @@ class Styles extends Component {
     this.setState({
       ...this.state,
       elementStyles: elementStyles
-    })
+    });
   }
   render(){
-    return <div className="styles-container">
+     return <div className="styles-container">
       {this.state.elementStyles.map(elementStyle => {
         return<style data-styles-id={elementStyle.elementId} key={elementStyle.elementId}>{elementStyle.styles}</style>
       })}

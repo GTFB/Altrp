@@ -5,6 +5,8 @@ import ColumnComponent from "../../../../editor/src/js/components/ColumnComponen
 import InputWidget from "../../../../editor/src/js/components/widgets/InputWidget";
 import ButtonWidget from "../../../../editor/src/js/components/widgets/ButtonWidget";
 import TextWidget from "../../../../editor/src/js/components/widgets/TextWidget";
+import ImageWidget from "../../../../editor/src/js/components/widgets/ImageWidget";
+import TableWidget from "../../../../editor/src/js/components/widgets/TableWidget";
 
 export default class FrontElementsManager {
 
@@ -18,6 +20,8 @@ export default class FrontElementsManager {
     this.components['input'] = InputWidget;
     this.components['button'] = ButtonWidget;
     this.components['text'] = TextWidget;
+    this.components['image'] = ImageWidget;
+    this.components['table'] = TableWidget;
   }
 
   getComponentClass(name){
@@ -27,6 +31,9 @@ export default class FrontElementsManager {
     return this.components[name];
   }
 
+  checkElementExists(elementName){
+    return ! ! this.components[elementName];
+  }
 }
 window.frontElementsManager = new FrontElementsManager();
 

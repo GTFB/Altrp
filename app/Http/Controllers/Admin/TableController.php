@@ -74,12 +74,12 @@ class TableController extends ApiController
      */
     function update(ApiRequest $request) {
         
-        $request->validate([
+        /*$request->validate([
             "name" => ["string","unique:tables,name,".$request->module],
             "title" => ["string","unique:tables,title,".$request->module]
-        ]);
+        ]);*/
         
-        $module = Table::find($request->table);
+        $table = Table::find($request->table);
         
         if(!$table) {
             return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
