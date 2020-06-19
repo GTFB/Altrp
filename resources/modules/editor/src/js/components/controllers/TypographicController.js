@@ -152,6 +152,135 @@ class TypographicController extends Component {
 
   render(){
 
+    const familyOptions = [
+      {
+        value: '1',
+        label:'Select sd  Content 1'
+      },
+      {
+        value: '2',
+        label:'Select Content 2'
+      },
+    ];
+
+    const weightOptions = [
+      {
+        value: '100',
+        label:'100'
+      },
+      {
+        value: '200',
+        label:'200'
+      },
+      {
+        value: '300',
+        label:'300'
+      },
+      {
+        value: '400',
+        label:'400'
+      },
+      {
+        value: '500',
+        label:'500'
+      },
+      {
+        value: '600',
+        label:'600'
+      },
+      {
+        value: '700',
+        label:'700'
+      },
+      {
+        value: '800',
+        label:'800'
+      },
+      {
+        value: '900',
+        label:'900'
+      },
+      {
+        value: 'bold',
+        label:'bold'
+      },
+      {
+        value: 'normal',
+        label:'normal'
+      },
+      {
+        value: 'bolder',
+        label:'bolder'
+      },
+      {
+        value: 'lighter',
+        label:'lighter'
+      },
+    ];
+
+    const transformOptions = [
+      {
+        value: 'none',
+        label:'default',
+        key: 0
+      },
+      {
+        value: 'capitalize',
+        label:'capitalize',
+        key: 1
+      },
+      {
+        value: 'uppercase',
+        label:'uppercase',
+        key: 2
+      },
+      {
+        value: 'lowercase',
+        label:'lowercase',
+        key: 3
+      },
+    ];
+
+    const styleOptions = [
+      {
+        value: 'normal',
+        label:'normal',
+        key: 0
+      },
+      {
+        value: 'italic',
+        label:'italic',
+        key: 1
+      },
+      {
+        value: 'oblique',
+        label:'oblique',
+        key: 2
+      },
+    ];
+    
+    const decorationOptions = [
+      {
+        value: 'none',
+        label:'none',
+        key: 0
+      },
+      {
+        value: 'underline',
+        label:'underline',
+        key: 1
+      },
+      {
+        value: 'overline',
+        label:'overline',
+        key: 3
+      },
+      {
+        value: 'line-through',
+        label:'line-through',
+        key: 4
+      },
+    ];
     // стили для select2
     const customStyles = {
       option: (provided, state) => ({
@@ -225,7 +354,7 @@ class TypographicController extends Component {
               <Select
                 onChange={this.changeFamily}
                 value={this.state.value.family.label}
-                options={this.props.familyOptions}
+                options={familyOptions}
                 styles={customStyles}
                 placeholder={this.state.value.family.label}
                 noOptionsMessage={() => "no fonts found"}
@@ -258,7 +387,7 @@ class TypographicController extends Component {
             </div>
             <div className="control-container_select-wrapper">
               <select name="weightSelect" className="control-select control-field" onChange={this.weightChange}>
-                {this.props.weightOptions.map(option => {return <option value={option.value} key={option.value}>{option.label}</option>})}
+                {weightOptions.map(option => {return <option value={option.value} key={option.value}>{option.label}</option>})}
               </select>
             </div>
           </div>
@@ -270,7 +399,7 @@ class TypographicController extends Component {
             </div>
             <div className="control-container_select-wrapper">
               <select name="weightSelect" className="control-select control-field" onChange={this.transformChange}>
-                {this.props.transformOptions.map(option => {return <option value={option.value} key={option.key}>{option.label}</option>})}
+                {transformOptions.map(option => {return <option value={option.value} key={option.key}>{option.label}</option>})}
               </select>
             </div>
           </div>
@@ -282,7 +411,7 @@ class TypographicController extends Component {
             </div>
             <div className="control-container_select-wrapper">
               <select name="weightSelect" className="control-select control-field" onChange={this.styleChange}>
-                {this.props.styleOptions.map(option => {return <option value={option.value} key={option.key}>{option.label}</option>})}
+                {styleOptions.map(option => {return <option value={option.value} key={option.key}>{option.label}</option>})}
               </select>
             </div>
           </div>
@@ -294,7 +423,7 @@ class TypographicController extends Component {
             </div>
             <div className="control-container_select-wrapper">
               <select name="weightSelect" className="control-select control-field" onChange={this.decorationChange}>
-                {this.props.decorationOptions.map(option => {return <option value={option.value} key={option.key}>{option.label}</option>})}
+                {decorationOptions.map(option => {return <option value={option.value} key={option.key}>{option.label}</option>})}
               </select>
             </div>
           </div>

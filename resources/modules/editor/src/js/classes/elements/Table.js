@@ -45,7 +45,7 @@ class Table extends BaseElement {
     this.addControl('table_table_header_alignment', {
         type: CONTROLLER_CHOOSE,
         label: 'Header alignment',
-        default: 'left',
+        default: 'center',
         options:[
           {
             icon: 'left',
@@ -61,6 +61,7 @@ class Table extends BaseElement {
           },
         ],
         rules: {
+          '{{ELEMENT}} .altrp-table-th': 'text-align: {{VALUE}}',
         },
     });
 
@@ -83,6 +84,7 @@ class Table extends BaseElement {
           },
         ],
         rules: {
+          '{{ELEMENT}} .altrp-table-td': 'text-align: {{VALUE}}',
         },
     });
       
@@ -193,14 +195,23 @@ class Table extends BaseElement {
         }
       ],
       rules: {
+        '{{ELEMENT}} .altrp-table-tbody': 'border-style: {{VALUE}} !important'
       }
     });
 
     this.addControl("table_style_table_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
+      default: {
+        top: 1,
+        right: 1,
+        bottom: 1,
+        left: 1,
+        unit: "px"
+      },
       units: ["px", "%", "vh"],
       rules: {
+        '{{ELEMENT}} .altrp-table-tbody': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
       }
     });
 
@@ -208,10 +219,11 @@ class Table extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Border Color",
       default: {
-        color: "",
-        colorPickedHex: ""
+        color: "rgb(186,186,186)",
+        colorPickedHex: "#32a852"
       },
       rules: {
+        '{{ELEMENT}} .altrp-table-tbody': 'border-color: {{COLOR}} !important'
       }
     });
 
@@ -237,6 +249,7 @@ class Table extends BaseElement {
         colorPickedHex: ""
       },
       rules: {
+        '{{ELEMENT}} .altrp-table-head': 'background: {{COLOR}}'
       }
     });
 
@@ -248,6 +261,7 @@ class Table extends BaseElement {
           colorPickedHex: ""
         },
         rules: {
+          '{{ELEMENT}} .altrp-table-th': 'color: {{COLOR}}'
         }
     });
 
@@ -282,6 +296,7 @@ class Table extends BaseElement {
         }
       ],
       rules: {
+        '{{ELEMENT}} .altrp-table-th': 'border-style: {{VALUE}};',
       }
     });
 
@@ -290,6 +305,7 @@ class Table extends BaseElement {
       label: "Border width",
       units: ["px", "%", "vh"],
       rules: {
+        '{{ELEMENT}} .altrp-table-th': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
       }
     });
 
@@ -301,6 +317,7 @@ class Table extends BaseElement {
         colorPickedHex: ""
       },
       rules: {
+        '{{ELEMENT}} .altrp-table-th': 'border-color: {{COLOR}};',
       }
     });
 
@@ -320,6 +337,7 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
+        '{{ELEMENT}} .altrp-table-th': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
       },
     });
 
@@ -361,6 +379,7 @@ class Table extends BaseElement {
         }
       ],
       rules: {
+        '{{ELEMENT}} .altrp-table-td': 'border-style: {{VALUE}};',
       }
     });
 
@@ -369,6 +388,7 @@ class Table extends BaseElement {
       label: "Border width",
       units: ["px", "%", "vh"],
       rules: {
+        '{{ELEMENT}} .altrp-table-td': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
       }
     });
 
@@ -380,6 +400,7 @@ class Table extends BaseElement {
         colorPickedHex: ""
       },
       rules: {
+        '{{ELEMENT}} .altrp-table-td': 'border-color: {{COLOR}};',
       }
     });
     
@@ -399,6 +420,7 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
+        '{{ELEMENT}} .altrp-table-td': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
       },
     });
 
@@ -410,28 +432,19 @@ class Table extends BaseElement {
         colorPickedHex: ""
       },
       rules: {
+        '{{ELEMENT}} .altrp-table-td': 'background: {{COLOR}};',
       }
     });
 
     this.addControl("table_style_body_border_text_color", {
       type: CONTROLLER_COLOR,
-      label: "Tsext color",
+      label: "Text color",
       default: {
         color: "",
         colorPickedHex: ""
       },
       rules: {
-      }
-    });
-
-    this.addControl("table_style_body_border_color", {
-      type: CONTROLLER_COLOR,
-      label: "Border color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
-      rules: {
+        '{{ELEMENT}} .altrp-table-td': 'color: {{COLOR}};',
       }
     });
 
