@@ -7,6 +7,7 @@ module.exports = merge(common, {
   devtool: 'source-map',
   output: {
     path: path.resolve(__dirname, "./public/modules/admin/"),
+    publicPath: "/modules/admin/",
     filename: "admin.js"
   },
 });
