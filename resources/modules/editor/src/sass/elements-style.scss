@@ -96,10 +96,12 @@
     opacity: 1;
   }
 }
+
 .altrp-tooltip-none {
   display: none;
   opacity: 0;
 }
+
 .altrp-tooltip::after {
   border-width: 10px;
   left: calc(50% - 10px);
