@@ -45,6 +45,9 @@ class AltrpUpdateService
    */
   public function update()
   {
+    if( env( 'APP_ENV', 'local' ) === 'local' ){
+      return true;
+    }
     set_time_limit( 0 );
     $version = $this->get_version();
 
@@ -73,8 +76,6 @@ class AltrpUpdateService
     if ( version_compare( $lastVersion, $currentVersion, '<=' ) ) {
       abort( 401 );
     }
-
-
 
     // Clear all the cache
     $this->clearCache();
@@ -134,9 +135,6 @@ class AltrpUpdateService
    */
   private function update_files(){
     Artisan::call( 'config:cache');
-    if( env( 'APP_ENV', 'local' ) === 'local' ){
-      return true;
-    }
     $file_path = storage_path( 'app/' . self::PRODUCT_NAME . '.zip' );
 
     $archive = new ZipArchive();

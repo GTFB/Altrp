@@ -73,6 +73,7 @@ class Resource {
    * */
   post(data = {}, headers){
     headers = headers || {
+      'X-CSRF-TOKEN': _token,
       'Content-Type': 'application/json'
     };
     let options = {

@@ -8,9 +8,13 @@
 @import "components/admin-assets";
 @import "components/admin-settings";
 @import "components/tabs";
-
+@import "components/admin-users";
+//@import "components/users-tools";
+//@import "components/admin-logo";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap');
 
 .admin {
+
   display: flex;
   height: 100vh;
   &__logo{
@@ -42,6 +46,7 @@
       padding-right: 20px;
     }
     &-list {
+        margin-top: 10px;
       &__link{
         display: flex;
         padding: 10px 20px;
@@ -56,7 +61,7 @@
         }
         & svg{
           position: relative;
-          top: 1px;
+          top: 3px;
         }
       }
       &_pages{
@@ -80,6 +85,8 @@
     font-size: 18px;
   }
   &__bars{
+    margin: 12px 12px;
+    float: right;
     cursor: pointer;
   }
   &_pages-show{
@@ -96,11 +103,11 @@
     display: inline-block;
     align-items: center;
 }
-li {
+.admin-nav li {
     list-style-type: none;
-    background-color: $dark-purple;
+    background: #343B4C;
     &:hover{
-        background-color: $purple;
+        background: #495267;
     }
 }
 ul {

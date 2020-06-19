@@ -1,7 +1,6 @@
 import {SET_LOGO} from "./actions";
 
 const defaultState = admin_logo ? admin_logo : {};
-// console.log(defaultState);
 
 export function adminLogoReducer(state, action) {
   state = state || defaultState;
@@ -12,6 +11,5 @@ export function adminLogoReducer(state, action) {
       };
     }break;
   }
-  console.log(state);
   return state;
 }
