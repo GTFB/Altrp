@@ -14,7 +14,7 @@
 
 ### 0.2.0
 + Upgrader
-* Fix Update from server Issues
+* Fix Update from Server Issues
 * Fix Widget not Found Checking
 + Adding and Duplicate Elements by Context Menu
 
