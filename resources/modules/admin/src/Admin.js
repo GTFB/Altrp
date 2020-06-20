@@ -23,7 +23,7 @@ import {
   Link
 } from "react-router-dom";
 import Users from "./components/Users";
-// import UsersTools from "./components/UsersTools";
+import UsersTools from "./components/UsersTools";
 import Assets from "./components/Assets";
 import Dashboard from "./components/Dashboard";
 import Plugins from "./components/Plugins";
