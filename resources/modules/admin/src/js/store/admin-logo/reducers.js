@@ -1,6 +1,6 @@
 import {SET_LOGO} from "./actions";
 
-const defaultState = admin_logo ? admin_logo : {};
+const defaultState = window.admin_logo ? window.admin_logo : {};
 
 export function adminLogoReducer(state, action) {
   state = state || defaultState;
