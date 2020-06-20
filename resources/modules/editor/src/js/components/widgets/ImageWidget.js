@@ -18,12 +18,12 @@ class ImageWidget extends Component {
     contentMedia.url = contentMedia.url || '/img/nullImage.png';
     contentMedia.name = contentMedia.name || 'null';
     contentMedia.assetType = contentMedia.assetType || 'image';
-    return <div>
-    {  renderAsset( contentMedia, {
-      className: this.state.settings.position_css_classes || "altrp-image",
-      id: this.state.settings.position_css_id || "", 
-    })
-    }
+    return <div className="altrp-image-container">
+      {  renderAsset( contentMedia, {
+        className: this.state.settings.position_css_classes || "altrp-image",
+        id: this.state.settings.position_css_id || "", 
+      })
+      }
     </div>
   }
 }

@@ -65,7 +65,7 @@ class TypographicController extends Component {
   changeFamily(value){
     this._changeValue({
       ...this.state.value,
-      family: value
+      family: value.value
     })
   };
   //конец select2
@@ -154,12 +154,12 @@ class TypographicController extends Component {
 
     const familyOptions = [
       {
-        value: '1',
-        label:'Select sd  Content 1'
+        value: 'Roboto',
+        label:'Roboto'
       },
       {
-        value: '2',
-        label:'Select Content 2'
+        value: 'Open Sans',
+        label:'Open Sans'
       },
     ];
 
