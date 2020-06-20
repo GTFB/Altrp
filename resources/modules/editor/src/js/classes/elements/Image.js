@@ -16,7 +16,7 @@ import {
 
 class Image extends BaseElement{
 	static getName(){
-    return'Image';
+    return'image';
   }
   static getTitle(){
     return'Image';
@@ -41,9 +41,7 @@ class Image extends BaseElement{
     this.addControl('content_media', {
       type: CONTROLLER_MEDIA,
       label: 'Choose image',
-      default: {
-      	assetType: 'img'
-      }
+      default: null
     });
 
     this.endControlSection();
@@ -101,7 +99,7 @@ class Image extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} img': [ 
+        '{{ELEMENT}} div': [ 
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -237,8 +235,7 @@ class Image extends BaseElement{
       label: 'Border'
     });
 
-    this.addControl(
-      'border_type', {
+    this.addControl('border_type', {
         type: CONTROLLER_SELECT,
         label: 'Border Type',
         units:[
@@ -278,8 +275,7 @@ class Image extends BaseElement{
       }
     );
   
-    this.addControl(
-      'border_width', {
+    this.addControl('border_width', {
         type: CONTROLLER_DIMENSIONS,
         label: 'Border Width',
         units:[
@@ -293,8 +289,7 @@ class Image extends BaseElement{
       }
     );
   
-    this.addControl(
-      'border_color', {
+    this.addControl('border_color', {
         type: CONTROLLER_COLOR,
         label: 'Border Color',
         default: {

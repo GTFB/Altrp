@@ -61,6 +61,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "admin/"),
     publicPath: "http://localhost:3002/src/",
+    chunkFilename: '[chunkhash].bundle.js',
     filename: "bundle.js"
   },
   devServer: {

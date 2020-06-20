@@ -4,16 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Role;
 use App\User;
-use Facade\Ignition\Solutions\RunMigrationsSolution;
-use Illuminate\Database\Console\Migrations\MigrateCommand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Jenssegers\Date\Date;
-use PulkitJalan\GeoIP\Facades\GeoIP;
 
 set_time_limit( 0 );
 

@@ -1,3 +1,4 @@
+import "./sass/editor-style.scss";
 import React, { Component } from "react";
 import { hot } from "react-hot-loader";
 import { Provider } from "react-redux";
@@ -14,7 +15,6 @@ import AssetsBrowser from "./js/classes/modules/AssetsBrowser";
 
 import store from "../src/js/store/store";
 
-import "./sass/editor-style.scss";
 
 import DesktopIcon from "./svgs/desktop.svg";
 import Logo from "./svgs/logo.svg";
@@ -24,6 +24,7 @@ import Preview from "./svgs/preview.svg";
 import Settings from "./svgs/settings.svg";
 import Dots from "./svgs/dots.svg";
 import Hamburger from "./svgs/hamburger.svg";
+import {contextMenu} from "react-contexify";
 /**
  * Главный класс редактора.<br/>
  * Реакт-Компонент.<br/>
@@ -38,14 +39,15 @@ class Editor extends Component {
     super(props);
     window.altrpEditor = this;
     this.state = {
-      activePanel: 'widgets',
-      // activePanel: "settings",
+      // activePanel: 'widgets',
+      activePanel: "settings",
       templateStatus: CONSTANTS.TEMPLATE_UPDATED,
     };
     this.openPageSettings = this.openPageSettings.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
     this.showWidgetsPanel = this.showWidgetsPanel.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
+    this.onClick = this.onClick.bind(this);
     store.subscribe(this.templateStatus.bind(this));
   }
   /**
@@ -85,6 +87,13 @@ class Editor extends Component {
       ...this.state,
       activePanel: "settings",
     });
+  }
+
+  /**
+   * Сработывает при клике
+   */
+  onClick() {
+    contextMenu.hideAll();
   }
 
   /**
@@ -143,7 +152,9 @@ class Editor extends Component {
 
     return (
       <Provider store={store}>
-        <div className={templateClasses} onDragEnd={this.onDragEnd}>
+        <div className={templateClasses}
+             onClick={this.onClick}
+             onDragEnd={this.onDragEnd}>
           <div className="left-panel">
             <div className="editor-top-panel">
               <button

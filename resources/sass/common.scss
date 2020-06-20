@@ -28,14 +28,40 @@ path{
   font-family: Roboto, sans-serif;
 }
 
+.btn:active,
+.btn:focus,
+a:active,
 a:focus,
+button:active,
 button:focus{
   outline: none;
+  box-shadow: none;
 }
 button{
   cursor: pointer;
 }
-
+.btn{
+  &_grey{
+    background-color: $button-grey;
+  }
+  &_disabled{
+    background-color: $button-grey;
+    cursor: default;
+    font-weight: bold;
+    color: #fff;
+    pointer-events: none;
+  }
+}
+.btn,
+button{
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 iframe{
   display: block;
   border: none;

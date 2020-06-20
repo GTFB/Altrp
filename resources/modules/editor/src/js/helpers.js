@@ -60,6 +60,10 @@ export const CONSTANTS = {
   DEFAULT_BREAKPOINT: 'DEFAULT_BREAKPOINT',
 };
 
+/**
+ *
+ * @return {ElementsFactory}
+ */
 export function getFactory() {
   return getEditor().modules.elementsFactory;
 }

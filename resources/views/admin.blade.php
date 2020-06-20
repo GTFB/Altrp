@@ -14,6 +14,9 @@
   <script>
     let _token = '{{ csrf_token() }}';
   </script>
+  <script>
+    let admin_logo = {!! env( 'ALTRP_SETTING_ADMIN_LOGO' ) !!};
+  </script>
   <script src="{{ altrp_asset( '/modules/admin/admin.js', 'http://localhost:3002/' ) }}" defer></script>
 
   <!-- Fonts -->

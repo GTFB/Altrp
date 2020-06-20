@@ -16,6 +16,8 @@ import DuplicateIcon from "../../svgs/duplicate.svg";
 import store from "../store/store";
 import { START_DRAG, startDrag } from "../store/element-drag/actions";
 import { setCurrentElement } from "../store/current-element/actions";
+import {contextMenu} from "react-contexify/lib/index";
+import {setCurrentContextElement} from "../store/current-context-element/actions";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -33,6 +35,7 @@ class ElementWrapper extends Component {
     this.onDrop = this.onDrop.bind(this);
     this.onDragStart = this.onDragStart.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
+    this.handleContext = this.handleContext.bind(this);
     this.wrapper = React.createRef();
   }
   onDragLeave(e) {
@@ -78,6 +81,24 @@ class ElementWrapper extends Component {
     return false;
   }
 
+  /**
+   * Срабатывает при вызывании контекстоного меню
+   * @param e - событие
+   */
+  handleContext(e) {
+    store.dispatch(setCurrentContextElement(this.props.element));
+    e.persist();
+    e.preventDefault();
+    e.stopPropagation();
+    contextMenu.show({
+      id: 'element-menu',
+      event: e,
+      props: {
+        element: this.props.element,
+      }
+    });
+  }
+
   onDrop(e) {
     /**
      * @member {HTMLElement} target
@@ -105,6 +126,7 @@ class ElementWrapper extends Component {
       if (this.props.element.getType() === "column") {
         this.props.element.appendChild(newElement);
       }
+      editorSetCurrentElement(newElement);
     }
     /**
      * @member {BaseElement} draggableElement
@@ -130,6 +152,7 @@ class ElementWrapper extends Component {
         draggableElement.insertAfter(this.props.element);
         e.stopPropagation();
       }
+      editorSetCurrentElement(draggableElement);
     }
     this.setState(state => {
       return { ...state, dragOver: false, cursorPos: false, isDrag: false };
@@ -190,6 +213,9 @@ class ElementWrapper extends Component {
     let classes = `altrp-element ${this.props.element
       .getSelector()
       .replace(".", "")} altrp-element_${this.props.element.getType()}`;
+    if(this.props.element.getType() === 'widget'){
+      classes += ` altrp-widget_${this.props.element.getName()}`;
+    }
     let overlayClasses = `overlay`;
     if (this.props.currentElement === this.props.element) {
       classes += " altrp-element_current";
@@ -226,6 +252,7 @@ class ElementWrapper extends Component {
       <div
         className={classes}
         ref={this.wrapper}
+        onContextMenu={this.handleContext}
         onDragOver={this.onDragOver}
         onClick={this.chooseElement}
         onDrop={this.onDrop}
@@ -233,6 +260,7 @@ class ElementWrapper extends Component {
         onDragLeave={this.onDragLeave}
         onDragEnter={this.onDragEnter}
       >
+
         <div className={overlayClasses}>
           <div className="overlay-settings">
             <button
@@ -288,13 +316,7 @@ class ElementWrapper extends Component {
   }
   duplicateElement(e) {
     e.stopPropagation();
-    let factory = getFactory();
-    let newElement = factory.duplicateElement(
-      this.props.element,
-      this.props.element.parent
-    );
-    getTemplateDataStorage().setCurrentElement(newElement);
-    getEditor().showSettingsPanel();
+    this.props.element.duplicate();
   }
   showWidgetsPanel(e) {
     e.stopPropagation();

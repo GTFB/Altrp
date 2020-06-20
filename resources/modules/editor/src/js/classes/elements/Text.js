@@ -21,7 +21,7 @@ import { advancedTabControllers } from "../../decorators/register-controllers";
 
 class Text extends BaseElement {
   static getName() {
-    return "Text";
+    return "text";
   }
   static getTitle() {
     return "Text";
@@ -54,14 +54,31 @@ class Text extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("text_style", {
+    this.startControlSection('text_settings', {
+      tab: TAB_CONTENT,
+      label: 'Text Settings',
+    });
+
+    this.addControl('text_link', {
+      type: CONTROLLER_LINK,
+      default: {
+        url: "",
+        attributes: "",
+        noFollow: false
+      },
+      label: 'link',
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('text_style', {
       tab: TAB_STYLE,
       label: ""
     });
 
     this.addControl("text_style_column-count", {
       type: CONTROLLER_NUMBER,
-      label: "column count",
+      label: "Column count",
       default: 1,
       rules: {
         "{{ELEMENT}} .altrp-text": "column-count: {{VALUE}}"
@@ -70,7 +87,7 @@ class Text extends BaseElement {
 
     this.addControl("text_style_column-width", {
       type: CONTROLLER_SLIDER,
-      label: "column width",
+      label: "Column width",
       default: {
         size: 0,
         unit: "px"
@@ -85,7 +102,7 @@ class Text extends BaseElement {
 
     this.addControl("text_style_column-gap", {
       type: CONTROLLER_SLIDER,
-      label: "column width",
+      label: "Column width",
       default: {
         size: 0,
         unit: "px"
@@ -100,7 +117,7 @@ class Text extends BaseElement {
 
     this.addControl("text_transition", {
       type: CONTROLLER_NUMBER,
-      label: "transition",
+      label: "Transition",
       default: 0,
       rules: {
         "{{ELEMENT}} .altrp-text": "transition: {{VALUE}}s"
@@ -111,12 +128,12 @@ class Text extends BaseElement {
 
     this.startControlSection("text_style_position", {
       tab: TAB_STYLE,
-      label: "position"
+      label: "Position"
     });
 
     this.addControl("text_style_position_padding", {
       type: CONTROLLER_DIMENSIONS,
-      label: "padding",
+      label: "Padding",
       default: {
         top: 0,
         right: 0,
@@ -135,9 +152,34 @@ class Text extends BaseElement {
       }
     });
 
-    this.addControl("text_position_z_index", {
+    this.addControl('text_style_position_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      default:{
+        top: 5,
+        right: 0,
+        bottom: 5,
+        left: 0,
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-text': [ 
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('text_position_z_index', {
       type: CONTROLLER_NUMBER,
-      label: "z-index",
+      label: "Z-index",
       default: 0,
       rules: {
         "{{ELEMENT}} .altrp-text": "z-index: {{VALUE}}"
@@ -148,15 +190,15 @@ class Text extends BaseElement {
 
     this.startControlSection("text_style_background", {
       tab: TAB_STYLE,
-      label: "background"
+      label: "Background"
     });
 
     this.addControl("text_style_background_color", {
       type: CONTROLLER_COLOR,
-      label: "background color",
+      label: "Background color",
       default: {
-        color: "rgb(234, 234, 234)",
-        colorPickedHex: "#EAEAEA"
+        color: "",
+        colorPickedHex: "",
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
@@ -166,7 +208,7 @@ class Text extends BaseElement {
 
     this.addControl("text_style_background_opacity", {
       type: CONTROLLER_SLIDER,
-      label: "opacity",
+      label: "Opacity",
       default: {
         size: 1
       },
@@ -182,12 +224,12 @@ class Text extends BaseElement {
 
     this.startControlSection("text_style_font", {
       tab: TAB_STYLE,
-      label: "font"
+      label: "Font"
     });
 
     this.addControl("text_style_font_color", {
       type: CONTROLLER_COLOR,
-      label: "color",
+      label: "Color",
       default: {
         color: "rgb(0, 0, 1)",
         colorPickedHex: "#000000"
@@ -202,12 +244,12 @@ class Text extends BaseElement {
 
     this.startControlSection("text_style_border", {
       tab: TAB_STYLE,
-      label: "border"
+      label: "Border"
     });
 
     this.addControl("text_style_border_type", {
       type: CONTROLLER_SELECT,
-      label: "Border Type",
+      label: "Border type",
       units: ["px", "%", "vh"],
       options: [
         {
@@ -242,7 +284,7 @@ class Text extends BaseElement {
 
     this.addControl("text_style_border_width", {
       type: CONTROLLER_DIMENSIONS,
-      label: "Border Width",
+      label: "Border width",
       units: ["px", "%", "vh"],
       rules: {
         "{{ELEMENT}} .altrp-text":
@@ -252,7 +294,7 @@ class Text extends BaseElement {
 
     this.addControl("text_style_border_color", {
       type: CONTROLLER_COLOR,
-      label: "Border Color",
+      label: "Border color",
       default: {
         color: "rgb(50,168,82)",
         colorPickedHex: "#32a852"
@@ -264,15 +306,18 @@ class Text extends BaseElement {
 
     this.addControl("text_style_border_radius", {
       type: CONTROLLER_SLIDER,
-      label: "Border radius",
-      default: {
-        size: 1,
-        unit: "px"
+      label: 'Border radius',
+      default:{
+        size: 0,
+        unit: 'px',
       },
-      units: ["px", "%", "vh"],
-      max: 1,
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
       min: 0,
-      step: 0.01,
       rules: {
         "{{ELEMENT}} .altrp-text": "border-radius: {{SIZE}}{{UNIT}}"
       }
@@ -285,11 +330,145 @@ class Text extends BaseElement {
       label: "Tooltip"
     });
 
-    this.addControl("tex_advanced_tooltip_font", {
+    this.addControl('text_advanced_tooltip_active', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Tooltip active',
+      default: false
+    });
+    
+    this.addControl('text_advanced_tooltip_label', {
+      type: CONTROLLER_TEXT,
+      default: "tooltip",
+      label: 'Label'
+    })
+
+    this.addControl('text_advanced_tooltip_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Background color',
+      default: {
+        color: "rgb(206,205,237)",
+        colorPickedHex: "#CECDED",
+      },
+      presetColors: [
+        "#eaeaea",
+        "#9c18a8"
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-tooltip': 'background: {{COLOR}};',
+        '{{ELEMENT}} .altrp-tooltip::after': 'border-color: transparent transparent {{COLOR}};'
+      },
+    });
+
+    this.addControl('text_advanced_tooltip_font_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Font color',
+      default: {
+        color: "rgb(0,0,0)",
+        colorPickedHex: "#000000",
+      },
+      presetColors: [
+        "#eaeaea",
+        "#9c18a8"
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-tooltip': 'color: {{COLOR}};',
+      },
+    });
+
+    this.addControl(
+      'text_advanced_tooltip_border_type', {
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        units:[
+          'px',
+          '%',
+          'vh',
+        ],
+        options:[
+          {
+            'value' : 'none',
+            'label' : 'None',
+          },
+          {
+            'value' : 'solid',
+            'label' : 'Solid',
+          },
+          {
+            'value' : 'double',
+            'label' : 'Double',
+          },
+          {
+            'value' : 'dotted',
+            'label' : 'Dotted',
+          },
+          {
+            'value' : 'dashed',
+            'label' : 'Dashed',
+          },
+          {
+            'value' : 'groove',
+            'label' : 'Groove',
+          },
+        ],
+        rules: {
+          '{{ELEMENT}} .altrp-tooltip': 'border-style: {{VALUE}};',
+        },
+      }
+    );
+  
+    this.addControl(
+      'text_advanced_tooltip_border_width', {
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        units:[
+          'px',
+          '%',
+          'vh',
+        ],
+        rules: {
+          '{{ELEMENT}} .altrp-tooltip': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        },
+      }
+    );
+  
+    this.addControl(
+      'text_advanced_tooltip_border_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+        default: {
+          color: "rgb(50,168,82)",
+          colorPickedHex: "#32a852",
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-tooltip': 'border-color: {{COLOR}};',
+        },
+      }
+    );
+    
+    this.addControl('text_advanced_tooltip_border_radius', {
+      type: CONTROLLER_SLIDER,
+      label: 'Border radius',
+      default:{
+        size: 0,
+        unit: 'px',
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-tooltip': 'border-radius: {{SIZE}}{{UNIT}}',
+      },
+    });
+
+    this.addControl('text_advanced_tooltip_font', {
       type: CONTROLLER_SELECT2,
-      label: "font",
-      placeholder: "placeholder",
-      default: '"Roboto"',
+      label: 'Font',
+      placeholder: 'Lato',
+      default: '"Lato"',
       options: [
         {
           value: '"Roboto"',
@@ -301,7 +480,7 @@ class Text extends BaseElement {
         }
       ],
       rules: {
-        "{{ELEMENT}}": "font-family: {{VALUE}}"
+        '{{ELEMENT}} .altrp-tooltip': 'font-family: {{VALUE}}'
       }
     });
 
@@ -309,7 +488,7 @@ class Text extends BaseElement {
 
     this.startControlSection("text_advanced_attributes", {
       tab: TAB_ADVANCED,
-      label: "attributes"
+      label: "Attributes"
     });
 
     this.addControl("text_advanced_attributes_css_id", {

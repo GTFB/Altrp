@@ -16,13 +16,6 @@ use Illuminate\Support\Facades\Route;
 
 
 /**
- * Upgrade
- */
-Route::group(['namespace' => 'App\Http\Controllers', 'middleware' => ['web']], function () {
-  Route::get('upgrade', 'UpgradeController@version');
-});
-
-/**
  * Installation
  */
 
@@ -99,15 +92,20 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::delete('/users/{user}/roles', "Users\Users@detachRole");
 
     Route::resource( 'areas', 'Admin\AreasController' );
-
     Route::resource( 'templates', 'TemplateController' );
     Route::resource( 'media', 'Admin\MediaController' );
+    Route::resource( 'settings', 'Admin\SettingsController' );
 
     /**
      * Updates Check
      */
     Route::post( 'check_update', 'Admin\UpdateController@check_update' )->name( 'admin.check_update' );
     Route::post( 'update_altrp', 'Admin\UpdateController@update_altrp' )->name( 'admin.update_altrp' );
+
+    /**
+     * Роуты для теста запросов для виджета таблицы todo: удалить, после того как модели будут готовы
+     */
+    Route::get( 'models_list', 'Admin\ModelsController@models_list' )->name( 'admin.models_list' );
   });
 
 });
@@ -147,5 +145,6 @@ foreach ( $frontend_routes as $frontend_route ) {
 Route::group( ['prefix' => 'ajax'], function(){
 
   Route::resource( 'routes', 'Frontend\RouteController' );
+  Route::get( 'models/{model_name}', 'Admin\ModelsController@models' )->name( 'front.models' );
 
 } );

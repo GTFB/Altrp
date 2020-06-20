@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\AltrpUpdateService;
+use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UpdateController extends Controller
@@ -15,6 +16,7 @@ class UpdateController extends Controller
    * @return \Illuminate\Http\JsonResponse
    */
   public function check_update( AltrpUpdateService $updateService ){
+    Artisan::call( 'config:clear');
     try {
       $new_version = $updateService->get_version();
     } catch ( NotFoundHttpException $e ){
@@ -34,13 +36,17 @@ class UpdateController extends Controller
    * Обработка запроса проверки нужно ли обнолвение
    * @param AltrpUpdateService $updateService
    * @return \Illuminate\Http\JsonResponse
+   * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
    */
   public function update_altrp( AltrpUpdateService $updateService ){
     try {
+      Artisan::call( 'down' );
       $result = $updateService->update();
     }catch ( \HttpException $e ) {
+      Artisan::call( 'up' );
       return response()->json( ['message' => $e->getMessage()], 500 );
     }
+    Artisan::call( 'up' );
     return response()->json( ['result' => $result] );
   }
 }

@@ -1,18 +1,32 @@
+/**
+ * Обновление значения в компоненте контроллера при загрузке нового экземпляра того же элемента
+ */
 function componentDidUpdate() {
-  let elementValue = this.props.currentElement.getSettings(this.props.controlId);
-  if(this.state.value !== elementValue){
-    if(elementValue === null){
-      elementValue = this.getDefaultValue();
-      this.props.currentElement.setSettingValue(this.props.controlId, elementValue);
+  if(!this.props.repeater){
+    let elementValue = this.props.currentElement.getSettings(this.props.controlId);
+    if(this.state.value !== elementValue){
+      if(elementValue === null){
+        elementValue = this.getDefaultValue();
+        this.props.currentElement.setSettingValue(this.props.controlId, elementValue);
+      }
+      this.setState({
+        value: elementValue
+      });
     }
-    this.setState({
-      value: elementValue
-    });
+  } else {
   }
 }
 
+/**
+ * @function _changeValue
+ * Обновление значения в  контроллере
+ * @member {object} props
+ * @property {Controller} props.controller
+ */
 function _changeValue(value) {
-  if(typeof value === 'object'){
+  if(typeof value === 'object' && value.length !== undefined){
+    value = [...value];
+  }else if(typeof value === 'object'){
     value = {...value};
   }
   this.setState((state)=>{

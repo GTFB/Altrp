@@ -126,7 +126,7 @@ class Input extends BaseElement{
 
     this.addControl('logic_action', {
       type: CONTROLLER_SELECT2,
-      label: 'action',
+      label: 'Action',
       placeholder: 'action',
       default: '1',
       options: [
@@ -157,7 +157,7 @@ class Input extends BaseElement{
 
     this.addControl('position_margin', {
       type: CONTROLLER_DIMENSIONS,
-      label: 'margin',
+      label: 'Margin',
       default:{
         top: 0,
         right: 0,
@@ -182,7 +182,7 @@ class Input extends BaseElement{
 
     this.addControl('position_padding', {
       type: CONTROLLER_DIMENSIONS,
-      label: 'padding',
+      label: 'Padding',
       default:{
         top: 0,
         right: 0,
@@ -207,7 +207,7 @@ class Input extends BaseElement{
 
     this.addControl('position_z_index', {
       type: CONTROLLER_NUMBER,
-      label: 'z-index',
+      label: 'Z-index',
       default: 0,
       rules: {
         '{{ELEMENT}} input': 'z-index: {{VALUE}}'
@@ -239,9 +239,6 @@ class Input extends BaseElement{
       },
       max: 1,
       min: 0,
-      rules: {
-        '{{ELEMENT}} input': 'opacity: {{SIZE}}',
-      },
     });
 
     this.endControlSection();
@@ -272,8 +269,7 @@ class Input extends BaseElement{
       label: 'Border'
     });
 
-    this.addControl(
-      'border_type', {
+    this.addControl('border_type', {
         type: CONTROLLER_SELECT,
         label: 'Border Type',
         units:[
@@ -313,8 +309,7 @@ class Input extends BaseElement{
       }
     );
   
-    this.addControl(
-      'border_width', {
+    this.addControl('border_width', {
         type: CONTROLLER_DIMENSIONS,
         label: 'Border Width',
         units:[
@@ -328,8 +323,7 @@ class Input extends BaseElement{
       }
     );
   
-    this.addControl(
-      'border_color', {
+    this.addControl('border_color', {
         type: CONTROLLER_COLOR,
         label: 'Border Color',
         default: {

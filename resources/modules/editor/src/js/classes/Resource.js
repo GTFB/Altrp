@@ -1,8 +1,9 @@
+import queryString from 'query-string';
 /**
- * @class
+ * @class Resource
  * */
-
 export const MAX_FILE_SIZE = 10485760;
+
 class Resource {
 
 
@@ -71,8 +72,8 @@ class Resource {
    * @return {Promise}
    * */
   post(data = {}, headers){
-    data._token = _token;
     headers = headers || {
+      'X-CSRF-TOKEN': _token,
       'Content-Type': 'application/json'
     };
     let options = {
@@ -126,7 +127,6 @@ class Resource {
    * @return {Promise}
    * */
   put(id, data){
-    data._token = _token;
     let options = {
       method: 'put',
       body: JSON.stringify(data),
@@ -183,6 +183,27 @@ class Resource {
     });
   }
 
+  /**
+   * @param {object} params
+   * @return {Promise}
+   * */
+  async getQueried(params){
+    let options = {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    };
+    let url = `${this.route}?${queryString.stringify(params)}`;
+    let res =  await fetch(url, options).then(res => {
+      if(res.ok === false){
+        return Promise.reject(res.text(), res.status);
+      }
+      return res.json()
+    });
+    // console.log(res);
+    return res;
+  }
 }
 
 export default Resource;

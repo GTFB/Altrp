@@ -14,12 +14,14 @@
   <script>
   let _token = '{{ csrf_token() }}';
   </script>
+  <script>
+  let _altrpVersion = '{{ getCurrentVersion() }}';
+  </script>
   {{--  <script src="{{ asset( '/modules/editor/editor.js' ) }}" defer></script>--}}
   <script src="{{ altrp_asset( '/modules/editor/editor.js', 'http://localhost:3000/' ) }}" crossorigin defer></script>
 
-  <link rel="stylesheet" href="/modules/editor/editor.css">
+  <link rel="stylesheet" href="{{ asset( '/modules/editor/editor.css?' ) . getCurrentVersion() }}">
   {{--<link rel="dns-prefetch" href="//fonts.gstatic.com">--}}
-
 </head>
 
 <body>
