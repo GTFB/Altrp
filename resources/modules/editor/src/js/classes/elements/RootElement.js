@@ -50,7 +50,7 @@ class RootElement extends BaseElement {
 
     let repeater = new Repeater();
 
-    repeater.addControl( 'text', {
+    this.addControl( 'text', {
       label: 'Text'
     } );
 
