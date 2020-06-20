@@ -1,0 +1,12 @@
+@import "../../../../../sass/vars";
+.admin-media-input{
+  width: 100px;
+  &__preview{
+    height: 100px;
+    width: 100%;
+    background-color: $light-gray;
+    & img{
+      max-width: 100%;
+    }
+  }
+}

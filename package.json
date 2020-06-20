@@ -14,11 +14,13 @@
     "editor-build": "webpack --config webpack.editor.prod.js",
     "admin-build": "webpack --config webpack.admin.prod.js",
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "pack": "npm run front-build && npm run editor-build && npm run admin-build && gulp pack"
+    "pack": "npm run front-build && npm run editor-build && npm run admin-build && gulp pack",
+    "run-all": "npm-run-all --parallel admin-start editor-start front-start"
   },
   "dependencies": {
     "ace-builds": "^1.4.11",
     "jodit-react": "^1.0.42",
+    "query-string": "^6.13.1",
     "react": "^16.8.5",
     "react-ace": "^8.1.0",
     "react-color": "^2.18.1",
@@ -63,6 +65,7 @@
     "mini-css-extract-plugin": "^0.9.0",
     "namor": "^2.0.2",
     "node-sass": "^4.13.1",
+    "npm-run-all": "^4.1.5",
     "popper.js": "^1.12",
     "react-hot-loader": "^4.12.19",
     "react-svg-loader": "^3.0.3",

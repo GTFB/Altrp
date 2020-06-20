@@ -42,8 +42,8 @@ class TextWidget extends Component {
       tooltipActive = this.tooltipActive
     }
 
-    let textCap = <span className="altrp-text"><span className="altrp-text-drop-cap">{this.state.settings.text.slice(0,1)}</span><span>{this.state.settings.text.slice(2)}</span> {tooltip}</span>
-    let text = <span className="altrp-text">{this.state.settings.text} {tooltip}</span>;
+    let textCap = <><span className="altrp-text-drop-cap">{this.state.settings.text.slice(0,1)}</span><span>{this.state.settings.text.slice(2)}</span> {tooltip}</>;
+    let text = <>{this.state.settings.text} {tooltip}</>;
 
     let activeText = "";
     if(this.state.settings.text_drop_cap === true) {
@@ -51,10 +51,18 @@ class TextWidget extends Component {
     } else {
       activeText = text;
     }
+    return React.createElement('div',
+        {
+          className: "altrp-text",
+          onMouseOver: tooltipActive,
+          dangerouslySetInnerHTML: {
+            __html: this.state.settings.text
+          },
+          // dangerouslySetInnerHTML: activeText,
 
-    return <div>
-      {React.createElement(this.state.settings.text_settings_html_tag, {className: "altrp-text",  onMouseOver: tooltipActive, onMouseLeave:tooltipActive}, activeText)}
-    </div>
+          onMouseLeave:tooltipActive
+        });
+
   }
 }
 

@@ -40,10 +40,13 @@ class UpdateController extends Controller
    */
   public function update_altrp( AltrpUpdateService $updateService ){
     try {
+      Artisan::call( 'down' );
       $result = $updateService->update();
     }catch ( \HttpException $e ) {
+      Artisan::call( 'up' );
       return response()->json( ['message' => $e->getMessage()], 500 );
     }
+    Artisan::call( 'up' );
     return response()->json( ['result' => $result] );
   }
 }

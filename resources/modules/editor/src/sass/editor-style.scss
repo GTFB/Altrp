@@ -1,6 +1,6 @@
 @import "../../../../sass/common";
 @import "./elements-style";
-@import "./assets-browser";
+@import './altrp-pagination';
 
 .editor {
   display: flex;
@@ -57,16 +57,6 @@ button{
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
-.btn{
-  &_grey{
-    background-color: $button-grey;
-  }
-  &_disabled{
-    background-color: $button-grey;
-    cursor: default;
-    pointer-events: none;
-  }
 }
 .left-panel-main{
   flex-grow: 1;
@@ -460,6 +450,9 @@ button{
   line-height: 24px;
   border-radius: 0;
   border: 1px solid $light-gray;
+  &_number{
+    width: 80px;
+  }
 }
 .control-group {
   .control-field{
@@ -583,6 +576,7 @@ background-color: red;
 .controller-container__label-svg{
   margin-left: 5px;
 }
+
 .control-slider-label{
   font-size: 12px;
   line-height: 1;
@@ -885,6 +879,16 @@ background-color: red;
 }
 .sketchPicker{
   z-index: 9999;
+}
+.controller{
+  &-field-group{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    &:not(:last-child){
+      margin-bottom: 10px;
+    }
+  }
 }
 .controller-newColor{
   width: 15px;

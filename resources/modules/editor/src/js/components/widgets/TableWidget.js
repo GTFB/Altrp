@@ -15,7 +15,7 @@ class TableWidget extends Component {
     }
   }
   componentDidMount(){
-    import('../altrp-table/component').then(res=>{
+    import('../altrp-table/altrp-table').then(res=>{
       this.setState(state=>({...state,TableComponent:res.default}))
     })
   }
