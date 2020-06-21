@@ -51,7 +51,7 @@ class ModelGenerator extends AppGenerator
         if(! $this->writeModel()) return false;
 
         // Записать ключи
-        if(! $this->writeKeys()) return false;
+        /*if(! $this->writeKeys()) return false;*/
 
         // Сгенерировать новую модель
         if (! $this->runCreateCommand()) return false;
@@ -153,8 +153,8 @@ class ModelGenerator extends AppGenerator
 
             $key->type_of_relation = $rel->type;
 
-            $key->source_table_id = $this->model->table()->first()->id;
-            $key->target_table_id = 1;
+            $key->source_table = $this->model->table()->first()->name;
+            $key->target_table = 1;
 
             $key->source_column_id = 1;
             $key->target_column_id = 1;

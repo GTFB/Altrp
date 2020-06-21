@@ -15,7 +15,7 @@ class Migration extends Model
     
     protected $table = 'altrp_migrations';
     
-    protected $appends = ['full'];
+    protected $appends = ['full_data'];
     
     public function table(){
         return $this->belongsTo('App\Altrp\Table');
@@ -89,10 +89,10 @@ class Migration extends Model
             $column->description = $value->description;
             $column->type = $value->type;
             $column->size = $value->size;
-            $column->null = $value->null;
+            $column->null = (bool) $value->null;
             $column->default = $value->default;
-            $column->primary = $value->primary;
-            $column->unique = $value->unique;
+            $column->primary = false;
+            $column->unique = (bool) $value->unique;
             
             
             

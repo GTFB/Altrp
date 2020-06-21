@@ -21,6 +21,7 @@
         "santigarcor/laratrust": "5.2.*"
     },
     "require-dev": {
+        "appzcoder/crud-generator": "^3.2",
         "facade/ignition": "^1.4",
         "fzaninotto/faker": "^1.4",
         "laracasts/generators": "^1.1",

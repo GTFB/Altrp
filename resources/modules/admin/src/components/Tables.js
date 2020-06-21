@@ -32,8 +32,9 @@ export default class Tables extends Component{
                         title: 'Description',
                     },
                     {
-                        name: 'url',
-                        title: 'Author',
+                        name: 'setting',
+                        title: 'Setting',
+                        url: true,
                     },
                     {
                         name: 'updated_at',

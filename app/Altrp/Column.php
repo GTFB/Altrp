@@ -30,10 +30,10 @@ class Column extends Model
         $this->description = $obj->description;
         $this->type = $obj->type;
         $this->size = $obj->size;
-        $this->null = $obj->null;
+        $this->null = (bool) $obj->null;
         $this->default = $obj->default;
-        $this->primary = $obj->primary;
-        $this->unique = $obj->unique;
+        $this->primary = isset($obj->primary) ? $obj->primary : false ;
+        $this->unique = (bool) $obj->unique;
         //$this->table_id = $obj->table_id;
         //$this->user_id = $obj->user_id;
         //$this->altrp_migration_id = $obj->altrp_migration_id;

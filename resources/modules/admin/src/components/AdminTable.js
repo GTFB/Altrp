@@ -21,6 +21,7 @@ class AdminTable extends Component {
               this.props.columns.map(column=>
               {
                 let tag = 'span';
+                let childrens = null;
                 let props = {
                   className: 'td__content',
                   children: [row[column.name]]
@@ -45,7 +46,15 @@ class AdminTable extends Component {
                     props.target = column.target;
                   }
                 }
+                if(column.is_button){
+                  tag = 'button';
+                  props.title = column.button.title;
+                  props.children = column.button.title;
+                  props.onClick = () => { column.button.function(row)};
+                }
+                
                 return<td className="admin-table__td td"  key={column.name + row.id}>
+                
                   {React.createElement(tag, props)}
 
                 </td>

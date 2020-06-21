@@ -52,7 +52,7 @@ class MigrationBuilder {
         'string' => 'string',
         'text' => 'text',
         'bigint' => 'bigInteger',
-        
+        'decimal' => 'decimal',
         /*
         'time' => 'time',
         'timestamp' => 'timestamp',
@@ -68,7 +68,7 @@ class MigrationBuilder {
         'tinyint' => 'tinyInteger',
         'smallint' => 'smallInteger',
         'boolean' => 'boolean',
-        'decimal' => 'decimal',
+        
         'double' => 'double',
         'float' => 'float',
         'enum' => 'enum',*/
@@ -164,7 +164,7 @@ class MigrationBuilder {
         
         $default = "";
         if($column->default && !$this->checkColumnAttribute($column, $old_column, "default")) {
-            $default = "->default(".$column->default.")";
+            $default = "->default('".$column->default."')";
         }
         
         $unique = "";
@@ -315,8 +315,9 @@ class MigrationBuilder {
         if($this->getMigrationType() == 'create') return false;
         
         if($old_column === false) return false;
-        
-        foreach($column as $key => $value) {
+        var_dump($column->getAttributes());
+        foreach($column->getAttributes() as $key => $value) {
+            var_dump($key." ".$value." - ".$old_column->{$key});
             if($value != $old_column->{$key}) {
                 return false;
             }

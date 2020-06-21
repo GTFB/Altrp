@@ -11,6 +11,11 @@ use App\Altrp\Table;
 use App\Altrp\Migration;
 use App\Error;
 
+use App\Altrp\Generators\ModelGenerator;
+use App\Altrp\Generators\ControllerGenerator;
+use App\Altrp\Generators\RouteGenerator;
+use App\Altrp\Model;
+
 class TableController extends ApiController
 {
     
@@ -160,14 +165,14 @@ class TableController extends ApiController
         
         $migration = new Migration();
         $migration->name = $request->name;
-        $migration->file_path = $request->file_path;
-        $migration->status = $request->status;
+        $migration->file_path = "";
+        $migration->status = 1;
         $migration->data = $request->data;
         $migration->user_id = auth()->user()->id;
         $migration->table_id = $table->id;
         
         if($migration->save()){
-            return response()->json($migration, 200, [],JSON_UNESCAPED_UNICODE);
+            return response()->json($migration->run(), 200, [],JSON_UNESCAPED_UNICODE);
         }
         
         return response()->json(trans("responses.dberror"), 400, [],JSON_UNESCAPED_UNICODE);
@@ -233,5 +238,29 @@ class TableController extends ApiController
     }
     
     
+    
+    /**
+     * Получение актуального списка ключей
+     * @return type
+     */
+    function test(ApiRequest $request) {
+        
+        
+        /*$model = new Model();
+        $generator = new ModelGenerator($model, $request->all());*/
+        
+        $controller = new \App\Altrp\Controller();
+        $generator = new ControllerGenerator($controller, $request->all(), ["tableName" => "contacts", "controllerName" => "ContactController"]);
+        
+        
+        dd($generator->generate());
+        
+        if(!$table) {
+            return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
+        }
+        
+        return response()->json($table->actual_keys, 200, [],JSON_UNESCAPED_UNICODE);
+        
+    }
     
 }

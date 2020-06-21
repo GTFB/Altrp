@@ -38,6 +38,8 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::put('/tables/{table}', "Admin\TableController@update");
         Route::delete('/tables/{table}', "Admin\TableController@delete");
         
+        Route::post('/tables/{table}/test', "Admin\TableController@test");
+        
         Route::get('/tables/{table}/migrations', "Admin\TableController@getMigrations");
         Route::post('/tables/{table}/migrations', "Admin\TableController@insertMigration");
         Route::post('/tables/{table}/migrations/{migration}/run', "Admin\TableController@runMigration");

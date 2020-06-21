@@ -13,7 +13,8 @@ class EditTable extends Component {
         super(props);
         this.state = {
             redirect_url: "/admin/tables",
-            table_id: this.props.match.params.id
+            table_id: this.props.match.params.id,
+            setting_url: "/admin/tables/edit/"+this.props.match.params.id+"/setting"
         };
         this.resource = new Resource({route: '/admin/ajax/tables'});
     }
@@ -31,7 +32,11 @@ class EditTable extends Component {
             </div>
             <div className="admin-content">
                 <TableForm id={this.state.table_id} redirect_url={this.state.redirect_url}/>
+                <div>
+                    <Link to={ this.state.setting_url }>Settings</Link>
+                </div>
             </div>
+            
         </div>;
     }
 }

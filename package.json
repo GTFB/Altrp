@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "ace-builds": "^1.4.11",
+    "immutability-helper": "^3.1.1",
     "jodit-react": "^1.0.42",
     "react": "^16.8.5",
     "react-ace": "^8.1.0",

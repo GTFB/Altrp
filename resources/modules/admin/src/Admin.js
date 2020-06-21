@@ -37,6 +37,8 @@ import UserTopPanel from "./components/UserTopPanel";
 import {Redirect} from "react-router";
 import AddTable from "./components/tables/AddTable";
 import EditTable from "./components/tables/EditTable";
+import SettingTable from "./components/tables/SettingTable";
+import AddMigrationPage from "./components/tables/AddMigrationPage";
 
 class Admin extends Component {
   constructor(props){
@@ -168,9 +170,11 @@ class Admin extends Component {
             <Route path="/admin/tables" exact>
               <Tables/>
             </Route>
-            <Route path="/admin/tables/edit/:id">
-              <EditTable/>
+            <Route path="/admin/tables/edit/:id"  component={EditTable} exact>
+              <EditTable/>   
             </Route>
+            <Route path="/admin/tables/edit/:id/setting" component={SettingTable} exact/>
+            <Route path="/admin/tables/edit/:id/setting/migrations/add" component={AddMigrationPage} />
             <Route path="/admin/tables/add">
               <AddTable/>
             </Route>

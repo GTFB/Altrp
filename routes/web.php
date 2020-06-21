@@ -121,6 +121,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::put('/tables/{table}', "Admin\TableController@update");
     Route::delete('/tables/{table}', "Admin\TableController@delete");
     
+    Route::get('/tables/{table}/migrations', "Admin\TableController@getMigrations");
+    Route::post('/tables/{table}/migrations', "Admin\TableController@insertMigration");
+    Route::post('/tables/{table}/migrations/{migration}/run', "Admin\TableController@runMigration");
+
+    Route::get('/tables/{table}/columns', "Admin\TableController@getColumns");
+    Route::get('/tables/{table}/keys', "Admin\TableController@getKeys");
+    
     
   });
 
