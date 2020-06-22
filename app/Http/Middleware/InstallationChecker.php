@@ -32,11 +32,6 @@ class InstallationChecker
 				return redirect('/');
 			}
 		} else {
-			// Check if an update is available
-			if (updateIsAvailable()) {
-				return headerLocation(getRawBaseUrl() . '/upgrade');
-			}
-			
 			// Check if the website is installed
 			if (!$this->alreadyInstalled($request)) {
 				return redirect(getRawBaseUrl() . '/install');
