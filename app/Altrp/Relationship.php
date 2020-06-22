@@ -8,13 +8,11 @@
 
 namespace App\Altrp;
 
-namespace App\Altrp;
-
 use Illuminate\Database\Eloquent\Model;
 
 class Relationship extends Model{
-    
+
     protected $table = 'altrp_relationships';
     public $timestamps = false;
-    
+
 }

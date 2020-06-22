@@ -13,7 +13,15 @@ return [
     |
      */
 
-    'path' => base_path('resources/crud-generator/'),
+    /**
+     * File for user route list
+     */
+    'routes_file' => 'routes/AltrpRoutes.php',
+
+    /**
+     * Path to stub files
+     */
+    'path' => base_path('Altrp/Commands/stubs/'),
 
     /**
      * Columns number to show in view's table.
@@ -65,6 +73,4 @@ return [
          * custom_template needs to be activated for this to work
          */
     ]
-
-
 ];
