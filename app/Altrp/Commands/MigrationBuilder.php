@@ -137,8 +137,8 @@ class MigrationBuilder {
         $d = file_put_contents($full_path, $template);
         //dd($d);
         
-        if($d !== false) return true;
-        else return true;
+        if($d !== false) return $full_path;
+        else return false;
     }
     
     
@@ -262,6 +262,8 @@ class MigrationBuilder {
         
         $post_data = "";
         
+        $old_key = $this->findKey($key);
+        
         if($key->onUpdate) {
             $post_data .= "->onUpdate('".$key->onUpdate."')";
         }
@@ -270,6 +272,10 @@ class MigrationBuilder {
         }
         
         $k = "\$table->foreign('".$key->source_column."')->references('".$key->target_column."')->on('".$key->target_table."')".$post_data.";";
+        
+        if($this->getMigrationType() === "update" && $old_key !== false) {
+            return "";
+        }
         
         return $k;
     }
@@ -286,7 +292,7 @@ class MigrationBuilder {
         foreach ($this->current_migration->full_data->keys as $value) {
             $keys .= $this->getForeignKey($value);
         }
-        
+        var_dump($keys);
         return $keys;
     }
     
@@ -315,9 +321,8 @@ class MigrationBuilder {
         if($this->getMigrationType() == 'create') return false;
         
         if($old_column === false) return false;
-        var_dump($column->getAttributes());
+        
         foreach($column->getAttributes() as $key => $value) {
-            var_dump($key." ".$value." - ".$old_column->{$key});
             if($value != $old_column->{$key}) {
                 return false;
             }
@@ -365,6 +370,36 @@ class MigrationBuilder {
         
         return false;
     }
+    
+    /**
+     * Ищем ключ в предыдущей миграции
+     *
+     * @return string
+     */
+    protected function findKey($key, $array = null)
+    {
+        if($this->getMigrationType() == 'create') return false;
+        
+        if(is_null($array)) {
+            $array = $this->previous_migration->full_data->keys;
+        }
+        
+        $old_keys = array_filter(
+            $array,
+            function ($e) use ($key) {
+                return $e->target_table == $key->target_table && 
+                        $e->target_column == $key->target_column &&
+                        $e->source_column == $key->source_column;
+            }
+        );
+        
+        if(count($old_keys) > 0) {
+            return $old_keys[0];
+        }
+        
+        return false;
+    }
+    
     
     /**
      * Получаем файл шаблона
