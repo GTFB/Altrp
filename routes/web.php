@@ -172,3 +172,7 @@ Route::group( ['prefix' => 'ajax'], function(){
   Route::get( 'models/{model_name}', 'Admin\ModelsController@models' )->name( 'front.models' );
 
 } );
+
+Route::resource('contacts', 'ContactController');
+
+Route::resource('stores', 'StoreController');
