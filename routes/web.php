@@ -128,6 +128,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get('/tables/{table}/columns', "Admin\TableController@getColumns");
     Route::get('/tables/{table}/keys', "Admin\TableController@getKeys");
     
+    Route::post('/tables/{table}/test', "Admin\TableController@test");
     
   });
 

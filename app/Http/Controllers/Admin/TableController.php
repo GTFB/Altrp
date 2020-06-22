@@ -245,13 +245,14 @@ class TableController extends ApiController
      */
     function test(ApiRequest $request) {
         
+        //dd($request->all());
         
-        /*$model = new Model();
-        $generator = new ModelGenerator($model, $request->all());*/
-        
+        $model = new Model();
+        $generator = new ModelGenerator($model, $request->all());
+        /*
         $controller = new \App\Altrp\Controller();
         $generator = new ControllerGenerator($controller, $request->all(), ["tableName" => "contacts", "controllerName" => "ContactController"]);
-        
+        */
         
         dd($generator->generate());
         
