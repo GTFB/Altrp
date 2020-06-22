@@ -8,21 +8,19 @@ import store from "../../js/store/store";
 import {setModalSettings, toggleModal} from "../../js/store/modal-settings/actions";
 import update from 'immutability-helper';
 
+import TimesIcon from '../../svgs/times.svg';
 
-/*
-import store from "../js/store/store";
-import {setModalSettings, toggleModal} from "../js/store/modal-settings/actions";
-import {generateId, redirect} from "../js/helpers";*/
 
 
 class AddMigrationPage extends Component{
     constructor(props){
         super(props);
         this.state = {
+            column_modal_toogle: false,
             table_id: this.props.match.params.id,
             table: {},
             data: {
-                columns: [{id: 1,name: "Name",title: "Title",description: "Description",type: "integer",size: 191,default: "default",null: true,unique: true,}],
+                columns: [],
                 keys: [],
                 rename_columns: [],
             },
@@ -56,7 +54,7 @@ class AddMigrationPage extends Component{
                     is_button: true, 
                     button: {
                         class: "",
-                        function: this.onEditClick.bind(this),
+                        function: this.addModalShow.bind(this),
                         title: "Edit"
                     },
                 },
@@ -72,24 +70,47 @@ class AddMigrationPage extends Component{
                 },
             ],
             default_column: {
-                id: null,
-                name: null,
-                title: null,
-                descrption: null,
+                id: "",
+                name: '',
+                title: '',
+                description: '',
                 type: "string",
                 size: 191,
                 default: "",
                 null: false,
-                unique: true,
+                unique: false,
+            },
+            selected_column: null,
+            column: {
+                id: "",
+                name: '',
+                title: '',
+                description: '',
+                type: "string",
+                size: 191,
+                default: "",
+                null: false,
+                unique: false,
             }
         };
         
         this.resource = new Resource({route: '/admin/ajax/tables'});
         this.migration_resource = new Resource({route: '/admin/ajax/tables/'+this.props.match.params.id+'/migrations'});
-        this.onEditClick = this.onEditClick.bind(this);
+        
         this.changeName = this.changeName.bind(this);
         this.saveMigration = this.saveMigration.bind(this);
+        
+        
+        this.addColumn = this.addColumn.bind(this);
+        this.toggleModal = this.toggleModal.bind(this);
+        this.getModalClasses = this.getModalClasses.bind(this);
+        
+        this.onDeleteClick = this.onDeleteClick.bind(this);
+        this.addModalShow = this.addModalShow.bind(this);
+        this.onChange = this.onChange.bind(this);
+        
     }
+    
     async componentDidMount(){
         let table_res = await this.resource.get(this.state.table_id)
         this.setState(state=>{
@@ -107,100 +128,70 @@ class AddMigrationPage extends Component{
         });*/
     }
     
-    
-    
-    
-    onEditClick(e){
-        let itemIndex = this.state.data.columns.indexOf(e);
-      
-        let modalSettings = {
-            title: 'Add New Column',
-            submitButton: 'Add',
-            submit: function(formData){
-                let b = this.setState((state) => {
-                    //Вроде должен заменять строку, но получаем ошибку в Таблице
-                    //Each child in a list should have a unique "key" prop.
-                    //Разобраться и поменять
-                    formData.id = new Date().getTime();
-                    if(itemIndex === -1) {
-                        return { ...state, data: { ...state.data,  columns: update(this.state.data.columns, {$push: [formData]})}};
-                    }
-                    else {
-                        return { ...state, data: {...state.data, columns: update(this.state.data.columns, {[itemIndex]: {$set: formData}})}};
-                    }
-                });
-                return Promise.resolve(b)
-            }.bind(this),
-            fields: [
-                {
-                    name: 'name',
-                    label: 'Name',
-                    required: true,
-                    defaultValue: e.name,
-                },
-                {
-                    name: 'title',
-                    label: 'Title',
-                    required: true,
-                    defaultValue: e.title,
-                },
-                {
-                    name: 'description',
-                    label: 'Description',
-                    defaultValue: e.description,
-                },
-                {
-                    name: 'type',
-                    label: 'Type',
-                    required: true,
-                    type: 'select',
-                    options: this.state.column_types,
-                    defaultValue: e.type,
-                },
-                {
-                    name: 'size',
-                    type: "number",
-                    label: 'Size',
-                    defaultValue: e.size,
-                },
-                {
-                    name: 'default',
-                    label: 'Default',
-                    defaultValue: e.default,
-                },
-                {
-                    name: 'null',
-                    label: 'Nullable',
-                    type: "checkbox",
-                    defaultValue: e.null,
-                },
-                {
-                    name: 'unique',
-                    label: 'Unique',
-                    type: "checkbox",
-                    defaultValue: e.unique,
-                },
-            ],
-            success: function(res){
-                console.log(this);
-                console.log("res");
-            }.bind(this),
-            active: true,
-        };
-        store.dispatch(setModalSettings(modalSettings));
-    }
-    onDeleteClick(e){
-        let itemIndex = this.state.data.columns.indexOf(e);
-        let b = false;
-        if(itemIndex !== -1) {
-            b = this.setState((state) => {
-                return { ...state, data: { ...state.data,  columns: update(this.state.data.columns, {$splice: [[itemIndex]]})}};
-            })
+    addColumn(e) {
+        e.preventDefault();
+        
+        let obj = {...this.state.column};
+        
+        if(obj.id == "") {
+            obj.id = new Date().getTime();
         }
         
-        return Promise.resolve(b)
-        console.log("delete");
-        console.log(e);
+        this.setState((state) => {
+            if(state.selected_column == null) {
+                return { ...state, data: { ...state.data,  columns: update(state.data.columns, {$push: [obj]})}};
+            }
+            else {
+                return { ...state, data: { ...state.data,  columns: update(state.data.columns, {[state.selected_column]: {$set: obj}})}};
+            }
+        }, () => {
+            this.toggleModal();
+        });
+    }
+    getModalClasses() {
+        let modalClasses = 'admin-modal';
+        if (this.state.column_modal_toogle) {
+          modalClasses += ' admin-modal_active';
+        }
+        return modalClasses;
+    }
+    toggleModal() {
+        this.setState((state) => {
+            return { ...state, column_modal_toogle: !state.column_modal_toogle}
+        })
+    }
+    addModalShow(e) {
+        let itemIndex = this.state.data.columns.indexOf(e);
+        this.setState((state) => {
+            if(itemIndex === -1) {
+                return { ...state, selected_column: null, column: state.default_column}
+            }
+            else {
+                return { ...state, selected_column: itemIndex, column: state.data.columns[itemIndex]}
+            }
+            
+        }, () => { 
+            this.toggleModal();
+        });
+    }
+    onChange(e) {
+        let field_name = e.target.name;
+        console.log(e.target.value);
+        this.setState({ ...this.state, column:{...this.state.column, [field_name]: e.target.value}});
+    }
+    onDeleteClick(e){
+        const conf = confirm(`Are you sure?`);
+        
+        if (conf) {
+            let itemIndex = this.state.data.columns.indexOf(e);
+            if(itemIndex !== -1) {
+                this.setState((state) => {
+                    return { ...state, data: { ...state.data,  columns: update(this.state.data.columns, {$splice: [[itemIndex, 1]]})}};
+                }, () => {
+                    alert("Success");
+                });
+            }
+        }
     }
     changeName(e) {
         let target = e.target;
@@ -211,6 +202,12 @@ class AddMigrationPage extends Component{
     }
     async saveMigration(e) {
         e.preventDefault();
+        
+        if(this.state.name == "") {
+            alert("Enter migration name!");
+            return;
+        }
+        
         let url = this.state.main_url + "/migrations";
         let headers = {
             'Content-Type': 'application/json'
@@ -232,105 +229,12 @@ class AddMigrationPage extends Component{
         res = await this.migration_resource.post(data);
         
         if(res){
-            alert(res)
+            alert("Success");
         }
-        /*if(this.state.id){
-            res = await this.resource.put(this.state.id, this.state.value);
-        } else {
-            res = await this.resource.post(this.state.value);
+        else {
+            alert("Error");
         }
-        
-        return fetch(url, options).then(res => {
-            if(res.ok === false){
-                return Promise.reject(res.text(), res.status);
-            }
-            return alert(res.json());
-        });  */
     }
-  /*
-  changeActiveArea(e){
-    let areaId = parseInt(e.target.dataset.area);
-    let activeTemplateArea = {};
-    this.state.templateAreas.forEach(area=>{
-      if(area.id === areaId){
-        activeTemplateArea = area;
-      }
-    });
-    this.setActiveArea(activeTemplateArea)
-  }
-  setActiveArea(activeTemplateArea){
-    let templates = this.state.allTemplates.filter(template=>{
-      return template.area === activeTemplateArea.name;
-    });
-    this.setState(state=>{
-      return{...state, activeTemplateArea, templates};
-    })
-  }
-  async componentDidMount(){
-    let templateAreas = await this.emplateTypesResource.getAll();
-    this.setActiveArea(templateAreas[0]);
-    this.setState(state=>{
-      return{...state,templateAreas}
-    });
-    this.resource.getAll().then(templates=>{
-      this.setTemplates(templates);
-    });
-  }
-  onClick(){
-    let modalSettings = {
-      title: 'Add New Template',
-      submitButton: 'Add',
-      submit: function(formData){
-        let data = {
-          name: formData.title,
-          title: formData.title,
-          area: formData.area,
-          data:{
-            children: [],
-            id: generateId(),
-            name: "root-element",
-            settings: {},
-            type: "root-element",
-          }
-        };
-        return (new Resource({route:'/admin/ajax/templates'})).post(data)
-      },
-      fields: [
-        {
-          name: 'title',
-          label: 'Template Name',
-          required: true,
-        },
-        {
-          name: 'area',
-          label: 'Area Name',
-          required: true,
-          type: 'select',
-          options: this.getAreasOptions(),
-          defaultValue: this.state.activeTemplateArea.id
-        }
-      ],
-      success: function(res){
-        if(res.redirect && res.url){
-          redirect(res.url)
-        }
-      },
-      active: true,
-    };
-    store.dispatch(setModalSettings(modalSettings));
-  }
-  getAreasOptions(){
-    return this.state.templateAreas;
-  }
-  setTemplates(templates){
-    let allTemplates = templates;
-    templates = templates.filter(template=>{
-      return template.area === this.state.activeTemplateArea.name;
-    });
-    this.setState(state=>{
-      return{...state, templates, allTemplates};
-    });
-  }*/
   render(){
     return <div className="admin-templates admin-page">
         <div className="admin-heading">
@@ -350,14 +254,92 @@ class AddMigrationPage extends Component{
             </div>
             <AdminTable columns={this.state.table_columns} rows={this.state.data.columns}/>
             <div>
-                <button onClick={() => this.onEditClick(this.state.default_column)}>Add</button>
+                <button onClick={this.addModalShow}>Add Column</button>
             </div>
-
+            
+            <div className={this.getModalClasses()}>
+                <div className="admin-modal__bg" onClick={this.toggleModal}/>
+                <div className="admin-modal-content">
+                  <button className="admin-modal__close" onClick={this.toggleModal}><TimesIcon className="icon"/></button>
+                  <div className="admin-caption">Add New Column</div>
+                  <div className="admin-modal-form form">
+                    <form className="admin-form" onSubmit={this.addColumn}>
+                        <div>
+                            <label className='form-label'>
+                                id
+                                <input className='form__input' type="text" name="id" value={this.state.column.id}  onChange={(e) => {this.onChange(e)}}/>
+                            </label>
+                        </div>
+                        <div>
+                            <label className='form-label'>
+                                name
+                                <input className='form__input' type="text" name="name" value={this.state.column.name} onChange={(e) => {this.onChange(e)}}/>
+                            </label>
+                        </div>
+                        <div>
+                            <label className='form-label'>
+                                title
+                                <input className='form__input' type="text" name="title" value={this.state.column.title}  onChange={(e) => {this.onChange(e)}}/>
+                            </label>
+                        </div>
+                        <div>
+                            <label className='form-label'>
+                                description
+                                <input className='form__input' type="text" name="description" value={this.state.column.description}  onChange={(e) => {this.onChange(e)}}/>
+                            </label>
+                        </div>
+                        <div>
+                            <label className='form-label'>
+                                type
+                                <select className="form__input" value={this.state.column.type} name='type'  onChange={(e) => {this.onChange(e)}}>
+                                    <option value=""/>
+                                    {
+                                      this.state.column_types.map(option =>
+                                          <option key={option.id}
+                                                  value={option.id}
+                                                  children={option.title || option.name}/>)
+                                    }
+                                    </select>
+                            </label>
+                        </div>
+                        <div>
+                            <label className='form-label'>
+                                size
+                                <input className='form__input' type="text" name="size"  value={this.state.column.size} onChange={(e) => {this.onChange(e)}}/>
+                            </label>
+                        </div>
+                        <div>
+                            <label className='form-label'>
+                                default
+                                <input className='form__input' type="text" name="default" value={this.state.column.default} onChange={(e) => {this.onChange(e)}}/>
+                            </label>
+                        </div>
+                        <div>
+                            <label className='form-label'>
+                                <input className='form__input' type="checkbox" name="unique" value={this.state.column.unique} onChange={(e) => {this.onChange(e)}}/>
+                                unique
+                            </label>
+                        </div>
+                        <div>
+                            <label className='form-label'>
+                                <input className='form__input' type="checkbox" name="null" value={this.state.column.null} onChange={(e) => {this.onChange(e)}}/>
+                                nullable
+                            </label>
+                        </div>
+                        <button className="btn btn_success">Add col</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            <div>
+                
+            </div>
             <div>
                 <form className="admin-form" onSubmit={this.saveMigration}>
                     <button className="btn btn_success">Save</button>
                 </form>
             </div>
+            
         </div>
     </div>;
   }

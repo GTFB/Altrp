@@ -6,6 +6,8 @@ use Illuminate\Support\Str;
 use App\Altrp\Migration;
 use App\Altrp\Table;
 use App\Altrp\Column;
+use Storage;
+use File;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -292,7 +294,7 @@ class MigrationBuilder {
         foreach ($this->current_migration->full_data->keys as $value) {
             $keys .= $this->getForeignKey($value);
         }
-        var_dump($keys);
+        
         return $keys;
     }
     
@@ -423,7 +425,29 @@ class MigrationBuilder {
      */
     protected function getPath()
     {
-        return database_path('/migrations/');
+        $folder_name = config('altrp.admin.migrations_folder_name');
+        $directory = database_path('/'.$folder_name.'/');
+        
+        if(!File::exists($directory)) {
+            return $this->createMigrationFolder($directory);
+        }
+        
+        return $directory;
+    }
+    
+    /**
+     * Получаем путь до папки миграций
+     *
+     * @return string
+     */
+    protected function createMigrationFolder($directory)
+    {
+        
+        if(File::makeDirectory($directory)) {
+            return $directory;
+        }
+        
+        return false;
     }
     
     /**

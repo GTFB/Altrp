@@ -45,23 +45,23 @@ class Migration extends Model
             $this->clearMigration();
             return false;
         }
-        var_dump(1);
+        
         //2. Записать ключи
         if(!$this->writeKeys()) {
             $this->clearMigration();
             return false;
         }
-        var_dump(2);
+        
         //3. Создать файл
         $file = $this->createFile();
         if(!$file) return false;
-        var_dump(3);
+        
         //4. Запустить миграцию
         if(!$this->migrationRun()) {
             $this->clearMigration();
             return false;
         }
-        var_dump(4);
+        
         //5. Обновить статус.
         $this->status = "complete";
         $this->file_path = $file;
@@ -128,29 +128,9 @@ class Migration extends Model
             
             if(!$key->save()) return false;
             
-            $this->writeRelation($value->target_column, $value->source_column);
-            
         }
         
         return true;
-        
-    }
-    
-    
-    /**
-     * Добавляем запись связи
-     */
-    public function writeRelation($foreign, $local) {
-        
-        $relationship = new Relationship();
-        $relationship->name = null;
-        $relationship->type = "hasMany";
-        $relationship->table_id = $this->table()->first()->id;
-        $relationship->model_class = "App\\Class";
-        $relationship->foreign_key = $foreign;
-        $relationship->local_key = $local;
-
-        return $relationship->save();
         
     }
     
@@ -158,11 +138,13 @@ class Migration extends Model
      * Запустить файл миграции
      */
     public function migrationRun() {
+        
+        $folder_name = config('altrp.admin.migrations_folder_name');
+        
         try {
-            Artisan::call('migrate', array('--force' => true));
+            Artisan::call('migrate', array('--force' => true, '--path' => "database/".$folder_name."/",));
         }
         catch (\Exception $e) {
-            dd($e);
             return false;
         }
         return true;
