@@ -1,5 +1,8 @@
 
 .admin-settings{
+    .nav{
+        margin-bottom: -1px;
+    }
     width: 100%;
     border: 1px solid $border-gray;
     border-radius: 3px;
@@ -26,8 +29,8 @@
         line-height: 18px;
     }
     & .admin-settings-button{
-        position: absolute;
-        width: 123px;
+        line-height: 5px;
+        width: 163px;
         height: 30px;
         left: 315px;
         top: 448px;
@@ -40,6 +43,9 @@
     & table{
         border-collapse: collapse;
         width: 100%;
+        & .admin-table__td_check{
+            margin-right: 10px;
+        }
     }
     &-head{
         background-color: #fff;
