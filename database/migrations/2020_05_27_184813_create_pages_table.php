@@ -17,7 +17,7 @@ class CreatePagesTable extends Migration
       $table->bigIncrements( 'id' );
       $table->timestamps();
       $table->softDeletes();
-      $table->string( 'title', 255 )->index();
+      $table->string( 'title', 191 )->index();
       $table->bigInteger( 'author' )->index();
       $table->longText( 'content' );
       $table->string( 'path' )->unique();
