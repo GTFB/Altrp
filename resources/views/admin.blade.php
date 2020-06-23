@@ -16,7 +16,7 @@
   </script>
   @if( env( 'ALTRP_SETTING_ADMIN_LOGO' ) )
   <script>
-    let admin_logo = {!! env( 'ALTRP_SETTING_ADMIN_LOGO' ) !!};
+    window.admin_logo = {!! env( 'ALTRP_SETTING_ADMIN_LOGO' ) !!};
   </script>
   @endif
   <script src="{{ altrp_asset( '/modules/admin/admin.js', 'http://localhost:3002/' ) }}" defer></script>

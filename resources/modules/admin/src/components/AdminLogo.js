@@ -8,10 +8,10 @@ class AdminLogo extends Component {
     super(props);
   }
   render(){
-    return <div className="admin__logo">{this.props.adminLogo.assetType
+    return <a href='/' target="_blank" className="admin__logo">{this.props.adminLogo.assetType
         ? renderAsset(this.props.adminLogo)
         : <DefaultLogo />}
-    </div>;
+    </a>;
   }
 }
 
