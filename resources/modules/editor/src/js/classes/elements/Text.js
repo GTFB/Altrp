@@ -85,24 +85,9 @@ class Text extends BaseElement {
       }
     });
 
-    this.addControl("text_style_column-width", {
-      type: CONTROLLER_SLIDER,
-      label: "Column width",
-      default: {
-        size: 0,
-        unit: "px"
-      },
-      units: ["px", "%", "vh"],
-      max: 1000,
-      min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-text": "column-width: {{SIZE}}{{UNIT}}"
-      }
-    });
-
     this.addControl("text_style_column-gap", {
       type: CONTROLLER_SLIDER,
-      label: "Column width",
+      label: "Column gap",
       default: {
         size: 0,
         unit: "px"
