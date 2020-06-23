@@ -73,7 +73,7 @@ class Text extends BaseElement {
 
     this.startControlSection('text_style', {
       tab: TAB_STYLE,
-      label: ""
+      label: "columns"
     });
 
     this.addControl("text_style_column-count", {
@@ -112,15 +112,6 @@ class Text extends BaseElement {
       min: 0,
       rules: {
         "{{ELEMENT}} .altrp-text": "column-gap: {{SIZE}}{{UNIT}}"
-      }
-    });
-
-    this.addControl("text_transition", {
-      type: CONTROLLER_NUMBER,
-      label: "Transition",
-      default: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-text": "transition: {{VALUE}}s"
       }
     });
 

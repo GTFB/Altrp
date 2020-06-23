@@ -153,7 +153,7 @@ class Heading extends BaseElement {
     this.addControl(
       'heading_style_typographic', {
         type: CONTROLLER_TYPOGRAPHIC,
-        label: 'typographic',
+        label: 'Typographic',
         default:{
           lineHeight: 0.1,
           spacing: 0,

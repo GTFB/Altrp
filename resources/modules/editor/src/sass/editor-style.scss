@@ -1126,6 +1126,7 @@ display: none;
   background-color: #fff;
   flex-direction: column;
 }
+
 .control-shadow-wrapper::before{
   content: "";
   position: absolute;
@@ -1165,6 +1166,22 @@ display: none;
 }
 .controller-container_slider_typographic_top{
   margin-top: 15px;
+}
+.control-typographic-wrapper{
+  position: absolute;
+  background-color: #FFFFFF;
+  box-shadow: 0px 2px 15px rgba(0,0,0,.3);
+  border-radius: 3px;
+  left: -100px;
+  padding: 15px;
+  right: 0;
+  margin-top: 35px;
+  margin-left: 15px;
+  width: 240px;
+  z-index: 10000;
+  box-sizing: border-box;
+  background-color: #fff;
+  flex-direction: column;
 }
 .overlay{
   position: absolute;
