@@ -9,18 +9,19 @@ class AdminTable extends Component {
         <tr className="admin-table-row">
           <td className="admin-table__td admin-table__td_check"><input type="checkbox"/></td>
         {this.props.columns.map(column=>
-            <td className="admin-table__td " key={column.name}>{column.title}</td>)}
+            <td className="admin-table__td " key={column.name} title={column.name}>{column.title}</td>)}
         </tr>
         </thead>
         <tbody className="admin-table-body">
         {
           this.props.rows.map((row, idx)=>
-          <tr className="admin-table-row" key={row.id}>
-            <td className="admin-table__td admin-table__td_check" key={'choose' + row.id}><input type="checkbox"/></td>
+          <tr className="admin-table-row" key={row.id} title={row.id}>
+            <td className="admin-table__td admin-table__td_check" key={'choose' + row.id} title={'choose' + row.id}><input type="checkbox"/></td>
             {
               this.props.columns.map(column=>
               {
                 let tag = 'span';
+                let childrens = null;
                 let props = {
                   className: 'td__content',
                   children: [row[column.name]]
@@ -45,7 +46,15 @@ class AdminTable extends Component {
                     props.target = column.target;
                   }
                 }
-                return<td className="admin-table__td td"  key={column.name + row.id}>
+                if(column.is_button){
+                  tag = 'button';
+                  props.title = column.button.title;
+                  props.children = column.button.title;
+                  props.onClick = () => { column.button.function(row)};
+                }
+                
+                return<td className="admin-table__td td" key={column.name + row.id} title={column.name + row.id}>
+                
                   {React.createElement(tag, props)}
 
                 </td>

@@ -106,6 +106,28 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
      * Роуты для теста запросов для виджета таблицы todo: удалить, после того как модели будут готовы
      */
     Route::get( 'models_list', 'Admin\ModelsController@models_list' )->name( 'admin.models_list' );
+
+
+    Route::get('/tables', "Admin\TableController@getTables");
+    Route::get('/tables/{table}', "Admin\TableController@getTable");
+    Route::post('/tables', "Admin\TableController@insert");
+    Route::put('/tables/{table}', "Admin\TableController@update");
+    Route::delete('/tables/{table}', "Admin\TableController@delete");
+
+    Route::get('/tables/{table}/migrations', "Admin\TableController@getMigrations");
+    Route::post('/tables/{table}/migrations', "Admin\TableController@insertMigration");
+    Route::post('/tables/{table}/migrations/{migration}/run', "Admin\TableController@runMigration");
+
+    Route::get('/tables/{table}/columns', "Admin\TableController@getColumns");
+    Route::get('/tables/{table}/keys', "Admin\TableController@getKeys");
+    
+    Route::post('/tables/{table}/test', "Admin\TableController@test");
+    
+    
+    Route::get('/tables/{table}/model', "Admin\TableController@getModel");
+    Route::post('/tables/{table}/model', "Admin\TableController@saveModel");
+    
+    
   });
 
 });
@@ -148,3 +170,8 @@ Route::group( ['prefix' => 'ajax'], function(){
   Route::get( 'models/{model_name}', 'Admin\ModelsController@models' )->name( 'front.models' );
 
 } );
+
+
+
+// Require users routes
+require_once ('AltrpRoutes.php');
