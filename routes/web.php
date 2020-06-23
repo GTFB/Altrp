@@ -106,6 +106,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
      * Роуты для теста запросов для виджета таблицы todo: удалить, после того как модели будут готовы
      */
     Route::get( 'models_list', 'Admin\ModelsController@models_list' )->name( 'admin.models_list' );
+    Route::get( 'models_list_for_query', 'Admin\ModelsController@models_list_for_query' )->name( 'admin.models_list_for_query' );
 
 
     Route::get('/tables', "Admin\TableController@getTables");

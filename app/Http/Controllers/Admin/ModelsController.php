@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Altrp\Model;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -35,7 +36,15 @@ class ModelsController extends Controller
         ],
       ],
     ];
-    return response()->json( $test_res );
+
+    return response()->json( Model::getModelsForEditor() );
+  }
+  /**
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function models_list_for_query()
+  {
+    return response()->json( Model::getModelsForEditor() );
   }
 
   /**

@@ -39,9 +39,12 @@ class QueryController extends Component {
   }
 
   async componentDidMount() {
-    let modelsList = await new Resource({route: '/admin/ajax/models_list'}).getAll();
+    let modelsList = await new Resource({route: '/admin/ajax/models_list_for_query'}).getAll();
     let value = {...this.state.value};
+    console.log(modelsList[0].name);
+    console.log(modelsList);
     value.modelName = value.modelName || modelsList[0].name;
+    console.log(value);
     if(! this.props.currentElement.getSettings(this.props.controlId)){
       this._changeModelName(modelsList[0].name)
     }
