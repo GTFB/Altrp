@@ -84,7 +84,7 @@ export default class AdminSettings extends Component {
               </tr>
               <tr className="admin-settings-table-row">
                 <td className="admin-settings-table__td">
-                  <button className="admin-settings-button" type="button">Save Changes</button>
+                  <button className="admin-settings-button btn btn-sm" type="button">Save Changes</button>
                 </td>
               </tr>
 
