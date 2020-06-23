@@ -18,13 +18,13 @@ class CreateAltrpRelationshipsTable extends Migration
             $table->string('name')->unique()->nullable();
             $table->string('type');
             $table->string('model_class');
-            $table->string('foreign_key');
-            $table->string('local_key');
+            $table->string('foreign_key')->nullable();
+            $table->string('local_key')->nullable();
             $table->bigInteger('table_id')->unsigned();
-            
+
             $table->foreign('table_id')->references('id')->on('tables');
         });
-        
+
         Schema::table('altrp_keys', function (Blueprint $table) {
             $table->dropColumn('type_of_relation');
         });

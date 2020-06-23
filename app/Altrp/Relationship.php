@@ -15,4 +15,13 @@ class Relationship extends Model{
     protected $table = 'altrp_relationships';
     public $timestamps = false;
 
+    protected $fillable = [
+        'name',
+        'type',
+        'model_class',
+        'foreign_key',
+        'local_key',
+        'table_id'
+    ];
+
 }

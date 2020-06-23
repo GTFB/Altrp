@@ -16,16 +16,17 @@ class CreateAltrpModelsTable extends Migration
         Schema::create('altrp_models', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
-            
+
             $table->string('name')->unique();
-            $table->string('soft_deletes')->default('no');
+            $table->integer('soft_deletes')->default(1);
+            $table->integer('time_stamps')->default(1);
             $table->string('fillable_cols')->nullable();
             $table->string('path');
-            
+
             $table->bigInteger('table_id')->unsigned();
 
             $table->text('description')->nullable();
-            
+
             $table->foreign('table_id')->references('id')->on('tables');
 
         });
