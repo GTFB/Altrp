@@ -9,9 +9,75 @@ class FrontElement {
     this.type = data.type;
     this.id = data.id;
     this.componentClass = window.frontElementsManager.getComponentClass(this.getName());
+    /**
+     * Ссылка на родителя
+     * @type {FrontElement}
+     */
     this.parent = null;
+    /**
+     * Ссылка на корневой элемент шаблона
+     * @type {FrontElement}
+     */
+    this.root = null;
+
+    /**
+     * Список данных моделей для текущего шаблона. Например:
+     *  {
+     *      modelName: page
+     *      modelId: 1,
+     *  }
+     *  Для каждого шаблона типа content устанавливается одна обязательная модель Page
+     *  Для шаблонов header и footer нужно предусмотреть изменение данных моджели типа Page
+     *  (при смене страницы header footer могут не меняться)
+     *  * @type {array}
+     */
+    this.models = []
   }
 
+  /**
+   * Устанавливаем ссылку на элемент-родитель
+   * @param {FrontElement} parent
+   */
+  setParent(parent){
+    this.parent = parent;
+  }
+
+  /**
+   * @return {object}
+   */
+  getModelData(modelName){
+    let rootElement = this.getRoot();
+    let data = null;
+    rootElement.models.forEach(model=>{
+      if(model.modelName === modelName){
+        data = {...model};
+      }
+    });
+    return data;
+  }
+
+  /**
+   * Возвращает ссылку на корневой элемент шаблона
+   * @return {FrontElement}
+   */
+  getRoot(){
+    if(!this.root){
+      this.root = this.findClosestByType('root-element')
+    }
+    return this.root;
+  }
+
+  /**
+   * Возвращает ссылку на первый элемент указанного типа (поиск идет к корню дерева)
+   * @param {string} type
+   * @return {FrontElement}
+   */
+  findClosestByType(type){
+    if (this.getType() === type){
+      return this;
+    }
+    return this.parent.findClosestByType(type)
+  }
   getChildren(){
     return this.children;
   }
