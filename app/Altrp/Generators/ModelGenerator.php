@@ -5,6 +5,7 @@ namespace App\Altrp\Generators;
 
 use App\Altrp\Column;
 use App\Altrp\Model;
+use App\Altrp\Table;
 use App\Altrp\Relationship;
 use Artisan;
 
@@ -114,10 +115,15 @@ class ModelGenerator extends AppGenerator
 
         // Получаем связи и записываем их
         if (isset($this->data->model->relationships)) {
+            
+            $this->relationships = Relationship::where('table_id', $this->data->model->table_id)->get();
+            
+            if(count($this->relationships) > 0) {
+                Relationship::where('table_id', $this->data->model->table_id)->delete();
+            }
+            
             $this->relationships = $this->data->model->relationships;
             if (! $this->writeRelationships()) return false;
-        } else {
-            $this->relationships = Relationship::where('table_id', $this->data->model->table_id)->get();
         }
 
         return $this->model->save();
@@ -131,8 +137,11 @@ class ModelGenerator extends AppGenerator
     private function getFillableColumns()
     {
         if (!isset($this->data->model->fillable)) return '';
-
-        $columns = Column::where('table_id', $this->model->table_id)
+        
+        $table = Table::find($this->model->table_id);
+        $last_migration = $table->actual_migration();
+        
+        $columns = Column::where([['table_id', $this->model->table_id],['altrp_migration_id', $last_migration->id]])
             ->whereIn('name', (array)$this->data->model->fillable)
             ->get();
 
@@ -157,7 +166,6 @@ class ModelGenerator extends AppGenerator
         $relationships = $this->screenBacklashes($this->relationshipsToString());
 
         $fullModelName = $this->getFormedFileName($this->data->model->path, $this->data->model->name);
-
         $fillableColumns = $this->getFillableColumns();
 
         $softDeletes = $this->isSoftDeletes();
@@ -169,7 +177,7 @@ class ModelGenerator extends AppGenerator
             $createdAt = null;
             $updatedAt = null;
         }
-
+        
         try {
             Artisan::call("crud:model", [
                 'name' => "{$fullModelName}",
@@ -202,10 +210,8 @@ class ModelGenerator extends AppGenerator
 
         foreach ($this->relationships as $rel) {
 
-            $relItem = $rel->name . '#' . $rel->type . '#App\\'
-                . trim(config('crudgenerator.user_models_folder') . '\\'
-                    . trim($this->screenBacklashes($rel->model_class), '\\'), '\\');
-
+            $relItem = $rel->name . '#' . $rel->type . '#' . trim($this->screenBacklashes($rel->model_class), '\\');
+            
             if (isset($rel->foreign_key)) {
 
                 $relItem .= "|{$rel->foreign_key}";
@@ -217,7 +223,7 @@ class ModelGenerator extends AppGenerator
 
             $relArr[] = $relItem;
         }
-
+        
         return implode(';', $relArr);
     }
 

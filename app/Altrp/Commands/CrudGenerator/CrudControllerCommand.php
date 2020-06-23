@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\CrudGenerator;
+namespace App\Altrp\Commands\CrudGenerator;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;

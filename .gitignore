@@ -18,3 +18,4 @@ gulpfile.js
 
 # Altrp User Activity 
 /database/altrp_migrations
+/app/AltrpModels

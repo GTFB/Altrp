@@ -237,6 +237,48 @@ class TableController extends ApiController
         
     }
     
+    /**
+     * Получение актуального списка ключей
+     * @return type
+     */
+    function saveModel(ApiRequest $request) {
+        
+        
+        $table_id = $request->table;
+        
+        $model = new Model();
+        $generator = new ModelGenerator($model, $request->all());
+        
+        $result = $generator->generate();
+        
+        if(!$result) {
+            return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
+        }
+        
+        return response()->json($result, 200, [],JSON_UNESCAPED_UNICODE);
+        
+    }
+    
+    /**
+     * Получение актуального списка ключей
+     * @return type
+     */
+    function getModel(ApiRequest $request) {
+
+        $table_id = $request->table;
+        
+        $model = Model::where("table_id",$table_id)->with('table.relationships')->firstOrFail();
+        
+        if(!$model) {
+            return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
+        }
+        
+        return response()->json($model, 200, [],JSON_UNESCAPED_UNICODE);
+        
+    }
+    
+    
+    
     
     
     /**
@@ -246,10 +288,11 @@ class TableController extends ApiController
     function test(ApiRequest $request) {
         
         //dd($request->all());
+        $table_id = $request->table_id;
         
-        /*$model = new Model();
+        $model = new Model();
         $generator = new ModelGenerator($model, $request->all());
-        */
+        
         
         //dd($request->all());
         $controller = new \App\Altrp\Controller();

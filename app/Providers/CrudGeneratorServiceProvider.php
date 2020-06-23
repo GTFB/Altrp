@@ -41,7 +41,6 @@ class CrudGeneratorServiceProvider extends ServiceProvider
     public function register()
     {
         $this->commands(
-            'App\Altrp\Commands\CrudGenerator\CrudCommand',
             'App\Altrp\Commands\CrudGenerator\CrudControllerCommand',
             'App\Altrp\Commands\CrudGenerator\CrudModelCommand',
             'App\Altrp\Commands\CrudGenerator\CrudMigrationCommand'

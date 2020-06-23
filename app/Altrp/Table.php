@@ -52,4 +52,8 @@ class Table extends Model
         
         return $this->source_keys()->where('altrp_migration_id','=',$migration->id);
     }
+    
+    public function relationships() {
+        return $this->hasMany('App\Altrp\Relationship');
+    }
 }

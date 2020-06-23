@@ -49,7 +49,7 @@ abstract class AppGenerator
      */
     protected function screenBacklashes($str)
     {
-        return preg_replace('/\\\/', '\\\\\\', $str);
+        return preg_replace('/(\\\)+/', '\\\\', $str);
     }
 
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\CrudGenerator;
+namespace App\Altrp\Commands\CrudGenerator;
 
 use Illuminate\Console\GeneratorCommand;
 
@@ -44,8 +44,8 @@ class CrudModelCommand extends GeneratorCommand
     protected function getStub()
     {
         return config('crudgenerator.custom_template')
-        ? config('crudgenerator.path') . '/model.stub'
-        : __DIR__ . '/../stubs/model.stub';
+        ? config('crudgenerator.path') . 'models/create_model.stub'
+        : __DIR__ . '/../stubs/models/create_model.stub';
     }
 
     /**

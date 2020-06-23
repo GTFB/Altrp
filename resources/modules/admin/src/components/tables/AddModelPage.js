@@ -27,7 +27,7 @@ class AddModelPage extends Component{
                 name: "",
                 relationships: [],
                 pk: "",
-                timestamps: false,
+                time_stamps: false,
                 soft_deletes: false
             },
             relationship_types: [
@@ -95,7 +95,7 @@ class AddModelPage extends Component{
         
         
         this.resource = new Resource({route: '/admin/ajax/tables'});
-        this.model_resource = new Resource({route: '/admin/ajax/tables/'+this.props.match.params.id+'/test'});
+        this.model_resource = new Resource({route: '/admin/ajax/tables/'+this.props.match.params.id+'/model'});
         
         this.addFillableColumn = this.addFillableColumn.bind(this);
         this.deleteFillableColumn = this.deleteFillableColumn.bind(this);
@@ -122,6 +122,31 @@ class AddModelPage extends Component{
         this.setState(state=>{
             return{...state, actual_columns: columns_res, fillable_columns: columns_res};
         });
+        
+        let model_data = await this.resource.get(this.state.table_id+"/model")
+        
+        if(model_data) {
+             model_data.fillable_cols = model_data.fillable_cols.replace(/'/g,"");
+             let model = {
+                description: model_data.description,
+                fillable: model_data.fillable_cols.split(","),
+                table_id: model_data.table_id,
+                path: model_data.path,
+                name: model_data.name,
+                relationships: model_data.table.relationships,
+                pk: model_data.pk,
+                time_stamps: 1 == model_data.time_stamps ? "true" : "false",
+                soft_deletes: 1 == model_data.soft_deletes ? "true" : "false",
+            }
+
+            this.setState(state=>{
+                return{...state, data: model};
+            }, () => {
+                console.log(this.state)
+            });
+        }
+                
+        
         
         /*
         let keys_res = await this.resource.get(this.state.table_id+"/keys")
@@ -183,9 +208,14 @@ class AddModelPage extends Component{
         let headers = {
             'Content-Type': 'application/json'
         };
+        
+        let model = {...this.state.data};
+        model.time_stamps = String(true) == model.time_stamps ? true : false,
+        model.soft_deletes = String(true) == model.soft_deletes ? true : false,
+        
         console.log(this.state.data)
         let data = {
-            model: this.state.data,
+            model: model,
             _token: _token
         };
         let options = {
@@ -293,7 +323,7 @@ class AddModelPage extends Component{
                     <div>
                         <label className='form-label'>
                             Timestamps
-                            <input className='form__input' type="checkbox" name="timestamps" value={this.state.data.timestamps}  onChange={(e) => {this.onChange(e)}}/>
+                            <input className='form__input' type="checkbox" name="time_stamps" value={this.state.data.time_stamps}  onChange={(e) => {this.onChange(e)}}/>
                         </label>
                     </div>
                     <div>

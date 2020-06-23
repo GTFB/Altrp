@@ -21,7 +21,12 @@ return [
     /**
      * Path to stub files
      */
-    'path' => base_path('Altrp/Commands/stubs/'),
+    'path' => app_path('Altrp/Commands/stubs/'),
+    
+    /**
+     * Folder for users models
+     */
+    'user_models_folder' => 'AltrpModels',
 
     /**
      * Columns number to show in view's table.

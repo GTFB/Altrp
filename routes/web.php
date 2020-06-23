@@ -127,14 +127,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
 
     Route::get('/tables/{table}/columns', "Admin\TableController@getColumns");
     Route::get('/tables/{table}/keys', "Admin\TableController@getKeys");
-<<<<<<< HEAD
-
-
-=======
     
     Route::post('/tables/{table}/test', "Admin\TableController@test");
     
->>>>>>> 0912a936f3a9c2917add14f11cb3a1b0f33ab9fe
+    
+    Route::get('/tables/{table}/model', "Admin\TableController@getModel");
+    Route::post('/tables/{table}/model', "Admin\TableController@saveModel");
+    
+    
   });
 
 });
@@ -178,12 +178,7 @@ Route::group( ['prefix' => 'ajax'], function(){
 
 } );
 
-<<<<<<< HEAD
+
 
 // Require users routes
 require_once ('AltrpRoutes.php');
-=======
-Route::resource('contacts', 'ContactController');
-
-Route::resource('stores', 'StoreController');
->>>>>>> 0912a936f3a9c2917add14f11cb3a1b0f33ab9fe
