@@ -19,3 +19,5 @@ gulpfile.js
 # Altrp User Activity 
 /database/altrp_migrations
 /app/AltrpModels
+/app/Http/Controllers/AltrpControllers
+/app/routes/AltrpRoutes.php

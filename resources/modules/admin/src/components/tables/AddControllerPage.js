@@ -18,20 +18,18 @@ class AddControllerPage extends Component{
             table_id: this.props.match.params.id,
             table: {},
             data: {
-                model_id: 7,
-                table_id: this.props.match.params.id,
                 description: "",
+                table_id: this.props.match.params.id,
                 prefix: "",
-                namespace: "",
+                namespace: "AltrpControllers",
                 path: "",
             },
             
         };
         
         
-        
         this.resource = new Resource({route: '/admin/ajax/tables'});
-        this.controller_resource = new Resource({route: '/admin/ajax/tables/'+this.props.match.params.id+'/test'});
+        this.controller_resource = new Resource({route: '/admin/ajax/tables/'+this.props.match.params.id+'/controller'});
         
         this.onChange = this.onChange.bind(this);
         this.saveController = this.saveController.bind(this);
@@ -42,6 +40,26 @@ class AddControllerPage extends Component{
         this.setState(state=>{
             return{...state, table:table_res};
         });
+        
+        let controller_res = await this.resource.get(this.state.table_id+"/controller");
+        
+        if(controller_res) {
+             
+             let controller = {
+                description: controller_res,
+                table_id: this.state.table_id,
+                prefix: "",
+                namespace: "",
+                path: "",
+            }
+
+            this.setState(state=>{
+                return{...state, data: controller};
+            }, () => {
+                console.log(this.state)
+            });
+        }
+        
     }
     
     onChange(e) {

@@ -64,7 +64,7 @@ class ControllerGenerator extends AppGenerator
 
         // Сгенерировать новый контроллер
         if (! $this->runCreateCommand()) return false;
-
+        
         // Сгенерировать маршрут
         if (! $this->generateRoutes()) return false;
 
@@ -88,6 +88,11 @@ class ControllerGenerator extends AppGenerator
      */
     private function writeController()
     {
+        
+        
+        $this->controllerModel->table_id = $this->data->controller->table_id;
+        $this->controllerModel->description = $this->data->controller->description ?? '';
+        
         $controller = Controller::where('table_id', $this->controllerModel->table()->first()->id)->first();
 
         $this->prefix = $this->data->controller->prefix ?? $this->prefix;
@@ -99,14 +104,10 @@ class ControllerGenerator extends AppGenerator
             $this->setController($controller);
         }
 
-        $this->controllerModel->table_id = $this->data->controller->table_id;
-        $this->controllerModel->description = $this->data->controller->description ?? '';
-
-
         if (isset($this->data->controller->namespace)) {
             $this->namespace = $this->screenBacklashes($this->data->controller->namespace);
         }
-
+        
         $this->controllerName = $this->namespace
             . '\\' . $this->controllerModel->table()->first()->models()->first()->name
             . 'Controller';
@@ -115,11 +116,11 @@ class ControllerGenerator extends AppGenerator
             . trim($this->path . '/' . $this->controllerModel->table()->first()->models()->first()->name, '/')
             . 'Controller.php';
 
-
+        
         if (file_exists(base_path($this->controllerFilename))) {
             unlink(base_path($this->controllerFilename));
         }
-
+        
         return $this->controllerModel->save();
     }
 
@@ -131,19 +132,26 @@ class ControllerGenerator extends AppGenerator
      */
     public function runCreateCommand()
     {
-        $modelName = $this->controllerModel->model()->first()->name;
+        $modelName = $this->controllerModel->table()->first()->models()->first()->name;
 
         $validations = $this->validationsToString();
 
         $crudName = $this->toSnakeCase($modelName);
-
+        
+        
+        
+        if(isset($this->namespace) && !empty($this->namespace)) {
+            $this->namespace = 'Http\\Controllers\\'.$this->namespace;
+            
+        }
+        
         try {
             Artisan::call('crud:controller', [
-                'name' => "{$modelName}Controller",
+                'name' => $modelName.'Controller',
                 '--crud-name' => $crudName,
                 '--model-name' => $modelName,
                 '--controller-namespace' => $this->namespace,
-                '--route-group' => $this->prefix,
+                '--route-group' => $this->prefix,        
                 '--validations' => $validations
             ]);
             return true;
@@ -161,7 +169,8 @@ class ControllerGenerator extends AppGenerator
     {
         $routeGenerator = new RouteGenerator();
         $tableName = $this->controllerModel->table()->first()->name;
-        $controller = $this->controllerName;
+        $controller = trim($this->controllerName,"\\");
+        
         $routeGenerator->addDynamicVariable('tableName', $tableName);
         $routeGenerator->addDynamicVariable('controllerName', $controller);
         return $routeGenerator->generate();
