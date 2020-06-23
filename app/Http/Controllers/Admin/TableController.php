@@ -288,15 +288,15 @@ class TableController extends ApiController
     function test(ApiRequest $request) {
         
         //dd($request->all());
-        $table_id = $request->table_id;
+        //$table_id = $request->table_id;
         
-        $model = new Model();
-        $generator = new ModelGenerator($model, $request->all());
+        /*$model = new Model();
+        $generator = new ModelGenerator($model, $request->all());*/
         
         
         //dd($request->all());
         $controller = new \App\Altrp\Controller();
-        $generator = new ControllerGenerator($controller, $request->all(), ["tableName" => "stores", "controllerName" => "StoreController"]);
+        $generator = new ControllerGenerator($controller, $request->all(), ["tableName" => "books", "controllerName" => "BookController"]);
         
         
         dd($generator->generate());
