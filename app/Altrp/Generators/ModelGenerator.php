@@ -36,6 +36,7 @@ class ModelGenerator extends AppGenerator
         if (is_array($data)) {
             $obj = new \stdClass;
             $this->data = $this->convertToObject($data, $obj);
+            
         } else {
             $this->data = json_decode($data);
         }

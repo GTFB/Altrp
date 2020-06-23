@@ -14,3 +14,7 @@ yarn-error.log
 .idea
 storage/installed
 gulpfile.js
+
+
+# Altrp User Activity 
+/database/altrp_migrations

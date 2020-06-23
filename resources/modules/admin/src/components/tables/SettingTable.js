@@ -6,6 +6,8 @@ import MigrationsTable from "./MigrationsTable";
 import {Link} from "react-router-dom";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 
+import AddModelPage from "./AddModelPage";
+import AddControllerPage from "./AddControllerPage";
 
 /*
 import store from "../../js/store/store";
@@ -68,11 +70,12 @@ class SettingTable extends Component{
                         <Link className="btn" to={"/admin/tables/edit/"+this.state.table_id+"/setting/migrations/add"}>Add New</Link>
                     </div>
                 </TabPanel>
-                  
-                    <TabPanel>
-                  </TabPanel>
-                  <TabPanel>
-                  </TabPanel>
+                <TabPanel>
+                    <AddModelPage/>
+                </TabPanel>
+                <TabPanel>
+                    <AddControllerPage/>
+                </TabPanel>
                   <TabPanel>
                   </TabPanel>
             </Tabs>

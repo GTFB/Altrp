@@ -35,11 +35,21 @@ class Table extends Model
     
     public function actual_columns() {
         $migration = $this->actual_migration();
+        
+        if(is_null($migration)) {
+            return $this->columns();
+        }
+        
         return $this->columns()->where('altrp_migration_id','=',$migration->id);
     }
     
     public function actual_keys() {
         $migration = $this->actual_migration();
+        
+        if(is_null($migration)) {
+            return $this->keys();
+        }
+        
         return $this->source_keys()->where('altrp_migration_id','=',$migration->id);
     }
 }

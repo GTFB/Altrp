@@ -9,14 +9,14 @@ class AdminTable extends Component {
         <tr className="admin-table-row">
           <td className="admin-table__td admin-table__td_check"><input type="checkbox"/></td>
         {this.props.columns.map(column=>
-            <td className="admin-table__td " key={column.name}>{column.title}</td>)}
+            <td className="admin-table__td " key={column.name} title={column.name}>{column.title}</td>)}
         </tr>
         </thead>
         <tbody className="admin-table-body">
         {
           this.props.rows.map((row, idx)=>
-          <tr className="admin-table-row" key={row.id}>
-            <td className="admin-table__td admin-table__td_check" key={'choose' + row.id}><input type="checkbox"/></td>
+          <tr className="admin-table-row" key={row.id} title={row.id}>
+            <td className="admin-table__td admin-table__td_check" key={'choose' + row.id} title={'choose' + row.id}><input type="checkbox"/></td>
             {
               this.props.columns.map(column=>
               {
@@ -53,7 +53,7 @@ class AdminTable extends Component {
                   props.onClick = () => { column.button.function(row)};
                 }
                 
-                return<td className="admin-table__td td"  key={column.name + row.id}>
+                return<td className="admin-table__td td" key={column.name + row.id} title={column.name + row.id}>
                 
                   {React.createElement(tag, props)}
 

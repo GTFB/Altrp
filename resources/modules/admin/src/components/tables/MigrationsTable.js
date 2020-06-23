@@ -25,23 +25,11 @@ class MigrationsTable extends Component{
                 {name: 'name',title: 'Name',},
                 {name: 'status',title: 'Status',},
                 {name: 'created_at',title: 'Created At',},
-                {
-                    name: 'run',
-                    title: 'Run',
-                    is_button: true, 
-                    button: {
-                        class: "",
-                        function: this.runMigration.bind(this),
-                        title: "Run"
-                    },
-                },
             ],
         };
         
         this.migrations_resource = new Resource({route: '/admin/ajax/tables/'+this.props.match.params.id+'/migrations'});
         this.table_resource = new Resource({route: '/admin/ajax/tables'});
-        
-        this.runMigration = this.runMigration.bind(this);
     }
     async componentDidMount(){
         let res = await this.migrations_resource.getAll();
@@ -55,46 +43,11 @@ class MigrationsTable extends Component{
         });
     }
     
-    
-    runMigration(e){
-        let itemIndex = this.state.data.migrations.indexOf(e);
-        
-        let modalSettings = {
-            title: 'Run Migration',
-            submitButton: 'Add',
-            submit: function(formData){
-                
-                console.log("run!!");
-                /*let b = this.setState((state) => {
-                    //Вроде должен заменять строку, но получаем ошибку в Таблице
-                    //Each child in a list should have a unique "key" prop.
-                    //Разобраться и поменять
-                    formData.id = new Date().getTime();
-                    if(itemIndex === -1) {
-                        return { ...state, data: { ...state.data,  columns: update(this.state.data.columns, {$push: [formData]})}};
-                    }
-                    else {
-                        return { ...state, data: {...state.data, columns: update(this.state.data.columns, {[itemIndex]: {$set: formData}})}};
-                    }
-                });
-                return Promise.resolve(b)*/
-            }.bind(this),
-            fields: [],
-            success: function(res){
-                console.log(this);
-                console.log("res");
-            }.bind(this),
-            active: true,
-        };
-        store.dispatch(setModalSettings(modalSettings));
+    render(){
+        return <div>
+          <AdminTable columns={this.state.table_columns} rows={this.state.migrations}/>
+        </div>
     }
-   
-    
-  render(){
-      return <div>
-        <AdminTable columns={this.state.table_columns} rows={this.state.migrations}/>
-      </div>
-  }
 
 }
 
