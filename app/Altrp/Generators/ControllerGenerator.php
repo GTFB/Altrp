@@ -40,7 +40,7 @@ class ControllerGenerator extends AppGenerator
      */
     private $validationRules;
 
-    public function __construct(Controller $controller, $data, array $routes = [])
+    public function __construct(Controller $controller, $data)
     {
         $this->controllerModel = $controller;
 
@@ -49,14 +49,6 @@ class ControllerGenerator extends AppGenerator
             $this->data = $this->convertToObject($data, $obj);
         } else {
             $this->data = json_decode($data);
-        }
-
-        if ($routes) {
-            $routeGenerator = new RouteGenerator();
-            foreach ($routes as $name => $controller) {
-                $routeGenerator->addDynamicVariable($name, $controller);
-            }
-            $routeGenerator->generate();
         }
     }
 
@@ -73,7 +65,20 @@ class ControllerGenerator extends AppGenerator
         // Сгенерировать новый контроллер
         if (! $this->runCreateCommand()) return false;
 
+        // Сгенерировать маршрут
+        if (! $this->generateRoutes()) return false;
+
         return true;
+    }
+
+    /**
+     * Изменить текущий контроллер
+     *
+     * @param Controller $controller
+     */
+    public function setController(Controller $controller)
+    {
+        $this->controllerModel = $controller;
     }
 
     /**
@@ -83,20 +88,36 @@ class ControllerGenerator extends AppGenerator
      */
     private function writeController()
     {
-        $this->controllerModel->model_id = $this->data->controller->model_id;
-        $this->controllerModel->description = $this->data->controller->description ?? '';
+        $controller = Controller::where('table_id', $this->controllerModel->table()->first()->id)->first();
+
         $this->prefix = $this->data->controller->prefix ?? $this->prefix;
         $this->validationRules = $this->data->controller->validations ?? $this->validationRules;
-        $this->path = $this->data->controller->path ? $this->data->controller->path . '/' : 'Http/Controllers/';
+        $this->path = $this->data->controller->path;
+
+        if ($controller) {
+            $controller->delete();
+            $this->setController($controller);
+        }
+
+        $this->controllerModel->table_id = $this->data->controller->table_id;
+        $this->controllerModel->description = $this->data->controller->description ?? '';
+
 
         if (isset($this->data->controller->namespace)) {
             $this->namespace = $this->screenBacklashes($this->data->controller->namespace);
         }
 
-        $this->controllerFilename = 'app/' . $this->path . $this->controllerModel->model()->first()->name . 'Controller.php';
+        $this->controllerName = $this->namespace
+            . '\\' . $this->controllerModel->table()->first()->models()->first()->name
+            . 'Controller';
+
+        $this->controllerFilename = 'app/Http/Controllers/AltrpControllers/'
+            . trim($this->path . '/' . $this->controllerModel->table()->first()->models()->first()->name, '/')
+            . 'Controller.php';
+
 
         if (file_exists(base_path($this->controllerFilename))) {
-            return false;
+            unlink(base_path($this->controllerFilename));
         }
 
         return $this->controllerModel->save();
@@ -116,19 +137,34 @@ class ControllerGenerator extends AppGenerator
 
         $crudName = $this->toSnakeCase($modelName);
 
-        Artisan::call("crud:controller {$modelName}Controller
-            --crud-name={$crudName}
-            --model-name={$modelName}
-            --controller-namespace={$this->namespace}
-            --route-group={$this->prefix}
-            --validations={$validations}
-        ");
+        try {
+            Artisan::call('crud:controller', [
+                'name' => "{$modelName}Controller",
+                '--crud-name' => $crudName,
+                '--model-name' => $modelName,
+                '--controller-namespace' => $this->namespace,
+                '--route-group' => $this->prefix,
+                '--validations' => $validations
+            ]);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 
-        // NOT FOR crud:api-controller !!!
-
-        // --route-group={$this->prefix}
-
-        return true;
+    /**
+     * Сгенерировать маршрут
+     *
+     * @return bool
+     */
+    protected function generateRoutes()
+    {
+        $routeGenerator = new RouteGenerator();
+        $tableName = $this->controllerModel->table()->first()->name;
+        $controller = $this->controllerName;
+        $routeGenerator->addDynamicVariable('tableName', $tableName);
+        $routeGenerator->addDynamicVariable('controllerName', $controller);
+        return $routeGenerator->generate();
     }
 
 
