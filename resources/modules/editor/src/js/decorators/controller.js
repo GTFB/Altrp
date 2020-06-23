@@ -29,12 +29,22 @@ function _changeValue(value) {
   }else if(typeof value === 'object'){
     value = {...value};
   }
-  this.setState((state)=>{
-    return {
-      ...state,
-      value,
-    }
-  });
+
+  if(! value.dynamic){
+    this.setState((state)=>{
+      return {
+        ...state,
+        value,
+      }
+    });
+  } else {
+    this.setState((state)=>{
+      return {
+        ...state,
+        dynamicValue: value,
+      }
+    });
+  }
   this.props.controller.changeValue(value);
 }
 

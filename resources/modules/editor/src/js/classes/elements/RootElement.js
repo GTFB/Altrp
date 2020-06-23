@@ -54,6 +54,10 @@ class RootElement extends BaseElement {
       label: 'Text'
     } );
 
+    this.addControl( 'text2', {
+      label: 'Text'
+    } );
+
     repeater.addControl( 'text2', {
       label: 'Text 2'
     } );

@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import SettingSection from "./SettingSection";
 import { Scrollbars } from "react-custom-scrollbars";
+import DynamicContent from "./DynamicContent/DynamicContent";
 
 class PanelTabContent extends Component {
     render(){
@@ -21,6 +22,7 @@ class PanelTabContent extends Component {
                 }
             )
           }
+          <DynamicContent/>
         </Scrollbars>
       </div>
     }

@@ -282,6 +282,7 @@ button{
   flex-grow: 1;
   overflow-x: hidden;
   overflow-y: auto;
+  position: relative;
 }
 .controller-container{
   flex-wrap: wrap;
@@ -1307,7 +1308,9 @@ display: none;
     }
   }
 }
-
+.settings-panel{
+  position: relative;
+}
 .altrp-element_section:first-of-type{
   & > .overlay{
     z-index: 100;
@@ -1446,4 +1449,20 @@ display: none;
 }
 .pl-0{
   padding-left: 0;
+}
+
+.dynamic-placeholder.control-field{
+  position: relative;
+}
+.dynamic-placeholder__remove{
+  position: absolute;
+  top: 0;
+  left: 100%;
+  height: 100%;
+  width: 27px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  cursor: pointer;
 }

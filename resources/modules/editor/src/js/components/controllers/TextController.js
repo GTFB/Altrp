@@ -2,7 +2,8 @@ import React, {Component} from "react";
 import {connect} from "react-redux";
 import DynamicIcon from '../../../svgs/dynamic.svg'
 import controllerDecorate from "../../decorators/controller";
-import {showDynamicContent} from "../../store/dynamic-content/actions";
+import {toggleDynamicContent} from "../../store/dynamic-content/actions";
+import {iconsManager} from "../../../../../admin/src/js/helpers";
 
 class TextController extends Component {
   constructor(props){
@@ -15,7 +16,10 @@ class TextController extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {value};
+    this.state = {
+      value,
+      dynamicValue: null,
+    };
     this.dynamicButton = React.createRef();
     controllerDecorate(this);
   }
@@ -26,23 +30,40 @@ class TextController extends Component {
   /**
    * Открывает меню динамического контента при нажатии на иконку
    */
-  openDynamicContent(){
-    this.props.dispatch(showDynamicContent({
+  openDynamicContent(e){
+    e.stopPropagation();
+    this.props.dispatch(toggleDynamicContent({
       type: 'text',
-
-    }, this.dynamicButton))
+      onSelect: (dynamicValue)=>{
+        this._changeValue(dynamicValue);
+      }
+    }, this.dynamicButton.current))
   }
   getDefaultValue(){
     return '';
   }
   render(){
+    console.log(this.state.dynamicValue);
 
     return <div className="controller-container controller-container_text">
       <div className="controller-container__label">
         {this.props.label}
       </div>
       <div className="control-group">
-        <input className="control-field" onChange={this.changeValue} value={this.state.value}/>
+        {this.state.dynamicValue ? <div className="dynamic-placeholder control-field">
+          <div className="dynamic-placeholder__text">
+            {
+              `${this.state.dynamicValue.modelTitle} ${this.state.dynamicValue.fieldTitle}`
+            }
+          </div>
+
+          <div className="dynamic-placeholder__remove">
+            {
+              iconsManager().renderIcon('times')
+            }
+          </div>
+        </div> : <input className="control-field" onChange={this.changeValue} value={this.state.value}/>}
+
         <div className="control-group__append" ref={this.dynamicButton} onClick={this.openDynamicContent}>
           <DynamicIcon/>
         </div>
