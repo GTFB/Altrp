@@ -36,7 +36,7 @@ class RouteGenerator
 
     public function __construct()
     {
-        $this->path = base_path('routes/web.php');
+        $this->path = base_path('routes/AltrpRoutes.php');
 
         $this->routeContents = file_get_contents($this->path);
 
@@ -99,8 +99,8 @@ class RouteGenerator
     protected function getStubContents()
     {
         $stub = config('crudgenerator.custom_template')
-            ? config('crudgenerator.path') . '/routes.stub'
-            : __DIR__ . '/../stubs/routes.stub';
+            ? config('crudgenerator.path') . 'routes/create_route.stub'
+            : __DIR__ . '/../stubs/routes/create_route.stu';
 
         return file_get_contents($stub);
     }
