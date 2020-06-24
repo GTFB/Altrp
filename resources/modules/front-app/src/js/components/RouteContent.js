@@ -1,7 +1,12 @@
 import React, {Component} from "react";
 import AreaComponent from "./AreaComponent";
+import {setTitle} from "../helpers";
 
 class RouteContent extends Component {
+  componentDidMount(){
+    console.log( this.props.title);
+    setTitle(this.props.title);
+  }
   render(){
     return<div className="route-content">{
       this.props.areas.map(area => <AreaComponent template={area.template} key={'appArea_' + area.id}/>)

@@ -59,6 +59,7 @@ class Page extends Model
       $pages[] = [
         'path' => $page->path,
         'id' => $page->id,
+        'title' => $page->title,
         'areas' => self::get_areas_for_page( $page->id ),
       ];
     }
