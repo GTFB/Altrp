@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import {connect} from "react-redux";
 import RouteContent from "./RouteContent";
-// import Styles from "./Styles";
 import Styles from "../../../../editor/src/js/components/Styles";
 
 class AppContent extends Component {

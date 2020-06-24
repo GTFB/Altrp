@@ -5,6 +5,14 @@
 
 
 
+### 0.3.2
++ Add Logo on Login Page  
+* Change Title on Frontend when Navigate
+* Fix Frontend Routing 
+
+### 0.3.1
+* Fix Update Issues 
+
 ### 0.3.0
 + Model Constructor 
 + Models Query for Table Widget 

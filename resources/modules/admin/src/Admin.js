@@ -40,6 +40,7 @@ import AddTable from "./components/tables/AddTable";
 import EditTable from "./components/tables/EditTable";
 import SettingTable from "./components/tables/SettingTable";
 import AddMigrationPage from "./components/tables/AddMigrationPage";
+import AdminVersion from "./components/AdminVersion";
 
 class Admin extends Component {
   constructor(props){
@@ -153,6 +154,7 @@ class Admin extends Component {
                 </li>
               </ul>
             </div>
+            <AdminVersion/>
           </nav>
           <Switch>
             <Route path="/admin/" exact>
