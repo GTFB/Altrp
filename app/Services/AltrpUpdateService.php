@@ -69,14 +69,7 @@ class AltrpUpdateService
     }
 
     // Get eventual new version value & the current (installed) version value
-    $lastVersion = getLatestVersion();
-    $currentVersion = getCurrentVersion();
-
-    // All is Up to Date
-    if ( version_compare( $lastVersion, $currentVersion, '<=' ) ) {
-      abort( 401 );
-    }
-
+    Artisan::call( 'config:clear' );
     // Clear all the cache
     $this->clearCache();
 
@@ -87,7 +80,7 @@ class AltrpUpdateService
     }
 
     // Update the current version to last version
-    $this->setCurrentVersion( $lastVersion );
+    $this->setCurrentVersion( $version );
 
     // Clear all the cache
     $this->clearCache();
@@ -164,6 +157,7 @@ class AltrpUpdateService
     sleep( 2 );
     $exitCode = Artisan::call( 'view:clear' );
     sleep( 1 );
+    Artisan::call( 'storage:link' );
     File::delete( File::glob( storage_path( 'logs' ) . DIRECTORY_SEPARATOR . 'laravel*.log' ) );
   }
 
