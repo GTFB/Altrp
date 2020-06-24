@@ -5,6 +5,10 @@
 
 
 
+### 0.3.0
++ Model Constructor 
++ Models Query for Table Widget 
+
 ### 0.2.3
 + Add Change Logo in Admin
 + Add Simple Prev/Next Pagination in Table

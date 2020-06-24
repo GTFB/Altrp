@@ -32,7 +32,6 @@ class TransformController extends Component {
     switch(value) {
       case "":
         option = {}
-        console.log(option)
         slider.classList.add("control-slider-input-wrapper-transform-none")
         break;
       case "rotate":

@@ -115,6 +115,7 @@ class QueryController extends Component {
           <select className="control-select control-field"
                   value={this.state.value.modelName || ''}
                   onChange={this.changeModelName}>
+            <option value=""/>
             {this.state.modelsList.map(option => {
               return <option value={option.name}
                              key={option.name}>{option.title}</option>

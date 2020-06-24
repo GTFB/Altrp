@@ -22,11 +22,6 @@ class FrontApp extends Component {
       this.routes = res.default;
     });
   }
-  onClick(){
-    this.getTemplates().then(Templates => {
-      console.log(this.templates === Templates.default);
-    });
-  }
   render(){
     return <Provider store={appStore}>
       <AppContent/>

@@ -184,7 +184,6 @@ class ElementWrapper extends Component {
     // console.log(draggableElement);
     if (this.state.isDrag) {
       classes += " altrp-element_is-drag";
-      console.log(classes);
       return classes;
     }
     if (this.state.dragOver) {

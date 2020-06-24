@@ -26,6 +26,7 @@ Route::group([
   Route::get('/', 'InstallationController@starting')->name(  'installation.start' );
   Route::get('process', 'InstallationController@process')->name(  'installation.input' );
   Route::post('process', 'InstallationController@process')->name(  'installation.post' );
+//  Route::get('migrate', 'InstallationController@migrate')->name(  'installation.migrate' );
 });
 
 Route::group([

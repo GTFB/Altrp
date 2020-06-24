@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 use App\Altrp\Model;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 
 class ModelsController extends Controller
@@ -661,8 +662,11 @@ class ModelsController extends Controller
       return response()->json( $data );
     }
 
-    $res[$model_name] = array_slice( $data, $request->get( 'page' ) * $request->get( 'pageSize' ), $request->get( 'pageSize' ) );
-    $res['hasMore'] = count( $data ) > ( ($request->get( 'page' ) + 1 ) * $request->get( 'pageSize' ) );
+    $res[$model_name] = DB::table( $model_name )->offset( ( $request->get( 'page' ) - 1 ) * $request->get( 'pageSize' ) )
+      ->limit( $request->get( 'pageSize' ) )
+      ->get()->toArray(  );
+    $res['hasMore'] = DB::table( $model_name )->getCountForPagination() >  $request->get( 'page' ) * $request->get( 'pageSize' );
+
     return response()->json( $res );
   }
 }
