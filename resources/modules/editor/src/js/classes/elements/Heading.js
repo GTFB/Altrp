@@ -82,7 +82,7 @@ class Heading extends BaseElement {
 
     this.addControl('heading_settings_html_tag', {
       type: CONTROLLER_SELECT,
-      label: 'Html tag',
+      label: 'HTML tag',
       default: 'h2',
       options: [
         {

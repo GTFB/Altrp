@@ -136,7 +136,7 @@ export function advancedTabControllers(element) {
   element.addControl(
     'element_display_type', {
       type: CONTROLLER_SELECT,
-      label: 'type',
+      label: 'Vertical align',
       options:[
         {
           'value' : '',
@@ -177,7 +177,7 @@ export function advancedTabControllers(element) {
   element.addControl(
     'element_display_flex_direction', {
       type: CONTROLLER_SELECT,
-      label: 'flex direction',
+      label: 'Horizontal align',
       options:[
         {
           'value' : '',

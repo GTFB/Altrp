@@ -67,14 +67,14 @@ class Text extends BaseElement {
         attributes: "",
         noFollow: false
       },
-      label: 'link',
+      label: 'Link',
     });
 
     this.endControlSection();
 
     this.startControlSection('text_style', {
       tab: TAB_STYLE,
-      label: "columns"
+      label: "Columns"
     });
 
     this.addControl("text_style_column-count", {
