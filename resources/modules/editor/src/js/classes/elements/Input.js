@@ -7,6 +7,7 @@ import {
   CONTROLLER_SELECT,
   CONTROLLER_SWITCHER,
   CONTROLLER_DIMENSIONS,
+  CONTROLLER_TYPOGRAPHIC,
   CONTROLLER_NUMBER,
   CONTROLLER_SLIDER,
   CONTROLLER_COLOR,
@@ -143,11 +144,64 @@ class Input extends BaseElement{
 
     this.endControlSection();
     
-    this.startControlSection('style_section', {
+    this.startControlSection('label_style_section', {
       tab: TAB_STYLE,
-      label: '',
+      label: 'label',
     });
 
+    this.addControl("label_style_spacing", {
+      type: CONTROLLER_SLIDER,
+      label: "Spacing",
+      default: {
+        size: 2,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      max: 60,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-field-label-container": "margin-bottom: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("label_style_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "font color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}} .altrp-field-label": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('label_style_font_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default:{
+          lineHeight: 1.5,
+          spacing: 0,
+          size: 16,
+          weight: "normal",
+          family: '"roboto"',
+          decoration: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-field-label': [
+            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
     this.endControlSection();
 
     this.startControlSection('position_section', {
@@ -184,10 +238,10 @@ class Input extends BaseElement{
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        top: 10,
+        right: 10,
+        bottom: 10,
+        left: 10,
         unit:'px'
       },
       units:[
@@ -231,22 +285,25 @@ class Input extends BaseElement{
       label: 'Overlay',
     });
 
-    this.addControl('text_style_background_opacity', {
-      type: CONTROLLER_SLIDER,
-      label: 'Opacity',
-      default:{
-        size: 0,
-      },
-      max: 1,
-      min: 0,
-    });
-
     this.endControlSection();
 
     this.startControlSection('background_section', {
       tab: TAB_STYLE,
       label: 'Background',
     });
+
+    this.addControl('background_style_background_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+        default: {
+          color: "",
+          colorPickedHex: "",
+        },
+        rules: {
+          '{{ELEMENT}} input': 'background-color: {{COLOR}};',
+        },
+      }
+    );
 
     this.addControl('background_section_opacity', {
       type: CONTROLLER_SLIDER,
@@ -257,9 +314,9 @@ class Input extends BaseElement{
       max: 1,
       min: 0,
       step: 0.01,
-      // rules: {
-      //   '{{ELEMENT}}': 'opacity: {{SIZE}}',
-      // },
+      rules: {
+        '{{ELEMENT}}': 'opacity: {{SIZE}}',
+      },
     });
 
     this.endControlSection();
@@ -272,11 +329,7 @@ class Input extends BaseElement{
     this.addControl('border_type', {
         type: CONTROLLER_SELECT,
         label: 'Border Type',
-        units:[
-          'px',
-          '%',
-          'vh',
-        ],
+        default: 'solid',
         options:[
           {
             'value' : 'none',
@@ -317,6 +370,12 @@ class Input extends BaseElement{
           '%',
           'vh',
         ],
+        default: {
+          top: 2,
+          right: 2,
+          bottom: 2,
+          left: 2
+        },
         rules: {
           '{{ELEMENT}} input': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         },
@@ -327,8 +386,8 @@ class Input extends BaseElement{
         type: CONTROLLER_COLOR,
         label: 'Border Color',
         default: {
-          color: "rgb(50,168,82)",
-          colorPickedHex: "#32a852",
+          color: "rgb(142,148,170)",
+          colorPickedHex: "#8E94AA",
         },
         rules: {
           '{{ELEMENT}} input': 'border-color: {{COLOR}};',
@@ -337,21 +396,24 @@ class Input extends BaseElement{
     );
     
     this.addControl('border_radius', {
-      type: CONTROLLER_SLIDER,
-      label: 'Border radius',
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Radius',
       default:{
-        size: 0,
-        unit: 'px',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit:'px'
       },
       units:[
         'px',
         '%',
         'vh',
       ],
-      max: 100,
-      min: 0,
       rules: {
-        '{{ELEMENT}} input': 'border-radius: {{SIZE}}{{UNIT}}',
+        '{{ELEMENT}} input': [ 
+          'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        ]
       },
     });
 

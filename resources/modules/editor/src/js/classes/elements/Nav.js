@@ -92,7 +92,7 @@ class Nav extends BaseElement{
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
         default:{
-          lineHeight: 0.1,
+          lineHeight: 1.5,
           spacing: 0,
           size: 36,
           weight: "normal",
@@ -177,7 +177,7 @@ class Nav extends BaseElement{
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
         default:{
-          lineHeight: 0.1,
+          lineHeight: 1.5,
           spacing: 0,
           size: 36,
           weight: "normal",
@@ -223,7 +223,7 @@ class Nav extends BaseElement{
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
         default:{
-          lineHeight: 0.1,
+          lineHeight: 1.5,
           spacing: 0,
           size: 36,
           weight: "normal",
@@ -269,7 +269,7 @@ class Nav extends BaseElement{
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
         default:{
-          lineHeight: 0.1,
+          lineHeight: 1.5,
           spacing: 0,
           size: 36,
           weight: "normal",

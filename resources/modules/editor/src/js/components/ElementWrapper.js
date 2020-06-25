@@ -13,6 +13,7 @@ import DotsIcon from "../../svgs/dots_section.svg";
 import ColumnIcon from "../../svgs/columns.svg";
 import AddIcon from "../../svgs/add.svg";
 import DuplicateIcon from "../../svgs/duplicate.svg";
+import CloseIcon from "../../svgs/close.svg";
 import store from "../store/store";
 import { START_DRAG, startDrag } from "../store/element-drag/actions";
 import { setCurrentElement } from "../store/current-element/actions";
@@ -290,7 +291,7 @@ class ElementWrapper extends Component {
               onClick={this.deleteElement}
               title={deleteText}
             >
-              <DeleteIcon className="icon" />
+              <CloseIcon className="icon" width="35" height="35" />
             </button>
           </div>
         </div>

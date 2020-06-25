@@ -345,7 +345,7 @@ class TypographicController extends Component {
       {/* начало select2 */}
         <div className="controller-container controller-container_select2">
           <div className="control-select2-header">
-            <div className="control-select2__label">family</div>
+            <div className="control-select2__label">Family</div>
           </div>
         <div className="control-container_select2-wrapper">
           <Select
@@ -361,7 +361,7 @@ class TypographicController extends Component {
       {/* начало slider size */}
       <div className="control-slider-header control-shadow-blur-header">
         <div className="control-slider-label">
-          size
+          Size
         </div>
       </div>
       <div className="control-slider-input-wrapper control-shadow-blur">
@@ -380,7 +380,7 @@ class TypographicController extends Component {
       {/* начало select weight */}
       <div className="controller-container controller-container_select controller-container_select_typographic">
         <div className="controller-container__label control-select__label">
-          weight
+          Weight
         </div>
         <div className="control-container_select-wrapper">
           <select name="weightSelect" className="control-select control-field" onChange={this.weightChange}>
@@ -392,7 +392,7 @@ class TypographicController extends Component {
       {/* начало select transform */}
       <div className="controller-container controller-container_select controller-container_select_typographic">
         <div className="controller-container__label control-select__label">
-          transform
+          Transform
         </div>
         <div className="control-container_select-wrapper">
           <select name="weightSelect" className="control-select control-field" onChange={this.transformChange}>
@@ -404,7 +404,7 @@ class TypographicController extends Component {
       {/* начало select style */}
       <div className="controller-container controller-container_select controller-container_select_typographic">
         <div className="controller-container__label control-select__label">
-        style
+        Style
         </div>
         <div className="control-container_select-wrapper">
           <select name="weightSelect" className="control-select control-field" onChange={this.styleChange}>
@@ -416,7 +416,7 @@ class TypographicController extends Component {
       {/* начало select decoration */}
       <div className="controller-container controller-container_select controller-container_select_typographic">
         <div className="controller-container__label control-select__label">
-        decoration
+        Decoration
         </div>
         <div className="control-container_select-wrapper">
           <select name="weightSelect" className="control-select control-field" onChange={this.decorationChange}>
@@ -428,7 +428,7 @@ class TypographicController extends Component {
       {/* начало slider Line-Height */}
       <div className="control-slider-header controller-container_slider_typographic_top">
         <div className="control-slider-label">
-            line-Height
+            Line-Height
         </div>
       </div>
       <div className="control-slider-input-wrapper">
@@ -449,7 +449,7 @@ class TypographicController extends Component {
       {/* начало slider Letter Spacing */}
       <div className="control-slider-header">
         <div className="control-slider-label">
-            letter Spacing
+            Letter Spacing
         </div>
       </div>
       <div className="control-slider-input-wrapper">

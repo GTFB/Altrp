@@ -10,6 +10,7 @@ import {
   CONTROLLER_SELECT,
   CONTROLLER_TEXT,
   CONTROLLER_SLIDER,
+  CONTROLLER_TYPOGRAPHIC,
   TAB_CONTENT,
   CONTROLLER_LINK,
   TAB_STYLE,
@@ -162,6 +163,16 @@ class Text extends BaseElement {
       }
     });
 
+    this.addControl("text_position_css_id", {
+      type: CONTROLLER_TEXT,
+      label: "CSS ID"
+    });
+
+    this.addControl("text_position_css_classes", {
+      type: CONTROLLER_TEXT,
+      label: "CSS Classes"
+    });
+
     this.endControlSection();
 
     this.startControlSection("text_style_background", {
@@ -202,6 +213,32 @@ class Text extends BaseElement {
       tab: TAB_STYLE,
       label: "Font"
     });
+
+    this.addControl('text_style_font_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default:{
+          lineHeight: 1.5,
+          spacing: 0,
+          size: 16,
+          weight: "normal",
+          family: '"roboto"',
+          decoration: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-text': [
+            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
 
     this.addControl("text_style_font_color", {
       type: CONTROLLER_COLOR,
@@ -458,23 +495,6 @@ class Text extends BaseElement {
       rules: {
         '{{ELEMENT}} .altrp-tooltip': 'font-family: {{VALUE}}'
       }
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("text_advanced_attributes", {
-      tab: TAB_ADVANCED,
-      label: "Attributes"
-    });
-
-    this.addControl("text_advanced_attributes_css_id", {
-      type: CONTROLLER_TEXT,
-      label: "CSS ID"
-    });
-
-    this.addControl("text_advanced_attributes_css_classes", {
-      type: CONTROLLER_TEXT,
-      label: "CSS Classes"
     });
 
     this.endControlSection();
