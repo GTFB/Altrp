@@ -64,7 +64,7 @@ class ControllerGenerator extends AppGenerator
 
         // Сгенерировать новый контроллер
         if (! $this->runCreateCommand()) return false;
-        
+
         // Сгенерировать маршрут
         if (! $this->generateRoutes()) return false;
 
@@ -88,39 +88,29 @@ class ControllerGenerator extends AppGenerator
      */
     private function writeController()
     {
-        
-        
-        $this->controllerModel->table_id = $this->data->controller->table_id;
-        $this->controllerModel->description = $this->data->controller->description ?? '';
-        
-        $controller = Controller::where('table_id', $this->controllerModel->table()->first()->id)->first();
-
-        $this->prefix = $this->data->controller->prefix ?? $this->prefix;
-        $this->validationRules = $this->data->controller->validations ?? $this->validationRules;
-        $this->path = $this->data->controller->path;
+        $controller = Controller::where('table_id', $this->data->controller->table_id)->first();
 
         if ($controller) {
+
+            $controllerFile = $this->getFormedFileName($controller);
+
+            if (file_exists(app_path($controllerFile))) {
+                unlink(app_path($controllerFile));
+            }
+
             $controller->delete();
+
             $this->setController($controller);
         }
 
-        if (isset($this->data->controller->namespace)) {
-            $this->namespace = $this->screenBacklashes($this->data->controller->namespace);
-        }
-        
-        $this->controllerName = $this->namespace
-            . '\\' . $this->controllerModel->table()->first()->models()->first()->name
-            . 'Controller';
+        $this->controllerModel->table_id = $this->data->controller->table_id;
+        $this->controllerModel->description = $this->data->controller->description ?? '';
+        $this->controllerModel->namespace = $this->data->controller->namespace ?? '';
+        $this->prefix = $this->data->controller->prefix ?? $this->prefix;
+        $this->validationRules = $this->data->controller->validations ?? $this->validationRules;
 
-        $this->controllerFilename = 'app/Http/Controllers/AltrpControllers/'
-            . trim($this->path . '/' . $this->controllerModel->table()->first()->models()->first()->name, '/')
-            . 'Controller.php';
+        $this->controllerName = $this->getFormedControllerName($this->controllerModel);
 
-        
-        if (file_exists(base_path($this->controllerFilename))) {
-            unlink(base_path($this->controllerFilename));
-        }
-        
         return $this->controllerModel->save();
     }
 
@@ -134,24 +124,25 @@ class ControllerGenerator extends AppGenerator
     {
         $modelName = $this->controllerModel->table()->first()->models()->first()->name;
 
+        $modelPath = $this->controllerModel->table()->first()->models()->first()->path
+            ? $this->controllerModel->table()->first()->models()->first()->path . '\\' : '';
+
+        $modelNamespace = 'AltrpModels\\' . $modelPath;
+
         $validations = $this->validationsToString();
 
         $crudName = $this->toSnakeCase($modelName);
-        
-        
-        
-        if(isset($this->namespace) && !empty($this->namespace)) {
-            $this->namespace = 'Http\\Controllers\\'.$this->namespace;
-            
-        }
-        
+
+        $namespace = $this->getNamespace($this->controllerModel);
+
         try {
             Artisan::call('crud:controller', [
                 'name' => $modelName.'Controller',
                 '--crud-name' => $crudName,
                 '--model-name' => $modelName,
-                '--controller-namespace' => $this->namespace,
-                '--route-group' => $this->prefix,        
+                '--model-namespace' => $modelNamespace,
+                '--controller-namespace' => $namespace,
+                '--route-group' => $this->prefix,
                 '--validations' => $validations
             ]);
             return true;
@@ -170,12 +161,57 @@ class ControllerGenerator extends AppGenerator
         $routeGenerator = new RouteGenerator();
         $tableName = $this->controllerModel->table()->first()->name;
         $controller = trim($this->controllerName,"\\");
-        
         $routeGenerator->addDynamicVariable('tableName', $tableName);
         $routeGenerator->addDynamicVariable('controllerName', $controller);
         return $routeGenerator->generate();
     }
 
+    /**
+     * Получить сформированное имя файла
+     *
+     * @param Controller $controller контроллер
+     * @return string
+     */
+    protected function getFormedFileName(Controller $controller)
+    {
+        $namespace = $this->getNamespace($controller);
+
+        $controllerFilename = trim(str_replace('\\', '/', $namespace)
+            . '/' . $controller->table()->first()->models()->first()->name, '/')
+            . 'Controller.php';
+
+        return $controllerFilename;
+    }
+
+    /**
+     * Получить сформированный путь к файлу контроллера
+     *
+     * @param Controller $controller контроллер
+     * @return string
+     */
+    protected function getFormedControllerName(Controller $controller)
+    {
+        $namespace = $controller->namespace ? $controller->namespace . '\\' : '';
+
+        $controllerName = trim('AltrpControllers\\' . $namespace
+                . $controller->table()->first()->models()->first()->name, '\\')
+                . 'Controller';
+
+        return $controllerName;
+    }
+
+    /**
+     * Получить пространство имен контроллера
+     *
+     * @param Controller $controller контроллер
+     * @return string
+     */
+    protected function getNamespace(Controller $controller)
+    {
+        return $controller->namespace
+            ? 'Http\Controllers\AltrpControllers\\' . $controller->namespace
+            : 'Http\Controllers\AltrpControllers';
+    }
 
     /**
      * Сформировать строку с валидационными правилами для artisan команды
