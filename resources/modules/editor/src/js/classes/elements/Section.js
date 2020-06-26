@@ -200,7 +200,7 @@ class Section extends BaseElement{
     this.addControl('layout_overflow', {
       type: CONTROLLER_SELECT,
       label: 'overflow',
-      default: 'stretch',
+      default: 'visible',
       options: [
         {
           value: 'visible',

@@ -8,6 +8,7 @@ import {
   CONTROLLER_SELECT2,
   CONTROLLER_SELECT,
   CONTROLLER_TEXT,
+  CONTROLLER_LINK,
   CONTROLLER_TYPOGRAPHIC,
   CONTROLLER_SLIDER,
   CONTROLLER_COLOR,
@@ -45,6 +46,23 @@ class Button extends BaseElement{
       type: CONTROLLER_TEXTAREA,
       label: 'Button Text',
       default: 'Click Me'
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("link", {
+      tab: TAB_CONTENT,
+      label: "Link"
+    });
+
+    this.addControl('link_link', {
+      type: CONTROLLER_LINK,
+      default: {
+        url: "",
+        attributes: "",
+        noFollow: false
+      },
+      label: 'Link',
     });
 
     this.endControlSection();

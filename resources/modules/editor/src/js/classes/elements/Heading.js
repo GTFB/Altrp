@@ -112,7 +112,7 @@ class Heading extends BaseElement {
       ]
     });
 
-    this.addControl('text_link', {
+    this.addControl('link_link', {
       type: CONTROLLER_LINK,
       default: {
         url: "",

@@ -20,7 +20,13 @@ class ColumnComponent extends Component {
         section => <ElementWrapper key={section.getId()} component={section.componentClass} element={section}/>
       )
     )
-    return column
+    
+    let link = null;
+    if(this.state.settings.link_link.url != null & this.state.settings.link_link.url != "") {
+      link = <div href={this.state.settings.link_link.url} className="altrp-column">link{column}</div>
+    }
+
+    return link || column
   }
 }
 

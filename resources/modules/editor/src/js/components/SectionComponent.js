@@ -73,7 +73,12 @@ class SectionComponent extends Component {
       {className: sectionClasses.join(' ')},
       sectionWrapper
     )
-    return section
+
+    let link = null;
+    if(this.state.settings.link_link.url != null & this.state.settings.link_link.url != "") {
+      link = <div className="altrp-section">link{section}</div>
+    }
+    return link || section
   }
 }
 
