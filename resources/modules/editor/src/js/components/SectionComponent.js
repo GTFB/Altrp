@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import '../../sass/section.scss'
+import { styles } from "react-contexify/lib/utils/styles";
 
 // const SectionComponent = ({ children, element }) => {
 //   if (!children.length) {
@@ -58,19 +59,37 @@ class SectionComponent extends Component {
   }
 
   render() {
+    let width = {};
+    if(this.state.settings.layout_stretch_section) {
+      let body = document.documentElement.clientWidth
+      let editor = document.getElementById("editor")
+      if(editor != undefined) {
+        body = body - 270
+
+      }
+
+      width = {
+        width: body + "px"
+      }
+      
+    } else {
+      width = {}
+    };
+    
     let sectionClasses = [
         'altrp-section',
         `altrp-section_columns-${this.props.element.getColumnsCount()}`
     ];
     let sectionWrapper = this.state.children.map(column => (
       <ElementWrapper
+          width={width}
           key={column.getId()}
           component={column.componentClass}
           element={column}
       />
     ));
     let section = React.createElement(this.state.settings.layout_html_tag || "div",
-      {className: sectionClasses.join(' ')},
+      {style: width, className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: this.state.settings.position_style_css_id},
       sectionWrapper
     )
 

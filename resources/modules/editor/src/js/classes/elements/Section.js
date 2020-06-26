@@ -26,6 +26,7 @@ class Section extends BaseElement{
     return 'section';
   }
   _registerControls(){
+
     this.startControlSection('Layout',{
       label: 'Layout'
     });
@@ -399,6 +400,76 @@ class Section extends BaseElement{
     );
 
     this.endControlSection();
+
+    this.startControlSection("position_style", {
+      tab: TAB_STYLE,
+      label: "Position"
+    });
+
+    this.addControl("position_style_position_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 15,
+        right: 15,
+        bottom: 15,
+        left: 15,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-section": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+
+    this.addControl('position_style_position_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      default:{
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-section': [ 
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('position_style_z_index', {
+      type: CONTROLLER_NUMBER,
+      label: "Z-index",
+      default: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-section": "z-index: {{VALUE}}"
+      }
+    });
+
+    this.addControl("position_style_css_id", {
+      type: CONTROLLER_TEXT,
+      label: "CSS ID"
+    });
+
+    this.addControl("position_style_css_classes", {
+      type: CONTROLLER_TEXT,
+      label: "CSS Classes"
+    });
 
     
   }

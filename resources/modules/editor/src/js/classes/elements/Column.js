@@ -127,7 +127,8 @@ class Column  extends BaseElement {
       label: 'Widgets space (px)',
       default: 0,
       rules: {
-        '{{ELEMENT}} .altrp-element': 'margin-bottom: {{VALUE}}px'
+        '{{ELEMENT}} .altrp-element': 'margin-bottom: {{VALUE}}px',
+        '{{ELEMENT}} .altrp-element:last-child': 'margin-bottom: 0px'
       }
     });
 

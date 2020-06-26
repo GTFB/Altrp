@@ -218,6 +218,7 @@ class ElementWrapper extends Component {
       classes += ` altrp-widget_${this.props.element.getName()}`;
     }
     let overlayClasses = `overlay`;
+    let overlayStyles = this.props.width;
     if (this.props.currentElement === this.props.element) {
       classes += " altrp-element_current";
     }
@@ -262,7 +263,7 @@ class ElementWrapper extends Component {
         onDragEnter={this.onDragEnter}
       >
 
-        <div className={overlayClasses}>
+        <div className={overlayClasses} id="overlay" style={overlayStyles}>
           <div className="overlay-settings">
             <button
               className="overlay-settings__button overlay-settings__button_add "
