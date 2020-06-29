@@ -49,6 +49,14 @@ class ModelsController extends Controller
   }
 
   /**
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function models_options()
+  {
+    return response()->json( Model::getModelsOptions() );
+  }
+
+  /**
    * @param string $model_name
    * @param Request $request
    * @return \Illuminate\Http\JsonResponse
