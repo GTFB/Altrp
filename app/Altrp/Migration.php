@@ -117,7 +117,7 @@ class Migration extends Model
             $key->onDelete = $value->onDelete;
             $key->onUpdate = $value->onUpdate;
             
-            $key->source_table = $this->table()->first()->name;
+            $key->source_table_id = $this->table()->first()->id;
             $key->target_table = $value->target_table;
             
             $key->source_column = $value->source_column;
