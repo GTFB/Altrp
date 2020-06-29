@@ -80,7 +80,8 @@ class Button extends BaseElement{
         right: 10,
         bottom: 10,
         left: 10,
-        unit:'px'
+        unit:'px',
+        bind: true
       },
       units:[
         'px',
@@ -105,7 +106,8 @@ class Button extends BaseElement{
         right: 25,
         bottom: 20,
         left: 25,
-        unit:'px'
+        unit:'px',
+        bind: true
       },
       units:[
         'px',
@@ -240,6 +242,9 @@ class Button extends BaseElement{
       'border_width', {
         type: CONTROLLER_DIMENSIONS,
         label: 'Border Width',
+        default: {
+          bind: true
+        },
         units:[
           'px',
           '%',
