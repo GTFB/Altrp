@@ -33,7 +33,7 @@ export default class Users extends Component{
                     <form className="admin-users-form form-bulk-right" >
                         <select className="form-control input">
                             <option value="1">Change role on...</option>
-                            <option value="2">Change role off...</option>
+
                         </select>
                         <button className="btn btn_bare admin-users-button">Change</button>
                     </form>

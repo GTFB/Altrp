@@ -12,6 +12,8 @@
 @import "components/users-tools";
 @import "components/admin-logo";
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap');
+@import "components/admin-users";
+
 
 .admin {
 
@@ -44,12 +46,21 @@
       align-items: center;
       width: 271px;
       padding-right: 5px;
+    .nav-logo{
+        background-color: #2A2D36;
+    }
+  &-nav {
+      background-color: #343B4C;
+      width: 271px;
+      height: 100vh;
+    &-top {
+      padding: 8px;
     }
     &-list {
         margin-top: 10px;
       &__link{
         display: flex;
-        padding: 10px 20px;
+        padding: 6px;
         color: #fff;
         font-size: 17px;
         font-weight: 500;
@@ -61,7 +72,8 @@
         }
         & svg{
           position: relative;
-          top: 3px;
+          top: 1px;
+          margin: 3px 16px 0 7px;
         }
       }
       &_pages{
