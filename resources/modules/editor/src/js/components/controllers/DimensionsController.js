@@ -22,8 +22,7 @@ class DimensionsController extends Component {
       backgroundColor: "#8E94AA",
       borderColor: "#8E94AA",
     };
-    console.log(this.value)
-    const bind = this.props.default.bind || true;
+    const bind = value ? (value.bind || true) : true;
     if(bind == false) {
       this.fillBind = "#8E94AA";
       this.stylesBind = {
