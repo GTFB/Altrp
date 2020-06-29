@@ -110,9 +110,6 @@ class AddMigrationPage extends Component{
         ],
         
         
-                
-                
-        
         this.state = {
             column_modal_toggle: false,
             key_modal_toggle: false,
@@ -352,11 +349,12 @@ class AddMigrationPage extends Component{
         
         let res;
         res = await this.migration_resource.post(data);
-        
+        console.log(res)
         if(res){
             alert("Success");
         }
         else {
+            
             alert("Error");
         }
     }
