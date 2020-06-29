@@ -64,7 +64,7 @@ class SectionComponent extends Component {
       let body = document.documentElement.clientWidth
       let editor = document.getElementById("editor")
       if(editor != undefined) {
-        body = body - 270
+        body = body
 
       }
 

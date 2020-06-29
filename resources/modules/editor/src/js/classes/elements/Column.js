@@ -76,8 +76,8 @@ class Column  extends BaseElement {
           }
         ],
         rules: {
-          '{{ELEMENT}} .altrp-column': 'align-content: {{VALUE}};',
-          '{{ELEMENT}} .altrp-column': 'align-items: {{VALUE}};',
+          '{{ELEMENT}} .altrp-column': 'align-content: {{VALUE}} !important;',
+          '{{ELEMENT}} .altrp-column': 'align-items: {{VALUE}} !important;',
         },
       }
     );
@@ -117,7 +117,7 @@ class Column  extends BaseElement {
           }
         ],
         rules: {
-          '{{ELEMENT}} .altrp-column': 'justify-content: {{VALUE}};',
+          '{{ELEMENT}} .altrp-column': 'justify-content: {{VALUE}} !important;',
         },
       }
     );
