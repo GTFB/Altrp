@@ -105,7 +105,6 @@ class QueryController extends Component {
   }
 
   render() {
-    console.log(this.state.value);
     return <div className="controller-container controller-container_query">
       <div className="controller-field-group">
         <div className="controller-container__label">

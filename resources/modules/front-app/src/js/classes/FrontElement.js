@@ -2,15 +2,44 @@ import {CONSTANTS} from "../../../../editor/src/js/helpers";
 
 class FrontElement {
 
-  constructor(data){
+  constructor(data = {}){
     this.name = data.name;
     this.settings = data.settings;
     this.children = data.children;
     this.type = data.type;
     this.id = data.id;
-    this.componentClass = window.frontElementsManager.getComponentClass(this.getName());
+    if(window.frontElementsManager){
+      this.componentClass = window.frontElementsManager.getComponentClass(this.getName());
+    }
     this.parent = null;
   }
+
+  /**
+   * Вызывается для обновление элемента
+   */
+  update(){
+    this.updateStyles();
+    let widgetsForForm = [
+        'button',
+        'input',
+    ];
+    if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_id')){
+      this.formInit()
+    }
+  }
+
+  /**
+   * Если элемент поле или кнопка нужно инициализирваоть форму в FormsManager
+   */
+  async formInit(){
+    let formsManager = await import('../../../../editor/src/js/classes/modules/FormsManager.js').then();
+    formsManager = formsManager.default;
+    console.log(formsManager);
+  }
+  /**
+   * Возвращает массив
+   * @return {[]}
+   */
 
   getChildren(){
     return this.children;
@@ -26,8 +55,18 @@ class FrontElement {
   getType(){
     return this.type;
   }
-  getSettings(){
-    return this.settings;
+
+  /**
+   * Получить настройку или все настройки
+   * @param settingName
+   * @return {*}
+   */
+  getSettings(settingName){
+    if(! settingName)
+    {
+      return this.settings;
+    }
+    return this.settings[settingName];
   }
   updateStyles(){
     window.stylesModulePromise.then(stylesModule => {

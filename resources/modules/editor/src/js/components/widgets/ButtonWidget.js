@@ -19,7 +19,7 @@ class ButtonWidget extends Component {
         {this.state.settings.button_text || ""}
       </button>;
     let link = null;
-    if(this.state.settings.link_link.url != null & this.state.settings.link_link.url != "") {
+    if(this.state.settings.link_link.url != null && this.state.settings.link_link.url != "") {
       link = <a href={this.state.settings.link_link.url} className="altrp-btn">link (перекидывает){button}</a>
     }
 
