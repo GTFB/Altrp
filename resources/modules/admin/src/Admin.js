@@ -168,7 +168,7 @@ class Admin extends Component {
               <Users/>
             </Route>
             <Route path="/admin/tools">
-              {/*<UsersTools/>*/}
+              <UsersTools/>
             </Route>
             <Route path="/admin/assets">
               <Assets/>

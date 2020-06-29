@@ -101,7 +101,7 @@ export function renderAsset(asset, props = null) {
       return React.createElement('img', {...props, src: asset.url})
     }
     case undefined: {
-      return ""
+      return React.createElement('img', {...props, src: '/img/nullImage.png'})
     }
   }
   return '';

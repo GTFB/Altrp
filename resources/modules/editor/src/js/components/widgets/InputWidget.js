@@ -24,10 +24,33 @@ class InputWidget extends Component {
   }
 
   render(){
-    return<input type={this.state.settings.content_type}
-                 value={this.state.settings.content_label || ""}
-                 placeholder={this.state.settings.content_placeholder}
-                 />;
+    let label = null;
+
+    if(this.state.settings.content_label != null) {
+      label = <div className="altrp-field-label-container"><label className="altrp-field-label">{this.state.settings.content_label}</label></div>
+    } else {
+      label = null
+    }
+
+    let autocomplete = "off"
+    if(this.state.settings.content_autocomplete) {
+      autocomplete = "on"
+    } else {
+      autocomplete = "off"
+    }
+
+    return <div className="altrp-field-container">
+      {
+        label
+      }
+      <input type={this.state.settings.content_type}
+        value={this.state.settings.content_default_value}
+        autocomplete={autocomplete}
+        placeholder={this.state.settings.content_placeholder}
+        className={"altrp-field " + this.state.settings.position_css_classes}
+        id={this.state.settings.position_css_id}
+      />
+    </div>
   }
 }
 

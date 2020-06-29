@@ -4,11 +4,16 @@ import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_COLOR,
   CONTROLLER_SELECT,
+  CONTROLLER_TEXT,
   CONTROLLER_TYPOGRAPHIC,
   CONTROLLER_SHADOW,
   TAB_CONTENT,
   TAB_STYLE,
+  CONTROLLER_NUMBER,
+  CONTROLLER_DIMENSIONS,
+  CONTROLLER_SLIDER,
   CONTROLLER_LINK,
+  CONTROLLER_TRANSFORM,
   CONTROLLER_CHOOSE,
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
@@ -77,8 +82,8 @@ class Heading extends BaseElement {
 
     this.addControl('heading_settings_html_tag', {
       type: CONTROLLER_SELECT,
-      label: 'Html tag',
-      default: 'h1',
+      label: 'HTML tag',
+      default: 'h2',
       options: [
         {
           value: 'h1',
@@ -107,7 +112,7 @@ class Heading extends BaseElement {
       ]
     });
 
-    this.addControl('text_link', {
+    this.addControl('link_link', {
       type: CONTROLLER_LINK,
       default: {
         url: "",
@@ -136,159 +141,22 @@ class Heading extends BaseElement {
         "{{ELEMENT}} .altrp-heading": "color: {{COLOR}};"
       }
     });
-    
-    this.addControl("heading_style_background_color", {
-      type: CONTROLLER_COLOR,
-      label: "Background color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
-      presetColors: ["#eaeaea", "#9c18a8"],
-      rules: {
-        "{{ELEMENT}} .altrp-heading": "background-color: {{COLOR}};"
-      }
-    });
 
     this.addControl(
       'heading_style_typographic', {
         type: CONTROLLER_TYPOGRAPHIC,
-        label: 'typographic',
+        label: 'Typographic',
         default:{
-          lineHeight: 0.1,
+          lineHeight: 1.5,
           spacing: 0,
           size: 36,
           weight: "normal",
-          family: '"lato"',
+          family: '"roboto"',
           decoration: ""
         },
-        familyOptions: [
-              {
-                value: '1',
-                label:'Select sd  Content 1'
-              },
-              {
-                value: '2',
-                label:'Select Content 2'
-              },
-            ],
-        weightOptions: [
-          {
-            value: '100',
-            label:'100'
-          },
-          {
-            value: '200',
-            label:'200'
-          },
-          {
-            value: '300',
-            label:'300'
-          },
-          {
-            value: '400',
-            label:'400'
-          },
-          {
-            value: '500',
-            label:'500'
-          },
-          {
-            value: '600',
-            label:'600'
-          },
-          {
-            value: '700',
-            label:'700'
-          },
-          {
-            value: '800',
-            label:'800'
-          },
-          {
-            value: '900',
-            label:'900'
-          },
-          {
-            value: 'bold',
-            label:'bold'
-          },
-          {
-            value: 'normal',
-            label:'normal'
-          },
-          {
-            value: 'bolder',
-            label:'bolder'
-          },
-          {
-            value: 'lighter',
-            label:'lighter'
-          },
-        ],
-        transformOptions: [
-          {
-            value: 'none',
-            label:'default',
-            key: 0
-          },
-          {
-            value: 'capitalize',
-            label:'capitalize',
-            key: 1
-          },
-          {
-            value: 'uppercase',
-            label:'uppercase',
-            key: 2
-          },
-          {
-            value: 'lowercase',
-            label:'lowercase',
-            key: 3
-          },
-        ],
-        styleOptions: [
-          {
-            value: 'normal',
-            label:'normal',
-            key: 0
-          },
-          {
-            value: 'italic',
-            label:'italic',
-            key: 1
-          },
-          {
-            value: 'oblique',
-            label:'oblique',
-            key: 2
-          },
-        ],
-        decorationOptions: [
-          {
-            value: 'none',
-            label:'none',
-            key: 0
-          },
-          {
-            value: 'underline',
-            label:'underline',
-            key: 1
-          },
-          {
-            value: 'overline',
-            label:'overline',
-            key: 3
-          },
-          {
-            value: 'line-through',
-            label:'line-through',
-            key: 4
-          },
-        ],
         rules: {
           '{{ELEMENT}} .altrp-heading': [
+            'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -301,10 +169,9 @@ class Heading extends BaseElement {
       }
     );
 
-    this.addControl(
-      'heading_style_text_shadow', {
+    this.addControl('heading_style_text_shadow', {
         type: CONTROLLER_SHADOW,
-        label: 'text shadow',
+        label: 'Shadow',
         default:{
           blur: 0,
           horizontal: 0,
@@ -324,6 +191,213 @@ class Heading extends BaseElement {
       }
     );
     
+    this.endControlSection();
+    
+    this.startControlSection("style_position", {
+      tab: TAB_STYLE,
+      label: "Position"
+    });
+
+    this.addControl("style_position_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-heading": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+
+    this.addControl('style_position_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      default:{
+        top: 5,
+        right: 0,
+        bottom: 5,
+        left: 0,
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-heading': [ 
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('position_z_index', {
+      type: CONTROLLER_NUMBER,
+      label: "Z-index",
+      default: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-heading": "z-index: {{VALUE}}"
+      }
+    });
+
+    this.addControl("position_css_id", {
+      type: CONTROLLER_TEXT,
+      label: "CSS ID"
+    });
+
+    this.addControl("position_css_classes", {
+      type: CONTROLLER_TEXT,
+      label: "CSS Classes"
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("style_background", {
+      tab: TAB_STYLE,
+      label: "Background"
+    });
+
+    this.addControl("style_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}} .altrp-heading": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("style_background_opacity", {
+      type: CONTROLLER_SLIDER,
+      label: "Opacity",
+      default: {
+        size: 1
+      },
+      max: 1,
+      min: 0,
+      step: 0.01,
+      rules: {
+        "{{ELEMENT}} .altrp-heading": "opacity: {{SIZE}}"
+      }
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("style_border", {
+      tab: TAB_STYLE,
+      label: "Border"
+    });
+
+    this.addControl("style_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Border type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        "{{ELEMENT}} .altrp-heading": "border-style: {{VALUE}};"
+      }
+    });
+
+    this.addControl("style_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-heading":
+          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      }
+    });
+
+    this.addControl("style_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Border color",
+      default: {
+        color: "rgb(50,168,82)",
+        colorPickedHex: "#32a852"
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-heading": "border-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("style_border_radius", {
+      type: CONTROLLER_SLIDER,
+      label: 'Border radius',
+      default:{
+        size: 0,
+        unit: 'px',
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-heading": "border-radius: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('transform_style_font', {
+      tab: TAB_STYLE,
+      label: 'Transform',
+    });
+
+    this.addControl("transform_style", {
+      type: CONTROLLER_TRANSFORM,
+      label: "Transform",
+      default: {
+        size: 0,
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-heading": "transform: {{FUNCTION}}({{SIZE}}{{UNIT}})"
+      }
+    });
+
     this.endControlSection();
 
     advancedTabControllers(this);

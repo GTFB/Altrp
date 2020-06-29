@@ -10,6 +10,7 @@ import {
   CONTROLLER_SELECT,
   CONTROLLER_TEXT,
   CONTROLLER_SLIDER,
+  CONTROLLER_TYPOGRAPHIC,
   TAB_CONTENT,
   CONTROLLER_LINK,
   TAB_STYLE,
@@ -66,14 +67,14 @@ class Text extends BaseElement {
         attributes: "",
         noFollow: false
       },
-      label: 'link',
+      label: 'Link',
     });
 
     this.endControlSection();
 
     this.startControlSection('text_style', {
       tab: TAB_STYLE,
-      label: ""
+      label: "Columns"
     });
 
     this.addControl("text_style_column-count", {
@@ -85,24 +86,9 @@ class Text extends BaseElement {
       }
     });
 
-    this.addControl("text_style_column-width", {
-      type: CONTROLLER_SLIDER,
-      label: "Column width",
-      default: {
-        size: 0,
-        unit: "px"
-      },
-      units: ["px", "%", "vh"],
-      max: 1000,
-      min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-text": "column-width: {{SIZE}}{{UNIT}}"
-      }
-    });
-
     this.addControl("text_style_column-gap", {
       type: CONTROLLER_SLIDER,
-      label: "Column width",
+      label: "Column gap",
       default: {
         size: 0,
         unit: "px"
@@ -112,15 +98,6 @@ class Text extends BaseElement {
       min: 0,
       rules: {
         "{{ELEMENT}} .altrp-text": "column-gap: {{SIZE}}{{UNIT}}"
-      }
-    });
-
-    this.addControl("text_transition", {
-      type: CONTROLLER_NUMBER,
-      label: "Transition",
-      default: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-text": "transition: {{VALUE}}s"
       }
     });
 
@@ -186,6 +163,16 @@ class Text extends BaseElement {
       }
     });
 
+    this.addControl("text_position_css_id", {
+      type: CONTROLLER_TEXT,
+      label: "CSS ID"
+    });
+
+    this.addControl("text_position_css_classes", {
+      type: CONTROLLER_TEXT,
+      label: "CSS Classes"
+    });
+
     this.endControlSection();
 
     this.startControlSection("text_style_background", {
@@ -226,6 +213,32 @@ class Text extends BaseElement {
       tab: TAB_STYLE,
       label: "Font"
     });
+
+    this.addControl('text_style_font_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default:{
+          lineHeight: 1.5,
+          spacing: 0,
+          size: 16,
+          weight: "normal",
+          family: '"roboto"',
+          decoration: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-text': [
+            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
 
     this.addControl("text_style_font_color", {
       type: CONTROLLER_COLOR,
@@ -482,23 +495,6 @@ class Text extends BaseElement {
       rules: {
         '{{ELEMENT}} .altrp-tooltip': 'font-family: {{VALUE}}'
       }
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("text_advanced_attributes", {
-      tab: TAB_ADVANCED,
-      label: "Attributes"
-    });
-
-    this.addControl("text_advanced_attributes_css_id", {
-      type: CONTROLLER_TEXT,
-      label: "CSS ID"
-    });
-
-    this.addControl("text_advanced_attributes_css_classes", {
-      type: CONTROLLER_TEXT,
-      label: "CSS Classes"
     });
 
     this.endControlSection();

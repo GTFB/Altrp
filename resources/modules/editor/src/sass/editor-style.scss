@@ -2,6 +2,9 @@
 @import "./elements-style";
 @import './altrp-pagination';
 
+//google fonts
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&display=swap');
+
 .editor {
   display: flex;
   min-height: 100vh;
@@ -265,13 +268,19 @@ button{
     -ms-user-select: none;
     user-select: none;
     border-bottom: 1px solid $light-gray;
+    margin-bottom: 10px;
   }
   &__label{
     margin-left: 8px;
+    font-weight: 600;
+    line-height: 15px;
+    font-family: Montserrat, sans-serif;
+    font-style: normal;
   }
   &.open{
     .controllers-wrapper{
       display: flex;
+      margin-bottom: 10px;
     }
     & .settings-section__icon{
       transform: scale(1, -1);
@@ -568,6 +577,9 @@ background-color: red;
 .control-container_select-wrapper{
   position: relative;
   float: right;
+}
+.control-container_select_container{
+  width: 100%;
 }
 .control-slider-label-select{
   display: flex;
@@ -916,6 +928,11 @@ background-color: red;
 .control-color-wrapper{
   width: 100%;
 }
+.control-color-open{
+  border-color: #E5E6EA;
+  border-style: solid;
+  border-width: 0 1px 0 0;
+}
 .control-color-input{
   position: relative;
   float: left;
@@ -939,6 +956,7 @@ background-color: red;
   margin-top: 5px;
   margin-left: 5px;
   margin-bottom: 5px;
+  margin-right: 5px;
   background-image: linear-gradient(45deg,#ddd 25%,transparent 0,transparent 75%,#ddd 0,#ddd),linear-gradient(45deg,#ddd 25%,transparent 0,transparent 75%,#ddd 0,#ddd);
   background-size: 32px 32px;
   background-position: 0 0,8px 8px;
@@ -1126,6 +1144,7 @@ display: none;
   background-color: #fff;
   flex-direction: column;
 }
+
 .control-shadow-wrapper::before{
   content: "";
   position: absolute;
@@ -1165,6 +1184,22 @@ display: none;
 }
 .controller-container_slider_typographic_top{
   margin-top: 15px;
+}
+.control-typographic-wrapper{
+  position: absolute;
+  background-color: #FFFFFF;
+  box-shadow: 0px 2px 15px rgba(0,0,0,.3);
+  border-radius: 3px;
+  left: -100px;
+  padding: 15px;
+  right: 0;
+  margin-top: 35px;
+  margin-left: 15px;
+  width: 240px;
+  z-index: 10000;
+  box-sizing: border-box;
+  background-color: #fff;
+  flex-direction: column;
 }
 .overlay{
   position: absolute;

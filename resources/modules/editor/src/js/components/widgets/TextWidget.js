@@ -53,7 +53,8 @@ class TextWidget extends Component {
     }
     return React.createElement('div',
         {
-          className: "altrp-text",
+          className: "altrp-text " + this.state.settings.text_position_css_classes,
+          id: this.state.settings.text_position_css_id || "",
           onMouseOver: tooltipActive,
           dangerouslySetInnerHTML: {
             __html: this.state.settings.text

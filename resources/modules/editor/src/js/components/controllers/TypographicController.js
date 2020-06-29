@@ -29,6 +29,7 @@ class TypographicController extends Component {
     value = value || false;
     this.state = {
       value,
+      activeTypographic: false,
       //size
       sizeMin: this.props.sizeMin || 0,
       sizeMax: this.props.sizeMax || 200,
@@ -51,7 +52,9 @@ class TypographicController extends Component {
     let shadowContainer = document.getElementById("typographicContainer")
     let shadowContentIcon = document.getElementById("shadowContentIcon");
 
-    shadowContainer.classList.toggle("control-shadow-active");
+    this.setState({
+      activeTypographic: !this.state.activeTypographic
+    })
     
     if(shadowContentIcon.getAttribute("fill") == "#8E94AA") {
       shadowContentIcon.removeAttribute("fill");
@@ -65,7 +68,7 @@ class TypographicController extends Component {
   changeFamily(value){
     this._changeValue({
       ...this.state.value,
-      family: value
+      family: value.value
     })
   };
   //конец select2
@@ -154,12 +157,12 @@ class TypographicController extends Component {
 
     const familyOptions = [
       {
-        value: '1',
-        label:'Select sd  Content 1'
+        value: 'Roboto',
+        label:'Roboto'
       },
       {
-        value: '2',
-        label:'Select Content 2'
+        value: 'Open Sans',
+        label:'Open Sans'
       },
     ];
 
@@ -335,6 +338,139 @@ class TypographicController extends Component {
     };
     // конец стилей для select2
 
+    let typographic = ""
+
+    if(this.state.activeTypographic == true) {
+      typographic = <div id="typographicContainer" className="control-typographic-wrapper control-shadow-wrapper-none">
+      {/* начало select2 */}
+        <div className="controller-container controller-container_select2">
+          <div className="control-select2-header">
+            <div className="control-select2__label">Family</div>
+          </div>
+        <div className="control-container_select2-wrapper">
+          <Select
+            onChange={this.changeFamily}
+            value={this.state.value.family.label}
+            options={familyOptions}
+            styles={customStyles}
+            placeholder={this.state.value.family.label}
+            noOptionsMessage={() => "no fonts found"}
+          />
+        </div>
+      </div>
+      {/* начало slider size */}
+      <div className="control-slider-header control-shadow-blur-header">
+        <div className="control-slider-label">
+          Size
+        </div>
+      </div>
+      <div className="control-slider-input-wrapper control-shadow-blur">
+        <input type="range"
+          min={this.state.sizeMin}
+          max={this.state.sizeMax}
+          className="control-slider" value={this.state.value.size} onChange={this.inputBlurUpdate} onInput={this.blurChange}/>
+        <div className="control-slider-input-box">
+        <input className="control-slider-input" type="number"
+               min={this.state.sizeMin}
+               max={this.state.sizeMax}
+               value={this.state.value.size} onChange={this.inputBlurUpdate} onInput={this.blurChange}/>
+        </div>
+      </div>
+      {/* конец slider size */}
+      {/* начало select weight */}
+      <div className="controller-container controller-container_select controller-container_select_typographic">
+        <div className="controller-container__label control-select__label">
+          Weight
+        </div>
+        <div className="control-container_select-wrapper">
+          <select name="weightSelect" className="control-select control-field" onChange={this.weightChange}>
+            {weightOptions.map(option => {return <option value={option.value} key={option.value}>{option.label}</option>})}
+          </select>
+        </div>
+      </div>
+      {/* конец select weight */}
+      {/* начало select transform */}
+      <div className="controller-container controller-container_select controller-container_select_typographic">
+        <div className="controller-container__label control-select__label">
+          Transform
+        </div>
+        <div className="control-container_select-wrapper">
+          <select name="weightSelect" className="control-select control-field" onChange={this.transformChange}>
+            {transformOptions.map(option => {return <option value={option.value} key={option.key}>{option.label}</option>})}
+          </select>
+        </div>
+      </div>
+      {/* конец select transform */}
+      {/* начало select style */}
+      <div className="controller-container controller-container_select controller-container_select_typographic">
+        <div className="controller-container__label control-select__label">
+        Style
+        </div>
+        <div className="control-container_select-wrapper">
+          <select name="weightSelect" className="control-select control-field" onChange={this.styleChange}>
+            {styleOptions.map(option => {return <option value={option.value} key={option.key}>{option.label}</option>})}
+          </select>
+        </div>
+      </div>
+      {/* конец select style */}
+      {/* начало select decoration */}
+      <div className="controller-container controller-container_select controller-container_select_typographic">
+        <div className="controller-container__label control-select__label">
+        Decoration
+        </div>
+        <div className="control-container_select-wrapper">
+          <select name="weightSelect" className="control-select control-field" onChange={this.decorationChange}>
+            {decorationOptions.map(option => {return <option value={option.value} key={option.key}>{option.label}</option>})}
+          </select>
+        </div>
+      </div>
+      {/* конец select decoration */}
+      {/* начало slider Line-Height */}
+      <div className="control-slider-header controller-container_slider_typographic_top">
+        <div className="control-slider-label">
+            Line-Height
+        </div>
+      </div>
+      <div className="control-slider-input-wrapper">
+        <input type="range"
+          min={this.state.lineHeightMin}
+          max={this.state.lineHeightMax}
+          step="0.1"
+          className="control-slider" value={this.state.value.lineHeight} onChange={this.inputHorUpdate} name="horizontal"/>
+        <div className="control-slider-input-box">
+        <input className="control-slider-input" type="number"
+               min={this.state.lineHeightMin}
+               max={this.state.lineHeightMax}
+               step="0.1"
+               value={this.state.value.lineHeight} name="horizontalNumber" onChange={this.horChange}/>
+        </div>
+      </div>
+      {/* конец slider line-Height */}
+      {/* начало slider Letter Spacing */}
+      <div className="control-slider-header">
+        <div className="control-slider-label">
+            Letter Spacing
+        </div>
+      </div>
+      <div className="control-slider-input-wrapper">
+        <input type="range"
+          min={this.state.spacingMin}
+          max={this.state.spacingMax}
+          step="0.1"
+          className="control-slider" value={this.state.value.spacing} onChange={this.inputVerUpdate} name="spacing"/>
+        <div className="control-slider-input-box">
+        <input className="control-slider-input" type="number"
+               min={this.state.spacingMin}
+               max={this.state.spacingMax}
+               step="0.1"
+               value={this.state.value.spacing} name="spacingNumber" onChange={this.verChange}/>
+        </div>
+      </div>
+      {/* конец slider letter Spacing */}
+    </div>
+    } else {
+      typographic = <div></div>
+    }
 
     return <div className="controller-container controller-container_shadow">
       <div className="controller-container__label control-shadow-label">
@@ -344,133 +480,9 @@ class TypographicController extends Component {
           <div className="control-shadow-toggle control-shadow-toggle-active" onClick={this.openTypographic} fill="#8E94AA">
               <ContentIcon id="shadowContentIcon" className="control-shadow-svg-content" fill="#8E94AA" width="16" height="16"/>
           </div>
-          <div id="typographicContainer" className="control-shadow-wrapper control-shadow-wrapper-none">
-          {/* начало select2 */}
-            <div className="controller-container controller-container_select2">
-              <div className="control-select2-header">
-                <div className="control-select2__label">family</div>
-              </div>
-            <div className="control-container_select2-wrapper">
-              <Select
-                onChange={this.changeFamily}
-                value={this.state.value.family.label}
-                options={familyOptions}
-                styles={customStyles}
-                placeholder={this.state.value.family.label}
-                noOptionsMessage={() => "no fonts found"}
-              />
-            </div>
-          </div>
-          {/* начало slider size */}
-          <div className="control-slider-header control-shadow-blur-header">
-            <div className="control-slider-label">
-              size
-            </div>
-          </div>
-          <div className="control-slider-input-wrapper control-shadow-blur">
-            <input type="range"
-              min={this.state.sizeMin}
-              max={this.state.sizeMax}
-              className="control-slider" value={this.state.value.size} onChange={this.inputBlurUpdate} onInput={this.blurChange}/>
-            <div className="control-slider-input-box">
-            <input className="control-slider-input" type="number"
-                   min={this.state.sizeMin}
-                   max={this.state.sizeMax}
-                   value={this.state.value.size} onChange={this.inputBlurUpdate} onInput={this.blurChange}/>
-            </div>
-          </div>
-          {/* конец slider size */}
-          {/* начало select weight */}
-          <div className="controller-container controller-container_select controller-container_select_typographic">
-            <div className="controller-container__label control-select__label">
-              weight
-            </div>
-            <div className="control-container_select-wrapper">
-              <select name="weightSelect" className="control-select control-field" onChange={this.weightChange}>
-                {weightOptions.map(option => {return <option value={option.value} key={option.value}>{option.label}</option>})}
-              </select>
-            </div>
-          </div>
-          {/* конец select weight */}
-          {/* начало select transform */}
-          <div className="controller-container controller-container_select controller-container_select_typographic">
-            <div className="controller-container__label control-select__label">
-              transform
-            </div>
-            <div className="control-container_select-wrapper">
-              <select name="weightSelect" className="control-select control-field" onChange={this.transformChange}>
-                {transformOptions.map(option => {return <option value={option.value} key={option.key}>{option.label}</option>})}
-              </select>
-            </div>
-          </div>
-          {/* конец select transform */}
-          {/* начало select style */}
-          <div className="controller-container controller-container_select controller-container_select_typographic">
-            <div className="controller-container__label control-select__label">
-            style
-            </div>
-            <div className="control-container_select-wrapper">
-              <select name="weightSelect" className="control-select control-field" onChange={this.styleChange}>
-                {styleOptions.map(option => {return <option value={option.value} key={option.key}>{option.label}</option>})}
-              </select>
-            </div>
-          </div>
-          {/* конец select style */}
-          {/* начало select decoration */}
-          <div className="controller-container controller-container_select controller-container_select_typographic">
-            <div className="controller-container__label control-select__label">
-            decoration
-            </div>
-            <div className="control-container_select-wrapper">
-              <select name="weightSelect" className="control-select control-field" onChange={this.decorationChange}>
-                {decorationOptions.map(option => {return <option value={option.value} key={option.key}>{option.label}</option>})}
-              </select>
-            </div>
-          </div>
-          {/* конец select decoration */}
-          {/* начало slider Line-Height */}
-          <div className="control-slider-header controller-container_slider_typographic_top">
-            <div className="control-slider-label">
-                line-Height
-            </div>
-          </div>
-          <div className="control-slider-input-wrapper">
-            <input type="range"
-              min={this.state.lineHeightMin}
-              max={this.state.lineHeightMax}
-              step="0.1"
-              className="control-slider" value={this.state.value.lineHeight} onChange={this.inputHorUpdate} name="horizontal"/>
-            <div className="control-slider-input-box">
-            <input className="control-slider-input" type="number"
-                   min={this.state.lineHeightMin}
-                   max={this.state.lineHeightMax}
-                   step="0.1"
-                   value={this.state.value.lineHeight} name="horizontalNumber" onChange={this.horChange}/>
-            </div>
-          </div>
-          {/* конец slider line-Height */}
-          {/* начало slider Letter Spacing */}
-          <div className="control-slider-header">
-            <div className="control-slider-label">
-                letter Spacing
-            </div>
-          </div>
-          <div className="control-slider-input-wrapper">
-            <input type="range"
-              min={this.state.spacingMin}
-              max={this.state.spacingMax}
-              step="0.1"
-              className="control-slider" value={this.state.value.spacing} onChange={this.inputVerUpdate} name="spacing"/>
-            <div className="control-slider-input-box">
-            <input className="control-slider-input" type="number"
-                   min={this.state.spacingMin}
-                   max={this.state.spacingMax}
-                   step="0.1"
-                   value={this.state.value.spacing} name="spacingNumber" onChange={this.verChange}/>
-            </div>
-          </div>
-          {/* конец slider letter Spacing */}
-        </div>
+
+          {typographic}
+
       </div>
     </div>
   }
