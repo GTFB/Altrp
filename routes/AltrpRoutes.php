@@ -3,5 +3,3 @@
 /**
  * File for user routes
  */
-
-

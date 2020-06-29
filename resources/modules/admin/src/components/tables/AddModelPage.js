@@ -135,8 +135,8 @@ class AddModelPage extends Component{
                 name: model_data.name,
                 relationships: model_data.table.relationships,
                 pk: model_data.pk,
-                time_stamps: 1 == model_data.time_stamps ? "true" : "false",
-                soft_deletes: 1 == model_data.soft_deletes ? "true" : "false",
+                time_stamps: 1 == model_data.time_stamps ? true : false,
+                soft_deletes: 1 == model_data.soft_deletes ? true : false,
             }
 
             this.setState(state=>{
@@ -317,13 +317,13 @@ class AddModelPage extends Component{
                     <div>
                         <label className='form-label'>
                             Soft Deletes
-                            <input className='form__input' type="checkbox" name="soft_deletes" value={this.state.data.soft_deletes}  onChange={(e) => {this.onChange(e)}}/>
+                            <input className='form__input' type="checkbox" checked={this.state.data.soft_deletes} name="soft_deletes" value={this.state.data.soft_deletes}  onChange={(e) => {this.onChange(e)}}/>
                         </label>
                     </div>
                     <div>
                         <label className='form-label'>
                             Timestamps
-                            <input className='form__input' type="checkbox" name="time_stamps" value={this.state.data.time_stamps}  onChange={(e) => {this.onChange(e)}}/>
+                            <input className='form__input' type="checkbox" checked={this.state.data.soft_deletes}  name="time_stamps" value={this.state.data.time_stamps}  onChange={(e) => {this.onChange(e)}}/>
                         </label>
                     </div>
                     <div>

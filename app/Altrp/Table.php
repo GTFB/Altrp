@@ -20,6 +20,10 @@ class Table extends Model
         return $this->hasMany('App\Altrp\Column');
     }
     
+    public function models() {
+        return $this->hasMany('App\Altrp\Model');
+    }
+    
     public function source_keys() {
         return $this->hasMany('App\Altrp\Key', 'source_table_id');
     }

@@ -37,7 +37,7 @@ class ModelGenerator extends AppGenerator
         if (is_array($data)) {
             $obj = new \stdClass;
             $this->data = $this->convertToObject($data, $obj);
-            
+
         } else {
             $this->data = json_decode($data);
         }
@@ -115,13 +115,13 @@ class ModelGenerator extends AppGenerator
 
         // Получаем связи и записываем их
         if (isset($this->data->model->relationships)) {
-            
+
             $this->relationships = Relationship::where('table_id', $this->data->model->table_id)->get();
-            
+
             if(count($this->relationships) > 0) {
                 Relationship::where('table_id', $this->data->model->table_id)->delete();
             }
-            
+
             $this->relationships = $this->data->model->relationships;
             if (! $this->writeRelationships()) return false;
         }
@@ -137,10 +137,10 @@ class ModelGenerator extends AppGenerator
     private function getFillableColumns()
     {
         if (!isset($this->data->model->fillable)) return '';
-        
+
         $table = Table::find($this->model->table_id);
         $last_migration = $table->actual_migration();
-        
+
         $columns = Column::where([['table_id', $this->model->table_id],['altrp_migration_id', $last_migration->id]])
             ->whereIn('name', (array)$this->data->model->fillable)
             ->get();
@@ -177,7 +177,7 @@ class ModelGenerator extends AppGenerator
             $createdAt = null;
             $updatedAt = null;
         }
-        
+
         try {
             Artisan::call("crud:model", [
                 'name' => "{$fullModelName}",
@@ -211,7 +211,7 @@ class ModelGenerator extends AppGenerator
         foreach ($this->relationships as $rel) {
 
             $relItem = $rel->name . '#' . $rel->type . '#' . trim($this->screenBacklashes($rel->model_class), '\\');
-            
+
             if (isset($rel->foreign_key)) {
 
                 $relItem .= "|{$rel->foreign_key}";
@@ -223,7 +223,7 @@ class ModelGenerator extends AppGenerator
 
             $relArr[] = $relItem;
         }
-        
+
         return implode(';', $relArr);
     }
 

@@ -18,8 +18,7 @@ class CreateAltrpModelsTable extends Migration
             $table->timestamps();
 
             $table->string('name')->unique();
-            $table->integer('soft_deletes')->default(1);
-            $table->integer('time_stamps')->default(1);
+            $table->string('soft_deletes')->default('no');
             $table->string('fillable_cols')->nullable();
             $table->string('path');
 

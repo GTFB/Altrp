@@ -47,8 +47,8 @@ class CrudControllerCommand extends GeneratorCommand
     protected function getStub()
     {
         return config('crudgenerator.custom_template')
-        ? config('crudgenerator.path') . '/controller.stub'
-        : __DIR__ . '/../stubs/controller.stub';
+        ? config('crudgenerator.path') . 'controllers/create_controller.stub'
+        : __DIR__ . '/../stubs/controllers/create_controller.stub';
     }
 
     /**

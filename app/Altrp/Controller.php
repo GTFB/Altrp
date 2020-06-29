@@ -4,6 +4,7 @@
 namespace App\Altrp;
 
 use Illuminate\Database\Eloquent\Model as EloquentModel;
+use App\Altrp\Table;
 
 class Controller extends EloquentModel
 {
@@ -12,5 +13,10 @@ class Controller extends EloquentModel
     public function model()
     {
         return $this->belongsTo(Model::class);
+    }
+    
+    public function table()
+    {
+        return $this->belongsTo(Table::class);
     }
 }

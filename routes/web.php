@@ -129,6 +129,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get('/tables/{table}/model', "Admin\TableController@getModel");
     Route::post('/tables/{table}/model', "Admin\TableController@saveModel");
     
+    Route::get('/tables/{table}/controller', "Admin\TableController@getController");
+    Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
     
   });
 
@@ -176,4 +178,7 @@ Route::group( ['prefix' => 'ajax'], function(){
 
 
 // Require users routes
-require_once ('AltrpRoutes.php');
+if ( file_exists( app_path( '/routes/AltrpRoutes.php' ) ) )
+{
+  require_once ('AltrpRoutes.php');
+}

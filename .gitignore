@@ -14,7 +14,13 @@ yarn-error.log
 .idea
 storage/installed
 
+# IDE helpers
+/config/ide-helper.php
+.phpstorm.meta.php
+_ide_helper.php
 
-# Altrp User Activity 
+# Altrp User Activity
 /database/altrp_migrations
 /app/AltrpModels
+/app/Http/Controllers/AltrpControllers
+/routes/AltrpRoutes.php

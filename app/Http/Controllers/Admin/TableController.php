@@ -277,9 +277,44 @@ class TableController extends ApiController
         
     }
     
+    /**
+     * Получение актуального списка ключей
+     * @return type
+     */
+    function getController(ApiRequest $request) {
+
+        $table_id = $request->table;
+        
+        $controller = Controller::where("table_id", $table_id)->firstOrFail();
+        
+        if(!$controller) {
+            return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
+        }
+        
+        return response()->json($controller, 200, [],JSON_UNESCAPED_UNICODE);
+        
+    }
     
-    
-    
+    /**
+     * Получение актуального списка ключей
+     * @return type
+     */
+    function saveController(ApiRequest $request) {
+        
+        $table_id = $request->table;
+        
+        $controller = new \App\Altrp\Controller();
+        $generator = new ControllerGenerator($controller, $request->all());
+        
+        $result = $generator->generate();
+        
+        if(!$result) {
+            return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
+        }
+        
+        return response()->json($result, 200, [],JSON_UNESCAPED_UNICODE);
+        
+    }
     
     /**
      * Получение актуального списка ключей
@@ -288,15 +323,15 @@ class TableController extends ApiController
     function test(ApiRequest $request) {
         
         //dd($request->all());
-        $table_id = $request->table_id;
+        //$table_id = $request->table_id;
         
-        $model = new Model();
-        $generator = new ModelGenerator($model, $request->all());
+        /*$model = new Model();
+        $generator = new ModelGenerator($model, $request->all());*/
         
         
         //dd($request->all());
         $controller = new \App\Altrp\Controller();
-        $generator = new ControllerGenerator($controller, $request->all(), ["tableName" => "stores", "controllerName" => "StoreController"]);
+        $generator = new ControllerGenerator($controller, $request->all(), ["tableName" => "books", "controllerName" => "BookController"]);
         
         
         dd($generator->generate());
