@@ -19,14 +19,14 @@ class ColumnComponent extends Component {
       this.state.children.map(
         section => <ElementWrapper key={section.getId()} component={section.componentClass} element={section}/>
       )
-    )
+    );
     
-    let link = null;
-    if(this.state.settings.link_link.url != null & this.state.settings.link_link.url != "") {
-      link = <div href={this.state.settings.link_link.url} className="altrp-column">link{column}</div>
-    }
+    // let link = null;
+    // if(this.state.settings.link_link.url != null & this.state.settings.link_link.url != "") {
+    //   link = <div href={this.state.settings.link_link.url} className="altrp-column">link{column}</div>
+    // }
 
-    return link || column
+    return column
   }
 }
 

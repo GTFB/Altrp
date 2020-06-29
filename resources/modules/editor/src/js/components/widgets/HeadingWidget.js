@@ -15,10 +15,10 @@ class HeadingWidget extends Component {
 
     let headingContainer = React.createElement(this.state.settings.heading_settings_html_tag || 'h2', {className: "altrp-heading " + this.state.settings.position_css_classes, id: this.state.settings.position_css_id || ""}, this.state.settings.text);
     let link = null;
-    if(this.state.settings.link_link.url != null & this.state.settings.link_link.url != "") {
-      link = <div href={this.state.settings.link_link.url} className="altrp-column">link{headingContainer}</div>
-    };
-    return link || headingContainer
+    // if(this.state.settings.link_link.url != null & this.state.settings.link_link.url != "") {
+    //   link = <div href={this.state.settings.link_link.url} className="altrp-column">link{headingContainer}</div>
+    // };
+    return  headingContainer
   }
 }
 

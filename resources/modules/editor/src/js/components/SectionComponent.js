@@ -94,7 +94,6 @@ class SectionComponent extends Component {
     );
 
     let link = null;
-    console.log(this.state.settings.link_link);
     // if(this.state.settings.link_link.url != null & this.state.settings.link_link.url != "") {
     //   link = <div className="altrp-section">link{section}</div>
     // }
