@@ -254,6 +254,9 @@ class Column  extends BaseElement {
     this.addControl("column_style_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
+      default: {
+        bind: true
+      },
       units: ["px", "%", "vh"],
       rules: {
         "{{ELEMENT}} .altrp-column":
@@ -329,7 +332,8 @@ class Column  extends BaseElement {
         right: 15,
         bottom: 15,
         left: 15,
-        unit: "px"
+        unit: "px",
+        bind: true
       },
       units: ["px", "%", "vh"],
       rules: {

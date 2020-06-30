@@ -36,7 +36,7 @@ class Section extends BaseElement{
       label: 'Stretch section',
     });
 
-    this.addControl('layout_content_width', {
+    this.addControl('layout_content_width_type', {
       type: CONTROLLER_SELECT,
       label: 'Content width',
       default: 'Boxed',
@@ -52,7 +52,7 @@ class Section extends BaseElement{
       ]
     });
 
-    this.addControl("label_style_spacing", {
+    this.addControl("layout_content_width", {
       type: CONTROLLER_SLIDER,
       label: "width",
       default: {
@@ -63,7 +63,7 @@ class Section extends BaseElement{
       max: 500,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-column": "width: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-section": "width: {{SIZE}}{{UNIT}}"
       }
     });
 

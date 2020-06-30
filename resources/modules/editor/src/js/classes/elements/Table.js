@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import TextIcon from "../../../svgs/widget_text.svg";
+import TableIcon from "../../../svgs/widget_post.svg";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_SWITCHER,
@@ -29,7 +29,7 @@ class Table extends BaseElement {
     return "Table";
   }
   static getIconComponent() {
-    return TextIcon;
+    return TableIcon;
   }
   static getType() {
     return "widget";
