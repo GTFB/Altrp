@@ -15,17 +15,22 @@ export default class Tables extends Component{
             super(props);
             this.state = {
                 editUrl: "/admin/tables",
+              tag: 'Link',
                 modules: [],
                 columns: [
                     {
                         name: 'title',
                         title: 'Title',
                         url: true,
+                      editUrl: true,
+                      tag : 'Link',
                     },
                     {
                         name: 'name',
                         title: 'Name',
                         url: true,
+                      editUrl: true,
+                      tag : 'Link',
                     },
                     {
                         name: 'description',
@@ -58,9 +63,8 @@ export default class Tables extends Component{
 	setModules(modules){
             console.log(modules);
             let urlModules = modules.map((row) => {
-		console.log(row)
-		row.url = "/admin/tables/edit/" + row.id;
-		return row;
+                row.editUrl = "/admin/tables/edit/" + row.id;
+                return row;
             });
             
             console.log(urlModules);
