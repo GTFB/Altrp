@@ -14,7 +14,7 @@ class UpdateAltrpRelationshipsTable extends Migration
     public function up()
     {
         Schema::table('altrp_relationships', function (Blueprint $table) {
-            $table->dropUnique('name');
+            $table->dropUnique(['name']);
             $table->string('foreign_key')->nullable()->change();
             $table->string('local_key')->nullable()->change();
         });

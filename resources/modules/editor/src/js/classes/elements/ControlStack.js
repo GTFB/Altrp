@@ -1,8 +1,12 @@
 import React, {Component} from "react";
 import {CONTROLLER_TEXT} from "../modules/ControllersManager";
+import FrontElement from "../../../../../front-app/src/js/classes/FrontElement";
 
-class ControlStack extends Component {
+class ControlStack extends FrontElement {
 
+  constructor(data){
+    super(data)
+  }
   /**
    * @param {string} controlId
    * @param {object} args

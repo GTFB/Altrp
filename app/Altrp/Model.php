@@ -41,6 +41,23 @@ class Model extends EloquentModel
     }
     return $models;
   }
+/**
+ * Список моделей для select
+ */
+  public static function getModelsOptions(){
+    $models = [ ];
+    $_models = self::all();
+    foreach ( $_models as $model ) {
+      /**
+       * @var {Model} $model
+       */
+      $models[] = [
+        'label' => $model->name,
+        'value' => $model->altrp_table->name,
+      ];
+    }
+    return $models;
+  }
 
 
   public function get_ordering_fields() {

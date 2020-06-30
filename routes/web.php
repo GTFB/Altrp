@@ -108,6 +108,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
      */
     Route::get( 'models_list', 'Admin\ModelsController@models_list' )->name( 'admin.models_list' );
     Route::get( 'models_list_for_query', 'Admin\ModelsController@models_list_for_query' )->name( 'admin.models_list_for_query' );
+    Route::get( 'models_options', 'Admin\ModelsController@models_options' )->name( 'admin.models_options' );
 
 
     Route::get('/tables', "Admin\TableController@getTables");
@@ -171,7 +172,8 @@ foreach ( $frontend_routes as $frontend_route ) {
 Route::group( ['prefix' => 'ajax'], function(){
 
   Route::resource( 'routes', 'Frontend\RouteController' );
-  Route::get( 'models/{model_name}', 'Admin\ModelsController@models' )->name( 'front.models' );
+  Route::get( 'models/{model_name}', 'Frontend\ModelsController@models' )->name( 'front.models.all' );
+  Route::post( 'models/{model_name}', 'Frontend\ModelsController@create' )->name( 'front.models.create' );
 
 } );
 

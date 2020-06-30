@@ -66,6 +66,40 @@ class Button extends BaseElement{
     });
 
     this.endControlSection();
+    this.startControlSection("form_section", {
+      tab: TAB_CONTENT,
+      label: "Form Settings"
+    });
+
+    this.addControl('form_id', {
+      label: 'Form ID',
+      placeholder: 'Form ID'
+    });
+
+    this.addControl('form_actions', {
+      type: CONTROLLER_SELECT2,
+      label: 'Form Actions',
+      options: [
+        {
+          value: 'add_new',
+          label: 'Add New',
+        },
+      ],
+    });
+
+    this.addControl('choose_model', {
+      conditions: {
+        'form_actions': 'add_new',
+      },
+      type: CONTROLLER_SELECT,
+      resource: '/admin/ajax/models_options',
+    });
+
+    this.addControl('redirect_after', {
+      label: 'Redirect After',
+    });
+
+    this.endControlSection();
 
     this.startControlSection('position_section', {
       tab: TAB_STYLE,

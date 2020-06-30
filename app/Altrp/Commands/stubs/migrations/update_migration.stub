@@ -19,7 +19,8 @@ class {{className}} extends Migration
             {{delete_fields}}
             
             {{foreign_keys}}
-
+            
+            {{delete_keys}}
         });
     }
 
