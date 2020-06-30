@@ -34,9 +34,9 @@ class ModelsController extends Controller
    */
   public function create( $model_name, Request $request ){
 
-
     $res = [];
 
+    DB::table( $model_name )->insert($request->toArray());
     return response()->json( $res );
   }
 }

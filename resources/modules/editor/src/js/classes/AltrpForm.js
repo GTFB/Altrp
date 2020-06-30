@@ -33,7 +33,7 @@ class AltrpForm {
   async submit(){
     let success = true;
     this.fields.forEach(field=>{
-      if(!field.fieldValidate()){
+      if(! field.fieldValidate()){
         success = false;
       }
     });
@@ -50,6 +50,11 @@ class AltrpForm {
    */
   getData(){
     let data = {};
+    this.fields.forEach(field=>{
+      if(field.getValue()){
+        data[field.getSettings('field_id')] = field.getValue();
+      }
+    });
     return data;
   }
 }
