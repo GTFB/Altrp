@@ -9,7 +9,7 @@ import SettingsPanel from "./js/components/SettingsPanel";
 import EditorWindow from "./js/components/EditorWindow";
 import HistoryPanel from "./js/components/HistoryPanel";
 import UpdateButton from "./js/components/UpdateButton";
-import { CONSTANTS } from "./js/helpers";
+import {CONSTANTS, renderAsset} from "./js/helpers";
 import { stopDrag } from "./js/store/element-drag/actions";
 import AssetsBrowser from "./js/classes/modules/AssetsBrowser";
 
@@ -25,6 +25,7 @@ import Settings from "./svgs/settings.svg";
 import Dots from "./svgs/dots.svg";
 import Hamburger from "./svgs/hamburger.svg";
 import {contextMenu} from "react-contexify";
+import {iconsManager} from "../../admin/src/js/helpers";
 /**
  * Главный класс редактора.<br/>
  * Реакт-Компонент.<br/>
@@ -149,7 +150,7 @@ class Editor extends Component {
     ) {
       settingsActive = " active";
     }
-
+    console.log( window.admin_logo);
     return (
       <Provider store={store}>
         <div className={templateClasses}
@@ -163,9 +164,13 @@ class Editor extends Component {
               >
                 <Hamburger className="icon" />
               </button>
-              <div className="logo">
-                <Logo viewBox="0 0 97 35" />
-              </div>
+              <a href="/admin" target="_blank" className="logo">
+                {
+                  window.admin_logo
+                      ? renderAsset(window.admin_logo, {className:'editor__logo'})
+                      :<Logo viewBox="0 0 97 35" className="editor__logo"/>
+                }
+              </a>
               <button className="btn btn_dots" onClick={this.showWidgetsPanel}>
                 <Dots className="icon" />
               </button>

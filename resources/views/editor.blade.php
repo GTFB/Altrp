@@ -14,6 +14,11 @@
   <script>
   let _token = '{{ csrf_token() }}';
   </script>
+  @if( env( 'ALTRP_SETTING_ADMIN_LOGO' ) )
+    <script>
+      window.admin_logo = {!! env( 'ALTRP_SETTING_ADMIN_LOGO' ) !!};
+    </script>
+  @endif
   <script>
   let _altrpVersion = '{{ getCurrentVersion() }}';
   </script>

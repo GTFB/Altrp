@@ -11,6 +11,9 @@
   &_saving{
     pointer-events: none;
   }
+  &__logo{
+    max-height: 100%;
+  }
 }
 .editor-content-body{
 
@@ -45,6 +48,9 @@
 .logo {
   width: 63px;
   height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   & svg{
     width: 63px;
     height: 20px;
