@@ -61,12 +61,14 @@ class SectionComponent extends Component {
   render() {
     let width = {};
     if(this.state.settings.layout_content_width_type == "full") {
-      let element = document.getElementById("editor-content")
-      let body = element.offsetWidth
+      let body = document.documentElement.clientWidth
+      let window = document.getElementById("editorWindow").offsetWidth
       let editor = document.getElementById("editor")
       if(editor != undefined) {
-        body = body
+        body = window
 
+      } else {
+        body = body
       }
 
       width = {

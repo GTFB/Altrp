@@ -32,7 +32,7 @@ class SelectController extends Component {
         <DesktopIcon className="controller-container__label-svg" width="12"/>
       </div>
       <div className="control-container_select-wrapper">
-        <select className="control-select control-field" onChange={this.changeValue}>
+        <select className="control-select control-field" value={this.state.value} onChange={this.changeValue}>
           {this.props.options.map(option => {return <option value={option.value} key={option.value}>{option.label}</option>})}
         </select>
       </div>

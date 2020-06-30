@@ -10,7 +10,7 @@ class EditorWindow extends Component {
 
   render() {
 
-    return  <div className="editor-window">
+    return  <div className="editor-window" id="editorWindow">
 
       {/*<Frame>*/}
         {/*<FrameBindingContext>*/}
@@ -21,7 +21,7 @@ class EditorWindow extends Component {
         {/*<FrameBindingContext/>*/}
       {/*</Frame>*/}
       {/*<FrameContextConsumer>*/}
-      <iframe src="/admin/editor-content" />
+      <iframe src="/admin/editor-content" width="100%"/>
       {/*</FrameContextConsumer>*/}
     </div>
   }

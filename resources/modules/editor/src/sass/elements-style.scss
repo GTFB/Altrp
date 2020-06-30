@@ -59,7 +59,8 @@
 
 .altrp-column {
   display: flex;
-  flex-direction: column;
+
+  flex-wrap: wrap;
   padding: 10px;
 }
 
@@ -135,4 +136,14 @@
 
 .altrp-table-tbody {
   border-collapse: separate;
+}
+
+.altrp-field-required {
+  color: red;
+  font-size: 18px;
+}
+
+.altrp-field-container-label {
+  display: flex;
+  flex-direction: row;
 }

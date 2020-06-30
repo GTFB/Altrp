@@ -238,10 +238,10 @@ class Input extends BaseElement{
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default:{
-        top: 10,
-        right: 10,
-        bottom: 10,
-        left: 10,
+        top: 2,
+        right: 2,
+        bottom: 2,
+        left: 2,
         unit:'px'
       },
       units:[
@@ -280,6 +280,98 @@ class Input extends BaseElement{
 
     this.endControlSection();
     
+    this.startControlSection('placeholder_style_section', {
+      tab: TAB_STYLE,
+      label: 'placeholder',
+    });
+
+    this.addControl("placeholder_style_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "font color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}} .altrp-field::placeholder": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('placeholder_style_font_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default:{
+          lineHeight: 1.5,
+          spacing: 0,
+          size: 13,
+          weight: "normal",
+          family: '"roboto"',
+          decoration: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-field::placeholder': [
+            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+    
+    this.endControlSection();
+
+    this.startControlSection('required_style_section', {
+      tab: TAB_STYLE,
+      label: 'required',
+    });
+
+    this.addControl("required_style_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "font color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}} .altrp-field-required": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('required_style_font_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default:{
+          lineHeight: 1.5,
+          spacing: 0,
+          size: 13,
+          weight: "normal",
+          family: '"roboto"',
+          decoration: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-field-required': [
+            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+    
+    this.endControlSection();
+
     this.startControlSection('overlay_section', {
       tab: TAB_STYLE,
       label: 'Overlay',
