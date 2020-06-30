@@ -3,19 +3,26 @@
  */
 class FormsManager {
   constructor(){
+    /**
+     *
+     * @type {AltrpForm[]}
+     */
     this.forms = [];
+    /**
+     *
+     * @type {string[]}
+     */
     this.formIds = [];
   }
 
   /**
    * Регистрирует новую форму.
-   * Если форма с таким ID существует, то возвращает false
    * @param {string} formId
-   * @param {string} route
+   * @param {string} modelName
    * @param {*} method
-   * @return {bool}
+   * @return {AltrpForm}
    */
-  registerForm(formId, route, method){
+  registerForm(formId, modelName, method){
 
   }
 
@@ -31,13 +38,31 @@ class FormsManager {
   /**
    * Отправляет форму
    * @param {string} formId
-   * @return {bool}
+   * @return {boolean}
    */
   submitForm(formId){
-
+    if(! this.getForm(formId)){
+      console.error('Форма не найдена');
+      return false;
+    }
+    return this.getForm(formId).submit();
+  }
+  /**
+   * Получить форму по id
+   * @param {string} formId
+   * @return {AltrpForm | null}
+   */
+  getForm(formId){
+    let _form = null;
     this.forms.forEach(form=>{
-      form.validateFileds();
-    })
+      /**
+       * @member {AltrpForm}form
+       */
+      if(form.formId === formId){
+        _form = form;
+      }
+    });
+    return _form;
   }
 }
 const formsManager = new FormsManager();

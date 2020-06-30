@@ -7,6 +7,7 @@ function altrpZip() {
     './.htaccess',
     './**/.htaccess',
     '!./public/storage',
+    '!./app/AltrpModels/**',
     '!./public/storage/**',
     '!./resources/modules/**',
     '!./resources/sass/**',

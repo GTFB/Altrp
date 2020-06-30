@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {isEditor} from "../../helpers";
 class ButtonWidget extends Component {
   constructor(props) {
     super(props);
@@ -9,10 +10,20 @@ class ButtonWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
+    this.onClick = this.onClick.bind(this);
+  }
+
+  onClick(e){
+    e.preventDefault();
+    if(isEditor()){
+      console.log(this.state.settings);
+    } else {
+
+    }
   }
 
   render() {
-    let button = <button
+    let button = <button onClick={this.onClick}
         className={"altrp-btn " + (this.state.settings.position_css_classes || '')}
         id={this.state.settings.position_css_id}
       >
@@ -20,7 +31,7 @@ class ButtonWidget extends Component {
       </button>;
     let link = null;
     if(this.state.settings.link_link.url != null && this.state.settings.link_link.url != "") {
-      link = <a href={this.state.settings.link_link.url} className="altrp-btn">link (перекидывает){button}</a>
+      link = <a onClick={this.onClick} href={this.state.settings.link_link.url} className="altrp-btn">link (перекидывает){button}</a>
     }
 
     return link || button

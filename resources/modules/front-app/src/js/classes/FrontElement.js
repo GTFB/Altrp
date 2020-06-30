@@ -32,9 +32,18 @@ class FrontElement {
    * Если элемент поле или кнопка нужно инициализирваоть форму в FormsManager
    */
   async formInit(){
+    /**
+     * @member {FormsManager} formsManager
+     */
     let formsManager = await import('../../../../editor/src/js/classes/modules/FormsManager.js').then();
     formsManager = formsManager.default;
     console.log(formsManager);
+    if(this.getName() === 'button'){
+      let method = 'POST';
+      if(this.getSettings('form_actions') === 'add_new'){
+        formsManager.registerForm(this.getSettings('form_id'), this.getSettings('choose_model'), method)
+      }
+    }
   }
   /**
    * Возвращает массив

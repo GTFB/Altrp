@@ -1,5 +1,5 @@
-class Form {
-  constructor(formId, route, method = 'post'){
+class AltrpForm {
+  constructor(formId, route, method = 'POST'){
     this.formId = formId;
     this.fileds = [];
     this.method = method;
@@ -17,6 +17,7 @@ class Form {
 
   /**
    * Проверка полей перед отправкой
+   * @return {boolean}
    */
   submit(){
 
@@ -33,4 +34,4 @@ class Form {
   }
 }
 
-export default Form
+export default AltrpForm
