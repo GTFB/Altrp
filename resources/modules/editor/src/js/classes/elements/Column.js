@@ -47,7 +47,7 @@ class Column  extends BaseElement {
         label: 'Vertical align',
         options:[
           {
-            'value' : '',
+            'value' : 'normal',
             'label' : 'default',
           },
           {
@@ -56,7 +56,7 @@ class Column  extends BaseElement {
           },
           {
             'value' : 'center',
-            'label' : 'middle'
+            'label' : 'center'
           },
           {
             'value' : 'flex-end',
@@ -76,8 +76,8 @@ class Column  extends BaseElement {
           }
         ],
         rules: {
-          '{{ELEMENT}} .altrp-column': 'align-content: {{VALUE}} !important;',
-          '{{ELEMENT}} .altrp-column': 'align-items: {{VALUE}} !important;',
+          '{{ELEMENT}} .altrp-column': 'align-content: {{VALUE}};',
+          '{{ELEMENT}} .altrp-column': 'align-items: {{VALUE}};',
         },
       }
     );
@@ -328,10 +328,10 @@ class Column  extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        top: 15,
-        right: 15,
-        bottom: 15,
-        left: 15,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
         unit: "px",
         bind: true
       },

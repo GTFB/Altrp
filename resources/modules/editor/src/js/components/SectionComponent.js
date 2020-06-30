@@ -63,12 +63,13 @@ class SectionComponent extends Component {
     if(this.state.settings.layout_content_width_type == "full") {
 
       let element = document.getElementsByTagName("iframe")[0];
-      console.log(document.getElementsByTagName("body"));
       let body = element ? element.offsetWidth : 0;
       let editor = document.getElementById("editor");
       if(editor != undefined) {
-        body = body
+        body = window
 
+      } else {
+        body = body
       }
 
       width = {

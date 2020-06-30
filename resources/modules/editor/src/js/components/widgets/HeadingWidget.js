@@ -16,7 +16,7 @@ class HeadingWidget extends Component {
         this.state.settings.text);
     let link = null;
     // if(this.state.settings.link_link.url != null & this.state.settings.link_link.url != "") {
-    //   link = <div href={this.state.settings.link_link.url} className="altrp-column">link{headingContainer}</div>
+    //   link = <a href={this.state.settings.link_link.url} className="altrp-btn">{headingContainer}</a>
     // };
     return  headingContainer
   }
