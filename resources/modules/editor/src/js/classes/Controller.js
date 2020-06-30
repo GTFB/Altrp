@@ -2,6 +2,7 @@ import store, {getCurrentElement} from '../store/store';
 import {CONSTANTS} from "../helpers";
 import CSSRule from "../classes/CSSRule";
 import {changeTemplateStatus} from "../store/template-status/actions";
+import {controllerValue} from "../store/controller-value/actions";
 
 /**
  * Класс-контроллер
@@ -47,6 +48,9 @@ class Controller {
       if (this.rules.length) {
         currentElement.addStyles(this.getSettingName(), this.rules);
       }
+      console.log(this.data);
+      store.dispatch(controllerValue(value, Object.keys(this.data.condition)[0]));
+
     } else {
 
       /**

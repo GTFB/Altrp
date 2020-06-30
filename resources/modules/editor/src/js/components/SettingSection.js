@@ -15,6 +15,7 @@ class SettingSection extends Component {
       open: !this.state.open
     });
   }
+
   render() {
     let controllers = this.props.controls || [];
     let sectionClasses = 'settings-section ' + (this.state.open ? 'open' : '');
@@ -30,9 +31,11 @@ class SettingSection extends Component {
       <div className="controllers-wrapper">
         {
           controllers.map((controller) => {
+              if(controller.show) {
                 let ControllerComponent = window.controllersManager.getController(controller.type);
                 return React.createElement(ControllerComponent, {...controller, key: controller.controlId, controller: new Controller(controller)});
               }
+            }
           )
         }
       </div>

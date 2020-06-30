@@ -103,49 +103,54 @@ class QueryController extends Component {
 
   render() {
     console.log(this.state.value);
-    return <div className="controller-container controller-container_query">
-      <div className="controller-field-group">
-        <div className="controller-container__label">
-          Source
+
+    if(this.state.show === false) {
+      return '';
+    } else {
+      return <div className="controller-container controller-container_query">
+        <div className="controller-field-group">
+          <div className="controller-container__label">
+            Source
+          </div>
+          <div className="control-container_select-wrapper">
+            <select className="control-select control-field"
+                    value={this.state.value.modelName || ''}
+                    onChange={this.changeModelName}>
+              {this.state.modelsList.map(option => {
+                return <option value={option.name}
+                               key={option.name}>{option.title}</option>
+              })}
+            </select>
+          </div>
         </div>
-        <div className="control-container_select-wrapper">
-          <select className="control-select control-field"
-                  value={this.state.value.modelName || ''}
-                  onChange={this.changeModelName}>
-            {this.state.modelsList.map(option => {
-              return <option value={option.name}
-                             key={option.name}>{option.title}</option>
-            })}
-          </select>
+        <div className="controller-field-group">
+          <div className="controller-container__label">
+            Page Size
+          </div>
+          <div className="control-container_select-wrapper">
+            <input className="control-field control-field_number"
+                   type="number"
+                   value={this.state.value.pageSize || 10}
+                   onChange={this.changePageSize}/>
+          </div>
+        </div>
+        <div className="controller-field-group">
+          <div className="controller-container__label">
+            Pagination Type
+          </div>
+          <div className="control-container_select-wrapper">
+            <select className="control-select control-field"
+                    value={this.state.value.paginationType || ''}
+                    onChange={this.changePaginationType}>
+              {this.state.paginationTypeOption.map(option => {
+                return <option value={option.name}
+                               key={option.name}>{option.title}</option>
+              })}
+            </select>
+          </div>
         </div>
       </div>
-      <div className="controller-field-group">
-        <div className="controller-container__label">
-          Page Size
-        </div>
-        <div className="control-container_select-wrapper">
-          <input className="control-field control-field_number"
-                 type="number"
-                 value={this.state.value.pageSize || 10}
-                 onChange={this.changePageSize}/>
-        </div>
-      </div>
-      <div className="controller-field-group">
-        <div className="controller-container__label">
-          Pagination Type
-        </div>
-        <div className="control-container_select-wrapper">
-          <select className="control-select control-field"
-                  value={this.state.value.paginationType || ''}
-                  onChange={this.changePaginationType}>
-            {this.state.paginationTypeOption.map(option => {
-              return <option value={option.name}
-                             key={option.name}>{option.title}</option>
-            })}
-          </select>
-        </div>
-      </div>
-    </div>
+    }
   }
 }
 

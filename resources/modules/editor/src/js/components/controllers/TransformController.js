@@ -126,10 +126,10 @@ class TransformController extends Component {
         size:e.target.value / 100
       });
     }
-    
+
     // console.log(this.state.value)
   };
-  
+
   inputUpdate (e) {
     this._changeValue({
       ...this.state.value,
@@ -139,34 +139,42 @@ class TransformController extends Component {
 
   render(){
 
-    return <div className="controller-container controller-container_transform">
-      <div className="controller-container__label control-button-label">
-        {this.props.label}
-      </div>
-      <div className="control-group">
-        <div className="control-group control-group-transform">
-          {/* выбор функции */}
-          <div className="control-container_select-wrapper control-container_select-wrapper-transform">
-            <select className="control-select control-field" onChange={this.changeFunction}>
-              {this.props.options.map(option => {return <option value={option.value} key={option.value}>{option.label}</option>})}
-            </select>
+    if(this.state.show === false) {
+      return '';
+    } else {
+      return <div className="controller-container controller-container_transform">
+        <div className="controller-container__label control-button-label">
+          {this.props.label}
+        </div>
+        <div className="control-group">
+          <div className="control-group control-group-transform">
+            {/* выбор функции */}
+            <div className="control-container_select-wrapper control-container_select-wrapper-transform">
+              <select className="control-select control-field" onChange={this.changeFunction}>
+                {this.props.options.map(option => {
+                  return <option value={option.value} key={option.value}>{option.label}</option>
+                })}
+              </select>
+            </div>
+          </div>
+        </div>
+        {/* слайдер */}
+        <div id="transformSlider"
+             className="control-slider-input-wrapper control-slider-input-wrapper-transform control-slider-input-wrapper-transform-none">
+          <input type="range"
+                 min={this.state.min}
+                 max={this.state.max}
+                 className="control-slider" value={this.state.value.size} onChange={this.inputUpdate}
+                 onInput={this.sliderChange}/>
+          <div className="control-slider-input-box">
+            <input className="control-slider-input" type="number"
+                   min={this.state.min}
+                   max={this.state.max}
+                   value={this.state.value.size} onChange={this.inputUpdate} onInput={this.sliderChange}/>
           </div>
         </div>
       </div>
-      {/* слайдер */}
-      <div id="transformSlider" className="control-slider-input-wrapper control-slider-input-wrapper-transform control-slider-input-wrapper-transform-none">
-        <input type="range"
-                min={this.state.min}
-                max={this.state.max}
-                className="control-slider" value={this.state.value.size} onChange={this.inputUpdate} onInput={this.sliderChange}/>
-          <div className="control-slider-input-box">
-            <input className="control-slider-input" type="number"
-                min={this.state.min}
-                max={this.state.max}
-                value={this.state.value.size} onChange={this.inputUpdate} onInput={this.sliderChange}/>
-        </div>
-      </div>
-    </div>
+    }
   }
 }
 

@@ -95,7 +95,6 @@ class ControllersManager {
       }
     }
   }
-
   getControls(elementName){
     if(!this.elementsControls){
       this.registerControls();

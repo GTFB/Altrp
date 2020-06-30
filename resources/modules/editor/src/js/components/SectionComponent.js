@@ -43,6 +43,7 @@ import '../../sass/section.scss'
 
 class SectionComponent extends Component {
   constructor(props) {
+    console.log(props);
     super(props);
     if (!props.children.length) {
       throw `Section Component Must Contain at Least One Column as Child`;

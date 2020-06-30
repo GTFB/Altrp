@@ -13,7 +13,10 @@ class TextController extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {value};
+    this.state = {
+      value,
+      show: true
+    };
     controllerDecorate(this);
   }
   changeValue(e){
@@ -23,18 +26,21 @@ class TextController extends Component {
     return '';
   }
   render(){
-
-    return <div className="controller-container controller-container_text">
-      <div className="controller-container__label">
-        {this.props.label}
-      </div>
-      <div className="control-group">
-        <input className="control-field" onChange={this.changeValue} value={this.state.value}/>
-        <div className="control-group__append">
-          <DynamicIcon/>
+    if(this.state.show === false) {
+      return '';
+    } else {
+      return <div className="controller-container controller-container_text">
+        <div className="controller-container__label">
+          {this.props.label}
+        </div>
+        <div className="control-group">
+          <input className="control-field" onChange={this.changeValue} value={this.state.value}/>
+          <div className="control-group__append">
+            <DynamicIcon/>
+          </div>
         </div>
       </div>
-    </div>
+    }
   }
 }
 
