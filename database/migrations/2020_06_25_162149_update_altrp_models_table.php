@@ -14,7 +14,7 @@ class UpdateAltrpModelsTable extends Migration
     public function up()
     {
         Schema::table('altrp_models', function (Blueprint $table) {
-            $table->boolean('time_stamps')->default(1)->after('soft_deletes');
+            $table->boolean('time_stamps')->default(1)->after('soft_deletes')->change();
             $table->dropColumn('soft_deletes');
         });
 

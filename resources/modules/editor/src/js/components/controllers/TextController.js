@@ -29,7 +29,10 @@ class TextController extends Component {
         {this.props.label}
       </div>
       <div className="control-group">
-        <input className="control-field" onChange={this.changeValue} value={this.state.value}/>
+        <input className="control-field"
+               placeholder={this.props.placeholder || ''}
+               onChange={this.changeValue}
+               value={this.state.value}/>
         <div className="control-group__append">
           <DynamicIcon/>
         </div>

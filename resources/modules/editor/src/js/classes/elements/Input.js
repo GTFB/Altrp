@@ -39,14 +39,14 @@ class Input extends BaseElement{
       label: 'Content',
     });
 
-    this.addControl('content_form_id', {
+    this.addControl('form_id', {
       type: CONTROLLER_TEXT,
       label: 'Form ID',
     });
 
-    this.addControl('content_field_id', {
+    this.addControl('field_id', {
       type: CONTROLLER_TEXT,
-      label: 'Field ID',
+      label: 'Field ID (Column Name)',
     });
 
     this.addControl('content_shortcode', {

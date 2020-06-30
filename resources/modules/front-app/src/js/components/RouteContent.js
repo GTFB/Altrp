@@ -4,7 +4,6 @@ import {setTitle} from "../helpers";
 
 class RouteContent extends Component {
   componentDidMount(){
-    console.log( this.props.title);
     setTitle(this.props.title);
   }
   render(){

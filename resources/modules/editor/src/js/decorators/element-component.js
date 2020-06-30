@@ -1,10 +1,20 @@
-
+/**
+ * Обновляем state элемента при изменении настроек в редакторе
+ * @param settingName
+ * @param value
+ */
 export function changeSetting(settingName, value) {
   let newState = this.state;
   newState.settings[settingName] = value;
+  /**
+   * Если виджет поле, то обнолвяем и значение
+   */
+  if(newState.value){
+    newState.value = value;
+  }
   this.setState({
     ...newState
-  })
+  });
 }
 
 export function setChildren(children) {

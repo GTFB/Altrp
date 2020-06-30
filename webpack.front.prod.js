@@ -39,8 +39,9 @@ module.exports = merge(common, {
     // new CleanWebpackPlugin(),
     // new ExtractTextPlugin('style.css'),
     new MiniCssExtractPlugin({
+      chunkFilename: '[chunkhash].front-app.css',
 
-      filename: 'front-app.css',
+      filename: 'front-app.css'
     })
     //   // Options similar to the same options in webpackOptions.output
     //   // both options are optional

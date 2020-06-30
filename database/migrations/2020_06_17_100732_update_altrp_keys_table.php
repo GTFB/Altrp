@@ -14,15 +14,17 @@ class UpdateAltrpKeysTable extends Migration
     public function up()
     {
         Schema::table('altrp_keys', function ( Blueprint $table ) {
-            $table->renameColumn('source_table_id', 'source_table');
-            $table->renameColumn('target_table_id', 'target_table');
-            $table->renameColumn('source_column_id', 'source_column');
-            $table->renameColumn('target_column_id', 'target_column');
-            
-            $table->dropForeign(['source_table_id']);
-            $table->dropForeign(['target_table_id']);
-            $table->dropForeign(['source_column_id']);
-            $table->dropForeign(['target_column_id']);
+
+          $table->dropForeign(['source_table_id']);
+          $table->dropForeign(['target_table_id']);
+          $table->dropForeign(['source_column_id']);
+          $table->dropForeign(['target_column_id']);
+
+          $table->renameColumn('source_table_id', 'source_table');
+          $table->renameColumn('target_table_id', 'target_table');
+          $table->renameColumn('source_column_id', 'source_column');
+          $table->renameColumn('target_column_id', 'target_column');
+
         });
         
         Schema::table('altrp_keys', function ( Blueprint $table ) {

@@ -22,8 +22,10 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import Users from "./components/Users";
-import UsersTools from "./components/UsersTools";
+import Users from "./components/users/Users";
+import AddUserPage from "./components/users/AddUserPage";
+import EditUserPage from "./components/users/EditUserPage";
+import UsersTools from "./components/users/UsersTools";
 import Assets from "./components/Assets";
 import Dashboard from "./components/Dashboard";
 import Plugins from "./components/Plugins";
@@ -164,9 +166,16 @@ class Admin extends Component {
             <Route path="/admin/settings">
               <AdminSettings/>
             </Route>
-            <Route path="/admin/users">
+            <Route path="/admin/users" exact>
               <Users/>
             </Route>
+            <Route path="/admin/users/new" exact>
+              <AddUserPage/>
+            </Route>
+            <Route path="/admin/users/user/:id">
+              <EditUserPage/>
+            </Route>
+            
             <Route path="/admin/tools">
               <UsersTools/>
             </Route>
