@@ -19,7 +19,7 @@ class Users extends Controller
      * @return type
      */
     function getUsers() {
-        $users = User::with("roles")->get();
+        $users = User::with(["roles", "usermeta"])->get();
         return response()->json($users, 200, [],JSON_UNESCAPED_UNICODE);
     }
     
@@ -47,7 +47,7 @@ class Users extends Controller
      * @return type
      */
     function insert(ApiRequest $request) {
-        
+        //dd(123);
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],

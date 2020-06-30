@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import PluginSvg from "../svgs/plugins.svg";
+import PluginSvg from "../../svgs/plugins.svg";
 
 export default class UsersTools extends Component{
   render(){ return <div id="content">
@@ -180,7 +180,7 @@ export default class UsersTools extends Component{
                   <div className="row">
                     <div className="col-sm-10">
                       <div className="form-check">
-                        <input className="form-check-input" type="checkbox" id="gridRadios1" value="option1" checked/>
+                        <input className="form-check-input" type="checkbox" id="gridRadios1" value="option1" defaultChecked/>
                           <label className="form-check-label" htmlFor="gridRadios1">
                             Create Template
                           </label>
@@ -188,7 +188,7 @@ export default class UsersTools extends Component{
                             href="#">Copy</a><span> | </span><a href="#">Delete</a></p>
                       </div>
                       <div className="form-check">
-                        <input className="form-check-input" type="checkbox" id="gridRadios2" value="option2" checked/>
+                        <input className="form-check-input" type="checkbox" id="gridRadios2" value="option2" defaultChecked/>
                           <label className="form-check-label" htmlFor="gridRadios2">
                             Duplicate Template
                           </label>
@@ -218,7 +218,7 @@ export default class UsersTools extends Component{
                           </label>
                       </div>
                       <div className="form-check">
-                        <input className="form-check-input" type="checkbox" id="gridRadios7" value="option7" checked/>
+                        <input className="form-check-input" type="checkbox" id="gridRadios7" value="option7" defaultChecked/>
                           <label className="form-check-label" htmlFor="gridRadios7">
                             Edit Template
                           </label>

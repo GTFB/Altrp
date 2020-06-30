@@ -1,9 +1,9 @@
 import React, {Component} from "react";
-import PluginSvg from "../svgs/plugins.svg";
-import VectorSvg from '../svgs/vector.svg';
-import UserSvg from '../svgs/user.svg';
-
-import Resource from "../../../editor/src/js/classes/Resource";
+import PluginSvg from "../../svgs/plugins.svg";
+import VectorSvg from '../../svgs/vector.svg';
+import UserSvg from '../../svgs/user.svg';
+import {Link} from "react-router-dom";
+import Resource from "../../../../editor/src/js/classes/Resource";
 
 export default class Users extends Component{
     constructor(props){
@@ -43,6 +43,7 @@ export default class Users extends Component{
             console.log(this.state);
         });
     }
+    
         
   render(){
     return <div className="admin-users">
@@ -53,7 +54,7 @@ export default class Users extends Component{
                     <span className="admin-breadcrumbs__separator">/</span>
                     <span className="admin-breadcrumbs__current">All Users</span>
                 </div>
-                <a href="#" className="btn">Add New</a>
+                <Link className="btn" to={"/admin/users/new/"}>Add New</Link>
                 <div className="admin-filters">
                     <span className="admin-filters__current">All (4)</span>
                     <span className="admin-filters__separator">|</span>
@@ -107,13 +108,13 @@ export default class Users extends Component{
                                 <td className="admin-table__td admin-table__td_check ">
                                     <input className="input-users" type="checkbox"/>
                                     <UserSvg className="users-svg"/>
-                                    <a>{row.name}</a>
+                                    <Link to={"/admin/users/user/"+row.id}>{row.name}</Link>
                                 </td>
-                                <td className="admin-table__td ">Jora Beardman</td>
+                                <td className="admin-table__td ">{row.full_name}</td>
                                 <td className="admin-table__td "><a>{row.email}</a></td>
                                 <td className="admin-table__td "><a>{row.roles.map((value) => {return value.name}).join(", ")}</a></td>
                                 <td className="admin-table__td ">2</td>
-                                <td className="admin-table__td ">{row.last_login_at}<br/> Last modified</td>
+                                <td className="admin-table__td ">{row.last_login_at}</td>
                                 <td className="admin-table__td ">Enable</td>
                             </tr>
                         

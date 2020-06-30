@@ -45,6 +45,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
     
+    
+    protected $appends = ['full_name'];
+    
     /**
      * Получение данных о пользователе
      * @return type
@@ -59,5 +62,15 @@ class User extends Authenticatable
      */
     function roles() {
         return $this->belongsToMany('App\Role');
+    }
+    
+    /**
+     * Получение данных о пользователе
+     * @return type
+     */
+    public function getFullNameAttribute() {
+        if(!$this->usermeta) return "";
+        
+        return $this->usermeta->first_name." ".$this->usermeta->second_name;
     }
 }
