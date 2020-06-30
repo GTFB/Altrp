@@ -52,4 +52,12 @@ class User extends Authenticatable
     function usermeta() {
         return $this->hasOne(UserMeta::class);
     }
+    
+    /**
+     * Получение данных о пользователе
+     * @return type
+     */
+    function roles() {
+        return $this->belongsToMany('App\Role');
+    }
 }

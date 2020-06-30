@@ -19,7 +19,7 @@ class Users extends Controller
      * @return type
      */
     function getUsers() {
-        $users = User::all();
+        $users = User::with("roles")->get();
         return response()->json($users, 200, [],JSON_UNESCAPED_UNICODE);
     }
     

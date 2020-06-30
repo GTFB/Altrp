@@ -3,8 +3,47 @@ import PluginSvg from "../svgs/plugins.svg";
 import VectorSvg from '../svgs/vector.svg';
 import UserSvg from '../svgs/user.svg';
 
+import Resource from "../../../editor/src/js/classes/Resource";
 
 export default class Users extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            data: [],
+            role_filter: "all",
+            search: "",
+        };
+        
+        this.resource = new Resource({route: '/admin/ajax/users'});
+        
+        /*
+        
+        
+        this.migration_resource = new Resource({route: '/admin/ajax/tables/'+this.props.match.params.id+'/migrations'});
+        
+        this.changeName = this.changeName.bind(this);
+        this.saveMigration = this.saveMigration.bind(this);
+        
+        
+        this.addColumn = this.addColumn.bind(this);
+        this.toggleModal = this.toggleModal.bind(this);
+        this.getModalClasses = this.getModalClasses.bind(this);
+        
+        this.onDeleteClick = this.onDeleteClick.bind(this);
+        this.addModalShow = this.addModalShow.bind(this);
+        this.onChange = this.onChange.bind(this);
+        */
+    }
+    
+    async componentDidMount(){
+        let users_result = await this.resource.getAll()
+        this.setState(state=>{
+            return{...state, data: users_result};
+        }, () => {
+            console.log(this.state);
+        });
+    }
+        
   render(){
     return <div className="admin-users">
         <div className="wrapper">
@@ -60,58 +99,27 @@ export default class Users extends Component{
                         </tr>
                     </thead>
                     <tbody className="admin-table-body">
-                        <tr className="admin-table-row">
-                            <td className="admin-table__td admin-table__td_check ">
-                                <input className="input-users" type="checkbox"/>
-                                <UserSvg className="users-svg"/>
-                                <a>Adm1nCRMsyst</a>
-                            </td>
-                            <td className="admin-table__td ">Jora Beardman</td>
-                            <td className="admin-table__td "><a>20010810@academ-x.ru</a></td>
-                            <td className="admin-table__td "><a>Administrator</a></td>
-                            <td className="admin-table__td ">2</td>
-                            <td className="admin-table__td ">2020/02/17<br/> Last modified</td>
-                            <td className="admin-table__td ">Enable</td>
-                        </tr>
-                        <tr className="admin-table-row">
-                            <td className="admin-table__td admin-table__td_check">
-                                <input className="input-users" type="checkbox"/>
-                                <UserSvg className="users-svg"/>
-                                <a>Max1mEdit0r</a>
-                            </td>
-                            <td className="admin-table__td ">Maxim Ivanov</td>
-                            <td className="admin-table__td "><a>awpmi@academ-x.ru</a></td>
-                            <td className="admin-table__td "><a>Editor</a></td>
-                            <td className="admin-table__td ">3</td>
-                            <td className="admin-table__td ">2020/02/01<br/> Last modified</td>
-                            <td className="admin-table__td ">Enable</td>
-                        </tr>
-                        <tr className="admin-table-row">
-                            <td className="admin-table__td admin-table__td_check">
-                                <input className="input-users" type="checkbox"/>
-                                <UserSvg className="users-svg"/>
-                                <a>Dm1tr1yEdit0r</a>
-                            </td>
-                            <td className="admin-table__td ">Dmitriy Ancupov</td>
-                            <td className="admin-table__td "><a>awpda@academ-x.ru</a></td>
-                            <td className="admin-table__td "><a>Editor</a></td>
-                            <td className="admin-table__td ">1</td>
-                            <td className="admin-table__td ">2020/02/05<br/> Last modified</td>
-                            <td className="admin-table__td ">Enable</td>
-                        </tr>
-                        <tr className="admin-table-row">
-                            <td className="admin-table__td admin-table__td_check">
-                                <input className="input-users" type="checkbox"/>
-                                <UserSvg className="users-svg"/>
-                                <a>Sof14Edit0r</a>
-                            </td>
-                            <td className="admin-table__td ">Sofia Anpilova</td>
-                            <td className="admin-table__td "><a>awpsa@academ-x.ru</a></td>
-                            <td className="admin-table__td "><a>Editor</a></td>
-                            <td className="admin-table__td ">1</td>
-                            <td className="admin-table__td ">2020/02/25<br/> Last modified</td>
-                            <td className="admin-table__td ">Enable</td>
-                        </tr>
+                    {
+                    
+                        this.state.data.map((row, idx) => 
+                            
+                            <tr className="admin-table-row" key={row.id}>
+                                <td className="admin-table__td admin-table__td_check ">
+                                    <input className="input-users" type="checkbox"/>
+                                    <UserSvg className="users-svg"/>
+                                    <a>{row.name}</a>
+                                </td>
+                                <td className="admin-table__td ">Jora Beardman</td>
+                                <td className="admin-table__td "><a>{row.email}</a></td>
+                                <td className="admin-table__td "><a>{row.roles.map((value) => {return value.name}).join(", ")}</a></td>
+                                <td className="admin-table__td ">2</td>
+                                <td className="admin-table__td ">{row.last_login_at}<br/> Last modified</td>
+                                <td className="admin-table__td ">Enable</td>
+                            </tr>
+                        
+                        )
+                        
+                    }   
                     </tbody>
                 </table>
             </div>
