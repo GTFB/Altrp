@@ -95,6 +95,10 @@ class Button extends BaseElement{
       resource: '/admin/ajax/models_options',
     });
 
+    this.addControl('redirect_after', {
+      label: 'Redirect After',
+    });
+
     this.endControlSection();
 
     this.startControlSection('position_section', {
