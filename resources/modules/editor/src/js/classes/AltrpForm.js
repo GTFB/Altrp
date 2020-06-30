@@ -10,11 +10,18 @@ class AltrpForm {
   }
 
   /**
+   * Устанавливает список полей (в случае, если егистрация после добавления какой либо формы)
+   * @param {FrontElement[]}fields
+   */
+  setFields(fields){
+    this.fields = fields;
+  }
+
+  /**
    * Добавлйет поле
    * @param {FrontElement} field
    */
   addField(field){
-    console.log(field);
     this.fields.push(field);
     return true;
   }
@@ -23,7 +30,7 @@ class AltrpForm {
    * Проверка полей перед отправкой
    * @return {boolean}
    */
-  submit(){
+  async submit(){
     let success = true;
     this.fields.forEach(field=>{
       if(!field.fieldValidate()){
@@ -31,9 +38,9 @@ class AltrpForm {
       }
     });
     if(success){
-      this.resource.post(this.getData())
+      return await this.resource.post(this.getData())
     } else {
-      alert('Валидация не прошла');
+      return await alert('Валидация не прошла');
     }
   }
 

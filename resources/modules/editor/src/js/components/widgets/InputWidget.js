@@ -4,23 +4,23 @@ class InputWidget extends Component {
 
   constructor(props){
     super(props);
-    this.change = this.change.bind(this);
+    this.onChange = this.onChange.bind(this);
     this.state = {
-      settings: props.element.getSettings()
+      settings: props.element.getSettings(),
+      value: props.element.getSettings().content_default_value || '',
     };
-    console.log(props.element.getSettings())
     props.element.component = this;
     if(window.elementDecorator){
       window.elementDecorator(this);
     }
   }
 
-  change(e){
-    this.setState({
-      settings: {
-        content_label: e.target.value 
-      }
-    })
+  onChange(e){
+    let value = e.target.value;
+    this.setState(state=>({
+      ...state,
+      value
+    }));
   }
 
   render(){
@@ -32,11 +32,11 @@ class InputWidget extends Component {
       label = null
     }
 
-    let autocomplete = "off"
+    let autocomplete = "off";
     if(this.state.settings.content_autocomplete) {
-      autocomplete = "on"
+      autocomplete = "on";
     } else {
-      autocomplete = "off"
+      autocomplete = "off";
     }
 
     return <div className="altrp-field-container">
@@ -44,11 +44,12 @@ class InputWidget extends Component {
         label
       }
       <input type={this.state.settings.content_type}
-        value={this.state.settings.content_default_value}
-        autocomplete={autocomplete}
-        placeholder={this.state.settings.content_placeholder}
-        className={"altrp-field " + this.state.settings.position_css_classes}
-        id={this.state.settings.position_css_id}
+             value={this.state.value}
+             autoComplete={autocomplete}
+             placeholder={this.state.settings.content_placeholder}
+             className={"altrp-field " + this.state.settings.position_css_classes}
+             onChange={this.onChange}
+             id={this.state.settings.position_css_id}
       />
     </div>
   }

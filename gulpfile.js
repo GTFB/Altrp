@@ -9,6 +9,7 @@ function altrpZip() {
     '!./public/storage',
     '!./app/AltrpModels/**',
     '!./public/storage/**',
+    '!./database/altrp_migrations/**',
     '!./resources/modules/**',
     '!./resources/sass/**',
     '!./resources/out/**',

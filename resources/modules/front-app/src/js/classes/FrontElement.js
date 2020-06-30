@@ -17,6 +17,11 @@ class FrontElement {
      * @type {AltrpForm[]}
      */
     this.forms = [];
+    /**
+     * Ссылка на компонент
+     * @type {React.Component | null}
+     */
+    this.component = null
   }
 
   /**
@@ -42,12 +47,18 @@ class FrontElement {
      */
     let formsManager = await import('../../../../editor/src/js/classes/modules/FormsManager.js');
     formsManager = formsManager.default;
-    console.log(formsManager);
-    if(this.getName() === 'button'){
-      let method = 'POST';
-      if(this.getSettings('form_actions') === 'add_new'){
-        this.addForm(formsManager.registerForm(this.getSettings('form_id'), this.getSettings('choose_model'), method));
+    switch (this.getName()) {
+      case 'button': {
+        let method = 'POST';
+        if(this.getSettings('form_actions') === 'add_new'){
+          this.addForm(formsManager.registerForm(this.getSettings('form_id'), this.getSettings('choose_model'), method));
+        }
       }
+      break;
+      case 'input': {
+        formsManager.addField(this.getSettings('form_id'), this);
+      }
+      break;
     }
   }
 
@@ -138,14 +149,46 @@ class FrontElement {
     return styles;
   }
 
+  /**
+   * Возвращает css-селектор в виду строки
+   * @return {string}
+   */
   getSelector(){
     if(this.type === 'root-element'){
       return `.altrp-template-root${this.getId()}`;
     }
     return `.altrp-element${this.getId()}`;
   }
+
+  /**
+   * Возвращает количестве колонок в секции
+   * @return {*}
+   */
   getColumnsCount(){
     return this.children.length;
+  }
+
+  /**
+   *  Проводит валидацию поля, если это виджет input,
+   *  если другой виджет, то просто возвращает true
+   *  @return {boolean}
+   */
+  fieldValidate(){
+    if(this.getName() !== 'input'){
+      return true;
+    }
+    return ! (this.getSettings('content_required') && ! this.getValue());
+  }
+
+  /**
+   * Возвращает значение если виджет input, если другое, то null
+   */
+  getValue(){
+
+    if(this.getName() !== 'input'){
+      return null;
+    }
+    return this.component.state.value;
   }
 }
 

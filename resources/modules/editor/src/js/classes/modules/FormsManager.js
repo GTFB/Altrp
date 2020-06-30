@@ -14,6 +14,7 @@ class FormsManager {
      * @type {string[]}
      */
     this.formIds = [];
+    this.fieldsStorage = {};
   }
 
   /**
@@ -28,6 +29,14 @@ class FormsManager {
     let route = `/ajax/models/${modelName}`;
     if(! form){
       form = new AltrpForm(formId, route, method);
+      /**
+       * Если в хранилище есть поля для указанной формы,
+       * то передаем их в форму, а ссылку удаляем
+       */
+      if(this.fieldsStorage[formId] && this.fieldsStorage[formId].length){
+        form.setFields(this.fieldsStorage[formId]);
+        delete this.fieldsStorage[formId]
+      }
       this.forms.push(form);
     }
     return form;
@@ -35,12 +44,18 @@ class FormsManager {
 
   /**
    * Добавляет поле к форме
+   * сохраняет поле в fieldsStorage если форма еще не добавлена
    * @param {string} formId
    * @param {FrontElement} field
    * @return {boolean}
    */
   addField(formId, field){
     let form = this.getForm(formId);
+    if(! form){
+      this.fieldsStorage[formId] = this.fieldsStorage[formId] || [];
+      this.fieldsStorage[formId].push(field);
+      return true;
+    }
     return form.addField(field)
   }
   /**
