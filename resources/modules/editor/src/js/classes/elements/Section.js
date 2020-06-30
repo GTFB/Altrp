@@ -31,11 +31,6 @@ class Section extends BaseElement{
       label: 'Layout'
     });
 
-    this.addControl('layout_stretch_section', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Stretch section',
-    });
-
     this.addControl('layout_content_width_type', {
       type: CONTROLLER_SELECT,
       label: 'Content width',
