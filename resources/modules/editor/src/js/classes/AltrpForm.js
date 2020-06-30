@@ -1,18 +1,22 @@
+import Resource from "./Resource";
+
 class AltrpForm {
   constructor(formId, route, method = 'POST'){
     this.formId = formId;
-    this.fileds = [];
+    this.fields = [];
     this.method = method;
     this.route = route;
+    this.resource = new Resource({route})
   }
 
   /**
    * Добавлйет поле
-   * @param fieldName
-   * @param field
+   * @param {FrontElement} field
    */
-  addField(fieldName,field){
-
+  addField(field){
+    console.log(field);
+    this.fields.push(field);
+    return true;
   }
 
   /**
@@ -20,9 +24,17 @@ class AltrpForm {
    * @return {boolean}
    */
   submit(){
-
-    this.fileds.forEach(form=>{
+    let success = true;
+    this.fields.forEach(field=>{
+      if(!field.fieldValidate()){
+        success = false;
+      }
     });
+    if(success){
+      this.resource.post(this.getData())
+    } else {
+      alert('Валидация не прошла');
+    }
   }
 
   /**
@@ -30,7 +42,8 @@ class AltrpForm {
    * @return {object}
    */
   getData(){
-
+    let data = {};
+    return data;
   }
 }
 

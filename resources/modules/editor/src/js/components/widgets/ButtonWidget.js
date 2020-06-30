@@ -19,6 +19,12 @@ class ButtonWidget extends Component {
       console.log(this.state.settings);
     } else {
 
+      this.props.element.getForms().forEach( /**
+       * @param {AltrpForm} form
+       */(form)=>{
+
+        form.submit();
+      })
     }
   }
 

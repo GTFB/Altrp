@@ -12,6 +12,11 @@ class FrontElement {
       this.componentClass = window.frontElementsManager.getComponentClass(this.getName());
     }
     this.parent = null;
+    /**
+     *
+     * @type {AltrpForm[]}
+     */
+    this.forms = [];
   }
 
   /**
@@ -35,15 +40,31 @@ class FrontElement {
     /**
      * @member {FormsManager} formsManager
      */
-    let formsManager = await import('../../../../editor/src/js/classes/modules/FormsManager.js').then();
+    let formsManager = await import('../../../../editor/src/js/classes/modules/FormsManager.js');
     formsManager = formsManager.default;
     console.log(formsManager);
     if(this.getName() === 'button'){
       let method = 'POST';
       if(this.getSettings('form_actions') === 'add_new'){
-        formsManager.registerForm(this.getSettings('form_id'), this.getSettings('choose_model'), method)
+        this.addForm(formsManager.registerForm(this.getSettings('form_id'), this.getSettings('choose_model'), method));
       }
     }
+  }
+
+  /**
+   *
+   * @return {AltrpForm[]}
+   */
+  getForms(){
+    return this.forms;
+  }
+
+  /**
+   *
+   * @param {AltrpForm} form
+   */
+  addForm(form){
+    this.forms.push(form);
   }
   /**
    * Возвращает массив

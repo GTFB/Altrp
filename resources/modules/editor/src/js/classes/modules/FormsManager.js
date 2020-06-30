@@ -1,3 +1,4 @@
+import AltrpForm from "../AltrpForm";
 /**
  * Класс менеджер форм для фронтенда/редактора
  */
@@ -19,21 +20,28 @@ class FormsManager {
    * Регистрирует новую форму.
    * @param {string} formId
    * @param {string} modelName
-   * @param {*} method
+   * @param {string} method
    * @return {AltrpForm}
    */
   registerForm(formId, modelName, method){
-
+    let form = this.getForm(formId);
+    let route = `/ajax/models/${modelName}`;
+    if(! form){
+      form = new AltrpForm(formId, route, method);
+      this.forms.push(form);
+    }
+    return form;
   }
 
   /**
    * Добавляет поле к форме
    * @param {string} formId
-   * @param {React.Component} filed
-   * @return {bool}
+   * @param {FrontElement} field
+   * @return {boolean}
    */
-  addField(formId, filed){
-
+  addField(formId, field){
+    let form = this.getForm(formId);
+    return form.addField(field)
   }
   /**
    * Отправляет форму
