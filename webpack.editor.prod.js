@@ -39,6 +39,7 @@ module.exports = merge(common, {
     // new CleanWebpackPlugin(),
     // new ExtractTextPlugin('style.css'),
     new MiniCssExtractPlugin({
+      chunkFilename: '[chunkhash].editor.css',
 
       filename: 'editor.css',
     })
