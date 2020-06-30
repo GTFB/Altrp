@@ -51,7 +51,7 @@ class Table extends Model
         $migration = $this->actual_migration();
         
         if(is_null($migration)) {
-            return $this->keys();
+            return $this->source_keys();
         }
         
         return $this->source_keys()->where('altrp_migration_id','=',$migration->id);

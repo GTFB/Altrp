@@ -129,6 +129,8 @@ class MigrationBuilder {
         if($this->getMigrationType() === "update") {
             $delete_fields = $this->getDeleteFields();
             $template = str_replace('{{delete_fields}}', $delete_fields, $template);
+            $delete_keys = $this->getDeleteKeys();
+            $template = str_replace('{{delete_keys}}', $delete_keys, $template);
         }
         
         //4. Получаем имя файла
@@ -228,6 +230,35 @@ class MigrationBuilder {
             
             if($res === false) {
                 $fields .= "\$table->dropColumn('".$value->name."')";
+                $fields .= ";\n".$this->tabIndent.$this->tabIndent.$this->tabIndent;
+            }
+            
+        }
+        
+        return $fields;
+        
+    }
+    
+    /**
+     * Получаем внешние ключи для удаления
+     *
+     * @return string
+     */
+    protected function getDeleteKeys()
+    {
+        
+        if($this->getMigrationType() === "create") {
+            return "";
+        }
+        
+        $fields = '';
+        
+        foreach ($this->previous_migration->full_data->keys as $value) {
+            
+            $res = $this->findKey($value, $this->current_migration->full_data->keys);
+            
+            if($res === false) {
+                $fields .= "\$table->dropForeign(['".$value->source_column."'])";
                 $fields .= ";\n".$this->tabIndent.$this->tabIndent.$this->tabIndent;
             }
             
