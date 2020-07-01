@@ -34,12 +34,7 @@ class DimensionsController extends Component {
     value.unit = value.unit || units[0];
     this.state = {
       value,
-<<<<<<< HEAD
-      show: true,
-      fill: "#FFF",
-=======
       fill: this.fillBind || "#FFF", 
->>>>>>> 894bf212959582c894c3bb7b3822278eea1c87f8
       active: true,
       styles: this.stylesBind || {
         transition: "0s",
@@ -168,7 +163,7 @@ class DimensionsController extends Component {
 
     if(this.state.show === false) {
       return '';
-    }
+    } else {
       return <div className="controller-container controller-container_dimensions">
         <div className="control-dimensions-header">
           <div className="controller-dimensions__label">{this.props.label}</div>
@@ -229,6 +224,7 @@ class DimensionsController extends Component {
           </div>
         </div>
       </div>
+    }
   }
 }
 

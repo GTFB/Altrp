@@ -16,7 +16,6 @@ class TransformController extends Component {
     value = value || false;
     this.state = {
       value,
-      show: true,
       min: 0,
       max: 0
     };
@@ -152,15 +151,6 @@ class TransformController extends Component {
     if(this.state.show === false) {
       return '';
     }
-<<<<<<< HEAD
-      return <div className="controller-container controller-container_transform">
-        <div className="controller-container__label control-button-label">
-          {this.props.label}
-        </div>
-        <div className="control-group">
-          <div className="control-group control-group-transform">
-            {/* выбор функции */}
-=======
     let options = [
       {
         value: "",
@@ -203,7 +193,6 @@ class TransformController extends Component {
         <div className="control-group control-group-transform">
           {/* выбор функции */}
           <div className="control-container_select_container">
->>>>>>> 894bf212959582c894c3bb7b3822278eea1c87f8
             <div className="control-container_select-wrapper control-container_select-wrapper-transform">
               <select className="control-select control-field" onChange={this.changeFunction}>
                 {options.map(option => {return <option value={option.value} key={option.value}>{option.label}</option>})}
@@ -227,11 +216,8 @@ class TransformController extends Component {
                 value={this.state.value.size} onChange={this.inputUpdate} onInput={this.sliderChange}/>
         </div>
       </div>
-<<<<<<< HEAD
-=======
     </div>
 
->>>>>>> 894bf212959582c894c3bb7b3822278eea1c87f8
   }
 }
 

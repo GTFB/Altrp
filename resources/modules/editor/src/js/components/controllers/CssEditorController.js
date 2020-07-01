@@ -20,7 +20,6 @@ class CssEditorController extends Component {
     value = value || '';
     this.state = {
       value,
-      show: true,
       editorValue: null
     };
     controllerDecorate(this);
@@ -49,7 +48,7 @@ class CssEditorController extends Component {
 
     if(this.state.show === false) {
       return '';
-    }
+    } else {
       return <div className="controller-container controller-container_css-editor">
         <div className="controller-container__label control-css-editor__label">
           Add your own custom CSS here
@@ -78,6 +77,7 @@ class CssEditorController extends Component {
           .my-class "text-align: center;" // Or use any custom selector
         </div>
       </div>
+    }
   }
 }
 

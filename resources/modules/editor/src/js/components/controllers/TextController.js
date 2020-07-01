@@ -7,7 +7,8 @@ class TextController extends Component {
   constructor(props){
     super(props);
     this.changeValue = this.changeValue.bind(this);
-    let value = this.props.currentElement.getSettings(this.props.controlId);;
+    let value = this.props.currentElement.getSettings(this.props.controlId);
+    // console.log(value);
     if(value === null && this.props.default){
       value = this.props.default ;
     }
@@ -16,7 +17,6 @@ class TextController extends Component {
       value,
       show: true
     };
-
     controllerDecorate(this);
   }
   changeValue(e){
@@ -25,24 +25,10 @@ class TextController extends Component {
   getDefaultValue(){
     return '';
   }
-
   render(){
     if(this.state.show === false) {
       return '';
     }
-<<<<<<< HEAD
-      return <div className="controller-container controller-container_text">
-        <div className="controller-container__label">
-          {this.props.label}
-        </div>
-        <div className="control-group">
-          <input className="control-field" onChange={this.changeValue} value={this.state.value}/>
-          <div className="control-group__append">
-            <DynamicIcon/>
-          </div>
-        </div>
-      </div>
-=======
 
     return <div className="controller-container controller-container_text">
       <div className="controller-container__label">
@@ -60,7 +46,6 @@ class TextController extends Component {
     </div>
 
 
->>>>>>> 894bf212959582c894c3bb7b3822278eea1c87f8
   }
 }
 

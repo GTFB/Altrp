@@ -27,7 +27,6 @@ class FiltersController extends Component {
     value = value || false;
     this.state = {
       value,
-      show: true,
     };
     controllerDecorate(this);
   }
@@ -36,13 +35,13 @@ class FiltersController extends Component {
     return {
     };
 	}
-
+	
   openShadow(){
     let shadowContainer = document.getElementById("shadowContainer")
     let shadowContentIcon = document.getElementById("shadowContentIcon");
 
     shadowContainer.classList.toggle("control-shadow-active");
-
+    
     if(shadowContentIcon.getAttribute("fill") == "#8E94AA") {
       shadowContentIcon.removeAttribute("fill");
       shadowContentIcon.setAttribute("fill", "#5bc0de");
@@ -51,7 +50,7 @@ class FiltersController extends Component {
       shadowContentIcon.setAttribute("fill", "#8E94AA");
     }
 	}
-
+	
   inputBlurUpdate (e) {
     this._changeValue({
       ...this.state.value,
@@ -66,7 +65,7 @@ class FiltersController extends Component {
     });
     // console.log(this.state.value)
 	};
-
+	
   inputBrightnessUpdate (e) {
     this._changeValue({
       ...this.state.value,
@@ -81,7 +80,7 @@ class FiltersController extends Component {
     });
     // console.log(this.state.value)
 	};
-
+	
   inputContrastUpdate(e) {
     this._changeValue({
       ...this.state.value,
@@ -96,7 +95,7 @@ class FiltersController extends Component {
     });
     // console.log(this.state.value)
 	};
-
+	
   inputSaturationUpdate(e) {
     this._changeValue({
       ...this.state.value,
@@ -110,7 +109,7 @@ class FiltersController extends Component {
       saturation:e.target.value
     });
 	}
-
+	
 	inputHueUpdate(e) {
     this._changeValue({
       ...this.state.value,
@@ -129,10 +128,6 @@ class FiltersController extends Component {
     let colorPickedStyle = {
       backgroundColor: this.state.value.color
     };
-
-    if(this.state.show === false) {
-      return '';
-    }
 
     return <div className="controller-container controller-container_shadow">
       <div className="controller-container__label control-shadow-label">

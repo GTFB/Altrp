@@ -19,7 +19,6 @@ class QueryController extends Component {
     value = value || {};
     this.state = {
       value,
-      show: true,
       modelsList: [],
       orderingFieldsOptions: [],
       paginationTypeOption: [
@@ -110,23 +109,6 @@ class QueryController extends Component {
     if(this.state.show === false) {
       return '';
     }
-<<<<<<< HEAD
-      return <div className="controller-container controller-container_query">
-        <div className="controller-field-group">
-          <div className="controller-container__label">
-            Source
-          </div>
-          <div className="control-container_select-wrapper">
-            <select className="control-select control-field"
-                    value={this.state.value.modelName || ''}
-                    onChange={this.changeModelName}>
-              {this.state.modelsList.map(option => {
-                return <option value={option.name}
-                               key={option.name}>{option.title}</option>
-              })}
-            </select>
-          </div>
-=======
     return <div className="controller-container controller-container_query">
       <div className="controller-field-group">
         <div className="controller-container__label">
@@ -153,7 +135,6 @@ class QueryController extends Component {
                  type="number"
                  value={this.state.value.pageSize || 10}
                  onChange={this.changePageSize}/>
->>>>>>> 894bf212959582c894c3bb7b3822278eea1c87f8
         </div>
         <div className="controller-field-group">
           <div className="controller-container__label">
@@ -182,12 +163,9 @@ class QueryController extends Component {
           </div>
         </div>
       </div>
-<<<<<<< HEAD
-=======
     </div>
 
 
->>>>>>> 894bf212959582c894c3bb7b3822278eea1c87f8
   }
 }
 

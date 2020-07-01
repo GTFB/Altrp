@@ -14,9 +14,7 @@ class ColorController extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {
-      value,
-      show: true,
+    this.state = {value,
       colorPickedHex: this.props.colorPickedHex,
       opacity: 1,
       colorRGB: this.props.colorPickedRGB,
@@ -82,7 +80,7 @@ class ColorController extends Component {
 
     if(this.state.show === false) {
       return '';
-    }
+    } else {
       return <div className="controller-container controller-container_color">
         <div className="control-color-header">
           <div className="controller-container__label">{this.props.label}</div>
@@ -108,6 +106,7 @@ class ColorController extends Component {
         }
         {/* sketchPicker-none */}
       </div>
+    }
   }
 }
 

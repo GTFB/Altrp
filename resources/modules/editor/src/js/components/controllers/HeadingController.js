@@ -11,10 +11,7 @@ class HeadingController extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {
-      value,
-      show: true
-    };
+    this.state = {value};
     controllerDecorate(this);
   }
 
@@ -22,10 +19,11 @@ class HeadingController extends Component {
 
     if(this.state.show === false) {
       return '';
-    }
+    } else {
       return <div className="controller-container controller-container_heading">
         <h1 className="control-heading">{this.state.value.label}</h1>
       </div>
+    }
   }
 }
 

@@ -17,10 +17,7 @@ class LinkController extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {
-      value,
-      show: true
-    };
+    this.state = {value};
     controllerDecorate(this);
   }
 
@@ -84,7 +81,7 @@ class LinkController extends Component {
   render(){
     if(this.state.show === false) {
       return '';
-    }
+    } else {
       return <div className="controller-container controller-container_link">
         <div className="control-link-header">
           <div className="controller-container__label">{this.props.label}</div>
@@ -123,6 +120,7 @@ class LinkController extends Component {
           </div>
         </div>
       </div>
+    }
   }
 }
 

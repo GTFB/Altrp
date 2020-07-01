@@ -32,7 +32,7 @@ class SwitcherController extends Component {
      */
     if(this.state.show === false) {
       return '';
-    }
+    } else {
       let switcherClasses=`control-switcher control-switcher_${ this.state.value ? 'on' : 'off' }`;
       return <div className="controller-container controller-container_switcher">
         <div className="controller-container__label">
@@ -44,6 +44,7 @@ class SwitcherController extends Component {
           <div className="control-switcher__off-text">OFF</div>
         </div>
       </div>
+    }
   }
 }
 

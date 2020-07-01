@@ -15,11 +15,7 @@ class SelectController extends Component {
     value = value || '';
     this.state = {
       value,
-<<<<<<< HEAD
-      show: true
-=======
       options: this.props.options || [],
->>>>>>> 894bf212959582c894c3bb7b3822278eea1c87f8
     };
     controllerDecorate(this);
     this.changeValue = this.changeValue.bind(this);
@@ -48,21 +44,6 @@ class SelectController extends Component {
     if(this.state.show === false) {
       return '';
     }
-<<<<<<< HEAD
-      return <div className="controller-container controller-container_select">
-        <div className="controller-container__label control-select__label">
-          {this.props.label}
-          <DesktopIcon className="controller-container__label-svg" width="12"/>
-        </div>
-        <div className="control-container_select-wrapper">
-          <select className="control-select control-field" onChange={this.changeValue}>
-            {this.props.options.map(option => {
-              return <option value={option.value} key={option.value}>{option.label}</option>
-            })}
-          </select>
-        </div>
-      </div>
-=======
     return <div className="controller-container controller-container_select">
       <div className="controller-container__label control-select__label">
         {this.props.label}
@@ -75,7 +56,6 @@ class SelectController extends Component {
         </select>
       </div>
     </div>
->>>>>>> 894bf212959582c894c3bb7b3822278eea1c87f8
   }
 }
 
