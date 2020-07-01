@@ -43,6 +43,7 @@
 
 .altrp-btn {
   width: auto;
+  text-decoration: none;
   &_gray{
     background-color: $grey;
     color: #fff;
@@ -134,7 +135,7 @@
   width: 100%;
 }
 
-.altrp-table-tbody {
+.altrp-table-tbody, .altrp-table-th {
   border-collapse: separate;
 }
 

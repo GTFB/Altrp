@@ -61,7 +61,6 @@ class SectionComponent extends Component {
   render() {
     let width = {};
     if(this.state.settings.layout_content_width_type == "full") {
-
       let element = document.getElementsByTagName("iframe")[0];
       let body = element ? element.offsetWidth : 0;
       let editor = document.getElementById("editor");
@@ -90,10 +89,12 @@ class SectionComponent extends Component {
           key={column.getId()}
           component={column.componentClass}
           element={column}
+          columnCount={this.props.element.getColumnsCount()}
       />
     ));
     let section = React.createElement(this.state.settings.layout_html_tag || "div",
-      {style: width, className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: this.state.settings.position_style_css_id},
+      {style: width, className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: ""},
+      <div className="get-column-count" id="columnCount" data-column-count={"\n" + this.props.element.getColumnsCount()}></div>,
       sectionWrapper
     );
 

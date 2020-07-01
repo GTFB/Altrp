@@ -52,8 +52,8 @@ class ButtonWidget extends Component {
         {this.state.settings.button_text || ""}
       </button>;
     let link = null;
-    if(this.state.settings.link_link.url != null && this.state.settings.link_link.url != "") {
-      link = <a onClick={this.onClick} href={this.state.settings.link_link.url} className={classes}> {this.state.settings.button_text || ""}{button}</a>
+    if(this.state.settings.link_link.url) {
+      link = <a href={this.state.settings.link_link.url} className={classes}> {this.state.settings.button_text || ""}</a>;
     }
 
     return link || button

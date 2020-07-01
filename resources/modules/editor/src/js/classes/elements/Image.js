@@ -8,6 +8,7 @@ import {
   CONTROLLER_SLIDER,  
   CONTROLLER_TEXT,
   CONTROLLER_SELECT,
+  CONTROLLER_FILTERS,
   CONTROLLER_COLOR,
   TAB_CONTENT,
   TAB_STYLE,
@@ -222,6 +223,28 @@ class Image extends BaseElement{
         '{{ELEMENT}} img': 'width: {{VALUE}}%;',
       },
     });
+
+    this.endControlSection();
+
+    this.startControlSection('image_style_section', {
+      tab: TAB_STYLE,
+      label: 'image'
+    });
+
+    this.addControl('heading_style_text_shadow', {
+        type: CONTROLLER_FILTERS,
+        label: 'filters',
+        rules: {
+          '{{ELEMENT}} img': [
+            'filter: blur({{BLUR}}px);',
+            'filter: brightness({{BRIGHTNESS}}%);',
+            'filter: contrast({{CONTRAST}}%);',
+            'filter: saturate({{SATURATION}}%);',
+            'filter: hue-rotate({{HUE}}deg);;'
+        ],
+        },
+      }
+    );
 
     this.endControlSection();
 

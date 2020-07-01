@@ -12,8 +12,17 @@ class ColumnComponent extends Component {
     if(window.elementDecorator){
       window.elementDecorator(this);
     }
+    const columnCount = 1;
   }
+
+  componentDidMount() {
+    this.columnCount = document.getElementById("columnCount")
+  }
+
   render(){
+    if (this.state.settings.layout_column_width != 100) {
+
+    };
     let column = React.createElement(this.state.settings.layout_html_tag || "div", 
       {className: "altrp-column " + this.state.settings.position_style_css_classes || "", id:this.state.settings.position_style_css_id || ""},
       this.state.children.map(

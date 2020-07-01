@@ -328,7 +328,7 @@ class Input extends BaseElement{
 
     this.startControlSection('required_style_section', {
       tab: TAB_STYLE,
-      label: 'required',
+      label: 'Required',
     });
 
     this.addControl("required_style_font_color", {
