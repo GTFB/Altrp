@@ -29,6 +29,7 @@ class TypographicController extends Component {
     value = value || false;
     this.state = {
       value,
+      show: true,
       activeTypographic: false,
       //size
       sizeMin: this.props.sizeMin || 0,

@@ -15,7 +15,10 @@ class MediaController extends Component {
       value = iconsManager().getIcon(this.props.default.name);
     }
     value = value || {};
-    this.state = {value};
+    this.state = {
+      value,
+      show: true
+    }};
     this.openAssetsBrowser = this.openAssetsBrowser.bind(this);
     this.deleteAsset = this.deleteAsset.bind(this);
     controllerDecorate(this);
@@ -71,7 +74,7 @@ class MediaController extends Component {
 
     if(this.state.show === false) {
       return '';
-    } else {
+    }
       return <div className="controller-container controller-container_media">
         <div className="controller-container__label">
           {this.props.label}
@@ -87,7 +90,6 @@ class MediaController extends Component {
           }
         </div>
       </div>
-    }
   }
 }
 

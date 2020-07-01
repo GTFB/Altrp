@@ -15,6 +15,7 @@ class SelectController extends Component {
     value = value || '';
     this.state = {
       value,
+      show: true,
       options: this.props.options || [],
     };
     controllerDecorate(this);
@@ -44,6 +45,7 @@ class SelectController extends Component {
     if(this.state.show === false) {
       return '';
     }
+
     return <div className="controller-container controller-container_select">
       <div className="controller-container__label control-select__label">
         {this.props.label}

@@ -12,7 +12,10 @@ class TextareaController extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {value};
+    this.state = {
+      value,
+      show: true
+    };
     controllerDecorate(this);
   }
   changeValue(e){
@@ -25,7 +28,7 @@ class TextareaController extends Component {
 
     if(this.state.show === false) {
       return '';
-    } else {
+    }
       return <div className="controller-container controller-container_textarea">
         <div className="controller-container__label">
           {this.props.label}
@@ -36,7 +39,6 @@ class TextareaController extends Component {
         </div>
         <textarea className="controller-container__textarea" onChange={this.changeValue} value={this.state.value}/>
       </div>
-    }
   }
 }
 

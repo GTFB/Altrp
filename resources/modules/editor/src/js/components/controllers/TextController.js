@@ -45,7 +45,6 @@ class TextController extends Component {
       </div>
     </div>
 
-
   }
 }
 

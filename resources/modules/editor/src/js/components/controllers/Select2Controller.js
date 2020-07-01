@@ -15,7 +15,8 @@ class Select2Controller extends Component {
     }
     value = value || '';
     this.state = {
-      value
+      value,
+      show: true
     };
     controllerDecorate(this);
   };
@@ -89,6 +90,7 @@ class Select2Controller extends Component {
     if(this.state.show === false) {
       return '';
     }
+
     let value = {};
     this.props.options.forEach(option=>{
       if(option.value === this.state.value){

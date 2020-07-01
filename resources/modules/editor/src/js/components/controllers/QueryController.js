@@ -19,6 +19,7 @@ class QueryController extends Component {
     value = value || {};
     this.state = {
       value,
+      show: true,
       modelsList: [],
       orderingFieldsOptions: [],
       paginationTypeOption: [
@@ -109,6 +110,7 @@ class QueryController extends Component {
     if(this.state.show === false) {
       return '';
     }
+
     return <div className="controller-container controller-container_query">
       <div className="controller-field-group">
         <div className="controller-container__label">

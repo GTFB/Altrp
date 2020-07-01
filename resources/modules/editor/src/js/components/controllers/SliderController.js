@@ -17,6 +17,7 @@ class SliderController extends Component {
     value = value || {};
     this.state = {
       value,
+      show: true,
       units: this.props.units || ['px'],
       max: this.props.max || 100,
       min: this.props.min || 0,
@@ -55,7 +56,7 @@ class SliderController extends Component {
   render() {
     if(this.state.show === false) {
       return '';
-    } else {
+    }
       return <div className="controller-container controller-container_slider">
         <div className="control-slider-header">
           <div className="control-slider-label">
@@ -96,7 +97,6 @@ class SliderController extends Component {
           </div>
         </div>
       </div>
-    }
   }
 }
 

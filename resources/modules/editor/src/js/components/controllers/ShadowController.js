@@ -25,6 +25,7 @@ class ShadowController extends Component {
     value = value || false;
     this.state = {
       value,
+      show: true,
       //color
       active: false,
       //blur
@@ -137,7 +138,7 @@ class ShadowController extends Component {
 
     if(this.state.show === false) {
       return '';
-    } else {
+    }
       return <div className="controller-container controller-container_shadow">
         <div className="controller-container__label control-shadow-label">
           {this.props.label}
@@ -236,7 +237,6 @@ class ShadowController extends Component {
           </div>
         </div>
       </div>
-    }
   }
 }
 
