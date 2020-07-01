@@ -17,7 +17,10 @@ class ChooseController extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {value};
+    this.state = {
+      value,
+      show: true
+    };
     controllerDecorate(this);
   };
   change (e) {
@@ -37,7 +40,7 @@ class ChooseController extends Component {
   render() {
     if(this.state.show === false) {
       return '';
-    } else {
+    }
       return <div className="controller-container controller-container_choose">
         <div className="controller-container__label">
           {this.props.label}
@@ -52,7 +55,6 @@ class ChooseController extends Component {
                            data-change={option.value} onClick={this.change}>
                   <Icon fill="#8E94AA"/>
                 </div>
-              }
             )
           }
         </div>

@@ -12,7 +12,9 @@ const WysiwygController = ({
 }) => {
   const value = currentElement.getSettings(controlId);
   const [content, setContent] = useState(value);
-
+  this.state = {
+    show: true
+  }
   // Изменяем контент в предпросмотре
   useEffect(() => {
     controller.changeValue(content);
@@ -25,7 +27,7 @@ const WysiwygController = ({
 
   if(this.state.show === false) {
     return '';
-  } else {
+  }
     return (
       <div className="controller-container controller-container_wysiwyg">
         <div className="controller-container__label">{label}</div>
@@ -38,7 +40,6 @@ const WysiwygController = ({
         </Suspense>
       </div>
     );
-  }
 };
 
 function mapStateToProps(state) {

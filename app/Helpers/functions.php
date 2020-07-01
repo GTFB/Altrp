@@ -312,3 +312,7 @@ function get_altrp_setting( $setting_name, $default = '' )
   return $settings_service->get_setting_value( $setting_name, $default );
 
 }
+
+function get_logo_url(){
+  return json_decode( env( 'ALTRP_SETTING_ADMIN_LOGO' ), true )['url'];
+}

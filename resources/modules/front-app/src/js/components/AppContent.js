@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import {connect} from "react-redux";
 import RouteContent from "./RouteContent";
-// import Styles from "./Styles";
 import Styles from "../../../../editor/src/js/components/Styles";
 
 class AppContent extends Component {
@@ -15,8 +14,8 @@ class AppContent extends Component {
     return <div className="front-app-content">
       <Router>
         <Switch>
-          {this.props.routes.map(route=><Route key={'appRoute_' + route.id} path={route.path}>
-            <RouteContent areas={route.areas}/>
+          {this.props.routes.map(route=><Route key={route.id} path={route.path} exact>
+            <RouteContent {...route}/>
           </Route>)}
         </Switch>
       </Router>

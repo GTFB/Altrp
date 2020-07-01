@@ -16,14 +16,32 @@ class DimensionsController extends Component {
     if(value === null && this.props.default){
       value = this.props.default ;
     }
+    const fillBind = null;
+    const stylesBind = {
+      transition: "0s",
+      backgroundColor: "#8E94AA",
+      borderColor: "#8E94AA",
+    };
+    const bind = value ? (value.bind || true) : true;
+    if(bind == false) {
+      this.fillBind = "#8E94AA";
+      this.stylesBind = {
+        backgroundColor: "none"
+      };
+    }
     value = value || {};
     let units = this.props.units || ['px'];
     value.unit = value.unit || units[0];
     this.state = {
       value,
+<<<<<<< HEAD
+      show: true,
       fill: "#FFF",
+=======
+      fill: this.fillBind || "#FFF", 
+>>>>>>> 894bf212959582c894c3bb7b3822278eea1c87f8
       active: true,
-      styles: {
+      styles: this.stylesBind || {
         transition: "0s",
         backgroundColor: "#8E94AA",
         borderColor: "#8E94AA",
@@ -126,6 +144,14 @@ class DimensionsController extends Component {
         }
       })
     };
+    this._changeValue({
+      bind: !this.state.value.bind,
+      right: this.state.value.right,
+      bottom: this.state.value.bottom,
+      top: this.state.value.top,
+      left: this.state.value.left,
+      unit: this.state.value.unit
+    })
   }
 
   getDefaultValue(){
@@ -142,7 +168,7 @@ class DimensionsController extends Component {
 
     if(this.state.show === false) {
       return '';
-    } else {
+    }
       return <div className="controller-container controller-container_dimensions">
         <div className="control-dimensions-header">
           <div className="controller-dimensions__label">{this.props.label}</div>
@@ -203,7 +229,6 @@ class DimensionsController extends Component {
           </div>
         </div>
       </div>
-    }
   }
 }
 

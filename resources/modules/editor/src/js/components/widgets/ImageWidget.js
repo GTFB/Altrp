@@ -17,13 +17,13 @@ class ImageWidget extends Component {
     let contentMedia = {...this.state.settings.content_media};
     contentMedia.url = contentMedia.url || '/img/nullImage.png';
     contentMedia.name = contentMedia.name || 'null';
-    contentMedia.assetType = contentMedia.assetType || 'image';
-    return <div>
-    {  renderAsset( contentMedia, {
-      className: this.state.settings.position_css_classes || "altrp-image",
-      id: this.state.settings.position_css_id || "", 
-    })
-    }
+    contentMedia.assetType = contentMedia.assetType || undefined;
+    return <div className="altrp-image-container">
+      {  renderAsset( contentMedia, {
+        className: this.state.settings.position_css_classes || "altrp-image",
+        id: this.state.settings.position_css_id || "", 
+      })
+      }
     </div>
   }
 }

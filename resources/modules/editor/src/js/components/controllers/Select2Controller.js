@@ -14,7 +14,14 @@ class Select2Controller extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {value};
+    this.state = {
+<<<<<<< HEAD
+      value,
+      show: true
+=======
+      value
+>>>>>>> 894bf212959582c894c3bb7b3822278eea1c87f8
+    };
     controllerDecorate(this);
   };
 
@@ -22,10 +29,12 @@ class Select2Controller extends Component {
     return '';
   }
 
-  change(value){
-    this._changeValue(
-      value
-    )
+  change(value, action){
+    if(action.action === 'select-option'){
+      this._changeValue(
+          value.value
+      );
+    }
   };
 
   render() {
@@ -84,7 +93,8 @@ class Select2Controller extends Component {
 
     if(this.state.show === false) {
       return '';
-    } else {
+    }
+<<<<<<< HEAD
       return <div className="controller-container controller-container_select2">
         <div className="control-select2-header">
           <div className="control-select2__label">{this.props.label}</div>
@@ -102,7 +112,32 @@ class Select2Controller extends Component {
           />
         </div>
       </div>
-    }
+=======
+    let value = {};
+    this.props.options.forEach(option=>{
+      if(option.value === this.state.value){
+        value = {...option};
+      }
+    });
+    return <div className="controller-container controller-container_select2">
+      <div className="control-select2-header">
+        <div className="control-select2__label">{this.props.label}</div>
+        <DesktopIcon className="controller-container__label-svg" width="12"/>
+      </div>
+      <div className="control-container_select2-wrapper">
+        <Select
+          onChange={this.change}
+          value={value}
+          onInputChange={this.change}
+          options={this.props.options}
+          styles={customStyles}
+          placeholder={this.props.placeholder}
+          noOptionsMessage={() => "no found"}
+        />
+      </div>
+    </div>
+
+>>>>>>> 894bf212959582c894c3bb7b3822278eea1c87f8
   }
 }
 

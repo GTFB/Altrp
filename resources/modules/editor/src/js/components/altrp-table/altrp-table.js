@@ -11,8 +11,11 @@ import '../../../sass/altrp-pagination.scss';
  * @constructor
  */
 const AltrpTable = ({settings, query}) => {
-  if (!settings.tables_columns) {
-    return <div children="Please add Column"/>
+  if (! (settings.tables_columns && settings.tables_columns.length)) {
+    return <div children="Please Add Column"/>
+  }
+  if(! query.modelName){
+    return <div children="Please Choose Model"/>
   }
   let _data =[], _status, _error, _latestData;
   const [page, setPage] = useState(1);

@@ -14,6 +14,7 @@ class ButtonController extends Component {
     value = value || false;
     this.state = {
       value,
+      show: true
     };
     controllerDecorate(this);
   }
@@ -36,7 +37,7 @@ class ButtonController extends Component {
   render(){
     if(this.state.show === false) {
       return '';
-    } else {
+    }
       let buttons = this.props.buttons || [];
       return <div className="controller-container controller-container_button">
         <div className="control-group control-button-container" id="buttonList">
@@ -46,7 +47,6 @@ class ButtonController extends Component {
           }
         </div>
       </div>
-    }
   }
 }
 

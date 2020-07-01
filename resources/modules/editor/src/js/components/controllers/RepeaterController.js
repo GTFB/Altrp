@@ -24,6 +24,7 @@ class RepeaterController extends Component {
     });
     this.state = {
       items,
+      show: true,
       activeItem: 0,
     };
     this.addItem = this.addItem.bind(this);
@@ -88,7 +89,7 @@ class RepeaterController extends Component {
   render() {
     if(this.state.show === false) {
       return '';
-    } else {
+    }
       return <div className='controller-container controller-container_repeater repeater'>
         <div className="control-header">
           <div className="controller-container__label">{this.props.label}</div>
@@ -138,7 +139,6 @@ class RepeaterController extends Component {
           </button>
         </div>
       </div>
-    }
   }
 }
 

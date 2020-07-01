@@ -8,9 +8,11 @@ import {
   CONTROLLER_SELECT2,
   CONTROLLER_SELECT,
   CONTROLLER_TEXT,
+  CONTROLLER_LINK,
   CONTROLLER_TYPOGRAPHIC,
   CONTROLLER_SLIDER,
   CONTROLLER_COLOR,
+  CONTROLLER_SHADOW,
   TAB_CONTENT,
   TAB_STYLE,
   TAB_ADVANCED
@@ -48,6 +50,57 @@ class Button extends BaseElement{
 
     this.endControlSection();
 
+    this.startControlSection("link", {
+      tab: TAB_CONTENT,
+      label: "Link"
+    });
+
+    this.addControl('link_link', {
+      type: CONTROLLER_LINK,
+      default: {
+        url: "",
+        attributes: "",
+        noFollow: false
+      },
+      label: 'Link',
+    });
+
+    this.endControlSection();
+    this.startControlSection("form_section", {
+      tab: TAB_CONTENT,
+      label: "Form Settings"
+    });
+
+    this.addControl('form_id', {
+      label: 'Form ID',
+      placeholder: 'Form ID'
+    });
+
+    this.addControl('form_actions', {
+      type: CONTROLLER_SELECT2,
+      label: 'Form Actions',
+      options: [
+        {
+          value: 'add_new',
+          label: 'Add New',
+        },
+      ],
+    });
+
+    this.addControl('choose_model', {
+      conditions: {
+        'form_actions': 'add_new',
+      },
+      type: CONTROLLER_SELECT,
+      resource: '/admin/ajax/models_options',
+    });
+
+    this.addControl('redirect_after', {
+      label: 'Redirect After',
+    });
+
+    this.endControlSection();
+
     this.startControlSection('position_section', {
       tab: TAB_STYLE,
       label: 'Position',
@@ -61,7 +114,8 @@ class Button extends BaseElement{
         right: 10,
         bottom: 10,
         left: 10,
-        unit:'px'
+        unit:'px',
+        bind: true
       },
       units:[
         'px',
@@ -86,7 +140,8 @@ class Button extends BaseElement{
         right: 25,
         bottom: 20,
         left: 25,
-        unit:'px'
+        unit:'px',
+        bind: true
       },
       units:[
         'px',
@@ -142,131 +197,6 @@ class Button extends BaseElement{
           family: '"lato"',
           decoration: ""
         },
-        familyOptions: [
-              {
-                value: '1',
-                label:'Select sd  Content 1'
-              },
-              {
-                value: '2',
-                label:'Select Content 2'
-              },
-            ],
-        weightOptions: [
-          {
-            value: '100',
-            label:'100'
-          },
-          {
-            value: '200',
-            label:'200'
-          },
-          {
-            value: '300',
-            label:'300'
-          },
-          {
-            value: '400',
-            label:'400'
-          },
-          {
-            value: '500',
-            label:'500'
-          },
-          {
-            value: '600',
-            label:'600'
-          },
-          {
-            value: '700',
-            label:'700'
-          },
-          {
-            value: '800',
-            label:'800'
-          },
-          {
-            value: '900',
-            label:'900'
-          },
-          {
-            value: 'bold',
-            label:'bold'
-          },
-          {
-            value: 'normal',
-            label:'normal'
-          },
-          {
-            value: 'bolder',
-            label:'bolder'
-          },
-          {
-            value: 'lighter',
-            label:'lighter'
-          },
-        ],
-        transformOptions: [
-          {
-            value: 'none',
-            label:'default',
-            key: 0
-          },
-          {
-            value: 'capitalize',
-            label:'capitalize',
-            key: 1
-          },
-          {
-            value: 'uppercase',
-            label:'uppercase',
-            key: 2
-          },
-          {
-            value: 'lowercase',
-            label:'lowercase',
-            key: 3
-          },
-        ],
-        styleOptions: [
-          {
-            value: 'normal',
-            label:'normal',
-            key: 0
-          },
-          {
-            value: 'italic',
-            label:'italic',
-            key: 1
-          },
-          {
-            value: 'oblique',
-            label:'oblique',
-            key: 2
-          },
-        ],
-        decorationOptions: [
-          {
-            value: 'none',
-            label:'none',
-            key: 0
-          },
-          {
-            value: 'underline',
-            label:'underline',
-            key: 1
-          },
-          {
-            value: 'overline',
-            label:'overline',
-            key: 3
-          },
-          {
-            value: 'line-through',
-            label:'line-through',
-            key: 4
-          },
-        ],
         rules: {
           '{{ELEMENT}} .altrp-btn': [
             'font-size: {{SIZE}}px;',
@@ -294,7 +224,7 @@ class Button extends BaseElement{
     }
   );
 
-    this.endControlSection();
+  this.endControlSection();
 
     this.startControlSection('border_section', {
       tab: TAB_STYLE,
@@ -346,6 +276,9 @@ class Button extends BaseElement{
       'border_width', {
         type: CONTROLLER_DIMENSIONS,
         label: 'Border Width',
+        default: {
+          bind: true
+        },
         units:[
           'px',
           '%',
@@ -409,7 +342,29 @@ class Button extends BaseElement{
     }
   );
 
-    this.endControlSection();
+  this.addControl('style_background_shadow', {
+        type: CONTROLLER_SHADOW,
+        label: 'Shadow',
+        default:{
+          blur: 0,
+          horizontal: 0,
+          vertical: 0,
+          opacity: 1,
+          colorRGB: 'rgb(0, 0, 0)',
+          color: 'rgb(0, 0, 0)',
+          colorPickedHex: '#000000',
+        },
+        presetColors: [
+          '#eaeaea',
+          '#9c18a8'
+        ],
+        rules: {
+          '{{ELEMENT}} .altrp-btn': 'box-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
+        },
+      }
+    );
+
+  this.endControlSection();
 
     this.startControlSection('button_advanced_tooltip', {
       tab: TAB_ADVANCED,
