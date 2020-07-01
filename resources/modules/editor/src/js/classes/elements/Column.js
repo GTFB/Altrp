@@ -193,7 +193,7 @@ class Column  extends BaseElement {
 
     this.startControlSection("column_style_background", {
       tab: TAB_STYLE,
-      label: "background"
+      label: "Background"
     });
 
     this.addControl("column_style_background_color", {

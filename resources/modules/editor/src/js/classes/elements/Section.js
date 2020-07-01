@@ -34,11 +34,11 @@ class Section extends BaseElement{
     this.addControl('layout_content_width_type', {
       type: CONTROLLER_SELECT,
       label: 'Content width',
-      default: 'Boxed',
+      default: 'boxed',
       options: [
         {
           value: 'boxed',
-          label: 'Boxed'
+          label: 'boxed'
         },
         {
           value: 'full',

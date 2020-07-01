@@ -298,7 +298,7 @@ class ElementWrapper extends Component {
         {React.createElement(this.props.component, {
           element: this.props.element,
           children: this.state.children,
-          wrapper: this
+          wrapper: this,
         })}
         {emptyColumn}
       </div>
