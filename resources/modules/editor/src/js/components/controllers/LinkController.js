@@ -79,21 +79,23 @@ class LinkController extends Component {
   }
 
   render(){
-    
-    return <div className="controller-container controller-container_link">
-      <div className="control-link-header">
-        <div className="controller-container__label">{this.props.label}</div>
-      </div>
-      <div className="control-link-input-wrapper">
-        <input onChange={this.changeInput} value={this.state.value.url || ''} type="text" className="control-link" placeholder="введите ссылку"></input>
-        <div className="control-link-settings control-link-button" onClick={this.settings}>
-        {/* тут есть проблема с размерами, просто нужно убрать width и height в самой svg но есть одна проблема*/}
-          <SettingsIcon width="12"/>
+    if(this.state.show === false) {
+      return '';
+    } else {
+      return <div className="controller-container controller-container_link">
+        <div className="control-link-header">
+          <div className="controller-container__label">{this.props.label}</div>
         </div>
-        <div className="control-link-dynamic control-link-button">
+        <div className="control-link-input-wrapper">
+          <input onChange={this.changeInput} value={this.state.value.url || ''} type="text" className="control-link" placeholder="введите ссылку"></input>
+          <div className="control-link-settings control-link-button" onClick={this.settings}>
+            {/* тут есть проблема с размерами, просто нужно убрать width и height в самой svg но есть одна проблема*/}
+            <SettingsIcon width="12"/>
+          </div>
+          <div className="control-link-dynamic control-link-button">
             <DynamicIcon width="12"/>
+          </div>
         </div>
-      </div>
         <div id="settings" className="settingBlock settingBlock-none">
           <div className="settings-checkbox-option" onClick={this.toggleSettingsNewPage}>
             <input id="toggleSettingsNewPageCheckbox" type="checkbox" className="settings-checkbox"/>
@@ -116,8 +118,9 @@ class LinkController extends Component {
                    className="settings-input-attribute"/>
             <a className="settings-attribute-description">Задайте пользовательские атрибуты для ссылки. Отделяйте ключи атрибута от значений с помощью символа | (труба). Разделите пары ключ-значение запятой.</a>
           </div>
+        </div>
       </div>
-    </div>
+    }
   }
 }
 

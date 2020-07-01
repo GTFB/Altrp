@@ -68,21 +68,26 @@ class MediaController extends Component {
     } else {
       Asset = AddIcon
     }
-    return <div className="controller-container controller-container_media">
-      <div className="controller-container__label">
-        {this.props.label}
-      </div>
-      <div className="controller-media-choose" onClick={this.openAssetsBrowser}>
-        {Asset ? <Asset {...assetsProps}/> : ''}
-        {
-          this.state.value.name ?
+
+    if(this.state.show === false) {
+      return '';
+    } else {
+      return <div className="controller-container controller-container_media">
+        <div className="controller-container__label">
+          {this.props.label}
+        </div>
+        <div className="controller-media-choose" onClick={this.openAssetsBrowser}>
+          {Asset ? <Asset {...assetsProps}/> : ''}
+          {
+            this.state.value.name ?
               <button className="controller-media-choose__button controller-media-choose__button_delete"
                       onClick={this.deleteAsset}>Delete</button> :
               <button className="controller-media-choose__button controller-media-choose__button_choose">Choose
                 Media</button>
-        }
+          }
+        </div>
       </div>
-    </div>
+    }
   }
 }
 

@@ -17,9 +17,13 @@ class HeadingController extends Component {
 
   render(){
 
-    return <div className="controller-container controller-container_heading">
+    if(this.state.show === false) {
+      return '';
+    } else {
+      return <div className="controller-container controller-container_heading">
         <h1 className="control-heading">{this.state.value.label}</h1>
-    </div>
+      </div>
+    }
   }
 }
 

@@ -13,7 +13,10 @@ class TextController extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {value};
+    this.state = {
+      value,
+      show: true
+    };
     controllerDecorate(this);
   }
   changeValue(e){
@@ -23,6 +26,9 @@ class TextController extends Component {
     return '';
   }
   render(){
+    if(this.state.show === false) {
+      return '';
+    }
 
     return <div className="controller-container controller-container_text">
       <div className="controller-container__label">
@@ -38,6 +44,8 @@ class TextController extends Component {
         </div>
       </div>
     </div>
+
+
   }
 }
 

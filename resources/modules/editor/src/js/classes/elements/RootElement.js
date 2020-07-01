@@ -49,6 +49,45 @@ class RootElement extends BaseElement {
       label: 'Text Section',
     });
 
+    this.addControl('test-text', {
+      label: 'Text',
+      show: true,
+    });
+
+    this.addControl('test-text-2', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Show',
+      show: true,
+      condition: {
+        'test-text-2': false
+      }
+    });
+
+    this.addControl('test-text-3', {
+      label: 'Text',
+      value: 'test',
+      show: true,
+      condition: {
+        'test-text-2': true
+      }
+    });
+
+    this.addControl('test-text-4', {
+      label: 'Text',
+      value: 'test',
+      show: false,
+      condition: {
+        'test-text-5': 'set'
+      }
+    });
+
+    this.addControl('test-text-5', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Show',
+      value: 'set',
+      show: false,
+    });
+
     let repeater = new Repeater();
 
     repeater.addControl( 'text', {

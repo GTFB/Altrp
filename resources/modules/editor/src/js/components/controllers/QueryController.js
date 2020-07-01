@@ -105,6 +105,10 @@ class QueryController extends Component {
   }
 
   render() {
+
+    if(this.state.show === false) {
+      return '';
+    }
     return <div className="controller-container controller-container_query">
       <div className="controller-field-group">
         <div className="controller-container__label">
@@ -132,23 +136,36 @@ class QueryController extends Component {
                  value={this.state.value.pageSize || 10}
                  onChange={this.changePageSize}/>
         </div>
-      </div>
-      <div className="controller-field-group">
-        <div className="controller-container__label">
-          Pagination Type
+        <div className="controller-field-group">
+          <div className="controller-container__label">
+            Page Size
+          </div>
+          <div className="control-container_select-wrapper">
+            <input className="control-field control-field_number"
+                   type="number"
+                   value={this.state.value.pageSize || 10}
+                   onChange={this.changePageSize}/>
+          </div>
         </div>
-        <div className="control-container_select-wrapper">
-          <select className="control-select control-field"
-                  value={this.state.value.paginationType || ''}
-                  onChange={this.changePaginationType}>
-            {this.state.paginationTypeOption.map(option => {
-              return <option value={option.name}
-                             key={option.name}>{option.title}</option>
-            })}
-          </select>
+        <div className="controller-field-group">
+          <div className="controller-container__label">
+            Pagination Type
+          </div>
+          <div className="control-container_select-wrapper">
+            <select className="control-select control-field"
+                    value={this.state.value.paginationType || ''}
+                    onChange={this.changePaginationType}>
+              {this.state.paginationTypeOption.map(option => {
+                return <option value={option.name}
+                               key={option.name}>{option.title}</option>
+              })}
+            </select>
+          </div>
         </div>
       </div>
     </div>
+
+
   }
 }
 

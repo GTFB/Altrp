@@ -23,19 +23,21 @@ class SettingSection extends Component {
       open: !this.state.open,
       active: e.currentTarget.dataset.key
     });
+  }
 
+
+  render() {
     let settingsControllers = document.getElementById('settingsControllers');
-
-    if(document.getElementById("settingsSection" + this.props.active).classList.contains('open') == false) {
+    if(document.getElementById("settingsSection" + this.props.active))
+    if(document.getElementById("settingsSection" + this.props.active).classList.contains('open') === false) {
       for(let count = 0; count < settingsControllers.children.length; count++) {
         document.getElementById("settingsSection" + count).classList.remove('open')
       }
       document.getElementById("settingsSection" + this.props.active).classList.add('open')
     } else {
       document.getElementById("settingsSection" + this.props.active).classList.remove('open');
-    };
-  };
-  render() {
+    }
+
     let controllers = this.props.controls || [];
     return <div className="settings-section" id={"settingsSection" + this.props.active}>
     <div className="settings-section">
@@ -50,9 +52,11 @@ class SettingSection extends Component {
       <div className="controllers-wrapper">
         {
           controllers.map((controller) => {
+              if(controller.show) {
                 let ControllerComponent = window.controllersManager.getController(controller.type);
                 return React.createElement(ControllerComponent, {...controller, key: controller.controlId, controller: new Controller(controller)});
               }
+            }
           )
         }
       </div>

@@ -40,6 +40,10 @@ class SelectController extends Component {
   }
 
   render() {
+
+    if(this.state.show === false) {
+      return '';
+    }
     return <div className="controller-container controller-container_select">
       <div className="controller-container__label control-select__label">
         {this.props.label}
