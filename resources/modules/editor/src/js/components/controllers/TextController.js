@@ -28,19 +28,24 @@ class TextController extends Component {
   render(){
     if(this.state.show === false) {
       return '';
-    } else {
-      return <div className="controller-container controller-container_text">
-        <div className="controller-container__label">
-          {this.props.label}
-        </div>
-        <div className="control-group">
-          <input className="control-field" onChange={this.changeValue} value={this.state.value}/>
-          <div className="control-group__append">
-            <DynamicIcon/>
-          </div>
+    }
+
+    return <div className="controller-container controller-container_text">
+      <div className="controller-container__label">
+        {this.props.label}
+      </div>
+      <div className="control-group">
+        <input className="control-field"
+               placeholder={this.props.placeholder || ''}
+               onChange={this.changeValue}
+               value={this.state.value}/>
+        <div className="control-group__append">
+          <DynamicIcon/>
         </div>
       </div>
-    }
+    </div>
+
+
   }
 }
 

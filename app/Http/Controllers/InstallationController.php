@@ -302,6 +302,7 @@ class InstallationController extends Controller
       $validatedData = $request->validate( $rules );
 
       $this->writeEnv( $request );
+
       $this->migrate( $request );
 
       return redirect( 'admin' );
@@ -385,9 +386,10 @@ class InstallationController extends Controller
     return $str;
   }
 
-  private function migrate( Request $request )
+  public function migrate( Request $request )
   {
     Artisan::call( 'config:clear');
+    sleep(2);
     Artisan::call( 'migrate', [ '--force' => true ] );
 
     $user = new User( [
@@ -403,7 +405,7 @@ class InstallationController extends Controller
     ] );
     $admin->save();
     $user->attachRole( $admin );
-    $request->session()->put('install_finish', true);
+    File::put(storage_path('installed'), '');
     Auth::loginUsingId( $user->id, true );
     Artisan::call( 'storage:link' );
 

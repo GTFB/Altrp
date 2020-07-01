@@ -50,6 +50,7 @@ class SliderController extends Component {
       ...this.state.value,
       size:e.target.value
     });
+    // console.log(e.target.value)
   }
   render() {
     if(this.state.show === false) {

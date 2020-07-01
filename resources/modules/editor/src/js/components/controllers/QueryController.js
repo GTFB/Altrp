@@ -39,9 +39,12 @@ class QueryController extends Component {
   }
 
   async componentDidMount() {
-    let modelsList = await new Resource({route: '/admin/ajax/models_list'}).getAll();
+    let modelsList = await new Resource({route: '/admin/ajax/models_list_for_query'}).getAll();
     let value = {...this.state.value};
+    console.log(modelsList[0].name);
+    console.log(modelsList);
     value.modelName = value.modelName || modelsList[0].name;
+    console.log(value);
     if(! this.props.currentElement.getSettings(this.props.controlId)){
       this._changeModelName(modelsList[0].name)
     }
@@ -102,26 +105,36 @@ class QueryController extends Component {
   }
 
   render() {
-    console.log(this.state.value);
 
     if(this.state.show === false) {
       return '';
-    } else {
-      return <div className="controller-container controller-container_query">
-        <div className="controller-field-group">
-          <div className="controller-container__label">
-            Source
-          </div>
-          <div className="control-container_select-wrapper">
-            <select className="control-select control-field"
-                    value={this.state.value.modelName || ''}
-                    onChange={this.changeModelName}>
-              {this.state.modelsList.map(option => {
-                return <option value={option.name}
-                               key={option.name}>{option.title}</option>
-              })}
-            </select>
-          </div>
+    }
+    return <div className="controller-container controller-container_query">
+      <div className="controller-field-group">
+        <div className="controller-container__label">
+          Source
+        </div>
+        <div className="control-container_select-wrapper">
+          <select className="control-select control-field"
+                  value={this.state.value.modelName || ''}
+                  onChange={this.changeModelName}>
+            <option value=""/>
+            {this.state.modelsList.map(option => {
+              return <option value={option.name}
+                             key={option.name}>{option.title}</option>
+            })}
+          </select>
+        </div>
+      </div>
+      <div className="controller-field-group">
+        <div className="controller-container__label">
+          Page Size
+        </div>
+        <div className="control-container_select-wrapper">
+          <input className="control-field control-field_number"
+                 type="number"
+                 value={this.state.value.pageSize || 10}
+                 onChange={this.changePageSize}/>
         </div>
         <div className="controller-field-group">
           <div className="controller-container__label">
@@ -150,7 +163,9 @@ class QueryController extends Component {
           </div>
         </div>
       </div>
-    }
+    </div>
+
+
   }
 }
 

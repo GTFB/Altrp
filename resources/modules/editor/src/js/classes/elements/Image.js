@@ -8,6 +8,7 @@ import {
   CONTROLLER_SLIDER,  
   CONTROLLER_TEXT,
   CONTROLLER_SELECT,
+  CONTROLLER_FILTERS,
   CONTROLLER_COLOR,
   TAB_CONTENT,
   TAB_STYLE,
@@ -41,7 +42,6 @@ class Image extends BaseElement{
     this.addControl('content_media', {
       type: CONTROLLER_MEDIA,
       label: 'Choose image',
-      default: null
     });
 
     this.endControlSection();
@@ -162,23 +162,11 @@ class Image extends BaseElement{
         options:[
           {
             'value' : 'cover',
-            'label' : 'default',
-          },
-          {
-            'value' : 'none',
-            'label' : 'none',
+            'label' : 'cover',
           },
           {
             'value' : 'contain',
             'label' : 'contain',
-          },
-          {
-            'value' : 'fill',
-            'label' : 'fill',
-          },
-          {
-            'value' : 'scale-down',
-            'label' : 'scale-down',
           }
         ],
         rules: {
@@ -193,23 +181,23 @@ class Image extends BaseElement{
 
         options:[
           {
-            'value' : 'default',
+            'value' : '100',
             'label' : 'default',
           },
           {
-            'value' : '3:4',
+            'value' : '-75',
             'label' : '3:4',
           },
           {
-            'value' : '16:9',
+            'value' : '56.25',
             'label' : '16:9',
           },
           {
-            'value' : '9:16',
+            'value' : '-56.25',
             'label' : '9:16',
           },
           {
-            'value' : '4:3',
+            'value' : '75',
             'label' : '4:3',
           }
         ],
@@ -221,12 +209,42 @@ class Image extends BaseElement{
     this.addControl('height_size', {
       type: CONTROLLER_NUMBER,
       label: 'Height',
+      default: "100",
+      rules: {
+        '{{ELEMENT}} img': 'height: {{VALUE}}%;',
+      },
     });
 
     this.addControl('width_size', {
       type: CONTROLLER_NUMBER,
       label: 'Width',
+      default: "100",
+      rules: {
+        '{{ELEMENT}} img': 'width: {{VALUE}}%;',
+      },
     });
+
+    this.endControlSection();
+
+    this.startControlSection('image_style_section', {
+      tab: TAB_STYLE,
+      label: 'image'
+    });
+
+    this.addControl('heading_style_text_shadow', {
+        type: CONTROLLER_FILTERS,
+        label: 'filters',
+        rules: {
+          '{{ELEMENT}} img': [
+            'filter: blur({{BLUR}}px);',
+            'filter: brightness({{BRIGHTNESS}}%);',
+            'filter: contrast({{CONTRAST}}%);',
+            'filter: saturate({{SATURATION}}%);',
+            'filter: hue-rotate({{HUE}}deg);;'
+        ],
+        },
+      }
+    );
 
     this.endControlSection();
 

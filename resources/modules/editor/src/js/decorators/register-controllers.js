@@ -5,6 +5,7 @@ import {
   CONTROLLER_SELECT,
   CONTROLLER_SLIDER,
   CONTROLLER_SHADOW,
+  CONTROLLER_CHOOSE,
   CONTROLLER_CSSEDITOR,
   TAB_ADVANCED
 } from "../classes/modules/ControllersManager";
@@ -13,235 +14,6 @@ import {
  * @param {BaseElement} element
  * */
 export function advancedTabControllers(element) {
-  element.startControlSection(
-    'advanced_section', {
-        tab: TAB_ADVANCED,
-        label: 'Advanced',
-      }
-  );
-
-  element.addControl(
-      'element_margin', {
-        type: CONTROLLER_DIMENSIONS,
-        label: 'Margin',
-        units:[
-          'px',
-          '%',
-          'vh',
-        ],
-        rules: {
-          '{{ELEMENT}}': 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-        },
-      }
-  );
-
-  element.addControl(
-    'element_padding', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Padding',
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};',
-        ]
-      },
-    }
-  );
-
-  element.endControlSection();
-
-  element.startControlSection(
-      'advanced_border', {
-        tab: TAB_ADVANCED,
-        label: 'Border',
-      }
-  );
-
-  element.addControl(
-    'element_border_type', {
-      type: CONTROLLER_SELECT,
-      label: 'Border Type',
-      options:[
-        {
-          'value' : 'none',
-          'label' : 'None',
-        },
-        {
-          'value' : 'solid',
-          'label' : 'Solid',
-        },
-        {
-          'value' : 'double',
-          'label' : 'Double',
-        },
-        {
-          'value' : 'dotted',
-          'label' : 'Dotted',
-        },
-        {
-          'value' : 'dashed',
-          'label' : 'Dashed',
-        },
-        {
-          'value' : 'groove',
-          'label' : 'Groove',
-        },
-      ],
-      rules: {
-        '{{ELEMENT}}': 'border-style: {{VALUE}};',
-      },
-    }
-  );
-
-  element.addControl(
-    'element_border_width', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Border Width',
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-      },
-    }
-  );
-
-  element.addControl(
-    'element_border_color', {
-      type: CONTROLLER_COLOR,
-      label: 'Border Color',
-      default: {
-        color: "rgb(234, 234, 234)",
-        colorPickedHex: "#EAEAEA",
-      },
-      rules: {
-        '{{ELEMENT}}': 'border-color: {{COLOR}};',
-      },
-    }
-  );
-  
-  element.addControl(
-    'element_border_shadow', {
-      type: CONTROLLER_SHADOW,
-      label: 'box shadow',
-      default:{
-        blur: 0,
-        horizontal: 0,
-        vertical: 0,
-        opacity: 1,
-        colorRGB: 'rgb(0, 0, 0)',
-        color: 'rgb(0, 0, 0)',
-        colorPickedHex: '#000000',
-      },
-      presetColors: [
-        '#eaeaea',
-        '#9c18a8'
-      ],
-      rules: {
-        '{{ELEMENT}}': 'box-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
-      },
-    }
-  );
-
-  element.addControl(
-    'element_border_outline_style', {
-      type: CONTROLLER_SELECT,
-      label: 'type',
-      options:[
-        {
-          'value' : 'none',
-          'label' : 'default',
-        },
-        {
-          'value' : 'dotted',
-          'label' : 'dotted'
-        },
-        {
-          'value' : 'dashed',
-          'label' : 'dashed'
-        },
-        {
-          'value' : 'solid',
-          'label' : 'solid'
-        },
-        {
-          'value' : 'double',
-          'label' : 'double'
-        },
-        {
-          'value' : 'groove',
-          'label' : 'groove',
-        },
-        {
-          'value' : 'ridge',
-          'label' : 'ridge'
-        },
-        {
-          'value' : 'inset',
-          'label' : 'inset'
-        },
-        {
-          'value' : 'outset',
-          'label' : 'outset'
-        },
-        {
-          'value' : 'inherit',
-          'label' : 'inherit'
-        },
-        
-      ],
-      rules: {
-        '{{ELEMENT}}': 'outline-style: {{VALUE}};',
-      },
-    }
-  );
-  
-  element.addControl(
-    'element_border_outline_color', {
-      type: CONTROLLER_COLOR,
-      label: 'outline color',
-      default: {
-        color: "rgb(0,238,255)",
-        colorPickedHex: "#0EF",
-      },
-      rules: {
-        '{{ELEMENT}}': 'outline-color: {{COLOR}};',
-      },
-    }
-  );
-
-  element.addControl(
-    'element_sizes_outline_width', {
-      type: CONTROLLER_SLIDER,
-      label: 'outline width',
-      default:{
-        size: 0,
-        unit:'px'
-      },
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-      max: 100,
-      min: 0,
-      rules: {
-        '{{ELEMENT}}': 'outline-width: {{SIZE}}{{UNIT}};',
-      },
-    }
-  );
-
-  element.endControlSection();
-  
   element.startControlSection(
     'element_position', {
       tab: TAB_ADVANCED,
@@ -285,6 +57,10 @@ export function advancedTabControllers(element) {
     'element_position_top_bottom_right_left', {
       type: CONTROLLER_DIMENSIONS,
       label: 'position',
+      default: {
+        bind: true,
+        unit:'px'
+      },
       units:[
         'px',
         '%',
@@ -350,201 +126,178 @@ export function advancedTabControllers(element) {
         '{{ELEMENT}}': 'height: {{SIZE}}{{UNIT}};',
       },
     }
-  )
+  );
 
   element.endControlSection();
 
   element.startControlSection(
-    'element_display', {
+    'element_positioning', {
       tab: TAB_ADVANCED,
-      label: 'Display',
+      label: 'Positioning',
     }
   );
 
-  element.addControl(
-    'element_display_type', {
-      type: CONTROLLER_SELECT,
-      label: 'type',
-      options:[
-        {
-          'value' : 'block',
-          'label' : 'default',
-        },
-        {
-          'value' : 'inline-block',
-          'label' : 'inline block'
-        },
-        {
-          'value' : 'flex',
-          'label' : 'flex'
-        },
-        {
-          'value' : 'inline-flex',
-          'label' : 'inline flex'
-        }
+  element.addControl('positioning_width_type', {
+    type: CONTROLLER_SELECT,
+    label: 'Width',
+    default: 'default',
+    options: [
+      {
+        value: 'default',
+        label: 'default'
+      },
+      {
+        value: 'full',
+        label: 'full width(100%)'
+      },
+      {
+        value: 'inline',
+        label: 'inline(auto)'
+      },
+      {
+        value: 'custom',
+        label: 'custom'
+      }
+    ]
+  });
+
+  element.addControl('positioning_custom_width', {
+      type: CONTROLLER_SLIDER,
+      label: 'Custom width',
+      default:{
+        size: "100%",
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
       ],
+      max: 1000,
+      min: 0,
       rules: {
-        '{{ELEMENT}}': 'display: {{VALUE}};',
+        '{{ELEMENT}}': 'width: {{SIZE}}{{UNIT}};',
       },
     }
   );
 
-  element.addControl(
-    'element_display_flex_direction', {
-      type: CONTROLLER_SELECT,
-      label: 'flex direction',
-      options:[
-        {
-          'value' : 'row',
-          'label' : 'row',
-        },
-        {
-          'value' : 'row-reverse',
-          'label' : 'row reverse'
-        },
-        {
-          'value' : 'column',
-          'label' : 'column'
-        },
-        {
-          'value' : 'column-reverse',
-          'label' : 'column reverse'
-        }
+  element.addControl('positioning_vertical_align', {
+    type: CONTROLLER_CHOOSE,
+    label: 'Vertical Align',
+    default: 'flex-start',
+    options:[
+      {
+        icon: 'left',
+        value: 'flex-start',
+      },
+      {
+        icon: 'center',
+        value: 'center',
+      },
+      {
+        icon: 'right',
+        value: 'flex-end',
+      },
+    ],
+    rules: {
+          '{{ELEMENT}}': 'align-self: {{VALUE}};',
+    },
+  });
+
+  element.addControl('positioning_position_type', {
+    type: CONTROLLER_SELECT,
+    label: 'Position',
+    default: 'default',
+    options: [
+      {
+        value: 'static',
+        label: 'default'
+      },
+      {
+        value: 'absolute',
+        label: 'absolute'
+      },
+      {
+        value: 'fixed',
+        label: 'fixed'
+      }
+    ],
+    rules: {
+          '{{ELEMENT}}': 'position: {{VALUE}};',
+    },
+  });
+
+  element.addControl('positioning_horizontal_orientation', {
+    type: CONTROLLER_CHOOSE,
+    label: 'Horizontal Align',
+    default: 'flex-start',
+    options:[
+      {
+        icon: 'left',
+        value: 'left',
+      },
+      {
+        icon: 'right',
+        value: 'right',
+      }
+    ],
+  });
+  
+  element.addControl('positioning_horizontal_offset', {
+      type: CONTROLLER_SLIDER,
+      label: 'offset',
+      default:{
+        size: "0",
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
       ],
+      max: 1000,
+      min: -1000,
       rules: {
-        '{{ELEMENT}}': 'flex-direction: {{VALUE}};',
+        '{{ELEMENT}}': 'left: {{SIZE}}{{UNIT}};',
       },
     }
   );
-
-  element.addControl(
-    'element_display_flex_wrap', {
-      type: CONTROLLER_SELECT,
-      label: 'wrap',
-      options:[
-        {
-          'value' : 'nowrap',
-          'label' : 'nowrap',
-        },
-        {
-          'value' : 'wrap',
-          'label' : 'wrap'
-        },
-        {
-          'value' : 'wrap-reverse',
-          'label' : 'wrap reverse'
-        },
-        {
-          'value' : 'column-reverse',
-          'label' : 'column reverse'
-        }
+  
+  element.addControl('positioning_vertical_orientation', {
+    type: CONTROLLER_CHOOSE,
+    label: 'Vertical align',
+    default: 'flex-start',
+    options:[
+      {
+        icon: 'left',
+        value: 'left',
+      },
+      {
+        icon: 'right',
+        value: 'right',
+      }
+    ],
+  });
+  
+  element.addControl('positioning_vertical_offset', {
+      type: CONTROLLER_SLIDER,
+      label: 'offset',
+      default:{
+        size: "0",
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
       ],
+      max: 1000,
+      min: -1000,
       rules: {
-        '{{ELEMENT}}': 'flex-direction: {{VALUE}};',
+        '{{ELEMENT}}': 'bottom: {{SIZE}}{{UNIT}};',
       },
     }
   );
-
-  element.addControl(
-    'element_display_flex_justify_content', {
-      type: CONTROLLER_SELECT,
-      label: 'justify content',
-      options:[
-        {
-          'value' : 'flex-start',
-          'label' : 'flex start',
-        },
-        {
-          'value' : 'flex-end',
-          'label' : 'flex-end'
-        },
-        {
-          'value' : 'center',
-          'label' : 'center'
-        },
-        {
-          'value' : 'space-between',
-          'label' : 'space between'
-        },
-        {
-          'value' : 'space-around',
-          'label' : 'space around'
-        }
-      ],
-      rules: {
-        '{{ELEMENT}}': 'justify-content: {{VALUE}};',
-      },
-    }
-  );
-
-  element.addControl(
-    'element_display_flex_align_items', {
-      type: CONTROLLER_SELECT,
-      label: 'align items',
-      options:[
-        {
-          'value' : 'flex-start',
-          'label' : 'flex start',
-        },
-        {
-          'value' : 'flex-end',
-          'label' : 'flex-end'
-        },
-        {
-          'value' : 'center',
-          'label' : 'center'
-        },
-        {
-          'value' : 'baseline',
-          'label' : 'baseline'
-        },
-        {
-          'value' : 'stretch',
-          'label' : 'stretch'
-        }
-      ],
-      rules: {
-        '{{ELEMENT}}': 'align-items: {{VALUE}};',
-      },
-    }
-  );
-
-  element.addControl(
-    'element_display_flex_align_content', {
-      type: CONTROLLER_SELECT,
-      label: 'align content',
-      options:[
-        {
-          'value' : 'flex-start',
-          'label' : 'flex start',
-        },
-        {
-          'value' : 'flex-end',
-          'label' : 'flex-end'
-        },
-        {
-          'value' : 'center',
-          'label' : 'center'
-        },
-        {
-          'value' : 'space-between',
-          'label' : 'space between'
-        },
-        {
-          'value' : 'space-around',
-          'label' : 'space around'
-        },
-        {
-          'value' : 'stretch',
-          'label' : 'stretch'
-        }
-      ],
-      rules: {
-        '{{ELEMENT}}': 'align-content: {{VALUE}};',
-      },
-    }
-  );
-
   element.endControlSection();
 
   element.startControlSection(

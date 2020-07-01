@@ -196,6 +196,7 @@ class BaseElement extends ControlStack{
     );
     getTemplateDataStorage().setCurrentElement(newElement);
     getEditor().showSettingsPanel();
+    this.update();
   }
 
   deleteAllIds(){
@@ -392,15 +393,6 @@ class BaseElement extends ControlStack{
       this.settings.styles[breakpoint][settingName][finalSelector] = rule.properties;
     });
     this.updateStyles();
-  }
-
-  updateStyles(){
-    window.stylesModulePromise.then(stylesModule => {
-      /**
-       * @member {Styles} stylesModule
-       * */
-      stylesModule.addElementStyles(this.getId(), this.getStringifyStyles());
-    });
   }
 
   getStringifyStyles(){

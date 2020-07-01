@@ -4,12 +4,13 @@
 import Area from "./Area";
 
 class Route {
-  constructor(id, path){
-    this.id = id;
-    this.path = path;
+  constructor(data){
+    this.id = data.id ;
+    this.path = data.path;
+    this.title = data.title || '';
   }
   static routeFabric(data){
-    let route = new Route(data.id, data.path);
+    let route = new Route(data);
     route.areas = [];
     for (let _area of data.areas){
       route.areas.push(Area.areaFabric(_area))

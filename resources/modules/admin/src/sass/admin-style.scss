@@ -12,15 +12,17 @@
 @import "components/users-tools";
 @import "components/admin-logo";
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap');
+@import "components/admin-users";
+
 
 .admin {
-
   display: flex;
   height: 100vh;
+  padding-left: 271px;
   &__logo{
     width: 120px;
     height: 44px;
-    padding: 0 10px;
+    padding-left: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -30,7 +32,10 @@
     }
   }
   &-nav {
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
     //overflow: hidden;
     overflow-x: hidden;
     overflow-y: auto;
@@ -43,28 +48,32 @@
       justify-content: space-between;
       align-items: center;
       width: 271px;
-      padding-right: 20px;
+      padding-right: 5px;
+      .nav-logo {
+        background-color: #2A2D36;
+      }
     }
     &-list {
-        margin-top: 10px;
-      &__link{
+      margin-top: 10px;
+      &__link {
         display: flex;
-        padding: 10px 20px;
+        padding: 6px;
         color: #fff;
         font-size: 17px;
         font-weight: 500;
-        &:hover{
+        &:hover {
           color: $green;
-          & path{
+          & path {
             fill: $green;
           }
         }
-        & svg{
+        & svg {
           position: relative;
-          top: 3px;
+          top: 1px;
+          margin: 3px 16px 0 7px;
         }
       }
-      &_pages{
+      &_pages {
         position: absolute;
         top: 44px;
         left: 0;
@@ -74,6 +83,7 @@
         transform: translate(100%, 0);
         transition-duration: .3s;
       }
+
     }
   }
   &-content {
@@ -94,7 +104,18 @@
       transform: translate(0, 0);
     }
   }
+  &__version{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 5px;
+    text-align: center;
+    font-size: 13px;
+    color: #fff;
+  }
 }
+
 .icon {
     width: 16px;
     height: 16px;

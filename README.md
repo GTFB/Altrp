@@ -4,6 +4,21 @@
 ## Changelog
 
 
+### 0.4.0
++ Add "Add New" Form Action to Button Widget
++ Adding Users Via Admin Interface 
+
+### 0.3.2
++ Add Logo on Login Page  
+* Change Title on Frontend when Navigate
+* Fix Frontend Routing 
+
+### 0.3.1
+* Fix Update Issues 
+
+### 0.3.0
++ Model Constructor 
++ Models Query for Table Widget 
 
 ### 0.2.3
 + Add Change Logo in Admin

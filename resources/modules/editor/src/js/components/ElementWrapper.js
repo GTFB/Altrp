@@ -13,6 +13,7 @@ import DotsIcon from "../../svgs/dots_section.svg";
 import ColumnIcon from "../../svgs/columns.svg";
 import AddIcon from "../../svgs/add.svg";
 import DuplicateIcon from "../../svgs/duplicate.svg";
+import CloseIcon from "../../svgs/close.svg";
 import store from "../store/store";
 import { START_DRAG, startDrag } from "../store/element-drag/actions";
 import { setCurrentElement } from "../store/current-element/actions";
@@ -184,7 +185,6 @@ class ElementWrapper extends Component {
     // console.log(draggableElement);
     if (this.state.isDrag) {
       classes += " altrp-element_is-drag";
-      console.log(classes);
       return classes;
     }
     if (this.state.dragOver) {
@@ -217,6 +217,7 @@ class ElementWrapper extends Component {
       classes += ` altrp-widget_${this.props.element.getName()}`;
     }
     let overlayClasses = `overlay`;
+    let overlayStyles = this.props.width;
     if (this.props.currentElement === this.props.element) {
       classes += " altrp-element_current";
     }
@@ -261,7 +262,7 @@ class ElementWrapper extends Component {
         onDragEnter={this.onDragEnter}
       >
 
-        <div className={overlayClasses}>
+        <div className={overlayClasses} id="overlay" style={overlayStyles}>
           <div className="overlay-settings">
             <button
               className="overlay-settings__button overlay-settings__button_add "
@@ -290,14 +291,14 @@ class ElementWrapper extends Component {
               onClick={this.deleteElement}
               title={deleteText}
             >
-              <DeleteIcon className="icon" />
+              <CloseIcon className="icon" width="35" height="35" />
             </button>
           </div>
         </div>
         {React.createElement(this.props.component, {
           element: this.props.element,
           children: this.state.children,
-          wrapper: this
+          wrapper: this,
         })}
         {emptyColumn}
       </div>
@@ -306,6 +307,8 @@ class ElementWrapper extends Component {
 
   chooseElement(e) {
     e.stopPropagation();
+    contextMenu.hideAll();
+
     this.props.element.setElementAsCurrent();
     getEditor().showSettingsPanel();
   }
