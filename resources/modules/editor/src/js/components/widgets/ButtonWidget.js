@@ -17,7 +17,6 @@ class ButtonWidget extends Component {
   }
 
   async onClick(e){
-    e.preventDefault();
     if(isEditor()){
       console.log(this.state.settings);
     } else {
@@ -54,7 +53,7 @@ class ButtonWidget extends Component {
       </button>;
     let link = null;
     if(this.state.settings.link_link.url != null && this.state.settings.link_link.url != "") {
-      link = <a onClick={this.onClick} href={this.state.settings.link_link.url} className={classes}>link (перекидывает){button}</a>
+      link = <a onClick={this.onClick} href={this.state.settings.link_link.url} className={classes}> {this.state.settings.button_text || ""}{button}</a>
     }
 
     return link || button

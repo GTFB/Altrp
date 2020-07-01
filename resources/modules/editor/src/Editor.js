@@ -150,7 +150,6 @@ class Editor extends Component {
     ) {
       settingsActive = " active";
     }
-    console.log( window.admin_logo);
     return (
       <Provider store={store}>
         <div className={templateClasses}
