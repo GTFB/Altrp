@@ -18,7 +18,7 @@ class MediaController extends Component {
     this.state = {
       value,
       show: true
-    }};
+    };
     this.openAssetsBrowser = this.openAssetsBrowser.bind(this);
     this.deleteAsset = this.deleteAsset.bind(this);
     controllerDecorate(this);
