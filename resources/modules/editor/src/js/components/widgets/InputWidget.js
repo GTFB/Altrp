@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import { set } from "lodash";
 
 class InputWidget extends Component {
 
@@ -17,17 +18,42 @@ class InputWidget extends Component {
 
   onChange(e){
     let value = e.target.value;
-    this.setState(state=>({
+    this.setState({
       ...state,
       value
-    }));
+    });
   }
 
   render(){
+    let styles = {};
     let label = null;
 
+    let classLabel = ""
+    let styleLabel = {}
+    switch (this.state.settings.content_label_position_type) {
+      case "top":
+        styleLabel = {
+            marginBottom: this.state.settings.label_style_spacing.size + this.state.settings.label_style_spacing.unit || 2 + "px"
+        }
+        classLabel = ""
+        break;
+      case "bottom":
+        styleLabel = {
+            marginTop: this.state.settings.label_style_spacing.size + this.state.settings.label_style_spacing.unit || 2 + "px"
+        }
+        break;
+      case "left":
+        styleLabel = {
+            marginRight: this.state.settings.label_style_spacing.size + this.state.settings.label_style_spacing.unit || 2 + "px"
+        }
+        classLabel = "altrp-field-label-container-left"
+        // this.label.current.classList.add("hello")
+
+        break;
+    }
+
     if(this.state.settings.content_label != null) {
-      label = <div className="altrp-field-label-container"><label className="altrp-field-label">{this.state.settings.content_label}</label></div>
+      label = <div className={"altrp-field-label-container " + classLabel} style={styleLabel}><label className="altrp-field-label">{this.state.settings.content_label}</label></div>
     } else {
       label = null
     }
@@ -46,15 +72,13 @@ class InputWidget extends Component {
       autocomplete = "off";
     }
 
-    return <div className="altrp-field-container">
-      <div className="altrp-field-container-label">
-        {
-          label
-        }
+    return <div className={"altrp-field-container " + classLabel}>
+        {this.state.settings.content_label_position_type == "top" ? label : ""}
+        {this.state.settings.content_label_position_type == "left" ? label : ""}
+            {/* .altrp-field-label-container */}
         {
           required 
         }
-      </div>
       <input type={this.state.settings.content_type}
              value={this.state.value}
              autoComplete={autocomplete}
@@ -63,6 +87,9 @@ class InputWidget extends Component {
              onChange={this.onChange}
              id={this.state.settings.position_css_id}
       />
+      {
+        this.state.settings.content_label_position_type == "bottom" ? label : ""
+      }
     </div>
   }
 }

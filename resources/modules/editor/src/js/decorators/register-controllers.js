@@ -207,7 +207,7 @@ export function advancedTabControllers(element) {
   element.addControl('positioning_position_type', {
     type: CONTROLLER_SELECT,
     label: 'Position',
-    default: 'default',
+    default: 'static',
     options: [
       {
         value: 'static',

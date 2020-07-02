@@ -91,6 +91,29 @@ class Input extends BaseElement{
       label: 'Label',
     });
 
+    this.addControl('content_label_position_type', {
+        type: CONTROLLER_SELECT,
+        label: 'label position',
+        default: 'top',
+        options:[
+          {
+            'value' : 'top',
+            'label' : 'default',
+          },
+          {
+            'value' : 'bottom',
+            'label' : 'bottom',
+          },
+          {
+            'value' : 'left',
+            'label' : 'left',
+          }
+        ],
+        rules: {
+        },
+      }
+    );
+
     this.addControl('content_placeholder', {
       type: CONTROLLER_TEXT,
       label: 'Placeholder',
@@ -160,7 +183,6 @@ class Input extends BaseElement{
       max: 60,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-field-label-container": "margin-bottom: {{SIZE}}{{UNIT}}"
       }
     });
 
