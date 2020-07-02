@@ -44,59 +44,6 @@ class RootElement extends BaseElement {
     if (this.controllersRegistered) {
       return
     }
-    this.startControlSection('text_section', {
-      tab: TAB_CONTENT,
-      label: 'Text Section',
-    });
-
-    // this.addControl('test-text', {
-    //   label: 'Text',
-    //   show: true,
-    // });
-
-    this.addControl('test-text-2', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Show',
-    });
-
-    this.addControl('test-text-3', {
-      label: 'Text',
-      value: 'test',
-      condition: {
-        'test-text-2': true
-      }
-    });
-
-    this.addControl('test-text-4', {
-      label: 'Text',
-      value: 'test',
-      condition: {
-        'test-text-3': 'show'
-      }
-    });
-
-    let repeater = new Repeater();
-
-    repeater.addControl( 'text', {
-      label: 'Text'
-    } );
-
-    repeater.addControl( 'text2', {
-      label: 'Text 2'
-    } );
-/*
-    this.addControl( 'test_repeater', {
-      label: 'test Items',
-      type: CONTROLLER_REPEATER,
-      fields: repeater.getControls(),
-      default : [{
-        text: 'Item 1',
-      }, {
-        text: 'Item 2',
-      },],
-  } );
-*/
-    this.endControlSection();
 
   }
 

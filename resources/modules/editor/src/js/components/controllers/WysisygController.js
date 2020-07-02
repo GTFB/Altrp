@@ -14,7 +14,7 @@ const WysiwygController = ({
   const [content, setContent] = useState(value);
   this.state = {
     show: true
-  }
+  };
   // Изменяем контент в предпросмотре
   useEffect(() => {
     controller.changeValue(content);
