@@ -44,7 +44,6 @@ import { styles } from "react-contexify/lib/utils/styles";
 
 class SectionComponent extends Component {
   constructor(props) {
-    console.log(props);
     super(props);
     if (!props.children.length) {
       throw `Section Component Must Contain at Least One Column as Child`;
@@ -61,7 +60,7 @@ class SectionComponent extends Component {
 
   render() {
     let width = {};
-    if(this.state.settings.layout_content_width_type == "full") {
+    if(this.state.settings.layout_content_width_type === "full") {
       let element = document.getElementsByTagName("iframe")[0];
       let body = element ? element.offsetWidth : 0;
       let editor = document.getElementById("editor");

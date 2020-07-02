@@ -247,6 +247,23 @@ class BaseElement extends ControlStack{
     }
   }
 
+  /**
+   * Удаляет свойство настройки по id
+   * @param {string} settingName
+   */
+  deleteSetting(settingName){
+    if(this.settings[settingName]){
+      delete this.settings[settingName];
+    }
+    // if(this.component){
+    //   this.component.changeSetting(settingName, null);
+    // }
+  }
+  /**
+   * Возвращает значение настройки по id
+   * @param {string} settingName
+   * @return {*}
+   */
   getSettings(settingName){
     this._initDefaultSettings();
     if(! settingName){

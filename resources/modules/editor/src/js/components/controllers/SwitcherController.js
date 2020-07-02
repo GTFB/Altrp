@@ -27,9 +27,9 @@ class SwitcherController extends Component {
 
   render(){
     /**
-     * ПРоверка show
-     * @type {string}
+     * ПРоверка this.state.show
      */
+    console.log(this.state.show);
     if(this.state.show === false) {
       return '';
     }

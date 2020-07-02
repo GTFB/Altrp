@@ -52,12 +52,9 @@ class SettingSection extends Component {
       <div className="controllers-wrapper">
         {
           controllers.map((controller) => {
-              if(controller.show) {
-                let ControllerComponent = window.controllersManager.getController(controller.type);
-                return React.createElement(ControllerComponent, {...controller, key: controller.controlId, controller: new Controller(controller)});
-              }
-            }
-          )
+              let ControllerComponent = window.controllersManager.getController(controller.type);
+              return React.createElement(ControllerComponent, {...controller, key: controller.controlId, controller: new Controller(controller)});
+            })
         }
       </div>
     </div>

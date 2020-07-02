@@ -46,35 +46,77 @@ function _changeValue(value) {
  */
 
 function conditionSubscriber() {
-  const controllerValue = store.getState().controllerValue;
+  // const controllerValue = store.getState().controllerValue;
+  // if(this.props.condition) {
+  //   if(this.props.condition[controllerValue.controlId]) {
+  //     if(controllerValue.controlId === Object.keys(this.props.condition)[0]) {
+  //       if(controllerValue.value !== this.props.condition[controllerValue.controlId] && this.props.controlId !== controllerValue.controlId) {
+  //         this.setState((state) => {
+  //           return {
+  //             ...state,
+  //             show: false,
+  //           }
+  //         });
+  //       } else {
+  //         this.setState((state) => {
+  //           return {
+  //             ...state,
+  //             show: true,
+  //           }
+  //         });
+  //       }
+  //     }
+  //   }
+  // }
   if(this.props.condition) {
-    if(this.props.condition[controllerValue.controlId]) {
-      if(controllerValue.controlId === Object.keys(this.props.condition)[0]) {
-        if(controllerValue.value !== this.props.condition[controllerValue.controlId] && this.props.controlId !== controllerValue.controlId) {
-          this.setState((state) => {
-            return {
-              ...state,
-              show: false,
-            }
-          });
-        } else {
-          this.setState((state) => {
-            return {
-              ...state,
-              show: true,
-            }
-          });
-        }
-      }
+    const controllerValue = store.getState().controllerValue;
+    if(Object.keys(this.props.condition).indexOf(controllerValue.controlId)>=0){
+      this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController() ;
     }
   }
+}
 
+/**
+ * Метод вызывается, когда компонент контроллера загружается
+ */
+function controllerComponentDidMount() {
+  /**
+   * Сначала проверим нужно ли отрисовывать контроллер по умолчанию
+   */
+  this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController() ;
+}
+
+/**
+ * Скрываем компонент контроллера,
+ * удаляем свойство у текущего элемента
+ */
+function hideComponentController() {
+  this.setState(state=>({
+    ...state,
+    show: false,
+  }));
+  this.props.currentElement.deleteSetting();
+  this.props.controller.changeValue(null);
+}
+
+/**
+ * Скрываем компонент контроллера,
+ * удаляем свойство у текущего элемента
+ */
+function showComponentController() {
+  this.setState(state=>({
+      ...state,
+    show: true,
+  }));
 }
 
 let controllerDecorate = function elementWrapperDecorate(component) {
   component.componentDidUpdate = componentDidUpdate.bind(component);
   component._changeValue = _changeValue.bind(component);
   component.conditionSubscriber = conditionSubscriber.bind(component);
+  component.componentDidMount = controllerComponentDidMount.bind(component);
+  component.hideComponentController = hideComponentController.bind(component);
+  component.showComponentController = showComponentController.bind(component);
   store.subscribe(component.conditionSubscriber);
 };
 export default controllerDecorate;

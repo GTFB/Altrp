@@ -10,7 +10,6 @@ class MediaController extends Component {
   constructor(props) {
     super(props);
     let value = this.props.currentElement.getSettings(this.props.controlId);
-    // console.log(value);
     if (value === null && this.props.default && this.props.default.name) {
       value = iconsManager().getIcon(this.props.default.name);
     }
