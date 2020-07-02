@@ -12,9 +12,7 @@ const WysiwygController = ({
 }) => {
   const value = currentElement.getSettings(controlId);
   const [content, setContent] = useState(value);
-  this.state = {
-    show: true
-  };
+
   // Изменяем контент в предпросмотре
   useEffect(() => {
     controller.changeValue(content);
@@ -25,7 +23,7 @@ const WysiwygController = ({
     setContent(value);
   }, [currentElement]);
 
-  if(this.state.show === false) {
+  if(!controller.isShow()) {
     return '';
   }
     return (
