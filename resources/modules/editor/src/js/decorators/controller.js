@@ -31,7 +31,7 @@ function _changeValue(value) {
     value = {...value};
   }
 
-  if(! value.dynamic){
+  if(value && ! value.dynamic){
     this.setState((state)=>{
       return {
         ...state,
@@ -89,11 +89,21 @@ function conditionSubscriber() {
 /**
  * Метод вызывается, когда компонент контроллера загружается
  */
-function controllerComponentDidMount() {
+async function  controllerComponentDidMount() {
   /**
    * Сначала проверим нужно ли отрисовывать контроллер по умолчанию
    */
-  this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController() ;
+  this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController();
+
+  if(this.resource){
+    let options = await this.resource.getAll();
+    if(this.props.nullable){
+      options = _.concat([{'':''}], options);
+      console.log(options);
+    }
+    this.setState(state=>({...state, options}));
+    this._changeValue(options[0].value);
+  }
 }
 
 /**

@@ -67,7 +67,9 @@ class RootElement extends BaseElement {
     });
 
     this.addControl('preview_model', {
-      type: CONTROLLER_SELECT
+      type: CONTROLLER_SELECT,
+      resource: '/admin/ajax/models_options',
+      nullable: true,
     });
 
     this.endControlSection();
