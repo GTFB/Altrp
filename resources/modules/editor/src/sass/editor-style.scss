@@ -1313,6 +1313,7 @@ display: none;
 .altrp-element_section{
   & > .overlay {
     & .overlay-settings__button {
+      z-index: 9998;
       &:first-child {
         border-radius: 5px 0 0 0;
         &::before {
@@ -1347,6 +1348,10 @@ display: none;
       }
     }
   }
+}
+
+.overlay-settings__button_edit {
+  z-index: 99999;
 }
 
 .altrp-element_section:first-of-type{

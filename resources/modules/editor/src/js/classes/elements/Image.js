@@ -159,7 +159,7 @@ class Image extends BaseElement{
     this.addControl('image_fit_size', {
         type: CONTROLLER_SELECT,
         label: 'Image fit',
-
+        default: "cover",
         options:[
           {
             'value' : 'cover',
@@ -208,20 +208,40 @@ class Image extends BaseElement{
     );
 
     this.addControl('height_size', {
-      type: CONTROLLER_NUMBER,
-      label: 'Height',
-      default: "100",
+      type: CONTROLLER_SLIDER,
+      label: 'height',
+      default:{
+        size: 100,
+        unit: '%',
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 1000,
+      min: 0,
       rules: {
-        '{{ELEMENT}} img': 'height: {{VALUE}}%;',
+        '{{ELEMENT}} img': 'height: {{SIZE}}{{UNIT}}',
       },
     });
 
     this.addControl('width_size', {
-      type: CONTROLLER_NUMBER,
-      label: 'Width',
-      default: "100",
+      type: CONTROLLER_SLIDER,
+      label: 'width',
+      default:{
+        size: 100,
+        unit: '%',
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 1000,
+      min: 0,
       rules: {
-        '{{ELEMENT}} img': 'width: {{VALUE}}%;',
+        '{{ELEMENT}} img': 'width: {{SIZE}}{{UNIT}}',
       },
     });
 

@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import '../../sass/section.scss'
 import { styles } from "react-contexify/lib/utils/styles";
+import { isEditor, getWindowWidth } from "../helpers"
 
 // const SectionComponent = ({ children, element }) => {
 //   if (!children.length) {
@@ -60,21 +61,11 @@ class SectionComponent extends Component {
 
   render() {
     let width = {};
-    if(this.state.settings.layout_content_width_type == "full") {
-      let element = document.getElementsByTagName("iframe")[0];
-      let body = element ? element.offsetWidth : 0;
-      let editor = document.getElementById("editor");
-      if(editor != undefined) {
-        body = window
-
-      } else {
-        body = body
-      }
-
+    if(this.state.settings.layout_content_width_type === "full") {
+      console.log(getWindowWidth())
       width = {
-        width: body + "px"
+        width: getWindowWidth() + "px"
       }
-      
     } else {
       width = {}
     };
@@ -94,10 +85,9 @@ class SectionComponent extends Component {
     ));
     let section = React.createElement(this.state.settings.layout_html_tag || "div",
       {style: width, className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: ""},
-      <div className="get-column-count" id="columnCount" data-column-count={"\n" + this.props.element.getColumnsCount()}></div>,
+      <div className={"get-column-count " + `altrp-element-column-count${this.props.element.id}`} id="columnCount" data-column-count={"\n" + this.props.element.getColumnsCount()}></div>,
       sectionWrapper
     );
-
     let link = null;
     // if(this.state.settings.link_link.url != null & this.state.settings.link_link.url != "") {
     //   link = <div className="altrp-section">link{section}</div>

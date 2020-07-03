@@ -37,6 +37,7 @@ class Column  extends BaseElement {
       label: 'Column width (%)',
       default: 100,
       rules: {
+        '{{ELEMENT}}.altrp-element_column': 'width: {{VALUE}}%',
         '{{ELEMENT}} .altrp-column': 'width: {{VALUE}}%'
       }
     });
