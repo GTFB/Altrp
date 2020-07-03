@@ -79,11 +79,11 @@ class ModelGenerator extends AppGenerator
     protected function writeModelToDb()
     {
         $attributes = json_decode(json_encode($this->data), true);
-
+        $this->model->fill($attributes);
         $this->getAndWriteRelationships();
 
         try {
-            $this->model->fill($attributes)->save();
+            $this->model->save();
         } catch (\Exception $e) {
             echo $e->getMessage();
             return false;
@@ -305,6 +305,7 @@ class ModelGenerator extends AppGenerator
      */
     protected function writeRelationships()
     {
+        //dd($this->model);
         if (! $this->getTableById($this->model->table_id)) {
             throw new TableNotFoundException('Table not found', 404);
         }
