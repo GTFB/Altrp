@@ -258,6 +258,26 @@ class FrontElement {
     }
     return this.component.state.value;
   }
+
+  /**
+   * @return {AltrpModel[]}
+   */
+  getModels(){
+    if(this.getType() !=='root-element'){
+      return this.parent.getModels();
+    }
+    if(!this.models){
+
+    }
+    return this.models;
+  }
+
+  /**
+   * @param {AltrpModel[]} models
+   */
+  setModels(models){
+    this.models = models;
+  }
 }
 
 export default FrontElement

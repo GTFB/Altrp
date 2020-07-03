@@ -57,6 +57,21 @@ class RootElement extends BaseElement {
   } );
 */
 
+    this.startControlSection('preview_section',{
+      label: 'Preview Settings',
+    });
+
+    this.addControl('preview_heading', {
+      label: 'Model Settings',
+      type: CONTROLLER_HEADING
+    });
+
+    this.addControl('preview_model', {
+      type: CONTROLLER_SELECT
+    });
+
+    this.endControlSection();
+
   }
 
   appendNewSection(newSection) {
