@@ -1,6 +1,10 @@
 @import "vars";
 @import "~bootstrap/dist/css/bootstrap-grid.min.css";
 
+html {
+  height: 100%;
+}
+
 body,
 *,
 *:focus,
@@ -14,6 +18,9 @@ body{
   margin: 0;
   overflow-x: hidden;
   color: $black;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 a,
