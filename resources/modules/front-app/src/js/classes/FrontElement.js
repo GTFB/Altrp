@@ -114,6 +114,7 @@ class FrontElement {
       /**
        * @member {Styles} stylesModule
        * */
+      console.log(this.settings.stringStyles);
       stylesModule.addElementStyles(this.getId(), this.getStringifyStyles());
     });
   }
@@ -146,6 +147,8 @@ class FrontElement {
         }
       }
     }
+    styles += this.settings.stringStyles || '';
+
     return styles;
   }
 
