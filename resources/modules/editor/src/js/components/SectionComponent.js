@@ -60,7 +60,7 @@ class SectionComponent extends Component {
 
   render() {
     let width = {};
-    if(this.state.settings.layout_content_width_type === "full") {
+    if(this.state.settings.layout_content_width_type == "full") {
       let element = document.getElementsByTagName("iframe")[0];
       let body = element ? element.offsetWidth : 0;
       let editor = document.getElementById("editor");

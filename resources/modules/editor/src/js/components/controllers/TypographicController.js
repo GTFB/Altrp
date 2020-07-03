@@ -52,8 +52,7 @@ class TypographicController extends Component {
   openTypographic(){
     let shadowContainer = document.getElementById("typographicContainer")
     let shadowContentIcon = document.getElementById("shadowContentIcon");
-
-    shadowContainer.classList.toggle("control-shadow-active");
+    // shadowContainer.classList.toggle("control-shadow-active");
 
     this.setState({
       activeTypographic: !this.state.activeTypographic

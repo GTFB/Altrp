@@ -9,6 +9,7 @@ import {
   CONTROLLER_TEXT,
   CONTROLLER_SELECT,
   CONTROLLER_FILTERS,
+  CONTROLLER_CHOOSE,
   CONTROLLER_COLOR,
   TAB_CONTENT,
   TAB_STYLE,
@@ -231,7 +232,7 @@ class Image extends BaseElement{
       label: 'image'
     });
 
-    this.addControl('heading_style_text_shadow', {
+    this.addControl('image_style_text_shadow', {
         type: CONTROLLER_FILTERS,
         label: 'filters',
         rules: {
@@ -245,6 +246,29 @@ class Image extends BaseElement{
         },
       }
     );
+
+    this.addControl('image_style_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'alignment',
+      default: 'center',
+      options:[
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+      ],
+      rules: {
+            '{{ELEMENT}} .altrp-image-container': 'justify-content: {{VALUE}};',
+      },
+    });
 
     this.endControlSection();
 
