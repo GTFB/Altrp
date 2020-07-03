@@ -210,7 +210,7 @@ class TableController extends ApiController
     function getColumns(ApiRequest $request) {
         
         $id = $request->table;
-        $table = Table::find($id);
+        $table = Table::with("tablet")->find($id);
         
         if(!$table) {
             return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);

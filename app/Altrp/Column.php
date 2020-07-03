@@ -10,7 +10,17 @@ class Column extends Model
     public $timestamps = false;
     
     
+    public function tablet() {
+        return $this->belongsTo('App\Altrp\Table');
+    }
     
+    public function getNullAttribute($value) {
+        return (bool) $value;
+    }
+    
+    public function getUniqueAttribute($value) {
+        return (bool) $value;
+    }
     
     /**
      * Проверяем является ли колонка, колонкой с размером

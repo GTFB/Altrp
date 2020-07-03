@@ -52,6 +52,9 @@ class AdminTable extends Component {
                   props.children = column.button.title;
                   props.onClick = () => { column.button.function(row)};
                 }
+                if(column.is_boolean){
+                  props.children = [row[column.name].toString()];
+                }
                 
                 return<td className="admin-table__td td" key={column.name + row.id} title={column.name + row.id}>
                 
