@@ -9,6 +9,12 @@ use App\Altrp\Key;
 
 use App\Altrp\Commands\MigrationBuilder;
 
+
+use App\Exceptions\AltrpMigrationWriteColumnsExceptions;
+use App\Exceptions\AltrpMigrationWriteKeysExceptions;
+use App\Exceptions\AltrpMigrationCreateFileExceptions;
+use App\Exceptions\AltrpMigrationRunExceptions;
+
 use Artisan;
 
 class Migration extends Model
@@ -43,29 +49,33 @@ class Migration extends Model
         //1 Записать колонки
         if(!$this->writeColumns()) {
             $this->clearMigration();
-            return false;
+            throw new AltrpMigrationWriteColumnsExceptions("Failed to write migration columns to the database");
         }
         
         //2. Записать ключи
         if(!$this->writeKeys()) {
             $this->clearMigration();
-            return false;
+            throw new AltrpMigrationWriteKeysExceptions("Failed to write migration keys to the database");
         }
         
         //3. Создать файл
         $file = $this->createFile();
-        if(!$file) return false;
+        
+        if(!$file) {
+            $this->clearMigration();
+            throw new AltrpMigrationCreateFileExceptions("Failed to create migration file");
+        }
         
         //4. Запустить миграцию
         if(!$this->migrationRun()) {
-            $this->clearMigration();
-            return false;
+            $this->clearMigration($file);
+            throw new AltrpMigrationRunExceptions("Failed to run migration file");
         }
         
         //5. Обновить статус.
         $this->status = "complete";
         $this->file_path = $file;
-        //dd($this->save());
+        
         return $this->save();
         
     }
@@ -89,8 +99,6 @@ class Migration extends Model
             $column->default = $value->default;
             $column->primary = false;
             $column->unique = (bool) $value->unique;
-            
-            
             
             $column->table_id = $this->table()->first()->id;
             $column->user_id = auth()->user()->id;
@@ -117,7 +125,7 @@ class Migration extends Model
             $key->onDelete = $value->onDelete;
             $key->onUpdate = $value->onUpdate;
             
-            $key->source_table = $this->table()->first()->name;
+            $key->source_table_id = $this->table()->first()->id;
             $key->target_table = $value->target_table;
             
             $key->source_column = $value->source_column;
@@ -153,12 +161,17 @@ class Migration extends Model
     /**
      * Запустить файл миграции
      */
-    protected function clearMigration() {
+    protected function clearMigration($file_path = null) {
         
         Column::where('altrp_migration_id', $this->id)->delete();
         Key::where('altrp_migration_id', $this->id)->delete();
         
-        return true;
+        if(!is_null($file_path)) {
+            unlink($file_path);
+        }
+        
+        return $this->delete();
+        
     }
     
     
