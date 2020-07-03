@@ -153,3 +153,26 @@
   display: flex;
   align-items: center;
 }
+
+.app-area_footer {
+  background-color: red;
+  flex: 0 0 auto;
+}
+
+.app-area_content {
+  flex: 1 0 auto;
+}
+
+.app-area_header {
+  flex: 0 0 auto;
+}
+
+#front-app, .front-app-content {
+  height: 100%;
+}
+
+.route-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
