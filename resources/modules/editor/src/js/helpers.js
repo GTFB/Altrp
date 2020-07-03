@@ -111,7 +111,6 @@ export function getWindowWidth() {
   let window;
   if(isEditor()) {
     window = document.getElementById("editorWindow").offsetWidth;
-    console.log(window)
   } else {
     window = document.getElementById("front-app").offsetWidth 
   }

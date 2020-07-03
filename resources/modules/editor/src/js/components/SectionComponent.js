@@ -62,7 +62,6 @@ class SectionComponent extends Component {
   render() {
     let width = {};
     if(this.state.settings.layout_content_width_type === "full") {
-      console.log(getWindowWidth())
       width = {
         width: getWindowWidth() + "px"
       }
