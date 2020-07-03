@@ -20,7 +20,8 @@ function componentDidUpdate() {
 
 /**
  * @function _changeValue
- * Обновление значения в  контроллере
+ * Обновление значения в  контроллере\
+ * и передача в класс Controller
  * @member {object} props
  * @property {Controller} props.controller
  */

@@ -146,6 +146,8 @@ class FrontElement {
         }
       }
     }
+    styles += this.settings.stringStyles || '';
+
     return styles;
   }
 

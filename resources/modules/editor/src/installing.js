@@ -15,8 +15,9 @@ let selectorCompleter = {
 
     if (0 < prefix.length && 'selector'.match(prefix) && 'constant' === token.type) {
       list = [{
-        name: 'selector',
-        value: 'selector',
+        name: '__selector__',
+        caption: 'selector',
+        value: '__selector__',
         score: 1,
         meta: 'Altrp'
       }];

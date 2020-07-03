@@ -19,9 +19,10 @@ class InputWidget extends Component {
 
   onChange(e){
     let value = e.target.value;
-    this.setState({
+    this.setState(state=>({
+      ...state,
       value
-    });
+    }));
   }
 
   render(){
