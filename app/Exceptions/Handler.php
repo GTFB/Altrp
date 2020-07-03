@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -50,6 +51,32 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+
+        if ($exception instanceof TableNotFoundException) {
+            return $exception->render($request);
+        }
+
+        if ($exception instanceof RelationshipNotInsertedException) {
+            return $exception->render($request);
+        }
+
+        if ($exception instanceof ModelNotWrittenException) {
+            return $exception->render($request);
+        }
+
+        if ($exception instanceof CommandFailedException) {
+            return $exception->render($request);
+        }
+
+        if ($request->ajax() || $request->isJson() || $request->wantsJson()) {
+
+            if ($exception instanceof QueryException) {
+                return response()->json([
+                    'message' => $exception->getMessage()
+                ], 500, [], JSON_UNESCAPED_UNICODE);
+            }
+        }
+
         return parent::render($request, $exception);
     }
 }
