@@ -4,6 +4,17 @@ namespace App\Altrp\Generators;
 
 abstract class AppGenerator
 {
+    public function __construct($data)
+    {
+        if (is_array($data)) {
+            $obj = new \stdClass;
+            $this->data = $this->convertToObject($data, $obj);
+
+        } else {
+            $this->data = json_decode($data);
+        }
+    }
+
     /**
      * Преобразовать массив в объект
      *
