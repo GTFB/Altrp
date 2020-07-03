@@ -1,0 +1,108 @@
+<?php
+
+namespace DummyNamespace;
+
+use DummyRootNamespaceHttp\Controllers\ApiController;
+
+use DummyRootNamespace{{modelNamespace}}{{modelName}};
+use Illuminate\Http\Request;
+
+class DummyClass extends ApiController
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index()
+    {
+        ${{crudName}} = {{modelName}}::all();
+
+        return response()->json(${{crudName}}, 200, [], JSON_UNESCAPED_UNICODE);;
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(Request $request)
+    {
+        {{validationRules}}
+        ${{crudNameSingular}} = new {{modelName}}($request->all());
+
+        if(${{crudNameSingular}}->save()){
+            return response()->json(${{crudNameSingular}}, 200, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        return response()->json(trans("responses.dberror"), 400, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show($id)
+    {
+        ${{crudNameSingular}} = {{modelName}}::find($id);
+
+        if(! ${{crudNameSingular}}) {
+            return response()->json(trans("responses.not_found.{{crudNameSingular}}"), 404, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        return response()->json(${{crudNameSingular}}, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param  int  $id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, $id)
+    {
+        {{validationRules}}
+        ${{crudNameSingular}} = {{modelName}}::find($id);
+
+        if(! ${{crudNameSingular}}) {
+            return response()->json(trans("responses.not_found.{{crudNameSingular}}"), 404, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        $result = ${{crudNameSingular}}->update($request->all());
+
+        if($result){
+            return response()->json($result, 200, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        return response()->json(trans("responses.dberror"), 400, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy($id)
+    {
+        ${{crudNameSingular}} = {{modelName}}::find($id);
+
+        if(! ${{crudNameSingular}}) {
+            return response()->json(trans("responses.not_found.{{crudNameSingular}}"), 404, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        if(${{crudNameSingular}}->delete()) {
+            return response()->json(trans("responses.delete.{{crudNameSingular}}"), 200, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        return response()->json(trans("deleteerror"), 400, [], JSON_UNESCAPED_UNICODE);
+    }
+}

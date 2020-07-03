@@ -24,6 +24,7 @@ class RepeaterController extends Component {
     });
     this.state = {
       items,
+      show: true,
       activeItem: 0,
     };
     this.addItem = this.addItem.bind(this);
@@ -86,55 +87,58 @@ class RepeaterController extends Component {
   }
 
   render() {
-    return <div className='controller-container controller-container_repeater repeater'>
-      <div className="control-header">
-        <div className="controller-container__label">{this.props.label}</div>
-      </div>
-      <div className="repeater-fields">
-        {
-          this.state.items.map((item, idx) => {
-            let itemClasses = ['repeater-item'];
-            if (this.state.activeItem === idx) {
-              itemClasses.push('repeater-item_open');
-            }
-            return <div className={itemClasses.join(' ')} key={idx}>
-              <div className="repeater-item-tools">
-                <div className="repeater-item__caption"
-                     data-itemindex={idx}
-                     onClick={this.setActiveItem}>Item #{idx + 1}</div>
-                <button className="repeater-item__delete"
-                        data-itemindex={idx}
-                        onClick={this.deleteItem}>{iconsManager().renderIcon('times')}</button>
+    if(this.state.show === false) {
+      return '';
+    }
+      return <div className='controller-container controller-container_repeater repeater'>
+        <div className="control-header">
+          <div className="controller-container__label">{this.props.label}</div>
+        </div>
+        <div className="repeater-fields">
+          {
+            this.state.items.map((item, idx) => {
+              let itemClasses = ['repeater-item'];
+              if (this.state.activeItem === idx) {
+                itemClasses.push('repeater-item_open');
+              }
+              return <div className={itemClasses.join(' ')} key={idx}>
+                <div className="repeater-item-tools">
+                  <div className="repeater-item__caption"
+                       data-itemindex={idx}
+                       onClick={this.setActiveItem}>Item #{idx + 1}</div>
+                  <button className="repeater-item__delete"
+                          data-itemindex={idx}
+                          onClick={this.deleteItem}>{iconsManager().renderIcon('times')}</button>
+                </div>
+                <div className="repeater-item-content">
+                  {
+                    this.props.fields.map(field => {
+                      let ControllerComponent = controllersManager.getController(field.type);
+                      let controller = new Controller({...field, repeater: this, itemIndex: idx});
+                      // value =
+                      let value = item[field.controlId] || '';
+                      return <ControllerComponent {...field}
+                                                  repeater={this}
+                                                  itemindex={idx}
+                                                  key={field.controlId}
+                                                  default={value}
+                                                  controller={controller}/>
+                    })
+                  }
+                </div>
               </div>
-              <div className="repeater-item-content">
-                {
-                  this.props.fields.map(field => {
-                    let ControllerComponent = controllersManager.getController(field.type);
-                    let controller = new Controller({...field, repeater: this, itemIndex: idx});
-                    // value =
-                    let value = item[field.controlId] || '';
-                    return <ControllerComponent {...field}
-                                                repeater={this}
-                                                itemindex={idx}
-                                                key={field.controlId}
-                                                default={value}
-                                                controller={controller}/>
-                  })
-                }
-              </div>
-            </div>
-          })
-        }
+            })
+          }
+        </div>
+        <div className="d-flex justify-center repeater-bottom">
+          <button className="altrp-btn altrp-btn_gray d-flex align-items-center" onClick={this.addItem}>
+            {iconsManager().renderIcon('plus', {
+              className: 'altrp-btn__icon',
+            })}
+            Add Item
+          </button>
+        </div>
       </div>
-      <div className="d-flex justify-center repeater-bottom">
-        <button className="altrp-btn altrp-btn_gray d-flex align-items-center" onClick={this.addItem}>
-          {iconsManager().renderIcon('plus', {
-            className: 'altrp-btn__icon',
-          })}
-          Add Item
-        </button>
-      </div>
-    </div>
   }
 }
 

@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import TextIcon from "../../../svgs/widget_text.svg";
+import TableIcon from "../../../svgs/widget_post.svg";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_SWITCHER,
@@ -11,6 +11,7 @@ import {
   CONTROLLER_TEXT,
   CONTROLLER_SLIDER,
   TAB_CONTENT,
+  CONTROLLER_TYPOGRAPHIC,
   CONTROLLER_LINK,
   TAB_STYLE,
   CONTROLLER_CHOOSE,
@@ -28,7 +29,7 @@ class Table extends BaseElement {
     return "Table";
   }
   static getIconComponent() {
-    return TextIcon;
+    return TableIcon;
   }
   static getType() {
     return "widget";
@@ -249,8 +250,199 @@ class Table extends BaseElement {
         tab: TAB_STYLE,
         label: "Pagination"
     });
-    
-    this.endControlSection();
+
+    this.addControl("table_style_pagination_buttons_text_color", {
+        type: CONTROLLER_COLOR,
+        label: "Buttons text color",
+        default: {
+          color: "",
+          colorPickedHex: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-pagination__previous, .altrp-pagination__next': 'color: {{COLOR}}'
+        }
+    });
+
+    this.addControl("table_style_pagination_buttons_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Buttons background color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous, .altrp-pagination__next': 'background-color: {{COLOR}}'
+      }
+  });
+
+  this.addControl('table_style_pagination_padding_buttons', {
+    type: CONTROLLER_DIMENSIONS,
+    label: 'buttons Padding',
+    default:{
+      top: 10,
+      right: 10,
+      bottom: 10,
+      left: 10,
+      unit:'px'
+    },
+    units:[
+      'px',
+      '%',
+      'vh',
+    ],
+    rules: {
+      '{{ELEMENT}} .altrp-pagination__previous, .altrp-pagination__next': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+    },
+  });
+
+  this.addControl("table_style_pagination_count_text_color", {
+      type: CONTROLLER_COLOR,
+      label: "Count text color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__count': 'color: {{COLOR}}'
+      }
+  });
+
+  this.addControl("table_style_pagination_count_background_color", {
+    type: CONTROLLER_COLOR,
+    label: "Count background color",
+    default: {
+      color: "",
+      colorPickedHex: ""
+    },
+    rules: {
+      '{{ELEMENT}} .altrp-pagination__count': 'background-color: {{COLOR}}'
+    }
+  });
+
+  this.addControl('table_style_pagination_padding_count', {
+    type: CONTROLLER_DIMENSIONS,
+    label: 'count Padding',
+    default:{
+      top: 10,
+      right: 10,
+      bottom: 10,
+      left: 10,
+      unit:'px'
+    },
+    units:[
+      'px',
+      '%',
+      'vh',
+    ],
+    rules: {
+      '{{ELEMENT}} .altrp-pagination__count': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+    },
+  });
+
+  this.addControl(
+    'table_style_pagination_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'typographic',
+      default:{
+        lineHeight: 0.8,
+        spacing: 0,
+        size: 16,
+        weight: 700,
+        family: 'Open Sans',
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__next, .altrp-pagination__count, .altrp-pagination__previous': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
+  );
+
+  this.addControl("table_style_pagination_border_type", {
+    type: CONTROLLER_SELECT,
+    label: "Border type",
+    units: ["px", "%", "vh"],
+    options: [
+      {
+        value: "none",
+        label: "None"
+      },
+      {
+        value: "solid",
+        label: "Solid"
+      },
+      {
+        value: "double",
+        label: "Double"
+      },
+      {
+        value: "dotted",
+        label: "Dotted"
+      },
+      {
+        value: "dashed",
+        label: "Dashed"
+      },
+      {
+        value: "groove",
+        label: "Groove"
+      }
+    ],
+    rules: {
+      '{{ELEMENT}} .altrp-pagination__previous, .altrp-pagination__next': 'border-style: {{VALUE}};',
+    }
+  });
+
+  this.addControl("table_style_pagination_border_width", {
+    type: CONTROLLER_DIMENSIONS,
+    label: "Border width",
+    units: ["px", "%", "vh"],
+    rules: {
+      '{{ELEMENT}} .altrp-pagination__previous, .altrp-pagination__next': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+    }
+  });  
+
+  this.addControl("table_style_pagination_border_color", {
+    type: CONTROLLER_COLOR,
+    label: "Border color",
+    default: {
+      color: "",
+      colorPickedHex: ""
+    },
+    rules: {
+      '{{ELEMENT}} .altrp-pagination__previous, .altrp-pagination__next': 'border-color: {{COLOR}};',
+    }
+  });
+
+  this.addControl('table_style_pagination_padding', {
+    type: CONTROLLER_DIMENSIONS,
+    label: 'Padding',
+    default:{
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      unit:'px'
+    },
+    units:[
+      'px',
+      '%',
+      'vh',
+    ],
+    rules: {
+      '{{ELEMENT}} .altrp-pagination': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+    },
+  });
+
+  this.endControlSection();  
 
     this.startControlSection("table_style_header", {
         tab: TAB_STYLE,
@@ -477,7 +669,7 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    advancedTabControllers(this);
+    advancedTabControllers(this);  
   }
 }
 

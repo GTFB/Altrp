@@ -196,6 +196,7 @@ class BaseElement extends ControlStack{
     );
     getTemplateDataStorage().setCurrentElement(newElement);
     getEditor().showSettingsPanel();
+    this.update();
   }
 
   deleteAllIds(){
@@ -246,6 +247,23 @@ class BaseElement extends ControlStack{
     }
   }
 
+  /**
+   * Удаляет свойство настройки по id
+   * @param {string} settingName
+   */
+  deleteSetting(settingName){
+    if(this.settings[settingName]){
+      delete this.settings[settingName];
+    }
+    // if(this.component){
+    //   this.component.changeSetting(settingName, null);
+    // }
+  }
+  /**
+   * Возвращает значение настройки по id
+   * @param {string} settingName
+   * @return {*}
+   */
   getSettings(settingName){
     this._initDefaultSettings();
     if(! settingName){
@@ -392,15 +410,6 @@ class BaseElement extends ControlStack{
       this.settings.styles[breakpoint][settingName][finalSelector] = rule.properties;
     });
     this.updateStyles();
-  }
-
-  updateStyles(){
-    window.stylesModulePromise.then(stylesModule => {
-      /**
-       * @member {Styles} stylesModule
-       * */
-      stylesModule.addElementStyles(this.getId(), this.getStringifyStyles());
-    });
   }
 
   getStringifyStyles(){

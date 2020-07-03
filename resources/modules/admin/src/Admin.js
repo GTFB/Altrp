@@ -22,8 +22,10 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import Users from "./components/Users";
-import UsersTools from "./components/UsersTools";
+import Users from "./components/users/Users";
+import AddUserPage from "./components/users/AddUserPage";
+import EditUserPage from "./components/users/EditUserPage";
+import UsersTools from "./components/users/UsersTools";
 import Assets from "./components/Assets";
 import Dashboard from "./components/Dashboard";
 import Plugins from "./components/Plugins";
@@ -36,6 +38,11 @@ import UserTopPanel from "./components/UserTopPanel";
 import {Redirect} from "react-router";
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 
+import AddTable from "./components/tables/AddTable";
+import EditTable from "./components/tables/EditTable";
+import SettingTable from "./components/tables/SettingTable";
+import AddMigrationPage from "./components/tables/AddMigrationPage";
+import AdminVersion from "./components/AdminVersion";
 
 class Admin extends Component {
   constructor(props){
@@ -86,6 +93,7 @@ class Admin extends Component {
             <div className="admin-nav-main">
 
             <ul className="admin-nav-list">
+
                 <li>
                   <Link to="/admin/dashboard" className="admin-nav-list__link">
                     <DashboardSvg className="icon"/>
@@ -149,6 +157,7 @@ class Admin extends Component {
                 </li>
               </ul>
             </div>
+            <AdminVersion/>
           </nav>
           <Switch>
             <Route path="/admin/" exact>
@@ -157,11 +166,18 @@ class Admin extends Component {
             <Route path="/admin/settings">
               <AdminSettings/>
             </Route>
-            <Route path="/admin/users">
+            <Route path="/admin/users" exact>
               <Users/>
             </Route>
+            <Route path="/admin/users/new" exact>
+              <AddUserPage/>
+            </Route>
+            <Route path="/admin/users/user/:id">
+              <EditUserPage/>
+            </Route>
+            
             <Route path="/admin/tools">
-              {/*<UsersTools/>*/}
+              <UsersTools/>
             </Route>
             <Route path="/admin/assets">
               <Assets/>
@@ -175,8 +191,16 @@ class Admin extends Component {
             <Route path="/admin/reports">
               <Reports/>
             </Route>
-            <Route path="/admin/tables">
+            <Route path="/admin/tables" exact>
               <Tables/>
+            </Route>
+            <Route path="/admin/tables/edit/:id"  component={EditTable} exact>
+              <EditTable/>   
+            </Route>
+            <Route path="/admin/tables/edit/:id/setting" component={SettingTable} exact/>
+            <Route path="/admin/tables/edit/:id/setting/migrations/add" component={AddMigrationPage} />
+            <Route path="/admin/tables/add">
+              <AddTable/>
             </Route>
             <Route path="/admin/templates">
               <Templates/>

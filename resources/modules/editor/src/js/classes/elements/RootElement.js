@@ -15,6 +15,7 @@ import {
   CONTROLLER_HEADING,
   CONTROLLER_CSSEDITOR,
   CONTROLLER_TYPOGRAPHIC,
+  CONTROLLER_FILTERS,
   TAB_ADVANCED,
   TAB_CONTENT,
   TAB_STYLE,
@@ -43,24 +44,6 @@ class RootElement extends BaseElement {
     if (this.controllersRegistered) {
       return
     }
-    this.startControlSection('text_section', {
-      tab: TAB_CONTENT,
-      label: 'Text Section',
-    });
-
-    let repeater = new Repeater();
-
-    this.addControl( 'text', {
-      label: 'Text'
-    } );
-
-    this.addControl( 'text2', {
-      label: 'Text'
-    } );
-
-    repeater.addControl( 'text2', {
-      label: 'Text 2'
-    } );
 /*
     this.addControl( 'test_repeater', {
       label: 'test Items',
@@ -73,7 +56,6 @@ class RootElement extends BaseElement {
       },],
   } );
 */
-    this.endControlSection();
 
   }
 

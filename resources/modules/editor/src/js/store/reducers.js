@@ -5,6 +5,7 @@ import {elementDragReducer} from "./element-drag/reducers";
 import {assetsSettingsReducer} from "./assets-browser/reducers";
 import {currentElementContextReducer} from "./current-context-element/reducers";
 import {dynamicContentReducer} from "./dynamic-content/reducers";
+import {controllerReducer} from "./controller-value/reducers";
 
 
 export default combineReducers({
@@ -14,4 +15,5 @@ export default combineReducers({
   elementDrag: elementDragReducer,
   assetsManagerSettings: assetsSettingsReducer,
   dynamicContentState: dynamicContentReducer,
+  controllerValue: controllerReducer,
 });

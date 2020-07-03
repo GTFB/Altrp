@@ -20,6 +20,7 @@ class CssEditorController extends Component {
     value = value || '';
     this.state = {
       value,
+      show: true,
       editorValue: null
     };
     controllerDecorate(this);
@@ -46,34 +47,37 @@ class CssEditorController extends Component {
   render(){
     let value = this.state.editorValue
 
-    return <div className="controller-container controller-container_css-editor">
-      <div className="controller-container__label control-css-editor__label">
-        Add your own custom CSS here
+    if(this.state.show === false) {
+      return '';
+    }
+      return <div className="controller-container controller-container_css-editor">
+        <div className="controller-container__label control-css-editor__label">
+          Add your own custom CSS here
+        </div>
+        <div className="control-css-editor-wrapper">
+          <AceEditor
+            ref="cssEditor"
+            mode="css"
+            theme="textmate"
+            onChange={this.changeValue}
+            name="UNIQUE_ID_OF_DIV"
+            editorProps={{ $blockScrolling: true }}
+            height="15em"
+            width="18.5em"
+            splits={1}
+            value={value}
+            enableSnippets
+            enableLiveAutocompletion
+          />
+        </div>
+        <div className="control-css-editor-description">
+          Use "selector" to target wrapper element.
+          <br />Examples:
+          selector "color: red;" // For main element
+          selector .child-element "margin: 10px;" // For <br />child element<br />
+          .my-class "text-align: center;" // Or use any custom selector
+        </div>
       </div>
-      <div className="control-css-editor-wrapper">
-        <AceEditor
-          ref="cssEditor"
-          mode="css"
-          theme="textmate"
-          onChange={this.changeValue}
-          name="UNIQUE_ID_OF_DIV"
-          editorProps={{ $blockScrolling: true }}
-          height="15em"
-          width="18.5em"
-          splits={1}
-          value={value}
-          enableSnippets
-          enableLiveAutocompletion
-        />
-      </div>
-      <div className="control-css-editor-description">
-        Use "selector" to target wrapper element. 
-        <br />Examples:
-        selector "color: red;" // For main element
-        selector .child-element "margin: 10px;" // For <br />child element<br />
-        .my-class "text-align: center;" // Or use any custom selector
-      </div>
-    </div>
   }
 }
 

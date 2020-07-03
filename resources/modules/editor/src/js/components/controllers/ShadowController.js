@@ -25,6 +25,7 @@ class ShadowController extends Component {
     value = value || false;
     this.state = {
       value,
+      show: true,
       //color
       active: false,
       //blur
@@ -49,7 +50,7 @@ class ShadowController extends Component {
     let shadowContentIcon = document.getElementById("shadowContentIcon");
 
     shadowContainer.classList.toggle("control-shadow-active");
-    
+
     if(shadowContentIcon.getAttribute("fill") == "#8E94AA") {
       shadowContentIcon.removeAttribute("fill");
       shadowContentIcon.setAttribute("fill", "#5bc0de");
@@ -135,13 +136,17 @@ class ShadowController extends Component {
       backgroundColor: this.state.value.color
     };
 
-    return <div className="controller-container controller-container_shadow">
-      <div className="controller-container__label control-shadow-label">
-        {this.props.label}
-      </div>
-      <div className="control-group control-group-shadow">
+    if(this.state.show === false) {
+      return '';
+    }
+      return <div className="controller-container controller-container_shadow">
+        <div className="controller-container__label control-shadow-label">
+          {this.props.label}
+        </div>
+        <div className="control-group control-group-shadow">
           <div className="control-shadow-toggle control-shadow-toggle-active" onClick={this.openShadow} fill="#8E94AA">
-              <ContentIcon id="shadowContentIcon" className="control-shadow-svg-content" fill="#8E94AA" width="16" height="16"/>
+            <ContentIcon id="shadowContentIcon" className="control-shadow-svg-content" fill="#8E94AA" width="16"
+                         height="16"/>
           </div>
           <div id="shadowContainer" className="control-shadow-wrapper control-shadow-wrapper-none">
             {/* начало color */}
@@ -157,77 +162,81 @@ class ShadowController extends Component {
                 <label className="control-color-hex">{this.state.value.colorPickedHex}</label>
               </div>
               <div className="control-color-opacity-container">
-                <label className="control-color-opacity" >{(this.state.value.opacity * 100).toFixed() + "%"}</label>
+                <label className="control-color-opacity">{(this.state.value.opacity * 100).toFixed() + "%"}</label>
               </div>
             </div>
             {
-            this.state.active ?
-              <div id="colorPicker" className="control-color-colorPicker">
-                <SketchPicker width="90%" presetColors={this.props.presetColors} color={this.state.value.colorRGB} onChange={this.colorChange} className="sketchPicker" />
-              </div>
-            : <div></div>
+              this.state.active ?
+                <div id="colorPicker" className="control-color-colorPicker">
+                  <SketchPicker width="90%" presetColors={this.props.presetColors} color={this.state.value.colorRGB}
+                                onChange={this.colorChange} className="sketchPicker"/>
+                </div>
+                : <div></div>
             }
-          {/* конец color */}
-          {/* начало slider blur */}
-          <div className="control-slider-header control-shadow-blur-header">
-            <div className="control-slider-label">
-              blur
+            {/* конец color */}
+            {/* начало slider blur */}
+            <div className="control-slider-header control-shadow-blur-header">
+              <div className="control-slider-label">
+                blur
+              </div>
             </div>
-          </div>
-          <div className="control-slider-input-wrapper control-shadow-blur">
-            <input type="range"
-              min={this.state.blurMin}
-              max={this.state.blurMax}
-              className="control-slider" value={this.state.value.blur} onChange={this.inputBlurUpdate} onInput={this.blurChange}/>
-            <div className="control-slider-input-box">
-            <input className="control-slider-input" type="number"
-                   min={this.state.blurMin}
-                   max={this.state.blurMax}
-                   value={this.state.value.blur} onChange={this.inputBlurUpdate} onInput={this.blurChange}/>
+            <div className="control-slider-input-wrapper control-shadow-blur">
+              <input type="range"
+                     min={this.state.blurMin}
+                     max={this.state.blurMax}
+                     className="control-slider" value={this.state.value.blur} onChange={this.inputBlurUpdate}
+                     onInput={this.blurChange}/>
+              <div className="control-slider-input-box">
+                <input className="control-slider-input" type="number"
+                       min={this.state.blurMin}
+                       max={this.state.blurMax}
+                       value={this.state.value.blur} onChange={this.inputBlurUpdate} onInput={this.blurChange}/>
+              </div>
             </div>
-          </div>
-          {/* конец slider blur */}
-          {/* начало slider horizontal displacement */}
-          <div className="control-slider-header">
-            <div className="control-slider-label">
-              horizontal displacement
+            {/* конец slider blur */}
+            {/* начало slider horizontal displacement */}
+            <div className="control-slider-header">
+              <div className="control-slider-label">
+                horizontal displacement
+              </div>
             </div>
-          </div>
-          <div className="control-slider-input-wrapper">
-            <input type="range"
-              min={this.state.horVerMin}
-              max={this.state.horVerMax}
-              className="control-slider" value={this.state.value.horizontal} onChange={this.inputHorUpdate} name="horizontal"/>
-            <div className="control-slider-input-box">
-            <input className="control-slider-input" type="number"
-                   min={this.state.horVerMin}
-                   max={this.state.horVerMax}
-                   value={this.state.value.horizontal} name="horizontalNumber" onChange={this.horChange}/>
+            <div className="control-slider-input-wrapper">
+              <input type="range"
+                     min={this.state.horVerMin}
+                     max={this.state.horVerMax}
+                     className="control-slider" value={this.state.value.horizontal} onChange={this.inputHorUpdate}
+                     name="horizontal"/>
+              <div className="control-slider-input-box">
+                <input className="control-slider-input" type="number"
+                       min={this.state.horVerMin}
+                       max={this.state.horVerMax}
+                       value={this.state.value.horizontal} name="horizontalNumber" onChange={this.horChange}/>
+              </div>
             </div>
-          </div>
-          {/* конец slider horizontal displacement */}
-          {/* начало slider vertical displacement */}
-          <div className="control-slider-header">
-            <div className="control-slider-label">
-              vertical displacement
+            {/* конец slider horizontal displacement */}
+            {/* начало slider vertical displacement */}
+            <div className="control-slider-header">
+              <div className="control-slider-label">
+                vertical displacement
+              </div>
             </div>
-          </div>
-          <div className="control-slider-input-wrapper">
-            <input type="range"
-              min={this.state.horVerMin}
-              max={this.state.horVerMax}
-              className="control-slider" value={this.state.value.vertical} onChange={this.inputVerUpdate} name="vertical"/>
-            <div className="control-slider-input-box">
-            <input className="control-slider-input" type="number"
-                   min={this.state.horVerMin}
-                   max={this.state.horVerMax}
-                   value={this.state.value.vertical} name="verticalNumber" onChange={this.verChange}/>
+            <div className="control-slider-input-wrapper">
+              <input type="range"
+                     min={this.state.horVerMin}
+                     max={this.state.horVerMax}
+                     className="control-slider" value={this.state.value.vertical} onChange={this.inputVerUpdate}
+                     name="vertical"/>
+              <div className="control-slider-input-box">
+                <input className="control-slider-input" type="number"
+                       min={this.state.horVerMin}
+                       max={this.state.horVerMax}
+                       value={this.state.value.vertical} name="verticalNumber" onChange={this.verChange}/>
+              </div>
             </div>
+            {/* конец slider vertical displacement */}
           </div>
-          {/* конец slider vertical displacement */}
         </div>
       </div>
-    </div>
   }
 }
 

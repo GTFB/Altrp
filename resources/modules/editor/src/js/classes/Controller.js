@@ -2,6 +2,7 @@ import store, {getCurrentElement} from '../store/store';
 import {CONSTANTS} from "../helpers";
 import CSSRule from "../classes/CSSRule";
 import {changeTemplateStatus} from "../store/template-status/actions";
+import {controllerValue} from "../store/controller-value/actions";
 
 /**
  * Класс-контроллер
@@ -9,23 +10,23 @@ import {changeTemplateStatus} from "../store/template-status/actions";
  * @property {RepeaterController} data.repeater
  */
 class Controller {
-  constructor(data){
+  constructor(data) {
     let currentElement = getCurrentElement();
     this.data = data;
     this.rules = [];
-    if(data.rules){
-      for(let selector in data.rules){
-        if(data.rules.hasOwnProperty(selector)){
+    if (data.rules) {
+      for (let selector in data.rules) {
+        if (data.rules.hasOwnProperty(selector)) {
           let newRule = new CSSRule(selector, data.rules[selector]);
           this.rules.push(newRule);
           let value = currentElement.getSettings(this.getSettingName());
-          if(value){
+          if (value) {
             newRule.insertValue(value);
           }
         }
       }
     }
-    if(this.rules.length){
+    if (this.rules.length) {
       currentElement.addStyles(this.getSettingName(), this.rules);
     }
   }
@@ -34,11 +35,11 @@ class Controller {
    * Изменение значения либо в текущем элементе либо в репитере
    * @param {*} value
    */
-  changeValue(value){
+  changeValue(value) {
     /**
      * @member {BaseElement} currentElement
      * */
-    if(! this.data.repeater) {
+    if (!this.data.repeater) {
       let currentElement = getCurrentElement();
       currentElement.setSettingValue(this.getSettingName(), value);
       this.rules.forEach(rule => {
@@ -47,6 +48,8 @@ class Controller {
       if (this.rules.length) {
         currentElement.addStyles(this.getSettingName(), this.rules);
       }
+      store.dispatch(controllerValue(value, this.getSettingName()));
+
     } else {
 
       /**
@@ -56,14 +59,40 @@ class Controller {
       this.data.repeater.changeValue(
           this.data.itemIndex,
           this.data.controlId,
-          value );
+          value);
     }
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
   }
+
+  /**
+   * Проверяем нужно ли контроллер отрисовывать
+   * @return {boolean}
+   */
+  isShow() {
+    if (!this.data.condition) {
+      return true;
+    }
+    /**
+     * как работает метод toPairs
+     * @link https://lodash.com/docs/4.17.15#toPairs
+     */
+    let conditionPairs = _.toPairs(this.data.condition);
+    let currentElement = getCurrentElement();
+    let show = true;
+    conditionPairs.forEach(condition=>{
+      let [controlId, value] = condition;
+      if(getCurrentElement().getSettings(controlId) !== value){
+        show = false;
+      }
+    });
+    console.log(show);
+    return show;
+  }
+
   /**
    * @return {string}
    * */
-  getSettingName(){
+  getSettingName() {
     return this.data.controlId;
   }
 }

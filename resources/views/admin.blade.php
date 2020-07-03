@@ -19,6 +19,10 @@
     window.admin_logo = {!! env( 'ALTRP_SETTING_ADMIN_LOGO' ) !!};
   </script>
   @endif
+  <script>
+    let altrp_version = '{!! config( 'app.altrp_version' ) !!}';
+  </script>
+
   <script src="{{ altrp_asset( '/modules/admin/admin.js', 'http://localhost:3002/' ) }}" defer></script>
 
   <!-- Fonts -->

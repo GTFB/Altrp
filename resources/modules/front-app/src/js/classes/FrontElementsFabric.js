@@ -27,7 +27,7 @@ class FrontElementsFabric {
     if(parent){
       element.setParent(parent);
     }
-    element.updateStyles();
+    element.update();
     return element;
   }
 }

@@ -1,33 +1,96 @@
 import React, {Component} from "react";
+import { set } from "lodash";
 
 class InputWidget extends Component {
 
   constructor(props){
     super(props);
-    this.change = this.change.bind(this);
+    this.onChange = this.onChange.bind(this);
     this.state = {
-      settings: props.element.getSettings()
+      settings: props.element.getSettings(),
+      value: props.element.getSettings().content_default_value || '',
     };
-    console.log(props.element.getSettings())
     props.element.component = this;
     if(window.elementDecorator){
       window.elementDecorator(this);
     }
   }
 
-  change(e){
+  onChange(e){
+    let value = e.target.value;
     this.setState({
-      settings: {
-        content_label: e.target.value 
-      }
-    })
+      ...state,
+      value
+    });
   }
 
   render(){
-    return<input type={this.state.settings.content_type}
-                 value={this.state.settings.content_label || ""}
-                 placeholder={this.state.settings.content_placeholder}
-                 />;
+    let styles = {};
+    let label = null;
+
+    let classLabel = ""
+    let styleLabel = {}
+    switch (this.state.settings.content_label_position_type) {
+      case "top":
+        styleLabel = {
+            marginBottom: this.state.settings.label_style_spacing.size + this.state.settings.label_style_spacing.unit || 2 + "px"
+        }
+        classLabel = ""
+        break;
+      case "bottom":
+        styleLabel = {
+            marginTop: this.state.settings.label_style_spacing.size + this.state.settings.label_style_spacing.unit || 2 + "px"
+        }
+        break;
+      case "left":
+        styleLabel = {
+            marginRight: this.state.settings.label_style_spacing.size + this.state.settings.label_style_spacing.unit || 2 + "px"
+        }
+        classLabel = "altrp-field-label-container-left"
+        // this.label.current.classList.add("hello")
+
+        break;
+    }
+
+    if(this.state.settings.content_label != null) {
+      label = <div className={"altrp-field-label-container " + classLabel} style={styleLabel}><label className="altrp-field-label">{this.state.settings.content_label}</label></div>
+    } else {
+      label = null
+    }
+
+    let required = null;
+    if(this.state.settings.content_required) {
+      required = <div className="altrp-field-label-container"><label className="altrp-field-required">*</label></div>
+    } else {
+      required = null
+    }
+
+    let autocomplete = "off";
+    if(this.state.settings.content_autocomplete) {
+      autocomplete = "on";
+    } else {
+      autocomplete = "off";
+    }
+
+    return <div className={"altrp-field-container " + classLabel}>
+        {this.state.settings.content_label_position_type == "top" ? label : ""}
+        {this.state.settings.content_label_position_type == "left" ? label : ""}
+            {/* .altrp-field-label-container */}
+        {
+          required 
+        }
+      <input type={this.state.settings.content_type}
+             value={this.state.value}
+             autoComplete={autocomplete}
+             placeholder={this.state.settings.content_placeholder}
+             className={"altrp-field " + this.state.settings.position_css_classes}
+             onChange={this.onChange}
+             id={this.state.settings.position_css_id}
+      />
+      {
+        this.state.settings.content_label_position_type == "bottom" ? label : ""
+      }
+    </div>
   }
 }
 

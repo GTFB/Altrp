@@ -12,7 +12,10 @@ class TextareaController extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {value};
+    this.state = {
+      value,
+      show: true
+    };
     controllerDecorate(this);
   }
   changeValue(e){
@@ -23,16 +26,19 @@ class TextareaController extends Component {
   }
   render(){
 
-    return <div className="controller-container controller-container_textarea">
-      <div className="controller-container__label">
-        {this.props.label}
+    if(this.state.show === false) {
+      return '';
+    }
+      return <div className="controller-container controller-container_textarea">
+        <div className="controller-container__label">
+          {this.props.label}
+        </div>
+        <div className="controller-container__dynamic">
+          Dynamic
+          <DynamicIcon/>
+        </div>
+        <textarea className="controller-container__textarea" onChange={this.changeValue} value={this.state.value}/>
       </div>
-      <div className="controller-container__dynamic">
-        Dynamic
-        <DynamicIcon/>
-      </div>
-      <textarea className="controller-container__textarea" onChange={this.changeValue} value={this.state.value}/>
-    </div>
   }
 }
 

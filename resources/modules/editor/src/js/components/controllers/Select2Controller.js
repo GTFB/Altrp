@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import Select from "react-select";
 import DesktopIcon from '../../../svgs/desktopNew.svg'
 import controllerDecorate from "../../decorators/controller";
-// в rootElement при создании массива select, value никогда не должно повторятся 
+// в rootElement при создании массива select, value никогда не должно повторятся
 class Select2Controller extends Component {
   constructor(props) {
     super(props);
@@ -14,7 +14,10 @@ class Select2Controller extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {value};
+    this.state = {
+      value,
+      show: true
+    };
     controllerDecorate(this);
   };
 
@@ -22,10 +25,12 @@ class Select2Controller extends Component {
     return '';
   }
 
-  change(value){
-    this._changeValue(
-      value
-    )
+  change(value, action){
+    if(action.action === 'select-option'){
+      this._changeValue(
+          value.value
+      );
+    }
   };
 
   render() {
@@ -72,7 +77,7 @@ class Select2Controller extends Component {
         fontSize: 13,
         opacity: 1
       }),
-      
+
       indicatorSeparator: () => ({
         display: "none !important"
       }),
@@ -82,6 +87,16 @@ class Select2Controller extends Component {
       })
     };
 
+    if(this.state.show === false) {
+      return '';
+    }
+
+    let value = {};
+    this.props.options.forEach(option=>{
+      if(option.value === this.state.value){
+        value = {...option};
+      }
+    });
     return <div className="controller-container controller-container_select2">
       <div className="control-select2-header">
         <div className="control-select2__label">{this.props.label}</div>
@@ -90,7 +105,7 @@ class Select2Controller extends Component {
       <div className="control-container_select2-wrapper">
         <Select
           onChange={this.change}
-          value={this.props.default.value}
+          value={value}
           onInputChange={this.change}
           options={this.props.options}
           styles={customStyles}
@@ -99,6 +114,7 @@ class Select2Controller extends Component {
         />
       </div>
     </div>
+
   }
 }
 

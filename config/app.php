@@ -33,7 +33,7 @@ return [
     |
     */
 
-    'altrp_version' => '0.2.4',
+    'altrp_version' => '0.4.3',
 
     /*
     |--------------------------------------------------------------------------
@@ -181,9 +181,10 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        
+
         Laratrust\LaratrustServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
+        App\Providers\CrudGeneratorServiceProvider::class,
 
     ],
 

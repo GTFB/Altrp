@@ -12,7 +12,10 @@ class NumberController extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {value};
+    this.state = {
+      value,
+      show: true
+    };
     controllerDecorate(this);
   }
   changeValue(e){
@@ -27,15 +30,17 @@ class NumberController extends Component {
     return '';
   }
   render(){
-
-    return <div className="controller-container controller-container_number">
-      <div className="controller-container__label">
-        {this.props.label}
+    if(this.state.show === false) {
+      return '';
+    }
+      return <div className="controller-container controller-container_number">
+        <div className="controller-container__label">
+          {this.props.label}
+        </div>
+        <div className="control-group">
+          <input className="control-field" onChange={this.changeValue} value={this.state.value} type="number"/>
+        </div>
       </div>
-      <div className="control-group">
-        <input className="control-field" onChange={this.changeValue} value={this.state.value} type="number"/>
-      </div>
-    </div>
   }
 }
 

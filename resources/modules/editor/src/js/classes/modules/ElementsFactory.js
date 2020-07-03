@@ -12,7 +12,7 @@ class ElementsFactory extends BaseModule{
     if( object.children && object.children.length ){
       for( let child of object.children){
         elementsManager.checkElementExists(child.name) ?
-          children.push( this.parseData(child, element) ) : '';
+          children.push(this.parseData(child, element) ) : '';
       }
     }
     element.id = object.id;
@@ -25,6 +25,7 @@ class ElementsFactory extends BaseModule{
     if(parent){
       element.parent = parent;
     }
+    element.update();
     return element;
   }
 

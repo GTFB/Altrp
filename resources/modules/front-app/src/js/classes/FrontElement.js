@@ -2,18 +2,31 @@ import {CONSTANTS} from "../../../../editor/src/js/helpers";
 
 class FrontElement {
 
-  constructor(data){
+  constructor(data = {}){
     this.name = data.name;
     this.settings = data.settings;
     this.children = data.children;
     this.type = data.type;
     this.id = data.id;
-    this.componentClass = window.frontElementsManager.getComponentClass(this.getName());
+    if(window.frontElementsManager){
+      this.componentClass = window.frontElementsManager.getComponentClass(this.getName());
+    }
+    this.parent = null;
+    /**
+     *
+     * @type {AltrpForm[]}
+     */
+    this.forms = [];
+    /**
+     * Ссылка на компонент
+     * @type {React.Component | null}
+     */
+    this.component = null;
+
     /**
      * Ссылка на родителя
      * @type {FrontElement}
      */
-    this.parent = null;
     /**
      * Ссылка на корневой элемент шаблона
      * @type {FrontElement}
@@ -23,7 +36,7 @@ class FrontElement {
     /**
      * Список данных моделей для текущего шаблона. Например:
      *  {
-     *      modelName: page
+     *      modelName: string
      *      modelId: 1,
      *  }
      *  Для каждого шаблона типа content устанавливается одна обязательная модель Page
@@ -78,6 +91,65 @@ class FrontElement {
     }
     return this.parent.findClosestByType(type)
   }
+
+  /**
+   * Вызывается для обновление элемента
+   */
+  update(){
+    this.updateStyles();
+    let widgetsForForm = [
+        'button',
+        'input',
+    ];
+    if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_id')){
+      this.formInit()
+    }
+  }
+
+  /**
+   * Если элемент поле или кнопка нужно инициализирваоть форму в FormsManager
+   */
+  async formInit(){
+    /**
+     * @member {FormsManager} formsManager
+     */
+    let formsManager = await import('../../../../editor/src/js/classes/modules/FormsManager.js');
+    formsManager = formsManager.default;
+    switch (this.getName()) {
+      case 'button': {
+        let method = 'POST';
+        if(this.getSettings('form_actions') === 'add_new'){
+          this.addForm(formsManager.registerForm(this.getSettings('form_id'), this.getSettings('choose_model'), method));
+        }
+      }
+      break;
+      case 'input': {
+        formsManager.addField(this.getSettings('form_id'), this);
+      }
+      break;
+    }
+  }
+
+  /**
+   *
+   * @return {AltrpForm[]}
+   */
+  getForms(){
+    return this.forms;
+  }
+
+  /**
+   *
+   * @param {AltrpForm} form
+   */
+  addForm(form){
+    this.forms.push(form);
+  }
+  /**
+   * Возвращает массив
+   * @return {[]}
+   */
+
   getChildren(){
     return this.children;
   }
@@ -92,8 +164,18 @@ class FrontElement {
   getType(){
     return this.type;
   }
-  getSettings(){
-    return this.settings;
+
+  /**
+   * Получить настройку или все настройки
+   * @param settingName
+   * @return {*}
+   */
+  getSettings(settingName){
+    if(! settingName)
+    {
+      return this.settings;
+    }
+    return this.settings[settingName];
   }
   updateStyles(){
     window.stylesModulePromise.then(stylesModule => {
@@ -135,14 +217,46 @@ class FrontElement {
     return styles;
   }
 
+  /**
+   * Возвращает css-селектор в виду строки
+   * @return {string}
+   */
   getSelector(){
     if(this.type === 'root-element'){
       return `.altrp-template-root${this.getId()}`;
     }
     return `.altrp-element${this.getId()}`;
   }
+
+  /**
+   * Возвращает количестве колонок в секции
+   * @return {*}
+   */
   getColumnsCount(){
     return this.children.length;
+  }
+
+  /**
+   *  Проводит валидацию поля, если это виджет input,
+   *  если другой виджет, то просто возвращает true
+   *  @return {boolean}
+   */
+  fieldValidate(){
+    if(this.getName() !== 'input'){
+      return true;
+    }
+    return ! (this.getSettings('content_required') && ! this.getValue());
+  }
+
+  /**
+   * Возвращает значение если виджет input, если другое, то null
+   */
+  getValue(){
+
+    if(this.getName() !== 'input'){
+      return null;
+    }
+    return this.component.state.value;
   }
 }
 

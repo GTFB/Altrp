@@ -19,6 +19,7 @@ class TextController extends Component {
     this.state = {
       value,
       dynamicValue: null,
+      show: true
     };
     this.dynamicButton = React.createRef();
     controllerDecorate(this);
@@ -43,7 +44,9 @@ class TextController extends Component {
     return '';
   }
   render(){
-    console.log(this.state.dynamicValue);
+    if(this.state.show === false) {
+      return '';
+    }
 
     return <div className="controller-container controller-container_text">
       <div className="controller-container__label">
@@ -69,6 +72,7 @@ class TextController extends Component {
         </div>
       </div>
     </div>
+
   }
 }
 

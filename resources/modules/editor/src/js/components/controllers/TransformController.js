@@ -16,6 +16,7 @@ class TransformController extends Component {
     value = value || false;
     this.state = {
       value,
+      show: true,
       min: 0,
       max: 0
     };
@@ -32,7 +33,6 @@ class TransformController extends Component {
     switch(value) {
       case "":
         option = {}
-        console.log(option)
         slider.classList.add("control-slider-input-wrapper-transform-none")
         break;
       case "rotate":
@@ -40,7 +40,8 @@ class TransformController extends Component {
           function: "rotate",
           unit: "deg",
           max: 360,
-          min: -360
+          min: -360,
+          step: 1
         }
         break;
       case "scaleX":
@@ -48,7 +49,8 @@ class TransformController extends Component {
           function: "scaleX",
           unit: "",
           max: 100,
-          min: -100
+          min: -100,
+          step: 0.1
         }
         break;
       case "scaleY":
@@ -56,7 +58,8 @@ class TransformController extends Component {
           function: "scaleY",
           unit: "",
           max: 100,
-          min: -100
+          min: -100,
+          step: 0.1
         }
         break;
       case "skewY":
@@ -64,7 +67,8 @@ class TransformController extends Component {
           function: "skewY",
           unit: "deg",
           max: 360,
-          min: -360
+          min: -360,
+          step: 1
         }
         break;
       case "skewX":
@@ -72,7 +76,8 @@ class TransformController extends Component {
           function: "skewX",
           unit: "deg",
           max: 360,
-          min: -360
+          min: -360,
+          step: 1
         }
         break;
       case "translateX":
@@ -80,7 +85,8 @@ class TransformController extends Component {
           function: "translateX",
           unit: "%",
           max: 100,
-          min: -100
+          min: -100,
+          step: 1
         }
         break;
       case "translateY":
@@ -88,7 +94,8 @@ class TransformController extends Component {
           function: "translateY",
           unit: "%",
           max: 100,
-          min: -100
+          min: -100,
+          step: 1
         }
         break;
     }
@@ -102,34 +109,37 @@ class TransformController extends Component {
         ...this.state.value,
         function: option.function,
         size:e.target.value,
-        unit: option.unit
+        unit: option.unit,
+        step: option.step
       });
     } else {
       this._changeValue({
         ...this.state.value,
         function: "rotate",
         size: 0,
-        unit: "deg"
+        unit: "deg",
+        step: 1
       });
     }
   }
 
   sliderChange(e) {
+    console.log(this.state.value)
     if(this.state.value.function != "scaleX" || "scaleY") {
       this._changeValue({
         ...this.state.value,
-        size:e.target.value
+        size:e.target.value * 0.1
       });
     } else {
       this._changeValue({
         ...this.state.value,
-        size:e.target.value / 100
+        size:e.target.value * 0
       });
     }
-    
+
     // console.log(this.state.value)
   };
-  
+
   inputUpdate (e) {
     this._changeValue({
       ...this.state.value,
@@ -139,6 +149,44 @@ class TransformController extends Component {
 
   render(){
 
+    if(this.state.show === false) {
+      return '';
+    }
+
+    let options = [
+      {
+        value: "",
+        label: "none"
+      },
+      {
+       value: "rotate",
+       label: "rotate"
+      },
+      {
+        value: "scaleX",
+        label: "scaleX"
+      },
+      {
+        value: "scaleY",
+        label: "scaleY"
+      },
+      {
+        value: "skewY",
+        label: "skewY"
+      },
+      {
+        value: "skewX",
+        label: "skewX"
+      },
+      {
+        value: "translateX",
+        label: "translateX"
+      },
+      {
+        value: "translateY",
+        label: "translateY"
+      }
+    ];
     return <div className="controller-container controller-container_transform">
       <div className="controller-container__label control-button-label">
         {this.props.label}
@@ -146,10 +194,12 @@ class TransformController extends Component {
       <div className="control-group">
         <div className="control-group control-group-transform">
           {/* выбор функции */}
-          <div className="control-container_select-wrapper control-container_select-wrapper-transform">
-            <select className="control-select control-field" onChange={this.changeFunction}>
-              {this.props.options.map(option => {return <option value={option.value} key={option.value}>{option.label}</option>})}
-            </select>
+          <div className="control-container_select_container">
+            <div className="control-container_select-wrapper control-container_select-wrapper-transform">
+              <select className="control-select control-field" onChange={this.changeFunction}>
+                {options.map(option => {return <option value={option.value} key={option.value}>{option.label}</option>})}
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -158,15 +208,18 @@ class TransformController extends Component {
         <input type="range"
                 min={this.state.min}
                 max={this.state.max}
+                step={this.state.value.step || 1}
                 className="control-slider" value={this.state.value.size} onChange={this.inputUpdate} onInput={this.sliderChange}/>
           <div className="control-slider-input-box">
             <input className="control-slider-input" type="number"
                 min={this.state.min}
                 max={this.state.max}
+                step={this.state.value.step || 1}
                 value={this.state.value.size} onChange={this.inputUpdate} onInput={this.sliderChange}/>
         </div>
       </div>
     </div>
+
   }
 }
 

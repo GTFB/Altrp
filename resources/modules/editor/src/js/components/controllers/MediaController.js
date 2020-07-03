@@ -10,12 +10,14 @@ class MediaController extends Component {
   constructor(props) {
     super(props);
     let value = this.props.currentElement.getSettings(this.props.controlId);
-    // console.log(value);
     if (value === null && this.props.default && this.props.default.name) {
       value = iconsManager().getIcon(this.props.default.name);
     }
     value = value || {};
-    this.state = {value};
+    this.state = {
+      value,
+      show: true
+    };
     this.openAssetsBrowser = this.openAssetsBrowser.bind(this);
     this.deleteAsset = this.deleteAsset.bind(this);
     controllerDecorate(this);
@@ -68,21 +70,25 @@ class MediaController extends Component {
     } else {
       Asset = AddIcon
     }
-    return <div className="controller-container controller-container_media">
-      <div className="controller-container__label">
-        {this.props.label}
-      </div>
-      <div className="controller-media-choose" onClick={this.openAssetsBrowser}>
-        {Asset ? <Asset {...assetsProps}/> : ''}
-        {
-          this.state.value.name ?
+
+    if(this.state.show === false) {
+      return '';
+    }
+      return <div className="controller-container controller-container_media">
+        <div className="controller-container__label">
+          {this.props.label}
+        </div>
+        <div className="controller-media-choose" onClick={this.openAssetsBrowser}>
+          {Asset ? <Asset {...assetsProps}/> : ''}
+          {
+            this.state.value.name ?
               <button className="controller-media-choose__button controller-media-choose__button_delete"
                       onClick={this.deleteAsset}>Delete</button> :
               <button className="controller-media-choose__button controller-media-choose__button_choose">Choose
                 Media</button>
-        }
+          }
+        </div>
       </div>
-    </div>
   }
 }
 

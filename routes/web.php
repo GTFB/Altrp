@@ -26,6 +26,7 @@ Route::group([
   Route::get('/', 'InstallationController@starting')->name(  'installation.start' );
   Route::get('process', 'InstallationController@process')->name(  'installation.input' );
   Route::post('process', 'InstallationController@process')->name(  'installation.post' );
+//  Route::get('migrate', 'InstallationController@migrate')->name(  'installation.migrate' );
 });
 
 Route::group([
@@ -106,6 +107,32 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
      * Роуты для теста запросов для виджета таблицы todo: удалить, после того как модели будут готовы
      */
     Route::get( 'models_list', 'Admin\ModelsController@models_list' )->name( 'admin.models_list' );
+    Route::get( 'models_list_for_query', 'Admin\ModelsController@models_list_for_query' )->name( 'admin.models_list_for_query' );
+    Route::get( 'models_options', 'Admin\ModelsController@models_options' )->name( 'admin.models_options' );
+
+
+    Route::get('/tables', "Admin\TableController@getTables");
+    Route::get('/tables/{table}', "Admin\TableController@getTable");
+    Route::post('/tables', "Admin\TableController@insert");
+    Route::put('/tables/{table}', "Admin\TableController@update");
+    Route::delete('/tables/{table}', "Admin\TableController@delete");
+
+    Route::get('/tables/{table}/migrations', "Admin\TableController@getMigrations");
+    Route::post('/tables/{table}/migrations', "Admin\TableController@insertMigration");
+    Route::post('/tables/{table}/migrations/{migration}/run', "Admin\TableController@runMigration");
+
+    Route::get('/tables/{table}/columns', "Admin\TableController@getColumns");
+    Route::get('/tables/{table}/keys', "Admin\TableController@getKeys");
+    
+    Route::post('/tables/{table}/test', "Admin\TableController@test");
+    
+    
+    Route::get('/tables/{table}/model', "Admin\TableController@getModel");
+    Route::post('/tables/{table}/model', "Admin\TableController@saveModel");
+    
+    Route::get('/tables/{table}/controller', "Admin\TableController@getController");
+    Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
+    
   });
 
 });
@@ -145,6 +172,15 @@ foreach ( $frontend_routes as $frontend_route ) {
 Route::group( ['prefix' => 'ajax'], function(){
 
   Route::resource( 'routes', 'Frontend\RouteController' );
-  Route::get( 'models/{model_name}', 'Admin\ModelsController@models' )->name( 'front.models' );
+  Route::get( 'models/{model_name}', 'Frontend\ModelsController@models' )->name( 'front.models.all' );
+  Route::post( 'models/{model_name}', 'Frontend\ModelsController@create' )->name( 'front.models.create' );
 
 } );
+
+
+
+// Require users routes
+if ( file_exists( app_path( '/routes/AltrpRoutes.php' ) ) )
+{
+  require_once ('AltrpRoutes.php');
+}
