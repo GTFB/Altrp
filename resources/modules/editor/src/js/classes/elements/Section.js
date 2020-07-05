@@ -11,6 +11,7 @@ import {
   TAB_CONTENT,
   CONTROLLER_SHADOW,
   CONTROLLER_LINK,
+  CONTROLLER_COLWIDTH,
   TAB_STYLE
 } from "../modules/ControllersManager";
 
@@ -271,6 +272,22 @@ class Section extends BaseElement{
 
     this.endControlSection();
 
+    /**
+     * Разработка структуры ширины
+     */
+
+    this.startControlSection('Structure', {
+      tab: TAB_CONTENT,
+      label: 'Structure',
+    });
+
+    this.addControl('layout_oveeeerflow', {
+      type: CONTROLLER_COLWIDTH,
+      label: 'Column width',
+    });
+
+    this.endControlSection();
+
     this.startControlSection("section_style_background", {
       tab: TAB_STYLE,
       label: "Background"
@@ -438,7 +455,7 @@ class Section extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-section': [ 
+        '{{ELEMENT}} .altrp-section': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -466,7 +483,7 @@ class Section extends BaseElement{
       label: "CSS Classes"
     });
 
-    
+
   }
 
   /**
