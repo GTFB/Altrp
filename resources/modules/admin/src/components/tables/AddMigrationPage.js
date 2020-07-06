@@ -312,8 +312,11 @@ class AddMigrationPage extends Component{
         let value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
         
         if(field_name === "name") {
+            
+        
             let val = e.target.value.replace("_", " ");
             value = val.charAt(0).toUpperCase() + val.slice(1); 
+            
             let title = this.state.column.title;
             let description = this.state.column.description;
             
@@ -324,7 +327,7 @@ class AddMigrationPage extends Component{
                 description = value; 
             }
             
-            this.setState({ ...this.state, column:{...this.state.column, [field_name]: value, title: title, description: description }});
+            this.setState({ ...this.state, column:{...this.state.column, [field_name]: e.target.value, title: title, description: description }});
             return;
         }
         

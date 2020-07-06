@@ -48,12 +48,23 @@ class AddControllerPage extends Component{
         
         let controller_res = await this.resource.get(this.state.table_id+"/controller");
         
+        
+        
         if(controller_res) {
+            
+            
+            controller_res.description = (controller_res.description == null) ? "" : controller_res.description;
+            controller_res.prefix = (controller_res.prefix == null) ? "" : controller_res.prefix;
+            controller_res.namespace = (controller_res.namespace == null) ? "" : controller_res.namespace;
             
             this.setState(state=>{
                 return{...state, data: controller_res};
             }, () => {
-                console.log(this.state)
+                
+                this.setState(state=>{
+                    return{...state, relationships: controller_res.relations.split(",")};
+                })
+                
             });
         }
         

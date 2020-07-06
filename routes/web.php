@@ -137,6 +137,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::post('/generators/{table}/model/create', 'Admin\GeneratorController@createModel');
     Route::post('/generators/{table}/controller/create', 'Admin\GeneratorController@createController');
     
+    
+
+    
   });
 
 });
@@ -181,10 +184,10 @@ Route::group( ['prefix' => 'ajax'], function(){
 
 } );
 
+/*
 
-
-// Require users routes
-if ( file_exists( app_path( '/routes/AltrpRoutes.php' ) ) )
-{
-  require_once ('AltrpRoutes.php');
-}
+    // Require users routes
+    if ( file_exists( app_path( '/routes/AltrpRoutes.php' ) ) )
+    {
+        require_once ('AltrpRoutes.php');
+    }*/
