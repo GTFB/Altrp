@@ -60,6 +60,10 @@ class Handler extends ExceptionHandler
             return $exception->render($request);
         }
 
+        if ($exception instanceof PermissionNotWrittenException) {
+            return $exception->render($request);
+        }
+
         if ($exception instanceof ModelNotWrittenException) {
             return $exception->render($request);
         }

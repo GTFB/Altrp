@@ -123,4 +123,16 @@ abstract class AppGenerator
 
         return $customContent;
     }
+
+    /**
+     * Получить пользовательский код из нужного блока комментариев
+     *
+     * @param $customCode
+     * @param $blockName
+     * @return mixed|string
+     */
+    protected function getCustomCodeBlock($customCode, $blockName)
+    {
+        return $customCode[$blockName] ?? '';
+    }
 }
