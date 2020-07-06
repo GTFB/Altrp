@@ -96,6 +96,9 @@ class AddModelPage extends Component{
         
         this.resource = new Resource({route: '/admin/ajax/tables'});
         this.model_resource = new Resource({route: '/admin/ajax/tables/'+this.props.match.params.id+'/model'});
+        this.save_model_resource = new Resource({route: '/admin/ajax/generators/'+this.props.match.params.id+'/model/create'});
+        
+        
         
         this.addFillableColumn = this.addFillableColumn.bind(this);
         this.deleteFillableColumn = this.deleteFillableColumn.bind(this);
@@ -211,15 +214,17 @@ class AddModelPage extends Component{
             'Content-Type': 'application/json'
         };
         
-        let model = {...this.state.data};
-        model.time_stamps = String(true) == model.time_stamps ? true : false,
-        model.soft_deletes = String(true) == model.soft_deletes ? true : false,
-        
+        let data = {...this.state.data};
+        /*data.time_stamps = String(true) == model.time_stamps ? true : false;
+        data.soft_deletes = String(true) == model.soft_deletes ? true : false;*/
+        data._token = _token;
+
+
         console.log(this.state.data)
-        let data = {
+        /*let data = {
             model: model,
-            _token: _token
-        };
+            
+        };*/
         let options = {
             method: 'POST',
             body: JSON.stringify(data),
@@ -228,7 +233,7 @@ class AddModelPage extends Component{
         
         
         let res;
-        res = await this.model_resource.post(data);
+        res = await this.save_model_resource.post(data);
         
         if(res){
             alert("Success");

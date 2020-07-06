@@ -9,6 +9,7 @@ use App\Http\Requests\ApiRequest;
 
 use App\Altrp\Table;
 use App\Altrp\Migration;
+use App\Altrp\Controller as AltrpController;
 use App\Error;
 
 use App\Altrp\Generators\ModelGenerator;
@@ -285,7 +286,7 @@ class TableController extends ApiController
 
         $table_id = $request->table;
         
-        $controller = Controller::where("table_id", $table_id)->firstOrFail();
+        $controller = AltrpController::where("table_id", $table_id)->firstOrFail();
         
         if(!$controller) {
             return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
@@ -303,7 +304,7 @@ class TableController extends ApiController
         
         $table_id = $request->table;
         
-        $controller = new \App\Altrp\Controller();
+        $controller = new AltrpController();
         $generator = new ControllerGenerator($controller, $request->all());
         
         $result = $generator->generate();
@@ -330,7 +331,7 @@ class TableController extends ApiController
         
         
         //dd($request->all());
-        $controller = new \App\Altrp\Controller();
+        $controller = new AltrpController();
         $generator = new ControllerGenerator($controller, $request->all(), ["tableName" => "books", "controllerName" => "BookController"]);
         
         

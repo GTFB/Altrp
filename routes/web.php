@@ -133,6 +133,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get('/tables/{table}/controller', "Admin\TableController@getController");
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
     
+    // GeneratorController routes
+    Route::post('/generators/{table}/model/create', 'Admin\GeneratorController@createModel');
+    Route::post('/generators/{table}/controller/create', 'Admin\GeneratorController@createController');
+    
   });
 
 });
