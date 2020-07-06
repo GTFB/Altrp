@@ -439,7 +439,7 @@ class BaseElement extends ControlStack{
     this.dynamicContentSettings = this.dynamicContentSettings || [];
     let exist = false;
     this.dynamicContentSettings.forEach(_dynamicContent=>{
-      _.isEqual(_dynamicContent, dynamicContent);
+      _.isEqual(_dynamicContent.settingName, dynamicContent.settingName);
     });
   }
 }

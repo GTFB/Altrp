@@ -83,6 +83,7 @@ class TextController extends Component {
     e.stopPropagation();
     this.props.dispatch(toggleDynamicContent({
       type: 'text',
+      settingName: this.props.controlId,
       onSelect: (dynamicValue) => {
         this._changeValue(dynamicValue);
       }
