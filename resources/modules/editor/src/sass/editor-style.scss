@@ -297,6 +297,7 @@ button{
   flex-grow: 1;
   overflow-x: hidden;
   overflow-y: auto;
+  position: relative;
 }
 .controller-container{
   flex-wrap: wrap;
@@ -1101,8 +1102,8 @@ display: none;
   color: #8E94AA;
 }
 .control-heading{
-  margin: 5px;
-  font-size: 18px;
+  margin: 5px 0;
+  font-weight: bold;
 }
 .control-css-editor-description{
   font-size: 11px;
@@ -1313,6 +1314,7 @@ display: none;
 .altrp-element_section{
   & > .overlay {
     & .overlay-settings__button {
+      z-index: 9998;
       &:first-child {
         border-radius: 5px 0 0 0;
         &::before {
@@ -1347,6 +1349,13 @@ display: none;
       }
     }
   }
+}
+.settings-panel{
+  position: relative;
+}
+
+.overlay-settings__button_edit {
+  z-index: 99999;
 }
 
 .altrp-element_section:first-of-type{
@@ -1488,6 +1497,25 @@ display: none;
 .pl-0{
   padding-left: 0;
 }
+
+.dynamic-placeholder.control-field{
+  position: relative;
+}
+.dynamic-placeholder__remove {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  height: 100%;
+  width: 27px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  cursor: pointer;
+}
 .css-tynsen-Menu{
   z-index: 100;
+}
+#editor-content .altrp-element{
+  position: relative;
 }

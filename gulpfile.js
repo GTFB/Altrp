@@ -39,6 +39,7 @@ function altrpZip() {
     '!./.gitattributes',
     '!./.gitignore',
     '!./.editorconfig',
+    '!./_ide_helper.php',
   ]).pipe(zip('altrp.zip'))
       .pipe(gulp.dest('../'));
 }

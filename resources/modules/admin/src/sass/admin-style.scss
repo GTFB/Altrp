@@ -16,9 +16,9 @@
 
 
 .admin {
-
   display: flex;
   height: 100vh;
+  padding-left: 271px;
   &__logo{
     width: 120px;
     height: 44px;
@@ -32,7 +32,10 @@
     }
   }
   &-nav {
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
     //overflow: hidden;
     overflow-x: hidden;
     overflow-y: auto;

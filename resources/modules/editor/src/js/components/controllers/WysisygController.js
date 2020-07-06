@@ -23,18 +23,21 @@ const WysiwygController = ({
     setContent(value);
   }, [currentElement]);
 
-  return (
-    <div className="controller-container controller-container_wysiwyg">
-      <div className="controller-container__label">{label}</div>
-      <div className="controller-container__dynamic">
-        Dynamic
-        <DynamicIcon />
+  if(!controller.isShow()) {
+    return '';
+  }
+    return (
+      <div className="controller-container controller-container_wysiwyg">
+        <div className="controller-container__label">{label}</div>
+        <div className="controller-container__dynamic">
+          Dynamic
+          <DynamicIcon/>
+        </div>
+        <Suspense fallback={<div>Loading...</div>}>
+          <JoditEditor onChange={value => setContent(value)} value={content}/>
+        </Suspense>
       </div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <JoditEditor onChange={value => setContent(value)} value={content} />
-      </Suspense>
-    </div>
-  );
+    );
 };
 
 function mapStateToProps(state) {

@@ -4,6 +4,9 @@
 ## Changelog
 
 
+### 0.4.0
++ Add "Add New" Form Action to Button Widget
++ Adding Users Via Admin Interface 
 
 ### 0.3.2
 + Add Logo on Login Page  

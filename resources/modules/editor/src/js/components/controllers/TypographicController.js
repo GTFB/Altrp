@@ -29,6 +29,7 @@ class TypographicController extends Component {
     value = value || false;
     this.state = {
       value,
+      show: true,
       activeTypographic: false,
       //size
       sizeMin: this.props.sizeMin || 0,
@@ -51,11 +52,12 @@ class TypographicController extends Component {
   openTypographic(){
     let shadowContainer = document.getElementById("typographicContainer")
     let shadowContentIcon = document.getElementById("shadowContentIcon");
+    // shadowContainer.classList.toggle("control-shadow-active");
 
     this.setState({
       activeTypographic: !this.state.activeTypographic
     })
-    
+
     if(shadowContentIcon.getAttribute("fill") == "#8E94AA") {
       shadowContentIcon.removeAttribute("fill");
       shadowContentIcon.setAttribute("fill", "#5bc0de");
@@ -261,7 +263,7 @@ class TypographicController extends Component {
         key: 2
       },
     ];
-    
+
     const decorationOptions = [
       {
         value: 'none',
@@ -338,9 +340,12 @@ class TypographicController extends Component {
     };
     // конец стилей для select2
 
-    let typographic = ""
+    if(this.state.show === false) {
+      return '';
+    }
+    let typographic = "";
 
-    if(this.state.activeTypographic == true) {
+    if(this.state.activeTypographic === true) {
       typographic = <div id="typographicContainer" className="control-typographic-wrapper control-shadow-wrapper-none">
       {/* начало select2 */}
         <div className="controller-container controller-container_select2">
@@ -485,6 +490,7 @@ class TypographicController extends Component {
 
       </div>
     </div>
+
   }
 }
 

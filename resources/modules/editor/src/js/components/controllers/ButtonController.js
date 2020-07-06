@@ -14,6 +14,7 @@ class ButtonController extends Component {
     value = value || false;
     this.state = {
       value,
+      show: true
     };
     controllerDecorate(this);
   }
@@ -34,15 +35,18 @@ class ButtonController extends Component {
   }
 
   render(){
-    let buttons = this.props.buttons || [];
-    return <div className="controller-container controller-container_button">
-      <div className="control-group control-button-container" id="buttonList">
-        {buttons.map((buttons) => {
-          return <button key={buttons.key} data-value={buttons.value} id={"activeButton" + buttons.key} data-key={buttons.key} onClick={this.changeValue} className={this.state.value.button === buttons.value ? this.state.value.activeClass : ""} style={buttons.styles}>{buttons.label}</button>
-        })
-      }
+    if(this.state.show === false) {
+      return '';
+    }
+      let buttons = this.props.buttons || [];
+      return <div className="controller-container controller-container_button">
+        <div className="control-group control-button-container" id="buttonList">
+          {buttons.map((buttons) => {
+            return <button key={buttons.key} data-value={buttons.value} id={"activeButton" + buttons.key} data-key={buttons.key} onClick={this.changeValue} className={this.state.value.button === buttons.value ? this.state.value.activeClass : ""} style={buttons.styles}>{buttons.label}</button>
+          })
+          }
+        </div>
       </div>
-    </div>
   }
 }
 

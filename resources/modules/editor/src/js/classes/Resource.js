@@ -74,7 +74,8 @@ class Resource {
   post(data = {}, headers){
     headers = headers || {
       'X-CSRF-TOKEN': _token,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
     };
     let options = {
       method: 'POST',

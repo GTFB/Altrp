@@ -16,6 +16,7 @@ class TransformController extends Component {
     value = value || false;
     this.state = {
       value,
+      show: true,
       min: 0,
       max: 0
     };
@@ -135,10 +136,10 @@ class TransformController extends Component {
         size:e.target.value * 0
       });
     }
-    
+
     // console.log(this.state.value)
   };
-  
+
   inputUpdate (e) {
     this._changeValue({
       ...this.state.value,
@@ -148,6 +149,10 @@ class TransformController extends Component {
 
   render(){
 
+    if(this.state.show === false) {
+      return '';
+    }
+
     let options = [
       {
         value: "",
@@ -155,33 +160,33 @@ class TransformController extends Component {
       },
       {
        value: "rotate",
-       label: "rotate" 
+       label: "rotate"
       },
       {
         value: "scaleX",
-        label: "scaleX" 
+        label: "scaleX"
       },
       {
         value: "scaleY",
-        label: "scaleY" 
+        label: "scaleY"
       },
       {
         value: "skewY",
-        label: "skewY" 
+        label: "skewY"
       },
       {
         value: "skewX",
-        label: "skewX" 
+        label: "skewX"
       },
       {
         value: "translateX",
-        label: "translateX" 
+        label: "translateX"
       },
       {
         value: "translateY",
-        label: "translateY" 
+        label: "translateY"
       }
-    ]
+    ];
     return <div className="controller-container controller-container_transform">
       <div className="controller-container__label control-button-label">
         {this.props.label}
@@ -214,6 +219,7 @@ class TransformController extends Component {
         </div>
       </div>
     </div>
+
   }
 }
 

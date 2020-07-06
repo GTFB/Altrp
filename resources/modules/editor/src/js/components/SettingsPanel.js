@@ -5,6 +5,7 @@ import StyleIcon from '../../svgs/style.svg'
 import AdvancedIcon from '../../svgs/advanced.svg'
 import {TAB_ADVANCED, TAB_CONTENT, TAB_STYLE} from "../classes/modules/ControllersManager";
 import PanelTabContent from "./PanelTabContent";
+import DynamicContent from "./DynamicContent/DynamicContent";
 
 class SettingsPanel extends Component {
 
@@ -15,6 +16,10 @@ class SettingsPanel extends Component {
     };
   }
 
+  /**
+   * Устанавливает текущий таб
+   * @param activeTab
+   */
   setActiveTab(activeTab){
     this.setState({
         ...this.state, activeTab

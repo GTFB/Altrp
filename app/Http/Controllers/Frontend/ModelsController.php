@@ -37,6 +37,8 @@ class ModelsController extends Controller
     $res = [];
 
     DB::table( $model_name )->insert($request->toArray());
+    $res[$model_name] = $request->toArray();
+    $res['success'] = true;
     return response()->json( $res );
   }
 }

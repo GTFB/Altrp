@@ -1,5 +1,8 @@
 import Resource from "./Resource";
 
+/**
+ * Класс имитирующий поведение формы (собирает данные с виджетов полей и отправляет их на сервер)
+ */
 class AltrpForm {
   constructor(formId, route, method = 'POST'){
     this.formId = formId;
@@ -38,7 +41,14 @@ class AltrpForm {
       }
     });
     if(success){
-      return await this.resource.post(this.getData())
+      switch (this.method){
+        case 'POST':{
+          return await this.resource.post(this.getData());
+        }
+        case 'PUT':{
+          return await this.resource.put(this.getData());
+        }
+      }
     } else {
       return await alert('Валидация не прошла');
     }

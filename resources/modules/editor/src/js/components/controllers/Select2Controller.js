@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import Select from "react-select";
 import DesktopIcon from '../../../svgs/desktopNew.svg'
 import controllerDecorate from "../../decorators/controller";
-// в rootElement при создании массива select, value никогда не должно повторятся 
+// в rootElement при создании массива select, value никогда не должно повторятся
 class Select2Controller extends Component {
   constructor(props) {
     super(props);
@@ -15,7 +15,8 @@ class Select2Controller extends Component {
     }
     value = value || '';
     this.state = {
-      value
+      value,
+      show: true
     };
     controllerDecorate(this);
   };
@@ -76,7 +77,7 @@ class Select2Controller extends Component {
         fontSize: 13,
         opacity: 1
       }),
-      
+
       indicatorSeparator: () => ({
         display: "none !important"
       }),
@@ -85,6 +86,11 @@ class Select2Controller extends Component {
         color: "#8E94AA",
       })
     };
+
+    if(this.state.show === false) {
+      return '';
+    }
+
     let value = {};
     this.props.options.forEach(option=>{
       if(option.value === this.state.value){
@@ -108,6 +114,7 @@ class Select2Controller extends Component {
         />
       </div>
     </div>
+
   }
 }
 

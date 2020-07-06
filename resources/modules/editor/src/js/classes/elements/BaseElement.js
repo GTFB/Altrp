@@ -247,6 +247,23 @@ class BaseElement extends ControlStack{
     }
   }
 
+  /**
+   * Удаляет свойство настройки по id
+   * @param {string} settingName
+   */
+  deleteSetting(settingName){
+    if(this.settings[settingName]){
+      delete this.settings[settingName];
+    }
+    // if(this.component){
+    //   this.component.changeSetting(settingName, null);
+    // }
+  }
+  /**
+   * Возвращает значение настройки по id
+   * @param {string} settingName
+   * @return {*}
+   */
   getSettings(settingName){
     this._initDefaultSettings();
     if(! settingName){
@@ -395,36 +412,15 @@ class BaseElement extends ControlStack{
     this.updateStyles();
   }
 
-  getStringifyStyles(){
-    let styles = '';
-    if(typeof this.settings.styles !== 'object'){
-      return styles
-    }
-    for(let breakpoint in this.settings.styles){
-      let rules = {};
-      if(this.settings.styles.hasOwnProperty(breakpoint)){
-        for(let settingName in this.settings.styles[breakpoint]){
-          if(this.settings.styles[breakpoint].hasOwnProperty(settingName)) {
-            for(let selector in this.settings.styles[breakpoint][settingName]){
-              if(this.settings.styles[breakpoint][settingName].hasOwnProperty(selector)) {
-                rules[selector] = rules[selector] || [];
-                // console.log(this.settings.styles[breakpoint][settingName][selector]);
-                rules[selector] = rules[selector].concat(this.settings.styles[breakpoint][settingName][selector])
-              }
-            }
-          }
-        }
-      }
-      if(breakpoint === CONSTANTS.DEFAULT_BREAKPOINT){
-        for(let selector in rules){
-          if(rules.hasOwnProperty(selector)){
-            styles += `${selector} {` + rules[selector].join('') + '}';
-          }
-        }
-      }
-    }
-    return styles;
+  /**
+   * @param {String} styles
+   * */
+  setStringStyles(styles){
+    styles = styles.replace(/__selector__/g, this.getSelector());
+    this.settings.stringStyles = styles;
+    this.updateStyles();
   }
+
   /**
    * @param {BaseElement} parent
    * */

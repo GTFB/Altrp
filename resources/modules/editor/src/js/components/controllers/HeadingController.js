@@ -11,15 +11,25 @@ class HeadingController extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {value};
+    this.state = {
+      value,
+      show: true
+    };
     controllerDecorate(this);
+  }
+
+  getDefaultValue(){
+    return '';
   }
 
   render(){
 
-    return <div className="controller-container controller-container_heading">
-        <h1 className="control-heading">{this.state.value.label}</h1>
-    </div>
+    if(this.state.show === false) {
+      return '';
+    }
+      return <div className="controller-container controller-container_heading">
+        <div className="control-heading">{this.props.label}</div>
+      </div>
   }
 }
 

@@ -17,6 +17,7 @@ class SliderController extends Component {
     value = value || {};
     this.state = {
       value,
+      show: true,
       units: this.props.units || ['px'],
       max: this.props.max || 100,
       min: this.props.min || 0,
@@ -53,37 +54,41 @@ class SliderController extends Component {
     // console.log(e.target.value)
   }
   render() {
-    return <div className="controller-container controller-container_slider">
-      <div className="control-slider-header">
-        <div className="control-slider-label">
-          {this.props.label}
-        </div>
-        <DesktopIcon className="controller-container__label-svg" width="12"/>
+    if(this.state.show === false) {
+      return '';
+    }
+      return <div className="controller-container controller-container_slider">
+        <div className="control-slider-header">
+          <div className="control-slider-label">
+            {this.props.label}
+          </div>
+          <DesktopIcon className="controller-container__label-svg" width="12"/>
 
-        <div className="control-slider-type">
-          {
-            this.state.units.map(unit=>{
-              let classes = 'control-slider-type-box';
-              if(this.state.value.unit === unit){
-                classes += ' control-slider-type-box_active';
-              }
-              return <div className={classes}
-                          key={unit}>
-                <button onClick={this.changeUnit}
-                        data-unit={unit}
-                        className="control-slider-type-label">{unit}</button>
-              </div>
-            })
-          }
+          <div className="control-slider-type">
+            {
+              this.state.units.map(unit => {
+                let classes = 'control-slider-type-box';
+                if (this.state.value.unit === unit) {
+                  classes += ' control-slider-type-box_active';
+                }
+                return <div className={classes}
+                            key={unit}>
+                  <button onClick={this.changeUnit}
+                          data-unit={unit}
+                          className="control-slider-type-label">{unit}</button>
+                </div>
+              })
+            }
+          </div>
         </div>
-      </div>
         <div className="control-slider-input-wrapper">
           <input type="range"
                  min={this.state.min}
                  max={this.state.max}
 
                  step={this.state.step}
-                 className="control-slider" value={this.state.value.size || ''} onChange={this.inputUpdate} onInput={this.sliderChange}/>
+                 className="control-slider" value={this.state.value.size || ''} onChange={this.inputUpdate}
+                 onInput={this.sliderChange}/>
           <div className="control-slider-input-box">
             <input className="control-slider-input" type="number"
                    min={this.state.min}

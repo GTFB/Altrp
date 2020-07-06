@@ -198,27 +198,6 @@ class Heading extends BaseElement {
       label: "Position"
     });
 
-    this.addControl("style_position_padding", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Padding",
-      default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit: "px"
-      },
-      units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-heading": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
-    });
-
     this.addControl('style_position_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
@@ -244,6 +223,27 @@ class Heading extends BaseElement {
       },
     });
 
+    this.addControl("style_position_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-heading": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+    
     this.addControl('position_z_index', {
       type: CONTROLLER_NUMBER,
       label: "Z-index",

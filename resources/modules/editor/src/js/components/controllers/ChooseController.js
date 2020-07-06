@@ -17,7 +17,10 @@ class ChooseController extends Component {
       value = this.props.default ;
     }
     value = value || '';
-    this.state = {value};
+    this.state = {
+      value,
+      show: true
+    };
     controllerDecorate(this);
   };
   change (e) {
@@ -35,26 +38,28 @@ class ChooseController extends Component {
   };
 
   render() {
-
-    return <div className="controller-container controller-container_choose">
-      <div className="controller-container__label">
-        {this.props.label}
-        <DesktopIcon className="controller-container__label-svg" width="12"/>
-      </div>
-      <div className="control-container-choose">
-        {
-          this.props.options.map(option =>{
-            let Icon = iconsManager().getIconComponent(option.icon);
-            return<div className="control-container-choose-block"
-                       key={option.value}
-                       data-change={option.value} onClick={this.change}>
-              <Icon fill="#8E94AA"/>
-            </div>
+    if(this.state.show === false) {
+      return '';
+    }
+      return <div className="controller-container controller-container_choose">
+        <div className="controller-container__label">
+          {this.props.label}
+          <DesktopIcon className="controller-container__label-svg" width="12"/>
+        </div>
+        <div className="control-container-choose">
+          {
+            this.props.options.map(option =>{
+                let Icon = iconsManager().getIconComponent(option.icon);
+                return<div className="control-container-choose-block"
+                           key={option.value}
+                           data-change={option.value} onClick={this.change}>
+                  <Icon fill="#8E94AA"/>
+                </div>
+              }
+            )
           }
-              )
-        }
+        </div>
       </div>
-    </div>
   }
 };
 

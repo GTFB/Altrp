@@ -31,19 +31,14 @@ class Section extends BaseElement{
       label: 'Layout'
     });
 
-    this.addControl('layout_stretch_section', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Stretch section',
-    });
-
     this.addControl('layout_content_width_type', {
       type: CONTROLLER_SELECT,
       label: 'Content width',
-      default: 'Boxed',
+      default: 'boxed',
       options: [
         {
           value: 'boxed',
-          label: 'Boxed'
+          label: 'boxed'
         },
         {
           value: 'full',
@@ -410,10 +405,10 @@ class Section extends BaseElement{
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        top: 15,
-        right: 15,
-        bottom: 15,
-        left: 15,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
         unit: "px"
       },
       units: ["px", "%", "vh"],

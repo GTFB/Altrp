@@ -1,4 +1,5 @@
 import {CONSTANTS} from "../../../../editor/src/js/helpers";
+import modelManager from "../../../../editor/src/js/classes/modules/ModelsManager";
 
 class FrontElement {
 
@@ -21,7 +22,62 @@ class FrontElement {
      * Ссылка на компонент
      * @type {React.Component | null}
      */
-    this.component = null
+    this.component = null;
+
+    /**
+     * Ссылка на родителя
+     * @type {FrontElement}
+     */
+    /**
+     * Ссылка на корневой элемент шаблона
+     * @type {FrontElement}
+     */
+    this.root = null;
+
+    /**
+     * Список данных моделей для текущего шаблона. Например:
+     *  {
+     *      modelName: string
+     *      modelId: 1,
+     *  }
+     *  Для каждого шаблона типа content устанавливается одна обязательная модель Page
+     *  Для шаблонов header и footer нужно предусмотреть изменение данных моджели типа Page
+     *  (при смене страницы header footer могут не меняться)
+     *  * @type {array}
+     */
+    this.models = []
+  }
+
+  /**
+   * Устанавливаем ссылку на элемент-родитель
+   * @param {FrontElement} parent
+   */
+  setParent(parent){
+    this.parent = parent;
+  }
+
+
+  /**
+   * Возвращает ссылку на корневой элемент шаблона
+   * @return {FrontElement}
+   */
+  getRoot(){
+    if(!this.root){
+      this.root = this.findClosestByType('root-element')
+    }
+    return this.root;
+  }
+
+  /**
+   * Возвращает ссылку на первый элемент указанного типа (поиск идет к корню дерева)
+   * @param {string} type
+   * @return {FrontElement}
+   */
+  findClosestByType(type){
+    if (this.getType() === type){
+      return this;
+    }
+    return this.parent.findClosestByType(type)
   }
 
   /**
@@ -146,6 +202,8 @@ class FrontElement {
         }
       }
     }
+    styles += this.settings.stringStyles || '';
+
     return styles;
   }
 
@@ -189,6 +247,31 @@ class FrontElement {
       return null;
     }
     return this.component.state.value;
+  }
+
+  /**
+   * @return {AltrpModel[]}
+   */
+  getModelsList(){
+    return this.getRoot().modelsList;
+  }
+
+  /**
+   * @param {AltrpModel[]} modelsList
+   */
+  setModelsList(modelsList){
+    this.modelsList = modelsList;
+  }
+
+  /**
+   * Подписываемся на изменеия моделей
+   * @param {function} callback
+   */
+  subscribeToModels(callback){
+    let modelsList = this.getModelsList();
+    modelsList.forEach(modelInfo=>{
+      modelManager.subscribeToModelUpdates(modelInfo.modelName, modelInfo.modelName, callback)
+    })
   }
 }
 
