@@ -9,6 +9,7 @@ use App\Altrp\Model;
 use App\Altrp\Relationship;
 use App\Altrp\Table;
 use App\Exceptions\CommandFailedException;
+use App\Exceptions\ModelNotWrittenException;
 use App\Exceptions\RelationshipNotInsertedException;
 use App\Exceptions\TableNotFoundException;
 
@@ -64,9 +65,55 @@ class ModelGenerator extends AppGenerator
      *
      * @return void
      */
-    public function changeModel(Model $model)
+    public function setModel(Model $model)
     {
         $this->model = $model;
+    }
+
+    /**
+     * Получить данные из полей
+     *
+     * @return object
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Сгенерировать модель
+     *
+     * @return bool
+     * @throws CommandFailedException
+     * @throws ModelNotWrittenException
+     * @throws RelationshipNotInsertedException
+     * @throws TableNotFoundException
+     */
+    public function generate()
+    {
+        $model = $this->getModelFromDb($this->data->table_id);
+
+        if ($model) {
+            $this->setModel($model);
+            $this->modelFilename = $this->getFormedFileName($this->model->path, $this->model->name);
+            $this->modelFile = $this->getModelFile();
+
+            if (! $this->writeModelToDb()) {
+                throw new ModelNotWrittenException('Failed to write model to the database', 500);
+            }
+            if (! $this->updateModelFile()) {
+                throw new CommandFailedException('Failed to update model file', 500);
+            }
+        } else {
+            if (! $this->writeModelToDb()) {
+                throw new ModelNotWrittenException('Failed to write model to the database', 500);
+            }
+            if (! $this->createModelFile()) {
+                throw new CommandFailedException('Failed to create model file', 500);
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -85,42 +132,9 @@ class ModelGenerator extends AppGenerator
         try {
             $this->model->save();
         } catch (\Exception $e) {
-            echo $e->getMessage();
             return false;
         }
         return true;
-    }
-
-    /**
-     * Сгенерировать модель
-     *
-     * @throws CommandFailedException
-     * @throws RelationshipNotInsertedException
-     * @throws TableNotFoundException
-     */
-    public function generate()
-    {
-        $model = $this->getModelFromDb($this->data->table_id);
-
-        if ($model) {
-            $this->changeModel($model);
-
-            $this->modelFilename = $this->getFormedFileName($this->model->path, $this->model->name);
-
-            if (! $this->writeModelToDb()) {
-                throw new TableNotFoundException('Failed to write model to the database', 500);
-            }
-            if (! $this->updateModelFile()) {
-                throw new CommandFailedException('Failed to update model file', 500);
-            }
-        } else {
-            if (! $this->writeModelToDb()) {
-                throw new TableNotFoundException('Failed to write model to the database', 500);
-            }
-            if (! $this->createModelFile()) {
-                throw new CommandFailedException('Failed to create model file', 500);
-            }
-        }
     }
 
     /**
@@ -132,16 +146,6 @@ class ModelGenerator extends AppGenerator
     }
 
     /**
-     * Получить данные из полей
-     *
-     * @return object
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
      * Запустить команду создания модели
      *
      * @return bool
@@ -150,20 +154,13 @@ class ModelGenerator extends AppGenerator
     private function createModelFile()
     {
         $relationships = $this->screenBacklashes($this->relationshipsToString());
-
         $fullModelName = $this->getFormedFileName($this->data->path, $this->data->name);
-
         $fillableColumns = $this->getFillableColumns();
-
         $softDeletes = $this->isSoftDeletes();
-
         $createdAt = $this->getCreatedAt();
-
         $updatedAt = $this->getUpdatedAt();
-
-        $primaryKey = $this->data->pk;
-
-        $customCode = $this->getCustomCode();
+        $primaryKey = $this->getPrimaryKey();
+        $customCode = $this->getCustomCode($this->modelFile);
 
         try {
             \Artisan::call('crud:model', [
@@ -189,6 +186,16 @@ class ModelGenerator extends AppGenerator
         if(file_exists($this->modelFile . '.bak'))
             unlink($this->modelFile . '.bak');
         return true;
+    }
+
+    /**
+     * Получить первичный ключ
+     *
+     * @return string
+     */
+    protected function getPrimaryKey()
+    {
+        return $this->data->pk ?? 'id';
     }
 
     /**
@@ -280,7 +287,8 @@ class ModelGenerator extends AppGenerator
 
         foreach ($this->relationships as $rel) {
 
-            $relItem = $rel->name . '#' . $rel->type . '#' . trim($this->screenBacklashes($rel->model_class), '\\');
+            $relItem = $rel->name . '#' . $rel->type . '#'
+                . trim($this->screenBacklashes($rel->model_class), '\\');
 
             if (isset($rel->foreign_key)) {
 
@@ -305,7 +313,6 @@ class ModelGenerator extends AppGenerator
      */
     protected function writeRelationships()
     {
-        //dd($this->model);
         if (! $this->getTableById($this->model->table_id)) {
             throw new TableNotFoundException('Table not found', 404);
         }
@@ -458,46 +465,12 @@ class ModelGenerator extends AppGenerator
     }
 
     /**
-     * Получить пользовательский код из файла
+     * Получить файл модели
      *
-     * @return array|null
+     * @return string
      */
-    public function getCustomCode()
+    protected function getModelFile()
     {
-        $this->modelFile = base_path('app/' . "{$this->modelFilename}.php");
-
-        if (! file_exists($this->modelFile)) return null;
-
-        $fileContent = file($this->modelFile, 2);
-
-        $commentBlocks = [
-            'CUSTOM_NAMESPACES',
-            'CUSTOM_TRAITS',
-            'CUSTOM_PROPERTIES',
-            'CUSTOM_METHODS',
-        ];
-
-        $customContent = [];
-
-        for ($i = 0; $i < count($commentBlocks); $i++) {
-            for ($j = 0; $j < count($fileContent); $j++) {
-                if (strpos($fileContent[$j], $commentBlocks[$i]) !== false) {
-                    $key = strtolower($commentBlocks[$i]);
-                    for ($k = $j + 1; $k < count($fileContent); $k++) {
-                        if ($k == $j + 1) $fileContent[$k] = trim($fileContent[$k], ' ');
-                        if (strpos($fileContent[$k], $commentBlocks[$i]) !== false) break;
-                        $customContent[$key][] = $fileContent[$k];
-                    }
-                    $customContent[$key] = implode(PHP_EOL, $customContent[$key]);
-                    break;
-                }
-            }
-        }
-
-        copy($this->modelFile, $this->modelFile . '.bak');
-
-        unlink($this->modelFile);
-
-        return $customContent;
+        return base_path('app/' . "{$this->modelFilename}.php");
     }
 }

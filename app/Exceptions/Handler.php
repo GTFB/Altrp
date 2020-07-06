@@ -68,6 +68,14 @@ class Handler extends ExceptionHandler
             return $exception->render($request);
         }
 
+        if ($exception instanceof ControllerNotWrittenException) {
+            return $exception->render($request);
+        }
+
+        if ($exception instanceof RouteGenerateFailedException) {
+            return $exception->render($request);
+        }
+
         if ($request->ajax() || $request->isJson() || $request->wantsJson()) {
 
             if ($exception instanceof QueryException) {

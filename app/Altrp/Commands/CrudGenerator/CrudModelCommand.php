@@ -323,24 +323,56 @@ EOD;
         return $this;
     }
 
+    /**
+     * Replace the customNamespaces for the given stub.
+     *
+     * @param $stub
+     * @param $customNamespaces
+     *
+     * @return $this
+     */
     protected function replaceCustomNamespaces(&$stub, $customNamespaces)
     {
         $stub = str_replace('{{customNamespaces}}', $customNamespaces, $stub);
         return $this;
     }
 
+    /**
+     * Replace the customTraits for the given stub.
+     *
+     * @param $stub
+     * @param $customTraits
+     *
+     * @return $this
+     */
     protected function replaceCustomTraits(&$stub, $customTraits)
     {
         $stub = str_replace('{{customTraits}}', $customTraits, $stub);
         return $this;
     }
 
+    /**
+     * Replace the customProperties for the given stub.
+     *
+     * @param $stub
+     * @param $customProperties
+     *
+     * @return $this
+     */
     protected function replaceCustomProperties(&$stub, $customProperties)
     {
         $stub = str_replace('{{customProperties}}', $customProperties, $stub);
         return $this;
     }
 
+    /**
+     * Replace the customMethods for the given stub.
+     *
+     * @param $stub
+     * @param $customMethods
+     *
+     * @return $this
+     */
     protected function replaceCustomMethods(&$stub, $customMethods)
     {
         $stub = str_replace('{{customMethods}}', $customMethods, $stub);
