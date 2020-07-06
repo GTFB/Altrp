@@ -18,9 +18,9 @@
     "run-all": "npm-run-all --parallel admin-start editor-start front-start"
   },
   "dependencies": {
+    "@tinymce/tinymce-react": "^3.6.0",
     "ace-builds": "^1.4.11",
     "immutability-helper": "^3.1.1",
-    "jodit-react": "^1.0.42",
     "query-string": "^6.13.1",
     "react": "^16.8.5",
     "react-ace": "^8.1.0",
@@ -40,7 +40,8 @@
     "react-table": "^7.2.1",
     "react-tabs": "^3.1.1",
     "redux-devtools-extension": "^2.13.8",
-    "renamer": "^1.1.4"
+    "renamer": "^1.1.4",
+    "tinymce": "^5.4.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.3",

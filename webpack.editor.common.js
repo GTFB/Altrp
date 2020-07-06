@@ -14,12 +14,12 @@ module.exports = {
         exclude: /(node_modules|bower_components)/,
         loader: "babel-loader",
         options: {
-          presets: ["@babel/env"]
-        }
+          presets: ["@babel/env"],
+        },
       },
       {
         test: /\.css$/,
-        loader: "css-loader"
+        loader: "css-loader",
       },
       // {
       //   test: /\.(js|jsx)$/,
@@ -34,8 +34,8 @@ module.exports = {
           // Translates CSS into CommonJS
           "css-loader",
           // Compiles Sass to CSS
-          "sass-loader"
-        ]
+          "sass-loader",
+        ],
 
         // loader: ExtractTextPlugin.extract({
         //   fallback: 'style-loader',
@@ -46,33 +46,33 @@ module.exports = {
         test: /\.svg$/,
         use: [
           {
-            loader: "babel-loader"
+            loader: "babel-loader",
           },
           {
             loader: "react-svg-loader",
             options: {
-              jsx: true // true outputs JSX tags
-            }
-          }
-        ]
+              jsx: true, // true outputs JSX tags
+            },
+          },
+        ],
       },
       {
         test: /\.(png|jpg|gif)$/,
         loader: "file-loader",
         options: {
-          name: "[path][name].[ext]"
-        }
-      }
-    ]
+          name: "[path][name].[ext]",
+        },
+      },
+    ],
   },
   resolve: {
-    extensions: ["*", ".js", ".jsx"]
+    extensions: ["*", ".js", ".jsx"],
   },
   output: {
     path: path.resolve(__dirname, "editor/"),
     publicPath: "http://localhost:3000/src/",
-    chunkFilename: '[chunkhash].bundle.js',
-    filename: "bundle.js"
+    chunkFilename: "[chunkhash].bundle.js",
+    filename: "bundle.js",
   },
   devServer: {
     contentBase: path.join(__dirname, "public/"),
@@ -81,14 +81,13 @@ module.exports = {
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-      "Access-Control-Allow-Headers":
-        "X-Requested-With, content-type, Authorization"
+      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
     },
-    hotOnly: true
+    hotOnly: true,
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new CleanWebpackPlugin()
+    new CleanWebpackPlugin(),
     // new ExtractTextPlugin('style.css'),
     // new MiniCssExtractPlugin({
     //   // Options similar to the same options in webpackOptions.output
@@ -96,5 +95,5 @@ module.exports = {
     //   filename: '[name].css',
     //   chunkFilename: '[id].css',
     // }),
-  ]
+  ],
 };
