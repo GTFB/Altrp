@@ -1,4 +1,5 @@
 import {CONSTANTS} from "../../../../editor/src/js/helpers";
+import modelManager from "../../../../editor/src/js/classes/modules/ModelsManager";
 
 class FrontElement {
 
@@ -55,19 +56,6 @@ class FrontElement {
     this.parent = parent;
   }
 
-  /**
-   * @return {object}
-   */
-  getModelData(modelName){
-    let rootElement = this.getRoot();
-    let data = null;
-    rootElement.models.forEach(model=>{
-      if(model.modelName === modelName){
-        data = {...model};
-      }
-    });
-    return data;
-  }
 
   /**
    * Возвращает ссылку на корневой элемент шаблона
@@ -264,21 +252,26 @@ class FrontElement {
   /**
    * @return {AltrpModel[]}
    */
-  getModels(){
-    if(this.getType() !=='root-element'){
-      return this.parent.getModels();
-    }
-    if(!this.models){
-
-    }
-    return this.models;
+  getModelsList(){
+    return this.getRoot().modelsList;
   }
 
   /**
-   * @param {AltrpModel[]} models
+   * @param {AltrpModel[]} modelsList
    */
-  setModels(models){
-    this.models = models;
+  setModelsList(modelsList){
+    this.modelsList = modelsList;
+  }
+
+  /**
+   * Подписываемся на изменеия моделей
+   * @param {function} callback
+   */
+  subscribeToModels(callback){
+    let modelsList = this.getModelsList();
+    modelsList.forEach(modelInfo=>{
+      modelManager.subscribeToModelUpdates(modelInfo.modelName, modelInfo.modelName, callback)
+    })
   }
 }
 

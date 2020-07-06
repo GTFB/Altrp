@@ -26,6 +26,16 @@ class ModelsManager {
   getModel(modelName, modelId){
 
   }
-}
 
-export default new ModelsManager();
+  /**
+   * Подписывается на изменения модели
+   * @param {string} modelName
+   * @param {int} modelId
+   * @param {function} callback
+   */
+  subscribeToModelUpdates(modelName, modelId, callback){
+
+  }
+}
+const modelManager =  new ModelsManager();
+export default modelManager;

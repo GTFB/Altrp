@@ -10,30 +10,49 @@ class AltrpModel {
   constructor(modelName, modelId){
     this.modelName = modelName;
     this.modelId = modelId;
-    this.data = {};
+    this.data = null;
     this.subscribers = []
   }
 
   /**
    * Подписывает функцию на обновления
-   * @param callback
+   * @param {function} callback
    */
   subscribeToUpdates(callback){
 
   }
 
   /**
-   * Обновляет моделя с сервера
+   * Обновляет модель с сервера
    */
   updateData(){
 
   }
 
   /**
-   *
+   * Передать данные всем подписчикам
+   */
+  callSubscribers(){
+
+  }
+
+  /**
+   * Отписаться (отписываемся перед удалением компонента)
+   * @param callback
+   */
+  unsubscribe(callback){
+    this.subscribers = _.remove(this.subscribers, (idx, item)=>{
+      console.log(item);
+      return callback === item;
+    })
+  }
+
+  /**
+   * Получить данные модели
+   * @return {object | null}
    */
   getData(){
-    return this.data();
+    return this.data;
   }
 }
 

@@ -100,10 +100,12 @@ async function  controllerComponentDidMount() {
     let options = await this.resource.getAll();
     if(this.props.nullable){
       options = _.concat([{'':''}], options);
-      console.log(options);
     }
     this.setState(state=>({...state, options}));
     this._changeValue(options[0].value);
+  }
+  if(typeof this._componentDidMount === 'function'){
+    this._componentDidMount();
   }
 }
 

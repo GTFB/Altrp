@@ -17,7 +17,7 @@ class ShadowController extends Component {
     this.inputHorUpdate = this.inputHorUpdate.bind(this);
     this.horChange = this.horChange.bind(this);
     this.verChange = this.verChange.bind(this);
-    this.inputVerUpdate = this.inputVerUpdate.bind(this)
+    this.inputVerUpdate = this.inputVerUpdate.bind(this);
     let value = this.props.currentElement.getSettings(this.props.controlId);
     if(value === null && this.props.default){
       value = this.props.default ;
