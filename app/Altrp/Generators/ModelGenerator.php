@@ -10,8 +10,11 @@ use App\Altrp\Relationship;
 use App\Altrp\Table;
 use App\Exceptions\CommandFailedException;
 use App\Exceptions\ModelNotWrittenException;
+use App\Exceptions\PermissionNotWrittenException;
 use App\Exceptions\RelationshipNotInsertedException;
 use App\Exceptions\TableNotFoundException;
+use App\Permission;
+use Illuminate\Support\Carbon;
 
 class ModelGenerator extends AppGenerator
 {
@@ -122,12 +125,20 @@ class ModelGenerator extends AppGenerator
      * @return bool
      * @throws RelationshipNotInsertedException
      * @throws TableNotFoundException
+     * @throws PermissionNotWrittenException
      */
     protected function writeModelToDb()
     {
         $attributes = json_decode(json_encode($this->data), true);
         $this->model->fill($attributes);
-        $this->getAndWriteRelationships();
+
+        if (! $this->getAndWriteRelationships()) {
+            throw new RelationshipNotInsertedException("Failed to write relationships", 500);
+        }
+
+        if (! $this->writePermissions()) {
+            throw new PermissionNotWrittenException("Failed to write permissions", 500);
+        }
 
         try {
             $this->model->save();
@@ -231,7 +242,6 @@ class ModelGenerator extends AppGenerator
     /**
      * Получить и записать в БД связи модели с другими таблицами
      *
-     * @throws RelationshipNotInsertedException
      * @throws TableNotFoundException
      */
     protected function getAndWriteRelationships()
@@ -244,9 +254,7 @@ class ModelGenerator extends AppGenerator
 
             $this->relationships = $this->data->relationships;
 
-            if (! $this->writeRelationships()) {
-                throw new RelationshipNotInsertedException("Ошибка добавления связей", 500);
-            }
+            return $this->writeRelationships();
         }
     }
 
@@ -321,7 +329,7 @@ class ModelGenerator extends AppGenerator
 
         try {
             Relationship::insert($relationshipsData);
-        } catch (RelationshipNotInsertedException $e) {
+        } catch (\Exception $e) {
             return false;
         }
 
@@ -349,6 +357,45 @@ class ModelGenerator extends AppGenerator
         }
 
         return $relData;
+    }
+
+    /**
+     * Записать permissions в БД
+     *
+     * @return bool
+     */
+    protected function writePermissions()
+    {
+        $permissions = $this->preparePermissions();
+        try {
+            Permission::insertOrIgnore($permissions);
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Подготовить permissions к записи в БД
+     *
+     * @return array
+     */
+    protected function preparePermissions()
+    {
+        $permissions = [];
+        $actions = ['create', 'read', 'update', 'delete', 'all'];
+        $nowTime = Carbon::now();
+
+        foreach ($actions as $action) {
+            $permissions[] = [
+                'name' => $action . '-' . strtolower($this->data->name),
+                'display_name' => ucfirst($action) . ' ' . \Str::plural($this->data->name),
+                'created_at' => $nowTime,
+                'updated_at' => $nowTime,
+            ];
+        }
+
+        return $permissions;
     }
 
     /**
