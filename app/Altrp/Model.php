@@ -44,6 +44,14 @@ class Model extends EloquentModel
     {
         return $this->belongsTo(Table::class, 'table_id');
     }
+    
+    public function getTimeStampsAttribute($value) {
+        return (bool) $value;
+    }
+    
+    public function getSoftDeletesAttribute($value) {
+        return (bool) $value;
+    }
 
 /**
  * Список моделей для редактора

@@ -9,11 +9,6 @@ class Column extends Model
     protected $table = 'altrp_columns';
     public $timestamps = false;
     
-    
-    public function tablet() {
-        return $this->belongsTo('App\Altrp\Table');
-    }
-    
     public function getNullAttribute($value) {
         return (bool) $value;
     }

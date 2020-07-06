@@ -13,6 +13,62 @@ import TimesIcon from '../../svgs/times.svg';
 class AddModelPage extends Component{
     constructor(props){
         super(props);
+        
+        /**
+         * Типы связей
+         */
+        this.relationship_types = [
+            {id: "hasMany",name: "hasMany"},
+            {id: "hasOne",name: "hasOne"},
+            {id: "belongsTo",name: "belongsTo"},
+            {id: "belongsToMany",name: "belongsToMany"},
+            {id: "hasOneThrough",name: "hasOneThrough"},
+            {id: "hasManyThrough",name: "hasManyThrough"},
+            {id: "morphTo",name: "morphTo"},
+            {id: "morphOne",name: "morphOne"},
+            {id: "morphMany",name: "morphMany"},
+            {id: "morphToMany",name: "morphToMany"},
+            {id: "morphedByMany",name: "morphedByMany"},
+        ];
+        
+        /**
+         * Настройки таблицы связей
+         */
+        this.table_columns = [
+            {name: 'id',title: 'ID',},
+            {name: 'name',title: 'Name',},
+            {name: 'type',title: 'Type',},
+            {name: 'model_class',title: 'Model Class',},
+            {name: 'foreign_key',title: 'Foreign Key',},
+            {name: 'local_key',title: 'Local Key',},
+            {
+                name: 'edit',
+                title: 'Edit',
+                is_button: true, 
+                button: {class: "",function: this.addModalShow.bind(this),title: "Edit"},
+            },
+            {
+                name: 'delete',
+                title: 'Delete',
+                is_button: true, 
+                button: {class: "",function: this.onDeleteClick.bind(this),title: "Delete"},
+            },
+        ];
+        
+        /**
+         * Связь по умолчанию
+         * @type type
+         */
+        const default_relationship = {
+            id: "",
+            name: '',
+            title: '',
+            type: "hasMany",
+            model_class: '',
+            foreign_key: '',
+            local_key: '',
+        };
+        
         this.state = {
             modal_toogle: false,
             table_id: this.props.match.params.id,
@@ -21,7 +77,7 @@ class AddModelPage extends Component{
             fillable_columns: [],
             data: {
                 description: "",
-                fillable: [],
+                fillable_cols: [],
                 table_id: this.props.match.params.id,
                 path: "",
                 name: "",
@@ -30,66 +86,10 @@ class AddModelPage extends Component{
                 time_stamps: false,
                 soft_deletes: false
             },
-            relationship_types: [
-                {id: "hasMany",name: "hasMany"},
-                {id: "hasOne",name: "hasOne"},
-                {id: "belongsTo",name: "belongsTo"},
-                {id: "belongsToMany",name: "belongsToMany"},
-                {id: "hasOneThrough",name: "hasOneThrough"},
-                {id: "hasManyThrough",name: "hasManyThrough"},
-                {id: "morphTo",name: "morphTo"},
-                {id: "morphOne",name: "morphOne"},
-                {id: "morphMany",name: "morphMany"},
-                {id: "morphToMany",name: "morphToMany"},
-                {id: "morphedByMany",name: "morphedByMany"},
-            ],
-            table_columns: [
-                {name: 'id',title: 'ID',},
-                {name: 'name',title: 'Name',},
-                {name: 'type',title: 'Type',},
-                {name: 'model_class',title: 'Model Class',},
-                {name: 'foreign_key',title: 'Foreign Key',},
-                {name: 'local_key',title: 'Local Key',},
-                {
-                    name: 'edit',
-                    title: 'Edit',
-                    is_button: true, 
-                    button: {
-                        class: "",
-                        function: this.addModalShow.bind(this),
-                        title: "Edit"
-                    },
-                },
-                {
-                    name: 'delete',
-                    title: 'Delete',
-                    is_button: true, 
-                    button: {
-                        class: "",
-                        function: this.onDeleteClick.bind(this),
-                        title: "Delete"
-                    },
-                },
-            ],
-            default_relationship: {
-                id: "",
-                name: '',
-                title: '',
-                type: "hasMany",
-                model_class: '',
-                foreign_key: '',
-                local_key: '',
-            },
+            
+            default_relationship: default_relationship,
             selected_relationship: null,
-            relationship: {
-                id: "",
-                name: '',
-                title: '',
-                type: "hasMany",
-                model_class: '',
-                foreign_key: '',
-                local_key: '',
-            }
+            relationship: default_relationship
         };
         
         
@@ -129,14 +129,14 @@ class AddModelPage extends Component{
              model_data.fillable_cols = model_data.fillable_cols.replace(/'/g,"");
              let model = {
                 description: model_data.description,
-                fillable: model_data.fillable_cols.split(","),
+                fillable_cols: model_data.fillable_cols.split(","),
                 table_id: model_data.table_id,
                 path: model_data.path,
                 name: model_data.name,
                 relationships: model_data.table.relationships,
                 pk: model_data.pk,
-                time_stamps: 1 == model_data.time_stamps ? true : false,
-                soft_deletes: 1 == model_data.soft_deletes ? true : false,
+                time_stamps: model_data.time_stamps,//1 == model_data.time_stamps ? true : false,
+                soft_deletes: model_data.soft_deletes//1 == model_data.soft_deletes ? true : false,
             }
 
             this.setState(state=>{
@@ -158,7 +158,7 @@ class AddModelPage extends Component{
         
         let value = e.target.value;
         
-        let itemIndex = this.state.data.fillable.indexOf(value);
+        let itemIndex = this.state.data.fillable_cols.indexOf(value);
         
         if(itemIndex !== -1) {
             alert("This column has already been added.");
@@ -166,7 +166,7 @@ class AddModelPage extends Component{
         }
         
         this.setState((state) => {
-            return { ...state, data: { ...state.data,  fillable: update(state.data.fillable, {$push: [value]})}};
+            return { ...state, data: { ...state.data,  fillable_cols: update(state.data.fillable_cols, {$push: [value]})}};
         }, () => {
             //this.toggleModal();
         });
@@ -174,7 +174,7 @@ class AddModelPage extends Component{
     deleteFillableColumn(e, value) {
         e.preventDefault();
         
-        let itemIndex = this.state.data.fillable.indexOf(value);
+        let itemIndex = this.state.data.fillable_cols.indexOf(value);
         
         if(itemIndex === -1) {
             alert("This column not found.");
@@ -182,7 +182,7 @@ class AddModelPage extends Component{
         }
         
         this.setState((state) => {
-            return { ...state, data: { ...state.data,  fillable: update(state.data.fillable, {$splice: [[itemIndex, 1]]})}};
+            return { ...state, data: { ...state.data,  fillable_cols: update(state.data.fillable_cols, {$splice: [[itemIndex, 1]]})}};
         }, () => {
             //this.toggleModal();
         });
@@ -190,7 +190,9 @@ class AddModelPage extends Component{
     
     onChange(e) {
         let field_name = e.target.name;
-        this.setState({ ...this.state, data:{...this.state.data, [field_name]: e.target.value}});
+        let value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+        
+        this.setState({ ...this.state, data:{...this.state.data, [field_name]: value}});
     }
     onChangeRelationship(e) {
         let field_name = e.target.name;
@@ -317,13 +319,13 @@ class AddModelPage extends Component{
                     <div>
                         <label className='form-label'>
                             Soft Deletes
-                            <input className='form__input' type="checkbox" checked={this.state.data.soft_deletes} name="soft_deletes" value={this.state.data.soft_deletes}  onChange={(e) => {this.onChange(e)}}/>
+                            <input className='form__input' type="checkbox" checked={this.state.data.soft_deletes ? 1 : 0} name="soft_deletes" onChange={(e) => {this.onChange(e)}}/>
                         </label>
                     </div>
                     <div>
                         <label className='form-label'>
                             Timestamps
-                            <input className='form__input' type="checkbox" checked={this.state.data.soft_deletes}  name="time_stamps" value={this.state.data.time_stamps}  onChange={(e) => {this.onChange(e)}}/>
+                            <input className='form__input' type="checkbox" checked={this.state.data.time_stamps ? 1 : 0}  name="time_stamps" onChange={(e) => {this.onChange(e)}}/>
                         </label>
                     </div>
                     <div>
@@ -341,7 +343,7 @@ class AddModelPage extends Component{
                         </label>
                         <div>
                             {
-                                this.state.data.fillable.map(option =>
+                                this.state.data.fillable_cols.map(option =>
                                 <div key={option}>
                                     <button className="btn" onClick={(e) => {this.deleteFillableColumn(e,option)}}>{option}</button>
                                 </div>  )
@@ -369,7 +371,7 @@ class AddModelPage extends Component{
                 </form>
             </div>
             <div>
-                <AdminTable columns={this.state.table_columns} rows={this.state.data.relationships}/>
+                <AdminTable columns={this.table_columns} rows={this.state.data.relationships}/>
             </div>
             <div>
                 <button onClick={this.addModalShow}>Add Relationship</button>
@@ -389,12 +391,6 @@ class AddModelPage extends Component{
                     <form className="admin-form" onSubmit={this.addRelationship}>
                         <div>
                             <label className='form-label'>
-                                id
-                                <input className='form__input' type="text" name="id" value={this.state.relationship.id}  onChange={(e) => {this.onChangeRelationship(e)}}/>
-                            </label>
-                        </div>
-                        <div>
-                            <label className='form-label'>
                                 name
                                 <input className='form__input' type="text" name="name" value={this.state.relationship.name} onChange={(e) => {this.onChangeRelationship(e)}}/>
                             </label>
@@ -411,7 +407,7 @@ class AddModelPage extends Component{
                                 <select className="form__input" value={this.state.relationship.type} name='type'  onChange={(e) => {this.onChangeRelationship(e)}}>
                                     <option value=""/>
                                     {
-                                      this.state.relationship_types.map(option =>
+                                      this.relationship_types.map(option =>
                                           <option key={option.id}
                                                   value={option.id}
                                                   children={option.title || option.name}/>)
