@@ -121,8 +121,6 @@ class BaseElement extends ControlStack{
     newChild.setParent(this);
     this.children.splice(index+1, 0, newChild);
     this.component.setChildren(this.children);
-    console.log(this.children);
-    console.log(newChild);
     this.templateNeedUpdate();
   }
   /**
