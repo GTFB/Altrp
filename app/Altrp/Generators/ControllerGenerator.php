@@ -170,13 +170,12 @@ class ControllerGenerator extends AppGenerator
                 '--route-group' => $prefix,
                 '--validations' => $validations,
                 '--relations' => $relations,
-                '--custom-namespaces' => $customCode['custom_namespaces'],
-                '--custom-traits' => $customCode['custom_traits'],
-                '--custom-properties' => $customCode['custom_properties'],
-                '--custom-methods' => $customCode['custom_methods']
+                '--custom-namespaces' => $this->getCustomCodeBlock($customCode,'custom_namespaces'),
+                '--custom-traits' => $this->getCustomCodeBlock($customCode,'custom_traits'),
+                '--custom-properties' => $this->getCustomCodeBlock($customCode,'custom_properties'),
+                '--custom-methods' => $this->getCustomCodeBlock($customCode,'custom_methods')
             ]);
         } catch (\Exception $e) {
-            echo $e->getMessage();
             if(file_exists($this->controllerFile . '.bak'))
                 rename($this->controllerFile . '.bak', $this->controllerFile);
             return false;

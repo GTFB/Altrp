@@ -173,10 +173,10 @@ class ModelGenerator extends AppGenerator
                 '--created-at' => $createdAt,
                 '--updated-at' => $updatedAt,
                 '--relationships' => "{$relationships}",
-                '--custom-namespaces' => $customCode['custom_namespaces'],
-                '--custom-traits' => $customCode['custom_traits'],
-                '--custom-properties' => $customCode['custom_properties'],
-                '--custom-methods' => $customCode['custom_methods']
+                '--custom-namespaces' => $this->getCustomCodeBlock($customCode,'custom_namespaces'),
+                '--custom-traits' => $this->getCustomCodeBlock($customCode,'custom_traits'),
+                '--custom-properties' => $this->getCustomCodeBlock($customCode,'custom_properties'),
+                '--custom-methods' => $this->getCustomCodeBlock($customCode,'custom_methods')
             ]);
         } catch(\Exception $e) {
             if(file_exists($this->modelFile . '.bak'))
