@@ -1,2 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[8],{100:function(n,e,t){"use strict";t.r(e);var i=t(2),c=t.n(i),u=t(3),a=t.n(u),o=function(){function n(){c()(this,n)}return a()(n,[{key:"getTemplate",value:function(n){}}]),n}();o.instance=new o,e.default=o.instance}}]);
-//# sourceMappingURL=db5d888e414595e7c64a.bundle.js.map
