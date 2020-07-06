@@ -33,7 +33,9 @@ class AltrpModel {
    * Передать данные всем подписчикам
    */
   callSubscribers(){
-
+    this.subscribers.forEach(subscriber=>{
+      subscriber(this.getData());
+    })
   }
 
   /**

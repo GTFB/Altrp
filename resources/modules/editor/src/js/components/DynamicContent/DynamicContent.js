@@ -14,8 +14,8 @@ class DynamicContent extends Component {
     this.state = {
       models: [
           {
-        modelName: 'post',
-        title: 'Post',
+        modelName: 'page',
+        title: 'Page',
         fields: [
           {
             type: 'text',

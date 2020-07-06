@@ -257,21 +257,26 @@ class FrontElement {
   }
 
   /**
+   * Получаем данные о модели (modelName и modelId) из корневого элемента по названию модели
+   * @param {string} modelName
+   * @return {{}}
+   */
+  getModelsInfoByModelName(modelName){
+    let modelsList = this.getModelsList();
+    let modelInfo = null;
+    modelsList.forEach(_modelInfo=>{
+      if(_modelInfo.modelName === modelName){
+        modelInfo = _modelInfo;
+      }
+    });
+    return modelInfo
+  }
+
+  /**
    * @param {AltrpModel[]} modelsList
    */
   setModelsList(modelsList){
     this.modelsList = modelsList;
-  }
-
-  /**
-   * Подписываемся на изменеия моделей
-   * @param {function} callback
-   */
-  subscribeToModels(callback){
-    let modelsList = this.getModelsList();
-    modelsList.forEach(modelInfo=>{
-      modelManager.subscribeToModelUpdates(modelInfo.modelName, modelInfo.modelName, callback)
-    })
   }
 }
 
