@@ -178,3 +178,18 @@
   display: flex;
   flex-direction: column;
 }
+
+.altrp-section-full-fill {
+  display: flex;
+  width: 100vh;
+}
+
+.altrp-section-full-fill .altrp-section {
+  width: 1400px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.altrp-table {
+  border-collapse: collapse;
+}

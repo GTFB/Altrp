@@ -40,6 +40,7 @@ class LinkController extends Component {
       toggleSettingsNewPageCheckbox.setAttribute("checked", "checked");
     } else {
       this._changeValue({
+        ...this.state.value,
         openInNew: changeCheckBox
       })
       toggleSettingsNewPageCheckbox.removeAttribute("checked");
@@ -48,16 +49,17 @@ class LinkController extends Component {
 
   toggleSettingsNoFollow(){
     let togglesettingsNoFollowCheckbox = document.getElementById("togglesettingsNoFollowCheckbox")
-
     let changeCheckBox = togglesettingsNoFollowCheckbox.hasAttribute("checked")
     if(changeCheckBox == false) {
       this._changeValue({
+        ...this.state.value,
         noFollow: changeCheckBox
       })
       togglesettingsNoFollowCheckbox.setAttribute("checked", "checked");
     } else {
       togglesettingsNoFollowCheckbox.removeAttribute("checked");
       this._changeValue({
+        ...this.state.value,
         noFollow: changeCheckBox
       })
     };
@@ -66,6 +68,7 @@ class LinkController extends Component {
 
   changeAttribute(e){
     this._changeValue({
+      ...this.state.value,
       attributes:e.target.value
     })
     console.log(this.state.value.attributes)
@@ -73,6 +76,7 @@ class LinkController extends Component {
 
   changeInput(e){
     this._changeValue({
+      ...this.state.value,
       url:e.target.value
     })
   }
@@ -119,7 +123,7 @@ class LinkController extends Component {
                    type="text"
                    placeholder="key|value, key|value..."
                    className="settings-input-attribute"/>
-            <a className="settings-attribute-description">Задайте пользовательские атрибуты для ссылки. Отделяйте ключи атрибута от значений с помощью символа | (труба). Разделите пары ключ-значение запятой.</a>
+            <a className="settings-attribute-description">Set custom attributes for the link element. Separate attribute keys from values using the | (pipe) character. Separate key-value pairs with a comma.</a>
           </div>
         </div>
       </div>

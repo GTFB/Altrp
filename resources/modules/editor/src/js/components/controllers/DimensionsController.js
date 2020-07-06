@@ -16,32 +16,12 @@ class DimensionsController extends Component {
     if(value === null && this.props.default){
       value = this.props.default ;
     }
-    const fillBind = null;
-    const stylesBind = {
-      transition: "0s",
-      backgroundColor: "#8E94AA",
-      borderColor: "#8E94AA",
-    };
-    const bind = value ? (value.bind || true) : true;
-    if(bind == false) {
-      this.fillBind = "#8E94AA";
-      this.stylesBind = {
-        backgroundColor: "none"
-      };
-    }
     value = value || {};
     let units = this.props.units || ['px'];
     value.unit = value.unit || units[0];
     this.state = {
       value,
       show: true,
-      fill: this.fillBind || "#FFF",
-      active: true,
-      styles: this.stylesBind || {
-        transition: "0s",
-        backgroundColor: "#8E94AA",
-        borderColor: "#8E94AA",
-      },
       // active: this.state.value.active,
       units
     };
@@ -58,7 +38,7 @@ class DimensionsController extends Component {
 
   changeValue(e){
 
-    if(this.state.active == true){
+    if(this.state.value.bind == true){
       if( e.target.value <= 9999){
         this._changeValue({
           ...this.state.value,
@@ -69,45 +49,36 @@ class DimensionsController extends Component {
         })
       }
     } else {
-      let active = e.currentTarget.dataset.active;
+      let active = null;
+      if(e.currentTarget != undefined) {
+        active = e.currentTarget.dataset.active;
+      }
 
       if(active == "top"){
         this._changeValue({
+          ...this.state.value,
           top:e.target.value|| 0,
-          right: this.state.value.right || 0,
-          bottom: this.state.value.bottom || 0,
-          left: this.state.value.left || 0,
-          unit: this.state.value.unit
         });
       }
 
       if(active == "right"){
         this._changeValue({
+          ...this.state.value,
           right:e.target.value|| 0,
-          bottom: this.state.value.bottom || 0,
-          left: this.state.value.left || 0,
-          top: this.state.value.top || 0,
-          unit: this.state.value.unit
         });
       }
 
       if(active == "bottom"){
         this._changeValue({
+          ...this.state.value,
           bottom:e.target.value|| 0,
-          right: this.state.value.right || 0,
-          left: this.state.value.left || 0,
-          top: this.state.value.top || 0,
-          unit: this.state.value.unit
         });
       }
 
       if(active == "left"){
         this._changeValue({
+          ...this.state.value,
           left:e.target.value|| 0,
-          right: this.state.value.right || 0,
-          bottom: this.state.value.bottom || 0,
-          top: this.state.value.top || 0,
-          unit: this.state.value.unit
         });
       }
     }
@@ -121,32 +92,10 @@ class DimensionsController extends Component {
   }
 
   changeBind(e){
-    let bind = document.getElementById("bind");
 
-    if(this.state.fill == "#FFF") {
-      this.setState({
-        fill: "#8E94AA",
-        active: false,
-        styles: null
-      })
-    } else {
-      this.setState({
-        fill: "#FFF",
-        active: true,
-        styles: {
-          transition: "0s",
-          backgroundColor: "#8E94AA",
-          borderColor: "#8E94AA",
-        }
-      })
-    };
     this._changeValue({
-      bind: !this.state.value.bind,
-      right: this.state.value.right,
-      bottom: this.state.value.bottom,
-      top: this.state.value.top,
-      left: this.state.value.left,
-      unit: this.state.value.unit
+      ...this.state.value,
+      bind: !this.state.value.bind
     })
   }
 
@@ -160,8 +109,7 @@ class DimensionsController extends Component {
     };
   }
   render(){
-    let styleBind = this.state.styles;
-
+    
     if(this.state.show === false) {
       return '';
     }
@@ -220,8 +168,8 @@ class DimensionsController extends Component {
                    type="number"/>
             <label className="control-field-bot-r-label control-field-dimensions-label">LEFT</label>
           </div>
-          <div id="bind" className="control-field control-field-bind" style={styleBind} onClick={this.changeBind}>
-            <BindIcon width="12" height="12" fill={this.state.fill}/>
+          <div id="bind" className="control-field control-field-bind" style={this.state.value.bind ? {transition: "0s", backgroundColor: "#8E94AA", borderColor: "#8E94AA",} : {}} onClick={this.changeBind}>
+            <BindIcon width="12" height="12" fill={this.state.value.bind ? "#FFF" : "#8E94AA"}/>
           </div>
         </div>
       </div>

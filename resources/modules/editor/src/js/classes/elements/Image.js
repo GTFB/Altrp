@@ -249,7 +249,7 @@ class Image extends BaseElement{
 
     this.startControlSection('image_style_section', {
       tab: TAB_STYLE,
-      label: 'image'
+      label: 'Image'
     });
 
     this.addControl('image_style_text_shadow', {
@@ -266,7 +266,6 @@ class Image extends BaseElement{
         },
       }
     );
-
     this.addControl('image_style_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'alignment',
