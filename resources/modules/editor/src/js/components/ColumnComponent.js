@@ -28,12 +28,12 @@ class ColumnComponent extends Component {
       )
     );
     
-    // let link = null;
-    // if(this.state.settings.link_link.url != null & this.state.settings.link_link.url != "") {
-    //   link = <div href={this.state.settings.link_link.url} className="altrp-column">link{column}</div>
-    // }
+    let link = null;
+    if(this.state.settings.link_link.url != null & this.state.settings.link_link.url != "") {
+      link = <a href={this.state.settings.link_link.url} rel={!this.state.settings.link_link.noFollow ? "nofollow" : null} className="altrp-column-link">{column}</a>
+    }
 
-    return column
+    return link || column
   }
 }
 

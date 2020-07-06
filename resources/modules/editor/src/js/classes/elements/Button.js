@@ -188,9 +188,9 @@ class Button extends BaseElement{
     this.addControl(
       'font_typographic', {
         type: CONTROLLER_TYPOGRAPHIC,
-        label: 'typographic',
+        label: 'Typographic',
         default:{
-          lineHeight: 0.1,
+          lineHeight: 1,
           spacing: 0,
           size: 16,
           weight: "normal",
@@ -350,16 +350,18 @@ class Button extends BaseElement{
           horizontal: 0,
           vertical: 0,
           opacity: 1,
+          spread: 0,
           colorRGB: 'rgb(0, 0, 0)',
           color: 'rgb(0, 0, 0)',
           colorPickedHex: '#000000',
+          type: ""
         },
         presetColors: [
           '#eaeaea',
           '#9c18a8'
         ],
         rules: {
-          '{{ELEMENT}} .altrp-btn': 'box-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
+          '{{ELEMENT}} .altrp-btn': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
         },
       }
     );

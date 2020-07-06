@@ -64,6 +64,7 @@ const AltrpTable = ({settings, query}) => {
       columns.push(_column);
     }
   });
+  console.log(page)
   let {
     getTableProps,
     getTableBodyProps,
