@@ -310,9 +310,6 @@ export function advancedTabControllers(element) {
   element.addControl(
     'element_css_editor', {
       type: CONTROLLER_CSSEDITOR,
-      default: {
-        value: null
-      }
     }
   );
 

@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import { set } from "lodash";
+// import InputMask from "react-input-mask";
 
 class InputWidget extends Component {
 
@@ -18,10 +19,10 @@ class InputWidget extends Component {
 
   onChange(e){
     let value = e.target.value;
-    this.setState({
+    this.setState(state=>({
       ...state,
       value
-    });
+    }));
   }
 
   render(){
@@ -87,6 +88,7 @@ class InputWidget extends Component {
              onChange={this.onChange}
              id={this.state.settings.position_css_id}
       />
+      {/* <InputMask mask="99/99/9999" onChange={this.onChange} value={this.state.value} /> */}
       {
         this.state.settings.content_label_position_type == "bottom" ? label : ""
       }

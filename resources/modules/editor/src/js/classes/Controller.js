@@ -39,8 +39,8 @@ class Controller {
     /**
      * @member {BaseElement} currentElement
      * */
+    let currentElement = getCurrentElement();
     if (!this.data.repeater) {
-      let currentElement = getCurrentElement();
       currentElement.setSettingValue(this.getSettingName(), value);
       this.rules.forEach(rule => {
         rule.insertValue(value);
@@ -60,6 +60,9 @@ class Controller {
           this.data.itemIndex,
           this.data.controlId,
           value);
+    }
+    if(this.getSettingName() === 'element_css_editor'){
+      currentElement.setStringStyles(value);
     }
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
   }
@@ -85,7 +88,6 @@ class Controller {
         show = false;
       }
     });
-    console.log(show);
     return show;
   }
 
