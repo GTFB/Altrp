@@ -39,10 +39,11 @@ function _changeValue(value) {
         value,
       }
     });
-  } else {
+  } else if( value ) {
     this.setState((state)=>{
       return {
         ...state,
+        value:'',
         dynamicValue: value,
       }
     });
@@ -57,28 +58,7 @@ function _changeValue(value) {
  */
 
 function conditionSubscriber() {
-  // const controllerValue = store.getState().controllerValue;
-  // if(this.props.condition) {
-  //   if(this.props.condition[controllerValue.controlId]) {
-  //     if(controllerValue.controlId === Object.keys(this.props.condition)[0]) {
-  //       if(controllerValue.value !== this.props.condition[controllerValue.controlId] && this.props.controlId !== controllerValue.controlId) {
-  //         this.setState((state) => {
-  //           return {
-  //             ...state,
-  //             show: false,
-  //           }
-  //         });
-  //       } else {
-  //         this.setState((state) => {
-  //           return {
-  //             ...state,
-  //             show: true,
-  //           }
-  //         });
-  //       }
-  //     }
-  //   }
-  // }
+
   if(this.props.condition) {
     const controllerValue = store.getState().controllerValue;
     if(Object.keys(this.props.condition).indexOf(controllerValue.controlId)>=0){
@@ -133,6 +113,13 @@ function showComponentController() {
   }));
 }
 
+/**
+ * Клик по кнопке удалйющей длинамические настройки
+ */
+function removeDynamicSettings() {
+  this._changeValue(this.getDefaultValue());
+}
+
 let controllerDecorate = function elementWrapperDecorate(component) {
   component.componentDidUpdate = componentDidUpdate.bind(component);
   component._changeValue = _changeValue.bind(component);
@@ -140,6 +127,7 @@ let controllerDecorate = function elementWrapperDecorate(component) {
   component.componentDidMount = controllerComponentDidMount.bind(component);
   component.hideComponentController = hideComponentController.bind(component);
   component.showComponentController = showComponentController.bind(component);
+  component.removeDynamicSettings = removeDynamicSettings.bind(component);
   store.subscribe(component.conditionSubscriber);
 };
 export default controllerDecorate;

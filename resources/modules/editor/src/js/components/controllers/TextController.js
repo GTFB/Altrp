@@ -6,45 +6,95 @@ import {toggleDynamicContent} from "../../store/dynamic-content/actions";
 import {iconsManager} from "../../../../../admin/src/js/helpers";
 
 class TextController extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.changeValue = this.changeValue.bind(this);
     this.openDynamicContent = this.openDynamicContent.bind(this);
     let value = this.props.currentElement.getSettings(this.props.controlId);
-    // console.log(value);
-    if(value === null && this.props.default){
-      value = this.props.default ;
+    console.log(value);
+    if (value === null && this.props.default) {
+      value = this.props.default;
     }
     value = value || '';
     this.state = {
       value,
-      dynamicValue: null,
+      dynamicValue: value.dynamic ? value : null,
       show: true
     };
     this.dynamicButton = React.createRef();
     controllerDecorate(this);
   }
-  changeValue(e){
+
+  changeValue(e) {
+    let variants = [
+      /**
+       * Вариант для одной колонки
+       */
+      [
+        {
+          name: '1_100',
+          variants: [
+            {
+              title: '100',
+              length: 100,
+            }
+          ]
+        },
+      ],
+      /**
+       * Вариант для двух колонок
+       */
+      [
+        {
+          name: '2_50',
+          variants: [
+            {
+              title: '50',
+              length: 50,
+            },
+            {
+              title: '50',
+              length: 50,
+            },
+          ]
+        },
+        {
+          name: '2_33',
+          variants: [
+            {
+              title: '33',
+              length: 33.33,
+            },
+            {
+              title: '66',
+              length: 66.66,
+            },
+          ]
+        },
+      ],
+    ];
     this._changeValue(e.target.value)
   }
 
   /**
    * Открывает меню динамического контента при нажатии на иконку
    */
-  openDynamicContent(e){
+  openDynamicContent(e) {
     e.stopPropagation();
     this.props.dispatch(toggleDynamicContent({
       type: 'text',
-      onSelect: (dynamicValue)=>{
+      onSelect: (dynamicValue) => {
         this._changeValue(dynamicValue);
       }
     }, this.dynamicButton.current))
   }
-  getDefaultValue(){
+
+  getDefaultValue() {
     return '';
   }
-  render(){
-    if(this.state.show === false) {
+
+  render() {
+    if (this.state.show === false) {
       return '';
     }
 
@@ -60,7 +110,7 @@ class TextController extends Component {
             }
           </div>
 
-          <div className="dynamic-placeholder__remove">
+          <div className="dynamic-placeholder__remove" onClick={this.removeDynamicSettings}>
             {
               iconsManager().renderIcon('times')
             }
@@ -77,8 +127,9 @@ class TextController extends Component {
 }
 
 function mapStateToProps(state) {
-  return{
-    currentElement:state.currentElement.currentElement,
+  return {
+    currentElement: state.currentElement.currentElement,
   };
 }
+
 export default connect(mapStateToProps)(TextController);

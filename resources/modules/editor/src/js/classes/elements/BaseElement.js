@@ -430,6 +430,18 @@ class BaseElement extends ControlStack{
     }
     this.parent = parent;
   }
+
+  /**
+   * Сохранить данные для динамического контента
+   * @param {{}} dynamicContent
+   */
+  setModelsSettings(dynamicContent){
+    this.dynamicContentSettings = this.dynamicContentSettings || [];
+    let exist = false;
+    this.dynamicContentSettings.forEach(_dynamicContent=>{
+      _.isEqual(_dynamicContent, dynamicContent);
+    });
+  }
 }
 
 export default BaseElement

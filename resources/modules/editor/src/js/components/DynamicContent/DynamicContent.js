@@ -71,7 +71,9 @@ class DynamicContent extends Component {
     value.fieldTitle = e.target.dataset.fieldtitle;
     value.dynamic = true;
     this.props.params.onSelect(value);
-    store.dispatch(closeDynamicContent())
+    store.dispatch(closeDynamicContent());
+    console.log(this.props);
+    getCurrentEditor().setModelsSettings(value)
   }
 
   getPositionProps(){
