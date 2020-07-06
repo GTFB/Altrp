@@ -39,13 +39,10 @@ class QueryController extends Component {
     controllerDecorate(this);
   }
 
-  async componentDidMount() {
+  async _componentDidMount() {
     let modelsList = await new Resource({route: '/admin/ajax/models_list_for_query'}).getAll();
     let value = {...this.state.value};
-    console.log(modelsList[0].name);
-    console.log(modelsList);
     value.modelName = value.modelName || modelsList[0].name;
-    console.log(value);
     if(! this.props.currentElement.getSettings(this.props.controlId)){
       this._changeModelName(modelsList[0].name)
     }
@@ -138,6 +135,7 @@ class QueryController extends Component {
                  value={this.state.value.pageSize || 10}
                  onChange={this.changePageSize}/>
         </div>
+      </div>
         <div className="controller-field-group">
           <div className="controller-container__label">
             Page Size
@@ -165,7 +163,6 @@ class QueryController extends Component {
           </div>
         </div>
       </div>
-    </div>
 
 
   }

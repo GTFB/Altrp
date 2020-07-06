@@ -34,6 +34,9 @@ class RouteGenerator
     private $dynamicVariables = [];
 
 
+    /**
+     * RouteGenerator constructor.
+     */
     public function __construct()
     {
         $this->path = base_path('routes/AltrpRoutes.php');
@@ -71,10 +74,13 @@ class RouteGenerator
      */
     protected function routeExists()
     {
-        $subStr = substr($this->routeStub, 0, strpos($this->routeStub, ','));
+        $routeName = substr($this->routeStub, 0, strpos($this->routeStub, ','));
+        $controllerName = trim(substr($this->routeStub,
+            strrpos($this->routeStub, ',') + 1), "\n");
 
         for ($i = 0; $i < count($this->routeContents); $i++) {
-            if (Str::contains($this->routeContents[$i], $subStr)) {
+            if (Str::contains($this->routeContents[$i], $routeName) ||
+                Str::contains($this->routeContents[$i], $controllerName)) {
                 return $i;
             }
         }

@@ -20,7 +20,11 @@ class CrudModelCommand extends GeneratorCommand
                             {--soft-deletes=no : Include soft deletes fields.}
                             {--timestamps= : Include timestamps fields.}
                             {--created-at= : The name of the created-at column.}
-                            {--updated-at= : The name of the updated-at column.}';
+                            {--updated-at= : The name of the updated-at column.}
+                            {--custom-namespaces= : Custom namespaces of the model.}
+                            {--custom-traits= : Custom traits of the model.}
+                            {--custom-properties= : Custom props of the model.}
+                            {--custom-methods= : Custom methods of the model.}';
 
     /**
      * The console command description.
@@ -78,6 +82,10 @@ class CrudModelCommand extends GeneratorCommand
         $timestamps = $this->option('timestamps');
         $createdAt = $this->option('created-at');
         $updatedAt = $this->option('updated-at');
+        $customNamespaces = $this->option('custom-namespaces') ?? '';
+        $customTraits = $this->option('custom-traits') ?? '';
+        $customProperties = $this->option('custom-properties') ?? '';
+        $customMethods = $this->option('custom-methods') ?? '';
 
 
         if (! empty($primaryKey)) {
@@ -132,7 +140,11 @@ EOD;
             ->replaceSoftDelete($stub, $softDeletes)
             ->replaceTimestamps($stub, $timestamps)
             ->replaceCreatedAt($stub, $createdAt)
-            ->replaceUpdatedAt($stub, $updatedAt);
+            ->replaceUpdatedAt($stub, $updatedAt)
+            ->replaceCustomNamespaces($stub, $customNamespaces)
+            ->replaceCustomTraits($stub, $customTraits)
+            ->replaceCustomProperties($stub, $customProperties)
+            ->replaceCustomMethods($stub, $customMethods);
 
         foreach ($relationships as $rel) {
             // relationshipname#relationshiptype#args_separated_by_pipes
@@ -308,6 +320,62 @@ EOD;
     protected function replaceRelationshipPlaceholder(&$stub)
     {
         $stub = str_replace('{{relationships}}', '', $stub);
+        return $this;
+    }
+
+    /**
+     * Replace the customNamespaces for the given stub.
+     *
+     * @param $stub
+     * @param $customNamespaces
+     *
+     * @return $this
+     */
+    protected function replaceCustomNamespaces(&$stub, $customNamespaces)
+    {
+        $stub = str_replace('{{customNamespaces}}', $customNamespaces, $stub);
+        return $this;
+    }
+
+    /**
+     * Replace the customTraits for the given stub.
+     *
+     * @param $stub
+     * @param $customTraits
+     *
+     * @return $this
+     */
+    protected function replaceCustomTraits(&$stub, $customTraits)
+    {
+        $stub = str_replace('{{customTraits}}', $customTraits, $stub);
+        return $this;
+    }
+
+    /**
+     * Replace the customProperties for the given stub.
+     *
+     * @param $stub
+     * @param $customProperties
+     *
+     * @return $this
+     */
+    protected function replaceCustomProperties(&$stub, $customProperties)
+    {
+        $stub = str_replace('{{customProperties}}', $customProperties, $stub);
+        return $this;
+    }
+
+    /**
+     * Replace the customMethods for the given stub.
+     *
+     * @param $stub
+     * @param $customMethods
+     *
+     * @return $this
+     */
+    protected function replaceCustomMethods(&$stub, $customMethods)
+    {
+        $stub = str_replace('{{customMethods}}', $customMethods, $stub);
         return $this;
     }
 }

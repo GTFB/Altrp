@@ -31,7 +31,8 @@ class SettingSection extends Component {
     if(document.getElementById("settingsSection" + this.props.active))
     if(document.getElementById("settingsSection" + this.props.active).classList.contains('open') === false) {
       for(let count = 0; count < settingsControllers.children.length; count++) {
-        document.getElementById("settingsSection" + count).classList.remove('open')
+        document.getElementById("settingsSection" + count)
+            ? document.getElementById("settingsSection" + count).classList.remove('open') : '';
       }
       document.getElementById("settingsSection" + this.props.active).classList.add('open')
     } else {

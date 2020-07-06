@@ -7,8 +7,8 @@ namespace App\Http\Controllers\Admin;
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
 use App\Altrp\Generators\ModelGenerator;
-use App\Altrp\Model;
 use App\Http\Controllers\ApiController;
+use App\User;
 use Illuminate\Http\Request;
 
 class GeneratorController extends ApiController
@@ -18,14 +18,16 @@ class GeneratorController extends ApiController
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\CommandFailedException
+     * @throws \App\Exceptions\RelationshipNotInsertedException
+     * @throws \App\Exceptions\TableNotFoundException
      */
     public function createModel(Request $request)
     {
         $id = $request->table;
 
         $generator = new ModelGenerator(
-            new Model(),
-            ['model' => array_merge($request->all(), ['table_id' => $id])]
+            array_merge($request->all(), ['table_id' => $id])
         );
 
         $result = $generator->generate();
@@ -48,8 +50,7 @@ class GeneratorController extends ApiController
         $id = $request->table;
 
         $generator = new ControllerGenerator(
-            new Controller(),
-            ['controller' => array_merge($request->all(), ['table_id' => $id])]
+            array_merge($request->all(), ['table_id' => $id])
         );
 
         $result = $generator->generate();

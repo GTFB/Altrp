@@ -31,12 +31,22 @@ function _changeValue(value) {
   }else if(typeof value === 'object'){
     value = {...value};
   }
-  this.setState((state)=>{
-    return {
-      ...state,
-      value,
-    }
-  });
+
+  if(value && ! value.dynamic){
+    this.setState((state)=>{
+      return {
+        ...state,
+        value,
+      }
+    });
+  } else {
+    this.setState((state)=>{
+      return {
+        ...state,
+        dynamicValue: value,
+      }
+    });
+  }
   this.props.controller.changeValue(value);
 
 }
@@ -80,11 +90,23 @@ function conditionSubscriber() {
 /**
  * Метод вызывается, когда компонент контроллера загружается
  */
-function controllerComponentDidMount() {
+async function  controllerComponentDidMount() {
   /**
    * Сначала проверим нужно ли отрисовывать контроллер по умолчанию
    */
-  this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController() ;
+  this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController();
+
+  if(this.resource){
+    let options = await this.resource.getAll();
+    if(this.props.nullable){
+      options = _.concat([{'':''}], options);
+    }
+    this.setState(state=>({...state, options}));
+    this._changeValue(options[0].value);
+  }
+  if(typeof this._componentDidMount === 'function'){
+    this._componentDidMount();
+  }
 }
 
 /**
