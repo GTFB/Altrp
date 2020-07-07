@@ -17,9 +17,6 @@ class DynamicContent extends Component {
         modelName: 'page',
         title: 'Page',
         fields: [
-          {
-            type: 'text',
-            fields: [
               {
                 fieldName: 'id',
                 title: 'ID',
@@ -36,11 +33,6 @@ class DynamicContent extends Component {
                 fieldName: 'authorId',
                 title: 'Author ID',
               },
-            ]
-          },
-          {
-            type: 'number',
-            fields: [
               {
                 fieldName: 'id',
                 title: 'ID',
@@ -52,9 +44,7 @@ class DynamicContent extends Component {
             ]
           },
         ],
-      }
-      ]
-    };
+      };
     this.select = this.select.bind(this);
   }
 
