@@ -174,6 +174,7 @@ Route::group( ['prefix' => 'ajax'], function(){
   Route::resource( 'routes', 'Frontend\RouteController' );
   Route::get( 'models/{model_name}', 'Frontend\ModelsController@models' )->name( 'front.models.all' );
   Route::post( 'models/{model_name}', 'Frontend\ModelsController@create' )->name( 'front.models.create' );
+  Route::get( 'models/page/{page_id}', 'Frontend\PageController@show' )->name( 'front.page.show' );
 
 } );
 

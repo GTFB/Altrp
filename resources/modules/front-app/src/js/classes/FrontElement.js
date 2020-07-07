@@ -45,7 +45,7 @@ class FrontElement {
      *  (при смене страницы header footer могут не меняться)
      *  * @type {array}
      */
-    this.models = []
+    this.modelsList = []
   }
 
   /**
@@ -250,10 +250,10 @@ class FrontElement {
   }
 
   /**
-   * @return {AltrpModel[]}
+   * @return {AltrpModelUpdater[]}
    */
   getModelsList(){
-    return this.getRoot().modelsList;
+    return this.getRoot().modelsList || [];
   }
 
   /**
@@ -273,10 +273,28 @@ class FrontElement {
   }
 
   /**
-   * @param {AltrpModel[]} modelsList
+   * @param {AltrpModelUpdater[]} modelsList
    */
   setModelsList(modelsList){
-    this.modelsList = modelsList;
+    this.getRoot().modelsList = modelsList;
+  }
+  /**
+   * Добавляет информацию о модели в список моделей
+   * @param {{}} modelInfo
+   */
+  addModelInfo(modelInfo){
+    this.getRoot().modelsList = this.getRoot().modelsList || [];
+    this.getRoot().modelsList.push({...modelInfo})
+  }
+
+  /**
+   * Получает данные для контента элемента
+   * Проверяет явлется ли свойство настроек динамическим контентом, если да берет это свойство из this.state.modelsData
+   * @param {string} settingName
+   * @return {*}
+   */
+  getContent(settingName){
+
   }
 }
 

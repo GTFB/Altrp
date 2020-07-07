@@ -54,7 +54,7 @@ class TextareaController extends Component {
               iconsManager().renderIcon('times')
             }
           </div>
-        </div> :<textarea className="controller-container__textarea" onChange={this.changeValue} value={this.state.value}/>
+        </div> : <textarea className="controller-container__textarea" onChange={this.changeValue} value={this.state.value}/>
         }
 
       </div>

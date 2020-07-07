@@ -52,11 +52,11 @@ class DynamicContent extends Component {
     value.modelTitle = e.target.dataset.modeltitle;
     value.fieldName = e.target.dataset.fieldname;
     value.fieldTitle = e.target.dataset.fieldtitle;
-    value.settingName = this.props.settingName;
+    value.settingName = this.props.params.settingName;
     value.dynamic = true;
     this.props.params.onSelect(value);
     store.dispatch(closeDynamicContent());
-    console.log(this.props);
+    console.log(value);
     getCurrentElement().setModelsSettings(value)
   }
 

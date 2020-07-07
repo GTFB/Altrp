@@ -1,3 +1,4 @@
+import frontDecorate from '../../../../front-app/src/js/decorators/front-element-component'
 /**
  * Обновляем state элемента при изменении настроек в редакторе
  * @param settingName
@@ -34,4 +35,5 @@ export function setChildren(children) {
 export default function decorate(component) {
   component.changeSetting = changeSetting.bind(component);
   component.setChildren = setChildren.bind(component);
+  frontDecorate(component);
 }

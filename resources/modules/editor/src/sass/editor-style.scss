@@ -309,7 +309,18 @@ button{
     padding: 10px;
     border-radius: 3px;
     border: 1px solid $border-gray;
-
+  }
+  &_textarea{
+    & .dynamic-placeholder{
+      display: flex;
+      justify-content: space-between;
+      padding-right: 0;
+      &__remove{
+        position: relative;
+        top: 0;
+        left: 0;
+      }
+    }
   }
   &__dynamic{
     padding-top: 10px;

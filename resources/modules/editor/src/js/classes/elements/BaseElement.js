@@ -59,6 +59,9 @@ class BaseElement extends ControlStack{
     data.name = this.getName();
     data.settings = this.settings;
     data.type = this.getType();
+    if(this.dynamicContentSettings && this.dynamicContentSettings.length){
+      data.dynamicContentSettings = [...this.dynamicContentSettings];
+    }
     let children = this.getChildrenForImport();
     if(children){
       data.children = children;
@@ -455,7 +458,8 @@ class BaseElement extends ControlStack{
    * @param {string} settingName
    */
   removeModelSettings(settingName){
-    this.dynamicContentSettings = _.remove(this.dynamicContentSettings, dynamicContent=>dynamicContent.settingName === settingName);
+    this.dynamicContentSettings = _.remove(this.dynamicContentSettings,{settingName});
+    _.remove(['test'],r=>{console.log(r);});
   }
 }
 

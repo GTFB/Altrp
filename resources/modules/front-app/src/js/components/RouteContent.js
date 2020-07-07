@@ -8,15 +8,20 @@ class RouteContent extends Component {
     setTitle(this.props.title);
   }
   render(){
+    console.log(this.props);
     return (
     <Scrollbars
       style={{zIndex: 99999}}
       // autoHide
       // autoHideTimeout={500}
       // autoHideDuration={200}
-    > 
+    >
+
     <div className="route-content">{
-      this.props.areas.map(area => <AreaComponent {...area} key={'appArea_' + area.id}/>)
+      this.props.areas.map(area => <AreaComponent
+          {...area}
+          page={this.props.id}
+          key={'appArea_' + area.id}/>)
     }</div>
     </Scrollbars>
     )

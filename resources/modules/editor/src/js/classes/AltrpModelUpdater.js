@@ -1,7 +1,9 @@
 /**
- * @class AltrpModel
+ * @class AltrpModelUpdater
  */
-class AltrpModel {
+import Resource from "./Resource";
+
+class AltrpModelUpdater {
   /**
    *
    * @param {string} modelName
@@ -11,7 +13,8 @@ class AltrpModel {
     this.modelName = modelName;
     this.modelId = modelId;
     this.data = null;
-    this.subscribers = []
+    this.subscribers = [];
+    this.resource = new Resource({route: `/ajax/models/${this.modelName}`});
   }
 
   /**
@@ -19,14 +22,20 @@ class AltrpModel {
    * @param {function} callback
    */
   subscribeToUpdates(callback){
-
+    this.subscribers.push(callback);
+    if(this.data){
+      this.callSubscribers();
+    } else {
+      this.updateData();
+    }
   }
 
   /**
    * Обновляет модель с сервера
    */
-  updateData(){
-
+  async updateData(){
+    this.data = await this.resource.get(this.modelId);
+    this.callSubscribers();
   }
 
   /**
@@ -58,4 +67,4 @@ class AltrpModel {
   }
 }
 
-export default AltrpModel
+export default AltrpModelUpdater

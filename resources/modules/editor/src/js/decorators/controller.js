@@ -33,19 +33,19 @@ function _changeValue(value) {
     value = {...value};
   }
 
-  if(value && ! value.dynamic){
-    this.setState((state)=>{
-      return {
-        ...state,
-        value,
-      }
-    });
-  } else if( value ) {
+  if(value && value.dynamic){
     this.setState((state)=>{
       return {
         ...state,
         value:'',
         dynamicValue: value,
+      }
+    });
+  } else {
+    this.setState((state)=>{
+      return {
+        ...state,
+        value,
       }
     });
   }
