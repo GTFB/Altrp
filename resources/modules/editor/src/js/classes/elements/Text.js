@@ -16,7 +16,7 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_NUMBER,
-  CONTROLLER_WYSIWYG
+  CONTROLLER_WYSIWYG, CONTROLLER_STYLESTATE
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 
@@ -69,6 +69,18 @@ class Text extends BaseElement {
       },
       label: 'Link',
     });
+
+    this.endControlSection();
+
+    this.startControlSection('style_stilization', {
+      tab: TAB_STYLE,
+      label: 'Style Stilization',
+    });
+
+    this.addControl('stilization_buttons', {
+      type: CONTROLLER_STYLESTATE,
+      label: 'Присутствует',
+    })
 
     this.endControlSection();
 
@@ -145,7 +157,7 @@ class Text extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-text': [ 
+        '{{ELEMENT}} .altrp-text': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -348,7 +360,7 @@ class Text extends BaseElement {
       label: 'Tooltip active',
       default: false
     });
-    
+
     this.addControl('text_advanced_tooltip_label', {
       type: CONTROLLER_TEXT,
       default: "tooltip",
@@ -428,7 +440,7 @@ class Text extends BaseElement {
         },
       }
     );
-  
+
     this.addControl(
       'text_advanced_tooltip_border_width', {
         type: CONTROLLER_DIMENSIONS,
@@ -443,7 +455,7 @@ class Text extends BaseElement {
         },
       }
     );
-  
+
     this.addControl(
       'text_advanced_tooltip_border_color', {
         type: CONTROLLER_COLOR,
@@ -457,7 +469,7 @@ class Text extends BaseElement {
         },
       }
     );
-    
+
     this.addControl('text_advanced_tooltip_border_radius', {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',

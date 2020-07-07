@@ -14,7 +14,7 @@ import {
   CONTROLLER_SLIDER,
   CONTROLLER_LINK,
   CONTROLLER_TRANSFORM,
-  CONTROLLER_CHOOSE,
+  CONTROLLER_CHOOSE, CONTROLLER_STYLESTATE,
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 
@@ -124,11 +124,23 @@ class Heading extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('style_stilization', {
+      tab: TAB_STYLE,
+      label: 'Style Stilization',
+    });
+
+    this.addControl('stilization_buttons', {
+      type: CONTROLLER_STYLESTATE,
+      label: 'Присутствует',
+    })
+
+    this.endControlSection();
+
     this.startControlSection('heading_style_font', {
       tab: TAB_STYLE,
       label: 'Font',
     });
-    
+
     this.addControl("heading_style_color", {
       type: CONTROLLER_COLOR,
       label: "Color",
@@ -190,9 +202,9 @@ class Heading extends BaseElement {
         },
       }
     );
-    
+
     this.endControlSection();
-    
+
     this.startControlSection("style_position", {
       tab: TAB_STYLE,
       label: "Position"
@@ -214,7 +226,7 @@ class Heading extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-heading': [ 
+        '{{ELEMENT}} .altrp-heading': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -243,7 +255,7 @@ class Heading extends BaseElement {
         ]
       }
     });
-    
+
     this.addControl('position_z_index', {
       type: CONTROLLER_NUMBER,
       label: "Z-index",

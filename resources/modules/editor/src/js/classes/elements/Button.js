@@ -15,7 +15,7 @@ import {
   CONTROLLER_SHADOW,
   TAB_CONTENT,
   TAB_STYLE,
-  TAB_ADVANCED
+  TAB_ADVANCED, CONTROLLER_STYLESTATE
 } from "../modules/ControllersManager";
 
 class Button extends BaseElement{
@@ -101,6 +101,18 @@ class Button extends BaseElement{
 
     this.endControlSection();
 
+    this.startControlSection('style_stilization', {
+      tab: TAB_STYLE,
+      label: 'Style Stilization',
+    });
+
+    this.addControl('stilization_buttons', {
+      type: CONTROLLER_STYLESTATE,
+      label: 'Присутствует',
+    })
+
+    this.endControlSection();
+
     this.startControlSection('position_section', {
       tab: TAB_STYLE,
       label: 'Position',
@@ -123,7 +135,7 @@ class Button extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-btn': [ 
+        '{{ELEMENT}} .altrp-btn': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -145,11 +157,11 @@ class Button extends BaseElement{
       },
       units:[
         'px',
-        '%',  
+        '%',
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-btn': [ 
+        '{{ELEMENT}} .altrp-btn': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -271,7 +283,7 @@ class Button extends BaseElement{
         },
       }
     );
-  
+
     this.addControl(
       'border_width', {
         type: CONTROLLER_DIMENSIONS,
@@ -289,7 +301,7 @@ class Button extends BaseElement{
         },
       }
     );
-  
+
     this.addControl('border_color', {
         type: CONTROLLER_COLOR,
         label: 'Border Color',
@@ -302,7 +314,7 @@ class Button extends BaseElement{
         },
       }
     );
-    
+
     this.addControl('border_radius', {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
@@ -382,7 +394,7 @@ class Button extends BaseElement{
         {
           value: '"Roboto"',
           label:'Roboto'
-        }, 
+        },
         {
           value: '"Lato"',
           label:'Lato'
