@@ -58,7 +58,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get( 'templates/options', 'TemplateController@options' );
     Route::get( '/template/{template_id}/reviews', 'TemplateController@reviews' );
     Route::resource( 'pages', 'Admin\PagesController' );
-    Route::get( 'pages_options', 'Admin\PagesController@pages_options' )->name( 'admin.pages_options' );
+    Route::get( '/pages_options', 'Admin\PagesController@pages_options' )->name( 'admin.pages_options.all' );
+    Route::get( '/pages_options/{page_id}', 'Admin\PagesController@show_pages_options' )->name( 'admin.pages_options.show' );
     Route::get('/permissions', "Users\Permissions@getPermissions");
     Route::get('/permissions/{permission}', "Users\Permissions@getPermission");
     Route::post('/permissions', "Users\Permissions@insert");
@@ -134,6 +135,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get('/tables/{table}/controller', "Admin\TableController@getController");
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
     
+    // GeneratorController routes
+    Route::post('/generators/{table}/model/create', 'Admin\GeneratorController@createModel');
+    Route::post('/generators/{table}/controller/create', 'Admin\GeneratorController@createController');
+    
+    
+
+    
   });
 
 });
@@ -179,10 +187,10 @@ Route::group( ['prefix' => 'ajax'], function(){
 
 } );
 
+/*
 
-
-// Require users routes
-if ( file_exists( app_path( '/routes/AltrpRoutes.php' ) ) )
-{
-  require_once ('AltrpRoutes.php');
-}
+    // Require users routes
+    if ( file_exists( app_path( '/routes/AltrpRoutes.php' ) ) )
+    {
+        require_once ('AltrpRoutes.php');
+    }*/

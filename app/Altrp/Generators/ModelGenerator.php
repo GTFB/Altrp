@@ -3,25 +3,32 @@
 
 namespace App\Altrp\Generators;
 
+
 use App\Altrp\Column;
 use App\Altrp\Model;
-use App\Altrp\Table;
 use App\Altrp\Relationship;
-use Artisan;
+use App\Altrp\Table;
+use App\Exceptions\CommandFailedException;
+use App\Exceptions\ModelNotWrittenException;
+use App\Exceptions\PermissionNotWrittenException;
+use App\Exceptions\RelationshipNotInsertedException;
+use App\Exceptions\TableNotFoundException;
+use App\Permission;
+use Illuminate\Support\Carbon;
 
 class ModelGenerator extends AppGenerator
 {
     /**
      * @var Model
      */
-    private $model;
+    protected $model;
 
     /**
-     * Данные, необходимые для генерации модели
+     * Данные, необходимые для генерации/изменения модели
      *
      * @var object
      */
-    private $data;
+    protected $data;
 
     /**
      * Связи с таблицами
@@ -30,17 +37,28 @@ class ModelGenerator extends AppGenerator
      */
     private $relationships;
 
-    public function __construct(Model $model, $data)
+    /**
+     * Имя файла модели
+     *
+     * @var string
+     */
+    private $modelFilename;
+
+    /**
+     * Файл модели
+     *
+     * @var string
+     */
+    private $modelFile;
+
+    /**
+     * ModelGenerator constructor.
+     * @param $data
+     */
+    public function __construct($data)
     {
-        $this->model = $model;
-
-        if (is_array($data)) {
-            $obj = new \stdClass;
-            $this->data = $this->convertToObject($data, $obj);
-
-        } else {
-            $this->data = json_decode($data);
-        }
+        $this->model = new Model();
+        parent::__construct($data);
     }
 
     /**
@@ -56,161 +74,229 @@ class ModelGenerator extends AppGenerator
     }
 
     /**
-     * Сгенерировать новую модель
+     * Получить данные из полей
+     *
+     * @return object
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Сгенерировать модель
      *
      * @return bool
+     * @throws CommandFailedException
+     * @throws ModelNotWrittenException
+     * @throws RelationshipNotInsertedException
+     * @throws TableNotFoundException
      */
     public function generate()
     {
+        $model = $this->getModelFromDb($this->data->table_id);
 
-        // Записать модель в таблицу
-        if(! $this->writeModel()) return false;
+        if ($model) {
+            $this->setModel($model);
+            $this->modelFilename = $this->getFormedFileName($this->model->path, $this->model->name);
+            $this->modelFile = $this->getModelFile();
 
-        // Сгенерировать новую модель
-        if (! $this->runCreateCommand()) return false;
+            if (! $this->writeModelToDb()) {
+                throw new ModelNotWrittenException('Failed to write model to the database', 500);
+            }
+            if (! $this->updateModelFile()) {
+                throw new CommandFailedException('Failed to update model file', 500);
+            }
+        } else {
+            if (! $this->writeModelToDb()) {
+                throw new ModelNotWrittenException('Failed to write model to the database', 500);
+            }
+            if (! $this->createModelFile()) {
+                throw new CommandFailedException('Failed to create model file', 500);
+            }
+        }
 
         return true;
     }
 
     /**
-     * Добавить модель в таблицу
+     * Сохранить модель в базе данных
      *
-     * @return mixed
+     * @return bool
+     * @throws RelationshipNotInsertedException
+     * @throws TableNotFoundException
+     * @throws PermissionNotWrittenException
      */
-    private function writeModel()
+    protected function writeModelToDb()
     {
-        // Получаем модель в таблице моделей для обновления
-        $model = Model::where('table_id', $this->data->model->table_id)->first();
+        $attributes = json_decode(json_encode($this->data), true);
+        $this->model->fill($attributes);
 
-        // Проверяем, существует ли модель в бд
-        if ($model) {
-
-            // Формируем имя файла (абсолютный путь + имя модели)
-            $modelFileName = $this->getFormedFileName($model->path, $model->name);
-
-            $modelFile = base_path('app/' . "{$modelFileName}.php");
-
-            if (file_exists($modelFile)) {
-                // Удаляем файл модели
-                unlink($modelFile);
-            }
-
-            $this->setModel($model);
+        if (! $this->getAndWriteRelationships()) {
+            throw new RelationshipNotInsertedException("Failed to write relationships", 500);
         }
 
-        $this->model->name = trim($this->data->model->name, '/');
-        $this->model->table_id = $this->data->model->table_id;
-        $this->model->path = isset($this->data->model->path) ? trim($this->data->model->path, '/') : "";
-        $this->model->description = $this->data->model->description ?? "";
-        $this->model->soft_deletes = $this->data->model->soft_deletes ?? false;
-        $this->model->timestamps = $this->data->model->timestamps ?? false;
-        $this->model->time_stamps = $this->model->timestamps;
-        $this->model->fillable_cols = isset($this->data->model->fillable)
-            ? implode(',', (array) $this->data->model->fillable)
-            : null;
-
-        if (isset($this->data->model->pk)) {
-            $this->model->setKeyName($this->data->model->pk);
+        if (! $this->writePermissions()) {
+            throw new PermissionNotWrittenException("Failed to write permissions", 500);
         }
 
-        // Получаем связи и записываем их
-        if (isset($this->data->model->relationships)) {
-
-            $this->relationships = Relationship::where('table_id', $this->data->model->table_id)->get();
-
-            if(count($this->relationships) > 0) {
-                Relationship::where('table_id', $this->data->model->table_id)->delete();
-            }
-
-            $this->relationships = $this->data->model->relationships;
-            if (! $this->writeRelationships()) return false;
+        try {
+            $this->model->save();
+        } catch (\Exception $e) {
+            return false;
         }
-
-        return $this->model->save();
+        return true;
     }
 
     /**
-     * Получить заполняемые поля
-     *
-     * @return string
+     * @throws \Exception
      */
-    private function getFillableColumns()
+    protected function updateModelFile()
     {
-        if (!isset($this->data->model->fillable)) return '';
-
-        $table = Table::find($this->model->table_id);
-        $last_migration = $table->actual_migration();
-
-        $columns = Column::where([['table_id', $this->model->table_id],['altrp_migration_id', $last_migration->id]])
-            ->whereIn('name', (array)$this->data->model->fillable)
-            ->get();
-
-        if ($columns->isEmpty()) return '';
-
-        $columnsArr = [];
-
-        foreach ($columns as $column) {
-            $columnsArr[] = $column->name;
-        }
-
-        return '\'' . implode("','", $columnsArr) . '\'';
+        return $this->createModelFile();
     }
 
     /**
      * Запустить команду создания модели
      *
      * @return bool
+     * @throws \Exception
      */
-    private function runCreateCommand()
+    private function createModelFile()
     {
         $relationships = $this->screenBacklashes($this->relationshipsToString());
-
-        $fullModelName = $this->getFormedFileName($this->data->model->path, $this->data->model->name);
+        $fullModelName = $this->getFormedFileName($this->data->path, $this->data->name);
         $fillableColumns = $this->getFillableColumns();
-
         $softDeletes = $this->isSoftDeletes();
-
-        if ($this->model->timestamps === true) {
-            $createdAt = $this->data->model->created_at ?? 'created_at';
-            $updatedAt = $this->data->model->updated_at ?? 'updated_at';
-        } else {
-            $createdAt = null;
-            $updatedAt = null;
-        }
+        $createdAt = $this->getCreatedAt();
+        $updatedAt = $this->getUpdatedAt();
+        $primaryKey = $this->getPrimaryKey();
+        $customCode = $this->getCustomCode($this->modelFile);
 
         try {
-            Artisan::call("crud:model", [
+            \Artisan::call('crud:model', [
                 'name' => "{$fullModelName}",
                 '--table' => "{$this->model->table()->first()->name}",
                 '--fillable' => "[{$fillableColumns}]",
-                '--pk' => "{$this->model->getKeyName()}",
+                '--pk' => "$primaryKey",
                 '--soft-deletes' => "{$softDeletes}",
-                '--timestamps' => $this->model->timestamps,
+                '--timestamps' => $this->model->time_stamps,
                 '--created-at' => $createdAt,
                 '--updated-at' => $updatedAt,
-                '--relationships' => "{$relationships}"
+                '--relationships' => "{$relationships}",
+                '--custom-namespaces' => $this->getCustomCodeBlock($customCode,'custom_namespaces'),
+                '--custom-traits' => $this->getCustomCodeBlock($customCode,'custom_traits'),
+                '--custom-properties' => $this->getCustomCodeBlock($customCode,'custom_properties'),
+                '--custom-methods' => $this->getCustomCodeBlock($customCode,'custom_methods')
             ]);
-            return true;
         } catch(\Exception $e) {
+            if(file_exists($this->modelFile . '.bak'))
+                rename($this->modelFile . '.bak', $this->modelFile);
             return false;
+        }
+        if(file_exists($this->modelFile . '.bak'))
+            unlink($this->modelFile . '.bak');
+        return true;
+    }
+
+    /**
+     * Получить первичный ключ
+     *
+     * @return string
+     */
+    protected function getPrimaryKey()
+    {
+        return $this->data->pk ?? 'id';
+    }
+
+    /**
+     * Получить значение поля времени создания
+     *
+     * @return string|null
+     */
+    protected function getCreatedAt()
+    {
+        if ($this->model->time_stamps === true) {
+            $createdAt = $this->data->created_at ?? 'created_at';
+        } else {
+            $createdAt = null;
+        }
+        return $createdAt;
+    }
+
+    /**
+     * Получить значение поля времени обновления
+     *
+     * @return string|null
+     */
+    protected function getUpdatedAt()
+    {
+        if ($this->model->time_stamps === true) {
+            $updatedAt = $this->data->updated_at ?? 'updated_at';
+        } else {
+            $updatedAt = null;
+        }
+        return $updatedAt;
+    }
+
+    /**
+     * Получить и записать в БД связи модели с другими таблицами
+     *
+     * @throws TableNotFoundException
+     */
+    protected function getAndWriteRelationships()
+    {
+        if (isset($this->data->relationships)) {
+
+            if (count($this->getRelationships($this->data->table_id)) > 0) {
+                $this->deleteRelationships($this->data->table_id);
+            }
+
+            $this->relationships = $this->data->relationships;
+
+            return $this->writeRelationships();
         }
     }
 
     /**
-     * Конвертировать связи в строку
+     * Получить связи по указанному ID таблицы из БД
      *
-     * @param array $relationships
-     * @return string
+     * @param $tableId
+     * @return mixed
      */
-    private function relationshipsToString()
+    protected function getRelationships($tableId)
     {
-        $relArr = [];
+        $relationships = Relationship::where('table_id', $tableId)->get();
+        return $relationships;
+    }
 
+    /**
+     * Удалить связи по указанному ID таблицы из БД
+     *
+     * @param $tableId
+     * @return mixed
+     */
+    protected function deleteRelationships($tableId)
+    {
+        return Relationship::where('table_id', $tableId)->delete();
+    }
+
+    /**
+     * Конвертировать связи в строку.
+     * Необходимо для выполнения artisan команды.
+     *
+     * @return string|null
+     */
+    protected function relationshipsToString()
+    {
         if (! $this->relationships) return null;
+
+        $relArr = [];
 
         foreach ($this->relationships as $rel) {
 
-            $relItem = $rel->name . '#' . $rel->type . '#' . trim($this->screenBacklashes($rel->model_class), '\\');
+            $relItem = $rel->name . '#' . $rel->type . '#'
+                . trim($this->screenBacklashes($rel->model_class), '\\');
 
             if (isset($rel->foreign_key)) {
 
@@ -231,8 +317,31 @@ class ModelGenerator extends AppGenerator
      * Добавить связи в таблицу связей
      *
      * @return bool
+     * @throws TableNotFoundException
      */
     protected function writeRelationships()
+    {
+        if (! $this->getTableById($this->model->table_id)) {
+            throw new TableNotFoundException('Table not found', 404);
+        }
+
+        $relationshipsData = $this->prepareRelationsData();
+
+        try {
+            Relationship::insert($relationshipsData);
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Подготовить и получить данные для связей
+     *
+     * @return array
+     */
+    protected function prepareRelationsData()
     {
         $relData = [];
 
@@ -247,12 +356,136 @@ class ModelGenerator extends AppGenerator
             ];
         }
 
-        return Relationship::insert($relData);
+        return $relData;
+    }
+
+    /**
+     * Записать permissions в БД
+     *
+     * @return bool
+     */
+    protected function writePermissions()
+    {
+        $permissions = $this->preparePermissions();
+        try {
+            Permission::insertOrIgnore($permissions);
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Подготовить permissions к записи в БД
+     *
+     * @return array
+     */
+    protected function preparePermissions()
+    {
+        $permissions = [];
+        $actions = ['create', 'read', 'update', 'delete', 'all'];
+        $nowTime = Carbon::now();
+
+        foreach ($actions as $action) {
+            $permissions[] = [
+                'name' => $action . '-' . strtolower($this->data->name),
+                'display_name' => ucfirst($action) . ' ' . \Str::plural($this->data->name),
+                'created_at' => $nowTime,
+                'updated_at' => $nowTime,
+            ];
+        }
+
+        return $permissions;
+    }
+
+    /**
+     * Проверить, существует ли модель
+     *
+     * @param $tableId
+     * @return mixed
+     */
+    protected function getModelFromDb($tableId)
+    {
+        // Получаем модель в таблице моделей для обновления
+        $model = Model::where('table_id', $tableId)->first();
+        return $model;
+    }
+
+    /**
+     * Получить заполняемые поля в модели
+     *
+     * @return string
+     * @throws TableNotFoundException
+     */
+    protected function getFillableColumns()
+    {
+        if (!isset($this->data->fillable_cols)) return '';
+
+        $table = $this->getTableById($this->model->table_id);
+
+        if (!$table) {
+            throw new TableNotFoundException("Table not found", 500);
+        }
+
+        $columns = $this->getColumns($table);
+
+        if ($columns->isEmpty()) return '';
+
+        $columnsList = $this->getColumnsList($columns);
+
+        return '\'' . implode("','", $columnsList) . '\'';
+    }
+
+    /**
+     * Получить таблицу по id
+     *
+     * @param $tableId
+     * @return mixed
+     */
+    protected function getTableById($tableId)
+    {
+        $table = Table::find($tableId);
+        return $table;
+    }
+
+    /**
+     * Получить колонки в таблице
+     *
+     * @param $table
+     * @return mixed
+     */
+    protected function getColumns($table)
+    {
+        $last_migration = $table->actual_migration();
+
+        $columns = Column::where([
+            ['table_id', $this->model->table_id],
+            ['altrp_migration_id', $last_migration->id]
+        ])
+            ->whereIn('name', (array) $this->data->fillable_cols)
+            ->get();
+
+        return $columns;
+    }
+
+    /**
+     * Получить список колонок
+     *
+     * @param $columns
+     * @return array
+     */
+    protected function getColumnsList($columns)
+    {
+        $columnsList = [];
+        foreach ($columns as $column) {
+            $columnsList[] = $column->name;
+        }
+        return $columnsList;
     }
 
     /**
      * Проверить, будет ли использоваться Soft Deletes
-     * Необходимо для artisan команды
+     * Необходимо для выполнения artisan команды
      *
      * @return string
      */
@@ -270,20 +503,21 @@ class ModelGenerator extends AppGenerator
      */
     protected function getFormedFileName($modelPath, $modelName)
     {
-        $fullModelFileName = isset($modelPath)
+
+        $fullModelFilename = isset($modelPath)
             ? trim(config('crudgenerator.user_models_folder') . "/{$modelPath}/{$modelName}", '/')
             : trim(config('crudgenerator.user_models_folder') . "/{$modelName}", '/');
 
-        return $fullModelFileName;
+        return $fullModelFilename;
     }
 
     /**
-     * Получить список связей
+     * Получить файл модели
      *
-     * @return array|null
+     * @return string
      */
-    public function getRelationships()
+    protected function getModelFile()
     {
-        return $this->relationships;
+        return base_path('app/' . "{$this->modelFilename}.php");
     }
 }

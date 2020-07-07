@@ -64,7 +64,7 @@ class RootElement extends BaseElement {
     this.addControl('choose_page', {
       type: CONTROLLER_SELECT2,
       label: 'Choose Page',
-      search_resource: '/admin/ajax/pages_options',
+      options_resource: '/admin/ajax/pages_options',
     });
 
     this.addControl('preview_heading', {
@@ -90,6 +90,21 @@ class RootElement extends BaseElement {
   }
   getSelector(){
     return `.altrp-template-root${this.getId()}`;
+  }
+
+  /**
+   * Задать настройки
+   * для корневого элемента проверим настройки моделей для предпросмотра
+   * @param settings
+   */
+  setSettings(settings){
+    this.settings = settings || this.settings;
+    if(this.settings.choose_page){
+      this.addModelInfo({
+        modelName: 'page',
+        modelId: this.settings.choose_page
+      })
+    }
   }
 }
 

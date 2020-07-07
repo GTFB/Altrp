@@ -72,8 +72,8 @@ class AddMigrationPage extends Component{
             {name: 'type',title: 'Type',},
             {name: 'size',title: 'Size',},
             {name: 'default',title: 'Default',},
-            {name: 'null',title: 'Nullable',},
-            {name: 'unique',title: 'Unique',},
+            {name: 'null',title: 'Nullable',is_boolean: true},
+            {name: 'unique',title: 'Unique',is_boolean: true},
             {
                 name: 'edit',
                 title: 'Edit',
@@ -302,11 +302,36 @@ class AddMigrationPage extends Component{
         }
     }
     
-    
+    /**
+     * Изменение значений при работе с модальным окном
+     * @param {type} e
+     * @returns {undefined}
+     */
     onChangeColumn(e) {
         let field_name = e.target.name;
-        console.log(e.target.value);
-        this.setState({ ...this.state, column:{...this.state.column, [field_name]: e.target.value}});
+        let value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+        
+        if(field_name === "name") {
+            
+        
+            let val = e.target.value.replace("_", " ");
+            value = val.charAt(0).toUpperCase() + val.slice(1); 
+            
+            let title = this.state.column.title;
+            let description = this.state.column.description;
+            
+            if(title === "" || title === value.slice(0, value.length - 1)) {
+                title = value;
+            }
+            if(description === "" || description === value.slice(0, value.length - 1)) {
+                description = value; 
+            }
+            
+            this.setState({ ...this.state, column:{...this.state.column, [field_name]: e.target.value, title: title, description: description }});
+            return;
+        }
+        
+        this.setState({ ...this.state, column:{...this.state.column, [field_name]: value}}, () => {console.log(this.state)});
     }
     onChangeKey(e) {
         let field_name = e.target.name;
@@ -459,12 +484,6 @@ class AddMigrationPage extends Component{
                     <form className="admin-form" onSubmit={this.addColumn}>
                         <div>
                             <label className='form-label'>
-                                id
-                                <input className='form__input' type="text" name="id" value={this.state.column.id}  onChange={(e) => {this.onChangeColumn(e)}}/>
-                            </label>
-                        </div>
-                        <div>
-                            <label className='form-label'>
                                 name
                                 <input className='form__input' type="text" name="name" value={this.state.column.name} onChange={(e) => {this.onChangeColumn(e)}}/>
                             </label>
@@ -509,13 +528,13 @@ class AddMigrationPage extends Component{
                         </div>
                         <div>
                             <label className='form-label'>
-                                <input className='form__input' type="checkbox" name="unique" value={this.state.column.unique} onChange={(e) => {this.onChangeColumn(e)}}/>
+                                <input className='form__input' type="checkbox" name="unique" checked={this.state.column.unique ? 1 : 0} onChange={(e) => {this.onChangeColumn(e)}}/>
                                 unique
                             </label>
                         </div>
                         <div>
                             <label className='form-label'>
-                                <input className='form__input' type="checkbox" name="null" value={this.state.column.null} onChange={(e) => {this.onChangeColumn(e)}}/>
+                                <input className='form__input' type="checkbox" name="null" checked={this.state.column.null ? 1 : 0} onChange={(e) => {this.onChangeColumn(e)}}/>
                                 nullable
                             </label>
                         </div>

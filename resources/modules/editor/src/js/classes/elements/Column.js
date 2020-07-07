@@ -303,93 +303,22 @@ class Column  extends BaseElement {
           blur: 0,
           horizontal: 0,
           vertical: 0,
+          spread: 0,
           opacity: 1,
           colorRGB: 'rgb(0, 0, 0)',
           color: 'rgb(0, 0, 0)',
           colorPickedHex: '#000000',
+          type: ""
         },
         presetColors: [
           '#eaeaea',
           '#9c18a8'
         ],
         rules: {
-          '{{ELEMENT}} .altrp-column': 'box-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
+          '{{ELEMENT}} .altrp-column': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
         },
       }
     );
-
-    this.endControlSection();
-
-    this.startControlSection("position_style", {
-      tab: TAB_STYLE,
-      label: "Position"
-    });
-
-    this.addControl("position_style_position_padding", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Padding",
-      default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit: "px",
-        bind: true
-      },
-      units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-column": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
-    });
-
-    this.addControl('position_style_position_margin', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Margin',
-      default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit:'px'
-      },
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-column': [ 
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
-    });
-
-    this.addControl('position_style_z_index', {
-      type: CONTROLLER_NUMBER,
-      label: "Z-index",
-      default: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-column": "z-index: {{VALUE}}"
-      }
-    });
-
-    this.addControl("position_style_css_id", {
-      type: CONTROLLER_TEXT,
-      label: "CSS ID"
-    });
-
-    this.addControl("position_style_css_classes", {
-      type: CONTROLLER_TEXT,
-      label: "CSS Classes"
-    });
 
     this.endControlSection();
 

@@ -14,70 +14,12 @@ import {
  * @param {BaseElement} element
  * */
 export function advancedTabControllers(element) {
-  element.startControlSection(
-    'element_position', {
-      tab: TAB_ADVANCED,
-      label: 'Position',
-    }
-  );
-  
-  element.addControl(
-    'element_position_type', {
-      type: CONTROLLER_SELECT,
-      label: 'type',
-      options:[
-        {
-          'value' : 'static',
-          'label' : 'default',
-        },
-        {
-          'value' : 'relative',
-          'label' : 'relative'
-        },
-        {
-          'value' : 'absolute',
-          'label' : 'absolute'
-        },
-        {
-          'value' : 'fixed',
-          'label' : 'fixed'
-        },
-        {
-          'value' : 'inherit',
-          'label' : 'inherit'
-        }
-      ],
-      rules: {
-        '{{ELEMENT}}': 'position: {{VALUE}};',
-      },
-    }
-  );
-  
-  element.addControl(
-    'element_position_top_bottom_right_left', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'position',
-      default: {
-        bind: true,
-        unit:'px'
-      },
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}}': [ 
-          'top: {{TOP}}{{UNIT}};',
-          'right: {{RIGHT}}{{UNIT}};',
-          'bottom: {{BOTTOM}}{{UNIT}};',
-          'left: {{LEFT}}{{UNIT}};'
-        ]
-      },
-    }
-  );
-
-  element.endControlSection();
+  // element.startControlSection(
+  //   'element_position', {
+  //     tab: TAB_ADVANCED,
+  //     label: 'Position',
+  //   }
+  // );
 
   element.startControlSection(
     'element_sizes', {
@@ -187,15 +129,15 @@ export function advancedTabControllers(element) {
     default: 'flex-start',
     options:[
       {
-        icon: 'left',
+        icon: 'block_top',
         value: 'flex-start',
       },
       {
-        icon: 'center',
+        icon: 'block_horiz',
         value: 'center',
       },
       {
-        icon: 'right',
+        icon: 'block_bottom',
         value: 'flex-end',
       },
     ],
@@ -223,7 +165,7 @@ export function advancedTabControllers(element) {
       }
     ],
     rules: {
-          '{{ELEMENT}}': 'position: {{VALUE}};',
+          '{{ELEMENT}}': 'position: {{VALUE}} !important;',
     },
   });
 
@@ -233,11 +175,11 @@ export function advancedTabControllers(element) {
     default: 'flex-start',
     options:[
       {
-        icon: 'left',
+        icon: 'block_left',
         value: 'left',
       },
       {
-        icon: 'right',
+        icon: 'block_right',
         value: 'right',
       }
     ],
@@ -269,11 +211,11 @@ export function advancedTabControllers(element) {
     default: 'flex-start',
     options:[
       {
-        icon: 'left',
+        icon: 'block_top',
         value: 'left',
       },
       {
-        icon: 'right',
+        icon: 'block_bottom',
         value: 'right',
       }
     ],

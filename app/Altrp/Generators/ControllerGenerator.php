@@ -3,6 +3,9 @@
 namespace App\Altrp\Generators;
 
 use App\Altrp\Controller;
+use App\Exceptions\CommandFailedException;
+use App\Exceptions\ControllerNotWrittenException;
+use App\Exceptions\RouteGenerateFailedException;
 use Artisan;
 
 class ControllerGenerator extends AppGenerator
@@ -10,7 +13,14 @@ class ControllerGenerator extends AppGenerator
     /**
      * @var Controller
      */
-    private $controllerModel;
+    protected $controllerModel;
+
+    /**
+     * Данные, необходимые для генерации контроллера
+     *
+     * @var object
+     */
+    protected $data;
 
     /**
      * Пространство имен контроллера
@@ -27,48 +37,27 @@ class ControllerGenerator extends AppGenerator
     private $prefix = null;
 
     /**
-     * Данные, необходимые для генерации контроллера
+     * Имя файла контроллера
      *
-     * @var object
+     * @var string
      */
-    private $data;
+    private $controllerFilename;
 
     /**
-     * Валидационные правила
+     * Файл контроллера
      *
-     * @var $array
+     * @var string
      */
-    private $validationRules;
-
-    public function __construct(Controller $controller, $data)
-    {
-        $this->controllerModel = $controller;
-
-        if (is_array($data)) {
-            $obj = new \stdClass;
-            $this->data = $this->convertToObject($data, $obj);
-        } else {
-            $this->data = json_decode($data);
-        }
-    }
+    private $controllerFile;
 
     /**
-     * Сгенерировать новый контроллер
-     *
-     * @return boolean
+     * ControllerGenerator constructor.
+     * @param $data
      */
-    public function generate()
+    public function __construct($data)
     {
-        // Записать контроллер в таблицу
-        if(! $this->writeController()) return false;
-
-        // Сгенерировать новый контроллер
-        if (! $this->runCreateCommand()) return false;
-
-        // Сгенерировать маршрут
-        if (! $this->generateRoutes()) return false;
-
-        return true;
+        $this->controllerModel = new Controller();
+        parent::__construct($data);
     }
 
     /**
@@ -82,58 +71,94 @@ class ControllerGenerator extends AppGenerator
     }
 
     /**
-     * Добавить контроллер в таблицу контроллеров
+     * Сгенерировать новый контроллер
      *
-     * @return boolean
+     * @return bool
+     *
+     * @throws CommandFailedException
+     * @throws ControllerNotWrittenException
+     * @throws RouteGenerateFailedException
      */
-    private function writeController()
+    public function generate()
     {
-        $controller = Controller::where('table_id', $this->data->controller->table_id)->first();
+        $controllerModel = $this->getControllerFromDb($this->data->table_id);
 
-        if ($controller) {
+        if ($controllerModel) {
+            $this->setController($controllerModel);
+            $this->controllerFilename = $this->getFormedFileName($controllerModel);
+            $this->controllerFile = app_path($this->controllerFilename);
 
-            $controllerFile = $this->getFormedFileName($controller);
-
-            if (file_exists(app_path($controllerFile))) {
-                unlink(app_path($controllerFile));
+            if (! $this->writeControllerToDb()) {
+                throw new ControllerNotWrittenException('Failed to write controller to the database', 500);
             }
-
-            $controller->delete();
-
-            $this->setController($controller);
+            if (! $this->updateControllerFile()) {
+                throw new CommandFailedException('Failed to update controller file', 500);
+            }
+            if (! $this->generateRoutes()) {
+                throw new RouteGenerateFailedException('Failed to generate routes', 500);
+            }
+        } else {
+            if (! $this->writeControllerToDb()) {
+                throw new ControllerNotWrittenException('Failed to write controller to the database', 500);
+            }
+            if (! $this->createControllerFile()) {
+                throw new CommandFailedException('Failed to create controller file', 500);
+            }
+            if (! $this->generateRoutes()) {
+                throw new RouteGenerateFailedException('Failed to generate routes', 500);
+            }
         }
 
-        $this->controllerModel->table_id = $this->data->controller->table_id;
-        $this->controllerModel->description = $this->data->controller->description ?? '';
-        $this->controllerModel->namespace = $this->data->controller->namespace ?? '';
-        $this->prefix = $this->data->controller->prefix ?? $this->prefix;
-        $this->validationRules = $this->data->controller->validations ?? $this->validationRules;
-
-        $this->controllerName = $this->getFormedControllerName($this->controllerModel);
-
-        return $this->controllerModel->save();
+        return true;
     }
 
+    /**
+     * Сохранить контроллер в базе данных
+     *
+     * @return bool
+     */
+    protected function writeControllerToDb()
+    {
+        $attributes = json_decode(json_encode($this->data), true);
+
+        $this->controllerModel->fill($attributes);
+
+        try {
+            $this->controllerModel->save();
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Получить контроллер из БД по id таблицы
+     *
+     * @param $tableId
+     * @return mixed
+     */
+    protected function getControllerFromDb($tableId)
+    {
+        $controller = Controller::where('table_id', $tableId)->first();
+        return $controller;
+    }
 
     /**
      * Запустить artisan команду для генерации контроллера
      *
      * @return boolean
      */
-    public function runCreateCommand()
+    public function createControllerFile()
     {
-        $modelName = $this->controllerModel->table()->first()->models()->first()->name;
-
-        $modelPath = $this->controllerModel->table()->first()->models()->first()->path
-            ? $this->controllerModel->table()->first()->models()->first()->path . '\\' : '';
-
+        $modelName = $this->getModelName();
+        $modelPath = $this->getModelPath();
+        $prefix = $this->getRoutePrefix();
         $modelNamespace = 'AltrpModels\\' . $modelPath;
-
-        $validations = $this->validationsToString();
-
-        $crudName = $this->toSnakeCase($modelName);
-
+        $validations = $this->validationsToString($this->getValidationRules());
+        $crudName = $this->toSnakeCase($this->getTableName());
         $namespace = $this->getNamespace($this->controllerModel);
+        $relations = $this->getRelations();
+        $customCode = $this->getCustomCode($this->controllerFile);
 
         try {
             Artisan::call('crud:controller', [
@@ -142,17 +167,99 @@ class ControllerGenerator extends AppGenerator
                 '--model-name' => $modelName,
                 '--model-namespace' => $modelNamespace,
                 '--controller-namespace' => $namespace,
-                '--route-group' => $this->prefix,
-                '--validations' => $validations
+                '--route-group' => $prefix,
+                '--validations' => $validations,
+                '--relations' => $relations,
+                '--custom-namespaces' => $this->getCustomCodeBlock($customCode,'custom_namespaces'),
+                '--custom-traits' => $this->getCustomCodeBlock($customCode,'custom_traits'),
+                '--custom-properties' => $this->getCustomCodeBlock($customCode,'custom_properties'),
+                '--custom-methods' => $this->getCustomCodeBlock($customCode,'custom_methods')
             ]);
-            return true;
         } catch (\Exception $e) {
+            if(file_exists($this->controllerFile . '.bak'))
+                rename($this->controllerFile . '.bak', $this->controllerFile);
             return false;
         }
+
+        if(file_exists($this->controllerFile . '.bak'))
+            unlink($this->controllerFile . '.bak');
+        return true;
     }
 
     /**
-     * Сгенерировать маршрут
+     * Обновить файл контроллера
+     *
+     * @return bool
+     */
+    protected function updateControllerFile()
+    {
+        return $this->createControllerFile();
+    }
+
+    /**
+     * Получить валидационные правила
+     *
+     * @return array
+     */
+    protected function getValidationRules()
+    {
+        return $this->data->validations ?? [];
+    }
+
+    /**
+     * Получить имя модели, которую использует контроллер
+     *
+     * @return mixed
+     */
+    protected function getModelName()
+    {
+        return $this->controllerModel->table()->first()->models()->first()->name;
+    }
+
+    /**
+     * Получить имя таблицы, которая принадлежит контроллеру
+     *
+     * @return mixed
+     */
+    protected function getTableName()
+    {
+        return $this->controllerModel->table()->first()->name;
+    }
+
+    /**
+     * Получить путь к файлу модели
+     *
+     * @return string
+     */
+    protected function getModelPath()
+    {
+        return $this->controllerModel->table()->first()->models()->first()->path
+            ? $this->controllerModel->table()->first()->models()->first()->path . '\\'
+            : '';
+    }
+
+    /**
+     * Получить связи для контроллера
+     *
+     * @return string
+     */
+    protected function getRelations()
+    {
+        return $this->data->relations ?? '';
+    }
+
+    /**
+     * Получить префикс
+     *
+     * @return string|null
+     */
+    protected function getRoutePrefix()
+    {
+        return $this->data->prefix ?? null;
+    }
+
+    /**
+     * Сгенерировать маршруты
      *
      * @return bool
      */
@@ -160,7 +267,10 @@ class ControllerGenerator extends AppGenerator
     {
         $routeGenerator = new RouteGenerator();
         $tableName = $this->controllerModel->table()->first()->name;
-        $controller = trim($this->controllerName,"\\");
+        $controllerName = $this->getFormedControllerName($this->controllerModel);
+        $controller = trim($controllerName,"\\");
+        $prefix = $this->getRoutePrefix() ? trim($this->getRoutePrefix(), '/') . '/' : null;
+        $routeGenerator->addDynamicVariable('routePrefix', $prefix);
         $routeGenerator->addDynamicVariable('tableName', $tableName);
         $routeGenerator->addDynamicVariable('controllerName', $controller);
         return $routeGenerator->generate();
@@ -216,14 +326,15 @@ class ControllerGenerator extends AppGenerator
     /**
      * Сформировать строку с валидационными правилами для artisan команды
      *
+     * @param $validationRules
      * @return string
      */
-    private function validationsToString()
+    protected function validationsToString($validationRules)
     {
-        if ((array) $this->validationRules) {
+        if ((array) $validationRules) {
             $validationArr = [];
 
-            foreach ($this->validationRules as $name => $rules) {
+            foreach ($validationRules as $name => $rules) {
                 $rules = (array) $rules;
                 if (! empty($rules)) {
                     $validationArr[] = $name . '#' . implode('|', $rules);

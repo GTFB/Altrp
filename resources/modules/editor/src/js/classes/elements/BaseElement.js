@@ -27,6 +27,13 @@ class BaseElement extends ControlStack{
     this._initDefaultSettings();
   }
 
+  /**
+   * Задать настройки
+   * @param settings
+   */
+  setSettings(settings){
+    this.settings = settings || this.settings;
+  }
   getId(){
     if(! this.id){
       this.id = BaseElement.generateId();
@@ -311,7 +318,6 @@ class BaseElement extends ControlStack{
   }
 
   setSettingValue(settingName, value){
-    // console.log(settingName);
     this.settings[settingName] = value;
     if(this.component){
       this.component.changeSetting(settingName, value);

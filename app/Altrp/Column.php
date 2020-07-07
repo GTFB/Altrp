@@ -9,8 +9,13 @@ class Column extends Model
     protected $table = 'altrp_columns';
     public $timestamps = false;
     
+    public function getNullAttribute($value) {
+        return (bool) $value;
+    }
     
-    
+    public function getUniqueAttribute($value) {
+        return (bool) $value;
+    }
     
     /**
      * Проверяем является ли колонка, колонкой с размером

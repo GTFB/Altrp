@@ -20,7 +20,8 @@ class ElementsFactory extends BaseModule{
     /**
      * Если настройки пустый то с сервера приходит пустой массив -- меняем на пустой объект
      * */
-    element.settings = (object.settings.length === 0) ? {} : object.settings;
+    let settings = (object.settings.length === 0) ? {} : object.settings;
+    element.setSettings(settings);
     if(object.dynamicContentSettings){
       element.dynamicContentSettings = (object.dynamicContentSettings.length === 0) ? {} : object.dynamicContentSettings;
     }

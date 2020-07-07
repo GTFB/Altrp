@@ -14,13 +14,43 @@ class Model extends EloquentModel
 {
     protected $table = 'altrp_models';
 
+    protected $fillable = [
+       'description',
+       'soft_deletes',
+       'time_stamps',
+       'fillable_cols',
+       'path',
+       'name',
+       'table_id',
+    ];
+
+    protected $hidden = [
+        'relationships',
+        'pk'
+    ];
+
     public function table()
     {
         return $this->belongsTo(Table::class);
     }
+
+    public function setFillableColsAttribute($value)
+    {
+        $this->attributes['fillable_cols'] = isset($value)
+            ? implode(',', (array) $value)
+            : null;
+    }
     public function altrp_table()
     {
         return $this->belongsTo(Table::class, 'table_id');
+    }
+    
+    public function getTimeStampsAttribute($value) {
+        return (bool) $value;
+    }
+    
+    public function getSoftDeletesAttribute($value) {
+        return (bool) $value;
     }
 
 /**

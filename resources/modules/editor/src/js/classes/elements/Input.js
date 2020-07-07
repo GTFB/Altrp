@@ -117,7 +117,7 @@ class Input extends BaseElement{
     this.addControl('content_placeholder', {
       type: CONTROLLER_TEXT,
       label: 'Placeholder',
-      default: 'placeholder'
+      default: 'Placeholder'
     });
 
     this.addControl('content_mask', {
@@ -247,7 +247,7 @@ class Input extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} input': [ 
+        '{{ELEMENT}} .altrp-field-container': [ 
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',

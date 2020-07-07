@@ -40,7 +40,7 @@ class PagesController extends Controller
         'author' => $page->user->name,
         'template_content' => $content_template,
         'template_content_title' => $content_template ? $content_template->title : '',
-        'url' => \url( $page->path),
+        'url' => \url( $page->path ),
         'editUrl' => '/admin/pages/edit/' . $page->id,
         'path' => $page->path,
       ];
@@ -66,17 +66,17 @@ class PagesController extends Controller
    */
   public function store( Request $request )
   {
-    $res = ['success' => false,];
+    $res = [ 'success' => false, ];
     $page = new Page( $request->toArray() );
     $page->author = auth()->user()->id;
     $page->content = '';
-    if( $page->save() ){
-      if( $request->template_id ){
-        $pages_templates = new PagesTemplate([
+    if ( $page->save() ) {
+      if ( $request->template_id ) {
+        $pages_templates = new PagesTemplate( [
           'page_id' => $page->id,
-          'template_id' =>  $request->template_id,
+          'template_id' => $request->template_id,
           'template_type' => 'content',
-        ]);
+        ] );
         $pages_templates->save();
         $res['pages_templates'] = $pages_templates->toArray();
       }
@@ -98,7 +98,7 @@ class PagesController extends Controller
   {
     //
     $page = Page::find( $id );
-    if( $page ){
+    if ( $page ) {
       $page->template_id = $page->get_content_template()->id;
     }
     return response()->json( $page->toArray() );
@@ -136,25 +136,25 @@ class PagesController extends Controller
     $res['page'] = $page->toArray();
 
     $pages_template = PagesTemplate::where( 'page_id', $id )->where( 'template_type', 'content' )->first();
-    if( $request->template_id && $pages_template ){
+    if ( $request->template_id && $pages_template ) {
       $pages_template->template_id = $request->template_id;
       $pages_template->save();
       $res['pages_template'] = $pages_template->toArray();
     }
-    if( ( ! $request->template_id ) && $pages_template ){
+    if ( ( ! $request->template_id ) && $pages_template ) {
       $pages_template->delete();
     }
-    if( $request->template_id && ! $pages_template ){
-      $pages_template = new PagesTemplate([
+    if ( $request->template_id && ! $pages_template ) {
+      $pages_template = new PagesTemplate( [
         'page_id' => $id,
         'template_id' => $request->template_id,
         'template_type' => 'content',
-      ]);
+      ] );
       $pages_template->save();
       $res['pages_template'] = $pages_template->toArray();
     }
 
-    if($page->save()){
+    if ( $page->save() ) {
       $res['success'] = true;
     }
 
@@ -177,10 +177,12 @@ class PagesController extends Controller
   /**
    * Обработка запроса на получение списка страниц
    * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
    */
-  public function pages_options( Request $request ){
+  public function pages_options( Request $request )
+  {
     $pages = Page::where( 'title', 'like', '%' . $request->get( 's' ) . '%' )
-      ->orWhere('path', 'like', '%' . $request->get( 's' ) . '%')->get();
+      ->orWhere( 'path', 'like', '%' . $request->get( 's' ) . '%' )->get();
 
     $pages_options = [];
     foreach ( $pages as $page ) {
@@ -189,6 +191,23 @@ class PagesController extends Controller
         'label' => $page->title,
       ];
     }
-    return response()->json($pages_options);
+    return response()->json( $pages_options );
+  }
+
+  /**
+   * Обработка запроса на получение списка страниц
+   * @param string $request
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function show_pages_options( $page_id )
+  {
+    $page = Page::find( $page_id );
+
+    $pages_options = [
+      'value' => $page->id,
+      'label' => $page->title,
+    ];
+
+    return response()->json( $pages_options );
   }
 }
