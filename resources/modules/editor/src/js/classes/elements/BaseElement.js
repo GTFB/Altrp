@@ -448,14 +448,27 @@ class BaseElement extends ControlStack{
   setModelsSettings(dynamicContent){
     this.dynamicContentSettings = this.dynamicContentSettings || [];
     let exist = false;
-    this.dynamicContentSettings.forEach(_dynamicContent=>{
+    this.dynamicContentSettings = this.dynamicContentSettings.map(_dynamicContent=>{
+      /**
+       * Если для текущего свойства есть настройка динамического контента, то заменяем
+       */
       if(_.isEqual(_dynamicContent.settingName, dynamicContent.settingName)){
         exist = true;
+        return dynamicContent;
+      } else {
+        return _dynamicContent;
       }
     });
+    console.log(exist);
+    console.log(this.dynamicContentSettings);
+    /**
+     * Если для текущего свойства нет настройки динамического контента, то добавляем
+     */
+
     if(! exist){
       this.dynamicContentSettings.push({...dynamicContent});
     }
+    this.component.subscribeToModels();
   }
 
   /**

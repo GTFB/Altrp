@@ -24,6 +24,7 @@ class ElementsFactory extends BaseModule{
     element.setSettings(settings);
     if(object.dynamicContentSettings){
       element.dynamicContentSettings = (object.dynamicContentSettings.length === 0) ? {} : object.dynamicContentSettings;
+      console.log(element.dynamicContentSettings);
     }
 
     if(parent){

@@ -98,7 +98,7 @@ class RootElement extends BaseElement {
    * @param settings
    */
   setSettings(settings){
-    this.settings = settings || this.settings;
+    super.setSettings(settings);
     if(this.settings.choose_page){
       this.addModelInfo({
         modelName: 'page',
