@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Основные сущности программы
+ * @
  */
 class Table extends Model
 {

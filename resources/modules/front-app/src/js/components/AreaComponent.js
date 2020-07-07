@@ -2,7 +2,7 @@ import React, {Component} from "react";
 
 class AreaComponent extends Component {
     render(){
-      let rootElement  = window.frontElementsFabric.parseData(this.props.template.data, null, this.props.page);
+      let rootElement  = window.frontElementsFabric.parseData(this.props.template.data, null, this.props.page, this.props.model);
       let classes = [`app-area`, `app-area_${this.props.id}`];
       return <div className={classes.join(' ')}>{
         React.createElement(rootElement.componentClass,

@@ -133,6 +133,7 @@ class PagesController extends Controller
     $page = Page::find( $id );
     $page->path = $request->path;
     $page->title = $request->title;
+    $page->model_id = $request->model_id;
     $res['page'] = $page->toArray();
 
     $pages_template = PagesTemplate::where( 'page_id', $id )->where( 'template_type', 'content' )->first();

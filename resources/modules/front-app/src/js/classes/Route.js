@@ -7,6 +7,7 @@ class Route {
   constructor(data){
     this.id = data.id ;
     this.path = data.path;
+    this.model = data.model;
     this.title = data.title || '';
   }
   static routeFabric(data){

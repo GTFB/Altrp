@@ -6,9 +6,10 @@ class FrontElementsFabric {
    * @param {object} object
    * @param {FrontElement | null} parent
    * @param {int | null} pageId
+   * @param {{} | null} model
    * @return {FrontElement}
    */
-  parseData(object, parent, pageId){
+  parseData(object, parent, pageId, model){
     let children = [];
     /**
      * @member {FrontElement} element
@@ -18,7 +19,11 @@ class FrontElementsFabric {
       element.addModelInfo({
         modelName: 'page',
         modelId: pageId,
-      })
+      });
+    }
+
+    if(model){
+      console.log(model);
     }
     if( object.children && object.children.length ){
       for( let child of object.children){
