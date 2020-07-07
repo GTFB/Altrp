@@ -17,7 +17,7 @@ class HeadingWidget extends Component {
         this.state.settings.text);
     let link = null;
 
-    if(this.state.settings.link_link.url != null & this.state.settings.link_link.url != "") {
+    if(this.state.settings.link_link && this.state.settings.link_link.url) {
       link = <a href={this.state.settings.link_link.url} rel={!this.state.settings.link_link.noFollow ? "nofollow" : null} className="altrp-btn">{headingContainer}</a>
     };
 
