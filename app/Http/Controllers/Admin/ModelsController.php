@@ -7,6 +7,7 @@ use App\Altrp\Model;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\ApiRequest;
 
 
 class ModelsController extends Controller
@@ -55,4 +56,13 @@ class ModelsController extends Controller
   {
     return response()->json( Model::getModelsOptions() );
   }
+  
+    /**
+     * Получение списка сгенерированных моделей
+     * @return type
+     */
+    function getModels(ApiRequest $request) {
+        $models = Model::all();
+        return response()->json($models, 200, [],JSON_UNESCAPED_UNICODE);
+    }
 }
