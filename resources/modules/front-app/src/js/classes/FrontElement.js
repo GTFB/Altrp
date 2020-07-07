@@ -92,6 +92,9 @@ class FrontElement {
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_id')){
       this.formInit()
     }
+    // if(this.component){
+    //   this.component.subscribeToModels();
+    // }
   }
 
   /**

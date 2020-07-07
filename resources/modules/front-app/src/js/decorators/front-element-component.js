@@ -30,7 +30,6 @@ function subscribeToModels(){
          */
         let modelsData = state.modelsData || {};
         modelsData = {...modelsData};
-        console.log(modelsSetting.fieldName);
         modelsData[modelsSetting.settingName] = modelData[modelsSetting.fieldName] || '';
         return{...state, modelsData}
       });
@@ -80,12 +79,24 @@ function getContent(settingName) {
   return content;
 }
 /**
+ * Компоненте загрузился в DOM
+ */
+function componentDidMount() {
+  /**
+   * Если есть определен метод _componentDidMount вызываем его
+   */
+  if(typeof this._componentDidMount === 'function'){
+    this._componentDidMount();
+  }
+  this.subscribeToModels();
+}
+/**
  * Декорирует компонент элемента методами необходимыми на фронте и в редакторе
  * @param component
  */
 export default function frontDecorate(component) {
   component.componentWillUnmount = componentWillUnmount.bind(component);
   component.subscribeToModels = subscribeToModels.bind(component);
-  component.subscribeToModels();
+  component.componentDidMount = componentDidMount.bind(component);
   component.getContent = getContent.bind(component);
 }

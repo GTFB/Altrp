@@ -459,8 +459,6 @@ class BaseElement extends ControlStack{
         return _dynamicContent;
       }
     });
-    console.log(exist);
-    console.log(this.dynamicContentSettings);
     /**
      * Если для текущего свойства нет настройки динамического контента, то добавляем
      */

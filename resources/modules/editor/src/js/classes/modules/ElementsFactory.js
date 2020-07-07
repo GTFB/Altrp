@@ -24,7 +24,6 @@ class ElementsFactory extends BaseModule{
     element.setSettings(settings);
     if(object.dynamicContentSettings){
       element.dynamicContentSettings = (object.dynamicContentSettings.length === 0) ? {} : object.dynamicContentSettings;
-      console.log(element.dynamicContentSettings);
     }
 
     if(parent){
@@ -64,9 +63,12 @@ class ElementsFactory extends BaseModule{
       newChild.setParent(newElement);
       newChildren.push(newChild);
     });
-    newElement.component = new
+    // newElement.component = new
     newElement.setChildren(newChildren);
     newElement.settings = _.cloneDeep(element.settings);
+    if(element.dynamicContentSettings){
+      newElement.dynamicContentSettings = _.cloneDeep(element.dynamicContentSettings);
+    }
     newElement.children = newChildren;
     return newElement;
   }
