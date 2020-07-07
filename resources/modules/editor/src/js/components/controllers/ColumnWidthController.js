@@ -32,14 +32,14 @@ const PresetTitle = {
   color: "#a4afb7",
   textAlign: "center",
   fontSize: "11px",
-  paddingTop: "5px"
+  paddingTop: "5px",
+  maxWidth: "105px"
 }
 
 class ColumnsWidthController extends Component {
   constructor(props) {
     super(props);
     let value = this.props.currentElement.getSettings(this.props.controlId);
-
     if(value === null & this.props.default) {
       value = this.props.default;
     }
@@ -359,7 +359,8 @@ class ColumnsWidthController extends Component {
             ]
           },
         ],
-      ]
+      ],
+      children: []
     };
     controllerDecorate(this);
   }
@@ -375,7 +376,7 @@ class ColumnsWidthController extends Component {
 
     return <div className="altrp-control-structure" style={MainWrapper}>
       {
-        this.state.variants[0].map((variant) => {
+        this.state.variants[this.props.currentElement.children.length - 1].map((variant) => {
           return <div className="altrp-control-structure-wrapper" style={StructureWrapper}>
             <div className="altrp-control-structure-sizefield" style={Sizefield}>
               {

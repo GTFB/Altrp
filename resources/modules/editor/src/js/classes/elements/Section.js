@@ -281,7 +281,7 @@ class Section extends BaseElement{
       label: 'Structure',
     });
 
-    this.addControl('layout_oveeeerflow', {
+    this.addControl('layout_colwidth', {
       type: CONTROLLER_COLWIDTH,
       label: 'Column width',
     });
