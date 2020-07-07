@@ -179,8 +179,16 @@ class PagesController extends Controller
    * @param Request $request
    */
   public function pages_options( Request $request ){
-    $res = [$request->toArray()];
+    $pages = Page::where( 'title', 'like', '%' . $request->get( 's' ) . '%' )
+      ->orWhere('path', 'like', '%' . $request->get( 's' ) . '%')->get();
 
-    return response()->json($res);
+    $pages_options = [];
+    foreach ( $pages as $page ) {
+      $pages_options[] = [
+        'value' => $page->id,
+        'label' => $page->title,
+      ];
+    }
+    return response()->json($pages_options);
   }
 }

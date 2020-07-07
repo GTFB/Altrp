@@ -19,6 +19,7 @@ class Select2Controller extends Component {
     value = value || '';
     this.state = {
       value,
+      options: this.props.options || [],
       show: true
     };
     controllerDecorate(this);
@@ -28,12 +29,21 @@ class Select2Controller extends Component {
     return '';
   }
 
-  loadOptions(e){
-    return new Resource({route:this.props.search_resource}).search(e);
+  async loadOptions(searchString, callback){
+    if(! searchString){
+      return callback([]);
+    }
+    let options = await (new Resource({route:this.props.search_resource})).search(searchString);
+    this.setState(state=>({
+      ...state,
+      options
+    }));
+    return callback(options);
   }
 
   change(value, action){
     if(action.action === 'select-option'){
+      console.log(value);
       this._changeValue(
           value.value
       );
@@ -98,8 +108,7 @@ class Select2Controller extends Component {
     }
 
     let value = {};
-    let options = this.props.options || [];
-    options.forEach(option=>{
+    this.state.options.forEach(option=>{
       if(option.value === this.state.value){
         value = {...option};
       }
@@ -107,7 +116,7 @@ class Select2Controller extends Component {
     let selectProps = {
       onChange: this.change,
       onInputChange: this.change,
-      options: this.props.options,
+      options: this.state.options,
       styles: customStyles,
       placeholder: this.props.placeholder,
       loadOptions: this.loadOptions,

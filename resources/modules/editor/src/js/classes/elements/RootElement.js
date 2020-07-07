@@ -63,6 +63,7 @@ class RootElement extends BaseElement {
 
     this.addControl('choose_page', {
       type: CONTROLLER_SELECT2,
+      label: 'Choose Page',
       search_resource: '/admin/ajax/pages_options',
     });
 
