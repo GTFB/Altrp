@@ -433,14 +433,29 @@ class BaseElement extends ControlStack{
 
   /**
    * Сохранить данные для динамического контента
+   * каждая настройка содержит в себе название настройки, имя модели, название поля модели
    * @param {{}} dynamicContent
    */
   setModelsSettings(dynamicContent){
     this.dynamicContentSettings = this.dynamicContentSettings || [];
     let exist = false;
     this.dynamicContentSettings.forEach(_dynamicContent=>{
-      _.isEqual(_dynamicContent.settingName, dynamicContent.settingName);
+      if(_.isEqual(_dynamicContent.settingName, dynamicContent.settingName)){
+        exist = true;
+      }
     });
+    if(! exist){
+      this.dynamicContentSettings.push({...dynamicContent});
+    }
+  }
+
+  /**
+   * Удаляет настроки динамического контента по названию настройки
+   * вызывается после нажатия конпик удалить динамический контент
+   * @param {string} settingName
+   */
+  removeModelSettings(settingName){
+    this.dynamicContentSettings = _.remove(this.dynamicContentSettings, dynamicContent=>dynamicContent.settingName === settingName);
   }
 }
 

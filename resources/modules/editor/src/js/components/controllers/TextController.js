@@ -9,9 +9,7 @@ class TextController extends Component {
   constructor(props) {
     super(props);
     this.changeValue = this.changeValue.bind(this);
-    this.openDynamicContent = this.openDynamicContent.bind(this);
     let value = this.props.currentElement.getSettings(this.props.controlId);
-    console.log(value);
     if (value === null && this.props.default) {
       value = this.props.default;
     }
@@ -76,20 +74,6 @@ class TextController extends Component {
     this._changeValue(e.target.value)
   }
 
-  /**
-   * Открывает меню динамического контента при нажатии на иконку
-   */
-  openDynamicContent(e) {
-    e.stopPropagation();
-    this.props.dispatch(toggleDynamicContent({
-      type: 'text',
-      settingName: this.props.controlId,
-      onSelect: (dynamicValue) => {
-        this._changeValue(dynamicValue);
-      }
-    }, this.dynamicButton.current))
-  }
-
   getDefaultValue() {
     return '';
   }
@@ -116,7 +100,8 @@ class TextController extends Component {
               iconsManager().renderIcon('times')
             }
           </div>
-        </div> : <input className="control-field" onChange={this.changeValue} value={this.state.value}/>}
+        </div> : <input className="control-field" onChange={this.changeValue} value={this.state.value}/>
+        }
 
         <div className="control-group__append" ref={this.dynamicButton} onClick={this.openDynamicContent}>
           <DynamicIcon/>

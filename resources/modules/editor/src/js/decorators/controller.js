@@ -1,4 +1,5 @@
 import store from '../store/store';
+import {toggleDynamicContent} from "../store/dynamic-content/actions";
 /**
  * Обновление значения в компоненте контроллера при загрузке нового экземпляра того же элемента
  */
@@ -118,8 +119,26 @@ function showComponentController() {
  */
 function removeDynamicSettings() {
   this._changeValue(this.getDefaultValue());
+  this.props.currentElement.removeModelSettings(this.props.controlId);
+  this.setState(state=>({
+    ...state,
+    dynamicValue: null
+  }));
 }
 
+/**
+ * Открывает меню динамического контента при нажатии на иконку
+ */
+function openDynamicContent(e) {
+  e.stopPropagation();
+  this.props.dispatch(toggleDynamicContent({
+    type: 'text',
+    settingName: this.props.controlId,
+    onSelect: (dynamicValue) => {
+      this._changeValue(dynamicValue);
+    }
+  }, this.dynamicButton.current))
+}
 let controllerDecorate = function elementWrapperDecorate(component) {
   component.componentDidUpdate = componentDidUpdate.bind(component);
   component._changeValue = _changeValue.bind(component);
@@ -128,6 +147,7 @@ let controllerDecorate = function elementWrapperDecorate(component) {
   component.hideComponentController = hideComponentController.bind(component);
   component.showComponentController = showComponentController.bind(component);
   component.removeDynamicSettings = removeDynamicSettings.bind(component);
+  component.openDynamicContent = openDynamicContent.bind(component);
   store.subscribe(component.conditionSubscriber);
 };
 export default controllerDecorate;
