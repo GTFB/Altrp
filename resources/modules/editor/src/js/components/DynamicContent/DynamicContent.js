@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {closeDynamicContent} from "../../store/dynamic-content/actions";
 import store from "../../store/store";
 import {getCurrentElement} from "../../store/store";
+import Resource from "../../classes/Resource";
 
 /**
  * Класс реализующий список динамических данных для контроллера
@@ -14,33 +15,41 @@ class DynamicContent extends Component {
     super(props);
     this.state = {
       models: [
-          {
-        modelName: 'page',
-        title: 'Page',
-        fields: [
-              {
-                fieldName: 'id',
-                title: 'ID',
-              },
-              {
-                fieldName: 'title',
-                title: 'Title',
-              },
-              {
-                fieldName: 'authorName',
-                title: 'Author Name',
-              },
-              {
-                fieldName: 'authorId',
-                title: 'Author ID',
-              },
-            ]
-          },
+        //   {
+        // modelName: 'page',
+        // title: 'Page',
+        // fields: [
+        //       {
+        //         fieldName: 'id',
+        //         title: 'ID',
+        //       },
+        //       {
+        //         fieldName: 'title',
+        //         title: 'Title',
+        //       },
+        //       {
+        //         fieldName: 'authorName',
+        //         title: 'Author Name',
+        //       },
+        //       {
+        //         fieldName: 'authorId',
+        //         title: 'Author ID',
+        //       },
+        //     ]
+        //   },
         ],
       };
     this.select = this.select.bind(this);
+    this.resource = new Resource({route: '/admin/ajax/models_with_fields_options'});
   }
 
+  async componentDidMount(){
+    let models = await this.resource.getAll();
+    this.setState(state=>({
+        ...state,
+      models,
+    }))
+  }
   /**
    * Обработка клика по элемету
    */

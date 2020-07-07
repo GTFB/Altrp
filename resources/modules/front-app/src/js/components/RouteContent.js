@@ -8,7 +8,6 @@ class RouteContent extends Component {
     setTitle(this.props.title);
   }
   render(){
-    console.log(this.props);
     return (
     <Scrollbars
       style={{zIndex: 99999}}

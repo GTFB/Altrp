@@ -55,4 +55,12 @@ class ModelsController extends Controller
   {
     return response()->json( Model::getModelsOptions() );
   }
+  /**
+   * обработка запроса на получение списка моделей с полями для динаимического контента и т. д.
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function models_with_fields_options()
+  {
+    return response()->json( Model::getModelsWithFieldsOptions() );
+  }
 }
