@@ -61,6 +61,11 @@ class RootElement extends BaseElement {
       label: 'Preview Settings',
     });
 
+    this.addControl('choose_page', {
+      type: CONTROLLER_SELECT2,
+      search_resource: '/admin/ajax/pages_options',
+    });
+
     this.addControl('preview_heading', {
       label: 'Model Settings',
       type: CONTROLLER_HEADING

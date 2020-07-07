@@ -56,8 +56,7 @@ class DynamicContent extends Component {
     value.dynamic = true;
     this.props.params.onSelect(value);
     store.dispatch(closeDynamicContent());
-    console.log(value);
-    getCurrentElement().setModelsSettings(value)
+    getCurrentElement().setModelsSettings(value);
   }
 
   getPositionProps(){

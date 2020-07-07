@@ -173,4 +173,14 @@ class PagesController extends Controller
   {
     //
   }
+
+  /**
+   * Обработка запроса на получение списка страниц
+   * @param Request $request
+   */
+  public function pages_options( Request $request ){
+    $res = [$request->toArray()];
+
+    return response()->json($res);
+  }
 }

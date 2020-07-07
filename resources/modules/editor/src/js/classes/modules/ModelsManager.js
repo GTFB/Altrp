@@ -9,8 +9,10 @@ class ModelsManager {
   /**
    *
    */
-  updateModel(){
-
+  updateModel(modelName, modelId){
+    if(! this.modelsStorage[`${modelName}::${modelId}`]) {
+      this.modelsStorage[`${modelName}::${modelId}`].updateData();
+    }
   }
 
   /**

@@ -21,7 +21,6 @@ function subscribeToModels(){
 
   this.props.element.dynamicContentSettings.forEach(modelsSetting=>{
     let modelInfo = this.props.element.getModelsInfoByModelName(modelsSetting.modelName);
-    console.log(modelsSetting);
     if(modelInfo)
     this.model = modelManager.subscribeToModelUpdates(modelInfo.modelName, modelInfo.modelId, modelData => {
       this.setState(state=>{

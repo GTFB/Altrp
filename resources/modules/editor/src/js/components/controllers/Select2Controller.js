@@ -1,13 +1,16 @@
 import React, {Component, useState} from "react";
 import {connect} from "react-redux";
 import Select from "react-select";
+import AsyncSelect from "react-select/async";
 import DesktopIcon from '../../../svgs/desktopNew.svg'
 import controllerDecorate from "../../decorators/controller";
+import Resource from "../../classes/Resource";
 // в rootElement при создании массива select, value никогда не должно повторятся
 class Select2Controller extends Component {
   constructor(props) {
     super(props);
     this.change = this.change.bind(this);
+    this.loadOptions = this.loadOptions.bind(this);
     let value = this.props.currentElement.getSettings(this.props.controlId);
     // console.log(value);
     if(value === null && this.props.default){
@@ -25,6 +28,10 @@ class Select2Controller extends Component {
     return '';
   }
 
+  loadOptions(e){
+    return new Resource({route:this.props.search_resource}).search(e);
+  }
+
   change(value, action){
     if(action.action === 'select-option'){
       this._changeValue(
@@ -34,7 +41,6 @@ class Select2Controller extends Component {
   };
 
   render() {
-
     const customStyles = {
       option: (provided, state) => ({
         ...provided,
@@ -92,26 +98,35 @@ class Select2Controller extends Component {
     }
 
     let value = {};
-    this.props.options.forEach(option=>{
+    let options = this.props.options || [];
+    options.forEach(option=>{
       if(option.value === this.state.value){
         value = {...option};
       }
     });
+    let selectProps = {
+      onChange: this.change,
+      onInputChange: this.change,
+      options: this.props.options,
+      styles: customStyles,
+      placeholder: this.props.placeholder,
+      loadOptions: this.loadOptions,
+      noOptionsMessage: () => "no found",
+      value,
+    };
+
+    let SelectComponent = Select;
+    if(this.props.search_resource){
+      SelectComponent = AsyncSelect;
+      selectProps.loadOptions = this.loadOptions;
+    }
     return <div className="controller-container controller-container_select2">
       <div className="control-select2-header">
         <div className="control-select2__label">{this.props.label}</div>
         <DesktopIcon className="controller-container__label-svg" width="12"/>
       </div>
       <div className="control-container_select2-wrapper">
-        <Select
-          onChange={this.change}
-          value={value}
-          onInputChange={this.change}
-          options={this.props.options}
-          styles={customStyles}
-          placeholder={this.props.placeholder}
-          noOptionsMessage={() => "no found"}
-        />
+        <SelectComponent {...selectProps}/>
       </div>
     </div>
 

@@ -67,6 +67,27 @@ class Resource {
   }
 
   /**
+   *
+   * Запрос со строкой для поиска вхождений
+   * @param {string} searchString
+   * @return {Promise}
+   * */
+  search(searchString){
+    let options = {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    };
+    let url = this.route + `?s=${searchString}`;
+    return fetch(url, options).then(res => {
+      if(res.ok === false){
+        return Promise.reject(res.text(), res.status);
+      }
+      return res.json()
+    });
+  }
+  /**
    * @param {any} data
    * @param {object | null} headers
    * @return {Promise}
@@ -205,6 +226,7 @@ class Resource {
     // console.log(res);
     return res;
   }
+
 }
 
 export default Resource;

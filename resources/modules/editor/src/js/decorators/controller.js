@@ -136,6 +136,7 @@ function openDynamicContent(e) {
     settingName: this.props.controlId,
     onSelect: (dynamicValue) => {
       this._changeValue(dynamicValue);
+      this.props.currentElement.component.subscribeToModels();
     }
   }, this.dynamicButton.current))
 }

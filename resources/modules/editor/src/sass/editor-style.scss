@@ -778,6 +778,10 @@ background-color: red;
 }
 .control-container_select2-wrapper{
   width: 100%;
+  & .css-tynsen-Menu{
+    z-index: 10000;
+    background-color: #fff;
+  }
 }
 .control-link-header{
   display: flex;

@@ -44,7 +44,7 @@ class AltrpModelUpdater {
   callSubscribers(){
     this.subscribers.forEach(subscriber=>{
       subscriber(this.getData());
-    })
+    });
   }
 
   /**
