@@ -109,7 +109,7 @@ class Model extends EloquentModel
       foreach ( $model->altrp_table->actual_columns as $actual_column ) {
         $fields[] = [
           'fieldName' => $actual_column->name,
-          'title' => $actual_column->title ? $actual_column->title : 'No field title',
+          'title' => $actual_column->title ? $actual_column->title : $actual_column->name,
         ];
       }
       $models[] = [

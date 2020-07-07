@@ -7,6 +7,7 @@ use App\Altrp\Model;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\ApiRequest;
 
 
 class ModelsController extends Controller
@@ -61,6 +62,15 @@ class ModelsController extends Controller
    */
   public function models_with_fields_options()
   {
-    return response()->json( Model::getModelsWithFieldsOptions() );
+    return response()->json( Model::getModelsWithFieldsOptions(), 200, [],JSON_UNESCAPED_UNICODE );
+  }
+
+  /**
+   * Получение списка сгенерированных моделей
+   * @return \Illuminate\Http\JsonResponse
+   */
+  function getModels(ApiRequest $request) {
+      $models = Model::all();
+      return response()->json($models, 200, [],JSON_UNESCAPED_UNICODE);
   }
 }

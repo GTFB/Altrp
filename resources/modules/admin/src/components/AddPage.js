@@ -16,8 +16,10 @@ class AddPage extends Component {
       value: {},
       redirectAfterSave: false,
       templates: [],
+      models: [],
     };
     this.resource = new Resource({route: '/admin/ajax/pages'});
+    this.model_resource = new Resource({route: '/admin/ajax/models'});
     this.templateResource = new Resource({route: '/admin/ajax/templates'});
     this.savePage = this.savePage.bind(this);
   }
@@ -26,6 +28,12 @@ class AddPage extends Component {
     this.setState(state=>{
       return{...state, templates: res}
     });
+    
+    let models_res = await this.model_resource.getAll();
+    this.setState(state=>{
+      return{...state, models: models_res}
+    });
+    
     let id = this.props.location.pathname.split('/');
     id = id[id.length - 1];
     id = parseInt(id);
@@ -108,6 +116,20 @@ class AddPage extends Component {
               {
                 this.state.templates.map(template=>{
                   return <option value={template.id} key={template.id}>{template.title}</option>
+                })
+              }
+            </select>
+          </div>
+          <div className="form-group">
+            <label htmlFor="page-path">Models</label>
+            <select id="page-path" required={1}
+                   value={this.state.value.model_id || ''}
+                   onChange={e => {this.changeValue(e.target.value, 'model_id')}}
+                   className="form-control">
+              <option value=""/>
+              {
+                this.state.models.map(model=>{
+                  return <option value={model.id} key={model.id}>{model.name}</option>
                 })
               }
             </select>

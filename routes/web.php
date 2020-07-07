@@ -108,11 +108,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     /**
      * Роуты для теста запросов для виджета таблицы todo: удалить, после того как модели будут готовы
      */
-    Route::get( 'models_list', 'Admin\ModelsController@models_list' )->name( 'admin.models_list' );
-    Route::get( 'models_list_for_query', 'Admin\ModelsController@models_list_for_query' )->name( 'admin.models_list_for_query' );
-    Route::get( 'models_options', 'Admin\ModelsController@models_options' )->name( 'admin.models_options' );
-    Route::get( 'models_with_fields_options', 'Admin\ModelsController@models_with_fields_options' )
+    Route::get( '/models_list', 'Admin\ModelsController@models_list' )->name( 'admin.models_list' );
+    Route::get( '/models_list_for_query', 'Admin\ModelsController@models_list_for_query' )->name( 'admin.models_list_for_query' );
+    Route::get( '/models_options', 'Admin\ModelsController@models_options' )->name( 'admin.models_options' );
+    Route::get( '/models_with_fields_options', 'Admin\ModelsController@models_with_fields_options' )
       ->name( 'admin.models_with_fields_options' );
+
+    Route::get( '/models', 'Admin\ModelsController@getModels');
+    
 
     Route::get('/tables', "Admin\TableController@getTables");
     Route::get('/tables/{table}', "Admin\TableController@getTable");
