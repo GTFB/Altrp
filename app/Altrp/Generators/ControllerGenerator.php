@@ -272,8 +272,10 @@ class ControllerGenerator extends AppGenerator
         $prefix = $this->getRoutePrefix() ? trim($this->getRoutePrefix(), '/') . '/' : null;
         $routeGenerator->addDynamicVariable('routePrefix', $prefix);
         $routeGenerator->addDynamicVariable('tableName', $tableName);
+        $routeGenerator->addDynamicVariable('id', \Str::singular($tableName));
+        $routeGenerator->addDynamicVariable('column', 'column');
         $routeGenerator->addDynamicVariable('controllerName', $controller);
-        return $routeGenerator->generate();
+        return $routeGenerator->generate($tableName, $controller);
     }
 
     /**
