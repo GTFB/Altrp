@@ -121,8 +121,8 @@ class AddPage extends Component {
             </select>
           </div>
           <div className="form-group">
-            <label htmlFor="page-path">Models</label>
-            <select id="page-path" required={1}
+            <label htmlFor="page-path">Model</label>
+            <select id="page-path"
                    value={this.state.value.model_id || ''}
                    onChange={e => {this.changeValue(e.target.value, 'model_id')}}
                    className="form-control">
