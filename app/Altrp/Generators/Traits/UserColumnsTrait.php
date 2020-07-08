@@ -23,31 +23,34 @@ trait UserColumnsTrait
     }
 
     /**
-     * Установить колонке значение id текущего пользователя
+     * Установить колонкам значение id текущего пользователя
      *
      * @param $model
      */
     public static function setAuthId($model)
     {
-        if ($column = self::columnExists($model)) {
-            $model->$column = auth()->user()->id;
+        if ($columns = self::columnsExists($model)) {
+            foreach ($columns as $column) {
+                $model->$column = auth()->user()->id;
+            }
         }
     }
 
     /**
-     * Проверить, существует ли такая колонка в модели
-     * и является ли она заполняемой, вернуть её, если она
-     * присутствует в списке пользовательских колонок
+     * Проверить, существует ли такие колонки в модели
+     * и является ли они заполняемыми, вернуть их, если они
+     * присутствуют в списке пользовательских колонок
      *
      * @param $model
-     * @return bool
+     * @return array|bool
      */
-    public static function columnExists($model)
+    public static function columnsExists($model)
     {
         if (! isset(self::$userColumns) || empty(self::$userColumns)) return false;
+        $columns = [];
         foreach (self::$userColumns as $column) {
-            if (in_array($column, $model->getFillable())) return $column;
+            if (in_array($column, $model->getFillable())) $columns[] = $column;
         }
-        return false;
+        return $columns;
     }
 }

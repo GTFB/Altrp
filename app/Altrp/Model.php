@@ -19,6 +19,7 @@ class Model extends EloquentModel
        'soft_deletes',
        'time_stamps',
        'fillable_cols',
+       'user_cols',
        'path',
        'name',
        'table_id',
@@ -40,15 +41,23 @@ class Model extends EloquentModel
             ? implode(',', (array) $value)
             : null;
     }
+
+    public function setUserColsAttribute($value)
+    {
+        $this->attributes['user_cols'] = isset($value)
+            ? implode(',', (array) $value)
+            : null;
+    }
+
     public function altrp_table()
     {
         return $this->belongsTo(Table::class, 'table_id');
     }
-    
+
     public function getTimeStampsAttribute($value) {
         return (bool) $value;
     }
-    
+
     public function getSoftDeletesAttribute($value) {
         return (bool) $value;
     }
