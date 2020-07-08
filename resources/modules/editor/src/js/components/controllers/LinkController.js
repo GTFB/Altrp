@@ -123,7 +123,7 @@ class LinkController extends Component {
                    type="text"
                    placeholder="key|value, key|value..."
                    className="settings-input-attribute"/>
-            <a className="settings-attribute-description">Set custom attributes for the link element. Separate attribute keys from values using the | (pipe) character. Separate key-value pairs with a comma.</a>
+            <p className="settings-attribute-description">Set custom attributes for the link element. Separate attribute keys from values using the | (pipe) character. Separate key-value pairs with a comma.</p>
           </div>
         </div>
       </div>

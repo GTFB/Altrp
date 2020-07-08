@@ -44,6 +44,7 @@ class ColorController extends Component {
     });
     this._changeValue({
       color: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+      colorPickedHex: color.hex,
     });
 
     // console.log(this.state.colorPickedRGB)

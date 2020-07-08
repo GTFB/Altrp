@@ -90,18 +90,18 @@ class SectionComponent extends Component {
       sectionWrapper
     );
 
-    let fullFill = null
-    if(this.state.settings.layout_content_width_type == "full-fill") {
-      fullFill = section
-      // <div className="full-fill" style={{width: getWindowWidth() + "px"}}>{section}</div>
-    }
+    // let fullFill = null
+    // if(this.state.settings.layout_content_width_type == "full-fill") {
+    //   fullFill = section
+    //   // <div className="full-fill" style={{width: getWindowWidth() + "px"}}>{section}</div>
+    // }
   
     let link = null;
     if(this.state.settings.link_link.url != null & this.state.settings.link_link.url != "") {
-      link = <a className="altrp-section-link" rel={!this.state.settings.link_link.noFollow ? "nofollow" : null} href={this.state.settings.link_link.url}>{fullFill || section}</a>
+      link = <a className="altrp-section" rel={!this.state.settings.link_link.noFollow ? "nofollow" : null} href={this.state.settings.link_link.url}>{section}</a>
     }
     // return link || section
-    return link || fullFill || section
+    return link || section
   }
 }
 

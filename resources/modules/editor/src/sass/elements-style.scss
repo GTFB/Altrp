@@ -60,7 +60,6 @@
 
 .altrp-column {
   display: flex;
-
   flex-wrap: wrap;
   padding: 10px;
 }
@@ -192,4 +191,26 @@
 
 .altrp-table {
   border-collapse: collapse;
+}
+
+.altrp-divider {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  line-height: 0;
+  font-size: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.altrp-divider-separator {
+  display: block;
+  height: 1px;
+  width: 100%;
+}
+
+.altrp-divider-label {
+  line-height: normal;
+  font-size: medium;
 }
