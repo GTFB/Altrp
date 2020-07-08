@@ -821,6 +821,11 @@ background-color: red;
 .settingBlock-none{
   display: none !important;
 }
+.settingBlock{
+  & .control-container_select-wrapper{
+    float: none;
+  }
+}
 .control-link::-webkit-input-placeholder{
   color: #8E94AA;
 }
