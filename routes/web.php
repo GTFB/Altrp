@@ -172,6 +172,7 @@ Route::get('/', function () {
 
 foreach ( $frontend_routes as $frontend_route ) {
 
+  $frontend_route = str_replace( ':id', '{id}', $frontend_route );
   Route::get($frontend_route, function () {
     return view('front-app');
   })->middleware( ['web', 'installation.checker'] );
