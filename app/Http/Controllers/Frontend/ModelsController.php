@@ -29,6 +29,15 @@ class ModelsController extends Controller
 
   /**
    * @param string $model_name
+   * @param string $model_id
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function show( $model_name, $model_id, Request $request ){
+    return response()->json( DB::table( $model_name )->find( $model_id ) );
+  }
+  /**
+   * @param string $model_name
    * @param Request $request
    * @return \Illuminate\Http\JsonResponse
    */

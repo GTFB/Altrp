@@ -87,7 +87,7 @@ class AddPage extends Component {
         <div className="admin-breadcrumbs">
           <Link className="admin-breadcrumbs__link" to="/admin/pages">Pages</Link>
           <span className="admin-breadcrumbs__separator">/</span>
-          <span className="admin-breadcrumbs__current">Add New Page</span>
+          <span className="admin-breadcrumbs__current">{this.state.value.title || 'Add New Page'}</span>
         </div>
       </div>
       <div className="admin-content">

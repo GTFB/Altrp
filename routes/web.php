@@ -185,10 +185,11 @@ foreach ( $frontend_routes as $frontend_route ) {
 
 Route::group( ['prefix' => 'ajax'], function(){
 
+  Route::get( 'models/page/{page_id}', 'Frontend\PageController@show' )->name( 'front.page.show' );
   Route::resource( 'routes', 'Frontend\RouteController' );
   Route::get( 'models/{model_name}', 'Frontend\ModelsController@models' )->name( 'front.models.all' );
+  Route::get( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@show' )->name( 'front.models.show' );
   Route::post( 'models/{model_name}', 'Frontend\ModelsController@create' )->name( 'front.models.create' );
-  Route::get( 'models/page/{page_id}', 'Frontend\PageController@show' )->name( 'front.page.show' );
 
 } );
 

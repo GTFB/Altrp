@@ -4,11 +4,14 @@ import {setTitle} from "../helpers";
 import { Scrollbars } from "react-custom-scrollbars";
 
 class RouteContent extends Component {
+  constructor(props){
+    super(props);
+    setTitle(this.props.title);
+  }
   componentDidMount(){
     setTitle(this.props.title);
   }
   render(){
-    console.log(this.props);
     return (
     <Scrollbars
       style={{zIndex: 99999}}
@@ -29,4 +32,4 @@ class RouteContent extends Component {
   }
 }
 
-export default RouteContent
+export default RouteContent;

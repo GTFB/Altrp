@@ -10,8 +10,10 @@ function componentWillUnmount(){
 }
 /**
  * Подписываемся на изменеия моделей
+ * если есть id то укзываем его при подписке на модели при отсутствии в modelInfo id модели
+ * @param {int} id
  */
-function subscribeToModels(){
+function subscribeToModels(id){
   /**
    * ЕСли в элементе нет настроек для динамического контента, то на изменения моделей не подписываемся
    */
@@ -22,7 +24,7 @@ function subscribeToModels(){
   this.props.element.dynamicContentSettings.forEach(modelsSetting=>{
     let modelInfo = this.props.element.getModelsInfoByModelName(modelsSetting.modelName);
     if(modelInfo)
-    this.model = modelManager.subscribeToModelUpdates(modelInfo.modelName, modelInfo.modelId, modelData => {
+    this.model = modelManager.subscribeToModelUpdates(modelInfo.modelName, modelInfo.modelId || id, modelData => {
       this.setState(state=>{
         /**
          * state.modelsData
@@ -92,8 +94,15 @@ function componentDidMount() {
   if(typeof this._componentDidMount === 'function'){
     this._componentDidMount();
   }
-  console.log(window.router.current);
-  this.subscribeToModels();
+  /**
+   * для получения id на фронтенде, если в url есть id
+   * @type {null}
+   */
+  let id = null;
+  if(this.props.match && this.props.match.params && this.props.match.params.id){
+    id = this.props.match.params.id;
+  }
+  this.subscribeToModels(id);
 }
 /**
  * Декорирует компонент элемента методами необходимыми на фронте и в редакторе
