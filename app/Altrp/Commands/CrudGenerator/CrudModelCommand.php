@@ -21,6 +21,7 @@ class CrudModelCommand extends GeneratorCommand
                             {--timestamps= : Include timestamps fields.}
                             {--created-at= : The name of the created-at column.}
                             {--updated-at= : The name of the updated-at column.}
+                            {--user-columns= : The names of the user columns.}
                             {--custom-namespaces= : Custom namespaces of the model.}
                             {--custom-traits= : Custom traits of the model.}
                             {--custom-properties= : Custom props of the model.}
@@ -66,9 +67,10 @@ class CrudModelCommand extends GeneratorCommand
     /**
      * Build the model class with the given name.
      *
-     * @param  string  $name
+     * @param string $name
      *
      * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     protected function buildClass($name)
     {
@@ -82,6 +84,7 @@ class CrudModelCommand extends GeneratorCommand
         $timestamps = $this->option('timestamps');
         $createdAt = $this->option('created-at');
         $updatedAt = $this->option('updated-at');
+        $userColumns = $this->option('user-columns');
         $customNamespaces = $this->option('custom-namespaces') ?? '';
         $customTraits = $this->option('custom-traits') ?? '';
         $customProperties = $this->option('custom-properties') ?? '';
@@ -141,6 +144,7 @@ EOD;
             ->replaceTimestamps($stub, $timestamps)
             ->replaceCreatedAt($stub, $createdAt)
             ->replaceUpdatedAt($stub, $updatedAt)
+            ->replaceUserColumns($stub, $userColumns)
             ->replaceCustomNamespaces($stub, $customNamespaces)
             ->replaceCustomTraits($stub, $customTraits)
             ->replaceCustomProperties($stub, $customProperties)
@@ -259,11 +263,10 @@ EOD;
     }
 
     /**
-     * Replace the (optional) timestamps part for the given stub.
+     * Replace the (optional) created_at part for the given stub.
      *
-     * @param  string  $stub
-     * @param  string  $replaceSoftDelete
-     *
+     * @param string $stub
+     * @param $createdAt
      * @return $this
      */
     protected function replaceCreatedAt(&$stub, $createdAt)
@@ -275,11 +278,10 @@ EOD;
     }
 
     /**
-     * Replace the (optional) timestamps part for the given stub.
+     * Replace the (optional) updated_at part for the given stub.
      *
-     * @param  string  $stub
-     * @param  string  $replaceSoftDelete
-     *
+     * @param string $stub
+     * @param $updatedAt
      * @return $this
      */
     protected function replaceUpdatedAt(&$stub, $updatedAt)
@@ -294,9 +296,10 @@ EOD;
      * Create the code for a model relationship
      *
      * @param string $stub
-     * @param string $relationshipName  the name of the function, e.g. owners
-     * @param string $relationshipType  the type of the relationship, hasOne, hasMany, belongsTo etc
-     * @param array $relationshipArgs   args for the relationship function
+     * @param string $relationshipName the name of the function, e.g. owners
+     * @param string $relationshipType the type of the relationship, hasOne, hasMany, belongsTo etc
+     * @param string $argsString
+     * @return CrudModelCommand
      */
     protected function createRelationshipFunction(&$stub, $relationshipName, $relationshipType, $argsString)
     {
@@ -376,6 +379,20 @@ EOD;
     protected function replaceCustomMethods(&$stub, $customMethods)
     {
         $stub = str_replace('{{customMethods}}', $customMethods, $stub);
+        return $this;
+    }
+
+    /**
+     * Replace the userColumns for the given stub.
+     *
+     * @param $stub
+     * @param $userColumns
+     *
+     * @return $this
+     */
+    protected function replaceUserColumns(&$stub, $userColumns)
+    {
+        $stub = str_replace('{{userColumns}}', $userColumns, $stub);
         return $this;
     }
 }
