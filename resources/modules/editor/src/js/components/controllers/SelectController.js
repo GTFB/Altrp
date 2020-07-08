@@ -25,14 +25,6 @@ class SelectController extends Component {
     }
   }
 
-  async componentDidMount(){
-    if(this.resource){
-      let options = await this.resource.getAll();
-      this.setState(state=>({...state, options}));
-      this._changeValue(options[0].value)
-    }
-  }
-
   getDefaultValue(){
     return '';
   }
@@ -54,7 +46,7 @@ class SelectController extends Component {
       <div className="control-container_select-wrapper">
 
         <select className="control-select control-field" value={this.state.value} onChange={this.changeValue}>
-          {this.state.options.map(option => {return <option value={option.value} key={option.value}>{option.label}</option>})}
+          {this.state.options.map(option => {return <option value={option.value} key={option.value || 'null'}>{option.label}</option>})}
         </select>
       </div>
     </div>

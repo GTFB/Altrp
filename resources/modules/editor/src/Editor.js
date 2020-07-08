@@ -25,6 +25,8 @@ import Settings from "./svgs/settings.svg";
 import Dots from "./svgs/dots.svg";
 import Hamburger from "./svgs/hamburger.svg";
 import {contextMenu} from "react-contexify";
+import DynamicContent from "./js/components/DynamicContent/DynamicContent";
+import {closeDynamicContent} from "./js/store/dynamic-content/actions";
 import {iconsManager} from "../../admin/src/js/helpers";
 /**
  * Главный класс редактора.<br/>
@@ -95,6 +97,7 @@ class Editor extends Component {
    */
   onClick() {
     contextMenu.hideAll();
+    store.dispatch(closeDynamicContent())
   }
 
   /**

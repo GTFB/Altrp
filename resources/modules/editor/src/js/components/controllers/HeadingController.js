@@ -18,13 +18,17 @@ class HeadingController extends Component {
     controllerDecorate(this);
   }
 
+  getDefaultValue(){
+    return '';
+  }
+
   render(){
 
     if(this.state.show === false) {
       return '';
     }
       return <div className="controller-container controller-container_heading">
-        <h1 className="control-heading">{this.state.value.label}</h1>
+        <div className="control-heading">{this.props.label}</div>
       </div>
   }
 }
