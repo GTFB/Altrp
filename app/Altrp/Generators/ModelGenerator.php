@@ -259,6 +259,8 @@ class ModelGenerator extends AppGenerator
 
             return $this->writeRelationships();
         }
+        
+        return false;
     }
 
     /**
