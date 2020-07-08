@@ -20,6 +20,7 @@ class SectionComponent extends Component {
   }
 
   render() {
+    let styles = {};
     let width = {};
     if(this.state.settings.layout_content_width_type === "full") {
       width = {
@@ -40,7 +41,7 @@ class SectionComponent extends Component {
         key={column.getId()}
         component={column.componentClass}
         element={column}
-        columnCount={this.props.element.getColumnsCount()}
+        // columnCount={this.props.element.getColumnsCount()}
       />
     ));
 
