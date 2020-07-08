@@ -161,6 +161,10 @@ class Table extends BaseElement {
     repeater.addControl('column_name',{
       label: 'Column Heading',
     });
+    repeater.addControl('column_link',{
+      label: 'Link Template',
+      description: '/path/:id',
+    });
 
     this.addControl('tables_columns', {
       label: 'Columns',

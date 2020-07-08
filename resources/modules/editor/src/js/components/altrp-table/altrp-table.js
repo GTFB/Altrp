@@ -2,6 +2,8 @@ import React, {useCallback, useState, useEffect} from "react";
 import {useTable} from "react-table";
 import {useQuery, usePaginatedQuery, queryCache} from  "react-query";
 import '../../../sass/altrp-pagination.scss';
+import {isEditor} from "../../helpers";
+import {Link} from "react-router-dom";
 
 /**
  *
@@ -64,7 +66,6 @@ const AltrpTable = ({settings, query}) => {
       columns.push(_column);
     }
   });
-  console.log(page)
   let {
     getTableProps,
     getTableBodyProps,
@@ -100,8 +101,22 @@ const AltrpTable = ({settings, query}) => {
               prepareRow(row);
               return (
                   <tr {...row.getRowProps()} className="altrp-table-tr">
-                    {row.cells.map(cell => {
-                      return <td {...cell.getCellProps()} className="altrp-table-td">{cell.render('Cell')}</td>
+                    {row.cells.map((cell, _i) => {
+                      console.log(columns[_i]);
+                      console.log(row);
+
+                      let cellContent = cell.render('Cell');
+                      let linkTag = isEditor() ? 'a': Link;
+                      /**
+                       * Если в настройках колонки есть url, и в данных есть id, то делаем ссылку
+                       */
+                      if(columns[_i].column_link && row.original.id){
+                        cellContent = React.createElement(linkTag, {
+                          to: columns[_i].column_link.replace(':id', row.original.id),
+                          className: 'altrp-inherit',
+                        }, cellContent)
+                      }
+                      return <td {...cell.getCellProps()} className="altrp-table-td">{cellContent}</td>
                     })}
                   </tr>
               )
