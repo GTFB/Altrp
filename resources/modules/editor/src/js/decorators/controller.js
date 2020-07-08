@@ -1,4 +1,5 @@
 import store from '../store/store';
+import {toggleDynamicContent} from "../store/dynamic-content/actions";
 /**
  * Обновление значения в компоненте контроллера при загрузке нового экземпляра того же элемента
  */
@@ -32,18 +33,19 @@ function _changeValue(value) {
     value = {...value};
   }
 
-  if(value && ! value.dynamic){
+  if(value && value.dynamic){
     this.setState((state)=>{
       return {
         ...state,
-        value,
+        value:'',
+        dynamicValue: value,
       }
     });
   } else {
     this.setState((state)=>{
       return {
         ...state,
-        dynamicValue: value,
+        value,
       }
     });
   }
@@ -57,28 +59,7 @@ function _changeValue(value) {
  */
 
 function conditionSubscriber() {
-  // const controllerValue = store.getState().controllerValue;
-  // if(this.props.condition) {
-  //   if(this.props.condition[controllerValue.controlId]) {
-  //     if(controllerValue.controlId === Object.keys(this.props.condition)[0]) {
-  //       if(controllerValue.value !== this.props.condition[controllerValue.controlId] && this.props.controlId !== controllerValue.controlId) {
-  //         this.setState((state) => {
-  //           return {
-  //             ...state,
-  //             show: false,
-  //           }
-  //         });
-  //       } else {
-  //         this.setState((state) => {
-  //           return {
-  //             ...state,
-  //             show: true,
-  //           }
-  //         });
-  //       }
-  //     }
-  //   }
-  // }
+
   if(this.props.condition) {
     const controllerValue = store.getState().controllerValue;
     if(Object.keys(this.props.condition).indexOf(controllerValue.controlId)>=0){
@@ -133,6 +114,32 @@ function showComponentController() {
   }));
 }
 
+/**
+ * Клик по кнопке удалйющей длинамические настройки
+ */
+function removeDynamicSettings() {
+  this._changeValue(this.getDefaultValue());
+  this.props.currentElement.removeModelSettings(this.props.controlId);
+  this.setState(state=>({
+    ...state,
+    dynamicValue: null
+  }));
+}
+
+/**
+ * Открывает меню динамического контента при нажатии на иконку
+ */
+function openDynamicContent(e) {
+  e.stopPropagation();
+  this.props.dispatch(toggleDynamicContent({
+    type: 'text',
+    settingName: this.props.controlId,
+    onSelect: (dynamicValue) => {
+      this._changeValue(dynamicValue);
+      this.props.currentElement.component.subscribeToModels();
+    }
+  }, this.dynamicButton.current))
+}
 let controllerDecorate = function elementWrapperDecorate(component) {
   component.componentDidUpdate = componentDidUpdate.bind(component);
   component._changeValue = _changeValue.bind(component);
@@ -140,6 +147,8 @@ let controllerDecorate = function elementWrapperDecorate(component) {
   component.componentDidMount = controllerComponentDidMount.bind(component);
   component.hideComponentController = hideComponentController.bind(component);
   component.showComponentController = showComponentController.bind(component);
+  component.removeDynamicSettings = removeDynamicSettings.bind(component);
+  component.openDynamicContent = openDynamicContent.bind(component);
   store.subscribe(component.conditionSubscriber);
 };
 export default controllerDecorate;

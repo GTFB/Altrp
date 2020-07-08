@@ -15,7 +15,7 @@ class HeadingWidget extends Component {
     }
   }
   render(){
-    let text = this.state.settings.text;
+    let text = this.getContent('text');
     if(this.state.settings.link_link && this.state.settings.link_link.url){
       let linkProps = {
         rel: this.state.settings.link_link.noFollow ? "nofollow" : null,
@@ -30,11 +30,7 @@ class HeadingWidget extends Component {
     }
     let headingContainer = React.createElement(this.state.settings.heading_settings_html_tag || 'h2', {className: "altrp-heading " + this.state.settings.position_css_classes, id: this.state.settings.position_css_id || "",},
         text);
-    // let link = null;
 
-    // if(this.state.settings.link_link && this.state.settings.link_link.url) {
-    //   link = <a href={this.state.settings.link_link.url} rel={!this.state.settings.link_link.noFollow ? "nofollow" : null} className="altrp-btn">{headingContainer}</a>
-    // }
 
     return headingContainer
   }

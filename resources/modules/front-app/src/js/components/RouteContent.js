@@ -14,9 +14,14 @@ class RouteContent extends Component {
       // autoHide
       // autoHideTimeout={500}
       // autoHideDuration={200}
-    > 
+    >
+
     <div className="route-content">{
-      this.props.areas.map(area => <AreaComponent {...area} key={'appArea_' + area.id}/>)
+      this.props.areas.map(area => <AreaComponent
+          {...area}
+          page={this.props.id}
+          model={this.props.model}
+          key={'appArea_' + area.id}/>)
     }</div>
     </Scrollbars>
     )

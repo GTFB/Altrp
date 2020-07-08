@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {connect} from "react-redux";
 import DynamicIcon from '../../../svgs/dynamic.svg'
 import controllerDecorate from '../../decorators/controller'
+import {iconsManager} from "../../../../../admin/src/js/helpers";
 
 class TextareaController extends Component {
   constructor(props){
@@ -14,8 +15,10 @@ class TextareaController extends Component {
     value = value || '';
     this.state = {
       value,
-      show: true
+      show: true,
+      dynamicValue: value.dynamic ? value : null,
     };
+    this.dynamicButton = React.createRef();
     controllerDecorate(this);
   }
   changeValue(e){
@@ -33,11 +36,28 @@ class TextareaController extends Component {
         <div className="controller-container__label">
           {this.props.label}
         </div>
-        <div className="controller-container__dynamic">
-          Dynamic
-          <DynamicIcon/>
-        </div>
-        <textarea wrap="soft" className="controller-container__textarea" onChange={this.changeValue} value={this.state.value}/>
+
+        {
+          this.state.dynamicValue ? '' : <div className="controller-container__dynamic"  ref={this.dynamicButton} onClick={this.openDynamicContent}>
+            Dynamic
+            <DynamicIcon/>
+          </div>
+        }
+        {this.state.dynamicValue ? <div className="dynamic-placeholder control-field">
+          <div className="dynamic-placeholder__text">
+            {
+              `${this.state.dynamicValue.modelTitle} ${this.state.dynamicValue.fieldTitle}`
+            }
+          </div>
+
+          <div className="dynamic-placeholder__remove" onClick={this.removeDynamicSettings}>
+            {
+              iconsManager().renderIcon('times')
+            }
+          </div>
+        </div> : <textarea className="controller-container__textarea" onChange={this.changeValue} value={this.state.value}/>
+        }
+
       </div>
   }
 }

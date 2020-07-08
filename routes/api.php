@@ -46,6 +46,8 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
 
         Route::get('/tables/{table}/columns', "Admin\TableController@getColumns");
         Route::get('/tables/{table}/keys', "Admin\TableController@getKeys");
+        
+        Route::get( '/models', 'Admin\ModelsController@getModels');
         /*Route::get('/tables', "Admin\TableController@getTables");
         Route::get('/tables/{table}', "Admin\TableController@getTable");
         Route::post('/tables', "Admin\TableController@insert");

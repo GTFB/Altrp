@@ -58,6 +58,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get( 'templates/options', 'TemplateController@options' );
     Route::get( '/template/{template_id}/reviews', 'TemplateController@reviews' );
     Route::resource( 'pages', 'Admin\PagesController' );
+    Route::get( '/pages_options', 'Admin\PagesController@pages_options' )->name( 'admin.pages_options.all' );
+    Route::get( '/pages_options/{page_id}', 'Admin\PagesController@show_pages_options' )->name( 'admin.pages_options.show' );
     Route::get('/permissions', "Users\Permissions@getPermissions");
     Route::get('/permissions/{permission}', "Users\Permissions@getPermission");
     Route::post('/permissions', "Users\Permissions@insert");
@@ -106,10 +108,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     /**
      * Роуты для теста запросов для виджета таблицы todo: удалить, после того как модели будут готовы
      */
-    Route::get( 'models_list', 'Admin\ModelsController@models_list' )->name( 'admin.models_list' );
-    Route::get( 'models_list_for_query', 'Admin\ModelsController@models_list_for_query' )->name( 'admin.models_list_for_query' );
-    Route::get( 'models_options', 'Admin\ModelsController@models_options' )->name( 'admin.models_options' );
+    Route::get( '/models_list', 'Admin\ModelsController@models_list' )->name( 'admin.models_list' );
+    Route::get( '/models_list_for_query', 'Admin\ModelsController@models_list_for_query' )->name( 'admin.models_list_for_query' );
+    Route::get( '/models_options', 'Admin\ModelsController@models_options' )->name( 'admin.models_options' );
+    Route::get( '/models_with_fields_options', 'Admin\ModelsController@models_with_fields_options' )
+      ->name( 'admin.models_with_fields_options' );
 
+    Route::get( '/models', 'Admin\ModelsController@getModels');
+    
 
     Route::get('/tables', "Admin\TableController@getTables");
     Route::get('/tables/{table}', "Admin\TableController@getTable");
@@ -166,6 +172,7 @@ Route::get('/', function () {
 
 foreach ( $frontend_routes as $frontend_route ) {
 
+  $frontend_route = str_replace( ':id', '{id}', $frontend_route );
   Route::get($frontend_route, function () {
     return view('front-app');
   })->middleware( ['web', 'installation.checker'] );
@@ -181,6 +188,7 @@ Route::group( ['prefix' => 'ajax'], function(){
   Route::resource( 'routes', 'Frontend\RouteController' );
   Route::get( 'models/{model_name}', 'Frontend\ModelsController@models' )->name( 'front.models.all' );
   Route::post( 'models/{model_name}', 'Frontend\ModelsController@create' )->name( 'front.models.create' );
+  Route::get( 'models/page/{page_id}', 'Frontend\PageController@show' )->name( 'front.page.show' );
 
 } );
 

@@ -45,7 +45,7 @@ class FrontElement {
      *  (при смене страницы header footer могут не меняться)
      *  * @type {array}
      */
-    this.models = []
+    this.modelsList = []
   }
 
   /**
@@ -92,6 +92,9 @@ class FrontElement {
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_id')){
       this.formInit()
     }
+    // if(this.component){
+    //   this.component.subscribeToModels();
+    // }
   }
 
   /**
@@ -250,28 +253,60 @@ class FrontElement {
   }
 
   /**
-   * @return {AltrpModel[]}
+   * @return {AltrpModelUpdater[]}
    */
   getModelsList(){
-    return this.getRoot().modelsList;
+    return this.getRoot().modelsList || [];
   }
 
   /**
-   * @param {AltrpModel[]} modelsList
+   * Получаем данные о модели (modelName и modelId) из корневого элемента по названию модели
+   * @param {string} modelName
+   * @return {{}}
+   */
+  getModelsInfoByModelName(modelName){
+    let modelsList = this.getModelsList();
+    let modelInfo = null;
+    modelsList.forEach(_modelInfo=>{
+      if(_modelInfo.modelName === modelName){
+        modelInfo = _modelInfo;
+      }
+    });
+    return modelInfo
+  }
+
+  /**
+   * @param {AltrpModelUpdater[]} modelsList
    */
   setModelsList(modelsList){
-    this.modelsList = modelsList;
+    this.getRoot().modelsList = modelsList;
+  }
+  /**
+   * Добавляет информацию о модели в список моделей
+   * @param {{}} modelInfo
+   */
+  addModelInfo(modelInfo){
+    this.getRoot().modelsList = this.getRoot().modelsList || [];
+    this.getRoot().modelsList.push({...modelInfo})
   }
 
   /**
-   * Подписываемся на изменеия моделей
-   * @param {function} callback
+   * Задайет id для всех моделей корневого элемента не являющихся моделью страницы (page)
+   * todo: нужно вызывать в элементе при смене роута в том случае если роут имеет id
+   * @param {int} id
    */
-  subscribeToModels(callback){
-    let modelsList = this.getModelsList();
-    modelsList.forEach(modelInfo=>{
-      modelManager.subscribeToModelUpdates(modelInfo.modelName, modelInfo.modelName, callback)
-    })
+  setModelsIds(id){
+
+  }
+
+  /**
+   * Получает данные для контента элемента
+   * Проверяет явлется ли свойство настроек динамическим контентом, если да берет это свойство из this.state.modelsData
+   * @param {string} settingName
+   * @return {*}
+   */
+  getContent(settingName){
+
   }
 }
 

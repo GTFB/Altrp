@@ -12,6 +12,7 @@ use Mockery\Exception;
  * Class Page
  * @package App
  * @property User $user
+ * @property \App\Altrp\Model $model
  */
 
 class Page extends Model
@@ -23,6 +24,7 @@ class Page extends Model
     'author',
     'content',
     'path',
+    'model_id',
   ];
 
   /**
@@ -55,13 +57,19 @@ class Page extends Model
 
     $_pages = static::all();
 
+    /** @var Page $page */
     foreach ( $_pages as $page ) {
-      $pages[] = [
+      $_page = [
         'path' => $page->path,
         'id' => $page->id,
         'title' => $page->title,
         'areas' => self::get_areas_for_page( $page->id ),
       ];
+      if($page->model){
+        $_page['model'] = $page->model->toArray();
+        $_page['model']['modelName'] = $page->model->altrp_table->name;
+      }
+      $pages[] = $_page;
     }
 
     return $pages;
@@ -121,5 +129,9 @@ class Page extends Model
     }
     return $pages_template->template;
   }
-
+  
+  function model()
+  {
+    return $this->hasOne( "App\Altrp\Model", 'id', 'model_id' );
+  }
 }
