@@ -13,12 +13,12 @@ const StructureWrapper = {
   width: "110px",
   cursor: "pointer",
   flexBasis: "48%",
-  marginBottom: "10px"
+  marginBottom: "10px",
 }
 
 const Sizefield = {
   display: "flex",
-  justifyContent: "space-between",
+  justifyContent: "center",
 }
 
 const Block = {
@@ -33,7 +33,6 @@ const PresetTitle = {
   textAlign: "center",
   fontSize: "11px",
   paddingTop: "5px",
-  maxWidth: "105px"
 }
 
 class ColumnsWidthController extends Component {
