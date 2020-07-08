@@ -23,7 +23,9 @@ class FrontElementsFabric {
     }
 
     if(model){
-      console.log(model);
+      element.addModelInfo({
+        modelName: model.modelName,
+      });
     }
     if( object.children && object.children.length ){
       for( let child of object.children){

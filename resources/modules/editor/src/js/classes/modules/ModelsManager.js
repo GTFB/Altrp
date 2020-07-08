@@ -36,9 +36,12 @@ class ModelsManager {
    * @param {string} modelName
    * @param {int} modelId
    * @param {function} callback
-   * @return {AltrpModelUpdater}
+   * @return {AltrpModelUpdater | null}
    */
   subscribeToModelUpdates(modelName, modelId, callback){
+    if(! modelId){
+      return null;
+    }
     /**
      * model
      * @type {AltrpModelUpdater}

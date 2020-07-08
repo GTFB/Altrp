@@ -11,6 +11,9 @@ class AltrpModelUpdater {
    */
   constructor(modelName, modelId){
     this.modelName = modelName;
+    if(! modelId){
+      console.error('ид модели не указан!');
+    }
     this.modelId = modelId;
     this.data = null;
     this.subscribers = [];
