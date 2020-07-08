@@ -1,2 +1,2 @@
-Route::resource('{{routePrefix}}{{tableName}}', '{{controllerName}}');
+Route::{{middleware}}resource('{{routePrefix}}{{tableName}}', '{{controllerName}}');
 Route::put('{{routePrefix}}{{tableName}}/{{{id}}}/{{{column}}}', '{{controllerName}}@updateColumn');
