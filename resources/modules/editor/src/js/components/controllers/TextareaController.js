@@ -37,7 +37,7 @@ class TextareaController extends Component {
           Dynamic
           <DynamicIcon/>
         </div>
-        <textarea className="controller-container__textarea" onChange={this.changeValue} value={this.state.value}/>
+        <textarea wrap="soft" className="controller-container__textarea" onChange={this.changeValue} value={this.state.value}/>
       </div>
   }
 }

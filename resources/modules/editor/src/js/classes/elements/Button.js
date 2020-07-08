@@ -10,6 +10,7 @@ import {
   CONTROLLER_TEXT,
   CONTROLLER_LINK,
   CONTROLLER_TYPOGRAPHIC,
+  CONTROLLER_CHOOSE,
   CONTROLLER_SLIDER,
   CONTROLLER_COLOR,
   CONTROLLER_SHADOW,
@@ -46,6 +47,33 @@ class Button extends BaseElement{
       type: CONTROLLER_TEXTAREA,
       label: 'Button Text',
       default: 'Click Me'
+    });
+
+    this.addControl('button_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'alignment',
+      default: 'center',
+      options:[
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+        {
+          icon: 'in_width',
+          value: 'stretch',
+        }
+      ],
+      rules: {
+            '{{ELEMENT}}': 'align-items: {{VALUE}};',
+      },
     });
 
     this.endControlSection();
