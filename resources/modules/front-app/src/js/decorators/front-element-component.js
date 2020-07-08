@@ -92,6 +92,7 @@ function componentDidMount() {
   if(typeof this._componentDidMount === 'function'){
     this._componentDidMount();
   }
+  console.log(window.router.current);
   this.subscribeToModels();
 }
 /**

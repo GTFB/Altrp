@@ -10,17 +10,27 @@ import RouteContent from "./RouteContent";
 import Styles from "../../../../editor/src/js/components/Styles";
 
 class AppContent extends Component {
+  constructor(){
+    super();
+    window.router = React.createRef();
+  }
+  componentDidMount(){
+
+  }
   render(){
-    return <div className="front-app-content">
-      <Router>
+    return <Router ref={window.router}>
+      <div className="front-app-content">
         <Switch>
-          {this.props.routes.map(route=><Route key={route.id} path={route.path} exact>
+          {this.props.routes.map(route=><Route key={route.id}
+                                               /*{...route}component={RouteContent}*/
+                                               path={route.path}
+                                               exact>
             <RouteContent {...route}/>
           </Route>)}
         </Switch>
-      </Router>
+      </div>
       <Styles/>
-    </div>;
+    </Router>
   }
 }
 
