@@ -14,9 +14,9 @@ class SettingSection extends Component {
     const open = props.open;
   }
 
-  componentDidMount() {
-    document.getElementById("settingsSection0").classList.add('open')
-  }
+  // componentDidMount() {
+  //   document.getElementById("settingsSection0").classList.add('open')
+  // }
 
   toggle(e){
     this.setState({
