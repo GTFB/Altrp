@@ -28,6 +28,9 @@ class MigrationFieldString  extends MigrationField implements MigrationFieldInte
     }
     
     public function update() {
+        
+        
+        
         $this->text = "\$table->bigIncrements('".$this->column->name."')->change()";
         $this->text .= ";\n".$this->tabIndent.$this->tabIndent.$this->tabIndent;
         return $this->text;

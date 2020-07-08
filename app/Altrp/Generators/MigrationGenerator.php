@@ -10,6 +10,13 @@ namespace App\Altrp\Generators;
 
 use App\Exceptions\TableNotFoundException;
 use App\Exceptions\AltrpMigrationNotWrittenException;
+
+use App\Altrp\Table;
+use App\Altrp\Migration;
+
+use Illuminate\Support\Str;
+use App\Altrp\Generators\Migration\MigrationFieldFactory;
+
 /**
  * Description of MigrationGenerator
  *
@@ -60,10 +67,9 @@ class MigrationGenerator extends AppGenerator{
     protected $tabIndent = '    ';
     
     /**
-     * ModelGenerator constructor.
+     * MigrationGenerator constructor.
      * @param $data
      * 
-     * @throws AltrpMigrationNotWrittenException
      */
     public function __construct($data)
     {
@@ -71,17 +77,91 @@ class MigrationGenerator extends AppGenerator{
         
         $this->table = $this->getTable();
         $this->current_migration = $this->saveCurrentMigration();
+        $this->previous_migration = $this->getPreviousMigration();
         
-        if(!$this->current_migration) {
-            throw new AltrpMigrationNotWrittenException("Failed to write migration to the database", 500);
+    }
+    
+    public function generate()
+    {
+        
+        $className = Str::studly($this->current_migration->name);
+        
+        //1. Получаем шаблон
+        $template = file_get_contents($this->getStub());
+        
+        //2. Получаем переменные
+        $fields = $this->getFields();
+        
+        dd($fields);
+        /*$foreign_keys = $this->getForeignKeys();
+        
+        
+        //3. заносим переменные
+        $template = str_replace('{{fields}}', $fields, $template);
+        $template = str_replace('{{className}}', $className, $template);
+        $template = str_replace('{{table}}', $this->table, $template);
+        $template = str_replace('{{foreign_keys}}', $foreign_keys, $template);
+       
+        if($this->getMigrationType() === "update") {
+            $delete_fields = $this->getDeleteFields();
+            $template = str_replace('{{delete_fields}}', $delete_fields, $template);
+            $delete_keys = $this->getDeleteKeys();
+            $template = str_replace('{{delete_keys}}', $delete_keys, $template);
         }
         
-        $this->previous_migration = $this->getPreviousMigration();
+        //4. Получаем имя файла
+        $fileName = date('Y_m_d_His').'_'.strtolower($this->current_migration->name).'.php';
+        $full_path = $this->getPath().$fileName;
+        
+        //5. создаем файл
+        $d = file_put_contents($full_path, $template);
+        //dd($d);
+        
+        if($d !== false) return $full_path;
+        else return false;*/
+        
     }
     
     
     
+    public function getFields()
+    {
+        $fields = '';
+        
+        $factory = new MigrationFieldFactory();
+        
+        foreach ($this->current_migration->full_data->columns as $value) {
+            
+            $old_column = $this->findColumn($value);
+            
+            $obj = $factory->getField($value, $old_column);
+            $fields .= $obj->up();
+        }
+        
+        return $fields;
+    }
     
+    /**
+     * Ищем колонку в предыдущей миграции
+     *
+     * @return string
+     */
+    protected function findColumn($column, $array = null)
+    {
+        if($this->isCreateMigration()) return false;
+        
+        if(is_null($array)) {
+            $array = $this->previous_migration->full_data->columns;
+        }
+        
+        $key = array_search($column->name, array_column($array, 'name'));
+        
+        if($key !== false) {
+            return $this->previous_migration->full_data->columns[$key];
+        }
+        
+        return false;
+    }
     
     /**
      * Получаем предыдущую миграцию
@@ -98,8 +178,8 @@ class MigrationGenerator extends AppGenerator{
     
     /**
      * Сохранение текущей миграции
-     *
-     * @return App/Altrp/Migration
+     * @return Migration
+     * @throws AltrpMigrationNotWrittenException
      */
     protected function saveCurrentMigration()
     {
@@ -111,7 +191,11 @@ class MigrationGenerator extends AppGenerator{
         $migration->user_id = auth()->user()->id;
         $migration->table_id = $this->table->id;
         
-        return $migration->save();
+        if(!$migration->save()) {
+            throw new AltrpMigrationNotWrittenException("Failed to write migration to the database", 500);
+        }
+        
+        return $migration;
     }
     
     /**
@@ -122,7 +206,7 @@ class MigrationGenerator extends AppGenerator{
      */
     protected function getTable()
     {
-        $table = Table::find($this->data->table);
+        $table = Table::find($this->data->table_id);
         
         if(!$table) {
             throw new TableNotFoundException("Table not found.", 404);
@@ -185,11 +269,11 @@ class MigrationGenerator extends AppGenerator{
      */
     protected function getStub()
     {
-        if($this->getMigrationType() === 'create') {
-            return app_path().'/Altrp/stubs/migrations/create_migration.stub';
+        if($this->isCreateMigration()) {
+            return app_path().'/Altrp/Commands/stubs/migrations/create_migration.stub';
         }
-        else if($this->getMigrationType() === 'update') {
-            return app_path().'/Altrp/stubs/migrations/update_migration.stub';
+        else {
+            return app_path().'/Altrp/Commands/stubs/migrations/update_migration.stub';
         }
     }
     

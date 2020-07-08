@@ -55,6 +55,7 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         // GeneratorController routes
         Route::post('/generators/{table}/model/create', 'Admin\GeneratorController@createModel');
         Route::post('/generators/{table}/controller/create', 'Admin\GeneratorController@createController');
+        Route::post('/generators/{table}/migration/create', 'Admin\GeneratorController@createMigration');
 
     });
 
