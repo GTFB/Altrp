@@ -16,7 +16,6 @@
   </script>
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">
-  <link rel="stylesheet" href="{{ asset( '/modules/front-app/front-app.css' ) }}"/>
   <!-- Style -->
   <style>
     .app-area > .sections-wrapper{
@@ -29,6 +28,7 @@
 <div id="front-app">
 
 </div>
+<link rel="stylesheet" href="{{ asset( '/modules/front-app/front-app.css' ) . '?' . getCurrentVersion() }}" />
 <script src="{{ altrp_asset( '/modules/front-app/front-app.js', 'http://localhost:3001/' ) }}" defer></script>
 </body>
 </html>
