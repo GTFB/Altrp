@@ -50,4 +50,19 @@ class ModelsController extends Controller
     $res['success'] = true;
     return response()->json( $res );
   }
+
+  /**
+   * Обраблотка запроса на удлаение модели по id
+   * @param string $model_name
+   * @param string $model_id
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function delete( $model_name, $model_id, Request $request ){
+    $res[] = $model_name;
+    $res[] = $model_id;
+    $res['success'] = true;
+    DB::table( $model_name )->delete( $model_id );
+    return response()->json( $res );
+  }
 }

@@ -112,6 +112,10 @@ class Button extends BaseElement{
           value: 'add_new',
           label: 'Add New',
         },
+        {
+          value: 'delete',
+          label: 'Delete',
+        },
       ],
     });
 

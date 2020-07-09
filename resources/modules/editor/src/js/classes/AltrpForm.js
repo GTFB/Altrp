@@ -31,9 +31,10 @@ class AltrpForm {
 
   /**
    * Проверка полей перед отправкой
+   * @param {int |  null} modelID
    * @return {boolean}
    */
-  async submit(){
+  async submit(modelID){
     let success = true;
     this.fields.forEach(field=>{
       if(! field.fieldValidate()){
@@ -46,7 +47,14 @@ class AltrpForm {
           return await this.resource.post(this.getData());
         }
         case 'PUT':{
-          return await this.resource.put(this.getData());
+          return await this.resource.put(modelID, this.getData());
+        }
+        case 'DELETE':{
+          if(modelID){
+            // return await await alert('Удаление!');
+            return await this.resource.delete(modelID);
+          }
+          console.error('Не удалось получить ИД модели для удаления!');
         }
       }
     } else {

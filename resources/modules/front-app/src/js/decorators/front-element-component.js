@@ -94,15 +94,19 @@ function componentDidMount() {
   if(typeof this._componentDidMount === 'function'){
     this._componentDidMount();
   }
-  /**
-   * для получения id на фронтенде, если в url есть id
-   * @type {null}
-   */
+  this.subscribeToModels(this.getModelId());
+}
+
+/**
+ * Возвращает id модели беря его из url если в роутере предусмтренно ид для текущего роута
+ * @return {int}
+ */
+function getModelId() {
   let id = null;
   if(this.props.match && this.props.match.params && this.props.match.params.id){
     id = this.props.match.params.id;
   }
-  this.subscribeToModels(id);
+  return id;
 }
 /**
  * Декорирует компонент элемента методами необходимыми на фронте и в редакторе
@@ -113,4 +117,5 @@ export default function frontDecorate(component) {
   component.subscribeToModels = subscribeToModels.bind(component);
   component.componentDidMount = componentDidMount.bind(component);
   component.getContent = getContent.bind(component);
+  component.getModelId = getModelId.bind(component);
 }

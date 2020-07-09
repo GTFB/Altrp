@@ -102,9 +102,6 @@ const AltrpTable = ({settings, query}) => {
               return (
                   <tr {...row.getRowProps()} className="altrp-table-tr">
                     {row.cells.map((cell, _i) => {
-                      console.log(columns[_i]);
-                      console.log(row);
-
                       let cellContent = cell.render('Cell');
                       let linkTag = isEditor() ? 'a': Link;
                       /**

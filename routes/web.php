@@ -189,6 +189,7 @@ Route::group( ['prefix' => 'ajax'], function(){
   Route::resource( 'routes', 'Frontend\RouteController' );
   Route::get( 'models/{model_name}', 'Frontend\ModelsController@models' )->name( 'front.models.all' );
   Route::get( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@show' )->name( 'front.models.show' );
+  Route::delete( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@delete' )->name( 'front.models.delete' );
   Route::post( 'models/{model_name}', 'Frontend\ModelsController@create' )->name( 'front.models.create' );
 
 } );

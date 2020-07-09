@@ -61,14 +61,15 @@ class FormsManager {
   /**
    * Отправляет форму
    * @param {string} formId
+   * @param {int | null} modelID
    * @return {boolean}
    */
-  submitForm(formId){
+  submitForm(formId, modelID){
     if(! this.getForm(formId)){
       console.error('Форма не найдена');
       return false;
     }
-    return this.getForm(formId).submit();
+    return this.getForm(formId).submit(modelID);
   }
   /**
    * Получить форму по id

@@ -14,7 +14,7 @@ class FrontElement {
     }
     this.parent = null;
     /**
-     *
+     * Список форм для текущего элемента (кнопки, интпута)
      * @type {AltrpForm[]}
      */
     this.forms = [];
@@ -92,9 +92,9 @@ class FrontElement {
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_id')){
       this.formInit()
     }
-    // if(this.component){
-    //   this.component.subscribeToModels();
-    // }
+    if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_actions') === 'delete'){
+      this.formInit()
+    }
   }
 
   /**
@@ -109,8 +109,19 @@ class FrontElement {
     switch (this.getName()) {
       case 'button': {
         let method = 'POST';
-        if(this.getSettings('form_actions') === 'add_new'){
-          this.addForm(formsManager.registerForm(this.getSettings('form_id'), this.getSettings('choose_model'), method));
+        switch (this.getSettings('form_actions')){
+          case 'add_new':{
+            this.addForm(formsManager.registerForm(this.getSettings('form_id'), this.getSettings('choose_model'), method));
+          }
+          break;
+          case 'delete':{
+            method = 'DELETE';
+            let modelName = this.getModelName();
+            if(modelName){
+              this.addForm(formsManager.registerForm(this.getId(), modelName, method));
+            }
+          }
+          break;
         }
       }
       break;
@@ -137,7 +148,7 @@ class FrontElement {
     this.forms.push(form);
   }
   /**
-   * Возвращает массив
+   * Возвращает массив потомков текущего элемента
    * @return {[]}
    */
 
@@ -177,6 +188,11 @@ class FrontElement {
     });
   }
 
+  /**
+   * Возвращает CSS-стили в виде строки
+   * для вставки в тег style текущего элемента
+   * @return {string}
+   */
   getStringifyStyles(){
     let styles = '';
     if(typeof this.settings.styles !== 'object'){
@@ -253,10 +269,26 @@ class FrontElement {
   }
 
   /**
+   * Список моделей для шаблона включая модель Page
    * @return {AltrpModelUpdater[]}
    */
   getModelsList(){
     return this.getRoot().modelsList || [];
+  }
+
+  /**
+   * Имя модели
+   * из списка моделей извлекает имя модели не являющейся Page и возращает иэто имя
+   * @return {string | null}
+   */
+  getModelName(){
+    let modelName = null;
+    this.getModelsList().forEach(modelInfo=>{
+      if(modelInfo.modelName!=='page'){
+        modelName = modelInfo.modelName
+      }
+    });
+    return modelName;
   }
 
   /**

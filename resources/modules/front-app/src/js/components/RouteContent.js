@@ -15,9 +15,11 @@ class RouteContent extends Component {
     return (
     <Scrollbars
       style={{zIndex: 99999}}
-      // autoHide
-      // autoHideTimeout={500}
-      // autoHideDuration={200}
+      autoHide
+      autoHideTimeout={500}
+      autoHideDuration={200}
+      renderTrackVertical={({style, ...props})=>{
+        return<div className="altrp-scroll__vertical-track" style={style} {...props} />}}
     >
 
     <div className="route-content">{
