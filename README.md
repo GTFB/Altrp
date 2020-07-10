@@ -7,6 +7,7 @@
 ### 0.5.0
 + Add "Delete" Form Action to Button Widget
 + Add Dynamic Content Option to Text Controllers and Receive Dynamic Data from Server 
++ Add New Text Editor in Text Widget
 
 ### 0.4.0
 + Add "Add New" Form Action to Button Widget

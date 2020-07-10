@@ -2,6 +2,7 @@ const merge = require('webpack-merge');
 const common = require('./webpack.editor.common.js');
 const path = require("path");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = merge(common, {
   mode: 'production',
@@ -42,7 +43,16 @@ module.exports = merge(common, {
       chunkFilename: '[chunkhash].editor.css',
 
       filename: 'editor.css',
-    })
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+
+          {
+            from: 'resources/modules/editor/src/skins',
+            to: 'skins'
+          },
+
+    ]})
     //   // Options similar to the same options in webpackOptions.output
     //   // both options are optional
     //   filename: '[name].css',
