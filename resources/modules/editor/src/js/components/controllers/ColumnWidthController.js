@@ -1,6 +1,8 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import controllerDecorate from "../../decorators/controller";
+import store from "../../store/store";
+import {changeWidthColumns} from "../../store/column-width/actions";
 
 const MainWrapper = {
   display: "flex",
@@ -368,6 +370,14 @@ class ColumnsWidthController extends Component {
     return '';
   }
 
+  /**
+   * Функция, обрабатывающая клик по одной из структур для изменения ширины колонок
+   * @param index
+   */
+
+  handleClick(index) {
+    store.dispatch(changeWidthColumns(index));
+  }
   render() {
     if(this.state.show === false) {
       return '';
@@ -375,12 +385,12 @@ class ColumnsWidthController extends Component {
 
     return <div className="altrp-control-structure" style={MainWrapper}>
       {
-        this.state.variants[this.props.currentElement.children.length - 1].map((variant) => {
-          return <div className="altrp-control-structure-wrapper" style={StructureWrapper}>
+        this.state.variants[this.props.currentElement.children.length - 1].map((variant, keyindex) => {
+          return <div className="altrp-control-structure-wrapper" style={StructureWrapper} key={keyindex} onClick={() => {this.handleClick(variant.name.split(','))}}>
             <div className="altrp-control-structure-sizefield" style={Sizefield}>
               {
-                variant.variants.map((section) => {
-                  return <div className="altrp-control-left-block" style={{...Block, width: `${section.length}%`}}></div>
+                variant.variants.map((section, sectionid) => {
+                  return <div className="altrp-control-left-block" key={sectionid} style={{...Block, width: `${section.length}%`}} ></div>
                 })
               }
             </div>

@@ -5,6 +5,7 @@ import {elementDragReducer} from "./element-drag/reducers";
 import {assetsSettingsReducer} from "./assets-browser/reducers";
 import {currentElementContextReducer} from "./current-context-element/reducers";
 import {controllerReducer} from "./controller-value/reducers";
+import {columnWidthReducer} from "./column-width/reducers";
 
 
 export default combineReducers({
@@ -13,5 +14,6 @@ export default combineReducers({
   templateStatus: templateStatusReducer,
   elementDrag: elementDragReducer,
   assetsManagerSettings: assetsSettingsReducer,
-  controllerValue: controllerReducer
+  controllerValue: controllerReducer,
+  columnWidth: columnWidthReducer
 });

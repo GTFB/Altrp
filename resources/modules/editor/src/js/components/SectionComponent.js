@@ -1,6 +1,9 @@
 import React, {Component} from "react";
-import '../../sass/section.scss'
+import '../../sass/section.scss';
+import {connect} from "react-redux";
+import store from "../store/store";
 import { styles } from "react-contexify/lib/utils/styles";
+import {changeWidthColumns} from "../store/column-width/actions";
 
 // const SectionComponent = ({ children, element }) => {
 //   if (!children.length) {
@@ -50,13 +53,15 @@ class SectionComponent extends Component {
     }
     this.state = {
       children: props.children,
-      settings: props.element.getSettings()
+      settings: props.element.getSettings(),
+      structure: store.getState().columnWidth.width
     };
     props.element.component = this;
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
   }
+
 
   render() {
     let width = {};
@@ -74,24 +79,40 @@ class SectionComponent extends Component {
       width = {
         width: body + "px"
       }
-      
+
     } else {
       width = {}
     };
-    
+
+    /**
+     * Динамическое обновление store для движения колонок в реальном времени
+     */
+
+    store.subscribe(() => {
+      this.setState((state) => {
+        return {
+          ...state,
+          structure: store.getState().columnWidth.width
+        }
+      });
+    })
+
+
     let sectionClasses = [
-        'altrp-section',
-        `altrp-section_columns-${this.props.element.getColumnsCount()}`
+      'altrp-section',
+      `altrp-section_columns-${this.props.element.getColumnsCount()}`
     ];
-    let sectionWrapper = this.state.children.map(column => (
-      <ElementWrapper
-          width={width}
-          key={column.getId()}
-          component={column.componentClass}
-          element={column}
-          columnCount={this.props.element.getColumnsCount()}
+    let sectionWrapper = this.state.children.map((column, index) => {
+      const width = this.state.structure[index];
+      return <ElementWrapper
+        width={{width: width + "%"}}
+        key={column.getId()}
+        component={column.componentClass}
+        element={column}
+        columnCount={this.props.element.getColumnsCount()}
       />
-    ));
+    });
+
     let section = React.createElement(this.state.settings.layout_html_tag || "div",
       {style: width, className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: ""},
       <div className="get-column-count" id="columnCount" data-column-count={"\n" + this.props.element.getColumnsCount()}></div>,
@@ -107,4 +128,10 @@ class SectionComponent extends Component {
   }
 }
 
-export default SectionComponent;
+function mapStateToProps(state) {
+  return{
+    changeWidthColumns:state.columnWidth,
+  };
+}
+
+export default connect(mapStateToProps)(SectionComponent);

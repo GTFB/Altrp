@@ -17,6 +17,7 @@ import CloseIcon from "../../svgs/close.svg";
 import store from "../store/store";
 import { START_DRAG, startDrag } from "../store/element-drag/actions";
 import { setCurrentElement } from "../store/current-element/actions";
+import {changeWidthColumns} from "../store/column-width/actions";
 import {contextMenu} from "react-contexify/lib/index";
 import {setCurrentContextElement} from "../store/current-context-element/actions";
 
@@ -105,7 +106,7 @@ class ElementWrapper extends Component {
      * @member {HTMLElement} target
      * @member {ElementsManger} elementsManager
      * */
-    // e.stopPropagation();
+      // e.stopPropagation();
     let newWidgetName = e.dataTransfer.getData("text/plain");
     if (newWidgetName) {
       e.stopPropagation();
@@ -113,14 +114,14 @@ class ElementWrapper extends Component {
       if (this.props.element.getType() === "widget") {
         switch (this.state.cursorPos) {
           case "top":
-            {
-              this.props.element.insertSiblingBefore(newElement);
-            }
+          {
+            this.props.element.insertSiblingBefore(newElement);
+          }
             break;
           case "bottom":
-            {
-              this.props.element.insertSiblingAfter(newElement);
-            }
+          {
+            this.props.element.insertSiblingAfter(newElement);
+          }
             break;
         }
       }
@@ -217,7 +218,7 @@ class ElementWrapper extends Component {
       classes += ` altrp-widget_${this.props.element.getName()}`;
     }
     let overlayClasses = `overlay`;
-    let overlayStyles = this.props.width;
+    let overlayStyles = {width: "100%"};
     if (this.props.currentElement === this.props.element) {
       classes += " altrp-element_current";
     }
@@ -228,14 +229,14 @@ class ElementWrapper extends Component {
     classes += this.getClasses();
     switch (this.props.element.getType()) {
       case "section":
-        {
-          _EditIcon = DotsIcon;
-        }
+      {
+        _EditIcon = DotsIcon;
+      }
         break;
       case "column":
-        {
-          _EditIcon = ColumnIcon;
-        }
+      {
+        _EditIcon = ColumnIcon;
+      }
         break;
     }
     let emptyColumn = "";
@@ -252,6 +253,7 @@ class ElementWrapper extends Component {
     return (
       <div
         className={classes}
+        style={this.props.width}
         ref={this.wrapper}
         onContextMenu={this.handleContext}
         onDragOver={this.onDragOver}
@@ -330,7 +332,8 @@ class ElementWrapper extends Component {
 function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
-    dragState: state.elementDrag.dragState
+    dragState: state.elementDrag.dragState,
+    columnWidth: state.columnWidth.columnWidth,
   };
 }
 
