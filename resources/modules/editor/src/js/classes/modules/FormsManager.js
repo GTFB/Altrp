@@ -26,9 +26,8 @@ class FormsManager {
    */
   registerForm(formId, modelName, method){
     let form = this.getForm(formId);
-    let route = `/ajax/models/${modelName}`;
     if(! form){
-      form = new AltrpForm(formId, route, method);
+      form = new AltrpForm(formId, modelName, method);
       /**
        * Если в хранилище есть поля для указанной формы,
        * то передаем их в форму, а ссылку удаляем

@@ -89,37 +89,43 @@ export function advancedTabControllers(element) {
         label: 'default'
       },
       {
-        value: 'full',
+        value: '100%',
         label: 'full width(100%)'
       },
       {
-        value: 'inline',
+        value: 'auto',
         label: 'inline(auto)'
       },
       {
         value: 'custom',
         label: 'custom'
       }
-    ]
+    ],
+    rules: {
+      '{{ELEMENT}}.altrp-element': 'width: {{VALUE}};',
+    },
   });
 
   element.addControl('positioning_custom_width', {
-      type: CONTROLLER_SLIDER,
-      label: 'Custom width',
-      default:{
-        size: "100%",
-        unit:'px'
-      },
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-      max: 1000,
-      min: 0,
-      rules: {
-        '{{ELEMENT}}': 'width: {{SIZE}}{{UNIT}};',
-      },
+    type: CONTROLLER_SLIDER,
+    label: 'Custom width',
+    default:{
+      size: "100%",
+      unit:'px'
+    },
+    units:[
+      'px',
+      '%',
+      'vh',
+    ],
+    max: 1000,
+    min: 0,
+    rules: {
+      'div{{ELEMENT}}.altrp-element': 'width: {{SIZE}}{{UNIT}};',
+    },
+    condition: {
+        'positioning_width_type': 'custom',
+      }
     }
   );
 

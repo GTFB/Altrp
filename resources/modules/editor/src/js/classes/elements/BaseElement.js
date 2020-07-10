@@ -406,7 +406,9 @@ class BaseElement extends ControlStack{
     this.settings.styles = this.settings.styles || {};
     this.settings.styles[breakpoint] = this.settings.styles[breakpoint] || {};
 
-    this.settings.styles[breakpoint][settingName] = this.settings.styles[breakpoint][settingName] || {};
+    // this.settings.styles[breakpoint][settingName] = this.settings.styles[breakpoint][settingName] || {};
+    //todo: проверить работает ли такое поведение (при обновлении стилей стили записанные на текущем свойстве перед изменением удаляются)
+    this.settings.styles[breakpoint][settingName] =  {};
     rules.forEach(rule => {
       let finalSelector = rule.selector;
       finalSelector = finalSelector.replace('{{ELEMENT}}', this.getSelector());

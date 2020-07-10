@@ -4,11 +4,12 @@ import Resource from "./Resource";
  * Класс имитирующий поведение формы (собирает данные с виджетов полей и отправляет их на сервер)
  */
 class AltrpForm {
-  constructor(formId, route, method = 'POST'){
+  constructor(formId, modelName, method = 'POST'){
     this.formId = formId;
     this.fields = [];
     this.method = method;
-    this.route = route;
+    this.modelName = modelName;
+    let route = `/ajax/models/${modelName}`;
     this.resource = new Resource({route})
   }
 
@@ -47,7 +48,17 @@ class AltrpForm {
           return await this.resource.post(this.getData());
         }
         case 'PUT':{
-          return await this.resource.put(modelID, this.getData());
+          // return await alert(JSON.stringify(this.getData()));
+          let res;
+          if(modelID){
+            res =  await this.resource.put(modelID, this.getData());
+            import('./modules/ModelsManager').then(modelsManager=>{
+              modelsManager.default.updateModelWithData(this.modelName, modelID, res[this.modelName]);
+            });
+
+            return res;
+          }
+          console.error('Не удалось получить ИД модели для удаления!');
         }
         case 'DELETE':{
           if(modelID){
@@ -69,10 +80,11 @@ class AltrpForm {
   getData(){
     let data = {};
     this.fields.forEach(field=>{
-      if(field.getValue()){
+      if(field.getValue() !== null){
         data[field.getSettings('field_id')] = field.getValue();
       }
     });
+    console.log(data);
     return data;
   }
 }

@@ -116,6 +116,10 @@ class Button extends BaseElement{
           value: 'delete',
           label: 'Delete',
         },
+        {
+          value: 'edit',
+          label: 'Edit',
+        },
       ],
     });
 

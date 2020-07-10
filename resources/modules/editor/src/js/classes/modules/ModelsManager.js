@@ -54,6 +54,20 @@ class ModelsManager {
     model.subscribeToUpdates(callback);
     return model;
   }
+
+  /**
+   * Обновить названию и ИД модель данными
+   * @param {string} modelName
+   * @param {int} modelId
+   * @param {{}} data
+   * @return void
+   */
+  updateModelWithData(modelName, modelId, data){
+    if(! this.modelsStorage[`${modelName}::${modelId}`]) {
+      return;
+    }
+    this.modelsStorage[`${modelName}::${modelId}`].updateWithData(data);
+  }
 }
 const modelManager =  new ModelsManager();
 export default modelManager;
