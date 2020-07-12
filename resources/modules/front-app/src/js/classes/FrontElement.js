@@ -122,6 +122,14 @@ class FrontElement {
             }
           }
           break;
+          case 'edit':{
+            method = 'PUT';
+            let modelName = this.getModelName();
+            if(modelName){
+              this.addForm(formsManager.registerForm(this.getSettings('form_id'), modelName, method));
+            }
+          }
+          break;
         }
       }
       break;
@@ -265,7 +273,15 @@ class FrontElement {
     if(this.getName() !== 'input'){
       return null;
     }
-    return this.component.state.value;
+    let value = this.component.state.value;
+    /**
+     * Если значение динамическое и не менялось в виджете,
+     * то используем метод this.getContent для получения значения, а не динмического объекта
+     */
+    if(value.dynamic){
+      value = this.getContent('content_default_value')
+    }
+    return value;
   }
 
   /**
@@ -333,12 +349,15 @@ class FrontElement {
 
   /**
    * Получает данные для контента элемента
-   * Проверяет явлется ли свойство настроек динамическим контентом, если да берет это свойство из this.state.modelsData
+   * делегирует на this.component
    * @param {string} settingName
    * @return {*}
    */
   getContent(settingName){
-
+    if(this.component){
+      return this.component.getContent(settingName)
+    }
+    return'';
   }
 }
 

@@ -193,9 +193,13 @@ Route::group( ['prefix' => 'ajax'], function(){
 
   Route::get( 'models/page/{page_id}', 'Frontend\PageController@show' )->name( 'front.page.show' );
   Route::resource( 'routes', 'Frontend\RouteController' );
+  /**
+   * todo: реализовать в контроллерах моделей
+   */
   Route::get( 'models/{model_name}', 'Frontend\ModelsController@models' )->name( 'front.models.all' );
   Route::get( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@show' )->name( 'front.models.show' );
   Route::delete( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@delete' )->name( 'front.models.delete' );
+  Route::put( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@edit' )->name( 'front.models.edit' );
   Route::post( 'models/{model_name}', 'Frontend\ModelsController@create' )->name( 'front.models.create' );
 
 } );

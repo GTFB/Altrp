@@ -68,6 +68,16 @@ class AltrpModelUpdater {
   getData(){
     return this.data;
   }
+  /**
+   * Обновить модель данными
+   * @param {{}} data
+   * @return void
+   */
+  updateWithData(data){
+    this.data = {...data};
+    this.callSubscribers();
+  }
 }
+
 
 export default AltrpModelUpdater

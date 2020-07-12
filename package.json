@@ -18,7 +18,6 @@
     "run-all": "npm-run-all --parallel admin-start editor-start front-start"
   },
   "dependencies": {
-    "@loadable/component": "^5.13.1",
     "@tinymce/tinymce-react": "^3.6.0",
     "ace-builds": "^1.4.11",
     "bootstrap-switch-button-react": "^1.2.0",
@@ -26,8 +25,6 @@
     "dot-prop-immutable": "^2.1.0",
     "highlight.js": "^10.1.1",
     "immutability-helper": "^3.1.1",
-    "jodit-react": "^1.0.42",
-    "js-beautify": "^1.11.0",
     "query-string": "^6.13.1",
     "react": "^16.8.5",
     "react-ace": "^8.1.0",
@@ -71,6 +68,7 @@
     "babel-loader": "^8.0.2",
     "bootstrap": "^4.5.0",
     "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^6.0.3",
     "cross-env": "^5.1",
     "css-loader": "^1.0.0",
     "extract-text-webpack-plugin": "^3.0.2",

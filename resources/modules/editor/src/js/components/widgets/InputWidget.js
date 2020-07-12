@@ -28,26 +28,33 @@ class InputWidget extends Component {
   render(){
     let styles = {};
     let label = null;
-
-    let classLabel = ""
-    let styleLabel = {}
+    /**
+     * Если значение загрузилось  динамическое,
+     * то используем this.getContent для получение этого динамического значения
+     * */
+    let value = this.state.value;
+    if(value.dynamic){
+      value = this.getContent('content_default_value');
+    }
+    let classLabel = "";
+    let styleLabel = {};
     switch (this.state.settings.content_label_position_type) {
       case "top":
         styleLabel = {
             marginBottom: this.state.settings.label_style_spacing.size + this.state.settings.label_style_spacing.unit || 2 + "px"
-        }
-        classLabel = ""
+        };
+        classLabel = "";
         break;
       case "bottom":
         styleLabel = {
             marginTop: this.state.settings.label_style_spacing.size + this.state.settings.label_style_spacing.unit || 2 + "px"
-        }
+        };
         break;
       case "left":
         styleLabel = {
             marginRight: this.state.settings.label_style_spacing.size + this.state.settings.label_style_spacing.unit || 2 + "px"
-        }
-        classLabel = "altrp-field-label-container-left"
+        };
+        classLabel = "altrp-field-label-container-left";
         // this.label.current.classList.add("hello")
 
         break;
@@ -81,7 +88,9 @@ class InputWidget extends Component {
           required 
         }
       <input type={this.state.settings.content_type}
-             value={this.state.value}
+             // defaultValue={this.getContent('content_default_value')}
+             // value={this.getContent('content_default_value') || ''}
+             value={value || ''}
              autoComplete={autocomplete}
              placeholder={this.state.settings.content_placeholder}
              className={"altrp-field " + this.state.settings.position_css_classes}

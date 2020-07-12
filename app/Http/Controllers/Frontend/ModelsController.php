@@ -65,4 +65,20 @@ class ModelsController extends Controller
     DB::table( $model_name )->delete( $model_id );
     return response()->json( $res );
   }
+  /**
+   * Обраблотка запроса на редактирование модели по id
+   * @param string $model_name
+   * @param string $model_id
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function edit( $model_name, $model_id, Request $request ){
+    DB::table( $model_name )->where( 'id', $model_id )->update( $request->toArray() );
+
+
+
+    $res[$model_name] = (array)DB::table( $model_name )->where( 'id', $model_id )->get()->toArray()[0];
+    $res['success'] = true;
+    return response()->json( $res );
+  }
 }
