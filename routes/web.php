@@ -41,9 +41,14 @@ Route::group([
 Route::get( '/admin/editor', function (){
   return view( 'editor' );
 } )->middleware( 'auth' )->name('editor');
+
 Route::get( '/admin/editor-content', function (){
   return view( 'editor-content' );
 } )->middleware( 'auth' )->name('editor-content');
+
+Route::get( '/admin/editor-reports', function (){
+  return view( 'editor-reports' );
+} )->middleware( 'auth' )->name('editor-reports');
 
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
@@ -96,6 +101,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
 
     Route::resource( 'areas', 'Admin\AreasController' );
     Route::resource( 'templates', 'TemplateController' );
+    Route::resource( 'reports', 'ReportsController' );
     Route::resource( 'media', 'Admin\MediaController' );
     Route::resource( 'settings', 'Admin\SettingsController' );
 
