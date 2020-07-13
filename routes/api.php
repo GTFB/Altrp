@@ -54,6 +54,9 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::put('/tables/{table}', "Admin\TableController@update");
         Route::delete('/tables/{table}', "Admin\TableController@delete");*/
 
+        Route::get('/reports', 'ReportsController@index');
+        Route::post('/reports', 'ReportsController@store');
+
         // GeneratorController routes
         Route::post('/generators/{table}/model/create', 'Admin\GeneratorController@createModel');
         Route::post('/generators/{table}/controller/create', 'Admin\GeneratorController@createController');
@@ -117,5 +120,3 @@ Route::group(['prefix' => 'users'], function () {
     });*/
 
 });
-
-
