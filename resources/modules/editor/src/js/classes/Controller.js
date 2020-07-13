@@ -46,7 +46,9 @@ class Controller {
         rule.insertValue(value);
       });
       if (this.rules.length) {
-        currentElement.addStyles(this.getSettingName(), this.rules);
+
+        value ? currentElement.addStyles(this.getSettingName(), this.rules)
+            : currentElement.removeStyle(this.getSettingName());
       }
       store.dispatch(controllerValue(value, this.getSettingName()));
 

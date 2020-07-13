@@ -424,6 +424,15 @@ class BaseElement extends ControlStack{
   }
 
   /**
+   * @param {string} settingName
+   * @param {string} breakpoint
+   * */
+  removeStyle(settingName, breakpoint = CONSTANTS.DEFAULT_BREAKPOINT){
+    this.settings.styles[breakpoint][settingName] =  {};
+    this.updateStyles();
+  }
+
+  /**
    * @param {String} styles
    * */
   setStringStyles(styles){

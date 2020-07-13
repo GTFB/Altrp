@@ -22,13 +22,13 @@
       width: {{ get_altrp_setting( 'container_width', '1440' ) }}px;
     }
   </style>
+  <link rel="stylesheet" href="{{ asset( '/modules/front-app/front-app.css' ) . '?' . getCurrentVersion() }}" />
 
 </head>
 <body>
 <div id="front-app">
 
 </div>
-<link rel="stylesheet" href="{{ asset( '/modules/front-app/front-app.css' ) . '?' . getCurrentVersion() }}" />
 <script src="{{ altrp_asset( '/modules/front-app/front-app.js', 'http://localhost:3001/' ) }}" defer></script>
 </body>
 </html>
