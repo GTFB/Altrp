@@ -497,7 +497,7 @@ button{
 }
 .controllers-wrapper{
   display: none;
-  padding: 13px;
+  padding: 20px;
   flex-direction: column;
   border-bottom: 1px solid $border-gray;
 }
@@ -894,6 +894,9 @@ background-color: red;
   font-style: italic;
   color: #8E94AA;
   line-height: 1.4;
+  padding-left: 1px;
+  letter-spacing: -0.2px;
+  text-align: left;
   width: 240px;
 }
 .sketchPicker{

@@ -17,6 +17,9 @@ class ShadowController extends Component {
     this.inputHorUpdate = this.inputHorUpdate.bind(this);
     this.horChange = this.horChange.bind(this);
     this.verChange = this.verChange.bind(this);
+    this.spreadChange = this.spreadChange.bind(this);
+    this.inputSpreadUpdate = this.inputSpreadUpdate.bind(this);
+    this.type = this.type.bind(this);
     this.inputVerUpdate = this.inputVerUpdate.bind(this);
     let value = this.props.currentElement.getSettings(this.props.controlId);
     if(value === null && this.props.default){
@@ -43,7 +46,6 @@ class ShadowController extends Component {
     return {
     };
   }
-
   //начало color
   openShadow(){
     let shadowContainer = document.getElementById("shadowContainer")
@@ -80,7 +82,7 @@ class ShadowController extends Component {
     this.setState({
       active: !this.state.active
     })
-  }
+  };
   //конец color
   //начало blur
   inputBlurUpdate (e) {
@@ -88,7 +90,7 @@ class ShadowController extends Component {
       ...this.state.value,
       blur:e.target.value
     });
-  }
+  };
 
   blurChange(e) {
     this._changeValue({
@@ -104,7 +106,7 @@ class ShadowController extends Component {
       ...this.state.value,
       horizontal:e.target.value
     });
-  }
+  };
 
   horChange(e) {
     this._changeValue({
@@ -120,7 +122,7 @@ class ShadowController extends Component {
       ...this.state.value,
       vertical:e.target.value
     });
-  }
+  };
 
   verChange(e) {
     this._changeValue({
@@ -130,12 +132,46 @@ class ShadowController extends Component {
     // console.log(this.state.value)
   };
   //конец vertical displacement
+  //начало spread
+  inputSpreadUpdate(e) {
+    this._changeValue({
+      ...this.state.value,
+      spread:e.target.value
+    });
+  };
 
+  spreadChange(e) {
+    this._changeValue({
+      ...this.state.value,
+      spread:e.target.value
+    });
+  };
+  //конец spread
+  //начало select
+  type(e) {
+    this._changeValue({
+      ...this.state.value,
+      type:e.target.value,
+    });
+  }
+  //конец select
   render(){
     let colorPickedStyle = {
       backgroundColor: this.state.value.color
     };
-
+    let typeOptions = [
+      {
+        value: "",
+        label: "outline",
+        key: 0
+      },
+      {
+        value: "inset",
+        label: "inset",
+        key: 1
+      }
+    ]
+    console.log(this.state.value)
     if(this.state.show === false) {
       return '';
     }
@@ -234,6 +270,36 @@ class ShadowController extends Component {
               </div>
             </div>
             {/* конец slider vertical displacement */}
+            {/* начало slider spread */}
+            <div className="control-slider-header">
+              <div className="control-slider-label">
+                spread
+              </div>
+            </div>
+            <div className="control-slider-input-wrapper">
+              <input type="range"
+                     min={-100}
+                     max={100}
+                     className="control-slider" value={this.state.value.spread ? this.state.value.spread : 0} onChange={this.inputSpreadUpdate}
+                     name="spread"/>
+              <div className="control-slider-input-box">
+                <input className="control-slider-input" type="number"
+                       min={-100}
+                       max={100}
+                       value={this.state.value.spread ? this.state.value.spread : 0} name="spreadNumber" onChange={this.spreadChange}/>
+              </div>
+            </div>
+            {/* конец slider vertical displacement */}
+            <div className="controller-container controller-container_select controller-container_select_typographic">
+              <div className="controller-container__label control-select__label">
+                position
+              </div>
+              <div className="control-container_select-wrapper">
+                <select name="weightSelect" className="control-select control-field" value={this.state.value.type ? this.state.value.type: ""} onChange={this.type}>
+                  {typeOptions.map(option => {return <option value={option.value} key={option.key}>{option.label}</option>})}
+                </select>
+              </div>
+            </div>
           </div>
         </div>
       </div>

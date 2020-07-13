@@ -137,10 +137,6 @@ class DummyClass extends ApiController
             return response()->json('Column not exists', 400, [], JSON_UNESCAPED_UNICODE);
         }
 
-        if (is_numeric(${{crudNameSingular}}->$column) !== is_numeric(($request->column_value))) {
-            return response()->json("Value types don't match", 400, [], JSON_UNESCAPED_UNICODE);
-        }
-
         ${{crudNameSingular}}->$column = $request->column_value;
 
         if (${{crudNameSingular}}->save()) {

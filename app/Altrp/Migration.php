@@ -68,6 +68,7 @@ class Migration extends Model
         
         //4. Запустить миграцию
         if(!$this->migrationRun()) {
+            
             $this->clearMigration($file);
             throw new AltrpMigrationRunExceptions("Failed to run migration file");
         }

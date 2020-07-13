@@ -31,6 +31,15 @@ import plusIcon from '../../../svgs/plus.svg';
 import previewIcon from '../../../svgs/preview.svg';
 import settingsIcon from '../../../svgs/settings.svg';
 import styleIcon from '../../../svgs/style.svg';
+import blockBottomIcon from '../../../svgs/block_align_bottom.svg';
+import blockHorizontallyIcon from '../../../svgs/block_align_horizontally.svg';
+import blockLeftIcon from '../../../svgs/block_align_left.svg';
+import blockRightIcon from '../../../svgs/block_align_right.svg';
+import blockTopIcon from '../../../svgs/block_align_top.svg';
+import blockVerticallyIcon from '../../../svgs/block_align_vertically.svg';
+import blockDHorizontallyIcon from '../../../svgs/block_distribute_horizontally.svg';
+import blockDVerticallyIcon from '../../../svgs/block_distribute_vertically.svg';
+
 
 class IconsManager {
   constructor(){
@@ -69,6 +78,14 @@ class IconsManager {
     this.icons.push(new Icon('preview', previewIcon));
     this.icons.push(new Icon('settings', settingsIcon));
     this.icons.push(new Icon('style', styleIcon));
+    this.icons.push(new Icon('block_bottom', blockBottomIcon));
+    this.icons.push(new Icon('block_horiz', blockHorizontallyIcon));
+    this.icons.push(new Icon('block_left', blockLeftIcon));
+    this.icons.push(new Icon('block_top', blockTopIcon));
+    this.icons.push(new Icon('block_right', blockRightIcon));
+    this.icons.push(new Icon('block_veric', blockVerticallyIcon));
+    this.icons.push(new Icon('block_d_horiz', blockDHorizontallyIcon));
+    this.icons.push(new Icon('block_d_vertic', blockDVerticallyIcon));
   }
   /**
    * @param {string} iconName

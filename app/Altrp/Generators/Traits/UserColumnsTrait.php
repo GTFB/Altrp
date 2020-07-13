@@ -16,10 +16,10 @@ trait UserColumnsTrait
         static::creating(function($model) {
             self::setAuthId($model);
         });
-
+        /*
         static::updating(function($model) {
             self::setAuthId($model);
-        });
+        });*/
     }
 
     /**

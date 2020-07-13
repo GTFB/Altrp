@@ -28,7 +28,7 @@ class GeneratorController extends ApiController
     public function createModel(Request $request)
     {
         $id = $request->table;
-
+        
         $generator = new ModelGenerator(
             array_merge($request->all(), ['table_id' => $id])
         );
