@@ -44,7 +44,13 @@ class DummyClass extends Model
     {{customProperties}}
     // CUSTOM_PROPERTIES - IMPORTANT: Don't remove this comment! Write your properties between these comments.
 
+    // ACCESSORS - IMPORTANT: Don't remove this comment!
+    {{accessors}}
+    // ACCESSORS - IMPORTANT: Don't remove this comment!
+
+    // RELATIONSHIPS
     {{relationships}}
+    // RELATIONSHIPS
 
     // CUSTOM_METHODS - IMPORTANT: Don't remove this comment! Write your methods between these comments.
     {{customMethods}}

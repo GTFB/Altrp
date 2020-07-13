@@ -54,6 +54,11 @@ class Model extends EloquentModel
         return $this->belongsTo(Table::class, 'table_id');
     }
 
+    public function altrp_accessors()
+    {
+        return $this->hasMany(Accessor::class);
+    }
+
     public function getTimeStampsAttribute($value) {
         return (bool) $value;
     }

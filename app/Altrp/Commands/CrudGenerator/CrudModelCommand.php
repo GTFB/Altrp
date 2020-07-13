@@ -15,13 +15,14 @@ class CrudModelCommand extends GeneratorCommand
                             {name : The name of the model.}
                             {--table= : The name of the table.}
                             {--fillable= : The names of the fillable columns.}
-                            {--relationships= : The relationships for the model}
+                            {--relationships= : The relationships for the model.}
                             {--pk=id : The name of the primary key.}
                             {--soft-deletes=no : Include soft deletes fields.}
                             {--timestamps= : Include timestamps fields.}
                             {--created-at= : The name of the created-at column.}
                             {--updated-at= : The name of the updated-at column.}
                             {--user-columns= : The names of the user columns.}
+                            {--accessors= : The accessors for the model.}
                             {--custom-namespaces= : Custom namespaces of the model.}
                             {--custom-traits= : Custom traits of the model.}
                             {--custom-properties= : Custom props of the model.}
@@ -85,6 +86,7 @@ class CrudModelCommand extends GeneratorCommand
         $createdAt = $this->option('created-at');
         $updatedAt = $this->option('updated-at');
         $userColumns = $this->option('user-columns');
+        $accessors = $this->option('accessors') ?? '';
         $customNamespaces = $this->option('custom-namespaces') ?? '';
         $customTraits = $this->option('custom-traits') ?? '';
         $customProperties = $this->option('custom-properties') ?? '';
@@ -145,6 +147,7 @@ EOD;
             ->replaceCreatedAt($stub, $createdAt)
             ->replaceUpdatedAt($stub, $updatedAt)
             ->replaceUserColumns($stub, $userColumns)
+            ->replaceAccessors($stub, $accessors)
             ->replaceCustomNamespaces($stub, $customNamespaces)
             ->replaceCustomTraits($stub, $customTraits)
             ->replaceCustomProperties($stub, $customProperties)
@@ -395,4 +398,20 @@ EOD;
         $stub = str_replace('{{userColumns}}', $userColumns, $stub);
         return $this;
     }
+
+    /**
+     * Replace the accessors for the given stub.
+     *
+     * @param $stub
+     * @param $accessors
+     *
+     * @return $this
+     */
+    protected function replaceAccessors(&$stub, $accessors)
+    {
+        $stub = str_replace('{{accessors}}', $accessors, $stub);
+        return $this;
+    }
+
+
 }

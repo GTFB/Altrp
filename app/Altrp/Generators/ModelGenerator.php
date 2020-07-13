@@ -187,6 +187,7 @@ class ModelGenerator extends AppGenerator
                 '--updated-at' => $updatedAt,
                 '--relationships' => "{$relationships}",
                 '--user-columns' => "[{$userColumns}]",
+                '--accessors' => $this->getCustomCodeBlock($customCode,'accessors'),
                 '--custom-namespaces' => $this->getCustomCodeBlock($customCode,'custom_namespaces'),
                 '--custom-traits' => $this->getCustomCodeBlock($customCode,'custom_traits'),
                 '--custom-properties' => $this->getCustomCodeBlock($customCode,'custom_properties'),

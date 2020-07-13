@@ -68,6 +68,22 @@ class Handler extends ExceptionHandler
             return $exception->render($request);
         }
 
+        if ($exception instanceof AccessorNotFoundException) {
+            return $exception->render($request);
+        }
+
+        if ($exception instanceof AccessorNotWrittenException) {
+            return $exception->render($request);
+        }
+
+        if ($exception instanceof ColumnNotFoundException) {
+            return $exception->render($request);
+        }
+
+        if ($exception instanceof ParseFormulaException) {
+            return $exception->render($request);
+        }
+
         if ($exception instanceof CommandFailedException) {
             return $exception->render($request);
         }
