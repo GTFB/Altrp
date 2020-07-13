@@ -3,6 +3,7 @@
 namespace App\Altrp\Generators\Migration;
 
 use App\Exceptions\AltrpMigrationIncorrectFieldTypeException;
+use App\Altrp\Generators\Migration\IMigrationField;
 /**
  * Description of Field
  *
@@ -30,9 +31,9 @@ class MigrationField{
         $this->column = $column;
         $this->old_column = $old_column;
         
-        if(!$this->checkColumnType()) {
+        /*if(!$this->checkColumnType()) {
             throw new AltrpMigrationIncorrectFieldTypeException("Incorrect field type ".$this->column->type." expected ".$this->type, 500);
-        }
+        }*/
     }
     
     /**
@@ -40,6 +41,11 @@ class MigrationField{
      * @return string
      */
     public function up() {
+        
+        if($this->isDeleteColumn()) {
+            return $this->delete();
+        }
+        
         if(!$this->isNewColumn()) {
             return $this->update();
         }
@@ -60,10 +66,8 @@ class MigrationField{
      */
     public function create() {
         
-        $modifiers = $this->getColumnModifiers();
-        $index_modifiers = $this->getColumnIndexModifiers();
-        
-        $this->text = "\$table->".$this->column->type."('".$this->column->name."')".$modifiers.$index_modifiers;
+        $this->text = $this->setText();
+        $this->addTabIndent();
         
         return $this->text;
     }
@@ -73,7 +77,12 @@ class MigrationField{
      * @return string
      */
     public function update() {
-        $this->text = $this->create()."->change()";
+        
+        if(!$this->checkAllAttributes()) {
+            $this->text = $this->setText()."->change()";
+            $this->addTabIndent();
+        }
+        
         return $this->text;
     }
     
@@ -82,8 +91,22 @@ class MigrationField{
      * @return string
      */
     public function delete() {
-        $this->text = "\$table->dropColumn('".$this->column->name."')";
+        $this->text = "\$table->dropColumn('".$this->old_column->name."')";
+        $this->addTabIndent();
         return $this->text;
+    }
+    
+    /**
+     * Формируем строку для создания или обновления колонки
+     * @return type
+     */
+    protected function setText() {
+        $modifiers = $this->getColumnModifiers();
+        $index_modifiers = $this->getColumnIndexModifiers();
+        
+        $text = "\$table->".$this->column->type."('".$this->column->name."')".$modifiers.$index_modifiers;
+        
+        return $text;
     }
     
     /**
@@ -105,6 +128,15 @@ class MigrationField{
     }
     
     /**
+     * Является ли поле удаленной колонкой
+     * @return boolean
+     */
+    protected function isDeleteColumn() {
+        if(!$this->column && $this->old_column) return true;
+        else return false;
+    }
+    
+    /**
      * Подходит ли колонка по типу
      * @return boolean
      */
@@ -121,8 +153,16 @@ class MigrationField{
         
         $default = "";
         
-        if($this->column->default && $this->column->default !== $this->old_column->default) {
+        if($this->column->default && !$this->checkAttribute("default")) {
             $default = "->default('".$this->column->default."')";
+        }
+        
+        //Если в default записан NULL, то делаем колонку nullable
+        if($this->column->default == "NULL" && $this->getNullable() !== "") {
+            $default = "";
+        }
+        else if($this->column->default == "NULL" && $this->getNullable() === "" && !$this->checkAttribute("default")) {
+            $default = "->nullable()";
         }
         
         return $default;
@@ -136,7 +176,7 @@ class MigrationField{
         
         $unique = "";
         
-        if($this->column->unique && $this->column->unique !== $this->old_column->unique) {
+        if($this->column->unique && !$this->checkAttribute("unique")) {
             $unique = "->unique()";
         }
         
@@ -150,8 +190,9 @@ class MigrationField{
     protected function getNullable() {
         
         $nullable = "";
-        
-        if($this->column->null && $this->column->null !== $this->old_column->null) {
+        //dd($this->checkAttribute("null"));
+        if($this->column->null && !$this->checkAttribute("null")) {
+            
             $nullable = "->nullable()";
         }
         
@@ -176,5 +217,39 @@ class MigrationField{
     protected function getColumnIndexModifiers() {
         $text = $this->getUnique();
         return $text;
+    }
+    
+    /**
+     * Сравниваем атрибут у колонок
+     *
+     * @return string
+     */
+    protected function checkAttribute($attribute)
+    {
+        if($this->isNewColumn()) return false;
+        
+        if($this->column->{$attribute} == $this->old_column->{$attribute}) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Сравниваем атрибуты у колонок
+     *
+     * @return string
+     */
+    protected function checkAllAttributes()
+    {
+        if($this->isNewColumn()) return false;
+        
+        foreach($this->column->getAttributes() as $key => $value) {
+            if($value != $this->old_column->{$key}) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 }

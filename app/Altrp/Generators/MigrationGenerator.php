@@ -1,11 +1,4 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace App\Altrp\Generators;
 
 use App\Exceptions\TableNotFoundException;
@@ -16,6 +9,9 @@ use App\Altrp\Migration;
 
 use Illuminate\Support\Str;
 use App\Altrp\Generators\Migration\MigrationFieldFactory;
+use App\Altrp\Generators\Migration\MigrationKey;
+use File;
+
 
 /**
  * Description of MigrationGenerator
@@ -61,29 +57,32 @@ class MigrationGenerator extends AppGenerator{
     public $foreign_keys;
     
     /**
-     * Знак табуляции
-     * @var string
-     */
-    protected $tabIndent = '    ';
-    
-    /**
      * MigrationGenerator constructor.
      * @param $data
      * 
      */
     public function __construct($data)
     {
-        parent::__construct($data);
+        if($data instanceof Migration) {
+            parent::__construct($data->getAttributes());
+            $this->table = $this->getTable();
+            $this->current_migration = $data;
+        }
+        else {
+            parent::__construct($data);
+            $this->table = $this->getTable();
+            $this->current_migration = $this->saveCurrentMigration();
+        }
         
-        $this->table = $this->getTable();
-        $this->current_migration = $this->saveCurrentMigration();
         $this->previous_migration = $this->getPreviousMigration();
-        
     }
     
+    /**
+     * Генерируем файл миграции
+     * @return boolean|string
+     */
     public function generate()
     {
-        
         $className = Str::studly($this->current_migration->name);
         
         //1. Получаем шаблон
@@ -91,18 +90,15 @@ class MigrationGenerator extends AppGenerator{
         
         //2. Получаем переменные
         $fields = $this->getFields();
-        
-        dd($fields);
-        /*$foreign_keys = $this->getForeignKeys();
-        
+        $foreign_keys = $this->getForeignKeys();
         
         //3. заносим переменные
         $template = str_replace('{{fields}}', $fields, $template);
         $template = str_replace('{{className}}', $className, $template);
-        $template = str_replace('{{table}}', $this->table, $template);
+        $template = str_replace('{{table}}', $this->table->name, $template);
         $template = str_replace('{{foreign_keys}}', $foreign_keys, $template);
        
-        if($this->getMigrationType() === "update") {
+        if(!$this->isCreateMigration()) {
             $delete_fields = $this->getDeleteFields();
             $template = str_replace('{{delete_fields}}', $delete_fields, $template);
             $delete_keys = $this->getDeleteKeys();
@@ -115,15 +111,17 @@ class MigrationGenerator extends AppGenerator{
         
         //5. создаем файл
         $d = file_put_contents($full_path, $template);
-        //dd($d);
         
         if($d !== false) return $full_path;
-        else return false;*/
+        else return false;
         
     }
     
     
-    
+    /**
+     * Получаем строку для добавления, обновления колонок
+     * @return string
+     */
     public function getFields()
     {
         $fields = '';
@@ -142,9 +140,89 @@ class MigrationGenerator extends AppGenerator{
     }
     
     /**
-     * Ищем колонку в предыдущей миграции
+     * Получаем строку для добавления, обновления внешних ключей
      *
      * @return string
+     */
+    public function getForeignKeys()
+    {
+        $keys = '';
+        
+        foreach ($this->current_migration->full_data->keys as $value) {
+            
+            $old_key = $this->findKey($value);
+            $key = new MigrationKey($value, $old_key);
+            
+            $keys .= $key->up();
+        }
+        
+        return $keys;
+    }
+    
+    /**
+     * Получаем строку для удаления внешних ключей
+     *
+     * @return string
+     */
+    protected function getDeleteFields()
+    {
+        
+        if($this->isCreateMigration()) {
+            return "";
+        }
+        
+        $fields = '';
+        $factory = new MigrationFieldFactory();
+        
+        foreach ($this->previous_migration->full_data->columns as $value) {
+            
+            $res = $this->findColumn($value, $this->current_migration->full_data->columns);
+            
+            if($res === false) {
+                
+                $obj = $factory->getOldField($value);
+                $fields .= $obj->up();
+            }
+            
+        }
+        
+        return $fields;
+        
+    }
+    
+    /**
+     * Получаем внешние ключи для удаления
+     *
+     * @return App\Altrp\Key | boolean
+     */
+    protected function getDeleteKeys()
+    {
+        
+        if($this->isCreateMigration()) {
+            return "";
+        }
+        
+        $keys = '';
+        
+        foreach ($this->previous_migration->full_data->keys as $value) {
+            
+            $res = $this->findKey($value, $this->current_migration->full_data->keys);
+            
+            if($res === false) {
+                $key = new MigrationKey($res, $value);
+                $keys .= $key->up();
+            }
+            
+        }
+        
+        return $keys;
+        
+    }
+    
+    /**
+     * Ищем колонку в предыдущей миграции
+     *
+     * @return App\Altrp\Column | boolean
      */
     protected function findColumn($column, $array = null)
     {
@@ -158,6 +236,35 @@ class MigrationGenerator extends AppGenerator{
         
         if($key !== false) {
             return $this->previous_migration->full_data->columns[$key];
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Ищем ключ в предыдущей миграции
+     *
+     * @return App\Altrp\Key | boolean
+     */
+    protected function findKey($key, $array = null)
+    {
+        if($this->isCreateMigration()) return false;
+        
+        if(is_null($array)) {
+            $array = $this->previous_migration->full_data->keys;
+        }
+        
+        $old_keys = array_filter(
+            $array,
+            function ($e) use ($key) {
+                return $e->target_table == $key->target_table && 
+                        $e->target_column == $key->target_column &&
+                        $e->source_column == $key->source_column;
+            }
+        );
+        
+        if(count($old_keys) > 0) {
+            return $old_keys[0];
         }
         
         return false;
@@ -228,8 +335,6 @@ class MigrationGenerator extends AppGenerator{
         return false;
     }
     
-    
-    
     /**
      * Получаем путь до папки миграций
      *
@@ -276,8 +381,4 @@ class MigrationGenerator extends AppGenerator{
             return app_path().'/Altrp/Commands/stubs/migrations/update_migration.stub';
         }
     }
-    
-    
-    
-
 }

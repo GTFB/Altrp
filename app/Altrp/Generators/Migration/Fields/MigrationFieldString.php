@@ -2,14 +2,13 @@
 namespace App\Altrp\Generators\Migration\Fields;
 
 use App\Altrp\Generators\Migration\MigrationField;
-use App\Altrp\Generators\Migration\MigrationFieldInterface;
+use App\Altrp\Generators\Migration\IMigrationField;
 
 /**
- * Description of newPHPClass
+ * Поле с типом String
  *
- * @author aco
  */
-class MigrationFieldString  extends MigrationField implements MigrationFieldInterface {
+class MigrationFieldString  extends MigrationField implements IMigrationField {
     
     protected $length = 191;
     
@@ -18,22 +17,15 @@ class MigrationFieldString  extends MigrationField implements MigrationFieldInte
         parent::__construct($column, $old_column);
     }
     
-    public function create() {
+    protected function setText() {
         
         $length = $this->getLength();
+        $modifiers = $this->getColumnModifiers();
+        $index_modifiers = $this->getColumnIndexModifiers();
         
-        $this->text = "\$table->string('".$this->column->name."', ".$length.")";
-        $this->text .= ";\n".$this->tabIndent.$this->tabIndent.$this->tabIndent;
-        return $this->text;
-    }
-    
-    public function update() {
+        $text = "\$table->string('".$this->column->name."', ".$length.")".$modifiers.$index_modifiers;
         
-        
-        
-        $this->text = "\$table->bigIncrements('".$this->column->name."')->change()";
-        $this->text .= ";\n".$this->tabIndent.$this->tabIndent.$this->tabIndent;
-        return $this->text;
+        return $text;
     }
     
     /**
@@ -42,8 +34,8 @@ class MigrationFieldString  extends MigrationField implements MigrationFieldInte
      */
     public function getLength() {
         
-        if(isset($this->column->length) && !empty($this->column->length)) {
-            return $this->column->length;
+        if(isset($this->column->size) && !empty($this->column->size)) {
+            return $this->column->size;
         }
         
         return $this->length;

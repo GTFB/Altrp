@@ -7,7 +7,7 @@ use App\Altrp\Column;
 use App\Altrp\Relationship;
 use App\Altrp\Key;
 
-use App\Altrp\Commands\MigrationBuilder;
+use App\Altrp\Generators\MigrationGenerator;
 
 
 use App\Exceptions\AltrpMigrationWriteColumnsExceptions;
@@ -36,8 +36,8 @@ class Migration extends Model
      * Создание файла миграции
      */
     public function createFile() {
-        $migration = new MigrationBuilder($this->table()->first()->name, $this);
-        return $migration->build();
+        $migration = new MigrationGenerator($this);
+        return $migration->generate();
     }
     
     /**
@@ -190,6 +190,13 @@ class Migration extends Model
             $column->fromObject($value);
             
             $value = $column;
+        }
+        
+        foreach ($data->keys as &$value) {
+            $key = new Key();
+            $key->fromObject($value);
+            
+            $value = $key;
         }
         
         //$this->attributes['full'] = $data;

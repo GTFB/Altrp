@@ -10,6 +10,7 @@ namespace App\Altrp\Generators\Migration;
 
 use App\Altrp\Generators\Migration\Fields\MigrationFieldId;
 use App\Altrp\Generators\Migration\Fields\MigrationFieldString;
+use App\Altrp\Generators\Migration\IMigrationField;
 /**
  * Description of MigrationFieldFactory
  *
@@ -18,16 +19,16 @@ use App\Altrp\Generators\Migration\Fields\MigrationFieldString;
 class MigrationFieldFactory {
     
     protected $column_types = [
-        'id' => 'MigrationFieldId',
-        'string' => 'MigrationFieldString',
+        'id' => 'App\Altrp\Generators\Migration\Fields\MigrationFieldId',
+        'string' => 'App\Altrp\Generators\Migration\Fields\MigrationFieldString',
+        'foreignId' => 'App\Altrp\Generators\Migration\Fields\MigrationFieldForeignId',
+        'boolean' => 'App\Altrp\Generators\Migration\Fields\MigrationFieldBoolean',
+        'date' => 'App\Altrp\Generators\Migration\Fields\MigrationFieldDate',
+        'integer' => 'App\Altrp\Generators\Migration\Fields\MigrationFieldInteger',
         
         /*
-        'foreignId' => 'foreignId',
-        'boolean' => 'boolean',
         'char' => 'char',
-        'date' => 'date',
         'datetime' => 'dateTime',
-        'integer' => 'integer',
         'mediumtext' => 'mediumText',
         'longtext' => 'longText',
         
@@ -39,13 +40,21 @@ class MigrationFieldFactory {
     
     public function getField($column, $oldcolumn = null) {
         
-        $className = $this->column_types[$column->type];
-        
-        if(!$className) {
-            throw new Exception("asd");
+        if(!array_key_exists($column->type, $this->column_types)) {
+            return new MigrationField($column, $oldcolumn);
         }
         
+        $className = $this->column_types[$column->type];
         return new $className($column, $oldcolumn);
     }
     
+    public function getOldField($oldcolumn, $column = null) {
+        
+        if(!array_key_exists($oldcolumn->type, $this->column_types)) {
+            return new MigrationField($column, $oldcolumn);
+        }
+        
+        $className = $this->column_types[$oldcolumn->type];
+        return new $className($column, $oldcolumn);
+    }
 }

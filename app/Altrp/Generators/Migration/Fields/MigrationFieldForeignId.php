@@ -5,18 +5,22 @@ use App\Altrp\Generators\Migration\MigrationField;
 use App\Altrp\Generators\Migration\IMigrationField;
 
 /**
- * Поле с типом ID 
+ * Поле с типом ForeignID 
  *
  */
-class MigrationFieldId extends MigrationField implements IMigrationField{
+class MigrationFieldForeignId extends MigrationField implements IMigrationField{
     
     public function __construct($column, $old_column) {
-        $this->type = "id";
+        $this->type = "foreignId";
         parent::__construct($column, $old_column);
     }
     
     protected function setText() {
-        $text = "\$table->bigIncrements('".$this->column->name."')";
+        
+        $modifiers = $this->getColumnModifiers();
+        
+        $text = "\$table->unsignedBigInteger('".$this->column->name."')".$modifiers;
         return $text;
     }
+    
 }
