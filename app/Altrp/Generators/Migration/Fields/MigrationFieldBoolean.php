@@ -42,6 +42,8 @@ class MigrationFieldBoolean  extends MigrationField implements IMigrationField {
             throw new AltrpMigrationFieldIncorrectDefaultException("Incorrect default value for boolean field", 500);
         }
         
+        $this->column->default = filter_var($this->column->default, FILTER_VALIDATE_BOOLEAN);
+         
         return parent::getDefault();
     }
     
@@ -55,7 +57,7 @@ class MigrationFieldBoolean  extends MigrationField implements IMigrationField {
         
         if($this->column->default == "NULL") return true;
         
-        if(is_bool($this->column->default)) return true;
+        if(is_bool(filter_var($this->column->default, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE))) return true;
         
         return false;
     }

@@ -153,7 +153,7 @@ class MigrationField{
         
         $default = "";
         
-        if($this->column->default && !$this->checkAttribute("default")) {
+        if(isset($this->column->default) && !$this->checkAttribute("default")) {
             $default = "->default('".$this->column->default."')";
         }
         

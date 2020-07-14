@@ -28,14 +28,14 @@ class MigrationFieldFactory {
         'text' => 'App\Altrp\Generators\Migration\Fields\MigrationFieldText',
         'datetime' => 'App\Altrp\Generators\Migration\Fields\MigrationFieldDateTime',
         'decimal' => 'App\Altrp\Generators\Migration\Fields\MigrationFieldDecimal',
-        
+        'longtext' => 'App\Altrp\Generators\Migration\Fields\MigrationFieldLongText',
+        'timestamps' => 'App\Altrp\Generators\Migration\Fields\MigrationFieldTimestamps',
         
         
         
         /*
         'char' => 'char',
         'mediumtext' => 'mediumText',
-        'longtext' => 'longText',
         
         'bigint' => 'bigInteger',*/
     ];

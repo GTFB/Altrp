@@ -21,16 +21,14 @@ class AddMigrationPage extends Component{
             {id: "id",name: "Identifier",fields:[]},
             {id: "foreignId",name: "Foreign Id",fields:["nullable","default"]},
             {id: "boolean",name: "Boolean",fields:["nullable","default"]},
-            {id: "char",name: "Char",fields:["nullable","default","size","unique"]},
             {id: "date",name: "Date",fields:["nullable","default","size","unique","current"]},
             {id: "datetime",name: "Datetime",fields:["nullable","default","size","unique","current"]},
+            {id: "decimal",name: "Decimal",fields:["nullable","default","size","places"]},
             {id: "integer",name: "Integer",fields:["nullable","default"]},
-            {id: "mediumtext",name: "Medium Text",fields:["nullable","default","size","unique"]},
-            {id: "longtext",name: "Long Text",fields:["nullable","default","size","unique"]},
+            {id: "longtext",name: "Long Text",fields:["nullable","default","unique"]},
             {id: "string",name: "String",fields:["nullable","default","size","unique"]},
-            {id: "text",name: "Text",fields:["nullable","default","size","unique"]},
-            {id: "bigint",name: "Big Integer"},
-            {id: "decimal",name: "Decimal",fields:["nullable","default","size","digits"]},
+            {id: "text",name: "Text",fields:["nullable","default","unique"]},
+            {id: "timestamps",name: "Timestamps",fields:["size"]},
         ];
         
         //Значения колонки по умолчанию
@@ -41,6 +39,7 @@ class AddMigrationPage extends Component{
             description: '',
             type: "string",
             size: 191,
+            places: 0,
             default: "",
             null: false,
             unique: false,
@@ -525,6 +524,12 @@ class AddMigrationPage extends Component{
                             <label className='form-label'>
                                 size
                                 <input className='form__input' type="text" name="size"  value={this.state.column.size} onChange={(e) => {this.onChangeColumn(e)}}/>
+                            </label>
+                        </div> : null}
+                        {this.isShowField("places") ? <div>
+                            <label className='form-label'>
+                                places
+                                <input className='form__input' type="text" name="places"  value={this.state.column.places} onChange={(e) => {this.onChangeColumn(e)}}/>
                             </label>
                         </div> : null}
                         {this.isShowField("default") ? <div>

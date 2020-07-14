@@ -166,9 +166,9 @@ class Migration extends Model
         Column::where('altrp_migration_id', $this->id)->delete();
         Key::where('altrp_migration_id', $this->id)->delete();
         
-        if(!is_null($file_path)) {
+        /*if(!is_null($file_path)) {
             unlink($file_path);
-        }
+        }*/
         
         return $this->delete();
         

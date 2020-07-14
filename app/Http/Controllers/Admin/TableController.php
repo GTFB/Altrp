@@ -154,6 +154,36 @@ class TableController extends ApiController
     function insertMigration(ApiRequest $request) {
         
         $id = $request->table;
+        
+        $table = Table::find($id);
+        
+        if(!$table) {
+            return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
+        }
+        
+        $request->validate([
+            "name" => ["string", "required"]
+        ]);
+        
+        $migration = new Migration();
+        $migration->name = $request->name;
+        $migration->file_path = "";
+        $migration->status = 1;
+        $migration->data = $request->data;
+        $migration->user_id = auth()->user()->id;
+        $migration->table_id = $table->id;
+        
+        if(!$migration->save()){
+            return response()->json('Ошибка генерации', 404, [], JSON_UNESCAPED_UNICODE);
+        }
+        
+        if($migration->run()) {
+            return response()->json('Успешно сгенерировано', 200, [], JSON_UNESCAPED_UNICODE);
+        }
+        
+        return response()->json('Ошибка генерации', 404, [], JSON_UNESCAPED_UNICODE);
+        
+        /*$id = $request->table;
         $table = Table::find($id);
         
         if(!$table) {
@@ -176,7 +206,7 @@ class TableController extends ApiController
             return response()->json($migration->run(), 200, [],JSON_UNESCAPED_UNICODE);
         }
         
-        return response()->json(trans("responses.dberror"), 400, [],JSON_UNESCAPED_UNICODE);
+        return response()->json(trans("responses.dberror"), 400, [],JSON_UNESCAPED_UNICODE);*/
         
     }
     

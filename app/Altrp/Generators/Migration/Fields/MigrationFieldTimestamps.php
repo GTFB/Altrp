@@ -5,15 +5,15 @@ use App\Altrp\Generators\Migration\MigrationField;
 use App\Altrp\Generators\Migration\IMigrationField;
 
 /**
- * Поле с типом DateTime
+ * Поле с типом Timestamps
  *
  */
-class MigrationFieldDateTime  extends MigrationField implements IMigrationField {
+class MigrationFieldTimestamps  extends MigrationField implements IMigrationField {
     
     protected $precision = 0;
     
     public function __construct($column, $old_column) {
-        $this->type = "datetime";
+        $this->type = "timestamps";
         parent::__construct($column, $old_column);
     }
     
@@ -23,7 +23,7 @@ class MigrationFieldDateTime  extends MigrationField implements IMigrationField 
         $modifiers = $this->getColumnModifiers();
         $index_modifiers = $this->getColumnIndexModifiers();
         
-        $text = "\$table->dateTime('".$this->column->name."', ".$precision.")".$modifiers.$index_modifiers;
+        $text = "\$table->timestamps('".$this->column->name."', ".$precision.")".$modifiers.$index_modifiers;
         
         return $text;
     }

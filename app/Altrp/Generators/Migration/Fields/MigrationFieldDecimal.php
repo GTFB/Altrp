@@ -55,4 +55,34 @@ class MigrationFieldDecimal  extends MigrationField implements IMigrationField {
         
         return $this->places;
     }
+    
+    /**
+     * Переопределяем метод получения значение default
+     * @return string
+     */
+    protected function getDefault() {
+        
+        if(!$this->checkDefault()) {
+            throw new AltrpMigrationFieldIncorrectDefaultException("Incorrect default value for integer field", 500);
+        }
+        
+        $this->column->default = (float) $this->column->default;
+        
+        return parent::getDefault();
+    }
+    
+    /**
+     * Проверяем является ли значение по умолчанию подходящим
+     * @return boolean
+     */
+    protected function checkDefault() {
+        
+        $options = [
+            "decimal" => $this->getPlaces(), 
+            "max_range" => $this->getTotal()
+        ];
+        
+        if ( filter_var($this->column->default, FILTER_VALIDATE_FLOAT, $options)) return true;
+        return false;
+    }
 }

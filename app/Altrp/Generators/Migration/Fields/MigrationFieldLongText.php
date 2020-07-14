@@ -5,13 +5,13 @@ use App\Altrp\Generators\Migration\MigrationField;
 use App\Altrp\Generators\Migration\IMigrationField;
 
 /**
- * Поле с типом Text
+ * Поле с типом LongText
  *
  */
-class MigrationFieldText  extends MigrationField implements IMigrationField {
+class MigrationFieldLongText  extends MigrationField implements IMigrationField {
     
     public function __construct($column, $old_column) {
-        $this->type = "text";
+        $this->type = "longtext";
         parent::__construct($column, $old_column);
     }
     
@@ -20,7 +20,7 @@ class MigrationFieldText  extends MigrationField implements IMigrationField {
         $modifiers = $this->getColumnModifiers();
         $index_modifiers = $this->getColumnIndexModifiers();
         
-        $text = "\$table->text('".$this->column->name."')".$modifiers.$index_modifiers;
+        $text = "\$table->longText('".$this->column->name."')".$modifiers.$index_modifiers;
         
         return $text;
     }
