@@ -293,7 +293,7 @@ class TableController extends ApiController
      * @param $modelId
      * @return \Illuminate\Http\JsonResponse
      */
-    function getModel(ApiRequest $request, $tableId, $modelId) {
+    function getModel(ApiRequest $request, $tableId) {
 
         $model = Model::where("table_id", $tableId)->with('table.relationships')->first();
 
