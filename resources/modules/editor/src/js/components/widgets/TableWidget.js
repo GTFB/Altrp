@@ -14,7 +14,7 @@ class TableWidget extends Component {
       window.elementDecorator(this);
     }
   }
-  componentDidMount(){
+  _componentDidMount(){
     import('../altrp-table/altrp-table').then(res=>{
       this.setState(state=>({...state,TableComponent:res.default}))
     })
@@ -29,7 +29,6 @@ class TableWidget extends Component {
 
   render(){
     let query = new Query(this.props.element.getSettings().table_query || {});
-
     return <this.state.TableComponent query={query} settings={this.props.element.getSettings()}/>;
   }
 }

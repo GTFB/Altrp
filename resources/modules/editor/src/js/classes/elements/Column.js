@@ -35,10 +35,9 @@ class Column  extends BaseElement {
     this.addControl('layout_column_width', {
       type: CONTROLLER_NUMBER,
       label: 'Column width (%)',
-      default: 100,
+      default: null,
       rules: {
         '{{ELEMENT}}.altrp-element_column': 'width: {{VALUE}}%',
-        '{{ELEMENT}} .altrp-column': 'width: {{VALUE}}%'
       }
     });
 
@@ -207,6 +206,68 @@ class Column  extends BaseElement {
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-column": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("style_position", {
+      tab: TAB_STYLE,
+      label: "Position"
+    });
+
+    this.addControl('style_position_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      default:{
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-column': [ 
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl("style_position_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 10,
+        right: 10,
+        bottom: 10,
+        left: 10,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-column": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+    
+    this.addControl('position_z_index', {
+      type: CONTROLLER_NUMBER,
+      label: "Z-index",
+      default: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-column": "z-index: {{VALUE}}"
       }
     });
 

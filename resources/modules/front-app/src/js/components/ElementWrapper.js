@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import { withRouter } from "react-router";
 
 class ElementWrapper extends Component {
   constructor(props){
@@ -15,10 +16,11 @@ class ElementWrapper extends Component {
         React.createElement(this.props.component, {
           element: this.props.element,
           children: this.props.element.getChildren(),
+          match: this.props.match,
         })
       }
     </div>
   }
 }
 
-export default ElementWrapper;
+export default withRouter(ElementWrapper);

@@ -6,7 +6,6 @@ import {
   CONTROLLER_COLOR,
   TAB_ADVANCED,
   CONTROLLER_DIMENSIONS,
-  CONTROLLER_SELECT2,
   CONTROLLER_SELECT,
   CONTROLLER_TEXT,
   CONTROLLER_SLIDER,
@@ -161,6 +160,10 @@ class Table extends BaseElement {
     });
     repeater.addControl('column_name',{
       label: 'Column Heading',
+    });
+    repeater.addControl('column_link',{
+      label: 'Link Template',
+      description: '/path/:id',
     });
 
     this.addControl('tables_columns', {

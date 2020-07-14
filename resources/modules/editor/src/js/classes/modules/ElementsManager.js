@@ -16,6 +16,8 @@ import TextWidget from '../../components/widgets/TextWidget';
 import InputWidget from "../../components/widgets/InputWidget";
 import TableWidget from "../../components/widgets/TableWidget";
 import NavWidget from "../../components/widgets/NavWidget";
+import DividerWidget from "../../components/widgets/DividerWidget";
+import Divider from "../elements/Divider";
 import Nav from "../elements/Nav";
 import Table from "../elements/Table";
 import { Tab } from "react-tabs";
@@ -37,6 +39,7 @@ export default class ElementsManger {
     this.elements[Image.getName()] = Image;
     this.elements[Table.getName()] = Table;
     this.elements[Nav.getName()] = Nav;
+    this.elements[Divider.getName()] = Divider;
     //список компонентов
     this.components = {};
     this.components[RootElement.getName()] = RootComponent;
@@ -49,6 +52,7 @@ export default class ElementsManger {
     this.components[Image.getName()] = ImageWidget;
     this.components[Table.getName()] = TableWidget;
     this.components[Nav.getName()] = NavWidget;
+    this.components[Divider.getName()] = DividerWidget;
   }
 
   getElements(){

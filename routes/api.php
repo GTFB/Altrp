@@ -46,6 +46,8 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
 
         Route::get('/tables/{table}/columns', "Admin\TableController@getColumns");
         Route::get('/tables/{table}/keys', "Admin\TableController@getKeys");
+        
+        Route::get( '/models', 'Admin\ModelsController@getModels');
 
         Route::post('/tables/{table}/models', 'Admin\TableController@saveModel');
         Route::get('/tables/{table}/models/{model}', 'Admin\TableController@getModel');
@@ -59,6 +61,9 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::post('/tables', "Admin\TableController@insert");
         Route::put('/tables/{table}', "Admin\TableController@update");
         Route::delete('/tables/{table}', "Admin\TableController@delete");*/
+
+        Route::get('/reports', 'ReportsController@index');
+        Route::post('/reports', 'ReportsController@store');
 
         // GeneratorController routes
         // Route::post('/generators/{table}/model/create', 'Admin\GeneratorController@createModel');
@@ -124,5 +129,3 @@ Route::group(['prefix' => 'users'], function () {
     });*/
 
 });
-
-

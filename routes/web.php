@@ -41,9 +41,14 @@ Route::group([
 Route::get( '/admin/editor', function (){
   return view( 'editor' );
 } )->middleware( 'auth' )->name('editor');
+
 Route::get( '/admin/editor-content', function (){
   return view( 'editor-content' );
 } )->middleware( 'auth' )->name('editor-content');
+
+Route::get( '/admin/editor-reports', function (){
+  return view( 'editor-reports' );
+} )->middleware( 'auth' )->name('editor-reports');
 
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
@@ -58,6 +63,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get( 'templates/options', 'TemplateController@options' );
     Route::get( '/template/{template_id}/reviews', 'TemplateController@reviews' );
     Route::resource( 'pages', 'Admin\PagesController' );
+    Route::get( '/pages_options', 'Admin\PagesController@pages_options' )->name( 'admin.pages_options.all' );
+    Route::get( '/pages_options/{page_id}', 'Admin\PagesController@show_pages_options' )->name( 'admin.pages_options.show' );
     Route::get('/permissions', "Users\Permissions@getPermissions");
     Route::get('/permissions/{permission}', "Users\Permissions@getPermission");
     Route::post('/permissions', "Users\Permissions@insert");
@@ -94,6 +101,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
 
     Route::resource( 'areas', 'Admin\AreasController' );
     Route::resource( 'templates', 'TemplateController' );
+    Route::resource( 'reports', 'ReportsController' );
     Route::resource( 'media', 'Admin\MediaController' );
     Route::resource( 'settings', 'Admin\SettingsController' );
 
@@ -106,10 +114,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     /**
      * Роуты для теста запросов для виджета таблицы todo: удалить, после того как модели будут готовы
      */
-    Route::get( 'models_list', 'Admin\ModelsController@models_list' )->name( 'admin.models_list' );
-    Route::get( 'models_list_for_query', 'Admin\ModelsController@models_list_for_query' )->name( 'admin.models_list_for_query' );
-    Route::get( 'models_options', 'Admin\ModelsController@models_options' )->name( 'admin.models_options' );
+    Route::get( '/models_list', 'Admin\ModelsController@models_list' )->name( 'admin.models_list' );
+    Route::get( '/models_list_for_query', 'Admin\ModelsController@models_list_for_query' )->name( 'admin.models_list_for_query' );
+    Route::get( '/models_options', 'Admin\ModelsController@models_options' )->name( 'admin.models_options' );
+    Route::get( '/models_with_fields_options', 'Admin\ModelsController@models_with_fields_options' )
+      ->name( 'admin.models_with_fields_options' );
 
+    Route::get( '/models', 'Admin\ModelsController@getModels');
+    
 
     Route::get('/tables', "Admin\TableController@getTables");
     Route::get('/tables/{table}', "Admin\TableController@getTable");
@@ -176,6 +188,7 @@ Route::get('/', function () {
 
 foreach ( $frontend_routes as $frontend_route ) {
 
+  $frontend_route = str_replace( ':id', '{id}', $frontend_route );
   Route::get($frontend_route, function () {
     return view('front-app');
   })->middleware( ['web', 'installation.checker'] );
@@ -188,8 +201,15 @@ foreach ( $frontend_routes as $frontend_route ) {
 
 Route::group( ['prefix' => 'ajax'], function(){
 
+  Route::get( 'models/page/{page_id}', 'Frontend\PageController@show' )->name( 'front.page.show' );
   Route::resource( 'routes', 'Frontend\RouteController' );
+  /**
+   * todo: реализовать в контроллерах моделей
+   */
   Route::get( 'models/{model_name}', 'Frontend\ModelsController@models' )->name( 'front.models.all' );
+  Route::get( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@show' )->name( 'front.models.show' );
+  Route::delete( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@delete' )->name( 'front.models.delete' );
+  Route::put( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@edit' )->name( 'front.models.edit' );
   Route::post( 'models/{model_name}', 'Frontend\ModelsController@create' )->name( 'front.models.create' );
 
 } );

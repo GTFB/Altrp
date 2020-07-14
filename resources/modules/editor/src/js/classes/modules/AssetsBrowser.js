@@ -8,8 +8,8 @@ import '../../../sass/assets-browser.scss';
 
 
 class AssetsBrowser extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.tabClick = this.tabClick.bind(this);
     this.toggleBrowser = this.toggleBrowser.bind(this);
     this.selectAsset = this.selectAsset.bind(this);

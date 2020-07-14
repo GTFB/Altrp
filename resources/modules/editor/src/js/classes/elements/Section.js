@@ -44,27 +44,27 @@ class Section extends BaseElement{
           value: 'full',
           label: 'full width'
         },
-        {
-          value: 'full-fill',
-          label: 'full fill'
-        }
+        // {
+        //   value: 'full-fill',
+        //   label: 'full fill'
+        // }
       ]
     });
 
-    this.addControl("layout_content_full_width", {
-      type: CONTROLLER_SLIDER,
-      label: "full fill width",
-      default: {
-        size: 100,
-        unit: "%"
-      },
-      units: ["px", "%", "vh"],
-      max: 1000,
-      min: 0,
-      rules: {
-        "{{ELEMENT}} .full-fill div": "width: {{SIZE}}{{UNIT}}"
-      }
-    });
+    // this.addControl("layout_content_full_width", {
+    //   type: CONTROLLER_SLIDER,
+    //   label: "full fill width",
+    //   default: {
+    //     size: 100,
+    //     unit: "%"
+    //   },
+    //   units: ["px", "%", "vh"],
+    //   max: 1000,
+    //   min: 0,
+    //   rules: {
+    //     "{{ELEMENT}} .full-fill div": "width: {{SIZE}}{{UNIT}}"
+    //   }
+    // });
 
     this.addControl("layout_content_width", {
       type: CONTROLLER_SLIDER,

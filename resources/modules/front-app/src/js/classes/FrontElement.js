@@ -14,7 +14,7 @@ class FrontElement {
     }
     this.parent = null;
     /**
-     *
+     * Список форм для текущего элемента (кнопки, интпута)
      * @type {AltrpForm[]}
      */
     this.forms = [];
@@ -45,7 +45,7 @@ class FrontElement {
      *  (при смене страницы header footer могут не меняться)
      *  * @type {array}
      */
-    this.models = []
+    this.modelsList = []
   }
 
   /**
@@ -92,6 +92,9 @@ class FrontElement {
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_id')){
       this.formInit()
     }
+    if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_actions') === 'delete'){
+      this.formInit()
+    }
   }
 
   /**
@@ -106,8 +109,27 @@ class FrontElement {
     switch (this.getName()) {
       case 'button': {
         let method = 'POST';
-        if(this.getSettings('form_actions') === 'add_new'){
-          this.addForm(formsManager.registerForm(this.getSettings('form_id'), this.getSettings('choose_model'), method));
+        switch (this.getSettings('form_actions')){
+          case 'add_new':{
+            this.addForm(formsManager.registerForm(this.getSettings('form_id'), this.getSettings('choose_model'), method));
+          }
+          break;
+          case 'delete':{
+            method = 'DELETE';
+            let modelName = this.getModelName();
+            if(modelName){
+              this.addForm(formsManager.registerForm(this.getId(), modelName, method));
+            }
+          }
+          break;
+          case 'edit':{
+            method = 'PUT';
+            let modelName = this.getModelName();
+            if(modelName){
+              this.addForm(formsManager.registerForm(this.getSettings('form_id'), modelName, method));
+            }
+          }
+          break;
         }
       }
       break;
@@ -134,7 +156,7 @@ class FrontElement {
     this.forms.push(form);
   }
   /**
-   * Возвращает массив
+   * Возвращает массив потомков текущего элемента
    * @return {[]}
    */
 
@@ -174,6 +196,11 @@ class FrontElement {
     });
   }
 
+  /**
+   * Возвращает CSS-стили в виде строки
+   * для вставки в тег style текущего элемента
+   * @return {string}
+   */
   getStringifyStyles(){
     let styles = '';
     if(typeof this.settings.styles !== 'object'){
@@ -246,32 +273,91 @@ class FrontElement {
     if(this.getName() !== 'input'){
       return null;
     }
-    return this.component.state.value;
+    let value = this.component.state.value;
+    /**
+     * Если значение динамическое и не менялось в виджете,
+     * то используем метод this.getContent для получения значения, а не динмического объекта
+     */
+    if(value.dynamic){
+      value = this.getContent('content_default_value')
+    }
+    return value;
   }
 
   /**
-   * @return {AltrpModel[]}
+   * Список моделей для шаблона включая модель Page
+   * @return {AltrpModelUpdater[]}
    */
   getModelsList(){
-    return this.getRoot().modelsList;
+    return this.getRoot().modelsList || [];
   }
 
   /**
-   * @param {AltrpModel[]} modelsList
+   * Имя модели
+   * из списка моделей извлекает имя модели не являющейся Page и возращает иэто имя
+   * @return {string | null}
+   */
+  getModelName(){
+    let modelName = null;
+    this.getModelsList().forEach(modelInfo=>{
+      if(modelInfo.modelName!=='page'){
+        modelName = modelInfo.modelName
+      }
+    });
+    return modelName;
+  }
+
+  /**
+   * Получаем данные о модели (modelName и modelId) из корневого элемента по названию модели
+   * @param {string} modelName
+   * @return {{}}
+   */
+  getModelsInfoByModelName(modelName){
+    let modelsList = this.getModelsList();
+    let modelInfo = null;
+    modelsList.forEach(_modelInfo=>{
+      if(_modelInfo.modelName === modelName){
+        modelInfo = _modelInfo;
+      }
+    });
+    return modelInfo
+  }
+
+  /**
+   * @param {AltrpModelUpdater[]} modelsList
    */
   setModelsList(modelsList){
-    this.modelsList = modelsList;
+    this.getRoot().modelsList = modelsList;
+  }
+  /**
+   * Добавляет информацию о модели в список моделей
+   * @param {{}} modelInfo
+   */
+  addModelInfo(modelInfo){
+    this.getRoot().modelsList = this.getRoot().modelsList || [];
+    this.getRoot().modelsList.push({...modelInfo})
   }
 
   /**
-   * Подписываемся на изменеия моделей
-   * @param {function} callback
+   * Задайет id для всех моделей корневого элемента не являющихся моделью страницы (page)
+   * todo: нужно вызывать в элементе при смене роута в том случае если роут имеет id
+   * @param {int} id
    */
-  subscribeToModels(callback){
-    let modelsList = this.getModelsList();
-    modelsList.forEach(modelInfo=>{
-      modelManager.subscribeToModelUpdates(modelInfo.modelName, modelInfo.modelName, callback)
-    })
+  setModelsIds(id){
+
+  }
+
+  /**
+   * Получает данные для контента элемента
+   * делегирует на this.component
+   * @param {string} settingName
+   * @return {*}
+   */
+  getContent(settingName){
+    if(this.component){
+      return this.component.getContent(settingName)
+    }
+    return'';
   }
 }
 

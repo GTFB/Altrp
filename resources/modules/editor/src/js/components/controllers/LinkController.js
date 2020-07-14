@@ -11,19 +11,38 @@ class LinkController extends Component {
     this.toggleSettingsNewPage = this.toggleSettingsNewPage.bind(this);
     this.toggleSettingsNoFollow = this.toggleSettingsNoFollow.bind(this);
     this.changeAttribute = this.changeAttribute.bind(this);
-    this.changeInput = this.changeInput.bind(this)
+    this.changeInput = this.changeInput.bind(this);
+    this.changeTag = this.changeTag.bind(this);
     let value = this.props.currentElement.getSettings(this.props.controlId);
     if(value === null && this.props.default){
       value = this.props.default ;
     }
-    value = value || '';
+    value = value || {};
+    value.tag = value.tag || 'a';
     this.state = {
       value,
-      show: true
+      show: true,
+      tagsOptions: [
+        {
+          label: 'a',
+          value: 'a',
+        },
+        {
+          label: 'Link',
+          value: 'Link',
+        },
+      ]
     };
     controllerDecorate(this);
   }
-
+  /**
+   * Сменить тег
+   */
+  changeTag(e){
+    let value = this.state.value || {};
+    value.tag = e.target.value;
+    this._changeValue(value);
+  }
   settings() {
     let settings = document.getElementById("settings");
     settings.classList.toggle("settingBlock-none");
@@ -104,6 +123,14 @@ class LinkController extends Component {
           </div>
         </div>
         <div id="settings" className="settingBlock settingBlock-none">
+          <div className="control-container_select-wrapper">
+            <div className="controller-container__label control-select__label">
+              Choose Tag
+            </div>
+            <select className="control-select control-field" value={this.state.value.tag} onChange={this.changeTag}>
+              {this.state.tagsOptions.map(option => {return <option value={option.value} key={option.value || 'null'}>{option.label}</option>})}
+            </select>
+          </div>
           <div className="settings-checkbox-option" onClick={this.toggleSettingsNewPage}>
             <input id="toggleSettingsNewPageCheckbox" type="checkbox" className="settings-checkbox"/>
             <span className="settings-checkbox-container"/>
@@ -123,7 +150,7 @@ class LinkController extends Component {
                    type="text"
                    placeholder="key|value, key|value..."
                    className="settings-input-attribute"/>
-            <a className="settings-attribute-description">Set custom attributes for the link element. Separate attribute keys from values using the | (pipe) character. Separate key-value pairs with a comma.</a>
+            <p className="settings-attribute-description">Set custom attributes for the link element. Separate attribute keys from values using the | (pipe) character. Separate key-value pairs with a comma.</p>
           </div>
         </div>
       </div>

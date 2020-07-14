@@ -21,56 +21,56 @@ export function advancedTabControllers(element) {
   //   }
   // );
 
-  element.startControlSection(
-    'element_sizes', {
-      tab: TAB_ADVANCED,
-      label: 'Sizes',
-    }
-  );
+  // element.startControlSection(
+  //   'element_sizes', {
+  //     tab: TAB_ADVANCED,
+  //     label: 'Sizes',
+  //   }
+  // );
   
-  element.addControl(
-    'element_sizes_width', {
-      type: CONTROLLER_SLIDER,
-      label: 'width',
-      default:{
-        size: "100%",
-        unit:'px'
-      },
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-      max: 1920,
-      min: 0,
-      rules: {
-        '{{ELEMENT}}.altrp-element': 'width: {{SIZE}}{{UNIT}};',
-      },
-    }
-  );
+  // element.addControl(
+  //   'element_sizes_width', {
+  //     type: CONTROLLER_SLIDER,
+  //     label: 'width',
+  //     default:{
+  //       size: "100%",
+  //       unit:'px'
+  //     },
+  //     units:[
+  //       'px',
+  //       '%',
+  //       'vh',
+  //     ],
+  //     max: 1920,
+  //     min: 0,
+  //     rules: {
+  //       '{{ELEMENT}}.altrp-element': 'width: {{SIZE}}{{UNIT}};',
+  //     },
+  //   }
+  // );
 
-  element.addControl(
-    'element_sizes_height', {
-      type: CONTROLLER_SLIDER,
-      label: 'height',
-      default:{
-        size: "100%",
-        unit:'px'
-      },
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-      max: 1080,
-      min: 0,
-      rules: {
-        '{{ELEMENT}}': 'height: {{SIZE}}{{UNIT}};',
-      },
-    }
-  );
+  // element.addControl(
+  //   'element_sizes_height', {
+  //     type: CONTROLLER_SLIDER,
+  //     label: 'height',
+  //     default:{
+  //       size: "100%",
+  //       unit:'px'
+  //     },
+  //     units:[
+  //       'px',
+  //       '%',
+  //       'vh',
+  //     ],
+  //     max: 1080,
+  //     min: 0,
+  //     rules: {
+  //       '{{ELEMENT}}': 'height: {{SIZE}}{{UNIT}};',
+  //     },
+  //   }
+  // );
 
-  element.endControlSection();
+  // element.endControlSection();
 
   element.startControlSection(
     'element_positioning', {
@@ -89,37 +89,43 @@ export function advancedTabControllers(element) {
         label: 'default'
       },
       {
-        value: 'full',
+        value: '100%',
         label: 'full width(100%)'
       },
       {
-        value: 'inline',
+        value: 'auto',
         label: 'inline(auto)'
       },
       {
         value: 'custom',
         label: 'custom'
       }
-    ]
+    ],
+    rules: {
+      '{{ELEMENT}}.altrp-element': 'width: {{VALUE}};',
+    },
   });
 
   element.addControl('positioning_custom_width', {
-      type: CONTROLLER_SLIDER,
-      label: 'Custom width',
-      default:{
-        size: "100%",
-        unit:'px'
-      },
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-      max: 1000,
-      min: 0,
-      rules: {
-        '{{ELEMENT}}': 'width: {{SIZE}}{{UNIT}};',
-      },
+    type: CONTROLLER_SLIDER,
+    label: 'Custom width',
+    default:{
+      size: "100%",
+      unit:'px'
+    },
+    units:[
+      'px',
+      '%',
+      'vh',
+    ],
+    max: 1000,
+    min: 0,
+    rules: {
+      'div{{ELEMENT}}.altrp-element': 'width: {{SIZE}}{{UNIT}};',
+    },
+    condition: {
+        'positioning_width_type': 'custom',
+      }
     }
   );
 
@@ -149,8 +155,12 @@ export function advancedTabControllers(element) {
   element.addControl('positioning_position_type', {
     type: CONTROLLER_SELECT,
     label: 'Position',
-    default: 'static',
+    default: 'relative',
     options: [
+      {
+        value: 'relative',
+        label: 'default'
+      },
       {
         value: 'static',
         label: 'default'
@@ -165,7 +175,7 @@ export function advancedTabControllers(element) {
       }
     ],
     rules: {
-          '{{ELEMENT}}': 'position: {{VALUE}} !important;',
+          '{{ELEMENT}}': 'position: {{VALUE}};',
     },
   });
 

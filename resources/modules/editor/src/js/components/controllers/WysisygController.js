@@ -1,15 +1,10 @@
 import React, { Suspense, useState, useEffect } from "react";
-import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 import DynamicIcon from "../../../svgs/dynamic.svg";
+const TinyMCE = React.lazy(() => import("../tinymce/TinyMCE"));
 
-const JoditEditor = React.lazy(() => import("jodit-react"));
-
-const WysiwygController = ({
-  currentElement,
-  controller,
-  controlId,
-  label
-}) => {
+const WysiwygController = ({ controller, controlId, label }) => {
+  const currentElement = useSelector((state) => state.currentElement.currentElement);
   const value = currentElement.getSettings(controlId);
   const [content, setContent] = useState(value);
 
@@ -23,27 +18,21 @@ const WysiwygController = ({
     setContent(value);
   }, [currentElement]);
 
-  if(!controller.isShow()) {
-    return '';
+  if (!controller.isShow()) {
+    return "";
   }
-    return (
-      <div className="controller-container controller-container_wysiwyg">
-        <div className="controller-container__label">{label}</div>
-        <div className="controller-container__dynamic">
-          Dynamic
-          <DynamicIcon/>
-        </div>
-        <Suspense fallback={<div>Loading...</div>}>
-          <JoditEditor onChange={value => setContent(value)} value={content}/>
-        </Suspense>
+  return (
+    <div className="controller-container controller-container_wysiwyg">
+      <div className="controller-container__label">{label}</div>
+      <div className="controller-container__dynamic">
+        Dynamic
+        <DynamicIcon />
       </div>
-    );
+      <Suspense fallback={<div>Loading...</div>}>
+        <TinyMCE onChange={(value) => setContent(value)} value={content} />
+      </Suspense>
+    </div>
+  );
 };
 
-function mapStateToProps(state) {
-  return {
-    currentElement: state.currentElement.currentElement
-  };
-}
-
-export default connect(mapStateToProps)(WysiwygController);
+export default WysiwygController;

@@ -1,0 +1,3 @@
+[submodule "resources/modules/reports"]
+	path = resources/modules/reports
+	url = https://github.com/chuikoffru/rrbe.git

@@ -2,17 +2,31 @@ import FrontElement from "./FrontElement";
 
 class FrontElementsFabric {
   /**
-   *
+   * парсим данные шаблона
    * @param {object} object
-   * @param {FrontElement} parent
+   * @param {FrontElement | null} parent
+   * @param {int | null} pageId
+   * @param {{} | null} model
    * @return {FrontElement}
    */
-  parseData(object, parent){
+  parseData(object, parent, pageId, model){
     let children = [];
     /**
      * @member {FrontElement} element
      * */
     let element = new FrontElement(object);
+    if(pageId){
+      element.addModelInfo({
+        modelName: 'page',
+        modelId: pageId,
+      });
+    }
+
+    if(model){
+      element.addModelInfo({
+        modelName: model.modelName,
+      });
+    }
     if( object.children && object.children.length ){
       for( let child of object.children){
         frontElementsManager.checkElementExists(child.name) ?
@@ -24,6 +38,7 @@ class FrontElementsFabric {
     element.settings = object.settings;
     element.name = object.name;
     element.type = object.type;
+    element.dynamicContentSettings = object.dynamicContentSettings;
     if(parent){
       element.setParent(parent);
     }

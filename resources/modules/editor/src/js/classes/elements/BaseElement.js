@@ -27,6 +27,13 @@ class BaseElement extends ControlStack{
     this._initDefaultSettings();
   }
 
+  /**
+   * Задать настройки
+   * @param settings
+   */
+  setSettings(settings){
+    this.settings = settings || this.settings;
+  }
   getId(){
     if(! this.id){
       this.id = BaseElement.generateId();
@@ -59,6 +66,9 @@ class BaseElement extends ControlStack{
     data.name = this.getName();
     data.settings = this.settings;
     data.type = this.getType();
+    if(this.dynamicContentSettings && this.dynamicContentSettings.length){
+      data.dynamicContentSettings = [...this.dynamicContentSettings];
+    }
     let children = this.getChildrenForImport();
     if(children){
       data.children = children;
@@ -308,7 +318,6 @@ class BaseElement extends ControlStack{
   }
 
   setSettingValue(settingName, value){
-    // console.log(settingName);
     this.settings[settingName] = value;
     if(this.component){
       this.component.changeSetting(settingName, value);
@@ -397,7 +406,9 @@ class BaseElement extends ControlStack{
     this.settings.styles = this.settings.styles || {};
     this.settings.styles[breakpoint] = this.settings.styles[breakpoint] || {};
 
-    this.settings.styles[breakpoint][settingName] = this.settings.styles[breakpoint][settingName] || {};
+    // this.settings.styles[breakpoint][settingName] = this.settings.styles[breakpoint][settingName] || {};
+    //todo: проверить работает ли такое поведение (при обновлении стилей стили записанные на текущем свойстве перед изменением удаляются)
+    this.settings.styles[breakpoint][settingName] =  {};
     rules.forEach(rule => {
       let finalSelector = rule.selector;
       finalSelector = finalSelector.replace('{{ELEMENT}}', this.getSelector());
@@ -409,6 +420,15 @@ class BaseElement extends ControlStack{
       }
       this.settings.styles[breakpoint][settingName][finalSelector] = rule.properties;
     });
+    this.updateStyles();
+  }
+
+  /**
+   * @param {string} settingName
+   * @param {string} breakpoint
+   * */
+  removeStyle(settingName, breakpoint = CONSTANTS.DEFAULT_BREAKPOINT){
+    this.settings.styles[breakpoint][settingName] =  {};
     this.updateStyles();
   }
 
@@ -429,6 +449,45 @@ class BaseElement extends ControlStack{
       this.parent.deleteChild(this);
     }
     this.parent = parent;
+  }
+
+  /**
+   * Сохранить данные для динамического контента
+   * каждая настройка содержит в себе название настройки, имя модели, название поля модели
+   * @param {{}} dynamicContent
+   */
+  setModelsSettings(dynamicContent){
+    this.dynamicContentSettings = this.dynamicContentSettings || [];
+    let exist = false;
+    this.dynamicContentSettings = this.dynamicContentSettings.map(_dynamicContent=>{
+      /**
+       * Если для текущего свойства есть настройка динамического контента, то заменяем
+       */
+      if(_.isEqual(_dynamicContent.settingName, dynamicContent.settingName)){
+        exist = true;
+        return dynamicContent;
+      } else {
+        return _dynamicContent;
+      }
+    });
+    /**
+     * Если для текущего свойства нет настройки динамического контента, то добавляем
+     */
+
+    if(! exist){
+      this.dynamicContentSettings.push({...dynamicContent});
+    }
+    this.component.subscribeToModels();
+  }
+
+  /**
+   * Удаляет настроки динамического контента по названию настройки
+   * вызывается после нажатия конпик удалить динамический контент
+   * @param {string} settingName
+   */
+  removeModelSettings(settingName){
+    this.dynamicContentSettings = _.remove(this.dynamicContentSettings,{settingName});
+    _.remove(['test'],r=>{console.log(r);});
   }
 }
 

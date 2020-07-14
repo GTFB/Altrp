@@ -26,9 +26,8 @@ class FormsManager {
    */
   registerForm(formId, modelName, method){
     let form = this.getForm(formId);
-    let route = `/ajax/models/${modelName}`;
     if(! form){
-      form = new AltrpForm(formId, route, method);
+      form = new AltrpForm(formId, modelName, method);
       /**
        * Если в хранилище есть поля для указанной формы,
        * то передаем их в форму, а ссылку удаляем
@@ -61,14 +60,15 @@ class FormsManager {
   /**
    * Отправляет форму
    * @param {string} formId
+   * @param {int | null} modelID
    * @return {boolean}
    */
-  submitForm(formId){
+  submitForm(formId, modelID){
     if(! this.getForm(formId)){
       console.error('Форма не найдена');
       return false;
     }
-    return this.getForm(formId).submit();
+    return this.getForm(formId).submit(modelID);
   }
   /**
    * Получить форму по id

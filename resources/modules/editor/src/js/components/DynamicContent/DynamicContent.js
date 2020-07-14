@@ -4,6 +4,8 @@ import './../../../sass/altrp-menu.scss';
 import {connect} from "react-redux";
 import {closeDynamicContent} from "../../store/dynamic-content/actions";
 import store from "../../store/store";
+import {getCurrentElement} from "../../store/store";
+import Resource from "../../classes/Resource";
 
 /**
  * Класс реализующий список динамических данных для контроллера
@@ -13,51 +15,41 @@ class DynamicContent extends Component {
     super(props);
     this.state = {
       models: [
-          {
-        modelName: 'post',
-        title: 'Post',
-        fields: [
-          {
-            type: 'text',
-            fields: [
-              {
-                fieldName: 'id',
-                title: 'ID',
-              },
-              {
-                fieldName: 'title',
-                title: 'Title',
-              },
-              {
-                fieldName: 'authorName',
-                title: 'Author Name',
-              },
-              {
-                fieldName: 'authorId',
-                title: 'Author ID',
-              },
-            ]
-          },
-          {
-            type: 'number',
-            fields: [
-              {
-                fieldName: 'id',
-                title: 'ID',
-              },
-              {
-                fieldName: 'authorId',
-                title: 'Author ID',
-              },
-            ]
-          },
+        //   {
+        // modelName: 'page',
+        // title: 'Page',
+        // fields: [
+        //       {
+        //         fieldName: 'id',
+        //         title: 'ID',
+        //       },
+        //       {
+        //         fieldName: 'title',
+        //         title: 'Title',
+        //       },
+        //       {
+        //         fieldName: 'authorName',
+        //         title: 'Author Name',
+        //       },
+        //       {
+        //         fieldName: 'authorId',
+        //         title: 'Author ID',
+        //       },
+        //     ]
+        //   },
         ],
-      }
-      ]
-    };
+      };
     this.select = this.select.bind(this);
+    this.resource = new Resource({route: '/admin/ajax/models_with_fields_options'});
   }
 
+  async componentDidMount(){
+    let models = await this.resource.getAll();
+    this.setState(state=>({
+        ...state,
+      models,
+    }))
+  }
   /**
    * Обработка клика по элемету
    */
@@ -69,9 +61,11 @@ class DynamicContent extends Component {
     value.modelTitle = e.target.dataset.modeltitle;
     value.fieldName = e.target.dataset.fieldname;
     value.fieldTitle = e.target.dataset.fieldtitle;
+    value.settingName = this.props.params.settingName;
     value.dynamic = true;
     this.props.params.onSelect(value);
-    store.dispatch(closeDynamicContent())
+    store.dispatch(closeDynamicContent());
+    getCurrentElement().setModelsSettings(value);
   }
 
   getPositionProps(){
@@ -95,15 +89,9 @@ class DynamicContent extends Component {
       <div className="altrp-menu">
         {
           this.state.models.map(model=>{
-            let fields = [];
-            model.fields.forEach(_f=>{
-              if(_f.type === this.props.params.type){
-                fields = _f.fields;
-              }
-            });
             return<div className="altrp-menu-group" key={model.modelName}>
               <div className="altrp-menu__title" key={model.modelName}>{model.title}</div>
-              {fields.map(field=>(<div className="altrp-menu__item"
+              { model.fields.map(field=>(<div className="altrp-menu__item"
                                        data-fieldname={field.fieldName}
                                        data-fieldtitle={field.title}
                                        data-modelname={model.modelName}
