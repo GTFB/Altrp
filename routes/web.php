@@ -206,11 +206,11 @@ Route::group( ['prefix' => 'ajax'], function(){
   /**
    * todo: реализовать в контроллерах моделей
    */
-  Route::get( 'models/{model_name}', 'Frontend\ModelsController@models' )->name( 'front.models.all' );
+  /*Route::get( 'models/{model_name}', 'Frontend\ModelsController@models' )->name( 'front.models.all' );
   Route::get( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@show' )->name( 'front.models.show' );
   Route::delete( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@delete' )->name( 'front.models.delete' );
   Route::put( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@edit' )->name( 'front.models.edit' );
-  Route::post( 'models/{model_name}', 'Frontend\ModelsController@create' )->name( 'front.models.create' );
+  Route::post( 'models/{model_name}', 'Frontend\ModelsController@create' )->name( 'front.models.create' );*/
 
 } );
 
