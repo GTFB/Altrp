@@ -69,6 +69,39 @@ class AddModelPage extends Component{
             local_key: '',
         };
         
+        /**
+         * Настройки таблицы формул
+         */
+        this.accessors_table_columns = [
+            {name: 'id',title: 'ID',},
+            {name: 'name',title: 'Name',},
+            {name: 'formula',title: 'Formula',},
+            {name: 'status',title: 'Status',},
+            {
+                name: 'edit',
+                title: 'Edit',
+                is_button: true, 
+                button: {class: "",function: this.addAccessorModalShow.bind(this),title: "Edit"},
+            },
+            {
+                name: 'delete',
+                title: 'Delete',
+                is_button: true, 
+                button: {class: "",function: this.onDeleteAccessorClick.bind(this),title: "Delete"},
+            },
+        ];
+        
+        /**
+         * Формула по умолчанию
+         * @type type
+         */
+        const default_accessor = {
+            id: "",
+            name: '',
+            formula: '',
+            description: "",
+        };
+        
         this.state = {
             modal_toogle: false,
             table_id: this.props.match.params.id,
@@ -88,10 +121,13 @@ class AddModelPage extends Component{
                 time_stamps: false,
                 soft_deletes: false
             },
-            
+            accessors: [],
             default_relationship: default_relationship,
             selected_relationship: null,
-            relationship: default_relationship
+            relationship: default_relationship,
+            default_accessor: default_accessor,
+            selected_accessor: null,
+            accessor: default_accessor,
         };
         
         
@@ -99,8 +135,7 @@ class AddModelPage extends Component{
         this.resource = new Resource({route: '/admin/ajax/tables'});
         this.model_resource = new Resource({route: '/admin/ajax/tables/'+this.props.match.params.id+'/model'});
         this.save_model_resource = new Resource({route: '/admin/ajax/tables/'+this.props.match.params.id+'/models'});
-        
-        
+        this.accessors_resource = false;
         
         this.addFillableColumn = this.addFillableColumn.bind(this);
         this.deleteFillableColumn = this.deleteFillableColumn.bind(this);
@@ -116,6 +151,8 @@ class AddModelPage extends Component{
         this.getModalClasses = this.getModalClasses.bind(this);
         this.onDeleteClick = this.onDeleteClick.bind(this);
         
+        this.addAccessorModalShow = this.addAccessorModalShow.bind(this);
+        this.onDeleteAccessorClick = this.onDeleteAccessorClick.bind(this);
         
     }
     
@@ -136,7 +173,7 @@ class AddModelPage extends Component{
              
             
             
-             let model = {
+            let model = {
                 description: model_data.description,
                 fillable_cols: this.setCols(model_data.fillable_cols),
                 user_cols: this.setCols(model_data.user_cols),
@@ -148,11 +185,14 @@ class AddModelPage extends Component{
                 time_stamps: model_data.time_stamps,//1 == model_data.time_stamps ? true : false,
                 soft_deletes: model_data.soft_deletes//1 == model_data.soft_deletes ? true : false,
             }
+            
+            this.accessors_resource = new Resource({route: '/admin/ajax/tables/'+this.props.match.params.id+'/models/'+model_data.id+"/accessors"});
+            let accessors_data = await this.accessors_resource.getAll();
 
             this.setState(state=>{
-                return{...state, data: model};
+                return{...state, data: model, accsessors: accessors_data};
             }, () => {
-                console.log(this.state)
+                
             });
         }
                 
@@ -360,6 +400,38 @@ class AddModelPage extends Component{
         }
     }
     
+    
+    
+    addAccessorModalShow(e) {
+        console.log(e);
+        let itemIndex = this.state.data.relationships.indexOf(e);
+        this.setState((state) => {
+            if(itemIndex === -1) {
+                return { ...state, selected_relationship: null, relationship: state.default_relationship}
+            }
+            else {
+                return { ...state, selected_relationship: itemIndex, relationship: state.data.relationships[itemIndex]}
+            }
+            
+        }, () => { 
+            this.toggleModal();
+        });
+    }
+    onDeleteAccessorClick(e){
+        const conf = confirm(`Are you sure?`);
+        
+        if (conf) {
+            let itemIndex = this.state.data.relationships.indexOf(e);
+            if(itemIndex !== -1) {
+                this.setState((state) => {
+                    return { ...state, data: { ...state.data,  relationships: update(this.state.data.relationships, {$splice: [[itemIndex, 1]]})}};
+                }, () => {
+                    alert("Success");
+                });
+            }
+        }
+    }
+    
     render(){
         return <div>
             <div>
@@ -462,6 +534,15 @@ class AddModelPage extends Component{
                 <form className="admin-form" onSubmit={this.saveModel}>
                     <button className="btn btn_success">Save</button>
                 </form>
+            </div>
+            <div>
+                <hr />
+            </div>
+            <div>
+                <AdminTable columns={this.accessors_table_columns} rows={this.state.accessors}/>
+            </div>
+            <div>
+                <button onClick={this.addAccessorModalShow}>Add Accessor</button>
             </div>
             
             <div className={this.getModalClasses()}>

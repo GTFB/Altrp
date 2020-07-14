@@ -333,7 +333,28 @@ class TableController extends ApiController
 
         return response()->json($model, 200, [],JSON_UNESCAPED_UNICODE);
     }
+    
+    /**
+     * Получить список аксессоров
+     *
+     * @param ApiRequest $request
+     * @param $tableId
+     * @param $modelId
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function getAccessors(ApiRequest $request, $tableId, $modelId)
+    {
+        $model = Model::find($modelId);
 
+        if (! $model) {
+            return response()->json('Модель не найдена!', 404, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        return response()->json($model->altrp_accessors, 200, [],JSON_UNESCAPED_UNICODE);
+        
+    }
+    
     /**
      * Добавить аксессор
      *

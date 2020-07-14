@@ -127,6 +127,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::post('/tables/{table}/models', 'Admin\TableController@saveModel');
     Route::get('/tables/{table}/models/{model}', 'Admin\TableController@getModel');
     Route::post('/tables/{table}/models/{model}/accessors', 'Admin\TableController@saveAccessor');
+    Route::get('/tables/{table}/models/{model}/accessors', 'Admin\TableController@getAccessors');
     Route::delete('/tables/{table}/models/{model}/accessors/{accessor}', 'Admin\TableController@deleteAccessor');
     Route::put('/tables/{table}/models/{model}/accessors/{accessor}', 'Admin\TableController@updateAccessor');
     Route::post('/tables/{table}/controllers', 'Admin\TableController@saveController');
