@@ -25,16 +25,19 @@ class MigrationFieldFactory {
         'boolean' => 'App\Altrp\Generators\Migration\Fields\MigrationFieldBoolean',
         'date' => 'App\Altrp\Generators\Migration\Fields\MigrationFieldDate',
         'integer' => 'App\Altrp\Generators\Migration\Fields\MigrationFieldInteger',
+        'text' => 'App\Altrp\Generators\Migration\Fields\MigrationFieldText',
+        'datetime' => 'App\Altrp\Generators\Migration\Fields\MigrationFieldDateTime',
+        'decimal' => 'App\Altrp\Generators\Migration\Fields\MigrationFieldDecimal',
+        
+        
+        
         
         /*
         'char' => 'char',
-        'datetime' => 'dateTime',
         'mediumtext' => 'mediumText',
         'longtext' => 'longText',
         
-        'text' => 'text',
-        'bigint' => 'bigInteger',
-        'decimal' => 'decimal',*/
+        'bigint' => 'bigInteger',*/
     ];
     
     

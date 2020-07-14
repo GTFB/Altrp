@@ -18,3 +18,4 @@ Route::resource('regions', 'AltrpControllers\RegionController');
 
 
 Route::resource('companies', 'AltrpControllers\CompanyController');
+Route::resource('admin2/cars', 'AltrpControllers\Admin23\CarController');
