@@ -267,13 +267,30 @@ class ControllerGenerator extends AppGenerator
     {
         $routeGenerator = new RouteGenerator();
         $tableName = $this->controllerModel->table()->first()->name;
+        $userColumns = trim($this->controllerModel->table()->first()->models()->first()->user_cols, ' ');
+        $middleware = ($userColumns) ? $this->getMiddleware() : null;
         $controllerName = $this->getFormedControllerName($this->controllerModel);
         $controller = trim($controllerName,"\\");
         $prefix = $this->getRoutePrefix() ? trim($this->getRoutePrefix(), '/') . '/' : null;
         $routeGenerator->addDynamicVariable('routePrefix', $prefix);
+        $routeGenerator->addDynamicVariable('middleware', $middleware);
         $routeGenerator->addDynamicVariable('tableName', $tableName);
+        $routeGenerator->addDynamicVariable('id', \Str::singular($tableName));
+        $routeGenerator->addDynamicVariable('column', 'column');
         $routeGenerator->addDynamicVariable('controllerName', $controller);
-        return $routeGenerator->generate();
+        return $routeGenerator->generate($tableName, $controller);
+    }
+
+    /**
+     * Получить middleware
+     *
+     * @return string|null
+     */
+    protected function getMiddleware()
+    {
+        $middlewares = ['auth:api', 'auth'];
+        if (! $middlewares) return null;
+        return 'middleware(\'' . implode("','", $middlewares) . '\')->';
     }
 
     /**

@@ -98,7 +98,7 @@ class AddModelPage extends Component{
         
         this.resource = new Resource({route: '/admin/ajax/tables'});
         this.model_resource = new Resource({route: '/admin/ajax/tables/'+this.props.match.params.id+'/model'});
-        this.save_model_resource = new Resource({route: '/admin/ajax/generators/'+this.props.match.params.id+'/model/create'});
+        this.save_model_resource = new Resource({route: '/admin/ajax/tables/'+this.props.match.params.id+'/models'});
         
         
         
@@ -125,12 +125,12 @@ class AddModelPage extends Component{
             return{...state, table:table_res};
         });
         
-        let columns_res = await this.resource.get(this.state.table_id+"/columns")
+        let columns_res = await this.resource.get(this.state.table_id+"/columns");
         this.setState(state=>{
             return{...state, actual_columns: columns_res, fillable_columns: columns_res, user_cols: columns_res};
         });
         
-        let model_data = await this.resource.get(this.state.table_id+"/model")
+        let model_data = await this.resource.get(this.state.table_id+"/model");
         
         if(model_data) {
              
@@ -141,7 +141,7 @@ class AddModelPage extends Component{
                 fillable_cols: this.setCols(model_data.fillable_cols),
                 user_cols: this.setCols(model_data.user_cols),
                 table_id: model_data.table_id,
-                path: model_data.path,
+                path: model_data.path !== null ? model_data.path : "",
                 name: model_data.name,
                 relationships: model_data.table.relationships,
                 pk: model_data.pk,

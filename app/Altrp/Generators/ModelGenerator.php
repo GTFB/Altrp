@@ -91,6 +91,7 @@ class ModelGenerator extends AppGenerator
      * @throws ModelNotWrittenException
      * @throws RelationshipNotInsertedException
      * @throws TableNotFoundException
+     * @throws PermissionNotWrittenException
      */
     public function generate()
     {
@@ -172,6 +173,7 @@ class ModelGenerator extends AppGenerator
         $updatedAt = $this->getUpdatedAt();
         $primaryKey = $this->getPrimaryKey();
         $customCode = $this->getCustomCode($this->modelFile);
+        $userColumns = $this->getUserColumns();
 
         try {
             \Artisan::call('crud:model', [
@@ -184,6 +186,8 @@ class ModelGenerator extends AppGenerator
                 '--created-at' => $createdAt,
                 '--updated-at' => $updatedAt,
                 '--relationships' => "{$relationships}",
+                '--user-columns' => "[{$userColumns}]",
+                '--accessors' => $this->getCustomCodeBlock($customCode,'accessors'),
                 '--custom-namespaces' => $this->getCustomCodeBlock($customCode,'custom_namespaces'),
                 '--custom-traits' => $this->getCustomCodeBlock($customCode,'custom_traits'),
                 '--custom-properties' => $this->getCustomCodeBlock($customCode,'custom_properties'),
@@ -256,6 +260,8 @@ class ModelGenerator extends AppGenerator
 
             return $this->writeRelationships();
         }
+        
+        return false;
     }
 
     /**
@@ -519,5 +525,16 @@ class ModelGenerator extends AppGenerator
     protected function getModelFile()
     {
         return base_path('app/' . "{$this->modelFilename}.php");
+    }
+
+    /**
+     * Получить пользовательские колонки в таблице модели
+     *
+     * @return string|null
+     */
+    protected function getUserColumns()
+    {
+        if (! isset($this->data->user_cols) || empty((array)$this->data->user_cols)) return null;
+        return '\'' . implode("','", (array) $this->data->user_cols) . '\'';
     }
 }

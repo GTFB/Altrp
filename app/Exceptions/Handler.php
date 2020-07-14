@@ -68,6 +68,22 @@ class Handler extends ExceptionHandler
             return $exception->render($request);
         }
 
+        if ($exception instanceof AccessorNotFoundException) {
+            return $exception->render($request);
+        }
+
+        if ($exception instanceof AccessorNotWrittenException) {
+            return $exception->render($request);
+        }
+
+        if ($exception instanceof ColumnNotFoundException) {
+            return $exception->render($request);
+        }
+
+        if ($exception instanceof ParseFormulaException) {
+            return $exception->render($request);
+        }
+
         if ($exception instanceof CommandFailedException) {
             return $exception->render($request);
         }
@@ -87,6 +103,10 @@ class Handler extends ExceptionHandler
                     'message' => $exception->getMessage()
                 ], 500, [], JSON_UNESCAPED_UNICODE);
             }
+
+            return response()->json([
+                'message' => $exception->getMessage()
+            ], 500, [], JSON_UNESCAPED_UNICODE);
         }
 
         return parent::render($request, $exception);

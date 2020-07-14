@@ -46,6 +46,14 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
 
         Route::get('/tables/{table}/columns', "Admin\TableController@getColumns");
         Route::get('/tables/{table}/keys', "Admin\TableController@getKeys");
+
+        Route::post('/tables/{table}/models', 'Admin\TableController@saveModel');
+        Route::get('/tables/{table}/models/{model}', 'Admin\TableController@getModel');
+        Route::post('/tables/{table}/models/{model}/accessors', 'Admin\TableController@saveAccessor');
+        Route::delete('/tables/{table}/models/{model}/accessors/{accessor}', 'Admin\TableController@deleteAccessor');
+        Route::put('/tables/{table}/models/{model}/accessors/{accessor}', 'Admin\TableController@updateAccessor');
+        Route::post('/tables/{table}/controllers', 'Admin\TableController@saveController');
+        Route::get('/tables/{table}/controllers/{controller}', 'Admin\TableController@getController');
         /*Route::get('/tables', "Admin\TableController@getTables");
         Route::get('/tables/{table}', "Admin\TableController@getTable");
         Route::post('/tables', "Admin\TableController@insert");
@@ -53,9 +61,9 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::delete('/tables/{table}', "Admin\TableController@delete");*/
 
         // GeneratorController routes
-        Route::post('/generators/{table}/model/create', 'Admin\GeneratorController@createModel');
-        Route::post('/generators/{table}/controller/create', 'Admin\GeneratorController@createController');
-        Route::post('/generators/{table}/migration/create', 'Admin\GeneratorController@createMigration');
+        // Route::post('/generators/{table}/model/create', 'Admin\GeneratorController@createModel');
+        // Route::post('/generators/{table}/controller/create', 'Admin\GeneratorController@createController');
+        // Route::post('/generators/{model}/accessor/create', 'Admin\GeneratorController@createAccessor');
 
     });
 
@@ -96,7 +104,7 @@ Route::group(['prefix' => 'users'], function () {
     Route::get('/users/{user}/usermeta', "Users\UsersMeta@getUserMeta");
     Route::post('/users/{user}/usermeta', "Users\UsersMeta@saveUserMeta");
     Route::delete('/users/{user}/roles', "Users\Users@detachRole");
-    
+
     //Route::get('/permissions/{permission}', "Users\Permissions@getPermission");
 
     /*

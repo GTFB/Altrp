@@ -1,0 +1,11 @@
+    /**
+     * {{accessorName}} accessor
+     * {{accessorDescription}}
+     *
+     * @return mixed
+     */
+    public function get{{accessorName}}Attribute()
+    {
+        {{accessorBody}}
+    }
+

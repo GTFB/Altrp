@@ -124,14 +124,22 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get('/tables/{table}/columns', "Admin\TableController@getColumns");
     Route::get('/tables/{table}/keys', "Admin\TableController@getKeys");
     
+    Route::post('/tables/{table}/models', 'Admin\TableController@saveModel');
+    Route::get('/tables/{table}/models/{model}', 'Admin\TableController@getModel');
+    Route::post('/tables/{table}/models/{model}/accessors', 'Admin\TableController@saveAccessor');
+    Route::delete('/tables/{table}/models/{model}/accessors/{accessor}', 'Admin\TableController@deleteAccessor');
+    Route::put('/tables/{table}/models/{model}/accessors/{accessor}', 'Admin\TableController@updateAccessor');
+    Route::post('/tables/{table}/controllers', 'Admin\TableController@saveController');
+    Route::get('/tables/{table}/controllers/{controller}', 'Admin\TableController@getController');
+    
+    
     Route::post('/tables/{table}/test', "Admin\TableController@test");
-    
-    
     Route::get('/tables/{table}/model', "Admin\TableController@getModel");
     Route::post('/tables/{table}/model', "Admin\TableController@saveModel");
     
     Route::get('/tables/{table}/controller', "Admin\TableController@getController");
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
+    
     
     // GeneratorController routes
     Route::post('/generators/{table}/model/create', 'Admin\GeneratorController@createModel');

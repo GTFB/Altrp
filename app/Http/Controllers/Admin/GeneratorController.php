@@ -4,9 +4,12 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Altrp\Builders\AccessorBuilder;
+use App\Altrp\Builders\AccessorBuilder2;
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
 use App\Altrp\Generators\ModelGenerator;
+use App\Altrp\Model;
 use App\Altrp\Generators\MigrationGenerator;
 use App\Http\Controllers\ApiController;
 use App\User;
@@ -28,7 +31,7 @@ class GeneratorController extends ApiController
     public function createModel(Request $request)
     {
         $id = $request->table;
-
+        
         $generator = new ModelGenerator(
             array_merge($request->all(), ['table_id' => $id])
         );
@@ -109,9 +112,30 @@ class GeneratorController extends ApiController
         );
 
         $result = $generator->generate();*/
+    }
         
         
         
         
+
+    public function createAccessor(Request $request)
+    {
+        $id = $request->model;
+
+        $model = Model::find($id);
+
+        if (! $model) {
+            return response()->json('Модель не найдена!', 404, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        $modelAccessorBuilder = new AccessorBuilder($model, $request->all());
+
+        $result = $modelAccessorBuilder->build();
+
+        if ($request) {
+            return response()->json('Success', 200, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        return response()->json('Error', 404, [], JSON_UNESCAPED_UNICODE);
     }
 }
