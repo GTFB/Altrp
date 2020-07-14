@@ -86,7 +86,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapAltrpRoutes()
     {
-        Route::prefix('altrp_models')
+        Route::prefix('ajax/models')
             ->middleware('web')
             ->namespace($this->namespace)
             ->group(base_path('routes/AltrpRoutes.php'));
