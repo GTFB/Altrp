@@ -29,6 +29,11 @@ class AccessorBuilder
     /**
      * @var array
      */
+    protected $modelFileContent;
+
+    /**
+     * @var array
+     */
     protected $data;
 
     /**
@@ -36,7 +41,7 @@ class AccessorBuilder
      * @param Model $model
      * @param $data
      */
-    public function __construct(Model $model, $data)
+    public function __construct(Model $model, $data = [])
     {
         $this->model = $model;
         $this->data = $data;
@@ -57,16 +62,133 @@ class AccessorBuilder
         }
 
         $modelFileContent = file($this->modelFile, 2);
+        $appends = $this->getAppendColumns($modelFileContent);
+
+        if ($this->accessorExists($modelFileContent, $this->data['name'])) {
+            throw new AccessorNotWrittenException("Аксессор {$this->data['name']} уже существует в модели!", 500);
+        }
 
         if (! $this->addAccessor()) {
             throw new AccessorNotWrittenException('Ошибка добавления аксессора!', 500);
         }
 
-        if (! $this->writeAccessors($modelFileContent)) {
+        if (! $this->writeAccessors($modelFileContent, $appends)) {
             throw new ModelNotWrittenException('Ошибка записи аксессора в файл модели!', 500);
         }
 
         return true;
+    }
+
+
+    /**
+     * Удалить аксессор
+     *
+     * @param $accessor
+     * @return bool
+     * @throws AccessorNotFoundException
+     * @throws ModelNotWrittenException
+     * @throws \Exception
+     */
+    public function delete($accessor)
+    {
+        if (! $accessor) {
+            throw new AccessorNotFoundException("Аксессор не найден!", 404);
+        }
+
+        if (! $this->removeAccessor($accessor)) {
+            throw new AccessorNotFoundException("Ошибка удаления аксессора!", 500);
+        }
+
+        if (! file_exists($this->modelFile)) {
+            throw new ModelNotFoundException("Файл модели не найден!", 404);
+        }
+
+        $modelFileContent = file($this->modelFile, 2);
+        $appends = $this->getAppendColumns($modelFileContent);
+        $search = array_search("'{$accessor->name}'", $appends);
+        if ($search !== false) {
+            array_splice($appends, $search ,1);
+        }
+
+        if (! $this->writeAccessors($modelFileContent, $appends)) {
+            throw new ModelNotWrittenException('Ошибка записи аксессора в файл модели!', 500);
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     * @throws AccessorNotWrittenException
+     * @throws ModelNotWrittenException
+     * @throws ParseFormulaException
+     * @throws \Exception
+     */
+    public function update()
+    {
+        if (! file_exists($this->modelFile)) {
+            throw new ModelNotFoundException("Файл модели не найден!", 500);
+        }
+
+        if (! $this->parseFormula($this->data['formula'])) {
+            throw new ParseFormulaException('Ошибка в формуле!', 500);
+        }
+
+        $modelFileContent = file($this->modelFile, 2);
+        $appends = $this->getAppendColumns($modelFileContent);
+
+        if (! $this->updateAccessor()) {
+            throw new AccessorNotWrittenException('Ошибка обновления аксессора!', 500);
+        }
+
+        if (! $this->writeAccessors($modelFileContent, $appends)) {
+            throw new ModelNotWrittenException('Ошибка записи аксессора в файл модели!', 500);
+        }
+
+        return true;
+    }
+
+    protected function removeAccessor($accessor)
+    {
+//        $modelFileContent = file($this->modelFile, 2);
+//        $appends = $this->getAppendColumns($modelFileContent);
+//        $search = array_search("'{$accessor->name}'", $appends);
+//        if ($search !== false) {
+//            array_splice($appends, $search ,1);
+//        }
+//        $content = [];
+//        $appendsStubContent = $this->getAppendsStubContent();
+//        $appendsStubContent = str_replace(
+//            '{{appends}}',
+//            '[' . implode(',', $appends) . ']',
+//            $appendsStubContent
+//        );
+//        $this->searchAccessor($modelFileContent, $accessor);
+//        dd($appends, $search, $appendsStubContent);
+        return Accessor::destroy($accessor->id);
+    }
+
+    /**
+     * Проверить, существует ли аксессор в модели
+     *
+     * @param $modelFileContent
+     * @param $accessor
+     * @return bool
+     */
+    protected function accessorExists($modelFileContent, $accessor)
+    {
+        foreach ($modelFileContent as $line => $content) {
+            $accessorName = Str::studly($accessor);
+            if ((Str::contains($content, 'function get' . $accessorName . 'Attribute')
+                || Str::contains($content, 'function ' . $accessor)
+                || Str::contains($content, 'public $' . $accessor)
+                || Str::contains($content, 'protected $' . $accessor)
+                || Str::contains($content, 'private $' . $accessor))
+            ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -77,26 +199,41 @@ class AccessorBuilder
      */
     protected function addAccessor()
     {
-        $accessor = Accessor::where([
-            ['model_id', $this->model->id],
-            ['name', $this->data['name']]
-        ])->first();
-
-        if ($accessor && $accessor->user_id != auth()->user()->id) {
-            throw new \Exception('Аксессор уже существует', 500);
-        }
-
-        if (! $accessor) {
-            $accessor = new Accessor();
-            $accessor->user_id =  auth()->user()->id;
-            $accessor->status = 'created';
-        }
-
+        $accessor = new Accessor();
+        $accessor->user_id =  auth()->user()->id;
+        $accessor->status = 'created';
         $accessor->name = $this->data['name'];
         $accessor->formula = $this->data['formula'];
         $accessor->description = $this->data['description'] ?? null;
         $accessor->model_id = $this->model->id;
+        return $accessor->save();
+    }
+
+    /**
+     * Обновить аксессор в БД
+     *
+     * @return bool
+     * @throws AccessorNotWrittenException
+     */
+    public function updateAccessor()
+    {
+        $accessor = Accessor::where([
+            ['model_id', $this->model->id],
+            ['name', $this->data['old_name']]
+        ])->first();
+
+        if (! $accessor) return false;
+
+        if ($accessor && $accessor->user_id != auth()->user()->id) {
+            throw new AccessorNotWrittenException('Вы не можете обновить этот аксессор!', 500);
+        }
+
+        $accessor->user_id =  auth()->user()->id;
         $accessor->status = 'updated';
+        $accessor->name = $this->data['name'];
+        $accessor->formula = $this->data['formula'];
+        $accessor->description = $this->data['description'] ?? null;
+        $accessor->model_id = $this->model->id;
         return $accessor->save();
     }
 
@@ -124,15 +261,15 @@ class AccessorBuilder
      * Записать акссессоры в файл модели
      *
      * @param $modelFileContent
+     * @param $appends
      * @return bool
      * @throws \Exception
      */
-    protected function writeAccessors($modelFileContent)
+    protected function writeAccessors($modelFileContent, $appends)
     {
         $accessors = $this->getAccessors();
-        $content = [];
-        $appends = $this->getAppendColumns($modelFileContent);
         $appendsStubContent = $this->getAppendsStubContent();
+        $content = [];
 
         foreach ($accessors as $accessor) {
             if (! in_array("'$accessor->name'",$appends))
@@ -148,24 +285,29 @@ class AccessorBuilder
         $content = array_merge($content, $appendsStubContent);
         $content[] = "";
 
-        foreach ($accessors as $accessor) {
-            $accessorStubContent = $this->getAccessorStubContent();
-            $accessorStubContent = str_replace(
-                '{{accessorName}}',
-                Str::studly($accessor->name),
-                $accessorStubContent
-            );
-            $accessorStubContent = str_replace(
-                '{{accessorDescription}}',
-                $accessor->description,
-                $accessorStubContent
-            );
-            $accessorStubContent = str_replace(
-                '{{accessorBody}}',
-                'return ' . $this->parseFormula($accessor->formula) . ';',
-                $accessorStubContent
-            );
-            $content = array_merge($content, $accessorStubContent);
+        try {
+            foreach ($accessors as $accessor) {
+                $accessorStubContent = $this->getAccessorStubContent();
+                $accessorStubContent = str_replace(
+                    '{{accessorName}}',
+                    Str::studly($accessor->name),
+                    $accessorStubContent
+                );
+                $accessorStubContent = str_replace(
+                    '{{accessorDescription}}',
+                    $accessor->description,
+                    $accessorStubContent
+                );
+                $formula = $this->parseFormula($accessor->formula);
+                $accessorStubContent = str_replace(
+                    '{{accessorBody}}',
+                    'return ' . $formula . ';',
+                    $accessorStubContent
+                );
+                $content = array_merge($content, $accessorStubContent);
+            }
+        } catch (\Exception $e) {
+
         }
 
         for ($i = 0; $i < count($modelFileContent); $i++) {
@@ -281,19 +423,20 @@ class AccessorBuilder
                 );
             }
 
-            if (! $this->accessorsExists(array_diff($operands['accessors'], ['']))) {
-                throw new AccessorNotFoundException('Аксессор не найден в модели', 404);
-            }
-
-            foreach ($operands['accessors'] as $accessor) {
-                $formula = str_replace(
-                    "{{$accessor}()}",
-                    '$this->' . trim($accessor, '{}()'),
-                    $formula
-                );
+            $accessors = array_diff($operands['accessors'], ['']);
+//            if (! $this->accessorsExists($accessors)) {
+//                throw new AccessorNotFoundException('Аксессор не найден в модели', 500);
+//            }
+            if ($accessors) {
+                foreach ($accessors as $accessor) {
+                    $formula = str_replace(
+                        "{{$accessor}()}",
+                        '$this->' . trim($accessor, '{}()'),
+                        $formula
+                    );
+                }
             }
         }
-
         return $formula;
     }
 
@@ -306,6 +449,7 @@ class AccessorBuilder
     protected function accessorsExists($accessors)
     {
         $tableAccessors = $this->getAccessors();
+        if (! $accessors) return true;
         foreach ($accessors as $accessor) {
             if (! in_array($accessor,
                 explode(',', $tableAccessors->implode('name',',')))) return false;

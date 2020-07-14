@@ -103,6 +103,10 @@ class Handler extends ExceptionHandler
                     'message' => $exception->getMessage()
                 ], 500, [], JSON_UNESCAPED_UNICODE);
             }
+
+            return response()->json([
+                'message' => $exception->getMessage()
+            ], 500, [], JSON_UNESCAPED_UNICODE);
         }
 
         return parent::render($request, $exception);
