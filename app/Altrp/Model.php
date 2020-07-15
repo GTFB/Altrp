@@ -4,6 +4,7 @@
 namespace App\Altrp;
 
 use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class Model
@@ -158,4 +159,38 @@ class Model extends EloquentModel
   {
     return $this->belongsTo( Table::class );
   }
+
+  /**
+   * Возвращает полное название класса для модели по имени для фронтенда
+   * @param string $model_name
+   * @return string
+   */
+  public static function get_model_class_by_name( $model_name ){
+    $class_name = '\App\AltrpModels\\';
+
+    $model = self::join( 'tables', 'altrp_models.table_id' , '=', 'tables.id' )
+      ->where( 'tables.name', $model_name )->get( 'altrp_models.name' )->first();
+
+
+    return isset( $model->toArray()['name'] ) ? $class_name . $model->toArray()['name'] : $class_name;
+  }
+  /**
+   * Возвращает полное название класса для модели по имени для фронтенда
+   * @param string $model_name
+   * @return array
+   */
+  public static function get_relations_by_name( $model_name ){
+    $relations = [];
+
+    $_relations = DB::table( 'tables' )
+      ->join( 'altrp_relationships', 'altrp_relationships.table_id', '=','tables.id' )
+      ->where( 'tables.name', $model_name )->get( 'altrp_relationships.name' )->toArray();
+
+
+    foreach ( $_relations as $relation ) {
+      $relations[] = $relation->name;
+    }
+    return $relations;
+  }
+
 }

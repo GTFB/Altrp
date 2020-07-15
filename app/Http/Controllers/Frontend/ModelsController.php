@@ -34,7 +34,11 @@ class ModelsController extends Controller
    * @return \Illuminate\Http\JsonResponse
    */
   public function show( $model_name, $model_id, Request $request ){
-    return response()->json( DB::table( $model_name )->find( $model_id ) );
+
+
+    $class_name = Model::get_model_class_by_name( $model_name );
+
+    return response()->json( $class_name::with( Model::get_relations_by_name( $model_name ) )->find( $model_id )->toArray() );
   }
   /**
    * @param string $model_name
