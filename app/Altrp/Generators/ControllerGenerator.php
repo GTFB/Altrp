@@ -115,7 +115,7 @@ class ControllerGenerator extends AppGenerator
                 throw new CommandFailedException('Failed to create controller file', 500);
             }
         }
-
+        
         if ($this->getSourceActions()->isEmpty()) {
             // Записать основные действия над ресурсом в базу
             if (! $this->writeSourceActions()) {

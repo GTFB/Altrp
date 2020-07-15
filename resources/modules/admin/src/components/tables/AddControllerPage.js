@@ -64,7 +64,7 @@ class AddControllerPage extends Component{
             }, () => {
                 
                 this.setState(state=>{
-                    return{...state, relationships: controller_res.relations.split(";")};
+                    return{...state, relationships: controller_res.relation};
                 })
                 
             });

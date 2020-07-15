@@ -482,7 +482,7 @@ class TableController extends ApiController
      * @throws \App\Exceptions\RouteGenerateFailedException
      */
     function saveController(ApiRequest $request, $tableId) {
-
+        
         $generator = new ControllerGenerator(
             array_merge($request->all(), ['table_id' => $tableId])
         );
