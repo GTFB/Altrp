@@ -77,11 +77,34 @@ class ModelsController extends Controller
    * @return \Illuminate\Http\JsonResponse
    */
   public function edit( $model_name, $model_id, Request $request ){
-    DB::table( $model_name )->where( 'id', $model_id )->update( $request->toArray() );
 
 
+    $class_name = Model::get_model_class_by_name( $model_name );
 
-    $res[$model_name] = (array)DB::table( $model_name )->where( 'id', $model_id )->get()->toArray()[0];
+    $columns = $request->toArray();
+    $related_columns = [];
+    foreach ( $columns as $key => $column ) {
+      if(strpos(  $key, '.' ) > 0){
+        unset( $columns[$key] );
+        $related_columns[$key] = $column;
+      }
+    }
+
+    $model_instance = $class_name::find( $model_id )->fill( $columns );
+    $model_instance->save();
+    foreach ( $related_columns as $key => $item ) {
+      $related_model_name = explode( '.', $key )[0];
+      $related_filed_name = explode( '.', $key )[1];
+
+      if( $model_instance->$related_model_name ){
+        $model_instance->$related_model_name->fill( [
+          $related_filed_name =>  $item
+        ] )->save();
+      }
+    }
+
+    $res[$model_name] = $class_name::with( Model::get_relations_by_name( $model_name ) )
+      ->where( 'id', $model_id )->first()->toArray();
     $res['success'] = true;
     return response()->json( $res );
   }

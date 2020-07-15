@@ -300,7 +300,7 @@ class FrontElement {
   getModelName(){
     let modelName = null;
     this.getModelsList().forEach(modelInfo=>{
-      if(modelInfo.modelName!=='page'){
+      if(modelInfo.modelName!=='page' && ! modelInfo.related){
         modelName = modelInfo.modelName
       }
     });

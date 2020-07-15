@@ -44,7 +44,7 @@ class Relationship extends Model{
      * @var \App\Altrp\Model $instance
      */
     $model['modelName'] = $instance->getTable();
-    $model['relation'] = 1;
+    $model['related'] = 1;
 
     return $model;
   }
@@ -63,11 +63,13 @@ class Relationship extends Model{
      * @var \App\Altrp\Model $instance
      */
     $table = Table::where( 'name', $instance->getTable() )->first();
-    foreach ( $table->actual_columns as $actual_column ) {
-      $fields[] = [
-        'fieldName' => $instance->getTable() . '::' . $actual_column->name,
-        'title' => ( $table->models->get(0)->name ? $table->models->get(0)->name : '') . ' - ' . ( $actual_column->title ? $actual_column->title : $actual_column->name),
-      ];
+    if( $table ){
+      foreach ( $table->actual_columns as $actual_column ) {
+        $fields[] = [
+          'fieldName' => $instance->getTable() . '.' . $actual_column->name,
+          'title' => ( $table->models->get(0)->name ? $table->models->get(0)->name : '') . ' - ' . ( $actual_column->title ? $actual_column->title : $actual_column->name),
+        ];
+      }
     }
     return $fields;
   }

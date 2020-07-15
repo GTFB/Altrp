@@ -21,18 +21,12 @@ class FrontElementsFabric {
         modelId: pageId,
       });
     }
-
     if(_.isArray(models)){
       for(let model of models){
         element.addModelInfo({
             ...model,
         });
       }
-    }
-    if(_.isObject(models)){
-      element.addModelInfo({
-          ...models
-      });
     }
     if( object.children && object.children.length ){
       for( let child of object.children){
