@@ -61,28 +61,32 @@ class Input extends BaseElement{
       options: [
         {
           value: 'text',
-          label: 'text'
+          label: 'Text'
         },
         {
           value: 'number',
-          label: 'number'
+          label: 'Number'
         },
         {
           value: 'date',
-          label: 'date'
+          label: 'Date'
         },
         {
           value: 'email',
-          label: 'email'
+          label: 'Email'
         },
         {
           value: 'tel',
-          label: 'tel'
+          label: 'Tel'
         },
         {
           value: 'file',
-          label: 'file'
-        }
+          label: 'File'
+        },
+        {
+          value: 'select',
+          label: 'Select'
+        },
       ]
     });
 
@@ -134,6 +138,24 @@ class Input extends BaseElement{
     this.addControl('content_autocomplete', {
       type: CONTROLLER_SWITCHER,
       label: 'Autocomplete',
+    });
+
+    this.addControl('content_options_nullable', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Select Nullable',
+      default: false,
+      conditions: {
+        'content_type': 'select',
+      },
+    });
+
+    this.addControl('content_options', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Select Options',
+      conditions: {
+        'content_type': 'select',
+      },
+      description: 'Enter each option in a separate line. To differentiate between label and value, separate them with a pipe char ("|"). For example: First Name|f_name',
     });
 
     this.addControl('content_default_value', {
@@ -272,7 +294,7 @@ class Input extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} input': [ 
+        '{{ELEMENT}} .altrp-field': [ 
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -286,7 +308,7 @@ class Input extends BaseElement{
       label: 'Z-index',
       default: 0,
       rules: {
-        '{{ELEMENT}} input': 'z-index: {{VALUE}}'
+        '{{ELEMENT}} .altrp-field': 'z-index: {{VALUE}}'
       }
     });
 
@@ -414,7 +436,7 @@ class Input extends BaseElement{
           colorPickedHex: "",
         },
         rules: {
-          '{{ELEMENT}} input': 'background-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-field': 'background-color: {{COLOR}};',
         },
       }
     );
@@ -471,7 +493,7 @@ class Input extends BaseElement{
           },
         ],
         rules: {
-          '{{ELEMENT}} input': 'border-style: {{VALUE}};',
+          '{{ELEMENT}} .altrp-field': 'border-style: {{VALUE}};',
         },
       }
     );
@@ -491,7 +513,7 @@ class Input extends BaseElement{
           left: 2
         },
         rules: {
-          '{{ELEMENT}} input': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          '{{ELEMENT}} .altrp-field': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         },
       }
     );
@@ -504,7 +526,7 @@ class Input extends BaseElement{
           colorPickedHex: "#8E94AA",
         },
         rules: {
-          '{{ELEMENT}} input': 'border-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-field': 'border-color: {{COLOR}};',
         },
       }
     );
@@ -525,7 +547,7 @@ class Input extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} input': [ 
+        '{{ELEMENT}} .altrp-field': [ 
           'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         ]
       },

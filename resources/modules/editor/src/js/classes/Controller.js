@@ -74,15 +74,14 @@ class Controller {
    * @return {boolean}
    */
   isShow() {
-    if (!this.data.condition) {
+    if (!this.data.conditions) {
       return true;
     }
     /**
      * как работает метод toPairs
      * @link https://lodash.com/docs/4.17.15#toPairs
      */
-    let conditionPairs = _.toPairs(this.data.condition);
-    let currentElement = getCurrentElement();
+    let conditionPairs = _.toPairs(this.data.conditions);
     let show = true;
     conditionPairs.forEach(condition=>{
       let [controlId, value] = condition;
