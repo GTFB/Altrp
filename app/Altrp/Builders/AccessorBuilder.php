@@ -148,23 +148,14 @@ class AccessorBuilder
         return true;
     }
 
+    /**
+     * Удалить аксессор из таблицы БД
+     *
+     * @param $accessor
+     * @return int
+     */
     protected function removeAccessor($accessor)
     {
-//        $modelFileContent = file($this->modelFile, 2);
-//        $appends = $this->getAppendColumns($modelFileContent);
-//        $search = array_search("'{$accessor->name}'", $appends);
-//        if ($search !== false) {
-//            array_splice($appends, $search ,1);
-//        }
-//        $content = [];
-//        $appendsStubContent = $this->getAppendsStubContent();
-//        $appendsStubContent = str_replace(
-//            '{{appends}}',
-//            '[' . implode(',', $appends) . ']',
-//            $appendsStubContent
-//        );
-//        $this->searchAccessor($modelFileContent, $accessor);
-//        dd($appends, $search, $appendsStubContent);
         return Accessor::destroy($accessor->id);
     }
 
