@@ -33,6 +33,13 @@ function subscribeToModels(id){
           let modelsData = state.modelsData || {};
           modelsData = {...modelsData};
           modelsData[modelsSetting.settingName] = modelData[modelsSetting.fieldName] || '';
+          /**
+           * Если возможно то берем данные из связанной модели
+           */
+          if((! modelsData[modelsSetting.settingName]) && modelsSetting.fieldName.split('::').length > 1){
+            modelsData[modelsSetting.settingName] = modelData[modelsSetting.fieldName.split('::')[0]] ?
+                modelData[modelsSetting.fieldName.split('::')[0]][modelsSetting.fieldName.split('::')[1]] : ''
+          }
 
           return {...state, modelsData, modelData: {...modelData}}
         });
