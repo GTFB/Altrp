@@ -6,10 +6,10 @@ class FrontElementsFabric {
    * @param {object} object
    * @param {FrontElement | null} parent
    * @param {int | null} pageId
-   * @param {{} | null} model
+   * @param {[{}] | null} models
    * @return {FrontElement}
    */
-  parseData(object, parent, pageId, model){
+  parseData(object, parent, pageId, models){
     let children = [];
     /**
      * @member {FrontElement} element
@@ -22,9 +22,16 @@ class FrontElementsFabric {
       });
     }
 
-    if(model){
+    if(_.isArray(models)){
+      for(let model of models){
+        element.addModelInfo({
+            ...model,
+        });
+      }
+    }
+    if(_.isObject(models)){
       element.addModelInfo({
-        modelName: model.modelName,
+          ...models
       });
     }
     if( object.children && object.children.length ){

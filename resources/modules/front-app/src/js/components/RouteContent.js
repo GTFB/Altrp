@@ -26,7 +26,7 @@ class RouteContent extends Component {
       this.props.areas.map(area => <AreaComponent
           {...area}
           page={this.props.id}
-          model={this.props.model}
+          models={this.props.models}
           key={'appArea_' + area.id}/>)
     }</div>
     </Scrollbars>

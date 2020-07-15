@@ -146,6 +146,10 @@ class Model extends EloquentModel
           'title' => $actual_column->title ? $actual_column->title : $actual_column->name,
         ];
       }
+      foreach ( $model->altrp_table->relationships as $relationship ) {
+
+        $fields = array_merge( $fields, $relationship->get_related_field_options() );
+      }
       $models[] = [
         'modelName' => $model->altrp_table->name,
         'title' => $model->name,

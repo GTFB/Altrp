@@ -17,28 +17,6 @@ class ModelsController extends Controller
    */
   public function models_list()
   {
-    $test_res = [
-
-      [
-        'name' => 'post',
-        'title' => 'Post',
-        'ordering_fields' => [
-          ['title' => 'Title',],
-          ['date' => 'Date',],
-          ['random' => 'Random',],
-        ],
-      ],
-      [
-        'name' => 'model1',
-        'title' => 'Model 1',
-        'ordering_fields' => [
-          ['name' => 'Name',],
-          ['date' => 'Date',],
-          ['random' => 'Random',],
-        ],
-      ],
-    ];
-
     return response()->json( Model::getModelsForEditor() );
   }
   /**

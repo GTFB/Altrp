@@ -359,6 +359,32 @@ class FrontElement {
     }
     return'';
   }
+
+  /**
+   * Сохраняет данные модели
+   * @param modelName
+   * @param data
+   */
+  setModelData(modelName, data){
+    this.modelsStorage = this.modelsStorage || {};
+    this.modelsStorage[modelName] = {...data};
+    // this.forceUpdate();
+    console.log(modelName);
+    console.log(this.modelCallbacksStorage);
+    if(this.modelCallbacksStorage && this.modelCallbacksStorage[modelName]){
+      this.modelCallbacksStorage[modelName](this.modelsStorage[modelName]);
+    }
+  }
+  /**
+   * Подписывает на изменения модели
+   */
+  onUpdateModelStorage(modelName, callback){
+    this.modelCallbacksStorage = this.modelCallbacksStorage || {};
+    this.modelCallbacksStorage[modelName] = callback;
+    if(this.modelsStorage && this.modelsStorage[modelName]){
+      callback(this.modelsStorage[modelName]);
+    }
+  }
 }
 
 export default FrontElement
