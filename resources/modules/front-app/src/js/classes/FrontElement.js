@@ -157,7 +157,7 @@ class FrontElement {
   }
   /**
    * Возвращает массив потомков текущего элемента
-   * @return {[]}
+   * @return {array}
    */
 
   getChildren(){
