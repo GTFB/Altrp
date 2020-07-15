@@ -7,6 +7,7 @@ import {Link} from "react-router-dom";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 
 import AddModelPage from "./AddModelPage";
+import AccessorsPage from "./AccessorsPage";
 import AddControllerPage from "./AddControllerPage";
 
 /*
@@ -63,6 +64,7 @@ class SettingTable extends Component{
                     <Tab>Model</Tab>
                     <Tab>Controller</Tab>
                     <Tab>Routes</Tab>
+                    <Tab>Accessors</Tab>
                 </TabList>
                 <TabPanel>
                     <MigrationsTable/>
@@ -78,6 +80,9 @@ class SettingTable extends Component{
                 </TabPanel>
                   <TabPanel>
                   </TabPanel>
+                <TabPanel>
+                    <AccessorsPage/>
+                </TabPanel>  
             </Tabs>
             
         </div>

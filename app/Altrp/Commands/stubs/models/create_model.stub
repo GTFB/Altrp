@@ -3,6 +3,7 @@
 namespace DummyNamespace;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Altrp\Generators\Traits\UserColumnsTrait;
 {{useSoftDeletes}}
 // CUSTOM_NAMESPACES - IMPORTANT: Don't remove this comment! Write your namespaces between these comments.
 {{customNamespaces}}
@@ -13,6 +14,7 @@ class DummyClass extends Model
     // CUSTOM_TRAITS - IMPORTANT: Don't remove this comment! Write your traits between these comments.
     {{customTraits}}
     // CUSTOM_TRAITS - IMPORTANT: Don't remove this comment! Write your traits between these comments.
+    use UserColumnsTrait;
     {{softDeletes}}{{timestamps}}{{createdAt}}{{updatedAt}}
 
     /**
@@ -31,11 +33,24 @@ class DummyClass extends Model
      */
     protected $fillable = {{fillable}};
 
+    /**
+     * Columns that should be contains current user id
+     *
+     * @var array
+     */
+    protected static $userColumns = {{userColumns}};
+
     // CUSTOM_PROPERTIES - IMPORTANT: Don't remove this comment! Write your properties between these comments.
     {{customProperties}}
     // CUSTOM_PROPERTIES - IMPORTANT: Don't remove this comment! Write your properties between these comments.
 
+    // ACCESSORS - IMPORTANT: Don't remove this comment!
+    {{accessors}}
+    // ACCESSORS - IMPORTANT: Don't remove this comment!
+
+    // RELATIONSHIPS
     {{relationships}}
+    // RELATIONSHIPS
 
     // CUSTOM_METHODS - IMPORTANT: Don't remove this comment! Write your methods between these comments.
     {{customMethods}}

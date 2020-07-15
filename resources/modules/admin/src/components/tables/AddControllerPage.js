@@ -30,7 +30,7 @@ class AddControllerPage extends Component{
         
         this.resource = new Resource({route: '/admin/ajax/tables'});
         this.controller_resource = new Resource({route: '/admin/ajax/tables/'+this.props.match.params.id+'/controller'});
-        this.save_controller_resource = new Resource({route: '/admin/ajax/generators/'+this.props.match.params.id+'/controller/create'});
+        this.save_controller_resource = new Resource({route: '/admin/ajax/tables/'+this.props.match.params.id+'/controllers'});
         
         
         this.onChange = this.onChange.bind(this);
@@ -57,17 +57,32 @@ class AddControllerPage extends Component{
             controller_res.prefix = (controller_res.prefix == null) ? "" : controller_res.prefix;
             controller_res.namespace = (controller_res.namespace == null) ? "" : controller_res.namespace;
             
+            controller_res.relation = this.setCols(controller_res.relations);
+            
             this.setState(state=>{
                 return{...state, data: controller_res};
             }, () => {
                 
                 this.setState(state=>{
-                    return{...state, relationships: controller_res.relations.split(",")};
+                    return{...state, relationships: controller_res.relations.split(";")};
                 })
                 
             });
         }
         
+    }
+    
+    setCols(value) {
+        
+        let cols = [];
+        
+        if(!value) return cols;
+        
+        if(value == null || value == "") return cols;
+        
+        
+        value.replace(/'/g,"");
+        return value.split(",");
     }
     
     onChange(e) {

@@ -49,14 +49,16 @@ class RouteGenerator
     /**
      * Сгенерировать новые маршруты
      *
+     * @param $tableName
+     * @param $controller
      * @return boolean
      */
-    public function generate()
+    public function generate($tableName, $controller)
     {
         $this->routeStub = $this->fillStub();
 
-        if ($item = $this->routeExists()) {
-            $this->routeRewrite($item);
+        if ($items = $this->routeExists($tableName, $controller)) {
+            $this->routeRewrite($items);
         } else {
             $this->routeWrite();
         }
@@ -70,31 +72,33 @@ class RouteGenerator
      * Проверить, существует ли уже такой маршрут в файле
      * и получить индекс строки, если совпадение найдено
      *
-     * @return bool|int
+     * @param $tableName
+     * @param $controller
+     * @return array|bool
      */
-    protected function routeExists()
+    protected function routeExists($tableName, $controller)
     {
-        $routeName = substr($this->routeStub, 0, strpos($this->routeStub, ','));
-        $controllerName = trim(substr($this->routeStub,
-            strrpos($this->routeStub, ',') + 1), "\n");
-
+        $indexes = [];
         for ($i = 0; $i < count($this->routeContents); $i++) {
-            if (Str::contains($this->routeContents[$i], $routeName) ||
-                Str::contains($this->routeContents[$i], $controllerName)) {
-                return $i;
+            if (Str::contains($this->routeContents[$i], $tableName) ||
+                Str::contains($this->routeContents[$i], $controller)) {
+                $indexes[] = $i;
             }
         }
+        if ($indexes) return $indexes;
         return false;
     }
 
     /**
      * Перезаписать существующий маршрут
      *
-     * @param int $itemIndex Индекс строки
+     * @param $itemIndexes
      */
-    protected function routeRewrite(int $itemIndex)
+    protected function routeRewrite($itemIndexes)
     {
-        $this->routeContents[$itemIndex] = $this->routeStub;
+        for ($i = 0; $i < count($itemIndexes); $i++) {
+            $this->routeContents[$itemIndexes[$i]] = $this->routeStub[$i];
+        }
     }
 
     /**
@@ -102,7 +106,9 @@ class RouteGenerator
      */
     protected function routeWrite()
     {
-        $this->routeContents[] = $this->routeStub;
+        for ($i = 0; $i < count($this->routeStub); $i++) {
+            $this->routeContents[] = $this->routeStub[$i];
+        }
     }
 
     /**
@@ -122,7 +128,7 @@ class RouteGenerator
     /**
      * Заполнить stub файл динамическими переменными
      *
-     * @return string
+     * @return array
      */
     public function fillStub()
     {
@@ -142,8 +148,8 @@ class RouteGenerator
     {
         $stub = config('crudgenerator.custom_template')
             ? config('crudgenerator.path') . 'routes/create_route.stub'
-            : __DIR__ . '/../stubs/routes/create_route.stu';
+            : __DIR__ . '/../stubs/routes/create_route.stub';
 
-        return file_get_contents($stub);
+        return file($stub, 2);
     }
 }

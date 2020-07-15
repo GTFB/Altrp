@@ -12,22 +12,55 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  */
 class Model extends EloquentModel
 {
-  protected $table = 'altrp_models';
+    protected $table = 'altrp_models';
 
-  protected $fillable = [
-    'description',
-    'soft_deletes',
-    'time_stamps',
-    'fillable_cols',
-    'path',
-    'name',
-    'table_id',
-  ];
+    protected $fillable = [
+       'description',
+       'soft_deletes',
+       'time_stamps',
+       'fillable_cols',
+       'user_cols',
+       'path',
+       'name',
+       'table_id',
+    ];
 
   protected $hidden = [
     'relationships',
     'pk'
   ];
+
+    public function setFillableColsAttribute($value)
+    {
+        $this->attributes['fillable_cols'] = isset($value)
+            ? implode(',', (array) $value)
+            : null;
+    }
+
+    public function setUserColsAttribute($value)
+    {
+        $this->attributes['user_cols'] = isset($value)
+            ? implode(',', (array) $value)
+            : null;
+    }
+
+    public function altrp_table()
+    {
+        return $this->belongsTo(Table::class, 'table_id');
+    }
+
+    public function altrp_accessors()
+    {
+        return $this->hasMany(Accessor::class);
+    }
+
+    public function getTimeStampsAttribute($value) {
+        return (bool) $value;
+    }
+
+    public function getSoftDeletesAttribute($value) {
+        return (bool) $value;
+    }
 
   /**
    * Список моделей для редактора
@@ -125,27 +158,4 @@ class Model extends EloquentModel
   {
     return $this->belongsTo( Table::class );
   }
-
-  public function setFillableColsAttribute( $value )
-  {
-    $this->attributes['fillable_cols'] = isset( $value )
-      ? implode( ',', (array)$value )
-      : null;
-  }
-
-  public function altrp_table()
-  {
-    return $this->belongsTo( Table::class, 'table_id' );
-  }
-
-  public function getTimeStampsAttribute( $value )
-  {
-    return (bool)$value;
-  }
-
-  public function getSoftDeletesAttribute( $value )
-  {
-    return (bool)$value;
-  }
-
 }

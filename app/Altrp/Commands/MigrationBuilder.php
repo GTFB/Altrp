@@ -434,6 +434,10 @@ class MigrationBuilder {
     }
     
     
+    
+    
+    
+    
     /**
      * Получаем файл шаблона
      *

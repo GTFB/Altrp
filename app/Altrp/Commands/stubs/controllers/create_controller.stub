@@ -117,6 +117,35 @@ class DummyClass extends ApiController
         return response()->json(trans("deleteerror"), 400, [], JSON_UNESCAPED_UNICODE);
     }
 
+    /**
+     * Update column of resource from storage.
+     *
+     * @param Request $request
+     * @param $id
+     * @param $column
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateColumn(Request $request, $id, $column)
+    {
+        ${{crudNameSingular}} = {{modelName}}::find($id);
+
+        if(! ${{crudNameSingular}}) {
+            return response()->json("Table not found", 404, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        if (! isset(${{crudNameSingular}}->$column)) {
+            return response()->json('Column not exists', 400, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        ${{crudNameSingular}}->$column = $request->column_value;
+
+        if (${{crudNameSingular}}->save()) {
+            return response()->json('Successfully updated', 200, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        return response()->json('Failed to update', 400, [], JSON_UNESCAPED_UNICODE);
+    }
+
     // CUSTOM_METHODS - IMPORTANT: Don't remove this comment! Write your methods between these comments.
     {{customMethods}}
     // CUSTOM_METHODS - IMPORTANT: Don't remove this comment! Write your methods between these comments.
