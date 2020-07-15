@@ -23,11 +23,16 @@ class Controller extends EloquentModel
 
     public function model()
     {
-        return $this->belongsTo(Model::class);
+        return $this->table()->first()->models()->first();
     }
 
     public function table()
     {
         return $this->belongsTo(Table::class);
+    }
+
+    public function sources()
+    {
+        return $this->hasMany(Source::class);
     }
 }
