@@ -1,0 +1,593 @@
+import BaseElement from "./BaseElement";
+import TabsIcon from "../../../svgs/widget_tabs.svg";
+import {
+  CONTROLLER_TEXTAREA,
+  CONTROLLER_SWITCHER,
+  CONTROLLER_COLOR,
+  TAB_ADVANCED,
+  CONTROLLER_DIMENSIONS,
+  CONTROLLER_SELECT2,
+  CONTROLLER_SELECT,
+  CONTROLLER_MEDIA,
+  CONTROLLER_TEXT,
+  CONTROLLER_REPEATER,
+  CONTROLLER_SLIDER,
+  CONTROLLER_TYPOGRAPHIC,
+  TAB_CONTENT,
+  CONTROLLER_LINK,
+  TAB_STYLE,
+  CONTROLLER_CHOOSE,
+  CONTROLLER_NUMBER,
+  CONTROLLER_WYSIWYG, CONTROLLER_SHADOW
+} from "../modules/ControllersManager";
+import Repeater from "../Repeater";
+import { advancedTabControllers } from "../../decorators/register-controllers";
+
+class Tabs extends BaseElement {
+  static getName() {
+    return "tabs";
+  }
+  static getTitle() {
+    return "Tabs";
+  }
+  static getIconComponent() {
+    return TabsIcon;
+  }
+  static getType() {
+    return "widget";
+  }
+  _registerControls() {
+    if (this.controllersRegistered) {
+      return;
+    }
+
+    this.startControlSection("type_content", {
+      tab: TAB_CONTENT,
+      label: "Type"
+    });
+
+    this.addControl("type_type", {
+      type: CONTROLLER_SELECT,
+      label: "Type",
+      default: "tabs",
+      options: [
+        {
+          value: "tabs",
+          label: "tabs"
+        },
+        {
+          value: "switcher",
+          label: "switcher"
+        }
+      ],
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("tabs_content", {
+      tab: TAB_CONTENT,
+      label: "Tabs"
+    });
+
+    this.addControl("layout_tabs", {
+      type: CONTROLLER_SELECT,
+      label: "Layout",
+      default: "top",
+      options: [
+        {
+          value: "top",
+          label: "top"
+        },
+        {
+          value: "bottom",
+          label: "bottom"
+        },
+        {
+          value: "left",
+          label: "left"
+        },
+        {
+          value: "right",
+          label: "right"
+        }
+      ],
+    });
+
+    let repeater = new Repeater();
+
+    repeater.addControl('title_and_content_items',{
+      type: CONTROLLER_TEXT,
+      label: 'Title & content',
+      default: 'tab'
+    });
+
+    repeater.addControl('id_items',{
+      type: CONTROLLER_TEXT,
+      label: 'ID for default activation',
+    });
+
+    repeater.addControl('icon_items', {
+      type: CONTROLLER_MEDIA,
+      label: 'icon',
+    });
+
+    repeater.addControl("wysiwyg_items", {
+      type: CONTROLLER_TEXTAREA,
+      label: "Text",
+      default: "text"
+    });
+
+    this.addControl('items_tabs', {
+      label: 'Tab Items',
+      type: CONTROLLER_REPEATER,
+      fields: repeater.getControls(),
+      default: [
+        {title_and_content_items: "tab #1", wysiwyg_items: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." },
+        {title_and_content_items: "tab #2", wysiwyg_items: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)." }
+      ]
+    });
+
+    this.addControl('alignment_tabs', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment',
+      default: 'flex-start',
+      options:[
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+        {
+          icon: 'in_width',
+          value: 'space-between',
+        },
+      ],
+      rules: {
+            '{{ELEMENT}} .altrp-tab-btn-container': 'justify-content: {{VALUE}};',
+      },
+    });
+
+    this.addControl("spacing_column_tabs", {
+      type: CONTROLLER_SLIDER,
+      label: "Tab spacing",
+      default: {
+        size: 10,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-tab-btn-column": "margin-right: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-tab-btn-row": "margin-bottom: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("spacing_content_tabs", {
+      type: CONTROLLER_SLIDER,
+      label: "Content spacing",
+      default: {
+        size: 10,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-tab-btn-top": "margin-bottom: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-tab-btn-bottom": "margin-top: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-tab-btn-left": "margin-right: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-tab-btn-right": "margin-left: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("tab_style", {
+      tab: TAB_STYLE,
+      label: "Tab"
+    });
+
+    this.addControl("background_tab_style", {
+      type: CONTROLLER_COLOR,
+      label: "Background tabs",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}} .altrp-tab-btn-container": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("background_type_tab_style", {
+      type: CONTROLLER_COLOR,
+      label: "Background buttons",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}} .altrp-tab-btn": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("background_text_color_tab_style", {
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}} .altrp-tab-btn": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('box_shadow_tab_style', {
+        type: CONTROLLER_SHADOW,
+        label: 'Box shadow',
+        default:{
+          blur: 0,
+          horizontal: 0,
+          vertical: 0,
+          opacity: 1,
+          spread: 0,
+          colorRGB: 'rgb(0, 0, 0)',
+          color: 'rgb(0, 0, 0)',
+          colorPickedHex: '#000000',
+          type: ""
+        },
+        presetColors: [
+          '#eaeaea',
+          '#9c18a8'
+        ],
+        rules: {
+          '{{ELEMENT}} .altrp-tab-btn': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+        },
+      }
+    );
+
+    this.addControl("padding_tab_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 10,
+        right: 15,
+        bottom: 10,
+        left: 15,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-tab-btn": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+
+    this.addControl("border_type_tab_style", {
+      type: CONTROLLER_SELECT,
+      label: "Border type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        "{{ELEMENT}} .altrp-tab-btn": "border-style: {{VALUE}};"
+      }
+    });
+
+    this.addControl("border_width_tab_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-tab-btn":
+          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      }
+    });
+
+    this.addControl("border_color_tab_style", {
+      type: CONTROLLER_COLOR,
+      label: "Border color",
+      default: {
+        color: "rgb(50,168,82)",
+        colorPickedHex: "#32a852"
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-tab-btn": "border-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("border_radius_tab_style", {
+      type: CONTROLLER_SLIDER,
+      label: 'Border radius',
+      default:{
+        size: 0,
+        unit: 'px',
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-tab-btn": "border-radius: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl('typographic_tab_style', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default:{
+          lineHeight: 1.5,
+          spacing: 0,
+          size: 14,
+          weight: "normal",
+          family: '"roboto"',
+          decoration: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-tab-btn': [
+            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
+    this.endControlSection();
+
+    this.startControlSection("content_style", {
+      tab: TAB_STYLE,
+      label: "Content"
+    });
+
+    this.addControl("background_content_style", {
+      type: CONTROLLER_COLOR,
+      label: "Background",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}} .altrp-tab-content": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("text_color_content_style", {
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}} .altrp-tab-content div": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("padding_content_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-tab-content": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+
+    this.addControl("border_type_content_style", {
+      type: CONTROLLER_SELECT,
+      label: "Border type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        "{{ELEMENT}} .altrp-tab-content": "border-style: {{VALUE}};"
+      }
+    });
+
+    this.addControl("border_width_content_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-tab-content":
+          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      }
+    });
+
+    this.addControl("border_color_content_style", {
+      type: CONTROLLER_COLOR,
+      label: "Border color",
+      default: {
+        color: "rgb(50,168,82)",
+        colorPickedHex: "#32a852"
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-tab-content": "border-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("border_radius_content_style", {
+      type: CONTROLLER_SLIDER,
+      label: 'Border radius',
+      default:{
+        size: 0,
+        unit: 'px',
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-tab-content": "border-radius: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl('typographic_content_style', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default:{
+          lineHeight: 1.5,
+          spacing: 0,
+          size: 14,
+          weight: "normal",
+          family: '"roboto"',
+          decoration: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-tab-content div': [
+            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
+    this.endControlSection();
+
+    this.startControlSection("icon_style", {
+      tab: TAB_STYLE,
+      label: "Icon"
+    });
+
+    this.addControl('alignment_icon_style', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment',
+      default: 'left',
+      options:[
+        {
+          icon: 'block_left',
+          value: 'left',
+        },
+        {
+          icon: 'block_right',
+          value: 'right',
+        },
+      ],
+    });
+
+    this.addControl("color_icon_style", {
+      type: CONTROLLER_COLOR,
+      label: "Color",
+      default: {
+        color: "rgb(50,168,82)",
+        colorPickedHex: "#32a852"
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-tab-btn-icon svg path": "fill: {{COLOR}};"
+      }
+    });
+
+    this.addControl("spacing_icon_style", {
+      type: CONTROLLER_SLIDER,
+      label: "Spacing",
+      default: {
+        size: 8,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      max: 100,
+      min: 0,
+    });
+
+    this.endControlSection();
+
+    advancedTabControllers(this);
+  }
+}
+
+export default Tabs;

@@ -292,7 +292,7 @@ class Input extends BaseElement{
 
     this.addControl('position_css_id', {
       type: CONTROLLER_TEXT,
-      label: 'CSS ID'
+      label: 'CSS ID',
     });
 
     this.addControl('position_css_classes', {

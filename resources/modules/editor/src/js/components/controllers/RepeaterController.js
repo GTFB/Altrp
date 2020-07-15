@@ -77,7 +77,7 @@ class RepeaterController extends Component {
    */
   addItem() {
     let items = [...this.state.items];
-    items.push({});
+    items.push({id:this.state.items.length});
     this.setState(state => {
       return {...state,
         activeItem: items.length - 1,
