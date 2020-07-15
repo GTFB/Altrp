@@ -107,12 +107,28 @@ export function renderAsset(asset, props = null) {
   return '';
 }
 
+export function renderAssetIcon(asset, props = null) {
+  switch (asset.assetType) {
+    case 'icon': {
+      return iconsManager().renderIcon(asset.name)
+    }
+    case 'image': {
+      return React.createElement('img', {...props, src: asset.url})
+    }
+    case 'media': {
+      return React.createElement('img', {...props, src: asset.url})
+    }
+
+  }
+  return '';
+}
+
 export function getWindowWidth() {
   let window;
   if(isEditor()) {
     window = document.getElementById("editorWindow").offsetWidth;
   } else {
-    window = document.getElementById("front-app").offsetWidth 
+    window = document.getElementById("front-app").offsetWidth
   }
   return window
 }

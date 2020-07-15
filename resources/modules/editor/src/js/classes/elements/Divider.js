@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import HeadingIcon from "../../../svgs/widget_heading.svg";
+import DividerIcon from "../../../svgs/widget_divider.svg";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_COLOR,
@@ -23,10 +23,10 @@ class Divider extends BaseElement {
     return "divider";
   }
   static getTitle() {
-    return "divider";
+    return "Divider";
   }
   static getIconComponent() {
-    return HeadingIcon;
+    return DividerIcon;
   }
   static getType() {
     return "widget";

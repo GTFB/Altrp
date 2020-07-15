@@ -268,7 +268,7 @@ class Image extends BaseElement{
     );
     this.addControl('image_style_alignment', {
       type: CONTROLLER_CHOOSE,
-      label: 'alignment',
+      label: 'Alignment',
       default: 'center',
       options:[
         {

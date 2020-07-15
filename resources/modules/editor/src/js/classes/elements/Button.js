@@ -159,7 +159,7 @@ class Button extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-btn': [ 
+        '{{ELEMENT}} .altrp-btn': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -181,11 +181,11 @@ class Button extends BaseElement{
       },
       units:[
         'px',
-        '%',  
+        '%',
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-btn': [ 
+        '{{ELEMENT}} .altrp-btn': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -307,7 +307,7 @@ class Button extends BaseElement{
         },
       }
     );
-  
+
     this.addControl(
       'border_width', {
         type: CONTROLLER_DIMENSIONS,
@@ -325,7 +325,7 @@ class Button extends BaseElement{
         },
       }
     );
-  
+
     this.addControl('border_color', {
         type: CONTROLLER_COLOR,
         label: 'Border Color',
@@ -338,7 +338,7 @@ class Button extends BaseElement{
         },
       }
     );
-    
+
     this.addControl('border_radius', {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
@@ -418,7 +418,7 @@ class Button extends BaseElement{
         {
           value: '"Roboto"',
           label:'Roboto'
-        }, 
+        },
         {
           value: '"Lato"',
           label:'Lato'
