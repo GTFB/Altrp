@@ -33,11 +33,13 @@ color: #343B4C;
 .pagination__move {
   width: 30px;
 height: 30px;
+display: flex;
+justify-content: center;
+align-items: center;
 border: 1px solid #8E94AA;
 box-sizing: border-box;
+cursor: pointer;
 border-radius: 2px;
-background-size: cover;
-background-image: url(../../svgs/left.svg);
 }
 .pagination__buttons {
   display: flex;

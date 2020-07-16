@@ -6,7 +6,8 @@ import {setModalSettings, toggleModal} from "../js/store/modal-settings/actions"
 import {generateId, redirect} from "../js/helpers";
 import { NavLink } from "react-router-dom";
 import "../sass/components/admin-pagination.scss";
-import Left from "../svgs/left.svg"
+import Left from "../svgs/left.svg";
+import Right from "../svgs/right.svg";
 
 
 export default class Templates extends Component{
@@ -155,12 +156,16 @@ export default class Templates extends Component{
         </div>
         <div className="pagination__buttons">
         <p className="pagination__text">8 Items</p>
-        <div className="pagination__move pagination__toStart" ></div>
-        <div className="pagination__move pagination__prev"></div>
+        <div className="pagination__move pagination__toStart" >
+          <Left/><Left/>
+        </div>
+        <div className="pagination__move pagination__prev"><Left/> </div>
         <div className="pagination__indicator">1</div>
         <p className="pagination__map">of 1</p>
-        <div className="pagination__move pagination__next"></div>
-        <div className="pagination__move"></div>
+        <div className="pagination__move pagination__next"> <Right/> </div>
+        <div className="pagination__move">
+          <Right/> <Right/>
+        </div>
         </div>
       </div>
       </div>
