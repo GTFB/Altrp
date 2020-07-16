@@ -18,7 +18,7 @@ export default class Templates extends Component{
     this.resource = new Resource({
       route: '/admin/ajax/templates'
     });
-    this.emplateTypesResource = new Resource({
+    this.templateTypesResource = new Resource({
       route: '/admin/ajax/areas'
     });
     this.onClick = this.onClick.bind(this);
@@ -43,7 +43,7 @@ export default class Templates extends Component{
     })
   }
   async componentDidMount(){
-    let templateAreas = await this.emplateTypesResource.getAll();
+    let templateAreas = await this.templateTypesResource.getAll();
     this.setActiveArea(templateAreas[0]);
     this.setState(state=>{
       return{...state,templateAreas}

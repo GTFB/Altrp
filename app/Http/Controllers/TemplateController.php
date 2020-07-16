@@ -29,7 +29,7 @@ class TemplateController extends Controller
         'title' => $template->title,
         'id' => $template->id,
         'author' => $template->user->name,
-        'url' => \url('/admin/editor?template_id=' . $template->id),
+        'url' => '/admin/editor?template_id=' . $template->id,
         'area' => $template->area()->name,
 
       ];
