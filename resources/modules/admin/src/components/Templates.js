@@ -48,8 +48,8 @@ export default class Templates extends Component{
     this.setState(state=>{
       return{...state,templateAreas}
     });
-    this.resource.getAll().then(templates=>{
-      this.setTemplates(templates);
+    this.resource.getAll().then(res=>{
+      this.setTemplates(res.templates);
     });
   }
   onClick(){

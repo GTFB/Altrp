@@ -17,7 +17,21 @@ class TemplateController extends Controller
    */
   public function index( Request $request )
   {
-    $_templates = Template::where( 'type', '!=', 'review' )->get()->sortByDesc( 'id' )->values();
+    $page_count = 1;
+    if( ! $request->get( 'page' ) ){
+      $_templates = Template::where( 'type', '!=', 'review' )->get()->sortByDesc( 'id' )->values();
+    } else {
+      $page_size = $request->get( 'pageSize', 10 );
+      $area_name = $request->get( 'area', 'content' );
+      $_templates = Template::where( 'type', '!=', 'review' )
+        ->join( 'areas', 'areas.id', '=', 'templates.area' )
+        ->where( 'areas.name', $area_name )->skip( $page_size * ( $request->get( 'page' ) - 1 ) )
+        ->take( $page_size );
+      $page_count = $_templates->toBase()->getCountForPagination();
+      $_templates = $_templates->get('templates.*')->sortByDesc( 'id' )->values();
+
+      $page_count = ceil( $page_count / $page_size );
+    }
     $templates = [];
     foreach ( $_templates as $template ) {
       /**
@@ -36,13 +50,16 @@ class TemplateController extends Controller
 
     }
 
-    return \response()->json( $templates );
+    return \response()->json( [
+        'templates' => $templates,
+        'pageCount' => $page_count,
+      ]);
   }
 
   /**
    * Send array for frontend <option> tags ({
-   *     id,
-   *    title
+   *     value,
+   *    label
    * }).
    *
    * @return \Illuminate\Http\JsonResponse
@@ -53,8 +70,8 @@ class TemplateController extends Controller
 
     foreach ( $_templates as $template ) {
       $options[] = [
-        'id' => $template->id,
-        'title' => $template->title,
+        'value' => $template->id,
+        'label' => $template->title,
       ];
     }
     return \response()->json( $options );
@@ -106,7 +123,19 @@ class TemplateController extends Controller
   public function show( Template $template )
   {
     return response()->json( $template->toArray() );
+  }
 
+  /**
+   * Display the specified resource.
+   *
+   * @param string $template_id
+   * @return \Illuminate\Http\Response
+   */
+  public function show_frontend( string $template_id )
+  {
+    $template = Template::find( $template_id );
+
+    return response()->json( $template->toArray() );
   }
 
   /**
@@ -164,6 +193,7 @@ class TemplateController extends Controller
   public function destroy( Template $template )
   {
     //
+
     if( $template->delete() ){
       return \response()->json( ['message'=>'Success'] );
     }
@@ -177,7 +207,13 @@ class TemplateController extends Controller
   public function reviews( $template_id ){
     $reviews = Template::where( 'parent_template', $template_id )
       ->where( 'type', 'review' )
-      ->get()->toArray();
+      ->get([
+        'parent_template',
+        'id',
+        'title',
+        'created_at',
+        'updated_at',
+      ])->toArray();
     return \response()->json( $reviews );
   }
 }
