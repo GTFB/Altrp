@@ -195,8 +195,8 @@ class ControllerGenerator extends AppGenerator
             $sources[] = [
                 "model_id" => $this->getModelId(),
                 "controller_id" => $this->controllerModel->id,
-                "url" => '/altrp_models/' . $url,
-                "api_url" => '/api/altrp_models/' . $url,
+                "url" => '/ajax/models/' . $url,
+                "api_url" => '/api/ajax/models/' . $url,
                 "type" => $action,
                 "name" => $name,
                 "created_at" => $nowTime,

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Altrp\Accessor;
 use App\Altrp\Builders\AccessorBuilder;
+use App\Exceptions\TableNotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
@@ -168,17 +169,17 @@ class TableController extends ApiController
     function insertMigration(ApiRequest $request) {
 
         $id = $request->table;
-        
+
         $table = Table::find($id);
-        
+
         if(!$table) {
             return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
         }
-        
+
         $request->validate([
             "name" => ["string", "required"]
         ]);
-        
+
         $migration = new Migration();
         $migration->name = $request->name;
         $migration->file_path = "";
@@ -186,17 +187,17 @@ class TableController extends ApiController
         $migration->data = $request->data;
         $migration->user_id = auth()->user()->id;
         $migration->table_id = $table->id;
-        
+
         if(!$migration->save()){
             return response()->json('Ошибка генерации', 404, [], JSON_UNESCAPED_UNICODE);
         }
-        
+
         if($migration->run()) {
             return response()->json('Успешно сгенерировано', 200, [], JSON_UNESCAPED_UNICODE);
         }
-        
+
         return response()->json('Ошибка генерации', 404, [], JSON_UNESCAPED_UNICODE);
-        
+
         /*$id = $request->table;
         $table = Table::find($id);
 
@@ -219,9 +220,9 @@ class TableController extends ApiController
         if($migration->save()){
             return response()->json($migration->run(), 200, [],JSON_UNESCAPED_UNICODE);
         }
-        
+
         return response()->json(trans("responses.dberror"), 400, [],JSON_UNESCAPED_UNICODE);*/
-        
+
     }
 
     /**
@@ -302,6 +303,11 @@ class TableController extends ApiController
      */
     function saveModel(ApiRequest $request, $tableId)
     {
+        $table = Table::find($tableId);
+
+        if (! $table)
+            return response()->json('Table not found', 404, [], JSON_UNESCAPED_UNICODE);
+
         $generator = new ModelGenerator(
             array_merge($request->all(), ['table_id' => $tableId])
         );
@@ -309,10 +315,10 @@ class TableController extends ApiController
         $result = $generator->generate();
 
         if ($result) {
-            return response()->json('Успешно сгенерировано', 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json('Successfully generated!', 200, [], JSON_UNESCAPED_UNICODE);
         }
 
-        return response()->json('Ошибка генерации', 404, [], JSON_UNESCAPED_UNICODE);
+        return response()->json('Error', 500, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -333,7 +339,7 @@ class TableController extends ApiController
 
         return response()->json($model, 200, [],JSON_UNESCAPED_UNICODE);
     }
-    
+
     /**
      * Получить список аксессоров
      *
@@ -352,9 +358,9 @@ class TableController extends ApiController
         }
 
         return response()->json($model->altrp_accessors, 200, [],JSON_UNESCAPED_UNICODE);
-        
+
     }
-    
+
     /**
      * Добавить аксессор
      *
@@ -372,15 +378,19 @@ class TableController extends ApiController
             return response()->json('Модель не найдена!', 404, [], JSON_UNESCAPED_UNICODE);
         }
 
-        $modelAccessorBuilder = new AccessorBuilder($model, $request->all());
+        $accessor = new Accessor();
 
-        $result = $modelAccessorBuilder->build();
+        $accessorBuilder = new AccessorBuilder(
+            $model,
+            $accessor,
+            $request->all()
+        );
 
-        if ($result) {
-            return response()->json('Successfully added!', 200, [], JSON_UNESCAPED_UNICODE);
+        if ($accessorBuilder->build()) {
+            return response()->json($accessor, 200, [], JSON_UNESCAPED_UNICODE);
         }
 
-        return response()->json('Error!', 404, [], JSON_UNESCAPED_UNICODE);
+        return response()->json('Failed to add accessor!', 404, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -404,15 +414,16 @@ class TableController extends ApiController
             return response()->json('Accessor not found!', 404, [],JSON_UNESCAPED_UNICODE);
         }
 
-        $accessorBuilder = new AccessorBuilder($model);
+        $accessorBuilder = new AccessorBuilder(
+            $model,
+            $accessor
+        );
 
-        $result = $accessorBuilder->delete($accessor);
-
-        if ($result) {
+        if ($accessorBuilder->delete()) {
             return response()->json('Successfully deleted!', 200, [], JSON_UNESCAPED_UNICODE);
         }
 
-        return response()->json('Error!', 404, [], JSON_UNESCAPED_UNICODE);
+        return response()->json('Failed to delete accessor!', 404, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -440,12 +451,14 @@ class TableController extends ApiController
             return response()->json('Accessor not found!', 404, [],JSON_UNESCAPED_UNICODE);
         }
 
-        $accessorBuilder = new AccessorBuilder($model, $request->all());
+        $accessorBuilder = new AccessorBuilder(
+            $model,
+            $accessor,
+            $request->all()
+        );
 
-        $result = $accessorBuilder->update();
-
-        if ($result) {
-            return response()->json('Successfully updated!', 200, [], JSON_UNESCAPED_UNICODE);
+        if ($accessorBuilder->update()) {
+            return response()->json($accessor, 200, [], JSON_UNESCAPED_UNICODE);
         }
 
         return response()->json('Error!', 404, [], JSON_UNESCAPED_UNICODE);
@@ -480,8 +493,17 @@ class TableController extends ApiController
      * @throws \App\Exceptions\CommandFailedException
      * @throws \App\Exceptions\ControllerNotWrittenException
      * @throws \App\Exceptions\RouteGenerateFailedException
+     * @throws \App\Exceptions\ModelNotWrittenException
      */
     function saveController(ApiRequest $request, $tableId) {
+
+        $table = Table::find($tableId);
+
+        if (! $table)
+            return response()->json('Table not found', 404, [], JSON_UNESCAPED_UNICODE);
+
+        if (! $table->models()->first())
+            return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
 
         $generator = new ControllerGenerator(
             array_merge($request->all(), ['table_id' => $tableId])
