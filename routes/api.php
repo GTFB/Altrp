@@ -46,7 +46,7 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
 
         Route::get('/tables/{table}/columns', "Admin\TableController@getColumns");
         Route::get('/tables/{table}/keys', "Admin\TableController@getKeys");
-        
+
         Route::get( '/models', 'Admin\ModelsController@getModels');
 
         Route::post('/tables/{table}/models', 'Admin\TableController@saveModel');
@@ -64,6 +64,8 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
 
         Route::get('/reports', 'ReportsController@index');
         Route::post('/reports', 'ReportsController@store');
+
+        Route::resource('/diagrams', 'Admin\AltrpDiagramController')->except(['create','edit']);
 
         // GeneratorController routes
         // Route::post('/generators/{table}/model/create', 'Admin\GeneratorController@createModel');

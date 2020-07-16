@@ -104,6 +104,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::resource( 'reports', 'ReportsController' );
     Route::resource( 'media', 'Admin\MediaController' );
     Route::resource( 'settings', 'Admin\SettingsController' );
+    Route::resource('diagrams', 'Admin\AltrpDiagramController');
 
     /**
      * Updates Check
@@ -121,7 +122,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
       ->name( 'admin.models_with_fields_options' );
 
     Route::get( '/models', 'Admin\ModelsController@getModels');
-    
+
 
     Route::get('/tables', "Admin\TableController@getTables");
     Route::get('/tables/{table}', "Admin\TableController@getTable");
@@ -135,7 +136,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
 
     Route::get('/tables/{table}/columns', "Admin\TableController@getColumns");
     Route::get('/tables/{table}/keys', "Admin\TableController@getKeys");
-    
+
     Route::post('/tables/{table}/models', 'Admin\TableController@saveModel');
     Route::get('/tables/{table}/models/{model}', 'Admin\TableController@getModel');
     Route::post('/tables/{table}/models/{model}/accessors', 'Admin\TableController@saveAccessor');
@@ -144,24 +145,20 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::put('/tables/{table}/models/{model}/accessors/{accessor}', 'Admin\TableController@updateAccessor');
     Route::post('/tables/{table}/controllers', 'Admin\TableController@saveController');
     Route::get('/tables/{table}/controllers/{controller}', 'Admin\TableController@getController');
-    
-    
+
+
     Route::post('/tables/{table}/test', "Admin\TableController@test");
     Route::get('/tables/{table}/model', "Admin\TableController@getModel");
     Route::post('/tables/{table}/model', "Admin\TableController@saveModel");
-    
+
     Route::get('/tables/{table}/controller', "Admin\TableController@getController");
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
-    
-    
-    // GeneratorController routes
-    Route::post('/generators/{table}/model/create', 'Admin\GeneratorController@createModel');
-    Route::post('/generators/{table}/controller/create', 'Admin\GeneratorController@createController');
-    Route::post('/generators/{table}/migration/create', 'Admin\GeneratorController@createMigration');
-    
-    
 
-    
+
+
+
+
+
   });
 
 });
