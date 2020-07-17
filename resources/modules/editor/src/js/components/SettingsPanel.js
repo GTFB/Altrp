@@ -47,6 +47,8 @@ class SettingsPanel extends Component {
           sections = [...pair[1]];
         }
       });
+      console.log(this.props.currentElement.getName());
+      // store.dispatch(changeSettingSection(this.props.currentElement.getName(), this.state.activeTab, 0))
     }
 
     let contentTabClasses = 'panel-tab d-flex ' + (this.state.activeTab === TAB_CONTENT ? 'active' : '');
