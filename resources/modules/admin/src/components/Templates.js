@@ -47,6 +47,11 @@ export default class Templates extends Component{
     console.log(currentPage);
     this.setState(state=>({...state, currentPage}));//todo: сделать запрос this.resource.getQueried
   }
+
+  /**
+   * Сменить текущую область шаблона (вкладка)
+   * @param activeTemplateArea
+   */
   setActiveArea(activeTemplateArea){
     //todo: удалить фильтрацию - сделать новый запрос this.resource.getQueried
     let templates = this.state.allTemplates.filter(template=>{
@@ -56,26 +61,49 @@ export default class Templates extends Component{
       return{...state, activeTemplateArea, templates};
     })
   }
+
+  /**
+   * Метод для обновления списка шаблонов
+   * @param currentPage
+   * @param activeTemplateArea
+   */
+  updateTemplates(currentPage, activeTemplateArea){
+    this.resource.getQueried({
+      area: activeTemplateArea.name,
+      page: currentPage,
+      pageSize: 10,
+    }).then(res=>{
+      console.log(res.pageCount);
+      this.setState(state=> {
+        return {
+          ...state,
+          pageCount: res.pageCount,
+          templates: res.templates
+        }
+      });
+    });
+  }
   async componentDidMount(){
     let templateAreas = await this.templateTypesResource.getAll();
     this.setActiveArea(templateAreas[0]);
     this.setState(state=>{
       return{...state,templateAreas}
     });
-    this.resource.getQueried({
-      area: this.state.activeTemplateArea.name,
-      page: this.state.currentPage,
-      pageSize: 10,
-    }).then(res=>{
-      console.log(res.pageCount);
-      this.setState(state=> {
-        return {
-            ...state,
-          pageCount: res.pageCount,
-          templates: res.templates
-        }
-      });
-    });
+    this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea.name)
+    // this.resource.getQueried({
+    //   area: this.state.activeTemplateArea.name,
+    //   page: this.state.currentPage,
+    //   pageSize: 10,
+    // }).then(res=>{
+    //   console.log(res.pageCount);
+    //   this.setState(state=> {
+    //     return {
+    //         ...state,
+    //       pageCount: res.pageCount,
+    //       templates: res.templates
+    //     }
+    //   });
+    // });
   }
   onClick(){
     let modalSettings = {
