@@ -54,7 +54,7 @@ class SettingSection extends Component {
         {
           controllers.map((controller) => {
               let ControllerComponent = window.controllersManager.getController(controller.type);
-              return React.createElement(ControllerComponent, {...controller, key: controller.controlId, controller: new Controller(controller)});
+              return React.createElement(ControllerComponent, {...controller, key: controller.controlId});
             })
         }
       </div>

@@ -6,10 +6,11 @@ import AdvancedIcon from '../../svgs/advanced.svg'
 import {TAB_ADVANCED, TAB_CONTENT, TAB_STYLE} from "../classes/modules/ControllersManager";
 import PanelTabContent from "./PanelTabContent";
 import DynamicContent from "./DynamicContent/DynamicContent";
+import Controller from "../classes/Controller";
 
 class SettingsPanel extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       activeTab: 'content',
@@ -20,9 +21,9 @@ class SettingsPanel extends Component {
    * Устанавливает текущий таб
    * @param activeTab
    */
-  setActiveTab(activeTab){
+  setActiveTab(activeTab) {
     this.setState({
-        ...this.state, activeTab
+      ...this.state, activeTab
     })
   }
 
@@ -31,8 +32,22 @@ class SettingsPanel extends Component {
     let controllersManager = window.controllersManager;
 
     let sections = [];
-    if(this.props.currentElement.getName){
+    let sectionStyle = [];
+    if (this.props.currentElement.getName) {
       sections = controllersManager.getControls(this.props.currentElement.getName())[this.state.activeTab] || [];
+      sections.forEach(section => {
+        section.controls = section.controls.map(control => {
+          control.controller = new Controller(control);
+          return control;
+        });
+      });
+      sectionStyle = controllersManager.getControls(this.props.currentElement.getName())['style'] || [];
+      sectionStyle.forEach(section => {
+        section.controls = section.controls.map(control => {
+          control.controller = new Controller(control);
+          return control;
+        });
+      });
     }
 
     // let sections = this.props.currentElement.getControllers ?
@@ -41,7 +56,7 @@ class SettingsPanel extends Component {
     let advancedTabClasses = 'panel-tab d-flex ' + (this.state.activeTab === TAB_ADVANCED ? 'active' : '');
     return <div className="panel settings-panel d-flex">
       <div className="panel-tabs d-flex">
-        <button className={contentTabClasses} onClick={()=>this.setActiveTab(TAB_CONTENT)}>
+        <button className={contentTabClasses} onClick={() => this.setActiveTab(TAB_CONTENT)}>
           <span className="panel-tab__icon">
             <ContentIcon/>
           </span>
@@ -49,7 +64,7 @@ class SettingsPanel extends Component {
             Content
           </span>
         </button>
-        <button className={styleTabClasses} onClick={()=>this.setActiveTab(TAB_STYLE)}>
+        <button className={styleTabClasses} onClick={() => this.setActiveTab(TAB_STYLE)}>
           <span className="panel-tab__icon">
             <StyleIcon/>
           </span>
@@ -57,7 +72,7 @@ class SettingsPanel extends Component {
             Style
           </span>
         </button>
-        <button className={advancedTabClasses} onClick={()=>this.setActiveTab(TAB_ADVANCED)}>
+        <button className={advancedTabClasses} onClick={() => this.setActiveTab(TAB_ADVANCED)}>
           <span className="panel-tab__icon">
             <AdvancedIcon/>
           </span>
@@ -70,9 +85,11 @@ class SettingsPanel extends Component {
     </div>
   }
 }
+
 function mapStateToProps(state) {
-  return{
-    currentElement:state.currentElement.currentElement
+  return {
+    currentElement: state.currentElement.currentElement
   };
 }
+
 export default connect(mapStateToProps)(SettingsPanel);
