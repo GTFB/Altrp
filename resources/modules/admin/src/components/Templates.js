@@ -17,6 +17,7 @@ export default class Templates extends Component{
       templateAreas: [],
       activeTemplateArea: {},
       pageCount: 1,
+      currentPage: 1,
     };
     this.resource = new Resource({
       route: '/admin/ajax/templates'
@@ -25,6 +26,7 @@ export default class Templates extends Component{
       route: '/admin/ajax/areas'
     });
     this.onClick = this.onClick.bind(this);
+    this.changePage = this.changePage.bind(this);
     this.changeActiveArea = this.changeActiveArea.bind(this);
   }
   changeActiveArea(e){
@@ -36,6 +38,14 @@ export default class Templates extends Component{
       }
     });
     this.setActiveArea(activeTemplateArea)
+  }
+
+  /**
+   * Смена текущей страницы
+   */
+  changePage(currentPage){
+    console.log(currentPage);
+    this.setState(state=>({...state, currentPage}));//todo: сделать запрос this.resource.getQueried
   }
   setActiveArea(activeTemplateArea){
     //todo: удалить фильтрацию - сделать новый запрос this.resource.getQueried
@@ -54,7 +64,7 @@ export default class Templates extends Component{
     });
     this.resource.getQueried({
       area: this.state.activeTemplateArea.name,
-      page: 1,
+      page: this.state.currentPage,
       pageSize: 10,
     }).then(res=>{
       console.log(res.pageCount);
@@ -161,7 +171,9 @@ export default class Templates extends Component{
           title: 'Author',
         },
       ]} rows={this.state.templates}/>
-        <Pagination pageCount={this.state.pageCount}/>
+        <Pagination pageCount={this.state.pageCount}
+                    changePage={this.changePage}
+        />
       </div>
     </div>;
   }

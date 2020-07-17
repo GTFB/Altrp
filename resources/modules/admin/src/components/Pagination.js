@@ -11,7 +11,7 @@ class Pagination extends Component {
     };
   }
   render(){
-
+//todo: сделать теги button для кнопок и input для ввода
     return<div className="pagination">
       <div className="version">
         <p className="pagination__version">App creating with <NavLink className="pagination__link" to="#">Altrp</NavLink> / Version 1.0.1 </p>
@@ -23,8 +23,10 @@ class Pagination extends Component {
         </div>
         <div className="pagination__move pagination__prev"><Left/> </div>
         <div className="pagination__indicator">{this.state.currentPage || 1}</div>
-        <p className="pagination__map">of {this.props.pageCount}</p>
-        <div className="pagination__move pagination__next"> <Right/> </div>
+        <div className="pagination__map">of {this.props.pageCount}</div>
+        <button className="pagination__move pagination__next" onClick={()=>{
+          this.props.changePage(++this.state.currentPage);
+        }}> <Right/> </button>
         <div className="pagination__move">
           <Right/> <Right/>
         </div>
