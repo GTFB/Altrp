@@ -61,7 +61,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::put('/global-elements/{element}', "Constructor\GlobalElements@update");
     Route::delete('/global-elements/{element}', "Constructor\GlobalElements@trashed");
     Route::get( 'templates/options', 'TemplateController@options' );
-    Route::get( '/template/{template_id}/reviews', 'TemplateController@reviews' );
+    Route::get( '/templates/{template_id}/reviews', 'TemplateController@reviews' );
+    Route::delete('/templates/{template_id}/reviews', 'TemplateController@deleteReviews');
+    Route::delete('/templates/{template_id}/reviews/{review_id}', 'TemplateController@deleteReview');
+    Route::delete('/templates/{template_id}', 'TemplateController@deleteTemplate');
+
     Route::resource( 'pages', 'Admin\PagesController' );
     Route::get( '/pages_options', 'Admin\PagesController@pages_options' )->name( 'admin.pages_options.all' );
     Route::get( '/pages_options/{page_id}', 'Admin\PagesController@show_pages_options' )->name( 'admin.pages_options.show' );
@@ -121,7 +125,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
       ->name( 'admin.models_with_fields_options' );
 
     Route::get( '/models', 'Admin\ModelsController@getModels');
-    
+
 
     Route::get('/tables', "Admin\TableController@getTables");
     Route::get('/tables/{table}', "Admin\TableController@getTable");
@@ -135,7 +139,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
 
     Route::get('/tables/{table}/columns', "Admin\TableController@getColumns");
     Route::get('/tables/{table}/keys', "Admin\TableController@getKeys");
-    
+
     Route::post('/tables/{table}/models', 'Admin\TableController@saveModel');
     Route::get('/tables/{table}/models/{model}', 'Admin\TableController@getModel');
     Route::post('/tables/{table}/models/{model}/accessors', 'Admin\TableController@saveAccessor');
@@ -144,24 +148,24 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::put('/tables/{table}/models/{model}/accessors/{accessor}', 'Admin\TableController@updateAccessor');
     Route::post('/tables/{table}/controllers', 'Admin\TableController@saveController');
     Route::get('/tables/{table}/controllers/{controller}', 'Admin\TableController@getController');
-    
-    
+
+
     Route::post('/tables/{table}/test', "Admin\TableController@test");
     Route::get('/tables/{table}/model', "Admin\TableController@getModel");
     Route::post('/tables/{table}/model', "Admin\TableController@saveModel");
-    
+
     Route::get('/tables/{table}/controller', "Admin\TableController@getController");
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
-    
-    
+
+
     // GeneratorController routes
     Route::post('/generators/{table}/model/create', 'Admin\GeneratorController@createModel');
     Route::post('/generators/{table}/controller/create', 'Admin\GeneratorController@createController');
     Route::post('/generators/{table}/migration/create', 'Admin\GeneratorController@createMigration');
-    
-    
 
-    
+
+
+
   });
 
 });
