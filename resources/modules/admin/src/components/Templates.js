@@ -4,10 +4,8 @@ import AdminTable from "./AdminTable";
 import store from "../js/store/store";
 import {setModalSettings, toggleModal} from "../js/store/modal-settings/actions";
 import {generateId, redirect} from "../js/helpers";
-import { NavLink } from "react-router-dom";
 import "../sass/components/admin-pagination.scss";
-import Left from "../svgs/left.svg";
-import Right from "../svgs/right.svg";
+import Pagination from "./Pagination";
 
 
 export default class Templates extends Component{
@@ -17,7 +15,8 @@ export default class Templates extends Component{
       templates: [],
       allTemplates: [],
       templateAreas: [],
-      activeTemplateArea: {}
+      activeTemplateArea: {},
+      pageCount: 1,
     };
     this.resource = new Resource({
       route: '/admin/ajax/templates'
@@ -39,6 +38,13 @@ export default class Templates extends Component{
     this.setActiveArea(activeTemplateArea)
   }
   setActiveArea(activeTemplateArea){
+    //todo: удалить фильтрацию - сделать новый запрос this.resource.getQueried
+    let templates = this.state.allTemplates.filter(template=>{
+      return template.area === activeTemplateArea.name;
+    });
+    this.setState(state=>{
+      return{...state, activeTemplateArea, templates};
+    })
   }
   async componentDidMount(){
     let templateAreas = await this.templateTypesResource.getAll();
@@ -46,8 +52,19 @@ export default class Templates extends Component{
     this.setState(state=>{
       return{...state,templateAreas}
     });
-    this.resource.getAll().then(res=>{
-      this.setTemplates(res.templates);
+    this.resource.getQueried({
+      area: this.state.activeTemplateArea.name,
+      page: 1,
+      pageSize: 10,
+    }).then(res=>{
+      console.log(res.pageCount);
+      this.setState(state=> {
+        return {
+            ...state,
+          pageCount: res.pageCount,
+          templates: res.templates
+        }
+      });
     });
   }
   onClick(){
@@ -144,24 +161,7 @@ export default class Templates extends Component{
           title: 'Author',
         },
       ]} rows={this.state.templates}/>
-      <div className="pagination">
-        <div className="version">
-          <p className="pagination__version">App creating with <NavLink className="pagination__link" to="#">Altrp</NavLink> / Version 1.0.1 </p>
-        </div>
-        <div className="pagination__buttons">
-        <p className="pagination__text">8 Items</p>
-        <div className="pagination__move pagination__toStart" >
-          <Left/><Left/>
-        </div>
-        <div className="pagination__move pagination__prev"><Left/> </div>
-        <div className="pagination__indicator">1</div>
-        <p className="pagination__map">of 1</p>
-        <div className="pagination__move pagination__next"> <Right/> </div>
-        <div className="pagination__move">
-          <Right/> <Right/>
-        </div>
-        </div>
-      </div>
+        <Pagination pageCount={this.state.pageCount}/>
       </div>
     </div>;
   }
