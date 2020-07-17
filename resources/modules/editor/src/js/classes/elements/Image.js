@@ -5,7 +5,7 @@ import {
   CONTROLLER_MEDIA,
   CONTROLLER_DIMENSIONS,
   CONTROLLER_NUMBER,
-  CONTROLLER_SLIDER,  
+  CONTROLLER_SLIDER,
   CONTROLLER_TEXT,
   CONTROLLER_SELECT,
   CONTROLLER_FILTERS,
@@ -75,7 +75,7 @@ class Image extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} img': [ 
+        '{{ELEMENT}} img': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -100,7 +100,7 @@ class Image extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} div': [ 
+        '{{ELEMENT}} div': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -175,7 +175,7 @@ class Image extends BaseElement{
         },
       }
     );
-    
+
     this.addControl('aspect_ratio_size', {
         type: CONTROLLER_SELECT,
         label: 'Aspect ratio',
@@ -335,7 +335,7 @@ class Image extends BaseElement{
         },
       }
     );
-  
+
     this.addControl('border_width', {
         type: CONTROLLER_DIMENSIONS,
         label: 'Border Width',
@@ -349,7 +349,7 @@ class Image extends BaseElement{
         },
       }
     );
-  
+
     this.addControl('border_color', {
         type: CONTROLLER_COLOR,
         label: 'Border Color',
@@ -362,7 +362,7 @@ class Image extends BaseElement{
         },
       }
     );
-    
+
     this.addControl('border_radius', {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
