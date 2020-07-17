@@ -147,7 +147,9 @@ class Model extends EloquentModel
         ];
       }
       foreach ( $model->altrp_table->relationships as $relationship ) {
-
+        /**
+         * @var Relationship $relationship
+         */
         $fields = array_merge( $fields, $relationship->get_related_field_options() );
       }
       $models[] = [
