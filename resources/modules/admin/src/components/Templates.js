@@ -89,7 +89,7 @@ export default class Templates extends Component{
     this.setState(state=>{
       return{...state,templateAreas}
     });
-    this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea.name)
+    this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea)
     // this.resource.getQueried({
     //   area: this.state.activeTemplateArea.name,
     //   page: this.state.currentPage,
