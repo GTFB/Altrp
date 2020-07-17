@@ -215,6 +215,9 @@ class Resource {
       headers: {
         'Content-Type': 'application/json'
       },
+       area,
+       page,
+       pageSize
     };
     let url = `${this.route}?${queryString.stringify(params)}`;
     let res =  await fetch(url, options).then(res => {

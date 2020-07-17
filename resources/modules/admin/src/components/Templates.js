@@ -39,12 +39,6 @@ export default class Templates extends Component{
     this.setActiveArea(activeTemplateArea)
   }
   setActiveArea(activeTemplateArea){
-    let templates = this.state.allTemplates.filter(template=>{
-      return template.area === activeTemplateArea.name;
-    });
-    this.setState(state=>{
-      return{...state, activeTemplateArea, templates};
-    })
   }
   async componentDidMount(){
     let templateAreas = await this.emplateTypesResource.getAll();
