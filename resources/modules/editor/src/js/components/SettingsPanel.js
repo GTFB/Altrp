@@ -32,25 +32,23 @@ class SettingsPanel extends Component {
     let controllersManager = window.controllersManager;
 
     let sections = [];
-    let sectionStyle = [];
     if (this.props.currentElement.getName) {
-      sections = controllersManager.getControls(this.props.currentElement.getName())[this.state.activeTab] || [];
-      sections.forEach(section => {
-        section.controls = section.controls.map(control => {
-          control.controller = new Controller(control);
-          return control;
+      let allControllersPairs = _.toPairs(controllersManager.getControls(this.props.currentElement.getName()));
+      allControllersPairs.forEach(pair=>{
+        pair[1].forEach(section=>{
+          section.controls = section.controls.map(control=>{
+            return {
+              ...control,
+              controller: new Controller(control)
+            }
+          });
         });
-      });
-      sectionStyle = controllersManager.getControls(this.props.currentElement.getName())['style'] || [];
-      sectionStyle.forEach(section => {
-        section.controls = section.controls.map(control => {
-          control.controller = new Controller(control);
-          return control;
-        });
+        if(pair[0] === this.state.activeTab){
+          sections = [...pair[1]];
+        }
       });
     }
 
-    // let sections = this.props.currentElement.getControllers ?
     let contentTabClasses = 'panel-tab d-flex ' + (this.state.activeTab === TAB_CONTENT ? 'active' : '');
     let styleTabClasses = 'panel-tab d-flex ' + (this.state.activeTab === TAB_STYLE ? 'active' : '');
     let advancedTabClasses = 'panel-tab d-flex ' + (this.state.activeTab === TAB_ADVANCED ? 'active' : '');
