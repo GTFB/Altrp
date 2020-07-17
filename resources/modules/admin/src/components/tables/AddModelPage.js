@@ -69,15 +69,50 @@ class AddModelPage extends Component{
             local_key: '',
         };
         
+        /**
+         * Настройки таблицы формул
+         */
+        this.accessors_table_columns = [
+            {name: 'id',title: 'ID',},
+            {name: 'name',title: 'Name',},
+            {name: 'formula',title: 'Formula',},
+            {name: 'status',title: 'Status',},
+            {
+                name: 'edit',
+                title: 'Edit',
+                is_button: true, 
+                button: {class: "",function: this.addAccessorModalShow.bind(this),title: "Edit"},
+            },
+            {
+                name: 'delete',
+                title: 'Delete',
+                is_button: true, 
+                button: {class: "",function: this.onDeleteAccessorClick.bind(this),title: "Delete"},
+            },
+        ];
+        
+        /**
+         * Формула по умолчанию
+         * @type type
+         */
+        const default_accessor = {
+            id: "",
+            name: '',
+            formula: '',
+            description: "",
+        };
+        
         this.state = {
             modal_toogle: false,
             table_id: this.props.match.params.id,
             table: {},
             actual_columns: [],
             fillable_columns: [],
+            user_cols: [],
             data: {
                 description: "",
                 fillable_cols: [],
+                user_cols: [],
                 table_id: this.props.match.params.id,
                 path: "",
                 name: "",
@@ -86,22 +121,26 @@ class AddModelPage extends Component{
                 time_stamps: false,
                 soft_deletes: false
             },
-            
+            accessors: [],
             default_relationship: default_relationship,
             selected_relationship: null,
-            relationship: default_relationship
+            relationship: default_relationship,
+            default_accessor: default_accessor,
+            selected_accessor: null,
+            accessor: default_accessor,
         };
         
         
         
         this.resource = new Resource({route: '/admin/ajax/tables'});
         this.model_resource = new Resource({route: '/admin/ajax/tables/'+this.props.match.params.id+'/model'});
-        this.save_model_resource = new Resource({route: '/admin/ajax/generators/'+this.props.match.params.id+'/model/create'});
-        
-        
+        this.save_model_resource = new Resource({route: '/admin/ajax/tables/'+this.props.match.params.id+'/models'});
+        this.accessors_resource = false;
         
         this.addFillableColumn = this.addFillableColumn.bind(this);
         this.deleteFillableColumn = this.deleteFillableColumn.bind(this);
+        this.addUserColsColumn = this.addUserColsColumn.bind(this);
+        this.deleteUserColsColumn = this.deleteUserColsColumn.bind(this);
         this.onChange = this.onChange.bind(this);
         this.onChangeRelationship = this.onChangeRelationship.bind(this);
         this.saveModel = this.saveModel.bind(this);
@@ -112,6 +151,8 @@ class AddModelPage extends Component{
         this.getModalClasses = this.getModalClasses.bind(this);
         this.onDeleteClick = this.onDeleteClick.bind(this);
         
+        this.addAccessorModalShow = this.addAccessorModalShow.bind(this);
+        this.onDeleteAccessorClick = this.onDeleteAccessorClick.bind(this);
         
     }
     
@@ -121,31 +162,37 @@ class AddModelPage extends Component{
             return{...state, table:table_res};
         });
         
-        let columns_res = await this.resource.get(this.state.table_id+"/columns")
+        let columns_res = await this.resource.get(this.state.table_id+"/columns");
         this.setState(state=>{
-            return{...state, actual_columns: columns_res, fillable_columns: columns_res};
+            return{...state, actual_columns: columns_res, fillable_columns: columns_res, user_cols: columns_res};
         });
         
-        let model_data = await this.resource.get(this.state.table_id+"/model")
+        let model_data = await this.resource.get(this.state.table_id+"/model");
         
         if(model_data) {
-             model_data.fillable_cols = model_data.fillable_cols.replace(/'/g,"");
-             let model = {
+             
+            
+            
+            let model = {
                 description: model_data.description,
-                fillable_cols: model_data.fillable_cols.split(","),
+                fillable_cols: this.setCols(model_data.fillable_cols),
+                user_cols: this.setCols(model_data.user_cols),
                 table_id: model_data.table_id,
-                path: model_data.path,
+                path: model_data.path !== null ? model_data.path : "",
                 name: model_data.name,
                 relationships: model_data.table.relationships,
                 pk: model_data.pk,
                 time_stamps: model_data.time_stamps,//1 == model_data.time_stamps ? true : false,
                 soft_deletes: model_data.soft_deletes//1 == model_data.soft_deletes ? true : false,
             }
+            
+            this.accessors_resource = new Resource({route: '/admin/ajax/tables/'+this.props.match.params.id+'/models/'+model_data.id+"/accessors"});
+            let accessors_data = await this.accessors_resource.getAll();
 
             this.setState(state=>{
-                return{...state, data: model};
+                return{...state, data: model, accsessors: accessors_data};
             }, () => {
-                console.log(this.state)
+                
             });
         }
                 
@@ -157,6 +204,20 @@ class AddModelPage extends Component{
             return{...state, data: { ...state.data, keys: keys_res}};
         });*/
     }
+    
+    setCols(value) {
+        
+        let cols = [];
+        
+        if(!value) return cols;
+        
+        if(value == null || value == "") return cols;
+        
+        
+        value.replace(/'/g,"");
+        return value.split(",");
+    }
+    
     addFillableColumn(e) {
         
         let value = e.target.value;
@@ -186,6 +247,40 @@ class AddModelPage extends Component{
         
         this.setState((state) => {
             return { ...state, data: { ...state.data,  fillable_cols: update(state.data.fillable_cols, {$splice: [[itemIndex, 1]]})}};
+        }, () => {
+            //this.toggleModal();
+        });
+    }
+    
+    addUserColsColumn(e) {
+        
+        let value = e.target.value;
+        
+        let itemIndex = this.state.data.user_cols.indexOf(value);
+        
+        if(itemIndex !== -1) {
+            alert("This column has already been added.");
+            return false;
+        }
+        
+        this.setState((state) => {
+            return { ...state, data: { ...state.data,  user_cols: update(state.data.user_cols, {$push: [value]})}};
+        }, () => {
+            //this.toggleModal();
+        });
+    }
+    deleteUserColsColumn(e, value) {
+        e.preventDefault();
+        
+        let itemIndex = this.state.data.user_cols.indexOf(value);
+        
+        if(itemIndex === -1) {
+            alert("This column not found.");
+            return false;
+        }
+        
+        this.setState((state) => {
+            return { ...state, data: { ...state.data,  user_cols: update(state.data.user_cols, {$splice: [[itemIndex, 1]]})}};
         }, () => {
             //this.toggleModal();
         });
@@ -305,6 +400,38 @@ class AddModelPage extends Component{
         }
     }
     
+    
+    
+    addAccessorModalShow(e) {
+        console.log(e);
+        let itemIndex = this.state.data.relationships.indexOf(e);
+        this.setState((state) => {
+            if(itemIndex === -1) {
+                return { ...state, selected_relationship: null, relationship: state.default_relationship}
+            }
+            else {
+                return { ...state, selected_relationship: itemIndex, relationship: state.data.relationships[itemIndex]}
+            }
+            
+        }, () => { 
+            this.toggleModal();
+        });
+    }
+    onDeleteAccessorClick(e){
+        const conf = confirm(`Are you sure?`);
+        
+        if (conf) {
+            let itemIndex = this.state.data.relationships.indexOf(e);
+            if(itemIndex !== -1) {
+                this.setState((state) => {
+                    return { ...state, data: { ...state.data,  relationships: update(this.state.data.relationships, {$splice: [[itemIndex, 1]]})}};
+                }, () => {
+                    alert("Success");
+                });
+            }
+        }
+    }
+    
     render(){
         return <div>
             <div>
@@ -357,13 +484,35 @@ class AddModelPage extends Component{
                     </div>
                     <div>
                         <label className='form-label'>
+                            User Cols
+                            <select className="form__input" name='add_user_cols' onChange={(e) => {this.addUserColsColumn(e)}}>
+                                <option value=""/>
+                                {
+                                  this.state.user_cols.map(option =>
+                                      <option key={option.id}
+                                              value={option.name}
+                                              children={option.title}/>)
+                                }
+                            </select>
+                        </label>
+                        <div>
+                            {
+                                this.state.data.user_cols.map(option =>
+                                <div key={option}>
+                                    <button className="btn" onClick={(e) => {this.deleteUserColsColumn(e,option)}}>{option}</button>
+                                </div>  )
+                                }
+                        </div>
+                    </div>
+                    <div>
+                        <label className='form-label'>
                             Path
                             <input className='form__input' type="text" name="path" value={this.state.data.path}  onChange={(e) => {this.onChange(e)}}/>
                         </label>
                     </div>
                     <label className='form-label'>
                         Primary Key
-                        <select className="form__input" name='pk' onChange={(e) => {this.onChange(e)}}>
+                        <select className="form__input" name='pk'  value={this.state.data.pk} onChange={(e) => {this.onChange(e)}}>
                             <option value=""/>
                             {
                               this.state.actual_columns.map(option =>
@@ -385,6 +534,15 @@ class AddModelPage extends Component{
                 <form className="admin-form" onSubmit={this.saveModel}>
                     <button className="btn btn_success">Save</button>
                 </form>
+            </div>
+            <div>
+                <hr />
+            </div>
+            <div>
+                <AdminTable columns={this.accessors_table_columns} rows={this.state.accessors}/>
+            </div>
+            <div>
+                <button onClick={this.addAccessorModalShow}>Add Accessor</button>
             </div>
             
             <div className={this.getModalClasses()}>

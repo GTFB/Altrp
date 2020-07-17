@@ -28,7 +28,6 @@ class TextareaController extends Component {
     return '';
   }
   render(){
-
     if(this.state.show === false) {
       return '';
     }
@@ -57,7 +56,9 @@ class TextareaController extends Component {
           </div>
         </div> : <textarea className="controller-container__textarea" onChange={this.changeValue} value={this.state.value}/>
         }
-
+        {this.props.description ? <div className="controller-container__description">
+          {this.props.description}
+        </div> : ''}
       </div>
   }
 }

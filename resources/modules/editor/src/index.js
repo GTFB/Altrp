@@ -34,6 +34,9 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 // window.ReactDOM.render(<Editor/>, editorTarget);
+/**
+ * Импортируем компонент редактора Editor
+ */
 import("./Editor.js")
   .then((Editor) => {
     Editor = Editor.default;

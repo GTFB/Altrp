@@ -147,7 +147,7 @@ class Table extends BaseElement {
       type: CONTROLLER_TEXT,
     });
 
-    this.addControl('current_page_text', {
+    this.addControl('cur  title=rent_page_text', {
       label: 'Current Page Text',
       type: CONTROLLER_TEXT,
     });

@@ -98,6 +98,7 @@ abstract class AppGenerator
             'CUSTOM_TRAITS',
             'CUSTOM_PROPERTIES',
             'CUSTOM_METHODS',
+            'ACCESSORS'
         ];
 
         $customContent = [];

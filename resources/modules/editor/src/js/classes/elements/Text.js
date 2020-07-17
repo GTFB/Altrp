@@ -338,9 +338,9 @@ class Text extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("text_advanced_tooltip", {
+    this.startControlSection('text_advanced_tooltip', {
       tab: TAB_ADVANCED,
-      label: "Tooltip"
+      label: 'Tooltip'
     });
 
     this.addControl('text_advanced_tooltip_active', {

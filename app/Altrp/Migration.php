@@ -7,7 +7,7 @@ use App\Altrp\Column;
 use App\Altrp\Relationship;
 use App\Altrp\Key;
 
-use App\Altrp\Commands\MigrationBuilder;
+use App\Altrp\Generators\MigrationGenerator;
 
 
 use App\Exceptions\AltrpMigrationWriteColumnsExceptions;
@@ -36,8 +36,8 @@ class Migration extends Model
      * Создание файла миграции
      */
     public function createFile() {
-        $migration = new MigrationBuilder($this->table()->first()->name, $this);
-        return $migration->build();
+        $migration = new MigrationGenerator($this);
+        return $migration->generate();
     }
     
     /**
@@ -68,6 +68,7 @@ class Migration extends Model
         
         //4. Запустить миграцию
         if(!$this->migrationRun()) {
+            
             $this->clearMigration($file);
             throw new AltrpMigrationRunExceptions("Failed to run migration file");
         }
@@ -166,9 +167,9 @@ class Migration extends Model
         Column::where('altrp_migration_id', $this->id)->delete();
         Key::where('altrp_migration_id', $this->id)->delete();
         
-        if(!is_null($file_path)) {
+        /*if(!is_null($file_path)) {
             unlink($file_path);
-        }
+        }*/
         
         return $this->delete();
         
@@ -190,6 +191,13 @@ class Migration extends Model
             $column->fromObject($value);
             
             $value = $column;
+        }
+        
+        foreach ($data->keys as &$value) {
+            $key = new Key();
+            $key->fromObject($value);
+            
+            $value = $key;
         }
         
         //$this->attributes['full'] = $data;

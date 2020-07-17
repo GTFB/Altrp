@@ -364,6 +364,12 @@ button{
   &_repeater{
     flex-direction: column;
   }
+  &__description{
+    margin-top: 5px;
+    font-size: 11px;
+    line-height: 1.3;
+    color: $grey;
+  }
 }
 .repeater{
   &-item{

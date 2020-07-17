@@ -17,6 +17,8 @@ import InputWidget from "../../components/widgets/InputWidget";
 import TableWidget from "../../components/widgets/TableWidget";
 import NavWidget from "../../components/widgets/NavWidget";
 import DividerWidget from "../../components/widgets/DividerWidget";
+import TabsWidget from "../../components/widgets/TabsWidget";
+import Tabs from "../elements/Tabs";
 import Divider from "../elements/Divider";
 import Nav from "../elements/Nav";
 import Table from "../elements/Table";
@@ -40,6 +42,7 @@ export default class ElementsManger {
     this.elements[Table.getName()] = Table;
     this.elements[Nav.getName()] = Nav;
     this.elements[Divider.getName()] = Divider;
+    this.elements[Tabs.getName()] = Tabs;
     //список компонентов
     this.components = {};
     this.components[RootElement.getName()] = RootComponent;
@@ -53,6 +56,7 @@ export default class ElementsManger {
     this.components[Table.getName()] = TableWidget;
     this.components[Nav.getName()] = NavWidget;
     this.components[Divider.getName()] = DividerWidget;
+    this.components[Tabs.getName()] = TabsWidget;
   }
 
   getElements(){

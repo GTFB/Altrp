@@ -136,18 +136,28 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get('/tables/{table}/columns', "Admin\TableController@getColumns");
     Route::get('/tables/{table}/keys', "Admin\TableController@getKeys");
     
+    Route::post('/tables/{table}/models', 'Admin\TableController@saveModel');
+    Route::get('/tables/{table}/models/{model}', 'Admin\TableController@getModel');
+    Route::post('/tables/{table}/models/{model}/accessors', 'Admin\TableController@saveAccessor');
+    Route::get('/tables/{table}/models/{model}/accessors', 'Admin\TableController@getAccessors');
+    Route::delete('/tables/{table}/models/{model}/accessors/{accessor}', 'Admin\TableController@deleteAccessor');
+    Route::put('/tables/{table}/models/{model}/accessors/{accessor}', 'Admin\TableController@updateAccessor');
+    Route::post('/tables/{table}/controllers', 'Admin\TableController@saveController');
+    Route::get('/tables/{table}/controllers/{controller}', 'Admin\TableController@getController');
+    
+    
     Route::post('/tables/{table}/test', "Admin\TableController@test");
-    
-    
     Route::get('/tables/{table}/model', "Admin\TableController@getModel");
     Route::post('/tables/{table}/model', "Admin\TableController@saveModel");
     
     Route::get('/tables/{table}/controller', "Admin\TableController@getController");
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
     
+    
     // GeneratorController routes
     Route::post('/generators/{table}/model/create', 'Admin\GeneratorController@createModel');
     Route::post('/generators/{table}/controller/create', 'Admin\GeneratorController@createController');
+    Route::post('/generators/{table}/migration/create', 'Admin\GeneratorController@createMigration');
     
     
 
@@ -196,12 +206,25 @@ Route::group( ['prefix' => 'ajax'], function(){
   /**
    * todo: реализовать в контроллерах моделей
    */
-  Route::get( 'models/{model_name}', 'Frontend\ModelsController@models' )->name( 'front.models.all' );
-  Route::get( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@show' )->name( 'front.models.show' );
-  Route::delete( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@delete' )->name( 'front.models.delete' );
-  Route::put( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@edit' )->name( 'front.models.edit' );
-  Route::post( 'models/{model_name}', 'Frontend\ModelsController@create' )->name( 'front.models.create' );
+  Route::get( 'models/{model_name}', 'Frontend\ModelsController@models' )
+    ->name( 'front.models.all' );
 
+  Route::get( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@show' )
+    ->name( 'front.models.show' );
+
+  Route::delete( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@delete' )
+    ->name( 'front.models.delete' );
+
+  Route::put( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@edit' )
+    ->name( 'front.models.edit' );
+
+  Route::post( 'models/{model_name}', 'Frontend\ModelsController@create' )
+    ->name( 'front.models.create' );
+
+  /**
+   * todo: для загрузчика шаблонов для виджетов
+   */
+  Route::get( 'templates/{template_id}', 'TemplateController@show_frontend' )->name( 'templates.show.frontend' );
 } );
 
 /*
