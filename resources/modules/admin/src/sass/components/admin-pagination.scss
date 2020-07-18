@@ -33,6 +33,7 @@ color: #343B4C;
 .pagination__move {
   width: 30px;
 height: 30px;
+padding: 0;
 display: flex;
 justify-content: center;
 align-items: center;
@@ -73,4 +74,11 @@ color: #343B4C;
 }
 .pagination__next {
   margin-right: 7.5px;
+}
+.pagination__disabled {
+  opacity: .5;
+  cursor: auto;
+}
+.right__arrow {
+  transform: rotate(-180deg);
 }

@@ -4,7 +4,6 @@ import AdminTable from "./AdminTable";
 import store from "../js/store/store";
 import {setModalSettings, toggleModal} from "../js/store/modal-settings/actions";
 import {generateId, redirect} from "../js/helpers";
-import "../sass/components/admin-pagination.scss";
 import Pagination from "./Pagination";
 
 
@@ -44,7 +43,6 @@ export default class Templates extends Component{
    * Смена текущей страницы
    */
   changePage(currentPage){
-    console.log(currentPage);
     this.setState(state=>({...state, currentPage}));//todo: сделать запрос this.resource.getQueried
   }
 
