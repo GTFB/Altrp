@@ -43,7 +43,7 @@ export default class Templates extends Component{
    * Смена текущей страницы
    */
   changePage(currentPage){
-    this.setState(state=>({...state, currentPage}));//todo: сделать запрос this.resource.getQueried
+    this.updateTemplates( currentPage, this.state.activeTemplateArea)
   }
 
   /**

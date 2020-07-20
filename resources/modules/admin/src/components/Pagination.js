@@ -24,9 +24,9 @@ class Pagination extends Component {
     this.setCurrentPage(value);
     this.props.changePage(this.state.currentPage);
   }
-  extractNums(str) {
-    let matches = str.match(/\d+/g);
-    console.log(matches)
+  inputHandler(e) {
+    this.changePage(this.state.currentPage);
+    this.setState({currentPage: e.target.value.replace(/[^0-9]/g, '') || 1})
   }
   render(){
 //todo: сделать теги button для кнопок и input для ввода
@@ -41,14 +41,14 @@ class Pagination extends Component {
           <Right className="right__arrow" />
           <Right className="right__arrow" />
         </button>
-        <button className={this.state.currentPage === 1 ? "pagination__disabled pagination__move pagination__prev" : "pagination__move pagination__prev" } 
+        <button className={this.state.currentPage <= 1 ? "pagination__disabled pagination__move pagination__prev" : "pagination__move pagination__prev" } 
         onClick={()=> this.changePage(--this.state.currentPage) } ><Right className="right__arrow" /> </button>
-        <input type="text" className="pagination__indicator" value={this.state.currentPage || 1} onChange={e=> this.setState({currentPage: e.target.value.replace(/[^0-9]/g, '') || 1}) } />
+        <input type="text" className="pagination__indicator" value={this.state.currentPage || 1} onChange={e=> this.inputHandler(e) } />
         <div className="pagination__map">of {this.props.pageCount}</div>
         <button className={this.state.currentPage === this.props.pageCount ? "pagination__disabled pagination__move pagination__next" : "pagination__move pagination__next"} onClick={()=>{
 this.changePage(++this.state.currentPage);
         }}> <Right/> </button>
-        <button className={this.state.currentPage === this.props.pageCount ? "pagination__disabled pagination__move" : "pagination__move"}
+        <button className={this.state.currentPage >= this.props.pageCount ? "pagination__disabled pagination__move" : "pagination__move"}
         onClick={()=> this.changePage(this.props.pageCount) }>
           <Right/> <Right/>
         </button>
