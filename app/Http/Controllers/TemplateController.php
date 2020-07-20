@@ -25,8 +25,9 @@ class TemplateController extends Controller
       $area_name = $request->get( 'area', 'content' );
       $_templates = Template::where( 'type', '!=', 'review' )
         ->join( 'areas', 'areas.id', '=', 'templates.area' )
-        ->where( 'areas.name', $area_name )->skip( $page_size * ( $request->get( 'page' ) - 1 ) )
-        ->take( $page_size );
+        ->where( 'areas.name', $area_name )
+        ->offset( $page_size * ( $request->get( 'page' ) - 1 ) )
+        ->limit( $page_size );
       $page_count = $_templates->toBase()->getCountForPagination();
       $_templates = $_templates->get('templates.*')->sortByDesc( 'id' )->values();
 
