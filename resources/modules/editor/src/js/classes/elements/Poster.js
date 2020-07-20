@@ -478,7 +478,6 @@ class Poster extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn": "background-color: {{COLOR}};"
       }
@@ -491,7 +490,6 @@ class Poster extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn": "color: {{COLOR}};"
       }
@@ -522,7 +520,6 @@ class Poster extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn": "fill: {{COLOR}};"
       }
@@ -617,7 +614,6 @@ class Poster extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn": "background-color: {{COLOR}};"
       }
@@ -703,7 +699,6 @@ class Poster extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn": "border-color: {{COLOR}};"
       }
@@ -782,7 +777,6 @@ class Poster extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn": "border-color: {{COLOR}};"
       }
@@ -865,7 +859,6 @@ class Poster extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn": "border-color: {{COLOR}};"
       }
@@ -878,7 +871,6 @@ class Poster extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn": "border-color: {{COLOR}};"
       }
@@ -936,7 +928,6 @@ class Poster extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn": "border-color: {{COLOR}};"
       }
@@ -956,10 +947,6 @@ class Poster extends BaseElement{
           colorPickedHex: '#000000',
           type: ""
         },
-        presetColors: [
-          '#eaeaea',
-          '#9c18a8'
-        ],
         rules: {
           '{{ELEMENT}} .altrp-btn': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
         },
@@ -1020,7 +1007,6 @@ class Poster extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn": "border-color: {{COLOR}};"
       }
@@ -1078,7 +1064,6 @@ class Poster extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn": "border-color: {{COLOR}};"
       }
@@ -1168,7 +1153,6 @@ class Poster extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn": "border-color: {{COLOR}};"
       }
@@ -1181,7 +1165,6 @@ class Poster extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn": "border-color: {{COLOR}};"
       }
@@ -1194,7 +1177,6 @@ class Poster extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn": "border-color: {{COLOR}};"
       }
@@ -1322,7 +1304,6 @@ class Poster extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn": "border-color: {{COLOR}};"
       }
@@ -1335,7 +1316,6 @@ class Poster extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn": "border-color: {{COLOR}};"
       }
@@ -1348,7 +1328,6 @@ class Poster extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn": "border-color: {{COLOR}};"
       }
@@ -1417,14 +1396,13 @@ class Poster extends BaseElement{
       }
     });
 
-    this.addControl("border_color_buttons_ordering_element_style", {
+    this.addControl( "border_color_buttons_ordering_element_style", {
       type: CONTROLLER_COLOR,
       label: "Border color",
       default: {
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn": "border-color: {{COLOR}};"
       }

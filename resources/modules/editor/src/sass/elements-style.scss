@@ -276,3 +276,76 @@
 .altrp-tab-btn-row:last-child {
     margin-bottom: 0px !important;
 }
+
+.altrp-tabs-switcher {
+    margin-left: 10px;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 35px;
+    padding-left: 35px;
+    width: 4.5em;
+    height: 2.3em;
+    border-radius: 100vh;
+    position: relative;
+    -webkit-transition-duration: 0.2s;
+    -moz-transition-duration: 0.2s;
+    -ms-transition-duration: 0.2s;
+    -o-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-weight: bold;
+
+    &_off {
+        background: #E6E9EC;
+        box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.15), inset -1px -1px 2px rgba(0, 0, 0, 0.15);
+        color: rgba(0, 0, 0, 0.3);
+    }
+
+    &_on {
+        background: #87CA00;
+        box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.15), inset -1px -1px 2px rgba(0, 0, 0, 0.15);
+        color: #FFFFFF;
+        & .altrp-tabs-switcher__caret{
+            left: 2.65em;
+        }
+    }
+
+    &__caret {
+        position: absolute;
+        width: 1.8em;
+        height: 1.8em;
+        top: 0.25em;
+        left: 4px;
+        border-radius: 50%;
+        background: #FFFFFF;
+        box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.25);
+        -webkit-transition-duration: 0.2s;
+        -moz-transition-duration: 0.2s;
+        -ms-transition-duration: 0.2s;
+        -o-transition-duration: 0.2s;
+        transition-duration: 0.2s;
+    }
+}
+
+.altrp-tabs-switcher-container {
+    display: flex;
+    flex-direction: row;
+    white-space: nowrap;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+}
+
+.altrp-tabs-switcher {
+    display: block;
+}
+
+.altrp-tabs-switcher-section-img {
+    max-width: 100%;
+}
