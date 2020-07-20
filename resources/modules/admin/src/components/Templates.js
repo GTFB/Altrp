@@ -198,7 +198,7 @@ export default class Templates extends Component{
         },
       ]} rows={this.state.templates}/>
         <Pagination pageCount={this.state.pageCount}
-                    changePage={this.changePage}
+                    changePage={this.changePage} allTemplates={ this.state.templates.length }
         />
       </div>
     </div>;
