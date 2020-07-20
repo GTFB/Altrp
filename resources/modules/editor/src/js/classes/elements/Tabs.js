@@ -738,7 +738,7 @@ class Tabs extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Size',
       default:{
-        size: null,
+        size: '16',
         unit: 'px',
       },
       max: 100,
