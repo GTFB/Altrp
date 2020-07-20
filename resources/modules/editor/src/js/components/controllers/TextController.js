@@ -79,7 +79,6 @@ class TextController extends Component {
   }
 
   render() {
-    console.log(this.state.value)
     if (this.state.show === false) {
       return '';
     }

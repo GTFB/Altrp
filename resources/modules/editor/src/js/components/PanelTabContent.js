@@ -12,15 +12,14 @@ class PanelTabContent extends Component {
         autoHide
         autoHideTimeout={500}
         autoHideDuration={200}
-        > 
+        >
           <div id="settingsControllers">
             {
               sections.map((section, idx) =>{
                 return React.createElement(SettingSection, {
                   ...section,
                   key: section.sectionId,
-                  active: keyActive++,
-                  open: idx === 0,
+                  sectionID: idx,
                   });
                 }
             )

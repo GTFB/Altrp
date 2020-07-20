@@ -171,7 +171,6 @@ class ShadowController extends Component {
         key: 1
       }
     ]
-    console.log(this.state.value)
     if(this.state.show === false) {
       return '';
     }

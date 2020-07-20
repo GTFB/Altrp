@@ -7,6 +7,8 @@ import {TAB_ADVANCED, TAB_CONTENT, TAB_STYLE} from "../classes/modules/Controlle
 import PanelTabContent from "./PanelTabContent";
 import DynamicContent from "./DynamicContent/DynamicContent";
 import Controller from "../classes/Controller";
+import {setCurrentTab} from "../store/active-settings-tab/actions";
+import {getCurrentTab} from "../store/store";
 
 class SettingsPanel extends Component {
 
@@ -25,6 +27,12 @@ class SettingsPanel extends Component {
     this.setState({
       ...this.state, activeTab
     })
+    this.props.setCurrentTab(activeTab);
+  }
+
+
+  componentDidMount() {
+    this.props.setCurrentTab(this.state.activeTab)
   }
 
   render() {
@@ -34,20 +42,20 @@ class SettingsPanel extends Component {
     let sections = [];
     if (this.props.currentElement.getName) {
       let allControllersPairs = _.toPairs(controllersManager.getControls(this.props.currentElement.getName()));
-      allControllersPairs.forEach(pair=>{
-        pair[1].forEach(section=>{
-          section.controls = section.controls.map(control=>{
+      allControllersPairs.forEach(pair => {
+        pair[1].forEach(section => {
+          section.controls = section.controls.map(control => {
             return {
               ...control,
               controller: new Controller(control)
             }
           });
         });
-        if(pair[0] === this.state.activeTab){
+        if (pair[0] === this.state.activeTab) {
           sections = [...pair[1]];
         }
       });
-      console.log(this.props.currentElement.getName());
+      // console.log(this.props.currentElement.getName());
       // store.dispatch(changeSettingSection(this.props.currentElement.getName(), this.state.activeTab, 0))
     }
 
@@ -88,8 +96,9 @@ class SettingsPanel extends Component {
 
 function mapStateToProps(state) {
   return {
-    currentElement: state.currentElement.currentElement
+    currentElement: state.currentElement.currentElement,
   };
 }
 
-export default connect(mapStateToProps)(SettingsPanel);
+
+export default connect(mapStateToProps, {setCurrentTab})(SettingsPanel);
