@@ -38,6 +38,9 @@ class CssEditorController extends Component {
       if(value === null && this.props.default){
         value = this.props.default ;
       }
+      if(! _.isString(value)){
+        value = '';
+      }
       this.editor = <window.AceEditor
           mode="css"
           theme="textmate"
@@ -91,7 +94,7 @@ class CssEditorController extends Component {
               name="aceEditor"
               height="15em"
               setOptions={{
-                value: this.state.value
+                value: this.state.value || ''
               }}
               enableLiveAutocompletion={true}/>)}
 
