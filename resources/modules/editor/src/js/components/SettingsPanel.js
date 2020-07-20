@@ -9,6 +9,7 @@ import DynamicContent from "./DynamicContent/DynamicContent";
 import Controller from "../classes/Controller";
 import {setCurrentTab} from "../store/active-settings-tab/actions";
 import {getCurrentTab} from "../store/store";
+import StateSection from "./StateSection";
 
 class SettingsPanel extends Component {
 
@@ -87,6 +88,7 @@ class SettingsPanel extends Component {
           </span>
         </button>
       </div>
+      <StateSection/>
       <PanelTabContent sections={sections}/>
     </div>
   }

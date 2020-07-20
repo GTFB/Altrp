@@ -24,7 +24,7 @@ class HeadingWidget extends Component {
       let tag = 'a';
       if((this.state.settings.link_link.tag === 'Link') && ! isEditor()){
         tag = Link;
-        linkProps.to = this.state.settings.link_link.url;
+        linkProps.to = this.state.settings.link_link.url.replace(':id', this.getModelId() || '')
       }
       text = React.createElement(tag, linkProps, text);
     }

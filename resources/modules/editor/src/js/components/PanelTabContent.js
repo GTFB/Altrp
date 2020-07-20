@@ -2,10 +2,10 @@ import React, {Component} from "react";
 import SettingSection from "./SettingSection";
 import { Scrollbars } from "react-custom-scrollbars";
 import DynamicContent from "./DynamicContent/DynamicContent";
+import StateSection from "./StateSection";
 
 class PanelTabContent extends Component {
     render(){
-      let keyActive = 0;
       let sections =  this.props.sections || [];
       return <div className="settings-controllers">
         <Scrollbars

@@ -8,6 +8,7 @@ import {dynamicContentReducer} from "./dynamic-content/reducers";
 import {controllerReducer} from "./controller-value/reducers";
 import {settingSectionMenuReducer} from "./setting-section/reducers"
 import {currentTabReducer} from "./active-settings-tab/reducers";
+import {currentStateReducer} from "./state-section/reducers";
 
 
 export default combineReducers({
@@ -20,4 +21,5 @@ export default combineReducers({
   controllerValue: controllerReducer,
   settingSectionMenu: settingSectionMenuReducer,
   currentTab: currentTabReducer,
+  currentState: currentStateReducer,
 });

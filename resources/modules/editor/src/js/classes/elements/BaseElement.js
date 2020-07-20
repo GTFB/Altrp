@@ -1,7 +1,7 @@
 import {CONTROLLER_TEXT, CONTROLLER_TEXTAREA, TAB_CONTENT, TAB_STYLE} from "../modules/ControllersManager";
 import {getTemplateDataStorage, isEditor, getEditor, CONSTANTS, getFactory} from "../../helpers";
 import {changeTemplateStatus} from "../../store/template-status/actions";
-import store from "../../store/store";
+import store, {getElementState} from "../../store/store";
 import ControlStack from "./ControlStack";
 
 /**
@@ -411,7 +411,7 @@ class BaseElement extends ControlStack{
     this.settings.styles[breakpoint][settingName] =  {};
     rules.forEach(rule => {
       let finalSelector = rule.selector;
-      finalSelector = finalSelector.replace('{{ELEMENT}}', this.getSelector());
+      finalSelector = finalSelector.replace('{{ELEMENT}}', this.getSelector()).replace('{{STATE}}', getElementState().value);
       /**
        * если this.settings.styles[breakpoint][settingName] массив, то преобразуем в объект
        */

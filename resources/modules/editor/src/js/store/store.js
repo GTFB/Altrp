@@ -17,3 +17,7 @@ export function getCurrentElement() {
 export function getCurrentTab() {
   return  store.getState().currentTab.currentTab;
 }
+
+export function getElementState() {
+  return store.getState().currentState
+}

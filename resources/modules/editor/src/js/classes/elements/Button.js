@@ -373,7 +373,7 @@ class Button extends BaseElement{
         colorPickedHex: "#343B4C",
       },
       rules: {
-        '{{ELEMENT}} .altrp-btn': 'background-color: {{COLOR}};',
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
       },
     }
   );
