@@ -305,6 +305,9 @@
         background: #E6E9EC;
         box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.15), inset -1px -1px 2px rgba(0, 0, 0, 0.15);
         color: rgba(0, 0, 0, 0.3);
+        & .altrp-tabs-switcher__caret{
+            transform: translateX(-1.3em);
+        }
     }
 
     &_on {
@@ -312,7 +315,7 @@
         box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.15), inset -1px -1px 2px rgba(0, 0, 0, 0.15);
         color: #FFFFFF;
         & .altrp-tabs-switcher__caret{
-            left: 2.65em;
+            transform: translateX(1.2em);
         }
     }
 
@@ -321,7 +324,7 @@
         width: 1.8em;
         height: 1.8em;
         top: 0.25em;
-        left: 4px;
+        left: 1.4em;
         border-radius: 50%;
         background: #FFFFFF;
         box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.25);
