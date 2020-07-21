@@ -12,16 +12,19 @@ class Pagination extends Component {
     }
   }
   setCurrentPage(num) {
+    num = parseInt(num) || 1;
     if(num <= 1) {
       this.setState({currentPage: 1});
-      this.changePage(this.state.currentPage);
+      this.props.changePage(1);
+      return;
     }
-    else if(num >= this.props.pageCount) {
+    if(num >= this.props.pageCount) {
       this.setState({currentPage: this.props.pageCount});
-      this.changePage(this.state.currentPage);
+      this.props.changePage(this.props.pageCount);
+      return;
     }
     this.setState({currentPage: num});
-    this.props.changePage(this.state.currentPage)
+    this.props.changePage(num)
   }
   render(){
     return<div className="pagination">
@@ -37,7 +40,10 @@ class Pagination extends Component {
         </div>
         <div className={this.state.currentPage <= 1 ? "pagination__disabled pagination__prev pagination__move" : "pagination__move pagination__prev" } 
         onClick={()=> this.setCurrentPage(--this.state.currentPage) } ><Right className="right__arrow" /> </div>
-        <input type="text" className="pagination__indicator" value={this.state.currentPage || 1} onChange={e=> this.setCurrentPage(e.target.value.replace(/[^0-9]/g, '') || 1) } />
+        <input type="text"
+               className="pagination__indicator"
+               value={this.state.currentPage || 1}
+               onChange={e=> this.setCurrentPage(e.target.value.replace(/[^0-9]/g, '') || 1) } />
         <div className="pagination__map">of {this.props.pageCount}</div>
         <div className={this.state.currentPage >= this.props.pageCount ? "pagination__disabled pagination__next pagination__move" : "pagination__move pagination__next"} onClick={()=>{
 this.setCurrentPage(++this.state.currentPage);

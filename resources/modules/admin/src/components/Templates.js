@@ -43,7 +43,7 @@ export default class Templates extends Component{
    * Смена текущей страницы
    */
   changePage(currentPage){
-    this.updateTemplates( currentPage, this.state.activeTemplateArea)
+    this.updateTemplates(currentPage, this.state.activeTemplateArea);
   }
 
   /**
@@ -71,7 +71,6 @@ export default class Templates extends Component{
       page: currentPage,
       pageSize: 10,
     }).then(res=>{
-      console.log(res.pageCount);
       this.setState(state=> {
         return {
           ...state,
@@ -88,20 +87,6 @@ export default class Templates extends Component{
       return{...state,templateAreas}
     });
     this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea)
-    // this.resource.getQueried({
-    //   area: this.state.activeTemplateArea.name,
-    //   page: this.state.currentPage,
-    //   pageSize: 10,
-    // }).then(res=>{
-    //   console.log(res.pageCount);
-    //   this.setState(state=> {
-    //     return {
-    //         ...state,
-    //       pageCount: res.pageCount,
-    //       templates: res.templates
-    //     }
-    //   });
-    // });
   }
   onClick(){
     let modalSettings = {
