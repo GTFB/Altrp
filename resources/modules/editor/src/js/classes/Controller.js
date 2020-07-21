@@ -1,8 +1,8 @@
-import store, {getCurrentElement, getElementState} from '../store/store';
-import {CONSTANTS} from "../helpers";
+import store, { getCurrentElement, getElementState } from '../store/store';
+import { CONSTANTS } from "../helpers";
 import CSSRule from "../classes/CSSRule";
-import {changeTemplateStatus} from "../store/template-status/actions";
-import {controllerValue} from "../store/controller-value/actions";
+import { changeTemplateStatus } from "../store/template-status/actions";
+import { controllerValue } from "../store/controller-value/actions";
 
 /**
  * Класс-контроллер
@@ -47,8 +47,8 @@ class Controller {
       });
       if (this.rules.length) {
 
-        value ? currentElement.addStyles(this.getSettingName() + getElementState().value , this.rules)
-            : currentElement.removeStyle(this.getSettingName() + getElementState().value);
+        value ? currentElement.addStyles(this.getSettingName() + getElementState().value, this.rules)
+          : currentElement.removeStyle(this.getSettingName() + getElementState().value);
       }
       store.dispatch(controllerValue(value, this.getSettingName()));
 
@@ -59,11 +59,11 @@ class Controller {
        * @public
        */
       this.data.repeater.changeValue(
-          this.data.itemIndex,
-          this.data.controlId,
-          value);
+        this.data.itemIndex,
+        this.data.controlId,
+        value);
     }
-    if(this.getSettingName() === 'element_css_editor'){
+    if (this.getSettingName() === 'element_css_editor') {
       currentElement.setStringStyles(value);
     }
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
@@ -83,9 +83,9 @@ class Controller {
      */
     let conditionPairs = _.toPairs(this.data.conditions);
     let show = true;
-    conditionPairs.forEach(condition=>{
+    conditionPairs.forEach(condition => {
       let [controlId, value] = condition;
-      if(getCurrentElement().getSettings(controlId) !== value){
+      if (getCurrentElement().getSettings(controlId) !== value) {
         show = false;
       }
     });

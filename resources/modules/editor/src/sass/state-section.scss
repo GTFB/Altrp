@@ -2,30 +2,21 @@
     background: #fff;
     margin-bottom: 10px;
     &__wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        text-align: center;
     }
     &__button {
         display: inline-block;
-        padding: 3px 5px;
         margin: 10px 5px 10px 0;
+        padding: 3px 6px;
         background: transparent;
         border: 2px solid #3c455b;
         border-radius: 2px;
         font-weight: bold;
         color: #3c455b;
         cursor: pointer;
-        &-active {
-            display: inline-block;
-            padding: 5px 7px;
-            margin: 10px 5px 10px 0;
-            border: none;
+        &_active {
             background: #3c455b;
-            border-radius: 2px;
-            font-weight: bold;
             color: #fff;
-            cursor: pointer;
         }
     }
 }

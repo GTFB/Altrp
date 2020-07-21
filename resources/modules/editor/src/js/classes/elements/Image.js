@@ -5,7 +5,7 @@ import {
   CONTROLLER_MEDIA,
   CONTROLLER_DIMENSIONS,
   CONTROLLER_NUMBER,
-  CONTROLLER_SLIDER,  
+  CONTROLLER_SLIDER,
   CONTROLLER_TEXT,
   CONTROLLER_SELECT,
   CONTROLLER_FILTERS,
@@ -75,7 +75,7 @@ class Image extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} img': [ 
+        '{{ELEMENT}} img': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -100,7 +100,7 @@ class Image extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} div': [ 
+        '{{ELEMENT}} div{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -114,7 +114,7 @@ class Image extends BaseElement{
       label: 'Z-index',
       default: 0,
       rules: {
-        '{{ELEMENT}} img': 'z-index: {{VALUE}}'
+        '{{ELEMENT}} img{{STATE}}': 'z-index: {{VALUE}}'
       }
     });
 
@@ -145,7 +145,7 @@ class Image extends BaseElement{
       min: 0,
       step: 0.01,
       rules: {
-        '{{ELEMENT}} img': 'opacity: {{SIZE}}',
+        '{{ELEMENT}} img{{STATE}}': 'opacity: {{SIZE}}',
       },
     });
 
@@ -171,11 +171,11 @@ class Image extends BaseElement{
           }
         ],
         rules: {
-          '{{ELEMENT}} img': 'object-fit: {{VALUE}};',
+          '{{ELEMENT}} img{{STATE}}': 'object-fit: {{VALUE}};',
         },
       }
     );
-    
+
     this.addControl('aspect_ratio_size', {
         type: CONTROLLER_SELECT,
         label: 'Aspect ratio',
@@ -222,7 +222,7 @@ class Image extends BaseElement{
       max: 1000,
       min: 0,
       rules: {
-        '{{ELEMENT}} img': 'height: {{SIZE}}{{UNIT}}',
+        '{{ELEMENT}} img{{STATE}}': 'height: {{SIZE}}{{UNIT}}',
       },
     });
 
@@ -241,7 +241,7 @@ class Image extends BaseElement{
       max: 1000,
       min: 0,
       rules: {
-        '{{ELEMENT}} img': 'width: {{SIZE}}{{UNIT}}',
+        '{{ELEMENT}} img{{STATE}}': 'width: {{SIZE}}{{UNIT}}',
       },
     });
 
@@ -256,7 +256,7 @@ class Image extends BaseElement{
         type: CONTROLLER_FILTERS,
         label: 'filters',
         rules: {
-          '{{ELEMENT}} img': [
+          '{{ELEMENT}} img{{STATE}}': [
             'filter: blur({{BLUR}}px);',
             'filter: brightness({{BRIGHTNESS}}%);',
             'filter: contrast({{CONTRAST}}%);',
@@ -285,7 +285,7 @@ class Image extends BaseElement{
         },
       ],
       rules: {
-            '{{ELEMENT}} .altrp-image-container': 'justify-content: {{VALUE}};',
+            '{{ELEMENT}} .altrp-image-container{{STATE}}': 'justify-content: {{VALUE}};',
       },
     });
 
@@ -331,11 +331,11 @@ class Image extends BaseElement{
           },
         ],
         rules: {
-          '{{ELEMENT}} img': 'border-style: {{VALUE}};',
+          '{{ELEMENT}} img{{STATE}}': 'border-style: {{VALUE}};',
         },
       }
     );
-  
+
     this.addControl('border_width', {
         type: CONTROLLER_DIMENSIONS,
         label: 'Border Width',
@@ -345,11 +345,11 @@ class Image extends BaseElement{
           'vh',
         ],
         rules: {
-          '{{ELEMENT}} img': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          '{{ELEMENT}} img{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         },
       }
     );
-  
+
     this.addControl('border_color', {
         type: CONTROLLER_COLOR,
         label: 'Border Color',
@@ -358,11 +358,11 @@ class Image extends BaseElement{
           colorPickedHex: "#32a852",
         },
         rules: {
-          '{{ELEMENT}} img': 'border-color: {{COLOR}};',
+          '{{ELEMENT}} img{{STATE}}': 'border-color: {{COLOR}};',
         },
       }
     );
-    
+
     this.addControl('border_radius', {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
@@ -378,7 +378,7 @@ class Image extends BaseElement{
       max: 100,
       min: 0,
       rules: {
-        '{{ELEMENT}} img': 'border-radius: {{SIZE}}{{UNIT}}',
+        '{{ELEMENT}} img{{STATE}}': 'border-radius: {{SIZE}}{{UNIT}}',
       },
     });
 

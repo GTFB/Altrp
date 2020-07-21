@@ -159,7 +159,7 @@ class Button extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-btn': [
+        '{{ELEMENT}} .altrp-btn{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -185,7 +185,7 @@ class Button extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-btn': [
+        '{{ELEMENT}} .altrp-btn{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -199,7 +199,7 @@ class Button extends BaseElement{
       label: 'Z-index',
       default: 0,
       rules: {
-        '{{ELEMENT}} .altrp-btn': 'z-index: {{VALUE}}'
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'z-index: {{VALUE}}'
       }
     });
 
@@ -234,7 +234,7 @@ class Button extends BaseElement{
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-btn': [
+          '{{ELEMENT}} .altrp-btn{{STATE}}': [
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -255,7 +255,7 @@ class Button extends BaseElement{
         colorPickedHex: "#FFF",
       },
       rules: {
-        '{{ELEMENT}} .altrp-btn': 'color: {{COLOR}};',
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
       },
     }
   );
@@ -303,7 +303,7 @@ class Button extends BaseElement{
           },
         ],
         rules: {
-          '{{ELEMENT}} .altrp-btn': 'border-style: {{VALUE}};',
+          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-style: {{VALUE}};',
         },
       }
     );
@@ -321,7 +321,7 @@ class Button extends BaseElement{
           'vh',
         ],
         rules: {
-          '{{ELEMENT}} .altrp-btn': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         },
       }
     );
@@ -334,7 +334,7 @@ class Button extends BaseElement{
           colorPickedHex: "#32a852",
         },
         rules: {
-          '{{ELEMENT}} .altrp-btn': 'border-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
         },
       }
     );
@@ -354,7 +354,7 @@ class Button extends BaseElement{
       max: 100,
       min: 0,
       rules: {
-        '{{ELEMENT}} .altrp-btn': 'border-radius: {{SIZE}}{{UNIT}}',
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-radius: {{SIZE}}{{UNIT}}',
       },
     });
 
@@ -397,7 +397,7 @@ class Button extends BaseElement{
           '#9c18a8'
         ],
         rules: {
-          '{{ELEMENT}} .altrp-btn': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+          '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
         },
       }
     );
