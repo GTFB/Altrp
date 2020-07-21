@@ -352,3 +352,29 @@
 .altrp-tabs-switcher-section-img {
     max-width: 100%;
 }
+
+.altrp-list-ul {
+    padding-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.altrp-list-li {
+    list-style: none;
+    display: flex;
+    justify-items: center;
+}
+
+.altrp-list-ul-inline {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.altrp-list-ul-inline .altrp-list-li {
+    margin-right: 10px;
+}
+
+.altrp-list-ul-inline .altrp-list-li:last-child {
+    margin-right: 0px;
+}

@@ -40,7 +40,7 @@ class Nav extends BaseElement{
       tab: TAB_CONTENT,
       label: 'Type',
     });
-    
+
     this.addControl("type_type", {
       type: CONTROLLER_SELECT,
       label: "type",
@@ -138,8 +138,10 @@ class Nav extends BaseElement{
       max: 20,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-text": "padding-left: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-text": "padding-right: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-text": [
+          "padding-left: {{SIZE}}{{UNIT}}",
+          "padding-right: {{SIZE}}{{UNIT}}"
+        ],
       }
     });
 

@@ -108,17 +108,18 @@ export function renderAsset(asset, props = null) {
 }
 
 export function renderAssetIcon(asset, props = null) {
-  switch (asset.assetType) {
-    case 'icon': {
-      return iconsManager().renderIcon(asset.name)
+  if(asset) {
+    switch (asset.assetType) {
+      case 'icon': {
+        return iconsManager().renderIcon(asset.name)
+      }
+      case 'image': {
+        return React.createElement('img', {...props, src: asset.url})
+      }
+      case 'media': {
+        return React.createElement('img', {...props, src: asset.url})
+      }
     }
-    case 'image': {
-      return React.createElement('img', {...props, src: asset.url})
-    }
-    case 'media': {
-      return React.createElement('img', {...props, src: asset.url})
-    }
-
   }
   return '';
 }
