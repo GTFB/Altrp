@@ -61,7 +61,7 @@ class Table extends BaseElement {
           },
         ],
         rules: {
-          '{{ELEMENT}} .altrp-table-th': 'text-align: {{VALUE}}',
+          '{{ELEMENT}} .altrp-table-th{{STATE}}': 'text-align: {{VALUE}}',
         },
     });
 
@@ -84,10 +84,10 @@ class Table extends BaseElement {
           },
         ],
         rules: {
-          '{{ELEMENT}} .altrp-table-td': 'text-align: {{VALUE}}',
+          '{{ELEMENT}} .altrp-table-td{{STATE}}': 'text-align: {{VALUE}}',
         },
     });
-      
+
     this.endControlSection();
 
     this.startControlSection("table_data_settings", {
@@ -112,7 +112,7 @@ class Table extends BaseElement {
         label: 'Pagination',
         default: true
     });
-    
+
     this.addControl('table_data_settings_info', {
         type: CONTROLLER_SWITCHER,
         label: 'Info',
@@ -183,7 +183,7 @@ class Table extends BaseElement {
         type: CONTROLLER_SWITCHER,
         label: 'Striple style',
     });
-    
+
     this.addControl("table_style_table_border_type", {
       type: CONTROLLER_SELECT,
       label: "Border Type",
@@ -215,7 +215,7 @@ class Table extends BaseElement {
         }
       ],
       rules: {
-        '{{ELEMENT}} .altrp-table-tbody': 'border-style: {{VALUE}} !important'
+        '{{ELEMENT}} .altrp-table-tbody{{STATE}}': 'border-style: {{VALUE}} !important'
       }
     });
 
@@ -231,7 +231,7 @@ class Table extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        '{{ELEMENT}} .altrp-table-tbody': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
+        '{{ELEMENT}} .altrp-table-tbody{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
       }
     });
 
@@ -243,7 +243,7 @@ class Table extends BaseElement {
         colorPickedHex: "#32a852"
       },
       rules: {
-        '{{ELEMENT}} .altrp-table-tbody': 'border-color: {{COLOR}} !important'
+        '{{ELEMENT}} .altrp-table-tbody{{STATE}}': 'border-color: {{COLOR}} !important'
       }
     });
 
@@ -262,7 +262,7 @@ class Table extends BaseElement {
           colorPickedHex: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-pagination__previous, .altrp-pagination__next': 'color: {{COLOR}}'
+          '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'color: {{COLOR}}'
         }
     });
 
@@ -274,7 +274,7 @@ class Table extends BaseElement {
         colorPickedHex: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-pagination__previous, .altrp-pagination__next': 'background-color: {{COLOR}}'
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'background-color: {{COLOR}}'
       }
   });
 
@@ -294,7 +294,7 @@ class Table extends BaseElement {
       'vh',
     ],
     rules: {
-      '{{ELEMENT}} .altrp-pagination__previous, .altrp-pagination__next': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
     },
   });
 
@@ -306,7 +306,7 @@ class Table extends BaseElement {
         colorPickedHex: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-pagination__count': 'color: {{COLOR}}'
+        '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'color: {{COLOR}}'
       }
   });
 
@@ -318,7 +318,7 @@ class Table extends BaseElement {
       colorPickedHex: ""
     },
     rules: {
-      '{{ELEMENT}} .altrp-pagination__count': 'background-color: {{COLOR}}'
+      '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'background-color: {{COLOR}}'
     }
   });
 
@@ -338,7 +338,7 @@ class Table extends BaseElement {
       'vh',
     ],
     rules: {
-      '{{ELEMENT}} .altrp-pagination__count': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
     },
   });
 
@@ -355,7 +355,7 @@ class Table extends BaseElement {
         decoration: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-pagination__next, .altrp-pagination__count, .altrp-pagination__previous': [
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}}, .altrp-pagination__count{{STATE}}, .altrp-pagination__previous{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-sefir;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -400,7 +400,7 @@ class Table extends BaseElement {
       }
     ],
     rules: {
-      '{{ELEMENT}} .altrp-pagination__previous, .altrp-pagination__next': 'border-style: {{VALUE}};',
+      '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-style: {{VALUE}};',
     }
   });
 
@@ -409,9 +409,9 @@ class Table extends BaseElement {
     label: "Border width",
     units: ["px", "%", "vh"],
     rules: {
-      '{{ELEMENT}} .altrp-pagination__previous, .altrp-pagination__next': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
     }
-  });  
+  });
 
   this.addControl("table_style_pagination_border_color", {
     type: CONTROLLER_COLOR,
@@ -421,7 +421,7 @@ class Table extends BaseElement {
       colorPickedHex: ""
     },
     rules: {
-      '{{ELEMENT}} .altrp-pagination__previous, .altrp-pagination__next': 'border-color: {{COLOR}};',
+      '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-color: {{COLOR}};',
     }
   });
 
@@ -441,11 +441,11 @@ class Table extends BaseElement {
       'vh',
     ],
     rules: {
-      '{{ELEMENT}} .altrp-pagination': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      '{{ELEMENT}} .altrp-pagination{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
     },
   });
 
-  this.endControlSection();  
+  this.endControlSection();
 
     this.startControlSection("table_style_header", {
         tab: TAB_STYLE,
@@ -460,7 +460,7 @@ class Table extends BaseElement {
         colorPickedHex: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-table-head': 'background: {{COLOR}}'
+        '{{ELEMENT}} .altrp-table-head{{STATE}}': 'background: {{COLOR}}'
       }
     });
 
@@ -472,7 +472,7 @@ class Table extends BaseElement {
           colorPickedHex: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-table-th': 'color: {{COLOR}}'
+          '{{ELEMENT}} .altrp-table-th{{STATE}}': 'color: {{COLOR}}'
         }
     });
 
@@ -507,7 +507,7 @@ class Table extends BaseElement {
         }
       ],
       rules: {
-        '{{ELEMENT}} .altrp-table-th': 'border-style: {{VALUE}};',
+        '{{ELEMENT}} .altrp-table-th{{STATE}}': 'border-style: {{VALUE}};',
       }
     });
 
@@ -516,7 +516,7 @@ class Table extends BaseElement {
       label: "Border width",
       units: ["px", "%", "vh"],
       rules: {
-        '{{ELEMENT}} .altrp-table-th': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-table-th{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
       }
     });
 
@@ -528,7 +528,7 @@ class Table extends BaseElement {
         colorPickedHex: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-table-th': 'border-color: {{COLOR}};',
+        '{{ELEMENT}} .altrp-table-th{{STATE}}': 'border-color: {{COLOR}};',
       }
     });
 
@@ -548,7 +548,7 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-table-th': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-table-th{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
       },
     });
 
@@ -590,7 +590,7 @@ class Table extends BaseElement {
         }
       ],
       rules: {
-        '{{ELEMENT}} .altrp-table-td': 'border-style: {{VALUE}};',
+        '{{ELEMENT}} .altrp-table-td{{STATE}}': 'border-style: {{VALUE}};',
       }
     });
 
@@ -599,7 +599,7 @@ class Table extends BaseElement {
       label: "Border width",
       units: ["px", "%", "vh"],
       rules: {
-        '{{ELEMENT}} .altrp-table-td': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-table-td{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
       }
     });
 
@@ -611,10 +611,10 @@ class Table extends BaseElement {
         colorPickedHex: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-table-td': 'border-color: {{COLOR}};',
+        '{{ELEMENT}} .altrp-table-td{{STATE}}': 'border-color: {{COLOR}};',
       }
     });
-    
+
     this.addControl('table_style_body_cell_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Cell padding',
@@ -631,7 +631,7 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-table-td': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-table-td{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
       },
     });
 
@@ -643,7 +643,7 @@ class Table extends BaseElement {
         colorPickedHex: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-table-td': 'background: {{COLOR}};',
+        '{{ELEMENT}} .altrp-table-td{{STATE}}': 'background: {{COLOR}};',
       }
     });
 
@@ -655,7 +655,7 @@ class Table extends BaseElement {
         colorPickedHex: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-table-td': 'color: {{COLOR}};',
+        '{{ELEMENT}} .altrp-table-td{{STATE}}': 'color: {{COLOR}};',
       }
     });
 
@@ -672,7 +672,7 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    advancedTabControllers(this);  
+    advancedTabControllers(this);
   }
 }
 

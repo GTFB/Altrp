@@ -1,6 +1,7 @@
 import BaseModule from "./BaseModule";
 import Resource from "../Resource";
-import {CONSTANTS, getEditor, getTemplateId} from "../../helpers";
+import { getEditor, getTemplateId} from "../../helpers";
+import CONSTANTS from "../../consts";
 import RootElement from "../elements/RootElement";
 import store from "../../store/store";
 import {changeTemplateStatus} from "../../store/template-status/actions";

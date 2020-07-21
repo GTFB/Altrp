@@ -1,8 +1,9 @@
-import store, {getCurrentElement} from '../store/store';
-import {CONSTANTS} from "../helpers";
+import store, { getCurrentElement,  } from '../store/store';
+import {getElementSettingsSuffix} from "../helpers";
+import CONSTANTS from "../consts";
 import CSSRule from "../classes/CSSRule";
-import {changeTemplateStatus} from "../store/template-status/actions";
-import {controllerValue} from "../store/controller-value/actions";
+import { changeTemplateStatus } from "../store/template-status/actions";
+import { controllerValue } from "../store/controller-value/actions";
 
 /**
  * Класс-контроллер
@@ -19,7 +20,7 @@ class Controller {
         if (data.rules.hasOwnProperty(selector)) {
           let newRule = new CSSRule(selector, data.rules[selector]);
           this.rules.push(newRule);
-          let value = currentElement.getSettings(this.getSettingName());
+          let value = currentElement.getSettings(this.getSettingName() + getElementSettingsSuffix());
           if (value) {
             newRule.insertValue(value);
           }
@@ -27,7 +28,7 @@ class Controller {
       }
     }
     if (this.rules.length) {
-      currentElement.addStyles(this.getSettingName(), this.rules);
+      currentElement.addStyles(this.getSettingName() + getElementSettingsSuffix(), this.rules);
     }
   }
 
@@ -41,14 +42,14 @@ class Controller {
      * */
     let currentElement = getCurrentElement();
     if (!this.data.repeater) {
-      currentElement.setSettingValue(this.getSettingName(), value);
+      currentElement.setSettingValue(this.getSettingName() + getElementSettingsSuffix(), value);
       this.rules.forEach(rule => {
         rule.insertValue(value);
       });
       if (this.rules.length) {
 
-        value ? currentElement.addStyles(this.getSettingName(), this.rules)
-            : currentElement.removeStyle(this.getSettingName());
+        value ? currentElement.addStyles(this.getSettingName() + getElementSettingsSuffix(), this.rules)
+          : currentElement.removeStyle(this.getSettingName() + getElementSettingsSuffix());
       }
       store.dispatch(controllerValue(value, this.getSettingName()));
 
@@ -59,11 +60,11 @@ class Controller {
        * @public
        */
       this.data.repeater.changeValue(
-          this.data.itemIndex,
-          this.data.controlId,
-          value);
+        this.data.itemIndex,
+        this.data.controlId,
+        value);
     }
-    if(this.getSettingName() === 'element_css_editor'){
+    if (this.getSettingName() === 'element_css_editor') {
       currentElement.setStringStyles(value);
     }
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
@@ -83,9 +84,9 @@ class Controller {
      */
     let conditionPairs = _.toPairs(this.data.conditions);
     let show = true;
-    conditionPairs.forEach(condition=>{
+    conditionPairs.forEach(condition => {
       let [controlId, value] = condition;
-      if(getCurrentElement().getSettings(controlId) !== value){
+      if (getCurrentElement().getSettings(controlId) !== value) {
         show = false;
       }
     });

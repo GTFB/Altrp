@@ -1,7 +1,8 @@
 import Chevron from '../../svgs/chevron.svg';
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {CONSTANTS, getEditor} from "../helpers";
+import {getEditor} from "../helpers";
+import CONSTANTS from '../consts'
 
 class UpdateButton extends Component {
   constructor(props){

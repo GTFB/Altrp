@@ -8,10 +8,11 @@ import controllerDecorate from "../../decorators/controller";
 class DimensionsController extends Component {
   constructor(props){
     super(props);
+    controllerDecorate(this);
     this.changeValue = this.changeValue.bind(this);
     this.changeBind = this.changeBind.bind(this);
     this.changeUnit = this.changeUnit.bind(this);
-    let value = this.props.currentElement.getSettings(this.props.controlId);
+    let value = this.getSettings(this.props.controlId);
     // console.log(value);
     if(value === null && this.props.default){
       value = this.props.default ;
@@ -25,7 +26,6 @@ class DimensionsController extends Component {
       // active: this.state.value.active,
       units
     };
-    controllerDecorate(this);
   }
 
   changeUnit(e){
@@ -82,12 +82,6 @@ class DimensionsController extends Component {
         });
       }
     }
-    // console.log(this.state.value)
-
-    // this.setState({
-    //   value:e.target.value
-    // });
-    // this.props.currentElement.setSettingValue(this.props.controlId, e.target.value);
 
   }
 
@@ -113,6 +107,8 @@ class DimensionsController extends Component {
     if(this.state.show === false) {
       return '';
     }
+    // console.log(this.getSettings(this.props.controlId));
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
       return <div className="controller-container controller-container_dimensions">
         <div className="control-dimensions-header">
           <div className="controller-dimensions__label">{this.props.label}</div>
@@ -122,7 +118,7 @@ class DimensionsController extends Component {
             {
               this.state.units.map(unit=>{
                 let classes = 'control-slider-type-box';
-                if(this.state.value.unit === unit){
+                if(value.unit === unit){
                   classes += ' control-slider-type-box_active';
                 }
                 return <div className={classes}
@@ -140,7 +136,7 @@ class DimensionsController extends Component {
             <input className="control-field control-field-dimensions control-field-top-l"
                    onChange={this.changeValue}
                    data-active="top"
-                   value={this.state.value.top || ''}
+                   value={value.top || ''}
                    type="number"/>
             <label className="control-field-top-l-label control-field-dimensions-label">TOP</label>
           </div>
@@ -148,7 +144,7 @@ class DimensionsController extends Component {
             <input className="control-field control-field-dimensions control-field-top-r"
                    onChange={this.changeValue}
                    data-active="right"
-                   value={this.state.value.right || ''}
+                   value={value.right || ''}
                    type="number"/>
             <label className="control-field-top-r-label control-field-dimensions-label">RIGHT</label>
           </div>
@@ -156,7 +152,7 @@ class DimensionsController extends Component {
             <input className="control-field control-field-dimensions control-field-bot-l"
                    onChange={this.changeValue}
                    data-active="bottom"
-                   value={this.state.value.bottom || ''}
+                   value={value.bottom || ''}
                    type="number"/>
             <label className="control-field-bot-l-label control-field-dimensions-label">BOTTOM</label>
           </div>
@@ -164,12 +160,14 @@ class DimensionsController extends Component {
             <input className="control-field control-field-dimensions control-field-bot-r"
                    onChange={this.changeValue}
                    data-active="left"
-                   value={this.state.value.left || ''}
+                   value={value.left || ''}
                    type="number"/>
             <label className="control-field-bot-r-label control-field-dimensions-label">LEFT</label>
           </div>
-          <div id="bind" className="control-field control-field-bind" style={this.state.value.bind ? {transition: "0s", backgroundColor: "#8E94AA", borderColor: "#8E94AA",} : {}} onClick={this.changeBind}>
-            <BindIcon width="12" height="12" fill={this.state.value.bind ? "#FFF" : "#8E94AA"}/>
+          <div id="bind" className="control-field control-field-bind"
+               style={value.bind ? {transition: "0s", backgroundColor: "#8E94AA", borderColor: "#8E94AA",} : {}}
+               onClick={this.changeBind}>
+            <BindIcon width="12" height="12" fill={value.bind ? "#FFF" : "#8E94AA"}/>
           </div>
         </div>
       </div>
@@ -179,6 +177,7 @@ class DimensionsController extends Component {
 function mapStateToProps(state) {
   return{
     currentElement:state.currentElement.currentElement,
+    currentState:state.currentState,
   };
 }
 export default connect(mapStateToProps)(DimensionsController);

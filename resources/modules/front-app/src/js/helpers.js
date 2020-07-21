@@ -41,7 +41,6 @@ export function parseOptionsFromSettings(string) {
     return[];
   }
   let options = string.split('\n');
-  console.log(options);
   options = options.map(option=>{
     let value = option.split('|')[0];
     value = value.trim();
@@ -52,6 +51,5 @@ export function parseOptionsFromSettings(string) {
       label,
     }
   });
-  console.log(options);
   return options;
 }

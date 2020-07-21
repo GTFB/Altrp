@@ -1,5 +1,4 @@
-import {CONSTANTS} from "../../../../editor/src/js/helpers";
-import modelManager from "../../../../editor/src/js/classes/modules/ModelsManager";
+import CONSTANTS from "../../../../editor/src/js/consts";
 
 class FrontElement {
 

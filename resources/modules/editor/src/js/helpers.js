@@ -1,3 +1,4 @@
+import {getElementState} from "./store/store";
 
 export function getTemplateId(){
   return (new URL(window.location)).searchParams.get('template_id');
@@ -52,13 +53,6 @@ export function editorSetCurrentElement(element){
 export function getTemplateDataStorage() {
   return window.altrpEditor.modules.templateDataStorage
 }
-
-export const CONSTANTS = {
-  TEMPLATE_UPDATED: 'TEMPLATE_UPDATED',
-  TEMPLATE_NEED_UPDATE: 'TEMPLATE_NEED_UPDATE',
-  TEMPLATE_SAVING: 'TEMPLATE_SAVING',
-  DEFAULT_BREAKPOINT: 'DEFAULT_BREAKPOINT',
-};
 
 /**
  *
@@ -132,4 +126,16 @@ export function getWindowWidth() {
     window = document.getElementById("front-app").offsetWidth
   }
   return window
+}
+
+/**
+ * Генерирует суфикс для всех настроек
+ * на основе elementState и разврешения
+ * @return {string}
+ */
+export function getElementSettingsSuffix() {
+  if(! getElementState().value){
+    return '';
+  }
+  return `_${getElementState().value}`
 }

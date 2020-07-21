@@ -1,5 +1,6 @@
 import store from '../store/store';
 import {toggleDynamicContent} from "../store/dynamic-content/actions";
+import {getElementSettingsSuffix} from "../helpers";
 /**
  * Обновление значения в компоненте контроллера при загрузке нового экземпляра того же элемента
  */
@@ -17,6 +18,19 @@ function componentDidUpdate() {
     }
   } else {
   }
+}
+
+/**
+ * Метод получения настроек для контроллера из текущего элемента
+ * с учетом текущего состояния
+ * @param {string }settingName
+ * @return {*}
+ */
+function getSettings(settingName){
+  if(! this.props.currentElement){
+    return '';
+  }
+  return this.props.currentElement.getSettings(settingName + getElementSettingsSuffix())
 }
 
 /**
@@ -82,7 +96,9 @@ async function  controllerComponentDidMount() {
       options = _.concat([{'':''}], options);
     }
     this.setState(state=>({...state, options}));
+    if(options[0]) {
     this._changeValue(options[0].value);
+    }
   }
   if(typeof this._componentDidMount === 'function'){
     this._componentDidMount();
@@ -148,6 +164,7 @@ let controllerDecorate = function elementWrapperDecorate(component) {
   component.showComponentController = showComponentController.bind(component);
   component.removeDynamicSettings = removeDynamicSettings.bind(component);
   component.openDynamicContent = openDynamicContent.bind(component);
+  component.getSettings = getSettings.bind(component);
   store.subscribe(component.conditionSubscriber);
 };
 export default controllerDecorate;

@@ -4,6 +4,7 @@ import AdminTable from "./AdminTable";
 import store from "../js/store/store";
 import {setModalSettings, toggleModal} from "../js/store/modal-settings/actions";
 import {generateId, redirect} from "../js/helpers";
+import Pagination from "./Pagination";
 
 
 export default class Templates extends Component{
@@ -13,15 +14,18 @@ export default class Templates extends Component{
       templates: [],
       allTemplates: [],
       templateAreas: [],
-      activeTemplateArea: {}
+      activeTemplateArea: {},
+      pageCount: 1,
+      currentPage: 1,
     };
     this.resource = new Resource({
       route: '/admin/ajax/templates'
     });
-    this.emplateTypesResource = new Resource({
+    this.templateTypesResource = new Resource({
       route: '/admin/ajax/areas'
     });
     this.onClick = this.onClick.bind(this);
+    this.changePage = this.changePage.bind(this);
     this.changeActiveArea = this.changeActiveArea.bind(this);
   }
   changeActiveArea(e){
@@ -34,7 +38,20 @@ export default class Templates extends Component{
     });
     this.setActiveArea(activeTemplateArea)
   }
+
+  /**
+   * Смена текущей страницы
+   */
+  changePage(currentPage){
+    this.updateTemplates(currentPage, this.state.activeTemplateArea);
+  }
+
+  /**
+   * Сменить текущую область шаблона (вкладка)
+   * @param activeTemplateArea
+   */
   setActiveArea(activeTemplateArea){
+    //todo: удалить фильтрацию - сделать новый запрос this.resource.getQueried
     let templates = this.state.allTemplates.filter(template=>{
       return template.area === activeTemplateArea.name;
     });
@@ -42,15 +59,34 @@ export default class Templates extends Component{
       return{...state, activeTemplateArea, templates};
     })
   }
+
+  /**
+   * Метод для обновления списка шаблонов
+   * @param currentPage
+   * @param activeTemplateArea
+   */
+  updateTemplates(currentPage, activeTemplateArea){
+    this.resource.getQueried({
+      area: activeTemplateArea.name,
+      page: currentPage,
+      pageSize: 10,
+    }).then(res=>{
+      this.setState(state=> {
+        return {
+          ...state,
+          pageCount: res.pageCount,
+          templates: res.templates
+        }
+      });
+    });
+  }
   async componentDidMount(){
-    let templateAreas = await this.emplateTypesResource.getAll();
+    let templateAreas = await this.templateTypesResource.getAll();
     this.setActiveArea(templateAreas[0]);
     this.setState(state=>{
       return{...state,templateAreas}
     });
-    this.resource.getAll().then(templates=>{
-      this.setTemplates(templates);
-    });
+    this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea)
   }
   onClick(){
     let modalSettings = {
@@ -146,6 +182,9 @@ export default class Templates extends Component{
           title: 'Author',
         },
       ]} rows={this.state.templates}/>
+        <Pagination pageCount={this.state.pageCount}
+                    changePage={this.changePage} allTemplates={ this.state.templates.length }
+        />
       </div>
     </div>;
   }
