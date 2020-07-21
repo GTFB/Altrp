@@ -6,7 +6,7 @@ import controllerDecorate from "../../decorators/controller";
 class ColorController extends Component {
   constructor(props){
     super(props);
-    this.openColorPicker = this.openColorPicker.bind(this)
+    this.openColorPicker = this.openColorPicker.bind(this);
     this.colorChange = this.colorChange.bind(this);
     // this.inputHex = this.inputHex.bind(this)
     let value = this.props.currentElement.getSettings(this.props.controlId);

@@ -6,7 +6,7 @@ class SwitcherController extends Component {
   constructor(props){
     super(props);
     this.toggle = this.toggle.bind(this);
-    let value = this.props.currentElement.getSettings(this.props.controlId);
+    let value = this.getSettings(this.props.controlId);
 
     if(value === null && this.props.default){
       value = this.props.default ;
@@ -48,7 +48,7 @@ class SwitcherController extends Component {
 
 function mapStateToProps(state) {
   return{
-    currentElement:state.currentElement.currentElement,
+    currentElement: state.currentElement.currentElement,
   };
 }
 export default connect(mapStateToProps)(SwitcherController);

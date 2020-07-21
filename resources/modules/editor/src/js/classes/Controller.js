@@ -1,5 +1,5 @@
 import store, { getCurrentElement, getElementState } from '../store/store';
-import { CONSTANTS } from "../helpers";
+import {CONSTANTS, getElementSettingsSuffix} from "../helpers";
 import CSSRule from "../classes/CSSRule";
 import { changeTemplateStatus } from "../store/template-status/actions";
 import { controllerValue } from "../store/controller-value/actions";
@@ -19,7 +19,7 @@ class Controller {
         if (data.rules.hasOwnProperty(selector)) {
           let newRule = new CSSRule(selector, data.rules[selector]);
           this.rules.push(newRule);
-          let value = currentElement.getSettings(this.getSettingName());
+          let value = currentElement.getSettings(this.getSettingName() + getElementSettingsSuffix());
           if (value) {
             newRule.insertValue(value);
           }
@@ -27,7 +27,7 @@ class Controller {
       }
     }
     if (this.rules.length) {
-      currentElement.addStyles(this.getSettingName(), this.rules);
+      currentElement.addStyles(this.getSettingName() + getElementSettingsSuffix(), this.rules);
     }
   }
 
@@ -41,14 +41,14 @@ class Controller {
      * */
     let currentElement = getCurrentElement();
     if (!this.data.repeater) {
-      currentElement.setSettingValue(this.getSettingName(), value);
+      currentElement.setSettingValue(this.getSettingName() + getElementSettingsSuffix(), value);
       this.rules.forEach(rule => {
         rule.insertValue(value);
       });
       if (this.rules.length) {
 
-        value ? currentElement.addStyles(this.getSettingName() + getElementState().value, this.rules)
-          : currentElement.removeStyle(this.getSettingName() + getElementState().value);
+        value ? currentElement.addStyles(this.getSettingName() + getElementSettingsSuffix(), this.rules)
+          : currentElement.removeStyle(this.getSettingName() + getElementSettingsSuffix());
       }
       store.dispatch(controllerValue(value, this.getSettingName()));
 

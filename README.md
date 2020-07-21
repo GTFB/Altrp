@@ -7,6 +7,8 @@
 ### 0.6.0
 + Add Related Models Field in Dynamic Content Options
 + Update Related Models Data in Forms
++ Element States in Editor
++ Clear All History for Templates
 
 ### 0.5.0
 + Add Delete/Edit Form Action to Button Widget
