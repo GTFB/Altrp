@@ -54,6 +54,11 @@ class Select2Controller extends Component {
   };
 
   render() {
+
+    if(this.state.show === false) {
+      return '';
+    }
+
     const customStyles = {
       option: (provided, state) => ({
         ...provided,
@@ -105,10 +110,6 @@ class Select2Controller extends Component {
         color: "#8E94AA",
       })
     };
-
-    if(this.state.show === false) {
-      return '';
-    }
 
     let value = {};
     this.state.options.forEach(option=>{

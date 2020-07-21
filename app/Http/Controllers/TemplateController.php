@@ -15,45 +15,45 @@ class TemplateController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request)
+    public function index( Request $request )
     {
-        $page_count = 1;
-        if (!$request->get('page')) {
-            $_templates = Template::where('type', '!=', 'review')->get()->sortByDesc('id')->values();
-        } else {
-            $page_size = $request->get('pageSize', 10);
-            $area_name = $request->get('area', 'content');
-            $_templates = Template::where('type', '!=', 'review')
-                ->join('areas', 'areas.id', '=', 'templates.area')
-                ->where('areas.name', $area_name)->skip($page_size * ($request->get('page') - 1))
-                ->take($page_size);
-            $page_count = $_templates->toBase()->getCountForPagination();
-            $_templates = $_templates->get('templates.*')->sortByDesc('id')->values();
+      $page_count = 1;
+      if ( ! $request->get( 'page' ) ) {
+        $_templates = Template::where( 'type', '!=', 'review' )->get()->sortByDesc( 'id' )->values();
+      } else {
+        $page_size = $request->get( 'pageSize', 10 );
+        $area_name = $request->get( 'area', 'content' );
+        $_templates = Template::where( 'type', '!=', 'review' )
+          ->join( 'areas', 'areas.id', '=', 'templates.area' )
+          ->where( 'areas.name', $area_name )
+          ->offset( $page_size * ( $request->get( 'page' ) - 1 ) )
+          ->limit( $page_size );
+        $page_count = $_templates->toBase()->getCountForPagination();
+        $_templates = $_templates->get( 'templates.*' )->sortByDesc( 'id' )->values();
 
-            $page_count = ceil($page_count / $page_size);
-        }
-        $templates = [];
-        foreach ($_templates as $template) {
-            /**
-             * @var Template $template
-             */
-            $templates[] = [
-                'user' => $template->user,
-                'name' => $template->name,
-                'title' => $template->title,
-                'id' => $template->id,
-                'author' => $template->user->name,
-                'url' => '/admin/editor?template_id=' . $template->id,
-                'area' => $template->area()->name,
+        $page_count = ceil( $page_count / $page_size );
+      }
+      $templates = [];
+      foreach ($_templates as $template) {
+        /**
+         * @var Template $template
+         */
+        $templates[] = [
+          'user' => $template->user,
+          'name' => $template->name,
+          'title' => $template->title,
+          'id' => $template->id,
+          'author' => $template->user->name,
+          'url' => '/admin/editor?template_id=' . $template->id,
+          'area' => $template->area()->name,
 
-            ];
+        ];
 
-        }
-
-        return \response()->json([
-            'templates' => $templates,
-            'pageCount' => $page_count,
-        ]);
+      }
+      return \response()->json([
+        'templates' => $templates,
+        'pageCount' => $page_count,
+      ]);
     }
 
     /**
@@ -149,8 +149,7 @@ class TemplateController extends Controller
         $template = Template::find($template_id);
 
         return response()->json($template->toArray());
-    }
-
+}
     /**
      * Show the form for editing the specified resource.
      *

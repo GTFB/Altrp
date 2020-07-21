@@ -1,11 +1,5 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import  AceEditor  from "react-ace";
-import "ace-builds/src-min-noconflict/ext-language_tools";
-import "ace-builds/src-noconflict/snippets/css";
-import "ace-builds/src-noconflict/snippets/json"
-import "ace-builds/src-noconflict/theme-textmate";
-import "ace-builds/src-noconflict/mode-css";
 import controllerDecorate from "../../decorators/controller";
 
 class CssEditorController extends Component {
@@ -27,6 +21,8 @@ class CssEditorController extends Component {
     this.state = {
       value,
       show: true,
+      // editorComponent: <window.AceEditor
+      // />,
     };
     controllerDecorate(this);
   }
@@ -36,12 +32,36 @@ class CssEditorController extends Component {
     this._changeValue(newValue);
   };
 
+  shouldComponentUpdate(newProps, newState){
+    if(newProps.currentElement.getId() !== this.props.currentElement.getId()){
+      let value = newProps.currentElement.getSettings(newProps.controlId);
+      if(value === null && this.props.default){
+        value = this.props.default ;
+      }
+      if(! _.isString(value)){
+        value = '';
+      }
+      this.editor = <window.AceEditor
+          mode="css"
+          theme="textmate"
+          onChange={this.onChange}
+
+          name="aceEditor"
+          height="15em"
+          setOptions={{
+            value: value || ''
+          }}
+          enableLiveAutocompletion={true}/>
+    }
+    return true;
+  }
+
+
   getDefaultValue(){
-    return null;
+    return '';
   }
 
   render(){
-
     if(this.state.show === false) {
       return '';
     }
@@ -64,21 +84,19 @@ class CssEditorController extends Component {
             {/*enableSnippets*/}
             {/*enableLiveAutocompletion*/}
           {/*/>*/}
-          {this.editor || (this.editor = <AceEditor
+          {/*{this.editor || (this.editor = <AceEditor*/}
+          {/*/>)}*/}
+          {this.editor = (this.editor || <window.AceEditor
               mode="css"
               theme="textmate"
               onChange={this.onChange}
 
               name="aceEditor"
               height="15em"
-              // defaultValue={this.state.value || ''}
-              // value={this.state.value || ''}
               setOptions={{
-                value: this.state.value
+                value: this.state.value || ''
               }}
-              // value={}
-              enableLiveAutocompletion={true}
-          />)}
+              enableLiveAutocompletion={true}/>)}
 
         </div>
         <div className="control-css-editor-description">

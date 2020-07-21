@@ -28,12 +28,12 @@ class AddPage extends Component {
     this.setState(state=>{
       return{...state, templates: res}
     });
-    
+
     let models_res = await this.model_resource.getAll();
     this.setState(state=>{
       return{...state, models: models_res}
     });
-    
+
     let id = this.props.location.pathname.split('/');
     id = id[id.length - 1];
     id = parseInt(id);
@@ -115,7 +115,7 @@ class AddPage extends Component {
               <option value=""/>
               {
                 this.state.templates.map(template=>{
-                  return <option value={template.id} key={template.id}>{template.title}</option>
+                  return <option value={template.value} key={template.value}>{template.label}</option>
                 })
               }
             </select>
