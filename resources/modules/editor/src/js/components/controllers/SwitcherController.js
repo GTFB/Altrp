@@ -5,6 +5,7 @@ import controllerDecorate from "../../decorators/controller";
 class SwitcherController extends Component {
   constructor(props){
     super(props);
+    controllerDecorate(this);
     this.toggle = this.toggle.bind(this);
     let value = this.getSettings(this.props.controlId);
 
@@ -16,7 +17,6 @@ class SwitcherController extends Component {
       value,
       show: true
     };
-    controllerDecorate(this);
   }
   toggle(){
     this._changeValue(!this.state.value);
