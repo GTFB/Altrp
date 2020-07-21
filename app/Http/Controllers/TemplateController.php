@@ -247,7 +247,7 @@ class TemplateController extends Controller
     }
 
     /**
-     * Удалить шаблон по ID review
+     * Удалить review по ID
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -259,7 +259,24 @@ class TemplateController extends Controller
             ['type', 'review']
         ])->forceDelete();
 
+
         return response()->json(['success' => (bool) $result]);
+    }
+    /**
+     * получить review по ID
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getReview(Request $request)
+    {
+        $result = Template::where([
+            ['id', $request->review_id],
+            ['type', 'review']
+        ])->get();
+
+
+        return response()->json($result);
     }
 
     /**
