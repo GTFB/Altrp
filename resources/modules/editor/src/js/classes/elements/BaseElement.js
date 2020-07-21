@@ -1,5 +1,6 @@
-import { CONTROLLER_TEXT, CONTROLLER_TEXTAREA, TAB_CONTENT, TAB_STYLE } from "../modules/ControllersManager";
-import { getTemplateDataStorage, isEditor, getEditor, CONSTANTS, getFactory } from "../../helpers";
+import { TAB_CONTENT, TAB_STYLE } from "../modules/ControllersManager";
+import { getTemplateDataStorage, isEditor, getEditor , getFactory } from "../../helpers";
+import  CONSTANTS  from "../../consts";
 import { changeTemplateStatus } from "../../store/template-status/actions";
 import store, { getElementState } from "../../store/store";
 import ControlStack from "./ControlStack";
@@ -131,8 +132,6 @@ class BaseElement extends ControlStack {
     newChild.setParent(this);
     this.children.splice(index + 1, 0, newChild);
     this.component.setChildren(this.children);
-    console.log(this.children);
-    console.log(newChild);
     this.templateNeedUpdate();
   }
   /**
@@ -482,12 +481,11 @@ class BaseElement extends ControlStack {
 
   /**
    * Удаляет настроки динамического контента по названию настройки
-   * вызывается после нажатия конпик удалить динамический контент
+   * вызывается после нажатия конпки удалить динамический контент
    * @param {string} settingName
    */
   removeModelSettings(settingName) {
     this.dynamicContentSettings = _.remove(this.dynamicContentSettings, { settingName });
-    _.remove(['test'], r => { console.log(r); });
   }
 }
 

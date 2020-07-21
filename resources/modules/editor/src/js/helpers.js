@@ -54,13 +54,6 @@ export function getTemplateDataStorage() {
   return window.altrpEditor.modules.templateDataStorage
 }
 
-export const CONSTANTS = {
-  TEMPLATE_UPDATED: 'TEMPLATE_UPDATED',
-  TEMPLATE_NEED_UPDATE: 'TEMPLATE_NEED_UPDATE',
-  TEMPLATE_SAVING: 'TEMPLATE_SAVING',
-  DEFAULT_BREAKPOINT: 'DEFAULT_BREAKPOINT',
-};
-
 /**
  *
  * @return {ElementsFactory}

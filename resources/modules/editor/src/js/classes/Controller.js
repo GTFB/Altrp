@@ -1,5 +1,6 @@
-import store, { getCurrentElement, getElementState } from '../store/store';
-import {CONSTANTS, getElementSettingsSuffix} from "../helpers";
+import store, { getCurrentElement,  } from '../store/store';
+import {getElementSettingsSuffix} from "../helpers";
+import CONSTANTS from "../consts";
 import CSSRule from "../classes/CSSRule";
 import { changeTemplateStatus } from "../store/template-status/actions";
 import { controllerValue } from "../store/controller-value/actions";
