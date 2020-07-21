@@ -51,7 +51,7 @@ class Button extends BaseElement{
 
     this.addControl('button_alignment', {
       type: CONTROLLER_CHOOSE,
-      label: 'alignment',
+      label: 'Alignment',
       default: 'center',
       options:[
         {
@@ -267,15 +267,9 @@ class Button extends BaseElement{
       label: 'Border'
     });
 
-    this.addControl(
-      'border_type', {
+    this.addControl('border_type', {
         type: CONTROLLER_SELECT,
         label: 'Border Type',
-        units:[
-          'px',
-          '%',
-          'vh',
-        ],
         options:[
           {
             'value' : 'none',
@@ -373,7 +367,7 @@ class Button extends BaseElement{
         colorPickedHex: "#343B4C",
       },
       rules: {
-        '{{ELEMENT}} .altrp-btn': 'background-color: {{COLOR}};',
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
       },
     }
   );

@@ -1,4 +1,4 @@
-import store, {getCurrentElement} from '../store/store';
+import store, {getCurrentElement, getElementState} from '../store/store';
 import {CONSTANTS} from "../helpers";
 import CSSRule from "../classes/CSSRule";
 import {changeTemplateStatus} from "../store/template-status/actions";
@@ -47,8 +47,8 @@ class Controller {
       });
       if (this.rules.length) {
 
-        value ? currentElement.addStyles(this.getSettingName(), this.rules)
-            : currentElement.removeStyle(this.getSettingName());
+        value ? currentElement.addStyles(this.getSettingName() + getElementState().value , this.rules)
+            : currentElement.removeStyle(this.getSettingName() + getElementState().value);
       }
       store.dispatch(controllerValue(value, this.getSettingName()));
 
