@@ -207,9 +207,9 @@ class TemplateController extends Controller
         //
 
         if ($template->delete()) {
-            return \response()->json(['message' => 'Success']);
+            return \response()->json(['success' => true]);
         }
-        return \response()->json(['message' => 'Error Delete'], 500);
+        return \response()->json(['success' => false], 500);
     }
 
     /**
@@ -246,29 +246,31 @@ class TemplateController extends Controller
         return response()->json(['success' => (bool) $result]);
     }
 
-    /**
-     * Удалить review по ID
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function deleteReview(Request $request)
-    {
-        $result = Template::where([
-            ['id', $request->review_id],
-            ['type', 'review']
-        ])->forceDelete();
+  /**
+   * Удалить все review по
+   *
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function deleteAllReviews()
+  {
+    $result = Template::where( 'type', 'review' );
 
-
-        return response()->json(['success' => (bool) $result]);
+    if( ! $result->count() ){
+      $result = true;
+    } else {
+      $result->forceDelete();
     }
+
+    return response()->json(['success' => (bool) $result]);
+  }
     /**
      * получить review по ID
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getReview(Request $request)
+    public function getAllReview(Request $request)
     {
         $result = Template::where([
             ['id', $request->review_id],
@@ -279,23 +281,6 @@ class TemplateController extends Controller
         return response()->json($result);
     }
 
-    /**
-     * Удалить шаблон и все связанные с ним шаблоны
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function deleteTemplate(Request $request)
-    {
-        Template::find($request->template_id)->delete();
-
-        $result = Template::where([
-            ['parent_template', $request->template_id],
-            ['type', 'review']
-        ])->forceDelete();
-
-        return response()->json(['success' => (bool) $result]);
-    }
 
 
 }
