@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import controllerDecorate from "../../decorators/controller";
-import store from "../../store/store";
+import store, {getCurrentElement} from "../../store/store";
 import {changeWidthColumns} from "../../store/column-width/actions";
 
 const MainWrapper = {
@@ -26,7 +26,7 @@ const Sizefield = {
 const Block = {
   maxWidth: "105px",
   height: "45px",
-  backgroundColor: "#a4afb7",
+  backgroundColor: "#e6e9ec",
   marginRight: "2px"
 }
 
@@ -47,6 +47,7 @@ class ColumnsWidthController extends Component {
     value = value || false;
     this.state = {
       value,
+      currentActive: null,
       show: true,
       variants: [
         /**
@@ -55,6 +56,7 @@ class ColumnsWidthController extends Component {
         [
           {
             name: '100',
+            value: '100',
             variants: [
               {
                 title: '100',
@@ -69,6 +71,7 @@ class ColumnsWidthController extends Component {
         [
           {
             name: '50, 50',
+            value: '50_50',
             variants: [
               {
                 title: '50',
@@ -82,6 +85,7 @@ class ColumnsWidthController extends Component {
           },
           {
             name: '30, 70',
+            value: '30_70',
             variants: [
               {
                 title: '30',
@@ -95,6 +99,7 @@ class ColumnsWidthController extends Component {
           },
           {
             name: '25, 75',
+            value: '25_75',
             variants: [
               {
                 title: '25',
@@ -108,6 +113,7 @@ class ColumnsWidthController extends Component {
           },
           {
             name: '20, 80',
+            value: '20_80',
             variants: [
               {
                 title: '20',
@@ -121,6 +127,7 @@ class ColumnsWidthController extends Component {
           },
           {
             name: '15, 85',
+            value: '15_85',
             variants: [
               {
                 title: '15',
@@ -134,6 +141,7 @@ class ColumnsWidthController extends Component {
           },
           {
             name: '85, 15',
+            value: '85_15',
             variants: [
               {
                 title: '85',
@@ -147,6 +155,7 @@ class ColumnsWidthController extends Component {
           },
           {
             name: '80, 20',
+            value: '80_20',
             variants: [
               {
                 title: '80',
@@ -160,6 +169,7 @@ class ColumnsWidthController extends Component {
           },
           {
             name: '75, 25',
+            value: '75_25',
             variants: [
               {
                 title: '75',
@@ -173,6 +183,7 @@ class ColumnsWidthController extends Component {
           },
           {
             name: '70, 30',
+            value: '70_30',
             variants: [
               {
                 title: '70',
@@ -191,6 +202,7 @@ class ColumnsWidthController extends Component {
         [
           {
             name: '33, 33, 33',
+            value: '33_33_33',
             variants: [
               {
                 title: '33',
@@ -208,6 +220,7 @@ class ColumnsWidthController extends Component {
           },
           {
             name: '50, 25, 25',
+            value: '50_25_25',
             variants: [
               {
                 title: '50',
@@ -225,6 +238,7 @@ class ColumnsWidthController extends Component {
           },
           {
             name: '25, 50, 25',
+            value: '25_50_25',
             variants: [
               {
                 title: '25',
@@ -242,6 +256,7 @@ class ColumnsWidthController extends Component {
           },
           {
             name: '25, 25, 50',
+            value: '25_25_50',
             variants: [
               {
                 title: '25',
@@ -259,6 +274,7 @@ class ColumnsWidthController extends Component {
           },
           {
             name: '60, 20, 20',
+            value: '60_20_20',
             variants: [
               {
                 title: '60',
@@ -276,6 +292,7 @@ class ColumnsWidthController extends Component {
           },
           {
             name: '20, 60, 20',
+            value: '20_60_20',
             variants: [
               {
                 title: '20',
@@ -293,6 +310,7 @@ class ColumnsWidthController extends Component {
           },
           {
             name: '20, 20, 60',
+            value: '20_20_60',
             variants: [
               {
                 title: '20',
@@ -310,6 +328,7 @@ class ColumnsWidthController extends Component {
           },
           {
             name: '70, 15, 15',
+            value: '70_15_15',
             variants: [
               {
                 title: '70',
@@ -327,6 +346,7 @@ class ColumnsWidthController extends Component {
           },
           {
             name: '15, 70, 15',
+            value: '15_70_15',
             variants: [
               {
                 title: '15',
@@ -344,6 +364,7 @@ class ColumnsWidthController extends Component {
           },
           {
             name: '15, 15, 70',
+            value: '15_15_70',
             variants: [
               {
                 title: '15',
@@ -365,7 +386,6 @@ class ColumnsWidthController extends Component {
     };
     controllerDecorate(this);
   }
-
   getDefaultValue(){
     return '';
   }
@@ -375,8 +395,16 @@ class ColumnsWidthController extends Component {
    * @param index
    */
 
-  handleClick(index) {
-    store.dispatch(changeWidthColumns(index));
+  /**
+   * На handleClick вызывать changeValue и передавать children length и меняешь
+   * @param index
+   */
+
+  handleClick(index, keyindex) {
+    this._changeValue(index);
+    this.setState({
+      currentActive: keyindex
+    });
   }
   render() {
     if(this.state.show === false) {
@@ -386,11 +414,11 @@ class ColumnsWidthController extends Component {
     return <div className="altrp-control-structure" style={MainWrapper}>
       {
         this.state.variants[this.props.currentElement.children.length - 1].map((variant, keyindex) => {
-          return <div className="altrp-control-structure-wrapper" style={StructureWrapper} key={keyindex} onClick={() => {this.handleClick(variant.name.split(','))}}>
+          return <div className={this.state.currentActive === keyindex ? "altrp-control-structure-wrapper active" : "altrp-control-structure-wrapper"} style={StructureWrapper} key={keyindex} onClick={() => {this.handleClick(variant.value, keyindex)}}>
             <div className="altrp-control-structure-sizefield" style={Sizefield}>
               {
                 variant.variants.map((section, sectionid) => {
-                  return <div className="altrp-control-left-block" key={sectionid} style={{...Block, width: `${section.length}%`}} ></div>
+                  return <div className="altrp-control-left-block" key={sectionid} style={{ ...Block , width: `${section.length}%`}} ></div>
                 })
               }
             </div>

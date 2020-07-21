@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import '../../sass/section.scss';
 import {connect} from "react-redux";
-import store from "../store/store";
+import store, {getCurrentElement} from "../store/store";
 import { styles } from "react-contexify/lib/utils/styles";
 import {changeWidthColumns} from "../store/column-width/actions";
 
@@ -102,6 +102,7 @@ class SectionComponent extends Component {
       'altrp-section',
       `altrp-section_columns-${this.props.element.getColumnsCount()}`
     ];
+    let currentElement = getCurrentElement();
     let sectionWrapper = this.state.children.map((column, index) => {
       const width = this.state.structure[index];
       return <ElementWrapper

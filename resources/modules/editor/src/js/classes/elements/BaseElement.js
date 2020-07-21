@@ -1,7 +1,7 @@
 import {CONTROLLER_TEXT, CONTROLLER_TEXTAREA, TAB_CONTENT, TAB_STYLE} from "../modules/ControllersManager";
 import {getTemplateDataStorage, isEditor, getEditor, CONSTANTS, getFactory} from "../../helpers";
 import {changeTemplateStatus} from "../../store/template-status/actions";
-import store from "../../store/store";
+import store, {getCurrentElement} from "../../store/store";
 import ControlStack from "./ControlStack";
 
 /**
@@ -13,6 +13,7 @@ class BaseElement extends ControlStack{
     super();
     this.settings = {};
     this.controls = {};
+    this.cssClassStorage = {};
     this.controlsIds = [];
     this.controllersRegistered = false;
     this.children = [];
@@ -33,6 +34,17 @@ class BaseElement extends ControlStack{
     }
     return this.id;
   }
+
+  /**
+   * Сохранить prefixClass и value, которое будет браться из variants.
+   * @param settingName
+   * @param value
+   */
+
+ setCssClass(settingName, value) {
+    this.cssClassStorage[settingName] = value;
+    console.log(this.cssClassStorage);
+ }
 
   getName(){
     return this.constructor.getName();
@@ -59,6 +71,7 @@ class BaseElement extends ControlStack{
     data.name = this.getName();
     data.settings = this.settings;
     data.type = this.getType();
+    data.setCssClass = this.setCssClass();
     let children = this.getChildrenForImport();
     if(children){
       data.children = children;

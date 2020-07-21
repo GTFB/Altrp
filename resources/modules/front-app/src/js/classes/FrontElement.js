@@ -1,4 +1,5 @@
 import {CONSTANTS} from "../../../../editor/src/js/helpers";
+import {getCurrentElement} from "../../../../editor/src/js/store/store";
 
 class FrontElement {
 
@@ -6,6 +7,7 @@ class FrontElement {
     this.name = data.name;
     this.settings = data.settings;
     this.children = data.children;
+    this.cssClassStorage = data.cssClassStorage;
     this.type = data.type;
     this.id = data.id;
     if(window.frontElementsManager){
@@ -191,6 +193,21 @@ class FrontElement {
       return null;
     }
     return this.component.state.value;
+  }
+  /**
+   * Парсит объект и извлекает из него строку со всеми классами у которых есть свойство prefixClass
+   * @return {string}
+   */
+
+  getPrefixClasses() {
+    let changeCss = _.toPairs(this.cssClassStorage);
+    console.log(changeCss);
+    let classStorage = ' ';
+    changeCss.forEach(element => {
+      classStorage += `${element[1]} `;
+      console.log(element[1]);
+    })
+    return classStorage;
   }
 }
 

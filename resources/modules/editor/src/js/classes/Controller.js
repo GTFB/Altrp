@@ -48,6 +48,12 @@ class Controller {
       if (this.rules.length) {
         currentElement.addStyles(this.getSettingName(), this.rules);
       }
+      /**
+       * Вызываем currentElement setCssClass в случае если есть this.data.prefixClass
+       */
+      if(this.data.prefixClass) {
+        currentElement.setCssClass(this.getSettingName(), this.data.prefixClass + value);
+      }
       store.dispatch(controllerValue(value, this.getSettingName()));
 
     } else {
