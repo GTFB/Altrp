@@ -100,7 +100,7 @@ class Image extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} div{{STATE}}': [
+        '{{ELEMENT}} .altrp-image-container{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
