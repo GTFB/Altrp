@@ -75,7 +75,7 @@ class Image extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} img': [
+        '{{ELEMENT}} img{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -100,7 +100,7 @@ class Image extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} div': [
+        '{{ELEMENT}} .altrp-image-container{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -114,7 +114,7 @@ class Image extends BaseElement{
       label: 'Z-index',
       default: 0,
       rules: {
-        '{{ELEMENT}} img': 'z-index: {{VALUE}}'
+        '{{ELEMENT}} img{{STATE}}': 'z-index: {{VALUE}}'
       }
     });
 
@@ -145,7 +145,7 @@ class Image extends BaseElement{
       min: 0,
       step: 0.01,
       rules: {
-        '{{ELEMENT}} img': 'opacity: {{SIZE}}',
+        '{{ELEMENT}} img{{STATE}}': 'opacity: {{SIZE}}',
       },
     });
 
@@ -171,7 +171,7 @@ class Image extends BaseElement{
           }
         ],
         rules: {
-          '{{ELEMENT}} img': 'object-fit: {{VALUE}};',
+          '{{ELEMENT}} img{{STATE}}': 'object-fit: {{VALUE}};',
         },
       }
     );
@@ -222,7 +222,7 @@ class Image extends BaseElement{
       max: 1000,
       min: 0,
       rules: {
-        '{{ELEMENT}} img': 'height: {{SIZE}}{{UNIT}}',
+        '{{ELEMENT}} img{{STATE}}': 'height: {{SIZE}}{{UNIT}}',
       },
     });
 
@@ -241,7 +241,7 @@ class Image extends BaseElement{
       max: 1000,
       min: 0,
       rules: {
-        '{{ELEMENT}} img': 'width: {{SIZE}}{{UNIT}}',
+        '{{ELEMENT}} img{{STATE}}': 'width: {{SIZE}}{{UNIT}}',
       },
     });
 
@@ -256,7 +256,7 @@ class Image extends BaseElement{
         type: CONTROLLER_FILTERS,
         label: 'filters',
         rules: {
-          '{{ELEMENT}} img': [
+          '{{ELEMENT}} img{{STATE}}': [
             'filter: blur({{BLUR}}px);',
             'filter: brightness({{BRIGHTNESS}}%);',
             'filter: contrast({{CONTRAST}}%);',
@@ -285,7 +285,7 @@ class Image extends BaseElement{
         },
       ],
       rules: {
-            '{{ELEMENT}} .altrp-image-container': 'justify-content: {{VALUE}};',
+            '{{ELEMENT}} .altrp-image-container{{STATE}}': 'justify-content: {{VALUE}};',
       },
     });
 
@@ -331,7 +331,7 @@ class Image extends BaseElement{
           },
         ],
         rules: {
-          '{{ELEMENT}} img': 'border-style: {{VALUE}};',
+          '{{ELEMENT}} img{{STATE}}': 'border-style: {{VALUE}};',
         },
       }
     );
@@ -345,7 +345,7 @@ class Image extends BaseElement{
           'vh',
         ],
         rules: {
-          '{{ELEMENT}} img': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          '{{ELEMENT}} img{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         },
       }
     );
@@ -358,7 +358,7 @@ class Image extends BaseElement{
           colorPickedHex: "#32a852",
         },
         rules: {
-          '{{ELEMENT}} img': 'border-color: {{COLOR}};',
+          '{{ELEMENT}} img{{STATE}}': 'border-color: {{COLOR}};',
         },
       }
     );
@@ -378,7 +378,7 @@ class Image extends BaseElement{
       max: 100,
       min: 0,
       rules: {
-        '{{ELEMENT}} img': 'border-radius: {{SIZE}}{{UNIT}}',
+        '{{ELEMENT}} img{{STATE}}': 'border-radius: {{SIZE}}{{UNIT}}',
       },
     });
 

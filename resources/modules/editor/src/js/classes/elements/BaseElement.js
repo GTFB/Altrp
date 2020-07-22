@@ -1,15 +1,16 @@
-import {CONTROLLER_TEXT, CONTROLLER_TEXTAREA, TAB_CONTENT, TAB_STYLE} from "../modules/ControllersManager";
-import {getTemplateDataStorage, isEditor, getEditor, CONSTANTS, getFactory} from "../../helpers";
-import {changeTemplateStatus} from "../../store/template-status/actions";
-import store, {getElementState} from "../../store/store";
+import { TAB_CONTENT, TAB_STYLE } from "../modules/ControllersManager";
+import { getTemplateDataStorage, isEditor, getEditor , getFactory } from "../../helpers";
+import  CONSTANTS  from "../../consts";
+import { changeTemplateStatus } from "../../store/template-status/actions";
+import store, { getElementState } from "../../store/store";
 import ControlStack from "./ControlStack";
 
 /**
  * Базовый класс для методов элемента для редактора
  */
-class BaseElement extends ControlStack{
+class BaseElement extends ControlStack {
 
-  constructor(){
+  constructor() {
     super();
     this.settings = {};
     this.controls = {};
@@ -31,33 +32,33 @@ class BaseElement extends ControlStack{
    * Задать настройки
    * @param settings
    */
-  setSettings(settings){
+  setSettings(settings) {
     this.settings = settings || this.settings;
   }
-  getId(){
-    if(! this.id){
+  getId() {
+    if (!this.id) {
       this.id = BaseElement.generateId();
     }
     return this.id;
   }
 
-  getName(){
+  getName() {
     return this.constructor.getName();
   }
 
-  getType(){
+  getType() {
     return this.constructor.getType();
   }
 
-  getTitle(){
+  getTitle() {
     return this.constructor.getTitle();
   }
 
-  static generateId(){
+  static generateId() {
     return '_' + Math.random().toString(36).substr(2, 9);
   }
 
-  toObject(){
+  toObject() {
     // if(!this.component){
     //   throw 'Element Must Composites with Some Component';
     // }
@@ -66,30 +67,30 @@ class BaseElement extends ControlStack{
     data.name = this.getName();
     data.settings = this.settings;
     data.type = this.getType();
-    if(this.dynamicContentSettings && this.dynamicContentSettings.length){
+    if (this.dynamicContentSettings && this.dynamicContentSettings.length) {
       data.dynamicContentSettings = [...this.dynamicContentSettings];
     }
     let children = this.getChildrenForImport();
-    if(children){
+    if (children) {
       data.children = children;
     }
     return data;
   }
 
   getChildrenForImport() {
-    if(! this.children.length){
-      return[];
+    if (!this.children.length) {
+      return [];
     }
     let children = [];
-    for( let _c of this.children ){
+    for (let _c of this.children) {
       children.push(_c.toObject())
     }
     return children;
   }
 
-  getChildren(){
-    if(! this.children.length){
-      return[];
+  getChildren() {
+    if (!this.children.length) {
+      return [];
     }
     return this.children;
   }
@@ -98,55 +99,53 @@ class BaseElement extends ControlStack{
    * добавлйет новый  дочерний элемент в конец
    * @param {BaseElement} child
    * */
-  appendChild(child){
+  appendChild(child) {
     this.children.push(child);
     child.setParent(this);
-    if(this.component && typeof this.component.setChildren === 'function'){
+    if (this.component && typeof this.component.setChildren === 'function') {
       this.component.setChildren(this.children);
     }
     this.templateNeedUpdate();
   }
 
-  insertSiblingAfter(newSibling){
+  insertSiblingAfter(newSibling) {
     this.parent.insertNewChildAfter(this.getId(), newSibling);
   }
 
-  insertSiblingBefore(newSibling){
+  insertSiblingBefore(newSibling) {
     this.parent.insertNewChildBefore(this.getId(), newSibling);
   }
   /**
    * @param {string} childId
    * @param {BaseElement} newChild
    * */
-  insertNewChildAfter(childId, newChild){
+  insertNewChildAfter(childId, newChild) {
     let index;
-    this.children.map((childItem, idx)=>{
-      if(childItem.getId() === childId){
+    this.children.map((childItem, idx) => {
+      if (childItem.getId() === childId) {
         index = idx;
       }
     });
-    if(index === undefined){
+    if (index === undefined) {
       throw 'childId not found when insertNewChildAfter'
     }
     newChild.setParent(this);
-    this.children.splice(index+1, 0, newChild);
+    this.children.splice(index + 1, 0, newChild);
     this.component.setChildren(this.children);
-    console.log(this.children);
-    console.log(newChild);
     this.templateNeedUpdate();
   }
   /**
    * @param {string} childId
    * @param {BaseElement} newChild
    * */
-  insertNewChildBefore(childId, newChild){
+  insertNewChildBefore(childId, newChild) {
     let index;
-    this.children.map((childItem, idx)=>{
-      if(childItem.getId() === childId){
+    this.children.map((childItem, idx) => {
+      if (childItem.getId() === childId) {
         index = idx;
       }
     });
-    if(index === undefined){
+    if (index === undefined) {
       throw 'childId not found when insertNewChildBefore'
     }
     newChild.setParent(this);
@@ -158,30 +157,30 @@ class BaseElement extends ControlStack{
   /**
    * @param {BaseElement} target
    * */
-  insertAfter(target){
+  insertAfter(target) {
     target.insertSiblingAfter(this);
   }
   /**
    * @param {BaseElement} target
    * */
-  insertBefore(target){
+  insertBefore(target) {
     target.insertSiblingBefore(this);
   }
 
-  templateNeedUpdate(){
+  templateNeedUpdate() {
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
   }
   /**
    * @param {BaseElement[]} newChildren
    * */
-  setChildren(newChildren){
+  setChildren(newChildren) {
     this.children = newChildren;
   }
   /**
    * @param {BaseElement[]} newChildren
    * */
-  updateChildren(newChildren){
-    if(newChildren){
+  updateChildren(newChildren) {
+    if (newChildren) {
       this.children = newChildren;
     }
     this.component.setChildren(this.children);
@@ -191,27 +190,27 @@ class BaseElement extends ControlStack{
   /**
    * Удаляет текущий элемент у родителя
    */
-  deleteThisElement(){
+  deleteThisElement() {
     this.parent.deleteChild(this);
   }
 
   /**
    * Дублирует элемент и вставляет после текущего
    */
-  duplicate(){
+  duplicate() {
     let factory = getFactory();
     let newElement = factory.duplicateElement(
-        this,
-        this.parent
+      this,
+      this.parent
     );
     getTemplateDataStorage().setCurrentElement(newElement);
     getEditor().showSettingsPanel();
     this.update();
   }
 
-  deleteAllIds(){
-    this.id= null;
-    this.children.forEach(child=>{
+  deleteAllIds() {
+    this.id = null;
+    this.children.forEach(child => {
       child.deleteAllIds();
     })
   }
@@ -219,31 +218,31 @@ class BaseElement extends ControlStack{
    * @param {BaseElement | string} child
    * @throws Если не указан IG или сам элемент
    * */
-  deleteChild(child){
+  deleteChild(child) {
     let childExist = false;
-    let childId ;
-    if(typeof child === 'string'){
+    let childId;
+    if (typeof child === 'string') {
       childId = child;
-    } else if(child instanceof BaseElement){
+    } else if (child instanceof BaseElement) {
       childId = child.getId();
     } else {
       throw 'Delete Child can only by id or Instance';
     }
     let newChildren = this.children.filter(item => {
-      if(item.getId() === childId){
+      if (item.getId() === childId) {
         childExist = true;
         item.beforeDelete();
         return false;
       }
       return true
     });
-    if(!childExist){
+    if (!childExist) {
       throw 'Element not Found for Delete'
     }
     this.updateChildren(newChildren);
   }
 
-  removeFromParent(){
+  removeFromParent() {
     this.parent.deleteChild(this);
   }
 
@@ -251,7 +250,7 @@ class BaseElement extends ControlStack{
     this.children.map(item => {
       item.beforeDelete();
     });
-    if(getTemplateDataStorage().getCurrentElement().getId() === this.getId()){
+    if (getTemplateDataStorage().getCurrentElement().getId() === this.getId()) {
       getTemplateDataStorage().setCurrentRootElement();
       getEditor().showWidgetsPanel();
     }
@@ -261,8 +260,8 @@ class BaseElement extends ControlStack{
    * Удаляет свойство настройки по id
    * @param {string} settingName
    */
-  deleteSetting(settingName){
-    if(this.settings[settingName]){
+  deleteSetting(settingName) {
+    if (this.settings[settingName]) {
       delete this.settings[settingName];
     }
     // if(this.component){
@@ -274,15 +273,15 @@ class BaseElement extends ControlStack{
    * @param {string} settingName
    * @return {*}
    */
-  getSettings(settingName){
+  getSettings(settingName) {
     this._initDefaultSettings();
-    if(! settingName){
+    if (!settingName) {
       return this.settings;
     }
-    if(this.settings[settingName] === undefined){
+    if (this.settings[settingName] === undefined) {
       let control = window.controllersManager.getElementControl(this.getName(), settingName);
 
-      if(! control || !control.default){
+      if (!control || !control.default) {
         return null;
       }
       this.settings[settingName] = control.default;
@@ -290,24 +289,24 @@ class BaseElement extends ControlStack{
     return this.settings[settingName];
   }
 
-  _initDefaultSettings(){
-    if(!window.controllersManager || this.initiatedDefaults){
+  _initDefaultSettings() {
+    if (!window.controllersManager || this.initiatedDefaults) {
       return;
     }
     let controls = window.controllersManager.getControls(this.getName());
 
-    for (let tabName in controls){
-      if(controls.hasOwnProperty(tabName)){
-        if(!controls[tabName].length){
+    for (let tabName in controls) {
+      if (controls.hasOwnProperty(tabName)) {
+        if (!controls[tabName].length) {
           continue;
         }
         for (let section of controls[tabName]) {
-          if(!section.controls.length){
+          if (!section.controls.length) {
             continue;
           }
-          for (let control of section.controls){
-            if(control.default !== undefined
-                && this.settings[control.controlId] === undefined){
+          for (let control of section.controls) {
+            if (control.default !== undefined
+              && this.settings[control.controlId] === undefined) {
               this.settings[control.controlId] = control.default;
             }
           }
@@ -317,54 +316,54 @@ class BaseElement extends ControlStack{
     this.updateStyles();
   }
 
-  setSettingValue(settingName, value){
+  setSettingValue(settingName, value) {
     this.settings[settingName] = value;
-    if(this.component){
+    if (this.component) {
       this.component.changeSetting(settingName, value);
     }
   }
 
-  _registerControls(){
+  _registerControls() {
     this.controllersRegistered = true;
   }
-   /**
-    * @param {string} sectionId
-    * @param {object} args
-    * */
-  startControlSection(sectionId, args){
-     if(this.controlsIds.indexOf(sectionId) !== -1){
-       throw 'Control with id' + sectionId + ' Already Exists in ' + this.getName();
-     }
-     let defaults = {
-       tab: TAB_CONTENT,
-     };
-     this.currentSection = {...defaults, ...args, sectionId};
-     this.controlsIds.push(sectionId);
-   }
+  /**
+   * @param {string} sectionId
+   * @param {object} args
+   * */
+  startControlSection(sectionId, args) {
+    if (this.controlsIds.indexOf(sectionId) !== -1) {
+      throw 'Control with id' + sectionId + ' Already Exists in ' + this.getName();
+    }
+    let defaults = {
+      tab: TAB_CONTENT,
+    };
+    this.currentSection = { ...defaults, ...args, sectionId };
+    this.controlsIds.push(sectionId);
+  }
 
-  endControlSection(){
+  endControlSection() {
     this.currentSection = null;
   }
 
 
 
-  _getCurrentTab(){
+  _getCurrentTab() {
     let tabName = this.currentSection.tab || TAB_STYLE;
     let tab = this.controls[tabName];
-    if(! tab){
+    if (!tab) {
       tab = this.controls[tabName] = [];
     }
     return tab;
   }
-  _getCurrentSection(){
+  _getCurrentSection() {
     let tab = this._getCurrentTab();
     let sectionId = this.currentSection.sectionId;
-    for(let _section of tab){
-      if(this.currentSection.sectionId=== _section.sectionId){
-         return _section
+    for (let _section of tab) {
+      if (this.currentSection.sectionId === _section.sectionId) {
+        return _section
       }
     }
-    let section ;
+    let section;
     section = {
       ...this.currentSection,
       controls: [],
@@ -374,19 +373,19 @@ class BaseElement extends ControlStack{
     return section;
   }
 
-  getControls(){
+  getControls() {
     this._registerControls();
     return this.controls;
   }
 
-  setElementAsCurrent(){
+  setElementAsCurrent() {
     window.altrpEditor.modules.templateDataStorage.setCurrentElement(this);
   }
 
-  isEditor(){
+  isEditor() {
     return isEditor();
   }
-  getIds(){
+  getIds() {
     let ids = [this.getId()];
     this.children.map(item => {
       ids.push(item.getIds())
@@ -394,7 +393,7 @@ class BaseElement extends ControlStack{
     return ids;
   }
 
-  getSelector(){
+  getSelector() {
     return `.altrp-element${this.getId()}`;
   }
   /**
@@ -402,20 +401,20 @@ class BaseElement extends ControlStack{
    * @param {CSSRule[]} rules
    * @param {string} breakpoint
    * */
-  addStyles(settingName, rules, breakpoint = CONSTANTS.DEFAULT_BREAKPOINT){
+  addStyles(settingName, rules, breakpoint = CONSTANTS.DEFAULT_BREAKPOINT) {
     this.settings.styles = this.settings.styles || {};
     this.settings.styles[breakpoint] = this.settings.styles[breakpoint] || {};
 
     // this.settings.styles[breakpoint][settingName] = this.settings.styles[breakpoint][settingName] || {};
     //todo: проверить работает ли такое поведение (при обновлении стилей стили записанные на текущем свойстве перед изменением удаляются)
-    this.settings.styles[breakpoint][settingName] =  {};
+    this.settings.styles[breakpoint][settingName] = {};
     rules.forEach(rule => {
       let finalSelector = rule.selector;
       finalSelector = finalSelector.replace('{{ELEMENT}}', this.getSelector()).replace('{{STATE}}', getElementState().value);
       /**
        * если this.settings.styles[breakpoint][settingName] массив, то преобразуем в объект
        */
-      if(_.isArray(this.settings.styles[breakpoint][settingName])){
+      if (_.isArray(this.settings.styles[breakpoint][settingName])) {
         this.settings.styles[breakpoint][settingName] = _.toPlainObject(this.settings.styles[breakpoint][settingName]);
       }
       this.settings.styles[breakpoint][settingName][finalSelector] = rule.properties;
@@ -427,15 +426,15 @@ class BaseElement extends ControlStack{
    * @param {string} settingName
    * @param {string} breakpoint
    * */
-  removeStyle(settingName, breakpoint = CONSTANTS.DEFAULT_BREAKPOINT){
-    this.settings.styles[breakpoint][settingName] =  {};
+  removeStyle(settingName, breakpoint = CONSTANTS.DEFAULT_BREAKPOINT) {
+    this.settings.styles[breakpoint][settingName] = {};
     this.updateStyles();
   }
 
   /**
    * @param {String} styles
    * */
-  setStringStyles(styles){
+  setStringStyles(styles) {
     styles = styles.replace(/__selector__/g, this.getSelector());
     this.settings.stringStyles = styles;
     this.updateStyles();
@@ -444,8 +443,8 @@ class BaseElement extends ControlStack{
   /**
    * @param {BaseElement} parent
    * */
-  setParent(parent){
-    if(this.parent instanceof BaseElement){
+  setParent(parent) {
+    if (this.parent instanceof BaseElement) {
       this.parent.deleteChild(this);
     }
     this.parent = parent;
@@ -456,14 +455,14 @@ class BaseElement extends ControlStack{
    * каждая настройка содержит в себе название настройки, имя модели, название поля модели
    * @param {{}} dynamicContent
    */
-  setModelsSettings(dynamicContent){
+  setModelsSettings(dynamicContent) {
     this.dynamicContentSettings = this.dynamicContentSettings || [];
     let exist = false;
-    this.dynamicContentSettings = this.dynamicContentSettings.map(_dynamicContent=>{
+    this.dynamicContentSettings = this.dynamicContentSettings.map(_dynamicContent => {
       /**
        * Если для текущего свойства есть настройка динамического контента, то заменяем
        */
-      if(_.isEqual(_dynamicContent.settingName, dynamicContent.settingName)){
+      if (_.isEqual(_dynamicContent.settingName, dynamicContent.settingName)) {
         exist = true;
         return dynamicContent;
       } else {
@@ -474,20 +473,19 @@ class BaseElement extends ControlStack{
      * Если для текущего свойства нет настройки динамического контента, то добавляем
      */
 
-    if(! exist){
-      this.dynamicContentSettings.push({...dynamicContent});
+    if (!exist) {
+      this.dynamicContentSettings.push({ ...dynamicContent });
     }
     this.component.subscribeToModels();
   }
 
   /**
    * Удаляет настроки динамического контента по названию настройки
-   * вызывается после нажатия конпик удалить динамический контент
+   * вызывается после нажатия конпки удалить динамический контент
    * @param {string} settingName
    */
-  removeModelSettings(settingName){
-    this.dynamicContentSettings = _.remove(this.dynamicContentSettings,{settingName});
-    _.remove(['test'],r=>{console.log(r);});
+  removeModelSettings(settingName) {
+    this.dynamicContentSettings = _.remove(this.dynamicContentSettings, { settingName });
   }
 }
 

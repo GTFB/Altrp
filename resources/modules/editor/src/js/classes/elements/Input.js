@@ -33,7 +33,7 @@ class Input extends BaseElement{
     if (this.controllersRegistered) {
       return
     }
-    
+
     this.startControlSection('content_section', {
       tab: TAB_CONTENT,
       label: 'Content',
@@ -129,7 +129,7 @@ class Input extends BaseElement{
       label: 'Mask',
     });
 
-    
+
     this.addControl('content_required', {
       type: CONTROLLER_SWITCHER,
       label: 'Required',
@@ -179,7 +179,7 @@ class Input extends BaseElement{
         {
           value: '1',
           label:'Select sd  Content 1'
-        }, 
+        },
         {
           value: '2',
           label:'Select Content 2'
@@ -188,7 +188,7 @@ class Input extends BaseElement{
     });
 
     this.endControlSection();
-    
+
     this.startControlSection('label_style_section', {
       tab: TAB_STYLE,
       label: 'label',
@@ -217,7 +217,7 @@ class Input extends BaseElement{
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-field-label": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-field-label{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -233,7 +233,7 @@ class Input extends BaseElement{
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-field-label': [
+          '{{ELEMENT}} .altrp-field-label{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -269,7 +269,7 @@ class Input extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-field-container': [ 
+        '{{ELEMENT}} .altrp-field-container{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -294,7 +294,7 @@ class Input extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-field': [ 
+        '{{ELEMENT}} .altrp-field{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -308,7 +308,7 @@ class Input extends BaseElement{
       label: 'Z-index',
       default: 0,
       rules: {
-        '{{ELEMENT}} .altrp-field': 'z-index: {{VALUE}}'
+        '{{ELEMENT}} .altrp-field{{STATE}}': 'z-index: {{VALUE}}'
       }
     });
 
@@ -323,7 +323,7 @@ class Input extends BaseElement{
     });
 
     this.endControlSection();
-    
+
     this.startControlSection('placeholder_style_section', {
       tab: TAB_STYLE,
       label: 'placeholder',
@@ -338,7 +338,7 @@ class Input extends BaseElement{
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-field::placeholder": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-field::placeholder{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -354,7 +354,7 @@ class Input extends BaseElement{
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-field::placeholder': [
+          '{{ELEMENT}} .altrp-field::placeholder{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -367,7 +367,7 @@ class Input extends BaseElement{
         },
       }
     );
-    
+
     this.endControlSection();
 
     this.startControlSection('required_style_section', {
@@ -384,7 +384,7 @@ class Input extends BaseElement{
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-field-required": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-field-required{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -400,7 +400,7 @@ class Input extends BaseElement{
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-field-required': [
+          '{{ELEMENT}} .altrp-field-required{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -413,7 +413,7 @@ class Input extends BaseElement{
         },
       }
     );
-    
+
     this.endControlSection();
 
     this.startControlSection('overlay_section', {
@@ -436,7 +436,7 @@ class Input extends BaseElement{
           colorPickedHex: "",
         },
         rules: {
-          '{{ELEMENT}} .altrp-field': 'background-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-field{{STATE}}': 'background-color: {{COLOR}};',
         },
       }
     );
@@ -493,11 +493,11 @@ class Input extends BaseElement{
           },
         ],
         rules: {
-          '{{ELEMENT}} .altrp-field': 'border-style: {{VALUE}};',
+          '{{ELEMENT}} .altrp-field{{STATE}}': 'border-style: {{VALUE}};',
         },
       }
     );
-  
+
     this.addControl('border_width', {
         type: CONTROLLER_DIMENSIONS,
         label: 'Border Width',
@@ -513,11 +513,11 @@ class Input extends BaseElement{
           left: 2
         },
         rules: {
-          '{{ELEMENT}} .altrp-field': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          '{{ELEMENT}} .altrp-field{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         },
       }
     );
-  
+
     this.addControl('border_color', {
         type: CONTROLLER_COLOR,
         label: 'Border Color',
@@ -526,11 +526,11 @@ class Input extends BaseElement{
           colorPickedHex: "#8E94AA",
         },
         rules: {
-          '{{ELEMENT}} .altrp-field': 'border-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-field{{STATE}}': 'border-color: {{COLOR}};',
         },
       }
     );
-    
+
     this.addControl('border_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Radius',
@@ -547,7 +547,7 @@ class Input extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-field': [ 
+        '{{ELEMENT}} .altrp-field{{STATE}}': [
           'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         ]
       },
