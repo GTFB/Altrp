@@ -44,6 +44,7 @@ export default class Templates extends Component{
    */
   changePage(currentPage){
     this.updateTemplates(currentPage, this.state.activeTemplateArea);
+    this.setState(state => ({ ...state, currentPage}));
   }
 
   /**
@@ -170,18 +171,40 @@ export default class Templates extends Component{
             </li>
           })}
         </ul>
-      <AdminTable columns={[
-        {
-          name: 'title',
-          title: 'Title',
-          url: true,
-          target: '_blank',
-        },
-        {
-          name: 'author',
-          title: 'Author',
-        },
-      ]} rows={this.state.templates}/>
+        <AdminTable columns={[
+          {
+            name: 'title',
+            title: 'Title',
+            url: true,
+            target: '_blank',
+          },
+          {
+            name: 'author',
+            title: 'Author',
+          },
+          ]} 
+          rows={this.state.templates}
+          quickActions={[{ tag: 'a', props: { 
+            href: '/admin/editor?template_id=:id', 
+            target: '_blank',
+            // className: ''
+            },
+            title: 'Edit'
+          }, {
+            tag: 'button',
+            route: '/admin/ajax/templates/:id/reviews',
+            method: 'delete', 
+            // className: ''
+            title: 'Clear History'
+            }, {
+            tag: 'button',
+            route: '/admin/ajax/templates/:id',
+            method: 'delete',
+            after: () => this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea),
+            className: 'quick-action-menu__item_danger',
+            title: 'Trash'
+          }]}
+        />
         <Pagination pageCount={this.state.pageCount}
                     changePage={this.changePage} allTemplates={ this.state.templates.length }
         />

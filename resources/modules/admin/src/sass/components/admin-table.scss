@@ -37,21 +37,34 @@
       &:nth-child(2n+1){
         background-color: #fff;
       }
-      & .td__content__menu {
+      & .quick-action-menu {
         display: none;
         position: absolute;
         bottom: 4px;
         left: 0;
       }
-      &:hover .td__content__menu {
+      &:hover .quick-action-menu {
         display: inline-block;
-        .td__content__menu__item_danger {
-          color: #cf0025;
+        
+        .quick-action-menu__item {
+          font-size: 12px;
+          color: #8E94AA;
+          padding: 0;
+          background-color: transparent;
+          &.quick-action-menu__item_danger {
+            color: #cf0025;
+          }
+          &:hover {
+            text-decoration: underline;
+          }
+          &::after {
+            content: " | ";
+          }
+          &:last-child::after {
+            content: "";
+          }
         }
-        a {
-        font-size: 12px;
-        color: #8E94AA;
-        }
+
       }
     }
   }

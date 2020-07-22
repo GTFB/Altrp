@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {Link} from 'react-router-dom'
+import Resource from "../../../editor/src/js/classes/Resource";
 
 class AdminTable extends Component {
   render(){
@@ -59,11 +60,37 @@ class AdminTable extends Component {
                 return<td className="admin-table__td td" key={column.name + row.id} title={column.name + row.id}>
                 
                   {React.createElement(tag, props)}
-                  {index === 0 && <span className="td__content__menu">
-                    <Link to="#">Edit</Link> |{" "}
-                    <Link to="#">Quick Edit</Link> |{" "}
-                    <Link to="#" className="td__content__menu__item_danger">Trash</Link> |{" "}
-                    <Link to="#"> Preview</Link>
+                  {index === 0 && <span className="quick-action-menu">
+                    {this.props.quickActions.map((quickAction, index) => {
+                      let item = '';
+                      switch (quickAction.tag) {
+                        case 'a':
+                          quickAction.props.href = quickAction.props.href.replace(':id', row.id)
+                          item = <a key={index} 
+                            className={'quick-action-menu__item ' + (quickAction.className || '')} 
+                            {...quickAction.props}
+                            >{quickAction.title}</a>
+                          break;
+                        case 'button':
+                          quickAction.route = quickAction.route.replace(':id', row.id)
+                          item = <button 
+                            key={index} 
+                            className={'quick-action-menu__item ' + (quickAction.className || '')} {...quickAction.props || {}}
+                            onClick={async () => { 
+                              const resource = new Resource({ route: quickAction.route});
+                              if (_.isFunction(resource[quickAction.method])) {
+                                await resource[quickAction.method]();
+                                _.isFunction(quickAction.after) ? quickAction.after() : ''
+                              }
+                            }}
+                            >{quickAction.title}</button>
+                          break;
+                      
+                        default:
+                          break;
+                      }
+                      return item;
+                    })}
                   </span>}
                 </td>
               }
