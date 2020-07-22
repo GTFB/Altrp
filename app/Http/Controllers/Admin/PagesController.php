@@ -99,7 +99,7 @@ class PagesController extends Controller
     //
     $page = Page::find( $id );
     if ( $page ) {
-      $page->template_id = $page->get_content_template()->id;
+      $page->template_id = $page->get_content_template() ? $page->get_content_template()->id : null;
     }
     return response()->json( $page->toArray() );
 

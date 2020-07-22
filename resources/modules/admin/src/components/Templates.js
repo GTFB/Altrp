@@ -52,12 +52,9 @@ export default class Templates extends Component{
    * @param activeTemplateArea
    */
   setActiveArea(activeTemplateArea){
-    //todo: удалить фильтрацию - сделать новый запрос this.resource.getQueried
-    let templates = this.state.allTemplates.filter(template=>{
-      return template.area === activeTemplateArea.name;
-    });
+    this.updateTemplates(1, activeTemplateArea);
     this.setState(state=>{
-      return{...state, activeTemplateArea, templates};
+      return{...state, activeTemplateArea};
     })
   }
 
@@ -200,13 +197,16 @@ export default class Templates extends Component{
             tag: 'button',
             route: '/admin/ajax/templates/:id',
             method: 'delete',
+            confirm: 'Are You Sure?',
             after: () => this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea),
             className: 'quick-action-menu__item_danger',
             title: 'Trash'
           }]}
         />
         <Pagination pageCount={this.state.pageCount}
-                    changePage={this.changePage} allTemplates={ this.state.templates.length }
+                    currentPage={this.state.currentPage}
+                    changePage={this.changePage}
+                    itemsCount={this.state.templates.length }
         />
       </div>
     </div>;

@@ -241,8 +241,12 @@ class TemplateController extends Controller
         $result = Template::where([
             ['parent_template', $request->template_id],
             ['type', 'review']
-        ])->forceDelete();
-
+        ]);
+      if( ! $result->count() ){
+        $result = true;
+      } else {
+        $result = $result->forceDelete();
+      }
         return response()->json(['success' => (bool) $result]);
     }
 
@@ -259,7 +263,7 @@ class TemplateController extends Controller
     if( ! $result->count() ){
       $result = true;
     } else {
-      $result->forceDelete();
+      $result = $result->forceDelete();
     }
 
     return response()->json(['success' => (bool) $result]);
