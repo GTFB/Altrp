@@ -61,7 +61,7 @@ class ChooseController extends Component {
         </div>
       </div>
   }
-};
+}
 
 function mapStateToProps(state) {
   return{

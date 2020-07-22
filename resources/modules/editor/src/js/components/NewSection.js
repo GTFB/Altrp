@@ -1,9 +1,8 @@
 import React, {Component} from "react";
 import PlusIcon from '../../svgs/plus.svg'
 import FolderIcon from '../../svgs/folder.svg'
-import {CONSTANTS, getEditor} from "../helpers";
-import store from '../store/store';
-import {changeTemplateStatus} from "../store/template-status/actions";
+import { getEditor} from "../helpers";
+import CONSTANTS from "../consts";
 
 class NewSection extends Component {
 

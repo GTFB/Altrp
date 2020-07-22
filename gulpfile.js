@@ -40,7 +40,9 @@ function altrpZip() {
     '!./.gitattributes',
     '!./.gitignore',
     '!./.editorconfig',
+    '!./.styleci.yml',
     '!./_ide_helper.php',
+    '!./.phpstorm.meta.php',
   ]).pipe(zip('altrp.zip'))
       .pipe(gulp.dest('../'));
 }

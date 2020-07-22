@@ -128,7 +128,7 @@ class Heading extends BaseElement {
       tab: TAB_STYLE,
       label: 'Font',
     });
-    
+
     this.addControl("heading_style_color", {
       type: CONTROLLER_COLOR,
       label: "Color",
@@ -138,7 +138,7 @@ class Heading extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-heading": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-heading{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -155,7 +155,7 @@ class Heading extends BaseElement {
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-heading': [
+          '{{ELEMENT}} .altrp-heading{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -186,13 +186,13 @@ class Heading extends BaseElement {
           '#9c18a8'
         ],
         rules: {
-          '{{ELEMENT}} .altrp-heading': 'text-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
+          '{{ELEMENT}} .altrp-heading{{STATE}}': 'text-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
         },
       }
     );
-    
+
     this.endControlSection();
-    
+
     this.startControlSection("style_position", {
       tab: TAB_STYLE,
       label: "Position"
@@ -214,7 +214,7 @@ class Heading extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-heading': [ 
+        '{{ELEMENT}} .altrp-heading{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -235,7 +235,7 @@ class Heading extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-heading": [
+        "{{ELEMENT}} .altrp-heading{{STATE}}": [
           "padding-top: {{TOP}}{{UNIT}};",
           "padding-right: {{RIGHT}}{{UNIT}};",
           "padding-bottom: {{BOTTOM}}{{UNIT}};",
@@ -243,13 +243,13 @@ class Heading extends BaseElement {
         ]
       }
     });
-    
+
     this.addControl('position_z_index', {
       type: CONTROLLER_NUMBER,
       label: "Z-index",
       default: 0,
       rules: {
-        "{{ELEMENT}} .altrp-heading": "z-index: {{VALUE}}"
+        "{{ELEMENT}} .altrp-heading{{STATE}}": "z-index: {{VALUE}}"
       }
     });
 
@@ -279,7 +279,7 @@ class Heading extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-heading": "background-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-heading{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
@@ -293,7 +293,7 @@ class Heading extends BaseElement {
       min: 0,
       step: 0.01,
       rules: {
-        "{{ELEMENT}} .altrp-heading": "opacity: {{SIZE}}"
+        "{{ELEMENT}} .altrp-heading{{STATE}}": "opacity: {{SIZE}}"
       }
     });
 
@@ -335,7 +335,7 @@ class Heading extends BaseElement {
         }
       ],
       rules: {
-        "{{ELEMENT}} .altrp-heading": "border-style: {{VALUE}};"
+        "{{ELEMENT}} .altrp-heading{{STATE}}": "border-style: {{VALUE}};"
       }
     });
 
@@ -344,7 +344,7 @@ class Heading extends BaseElement {
       label: "Border width",
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-heading":
+        "{{ELEMENT}} .altrp-heading{{STATE}}":
           "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
       }
     });
@@ -357,7 +357,7 @@ class Heading extends BaseElement {
         colorPickedHex: "#32a852"
       },
       rules: {
-        "{{ELEMENT}} .altrp-heading": "border-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-heading{{STATE}}": "border-color: {{COLOR}};"
       }
     });
 
@@ -376,7 +376,7 @@ class Heading extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-heading": "border-radius: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-heading{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -403,7 +403,7 @@ class Heading extends BaseElement {
         },
       ],
       rules: {
-        "{{ELEMENT}} .altrp-heading": "text-decoration: {{VALUE}};"
+        "{{ELEMENT}} .altrp-heading{{STATE}}": "text-decoration: {{VALUE}};"
       }
     });
 
@@ -421,7 +421,7 @@ class Heading extends BaseElement {
         size: 0,
       },
       rules: {
-        "{{ELEMENT}} .altrp-heading": "transform: {{FUNCTION}}({{SIZE}}{{UNIT}})"
+        "{{ELEMENT}} .altrp-heading{{STATE}}": "transform: {{FUNCTION}}({{SIZE}}{{UNIT}})"
       }
     });
 
