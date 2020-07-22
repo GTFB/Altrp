@@ -14,46 +14,87 @@ class ListWidget extends Component {
   }
 
   render(){
-    let list = null
-    let ul_classes = null
+    let list = null;
+    let ul_classes = null;
+    let divider = "";
 
-    ul_classes = this.state.settings.layout_meta_data == "inline" ? "altrp-list-ul-inline" : ulClasses;
+    ul_classes += this.state.settings.layout_meta_data == "inline" ? " altrp-list-ul-inline" : " altrp-list-ul-default";
+
+    let li_styles = {};
+
+    if(this.state.settings.layout_meta_data != "inline") {
+      if(this.state.settings.space_between_list_style) {
+        li_styles = {
+          marginTop: this.state.settings.space_between_list_style.size + "px",
+          marginBottom: this.state.settings.space_between_list_style.size + "px"
+        }
+      }
+    }else {
+      if(this.state.settings.space_between_list_style) {
+        li_styles = {
+          marginLeft: this.state.settings.space_between_list_style.size + "px",
+          marginRight: this.state.settings.space_between_list_style.size + "px"
+        }
+      }
+    };
+
+    let divider_classes = this.state.settings.layout_meta_data == "inline" ? "altrp-list-li-divider-inline" : "altrp-list-li-divider-default";
+    if(this.state.settings.divider_switcher_list_style) {
+      divider = <div className={"altrp-list-li-divider " + divider_classes}>
+      </div>
+    }
 
     if(this.state.settings.repeater_meta_data_section) {
       list = this.state.settings.repeater_meta_data_section.map((li, idx) => {
         let li_container = null;
-        let li_link = null;
-        let li_icon = null;
+        let li_label = null;
+        let li_classes = "altrp-list-li ";
+        let li_icon_classes = "";
+        let li_icon_x = li.position_relative_x_custom_repeater;
+        let li_icon_y = li.position_relative_y_custom_repeater;
 
-        li_icon = li.icon_select_repeater == "custom" ?
-          <span className="altrp-list-icon">{renderAssetIcon(
-            li.icon_repeater
-          )}</span>
-          : null;
+        let li_icon_styles = {};
+
+        if(li.position_relative_switcher_custom_repeater) {
+          if(li_icon_x) {
+            li_icon_styles = {
+              ...li_icon_styles,
+              left: li_icon_x.size + li_icon_x.unit
+            };
+          };
+
+        if(li_icon_y) {
+          li_icon_styles = {
+            ...li_icon_styles,
+            top: li_icon_y.size + li_icon_y.unit
+          };
+        };
+      };
+
+        li_icon_classes = li.position_relative_switcher_custom_repeater ? "altrp-list-icon-relative" : li_icon_classes;
+
+        let li_icon = li.icon_select_repeater == "custom" ? <span className={"altrp-list-icon " + li_icon_classes} style={li_icon_styles}>{renderAssetIcon(
+          li.icon_repeater
+          )}
+        </span>: null;
 
         switch (li.type_repeater) {
           case "custom":
+            li_label = <span className="altrp-list-label">{li.custom_repeater}</span>;
 
-            li_container = <li key={idx} className="altrp-list-li altrp-list-custom">
-              {
-                li.icon_select_repeater == "custom" ?
-              }
-              <span className="altrp-list-label">
-                {li.custom_repeater}
+            li_classes = li_classes + "altrp-list-custom";
+
+            li_container = <li key={idx} className={li_classes}>
+              <span className="altrp-list-li-content" style={li_styles}>
+                {li_icon}
+                {li_label}
               </span>
+              {divider}
             </li>
             break
-        }
+        };
 
-        if(li.link_custom_repeater) {
-          console.log(li.link_custom_repeater)
-          li_link = <a href={li.link_custom_repeater.url} target={li.link_custom_repeater.openInNew ? "_blank" : null} rel={li.link_custom_repeater.nofollow ? "nofollow" : null} className="altrp-list-li-link" key={idx}>{liContainer}</a>
-          if(li.link_custom_repeater.url == "") {
-            li_link = null
-          }
-        }
-
-        return li_link || li_container
+        return li_container
 
       })
     }

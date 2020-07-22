@@ -55,7 +55,7 @@ class Heading extends BaseElement {
 
     this.addControl('heading_settings_alignment', {
       type: CONTROLLER_CHOOSE,
-      label: 'alignment',
+      label: 'Alignment',
       default: 'left',
       options:[
         {
@@ -142,8 +142,7 @@ class Heading extends BaseElement {
       }
     });
 
-    this.addControl(
-      'heading_style_typographic', {
+    this.addControl('heading_style_typographic', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
         default:{
@@ -307,7 +306,6 @@ class Heading extends BaseElement {
     this.addControl("style_border_type", {
       type: CONTROLLER_SELECT,
       label: "Border type",
-      units: ["px", "%", "vh"],
       options: [
         {
           value: "none",
