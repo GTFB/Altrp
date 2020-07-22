@@ -66,7 +66,7 @@ class AdminTable extends Component {
                       switch (quickAction.tag) {
                         case 'a':
                           quickAction.props.href = quickAction.props.href.replace(':id', row.id)
-                          item = <a key={index} 
+                          item = <a 
                             className={'quick-action-menu__item ' + (quickAction.className || '')} 
                             {...quickAction.props}
                             >{quickAction.title}</a>;
@@ -74,7 +74,6 @@ class AdminTable extends Component {
                         case 'button':
                           quickAction.route = quickAction.route.replace(':id', row.id);
                           item = <button 
-                            key={index} 
                             className={'quick-action-menu__item ' + (quickAction.className || '')} {...quickAction.props || {}}
                             onClick={async () => {
                               if(quickAction.confirm){
@@ -94,7 +93,7 @@ class AdminTable extends Component {
                         default:
                           break;
                       }
-                      return item;
+                      return <span className="quick-action-menu__item_wrapper" key={index}>{item}</span>;
                     })}
                   </span>}
                 </td>
