@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { isEditor } from "../../helpers";
 import { Redirect } from "react-router";
+import {isEditor} from "../../../../../front-app/src/js/helpers";
 
 class ButtonWidget extends Component {
   constructor(props) {

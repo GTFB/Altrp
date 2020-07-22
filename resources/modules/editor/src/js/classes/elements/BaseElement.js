@@ -1,9 +1,10 @@
 import { TAB_CONTENT, TAB_STYLE } from "../modules/ControllersManager";
-import { getTemplateDataStorage, isEditor, getEditor , getFactory } from "../../helpers";
+import { getTemplateDataStorage, getEditor , getFactory } from "../../helpers";
 import  CONSTANTS  from "../../consts";
 import { changeTemplateStatus } from "../../store/template-status/actions";
 import store, { getElementState } from "../../store/store";
 import ControlStack from "./ControlStack";
+import {isEditor} from "../../../../../front-app/src/js/helpers";
 
 /**
  * Базовый класс для методов элемента для редактора

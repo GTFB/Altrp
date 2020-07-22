@@ -65,16 +65,17 @@ class AdminTable extends Component {
                       let item = '';
                       switch (quickAction.tag) {
                         case 'a':
-                          quickAction.props.href = quickAction.props.href.replace(':id', row.id)
+                          quickAction.props.href = quickAction.props.href.replace(':id', row.id);
                           item = <a 
                             className={'quick-action-menu__item ' + (quickAction.className || '')} 
-                            {...quickAction.props}
+                            {...quickAction.props || {}}
                             >{quickAction.title}</a>;
                           break;
                         case 'button':
                           quickAction.route = quickAction.route.replace(':id', row.id);
                           item = <button 
-                            className={'quick-action-menu__item ' + (quickAction.className || '')} {...quickAction.props || {}}
+                            className={'quick-action-menu__item ' + (quickAction.className || '')}
+                            {...quickAction.props || {}}
                             onClick={async () => {
                               if(quickAction.confirm){
                                 if(! await confirm(quickAction.confirm)){

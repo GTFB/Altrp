@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { styles } from "react-contexify/lib/utils/styles";
 import { Link } from 'react-router-dom'
-import { isEditor } from "../../helpers";
+import {isEditor} from "../../../../../front-app/src/js/helpers";
 
 class HeadingWidget extends Component {
   constructor(props) {
@@ -22,9 +21,12 @@ class HeadingWidget extends Component {
         href: this.state.settings.link_link.url,
       };
       let tag = 'a';
-      if ((this.state.settings.link_link.tag === 'Link') && !isEditor()) {
+      if ((this.state.settings.link_link.tag === 'Link') && ! isEditor()) {
         tag = Link;
         linkProps.to = this.state.settings.link_link.url.replace(':id', this.getModelId() || '')
+      }
+      if(isEditor()){
+        linkProps.onClick = e => {e.preventDefault()}
       }
       text = React.createElement(tag, linkProps, text);
     }

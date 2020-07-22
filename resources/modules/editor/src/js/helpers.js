@@ -1,4 +1,5 @@
 import {getElementState} from "./store/store";
+import {isEditor} from "../../../front-app/src/js/helpers";
 
 export function getTemplateId(){
   return (new URL(window.location)).searchParams.get('template_id');
@@ -35,13 +36,6 @@ export function getEditorContent(){
  * */
 export function getEditor() {
   return window.altrpEditor || window.parent.altrpEditor;
-}
-
-/**
- * @return {boolean}
- * */
-export function isEditor() {
-  return !!(window.altrpEditor || window.parent.altrpEditor);
 }
 
 export function editorSetCurrentElement(element){
