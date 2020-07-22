@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Exceptions;
+namespace App\Exceptions\Repository;
 
 use Exception;
 
-class RouteGenerateFailedException extends Exception
+class RepositoryFileException extends Exception
 {
     /**
      * @param Request $request

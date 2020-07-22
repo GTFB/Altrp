@@ -1,0 +1,10 @@
+    /**
+     * @param {{repoInterface}} ${{repo}}
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function {{methodName}}({{repoInterface}} ${{repo}})
+    {
+        ${{resource}} = ${{repo}}->{{methodName}}();
+
+        return response()->json(${{resource}}, 200, [], JSON_UNESCAPED_UNICODE);
+    }

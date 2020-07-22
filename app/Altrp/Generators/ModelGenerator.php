@@ -92,6 +92,7 @@ class ModelGenerator extends AppGenerator
      * @throws RelationshipNotInsertedException
      * @throws TableNotFoundException
      * @throws PermissionNotWrittenException
+     * @throws \Exception
      */
     public function generate()
     {
@@ -260,7 +261,7 @@ class ModelGenerator extends AppGenerator
 
             return $this->writeRelationships();
         }
-        
+
         return false;
     }
 

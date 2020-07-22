@@ -15,20 +15,20 @@ class Model extends EloquentModel
     protected $table = 'altrp_models';
 
     protected $fillable = [
-       'description',
-       'soft_deletes',
-       'time_stamps',
-       'fillable_cols',
-       'user_cols',
-       'path',
-       'name',
-       'table_id',
+        'description',
+        'soft_deletes',
+        'time_stamps',
+        'fillable_cols',
+        'user_cols',
+        'path',
+        'name',
+        'table_id',
+        'pk'
     ];
 
-  protected $hidden = [
-    'relationships',
-    'pk'
-  ];
+    protected $hidden = [
+        'relationships'
+    ];
 
     public function setFillableColsAttribute($value)
     {
