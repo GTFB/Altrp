@@ -18,7 +18,7 @@ class AdminTable extends Component {
           <tr className="admin-table-row" key={row.id} title={row.id}>
             <td className="admin-table__td admin-table__td_check" key={'choose' + row.id} title={'choose' + row.id}><input type="checkbox"/></td>
             {
-              this.props.columns.map(column=>
+              this.props.columns.map((column, index)=>
               {
                 let tag = 'span';
                 let childrens = null;
@@ -59,7 +59,12 @@ class AdminTable extends Component {
                 return<td className="admin-table__td td" key={column.name + row.id} title={column.name + row.id}>
                 
                   {React.createElement(tag, props)}
-
+                  {index === 0 && <span className="td__content__menu">
+                    <Link to="#">Edit</Link> |{" "}
+                    <Link to="#">Quick Edit</Link> |{" "}
+                    <Link to="#" className="td__content__menu__item_danger">Trash</Link> |{" "}
+                    <Link to="#"> Preview</Link>
+                  </span>}
                 </td>
               }
              )
