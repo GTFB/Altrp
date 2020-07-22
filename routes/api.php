@@ -61,6 +61,7 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::post('/tables', "Admin\TableController@insert");
         Route::put('/tables/{table}', "Admin\TableController@update");
         Route::delete('/tables/{table}', "Admin\TableController@delete");*/
+        Route::post('/tables/{table}/add_request', 'Admin\TableController@addRequest');
 
         Route::get('/reports', 'ReportsController@index');
         Route::post('/reports', 'ReportsController@store');

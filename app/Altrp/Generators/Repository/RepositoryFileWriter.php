@@ -1,0 +1,321 @@
+<?php
+
+
+namespace App\Altrp\Generators\Repository;
+
+
+use App\Exceptions\Repository\RepositoryFileException;
+use Illuminate\Support\Str;
+
+class RepositoryFileWriter
+{
+    /**
+     * @var RepositoryFile
+     */
+    private $repository;
+
+    /**
+     * @var RepositoryInterfaceFile
+     */
+    private $repoInterface;
+
+    /**
+     * @var string
+     */
+    private $stub;
+
+    /**
+     * @var string
+     */
+    private $interfaceStub;
+
+    /**
+     * RepositoryFileWriter constructor.
+     * @param RepositoryFile $repositoryFile
+     * @param RepositoryInterfaceFile $repositoryInterfaceFile
+     */
+    public function __construct(RepositoryFile $repositoryFile, RepositoryInterfaceFile $repositoryInterfaceFile)
+    {
+        $this->repository = $repositoryFile;
+        $this->repoInterface = $repositoryInterfaceFile;
+        $this->stub = $this->getRepoStub();
+        $this->interfaceStub = $this->getRepoInterfaceStub();
+    }
+
+    /**
+     * Записать в файл репозитория
+     */
+    public function write()
+    {
+        $contentRepo = $this->getRepoContent();
+        $contentRepoInterface = $this->getRepoInterfaceContent();
+        $this->writeRepository($contentRepo);
+        $this->writeRepoInterface($contentRepoInterface);
+    }
+
+    /**
+     * Добавить метод в файл репозитория
+     *
+     * @param $name
+     * @param $body
+     * @throws RepositoryFileException
+     */
+    public function addMethod($name, $body)
+    {
+        $contentRepo = $this->getRepoContent();
+        if (Str::contains($this->repository->getMethods(), 'public function ' . $name . '()')) {
+            throw new RepositoryFileException('Method already exists in repository', 500);
+        }
+        $contentRepoInterface = $this->getRepoInterfaceContent();
+        if (Str::contains($this->repoInterface->getMethods(), 'public function ' . $name . '()')) {
+            throw new RepositoryFileException('Method already exists in repository interface', 500);
+        }
+        $this->repository->addMethods($body);
+        $this->repoInterface->addMethods("public function $name();\n");
+        $this->replaceCustomMethods($contentRepo,$this->repository->getMethods());
+        $this->replaceCustomMethods($contentRepoInterface,$this->repoInterface->getMethods());
+        $this->writeRepository($contentRepo);
+        $this->writeRepoInterface($contentRepoInterface);
+        $this->writeToServiceProvider();
+    }
+
+    /**
+     * Получить содержимое файла репозитория
+     *
+     * @return array|false
+     */
+    protected function getRepoContent()
+    {
+        $stubContent = file($this->stub, 2);
+        $this->replaceModelName($stubContent, $this->repository->getModelName())
+            ->replaceModelNamespace($stubContent, $this->repository->getModelNamespace())
+            ->replaceRepoNamespace($stubContent, $this->repository->getNamespace());
+        if (file_exists($this->repository->getFile())) {
+            $repoFile = file($this->repository->getFile());
+            $this->repository->addMethods(trim($this->getFileMethods($repoFile), "    \n\r"));
+        }
+        return $stubContent;
+    }
+
+    /**
+     * Получить содержимое файла интерфейса репозитория
+     *
+     * @return array|false
+     */
+    protected function getRepoInterfaceContent()
+    {
+        $stubContent = file($this->interfaceStub, 2);
+        $this->replaceModelName($stubContent, $this->repoInterface->getModelName())
+            ->replaceRepoInterfaceNamespace(
+                $stubContent,
+                $this->repoInterface->getNamespace()
+            );
+        if (file_exists($this->repoInterface->getFile())) {
+            $repoFile = file($this->repoInterface->getFile());
+            $this->repoInterface->addMethods(trim($this->getFileMethods($repoFile),"    \n\r"));
+        }
+        return $stubContent;
+    }
+
+    /**
+     * Записать в файл репозитория контент
+     *
+     * @param $content
+     * @return false|int
+     */
+    public function writeRepository($content)
+    {
+        return file_put_contents(
+            $this->repository->getFile(),
+            implode(PHP_EOL,$content)
+        ) !== false;
+    }
+
+    /**
+     * Записать в файл интерфейса репозитория контент
+     *
+     * @param $content
+     * @return false|int
+     */
+    public function writeRepoInterface($content)
+    {
+        return file_put_contents(
+            $this->repoInterface->getFile(),
+            implode(PHP_EOL,$content)
+        ) !== false;
+    }
+
+    /**
+     * Записать в сервис провайдер интерфейс репозитория и репозиторий
+     */
+    protected function writeToServiceProvider()
+    {
+        $serviceProviderContent = file($this->getRepoServiceProvider(), 2);
+        if(! $this->existsInServiceProvider($serviceProviderContent)) {
+            foreach ($serviceProviderContent as $line => $content) {
+                if (Str::contains($content, 'public function register()')) {
+                    array_splice(
+                        $serviceProviderContent,
+                        $line + 2,
+                        0,
+                        $this->getBindRepo()
+                    );
+                    break;
+                }
+            }
+            file_put_contents($this->getRepoServiceProvider(), implode(PHP_EOL, $serviceProviderContent));
+        }
+    }
+
+    /**
+     * Формаирует связывающий метод репозитория для сервис провайдера
+     *
+     * @return string
+     */
+    protected function getBindRepo()
+    {
+        return '        $this->app->bind(\\' .
+        str_replace('\\\\', '\\', $this->repoInterface->getNamespace()
+         . '\\' . $this->repoInterface->getModelName()) . 'RepositoryInterface::class, '
+         . '\\' . str_replace('\\\\', '\\', $this->repository->getNamespace()
+         . '\\' . $this->repoInterface->getModelName()) . 'Repository::class);' . "\n";
+    }
+
+    /**
+     * Проверить, прописаны ли в сервис провайдере классы репозитория
+     *
+     * @param $serviceProviderContent
+     * @return bool
+     */
+    protected function existsInServiceProvider($serviceProviderContent)
+    {
+        foreach ($serviceProviderContent as $line => $content) {
+            if (Str::contains($content, $this->repoInterface->getNamespace())
+                && Str::contains($content, $this->repository->getNamespace())
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Получить уже существующие в файле методы
+     *
+     * @param $file
+     * @return string
+     */
+    protected function getFileMethods($file)
+    {
+        $methods = [];
+        foreach ($file as $line => $content) {
+            if (Str::contains($content, 'CUSTOM_METHODS')) {
+                for ($i = $line + 1; true; $i++) {
+                    if (Str::contains($file[$i], 'CUSTOM_METHODS')) break;
+                    $methods[] = $file[$i];
+                }
+                break;
+            }
+        }
+        return implode('', $methods);
+    }
+
+    /**
+     * Заменить имя модели в стаб контенте
+     *
+     * @param $stubContent
+     * @param $modelName
+     * @return $this
+     */
+    protected function replaceModelName(&$stubContent, $modelName)
+    {
+        $stubContent = str_replace('{{modelName}}', $modelName, $stubContent);
+        return $this;
+    }
+
+    /**
+     * Заменить пространство имен модели в стаб контенте
+     *
+     * @param $stubContent
+     * @param $modelNamespace
+     * @return $this
+     */
+    protected function replaceModelNamespace(&$stubContent, $modelNamespace)
+    {
+        $stubContent = str_replace('{{modelNamespace}}', $modelNamespace, $stubContent);
+        return $this;
+    }
+
+    /**
+     * Заменить пространство имён репозитория в стаб контенте
+     *
+     * @param $stubContent
+     * @param $repoNamespace
+     * @return $this
+     */
+    protected function replaceRepoNamespace(&$stubContent, $repoNamespace)
+    {
+        $stubContent = str_replace('{{repoNamespace}}', $repoNamespace, $stubContent);
+        return $this;
+    }
+
+    /**
+     * Заменить пространство имён интерфейса репозитория в стаб контенте
+     *
+     * @param $stubContent
+     * @param $repoInterfaceNamespace
+     * @return $this
+     */
+    protected function replaceRepoInterfaceNamespace(&$stubContent, $repoInterfaceNamespace)
+    {
+        $stubContent = str_replace(
+            '{{repoInterfaceNamespace}}',
+            $repoInterfaceNamespace,
+            $stubContent
+        );
+        return $this;
+    }
+
+    /**
+     * Заменить пользовательские методы в стаб контенте
+     *
+     * @param $stubContent
+     * @param $methods
+     * @return $this
+     */
+    protected function replaceCustomMethods(&$stubContent, $methods)
+    {
+        $stubContent = str_replace('{{customMethods}}', $methods, $stubContent);
+        return $this;
+    }
+
+    /**
+     * Получить стаб файл репозитория
+     *
+     * @return string
+     */
+    protected function getRepoStub()
+    {
+        return app_path('Altrp/Commands/stubs/repositories/create_repository.stub');
+    }
+
+    /**
+     * Получить стаб файл интерфейса репозитория
+     *
+     * @return string
+     */
+    protected function getRepoInterfaceStub()
+    {
+        return app_path('Altrp/Commands/stubs/repositories/create_repository_interface.stub');
+    }
+
+    /**
+     * Получить файл сервис провайдера репозиториев
+     *
+     * @return string
+     */
+    protected function getRepoServiceProvider()
+    {
+        return app_path('Providers/RepositoryServiceProvider.php');
+    }
+}

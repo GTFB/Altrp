@@ -2,6 +2,9 @@
 
 namespace App\Exceptions;
 
+use App\Exceptions\Controller\ControllerFileException;
+use App\Exceptions\Repository\RepositoryFileException;
+use App\Exceptions\Route\RouteFileException;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -92,7 +95,19 @@ class Handler extends ExceptionHandler
             return $exception->render($request);
         }
 
+        if ($exception instanceof ControllerFileException) {
+            return $exception->render($request);
+        }
+
         if ($exception instanceof RouteGenerateFailedException) {
+            return $exception->render($request);
+        }
+
+        if ($exception instanceof RouteFileException) {
+            return $exception->render($request);
+        }
+
+        if ($exception instanceof RepositoryFileException) {
             return $exception->render($request);
         }
 
