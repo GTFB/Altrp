@@ -43,6 +43,14 @@
         bottom: 4px;
         left: 0;
       }
+      .quick-action-menu__item_wrapper {
+        &::after {
+          content: " | ";
+        }
+        &:last-child::after {
+          content: "";
+        }
+      }
       &:hover .quick-action-menu {
         display: inline-block;
         
@@ -56,12 +64,6 @@
           }
           &:hover {
             text-decoration: underline;
-          }
-          &::after {
-            content: " | ";
-          }
-          &:last-child::after {
-            content: "";
           }
         }
 
