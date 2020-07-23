@@ -98,6 +98,11 @@ class List extends BaseElement{
       label: 'Custom',
     });
 
+    repeater.addControl('link_switcher_custom_repeater', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Link',
+    });
+
     repeater.addControl('hover_all_switcher_custom_repeater', {
       type: CONTROLLER_SWITCHER,
       label: 'Hover all',
@@ -205,7 +210,7 @@ class List extends BaseElement{
       ],
       rules: {
         '{{ELEMENT}} .altrp-list-ul-inline{{STATE}}': 'justify-content: {{VALUE}};',
-        '{{ELEMENT}} .altrp-list-ul-default .altrp-list-label-content{{STATE}}': 'align-items: {{VALUE}};'
+        '{{ELEMENT}} .altrp-list-ul-default .altrp-list-li{{STATE}}': 'justify-content: {{VALUE}};'
       },
     });
 
@@ -457,7 +462,7 @@ class List extends BaseElement{
       type: CONTROLLER_SLIDER,
       label: 'Indent',
       default:{
-        size: 5,
+        size: 0,
         unit: 'px',
       },
       max: 50,
@@ -592,9 +597,9 @@ class List extends BaseElement{
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
         default:{
-          lineHeight: 1.4,
+          lineHeight: 1,
           spacing: 0,
-          size: 36,
+          size: 16,
           weight: "normal",
           family: '"roboto"',
           decoration: ""
@@ -613,6 +618,33 @@ class List extends BaseElement{
         },
       }
     );
+
+    this.addControl("link_decoration_text_style", {
+      type: CONTROLLER_SELECT,
+      label: "Text decoration",
+      default: "none",
+      options: [
+        {
+          value: "none",
+          label: "none"
+        },
+        {
+          value: "underline",
+          label: "underline"
+        },
+        {
+          value: "overline",
+          label: "overline"
+        },
+        {
+          value: "line-through",
+          label: "line-through"
+        },
+      ],
+      rules: {
+        "{{ELEMENT}} .altrp-list-li-link{{STATE}}": "text-decoration: {{VALUE}};"
+      }
+    });
 
     this.endControlSection();
 

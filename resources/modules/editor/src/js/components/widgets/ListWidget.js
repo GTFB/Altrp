@@ -52,6 +52,22 @@ class ListWidget extends Component {
         let li_icon_classes = "";
         let li_icon_x = li.position_relative_x_custom_repeater;
         let li_icon_y = li.position_relative_y_custom_repeater;
+        let link_icon = "";
+        let link_url = "";
+        let link_newTab = "";
+        let link_noFollow = "";
+
+        if(li.link_custom_repeater) {
+          if(li.link_custom_repeater.url) {
+            link_url = li.link_custom_repeater.url;
+          };
+          if(li.link_custom_repeater.openInNew) {
+            link_newTab = "_blank"
+          };
+          if(!li.link_custom_repeater.noFollow) {
+            link_noFollow = "nofollow"
+          };
+        };
 
         let li_icon_styles = {};
 
@@ -78,6 +94,12 @@ class ListWidget extends Component {
           )}
         </span>: null;
 
+        if(li.link_switcher_custom_repeater) {
+          if(!li.hover_all_switcher_custom_repeater) {
+            link_icon = li_icon
+          };
+        };
+
         switch (li.type_repeater) {
           case "custom":
             li_label = <span className="altrp-list-label">{li.custom_repeater}</span>;
@@ -85,10 +107,19 @@ class ListWidget extends Component {
             li_classes = li_classes + "altrp-list-custom";
 
             li_container = <li key={idx} className={li_classes}>
-              <span className="altrp-list-li-content" style={li_styles}>
-                {li_icon}
-                {li_label}
-              </span>
+              <div className="altrp-list-li-content" style={li_styles}>
+                {link_icon}
+                {
+                  li.link_switcher_custom_repeater ? <a className="altrp-list-li-content altrp-list-li-link" href={link_url} target={link_newTab} rel={link_noFollow} style={li_styles}>
+                    {li.hover_all_switcher_custom_repeater ? li_icon : ""}
+                    {li_label}
+                  </a>
+                    : <div className="altrp-list-li-content" style={li_styles}>
+                      {li_icon}
+                      {li_label}
+                    </div>
+                }
+              </div>
               {divider}
             </li>
             break
