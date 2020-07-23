@@ -314,7 +314,7 @@ class List extends BaseElement{
 
     this.addControl('size_icon_style', {
       type: CONTROLLER_SLIDER,
-      label: 'Border radius',
+      label: 'Size',
       default:{
         size: null,
         unit: 'px',

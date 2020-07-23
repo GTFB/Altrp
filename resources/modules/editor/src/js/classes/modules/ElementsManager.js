@@ -20,6 +20,8 @@ import DividerWidget from "../../components/widgets/DividerWidget";
 import TabsWidget from "../../components/widgets/TabsWidget";
 import PosterWidget from "../../components/widgets/PosterWidget";
 import ListWidget from "../../components/widgets/ListWidget";
+import AccordionWidget from "../../components/widgets/AccordionWidget";
+import Accordion from "../elements/Accordion";
 import List from "../elements/List";
 import Poster from "../elements/Poster";
 import Tabs from "../elements/Tabs";
@@ -49,6 +51,7 @@ export default class ElementsManger {
     this.elements[Tabs.getName()] = Tabs;
     this.elements[Poster.getName()] = Poster;
     this.elements[List.getName()] = List;
+    this.elements[Accordion.getName()] = Accordion;
     //список компонентов
     this.components = {};
     this.components[RootElement.getName()] = RootComponent;
@@ -65,6 +68,7 @@ export default class ElementsManger {
     this.components[Tabs.getName()] = TabsWidget;
     this.components[Poster.getName()] = PosterWidget;
     this.components[List.getName()] = ListWidget;
+    this.components[Accordion.getName()] = AccordionWidget;
   }
 
   getElements(){

@@ -425,3 +425,37 @@
     justify-content: center;
     align-items: center;
 }
+
+.altrp-accordion-item-button {
+    background-color: $grey;
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    z-index: 100;
+}
+
+.altrp-accordion-item-content {
+    top: -3em;
+    width: 100%;
+    height: 100%;
+    line-height: 0;
+    padding: 0 20px;
+    position: relative;
+    transition: 0.25s;
+    opacity: 0;
+    z-index: 0;
+}
+
+.altrp-accordion-item-content-show {
+    padding: 15px 20px;
+    top: 0;
+    opacity: 1;
+    line-height: 1;
+    z-index: 0;
+}
+
+.altrp-accordion-item-content * {
+    margin: 0;
+}
