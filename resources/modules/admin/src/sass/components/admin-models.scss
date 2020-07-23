@@ -1,0 +1,29 @@
+.btn__wrapper {
+  .btn {
+    margin-right: 20px;
+  }
+}
+
+.btn.btn_add {
+  margin-top: 20px;
+}
+
+.form-group.form-group_width30 {
+  display: inline-block;
+  width: 30%;
+  margin-right: 5%;
+}
+
+.form-group.form-group_width65 {
+  display: inline-block;
+  width: 65%;
+}
+
+.sub-header {
+  margin: 30px 0;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  text-transform: uppercase;
+  color: $purple;
+}

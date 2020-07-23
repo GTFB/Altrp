@@ -37,6 +37,9 @@ import AddPage from "./components/AddPage";
 import UserTopPanel from "./components/UserTopPanel";
 import {Redirect} from "react-router";
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
+import Models from "./components/Models";
+import AddModel from "./components/models/AddModel";
+import EditModel from "./components/models/EditModel";
 
 import AddTable from "./components/tables/AddTable";
 import EditTable from "./components/tables/EditTable";
@@ -131,6 +134,12 @@ class Admin extends Component {
                   </Link>
                 </li>
                 <li>
+                  <Link to="/admin/models" className="admin-nav-list__link">
+                    <UserSvg className="icon" />
+                    <span>Models</span>
+                  </Link>
+                </li>
+                <li>
                   <Link to="/admin/tools" className="admin-nav-list__link">
                     <span>Tools</span>
                   </Link>
@@ -213,6 +222,15 @@ class Admin extends Component {
             </Route>
             <Route path="/admin/pages/add">
               <AddPage/>
+            </Route>
+            <Route path="/admin/models" exact>
+              <Models />
+            </Route>
+            <Route path="/admin/models/add">
+              <AddModel />
+            </Route>
+            <Route path="/admin/models/edit/:id" exact>
+              <EditModel />
             </Route>
           </Switch>
         </Router>
