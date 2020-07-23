@@ -11,6 +11,7 @@ use App\Altrp\Generators\Repository\RepositoryFileWriter;
 use App\Altrp\Generators\Repository\RepositoryInterfaceFile;
 use App\Altrp\Generators\Route\RouteFile;
 use App\Altrp\Generators\Route\RouteFileWriter;
+use App\Altrp\Query;
 use App\Altrp\Source;
 use App\Altrp\SourcePermission;
 use App\Altrp\SourceRole;
@@ -56,6 +57,8 @@ class QueryBuilder
      * Построить запрос
      *
      * @return bool
+     * @throws RepositoryFileException
+     * @throws \App\Exceptions\Controller\ControllerFileException
      */
     public function build()
     {
@@ -68,7 +71,7 @@ class QueryBuilder
                     $this->query[] = $this->getAggregates($value);
                     break;
                 case 'conditions':
-                    $this->query = array_merge($this->query,$this->getConditions($value));
+                    $this->query[] = $this->getConditions($value);
                     break;
                 case 'relations':
                     $this->query[] = $this->getRelations($value);
@@ -90,14 +93,16 @@ class QueryBuilder
                     break;
             }
         }
-        if (! $this->existsNotGetableData()) {
-            $this->query[] = "->get();\n";
-        }
+
+        if (! $this->existsNotGetableData()) $this->query[] = "->get();\n";
 
         $methodBody = $this->getMethodBody();
 
+        $source = $this->writeSource($this->getMethodName());
+
+        $this->saveQuery($source);
+
         if (isset($this->data['access'])) {
-            $source = $this->writeSource($this->getMethodName());
             $this->writeSourceRoles($source);
             $this->writeSourcePermissions($source);
         }
@@ -171,6 +176,7 @@ class QueryBuilder
     /**
      * Записать метод в файл контроллера
      *
+     * @throws \App\Exceptions\Controller\ControllerFileException
      */
     protected function writeMethodToController()
     {
@@ -268,6 +274,29 @@ class QueryBuilder
     }
 
     /**
+     * Сохранить запрос в БД
+     *
+     * @param $source
+     * @return bool
+     */
+    protected function saveQuery($source)
+    {
+        $attributes = [];
+        foreach ($this->data as $item => $value) {
+            $attributes[$item] = trim(json_encode($value), "\"");
+        }
+        $query = Query::where('source_id', $source->id)->first();
+        if (! $query)  {
+            $query = new Query();
+            $attributes['user_id'] = auth()->user()->id;
+            $attributes['source_id'] = $source->id;
+        }
+        $query->fill($attributes);
+
+        return $query->save();
+    }
+
+    /**
      * Получить имя добавляемого метода
      *
      * @return mixed
@@ -319,7 +348,7 @@ class QueryBuilder
      * Сформировать список всех условий
      *
      * @param $conditions
-     * @return array
+     * @return string
      */
     protected function getConditions($conditions)
     {
@@ -346,7 +375,7 @@ class QueryBuilder
                     break;
             }
         }
-        return $conditionsList;
+        return implode("{$this->threeTabs}",$conditionsList);
     }
 
     /**
@@ -374,9 +403,9 @@ class QueryBuilder
         $condition = 'where([';
         $loop = 1;
         foreach ($conditions as $cond) {
-            $value = $cond['value'] != 'CURRENT_USER' ? $cond['value'] : auth()->user()->id;
+            $value = $cond['value'] != 'CURRENT_USER' ? "'{$cond['value']}'" : 'auth()->user()->id';
             if (count($conditions) > 1 && $loop == 1) $condition .= "\n{$this->threeTabs}{$this->tabIndent}";
-            $condition .= "['{$cond['column']}'," . "'{$cond['operator']}'," . "'" . $value ."'], ";
+            $condition .= "['{$cond['column']}'," . "'{$cond['operator']}'," . $value . "], ";
             if (count($conditions) > 1 && count($conditions) != $loop)
                 $condition .= "\n{$this->threeTabs}{$this->tabIndent}";
             $loop++;
@@ -417,16 +446,16 @@ class QueryBuilder
                 $conditionList = $this->getConditions($cond['conditions']);
             }
 
-            $value = $cond['value'] != 'CURRENT_USER' ? $cond['value'] : auth()->user()->id;
+            $value = $cond['value'] != 'CURRENT_USER' ? "'{$cond['value']}'" : 'auth()->user()->id';
             if (isset($cond['or_where'])) {
                 $condition = 'orWhere(function ($query) {' . "\n";
                 if (count($conditions) > 1 && $loop == 1) $condition .= "{$this->threeTabs}\$query";
-                $condition .= "->orWhere('{$cond['column']}'," . "'{$cond['operator']}'," . "'" . $value . "')";
+                $condition .= "->orWhere('{$cond['column']}'," . "'{$cond['operator']}'," . $value . ")";
                 if (count($conditions) > 1 && count($conditions) != $loop) $condition .= "\n{$this->threeTabs}";
 //                $conditionList = $this->getOrWhereConditions($cond['or_where']);
             } else {
                 $condition = 'orWhere(';
-                $condition .= "'{$cond['column']}'," . "'{$cond['operator']}'," . "'" . $value . "')";
+                $condition .= "'{$cond['column']}'," . "'{$cond['operator']}'," . $value . ")";
             }
             $conditionList[] = $condition;
             $loop++;

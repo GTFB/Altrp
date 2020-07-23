@@ -125,10 +125,10 @@ class RepositoryFileWriter
      */
     public function writeRepository($content)
     {
-        return file_put_contents(
+        return $this->writeToFile(
             $this->repository->getFile(),
             implode(PHP_EOL,$content)
-        ) !== false;
+        );
     }
 
     /**
@@ -139,11 +139,32 @@ class RepositoryFileWriter
      */
     public function writeRepoInterface($content)
     {
-        return file_put_contents(
+        return $this->writeToFile(
             $this->repoInterface->getFile(),
             implode(PHP_EOL,$content)
-        ) !== false;
+        );
     }
+
+    /**
+     * Записать контент в файл
+     *
+     * @param $file
+     * @param $content
+     * @return bool|int
+     */
+    protected function writeToFile($file, $content)
+    {
+        $path = explode('/', $file);
+        array_pop($path);
+        $dir = implode('/', $path);
+
+        if(! \File::exists($dir)) {
+            \File::makeDirectory($dir, 493, true);
+        }
+        return \File::put($file, $content);
+    }
+
+
 
     /**
      * Записать в сервис провайдер интерфейс репозитория и репозиторий
@@ -163,7 +184,10 @@ class RepositoryFileWriter
                     break;
                 }
             }
-            file_put_contents($this->getRepoServiceProvider(), implode(PHP_EOL, $serviceProviderContent));
+            file_put_contents(
+                $this->getRepoServiceProvider(),
+                implode(PHP_EOL, $serviceProviderContent)
+            );
         }
     }
 
@@ -316,6 +340,6 @@ class RepositoryFileWriter
      */
     protected function getRepoServiceProvider()
     {
-        return app_path('Providers/RepositoryServiceProvider.php');
+        return app_path('Providers/AltrpRepositoryServiceProvider.php');
     }
 }

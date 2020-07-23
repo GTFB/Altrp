@@ -524,6 +524,8 @@ class TableController extends ApiController
      * @param ApiRequest $request
      * @param $tableId
      * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\Controller\ControllerFileException
+     * @throws \App\Exceptions\Repository\RepositoryFileException
      */
     public function addRequest(ApiRequest $request, $tableId)
     {
@@ -538,8 +540,6 @@ class TableController extends ApiController
         if (! $table->controllers()->first())
             return response()->json('Controller not found!',404,[],JSON_UNESCAPED_UNICODE);
 
-        
-        //dd(1);
         $builder = new QueryBuilder(array_merge($request->all(), ['model' => $model]));
         $result = $builder->build();
 
