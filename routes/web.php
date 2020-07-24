@@ -33,7 +33,7 @@ Route::group([
   'middleware' => [ 'installation.checker'],
 ], function () {
   Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-  Route::post('login', 'Auth\LoginController@login');
+  Route::post('login', 'Auth\LoginController@login')->name( 'post.login' );
   Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 });
 
@@ -77,6 +77,17 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::delete('/permissions/{permission}', "Users\Permissions@delete");
 
     Route::get('/roles', "Users\Roles@getRoles");
+    /**
+     * URL: /admin/ajax/role_options?s=search_string
+     * response:
+     * [
+     *  {
+     *    value - role id
+     *    label - role display_name
+     *  }
+     * ]
+     */
+    Route::get('/role_options', "Users\Roles@get_options")->name( 'admin.role_options' );
     Route::get('/roles/{role}', "Users\Roles@getRole");
     Route::post('/roles', "Users\Roles@insert");
     Route::put('/roles/{role}', "Users\Roles@update");

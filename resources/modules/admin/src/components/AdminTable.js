@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {Link} from 'react-router-dom'
+import Resource from "../../../editor/src/js/classes/Resource";
 
 class AdminTable extends Component {
   render(){
@@ -18,7 +19,7 @@ class AdminTable extends Component {
           <tr className="admin-table-row" key={row.id} title={row.id}>
             <td className="admin-table__td admin-table__td_check" key={'choose' + row.id} title={'choose' + row.id}><input type="checkbox"/></td>
             {
-              this.props.columns.map(column=>
+              this.props.columns.map((column, index)=>
               {
                 let tag = 'span';
                 let childrens = null;
@@ -59,7 +60,45 @@ class AdminTable extends Component {
                 return<td className="admin-table__td td" key={column.name + row.id} title={column.name + row.id}>
                 
                   {React.createElement(tag, props)}
+                  {index === 0 && <span className="quick-action-menu">
+                    {this.props.quickActions && this.props.quickActions.map((quickAction, index) => {
+                      let item = '';
+                      switch (quickAction.tag) {
+                        case 'a':
+                          let href = quickAction.props.href.replace(':id', row.id);
 
+                          item = <a
+                            className={'quick-action-menu__item ' + (quickAction.className || '')} 
+                            {...quickAction.props || {}}
+                            href={href}
+                            >{quickAction.title}</a>;
+                          break;
+                        case 'button':
+                          quickAction.route = quickAction.route.replace(':id', row.id);
+                          item = <button 
+                            className={'quick-action-menu__item ' + (quickAction.className || '')}
+                            {...quickAction.props || {}}
+                            onClick={async () => {
+                              if(quickAction.confirm){
+                                if(! await confirm(quickAction.confirm)){
+                                  return;
+                                }
+                              }
+                              const resource = new Resource({ route: quickAction.route.replace(':id', row.id)});
+                              if (_.isFunction(resource[quickAction.method])) {
+                                await resource[quickAction.method]();
+                                _.isFunction(quickAction.after) ? quickAction.after() : ''
+                              }
+                            }}
+                            >{quickAction.title}</button>;
+                          break;
+                      
+                        default:
+                          break;
+                      }
+                      return <span className="quick-action-menu__item_wrapper" key={index+row.id}>{item}</span>;
+                    })}
+                  </span>}
                 </td>
               }
              )

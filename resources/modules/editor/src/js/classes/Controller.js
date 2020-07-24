@@ -20,7 +20,7 @@ class Controller {
         if (data.rules.hasOwnProperty(selector)) {
           let newRule = new CSSRule(selector, data.rules[selector]);
           this.rules.push(newRule);
-          let value = currentElement.getSettings(this.getSettingName() + getElementSettingsSuffix());
+          let value = currentElement.getSettings(this.getSettingName());
           if (value) {
             newRule.insertValue(value);
           }
@@ -28,7 +28,7 @@ class Controller {
       }
     }
     if (this.rules.length) {
-      currentElement.addStyles(this.getSettingName() + getElementSettingsSuffix(), this.rules);
+      currentElement.addStyles(this.getSettingName(), this.rules);
     }
   }
 
@@ -42,14 +42,14 @@ class Controller {
      * */
     let currentElement = getCurrentElement();
     if (!this.data.repeater) {
-      currentElement.setSettingValue(this.getSettingName() + getElementSettingsSuffix(), value);
+      currentElement.setSettingValue(this.getSettingName(), value);
       this.rules.forEach(rule => {
         rule.insertValue(value);
       });
       if (this.rules.length) {
 
-        value ? currentElement.addStyles(this.getSettingName() + getElementSettingsSuffix(), this.rules)
-          : currentElement.removeStyle(this.getSettingName() + getElementSettingsSuffix());
+        value ? currentElement.addStyles(this.getSettingName(), this.rules)
+          : currentElement.removeStyle(this.getSettingName());
       }
       store.dispatch(controllerValue(value, this.getSettingName()));
 
@@ -94,10 +94,17 @@ class Controller {
   }
 
   /**
+   * Получеаем название свойства добавив суффикс
    * @return {string}
    * */
   getSettingName() {
-    return this.data.controlId;
+    /**
+     * Если css редактор, то добавляем суффикс
+     */
+    if(this.data.controlId === 'element_css_editor'){
+      return 'element_css_editor';
+    }
+    return this.data.controlId + getElementSettingsSuffix();
   }
 }
 

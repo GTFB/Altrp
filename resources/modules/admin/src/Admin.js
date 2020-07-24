@@ -20,6 +20,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect,
   Link
 } from "react-router-dom";
 import Users from "./components/users/Users";
@@ -35,7 +36,6 @@ import Templates from "./components/Templates";
 import AdminModal from "./components/AdminModal";
 import AddPage from "./components/AddPage";
 import UserTopPanel from "./components/UserTopPanel";
-import {Redirect} from "react-router";
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 
 import AddTable from "./components/tables/AddTable";

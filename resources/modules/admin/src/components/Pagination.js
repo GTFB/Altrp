@@ -11,6 +11,11 @@ class Pagination extends Component {
       currentPage: 1,
     }
   }
+
+  /**
+   * Задает текущую страницу
+   * @param num
+   */
   setCurrentPage(num) {
     num = parseInt(num) || 1;
     if(num <= 1) {
@@ -26,13 +31,23 @@ class Pagination extends Component {
     this.setState({currentPage: num});
     this.props.changePage(num)
   }
+
+  /**
+   * надо проверить, чтобы при обновлении props.pageCount state.currentPage было меньше
+   */
+  componentDidUpdate(){
+
+    if(this.state.currentPage > this.props.pageCount){
+      this.setCurrentPage(this.props.currentPage || this.props.pageCount);
+    }
+  }
   render(){
     return<div className="pagination">
       <div className="version">
         <p className="pagination__version">App creating with <NavLink className="pagination__link" to="#">Altrp</NavLink> / Version 1.0.1 </p>
       </div>
       <div className="pagination__buttons">
-        <p className="pagination__text">{ this.props.allTemplates} Items</p>
+        <p className="pagination__text">{ this.props.itemsCount} Items</p>
         <div className={this.state.currentPage <= 1 ? " pagination__disabled pagination__toStart pagination__move" : "pagination__move pagination__toStart"}
         onClick={()=> this.setCurrentPage(1) }>
           <Right className="right__arrow" />

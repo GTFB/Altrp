@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import AreaComponent from "./AreaComponent";
 import {setTitle} from "../helpers";
 import { Scrollbars } from "react-custom-scrollbars";
+import {Redirect} from "react-router-dom";
 
 class RouteContent extends Component {
   constructor(props){
@@ -12,6 +13,10 @@ class RouteContent extends Component {
     setTitle(this.props.title);
   }
   render(){
+    console.log(this.props);
+    if(! this.props.allowed){
+      return<Redirect to={this.props.redirect || '/'}/>
+    }
     return (
     <Scrollbars
       style={{zIndex: 99999}}

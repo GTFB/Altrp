@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { isEditor } from "../../helpers";
-import { Redirect } from "react-router";
+import { Redirect } from 'react-router-dom';
+import {isEditor} from "../../../../../front-app/src/js/helpers";
 
 class ButtonWidget extends Component {
   constructor(props) {
@@ -33,6 +33,8 @@ class ButtonWidget extends Component {
                 ? this.state.settings.redirect_after
                 : false;
               this.setState(state => ({ ...state, pending: false, redirect }));
+            } else if(res.message){
+              alert(res.message);
             }
             this.setState(state => ({ ...state, pending: false }));
           } catch (e) {

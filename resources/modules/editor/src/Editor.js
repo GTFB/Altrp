@@ -167,7 +167,7 @@ class Editor extends Component {
               >
                 <Hamburger className="icon" />
               </button>
-              <a href="/admin" target="_blank" className="logo">
+              <a href="/admin/templates" target="_blank" className="logo">
                 {
                   window.admin_logo
                       ? renderAsset(window.admin_logo, {className:'editor__logo'})

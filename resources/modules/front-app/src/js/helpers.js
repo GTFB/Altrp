@@ -27,6 +27,13 @@ export function setTitle(title){
 }
 
 /**
+ * @return {boolean}
+ * */
+export function isEditor() {
+  return !!(window.altrpEditor || window.parent.altrpEditor);
+}
+
+/**
  * Переменная, в которой храниться измначальный заголовок
  * @var {string}
  */
