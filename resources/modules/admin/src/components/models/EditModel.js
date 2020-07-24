@@ -88,9 +88,9 @@ class EditModel extends Component {
         <h2 className="sub-header">Fields</h2>
         <AdminTable
           columns={columns}
-          rows={fields.map(field => ({ ...field, editUrl: '/admin/fields/edit/' + field.id }))}
+          rows={fields.map(field => ({ ...field, editUrl: `/admin/${model.id}/fields/edit/${field.id}` }))}
         />
-        <Link className="btn btn_add" to={`/admin/fields/add`}>Add Field</Link>
+        <Link className="btn btn_add" to={`/admin/${model.id}/fields/add`}>Add Field</Link>
 
         <h2 className="sub-header">Relations</h2>
         <AdminTable

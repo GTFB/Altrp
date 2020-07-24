@@ -3,7 +3,6 @@ import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import 'react-tabs/style/react-tabs.scss';
 import { Link } from 'react-router-dom'
 
-// import ModelsTable from "./models/ModelsTable";
 import AdminTable from "./AdminTable";
 import Pagination from "./Pagination";
 
@@ -98,7 +97,6 @@ export default class Models extends Component {
             </Tab>
           </TabList>
           <TabPanel>
-            {/* <ModelsTable /> */}
             {/* TODO: что делать с колoнкой с чекбоксами? */}
             <AdminTable 
               columns={columns} 

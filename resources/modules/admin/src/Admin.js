@@ -40,6 +40,7 @@ import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 import Models from "./components/Models";
 import AddModel from "./components/models/AddModel";
 import EditModel from "./components/models/EditModel";
+import AddField from "./components/models/AddField";
 
 import AddTable from "./components/tables/AddTable";
 import EditTable from "./components/tables/EditTable";
@@ -231,6 +232,9 @@ class Admin extends Component {
             </Route>
             <Route path="/admin/models/edit/:id" exact>
               <EditModel />
+            </Route>
+            <Route path="/admin/:modelId/fields/add">
+              <AddField/>
             </Route>
           </Switch>
         </Router>
