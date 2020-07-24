@@ -221,8 +221,7 @@ class Button extends BaseElement{
       label: 'Font',
     });
 
-    this.addControl(
-      'font_typographic', {
+    this.addControl('font_typographic', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
         default:{
