@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { withRouter } from "react-router";
+import { Link, withRouter } from "react-router-dom";
 import EditModelForm from "./EditModelForm";
 import AdminTable from "../AdminTable";
 

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Redirect, withRouter } from "react-router";
 
 class EditModelForm extends Component {
   constructor(props) {
