@@ -10,6 +10,7 @@
 + Element States in Editor
 + Clear All History for Templates
 + Pagination and Quick Actions for Templates Page
++ Reports Editor
 
 ### 0.5.0
 + Add Delete/Edit Form Action to Button Widget

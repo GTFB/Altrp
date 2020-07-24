@@ -129,6 +129,11 @@ class FrontElement {
             }
           }
           break;
+          case 'login':{
+            method = 'POST';
+            this.addForm(formsManager.registerForm(this.getSettings('form_id'), 'login', method));
+          }
+          break;
         }
       }
       break;

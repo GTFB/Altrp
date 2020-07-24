@@ -64,6 +64,10 @@ class Input extends BaseElement{
           label: 'Text'
         },
         {
+          value: 'password',
+          label: 'Password'
+        },
+        {
           value: 'number',
           label: 'Number'
         },

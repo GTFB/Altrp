@@ -120,6 +120,10 @@ class Button extends BaseElement{
           value: 'edit',
           label: 'Edit',
         },
+        {
+          value: 'login',
+          label: 'Login',
+        },
       ],
     });
 
