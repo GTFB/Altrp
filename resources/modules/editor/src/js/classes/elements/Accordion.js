@@ -524,7 +524,7 @@ class Accordion extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-accordion-item-content{{STATE}}': [
+        '{{ELEMENT}} .altrp-accordion-item-content-show{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -543,7 +543,7 @@ class Accordion extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        '{{ELEMENT}} .altrp-accordion-item-content{{STATE}}': 'margin-top: {{SIZE}}{{UNIT}}',
+        '{{ELEMENT}} .altrp-accordion-item-content-show{{STATE}}': 'margin-top: {{SIZE}}{{UNIT}}',
       },
     });
 
@@ -559,7 +559,7 @@ class Accordion extends BaseElement {
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-accordion-item-content{{STATE}}': [
+          '{{ELEMENT}} .altrp-accordion-item-content-show{{STATE}}': [
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
