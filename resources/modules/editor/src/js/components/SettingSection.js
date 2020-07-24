@@ -1,28 +1,31 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import ChevronIcon from '../../svgs/chevron.svg'
-import {connect} from "react-redux";
-import {getCurrentElement, getCurrentTab} from "../store/store";
-import {setActiveSection} from "../store/setting-section/actions";
+import { connect } from "react-redux";
+import { getCurrentElement, getCurrentTab } from "../store/store";
+import { setActiveSection } from "../store/setting-section/actions";
 
 class SettingSection extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: props.open,
-      active: props.open,
+      open: false,
+      // active: props.open,
     };
     this.toggle = this.toggle.bind(this);
   }
 
   componentDidMount() {
+    if (this.props.sectionID === 0) {
+      this.setState({
+        open: true,
+      })
+    }
   }
 
   toggle(e) {
-    // this.setState({
-    //   open: !this.state.open,
-    //   active: e.currentTarget.dataset.key
-    //
-    // });
+    this.setState({
+      open: !this.state.open
+    })
     this.props.dispatch(setActiveSection(getCurrentElement().getName(), getCurrentTab(), this.props.sectionID));
   }
 
@@ -34,11 +37,11 @@ class SettingSection extends Component {
       activeSectionId = this.props.settingSection[currentElementName][currentTab];
     }
     let controllers = this.props.controls || [];
-    return <div className={"settings-section " + (activeSectionId === this.props.sectionID ? "open" : "")}>
-      <div className="settings-section__title d-flex " data-open={true} data-key={this.props.active}
-           onClick={this.toggle}>
+    return <div className={"settings-section " + (this.state.open && 'open')}>
+      <div className="settings-section__title d-flex " data-open={true}
+        onClick={this.toggle}>
         <div className="settings-section__icon d-flex ">
-          <ChevronIcon/>
+          <ChevronIcon />
         </div>
         <div className="settings-section__label">
           {this.props.label}
@@ -46,9 +49,10 @@ class SettingSection extends Component {
       </div>
       <div className="controllers-wrapper">
         {
+
           controllers.map((controller) => {
             let ControllerComponent = window.controllersManager.getController(controller.type);
-            return React.createElement(ControllerComponent, {...controller, key: controller.controlId});
+            return React.createElement(ControllerComponent, { ...controller, key: controller.controlId });
           })
         }
       </div>
