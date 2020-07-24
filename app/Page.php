@@ -242,13 +242,18 @@ class Page extends Model
    * @return bool
    */
   public function allowedForUser( $user_id = '' ){
-    if( ! $user_id ) {
-      $user_id = auth()->user()->id;
-    }
-    $allowed = false;
-    if( ( ! $user_id ) && $this->for_guest ){
+    if( ( ! auth()->user() ) && $this->for_guest ) {
       return true;
     }
+    if( ! $user_id ) {
+      $user = auth()->user();
+    } else {
+      $user = User::find( $user_id );
+    }
+    if( ! $user ){
+      return false;
+    }
+    $allowed = false;
 
     /** @var User $user */
     $user = auth()->user();
