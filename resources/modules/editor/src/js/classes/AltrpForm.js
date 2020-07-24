@@ -13,6 +13,14 @@ class AltrpForm {
     if(modelName === 'login'){
       route = `/login`
     }
+    switch (modelName){
+      case 'login':{
+        route = `/login`
+      }break;
+      case 'logout':{
+        route = `/logout`
+      }break;
+    }
     this.resource = new Resource({route})
   }
 

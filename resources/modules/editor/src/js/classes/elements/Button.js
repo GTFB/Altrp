@@ -124,6 +124,10 @@ class Button extends BaseElement{
           value: 'login',
           label: 'Login',
         },
+        {
+          value: 'logout',
+          label: 'Logout',
+        },
       ],
     });
 
