@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import AdminTable from "./AdminTable";
 import Pagination from "./Pagination";
 
-const columns = [
+const columnsModel = [
   {
     name: 'title',
     title: 'Title',
@@ -21,10 +21,80 @@ const columns = [
   {
     name: 'description',
     title: 'Description'
-  }, {
+  },
+  {
     name: 'updatedAt',
     title: 'Updated At'
   }
+];
+const columnsDataSource = [
+  {
+    name: 'title',
+    title: 'Title',
+    url: true,
+    editUrl: true,
+    tag: 'Link'
+  },
+  {
+    name: 'name',
+    title: 'Name'
+  },
+  {
+    name: 'route',
+    title: 'Route'
+  },
+  {
+    name: 'type',
+    title: 'Type'
+  }
+];
+const initPaginationProps = {
+  pageCount: 1,
+  currentPage: 1,
+};
+
+const mockedModels = [
+  {
+    id: 1,
+    name: 'test1',
+    title: 'Test1',
+    description: 'test1'
+  },
+  {
+    id: 2,
+    name: 'test2',
+    title: 'Test2',
+    description: 'test2'
+  },
+  {
+    id: 3,
+    name: 'test3',
+    title: 'Test3',
+    description: 'test3'
+  },
+];
+const mockedDataSources = [
+  {
+    id: 1,
+    name: 'test1',
+    title: 'Test1',
+    route: 'https://test1',
+    type: ['Get Queried', 'create', 'read', 'update', 'delete']
+  },
+  {
+    id: 2,
+    name: 'test2',
+    title: 'Test2',
+    route: 'https://test2',
+    type: ['resource', 'Get Queried', 'create', 'read', 'update', 'delete']
+  },
+  {
+    id: 3,
+    name: 'test3',
+    title: 'Test3',
+    route: 'https://test3',
+    type: ['Get Queried', 'create', 'read', 'options']
+  },
 ];
 
 export default class Models extends Component {
@@ -32,29 +102,12 @@ export default class Models extends Component {
     super(props);
     this.state = {
       activeTab: 0,
-      pageCount: 1,
-      currentPage: 1,
+      modelsPagination: initPaginationProps,
+      dataSourcesPagination: initPaginationProps,      
       // models: [],   TODO: заменить замоканые данные
-      models: [
-        {
-          id: 1,
-          name: 'test1',
-          title: 'Test1',
-          description: 'test1'
-        },
-        {
-          id: 2,
-          name: 'test2',
-          title: 'Test2',
-          description: 'test2'
-        },
-        {
-          id: 3,
-          name: 'test3',
-          title: 'Test3',
-          description: 'test3'
-        },
-      ]
+      models: mockedModels,
+      // dataSources: [],   TODO: заменить замоканые данные
+      dataSources: mockedDataSources
     };
     this.switchTab = this.switchTab.bind(this);
     this.changePage = this.changePage.bind(this);
@@ -64,8 +117,8 @@ export default class Models extends Component {
     this.setState(state => ({ ...state, activeTab }))
   }
 
-  changePage(currentPage) {
-    this.setState(state => ({ ...state, currentPage }));
+  changePage(currentPage, pagination) {
+    this.setState(state => ({ ...state, [pagination]: { ...state[pagination], currentPage} }));
   }
 
   componentDidMount() {
@@ -75,7 +128,7 @@ export default class Models extends Component {
   }
 
   render() {
-    const { activeTab, models, pageCount, currentPage } = this.state;
+    const { activeTab, models, dataSources, modelsPagination, dataSourcesPagination} = this.state;
 
     return <div className="admin-settings admin-page">
       <div className="admin-heading">
@@ -98,18 +151,32 @@ export default class Models extends Component {
           </TabList>
           <TabPanel>
             {/* TODO: что делать с колoнкой с чекбоксами? */}
-            <AdminTable 
-              columns={columns} 
-              rows={models.map(model => ({ ...model, editUrl: '/admin/models/edit/' + model.id}))} 
+            <AdminTable
+              columns={columnsModel}
+              rows={models.map(model => ({ 
+                ...model, 
+                editUrl: '/admin/models/edit/' + model.id 
+              }))}
             />
-            <Pagination pageCount={pageCount}
-              currentPage={currentPage}
-              changePage={this.changePage}
+            <Pagination pageCount={modelsPagination.pageCount}
+              currentPage={modelsPagination.currentPage}
+              changePage={currentPage => this.changePage(currentPage, "modelsPagination")}
               itemsCount={models.length}
             />
           </TabPanel>
           <TabPanel>
-            <div>Data Sources</div>
+            <AdminTable
+              columns={columnsDataSource}
+              rows={dataSources.map(dataSource => ({
+                ...dataSource,
+                editUrl: '/admin/data-source/edit/' + dataSource.id
+              }))}
+            />
+            <Pagination pageCount={dataSourcesPagination.pageCount}
+              currentPage={dataSourcesPagination.currentPage}
+              changePage={currentPage => this.changePage(currentPage, "dataSourcesPagination")}
+              itemsCount={models.length}
+            />
           </TabPanel>
         </Tabs>
       </div>
