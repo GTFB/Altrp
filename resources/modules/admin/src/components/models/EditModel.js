@@ -97,7 +97,7 @@ class EditModel extends Component {
           columns={columns}
           rows={relations.map(relation => ({ ...relation, editUrl: '/admin/relations/edit/' + relation.id }))}
         />
-        <Link className="btn btn_add" to={`/admin/relations/add`}>Add Relation</Link>
+        <Link className="btn btn_add" to={`/admin/${model.id}/relations/add`}>Add Relation</Link>
       </div>
     </div>;
   }

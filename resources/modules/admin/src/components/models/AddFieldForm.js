@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 const fieldTypeOptions = ['varchar', 'int', 'bigint', 'boolean', 'text', 'long text', 'calculated'];
 const attributeOptions = ['BINARY', 'UNSIGNED', 'UNSIGNED ZEROFILL', 'on update'];
 const inputTipeOptions = ['textarea', 'text', 'number', 'slider', 'WYSIWYG', 'color', 'select', 'checkbox', 'radio button']
 
-class AddModelForm extends Component {
+class AddFieldForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,8 +24,8 @@ class AddModelForm extends Component {
         nullable: false,
         indexed: false,
         editable: false,
-        calculation: '',
-        calculation_logic: '',
+        // calculation: '',
+        // calculation_logic: '',
       },
     };
     this.submitHandler = this.submitHandler.bind(this);
@@ -56,7 +56,7 @@ class AddModelForm extends Component {
       </div>
 
       <div className="form-group__inline-wrapper">
-        <div className="form-group form-group_width30 form-group-with-margin">
+        <div className="form-group form-group_width30">
           <label htmlFor="field-name">Field Name</label>
           <input type="text" id="field-name" required
             value={this.state.value.name}
@@ -79,20 +79,20 @@ class AddModelForm extends Component {
             checked={this.state.value.is_label}
             onChange={e => { this.changeValue(e.target.checked, 'is_label') }}
           />
-          <label htmlFor="field-is_label">As Label</label>
+          <label className="checkbox-label" htmlFor="field-is_label">As Label</label>
         </div>
         <div className="form-group">
           <input type="checkbox" id="field-is_title" required
             checked={this.state.value.is_title}
             onChange={e => { this.changeValue(e.target.checked, 'is_title') }}
           />
-          <label htmlFor="field-is_title">As Title</label>
+          <label className="checkbox-label" htmlFor="field-is_title">As Title</label>
         </div>
       </div>
 
       <div className="form-group">
-        <label htmlFor="field-is_label">Field Type</label>
-        <select id="field-is_label" required
+        <label htmlFor="field-type">Field Type</label>
+        <select id="field-type" required
           value={this.state.value.type}
           onChange={e => { this.changeValue(e.target.value, 'type') }}
           className="form-control"
@@ -173,21 +173,21 @@ class AddModelForm extends Component {
             checked={this.state.value.nullable}
             onChange={e => { this.changeValue(e.target.checked, 'nullable') }}
           />
-          <label htmlFor="field-nullable">Nullable</label>
+          <label className="checkbox-label" htmlFor="field-nullable">Nullable</label>
         </div>
         <div className="form-group">
           <input type="checkbox" id="field-indexed" required
             checked={this.state.value.indexed}
             onChange={e => { this.changeValue(e.target.checked, 'indexed') }}
           />
-          <label htmlFor="field-indexed">Indexed</label>
+          <label className="checkbox-label" htmlFor="field-indexed">Indexed</label>
         </div>
         <div className="form-group">
           <input type="checkbox" id="field-editable" required
             checked={this.state.value.editable}
             onChange={e => { this.changeValue(e.target.checked, 'editable') }}
           />
-          <label htmlFor="field-editable">Editable</label>
+          <label className="checkbox-label" htmlFor="field-editable">Editable</label>
         </div>
       </div>
 
@@ -200,4 +200,4 @@ class AddModelForm extends Component {
   }
 }
 
-export default AddModelForm;
+export default withRouter(AddFieldForm);

@@ -41,6 +41,7 @@ import Models from "./components/Models";
 import AddModel from "./components/models/AddModel";
 import EditModel from "./components/models/EditModel";
 import AddField from "./components/models/AddField";
+import AddRelation from "./components/models/AddRelation";
 
 import AddTable from "./components/tables/AddTable";
 import EditTable from "./components/tables/EditTable";
@@ -236,6 +237,9 @@ class Admin extends Component {
             <Route path="/admin/:modelId/fields/add">
               <AddField/>
             </Route>
+            <Route path="/admin/:modelId/relations/add">
+              <AddRelation />
+            </Route>            
           </Switch>
         </Router>
         <AdminModal/>

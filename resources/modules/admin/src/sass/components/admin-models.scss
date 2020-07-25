@@ -45,9 +45,10 @@
     display: flex;
     .form-group {
       flex-grow: 1;
-      label {
-        margin-left: 10px;
-      }
     }
   }
+}
+
+.checkbox-label {
+  margin-left: 10px;
 }
