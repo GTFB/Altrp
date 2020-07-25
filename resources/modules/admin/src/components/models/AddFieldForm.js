@@ -75,7 +75,7 @@ class AddFieldForm extends Component {
 
       <div className="checkbox-group">
         <div className="form-group">
-          <input type="checkbox" id="field-is_label" required
+          <input type="checkbox" id="field-is_label"
             checked={this.state.value.is_label}
             onChange={e => { this.changeValue(e.target.checked, 'is_label') }}
           />
@@ -169,21 +169,21 @@ class AddFieldForm extends Component {
 
       <div className="checkbox-group">
         <div className="form-group">
-          <input type="checkbox" id="field-nullable" required
+          <input type="checkbox" id="field-nullable"
             checked={this.state.value.nullable}
             onChange={e => { this.changeValue(e.target.checked, 'nullable') }}
           />
           <label className="checkbox-label" htmlFor="field-nullable">Nullable</label>
         </div>
         <div className="form-group">
-          <input type="checkbox" id="field-indexed" required
+          <input type="checkbox" id="field-indexed"
             checked={this.state.value.indexed}
             onChange={e => { this.changeValue(e.target.checked, 'indexed') }}
           />
           <label className="checkbox-label" htmlFor="field-indexed">Indexed</label>
         </div>
         <div className="form-group">
-          <input type="checkbox" id="field-editable" required
+          <input type="checkbox" id="field-editable"
             checked={this.state.value.editable}
             onChange={e => { this.changeValue(e.target.checked, 'editable') }}
           />

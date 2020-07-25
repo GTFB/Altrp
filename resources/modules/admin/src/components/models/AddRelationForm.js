@@ -15,9 +15,9 @@ class AddRelationForm extends Component {
       // modelsOptions: [],   TODO: заменить замоканые данные
       modelsOptions: mockedOptions,
       value: {
-        name: '',
         title: '',
         description: '',
+        type: '',
         model_id: '',
         add_belong_to: false,
         local_field: '',
@@ -101,7 +101,7 @@ class AddRelationForm extends Component {
       </div>
 
       <div className="form-group">
-        <input type="checkbox" id="relation-add_belong_to" required
+        <input type="checkbox" id="relation-add_belong_to"
           checked={this.state.value.add_belong_to}
           onChange={e => { this.changeValue(e.target.checked, 'add_belong_to') }}
         />
@@ -136,7 +136,7 @@ class AddRelationForm extends Component {
       </div>
 
       <div className="form-group">
-        <input type="checkbox" id="relation-delete_cascade" required
+        <input type="checkbox" id="relation-delete_cascade"
           checked={this.state.value.delete_cascade}
           onChange={e => { this.changeValue(e.target.checked, 'delete_cascade') }}
         />
