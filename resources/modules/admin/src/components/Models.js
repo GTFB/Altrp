@@ -169,6 +169,7 @@ export default class Models extends Component {
               columns={columnsDataSource}
               rows={dataSources.map(dataSource => ({
                 ...dataSource,
+                type: dataSource.type.join(', '),
                 editUrl: '/admin/data-source/edit/' + dataSource.id
               }))}
             />
