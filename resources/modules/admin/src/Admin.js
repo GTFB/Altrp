@@ -118,6 +118,12 @@ class Admin extends Component {
                     <span>Tables</span>
                   </Link>
                 </li>
+              <li>
+                <Link to="/admin/models" className="admin-nav-list__link">
+                  <TableSvg className="icon"/>
+                  <span>Tables/Models</span>
+                </Link>
+              </li>
                 <li>
                   <Link to="/admin/templates" className="admin-nav-list__link">
                     <TemplateSvg className="icon"/>
@@ -134,12 +140,6 @@ class Admin extends Component {
                   <Link to="/admin/users" className="admin-nav-list__link">
                     <UserSvg className="icon"/>
                     <span>Users</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/admin/models" className="admin-nav-list__link">
-                    <UserSvg className="icon" />
-                    <span>Models</span>
                   </Link>
                 </li>
                 <li>
