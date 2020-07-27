@@ -242,7 +242,7 @@ class Page extends Model
    * @return bool
    */
   public function allowedForUser( $user_id = '' ){
-    if( ( ! auth()->user() ) && $this->for_guest ) {
+    if( ( ! auth()->user() ) ) {
       return true;
     }
     if( ! $user_id ) {
@@ -250,23 +250,26 @@ class Page extends Model
     } else {
       $user = User::find( $user_id );
     }
-    if( ! $user ){
-      return false;
-    }
     $allowed = false;
 
     /** @var User $user */
     $user = auth()->user();
     $page_role_table = DB::table( 'page_role' );
     $page_roles = $page_role_table->where( 'page_id', $this->id )->get();
+    /**
+     * Если никаких ролей не указано и for_guest false, то всегда доступно
+     */
+    if( ( ! $page_roles->count() ) && ! $this->for_guest ){
+      $allowed = true;
+    }
+    if( ! $user ){
+      return false;
+    }
     foreach ( $page_roles as $page_role ) {
       $role = Role::find( $page_role->role_id );
       if( $user->hasRole( $role->name ) ){
         $allowed = true;
       }
-    }
-    if( ( ! $page_roles->count() ) && ! $this->for_guest ){
-      $allowed = true;
     }
     return $allowed;
   }

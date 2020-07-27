@@ -13,7 +13,6 @@ class RouteContent extends Component {
     setTitle(this.props.title);
   }
   render(){
-    console.log(this.props);
     if(! this.props.allowed){
       return<Redirect to={this.props.redirect || '/'}/>
     }
