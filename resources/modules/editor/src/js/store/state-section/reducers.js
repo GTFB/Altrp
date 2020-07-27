@@ -1,4 +1,4 @@
-import {SET_CURRENT_STATE} from "./actions"
+import { SET_CURRENT_STATE } from "./actions"
 
 const defaultState = {
   title: "Normal",

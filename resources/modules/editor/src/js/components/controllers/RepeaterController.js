@@ -1,7 +1,7 @@
-import React, {Component} from "react";
-import {connect} from "react-redux";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import controllerDecorate from "../../decorators/controller";
-import {iconsManager} from "../../helpers";
+import { iconsManager } from "../../helpers";
 import Controller from "../../classes/Controller";
 /**
  * @method _changeValue
@@ -15,9 +15,9 @@ class RepeaterController extends Component {
     super(props);
     controllerDecorate(this);
     let items = props.default || [];
-    items = this.props.currentElement.getSettings(this.props.controlId) || items;
-    items = items.map(item=>{
-      if(item.length === 0){
+    items = this.getSettings(this.props.controlId) || items;
+    items = items.map(item => {
+      if (item.length === 0) {
         return {};
       }
       return item;
@@ -37,13 +37,13 @@ class RepeaterController extends Component {
    * Значение по умолчанию для @see {../../decorators/controller.js}
    * @return {array}
    */
-  getDefaultValue(){
+  getDefaultValue() {
     return [];
   }
   /**
    * Изменяем знавение в итеме и передаем в текущий элемент
    */
-  changeValue(itemIndex, controlId, value){
+  changeValue(itemIndex, controlId, value) {
     let newValue = [...this.state.items];
     newValue[itemIndex][controlId] = value;
     this._changeValue(newValue);
@@ -56,8 +56,8 @@ class RepeaterController extends Component {
     let items = [...this.state.items];
     items.splice(index, 1);
     this.setState(state => {
-          return {...state, items}
-        }
+      return { ...state, items }
+    }
     );
     this._changeValue(items);
   }
@@ -67,8 +67,8 @@ class RepeaterController extends Component {
   setActiveItem(e) {
     let activeItem = parseInt(e.currentTarget.dataset.itemindex);
     this.setState(state => {
-          return {...state, activeItem}
-        }
+      return { ...state, activeItem }
+    }
     );
   }
 
@@ -77,74 +77,77 @@ class RepeaterController extends Component {
    */
   addItem() {
     let items = [...this.state.items];
-    items.push({id:this.state.items.length});
+    items.push({ id: this.state.items.length });
     this.setState(state => {
-      return {...state,
+      return {
+        ...state,
         activeItem: items.length - 1,
-        items}
+        items
+      }
     });
     this._changeValue(items);
   }
 
   render() {
-    if(this.state.show === false) {
+    if (this.state.show === false) {
       return '';
     }
-      return <div className='controller-container controller-container_repeater repeater'>
-        <div className="control-header">
-          <div className="controller-container__label">{this.props.label}</div>
-        </div>
-        <div className="repeater-fields">
-          {
-            this.state.items.map((item, idx) => {
-              let itemClasses = ['repeater-item'];
-              if (this.state.activeItem === idx) {
-                itemClasses.push('repeater-item_open');
-              }
-              return <div className={itemClasses.join(' ')} key={idx}>
-                <div className="repeater-item-tools">
-                  <div className="repeater-item__caption"
-                       data-itemindex={idx}
-                       onClick={this.setActiveItem}>Item #{idx + 1}</div>
-                  <button className="repeater-item__delete"
-                          data-itemindex={idx}
-                          onClick={this.deleteItem}>{iconsManager().renderIcon('times')}</button>
-                </div>
-                <div className="repeater-item-content">
-                  {
-                    this.props.fields.map(field => {
-                      let ControllerComponent = controllersManager.getController(field.type);
-                      let controller = new Controller({...field, repeater: this, itemIndex: idx});
-                      // value =
-                      let value = item[field.controlId] || '';
-                      return <ControllerComponent {...field}
-                                                  repeater={this}
-                                                  itemindex={idx}
-                                                  key={field.controlId}
-                                                  default={value}
-                                                  controller={controller}/>
-                    })
-                  }
-                </div>
+    return <div className='controller-container controller-container_repeater repeater'>
+      <div className="control-header">
+        <div className="controller-container__label">{this.props.label}</div>
+      </div>
+      <div className="repeater-fields">
+        {
+          this.state.items.map((item, idx) => {
+            let itemClasses = ['repeater-item'];
+            if (this.state.activeItem === idx) {
+              itemClasses.push('repeater-item_open');
+            }
+            return <div className={itemClasses.join(' ')} key={idx}>
+              <div className="repeater-item-tools">
+                <div className="repeater-item__caption"
+                  data-itemindex={idx}
+                  onClick={this.setActiveItem}>Item #{idx + 1}</div>
+                <button className="repeater-item__delete"
+                  data-itemindex={idx}
+                  onClick={this.deleteItem}>{iconsManager().renderIcon('times')}</button>
               </div>
-            })
-          }
-        </div>
-        <div className="d-flex justify-center repeater-bottom">
-          <button className="altrp-btn altrp-btn_gray d-flex align-items-center" onClick={this.addItem}>
-            {iconsManager().renderIcon('plus', {
-              className: 'altrp-btn__icon',
-            })}
+              <div className="repeater-item-content">
+                {
+                  this.props.fields.map(field => {
+                    let ControllerComponent = controllersManager.getController(field.type);
+                    let controller = new Controller({ ...field, repeater: this, itemIndex: idx });
+                    // value =
+                    let value = item[field.controlId] || '';
+                    return <ControllerComponent {...field}
+                      repeater={this}
+                      itemindex={idx}
+                      key={field.controlId}
+                      default={value}
+                      controller={controller} />
+                  })
+                }
+              </div>
+            </div>
+          })
+        }
+      </div>
+      <div className="d-flex justify-center repeater-bottom">
+        <button className="altrp-btn altrp-btn_gray d-flex align-items-center" onClick={this.addItem}>
+          {iconsManager().renderIcon('plus', {
+            className: 'altrp-btn__icon',
+          })}
             Add Item
           </button>
-        </div>
       </div>
+    </div>
   }
 }
 
 function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
+    currentState: state.currentState,
   };
 }
 

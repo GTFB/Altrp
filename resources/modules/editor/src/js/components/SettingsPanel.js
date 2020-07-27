@@ -1,15 +1,16 @@
-import React, {Component} from "react";
-import {connect} from 'react-redux';
+import React, { Component } from "react";
+import { connect } from 'react-redux';
 import ContentIcon from '../../svgs/content.svg'
 import StyleIcon from '../../svgs/style.svg'
 import AdvancedIcon from '../../svgs/advanced.svg'
-import {TAB_ADVANCED, TAB_CONTENT, TAB_STYLE} from "../classes/modules/ControllersManager";
+import { TAB_ADVANCED, TAB_CONTENT, TAB_STYLE } from "../classes/modules/ControllersManager";
 import PanelTabContent from "./PanelTabContent";
 import DynamicContent from "./DynamicContent/DynamicContent";
 import Controller from "../classes/Controller";
-import {setCurrentTab} from "../store/active-settings-tab/actions";
-import {getCurrentTab} from "../store/store";
+import { setCurrentTab } from "../store/active-settings-tab/actions";
+import { getCurrentTab, getElementState } from "../store/store";
 import StateSection from "./StateSection";
+import { setCurrentState } from "../store/state-section/actions";
 
 class SettingsPanel extends Component {
 
@@ -31,15 +32,17 @@ class SettingsPanel extends Component {
     this.props.setCurrentTab(activeTab);
   }
 
-
   componentDidMount() {
     this.props.setCurrentTab(this.state.activeTab)
-  }
+  };
 
   render() {
 
     let controllersManager = window.controllersManager;
+    let currentTab = getCurrentTab();
 
+    let state = getElementState();
+    console.log(state);
     let sections = [];
     if (this.props.currentElement.getName) {
       let allControllersPairs = _.toPairs(controllersManager.getControls(this.props.currentElement.getName()));
@@ -58,6 +61,7 @@ class SettingsPanel extends Component {
       });
     }
 
+
     let contentTabClasses = 'panel-tab d-flex ' + (this.state.activeTab === TAB_CONTENT ? 'active' : '');
     let styleTabClasses = 'panel-tab d-flex ' + (this.state.activeTab === TAB_STYLE ? 'active' : '');
     let advancedTabClasses = 'panel-tab d-flex ' + (this.state.activeTab === TAB_ADVANCED ? 'active' : '');
@@ -65,7 +69,7 @@ class SettingsPanel extends Component {
       <div className="panel-tabs d-flex">
         <button className={contentTabClasses} onClick={() => this.setActiveTab(TAB_CONTENT)}>
           <span className="panel-tab__icon">
-            <ContentIcon/>
+            <ContentIcon />
           </span>
           <span className="panel-tab__text">
             Content
@@ -73,7 +77,7 @@ class SettingsPanel extends Component {
         </button>
         <button className={styleTabClasses} onClick={() => this.setActiveTab(TAB_STYLE)}>
           <span className="panel-tab__icon">
-            <StyleIcon/>
+            <StyleIcon />
           </span>
           <span className="panel-tab__text">
             Style
@@ -81,15 +85,17 @@ class SettingsPanel extends Component {
         </button>
         <button className={advancedTabClasses} onClick={() => this.setActiveTab(TAB_ADVANCED)}>
           <span className="panel-tab__icon">
-            <AdvancedIcon/>
+            <AdvancedIcon />
           </span>
           <span className="panel-tab__text">
             Advanced
           </span>
         </button>
       </div>
-      <StateSection/>
-      <PanelTabContent sections={sections}/>
+      {
+        (this.state.activeTab != 'content' && <StateSection />)
+      }
+      <PanelTabContent sections={sections} />
     </div>
   }
 }
@@ -97,8 +103,9 @@ class SettingsPanel extends Component {
 function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
+    currentState: state.currentState,
   };
 }
 
 
-export default connect(mapStateToProps, {setCurrentTab})(SettingsPanel);
+export default connect(mapStateToProps, { setCurrentTab, setCurrentState })(SettingsPanel);
