@@ -126,6 +126,27 @@ class QueryBuilder
         $methodBody = "\n\n{$this->tabIndent}public function " . $this->getMethodName() . "()\n{$this->tabIndent}{\n"
             . "{$this->tabIndent}{$this->tabIndent}return \$this->model()\n"
             . implode("{$this->threeTabs}",$this->query) . $this->tabIndent . "}{$this->tabIndent}";
+        return $this->replaceRequestValues($methodBody);
+    }
+
+    /**
+     * Заменить переменные значения запроса, настоящими значениями запроса
+     *
+     * @param $methodBody
+     * @return string|string[]
+     */
+    protected function replaceRequestValues($methodBody)
+    {
+        if (isset($this->data['request_variables'])) {
+            foreach ($this->data['request_variables'] as $variable) {
+                $methodBody = str_replace(
+                    '\'REQUEST:' . $variable . '\'',
+                    'request()->' . $variable,
+                    $methodBody
+                );
+            }
+            return $methodBody;
+        }
         return $methodBody;
     }
 
@@ -244,8 +265,13 @@ class QueryBuilder
                 }
             }
         }
-        SourceRole::whereIn('role_id', $rolesIds)->whereIn('source_id', [$source->id])->delete();
-        SourceRole::insert($rolesList);
+        try {
+            SourceRole::whereIn('role_id', $rolesIds)->whereIn('source_id', [$source->id])->delete();
+            SourceRole::insert($rolesList);
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -269,8 +295,13 @@ class QueryBuilder
                 }
             }
         }
-        SourcePermission::whereIn('permission_id', $permissionIds)->whereIn('source_id', [$source->id])->delete();
-        SourcePermission::insert($permissionsList);
+        try {
+            SourcePermission::whereIn('permission_id', $permissionIds)->whereIn('source_id', [$source->id])->delete();
+            SourcePermission::insert($permissionsList);
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -403,7 +434,7 @@ class QueryBuilder
         $condition = 'where([';
         $loop = 1;
         foreach ($conditions as $cond) {
-            $value = $cond['value'] != 'CURRENT_USER' ? "'{$cond['value']}'" : 'auth()->user()->id';
+            $value = $this->getColumnValue($cond['value']);
             if (count($conditions) > 1 && $loop == 1) $condition .= "\n{$this->threeTabs}{$this->tabIndent}";
             $condition .= "['{$cond['column']}'," . "'{$cond['operator']}'," . $value . "], ";
             if (count($conditions) > 1 && count($conditions) != $loop)
@@ -413,6 +444,22 @@ class QueryBuilder
         $condition = trim($condition, ', ');
         $condition .= (count($conditions) > 1) ? "\n{$this->threeTabs}])" : "])";
         return '->' . $condition . "\n";
+    }
+
+    /**
+     * Сформировать и получить значение колонки при выборке по условию
+     *
+     * @param $value
+     * @return string
+     */
+    protected function getColumnValue($value)
+    {
+        if (Str::contains($value, 'CURRENT_USER')) {
+            $parts = explode(':', $value);
+            $relations = str_replace('.', '->', $parts[1]);
+            return 'auth()->user()->' . $relations;
+        }
+        return "'{$value}'";
     }
 
     /**
@@ -446,7 +493,7 @@ class QueryBuilder
                 $conditionList = $this->getConditions($cond['conditions']);
             }
 
-            $value = $cond['value'] != 'CURRENT_USER' ? "'{$cond['value']}'" : 'auth()->user()->id';
+            $value = $this->getColumnValue($cond['value']);
             if (isset($cond['or_where'])) {
                 $condition = 'orWhere(function ($query) {' . "\n";
                 if (count($conditions) > 1 && $loop == 1) $condition .= "{$this->threeTabs}\$query";
