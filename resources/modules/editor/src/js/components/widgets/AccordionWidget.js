@@ -5,25 +5,16 @@ import { renderAssetIcon } from "../../helpers"
 class AccordionWidget extends Component {
   constructor(props){
     super(props);
+    let settings = props.element.getSettings()
     this.state = {
-      settings: props.element.getSettings(),
-      activeItem: 0
+      settings: settings,
+      activeItem: Number(settings.active_item_additional_content) || 0
     };
     this.open = this.open.bind(this);
     props.element.component = this;
     if(window.elementDecorator){
       window.elementDecorator(this);
     };
-  }
-
-  componentDidUpdate(previousProps, previousState) {
-    if(!this.state.active_item_switcher_additional_content) {
-      if(Number(this.state.settings.active_item_additional_content) !== previousState.activeItem) {
-        this.setState(() => ({
-          activeItem: Number(this.state.settings.active_item_additional_content)
-        }));
-      }
-    }
   }
 
   open(e) {
