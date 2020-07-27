@@ -19,5 +19,4 @@ export function settingSectionMenuReducer(state = defaultState, action) {
     default:
       return state
   }
-  return state;
 }
