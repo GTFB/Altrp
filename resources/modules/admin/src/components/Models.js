@@ -5,25 +5,27 @@ import { Link } from 'react-router-dom'
 
 import AdminTable from "./AdminTable";
 import Pagination from "./Pagination";
+import Resource from "../../../editor/src/js/classes/Resource";
 
 const columnsModel = [
   {
-    name: 'title',
+    name: 'name',
+    //name: 'title', todo: сменить, когда будет title
     title: 'Title',
     url: true,
     editUrl: true,
     tag: 'Link'
   },
-  {
-    name: 'name',
-    title: 'Name'
-  },
+  // {
+  //   name: 'name',
+  //   title: 'Name'
+  // },
   {
     name: 'description',
     title: 'Description'
   },
   {
-    name: 'updatedAt',
+    name: 'updated_at',
     title: 'Updated At'
   }
 ];
@@ -53,26 +55,6 @@ const initPaginationProps = {
   currentPage: 1,
 };
 
-const mockedModels = [
-  {
-    id: 1,
-    name: 'test1',
-    title: 'Test1',
-    description: 'test1'
-  },
-  {
-    id: 2,
-    name: 'test2',
-    title: 'Test2',
-    description: 'test2'
-  },
-  {
-    id: 3,
-    name: 'test3',
-    title: 'Test3',
-    description: 'test3'
-  },
-];
 const mockedDataSources = [
   {
     id: 1,
@@ -104,13 +86,13 @@ export default class Models extends Component {
       activeTab: 0,
       modelsPagination: initPaginationProps,
       dataSourcesPagination: initPaginationProps,      
-      // models: [],   TODO: заменить замоканые данные
-      models: mockedModels,
-      // dataSources: [],   TODO: заменить замоканые данные
-      dataSources: mockedDataSources
+      models: [],
+      dataSources: [],
+      // dataSources: mockedDataSources
     };
     this.switchTab = this.switchTab.bind(this);
     this.changePage = this.changePage.bind(this);
+    this.modelsResource = new Resource({route: '/admin/ajax/models'});
   }
 
   switchTab(activeTab) {
@@ -121,10 +103,16 @@ export default class Models extends Component {
     this.setState(state => ({ ...state, [pagination]: { ...state[pagination], currentPage} }));
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     // get: /admin/ajax/models .then(models => {
     //   this.setState({models});
     // });
+    let models = await this.modelsResource.getAll();
+    models = models.models;
+    this.setState(state=>({
+        ...state,
+        models
+    }))
   }
 
   render() {

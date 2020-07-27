@@ -38,7 +38,6 @@ import AddPage from "./components/AddPage";
 import UserTopPanel from "./components/UserTopPanel";
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 import Models from "./components/Models";
-import AddModel from "./components/models/AddModel";
 import EditModel from "./components/models/EditModel";
 import EditField from "./components/models/EditField";
 import AddRelation from "./components/models/AddRelation";

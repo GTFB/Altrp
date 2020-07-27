@@ -36,6 +36,7 @@ class EditModel extends Component {
       // fields: [],
       // relations: []
     };
+
     this.modelsResource = new Resource({route: '/admin/ajax/models'});
     if(id){
       this.fieldsResource = new Resource({route: `/admin/ajax/models/${id}/fields`});
@@ -44,6 +45,10 @@ class EditModel extends Component {
     }
   }
 
+  /**
+   * Загрузим данные модели
+   * @return {Promise<void>}
+   */
   async componentDidMount() {
 
     if(this.state.id){
@@ -58,12 +63,19 @@ class EditModel extends Component {
       }))
     }
   }
-
   /**
    * Обработка формы
    * @return {*}
    */
-
+  onSubmit = async (model) => {
+    let res;
+    if(this.state.id){
+      res = await this.modelsResource.put(this.state.id ,model);
+    } else {
+      res = await this.modelsResource.post(model);
+    }
+    console.log(res);
+  };
   render() {
     const { model, fields, relations } = this.state;
 
@@ -77,7 +89,7 @@ class EditModel extends Component {
       </div>
       <div className="admin-content">
         <EditModelForm model={model}
-                       submitText={model.id ? 'Edit' : 'Add'}
+                       submitText={model.id ? 'Save' : 'Add'}
                        edit={model.id}
                        onSubmit={this.onSubmit}/>
 

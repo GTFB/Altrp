@@ -5,20 +5,42 @@ class EditModelForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: {}
+      value: {...this.props.model}
     };
     this.submitHandler = this.submitHandler.bind(this);
     this.deleteHandler = this.deleteHandler.bind(this);
   }
 
+  /**
+   * Сменить значение поля модели
+   * @param value
+   * @param field
+   */
   changeValue(value, field) {
     this.setState(state => {
       state = { ...state };
       state.value[field] = value;
+      console.log(state);
       return state
-    })
+    });
   }
 
+  /**
+   * Обновляем state при получении новых props (model)
+   */
+  componentDidUpdate(prevProps){
+    if(this.props !== prevProps){
+      this.setState(state => {
+        state = { ...state };
+        state.value = {...this.props.model};
+        return state
+      });
+    }
+  }
+  /**
+   * Обработка формы
+   * @param e
+   */
   submitHandler(e) {
     e.preventDefault();
     if(_.isFunction(this.props.onSubmit)){
