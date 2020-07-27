@@ -54,7 +54,10 @@ class LoginController extends Controller
     $request->session()->regenerateToken();
     $this->loggedOut( $request );
 
-    return  response( )->json( ['location' => '/'] );
+    return  response( )->json( [
+      'success' => true,
+      'reload' => true,
+    ] );
   }
 
   /**

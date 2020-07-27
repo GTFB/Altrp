@@ -134,6 +134,11 @@ class FrontElement {
             this.addForm(formsManager.registerForm(this.getSettings('form_id'), 'login', method));
           }
           break;
+          case 'logout':{
+            method = 'POST';
+            this.addForm(formsManager.registerForm(this.getSettings('form_id'), 'logout', method));
+          }
+          break;
         }
       }
       break;

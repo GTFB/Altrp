@@ -352,3 +352,138 @@
 .altrp-tabs-switcher-section-img {
     max-width: 100%;
 }
+
+.altrp-list-ul {
+    padding: 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+}
+
+.altrp-list-li {
+    list-style: none;
+    display: flex;
+    position: relative;
+    justify-items: center;
+}
+
+.altrp-list-ul-inline {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.altrp-list-ul-inline .altrp-list-label-content {
+    margin-right: 10px;
+}
+
+.altrp-list-ul-inline .altrp-list-li:first-child .altrp-list-li-content {
+    margin-left: 0 !important;
+}
+
+.altrp-list-ul-default .altrp-list-li:first-child .altrp-list-li-content {
+    margin-top: 0 !important;
+}
+
+.altrp-list-ul-inline .altrp-list-li:last-child .altrp-list-li-content {
+    margin-right: 0 !important;
+}
+
+.altrp-list-ul-default .altrp-list-li:last-child .altrp-list-li-content {
+    margin-bottom: 0 !important;
+}
+
+.altrp-list-ul-default {
+    flex-direction: column;
+}
+
+.altrp-list-icon-relative {
+    position: relative;
+}
+
+.altrp-list-li-divider-default {
+    position: absolute;
+    bottom: 0;
+}
+
+.altrp-list-li:last-child .altrp-list-li-divider-default {
+    border-top: none;
+}
+
+.altrp-list-li:last-child .altrp-list-li-divider-inline {
+    border-right: none;
+}
+
+.altrp-list-li-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-items: center;
+}
+
+.altrp-list-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.altrp-accordion-item-button {
+    background-color: rgb(52,59,76);
+    color: #FFFFFF;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    cursor: pointer;
+    width: 100%;
+    padding: 15px 20px;
+    z-index: 100;
+}
+
+.altrp-accordion-item-content {
+    background-color: rgb(79, 90, 114);
+    color: #FFFFFF;
+    width: 100%;
+    height: 100%;
+    line-height: 0;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    transition: 250ms ease-in-out;
+    z-index: 0;
+    top: -1em;
+    height: 0px;
+}
+
+.altrp-accordion-item-content-show {
+    padding: 15px 20px;
+    line-height: 1;
+    top: 0;
+    z-index: 0;
+    height: auto;
+}
+
+.altrp-accordion-item-content * {
+    margin: 0;
+}
+
+.altrp-accordion-item-label-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    margin-right: auto;
+}
+
+.altrp-accordion-item:first-child {
+    margin-top: 0px !important;
+}
+
+.altrp-accordion-item-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
