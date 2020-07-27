@@ -11,7 +11,6 @@ class SettingSection extends Component {
       open: false,
     };
     this.toggle = this.toggle.bind(this);
-    this.sectionToggle = this.sectionToggle.bind(this);
   };
 
   componentDidMount() {
@@ -21,23 +20,27 @@ class SettingSection extends Component {
     this.props.dispatch(setActiveSection(getCurrentElement().getName(), getCurrentTab(), this.props.sectionID));
   };
 
-  sectionToggle() {
-    this.setState({
-      open: !this.state.open,
-    })
-  };
-
   render() {
     let currentElementName = getCurrentElement().getName();
     let currentTab = getCurrentTab();
     let activeSectionID = 0;
-    if (this.props.settingSection[currentElementName] && this.props.settingSection[currentElementName][currentTab]) {
+    /**
+     * Сравниваем с undefined
+     */
+    if (this.props.settingSection[currentElementName]
+        && (this.props.settingSection[currentElementName][currentTab] !== undefined)) {
       activeSectionID = this.props.settingSection[currentElementName][currentTab];
+    } else {
+      /**
+       * Если еще ни разу не открывали текущую вкладку у элемента,
+       * то в setActiveSection передадим 0
+       */
+      this.props.dispatch(setActiveSection(getCurrentElement().getName(), getCurrentTab(), activeSectionID));
     }
     let controllers = this.props.controls || [];
     return (
-      <div onClick={this.toggle} className={"settings-section " + (this.props.sectionID === activeSectionID && this.state.open && 'open')}>
-        <div className="settings-section__title d-flex" onClick={this.sectionToggle}>
+      <div  className={"settings-section " + (this.props.sectionID === activeSectionID ? 'open' : '')}>
+        <div className="settings-section__title d-flex" onClick={this.toggle}>
           <div className="settings-section__icon d-flex ">
             <ChevronIcon />
           </div>

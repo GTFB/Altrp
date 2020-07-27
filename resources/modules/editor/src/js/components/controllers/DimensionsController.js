@@ -171,7 +171,6 @@ class DimensionsController extends Component {
           </div>
         </div>
       </div>
-    </div>
   }
 }
 
