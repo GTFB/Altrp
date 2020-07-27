@@ -54,7 +54,8 @@ class LinkController extends Component {
     let changeCheckBox = togglesettingsNoFollowCheckbox.hasAttribute("checked")
     if(toggleSettingsNewPageCheckbox.hasAttribute("checked") == false) {
       this._changeValue({
-        openInNew: changeCheckBox
+        ...this.state.value,
+        openInNew: !changeCheckBox
       })
       toggleSettingsNewPageCheckbox.setAttribute("checked", "checked");
     } else {

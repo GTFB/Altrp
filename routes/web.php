@@ -77,6 +77,17 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::delete('/permissions/{permission}', "Users\Permissions@delete");
 
     Route::get('/roles', "Users\Roles@getRoles");
+    /**
+     * URL: /admin/ajax/role_options?s=search_string
+     * response:
+     * [
+     *  {
+     *    value - role id
+     *    label - role display_name
+     *  }
+     * ]
+     */
+    Route::get('/role_options', "Users\Roles@get_options")->name( 'admin.role_options' );
     Route::get('/roles/{role}', "Users\Roles@getRole");
     Route::post('/roles', "Users\Roles@insert");
     Route::put('/roles/{role}', "Users\Roles@update");
@@ -125,7 +136,38 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get( '/models_with_fields_options', 'Admin\ModelsController@models_with_fields_options' )
       ->name( 'admin.models_with_fields_options' );
 
+    // Models
     Route::get( '/models', 'Admin\ModelsController@getModels');
+
+    Route::get( '/model_options', 'Admin\ModelsController@getModelOptions');
+    Route::post( '/models', 'Admin\ModelsController@storeModel');
+    Route::put( '/models/{model_id}', 'Admin\ModelsController@updateModel');
+    Route::get( '/models/{model_id}', 'Admin\ModelsController@showModel');
+    Route::delete( '/models/{model_id}', 'Admin\ModelsController@destroyModel');
+
+    // Fields
+    Route::get( '/models/{model_id}/fields', 'Admin\ModelsController@getModelFields');
+    Route::get( '/models/{model_id}/field_options', 'Admin\ModelsController@getModelFieldOptions');
+    Route::post( '/models/{model_id}/fields', 'Admin\ModelsController@storeModelField');
+    Route::put( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@updateModelField');
+    Route::get( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@showModelField');
+    Route::delete( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@destroyModelField');
+
+    // Relations
+    Route::get( '/models/{model_id}/relations', 'Admin\ModelsController@getModelRelations');
+    Route::get( '/models/{model_id}/relation_options', 'Admin\ModelsController@getModelRelationOptions');
+    Route::post( '/models/{model_id}/relations', 'Admin\ModelsController@storeModelRelation');
+    Route::put( '/models/{model_id}/relations/{field_id}', 'Admin\ModelsController@updateModelRelation');
+    Route::get( '/models/{model_id}/relations/{field_id}', 'Admin\ModelsController@showModelRelation');
+    Route::delete( '/models/{model_id}/relations/{field_id}', 'Admin\ModelsController@destroyModelRelation');
+
+    // Data Source
+    Route::get( '/data_sources', 'Admin\ModelsController@getDataSources');
+    Route::get( '/data_source_options', 'Admin\ModelsController@getDataSourceOptions');
+    Route::post( '/data_sources', 'Admin\ModelsController@storeDataSource');
+    Route::put( '/data_sources/{field_id}', 'Admin\ModelsController@updateDataSource');
+    Route::get( '/data_sources/{field_id}', 'Admin\ModelsController@showDataSource');
+    Route::delete( '/data_sources/{field_id}', 'Admin\ModelsController@destroyDataSource');
 
 
     Route::get('/tables', "Admin\TableController@getTables");

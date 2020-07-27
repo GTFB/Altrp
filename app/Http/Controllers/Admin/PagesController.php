@@ -70,6 +70,7 @@ class PagesController extends Controller
     $page = new Page( $request->toArray() );
     $page->author = auth()->user()->id;
     $page->content = '';
+    $page->parseRoles( (array)$request->get( 'roles' ) );
     if ( $page->save() ) {
       if ( $request->template_id ) {
         $pages_templates = new PagesTemplate( [
@@ -100,6 +101,7 @@ class PagesController extends Controller
     $page = Page::find( $id );
     if ( $page ) {
       $page->template_id = $page->get_content_template() ? $page->get_content_template()->id : null;
+      $page->roles = $page->getRoles();
     }
     return response()->json( $page->toArray() );
 
@@ -154,7 +156,7 @@ class PagesController extends Controller
       $pages_template->save();
       $res['pages_template'] = $pages_template->toArray();
     }
-
+    $page->parseRoles( (array)$request->get( 'roles' ) );
     if ( $page->save() ) {
       $res['success'] = true;
     }

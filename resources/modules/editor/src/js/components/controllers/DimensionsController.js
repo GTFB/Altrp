@@ -1,12 +1,12 @@
-import React, {Component} from "react";
-import {connect} from "react-redux";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import DynamicIcon from "../../../svgs/dynamic.svg";
 import DesktopIcon from "../../../svgs/desktopNew.svg";
 import BindIcon from "../../../svgs/bind.svg";
 import controllerDecorate from "../../decorators/controller";
 
 class DimensionsController extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     controllerDecorate(this);
     this.changeValue = this.changeValue.bind(this);
@@ -14,8 +14,8 @@ class DimensionsController extends Component {
     this.changeUnit = this.changeUnit.bind(this);
     let value = this.getSettings(this.props.controlId);
     // console.log(value);
-    if(value === null && this.props.default){
-      value = this.props.default ;
+    if (value === null && this.props.default) {
+      value = this.props.default;
     }
     value = value || {};
     let units = this.props.units || ['px'];
@@ -28,7 +28,7 @@ class DimensionsController extends Component {
     };
   }
 
-  changeUnit(e){
+  changeUnit(e) {
     let unit = e.target.dataset.unit;
     this._changeValue({
       ...this.state.value,
@@ -36,56 +36,56 @@ class DimensionsController extends Component {
     });
   };
 
-  changeValue(e){
+  changeValue(e) {
 
-    if(this.state.value.bind == true){
-      if( e.target.value <= 9999){
+    if (this.state.value.bind == true) {
+      if (e.target.value <= 9999) {
         this._changeValue({
           ...this.state.value,
-          left: e.target.value|| 0,
-          bottom: e.target.value|| 0,
-          top: e.target.value|| 0,
-          right: e.target.value|| 0
+          left: e.target.value || 0,
+          bottom: e.target.value || 0,
+          top: e.target.value || 0,
+          right: e.target.value || 0
         })
       }
     } else {
       let active = null;
-      if(e.currentTarget != undefined) {
+      if (e.currentTarget != undefined) {
         active = e.currentTarget.dataset.active;
       }
 
-      if(active == "top"){
+      if (active == "top") {
         this._changeValue({
           ...this.state.value,
-          top:e.target.value|| 0,
+          top: e.target.value || 0,
         });
       }
 
-      if(active == "right"){
+      if (active == "right") {
         this._changeValue({
           ...this.state.value,
-          right:e.target.value|| 0,
+          right: e.target.value || 0,
         });
       }
 
-      if(active == "bottom"){
+      if (active == "bottom") {
         this._changeValue({
           ...this.state.value,
-          bottom:e.target.value|| 0,
+          bottom: e.target.value || 0,
         });
       }
 
-      if(active == "left"){
+      if (active == "left") {
         this._changeValue({
           ...this.state.value,
-          left:e.target.value|| 0,
+          left: e.target.value || 0,
         });
       }
     }
 
   }
 
-  changeBind(e){
+  changeBind(e) {
 
     this._changeValue({
       ...this.state.value,
@@ -93,7 +93,7 @@ class DimensionsController extends Component {
     })
   }
 
-  getDefaultValue(){
+  getDefaultValue() {
     return {
       left: '',
       top: '',
@@ -102,9 +102,9 @@ class DimensionsController extends Component {
       unit: 'px',
     };
   }
-  render(){
-    
-    if(this.state.show === false) {
+  render() {
+
+    if (this.state.show === false) {
       return '';
     }
     // console.log(this.getSettings(this.props.controlId));
@@ -175,9 +175,10 @@ class DimensionsController extends Component {
 }
 
 function mapStateToProps(state) {
-  return{
-    currentElement:state.currentElement.currentElement,
-    currentState:state.currentState,
+  return {
+    currentElement: state.currentElement.currentElement,
+    currentState: state.currentState
   };
 }
+
 export default connect(mapStateToProps)(DimensionsController);

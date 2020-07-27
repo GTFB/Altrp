@@ -20,7 +20,7 @@ class ImageWidget extends Component {
     contentMedia.assetType = contentMedia.assetType || undefined;
     return <div className="altrp-image-container">
       {  renderAsset( contentMedia, {
-        className: this.state.settings.position_css_classes || "altrp-image",
+        className: this.state.settings.position_css_classes + " altrp-image",
         id: this.state.settings.position_css_id || "",
       })
       }

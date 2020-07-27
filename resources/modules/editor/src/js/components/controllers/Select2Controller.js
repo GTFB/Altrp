@@ -37,7 +37,6 @@ class Select2Controller extends Component {
       return callback([]);
     }
     let options = await this.resource.search(searchString);
-    console.log(options);
     this.setState(state=>({
       ...state,
       options

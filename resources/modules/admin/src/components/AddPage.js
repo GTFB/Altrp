@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import Resource from "../../../editor/src/js/classes/Resource";
 import {Redirect, withRouter} from 'react-router-dom';
+import AltrpSelect from "./altrp/AltrpSelect";
 
 /**
  * @class
@@ -23,6 +24,12 @@ class AddPage extends Component {
     this.templateResource = new Resource({route: '/admin/ajax/templates'});
     this.savePage = this.savePage.bind(this);
   }
+
+  /**
+   * Компонент загрузился
+   * получыаем данный страницы + опции для шаблона
+   * @return {Promise<void>}
+   */
   async componentDidMount(){
     let res = await this.templateResource.getOptions();
     this.setState(state=>{
@@ -33,9 +40,7 @@ class AddPage extends Component {
     this.setState(state=>{
       return{...state, models: models_res}
     });
-
-    let id = this.props.location.pathname.split('/');
-    id = id[id.length - 1];
+    let id = this.props.match.params.id;
     id = parseInt(id);
     if(id){
       let pageData = await this.resource.get(id);
@@ -44,6 +49,12 @@ class AddPage extends Component {
       });
     }
   }
+
+  /**
+   * Сохранить страницу или добавить новую
+   * @param e
+   * @return {Promise<void>}
+   */
   async savePage(e){
     e.preventDefault();
     let res;
@@ -79,9 +90,9 @@ class AddPage extends Component {
     })
   }
   render() {
-    if(this.state.redirectAfterSave){
-      return<Redirect to="/admin/pages"/>
-    }
+    // if(this.state.redirectAfterSave){
+    //   return<Redirect to="/admin/pages"/>
+    // }
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
@@ -107,8 +118,8 @@ class AddPage extends Component {
                    className="form-control"/>
           </div>
           <div className="form-group">
-            <label htmlFor="page-path">Content Template</label>
-            <select id="page-path" required={1}
+            <label htmlFor="page-template">Content Template</label>
+            <select id="page-template" required={1}
                    value={this.state.value.template_id || ''}
                    onChange={e => {this.changeValue(e.target.value, 'template_id')}}
                    className="form-control">
@@ -121,8 +132,8 @@ class AddPage extends Component {
             </select>
           </div>
           <div className="form-group">
-            <label htmlFor="page-path">Model</label>
-            <select id="page-path"
+            <label htmlFor="page-model">Model</label>
+            <select id="page-model"
                    value={this.state.value.model_id || ''}
                    onChange={e => {this.changeValue(e.target.value, 'model_id')}}
                    className="form-control">
@@ -133,6 +144,22 @@ class AddPage extends Component {
                 })
               }
             </select>
+          </div>
+          <div className="form-group">
+            <label htmlFor="page-roles">Roles</label>
+            <AltrpSelect id="page-roles"
+                         isMulti={true}
+                         optionsRoute="/admin/ajax/role_options"
+                         placeholder="All"
+                         defaultOptions={[
+                           {
+                             value: 'guest',
+                             label: 'Guest',
+                           }
+                         ]}
+                         value={this.state.value.roles}
+                         onChange={value => {this.changeValue(value, 'roles')}}
+            />
           </div>
           <button className="btn btn_success">{this.state.id ? 'Save' : 'Add'}</button>
         </form>

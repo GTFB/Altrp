@@ -11,6 +11,7 @@
 + Clear All History for Templates
 + Pagination and Quick Actions for Templates Page
 + Reports Editor
++ Added the Ability to Show Pages to Certain Roles and Redirect to the Main Page if there is no View Permission
 
 ### 0.5.0
 + Add Delete/Edit Form Action to Button Widget

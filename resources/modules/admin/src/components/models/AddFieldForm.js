@@ -3,7 +3,8 @@ import { Link, withRouter } from "react-router-dom";
 
 const fieldTypeOptions = ['varchar', 'int', 'bigint', 'boolean', 'text', 'long text', 'calculated'];
 const attributeOptions = ['BINARY', 'UNSIGNED', 'UNSIGNED ZEROFILL', 'on update'];
-const inputTipeOptions = ['textarea', 'text', 'number', 'slider', 'WYSIWYG', 'color', 'select', 'checkbox', 'radio button']
+const inputTipeOptions = ['textarea', 'text', 'number', 'slider', 'WYSIWYG', 'color', 'select', 'checkbox', 'radio button'];
+
 
 class AddFieldForm extends Component {
   constructor(props) {
@@ -90,7 +91,12 @@ class AddFieldForm extends Component {
 
       {this.state.value.type === 'calculated' ?
         <>
-          <p className="centred">or Calculated Logic</p>
+
+          <div className="form-group col-6 form-check-inline">
+            <input type="checkbox" id="always"
+                   className="form-check-input form-check-input" />
+            <label htmlFor="always" className="label_checkbox">Always</label>
+          </div>
           <p>if</p>
           <div className="form-group">
             <label>Field Name</label>
@@ -102,10 +108,17 @@ class AddFieldForm extends Component {
           <p>Comparison Operators</p>
 
           <div className="form-group">
-            <label>Not Null</label>
             <select className="form-control"
             >
-              <option disabled value="" />
+              <option value="not-null">Not Null</option>
+              <option value="null">Null</option>
+              <option value="=">Equals</option>
+              <option value="!=">Not Equals</option>
+              <option value="between">Between</option>
+              <option value=">">&gt;</option>
+              <option value=">=">&gt;=</option>
+              <option value="<">&lt;</option>
+              <option value="<=">&lt;=</option>
             </select>
           </div>
 
@@ -130,7 +143,7 @@ class AddFieldForm extends Component {
             <label>Value</label>
             <input type="text" className="form-control" />
           </div>
-          <p>E.g. [Field Title]*[Field Title] + 10</p>
+          <p>E.g. [field_name]*[field_name] + 10</p>
           <button className="btn" type="button">+ Calculated Logic</button>
         </> :
         <>
@@ -242,7 +255,7 @@ class AddFieldForm extends Component {
 
       <div className="btn__wrapper btn_add">
         <button className="btn btn_success" type="submit">Add</button>
-        <Link className="btn" to="/admin/models">Cancel</Link>
+        <Link className="btn" to="/admin/tables/models">Cancel</Link>
         {/* <button className="btn btn_failure">Delete</button> */}
       </div>
     </form>;

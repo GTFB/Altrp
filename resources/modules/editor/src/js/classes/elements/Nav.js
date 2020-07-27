@@ -138,8 +138,10 @@ class Nav extends BaseElement{
       max: 20,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-text{{STATE}}": "padding-left: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-text{{STATE}}": "padding-right: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-text{{STATE}}": [
+          "padding-left: {{SIZE}}{{UNIT}}",
+          "padding-right: {{SIZE}}{{UNIT}}"
+        ],
       }
     });
 
