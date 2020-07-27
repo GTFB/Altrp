@@ -8,12 +8,12 @@ class AccordionWidget extends Component {
     this.state = {
       settings: props.element.getSettings(),
     };
-    this.open = this.open.bind(this);
+    // this.open = this.open.bind(this);
     props.element.component = this;
     if(window.elementDecorator){
       window.elementDecorator(this);
     };
-
+    this.icon_is_active = false;
     this.items = [];
   }
 
@@ -61,7 +61,7 @@ class AccordionWidget extends Component {
       return (
         <div className="altrp-accordion-item" key={idx}>
           {/*button*/}
-          <div className="altrp-accordion-item-button" data-key={idx} onClick={this.open}>
+          <div className="altrp-accordion-item-button" data-key={idx} onClick={(e) => this.open(e)}>
             <div className="altrp-accordion-item-label-container">
               {
                 React.createElement(
@@ -75,7 +75,7 @@ class AccordionWidget extends Component {
             </div>
 
             <div className="altrp-accordion-item-icon">
-              {icon}
+              {String(this.icon_is_active)}
             </div>
           </div>
           {/*content*/}
@@ -92,7 +92,7 @@ class AccordionWidget extends Component {
       )
     });
 
-    return <div className="altrp-accordion" ref={this.items_content}>
+    return <div className="altrp-accordion">
       {
         accordion_items
       }

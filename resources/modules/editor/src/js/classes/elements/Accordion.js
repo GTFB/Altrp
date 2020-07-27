@@ -465,7 +465,7 @@ class Accordion extends BaseElement {
 
     this.addControl('background_color_content_style', {
         type: CONTROLLER_COLOR,
-        label: 'Color',
+        label: 'Background color',
         default: {
           color: "",
           colorPickedHex: "",
