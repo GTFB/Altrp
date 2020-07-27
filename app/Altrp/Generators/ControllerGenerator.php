@@ -3,6 +3,8 @@
 namespace App\Altrp\Generators;
 
 use App\Altrp\Controller;
+use App\Altrp\Generators\Request\RequestFile;
+use App\Altrp\Generators\Request\RequestFileWriter;
 use App\Altrp\Source;
 use App\Altrp\SourcePermission;
 use App\Altrp\SourceRole;
@@ -101,6 +103,9 @@ class ControllerGenerator extends AppGenerator
             if (! $this->writeControllerToDb()) {
                 throw new ControllerNotWrittenException('Failed to write controller to the database', 500);
             }
+            if (! $this->generateRequests()) {
+                throw new ControllerNotWrittenException('Failed to generate requests', 500);
+            }
             // Обновить файл контроллера
             if (! $this->updateControllerFile()) {
                 throw new CommandFailedException('Failed to update controller file', 500);
@@ -110,12 +115,15 @@ class ControllerGenerator extends AppGenerator
             if (! $this->writeControllerToDb()) {
                 throw new ControllerNotWrittenException('Failed to write controller to the database', 500);
             }
+            if (! $this->generateRequests()) {
+                throw new ControllerNotWrittenException('Failed to generate requests', 500);
+            }
             // Создать новый файл контроллера
             if (! $this->createControllerFile()) {
                 throw new CommandFailedException('Failed to create controller file', 500);
             }
         }
-        
+
         if ($this->getSourceActions()->isEmpty()) {
             // Записать основные действия над ресурсом в базу
             if (! $this->writeSourceActions()) {
@@ -604,16 +612,50 @@ class ControllerGenerator extends AppGenerator
     {
         if ((array) $validationRules) {
             $validationArr = [];
-
             foreach ($validationRules as $name => $rules) {
                 $rules = (array) $rules;
                 if (! empty($rules)) {
                     $validationArr[] = $name . '#' . implode('|', $rules);
                 }
             }
-
             return implode(';', $validationArr);
         }
         return '';
+    }
+
+    /**
+     * Сформировать валидационные правила для файла запроса
+     *
+     * @return string
+     */
+    protected function getValidations()
+    {
+        $validations = [];
+        $validationRules = $this->getValidationRules();
+        foreach ($validationRules as $name => $rules) {
+            $validations[] = "'{$name}' => '" . implode('|', (array)$rules) . "',";
+        }
+        return implode(PHP_EOL . "\t\t\t", $validations);
+    }
+
+    /**
+     * Сгенерировать файл запроса
+     *
+     * @return bool
+     */
+    protected function generateRequests()
+    {
+        $requests = ['Store', 'Update'];
+        $validations = $this->getValidations();
+        foreach ($requests as $name) {
+            $request = new RequestFile(
+                $this->controllerModel->model(),
+                $name,
+                $validations
+            );
+            $requestWriter = new RequestFileWriter();
+            $requestWriter->write($request);
+        }
+        return true;
     }
 }

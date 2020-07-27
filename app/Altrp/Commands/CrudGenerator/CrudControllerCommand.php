@@ -111,6 +111,13 @@ class CrudControllerCommand extends GeneratorCommand
         $customProperties = $this->option('custom-properties') ?? '';
         $customMethods = $this->option('custom-methods') ?? '';
 
+        $storeRequest = $modelName . 'StoreRequest';
+        $updateRequest = $modelName . 'UpdateRequest';
+        $requestNamespaces = "use App\Http\Requests\AltrpRequests\\"
+            . str_replace('AltrpModels\\', '', $modelNamespace) . $storeRequest . ";\n"
+            . "use App\Http\Requests\AltrpRequests\\"
+            . str_replace('AltrpModels\\', '', $modelNamespace) . $updateRequest . ";";
+
         $validationRules = '';
         if (trim($validations) != '') {
             $validationRules = "\$this->validate(\$request, [";
@@ -184,6 +191,9 @@ EOD;
             ->replaceRoutePrefix($stub, $routePrefix)
             ->replaceRoutePrefixCap($stub, $routePrefixCap)
             ->replaceValidationRules($stub, $validationRules)
+            ->replaceStoreRequest($stub, $storeRequest)
+            ->replaceUpdateRequest($stub, $updateRequest)
+            ->replaceRequestNamespaces($stub, $requestNamespaces)
             ->replaceRelations($stub, $relations)
             ->replaceCustomNamespaces($stub, $customNamespaces)
             ->replaceCustomTraits($stub, $customTraits)
@@ -193,6 +203,24 @@ EOD;
             ->replaceFileSnippet($stub, $fileSnippet)
             ->replaceWhereSnippet($stub, $whereSnippet)
             ->replaceClass($stub, $name);
+    }
+
+    protected function replaceStoreRequest(&$stub, $storeRequest)
+    {
+        $stub = str_replace('{{storeRequest}}', $storeRequest, $stub);
+        return $this;
+    }
+
+    protected function replaceUpdateRequest(&$stub, $updateRequest)
+    {
+        $stub = str_replace('{{updateRequest}}', $updateRequest, $stub);
+        return $this;
+    }
+
+    protected function replaceRequestNamespaces(&$stub, $requestNamespaces)
+    {
+        $stub = str_replace('{{requestNamespaces}}', $requestNamespaces, $stub);
+        return $this;
     }
 
     /**

@@ -6,6 +6,7 @@ use DummyRootNamespaceHttp\Controllers\ApiController;
 
 use DummyRootNamespace{{modelNamespace}}{{modelName}};
 use Illuminate\Http\Request;
+{{requestNamespaces}}
 // CUSTOM_NAMESPACES_BEGIN - IMPORTANT: Don't remove this comment! Write your namespaces between these comments.
 {{customNamespaces}}
 // CUSTOM_NAMESPACES_END - IMPORTANT: Don't remove this comment! Write your namespaces between these comments.
@@ -39,9 +40,8 @@ class DummyClass extends ApiController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store({{storeRequest}} $request)
     {
-        {{validationRules}}
         ${{crudNameSingular}} = new {{modelName}}($request->all());
 
         if(${{crudNameSingular}}->save()){
@@ -77,9 +77,8 @@ class DummyClass extends ApiController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update({{updateRequest}} $request, $id)
     {
-        {{validationRules}}
         ${{crudNameSingular}} = {{modelName}}::find($id);
 
         if(! ${{crudNameSingular}}) {
