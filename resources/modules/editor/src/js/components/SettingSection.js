@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ChevronIcon from '../../svgs/chevron.svg'
 import { connect } from "react-redux";
-import { getCurrentElement, getCurrentTab } from "../store/store";
+import { getCurrentElement, getCurrentTab, getElementState } from "../store/store";
 import { setActiveSection } from "../store/setting-section/actions";
 
 class SettingSection extends Component {
@@ -9,54 +9,52 @@ class SettingSection extends Component {
     super(props);
     this.state = {
       open: false,
-      // active: props.open,
     };
     this.toggle = this.toggle.bind(this);
-  }
+    this.sectionToggle = this.sectionToggle.bind(this);
+  };
 
   componentDidMount() {
-    if (this.props.sectionID === 0) {
-      this.setState({
-        open: true,
-      })
-    }
   }
 
-  toggle(e) {
-    this.setState({
-      open: !this.state.open
-    })
+  toggle() {
     this.props.dispatch(setActiveSection(getCurrentElement().getName(), getCurrentTab(), this.props.sectionID));
-  }
+  };
+
+  sectionToggle() {
+    this.setState({
+      open: !this.state.open,
+    })
+  };
 
   render() {
     let currentElementName = getCurrentElement().getName();
     let currentTab = getCurrentTab();
-    let activeSectionId = 0;
+    let activeSectionID = 0;
     if (this.props.settingSection[currentElementName] && this.props.settingSection[currentElementName][currentTab]) {
-      activeSectionId = this.props.settingSection[currentElementName][currentTab];
+      activeSectionID = this.props.settingSection[currentElementName][currentTab];
     }
     let controllers = this.props.controls || [];
-    return <div className={"settings-section " + (this.state.open && 'open')}>
-      <div className="settings-section__title d-flex " data-open={true}
-        onClick={this.toggle}>
-        <div className="settings-section__icon d-flex ">
-          <ChevronIcon />
+    return (
+      <div onClick={this.toggle} className={"settings-section " + (this.props.sectionID === activeSectionID && this.state.open && 'open')}>
+        <div className="settings-section__title d-flex" onClick={this.sectionToggle}>
+          <div className="settings-section__icon d-flex ">
+            <ChevronIcon />
+          </div>
+          <div className="settings-section__label">
+            {this.props.label}
+          </div>
         </div>
-        <div className="settings-section__label">
-          {this.props.label}
+        <div className="controllers-wrapper">
+          {
+            controllers.map((controller) => {
+              let ControllerComponent = window.controllersManager.getController(controller.type);
+              return React.createElement(ControllerComponent, { ...controller, key: controller.controlId });
+            })
+          }
         </div>
       </div>
-      <div className="controllers-wrapper">
-        {
-
-          controllers.map((controller) => {
-            let ControllerComponent = window.controllersManager.getController(controller.type);
-            return React.createElement(ControllerComponent, { ...controller, key: controller.controlId });
-          })
-        }
-      </div>
-    </div>
+    )
   }
 }
 
