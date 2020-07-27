@@ -43,17 +43,21 @@ class EditorContent extends Component {
   // }
 
 
+  /**
+   * Компонент окна редактора загрузился
+   * берем корневой элемент и загружаем в окно
+   */
   componentDidMount() {
     let rootElement = getEditor().modules.templateDataStorage.getRootElement();
     this.setState({
       rootElement
-    })
+    });
   }
 
   /**
    * Сработывает при клике
    */
-  onClick() {
+  onClick(e) {
     contextMenu.hideAll();
   }
 

@@ -4,6 +4,7 @@ import AdminTable from "./AdminTable";
 import store from "../js/store/store";
 import {setModalSettings, toggleModal} from "../js/store/modal-settings/actions";
 import {generateId, redirect} from "../js/helpers";
+import Pagination from "./Pagination";
 
 
 export default class Templates extends Component{
@@ -13,7 +14,9 @@ export default class Templates extends Component{
       templates: [],
       allTemplates: [],
       templateAreas: [],
-      activeTemplateArea: {}
+      activeTemplateArea: {},
+      pageCount: 1,
+      currentPage: 1,
     };
     this.resource = new Resource({
       route: '/admin/ajax/templates'
@@ -22,6 +25,7 @@ export default class Templates extends Component{
       route: '/admin/ajax/areas'
     });
     this.onClick = this.onClick.bind(this);
+    this.changePage = this.changePage.bind(this);
     this.changeActiveArea = this.changeActiveArea.bind(this);
   }
   changeActiveArea(e){
@@ -34,13 +38,45 @@ export default class Templates extends Component{
     });
     this.setActiveArea(activeTemplateArea)
   }
+
+  /**
+   * Смена текущей страницы
+   */
+  changePage(currentPage){
+    this.updateTemplates(currentPage, this.state.activeTemplateArea);
+    this.setState(state => ({ ...state, currentPage}));
+  }
+
+  /**
+   * Сменить текущую область шаблона (вкладка)
+   * @param activeTemplateArea
+   */
   setActiveArea(activeTemplateArea){
-    let templates = this.state.allTemplates.filter(template=>{
-      return template.area === activeTemplateArea.name;
-    });
+    this.updateTemplates(1, activeTemplateArea);
     this.setState(state=>{
-      return{...state, activeTemplateArea, templates};
+      return{...state, activeTemplateArea};
     })
+  }
+
+  /**
+   * Метод для обновления списка шаблонов
+   * @param currentPage
+   * @param activeTemplateArea
+   */
+  updateTemplates(currentPage, activeTemplateArea){
+    this.resource.getQueried({
+      area: activeTemplateArea.name,
+      page: currentPage,
+      pageSize: 10,
+    }).then(res=>{
+      this.setState(state=> {
+        return {
+          ...state,
+          pageCount: res.pageCount,
+          templates: res.templates
+        }
+      });
+    });
   }
   async componentDidMount(){
     let templateAreas = await this.templateTypesResource.getAll();
@@ -48,9 +84,7 @@ export default class Templates extends Component{
     this.setState(state=>{
       return{...state,templateAreas}
     });
-    this.resource.getAll().then(res=>{
-      this.setTemplates(res.templates);
-    });
+    this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea)
   }
   onClick(){
     let modalSettings = {
@@ -134,18 +168,46 @@ export default class Templates extends Component{
             </li>
           })}
         </ul>
-      <AdminTable columns={[
-        {
-          name: 'title',
-          title: 'Title',
-          url: true,
-          target: '_blank',
-        },
-        {
-          name: 'author',
-          title: 'Author',
-        },
-      ]} rows={this.state.templates}/>
+        <AdminTable columns={[
+          {
+            name: 'title',
+            title: 'Title',
+            url: true,
+            target: '_blank',
+          },
+          {
+            name: 'author',
+            title: 'Author',
+          },
+          ]}
+          rows={this.state.templates}
+          quickActions={[{ tag: 'a', props: {
+            href: '/admin/editor?template_id=:id',
+            target: '_blank',
+            // className: ''
+            },
+            title: 'Edit'
+          }, {
+            tag: 'button',
+            route: '/admin/ajax/templates/:id/reviews',
+            method: 'delete',
+            // className: ''
+            title: 'Clear History'
+            }, {
+            tag: 'button',
+            route: '/admin/ajax/templates/:id',
+            method: 'delete',
+            confirm: 'Are You Sure?',
+            after: () => this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea),
+            className: 'quick-action-menu__item_danger',
+            title: 'Trash'
+          }]}
+        />
+        <Pagination pageCount={this.state.pageCount || 1}
+                    currentPage={this.state.currentPage}
+                    changePage={this.changePage}
+                    itemsCount={this.state.templates.length }
+        />
       </div>
     </div>;
   }

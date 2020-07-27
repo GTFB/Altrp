@@ -1,0 +1,84 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  padding: 20px 0;
+}
+.pagination__version {
+  font-family: Roboto;
+font-style: italic;
+font-weight: normal;
+font-size: 13px;
+line-height: 15px;
+color: #8E94AA;
+margin-right: 437px;
+}
+.pagination__link {
+  text-decoration: none;
+  font-weight: 400;
+  font-family: Roboto;
+font-style: italic;
+font-size: 13px;
+line-height: 15px;
+color: #673daa;
+}
+.pagination__text {
+  margin: 0 9px;
+  font-family: Roboto;
+font-style: normal;
+font-weight: normal;
+font-size: 15px;
+line-height: 18px;
+color: #343B4C;
+}
+.pagination__move {
+  width: 30px;
+height: 30px;
+padding: 0;
+display: flex;
+justify-content: center;
+align-items: center;
+border: 1px solid #8E94AA;
+box-sizing: border-box;
+cursor: pointer;
+border-radius: 2px;
+}
+.pagination__buttons {
+  display: flex;
+  align-items: center;
+}
+.pagination__indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 43px;
+height: 30px;
+background: #FFFFFF;
+border: 1px solid #343B4C;
+box-sizing: border-box;
+box-shadow: 0px 0px 0px #007CBA;
+border-radius: 2px;
+}
+.pagination__prev {
+  background-image: url(../../svgs/left.svg);
+  background-size: 7.5px 4px;
+  margin: 0 7px;
+}
+.pagination__map {
+  margin: 0 9px;
+  font-family: Roboto;
+font-style: normal;
+font-weight: normal;
+font-size: 15px;
+line-height: 18px;
+color: #343B4C;
+}
+.pagination__next {
+  margin-right: 7.5px;
+}
+.pagination__disabled {
+  opacity: .5;
+  cursor: auto;
+}
+.right__arrow {
+  transform: rotate(-180deg);
+}

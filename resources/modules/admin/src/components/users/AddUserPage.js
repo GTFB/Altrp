@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Link} from "react-router-dom";
 
 import Resource from "../../../../editor/src/js/classes/Resource";
-import {Redirect, withRouter} from "react-router";
+import {Redirect, withRouter} from 'react-router-dom';
 import UserForm from "./UserForm";
 /**
  * @class

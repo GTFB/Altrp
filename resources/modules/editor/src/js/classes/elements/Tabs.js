@@ -151,7 +151,7 @@ class Tabs extends BaseElement {
         },
       ],
       rules: {
-            '{{ELEMENT}} .altrp-tab-btn-container': 'justify-content: {{VALUE}};',
+            '{{ELEMENT}} .altrp-tab-btn-container{{STATE}}': 'justify-content: {{VALUE}};',
       },
     });
 
@@ -166,8 +166,8 @@ class Tabs extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn-column": "margin-right: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-tab-btn-row": "margin-bottom: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-tab-btn-column{{STATE}}": "margin-right: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-tab-btn-row{{STATE}}": "margin-bottom: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -182,10 +182,10 @@ class Tabs extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn-top": "margin-bottom: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-tab-btn-bottom": "margin-top: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-tab-btn-left": "margin-right: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-tab-btn-right": "margin-left: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-tab-btn-top{{STATE}}": "margin-bottom: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-tab-btn-bottom{{STATE}}": "margin-top: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-tab-btn-left{{STATE}}": "margin-right: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-tab-btn-right{{STATE}}": "margin-left: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -297,7 +297,7 @@ class Tabs extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn-container": "background-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-tab-btn-container{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
@@ -310,7 +310,7 @@ class Tabs extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn": "background-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
@@ -323,7 +323,7 @@ class Tabs extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -346,7 +346,7 @@ class Tabs extends BaseElement {
           '#9c18a8'
         ],
         rules: {
-          '{{ELEMENT}} .altrp-tab-btn': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+          '{{ELEMENT}} .altrp-tab-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
         },
       }
     );
@@ -363,7 +363,7 @@ class Tabs extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn": [
+        "{{ELEMENT}} .altrp-tab-btn{{STATE}}": [
           "padding-top: {{TOP}}{{UNIT}};",
           "padding-right: {{RIGHT}}{{UNIT}};",
           "padding-bottom: {{BOTTOM}}{{UNIT}};",
@@ -403,7 +403,7 @@ class Tabs extends BaseElement {
         }
       ],
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn": "border-style: {{VALUE}};"
+        "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "border-style: {{VALUE}};"
       }
     });
 
@@ -412,7 +412,7 @@ class Tabs extends BaseElement {
       label: "Border width",
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn":
+        "{{ELEMENT}} .altrp-tab-btn{{STATE}}":
           "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
       }
     });
@@ -425,7 +425,7 @@ class Tabs extends BaseElement {
         colorPickedHex: "#32a852"
       },
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn": "border-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "border-color: {{COLOR}};"
       }
     });
 
@@ -444,7 +444,7 @@ class Tabs extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn": "border-radius: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -460,7 +460,7 @@ class Tabs extends BaseElement {
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-tab-btn': [
+          '{{ELEMENT}} .altrp-tab-btn{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -490,7 +490,7 @@ class Tabs extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-tab-content": "background-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-tab-content{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
@@ -503,7 +503,7 @@ class Tabs extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-tab-content div": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-tab-content div{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -519,7 +519,7 @@ class Tabs extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-tab-content": [
+        "{{ELEMENT}} .altrp-tab-content{{STATE}}": [
           "padding-top: {{TOP}}{{UNIT}};",
           "padding-right: {{RIGHT}}{{UNIT}};",
           "padding-bottom: {{BOTTOM}}{{UNIT}};",
@@ -559,7 +559,7 @@ class Tabs extends BaseElement {
         }
       ],
       rules: {
-        "{{ELEMENT}} .altrp-tab-content": "border-style: {{VALUE}};"
+        "{{ELEMENT}} .altrp-tab-content{{STATE}}": "border-style: {{VALUE}};"
       }
     });
 
@@ -568,7 +568,7 @@ class Tabs extends BaseElement {
       label: "Border width",
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-tab-content":
+        "{{ELEMENT}} .altrp-tab-content{{STATE}}":
           "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
       }
     });
@@ -581,7 +581,7 @@ class Tabs extends BaseElement {
         colorPickedHex: "#32a852"
       },
       rules: {
-        "{{ELEMENT}} .altrp-tab-content": "border-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-tab-content{{STATE}}": "border-color: {{COLOR}};"
       }
     });
 
@@ -600,7 +600,7 @@ class Tabs extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-tab-content": "border-radius: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-tab-content{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -616,7 +616,7 @@ class Tabs extends BaseElement {
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-tab-content div': [
+          '{{ELEMENT}} .altrp-tab-content div{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -661,7 +661,7 @@ class Tabs extends BaseElement {
         colorPickedHex: "#32a852"
       },
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn-icon svg path": "fill: {{COLOR}};"
+        "{{ELEMENT}} .altrp-tab-btn-icon{{STATE}} svg path": "fill: {{COLOR}};"
       }
     });
 

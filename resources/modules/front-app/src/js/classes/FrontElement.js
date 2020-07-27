@@ -1,5 +1,4 @@
-import {CONSTANTS} from "../../../../editor/src/js/helpers";
-import modelManager from "../../../../editor/src/js/classes/modules/ModelsManager";
+import CONSTANTS from "../../../../editor/src/js/consts";
 
 class FrontElement {
 
@@ -128,6 +127,16 @@ class FrontElement {
             if(modelName){
               this.addForm(formsManager.registerForm(this.getSettings('form_id'), modelName, method));
             }
+          }
+          break;
+          case 'login':{
+            method = 'POST';
+            this.addForm(formsManager.registerForm(this.getSettings('form_id'), 'login', method));
+          }
+          break;
+          case 'logout':{
+            method = 'POST';
+            this.addForm(formsManager.registerForm(this.getSettings('form_id'), 'logout', method));
           }
           break;
         }

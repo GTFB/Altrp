@@ -27,6 +27,13 @@ export function setTitle(title){
 }
 
 /**
+ * @return {boolean}
+ * */
+export function isEditor() {
+  return !!(window.altrpEditor || window.parent.altrpEditor);
+}
+
+/**
  * Переменная, в которой храниться измначальный заголовок
  * @var {string}
  */
@@ -41,7 +48,6 @@ export function parseOptionsFromSettings(string) {
     return[];
   }
   let options = string.split('\n');
-  console.log(options);
   options = options.map(option=>{
     let value = option.split('|')[0];
     value = value.trim();
@@ -52,6 +58,5 @@ export function parseOptionsFromSettings(string) {
       label,
     }
   });
-  console.log(options);
   return options;
 }

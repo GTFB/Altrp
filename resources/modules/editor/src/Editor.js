@@ -9,7 +9,8 @@ import SettingsPanel from "./js/components/SettingsPanel";
 import EditorWindow from "./js/components/EditorWindow";
 import HistoryPanel from "./js/components/HistoryPanel";
 import UpdateButton from "./js/components/UpdateButton";
-import {CONSTANTS, renderAsset} from "./js/helpers";
+import { renderAsset} from "./js/helpers";
+import CONSTANTS from "./js/consts";
 import { stopDrag } from "./js/store/element-drag/actions";
 import AssetsBrowser from "./js/classes/modules/AssetsBrowser";
 
@@ -166,7 +167,7 @@ class Editor extends Component {
               >
                 <Hamburger className="icon" />
               </button>
-              <a href="/admin" target="_blank" className="logo">
+              <a href="/admin/templates" target="_blank" className="logo">
                 {
                   window.admin_logo
                       ? renderAsset(window.admin_logo, {className:'editor__logo'})
