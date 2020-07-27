@@ -158,9 +158,16 @@ class Accordion extends BaseElement {
       label: 'Multiple open',
     });
 
+    this.addControl('active_item_switcher_additional_content', {
+      type: CONTROLLER_SWITCHER,
+      default: true,
+      label: 'Collapsible all item',
+    });
+
     this.addControl("active_item_additional_content", {
       type: CONTROLLER_NUMBER,
       label: "Acitve item",
+      default: 0
     });
 
     this.endControlSection();

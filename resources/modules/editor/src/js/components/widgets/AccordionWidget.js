@@ -17,10 +17,12 @@ class AccordionWidget extends Component {
   }
 
   componentDidUpdate(previousProps, previousState) {
-    if(Number(this.state.settings.active_item_additional_content) !== previousState.activeItem) {
-      this.setState(() => ({
-        activeItem: Number(this.state.settings.active_item_additional_content)
-      }));
+    if(!this.state.active_item_switcher_additional_content) {
+      if(Number(this.state.settings.active_item_additional_content) !== previousState.activeItem) {
+        this.setState(() => ({
+          activeItem: Number(this.state.settings.active_item_additional_content)
+        }));
+      }
     }
   }
 
