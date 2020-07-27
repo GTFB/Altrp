@@ -179,10 +179,10 @@ export default class Templates extends Component{
             name: 'author',
             title: 'Author',
           },
-          ]} 
+          ]}
           rows={this.state.templates}
-          quickActions={[{ tag: 'a', props: { 
-            href: '/admin/editor?template_id=:id', 
+          quickActions={[{ tag: 'a', props: {
+            href: '/admin/editor?template_id=:id',
             target: '_blank',
             // className: ''
             },
@@ -190,7 +190,7 @@ export default class Templates extends Component{
           }, {
             tag: 'button',
             route: '/admin/ajax/templates/:id/reviews',
-            method: 'delete', 
+            method: 'delete',
             // className: ''
             title: 'Clear History'
             }, {
@@ -203,7 +203,7 @@ export default class Templates extends Component{
             title: 'Trash'
           }]}
         />
-        <Pagination pageCount={this.state.pageCount}
+        <Pagination pageCount={this.state.pageCount || 1}
                     currentPage={this.state.currentPage}
                     changePage={this.changePage}
                     itemsCount={this.state.templates.length }
