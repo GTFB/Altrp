@@ -185,7 +185,7 @@ class ModelsController extends Controller
         foreach ($result['models'] as $model) {
             $options[] = [
                 'value' => $model->id,
-                'label' => $model->name,
+                'label' => $model->title,
             ];
         }
         $models = [
