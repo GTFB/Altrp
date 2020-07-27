@@ -26,4 +26,40 @@ class Source extends Model
     {
         return $this->hasMany(SourcePermission::class);
     }
+
+    public static function getBySearch($search)
+    {
+        return self::where('title','like', "%{$search}%")
+            ->orWhere('id', $search)
+            ->get();
+    }
+
+    public static function getBySearchWithPaginate($search, $offset, $limit)
+    {
+        return self::where('title','like', "%{$search}%")
+            ->orWhere('id', $search)
+            ->skip($offset)
+            ->take($limit)
+            ->get();
+    }
+
+    public static function getWithPaginate($offset, $limit)
+    {
+        return self::skip($offset)
+            ->take($limit)
+            ->get();
+    }
+
+    public static function getCount()
+    {
+        return self::toBase()->count();
+    }
+
+    public static function getCountWithSearch($search)
+    {
+        return self::where('title','like', "%{$search}%")
+            ->orWhere('id', $search)
+            ->toBase()
+            ->count();
+    }
 }

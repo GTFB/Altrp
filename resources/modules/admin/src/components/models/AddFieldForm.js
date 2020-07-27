@@ -242,7 +242,7 @@ class AddFieldForm extends Component {
 
       <div className="btn__wrapper btn_add">
         <button className="btn btn_success" type="submit">Add</button>
-        <Link className="btn" to="/admin/models">Cancel</Link>
+        <Link className="btn" to="/admin/tables/models">Cancel</Link>
         {/* <button className="btn btn_failure">Delete</button> */}
       </div>
     </form>;

@@ -7,7 +7,7 @@ class AddModel extends Component {
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
-          <Link className="admin-breadcrumbs__link" to="/admin/models">Tables / All Models</Link>
+          <Link className="admin-breadcrumbs__link" to="/admin/tables/models">Tables / All Models</Link>
           <span className="admin-breadcrumbs__separator">/</span>
           <span className="admin-breadcrumbs__current">Add New Model</span>
         </div>

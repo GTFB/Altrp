@@ -57,11 +57,6 @@ class AreasController extends Controller
   public function show(  $id )
   {
     //
-    $page = Page::find( $id );
-    if( $page ){
-      $page->template_id = $page->get_content_template()->id;
-    }
-    return response()->json( $page->toArray() );
 
   }
 

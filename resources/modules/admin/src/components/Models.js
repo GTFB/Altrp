@@ -137,7 +137,7 @@ export default class Models extends Component {
           <span className="admin-breadcrumbs__separator">/</span>
           <span className="admin-breadcrumbs__current">{activeTab === 0 ? 'All Models' : 'All Data Sources'}</span>
         </div>
-        <Link className="btn" to={`/admin/${activeTab === 0 ? 'models' : 'data-sources'}/add`}>Add New</Link>
+        <Link className="btn" to={`/admin/tables/${activeTab === 0 ? 'models' : 'data-sources'}/add`}>Add New</Link>
       </div>
       <div className="admin-content">
         <Tabs selectedIndex={activeTab} onSelect={this.switchTab}>
@@ -155,7 +155,7 @@ export default class Models extends Component {
               columns={columnsModel}
               rows={models.map(model => ({ 
                 ...model, 
-                editUrl: '/admin/models/edit/' + model.id 
+                editUrl: '/admin/tables/models/edit/' + model.id
               }))}
             />
             <Pagination pageCount={modelsPagination.pageCount}

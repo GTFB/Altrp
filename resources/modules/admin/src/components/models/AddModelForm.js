@@ -47,10 +47,9 @@ class AddModelForm extends Component {
           onChange={e => { this.changeValue(e.target.value, 'description') }}
           className="form-control" />
       </div>
-      <div></div>
       <div className="btn__wrapper">
         <button className="btn btn_success" type="submit">Add</button>
-        <Link className="btn" to="/admin/models">Cancel</Link>
+        <Link className="btn" to="/admin/tables/models">Cancel</Link>
         {/* <button className="btn btn_failure">Delete</button> */}
       </div>
     </form>;

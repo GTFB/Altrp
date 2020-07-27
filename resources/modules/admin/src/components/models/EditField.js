@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import AddFieldForm from "./AddFieldForm";
 
-class AddField extends Component {
+class EditField extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -20,13 +20,13 @@ class AddField extends Component {
   render() {
     const { modelTitle } = this.state;
     const { modelId } = this.props.match.params;
-
+    console.log(this.props.match.params);
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
-          <Link className="admin-breadcrumbs__link" to="/admin/models">Models / All Models</Link>
+          <Link className="admin-breadcrumbs__link" to="/admin/tables/models">Models / All Models</Link>
           <span className="admin-breadcrumbs__separator">/</span>
-          <Link className="admin-breadcrumbs__link" to={`/admin/models/edit/${modelId}`}>
+          <Link className="admin-breadcrumbs__link" to={`/admin/tables/models/edit/${modelId}`}>
             {modelTitle}
           </Link>
           <span className="admin-breadcrumbs__separator">/</span>
@@ -40,4 +40,4 @@ class AddField extends Component {
   }
 }
 
-export default withRouter(AddField);
+export default withRouter(EditField);
