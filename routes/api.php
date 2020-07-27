@@ -64,6 +64,7 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
 
         Route::get('/reports', 'ReportsController@index');
         Route::post('/reports', 'ReportsController@store');
+        Route::put('/reports/{id}', 'ReportsController@update')->middleware('cors');
 
         // GeneratorController routes
         // Route::post('/generators/{table}/model/create', 'Admin\GeneratorController@createModel');

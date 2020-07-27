@@ -58,26 +58,16 @@ class ReportsController extends ApiController
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Reports  $reports
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Reports $reports)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Reports  $reports
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Reports $reports)
+    public function update(Request $request, $id)
     {
-        //
+        $input = $request->all();
+        return response()->json($input, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
