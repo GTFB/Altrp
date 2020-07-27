@@ -23,34 +23,33 @@ function subscribeToModels(id){
 
   this.props.element.dynamicContentSettings.forEach(modelsSetting=>{
     let modelInfo = this.props.element.getModelsInfoByModelName(modelsSetting.modelName);
-    if(modelInfo)
-    this.model = modelManager.subscribeToModelUpdates(modelInfo.modelName, modelInfo.modelId || id, modelData => {
-      this.setState(state=>{
-        /**
-         * state.modelsData
-         * @type {{}}
-         */
-        let modelsData = state.modelsData || {};
-        modelsData = {...modelsData};
-        modelsData[modelsSetting.settingName] = modelData[modelsSetting.fieldName] || '';
-        return{...state, modelsData}
+    if(modelInfo && ! modelInfo.relation) {
+      this.model = modelManager.subscribeToModelUpdates(modelInfo.modelName, modelInfo.modelId || id, modelData => {
+        this.setState(state => {
+          /**
+           * state.modelsData
+           * @type {{}}
+           */
+          let modelsData = state.modelsData || {};
+          modelsData = {...modelsData};
+          modelsData[modelsSetting.settingName] = modelData[modelsSetting.fieldName] || '';
+          /**
+           * Если возможно то берем данные из связанной модели
+           */
+          if((! modelsData[modelsSetting.settingName]) && modelsSetting.fieldName.split('.').length > 1){
+            modelsData[modelsSetting.settingName] = modelData[modelsSetting.fieldName.split('.')[0]] ?
+                modelData[modelsSetting.fieldName.split('.')[0]][modelsSetting.fieldName.split('.')[1]] : ''
+          }
+
+          return {...state, modelsData, modelData: {...modelData}}
+        });
       });
-    });
+    } else if( modelInfo && modelInfo.relation ){
+      // console.log(modelInfo);
+      // console.log(modelsSetting);
+      // console.log(this.state.modelData);
+    }
   });
-  // modelsList.forEach(modelInfo=>{
-  //   modelManager.subscribeToModelUpdates(modelInfo.modelName, modelInfo.modelId, modelData => {
-  //     this.setState(state=>{
-  //       /**
-  //        * state.modelsData
-  //        * @type {{}}
-  //        */
-  //       let modelsData = state.modelsData || {};
-  //       modelsData = {...modelsData};
-  //       modelsData[modelInfo.modelName] = modelData;
-  //       return{...state, modelsData: {...modelsData}}
-  //     })
-  //   });
-  // });
 }
 
 /**
@@ -81,6 +80,7 @@ function getContent(settingName) {
     } else {
       content = this.state.modelsData[settingName] || '';
     }
+
   }
   return content;
 }

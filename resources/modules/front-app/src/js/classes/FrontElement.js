@@ -157,7 +157,7 @@ class FrontElement {
   }
   /**
    * Возвращает массив потомков текущего элемента
-   * @return {[]}
+   * @return {array}
    */
 
   getChildren(){
@@ -300,7 +300,7 @@ class FrontElement {
   getModelName(){
     let modelName = null;
     this.getModelsList().forEach(modelInfo=>{
-      if(modelInfo.modelName!=='page'){
+      if(modelInfo.modelName!=='page' && ! modelInfo.related){
         modelName = modelInfo.modelName
       }
     });
@@ -358,6 +358,32 @@ class FrontElement {
       return this.component.getContent(settingName)
     }
     return'';
+  }
+
+  /**
+   * Сохраняет данные модели
+   * @param modelName
+   * @param data
+   */
+  setModelData(modelName, data){
+    this.modelsStorage = this.modelsStorage || {};
+    this.modelsStorage[modelName] = {...data};
+    // this.forceUpdate();
+    console.log(modelName);
+    console.log(this.modelCallbacksStorage);
+    if(this.modelCallbacksStorage && this.modelCallbacksStorage[modelName]){
+      this.modelCallbacksStorage[modelName](this.modelsStorage[modelName]);
+    }
+  }
+  /**
+   * Подписывает на изменения модели
+   */
+  onUpdateModelStorage(modelName, callback){
+    this.modelCallbacksStorage = this.modelCallbacksStorage || {};
+    this.modelCallbacksStorage[modelName] = callback;
+    if(this.modelsStorage && this.modelsStorage[modelName]){
+      callback(this.modelsStorage[modelName]);
+    }
   }
 }
 

@@ -18,6 +18,7 @@ class AltrpModelUpdater {
     this.data = null;
     this.subscribers = [];
     this.resource = new Resource({route: `/ajax/models/${this.modelName}`});
+    this.updating = false;
   }
 
   /**
@@ -26,6 +27,9 @@ class AltrpModelUpdater {
    */
   subscribeToUpdates(callback){
     this.subscribers.push(callback);
+    if(this.updating){
+      return;
+    }
     if(this.data){
       this.callSubscribers();
     } else {
@@ -37,7 +41,9 @@ class AltrpModelUpdater {
    * Обновляет модель с сервера
    */
   async updateData(){
+    this.updating = true;
     this.data = await this.resource.get(this.modelId);
+    this.updating = false;
     this.callSubscribers();
   }
 

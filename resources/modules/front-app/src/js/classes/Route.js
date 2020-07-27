@@ -8,6 +8,7 @@ class Route {
     this.id = data.id ;
     this.path = data.path;
     this.model = data.model;
+    this.models = data.models;
     this.title = data.title || '';
   }
   static routeFabric(data){

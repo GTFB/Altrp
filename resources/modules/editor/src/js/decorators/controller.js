@@ -59,10 +59,9 @@ function _changeValue(value) {
  */
 
 function conditionSubscriber() {
-
-  if(this.props.condition) {
+  if(this.props.conditions) {
     const controllerValue = store.getState().controllerValue;
-    if(Object.keys(this.props.condition).indexOf(controllerValue.controlId)>=0){
+    if(Object.keys(this.props.conditions).indexOf(controllerValue.controlId)>=0){
       this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController() ;
     }
   }
@@ -83,7 +82,9 @@ async function  controllerComponentDidMount() {
       options = _.concat([{'':''}], options);
     }
     this.setState(state=>({...state, options}));
+    if(options[0]) {
     this._changeValue(options[0].value);
+    }
   }
   if(typeof this._componentDidMount === 'function'){
     this._componentDidMount();
@@ -100,7 +101,7 @@ function hideComponentController() {
     show: false,
   }));
   this.props.currentElement.deleteSetting();
-  this.props.controller.changeValue(null);
+  // this.props.controller.changeValue(null);todo: нельзя пробрасывать значение сразу, а то меняется только один контроллер в другие передаются данные с удаленного по условию
 }
 
 /**

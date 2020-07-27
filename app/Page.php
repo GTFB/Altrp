@@ -5,6 +5,7 @@ namespace App;
 use App\Constructor\Template;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Mockery\Exception;
 
@@ -68,6 +69,9 @@ class Page extends Model
       if($page->model){
         $_page['model'] = $page->model->toArray();
         $_page['model']['modelName'] = $page->model->altrp_table->name;
+      }
+      if( $page->get_models() ){
+        $_page['models'] = $page->get_models();
       }
       $pages[] = $_page;
     }
@@ -133,5 +137,27 @@ class Page extends Model
   function model()
   {
     return $this->hasOne( "App\Altrp\Model", 'id', 'model_id' );
+  }
+
+  /**
+   * @return \App\Altrp\Model[]|null
+   */
+  function get_models(){
+    if( ! $this->model ){
+      return null;
+    }
+    $models[] = [
+      'modelName' => $this->model->altrp_table->name,
+      'name' => $this->model->name,
+    ];
+    $relations = $this->model->altrp_table->relationships;
+
+    foreach ( $relations as $relation ) {
+      if($relation->get_model_for_route()){
+        $models[] = $relation->get_model_for_route();
+      }
+    }
+
+    return $models;
   }
 }

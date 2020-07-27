@@ -25,3 +25,4 @@ _ide_helper.php
 /app/Http/Controllers/AltrpControllers
 /app/Repositories/AltrpRepositories
 /routes/AltrpRoutes.php
+/out

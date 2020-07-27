@@ -84,7 +84,6 @@ class AltrpForm {
         data[field.getSettings('field_id')] = field.getValue();
       }
     });
-    console.log(data);
     return data;
   }
 }

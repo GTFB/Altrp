@@ -4,6 +4,10 @@
 ## Changelog
 
 
+### 0.6.0
++ Add Related Models Field in Dynamic Content Options
++ Update Related Models Data in Forms
+
 ### 0.5.0
 + Add Delete/Edit Form Action to Button Widget
 + Add Dynamic Content Option to Text Controllers and Receive Dynamic Data from Server 
