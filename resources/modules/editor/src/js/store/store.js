@@ -15,9 +15,13 @@ export function getCurrentElement() {
 }
 
 export function getCurrentTab() {
-  return  store.getState().currentTab.currentTab;
+  return store.getState().currentTab.currentTab;
 }
 
 export function getElementState() {
-  return store.getState().currentState
+  return store.getState().currentState;
+}
+
+export function getCurrentScreen() {
+  return store.getState().currentScreen;
 }

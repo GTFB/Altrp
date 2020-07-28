@@ -7,6 +7,7 @@ import BigPhoneScreen from "../../svgs/bigphonescreen.svg"
 import SmallPhoneScreen from "../../svgs/smallphonescreen.svg"
 import { connect } from 'react-redux'
 import { setCurrentScreen } from "../store/responsive-switcher/actions"
+import { getCurrentScreen } from '../store/store'
 
 class ResponsiveDdMenu extends Component {
   constructor(props) {
@@ -29,20 +30,22 @@ class ResponsiveDdMenu extends Component {
     })
   };
   setCurrentScreen(screen) {
-    this.setCurrentScreen(screen)
+    this.props.setCurrentScreen(screen)
     this.setState({
       open: !this.state.open,
     })
   }
   render() {
+    let currentScreen = getCurrentScreen();
+    console.log(currentScreen);
     return (
       <div className="screens-container">
-        <span onClick={() => this.toggleOpen()} className={"screens-title " + (this.state.open ? 'screens-title-open' : '')}><WideScreen /></span>
+        <span onClick={() => this.toggleOpen()} className={"screens-title " + (this.state.open ? 'screens-title-open' : '')}><Desktop /></span>
         <ul className={"screens-list " + (this.state.open && 'screens-list__open')} >
           {
             this.state.screens.map(screen => {
               let Component = screen.icon
-              return <li className="screens-list__item" key={screen.id}><Component onClick={() => this.setCurrentScreen()} /></li>
+              return <li className="screens-list__item" key={screen.id}><Component onClick={() => this.setCurrentScreen(screen)} /></li>
             })
           }
         </ul>
