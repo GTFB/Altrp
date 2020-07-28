@@ -46,6 +46,7 @@ class TypographicController extends Component {
 
   getDefaultValue() {
     return {
+      family: {}
     };
   }
 
