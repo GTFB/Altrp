@@ -110,7 +110,7 @@ class AddFieldForm extends Component {
           <div className="form-group">
             <select className="form-control"
             >
-              <option value="not-null">Not Null</option>
+              <option value="not_null">Not Null</option>
               <option value="null">Null</option>
               <option value="=">Equals</option>
               <option value="!=">Not Equals</option>
