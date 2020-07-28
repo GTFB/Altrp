@@ -50,15 +50,15 @@ class TypographicController extends Component {
   }
 
   openTypographic() {
-    let shadowContainer = document.getElementById("typographicContainer")
+    let shadowContainer = document.getElementById("typographicContainer");
     let shadowContentIcon = document.getElementById("shadowContentIcon");
     // shadowContainer.classList.toggle("control-shadow-active");
 
     this.setState({
       activeTypographic: !this.state.activeTypographic
-    })
+    });
 
-    if (shadowContentIcon.getAttribute("fill") == "#8E94AA") {
+    if (shadowContentIcon.getAttribute("fill") === "#8E94AA") {
       shadowContentIcon.removeAttribute("fill");
       shadowContentIcon.setAttribute("fill", "#5bc0de");
     } else {
