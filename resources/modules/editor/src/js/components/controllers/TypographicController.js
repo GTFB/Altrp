@@ -71,7 +71,8 @@ class TypographicController extends Component {
   changeFamily(value) {
     this._changeValue({
       ...this.state.value,
-      family: value.value
+      family: value.value,
+      label: value.label
     })
   };
   //конец select2
@@ -157,11 +158,12 @@ class TypographicController extends Component {
   //конец letter spacing
 
   render() {
-    console.log('value state', this.state.value);
+
     if (this.state.show === false) {
       return '';
     }
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    console.log('state value', this.state.value);
     console.log('value', value);
     const familyOptions = [
       {
@@ -361,7 +363,7 @@ class TypographicController extends Component {
               value={value.family.label}
               options={familyOptions}
               styles={customStyles}
-              placeholder={value.family.label}
+              placeholder={value.label}
               noOptionsMessage={() => "no fonts found"}
             />
           </div>
