@@ -150,11 +150,6 @@ class Admin extends Component {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/admin/tools" className="admin-nav-list__link">
-                    <span>Tools</span>
-                  </Link>
-                </li>
-                <li>
                   <Link to="/admin/plugins" className="admin-nav-list__link">
                     <PluginSvg className="icon"/>
                     <span>Plugins</span>
