@@ -24,11 +24,17 @@ class PageController
    * @return \Illuminate\Http\JsonResponse
    */
   public function pageForRoutes( $page_id ){
-    $res = Page::find( $page_id );
+    $page = Page::find( $page_id );
 
-    if( ! $res ){
-      return response()->json( $res, 404, [], JSON_UNESCAPED_UNICODE );
+    if( ! $page ){
+      return response()->json( [
+        'message'=> 'Not Found'
+      ], 404, [], JSON_UNESCAPED_UNICODE );
     }
-    return response()->json($res);
+    $res = [
+      'areas' => Page::get_areas_for_page( $page_id )
+    ];
+
+    return response()->json( $res );
   }
 }

@@ -67,7 +67,11 @@ class Page extends Model
           'id' => $page->id,
           'title' => $page->title,
           'allowed' => true,
-          'areas' => self::get_areas_for_page( $page->id ),
+          /**
+           * Если лениво загружаем области то возвращаем пустой массив
+           */
+          'areas' => $lazy ? [] : self::get_areas_for_page( $page->id ),
+//          'areas' => self::get_areas_for_page( $page->id ),
         ];
       } else {
         $_page = [

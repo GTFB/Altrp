@@ -228,9 +228,9 @@ Route::group( ['prefix' => 'ajax'], function(){
   Route::resource( 'routes', 'Frontend\RouteController' );
 
   /**
-   * Отдает данные страниц внутри роутов ( с area и шаблонами)
+   * Отдает данные страниц внутри роутов ( с areas и шаблонами)
    */
-  Route::get( 'pages/{page_id}', 'Frontend\PageController@show' )->name( 'front.page-for-routes' );
+  Route::get( 'pages/{page_id}', 'Frontend\PageController@pageForRoutes' )->name( 'front.page-for-routes' );
   /**
    * todo: реализовать в контроллерах моделей
    */
