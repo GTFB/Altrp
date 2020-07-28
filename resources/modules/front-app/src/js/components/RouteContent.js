@@ -8,6 +8,9 @@ class RouteContent extends Component {
   constructor(props){
     super(props);
     setTitle(this.props.title);
+    this.state = {
+      areas: this.props.areas || []
+    };
   }
   componentDidMount(){
     setTitle(this.props.title);
@@ -16,6 +19,7 @@ class RouteContent extends Component {
     if(! this.props.allowed){
       return<Redirect to={this.props.redirect || '/'}/>
     }
+    console.log(this.props.lazy);
     return (
     <Scrollbars
       style={{zIndex: 99999}}
@@ -27,7 +31,7 @@ class RouteContent extends Component {
     >
 
     <div className="route-content">{
-      this.props.areas.map(area => <AreaComponent
+      this.state.areas.map(area => <AreaComponent
           {...area}
           page={this.props.id}
           models={this.props.models}

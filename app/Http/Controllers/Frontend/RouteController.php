@@ -16,7 +16,7 @@ class RouteController extends Controller
    */
   public function index()
   {
-    $res['pages'] = Page::get_pages_for_frontend();
+    $res['pages'] = Page::get_pages_for_frontend( true );
 
     return response()->json( $res );
   }

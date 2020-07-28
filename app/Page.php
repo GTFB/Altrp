@@ -31,7 +31,7 @@ class Page extends Model
   /**
    * @return array
    */
-  static function get_frontend_routes()
+  static function get_frontend_routes( )
   {
     $pages = [];
     if( ! appIsInstalled()  ){
@@ -50,9 +50,10 @@ class Page extends Model
   }
 
   /**
+   * @param bool $lazy
    * @return array
    */
-  public static function get_pages_for_frontend()
+  public static function get_pages_for_frontend( $lazy = false )
   {
     $pages = [];
 
@@ -76,6 +77,7 @@ class Page extends Model
           'redirect' => '/',
         ];
       }
+      $_page['lazy'] = $lazy;
       if($page->model){
         $_page['model'] = $page->model->toArray();
         $_page['model']['modelName'] = $page->model->altrp_table->name;
