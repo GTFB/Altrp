@@ -18,10 +18,9 @@ class AccordionWidget extends Component {
         this.state.activeItem.id.push(false)
       } else {
         this.state.activeItem.id.push(true)
-      }
-    }
+      };
+    };
 
-    console.log(this.state.activeItem)
     this.open = this.open.bind(this);
     props.element.component = this;
     if(window.elementDecorator){
@@ -38,18 +37,17 @@ class AccordionWidget extends Component {
           state.activeItem.id[i] = false;
           return {
             ...state
-          }
+          };
         });
-      }
+      };
     };
 
     this.setState((state) => {
       state.activeItem.id[activeItem] = !state.activeItem.id[activeItem];
       return {
         ...state
-      }
+      };
     });
-    console.log(this.state.activeItem.id)
   };
 
   render(){
