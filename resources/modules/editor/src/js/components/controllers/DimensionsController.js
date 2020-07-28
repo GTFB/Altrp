@@ -113,7 +113,7 @@ class DimensionsController extends Component {
     return <div className="controller-container controller-container_dimensions">
       <div className="control-dimensions-header">
         <div className="controller-dimensions__label">{this.props.label}</div>
-        <ResponsiveDdMenu className="controller-container__label-svg" width="12" />
+        <ResponsiveDdMenu className="controller-container__label-svg" />
 
         <div className="control-slider-type">
           {

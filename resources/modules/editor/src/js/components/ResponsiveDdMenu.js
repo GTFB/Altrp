@@ -5,47 +5,56 @@ import Laptop from "../../svgs/laptop.svg"
 import Tablet from "../../svgs/tablet.svg"
 import BigPhoneScreen from "../../svgs/bigphonescreen.svg"
 import SmallPhoneScreen from "../../svgs/smallphonescreen.svg"
-
-
+import { connect } from 'react-redux'
+import { setCurrentScreen } from "../store/responsive-switcher/actions"
 
 class ResponsiveDdMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
       screens: [
-        { icon: Desktop, id: 1 },
-        { icon: WideScreen, id: 2 },
-        { icon: Laptop, id: 3 },
-        { icon: Tablet, id: 4 },
-        { icon: BigPhoneScreen, id: 5 },
-        { icon: SmallPhoneScreen, id: 6 },
+        { icon: Desktop, id: 1, width: '' },
+        { icon: WideScreen, id: 2, width: '1440px' },
+        { icon: Laptop, id: 3, width: '1024px' },
+        { icon: Tablet, id: 4, width: '768px' },
+        { icon: BigPhoneScreen, id: 5, width: '450px' },
+        { icon: SmallPhoneScreen, id: 6, width: '320px' },
       ],
       open: false,
     }
   };
-
   toggleOpen() {
     this.setState({
       open: !this.state.open,
     })
   };
-
+  setCurrentScreen(screen) {
+    this.setCurrentScreen(screen)
+    this.setState({
+      open: !this.state.open,
+    })
+  }
   render() {
-
     return (
       <div className="screens-container">
-        <div onClick={() => this.toggleOpen()} className="screens-header"><Desktop /></div>
-        {
-          this.state.screens.map(screen => {
-            let Component = screen.icon
-            return <div className={"screens-item " + (this.state.open ? 'screens-item__open' : 'screens-item__close')}>
-              <Component key={screen.id} />
-            </div>
-          })
-        }
+        <span onClick={() => this.toggleOpen()} className={"screens-title " + (this.state.open ? 'screens-title-open' : '')}><WideScreen /></span>
+        <ul className={"screens-list " + (this.state.open && 'screens-list__open')} >
+          {
+            this.state.screens.map(screen => {
+              let Component = screen.icon
+              return <li className="screens-list__item" key={screen.id}><Component onClick={() => this.setCurrentScreen()} /></li>
+            })
+          }
+        </ul>
       </div>
     )
   }
 };
 
-export default ResponsiveDdMenu;
+function mapStateToProps(state) {
+  return {
+    currentScreen: state.currentScreen,
+  }
+}
+
+export default connect(mapStateToProps, { setCurrentScreen })(ResponsiveDdMenu);

@@ -1553,27 +1553,66 @@ display: none;
 
 .screens {
   &-container {
+    position: relative;
+    margin-left: 3px;
+  }
+  &-title {
+    display: inline-flex;
+    margin-left: 7px;
+    cursor: pointer;
+    &-open {
+      display: none;
+    }
+  }
+  &-list {
+    position: absolute;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
-    margin-left: 3px;
+    max-height: 0;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    width: 30px;
+    margin: 0;
+    padding: 0;
     background: #FFFFFF;
-    border: 1px solid #E5E6EA;
-    box-sizing: border-box;
-    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05);
-    border-radius: 3px;
-  }
-  &-item {
-    margin: 3px;
-    transition: 1s;
+    list-style: none;
+    text-align: center;
+    transition: max-height .15s ease-out;
+    z-index: 9999;
     &__open {
-      max-height: 110px;
+      max-height: 200px;
+      border: 1px solid #E5E6EA;
+      box-sizing: border-box;
+      box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05);
+      border-radius: 3px;
+      z-index: 10000;
+      transition: max-height .15s ease-in;
     }
-    &__close {
-      max-height: 0px;
+    &__item  {
+      width: 100%;
+      display: inline-block;
+      margin: 3px;
+      text-decoration: none;
+      cursor: pointer;
+      & > svg {
+        text-align: center;
+      }
+        &:hover {
+          & > svg > path {
+            fill: blue;
+          }
+        }
+        &-active {
+          & > svg > path {
+            fill: blue;
+          }
+        }
     }
   }
 }
+
 
 
