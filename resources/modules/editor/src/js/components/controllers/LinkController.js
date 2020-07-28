@@ -39,7 +39,7 @@ class LinkController extends Component {
    * Сменить тег
    */
   changeTag(e) {
-    let value = this.state.value || {};
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     value.tag = e.target.value;
     this._changeValue(value);
   }
@@ -50,17 +50,18 @@ class LinkController extends Component {
 
   toggleSettingsNewPage() {
     let toggleSettingsNewPageCheckbox = document.getElementById("toggleSettingsNewPageCheckbox");
-
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     let changeCheckBox = togglesettingsNoFollowCheckbox.hasAttribute("checked")
     if (toggleSettingsNewPageCheckbox.hasAttribute("checked") == false) {
       this._changeValue({
-        ...this.state.value,
+
+        ...value,
         openInNew: !changeCheckBox
       })
       toggleSettingsNewPageCheckbox.setAttribute("checked", "checked");
     } else {
       this._changeValue({
-        ...this.state.value,
+        ...value,
         openInNew: changeCheckBox
       })
       toggleSettingsNewPageCheckbox.removeAttribute("checked");
@@ -68,18 +69,19 @@ class LinkController extends Component {
   };
 
   toggleSettingsNoFollow() {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     let togglesettingsNoFollowCheckbox = document.getElementById("togglesettingsNoFollowCheckbox")
     let changeCheckBox = togglesettingsNoFollowCheckbox.hasAttribute("checked")
     if (changeCheckBox == false) {
       this._changeValue({
-        ...this.state.value,
+        ...value,
         noFollow: changeCheckBox
       })
       togglesettingsNoFollowCheckbox.setAttribute("checked", "checked");
     } else {
       togglesettingsNoFollowCheckbox.removeAttribute("checked");
       this._changeValue({
-        ...this.state.value,
+        ...value,
         noFollow: changeCheckBox
       })
     };
@@ -87,16 +89,18 @@ class LinkController extends Component {
   };
 
   changeAttribute(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       attributes: e.target.value
     })
-    console.log(this.state.value.attributes)
+    // console.log(this.state.value.attributes
   }
 
   changeInput(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       url: e.target.value
     })
   }

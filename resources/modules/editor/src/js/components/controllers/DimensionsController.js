@@ -28,18 +28,20 @@ class DimensionsController extends Component {
     };
   }
   changeUnit(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     let unit = e.target.dataset.unit;
     this._changeValue({
-      ...this.state.value,
+      ...value,
       unit
     });
   };
 
   changeValue(e) {
-    if (this.state.value.bind == true) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    if (value.bind === true) {
       if (e.target.value <= 9999) {
         this._changeValue({
-          ...this.state.value,
+          ...value,
           left: e.target.value || 0,
           bottom: e.target.value || 0,
           top: e.target.value || 0,
@@ -52,30 +54,34 @@ class DimensionsController extends Component {
         active = e.currentTarget.dataset.active;
       }
 
-      if (active == "top") {
+      if (active === "top") {
+        let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
         this._changeValue({
-          ...this.state.value,
+          ...value,
           top: e.target.value || 0,
         });
       }
 
-      if (active == "right") {
+      if (active === "right") {
+        let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
         this._changeValue({
-          ...this.state.value,
+          ...value,
           right: e.target.value || 0,
         });
       }
 
-      if (active == "bottom") {
+      if (active === "bottom") {
+        let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
         this._changeValue({
-          ...this.state.value,
+          ...value,
           bottom: e.target.value || 0,
         });
       }
 
-      if (active == "left") {
+      if (active === "left") {
+        let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
         this._changeValue({
-          ...this.state.value,
+          ...value,
           left: e.target.value || 0,
         });
       }

@@ -106,12 +106,13 @@ class TransformController extends Component {
     }
 
     if (value != "") {
+      let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
       this.setState({
         max: option.max,
         min: option.min
       })
       this._changeValue({
-        ...this.state.value,
+        ...value,
         function: option.function,
         size: e.target.value,
         unit: option.unit,
@@ -119,7 +120,7 @@ class TransformController extends Component {
       });
     } else {
       this._changeValue({
-        ...this.state.value,
+        ...value,
         function: "rotate",
         size: 0,
         unit: "deg",
@@ -129,15 +130,16 @@ class TransformController extends Component {
   }
 
   sliderChange(e) {
-    console.log(this.state.value)
-    if (this.state.value.function != "scaleX" || "scaleY") {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    // console.log(this.state.value)
+    if (value.function != "scaleX" || "scaleY") {
       this._changeValue({
-        ...this.state.value,
+        ...value,
         size: e.target.value * 0.1
       });
     } else {
       this._changeValue({
-        ...this.state.value,
+        ...value,
         size: e.target.value * 0
       });
     }
@@ -146,8 +148,9 @@ class TransformController extends Component {
   };
 
   inputUpdate(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       size: e.target.value
     });
   }

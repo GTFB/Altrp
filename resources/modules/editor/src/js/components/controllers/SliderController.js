@@ -26,15 +26,17 @@ class SliderController extends Component {
     };
   }
   changeUnit(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     let unit = e.target.dataset.unit;
     this._changeValue({
-      ...this.state.value,
+      ...value,
       unit
     });
   }
   sliderChange(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       size: e.target.value
     });
     // console.log(this.state.value)
@@ -47,8 +49,9 @@ class SliderController extends Component {
     };
   }
   inputUpdate(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       size: e.target.value
     });
     // console.log(e.target.value)

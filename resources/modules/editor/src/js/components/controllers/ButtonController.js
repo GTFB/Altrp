@@ -20,18 +20,19 @@ class ButtonController extends Component {
   }
 
   changeValue(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       button: e.currentTarget.dataset.value,
     });
     let noActive = [];
     let buttonList = document.getElementById("buttonList");
     for (let i = 0; i < buttonList.children.length; i++) {
       if (i != e.currentTarget.dataset.key) {
-        buttonList.children[i].classList.remove(this.state.value.activeClass);
+        buttonList.children[i].classList.remove(value.activeClass);
       }
     }
-    e.currentTarget.classList.add(this.state.value.activeClass);
+    e.currentTarget.classList.add(value.activeClass);
   }
 
   render() {

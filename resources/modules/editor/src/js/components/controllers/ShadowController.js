@@ -63,6 +63,7 @@ class ShadowController extends Component {
   }
 
   colorChange(color) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this.setState({
       // colorPickedHex: color.hex,
       // colorPickedRGB: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
@@ -70,7 +71,7 @@ class ShadowController extends Component {
       // colorRGB: color.rgb
     });
     this._changeValue({
-      ...this.state.value,
+      ...value,
       color: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
       colorRGB: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
       colorPickedHex: color.hex,
@@ -86,15 +87,17 @@ class ShadowController extends Component {
   //конец color
   //начало blur
   inputBlurUpdate(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       blur: e.target.value
     });
   };
 
   blurChange(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       blur: e.target.value
     });
     // console.log(this.state.value)
@@ -102,15 +105,17 @@ class ShadowController extends Component {
   //конец blur
   //начало horizontal displacement
   inputHorUpdate(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       horizontal: e.target.value
     });
   };
 
   horChange(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       horizontal: e.target.value
     });
     // console.log(this.state.value)
@@ -118,15 +123,17 @@ class ShadowController extends Component {
   //конец horizontal displacement
   //начало vertical displacement
   inputVerUpdate(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       vertical: e.target.value
     });
   };
 
   verChange(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       vertical: e.target.value
     });
     // console.log(this.state.value)
@@ -134,23 +141,26 @@ class ShadowController extends Component {
   //конец vertical displacement
   //начало spread
   inputSpreadUpdate(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       spread: e.target.value
     });
   };
 
   spreadChange(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       spread: e.target.value
     });
   };
   //конец spread
   //начало select
   type(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       type: e.target.value,
     });
   }

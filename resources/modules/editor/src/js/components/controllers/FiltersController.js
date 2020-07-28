@@ -53,74 +53,84 @@ class FiltersController extends Component {
   }
 
   inputBlurUpdate(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       blur: e.target.value
     });
   }
 
   blurChange(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       blur: e.target.value
     });
     // console.log(this.state.value)
   };
 
   inputBrightnessUpdate(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       brightness: e.target.value
     });
   }
 
   brightnessChange(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       brightness: e.target.value
     });
     // console.log(this.state.value)
   };
 
   inputContrastUpdate(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       contrast: e.target.value
     });
   }
 
   contrastChange(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       contrast: e.target.value
     });
     // console.log(this.state.value)
   };
 
   inputSaturationUpdate(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       saturation: e.target.value
     });
   }
 
   saturationChange(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       saturation: e.target.value
     });
   }
 
   inputHueUpdate(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       hue: e.target.value
     });
   }
 
   hueChange(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       hue: e.target.value
     });
   }

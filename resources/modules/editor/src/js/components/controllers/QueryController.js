@@ -41,7 +41,7 @@ class QueryController extends Component {
 
   async _componentDidMount() {
     let modelsList = await new Resource({ route: '/admin/ajax/models_list_for_query' }).getAll();
-    let value = { ...this.state.value };
+    let value = { ...value };
     value.modelName = value.modelName || modelsList[0].name;
     if (!this.props.currentElement.getSettings(this.props.controlId)) {
       this._changeModelName(modelsList[0].name)
@@ -62,7 +62,8 @@ class QueryController extends Component {
    * @param e
    */
   changePageSize(e) {
-    let newValue = { ...this.state.value };
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    let newValue = { ...value };
     newValue.pageSize = parseInt(e.target.value);
     this._changeValue(newValue)
   }
@@ -72,7 +73,8 @@ class QueryController extends Component {
    * @param e
    */
   changePaginationType(e) {
-    let newValue = { ...this.state.value };
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    let newValue = { ...value };
     newValue.paginationType = e.target.value;
     this._changeValue(newValue)
   }

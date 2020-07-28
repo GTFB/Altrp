@@ -78,15 +78,17 @@ class TypographicController extends Component {
   //конец select2
   //начало size
   inputBlurUpdate(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       size: e.target.value
     });
   }
 
   blurChange(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       size: e.target.value
     });
     // console.log(this.state.value)
@@ -94,47 +96,53 @@ class TypographicController extends Component {
   //конец size
   //начало weight
   weightChange(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       weight: e.target.value,
     });
   }
   //конец weight
   //начало transform
   transformChange(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       transform: e.target.value,
     });
   }
   //конец transform
   //начал style
   styleChange(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       style: e.target.value,
     });
   }
   //конец style
   //начало decoration
   decorationChange(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       decoration: e.target.value,
     });
   }
   //конец decoration
   //начало lineHeight
   inputHorUpdate(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       lineHeight: e.target.value
     });
   }
 
   horChange(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       lineHeight: e.target.value
     });
     // console.log(this.state.value)
@@ -142,15 +150,17 @@ class TypographicController extends Component {
   //конец lineHeight
   //начало letter spacing
   inputVerUpdate(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       spacing: e.target.value
     });
   }
 
   verChange(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       spacing: e.target.value
     });
     // console.log(this.state.value)
