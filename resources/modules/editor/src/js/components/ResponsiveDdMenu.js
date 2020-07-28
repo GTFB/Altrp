@@ -37,7 +37,6 @@ class ResponsiveDdMenu extends Component {
   }
   render() {
     let currentScreen = getCurrentScreen();
-    console.log(currentScreen);
     return (
       <div className="screens-container">
         <span onClick={() => this.toggleOpen()} className={"screens-title " + (this.state.open ? 'screens-title-open' : '')}><Desktop /></span>

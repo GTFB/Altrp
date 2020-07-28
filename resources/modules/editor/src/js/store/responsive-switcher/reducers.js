@@ -1,7 +1,8 @@
 import { SET_CURRENT_SCREEN } from './actions'
 
 const defaultState = {
-
+  icon: '',
+  width: '',
 };
 
 export function currentScreenReducer(state = defaultState, action) {
