@@ -8,8 +8,20 @@ class AccordionWidget extends Component {
     let settings = props.element.getSettings()
     this.state = {
       settings: settings,
-      activeItem: Number(settings.active_item_additional_content) || 0
+      activeItem: {
+        id: [],
+      }
     };
+
+    for (let i = 0; i<settings.repeater_accordion_content.length; i++) {
+      if(i !== Number(settings.active_item_additional_content - 1)) {
+        this.state.activeItem.id.push(false)
+      } else {
+        this.state.activeItem.id.push(true)
+      }
+    }
+
+    console.log(this.state.activeItem)
     this.open = this.open.bind(this);
     props.element.component = this;
     if(window.elementDecorator){
@@ -20,10 +32,24 @@ class AccordionWidget extends Component {
   open(e) {
     let activeItem = Number(e.currentTarget.dataset.key) || 0;
 
-    this.setState((state) => ({
-      ...state,
-      activeItem
-    }));
+    if(!this.state.settings.multiple_additional_content) {
+      for (let i = 0; i<this.state.activeItem.id.length; i++) {
+        this.setState((state) => {
+          state.activeItem.id[i] = false;
+          return {
+            ...state
+          }
+        });
+      }
+    };
+
+    this.setState((state) => {
+      state.activeItem.id[activeItem] = !state.activeItem.id[activeItem];
+      return {
+        ...state
+      }
+    });
+    console.log(this.state.activeItem.id)
   };
 
   render(){
@@ -62,13 +88,13 @@ class AccordionWidget extends Component {
             </div>
             {/*icon*/}
             <div className="altrp-accordion-item-icon">
-              {this.state.activeItem === idx ? active_icon : icon}
+              {this.state.activeItem.id[idx] ? active_icon : icon}
             </div>
           </div>
           {/*content*/}
           {
             React.createElement("div", {
-              className: "altrp-accordion-item-content" + (this.state.activeItem === idx ?
+              className: "altrp-accordion-item-content" + (this.state.activeItem.id[idx] ?
                   " altrp-accordion-item-content-show"
                   :
                   ""

@@ -160,8 +160,7 @@ class Accordion extends BaseElement {
 
     this.addControl("active_item_additional_content", {
       type: CONTROLLER_NUMBER,
-      label: "Acitve item",
-      default: 0
+      label: "Acitve item no",
     });
 
     this.endControlSection();
