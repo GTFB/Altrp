@@ -14,6 +14,17 @@ class SettingSection extends Component {
   };
 
   componentDidMount() {
+
+    /**
+     * Если еще ни разу не открывали текущую вкладку у элемента,
+     * то в setActiveSection передадим 0
+     */
+    let currentElementName = getCurrentElement().getName();
+    let currentTab = getCurrentTab();
+    if (! (this.props.settingSection[currentElementName]
+        && (this.props.settingSection[currentElementName][currentTab] !== undefined))) {
+      this.props.dispatch(setActiveSection(getCurrentElement().getName(), getCurrentTab(), 0));
+    }
   }
 
   toggle() {
@@ -30,12 +41,6 @@ class SettingSection extends Component {
     if (this.props.settingSection[currentElementName]
         && (this.props.settingSection[currentElementName][currentTab] !== undefined)) {
       activeSectionID = this.props.settingSection[currentElementName][currentTab];
-    } else {
-      /**
-       * Если еще ни разу не открывали текущую вкладку у элемента,
-       * то в setActiveSection передадим 0
-       */
-      this.props.dispatch(setActiveSection(getCurrentElement().getName(), getCurrentTab(), activeSectionID));
     }
     let controllers = this.props.controls || [];
     return (
