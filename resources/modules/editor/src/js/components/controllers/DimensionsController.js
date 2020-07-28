@@ -84,10 +84,10 @@ class DimensionsController extends Component {
   }
 
   changeBind(e) {
-
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
-      bind: !this.state.value.bind
+      ...value,
+      bind: !value.bind
     })
   }
 
@@ -107,6 +107,7 @@ class DimensionsController extends Component {
     }
     // console.log(this.getSettings(this.props.controlId));
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    console.log(value);
 
     return <div className="controller-container controller-container_dimensions">
       <div className="control-dimensions-header">

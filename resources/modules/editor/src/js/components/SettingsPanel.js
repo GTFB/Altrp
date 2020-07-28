@@ -39,10 +39,6 @@ class SettingsPanel extends Component {
   render() {
 
     let controllersManager = window.controllersManager;
-    let currentTab = getCurrentTab();
-
-    let state = getElementState();
-    console.log(state);
     let sections = [];
     if (this.props.currentElement.getName) {
       let allControllersPairs = _.toPairs(controllersManager.getControls(this.props.currentElement.getName()));

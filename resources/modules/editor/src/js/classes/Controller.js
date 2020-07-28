@@ -41,7 +41,11 @@ class Controller {
      * @member {BaseElement} currentElement
      * */
     let currentElement = getCurrentElement();
-    if (!this.data.repeater) {
+    if (! this.data.repeater) {
+      console.log(this.getSettingName());
+      console.log(value);
+
+
       currentElement.setSettingValue(this.getSettingName(), value);
       this.rules.forEach(rule => {
         rule.insertValue(value);
