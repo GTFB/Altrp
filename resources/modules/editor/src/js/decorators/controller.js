@@ -30,7 +30,8 @@ function getSettings(settingName){
   if(! this.props.currentElement){
     return '';
   }
-  return this.props.currentElement.getSettings(settingName + getElementSettingsSuffix())
+  return this.props.currentElement.getSettings(settingName +
+      getElementSettingsSuffix())
 }
 
 /**

@@ -35,8 +35,6 @@ class DimensionsController extends Component {
     });
   };
 
-
-
   changeValue(e) {
 
     if (this.state.value.bind == true) {
@@ -182,4 +180,5 @@ function mapStateToProps(state) {
     currentState: state.currentState,
   };
 }
+
 export default connect(mapStateToProps)(DimensionsController);
