@@ -43,12 +43,12 @@ class TypographicController extends Component {
       spacingMin: this.props.spacingMin || -5,
     };
   }
-
   getDefaultValue() {
     return {
       family: {}
     };
   }
+
 
   openTypographic() {
     let shadowContainer = document.getElementById("typographicContainer");
@@ -157,10 +157,12 @@ class TypographicController extends Component {
   //конец letter spacing
 
   render() {
+    console.log('value state', this.state.value);
     if (this.state.show === false) {
       return '';
     }
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    console.log('value', value);
     const familyOptions = [
       {
         value: 'Roboto',
@@ -356,7 +358,7 @@ class TypographicController extends Component {
           <div className="control-container_select2-wrapper">
             <Select
               onChange={this.changeFamily}
-              value={value.family.label || ''}
+              value={value.family.label}
               options={familyOptions}
               styles={customStyles}
               placeholder={value.family.label}
@@ -374,12 +376,12 @@ class TypographicController extends Component {
           <input type="range"
             min={this.state.sizeMin}
             max={this.state.sizeMax}
-            className="control-slider" value={value.size} onChange={this.inputBlurUpdate} onInput={this.blurChange} />
+            className="control-slider" value={value.size || 0} onChange={this.inputBlurUpdate} onInput={this.blurChange} />
           <div className="control-slider-input-box">
             <input className="control-slider-input" type="number"
               min={this.state.sizeMin}
               max={this.state.sizeMax}
-              value={value.size} onChange={this.inputBlurUpdate} onInput={this.blurChange} />
+              value={value.size || 0} onChange={this.inputBlurUpdate} onInput={this.blurChange} />
           </div>
         </div>
         {/* конец slider size */}
@@ -442,13 +444,13 @@ class TypographicController extends Component {
             min={this.state.lineHeightMin}
             max={this.state.lineHeightMax}
             step="0.1"
-            className="control-slider" value={value.lineHeight} onChange={this.inputHorUpdate} name="horizontal" />
+            className="control-slider" value={value.lineHeight || 0} onChange={this.inputHorUpdate} name="horizontal" />
           <div className="control-slider-input-box">
             <input className="control-slider-input" type="number"
               min={this.state.lineHeightMin}
               max={this.state.lineHeightMax}
               step="0.1"
-              value={value.lineHeight} name="horizontalNumber" onChange={this.horChange} />
+              value={value.lineHeight || 0} name="horizontalNumber" onChange={this.horChange} />
           </div>
         </div>
         {/* конец slider line-Height */}
@@ -463,13 +465,13 @@ class TypographicController extends Component {
             min={this.state.spacingMin}
             max={this.state.spacingMax}
             step="0.1"
-            className="control-slider" value={value.spacing} onChange={this.inputVerUpdate} name="spacing" />
+            className="control-slider" value={value.spacing || 0} onChange={this.inputVerUpdate} name="spacing" />
           <div className="control-slider-input-box">
             <input className="control-slider-input" type="number"
               min={this.state.spacingMin}
               max={this.state.spacingMax}
               step="0.1"
-              value={value.spacing} name="spacingNumber" onChange={this.verChange} />
+              value={value.spacing || 0} name="spacingNumber" onChange={this.verChange} />
           </div>
         </div>
         {/* конец slider letter Spacing */}

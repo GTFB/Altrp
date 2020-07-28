@@ -36,7 +36,6 @@ class DimensionsController extends Component {
   };
 
   changeValue(e) {
-
     if (this.state.value.bind == true) {
       if (e.target.value <= 9999) {
         this._changeValue({

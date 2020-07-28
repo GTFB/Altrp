@@ -63,12 +63,12 @@ class ShadowController extends Component {
   }
 
   colorChange(color) {
-    // this.setState({
-    //   colorPickedHex: color.hex,
-    //   colorPickedRGB: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
-    //   opacity: color.rgb.a,
-    //   colorRGB: color.rgb
-    // });
+    this.setState({
+      // colorPickedHex: color.hex,
+      // colorPickedRGB: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+      // opacity: color.rgb.a,
+      // colorRGB: color.rgb
+    });
     this._changeValue({
       ...this.state.value,
       color: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
@@ -198,7 +198,7 @@ class ShadowController extends Component {
               <label className="control-color-hex">{value.colorPickedHex}</label>
             </div>
             <div className="control-color-opacity-container">
-              <label className="control-color-opacity">{(value.opacity * 100).toFixed() + "%"}</label>
+              <label className="control-color-opacity" >{(value.opacity * 100).toFixed() + "%"}</label>
             </div>
           </div>
           {
@@ -220,13 +220,13 @@ class ShadowController extends Component {
             <input type="range"
               min={this.state.blurMin}
               max={this.state.blurMax}
-              className="control-slider" value={value.blur || ""} onChange={this.inputBlurUpdate}
+              className="control-slider" value={value.blur || 0} onChange={this.inputBlurUpdate}
               onInput={this.blurChange} />
             <div className="control-slider-input-box">
               <input className="control-slider-input" type="number"
                 min={this.state.blurMin}
                 max={this.state.blurMax}
-                value={value.blur || ""} onChange={this.inputBlurUpdate} onInput={this.blurChange} />
+                value={value.blur || 0} onChange={this.inputBlurUpdate} onInput={this.blurChange} />
             </div>
           </div>
           {/* конец slider blur */}
@@ -240,13 +240,13 @@ class ShadowController extends Component {
             <input type="range"
               min={this.state.horVerMin}
               max={this.state.horVerMax}
-              className="control-slider" value={value.horizontal || ""} onChange={this.inputHorUpdate}
+              className="control-slider" value={value.horizontal || 0} onChange={this.inputHorUpdate}
               name="horizontal" />
             <div className="control-slider-input-box">
               <input className="control-slider-input" type="number"
                 min={this.state.horVerMin}
                 max={this.state.horVerMax}
-                value={value.horizontal || ""} name="horizontalNumber" onChange={this.horChange} />
+                value={value.horizontal || 0} name="horizontalNumber" onChange={this.horChange} />
             </div>
           </div>
           {/* конец slider horizontal displacement */}
@@ -260,13 +260,13 @@ class ShadowController extends Component {
             <input type="range"
               min={this.state.horVerMin}
               max={this.state.horVerMax}
-              className="control-slider" value={value.vertical || ""} onChange={this.inputVerUpdate}
+              className="control-slider" value={value.vertical || 0} onChange={this.inputVerUpdate}
               name="vertical" />
             <div className="control-slider-input-box">
               <input className="control-slider-input" type="number"
                 min={this.state.horVerMin}
                 max={this.state.horVerMax}
-                value={value.vertical || ""} name="verticalNumber" onChange={this.verChange} />
+                value={value.vertical || 0} name="verticalNumber" onChange={this.verChange} />
             </div>
           </div>
           {/* конец slider vertical displacement */}
