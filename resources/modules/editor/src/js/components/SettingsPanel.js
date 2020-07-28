@@ -1,14 +1,14 @@
-import React, {Component} from "react";
-import {connect} from 'react-redux';
+import React, { Component } from "react";
+import { connect } from 'react-redux';
 import ContentIcon from '../../svgs/content.svg'
 import StyleIcon from '../../svgs/style.svg'
 import AdvancedIcon from '../../svgs/advanced.svg'
-import {TAB_ADVANCED, TAB_CONTENT, TAB_STYLE} from "../classes/modules/ControllersManager";
+import { TAB_ADVANCED, TAB_CONTENT, TAB_STYLE } from "../classes/modules/ControllersManager";
 import PanelTabContent from "./PanelTabContent";
 import DynamicContent from "./DynamicContent/DynamicContent";
 import Controller from "../classes/Controller";
-import {setCurrentTab} from "../store/active-settings-tab/actions";
-import {getCurrentTab} from "../store/store";
+import { setCurrentTab } from "../store/active-settings-tab/actions";
+import { getCurrentTab } from "../store/store";
 import StateSection from "./StateSection";
 
 class SettingsPanel extends Component {
@@ -65,7 +65,7 @@ class SettingsPanel extends Component {
       <div className="panel-tabs d-flex">
         <button className={contentTabClasses} onClick={() => this.setActiveTab(TAB_CONTENT)}>
           <span className="panel-tab__icon">
-            <ContentIcon/>
+            <ContentIcon />
           </span>
           <span className="panel-tab__text">
             Content
@@ -73,7 +73,7 @@ class SettingsPanel extends Component {
         </button>
         <button className={styleTabClasses} onClick={() => this.setActiveTab(TAB_STYLE)}>
           <span className="panel-tab__icon">
-            <StyleIcon/>
+            <StyleIcon />
           </span>
           <span className="panel-tab__text">
             Style
@@ -81,15 +81,15 @@ class SettingsPanel extends Component {
         </button>
         <button className={advancedTabClasses} onClick={() => this.setActiveTab(TAB_ADVANCED)}>
           <span className="panel-tab__icon">
-            <AdvancedIcon/>
+            <AdvancedIcon />
           </span>
           <span className="panel-tab__text">
             Advanced
           </span>
         </button>
       </div>
-      <StateSection/>
-      <PanelTabContent sections={sections}/>
+      <StateSection />
+      <PanelTabContent sections={sections} />
     </div>
   }
 }
@@ -101,4 +101,4 @@ function mapStateToProps(state) {
 }
 
 
-export default connect(mapStateToProps, {setCurrentTab})(SettingsPanel);
+export default connect(mapStateToProps, { setCurrentTab })(SettingsPanel);
