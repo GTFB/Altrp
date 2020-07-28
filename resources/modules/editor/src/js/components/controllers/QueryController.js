@@ -83,7 +83,9 @@ class QueryController extends Component {
    * @param {string} modelName
    */
   _changeModelName(modelName) {
-    let value = { ...this.state.value, modelName };
+    let _value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+
+    let value = { ..._value, modelName };
     let orderingFieldsOptions = [];
     this.state.modelsList.forEach(model => {
       if (model.name === modelName) {

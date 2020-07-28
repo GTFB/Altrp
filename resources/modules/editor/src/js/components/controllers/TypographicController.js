@@ -69,8 +69,9 @@ class TypographicController extends Component {
   }
   //начало select2
   changeFamily(value) {
+    let _value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ..._value,
       family: value.value,
       label: value.label
     })
@@ -91,7 +92,6 @@ class TypographicController extends Component {
       ...value,
       size: e.target.value
     });
-    // console.log(this.state.value)
   };
   //конец size
   //начало weight

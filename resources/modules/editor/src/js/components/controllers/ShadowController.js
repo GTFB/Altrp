@@ -100,7 +100,6 @@ class ShadowController extends Component {
       ...value,
       blur: e.target.value
     });
-    // console.log(this.state.value)
   };
   //конец blur
   //начало horizontal displacement
@@ -118,7 +117,6 @@ class ShadowController extends Component {
       ...value,
       horizontal: e.target.value
     });
-    // console.log(this.state.value)
   };
   //конец horizontal displacement
   //начало vertical displacement
@@ -136,7 +134,6 @@ class ShadowController extends Component {
       ...value,
       vertical: e.target.value
     });
-    // console.log(this.state.value)
   };
   //конец vertical displacement
   //начало spread

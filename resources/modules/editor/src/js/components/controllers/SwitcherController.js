@@ -19,7 +19,8 @@ class SwitcherController extends Component {
     };
   }
   toggle() {
-    this._changeValue(!this.state.value);
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    this._changeValue(!value);
   }
   getDefaultValue() {
     return false;
