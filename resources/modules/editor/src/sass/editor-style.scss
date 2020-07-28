@@ -1549,3 +1549,31 @@ display: none;
 #editor-content .altrp-element{
   position: relative;
 }
+
+
+.screens {
+  &-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-left: 3px;
+    background: #FFFFFF;
+    border: 1px solid #E5E6EA;
+    box-sizing: border-box;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+  }
+  &-item {
+    margin: 3px;
+    transition: 1s;
+    &__open {
+      max-height: 110px;
+    }
+    &__close {
+      max-height: 0px;
+    }
+  }
+}
+
+
