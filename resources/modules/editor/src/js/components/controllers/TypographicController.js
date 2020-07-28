@@ -356,7 +356,7 @@ class TypographicController extends Component {
           <div className="control-container_select2-wrapper">
             <Select
               onChange={this.changeFamily}
-              value={value.family.label}
+              value={value.family.label || ''}
               options={familyOptions}
               styles={customStyles}
               placeholder={value.family.label}
