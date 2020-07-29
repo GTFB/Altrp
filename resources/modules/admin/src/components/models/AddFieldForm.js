@@ -3,7 +3,7 @@ import { Link, withRouter } from "react-router-dom";
 
 import FieldCalculationLogic from "./FieldCalculationLogic";
 import Resource from "../../../../editor/src/js/classes/Resource";
-
+import { titleToName } from "../../js/helpers";
 
 const fieldTypeOptions = ['varchar', 'int', 'bigint', 'boolean', 'text', 'long text', 'calculated'];
 const attributeOptions = ['BINARY', 'UNSIGNED', 'UNSIGNED ZEROFILL', 'on update'];
@@ -44,7 +44,7 @@ class AddFieldForm extends Component {
     this.itemChangeHandler = this.itemChangeHandler.bind(this);
     this.addItemHandler = this.addItemHandler.bind(this);
     this.deleteItemHandler = this.deleteItemHandler.bind(this);
-
+    this.titleChangeHandler = this.titleChangeHandler.bind(this);
 
     this.fieldsOptionsResource = new Resource({
       route: `/admin/ajax/models/${this.props.match.params.modelId}/field_options`
@@ -57,6 +57,17 @@ class AddFieldForm extends Component {
       state.value[field] = value;
       return state
     })
+  }
+
+  titleChangeHandler(e) {
+    e.persist();
+    this.setState(state => ({
+      ...state, value: {
+        ...state.value,
+        title: e.target.value,
+        name: titleToName(e.target.value)
+      }
+    }))
   }
 
   submitHandler(e) {
@@ -107,7 +118,7 @@ class AddFieldForm extends Component {
           <label htmlFor="field-title">Field Title</label>
           <input type="text" id="field-title" required
             value={this.state.value.title}
-            onChange={e => { this.changeValue(e.target.value, 'title') }}
+            onChange={this.titleChangeHandler}
             className="form-control" />
         </div>
 
