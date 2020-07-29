@@ -44,6 +44,7 @@ module.exports = {
       },
       {
         test: /\.svg$/,
+        exclude: /slick.svg$/,
         use: [
           {
             loader: "babel-loader",
@@ -64,7 +65,7 @@ module.exports = {
         },
       },
       {
-        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        test: /(\.(woff|woff2|eot|ttf|otf)|slick.svg)$/,
         use: [
            'file-loader',
          ],
