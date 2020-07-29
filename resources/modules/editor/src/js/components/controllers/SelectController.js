@@ -45,7 +45,7 @@ class SelectController extends Component {
       </div>
       <div className="control-container_select-wrapper">
 
-        <select className="control-select control-field" value={value} onChange={this.changeValue}>
+        <select className="control-select control-field" value={value || ''} onChange={this.changeValue}>
           {this.state.options.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
         </select>
       </div>
