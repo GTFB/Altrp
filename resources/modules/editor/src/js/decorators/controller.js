@@ -30,6 +30,14 @@ function getSettings(settingName){
   if(! this.props.currentElement){
     return '';
   }
+  // console.log(this.props.controller);
+  /**
+   * Если внутри репитера, то берем свойство из репитера, а не элемента
+   */
+  if(this.props.controller.data.repeater){
+    return this.props.controller.data.repeater.getSettings(this.props.controller.data.repeater.props.controlId)
+        [this.props.controller.data.itemIndex][this.props.controller.data.controlId];
+  }
   return this.props.currentElement.getSettings(settingName +
       getElementSettingsSuffix())
 }
