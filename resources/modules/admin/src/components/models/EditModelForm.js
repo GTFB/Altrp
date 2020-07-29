@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { titleToName }from "../../js/helpers";
 
 class EditModelForm extends Component {
   constructor(props) {
@@ -9,6 +10,7 @@ class EditModelForm extends Component {
     };
     this.submitHandler = this.submitHandler.bind(this);
     this.deleteHandler = this.deleteHandler.bind(this);
+    this.titleChangeHandler = this.titleChangeHandler.bind(this);    
   }
 
   /**
@@ -20,9 +22,19 @@ class EditModelForm extends Component {
     this.setState(state => {
       state = { ...state };
       state.value[field] = value;
-      console.log(state);
       return state
     });
+  }
+
+  titleChangeHandler(e) {
+    e.persist();
+    this.setState(state => ({
+      ...state, value: {
+        ...state.value,
+        title: e.target.value,
+        name: titleToName(e.target.value)
+      }
+    }))
   }
 
   /**
@@ -62,7 +74,7 @@ class EditModelForm extends Component {
         <label htmlFor="page-title">Model Title</label>
         <input type="text" id="page-title" required
           value={this.state.value.title || model.title || ''}
-          onChange={e => { this.changeValue(e.target.value, 'title') }}
+          onChange={this.titleChangeHandler}
           className="form-control" />
       </div>
       <div className="form-group form-group_width30">

@@ -143,7 +143,7 @@ class Admin extends Component {
                     <UserSvg className="icon"/>
                     <span>Users</span>
                   </Link>
-                </li>
+                </li>                
                 <li>
                   <Link to="/admin/tools" className="admin-nav-list__link">
                     <span>Tools</span>

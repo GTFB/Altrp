@@ -12,6 +12,9 @@
 .form-group__inline-wrapper {
   display: flex;
   justify-content: space-between;
+  &__divider {
+    align-self: flex-end;
+  }
 }
 
 .form-group.form-group_width30 {
@@ -56,10 +59,18 @@
 .checkbox-label {
   margin-left: 10px;
 }
-.form-check-inline{
 
+.flex-container{
+ display: flex;
+ justify-content: space-between;
+ align-items: baseline;
 }
+
 .label_checkbox{
   margin-bottom: 0;
   cursor: pointer;
+}
+
+.disabling-radio {
+  margin-left: 15px;
 }

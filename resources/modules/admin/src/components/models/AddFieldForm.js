@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 
+import FieldCalculationLogic from "./FieldCalculationLogic";
+import Resource from "../../../../editor/src/js/classes/Resource";
+import { titleToName } from "../../js/helpers";
+
 const fieldTypeOptions = ['varchar', 'int', 'bigint', 'boolean', 'text', 'long text', 'calculated'];
 const attributeOptions = ['BINARY', 'UNSIGNED', 'UNSIGNED ZEROFILL', 'on update'];
 const inputTipeOptions = ['textarea', 'text', 'number', 'slider', 'WYSIWYG', 'color', 'select', 'checkbox', 'radio button'];
@@ -10,6 +14,8 @@ class AddFieldForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isAlways: false,
+      fieldsOptions: [{ value: 1, label: "field1" }, { value: 2, label: "field2" }, { value: 3, label: "field3" }],
       value: {
         name: '',
         title: '',
@@ -25,11 +31,24 @@ class AddFieldForm extends Component {
         nullable: false,
         indexed: false,
         editable: false,
-        // calculation: '',
-        // calculation_logic: '',
+        calculation: '',
+        calculation_logic: [{
+          left: '',
+          operator: '',
+          result: '',
+          right: ''
+        }],
       },
     };
     this.submitHandler = this.submitHandler.bind(this);
+    this.itemChangeHandler = this.itemChangeHandler.bind(this);
+    this.addItemHandler = this.addItemHandler.bind(this);
+    this.deleteItemHandler = this.deleteItemHandler.bind(this);
+    this.titleChangeHandler = this.titleChangeHandler.bind(this);
+
+    this.fieldsOptionsResource = new Resource({
+      route: `/admin/ajax/models/${this.props.match.params.modelId}/field_options`
+    });
   }
 
   changeValue(value, field) {
@@ -40,10 +59,48 @@ class AddFieldForm extends Component {
     })
   }
 
+  titleChangeHandler(e) {
+    e.persist();
+    this.setState(state => ({
+      ...state, value: {
+        ...state.value,
+        title: e.target.value,
+        name: titleToName(e.target.value)
+      }
+    }))
+  }
+
   submitHandler(e) {
     e.preventDefault();
     // post: /admin/ajax/models (value)
     console.log(this.state.value);
+  }
+
+  addItemHandler() {
+    this.setState(state => {
+      state.value.calculation_logic
+        .push({ left: '', operator: '', result: '', right: '' });
+      return state;
+    })
+  }
+
+  deleteItemHandler(index) {
+    this.setState(state => {
+      state.value.calculation_logic.splice(index, 1);
+      return state;
+    })
+  }
+
+  itemChangeHandler({ name, value }, index) {
+    this.setState(state => {
+      state.value.calculation_logic[index][name] = value;
+      return state
+    })
+  }
+
+  async componentDidMount() {
+    let fieldsOptions = await this.fieldsOptionsResource.getAll();
+    this.setState(state => ({ ...state, fieldsOptions }))
   }
 
   render() {
@@ -61,7 +118,7 @@ class AddFieldForm extends Component {
           <label htmlFor="field-title">Field Title</label>
           <input type="text" id="field-title" required
             value={this.state.value.title}
-            onChange={e => { this.changeValue(e.target.value, 'title') }}
+            onChange={this.titleChangeHandler}
             className="form-control" />
         </div>
 
@@ -91,60 +148,41 @@ class AddFieldForm extends Component {
 
       {this.state.value.type === 'calculated' ?
         <>
-
           <div className="form-group col-6 form-check-inline">
             <input type="checkbox" id="always"
-                   className="form-check-input form-check-input" />
+              className="form-check-input form-check-input"
+              checked={this.state.isAlways}
+              onChange={e => this.setState({ isAlways: e.target.checked })}
+            />
             <label htmlFor="always" className="label_checkbox">Always</label>
           </div>
-          <p>if</p>
-          <div className="form-group">
-            <label>Field Name</label>
-            <select className="form-control"
-            >
-              <option disabled value="" />
-            </select>
-          </div>
-          <p>Comparison Operators</p>
 
-          <div className="form-group">
-            <select className="form-control"
-            >
-              <option value="not_null">Not Null</option>
-              <option value="null">Null</option>
-              <option value="=">Equals</option>
-              <option value="!=">Not Equals</option>
-              <option value="between">Between</option>
-              <option value=">">&gt;</option>
-              <option value=">=">&gt;=</option>
-              <option value="<">&lt;</option>
-              <option value="<=">&lt;=</option>
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>Value</label>
-            <input type="text" className="form-control" />
-          </div>
-
-          <p>or</p>
-
-          <div className="form-group">
-            <label>Field Name</label>
-            <select className="form-control"
-            >
-              <option disabled value="" />
-            </select>
-          </div>
-
-          <p>Then = </p>
-
-          <div className="form-group">
-            <label>Value</label>
-            <input type="text" className="form-control" />
-          </div>
-          <p>E.g. [field_name]*[field_name] + 10</p>
-          <button className="btn" type="button">+ Calculated Logic</button>
+          {this.state.isAlways ?
+            <>
+              <div className="form-group">
+                <label htmlFor="calculation">Calculation</label>
+                <input type="text" className="form-control" id="calculation"
+                  value={this.state.value.calculation}
+                  onChange={e => { this.changeValue(e.target.value, 'calculation') }}
+                />
+              </div>
+              <p>E.g. [field_name]*[field_name] + 10</p>
+            </> :
+            <>
+              {this.state.value.calculation_logic.map((item, index) => <>
+                <FieldCalculationLogic
+                  item={item}
+                  index={index}
+                  fieldsOptions={this.state.fieldsOptions}
+                  key={index}
+                  changeHandler={item => this.itemChangeHandler(item, index)}
+                  deleteItemHandler={() => this.deleteItemHandler(index)}
+                />
+              </>)}
+              <button className="btn" type="button" onClick={this.addItemHandler}>
+                + Calculated Logic
+              </button>
+            </>}
         </> :
         <>
           <div className="checkbox-group">
