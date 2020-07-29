@@ -1,30 +1,39 @@
-import React, {Component} from "react";
-
+import React, { Component } from "react";
+import { getCurrentScreen } from "../store/store";
+import { connect } from "react-redux";
 
 class EditorWindow extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+    };
   }
 
   render() {
-
-    return  <div className="editor-window" id="editorWindow">
+    console.log(this.props.currentScreen);
+    return <div style={{ width: this.props.currentScreen.width, height: this.props.currentScreen.height }} className={"editor-window"} id="editorWindow">
 
       {/*<Frame>*/}
-        {/*<FrameBindingContext>*/}
-          {/*<DropTarget/>*/}
-        {/*</FrameBindingContext>*/}
+      {/*<FrameBindingContext>*/}
+      {/*<DropTarget/>*/}
+      {/*</FrameBindingContext>*/}
       {/*</Frame>*/}
       {/*<Frame src="/admin/editor-content" >*/}
-        {/*<FrameBindingContext/>*/}
+      {/*<FrameBindingContext/>*/}
       {/*</Frame>*/}
       {/*<FrameContextConsumer>*/}
-      <iframe src="/admin/editor-content" width="100%"/>
+      <iframe src="/admin/editor-content" width="100%" />
       {/*</FrameContextConsumer>*/}
     </div>
   }
 }
 
-export default EditorWindow
+function mapStateToProps(state) {
+  return {
+    currentScreen: state.currentScreen
+  }
+}
+
+
+export default connect(mapStateToProps)(EditorWindow)

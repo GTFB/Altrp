@@ -39,10 +39,14 @@ import blockTopIcon from '../../../svgs/block_align_top.svg';
 import blockVerticallyIcon from '../../../svgs/block_align_vertically.svg';
 import blockDHorizontallyIcon from '../../../svgs/block_distribute_horizontally.svg';
 import blockDVerticallyIcon from '../../../svgs/block_distribute_vertically.svg';
-
+import widescreenIcon from '../../../svgs/widescreen.svg'
+import laptopIcon from '../../../svgs/laptop.svg'
+import tabletIcon from '../../../svgs/tablet.svg'
+import bigPhoneIcon from '../../../svgs/bigphonescreen.svg'
+import smallPhoneIcon from '../../../svgs/smallphonescreen.svg'
 
 class IconsManager {
-  constructor(){
+  constructor() {
     this.icons = [];
     this.icons.push(new Icon('add', AddIcon));
     this.icons.push(new Icon('advanced', AdvancedIcon));
@@ -86,13 +90,18 @@ class IconsManager {
     this.icons.push(new Icon('block_veric', blockVerticallyIcon));
     this.icons.push(new Icon('block_d_horiz', blockDHorizontallyIcon));
     this.icons.push(new Icon('block_d_vertic', blockDVerticallyIcon));
+    this.icons.push(new Icon('wide_screen', widescreenIcon))
+    this.icons.push(new Icon('laptop', laptopIcon))
+    this.icons.push(new Icon('tablet', tabletIcon))
+    this.icons.push(new Icon('big_phone', bigPhoneIcon))
+    this.icons.push(new Icon('small_phone', smallPhoneIcon))
   }
   /**
    * @param {string} iconName
    * @return {function}
    * @throws Исключение если иконка не найдена
    * */
-  getIconComponent(iconName){
+  getIconComponent(iconName) {
     let icon = this.getIcon(iconName);
     return icon.iconComponent;
   }
@@ -101,14 +110,14 @@ class IconsManager {
    * @return {Icon}
    * @throws Исключение если иконка не найдена
    * */
-  getIcon(iconName){
+  getIcon(iconName) {
     let _icon;
-    this.icons.forEach(icon=>{
-      if(icon.name === iconName){
+    this.icons.forEach(icon => {
+      if (icon.name === iconName) {
         _icon = icon;
       }
     });
-    if(! _icon){
+    if (!_icon) {
       throw `Icon ${iconName} not found`;
     }
     return _icon;
@@ -116,7 +125,7 @@ class IconsManager {
   /**
    * @return {array}
    * */
-  getIconsList(){
+  getIconsList() {
     return this.icons;
   }
   /**
@@ -125,9 +134,9 @@ class IconsManager {
    * @return {React.DetailedReactHTMLElement<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> | React.DetailedReactHTMLElement<React.HTMLAttributes<T>, HTMLElement> | React.ReactSVGElement | React.DOMElement<React.DOMAttributes<T>, Element> | React.FunctionComponentElement<{}> | React.CElement<{}, React.ClassicComponent<{}, React.ComponentState>> | React.CElement<{}, React.Component<P, React.ComponentState>> | React.ReactElement<{}>}
    * @throws Исключение если иконка не найдена
    * */
-  renderIcon(iconName, props = null){
+  renderIcon(iconName, props = null) {
     let iconComponent = this.getIconComponent(iconName);
-    if(! iconComponent) {
+    if (!iconComponent) {
       iconComponent = this.getIconComponent('default');
     }
     return React.createElement(iconComponent, props);
