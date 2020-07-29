@@ -5,42 +5,53 @@ import { renderAssetIcon } from "../../helpers"
 class AccordionWidget extends Component {
   constructor(props){
     super(props);
+    let settings = props.element.getSettings()
     this.state = {
-      settings: props.element.getSettings(),
+      settings: settings,
+      activeItem: {
+        id: [],
+      }
     };
-    // this.open = this.open.bind(this);
+
+    for (let i = 0; i<settings.repeater_accordion_content.length; i++) {
+      if(i !== Number(settings.active_item_additional_content - 1)) {
+        this.state.activeItem.id.push(false)
+      } else {
+        this.state.activeItem.id.push(true)
+      };
+    };
+
+    this.open = this.open.bind(this);
     props.element.component = this;
     if(window.elementDecorator){
       window.elementDecorator(this);
     };
-    this.icon_is_active = false;
-    this.items = [];
   }
 
-  // componentDidMount() {
-  //   let number_item = this.state.settings.active_item_additional_content
-  //   if(this.items_content.current.children[Number(number_item)-1]) {
-  //     this.items_content.current.children[Number(number_item)-1].lastChild.classList.add("altrp-accordion-item-content-show")
-  //   }
-  // }
-
   open(e) {
-    let target = e.currentTarget;
+    let activeItem = Number(e.currentTarget.dataset.key) || 0;
 
     if(!this.state.settings.multiple_additional_content) {
-      let items = target.parentNode.parentNode.children;
-      for(let i=0; i<items.length; i++) {
-        if(i != target.parentNode.lastChild.dataset.item) {
-          items[i].lastChild.classList.remove("altrp-accordion-item-content-show");
-        };
+      for (let i = 0; i<this.state.activeItem.id.length; i++) {
+        this.setState((state) => {
+          state.activeItem.id[i] = false;
+          return {
+            ...state
+          };
+        });
       };
     };
 
-    target.parentNode.lastChild.classList.toggle("altrp-accordion-item-content-show");
+    this.setState((state) => {
+      state.activeItem.id[activeItem] = !state.activeItem.id[activeItem];
+      return {
+        ...state
+      };
+    });
   };
 
   render(){
-    this.items = this.state.settings.repeater_accordion_content || []
+    let items = this.state.settings.repeater_accordion_content || []
     let icon = "";
     let active_icon = "";
 
@@ -56,7 +67,7 @@ class AccordionWidget extends Component {
       );
     };
 
-    let accordion_items = this.items.map((item, idx) => {
+    let accordion_items = items.map((item, idx) => {
 
       return (
         <div className="altrp-accordion-item" key={idx}>
@@ -73,15 +84,20 @@ class AccordionWidget extends Component {
                 )
               }
             </div>
-
+            {/*icon*/}
             <div className="altrp-accordion-item-icon">
-              {String(this.icon_is_active)}
+              {this.state.activeItem.id[idx] ? active_icon : icon}
             </div>
           </div>
           {/*content*/}
           {
             React.createElement("div", {
-              className: "altrp-accordion-item-content",
+              className: "altrp-accordion-item-content" + (this.state.activeItem.id[idx] ?
+                  " altrp-accordion-item-content-show"
+                  :
+                  ""
+              )
+              ,
               dangerouslySetInnerHTML: {
                 __html: item.wysiwyg_repeater
               },

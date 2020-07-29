@@ -248,8 +248,20 @@ foreach ( $frontend_routes as $frontend_route ) {
 
 Route::group( ['prefix' => 'ajax'], function(){
 
+  /**
+   * Отдает данные страницы как модели для динамического контента
+   */
   Route::get( 'models/page/{page_id}', 'Frontend\PageController@show' )->name( 'front.page.show' );
+
+  /**
+   * Отдает данные роутов для фронтенда
+   */
   Route::resource( 'routes', 'Frontend\RouteController' );
+
+  /**
+   * Отдает данные страниц внутри роутов ( с areas и шаблонами)
+   */
+  Route::get( 'pages/{page_id}', 'Frontend\PageController@pageForRoutes' )->name( 'front.page-for-routes' );
   /**
    * todo: реализовать в контроллерах моделей
    */

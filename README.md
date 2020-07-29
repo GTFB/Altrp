@@ -4,7 +4,12 @@
 ## Changelog
 
 
-### 0.5.7
+### 0.7.0
++ Add States Styling
++ Optimize Front App
+
+
+### 0.6.0
 + Add Related Models Field in Dynamic Content Options
 + Update Related Models Data in Forms
 + Element States in Editor

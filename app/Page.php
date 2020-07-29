@@ -31,7 +31,7 @@ class Page extends Model
   /**
    * @return array
    */
-  static function get_frontend_routes()
+  static function get_frontend_routes( )
   {
     $pages = [];
     if( ! appIsInstalled()  ){
@@ -50,9 +50,10 @@ class Page extends Model
   }
 
   /**
+   * @param bool $lazy
    * @return array
    */
-  public static function get_pages_for_frontend()
+  public static function get_pages_for_frontend( $lazy = false )
   {
     $pages = [];
 
@@ -66,7 +67,11 @@ class Page extends Model
           'id' => $page->id,
           'title' => $page->title,
           'allowed' => true,
-          'areas' => self::get_areas_for_page( $page->id ),
+          /**
+           * Если лениво загружаем области то возвращаем пустой массив
+           */
+          'areas' => $lazy ? [] : self::get_areas_for_page( $page->id ),
+//          'areas' => self::get_areas_for_page( $page->id ),
         ];
       } else {
         $_page = [
@@ -76,6 +81,7 @@ class Page extends Model
           'redirect' => '/',
         ];
       }
+      $_page['lazy'] = $lazy;
       if($page->model){
         $_page['model'] = $page->model->toArray();
         $_page['model']['modelName'] = $page->model->altrp_table->name;
