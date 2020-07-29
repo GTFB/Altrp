@@ -134,6 +134,12 @@ class ModelGenerator extends AppGenerator
         $attributes = json_decode(json_encode($this->data), true);
         $this->model->fill($attributes);
 
+        try {
+            $this->model->save();
+        } catch (\Exception $e) {
+            return false;
+        }
+
         if (! $this->getAndWriteRelationships()) {
             throw new RelationshipNotInsertedException("Failed to write relationships", 500);
         }
@@ -142,11 +148,6 @@ class ModelGenerator extends AppGenerator
             throw new PermissionNotWrittenException("Failed to write permissions", 500);
         }
 
-        try {
-            $this->model->save();
-        } catch (\Exception $e) {
-            return false;
-        }
         return true;
     }
 
@@ -252,11 +253,9 @@ class ModelGenerator extends AppGenerator
     protected function getAndWriteRelationships()
     {
         if (isset($this->data->relationships)) {
-
-            if (count($this->getRelationships($this->data->table_id)) > 0) {
-                $this->deleteRelationships($this->data->table_id);
+            if (count($this->getRelationships($this->model->id)) > 0) {
+                $this->deleteRelationships($this->model->id);
             }
-
             $this->relationships = $this->data->relationships;
 
             return $this->writeRelationships();
@@ -266,26 +265,26 @@ class ModelGenerator extends AppGenerator
     }
 
     /**
-     * Получить связи по указанному ID таблицы из БД
+     * Получить связи по указанному ID модели из БД
      *
-     * @param $tableId
+     * @param $modelId
      * @return mixed
      */
-    protected function getRelationships($tableId)
+    protected function getRelationships($modelId)
     {
-        $relationships = Relationship::where('table_id', $tableId)->get();
+        $relationships = Relationship::where('model_id', $modelId)->get();
         return $relationships;
     }
 
     /**
-     * Удалить связи по указанному ID таблицы из БД
+     * Удалить связи по указанному ID модели из БД
      *
-     * @param $tableId
+     * @param $modelId
      * @return mixed
      */
-    protected function deleteRelationships($tableId)
+    protected function deleteRelationships($modelId)
     {
-        return Relationship::where('table_id', $tableId)->delete();
+        return Relationship::where('model_id', $modelId)->delete();
     }
 
     /**
@@ -354,7 +353,7 @@ class ModelGenerator extends AppGenerator
 
         foreach ($this->relationships as $rel) {
             $relData[] = [
-                'table_id' => $this->model->table_id,
+                'model_id' => $this->model->id,
                 'name' => $rel->name,
                 'type' => $rel->type,
                 'model_class' => $this->screenBacklashes($rel->model_class),
@@ -436,7 +435,7 @@ class ModelGenerator extends AppGenerator
 
         $columns = $this->getColumns($table);
 
-        if ($columns->isEmpty()) return '';
+        if (! $columns) return '';
 
         $columnsList = $this->getColumnsList($columns);
 
@@ -464,6 +463,8 @@ class ModelGenerator extends AppGenerator
     protected function getColumns($table)
     {
         $last_migration = $table->actual_migration();
+
+        if (! $last_migration) return false;
 
         $columns = Column::where([
             ['table_id', $this->model->table_id],

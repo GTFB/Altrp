@@ -291,37 +291,7 @@ class TableController extends ApiController
 
     }
 
-    /**
-     * Создание модели
-     *
-     * @param ApiRequest $request
-     * @param $tableId
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \App\Exceptions\CommandFailedException
-     * @throws \App\Exceptions\ModelNotWrittenException
-     * @throws \App\Exceptions\PermissionNotWrittenException
-     * @throws \App\Exceptions\RelationshipNotInsertedException
-     * @throws \App\Exceptions\TableNotFoundException
-     */
-    function saveModel(ApiRequest $request, $tableId)
-    {
-        $table = Table::find($tableId);
 
-        if (! $table)
-            return response()->json('Table not found', 404, [], JSON_UNESCAPED_UNICODE);
-
-        $generator = new ModelGenerator(
-            array_merge($request->all(), ['table_id' => $tableId])
-        );
-
-        $result = $generator->generate();
-
-        if ($result) {
-            return response()->json('Successfully generated!', 200, [], JSON_UNESCAPED_UNICODE);
-        }
-
-        return response()->json('Error', 500, [], JSON_UNESCAPED_UNICODE);
-    }
 
     /**
      * Получение модели
@@ -464,60 +434,6 @@ class TableController extends ApiController
         }
 
         return response()->json('Error!', 404, [], JSON_UNESCAPED_UNICODE);
-    }
-
-    /**
-     * Получение контроллера
-     *
-     * @param ApiRequest $request
-     * @param $tableId
-     * @param $controllerId
-     * @return \Illuminate\Http\JsonResponse
-     */
-    function getController(ApiRequest $request, $tableId) {
-
-        $controller = AltrpController::where("table_id", $tableId)->first();
-
-        if(!$controller) {
-            return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
-        }
-
-        return response()->json($controller, 200, [],JSON_UNESCAPED_UNICODE);
-
-    }
-
-    /**
-     * Создать контроллер
-     *
-     * @param ApiRequest $request
-     * @param $tableId
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \App\Exceptions\CommandFailedException
-     * @throws \App\Exceptions\ControllerNotWrittenException
-     * @throws \App\Exceptions\RouteGenerateFailedException
-     * @throws \App\Exceptions\ModelNotWrittenException
-     */
-    function saveController(ApiRequest $request, $tableId) {
-
-        $table = Table::find($tableId);
-
-        if (! $table)
-            return response()->json('Table not found', 404, [], JSON_UNESCAPED_UNICODE);
-
-        if (! $table->models()->first())
-            return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
-
-        $generator = new ControllerGenerator(
-            array_merge($request->all(), ['table_id' => $tableId])
-        );
-
-        $result = $generator->generate();
-
-        if ($result) {
-            return response()->json('Успешно сгенерировано', 200, [], JSON_UNESCAPED_UNICODE);
-        }
-
-        return response()->json('Ошибка генерации', 404, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**

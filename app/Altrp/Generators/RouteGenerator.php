@@ -41,7 +41,7 @@ class RouteGenerator
     {
         $this->path = base_path('routes/AltrpRoutes.php');
 
-        $this->routeContents = file($this->path, FILE_IGNORE_NEW_LINES);
+        $this->routeContents = file($this->path, 2);
 
         $this->routeStubContents = $this->getStubContents();
     }
@@ -56,6 +56,8 @@ class RouteGenerator
     public function generate($tableName, $controller)
     {
         $this->routeStub = $this->fillStub();
+
+
 
         if ($items = $this->routeExists($tableName, $controller)) {
             $this->routeRewrite($items);

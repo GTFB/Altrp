@@ -22,6 +22,7 @@ class Model extends EloquentModel
         'user_cols',
         'path',
         'name',
+        'title',
         'table_id',
         'pk'
     ];

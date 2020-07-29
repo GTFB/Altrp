@@ -119,9 +119,9 @@ class Handler extends ExceptionHandler
                 ], 500, [], JSON_UNESCAPED_UNICODE);
             }
 
-            return response()->json([
-                'message' => $exception->getMessage()
-            ], 500, [], JSON_UNESCAPED_UNICODE);
+//            return response()->json([
+//                'message' => $exception->getMessage()
+//            ], 500, [], JSON_UNESCAPED_UNICODE);
         }
 
         return parent::render($request, $exception);

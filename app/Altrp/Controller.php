@@ -14,7 +14,7 @@ class Controller extends EloquentModel
         'namespace',
         'prefix',
         'relations',
-        'table_id',
+        'model_id',
     ];
 
     protected $hidden = [
@@ -23,12 +23,12 @@ class Controller extends EloquentModel
 
     public function model()
     {
-        return $this->table()->first()->models()->first();
+        return $this->belongsTo(Model::class, 'model_id', 'id');
     }
 
     public function table()
     {
-        return $this->belongsTo(Table::class);
+        return $this->model->table;
     }
 
     public function sources()

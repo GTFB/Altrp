@@ -30,7 +30,20 @@ class DummyClass extends ApiController
     {
         ${{crudName}} = {{modelName}}::all(){{relations}};
 
-        return response()->json(${{crudName}}, 200, [], JSON_UNESCAPED_UNICODE);;
+        return response()->json(${{crudName}}, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function options(Request $request)
+    {
+        $options = {{modelName}}::select(['id as value', 'title as label'])->get();
+
+        return response()->json($options, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -54,7 +67,7 @@ class DummyClass extends ApiController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -73,7 +86,7 @@ class DummyClass extends ApiController
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -97,7 +110,7 @@ class DummyClass extends ApiController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */

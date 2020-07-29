@@ -19,7 +19,7 @@ class AltrpModelsTableSeeder extends Seeder
             'fillable_cols' => 'name,email,password,last_name',
             'user_cols' => null,
             'path' => null,
-            'table_id' => 0,
+            'table_id' => 1,
             'pk' => 'id',
             'desc' => null,
         ];

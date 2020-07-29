@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 class Relationship extends Model{
 
     protected $table = 'altrp_relationships';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -21,7 +22,7 @@ class Relationship extends Model{
         'model_class',
         'foreign_key',
         'local_key',
-        'table_id'
+        'model_id'
     ];
 
 }
