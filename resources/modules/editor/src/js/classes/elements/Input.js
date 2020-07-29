@@ -13,7 +13,7 @@ import {
   CONTROLLER_COLOR,
   CONTROLLER_SELECT2,
   TAB_CONTENT,
-  TAB_STYLE
+  TAB_STYLE, CONTROLLER_CHOOSE
 } from "../modules/ControllersManager";
 
 class Input extends BaseElement{
@@ -255,6 +255,29 @@ class Input extends BaseElement{
     this.startControlSection('position_section', {
       tab: TAB_STYLE,
       label: 'Position',
+    });
+
+    this.addControl('placeholder_and_value_alignment_position_section', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment, value',
+      default: 'left',
+      options:[
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        }
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-field{{STATE}}': 'text-align: {{VALUE}};',
+      },
     });
 
     this.addControl('position_margin', {
