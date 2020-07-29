@@ -26,3 +26,7 @@ export async function logout() {
 export function pageReload() {
   document.location.reload(true);
 }
+
+export function titleToName(str) {
+  return str.toLowerCase().replace(/^\d+/, '').replace(/[^\d\w]/g, '_');
+}
