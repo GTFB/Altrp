@@ -154,8 +154,12 @@ button{
   display: inline-block;
 }
 
-.widget-panel{
+.widget-panel-wrapper {
   background-color: $light-gray;
+  width: 100%;
+}
+
+.widget-panel{
   width: 100%;
   display: flex;
   flex-wrap: wrap;
