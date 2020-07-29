@@ -12,7 +12,7 @@ class StateSection extends Component {
       buttons: [
         { title: "Normal", value: "" },
         { title: "Hover", value: ":hover" },
-        { title: "Active", value: ":active" },
+        { title: "Active", value: ".active" },
         { title: "Disabled", value: ".disabled" },
       ]
     }
