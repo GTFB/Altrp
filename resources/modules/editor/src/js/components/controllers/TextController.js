@@ -1,15 +1,16 @@
-import React, {Component} from "react";
-import {connect} from "react-redux";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import DynamicIcon from '../../../svgs/dynamic.svg'
 import controllerDecorate from "../../decorators/controller";
-import {toggleDynamicContent} from "../../store/dynamic-content/actions";
-import {iconsManager} from "../../../../../admin/src/js/helpers";
+import { toggleDynamicContent } from "../../store/dynamic-content/actions";
+import { iconsManager } from "../../../../../admin/src/js/helpers";
 
 class TextController extends Component {
   constructor(props) {
     super(props);
+    controllerDecorate(this);
     this.changeValue = this.changeValue.bind(this);
-    let value = this.props.currentElement.getSettings(this.props.controlId);
+    let value = this.getSettings(this.props.controlId);
     if (value === null && this.props.default) {
       value = this.props.default;
     }
@@ -20,7 +21,6 @@ class TextController extends Component {
       show: true
     };
     this.dynamicButton = React.createRef();
-    controllerDecorate(this);
   }
 
   changeValue(e) {
@@ -82,7 +82,7 @@ class TextController extends Component {
     if (this.state.show === false) {
       return '';
     }
-
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     return <div className="controller-container controller-container_text">
       <div className="controller-container__label">
         {this.props.label}
@@ -100,11 +100,11 @@ class TextController extends Component {
               iconsManager().renderIcon('times')
             }
           </div>
-        </div> : <input className="control-field" onChange={this.changeValue} value={this.state.value}/>
+        </div> : <input className="control-field" onChange={this.changeValue} value={value} />
         }
 
         <div className="control-group__append" ref={this.dynamicButton} onClick={this.openDynamicContent}>
-          <DynamicIcon/>
+          <DynamicIcon />
         </div>
       </div>
     </div>
@@ -115,6 +115,7 @@ class TextController extends Component {
 function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
+    currentState: state.currentState,
   };
 }
 

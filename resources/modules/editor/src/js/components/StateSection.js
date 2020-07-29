@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import '../../sass/state-section.scss'
 import { connect } from "react-redux";
 import { setCurrentState } from "../store/state-section/actions";
-import { getElementState } from "../store/store";
+import { getElementState, getCurrentTab } from "../store/store";
 
 class StateSection extends Component {
 
@@ -16,6 +16,10 @@ class StateSection extends Component {
         { title: "Disabled", value: ".disabled" },
       ]
     }
+  }
+
+  componentWillUnmount() {
+    this.props.dispatch(setCurrentState("Normal", ""));
   }
 
   setCurrentState(button) {
