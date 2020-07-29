@@ -5,7 +5,7 @@
 
 
 ### 0.7.0
-+ Add States Styling
++ Add Hover, Active, Disabled States Styling
 + Optimize Front App
 
 
