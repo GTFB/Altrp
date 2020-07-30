@@ -10,6 +10,7 @@ class Area extends Model
   protected $fillable = [
     'name',
     'settings',
+    'title',
   ];
 
   static function get_areas_names(){
