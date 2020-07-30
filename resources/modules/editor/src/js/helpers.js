@@ -125,9 +125,10 @@ export function getWindowWidth() {
 /**
  * Генерирует суфикс для всех настроек
  * на основе elementState и разврешения
+ * @param {Controller} controller
  * @return {string}
  */
-export function getElementSettingsSuffix() {
+export function getElementSettingsSuffix(controller) {
   if(! getElementState().value){
     return '';
   }

@@ -30,7 +30,6 @@ function getSettings(settingName){
   if(! this.props.currentElement){
     return '';
   }
-  // console.log(this.props.controller);
   /**
    * Если внутри репитера, то берем свойство из репитера, а не элемента
    */
@@ -39,7 +38,7 @@ function getSettings(settingName){
         [this.props.controller.data.itemIndex][this.props.controller.data.controlId];
   }
   return this.props.currentElement.getSettings(settingName +
-      getElementSettingsSuffix())
+      getElementSettingsSuffix(this.props.controller))
 }
 
 /**
