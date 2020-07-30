@@ -183,16 +183,18 @@ button{
   flex-grow: 1;
   display: flex;
   justify-content: center;
+  background-color: $light-gray;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 .editor-window {
-  max-width: calc(100vw - 270px);
+  max-width: calc(100vw - 275px);
   display: flex;
   align-items: center;
   flex-grow: 0;
+  background-color: #fff;
   transition: .5s;
   & iframe{
     width: 100%;

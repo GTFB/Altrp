@@ -5,6 +5,7 @@ import AsyncSelect from "react-select/async";
 import DesktopIcon from '../../../svgs/desktopNew.svg'
 import controllerDecorate from "../../decorators/controller";
 import Resource from "../../classes/Resource";
+import ResponsiveDdMenu from "../ResponsiveDdMenu"
 // в rootElement при создании массива select, value никогда не должно повторятся
 class Select2Controller extends Component {
   constructor(props) {
