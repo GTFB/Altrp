@@ -360,7 +360,7 @@ button{
     justify-content: space-between;
   }
   & .control-group{
-    width: 65%;
+    width: 100%;
     min-width: 145px;
   }
   &:not(:last-child){
@@ -438,6 +438,17 @@ button{
     margin-bottom: 10px;
   }
 }
+
+.responsive-absolute {
+  position: absolute;
+  left: 32%;
+}
+
+.textcontroller-responsive {
+  width: 100%;
+  margin-bottom: 5px;
+}
+
 .controller-media{
   &-choose{
     position: relative;

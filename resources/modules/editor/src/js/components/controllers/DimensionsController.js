@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import DynamicIcon from "../../../svgs/dynamic.svg";
-import DesktopIcon from "../../../svgs/desktopNew.svg";
 import BindIcon from "../../../svgs/bind.svg";
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
@@ -114,9 +113,10 @@ class DimensionsController extends Component {
 
     return <div className="controller-container controller-container_dimensions">
       <div className="control-dimensions-header">
-        <div className="controller-dimensions__label">{this.props.label}</div>
-        <DesktopIcon className="controller-container__label-svg" width="12" />
-
+        <div className="controller-dimensions__label">
+          {this.props.label}
+        </div>
+        <ResponsiveDdMenu />
         <div className="control-slider-type">
           {
             this.state.units.map(unit => {

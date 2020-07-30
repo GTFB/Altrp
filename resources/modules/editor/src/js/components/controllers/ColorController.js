@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { SketchPicker } from "react-color"
 import controllerDecorate from "../../decorators/controller";
+import ResponsiveDdMenu from "../ResponsiveDdMenu";
 
 class ColorController extends Component {
   constructor(props) {
@@ -89,7 +90,10 @@ class ColorController extends Component {
 
     return <div className="controller-container controller-container_color">
       <div className="control-color-header">
-        <div className="controller-container__label">{this.props.label}</div>
+        <div className="controller-container__label">
+          {this.props.label}
+          <ResponsiveDdMenu className="controller-container__label-svg" width="12" />
+        </div>
         {/* <div className="controller-newColor"></div> */}
       </div>
       <div className="control-color-wrapper" onClick={this.openColorPicker}>

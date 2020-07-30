@@ -4,9 +4,9 @@ import Left from '../../../svgs/left.svg';
 import Center from '../../../svgs/center.svg';
 import Right from '../../../svgs/right.svg';
 import InWidth from '../../../svgs/in_width.svg';
-import DesktopIcon from '../../../svgs/desktopNew.svg'
 import controllerDecorate from "../../decorators/controller";
 import { iconsManager } from "../../helpers";
+import ResponsiveDdMenu from "../ResponsiveDdMenu";
 
 class ChooseController extends Component {
   constructor(props) {
@@ -46,7 +46,7 @@ class ChooseController extends Component {
     return <div className="controller-container controller-container_choose">
       <div className="controller-container__label">
         {this.props.label}
-        <DesktopIcon className="controller-container__label-svg" width="12" />
+        <ResponsiveDdMenu />
       </div>
       <div className="control-container-choose">
         {

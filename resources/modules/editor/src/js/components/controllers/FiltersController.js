@@ -5,6 +5,7 @@ import DynamicIcon from '../../../svgs/dynamic.svg'
 import ContentIcon from '../../../svgs/content.svg'
 import HistoryIcon from '../../../svgs/history.svg'
 import controllerDecorate from "../../decorators/controller";
+import ResponsiveDdMenu from "../ResponsiveDdMenu";
 
 class FiltersController extends Component {
   constructor(props) {
@@ -146,6 +147,7 @@ class FiltersController extends Component {
     return <div className="controller-container controller-container_shadow">
       <div className="controller-container__label control-shadow-label">
         {this.props.label}
+        <ResponsiveDdMenu />
       </div>
       <div className="control-group control-group-shadow">
         <div className="control-shadow-toggle control-shadow-toggle-active" onClick={this.openShadow} fill="#8E94AA">

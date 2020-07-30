@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import DynamicIcon from '../../../svgs/dynamic.svg'
 import controllerDecorate from "../../decorators/controller";
+import ResponsiveDdMenu from "../ResponsiveDdMenu";
 
 class NumberController extends Component {
   constructor(props) {
@@ -37,6 +38,7 @@ class NumberController extends Component {
     return <div className="controller-container controller-container_number">
       <div className="controller-container__label">
         {this.props.label}
+        <ResponsiveDdMenu />
       </div>
       <div className="control-group">
         <input className="control-field" onChange={this.changeValue} value={value} type="number" />

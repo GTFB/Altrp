@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import DesktopIcon from '../../../svgs/desktopNew.svg'
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
 
@@ -67,10 +66,8 @@ class SliderController extends Component {
       <div className="control-slider-header">
         <div className="control-slider-label">
           {this.props.label}
-
         </div>
-        <ResponsiveDdMenu className="controller-container__label-svg" width="12" />
-
+        <ResponsiveDdMenu />
         <div className="control-slider-type">
           {
             this.state.units.map(unit => {
