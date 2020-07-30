@@ -1,27 +1,40 @@
 import React, { Component, Fragment } from "react";
 import Resource from "../../../../editor/src/js/classes/Resource";
+import { titleToName } from "../../js/helpers";
 import AggregateComponent from "./AggregateComponent";
 import ConditionComponent from "./ConditionComponent";
+import OrderByComponent from "./OrderByComponent";
 
 const mockedModels = [
   { value: 1, label: "Model title 1" },
   { value: 2, label: "Model title 2" },
   { value: 3, label: "Model title 3" },
 ];
-
 const mockedRelations = [
   { value: 1, label: "Relation title 1" },
   { value: 2, label: "Relation title 2" },
   { value: 3, label: "Relation title 3" },
 ];
-
 const mockedColumns = [
   { value: 1, label: "Coolumn title 1" },
   { value: 2, label: "Coolumn title 2" },
   { value: 3, label: "Coolumn title 3" },
 ];
 
-const permissionsOptions = [];
+const conditionInitState = {
+  conditionType: '',
+  column: '',
+  operator: '',
+  value: '',
+  or: false,
+  not: false,
+  value1: '',
+  value2: '',
+  values: '',
+  type: '',
+  first_column: '',
+  second_column: ''
+}
 
 class SQLBuilderForm extends Component {
   constructor(props) {
@@ -34,15 +47,10 @@ class SQLBuilderForm extends Component {
       columns: [],
       roles: [],
       permissions: [],
-      aggregates: [{ type: '', column: '', alias: '', id: 0 }], //TODO: delete id before submit
-      conditions: {
-        where: [],
-        or_where: [],
-        where_between: [],
-        where_in: [],
-        where_date: [],
-        where_column: []
-      },
+      aggregates: [{ type: '', column: '', alias: '', id: 0 }],
+      conditions: [conditionInitState],
+      orderBy: [{ type: '', column: '', id: 0 }],
+      group_by: [],
       // modelsOptions: [],   TODO: заменить замоканые данные
       // relationsOptions: [],
       // columnsOptions: [],
@@ -50,7 +58,7 @@ class SQLBuilderForm extends Component {
       relationsOptions: mockedRelations,
       columnsOptions: mockedColumns,
       rolesOptions: [],
-      // permissionsOptions: permissionsOptions,
+      permissionsOptions: [],
 
     };
     this.counter = 0;
@@ -60,20 +68,38 @@ class SQLBuilderForm extends Component {
     this.multipleSelectChangeHandler = this.multipleSelectChangeHandler.bind(this);
     this.aggregateChangeHandler = this.aggregateChangeHandler.bind(this);
     this.aggregatesAddHandler = this.aggregatesAddHandler.bind(this);
-    this.aggregatesdeleteHandler = this.aggregatesdeleteHandler.bind(this);
+    this.aggregateDeleteHandler = this.aggregateDeleteHandler.bind(this);
     this.conditionChangeHandler = this.conditionChangeHandler.bind(this);
-    this.typeChangeHandler = this.typeChangeHandler.bind(this);
-    this.conditionsAddHandler = this.conditionsAddHandler.bind(this);
-    this.conditionsDeleteHandler = this.conditionsDeleteHandler.bind(this);
+    this.conditionAddHandler = this.conditionAddHandler.bind(this);
+    this.conditionDeleteHandler = this.conditionDeleteHandler.bind(this);
+    this.conditionDeleteHandler = this.conditionDeleteHandler.bind(this);
+    this.orderByChangeHandler = this.orderByChangeHandler.bind(this);
+    this.orderByAddHandler = this.orderByAddHandler.bind(this);
+    this.orderByDeleteHandler = this.orderByDeleteHandler.bind(this);
+    this.titleChangeHandler = this.titleChangeHandler.bind(this);
   }
 
   async componentDidMount() {
     const rolesOptions = await this.rolesOptions.getAll();
     this.setState(state => ({ ...state, rolesOptions }))
+    // TODO: GET
+    // modelsOptions
+    // relationsOptions
+    // columnsOptions
+    // permissionsOptions
   }
 
   changeHandler({ target: { value, name } }) {
     this.setState(_state => ({ [name]: value }));
+  }
+
+  titleChangeHandler(e) {
+    e.persist();
+    this.setState(state => ({
+      ...state,
+      title: e.target.value,
+      name: titleToName(e.target.value)
+    }))
   }
 
   aggregateChangeHandler({ target: { value, name } }, index) {
@@ -94,7 +120,7 @@ class SQLBuilderForm extends Component {
     });
   }
 
-  aggregatesdeleteHandler(index) {
+  aggregateDeleteHandler(index) {
     this.setState(state => {
       const aggregates = [...state.aggregates];
       aggregates.splice(index, 1);
@@ -102,54 +128,56 @@ class SQLBuilderForm extends Component {
     });
   }
 
-  conditionChangeHandler({ target: { value, name } }, type, index) {
+  conditionChangeHandler({ target: { value, name, checked } }, index) {
     this.setState(state => {
-      const array = [...state.conditions[type]];
-      const conditionItem = { ...state.conditions[type][index] };
-      array[index] = { ...conditionItem, [name]: value };
-      return {
-        ...state, conditions: {
-          ...state.conditions, [type]: [...array]
-        }
-      }
+      const conditions = [...state.conditions];
+      conditions[index] = {
+        ...state.conditions[index],
+        [name]: ['or', 'not'].includes(name) ? checked : value
+      };
+      return { ...state, conditions };
     });
   }
 
-  typeChangeHandler(e, type, index) {
-    e.persist();
+  conditionAddHandler() {
     this.counter++;
-
     this.setState(state => {
-      const newType = e.target.value;
-      const fromArray = [...state.conditions[type]];
-      const toArray = [...state.conditions[newType]];
+      return { ...state, conditions: [...state.conditions, { ...conditionInitState, id: this.counter }] };
+    });
+  }
 
-      fromArray.splice(index, 1);
-      toArray.push({ id: this.counter });
-
-      return {
-        ...state, conditions: {
-          ...state.conditions,
-          [type]: fromArray,
-          [newType]: toArray
-        }
-      }
+  conditionDeleteHandler(index) {
+    this.setState(state => {
+      const conditions = [...state.conditions];
+      conditions.splice(index, 1);
+      return { ...state, conditions };
     })
-  };
+  }
 
-
-  conditionsAddHandler() {
-    this.counter++;
-
+  orderByChangeHandler({ target: { value, name } }, index) {
     this.setState(state => {
-      const conditions = { ...state.conditions };
-      conditions.where.push({ column: '', operator: '', value: '', id: this.counter });
-      return { ...state, conditions: { ...state.conditions, ...conditions } };
+      const orderBy = [...state.orderBy];
+      orderBy[index] = { ...state.orderBy[index], [name]: value };
+      return { ...state, orderBy };
     });
   }
 
-  conditionsDeleteHandler() {
+  orderByAddHandler() {
+    this.counter++;
 
+    this.setState(state => {
+      const orderBy = [...state.orderBy];
+      orderBy.push({ type: '', column: '', id: this.counter });
+      return { ...state, orderBy };
+    });
+  }
+
+  orderByDeleteHandler(index) {
+    this.setState(state => {
+      const orderBy = [...state.orderBy];
+      orderBy.splice(index, 1);
+      return { ...state, orderBy };
+    })
   }
 
   multipleSelectChangeHandler({ target: { value, name } }) {
@@ -169,19 +197,70 @@ class SQLBuilderForm extends Component {
 
   submitHandler(e) {
     e.preventDefault();
+    const { title, name, relations, columns, roles, permissions, aggregates,
+      conditions: stateConditions, orderBy, group_by } = this.state;
 
+    aggregates.forEach(item => delete item.id);
+    stateConditions.forEach(item => delete item.id);
+    orderBy.forEach(item => delete item.id);
+
+    const where = stateConditions
+      .filter(({ conditionType }) => conditionType === "where")
+      .map(({ column, operator, value }) => ({ column, operator, value }));
+
+    const or_where = stateConditions
+      .filter(({ conditionType }) => conditionType === "or_where")
+      .map(({ column, operator, value }) => ({ column, operator, value }));
+
+    const where_between = stateConditions
+      .filter(({ conditionType }) => conditionType === "where_between")
+      .map(({ or, not, column, value1, value2 }) => ({ or, not, column, values: [value1, value2] }));
+
+    const where_in = stateConditions
+      .filter(({ conditionType }) => conditionType === "where_in")
+      .map(({ or, not, column, values }) =>
+        ({ or, not, column, values: values.split(",").map(item => item.trim()) })
+      );
+
+    const where_date = stateConditions
+      .filter(({ conditionType }) => conditionType === "where_date")
+      .map(({ type, column, operator, value }) => ({ type, column, operator, value }));
+
+    const where_column = stateConditions
+      .filter(({ conditionType, or }) => conditionType === "where_column" && !or)
+      .map(({ first_column, operator, second_column }) => ({ first_column, operator, second_column }));
+
+    const where_column_or = stateConditions
+      .filter(({ conditionType, or }) => conditionType === "where_column" && or)
+      .map(({ first_column, operator, second_column }) => ({ first_column, operator, second_column }));
+
+    const conditions = {
+      where,
+      or_where,
+      where_between,
+      where_in,
+      where_date,
+      where_column: [
+        { or: false, data: where_column },
+        { or: true, data: where_column_or }
+      ]
+    };
+    const access = { roles, permissions };
+    const data = { title, name, columns, aggregates, conditions, relations, orderBy, access, group_by }
+    console.log(data);
   }
 
   render() {
-    const { title, name, modelId, relations, columns, roles, permissions, aggregates, conditions,
-      modelsOptions, relationsOptions, columnsOptions, rolesOptions } = this.state;
+    const { title, name, modelId, relations, columns, roles, permissions,
+      aggregates, conditions, orderBy, group_by, modelsOptions, 
+      permissionsOptions, relationsOptions, columnsOptions, rolesOptions } = this.state;
 
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="form-group">
         <label htmlFor="title">Title</label>
         <input type="text" id="title" required name="title"
           value={title}
-          onChange={this.changeHandler}
+          onChange={this.titleChangeHandler}
           className="form-control" />
       </div>
 
@@ -245,7 +324,7 @@ class SQLBuilderForm extends Component {
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
           <label htmlFor="roles">Roles</label>
-          <select id="roles" required name="roles" multiple
+          <select id="roles" /* required */ name="roles" multiple //TODO: раскоментировать required
             value={roles}
             onChange={this.changeHandler}
             className="form-control"
@@ -260,7 +339,7 @@ class SQLBuilderForm extends Component {
 
         <div className="form-group form-group_width47">
           <label htmlFor="permissions">Permissions</label>
-          <select id="permissions" required name="permissions" multiple
+          <select id="permissions" /* required */ name="permissions" multiple //TODO: раскоментировать required
             value={permissions}
             onChange={this.multipleSelectChangeHandler}
             className="form-control"
@@ -279,9 +358,9 @@ class SQLBuilderForm extends Component {
         <AggregateComponent item={item}
           columnsOptions={columnsOptions}
           changeHandler={e => this.aggregateChangeHandler(e, index)}
-          deleteHandler={() => this.aggregatesdeleteHandler(index)} />
+          deleteHandler={() => this.aggregateDeleteHandler(index)} />
         <button className="btn btn_failure" type="button"
-          onClick={() => this.aggregatesdeleteHandler(index)}
+          onClick={() => this.aggregateDeleteHandler(index)}
         >
           Delete
         </button>
@@ -293,27 +372,66 @@ class SQLBuilderForm extends Component {
       </div>
 
       <p className="centred">Conditions</p>
-      {/* {JSON.stringify(Object.entries(conditions))} */}
 
-      {Object.entries(conditions).map(item => item[1].map((condition, index) => <Fragment key={condition.id}>
-        <ConditionComponent conditionType={item[0]} item={condition}
+      {conditions.map((condition, index) => <Fragment key={condition.id}>
+        <ConditionComponent
+          index={index}
+          item={condition}
           columnsOptions={columnsOptions}
-          conditionTypeOptions={Object.keys(conditions)}
-          columnsOptions={columnsOptions}
-          changeHandler={e => this.conditionChangeHandler(e, item[0], index)}
-          deleteHandler={() => this.conditionsDeleteHandler(index)}
-          typeChangeHandler={(e) => this.typeChangeHandler(e, item[0], index)}
+          changeHandler={e => this.conditionChangeHandler(e, index)}
         />
         <button className="btn btn_failure" type="button"
-          onClick={() => this.conditionsDeleteHandler(index)}
+          onClick={() => this.conditionDeleteHandler(index)}
         >
           Delete
         </button>
-      </Fragment>))}
+      </Fragment>)}
       <div className="centred">
-        <button className="btn btn_success" type="button" onClick={this.conditionsAddHandler}>
+        <button className="btn btn_success" type="button" onClick={this.conditionAddHandler}>
           + New
         </button>
+      </div>
+
+      <p className="centred">Order By</p>
+
+      {orderBy.map((item, index) => <Fragment key={item.id}>
+        <OrderByComponent
+          item={item}
+          columnsOptions={columnsOptions}
+          changeHandler={e => this.orderByChangeHandler(e, index)}
+        />
+        <button className="btn btn_failure" type="button"
+          onClick={() => this.orderByDeleteHandler(index)}
+        >
+          Delete
+        </button>
+      </Fragment>)}
+      <div className="centred">
+        <button className="btn btn_success" type="button" onClick={this.orderByAddHandler}>
+          + New
+        </button>
+      </div>
+
+      <p className="centred">Group By</p>
+
+      <div className="form-group">
+        <label htmlFor="group_by">Fields</label>
+        <select id="group_by" required name="group_by" multiple
+          value={group_by}
+          onChange={this.multipleSelectChangeHandler}
+          className="form-control"
+        >
+          <option disabled value="" />
+          {columnsOptions.map(({ value, label }) =>
+            <option key={value} value={label}>
+              {label}
+            </option>)}
+        </select>
+      </div>
+
+      <div className="btn__wrapper btn_add centred">
+        <button className="btn btn_success" type="submit">Save</button>
+        {/* <Link className="btn" to="/admin/tables/models">Cancel</Link> */}
       </div>
     </form>
   }
@@ -321,142 +439,3 @@ class SQLBuilderForm extends Component {
 }
 
 export default SQLBuilderForm;
-
-const a = {
-  "name": "getAllRecords",
-  "columns": [
-    "id",
-    "name",
-    "email"
-  ],
-  "aggregates": [
-    {
-      "type": "sum",
-      "column": "price",
-      "alias": "sum_price"
-    },
-    {
-      "type": "max",
-      "column": "price",
-      "alias": "max_price"
-    }
-  ],
-  "conditions": {
-    "where": [
-      {
-        "column": "user_id",
-        "operator": "=",
-        "value": "CURRENT_USER"
-      },
-      {
-        "column": "name",
-        "operator": "=",
-        "value": "Egor"
-      }
-    ],
-    "or_where": [
-      {
-        "column": "name",
-        "operator": "<>",
-        "value": "CURRENT_USER"
-      },
-      {
-        "column": "name",
-        "operator": "<>",
-        "value": "Tgor"
-      }
-    ],
-    "where_between": [
-      {
-        "or": false,
-        "not": false,
-        "column": "price",
-        "values": [
-          20,
-          50
-        ]
-      },
-      {
-        "or": false,
-        "not": false,
-        "column": "price",
-        "values": [
-          20,
-          50
-        ]
-      }
-    ],
-    "where_in": [
-      {
-        "or": true,
-        "not": true,
-        "column": "price",
-        "values": [
-          20,
-          50
-        ]
-      }
-    ],
-    "where_date": [
-      {
-        "type": "year",
-        "column": "created_at",
-        "operator": "=",
-        "value": "2020"
-      }
-    ],
-    "where_column": [
-      {
-        "or": false,
-        "data": [
-          {
-            "first_column": "price",
-            "operator": "<",
-            "second_column": "old_price"
-          }
-        ]
-      },
-      {
-        "or": true,
-        "data": [
-          {
-            "first_column": "price",
-            "operator": "<",
-            "second_column": "old_price"
-          },
-          {
-            "first_column": "price",
-            "operator": "<",
-            "second_column": "old_price"
-          }
-        ]
-      }
-    ]
-  },
-  "relations": [
-    "post",
-    "comments"
-  ],
-  "order_by": [
-    {
-      "column": "name",
-      "type": "desc"
-    }
-  ],
-  "access": {
-    "roles": [
-      1,
-      2
-    ],
-    "permissions": [
-      48,
-      50
-    ]
-  },
-  "group_by": [
-    "name",
-    "surname"
-  ],
-  "offset": 10,
-  "limit": 5
-}

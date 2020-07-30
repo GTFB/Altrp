@@ -12,9 +12,10 @@
 .form-group__inline-wrapper {
   display: flex;
   justify-content: space-between;
-  &__divider {
+  &__divider, .form-group_checkbox {
     align-self: flex-end;
   }
+  
 }
 
 .form-group.form-group_width30 {
