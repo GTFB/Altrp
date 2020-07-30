@@ -28,21 +28,21 @@ class DimensionsController extends Component {
       units
     };
   }
-
   changeUnit(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     let unit = e.target.dataset.unit;
     this._changeValue({
-      ...this.state.value,
+      ...value,
       unit
     });
   };
 
   changeValue(e) {
-
-    if (this.state.value.bind == true) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    if (value.bind === true) {
       if (e.target.value <= 9999) {
         this._changeValue({
-          ...this.state.value,
+          ...value,
           left: e.target.value || 0,
           bottom: e.target.value || 0,
           top: e.target.value || 0,
@@ -55,30 +55,30 @@ class DimensionsController extends Component {
         active = e.currentTarget.dataset.active;
       }
 
-      if (active == "top") {
+      if (active === "top") {
         this._changeValue({
-          ...this.state.value,
+          ...value,
           top: e.target.value || 0,
         });
       }
 
-      if (active == "right") {
+      if (active === "right") {
         this._changeValue({
-          ...this.state.value,
+          ...value,
           right: e.target.value || 0,
         });
       }
 
-      if (active == "bottom") {
+      if (active === "bottom") {
         this._changeValue({
-          ...this.state.value,
+          ...value,
           bottom: e.target.value || 0,
         });
       }
 
-      if (active == "left") {
+      if (active === "left") {
         this._changeValue({
-          ...this.state.value,
+          ...value,
           left: e.target.value || 0,
         });
       }
@@ -87,10 +87,10 @@ class DimensionsController extends Component {
   }
 
   changeBind(e) {
-
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
-      bind: !this.state.value.bind
+      ...value,
+      bind: !value.bind
     })
   }
 
@@ -110,10 +110,12 @@ class DimensionsController extends Component {
     }
     // console.log(this.getSettings(this.props.controlId));
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+
+
     return <div className="controller-container controller-container_dimensions">
       <div className="control-dimensions-header">
         <div className="controller-dimensions__label">{this.props.label}</div>
-        <ResponsiveDdMenu className="controller-container__label-svg" />
+        <DesktopIcon className="controller-container__label-svg" width="12" />
 
         <div className="control-slider-type">
           {
@@ -137,7 +139,8 @@ class DimensionsController extends Component {
           <input className="control-field control-field-dimensions control-field-top-l"
             onChange={this.changeValue}
             data-active="top"
-            value={value.top || ''}
+
+            value={value.top || 0}
             type="number" />
           <label className="control-field-top-l-label control-field-dimensions-label">TOP</label>
         </div>
@@ -145,7 +148,8 @@ class DimensionsController extends Component {
           <input className="control-field control-field-dimensions control-field-top-r"
             onChange={this.changeValue}
             data-active="right"
-            value={value.right || ''}
+
+            value={value.right || 0}
             type="number" />
           <label className="control-field-top-r-label control-field-dimensions-label">RIGHT</label>
         </div>
@@ -153,7 +157,7 @@ class DimensionsController extends Component {
           <input className="control-field control-field-dimensions control-field-bot-l"
             onChange={this.changeValue}
             data-active="bottom"
-            value={value.bottom || ''}
+            value={value.bottom || 0}
             type="number" />
           <label className="control-field-bot-l-label control-field-dimensions-label">BOTTOM</label>
         </div>
@@ -161,7 +165,7 @@ class DimensionsController extends Component {
           <input className="control-field control-field-dimensions control-field-bot-r"
             onChange={this.changeValue}
             data-active="left"
-            value={value.left || ''}
+            value={value.left || 0}
             type="number" />
           <label className="control-field-bot-r-label control-field-dimensions-label">LEFT</label>
         </div>
@@ -181,4 +185,5 @@ function mapStateToProps(state) {
     currentState: state.currentState,
   };
 }
+
 export default connect(mapStateToProps)(DimensionsController);

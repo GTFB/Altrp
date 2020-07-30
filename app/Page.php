@@ -31,7 +31,7 @@ class Page extends Model
   /**
    * @return array
    */
-  static function get_frontend_routes()
+  static function get_frontend_routes( )
   {
     $pages = [];
     if( ! appIsInstalled()  ){
@@ -50,9 +50,10 @@ class Page extends Model
   }
 
   /**
+   * @param bool $lazy
    * @return array
    */
-  public static function get_pages_for_frontend()
+  public static function get_pages_for_frontend( $lazy = false )
   {
     $pages = [];
 
@@ -66,7 +67,11 @@ class Page extends Model
           'id' => $page->id,
           'title' => $page->title,
           'allowed' => true,
-          'areas' => self::get_areas_for_page( $page->id ),
+          /**
+           * Если лениво загружаем области то возвращаем пустой массив
+           */
+          'areas' => $lazy ? [] : self::get_areas_for_page( $page->id ),
+//          'areas' => self::get_areas_for_page( $page->id ),
         ];
       } else {
         $_page = [
@@ -76,6 +81,7 @@ class Page extends Model
           'redirect' => '/',
         ];
       }
+      $_page['lazy'] = $lazy;
       if($page->model){
         $_page['model'] = $page->model->toArray();
         $_page['model']['modelName'] = $page->model->altrp_table->name;
@@ -242,7 +248,7 @@ class Page extends Model
    * @return bool
    */
   public function allowedForUser( $user_id = '' ){
-    if( ( ! auth()->user() ) && $this->for_guest ) {
+    if( ( ! auth()->user() ) ) {
       return true;
     }
     if( ! $user_id ) {
@@ -250,23 +256,26 @@ class Page extends Model
     } else {
       $user = User::find( $user_id );
     }
-    if( ! $user ){
-      return false;
-    }
     $allowed = false;
 
     /** @var User $user */
     $user = auth()->user();
     $page_role_table = DB::table( 'page_role' );
     $page_roles = $page_role_table->where( 'page_id', $this->id )->get();
+    /**
+     * Если никаких ролей не указано и for_guest false, то всегда доступно
+     */
+    if( ( ! $page_roles->count() ) && ! $this->for_guest ){
+      $allowed = true;
+    }
+    if( ! $user ){
+      return false;
+    }
     foreach ( $page_roles as $page_role ) {
       $role = Role::find( $page_role->role_id );
       if( $user->hasRole( $role->name ) ){
         $allowed = true;
       }
-    }
-    if( ( ! $page_roles->count() ) && ! $this->for_guest ){
-      $allowed = true;
     }
     return $allowed;
   }

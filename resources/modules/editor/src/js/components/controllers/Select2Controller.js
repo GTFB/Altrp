@@ -10,9 +10,10 @@ import ResponsiveDdMenu from "../ResponsiveDdMenu"
 class Select2Controller extends Component {
   constructor(props) {
     super(props);
+    controllerDecorate(this);
     this.change = this.change.bind(this);
     this.loadOptions = this.loadOptions.bind(this);
-    let value = this.props.currentElement.getSettings(this.props.controlId);
+    let value = this.getSettings(this.props.controlId);
     if (value === null && this.props.default) {
       value = this.props.default;
     }
@@ -25,7 +26,6 @@ class Select2Controller extends Component {
     if (this.props.options_resource) {
       this.resource = new Resource({ route: this.props.options_resource });
     }
-    controllerDecorate(this);
   };
 
   getDefaultValue() {
@@ -57,6 +57,8 @@ class Select2Controller extends Component {
     if (this.state.show === false) {
       return '';
     }
+
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
 
     const customStyles = {
       option: (provided, state) => ({
@@ -110,9 +112,9 @@ class Select2Controller extends Component {
       })
     };
 
-    let value = {};
+    // let value = {};
     this.state.options.forEach(option => {
-      if (option.value === this.state.value) {
+      if (option.value === value) {
         value = { ...option };
       }
     });
@@ -148,6 +150,7 @@ class Select2Controller extends Component {
 function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
+    currentState: state.currentState,
   };
 }
 export default connect(mapStateToProps)(Select2Controller);

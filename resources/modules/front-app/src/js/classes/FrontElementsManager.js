@@ -7,6 +7,13 @@ import ButtonWidget from "../../../../editor/src/js/components/widgets/ButtonWid
 import TextWidget from "../../../../editor/src/js/components/widgets/TextWidget";
 import ImageWidget from "../../../../editor/src/js/components/widgets/ImageWidget";
 import TableWidget from "../../../../editor/src/js/components/widgets/TableWidget";
+import NavWidget from "../../../../editor/src/js/components/widgets/NavWidget";
+import DividerWidget from "../../../../editor/src/js/components/widgets/DividerWidget";
+import TabsWidget from "../../../../editor/src/js/components/widgets/TabsWidget";
+import PosterWidget from "../../../../editor/src/js/components/widgets/PosterWidget";
+import ListWidget from "../../../../editor/src/js/components/widgets/ListWidget";
+import AccordionWidget from "../../../../editor/src/js/components/widgets/AccordionWidget";
+import CarouselWidget from "../../../../editor/src/js/components/widgets/CarouselWidget";
 
 export default class FrontElementsManager {
 
@@ -22,6 +29,13 @@ export default class FrontElementsManager {
     this.components['text'] = TextWidget;
     this.components['image'] = ImageWidget;
     this.components['table'] = TableWidget;
+    this.components['nav'] = NavWidget;
+    this.components['divider'] = DividerWidget;
+    this.components['tabs'] = TabsWidget;
+    this.components['poster'] = PosterWidget;
+    this.components['list'] = ListWidget;
+    this.components['accordion'] = AccordionWidget;
+    this.components['carousel'] = CarouselWidget;
   }
 
   getComponentClass(name){

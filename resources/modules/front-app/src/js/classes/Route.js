@@ -12,6 +12,7 @@ class Route {
     this.title = data.title || '';
     this.allowed = data.allowed;
     this.redirect = data.redirect;
+    this.lazy = data.lazy;
   }
   static routeFabric(data){
     let route = new Route(data);
