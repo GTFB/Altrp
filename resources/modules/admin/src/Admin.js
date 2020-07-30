@@ -37,6 +37,7 @@ import AdminModal from "./components/AdminModal";
 import AddPage from "./components/AddPage";
 import UserTopPanel from "./components/UserTopPanel";
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
+import SQLBuilder from "./components/SQLBuilder";
 
 import AddTable from "./components/tables/AddTable";
 import EditTable from "./components/tables/EditTable";
@@ -213,6 +214,9 @@ class Admin extends Component {
             </Route>
             <Route path="/admin/pages/add">
               <AddPage/>
+            </Route>
+            <Route path="/admin/sql-builder">
+              <SQLBuilder />
             </Route>
           </Switch>
         </Router>
