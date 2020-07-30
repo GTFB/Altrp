@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import '../../sass/section.scss'
-import { styles } from "react-contexify/lib/utils/styles";
 import { isEditor, getWindowWidth } from "../helpers"
 
 class SectionComponent extends Component {

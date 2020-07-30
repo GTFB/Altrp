@@ -8,6 +8,10 @@ import RootElement from "./js/classes/elements/RootElement";
 import Styles from "./js/components/Styles";
 import {contextMenu} from "react-contexify/lib/index";
 import ElementContextMenu from "./js/components/ElementContextMenu";
+import "slick-carousel/slick/slick.scss";
+import "slick-carousel/slick/slick-theme.scss";
+import './js/components/altrp-carousel/altrp-carousel.scss';
+
 
 class EditorContent extends Component {
   constructor(props) {

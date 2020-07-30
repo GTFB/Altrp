@@ -7,10 +7,12 @@ import ResponsiveDdMenu from "../ResponsiveDdMenu";
 class SliderController extends Component {
   constructor(props) {
     super(props);
+    controllerDecorate(this);
     this.inputUpdate = this.inputUpdate.bind(this);
     this.sliderChange = this.sliderChange.bind(this);
     this.changeUnit = this.changeUnit.bind(this);
-    let value = this.props.currentElement.getSettings(this.props.controlId);
+    let value = this.getSettings(this.props.controlId);
+
     if (value === null && this.props.default) {
       value = this.props.default;
     }
@@ -24,18 +26,19 @@ class SliderController extends Component {
       min: this.props.min || 0,
       step: this.props.step || 1
     };
-    controllerDecorate(this);
   }
   changeUnit(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     let unit = e.target.dataset.unit;
     this._changeValue({
-      ...this.state.value,
+      ...value,
       unit
     });
   }
   sliderChange(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       size: e.target.value
     });
     // console.log(this.state.value)
@@ -48,8 +51,9 @@ class SliderController extends Component {
     };
   }
   inputUpdate(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
+      ...value,
       size: e.target.value
     });
     // console.log(e.target.value)
@@ -58,10 +62,12 @@ class SliderController extends Component {
     if (this.state.show === false) {
       return '';
     }
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     return <div className="controller-container controller-container_slider">
       <div className="control-slider-header">
         <div className="control-slider-label">
           {this.props.label}
+
         </div>
         <DesktopIcon className="controller-container__label-svg" width="12" />
 
@@ -69,7 +75,7 @@ class SliderController extends Component {
           {
             this.state.units.map(unit => {
               let classes = 'control-slider-type-box';
-              if (this.state.value.unit === unit) {
+              if (value.unit === unit) {
                 classes += ' control-slider-type-box_active';
               }
               return <div className={classes}
@@ -86,15 +92,15 @@ class SliderController extends Component {
         <input type="range"
           min={this.state.min}
           max={this.state.max}
-
           step={this.state.step}
-          className="control-slider" value={this.state.value.size || ''} onChange={this.inputUpdate}
+          className="control-slider" value={value.size || 0} onChange={this.inputUpdate}
           onInput={this.sliderChange} />
         <div className="control-slider-input-box">
           <input className="control-slider-input" type="number"
             min={this.state.min}
             max={this.state.max}
-            value={this.state.value.size || ''} onChange={this.inputUpdate} onInput={this.sliderChange} />
+
+            value={value.size || 0} onChange={this.inputUpdate} onInput={this.sliderChange} />
         </div>
       </div>
     </div>
@@ -104,6 +110,7 @@ class SliderController extends Component {
 function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
+    currentState: state.currentState,
   };
 }
 export default connect(mapStateToProps)(SliderController);
