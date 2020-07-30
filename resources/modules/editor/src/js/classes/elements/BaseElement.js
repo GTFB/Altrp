@@ -403,7 +403,9 @@ class BaseElement extends ControlStack {
    * */
   addStyles(settingName, rules) {
     let breakpoint = CONSTANTS.DEFAULT_BREAKPOINT;
-    console.log(getCurrentScreen());
+    if(getCurrentScreen().name){
+      breakpoint = getCurrentScreen().name;
+    }
     this.settings.styles = this.settings.styles || {};
     this.settings.styles[breakpoint] = this.settings.styles[breakpoint] || {};
 

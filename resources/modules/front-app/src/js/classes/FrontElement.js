@@ -1,4 +1,5 @@
 import CONSTANTS from "../../../../editor/src/js/consts";
+import {getMediaQueryByName} from "../helpers";
 
 class FrontElement {
 
@@ -229,12 +230,24 @@ class FrontElement {
             }
           }
         }
-      }
-      if(breakpoint === CONSTANTS.DEFAULT_BREAKPOINT){
-        for(let selector in rules){
-          if(rules.hasOwnProperty(selector)){
-            styles += `${selector} {` + rules[selector].join('') + '}';
+        /**
+         * Оборачиваем в медиа запрос при необходимости
+         *
+         */
+        if(breakpoint === CONSTANTS.DEFAULT_BREAKPOINT){
+          for(let selector in rules){
+            if(rules.hasOwnProperty(selector)){
+              styles += `${selector} {` + rules[selector].join('') + '}';
+            }
           }
+        } else {
+          styles += `${getMediaQueryByName(breakpoint)}{`;
+          for(let selector in rules){
+            if(rules.hasOwnProperty(selector)){
+              styles += `${selector} {` + rules[selector].join('') + '}';
+            }
+          }
+          styles += `}`;
         }
       }
     }

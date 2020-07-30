@@ -24,8 +24,6 @@ class ResponsiveDdFooter extends Component {
     })
   }
   render() {
-    console.log(this.props.currentScreen);
-    console.log(this.state.screens);
     return (
       <div className="responsive-footer-wrapper">
         <span className={"responsive-footer-title " + (this.state.open && 'responsive-footer-icon__close')} onClick={() => this.toggleOpen()}>{iconsManager().renderIcon(this.props.currentScreen.icon)}</span>

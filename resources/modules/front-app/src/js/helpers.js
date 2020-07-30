@@ -1,3 +1,4 @@
+import CONSTANTS from "../../../editor/src/js/consts";
 
 export function getRoutes() {
   return import('./classes/Routes.js');
@@ -59,4 +60,19 @@ export function parseOptionsFromSettings(string) {
     }
   });
   return options;
+}
+
+/**
+ * Получает медиа запрос для css по имени настройки
+ * @param {string} screenSettingName
+ * @return {string}
+ */
+export function getMediaQueryByName(screenSettingName) {
+  let mediaQuery = '';
+  CONSTANTS.SCREENS.forEach(screen=>{
+    if(screen.name === screenSettingName){
+      mediaQuery = screen.mediaQuery;
+    }
+  });
+  return mediaQuery;
 }

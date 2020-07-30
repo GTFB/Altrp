@@ -13,5 +13,4 @@ export function currentScreenReducer(state = defaultState, action) {
     default:
       return state;
   }
-  return state;
-};
+}
