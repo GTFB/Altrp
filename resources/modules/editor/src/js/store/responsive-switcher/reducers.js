@@ -1,6 +1,7 @@
 import { SET_CURRENT_SCREEN } from './actions'
+import CONSTANTS from "../../consts";
 
-const defaultState = { icon: "wide_screen", name: "Desktop", id: 1, width: '100%', css: '' }
+const defaultState = CONSTANTS.SCREENS[0];
 
 export function currentScreenReducer(state = defaultState, action) {
   switch (action.type) {

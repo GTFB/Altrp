@@ -1,4 +1,4 @@
-import {getElementState} from "./store/store";
+import {getCurrentScreen, getElementState} from "./store/store";
 import {isEditor} from "../../../front-app/src/js/helpers";
 
 export function getTemplateId(){
@@ -131,5 +131,5 @@ export function getElementSettingsSuffix() {
   if(! getElementState().value){
     return '';
   }
-  return `_${getElementState().value}`
+  return `_${getElementState().value}_${getCurrentScreen().name}`
 }

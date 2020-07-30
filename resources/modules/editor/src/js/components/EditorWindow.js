@@ -11,20 +11,9 @@ class EditorWindow extends Component {
   }
 
   render() {
-    console.log(this.props.currentScreen);
     return <div style={{ width: this.props.currentScreen.width, height: this.props.currentScreen.height }} className={"editor-window"} id="editorWindow">
 
-      {/*<Frame>*/}
-      {/*<FrameBindingContext>*/}
-      {/*<DropTarget/>*/}
-      {/*</FrameBindingContext>*/}
-      {/*</Frame>*/}
-      {/*<Frame src="/admin/editor-content" >*/}
-      {/*<FrameBindingContext/>*/}
-      {/*</Frame>*/}
-      {/*<FrameContextConsumer>*/}
       <iframe src="/admin/editor-content" width="100%" />
-      {/*</FrameContextConsumer>*/}
     </div>
   }
 }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { setCurrentScreen } from "../store/responsive-switcher/actions"
-import { getCurrentScreen } from '../store/store'
 import { iconsManager } from "../helpers"
 import CONSTANTS from '../consts'
 
@@ -19,7 +18,7 @@ class ResponsiveDdMenu extends Component {
     })
   };
   setCurrentScreen(screen) {
-    this.props.setCurrentScreen(screen)
+    this.props.setCurrentScreen(screen);
     this.setState({
       open: !this.state.open,
     })
@@ -42,7 +41,7 @@ class ResponsiveDdMenu extends Component {
       </div>
     )
   }
-};
+}
 
 function mapStateToProps(state) {
   return {
