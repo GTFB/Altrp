@@ -1,10 +1,11 @@
-import React, {Component, useState} from "react";
-import {connect} from "react-redux";
+import React, { Component, useState } from "react";
+import { connect } from "react-redux";
 import Select from "react-select";
 import AsyncSelect from "react-select/async";
 import DesktopIcon from '../../../svgs/desktopNew.svg'
 import controllerDecorate from "../../decorators/controller";
 import Resource from "../../classes/Resource";
+import ResponsiveDdMenu from "../ResponsiveDdMenu"
 // в rootElement при создании массива select, value никогда не должно повторятся
 class Select2Controller extends Component {
   constructor(props) {
@@ -12,8 +13,8 @@ class Select2Controller extends Component {
     this.change = this.change.bind(this);
     this.loadOptions = this.loadOptions.bind(this);
     let value = this.props.currentElement.getSettings(this.props.controlId);
-    if(value === null && this.props.default){
-      value = this.props.default ;
+    if (value === null && this.props.default) {
+      value = this.props.default;
     }
     value = value || '';
     this.state = {
@@ -21,40 +22,39 @@ class Select2Controller extends Component {
       options: this.props.options || [],
       show: true
     };
-    if(this.props.options_resource)
-    {
-      this.resource = new Resource({route:this.props.options_resource});
+    if (this.props.options_resource) {
+      this.resource = new Resource({ route: this.props.options_resource });
     }
     controllerDecorate(this);
   };
 
-  getDefaultValue(){
+  getDefaultValue() {
     return '';
   }
 
-  async loadOptions(searchString, callback){
-    if(! searchString){
+  async loadOptions(searchString, callback) {
+    if (!searchString) {
       return callback([]);
     }
     let options = await this.resource.search(searchString);
-    this.setState(state=>({
+    this.setState(state => ({
       ...state,
       options
     }));
     return callback(options);
   }
 
-  change(value, action){
-    if(action.action === 'select-option'){
+  change(value, action) {
+    if (action.action === 'select-option') {
       this._changeValue(
-          value.value
+        value.value
       );
     }
   };
 
   render() {
 
-    if(this.state.show === false) {
+    if (this.state.show === false) {
       return '';
     }
 
@@ -111,9 +111,9 @@ class Select2Controller extends Component {
     };
 
     let value = {};
-    this.state.options.forEach(option=>{
-      if(option.value === this.state.value){
-        value = {...option};
+    this.state.options.forEach(option => {
+      if (option.value === this.state.value) {
+        value = { ...option };
       }
     });
     let selectProps = {
@@ -128,17 +128,17 @@ class Select2Controller extends Component {
     };
 
     let SelectComponent = Select;
-    if(this.props.options_resource){
+    if (this.props.options_resource) {
       SelectComponent = AsyncSelect;
       selectProps.loadOptions = this.loadOptions;
     }
     return <div className="controller-container controller-container_select2">
       <div className="control-select2-header">
         <div className="control-select2__label">{this.props.label}</div>
-        <DesktopIcon className="controller-container__label-svg" width="12"/>
+        <DesktopIcon className="controller-container__label-svg" width="12" />
       </div>
       <div className="control-container_select2-wrapper">
-        <SelectComponent {...selectProps}/>
+        <SelectComponent {...selectProps} />
       </div>
     </div>
 
@@ -146,8 +146,8 @@ class Select2Controller extends Component {
 }
 
 function mapStateToProps(state) {
-  return{
-    currentElement:state.currentElement.currentElement,
+  return {
+    currentElement: state.currentElement.currentElement,
   };
 }
 export default connect(mapStateToProps)(Select2Controller);
