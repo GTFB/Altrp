@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-// import DatePicker from "react-datepicker";
-
-// import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
 
 const conditionTypeOptions = ['where', 'or_where', 'where_between', 'where_in', 'where_date', 'where_column'];
 
@@ -97,7 +95,7 @@ class ConditionComponent extends Component {
         </div>}
       </div>
 
-      {['where', 'or_where', "where_date"].includes(conditionType) &&
+      {['where', 'or_where'].includes(conditionType) &&
         <div className="form-group">
           <label htmlFor="value">Value</label>
           <input type="text" id="value" required name="value"
@@ -136,9 +134,15 @@ class ConditionComponent extends Component {
         <p>Comma Separated</p>
       </>}
 
-      {/* {conditionType === "where_date" &&
+      {conditionType === "where_date" && <div className="form-group">
+        <label htmlFor="value">Value</label>
         <DatePicker selected={value}
-          onChange={date => changeHandler({ target: { name: 'value', value: date } })} />} */}
+          showTimeSelect={type === "datetime"}
+          dateFormat={type === "datetime" ? "Pp" : 'MM/dd/yyyy'}
+          className="form-control"
+          onChange={date => changeHandler({ target: { name: 'value', value: date } })}
+        />
+      </div>}
 
       {conditionType === "where_column" && <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">

@@ -14,6 +14,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap');
 @import "components/admin-users";
 @import "components/admin-models";
+@import "~react-datepicker/dist/react-datepicker.css";
+@import "components/admin-sql-builder";
 
 
 .admin {
