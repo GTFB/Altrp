@@ -76,3 +76,17 @@ export function getMediaQueryByName(screenSettingName) {
   });
   return mediaQuery;
 }
+/**
+ * Получает медиа запрос для css по имени настройки
+ * @param {string} screenSettingName
+ * @return {string}
+ */
+export function getMediaSettingsByName(screenSettingName) {
+  let screen = CONSTANTS.SCREENS[0];
+  CONSTANTS.SCREENS.forEach(_screen=>{
+    if(_screen.name === screenSettingName){
+      screen = _screen;
+    }
+  });
+  return screen;
+}

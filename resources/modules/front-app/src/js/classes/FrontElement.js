@@ -216,6 +216,18 @@ class FrontElement {
     if(typeof this.settings.styles !== 'object'){
       return styles
     }
+    /**
+     * Чтобы сохранить последовательность медиа-запросов в CSS,
+     * добавлять будем в первоначальной последовательности.
+     * Для этого сначала создадим копию массива со всеми настройками экранов
+     * @type {{}[]}
+     */
+    let screens = _.cloneDeep(CONSTANTS.SCREENS);
+    /**
+     * Удалим дефолтный - он не нужен
+     * @type {{}[]}
+     */
+    screens.splice(0,1);
     for(let breakpoint in this.settings.styles){
       let rules = {};
       if(this.settings.styles.hasOwnProperty(breakpoint)){
@@ -241,16 +253,43 @@ class FrontElement {
             }
           }
         } else {
-          styles += `${getMediaQueryByName(breakpoint)}{`;
-          for(let selector in rules){
-            if(rules.hasOwnProperty(selector)){
-              styles += `${selector} {` + rules[selector].join('') + '}';
+          // styles += `${getMediaQueryByName(breakpoint)}{`;
+          // for(let selector in rules){
+          //   if(rules.hasOwnProperty(selector)){
+          //     styles += `${selector} {` + rules[selector].join('') + '}';
+          //   }
+          // }
+          // styles += `}`;
+          screens.forEach(screen=>{
+            /**
+             * Для каждого breakpoint сохраним
+             * в соответствующей настройке экрана css правила
+             */
+            if(screen.name === breakpoint){
+              screen.rules = rules;
             }
-          }
-          styles += `}`;
+          });
         }
       }
     }
+
+    screens.forEach(screen=>{
+
+      /**
+       * Если rules записаны, то добавим в styles в нужном порядке
+       */
+      if(!_.isObject(screen.rules)){
+        return;
+      }
+      console.log(screen);
+      styles += `${screen.mediaQuery}{`;
+      for(let selector in screen.rules){
+        if(screen.rules.hasOwnProperty(selector)){
+          styles += `${selector} {` + screen.rules[selector].join('') + '}';
+        }
+      }
+      styles += `}`;
+    });
     styles += this.settings.stringStyles || '';
 
     return styles;
