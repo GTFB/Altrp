@@ -27,21 +27,21 @@ class DimensionsController extends Component {
       units
     };
   }
-
   changeUnit(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     let unit = e.target.dataset.unit;
     this._changeValue({
-      ...this.state.value,
+      ...value,
       unit
     });
   };
 
   changeValue(e) {
-
-    if (this.state.value.bind == true) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    if (value.bind === true) {
       if (e.target.value <= 9999) {
         this._changeValue({
-          ...this.state.value,
+          ...value,
           left: e.target.value || 0,
           bottom: e.target.value || 0,
           top: e.target.value || 0,
@@ -54,30 +54,34 @@ class DimensionsController extends Component {
         active = e.currentTarget.dataset.active;
       }
 
-      if (active == "top") {
+      if (active === "top") {
+        let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
         this._changeValue({
-          ...this.state.value,
+          ...value,
           top: e.target.value || 0,
         });
       }
 
-      if (active == "right") {
+      if (active === "right") {
+        let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
         this._changeValue({
-          ...this.state.value,
+          ...value,
           right: e.target.value || 0,
         });
       }
 
-      if (active == "bottom") {
+      if (active === "bottom") {
+        let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
         this._changeValue({
-          ...this.state.value,
+          ...value,
           bottom: e.target.value || 0,
         });
       }
 
-      if (active == "left") {
+      if (active === "left") {
+        let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
         this._changeValue({
-          ...this.state.value,
+          ...value,
           left: e.target.value || 0,
         });
       }
@@ -86,10 +90,10 @@ class DimensionsController extends Component {
   }
 
   changeBind(e) {
-
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
-      bind: !this.state.value.bind
+      ...value,
+      bind: !value.bind
     })
   }
 
@@ -109,75 +113,77 @@ class DimensionsController extends Component {
     }
     // console.log(this.getSettings(this.props.controlId));
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
-      return <div className="controller-container controller-container_dimensions">
-        <div className="control-dimensions-header">
-          <div className="controller-dimensions__label">{this.props.label}</div>
-          <DesktopIcon className="controller-container__label-svg" width="12"/>
+    console.log(value);
 
-          <div className="control-slider-type">
-            {
-              this.state.units.map(unit=>{
-                let classes = 'control-slider-type-box';
-                if(value.unit === unit){
-                  classes += ' control-slider-type-box_active';
-                }
-                return <div className={classes}
-                            key={unit}>
-                  <button onClick={this.changeUnit}
-                          data-unit={unit}
-                          className="control-slider-type-label">{unit}</button>
-                </div>
-              })
-            }
-          </div>
-        </div>
-        <div className="control-group">
-          <div className="control-dimensions-container">
-            <input className="control-field control-field-dimensions control-field-top-l"
-                   onChange={this.changeValue}
-                   data-active="top"
-                   value={value.top || ''}
-                   type="number"/>
-            <label className="control-field-top-l-label control-field-dimensions-label">TOP</label>
-          </div>
-          <div className="control-dimensions-container">
-            <input className="control-field control-field-dimensions control-field-top-r"
-                   onChange={this.changeValue}
-                   data-active="right"
-                   value={value.right || ''}
-                   type="number"/>
-            <label className="control-field-top-r-label control-field-dimensions-label">RIGHT</label>
-          </div>
-          <div className="control-dimensions-container">
-            <input className="control-field control-field-dimensions control-field-bot-l"
-                   onChange={this.changeValue}
-                   data-active="bottom"
-                   value={value.bottom || ''}
-                   type="number"/>
-            <label className="control-field-bot-l-label control-field-dimensions-label">BOTTOM</label>
-          </div>
-          <div className="control-dimensions-container">
-            <input className="control-field control-field-dimensions control-field-bot-r"
-                   onChange={this.changeValue}
-                   data-active="left"
-                   value={value.left || ''}
-                   type="number"/>
-            <label className="control-field-bot-r-label control-field-dimensions-label">LEFT</label>
-          </div>
-          <div id="bind" className="control-field control-field-bind"
-               style={value.bind ? {transition: "0s", backgroundColor: "#8E94AA", borderColor: "#8E94AA",} : {}}
-               onClick={this.changeBind}>
-            <BindIcon width="12" height="12" fill={value.bind ? "#FFF" : "#8E94AA"}/>
-          </div>
+    return <div className="controller-container controller-container_dimensions">
+      <div className="control-dimensions-header">
+        <div className="controller-dimensions__label">{this.props.label}</div>
+        <DesktopIcon className="controller-container__label-svg" width="12" />
+
+        <div className="control-slider-type">
+          {
+            this.state.units.map(unit => {
+              let classes = 'control-slider-type-box';
+              if (value.unit === unit) {
+                classes += ' control-slider-type-box_active';
+              }
+              return <div className={classes}
+                key={unit}>
+                <button onClick={this.changeUnit}
+                  data-unit={unit}
+                  className="control-slider-type-label">{unit}</button>
+              </div>
+            })
+          }
         </div>
       </div>
+      <div className="control-group">
+        <div className="control-dimensions-container">
+          <input className="control-field control-field-dimensions control-field-top-l"
+            onChange={this.changeValue}
+            data-active="top"
+            value={value.top || 0}
+            type="number" />
+          <label className="control-field-top-l-label control-field-dimensions-label">TOP</label>
+        </div>
+        <div className="control-dimensions-container">
+          <input className="control-field control-field-dimensions control-field-top-r"
+            onChange={this.changeValue}
+            data-active="right"
+            value={value.right || 0}
+            type="number" />
+          <label className="control-field-top-r-label control-field-dimensions-label">RIGHT</label>
+        </div>
+        <div className="control-dimensions-container">
+          <input className="control-field control-field-dimensions control-field-bot-l"
+            onChange={this.changeValue}
+            data-active="bottom"
+            value={value.bottom || 0}
+            type="number" />
+          <label className="control-field-bot-l-label control-field-dimensions-label">BOTTOM</label>
+        </div>
+        <div className="control-dimensions-container">
+          <input className="control-field control-field-dimensions control-field-bot-r"
+            onChange={this.changeValue}
+            data-active="left"
+            value={value.left || 0}
+            type="number" />
+          <label className="control-field-bot-r-label control-field-dimensions-label">LEFT</label>
+        </div>
+        <div id="bind" className="control-field control-field-bind"
+          style={value.bind ? { transition: "0s", backgroundColor: "#8E94AA", borderColor: "#8E94AA", } : {}}
+          onClick={this.changeBind}>
+          <BindIcon width="12" height="12" fill={value.bind ? "#FFF" : "#8E94AA"} />
+        </div>
+      </div>
+    </div>
   }
 }
 
 function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
-    currentState: state.currentState
+    currentState: state.currentState,
   };
 }
 

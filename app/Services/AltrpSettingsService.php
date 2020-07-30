@@ -43,6 +43,7 @@ class AltrpSettingsService{
   }
 
   /**
+   * Сохраняет настройку
    * @param string $setting_name
    * @param string $value
    * @return bool
