@@ -1,3 +1,4 @@
+
 import { TAB_CONTENT, TAB_STYLE } from "../modules/ControllersManager";
 import { getTemplateDataStorage, getEditor, getFactory } from "../../helpers";
 import CONSTANTS from "../../consts";
@@ -15,6 +16,7 @@ class BaseElement extends ControlStack {
     super();
     this.settings = {};
     this.controls = {};
+    this.cssClassStorage = {};
     this.controlsIds = [];
     this.controllersRegistered = false;
     this.children = [];
@@ -43,7 +45,17 @@ class BaseElement extends ControlStack {
     return this.id;
   }
 
-  getName() {
+  /**
+   * Сохранить prefixClass и value, которое будет браться из variants.
+   * @param settingName
+   * @param value
+   */
+
+ setCssClass(settingName, value) {
+    this.cssClassStorage[settingName] = value;
+ }
+
+  getName(){
     return this.constructor.getName();
   }
 
@@ -71,6 +83,7 @@ class BaseElement extends ControlStack {
     if (this.dynamicContentSettings && this.dynamicContentSettings.length) {
       data.dynamicContentSettings = [...this.dynamicContentSettings];
     }
+    data.cssClassStorage = {...this.cssClassStorage};
     let children = this.getChildrenForImport();
     if (children) {
       data.children = children;
