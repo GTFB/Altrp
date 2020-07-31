@@ -320,7 +320,18 @@ class ModelsController extends Controller
      */
     public function storeModelField(ApiRequest $request, $model_id)
     {
+        $model = Model::find($model_id);
+        
+        if (! $model) {
+            return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
+        }
+        
         $field = new Column($request->all());
+        
+        $field->user_id = auth()->user()->id;
+        $field->table_id = $model->altrp_table->id;
+        $field->model_id = $model->id;
+        
         $result = $field->save();
         if ($result) {
             return response()->json($field, 200, [], JSON_UNESCAPED_UNICODE);
@@ -448,7 +459,9 @@ class ModelsController extends Controller
      */
     public function storeModelRelation(ApiRequest $request)
     {
+        
         $relation = new Relationship($request->all());
+        $relation->model_id = $request->model_id;
         $result = $relation->save();
         if ($result) {
             return response()->json($relation, 200, [], JSON_UNESCAPED_UNICODE);

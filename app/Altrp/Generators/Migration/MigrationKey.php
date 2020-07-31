@@ -106,7 +106,13 @@ class MigrationKey{
      */
     protected function setText() {
         $modifiers = $this->getKeyModifiers();
-        $text = "\$table->foreign('".$this->key->source_column."')->references('".$this->key->target_column."')->on('".$this->key->target_table."')".$modifiers;
+        
+        $source_column = $this->key->local_key;
+        $target_column = $this->key->foreign_key;
+        
+        $target_table = $this->key->altrp_model->altrp_table->name;
+        
+        $text = "\$table->foreign('".$source_column."')->references('".$target_column."')->on('".$target_table."')".$modifiers;
         return $text;
     }
     
@@ -115,7 +121,7 @@ class MigrationKey{
      * @return string
      */
     protected function setDeleteText() {
-        $text = "\$table->dropForeign(['".$this->old_key->source_column."'])";
+        $text = "\$table->dropForeign(['".$this->old_key->local_key."'])";
         return $text;
     }
     

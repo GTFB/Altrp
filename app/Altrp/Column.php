@@ -8,6 +8,11 @@ class Column extends Model
 {
     protected $table = 'altrp_columns';
     public $timestamps = false;
+    
+    public $fillable = ["id","name","title","description","type","size","null",
+        "default","primary","unique","user_id","altrp_migration_id",
+        "is_label","is_title","attribute","input_type","options",
+        "indexed","editable","hidden","model_id"];
 
     public function getNullAttribute($value) {
         return (bool) $value;
@@ -17,6 +22,16 @@ class Column extends Model
         return (bool) $value;
     }
 
+    
+    public function altrp_table(){
+        return $this->hasOne('App\Altrp\Table', 'id', 'table_id');
+    }
+    
+    public function altrp_model(){
+        return $this->hasOne('App\Altrp\Model', 'id', 'model_id');
+    }
+    
+    
     /**
      * Проверяем является ли колонка, колонкой с размером
      *

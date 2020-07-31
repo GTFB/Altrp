@@ -8,15 +8,17 @@
 
 namespace App\Altrp;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Mockery\Exception;
+
+use App\Altrp\Model;
 
 /**
  * Class Relationship
  * @package App\Altrp
  * @property Table $altrp_table
  */
-class Relationship extends Model
+class Relationship extends EloquentModel
 {
 
     protected $table = 'altrp_relationships';
@@ -24,11 +26,18 @@ class Relationship extends Model
 
     protected $fillable = [
         'name',
+        'title',
+        'description',
         'type',
         'model_class',
         'foreign_key',
         'local_key',
-        'table_id'
+        'table_id',
+        'model_id',
+        'target_model_id',
+        'add_belong_to',
+        'onDelete',
+        'onUpdate',
     ];
 
     /**
@@ -80,6 +89,16 @@ class Relationship extends Model
     public function altrp_table()
     {
         return $this->belongsTo(Table::class, 'table_id');
+    }
+    
+    public function altrp_model()
+    {
+        return $this->belongsTo(Model::class, 'model_id');
+    }
+    
+    public function altrp_target_model()
+    {
+        return $this->belongsTo(Model::class, 'target_model_id');
     }
 
     public static function getBySearch($search, $modelId)

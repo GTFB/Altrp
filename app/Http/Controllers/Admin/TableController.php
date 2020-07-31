@@ -72,7 +72,7 @@ class TableController extends ApiController
         $table->name = $request->name;
         $table->description = $request->description;
         $table->user_id = auth()->user()->id;
-
+        
         if($table->save()){
             return response()->json($table, 200, [],JSON_UNESCAPED_UNICODE);
         }
@@ -122,8 +122,8 @@ class TableController extends ApiController
      */
     function delete(ApiRequest $request) {
 
-        $table = Table::find($request->module);
-
+        $table = Table::find($request->table);
+        
         if(!$table) {
             return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
         }
