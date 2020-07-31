@@ -1,0 +1,149 @@
+
+// MODAL WINDOW STYLES
+
+.modal {
+  &-overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba($color: #000000, $alpha: 0.3);
+  }
+  &-window {
+    position: absolute;
+    top: 8px;
+    left: 232px;
+    margin: auto;
+    width: 70vw;
+    height: 80vh;
+    border-radius: 5px;
+    background-color: #4c565c;
+  }
+  &-header {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    background-color: #343b4c;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.28);
+    &__logo {
+      margin-left: 10px;
+    }
+    & > button {
+    background-color: #343b4c;
+    }
+  }
+  &-body{
+    height: 100%;
+    display: flex;
+    background-color: #4c565c;
+    &__tabs{
+      width: 30%;
+      padding-top: 25px;
+      box-shadow: 4px 0px 3px 0px rgba(0,0,0,0.10);
+      &-active{
+        background: red;
+      }
+    }
+    &__content{
+      padding: 50px;
+      overflow: auto;
+      width: 100%;
+    }
+  }
+  &-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 50px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #4c565c;
+    box-shadow: 0px -4px 3px 0px rgba(0,0,0,0.10);
+    &__button {
+      width: 110px;
+      height: 40px;      
+      margin: 0 5px;
+      padding: 0;
+      text-transform: uppercase;
+      background-color: inherit;
+      color: #fff;
+    }
+  }
+  &-save{
+    text-decoration: underline;
+  }
+  &-next {
+    background-color: #39b54a;
+    border-radius: 10px;
+    font-weight: 700;
+  }
+}
+// /MODAL WINDOW STYLES
+// MODAL TAB STYLES
+.modal-tab {
+  &-wrapper {
+    position: relative;
+    width: 100%;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    padding: 20px 15px;
+    cursor: pointer;
+    &-active {
+      background-color: #404349;
+      &::after{
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 5px;
+        background-color: #71d7f7;
+      }
+    }
+  }
+  &__content {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    padding-left: 15px;
+    text-align: left;
+  }
+  &__title {
+    font-weight: 800;
+  }
+  &__description {
+    font-size: 12px;
+    line-height: 1.5;
+    word-wrap: break-word;
+  }
+}
+// MODAL TAB STYLES
+// DIALOG CONDITION TAB
+
+.modal-condition {
+  &-tab{
+    text-align: center;
+    color: #fff;
+  }
+  &-image{
+    margin-top: 45px;
+  }
+  &-title{
+    margin-top: 40px;
+    font-size: 30px;
+  }
+  &-text {
+    margin-top: 15px;
+    font-size: 18px;
+  }
+}
+
+

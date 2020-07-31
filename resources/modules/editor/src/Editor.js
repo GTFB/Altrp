@@ -31,6 +31,7 @@ import { closeDynamicContent } from "./js/store/dynamic-content/actions";
 import { iconsManager } from "../../admin/src/js/helpers";
 import ResponsiveDdMenu from "./js/components/ResponsiveDdMenu";
 import ResponsiveDdFooter from "./js/components/ResponsiveDdFooter";
+import DialogWindow from "./js/components/DialogWindow";
 /**
  * Главный класс редактора.<br/>
  * Реакт-Компонент.<br/>
@@ -207,6 +208,7 @@ class Editor extends Component {
             </div>
           </div>
           <div className="right-panel">
+            <DialogWindow />
             <EditorWindow />
           </div>
         </div>
