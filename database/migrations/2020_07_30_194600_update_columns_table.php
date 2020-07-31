@@ -48,7 +48,9 @@ class UpdateColumnsTable extends Migration
         foreach (Column::all() as $column) {
             
             if(!$column->altrp_table) {
-                $column->delete();
+                Column::withoutEvents(function () use ($column) {
+                    $column->delete();
+                });
                 break;
             }
             
@@ -59,9 +61,15 @@ class UpdateColumnsTable extends Migration
                 $model_id = $model->id;
             }
             
-            $column->update([
-              'model_id' => $model_id
-            ]);
+            Column::withoutEvents(function () use ($column) {
+                $column->update([
+                    'model_id' => $model_id
+                ]);
+            });
+            
+            
+            
+            
             
             $data = Column::where([
                 ["table_id", "=", $column->altrp_table->id],
@@ -70,7 +78,10 @@ class UpdateColumnsTable extends Migration
             ])->get();
             
             if(count($data) > 0) {
-                $column->delete();
+                Column::withoutEvents(function () use ($column) {
+                    $column->delete();
+                });
+                
             }
         }
         
