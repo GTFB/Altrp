@@ -309,7 +309,7 @@ class Section extends BaseElement{
     this.addControl('layout_colwidth', {
       type: CONTROLLER_COLWIDTH,
       label: 'Column width',
-      prefixClass: 'column-width_',
+      prefixClass: 'column-structure_',
     });
 
     this.endControlSection();

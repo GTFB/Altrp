@@ -53,7 +53,6 @@ class BaseElement extends ControlStack {
 
  setCssClass(settingName, value) {
     this.cssClassStorage[settingName] = value;
-    console.log(this.cssClassStorage);
  }
 
   getName(){

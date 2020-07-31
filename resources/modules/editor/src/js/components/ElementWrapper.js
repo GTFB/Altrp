@@ -183,7 +183,6 @@ class ElementWrapper extends Component {
   getClasses() {
     let classes = " ";
     classes += this.props.element.getPrefixClasses() + " ";
-    console.log(this.props.element.getPrefixClasses());
     let draggableElement = store.getState().elementDrag.element;
     // console.log(draggableElement);
     if (this.state.isDrag) {
