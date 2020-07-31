@@ -4,6 +4,7 @@ import DynamicIcon from '../../../svgs/dynamic.svg'
 import controllerDecorate from "../../decorators/controller";
 import { toggleDynamicContent } from "../../store/dynamic-content/actions";
 import { iconsManager } from "../../../../../admin/src/js/helpers";
+import ResponsiveDdMenu from "../ResponsiveDdMenu";
 
 class TextController extends Component {
   constructor(props) {
@@ -84,8 +85,9 @@ class TextController extends Component {
     }
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     return <div className="controller-container controller-container_text">
-      <div className="controller-container__label">
+      <div className="controller-container__label textcontroller-responsive">
         {this.props.label}
+        <ResponsiveDdMenu />
       </div>
       <div className="control-group">
         {this.state.dynamicValue ? <div className="dynamic-placeholder control-field">
@@ -116,6 +118,7 @@ function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
     currentState: state.currentState,
+    currentScreen: state.currentScreen
   };
 }
 
