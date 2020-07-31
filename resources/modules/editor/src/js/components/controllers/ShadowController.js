@@ -186,7 +186,9 @@ class ShadowController extends Component {
     return <div className="controller-container controller-container_shadow">
       <div className="controller-container__label control-shadow-label">
         {this.props.label}
-        <ResponsiveDdMenu />
+        <div className="responsive-absolute-shadow">
+          <ResponsiveDdMenu />
+        </div>
       </div>
       <div className="control-group control-group-shadow">
         <div className="control-shadow-toggle control-shadow-toggle-active" onClick={this.openShadow} fill="#8E94AA">
@@ -319,6 +321,7 @@ function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
     currentState: state.currentState,
+    currentScreen: state.currentScreen
   };
 }
 export default connect(mapStateToProps)(ShadowController);
