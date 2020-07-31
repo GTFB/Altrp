@@ -114,7 +114,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get('/users/{user}/usermeta', "Users\UsersMeta@getUserMeta");
     Route::post('/users/{user}/usermeta', "Users\UsersMeta@saveUserMeta");
     Route::delete('/users/{user}/roles', "Users\Users@detachRole");
-
+    /**
+     * Areas Routes
+     */
     Route::resource( 'areas', 'Admin\AreasController' );
     /**
      * Templates Routes
