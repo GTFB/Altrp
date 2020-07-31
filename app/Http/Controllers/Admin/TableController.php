@@ -436,34 +436,4 @@ class TableController extends ApiController
         return response()->json('Error!', 404, [], JSON_UNESCAPED_UNICODE);
     }
 
-    /**
-     * @param ApiRequest $request
-     * @param $tableId
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \App\Exceptions\Controller\ControllerFileException
-     * @throws \App\Exceptions\Repository\RepositoryFileException
-     */
-    public function addRequest(ApiRequest $request, $tableId)
-    {
-        $table = Table::find($tableId);
-
-        if (! $table)
-            return response()->json('Table not found!', 404, [], JSON_UNESCAPED_UNICODE);
-
-        if (! $model = $table->models()->first())
-            return response()->json('Model not found!', 404, [], JSON_UNESCAPED_UNICODE);
-
-        if (! $table->controllers()->first())
-            return response()->json('Controller not found!',404,[],JSON_UNESCAPED_UNICODE);
-
-        $builder = new QueryBuilder(array_merge($request->all(), ['model' => $model]));
-        $result = $builder->build();
-
-        if ($result) {
-            return response()->json('Successfully added!', 200, [], JSON_UNESCAPED_UNICODE);
-        }
-
-        return response()->json('Error!', 404, [], JSON_UNESCAPED_UNICODE);
-    }
-
 }

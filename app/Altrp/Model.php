@@ -34,14 +34,14 @@ class Model extends EloquentModel
     public function setFillableColsAttribute($value)
     {
         $this->attributes['fillable_cols'] = isset($value)
-            ? implode(',', (array) $value)
+            ? implode(',', (array)$value)
             : null;
     }
 
     public function setUserColsAttribute($value)
     {
         $this->attributes['user_cols'] = isset($value)
-            ? implode(',', (array) $value)
+            ? implode(',', (array)$value)
             : null;
     }
 
@@ -55,108 +55,115 @@ class Model extends EloquentModel
         return $this->hasMany(Accessor::class);
     }
 
-    public function getTimeStampsAttribute($value) {
-        return (bool) $value;
+    public function getTimeStampsAttribute($value)
+    {
+        return (bool)$value;
     }
 
-    public function getSoftDeletesAttribute($value) {
-        return (bool) $value;
+    public function getSoftDeletesAttribute($value)
+    {
+        return (bool)$value;
     }
 
-  /**
-   * Список моделей для редактора
-   */
-  public static function getModelsForEditor()
-  {
-    $models = [];
-    $_models = self::all();
-    foreach ( $_models as $model ) {
-      /**
-       * @var {Model} $model
-       */
-      $models[] = [
-        'title' => $model->name,
-        'name' => $model->altrp_table->name,
-        'ordering_fields' => $model->get_ordering_fields()
-      ];
+    /**
+     * Список моделей для редактора
+     */
+    public static function getModelsForEditor()
+    {
+        $models = [];
+        $_models = self::all();
+        foreach ($_models as $model) {
+            /**
+             * @var {Model} $model
+             */
+            $models[] = [
+                'title' => $model->name,
+                'name' => $model->altrp_table->name,
+                'ordering_fields' => $model->get_ordering_fields()
+            ];
+        }
+        return $models;
     }
-    return $models;
-  }
 
-  public function get_ordering_fields()
-  {
-    return $this->altrp_table->actual_columns;
-  }
-
-  /**
-   * Список моделей для select
-   */
-  public static function getModelsOptions()
-  {
-    $models = [];
-    $_models = self::all();
-    foreach ( $_models as $model ) {
-      /**
-       * @var {Model} $model
-       */
-      $models[] = [
-        'label' => $model->name,
-        'value' => $model->altrp_table->name,
-      ];
+    public function get_ordering_fields()
+    {
+        return $this->altrp_table->actual_columns;
     }
-    return $models;
-  }
 
-  /**
-   * Список моделей с полями для динаимического контента и т. д.
-   */
-  public static function getModelsWithFieldsOptions()
-  {
+    /**
+     * Список моделей для select
+     */
+    public static function getModelsOptions()
+    {
+        $models = [];
+        $_models = self::all();
+        foreach ($_models as $model) {
+            /**
+             * @var {Model} $model
+             */
+            $models[] = [
+                'label' => $model->name,
+                'value' => $model->altrp_table->name,
+            ];
+        }
+        return $models;
+    }
 
-    $models = [
-      [
-        'modelName' => 'page',
-        'title' => 'Page',
-        'fields' => [
-          [
-            'fieldName' => 'id',
-            'title' => 'ID',
-          ],
-          [
-            'fieldName' => 'path',
-            'title' => 'Path',
-          ],
-          [
-            'fieldName' => 'title',
-            'title' => 'Title',
-          ],
-          [
-            'fieldName' => 'content',
-            'title' => 'Content',
-          ],
-        ]
-      ]
-    ];
-    $_models = self::all();
-    foreach ( $_models as $model ) {
-      $fields = [];
-      foreach ( $model->altrp_table->actual_columns as $actual_column ) {
-        $fields[] = [
-          'fieldName' => $actual_column->name,
-          'title' => $actual_column->title ? $actual_column->title : $actual_column->name,
+    /**
+     * Список моделей с полями для динаимического контента и т. д.
+     */
+    public static function getModelsWithFieldsOptions()
+    {
+
+        $models = [
+            [
+                'modelName' => 'page',
+                'title' => 'Page',
+                'fields' => [
+                    [
+                        'fieldName' => 'id',
+                        'title' => 'ID',
+                    ],
+                    [
+                        'fieldName' => 'path',
+                        'title' => 'Path',
+                    ],
+                    [
+                        'fieldName' => 'title',
+                        'title' => 'Title',
+                    ],
+                    [
+                        'fieldName' => 'content',
+                        'title' => 'Content',
+                    ],
+                ]
+            ]
         ];
-      }
-      $models[] = [
-        'modelName' => $model->altrp_table->name,
-        'title' => $model->name,
-        'fields' => $fields,
-      ];
+        $_models = self::all();
+        foreach ($_models as $model) {
+            $fields = [];
+            foreach ($model->altrp_table->actual_columns as $actual_column) {
+                $fields[] = [
+                    'fieldName' => $actual_column->name,
+                    'title' => $actual_column->title ? $actual_column->title : $actual_column->name,
+                ];
+            }
+            $models[] = [
+                'modelName' => $model->altrp_table->name,
+                'title' => $model->name,
+                'fields' => $fields,
+            ];
+        }
+        return $models;
     }
-    return $models;
-  }
 
-  public function table()
-  {
-    return $this->belongsTo( Table::class );
-  }
+    public function controller()
+    {
+        return $this->hasOne(Controller::class);
+    }
+
+    public function table()
+    {
+      return $this->belongsTo(Table::class);
+    }
 }

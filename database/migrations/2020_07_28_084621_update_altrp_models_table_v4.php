@@ -15,6 +15,7 @@ class UpdateAltrpModelsTableV4 extends Migration
     {
         Schema::table('altrp_models', function (Blueprint $table) {
             $table->string('title')->nullable()->after('name');
+            $table->string('bounded_model')->nullable();
         });
     }
 
@@ -27,6 +28,7 @@ class UpdateAltrpModelsTableV4 extends Migration
     {
         Schema::table('altrp_models', function (Blueprint $table) {
             $table->dropColumn('title');
+            $table->dropColumn('bounded_model');
         });
     }
 }

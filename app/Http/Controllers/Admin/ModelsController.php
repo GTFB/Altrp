@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Altrp\Builders\QueryBuilder;
 use App\Altrp\Generators\ControllerGenerator;
 use App\Altrp\Generators\ModelGenerator;
 use App\Altrp\Model;
@@ -146,6 +147,32 @@ class ModelsController extends Controller
         }
 
         return response()->json('Error', 404, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * @param ApiRequest $request
+     * @param $model_id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\Controller\ControllerFileException
+     * @throws \App\Exceptions\Repository\RepositoryFileException
+     */
+    public function addQuery(ApiRequest $request, $model_id)
+    {
+        $model = Model::find($model_id);
+
+        if (! $model)
+            return response()->json('Model not found!', 404, [], JSON_UNESCAPED_UNICODE);
+
+        $builder = new QueryBuilder(
+            array_merge($request->all(), ['model' => $model])
+        );
+        $result = $builder->build();
+
+        if ($result) {
+            return response()->json('Successfully added!', 200, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        return response()->json('Error!', 404, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**

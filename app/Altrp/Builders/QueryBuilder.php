@@ -126,27 +126,37 @@ class QueryBuilder
         $methodBody = "\n\n{$this->tabIndent}public function " . $this->getMethodName() . "()\n{$this->tabIndent}{\n"
             . "{$this->tabIndent}{$this->tabIndent}return \$this->model()\n"
             . implode("{$this->threeTabs}",$this->query) . $this->tabIndent . "}{$this->tabIndent}";
-        return $this->replaceRequestValues($methodBody);
+        return $this->replaceConstants($methodBody);
     }
 
     /**
-     * Заменить переменные значения запроса, настоящими значениями запроса
+     * Заменить пользовательские константы в методе
      *
      * @param $methodBody
      * @return string|string[]
      */
-    protected function replaceRequestValues($methodBody)
+    protected function replaceConstants($methodBody)
     {
-        if (isset($this->data['request_variables'])) {
-            foreach ($this->data['request_variables'] as $variable) {
-                $methodBody = str_replace(
-                    '\'REQUEST:' . $variable . '\'',
-                    'request()->' . $variable,
-                    $methodBody
-                );
-            }
-            return $methodBody;
-        }
+        $pattern = "'?[A-Z_]+:[a-z0-9_.]+'?";
+        $methodBody = preg_replace_callback(
+            "#$pattern#",
+            function($matches) {
+                $param = $matches[0] ? explode(':',trim($matches[0], '\'')) : null;
+                if ($param && $param[0] == 'REQUEST') {
+                    if ( request()->has($param[1])) {
+                        return 'request()->' . $param[1];
+                    } else {
+                        return $param[1] == 'skip' || $param[1] == 'take' ? 10 : "''";
+                    }
+                }
+                if ($param && $param[0] == 'CURRENT_USER') {
+                    $relations = str_replace('.', '->', $param[1]);
+                    return 'auth()->user()->' . $relations;
+                }
+                return "''";
+            },
+            $methodBody
+        );
         return $methodBody;
     }
 
@@ -222,7 +232,7 @@ class QueryBuilder
     {
         $method = Str::kebab($method);
         $modelId = $this->data['model']->id;
-        $controllerId = $this->data['model']->table->controllers()->first()->id;
+        $controllerId = $this->data['model']->controller->id;
         $source = Source::where([
             ['model_id', $modelId],
             ['controller_id', $controllerId],
@@ -434,7 +444,7 @@ class QueryBuilder
         $condition = 'where([';
         $loop = 1;
         foreach ($conditions as $cond) {
-            $value = $this->getColumnValue($cond['value']);
+            $value = $cond['value'];
             if (count($conditions) > 1 && $loop == 1) $condition .= "\n{$this->threeTabs}{$this->tabIndent}";
             $condition .= "['{$cond['column']}'," . "'{$cond['operator']}'," . $value . "], ";
             if (count($conditions) > 1 && count($conditions) != $loop)
@@ -493,7 +503,7 @@ class QueryBuilder
                 $conditionList = $this->getConditions($cond['conditions']);
             }
 
-            $value = $this->getColumnValue($cond['value']);
+            $value = $cond['value'];
             if (isset($cond['or_where'])) {
                 $condition = 'orWhere(function ($query) {' . "\n";
                 if (count($conditions) > 1 && $loop == 1) $condition .= "{$this->threeTabs}\$query";
@@ -562,7 +572,7 @@ class QueryBuilder
 
     /**
      * Получить условия по различным типам даты и времени
-     * Типы: Date / Month / Day / Year / Time
+     * Типы: Date / Month / Day / Year / Time / Datetime
      *
      * @param $conditions
      * @return string
@@ -571,8 +581,8 @@ class QueryBuilder
     {
         $conditionList = [];
         foreach ($conditions as $cond) {
-            $whereType = 'where' . ucfirst($cond['type']);
-            $conditionList[] = "{$whereType}('{$cond['column']}'," . "'{$cond['operator']}'," . "'{$cond['value']}')";
+            $whereType = $cond['type'] != 'datetime' ? ucfirst($cond['type']) : null;
+            $conditionList[] = "where{$whereType}('{$cond['column']}'," . "'{$cond['operator']}'," . "'{$cond['value']}')";
         }
         return "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
     }

@@ -48,6 +48,8 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::get('/tables/{table}/keys', "Admin\TableController@getKeys");
 
         Route::get( '/models', 'Admin\ModelsController@getModels');
+        Route::post( '/models/{model_id}/sql_builder', 'Admin\ModelsController@addQuery');
+
 
         Route::post('/tables/{table}/models', 'Admin\TableController@saveModel');
         Route::get('/tables/{table}/models/{model}', 'Admin\TableController@getModel');
