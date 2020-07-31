@@ -1,3 +1,7 @@
 .form-group .react-datepicker-wrapper {
   width: 100%;
 }
+
+.hide-blocks .react-datepicker__header {
+  display: none;
+}

@@ -10,7 +10,12 @@ const dateTypesOptions = [
   { value: 'month', label: 'Month' },
   { value: 'year', label: 'Year' }
 ];
-
+/* 
+  * Принимает строку тип поля where_date
+  * @param {string} type
+  * Возвращает строку формата отображаемыхданных
+  * @return {string}
+ */
 function getDateFormat(type) {
   switch (type) {
     case 'datetime':
@@ -163,19 +168,20 @@ class ConditionComponent extends Component {
         <p>Comma Separated</p>
       </>}
 
-      {conditionType === "where_date" && <div className="form-group">
-        <label>Value</label>
-        {/* TODO: реализовать для типа year */}
-        <DatePicker selected={date}
-          showTimeSelect={["datetime", "time"].includes(type)}
-          showYearPicker={type === "year"}
-          showTimeSelectOnly={type === "time"}
-          showMonthYearPicker={type === "month"}
-          dateFormat={getDateFormat(type)}
-          className="form-control"
-          onChange={date => changeHandler({ target: { name: 'date', value: date } })}
-        />
-      </div>}
+      {conditionType === "where_date" &&
+        <div className={`form-group ${["day", "month"].includes(type) ? "hide-blocks" : ""}`}>
+          <label>Value</label>
+          {/* TODO: реализовать для типа year */}
+          <DatePicker selected={date}
+            showTimeSelect={["datetime", "time"].includes(type)}
+            showYearPicker={type === "year"}
+            showTimeSelectOnly={type === "time"}
+            showMonthYearPicker={type === "month"}
+            dateFormat={getDateFormat(type)}
+            className="form-control"
+            onChange={date => changeHandler({ target: { name: 'date', value: date } })}
+          />
+        </div>}
 
       {conditionType === "where_column" && <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">

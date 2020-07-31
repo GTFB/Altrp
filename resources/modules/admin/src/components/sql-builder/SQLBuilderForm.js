@@ -39,16 +39,24 @@ const conditionInitState = {
   id: 0
 };
 
+/*
+  * Принимает строку тип поля where_date
+  * @param {string} type
+  * Возвращает строку формата отображаемыхданных
+  * Функция схожа с объявленой в файле ConditionComponent.js, стемразличием
+  * что moment возвращает запрашивает дату в формате DD - заглавные буквы
+  * @return {string}
+ */
 function getDateFormat(type) {
   switch (type) {
     case 'datetime':
-      return "yyyy/MM/dd h:mm:ss";
+      return "yyyy/MM/DD h:mm:ss";
     case 'date':
-      return "yyyy/MM/dd";
+      return "yyyy/MM/DD";
     case 'time':
       return "h:mm:ss";
     case 'day':
-      return "dd";
+      return "DD";
     case 'month':
       return "MM";
     case 'year':
