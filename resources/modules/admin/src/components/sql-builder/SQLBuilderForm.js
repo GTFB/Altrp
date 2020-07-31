@@ -33,7 +33,9 @@ const conditionInitState = {
   values: '',
   type: '',
   first_column: '',
-  second_column: ''
+  second_column: '',
+  date: new Date(),
+  id: 0
 }
 
 class SQLBuilderForm extends Component {
@@ -222,9 +224,9 @@ class SQLBuilderForm extends Component {
         ({ or, not, column, values: values.split(",").map(item => item.trim()) })
       );
 
-    const where_date = stateConditions
+    const where_date = stateConditions  //TODO: value брать из date в зависимости от type
       .filter(({ conditionType }) => conditionType === "where_date")
-      .map(({ type, column, operator, value }) => ({ type, column, operator, value }));
+      .map(({ type, column, operator, date }) => ({ type, column, operator, value: date }));
 
     const where_column = stateConditions
       .filter(({ conditionType, or }) => conditionType === "where_column" && !or)
@@ -372,7 +374,7 @@ class SQLBuilderForm extends Component {
       </div>
 
       <p className="centred">Conditions</p>
-
+      
       {conditions.map((condition, index) => <Fragment key={condition.id}>
         <ConditionComponent
           index={index}
@@ -435,7 +437,6 @@ class SQLBuilderForm extends Component {
       </div>
     </form>
   }
-
 }
 
 export default SQLBuilderForm;

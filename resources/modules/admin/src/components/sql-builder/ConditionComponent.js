@@ -6,12 +6,14 @@ const conditionTypeOptions = ['where', 'or_where', 'where_between', 'where_in', 
 class ConditionComponent extends Component {
   render() {
     const { columnsOptions, changeHandler } = this.props;
-    const { conditionType, column, operator, value, or, not, values, type, first_column, second_column } = this.props.item;
+    const { conditionType, column, operator, value, or, not, values, type,
+      first_column, second_column, date, id } = this.props.item;
+
     return <>
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width30">
-          <label htmlFor="conditionType">Condition Type</label>
-          <select id="conditionType" required name="conditionType"
+          <label htmlFor={"conditionType" + id}>Condition Type</label>
+          <select id={"conditionType" + id} required name="conditionType"
             value={conditionType}
             onChange={changeHandler}
             className="form-control"
@@ -25,8 +27,8 @@ class ConditionComponent extends Component {
         </div>
 
         {conditionType !== "where_column" && <div className="form-group form-group_width30">
-          <label htmlFor="column">Field</label>
-          <select id="column" required name="column"
+          <label htmlFor={"column" + id}>Field</label>
+          <select id={"column" + id} required name="column"
             value={column}
             onChange={changeHandler}
             className="form-control"
@@ -41,8 +43,8 @@ class ConditionComponent extends Component {
 
         {['where', 'or_where', 'where_column'].includes(conditionType) &&
           <div className="form-group form-group_width30">
-            <label htmlFor="operator">Operator</label>
-            <select id="operator" required name="operator"
+            <label htmlFor={"operator" + id}>Operator</label>
+            <select id={"operator" + id} required name="operator"
               value={operator}
               onChange={changeHandler}
               className="form-control"
@@ -62,26 +64,26 @@ class ConditionComponent extends Component {
 
         {['where_between', 'where_in', 'where_column'].includes(conditionType) && <>
           <div className="form-group form-group_checkbox form-group_width15">
-            <input type="checkbox" id="or" name="or"
+            <input type="checkbox" id={"or" + id} name="or"
               className="form-check-input"
               checked={or}
               onChange={changeHandler}
             />
-            <label htmlFor="or" className="label_checkbox">Or</label>
+            <label htmlFor={"or" + id} className="label_checkbox">Or</label>
           </div>
 
           {conditionType !== 'where_column' && <div className="form-group form-group_checkbox form-group_width15">
-            <input type="checkbox" id="not" name="not"
+            <input type="checkbox" id={"not" + id} name="not"
               className="form-check-input"
               checked={not}
               onChange={changeHandler}
             />
-            <label htmlFor="not" className="label_checkbox">Not</label>
+            <label htmlFor={"not" + id} className="label_checkbox">Not</label>
           </div>}
         </>}
 
         {conditionType === "where_date" && <div className="form-group form-group_width30">
-          <label htmlFor="type">Type</label>
+          <label htmlFor={"type" + id}>Type</label>
           <select id="type" required name="type"
             value={type}
             onChange={changeHandler}
@@ -90,15 +92,15 @@ class ConditionComponent extends Component {
             <option disabled value="" />
             <option value="year">Year</option>
             <option value="date">Date</option>
-            <option value="datetime">Time</option>
+            <option value="datetime">Date - Time</option>
           </select>
         </div>}
       </div>
 
       {['where', 'or_where'].includes(conditionType) &&
         <div className="form-group">
-          <label htmlFor="value">Value</label>
-          <input type="text" id="value" required name="value"
+          <label htmlFor={"value" + id}>Value</label>
+          <input type="text" id={"value" + id} required name="value"
             value={value}
             onChange={changeHandler}
             className="form-control" />
@@ -107,16 +109,16 @@ class ConditionComponent extends Component {
       {['where_between'].includes(conditionType) &&
         <div className="form-group__inline-wrapper">
           <div className="form-group form-group_width47">
-            <label htmlFor="value1">Value 1</label>
-            <input type="text" id="value1" required name="value1"
+            <label htmlFor={"value1" + id}>Value 1</label>
+            <input type="text" id={"value1" + id} required name="value1"
               value={values[0]}
               onChange={changeHandler}
               className="form-control" />
           </div>
 
           <div className="form-group form-group_width47">
-            <label htmlFor="value2">Value 2</label>
-            <input type="text" id="value2" required name="value2"
+            <label htmlFor={"value2" + id}>Value 2</label>
+            <input type="text" id={"value2" + id} required name="value2"
               value={values[1]}
               onChange={changeHandler}
               className="form-control" />
@@ -125,8 +127,8 @@ class ConditionComponent extends Component {
 
       {conditionType === "where_in" && <>
         <div className="form-group">
-          <label htmlFor="values">Values</label>
-          <textarea id="values" required name="values"
+          <label htmlFor={"values" + id}>Values</label>
+          <textarea id={"values" + id} required name="values"
             value={value[1]}
             onChange={changeHandler}
             className="form-control" />
@@ -135,19 +137,20 @@ class ConditionComponent extends Component {
       </>}
 
       {conditionType === "where_date" && <div className="form-group">
-        <label htmlFor="value">Value</label>
-        <DatePicker selected={value}
+        <label>Value</label>
+        {/* TODO: реализовать для типа year */}
+        <DatePicker selected={date}
           showTimeSelect={type === "datetime"}
-          dateFormat={type === "datetime" ? "Pp" : 'MM/dd/yyyy'}
+          dateFormat={type === "datetime" ? "MMMM d, yyyy h:mm aa" : type === "year" ? 'yyyy' : 'MMMM d, yyyy'}
           className="form-control"
-          onChange={date => changeHandler({ target: { name: 'value', value: date } })}
+          onChange={date => changeHandler({ target: { name: 'date', value: date } })}
         />
       </div>}
 
       {conditionType === "where_column" && <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
-          <label htmlFor="first_column">First Field</label>
-          <select id="first_column" required name="first_column"
+          <label htmlFor={"first_column" + id}>First Field</label>
+          <select id={"first_column" + id} required name="first_column"
             value={first_column}
             onChange={changeHandler}
             className="form-control"
@@ -161,8 +164,8 @@ class ConditionComponent extends Component {
         </div>
 
         <div className="form-group form-group_width47">
-          <label htmlFor="second_column">Second Field</label>
-          <select id="second_column" required name="second_column"
+          <label htmlFor={"second_column" + id}>Second Field</label>
+          <select id={"first_column" + id} required name="second_column"
             value={second_column}
             onChange={changeHandler}
             className="form-control"

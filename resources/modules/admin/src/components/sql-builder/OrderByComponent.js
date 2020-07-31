@@ -2,13 +2,13 @@ import React, { Component } from "react";
 
 class OrderByComponent extends Component {
   render() {
-    const { type, column } = this.props.item;
+    const { type, column, id } = this.props.item;
     const { columnsOptions, changeHandler } = this.props;
 
     return <div className="form-group__inline-wrapper">
       <div className="form-group form-group_width47">
-        <label htmlFor="column">Field</label>
-        <select id="column" required name="column"
+        <label htmlFor={"column" + id}>Field</label>
+        <select id={"column" + id} required name="column"
           value={column}
           onChange={changeHandler}
           className="form-control"
@@ -22,8 +22,8 @@ class OrderByComponent extends Component {
       </div>
 
       <div className="form-group form-group_width47">
-        <label htmlFor="type">Type</label>
-        <select id="type" required name="type"
+        <label htmlFor={"type" + id}>Type</label>
+        <select id={"type" + id} required name="type"
           value={type}
           onChange={changeHandler}
           className="form-control"
