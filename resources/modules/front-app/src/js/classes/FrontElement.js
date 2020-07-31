@@ -281,7 +281,6 @@ class FrontElement {
       if(!_.isObject(screen.rules)){
         return;
       }
-      console.log(screen);
       styles += `${screen.mediaQuery}{`;
       for(let selector in screen.rules){
         if(screen.rules.hasOwnProperty(selector)){

@@ -8,7 +8,8 @@ export function currentScreenReducer(state = defaultState, action) {
     case SET_CURRENT_SCREEN: {
       state = {
         ...action.screen
-      }
+      };
+      return state;
     }
     default:
       return state;

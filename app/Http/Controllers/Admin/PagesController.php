@@ -199,7 +199,7 @@ class PagesController extends Controller
 
   /**
    * Обработка запроса на получение списка страниц
-   * @param string $request
+   * @param string $page_id
    * @return \Illuminate\Http\JsonResponse
    */
   public function show_pages_options( $page_id )
