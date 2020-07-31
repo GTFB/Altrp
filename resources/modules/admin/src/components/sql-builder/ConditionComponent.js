@@ -2,6 +2,34 @@ import React, { Component } from "react";
 import DatePicker from "react-datepicker";
 
 const conditionTypeOptions = ['where', 'or_where', 'where_between', 'where_in', 'where_date', 'where_column'];
+const dateTypesOptions = [
+  { value: 'datetime', label: 'Date - Time' },
+  { value: 'date', label: 'Date' },
+  { value: 'time', label: 'Time' },
+  { value: 'day', label: 'Day' },
+  { value: 'month', label: 'Month' },
+  { value: 'year', label: 'Year' }
+];
+
+function getDateFormat(type) {
+  switch (type) {
+    case 'datetime':
+      return "yyyy/MM/dd h:mm:ss";
+    case 'date':
+      return "yyyy/MM/dd";
+    case 'time':
+      return "h:mm:ss";
+    case 'day':
+      return "dd";
+    case 'month':
+      return "MM";
+    case 'year':
+      return "yyyy";
+
+    default:
+      break;
+  }
+}
 
 class ConditionComponent extends Component {
   render() {
@@ -90,9 +118,8 @@ class ConditionComponent extends Component {
             className="form-control"
           >
             <option disabled value="" />
-            <option value="year">Year</option>
-            <option value="date">Date</option>
-            <option value="datetime">Date - Time</option>
+            {dateTypesOptions.map(({ value, label }) =>
+              <option key={value} value={value}>{label}</option>)}
           </select>
         </div>}
       </div>
@@ -140,8 +167,11 @@ class ConditionComponent extends Component {
         <label>Value</label>
         {/* TODO: реализовать для типа year */}
         <DatePicker selected={date}
-          showTimeSelect={type === "datetime"}
-          dateFormat={type === "datetime" ? "MMMM d, yyyy h:mm aa" : type === "year" ? 'yyyy' : 'MMMM d, yyyy'}
+          showTimeSelect={["datetime", "time"].includes(type)}
+          showYearPicker={type === "year"}
+          showTimeSelectOnly={type === "time"}
+          showMonthYearPicker={type === "month"}
+          dateFormat={getDateFormat(type)}
           className="form-control"
           onChange={date => changeHandler({ target: { name: 'date', value: date } })}
         />

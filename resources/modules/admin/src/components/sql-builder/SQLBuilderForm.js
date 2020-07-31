@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from "react";
+import moment from "moment";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import { titleToName } from "../../js/helpers";
 import AggregateComponent from "./AggregateComponent";
@@ -36,6 +37,26 @@ const conditionInitState = {
   second_column: '',
   date: new Date(),
   id: 0
+};
+
+function getDateFormat(type) {
+  switch (type) {
+    case 'datetime':
+      return "yyyy/MM/dd h:mm:ss";
+    case 'date':
+      return "yyyy/MM/dd";
+    case 'time':
+      return "h:mm:ss";
+    case 'day':
+      return "dd";
+    case 'month':
+      return "MM";
+    case 'year':
+      return "yyyy";
+
+    default:
+      break;
+  }
 }
 
 class SQLBuilderForm extends Component {
@@ -226,7 +247,10 @@ class SQLBuilderForm extends Component {
 
     const where_date = stateConditions  //TODO: value брать из date в зависимости от type
       .filter(({ conditionType }) => conditionType === "where_date")
-      .map(({ type, column, operator, date }) => ({ type, column, operator, value: date }));
+      .map(({ type, column, operator, date }) => {
+        const value = moment(date).format(getDateFormat(type));
+        return { type, column, operator, value };
+      });
 
     const where_column = stateConditions
       .filter(({ conditionType, or }) => conditionType === "where_column" && !or)
@@ -254,7 +278,7 @@ class SQLBuilderForm extends Component {
 
   render() {
     const { title, name, modelId, relations, columns, roles, permissions,
-      aggregates, conditions, orderBy, group_by, modelsOptions, 
+      aggregates, conditions, orderBy, group_by, modelsOptions,
       permissionsOptions, relationsOptions, columnsOptions, rolesOptions } = this.state;
 
     return <form className="admin-form" onSubmit={this.submitHandler}>
@@ -374,10 +398,9 @@ class SQLBuilderForm extends Component {
       </div>
 
       <p className="centred">Conditions</p>
-      
+
       {conditions.map((condition, index) => <Fragment key={condition.id}>
         <ConditionComponent
-          index={index}
           item={condition}
           columnsOptions={columnsOptions}
           changeHandler={e => this.conditionChangeHandler(e, index)}
