@@ -164,7 +164,7 @@ export default class Templates extends Component{
             return<li className="nav-item" key={area.id}>
               <button className={tabClasses.join(' ')}
                       onClick={this.changeActiveArea}
-                      data-area={area.id}>{area.name}</button>
+                      data-area={area.id}>{area.title}</button>
             </li>
           })}
         </ul>

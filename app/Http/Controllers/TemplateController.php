@@ -135,7 +135,9 @@ class TemplateController extends Controller
      */
     public function show(Template $template)
     {
-        return response()->json($template->toArray());
+      $res = $template->toArray();
+      $res['template_type'] = $template->template_type;
+      return response()->json( $res );
     }
 
     /**
@@ -149,7 +151,7 @@ class TemplateController extends Controller
         $template = Template::find($template_id);
 
         return response()->json($template->toArray());
-}
+    }
     /**
      * Show the form for editing the specified resource.
      *
