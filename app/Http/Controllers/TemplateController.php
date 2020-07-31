@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Constructor\Template;
+use App\Constructor\TemplateSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
@@ -270,23 +271,63 @@ class TemplateController extends Controller
 
     return response()->json(['success' => (bool) $result]);
   }
-    /**
-     * получить review по ID
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getAllReview(Request $request)
-    {
-        $result = Template::where([
-            ['id', $request->review_id],
-            ['type', 'review']
-        ])->get();
+  /**
+   * получить review по ID
+   *
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function getAllReview(Request $request)
+  {
+      $result = Template::where([
+          ['id', $request->review_id],
+          ['type', 'review']
+      ])->get();
+      return response()->json($result);
+  }
 
-
-        return response()->json($result);
+  /**
+   * Обрабатываем запрос на получение настройки
+   * @param string $template_id
+   * @param string $setting_name
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function settingGet( $template_id, $setting_name ){
+    $setting = TemplateSetting::where( [
+      'template_id' => $template_id,
+      'setting_name' => $setting_name,
+    ] )->first();
+    if( ! $setting ){
+      return response()->json( new \stdClass(), 200, [], JSON_UNESCAPED_UNICODE );
     }
+    return response()->json( $setting->toArray(), 200, [], JSON_UNESCAPED_UNICODE );
+  }
 
-
+  /**
+   * Обрабатываем запрос на сохранение настройки
+   * @param string $template_id
+   * @param string $setting_name
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function settingSet( $template_id, $setting_name, Request $request ){
+    $setting = TemplateSetting::where( [
+      'template_id' => $template_id,
+      'setting_name' => $setting_name,
+    ] )->first();
+    if( ! $setting ){
+      $setting = new TemplateSetting( [
+        'template_id' => $template_id,
+        'setting_name' => $setting_name,
+        'data' => $request->get( 'data' ),
+      ] );
+    } else {
+      $setting->data = $request->get( 'data' );
+    }
+    if( ! $setting->save() ){
+      return response()->json( ['message' => 'Setting not Saved'], 500, [], JSON_UNESCAPED_UNICODE );
+    }
+    return response()->json( ['success' => true], 200, [], JSON_UNESCAPED_UNICODE );
+  }
 
 }

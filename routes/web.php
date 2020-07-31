@@ -116,7 +116,17 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::delete('/users/{user}/roles', "Users\Users@detachRole");
 
     Route::resource( 'areas', 'Admin\AreasController' );
+    /**
+     * Templates Routes
+     */
     Route::resource( 'templates', 'TemplateController' );
+    /**
+     * templates settings
+     */
+    Route::get( 'templates/{template_id}/settings/{setting_name}', 'TemplateController@settingGet' )
+      ->name( 'get-template-setting' );
+    Route::put( 'templates/{template_id}/settings/{setting_name}', 'TemplateController@settingSet' )
+      ->name( 'set-template-setting' );
     Route::resource( 'reports', 'ReportsController' );
     Route::resource( 'media', 'Admin\MediaController' );
     Route::resource( 'settings', 'Admin\SettingsController' );
