@@ -82,7 +82,7 @@ class Text extends BaseElement {
       label: "Column count",
       default: 1,
       rules: {
-        "{{ELEMENT}} .altrp-text": "column-count: {{VALUE}}"
+        "{{ELEMENT}} .altrp-text{{STATE}}": "column-count: {{VALUE}}"
       }
     });
 
@@ -120,7 +120,7 @@ class Text extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-text": [
+        "{{ELEMENT}} .altrp-text{{STATE}}": [
           "padding-top: {{TOP}}{{UNIT}};",
           "padding-right: {{RIGHT}}{{UNIT}};",
           "padding-bottom: {{BOTTOM}}{{UNIT}};",
@@ -145,7 +145,7 @@ class Text extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-text': [ 
+        '{{ELEMENT}} .altrp-text{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -159,7 +159,7 @@ class Text extends BaseElement {
       label: "Z-index",
       default: 0,
       rules: {
-        "{{ELEMENT}} .altrp-text": "z-index: {{VALUE}}"
+        "{{ELEMENT}} .altrp-text{{STATE}}": "z-index: {{VALUE}}"
       }
     });
 
@@ -189,7 +189,7 @@ class Text extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-text": "background-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-text{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
@@ -203,7 +203,7 @@ class Text extends BaseElement {
       min: 0,
       step: 0.01,
       rules: {
-        "{{ELEMENT}} .altrp-text": "opacity: {{SIZE}}"
+        "{{ELEMENT}} .altrp-text{{STATE}}": "opacity: {{SIZE}}"
       }
     });
 
@@ -226,7 +226,7 @@ class Text extends BaseElement {
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-text': [
+          '{{ELEMENT}} .altrp-text{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -249,7 +249,7 @@ class Text extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-text": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-text{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -291,7 +291,7 @@ class Text extends BaseElement {
         }
       ],
       rules: {
-        "{{ELEMENT}} .altrp-text": "border-style: {{VALUE}};"
+        "{{ELEMENT}} .altrp-text{{STATE}}": "border-style: {{VALUE}};"
       }
     });
 
@@ -300,7 +300,7 @@ class Text extends BaseElement {
       label: "Border width",
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-text":
+        "{{ELEMENT}} .altrp-text{{STATE}}":
           "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
       }
     });
@@ -313,7 +313,7 @@ class Text extends BaseElement {
         colorPickedHex: "#32a852"
       },
       rules: {
-        "{{ELEMENT}} .altrp-text": "border-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-text{{STATE}}": "border-color: {{COLOR}};"
       }
     });
 
@@ -332,15 +332,15 @@ class Text extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-text": "border-radius: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-text{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
       }
     });
 
     this.endControlSection();
 
-    this.startControlSection("text_advanced_tooltip", {
+    this.startControlSection('text_advanced_tooltip', {
       tab: TAB_ADVANCED,
-      label: "Tooltip"
+      label: 'Tooltip'
     });
 
     this.addControl('text_advanced_tooltip_active', {
@@ -348,7 +348,7 @@ class Text extends BaseElement {
       label: 'Tooltip active',
       default: false
     });
-    
+
     this.addControl('text_advanced_tooltip_label', {
       type: CONTROLLER_TEXT,
       default: "tooltip",
@@ -367,8 +367,8 @@ class Text extends BaseElement {
         "#9c18a8"
       ],
       rules: {
-        '{{ELEMENT}} .altrp-tooltip': 'background: {{COLOR}};',
-        '{{ELEMENT}} .altrp-tooltip::after': 'border-color: transparent transparent {{COLOR}};'
+        '{{ELEMENT}} .altrp-tooltip{{STATE}}': 'background: {{COLOR}};',
+        '{{ELEMENT}} .altrp-tooltip::after{{STATE}}': 'border-color: transparent transparent {{COLOR}};'
       },
     });
 
@@ -384,7 +384,7 @@ class Text extends BaseElement {
         "#9c18a8"
       ],
       rules: {
-        '{{ELEMENT}} .altrp-tooltip': 'color: {{COLOR}};',
+        '{{ELEMENT}} .altrp-tooltip{{STATE}}': 'color: {{COLOR}};',
       },
     });
 
@@ -424,11 +424,11 @@ class Text extends BaseElement {
           },
         ],
         rules: {
-          '{{ELEMENT}} .altrp-tooltip': 'border-style: {{VALUE}};',
+          '{{ELEMENT}} .altrp-tooltip{{STATE}}': 'border-style: {{VALUE}};',
         },
       }
     );
-  
+
     this.addControl(
       'text_advanced_tooltip_border_width', {
         type: CONTROLLER_DIMENSIONS,
@@ -439,11 +439,11 @@ class Text extends BaseElement {
           'vh',
         ],
         rules: {
-          '{{ELEMENT}} .altrp-tooltip': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          '{{ELEMENT}} .altrp-tooltip{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         },
       }
     );
-  
+
     this.addControl(
       'text_advanced_tooltip_border_color', {
         type: CONTROLLER_COLOR,
@@ -453,11 +453,11 @@ class Text extends BaseElement {
           colorPickedHex: "#32a852",
         },
         rules: {
-          '{{ELEMENT}} .altrp-tooltip': 'border-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-tooltip{{STATE}}': 'border-color: {{COLOR}};',
         },
       }
     );
-    
+
     this.addControl('text_advanced_tooltip_border_radius', {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
@@ -473,7 +473,7 @@ class Text extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        '{{ELEMENT}} .altrp-tooltip': 'border-radius: {{SIZE}}{{UNIT}}',
+        '{{ELEMENT}} .altrp-tooltip{{STATE}}': 'border-radius: {{SIZE}}{{UNIT}}',
       },
     });
 
@@ -493,7 +493,7 @@ class Text extends BaseElement {
         }
       ],
       rules: {
-        '{{ELEMENT}} .altrp-tooltip': 'font-family: {{VALUE}}'
+        '{{ELEMENT}} .altrp-tooltip{{STATE}}': 'font-family: {{VALUE}}'
       }
     });
 

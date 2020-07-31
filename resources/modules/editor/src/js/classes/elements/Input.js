@@ -13,7 +13,7 @@ import {
   CONTROLLER_COLOR,
   CONTROLLER_SELECT2,
   TAB_CONTENT,
-  TAB_STYLE
+  TAB_STYLE, CONTROLLER_CHOOSE
 } from "../modules/ControllersManager";
 
 class Input extends BaseElement{
@@ -33,7 +33,7 @@ class Input extends BaseElement{
     if (this.controllersRegistered) {
       return
     }
-    
+
     this.startControlSection('content_section', {
       tab: TAB_CONTENT,
       label: 'Content',
@@ -61,28 +61,36 @@ class Input extends BaseElement{
       options: [
         {
           value: 'text',
-          label: 'text'
+          label: 'Text'
+        },
+        {
+          value: 'password',
+          label: 'Password'
         },
         {
           value: 'number',
-          label: 'number'
+          label: 'Number'
         },
         {
           value: 'date',
-          label: 'date'
+          label: 'Date'
         },
         {
           value: 'email',
-          label: 'email'
+          label: 'Email'
         },
         {
           value: 'tel',
-          label: 'tel'
+          label: 'Tel'
         },
         {
           value: 'file',
-          label: 'file'
-        }
+          label: 'File'
+        },
+        {
+          value: 'select',
+          label: 'Select'
+        },
       ]
     });
 
@@ -117,7 +125,7 @@ class Input extends BaseElement{
     this.addControl('content_placeholder', {
       type: CONTROLLER_TEXT,
       label: 'Placeholder',
-      default: 'placeholder'
+      default: 'Placeholder'
     });
 
     this.addControl('content_mask', {
@@ -125,7 +133,7 @@ class Input extends BaseElement{
       label: 'Mask',
     });
 
-    
+
     this.addControl('content_required', {
       type: CONTROLLER_SWITCHER,
       label: 'Required',
@@ -134,6 +142,24 @@ class Input extends BaseElement{
     this.addControl('content_autocomplete', {
       type: CONTROLLER_SWITCHER,
       label: 'Autocomplete',
+    });
+
+    this.addControl('content_options_nullable', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Select Nullable',
+      default: false,
+      conditions: {
+        'content_type': 'select',
+      },
+    });
+
+    this.addControl('content_options', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Select Options',
+      conditions: {
+        'content_type': 'select',
+      },
+      description: 'Enter each option in a separate line. To differentiate between label and value, separate them with a pipe char ("|"). For example: First Name|f_name',
     });
 
     this.addControl('content_default_value', {
@@ -157,7 +183,7 @@ class Input extends BaseElement{
         {
           value: '1',
           label:'Select sd  Content 1'
-        }, 
+        },
         {
           value: '2',
           label:'Select Content 2'
@@ -166,7 +192,7 @@ class Input extends BaseElement{
     });
 
     this.endControlSection();
-    
+
     this.startControlSection('label_style_section', {
       tab: TAB_STYLE,
       label: 'label',
@@ -195,7 +221,7 @@ class Input extends BaseElement{
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-field-label": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-field-label{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -211,7 +237,7 @@ class Input extends BaseElement{
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-field-label': [
+          '{{ELEMENT}} .altrp-field-label{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -231,6 +257,29 @@ class Input extends BaseElement{
       label: 'Position',
     });
 
+    this.addControl('placeholder_and_value_alignment_position_section', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment, value',
+      default: 'left',
+      options:[
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        }
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-field{{STATE}}': 'text-align: {{VALUE}};',
+      },
+    });
+
     this.addControl('position_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
@@ -247,7 +296,7 @@ class Input extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} input': [ 
+        '{{ELEMENT}} .altrp-field-container{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -272,7 +321,7 @@ class Input extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} input': [ 
+        '{{ELEMENT}} .altrp-field{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -286,13 +335,13 @@ class Input extends BaseElement{
       label: 'Z-index',
       default: 0,
       rules: {
-        '{{ELEMENT}} input': 'z-index: {{VALUE}}'
+        '{{ELEMENT}} .altrp-field{{STATE}}': 'z-index: {{VALUE}}'
       }
     });
 
     this.addControl('position_css_id', {
       type: CONTROLLER_TEXT,
-      label: 'CSS ID'
+      label: 'CSS ID',
     });
 
     this.addControl('position_css_classes', {
@@ -301,7 +350,7 @@ class Input extends BaseElement{
     });
 
     this.endControlSection();
-    
+
     this.startControlSection('placeholder_style_section', {
       tab: TAB_STYLE,
       label: 'placeholder',
@@ -316,7 +365,7 @@ class Input extends BaseElement{
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-field::placeholder": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-field::placeholder{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -332,7 +381,7 @@ class Input extends BaseElement{
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-field::placeholder': [
+          '{{ELEMENT}} .altrp-field::placeholder{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -345,7 +394,7 @@ class Input extends BaseElement{
         },
       }
     );
-    
+
     this.endControlSection();
 
     this.startControlSection('required_style_section', {
@@ -362,7 +411,7 @@ class Input extends BaseElement{
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-field-required": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-field-required{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -378,7 +427,7 @@ class Input extends BaseElement{
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-field-required': [
+          '{{ELEMENT}} .altrp-field-required{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -391,7 +440,7 @@ class Input extends BaseElement{
         },
       }
     );
-    
+
     this.endControlSection();
 
     this.startControlSection('overlay_section', {
@@ -414,7 +463,7 @@ class Input extends BaseElement{
           colorPickedHex: "",
         },
         rules: {
-          '{{ELEMENT}} input': 'background-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-field{{STATE}}': 'background-color: {{COLOR}};',
         },
       }
     );
@@ -471,11 +520,11 @@ class Input extends BaseElement{
           },
         ],
         rules: {
-          '{{ELEMENT}} input': 'border-style: {{VALUE}};',
+          '{{ELEMENT}} .altrp-field{{STATE}}': 'border-style: {{VALUE}};',
         },
       }
     );
-  
+
     this.addControl('border_width', {
         type: CONTROLLER_DIMENSIONS,
         label: 'Border Width',
@@ -491,11 +540,11 @@ class Input extends BaseElement{
           left: 2
         },
         rules: {
-          '{{ELEMENT}} input': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          '{{ELEMENT}} .altrp-field{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         },
       }
     );
-  
+
     this.addControl('border_color', {
         type: CONTROLLER_COLOR,
         label: 'Border Color',
@@ -504,11 +553,11 @@ class Input extends BaseElement{
           colorPickedHex: "#8E94AA",
         },
         rules: {
-          '{{ELEMENT}} input': 'border-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-field{{STATE}}': 'border-color: {{COLOR}};',
         },
       }
     );
-    
+
     this.addControl('border_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Radius',
@@ -525,7 +574,7 @@ class Input extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} input': [ 
+        '{{ELEMENT}} .altrp-field{{STATE}}': [
           'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         ]
       },

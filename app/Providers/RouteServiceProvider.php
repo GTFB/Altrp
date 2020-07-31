@@ -47,7 +47,9 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
-        //
+        $this->mapApiAltrpRoutes();
+
+        $this->mapAltrpRoutes();
     }
 
     /**
@@ -77,5 +79,27 @@ class RouteServiceProvider extends ServiceProvider
              ->middleware('api')
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
+    }
+
+    /**
+     * Custom routes for Altrp Routes
+     */
+    protected function mapAltrpRoutes()
+    {
+        Route::prefix('ajax/models')
+            ->middleware('web')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/AltrpRoutes.php'));
+    }
+
+    /**
+     * Custom api routes for Altrp Routes
+     */
+    protected function mapApiAltrpRoutes()
+    {
+        Route::prefix('api/altrp_models')
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/AltrpRoutes.php'));
     }
 }

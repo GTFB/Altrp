@@ -20,7 +20,11 @@ class ElementsFactory extends BaseModule{
     /**
      * Если настройки пустый то с сервера приходит пустой массив -- меняем на пустой объект
      * */
-    element.settings = (object.settings.length === 0) ? {} : object.settings;
+    let settings = (object.settings.length === 0) ? {} : object.settings;
+    element.setSettings(settings);
+    if(object.dynamicContentSettings){
+      element.dynamicContentSettings = (object.dynamicContentSettings.length === 0) ? {} : object.dynamicContentSettings;
+    }
 
     if(parent){
       element.parent = parent;
@@ -59,9 +63,12 @@ class ElementsFactory extends BaseModule{
       newChild.setParent(newElement);
       newChildren.push(newChild);
     });
-    newElement.component = new
+    // newElement.component = new
     newElement.setChildren(newChildren);
     newElement.settings = _.cloneDeep(element.settings);
+    if(element.dynamicContentSettings){
+      newElement.dynamicContentSettings = _.cloneDeep(element.dynamicContentSettings);
+    }
     newElement.children = newChildren;
     return newElement;
   }

@@ -23,7 +23,12 @@ class CrudControllerCommand extends GeneratorCommand
                             {--validations= : Validation rules for the fields.}
                             {--route-group= : Prefix of the route group.}
                             {--pagination=25 : The amount of models per page for index pages.}
-                            {--force : Overwrite already existing controller.}';
+                            {--force : Overwrite already existing controller.}
+                            {--relations : Relations for methods of controller.}
+                            {--custom-namespaces= : Custom namespaces of the controller.}
+                            {--custom-traits= : Custom traits of the controller.}
+                            {--custom-properties= : Custom props of the controller.}
+                            {--custom-methods= : Custom methods of the controller.}';
 
     /**
      * The console command description.
@@ -100,6 +105,11 @@ class CrudControllerCommand extends GeneratorCommand
         $viewName = Str::snake($this->option('crud-name'), '-');
         $fields = $this->option('fields');
         $validations = rtrim($this->option('validations'), ';');
+        $relations = $this->option('relations') ? explode(';', $this->option('relations')) : '';
+        $customNamespaces = $this->option('custom-namespaces') ?? '';
+        $customTraits = $this->option('custom-traits') ?? '';
+        $customProperties = $this->option('custom-properties') ?? '';
+        $customMethods = $this->option('custom-methods') ?? '';
 
         $validationRules = '';
         if (trim($validations) != '') {
@@ -141,7 +151,6 @@ EOD;
 EOD;
         }
 
-
         $fieldsArray = explode(';', $fields);
         $fileSnippet = '';
         $whereSnippet = '';
@@ -175,6 +184,11 @@ EOD;
             ->replaceRoutePrefix($stub, $routePrefix)
             ->replaceRoutePrefixCap($stub, $routePrefixCap)
             ->replaceValidationRules($stub, $validationRules)
+            ->replaceRelations($stub, $relations)
+            ->replaceCustomNamespaces($stub, $customNamespaces)
+            ->replaceCustomTraits($stub, $customTraits)
+            ->replaceCustomProperties($stub, $customProperties)
+            ->replaceCustomMethods($stub, $customMethods)
             ->replacePaginationNumber($stub, $perPage)
             ->replaceFileSnippet($stub, $fileSnippet)
             ->replaceWhereSnippet($stub, $whereSnippet)
@@ -182,7 +196,79 @@ EOD;
     }
 
     /**
-     * Replace the viewName fo the given stub.
+     * Replace the relations for the given stub.
+     *
+     * @param $stub
+     * @param $relations
+     *
+     * @return $this
+     */
+    protected function replaceRelations(&$stub, $relations)
+    {
+        $relations = $relations
+            ? '->load([\'' . implode("','", $relations) . '\'])' : '';
+        $stub = str_replace('{{relations}}', $relations, $stub);
+        return $this;
+    }
+
+    /**
+     * Replace the customNamespaces for the given stub.
+     *
+     * @param $stub
+     * @param $customNamespaces
+     *
+     * @return $this
+     */
+    protected function replaceCustomNamespaces(&$stub, $customNamespaces)
+    {
+        $stub = str_replace('{{customNamespaces}}', $customNamespaces, $stub);
+        return $this;
+    }
+
+    /**
+     * Replace the customTraits for the given stub.
+     *
+     * @param $stub
+     * @param $customTraits
+     *
+     * @return $this
+     */
+    protected function replaceCustomTraits(&$stub, $customTraits)
+    {
+        $stub = str_replace('{{customTraits}}', $customTraits, $stub);
+        return $this;
+    }
+
+    /**
+     * Replace the customProperties for the given stub.
+     *
+     * @param $stub
+     * @param $customProperties
+     *
+     * @return $this
+     */
+    protected function replaceCustomProperties(&$stub, $customProperties)
+    {
+        $stub = str_replace('{{customProperties}}', $customProperties, $stub);
+        return $this;
+    }
+
+    /**
+     * Replace the customMethods for the given stub.
+     *
+     * @param $stub
+     * @param $customMethods
+     *
+     * @return $this
+     */
+    protected function replaceCustomMethods(&$stub, $customMethods)
+    {
+        $stub = str_replace('{{customMethods}}', $customMethods, $stub);
+        return $this;
+    }
+
+    /**
+     * Replace the viewName for the given stub.
      *
      * @param string $stub
      * @param string $viewName

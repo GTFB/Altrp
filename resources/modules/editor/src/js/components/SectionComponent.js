@@ -44,6 +44,8 @@ import {changeWidthColumns} from "../store/column-width/actions";
 //     </div>
 //   );
 // };
+import '../../sass/section.scss'
+import { isEditor, getWindowWidth } from "../helpers"
 
 class SectionComponent extends Component {
   constructor(props) {
@@ -54,7 +56,6 @@ class SectionComponent extends Component {
     this.state = {
       children: props.children,
       settings: props.element.getSettings(),
-      structure: store.getState().columnWidth.width
     };
     props.element.component = this;
     if (window.elementDecorator) {
@@ -64,67 +65,51 @@ class SectionComponent extends Component {
 
 
   render() {
+    let styles = {};
     let width = {};
-    if(this.state.settings.layout_content_width_type == "full") {
-      let element = document.getElementsByTagName("iframe")[0];
-      let body = element ? element.offsetWidth : 0;
-      let editor = document.getElementById("editor");
-      if(editor != undefined) {
-        body = window
-
-      } else {
-        body = body
-      }
-
+    if(this.state.settings.layout_content_width_type === "full") {
       width = {
-        width: body + "px"
+        width: getWindowWidth() + "px"
       }
-
     } else {
       width = {}
-    };
-
-    /**
-     * Динамическое обновление store для движения колонок в реальном времени
-     */
-
-    store.subscribe(() => {
-      this.setState((state) => {
-        return {
-          ...state,
-          structure: store.getState().columnWidth.width
-        }
-      });
-    })
-
+    }
+    
 
     let sectionClasses = [
       'altrp-section',
       `altrp-section_columns-${this.props.element.getColumnsCount()}`
     ];
-    let currentElement = getCurrentElement();
-    let sectionWrapper = this.state.children.map((column, index) => {
-      const width = this.state.structure[index];
-      return <ElementWrapper
-        width={{width: width + "%"}}
+
+    let sectionWrapper = this.state.children.map(column => (
+      <ElementWrapper
         key={column.getId()}
         component={column.componentClass}
         element={column}
-        columnCount={this.props.element.getColumnsCount()}
+        // columnCount={this.props.element.getColumnsCount()}
       />
-    });
+    ));
+
+    if(this.state.settings.layout_content_width_type == "full") {
+      styles.width = getWindowWidth() + "px"
+    }
+
+    if(this.state.settings.layout_height == "fit") {
+      styles.height = "100vh"
+    }
 
     let section = React.createElement(this.state.settings.layout_html_tag || "div",
-      {style: width, className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: ""},
-      <div className="get-column-count" id="columnCount" data-column-count={"\n" + this.props.element.getColumnsCount()}></div>,
+      {style: styles, className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: ""},
+      <div className={"get-column-count " + `altrp-element-column-count${this.props.element.id}`} id="columnCount" data-column-count={"\n" + this.props.element.getColumnsCount()}></div>,
       sectionWrapper
     );
 
-    let link = null;
-    // if(this.state.settings.link_link.url != null & this.state.settings.link_link.url != "") {
-    //   link = <div className="altrp-section">link{section}</div>
+    // let fullFill = null
+    // if(this.state.settings.layout_content_width_type == "full-fill") {
+    //   fullFill = section
+    //   // <div className="full-fill" style={{width: getWindowWidth() + "px"}}>{section}</div>
     // }
-    // return link || section
+
     return  section
   }
 }

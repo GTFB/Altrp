@@ -1,65 +1,76 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import ChevronIcon from '../../svgs/chevron.svg'
-import Controller from "../classes/Controller";
-import { set } from "lodash";
+import { connect } from "react-redux";
+import { getCurrentElement, getCurrentTab, getElementState } from "../store/store";
+import { setActiveSection } from "../store/setting-section/actions";
 
 class SettingSection extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      open: props.open,
-      active: props.open
+      open: false,
     };
     this.toggle = this.toggle.bind(this);
-    const open = props.open;
-  }
+  };
 
   componentDidMount() {
-    document.getElementById("settingsSection0").classList.add('open')
+
+    /**
+     * Если еще ни разу не открывали текущую вкладку у элемента,
+     * то в setActiveSection передадим 0
+     */
+    let currentElementName = getCurrentElement().getName();
+    let currentTab = getCurrentTab();
+    if (! (this.props.settingSection[currentElementName]
+        && (this.props.settingSection[currentElementName][currentTab] !== undefined))) {
+      this.props.dispatch(setActiveSection(getCurrentElement().getName(), getCurrentTab(), 0));
+    }
   }
 
-  toggle(e){
-    this.setState({
-      open: !this.state.open,
-      active: e.currentTarget.dataset.key
-    });
-  }
-
+  toggle() {
+    this.props.dispatch(setActiveSection(getCurrentElement().getName(), getCurrentTab(), this.props.sectionID));
+  };
 
   render() {
-    let settingsControllers = document.getElementById('settingsControllers');
-    if(document.getElementById("settingsSection" + this.props.active))
-    if(document.getElementById("settingsSection" + this.props.active).classList.contains('open') === false) {
-      for(let count = 0; count < settingsControllers.children.length; count++) {
-        document.getElementById("settingsSection" + count).classList.remove('open')
-      }
-      document.getElementById("settingsSection" + this.props.active).classList.add('open')
-    } else {
-      document.getElementById("settingsSection" + this.props.active).classList.remove('open');
+    let currentElementName = getCurrentElement().getName();
+    let currentTab = getCurrentTab();
+    let activeSectionID = 0;
+    /**
+     * Сравниваем с undefined
+     */
+    if (this.props.settingSection[currentElementName]
+        && (this.props.settingSection[currentElementName][currentTab] !== undefined)) {
+      activeSectionID = this.props.settingSection[currentElementName][currentTab];
     }
-
     let controllers = this.props.controls || [];
-    return <div className="settings-section" id={"settingsSection" + this.props.active}>
-    <div className="settings-section">
-      <div className="settings-section__title d-flex " data-open={true} data-key={this.props.active} onClick={this.toggle}>
-        <div className="settings-section__icon d-flex ">
-          <ChevronIcon/>
+    return (
+      <div  className={"settings-section " + (this.props.sectionID === activeSectionID ? 'open' : '')}>
+        <div className="settings-section__title d-flex" onClick={this.toggle}>
+          <div className="settings-section__icon d-flex ">
+            <ChevronIcon />
+          </div>
+          <div className="settings-section__label">
+            {this.props.label}
+          </div>
         </div>
-        <div className="settings-section__label">
-          {this.props.label}
-        </div>
-      </div>
-      <div className="controllers-wrapper">
-        {
-          controllers.map((controller) => {
+        <div className="controllers-wrapper">
+          {
+            controllers.map((controller) => {
               let ControllerComponent = window.controllersManager.getController(controller.type);
-              return React.createElement(ControllerComponent, {...controller, key: controller.controlId, controller: new Controller(controller)});
+              return React.createElement(ControllerComponent, { ...controller, key: controller.controlId });
             })
-        }
+          }
+        </div>
       </div>
-    </div>
-    </div>
+    )
   }
 }
 
-export default SettingSection;
+const mapStateToProps = (state) => {
+  return {
+    settingSection: state.settingSectionMenu
+  }
+}
+
+
+export default connect(mapStateToProps, null)(SettingSection);

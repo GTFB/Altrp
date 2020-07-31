@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Redirect, withRouter} from "react-router";
+import {Redirect, withRouter} from 'react-router-dom';
 import AdminTable from "../AdminTable";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import {Link} from "react-router-dom";
@@ -18,19 +18,17 @@ class AddMigrationPage extends Component{
         
         //Типы  полей
         this.column_types = [
-            {id: "id",name: "Identifier"},
-            {id: "foreignId",name: "Foreign Id"},
-            {id: "boolean",name: "Boolean"},
-            {id: "char",name: "Char"},
-            {id: "date",name: "Date"},
-            {id: "datetime",name: "Datetime"},
-            {id: "integer",name: "Integer"},
-            {id: "mediumtext",name: "Medium Text"},
-            {id: "longtext",name: "Long Text"},
-            {id: "string",name: "String"},
-            {id: "text",name: "Text"},
-            {id: "bigint",name: "Big Integer"},
-            {id: "decimal",name: "Decimal"},
+            {id: "id",name: "Identifier",fields:[]},
+            {id: "foreignId",name: "Foreign Id",fields:["nullable","default"]},
+            {id: "boolean",name: "Boolean",fields:["nullable","default"]},
+            {id: "date",name: "Date",fields:["nullable","default","size","unique","current"]},
+            {id: "datetime",name: "Datetime",fields:["nullable","default","size","unique","current"]},
+            {id: "decimal",name: "Decimal",fields:["nullable","default","size","places"]},
+            {id: "integer",name: "Integer",fields:["nullable","default"]},
+            {id: "longtext",name: "Long Text",fields:["nullable","default","unique"]},
+            {id: "string",name: "String",fields:["nullable","default","size","unique"]},
+            {id: "text",name: "Text",fields:["nullable","default","unique"]},
+            {id: "timestamps",name: "Timestamps",fields:["size"]},
         ];
         
         //Значения колонки по умолчанию
@@ -41,6 +39,7 @@ class AddMigrationPage extends Component{
             description: '',
             type: "string",
             size: 191,
+            places: 0,
             default: "",
             null: false,
             unique: false,
@@ -72,8 +71,8 @@ class AddMigrationPage extends Component{
             {name: 'type',title: 'Type',},
             {name: 'size',title: 'Size',},
             {name: 'default',title: 'Default',},
-            {name: 'null',title: 'Nullable',},
-            {name: 'unique',title: 'Unique',},
+            {name: 'null',title: 'Nullable',is_boolean: true},
+            {name: 'unique',title: 'Unique',is_boolean: true},
             {
                 name: 'edit',
                 title: 'Edit',
@@ -149,7 +148,7 @@ class AddMigrationPage extends Component{
         this.changeName = this.changeName.bind(this);
         this.saveMigration = this.saveMigration.bind(this);
         
-        
+        this.isShowField = this.isShowField.bind(this);
         
         
         
@@ -185,6 +184,25 @@ class AddMigrationPage extends Component{
           modalClasses += ' admin-modal_active';
         }
         return modalClasses;
+    }
+    
+    //Получаем класс для модального окна
+    isShowField(field_name) {
+        
+        let state = false;
+        
+        let type = this.column_types.find(item => item.id === this.state.column.type);
+        
+        if(type) {
+            
+            let index = type.fields.indexOf(field_name);
+            
+            if(index > -1)  {
+                state = true;
+            }
+            
+        }
+        return state;
     }
     
     //Меняем переменную для открытия той или иной модали
@@ -302,11 +320,36 @@ class AddMigrationPage extends Component{
         }
     }
     
-    
+    /**
+     * Изменение значений при работе с модальным окном
+     * @param {type} e
+     * @returns {undefined}
+     */
     onChangeColumn(e) {
         let field_name = e.target.name;
-        console.log(e.target.value);
-        this.setState({ ...this.state, column:{...this.state.column, [field_name]: e.target.value}});
+        let value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+        
+        if(field_name === "name") {
+            
+        
+            let val = e.target.value.replace("_", " ");
+            value = val.charAt(0).toUpperCase() + val.slice(1); 
+            
+            let title = this.state.column.title;
+            let description = this.state.column.description;
+            
+            if(title === "" || title === value.slice(0, value.length - 1)) {
+                title = value;
+            }
+            if(description === "" || description === value.slice(0, value.length - 1)) {
+                description = value; 
+            }
+            
+            this.setState({ ...this.state, column:{...this.state.column, [field_name]: e.target.value, title: title, description: description }});
+            return;
+        }
+        
+        this.setState({ ...this.state, column:{...this.state.column, [field_name]: value}}, () => {console.log(this.state)});
     }
     onChangeKey(e) {
         let field_name = e.target.name;
@@ -459,26 +502,8 @@ class AddMigrationPage extends Component{
                     <form className="admin-form" onSubmit={this.addColumn}>
                         <div>
                             <label className='form-label'>
-                                id
-                                <input className='form__input' type="text" name="id" value={this.state.column.id}  onChange={(e) => {this.onChangeColumn(e)}}/>
-                            </label>
-                        </div>
-                        <div>
-                            <label className='form-label'>
                                 name
                                 <input className='form__input' type="text" name="name" value={this.state.column.name} onChange={(e) => {this.onChangeColumn(e)}}/>
-                            </label>
-                        </div>
-                        <div>
-                            <label className='form-label'>
-                                title
-                                <input className='form__input' type="text" name="title" value={this.state.column.title}  onChange={(e) => {this.onChangeColumn(e)}}/>
-                            </label>
-                        </div>
-                        <div>
-                            <label className='form-label'>
-                                description
-                                <input className='form__input' type="text" name="description" value={this.state.column.description}  onChange={(e) => {this.onChangeColumn(e)}}/>
                             </label>
                         </div>
                         <div>
@@ -495,28 +520,46 @@ class AddMigrationPage extends Component{
                                     </select>
                             </label>
                         </div>
-                        <div>
+                        {this.isShowField("size") ? <div>
                             <label className='form-label'>
                                 size
                                 <input className='form__input' type="text" name="size"  value={this.state.column.size} onChange={(e) => {this.onChangeColumn(e)}}/>
                             </label>
-                        </div>
-                        <div>
+                        </div> : null}
+                        {this.isShowField("places") ? <div>
+                            <label className='form-label'>
+                                places
+                                <input className='form__input' type="text" name="places"  value={this.state.column.places} onChange={(e) => {this.onChangeColumn(e)}}/>
+                            </label>
+                        </div> : null}
+                        {this.isShowField("default") ? <div>
                             <label className='form-label'>
                                 default
                                 <input className='form__input' type="text" name="default" value={this.state.column.default} onChange={(e) => {this.onChangeColumn(e)}}/>
                             </label>
-                        </div>
+                        </div> : null}
+                        {this.isShowField("unique") ? <div>
+                            <label className='form-label'>
+                                <input className='form__input' type="checkbox" name="unique" checked={this.state.column.unique ? 1 : 0} onChange={(e) => {this.onChangeColumn(e)}}/>
+                                unique
+                            </label>
+                        </div> : null}
+                        {this.isShowField("nullable") ? <div>
+                            <label className='form-label'>
+                                <input className='form__input' type="checkbox" name="null" checked={this.state.column.null ? 1 : 0} onChange={(e) => {this.onChangeColumn(e)}}/>
+                                nullable
+                            </label>
+                        </div> : null}
                         <div>
                             <label className='form-label'>
-                                <input className='form__input' type="checkbox" name="unique" value={this.state.column.unique} onChange={(e) => {this.onChangeColumn(e)}}/>
-                                unique
+                                title
+                                <input className='form__input' type="text" name="title" value={this.state.column.title}  onChange={(e) => {this.onChangeColumn(e)}}/>
                             </label>
                         </div>
                         <div>
                             <label className='form-label'>
-                                <input className='form__input' type="checkbox" name="null" value={this.state.column.null} onChange={(e) => {this.onChangeColumn(e)}}/>
-                                nullable
+                                description
+                                <input className='form__input' type="text" name="description" value={this.state.column.description}  onChange={(e) => {this.onChangeColumn(e)}}/>
                             </label>
                         </div>
                         <button className="btn btn_success">Add col</button>

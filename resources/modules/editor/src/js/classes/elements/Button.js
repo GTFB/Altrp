@@ -10,6 +10,7 @@ import {
   CONTROLLER_TEXT,
   CONTROLLER_LINK,
   CONTROLLER_TYPOGRAPHIC,
+  CONTROLLER_CHOOSE,
   CONTROLLER_SLIDER,
   CONTROLLER_COLOR,
   CONTROLLER_SHADOW,
@@ -48,6 +49,33 @@ class Button extends BaseElement{
       default: 'Click Me'
     });
 
+    this.addControl('button_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment',
+      default: 'center',
+      options:[
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+        {
+          icon: 'in_width',
+          value: 'stretch',
+        }
+      ],
+      rules: {
+            '{{ELEMENT}}': 'align-items: {{VALUE}};',
+      },
+    });
+
     this.endControlSection();
 
     this.startControlSection("link", {
@@ -83,6 +111,22 @@ class Button extends BaseElement{
         {
           value: 'add_new',
           label: 'Add New',
+        },
+        {
+          value: 'delete',
+          label: 'Delete',
+        },
+        {
+          value: 'edit',
+          label: 'Edit',
+        },
+        {
+          value: 'login',
+          label: 'Login',
+        },
+        {
+          value: 'logout',
+          label: 'Logout',
         },
       ],
     });
@@ -123,7 +167,7 @@ class Button extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-btn': [ 
+        '{{ELEMENT}} .altrp-btn{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -145,11 +189,11 @@ class Button extends BaseElement{
       },
       units:[
         'px',
-        '%',  
+        '%',
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-btn': [ 
+        '{{ELEMENT}} .altrp-btn{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -163,7 +207,7 @@ class Button extends BaseElement{
       label: 'Z-index',
       default: 0,
       rules: {
-        '{{ELEMENT}} .altrp-btn': 'z-index: {{VALUE}}'
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'z-index: {{VALUE}}'
       }
     });
 
@@ -185,12 +229,11 @@ class Button extends BaseElement{
       label: 'Font',
     });
 
-    this.addControl(
-      'font_typographic', {
+    this.addControl('font_typographic', {
         type: CONTROLLER_TYPOGRAPHIC,
-        label: 'typographic',
+        label: 'Typographic',
         default:{
-          lineHeight: 0.1,
+          lineHeight: 1,
           spacing: 0,
           size: 16,
           weight: "normal",
@@ -198,7 +241,7 @@ class Button extends BaseElement{
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-btn': [
+          '{{ELEMENT}} .altrp-btn{{STATE}}': [
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -219,7 +262,7 @@ class Button extends BaseElement{
         colorPickedHex: "#FFF",
       },
       rules: {
-        '{{ELEMENT}} .altrp-btn': 'color: {{COLOR}};',
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
       },
     }
   );
@@ -231,15 +274,9 @@ class Button extends BaseElement{
       label: 'Border'
     });
 
-    this.addControl(
-      'border_type', {
+    this.addControl('border_type', {
         type: CONTROLLER_SELECT,
         label: 'Border Type',
-        units:[
-          'px',
-          '%',
-          'vh',
-        ],
         options:[
           {
             'value' : 'none',
@@ -267,11 +304,11 @@ class Button extends BaseElement{
           },
         ],
         rules: {
-          '{{ELEMENT}} .altrp-btn': 'border-style: {{VALUE}};',
+          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-style: {{VALUE}};',
         },
       }
     );
-  
+
     this.addControl(
       'border_width', {
         type: CONTROLLER_DIMENSIONS,
@@ -285,11 +322,11 @@ class Button extends BaseElement{
           'vh',
         ],
         rules: {
-          '{{ELEMENT}} .altrp-btn': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         },
       }
     );
-  
+
     this.addControl('border_color', {
         type: CONTROLLER_COLOR,
         label: 'Border Color',
@@ -298,11 +335,11 @@ class Button extends BaseElement{
           colorPickedHex: "#32a852",
         },
         rules: {
-          '{{ELEMENT}} .altrp-btn': 'border-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
         },
       }
     );
-    
+
     this.addControl('border_radius', {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
@@ -318,7 +355,7 @@ class Button extends BaseElement{
       max: 100,
       min: 0,
       rules: {
-        '{{ELEMENT}} .altrp-btn': 'border-radius: {{SIZE}}{{UNIT}}',
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-radius: {{SIZE}}{{UNIT}}',
       },
     });
 
@@ -337,7 +374,7 @@ class Button extends BaseElement{
         colorPickedHex: "#343B4C",
       },
       rules: {
-        '{{ELEMENT}} .altrp-btn': 'background-color: {{COLOR}};',
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
       },
     }
   );
@@ -350,16 +387,18 @@ class Button extends BaseElement{
           horizontal: 0,
           vertical: 0,
           opacity: 1,
+          spread: 0,
           colorRGB: 'rgb(0, 0, 0)',
           color: 'rgb(0, 0, 0)',
           colorPickedHex: '#000000',
+          type: ""
         },
         presetColors: [
           '#eaeaea',
           '#9c18a8'
         ],
         rules: {
-          '{{ELEMENT}} .altrp-btn': 'box-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
+          '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
         },
       }
     );
@@ -380,7 +419,7 @@ class Button extends BaseElement{
         {
           value: '"Roboto"',
           label:'Roboto'
-        }, 
+        },
         {
           value: '"Lato"',
           label:'Lato'

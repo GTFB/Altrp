@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Основные сущности программы
+ * @property Relationship[] $relationships
+ * @property [] $actual_columns
  */
 class Table extends Model
 {
@@ -60,4 +62,17 @@ class Table extends Model
     public function relationships() {
         return $this->hasMany('App\Altrp\Relationship');
     }
+
+  /**
+   * @param boolean $with_relations
+   * @return []
+   */
+  public function get_all_columns( $with_relations = false ){
+    $columns = $this->actual_columns;
+    if( ! $with_relations ){
+      return $columns;
+    }
+
+    return $columns;
+  }
 }

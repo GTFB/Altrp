@@ -44,6 +44,41 @@ class RootElement extends BaseElement {
     if (this.controllersRegistered) {
       return
     }
+/*
+    this.addControl( 'test_repeater', {
+      label: 'test Items',
+      type: CONTROLLER_REPEATER,
+      fields: repeater.getControls(),
+      default : [{
+        text: 'Item 1',
+      }, {
+        text: 'Item 2',
+      },],
+  } );
+*/
+
+    this.startControlSection('preview_section',{
+      label: 'Preview Settings',
+    });
+
+    this.addControl('choose_page', {
+      type: CONTROLLER_SELECT2,
+      label: 'Choose Page',
+      options_resource: '/admin/ajax/pages_options',
+    });
+
+    this.addControl('preview_heading', {
+      label: 'Model Settings',
+      type: CONTROLLER_HEADING
+    });
+
+    this.addControl('preview_model', {
+      type: CONTROLLER_SELECT,
+      resource: '/admin/ajax/models_options',
+      nullable: true,
+    });
+
+    this.endControlSection();
 
   }
 
@@ -55,6 +90,21 @@ class RootElement extends BaseElement {
   }
   getSelector(){
     return `.altrp-template-root${this.getId()}`;
+  }
+
+  /**
+   * Задать настройки
+   * для корневого элемента проверим настройки моделей для предпросмотра
+   * @param settings
+   */
+  setSettings(settings){
+    super.setSettings(settings);
+    if(this.settings.choose_page){
+      this.addModelInfo({
+        modelName: 'page',
+        modelId: this.settings.choose_page
+      })
+    }
   }
 }
 

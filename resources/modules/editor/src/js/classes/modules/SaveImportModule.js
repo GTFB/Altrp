@@ -1,9 +1,11 @@
 import BaseModule from "./BaseModule";
 import Resource from "../Resource";
-import {CONSTANTS, getEditor, getTemplateId} from "../../helpers";
+import { getEditor, getTemplateId} from "../../helpers";
+import CONSTANTS from "../../consts";
 import RootElement from "../elements/RootElement";
 import store from "../../store/store";
 import {changeTemplateStatus} from "../../store/template-status/actions";
+import {setTitle} from "../../../../../front-app/src/js/helpers";
 
 class SaveImportModule extends BaseModule{
 
@@ -21,6 +23,7 @@ class SaveImportModule extends BaseModule{
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_SAVING));
     if(this.template_id){
       let res = this.resource.get(this.template_id).then(templateData => {
+        setTitle(templateData.title);
         let data = JSON.parse(templateData.data);
         let parsedData = this.modules.elementsFactory.parseData(data);
         let templateDataStorage = getEditor().modules.templateDataStorage;

@@ -33,7 +33,7 @@ Route::group([
   'middleware' => [ 'installation.checker'],
 ], function () {
   Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-  Route::post('login', 'Auth\LoginController@login');
+  Route::post('login', 'Auth\LoginController@login')->name( 'post.login' );
   Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 });
 
@@ -41,9 +41,14 @@ Route::group([
 Route::get( '/admin/editor', function (){
   return view( 'editor' );
 } )->middleware( 'auth' )->name('editor');
+
 Route::get( '/admin/editor-content', function (){
   return view( 'editor-content' );
 } )->middleware( 'auth' )->name('editor-content');
+
+Route::get( '/admin/editor-reports', function (){
+  return view( 'editor-reports' );
+} )->middleware( 'auth' )->name('editor-reports');
 
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
@@ -56,8 +61,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::put('/global-elements/{element}', "Constructor\GlobalElements@update");
     Route::delete('/global-elements/{element}', "Constructor\GlobalElements@trashed");
     Route::get( 'templates/options', 'TemplateController@options' );
-    Route::get( '/template/{template_id}/reviews', 'TemplateController@reviews' );
+    Route::get( '/templates/{template_id}/reviews', 'TemplateController@reviews' );
+    Route::delete('/templates/{template_id}/reviews', 'TemplateController@deleteReviews');
+    Route::delete('/templates/{template_id}/reviews/{review_id}', 'TemplateController@deleteReview');
+    Route::get('/templates/{template_id}/reviews/{review_id}', 'TemplateController@getReview')->name( 'admin.get-review' );
+    Route::delete('/reviews', 'TemplateController@deleteAllReviews')->name( 'admin.delete-all-reviews' );
+
     Route::resource( 'pages', 'Admin\PagesController' );
+    Route::get( '/pages_options', 'Admin\PagesController@pages_options' )->name( 'admin.pages_options.all' );
+    Route::get( '/pages_options/{page_id}', 'Admin\PagesController@show_pages_options' )->name( 'admin.pages_options.show' );
     Route::get('/permissions', "Users\Permissions@getPermissions");
     Route::get('/permissions/{permission}', "Users\Permissions@getPermission");
     Route::post('/permissions', "Users\Permissions@insert");
@@ -65,6 +77,17 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::delete('/permissions/{permission}', "Users\Permissions@delete");
 
     Route::get('/roles', "Users\Roles@getRoles");
+    /**
+     * URL: /admin/ajax/role_options?s=search_string
+     * response:
+     * [
+     *  {
+     *    value - role id
+     *    label - role display_name
+     *  }
+     * ]
+     */
+    Route::get('/role_options', "Users\Roles@get_options")->name( 'admin.role_options' );
     Route::get('/roles/{role}', "Users\Roles@getRole");
     Route::post('/roles', "Users\Roles@insert");
     Route::put('/roles/{role}', "Users\Roles@update");
@@ -94,6 +117,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
 
     Route::resource( 'areas', 'Admin\AreasController' );
     Route::resource( 'templates', 'TemplateController' );
+    Route::resource( 'reports', 'ReportsController' );
     Route::resource( 'media', 'Admin\MediaController' );
     Route::resource( 'settings', 'Admin\SettingsController' );
 
@@ -106,9 +130,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     /**
      * Роуты для теста запросов для виджета таблицы todo: удалить, после того как модели будут готовы
      */
-    Route::get( 'models_list', 'Admin\ModelsController@models_list' )->name( 'admin.models_list' );
-    Route::get( 'models_list_for_query', 'Admin\ModelsController@models_list_for_query' )->name( 'admin.models_list_for_query' );
-    Route::get( 'models_options', 'Admin\ModelsController@models_options' )->name( 'admin.models_options' );
+    Route::get( '/models_list', 'Admin\ModelsController@models_list' )->name( 'admin.models_list' );
+    Route::get( '/models_list_for_query', 'Admin\ModelsController@models_list_for_query' )->name( 'admin.models_list_for_query' );
+    Route::get( '/models_options', 'Admin\ModelsController@models_options' )->name( 'admin.models_options' );
+    Route::get( '/models_with_fields_options', 'Admin\ModelsController@models_with_fields_options' )
+      ->name( 'admin.models_with_fields_options' );
+
+    Route::get( '/models', 'Admin\ModelsController@getModels');
 
 
     Route::get('/tables', "Admin\TableController@getTables");
@@ -123,16 +151,33 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
 
     Route::get('/tables/{table}/columns', "Admin\TableController@getColumns");
     Route::get('/tables/{table}/keys', "Admin\TableController@getKeys");
-    
+
+    Route::post('/tables/{table}/models', 'Admin\TableController@saveModel');
+    Route::get('/tables/{table}/models/{model}', 'Admin\TableController@getModel');
+    Route::post('/tables/{table}/models/{model}/accessors', 'Admin\TableController@saveAccessor');
+    Route::get('/tables/{table}/models/{model}/accessors', 'Admin\TableController@getAccessors');
+    Route::delete('/tables/{table}/models/{model}/accessors/{accessor}', 'Admin\TableController@deleteAccessor');
+    Route::put('/tables/{table}/models/{model}/accessors/{accessor}', 'Admin\TableController@updateAccessor');
+    Route::post('/tables/{table}/controllers', 'Admin\TableController@saveController');
+    Route::get('/tables/{table}/controllers/{controller}', 'Admin\TableController@getController');
+
+
     Route::post('/tables/{table}/test', "Admin\TableController@test");
-    
-    
     Route::get('/tables/{table}/model', "Admin\TableController@getModel");
     Route::post('/tables/{table}/model', "Admin\TableController@saveModel");
-    
+
     Route::get('/tables/{table}/controller', "Admin\TableController@getController");
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
-    
+
+
+    // GeneratorController routes
+    Route::post('/generators/{table}/model/create', 'Admin\GeneratorController@createModel');
+    Route::post('/generators/{table}/controller/create', 'Admin\GeneratorController@createController');
+    Route::post('/generators/{table}/migration/create', 'Admin\GeneratorController@createMigration');
+
+
+
+
   });
 
 });
@@ -159,6 +204,7 @@ Route::get('/', function () {
 
 foreach ( $frontend_routes as $frontend_route ) {
 
+  $frontend_route = str_replace( ':id', '{id}', $frontend_route );
   Route::get($frontend_route, function () {
     return view('front-app');
   })->middleware( ['web', 'installation.checker'] );
@@ -171,16 +217,48 @@ foreach ( $frontend_routes as $frontend_route ) {
 
 Route::group( ['prefix' => 'ajax'], function(){
 
-  Route::resource( 'routes', 'Frontend\RouteController' );
-  Route::get( 'models/{model_name}', 'Frontend\ModelsController@models' )->name( 'front.models.all' );
-  Route::post( 'models/{model_name}', 'Frontend\ModelsController@create' )->name( 'front.models.create' );
+  /**
+   * Отдает данные страницы как модели для динамического контента
+   */
+  Route::get( 'models/page/{page_id}', 'Frontend\PageController@show' )->name( 'front.page.show' );
 
+  /**
+   * Отдает данные роутов для фронтенда
+   */
+  Route::resource( 'routes', 'Frontend\RouteController' );
+
+  /**
+   * Отдает данные страниц внутри роутов ( с areas и шаблонами)
+   */
+  Route::get( 'pages/{page_id}', 'Frontend\PageController@pageForRoutes' )->name( 'front.page-for-routes' );
+  /**
+   * todo: реализовать в контроллерах моделей
+   */
+  Route::get( 'models/{model_name}', 'Frontend\ModelsController@models' )
+    ->name( 'front.models.all' );
+
+  Route::get( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@show' )
+    ->name( 'front.models.show' );
+
+  Route::delete( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@delete' )
+    ->name( 'front.models.delete' );
+
+  Route::put( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@edit' )
+    ->name( 'front.models.edit' );
+
+  Route::post( 'models/{model_name}', 'Frontend\ModelsController@create' )
+    ->name( 'front.models.create' );
+
+  /**
+   * todo: для загрузчика шаблонов для виджетов
+   */
+  Route::get( 'templates/{template_id}', 'TemplateController@show_frontend' )->name( 'templates.show.frontend' );
 } );
 
+/*
 
-
-// Require users routes
-if ( file_exists( app_path( '/routes/AltrpRoutes.php' ) ) )
-{
-  require_once ('AltrpRoutes.php');
-}
+    // Require users routes
+    if ( file_exists( app_path( '/routes/AltrpRoutes.php' ) ) )
+    {
+        require_once ('AltrpRoutes.php');
+    }*/

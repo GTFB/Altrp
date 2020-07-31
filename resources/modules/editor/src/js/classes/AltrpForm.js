@@ -4,11 +4,23 @@ import Resource from "./Resource";
  * Класс имитирующий поведение формы (собирает данные с виджетов полей и отправляет их на сервер)
  */
 class AltrpForm {
-  constructor(formId, route, method = 'POST'){
+  constructor(formId, modelName, method = 'POST'){
     this.formId = formId;
     this.fields = [];
     this.method = method;
-    this.route = route;
+    this.modelName = modelName;
+    let route = `/ajax/models/${modelName}`;
+    if(modelName === 'login'){
+      route = `/login`
+    }
+    switch (modelName){
+      case 'login':{
+        route = `/login`
+      }break;
+      case 'logout':{
+        route = `/logout`
+      }break;
+    }
     this.resource = new Resource({route})
   }
 
@@ -31,9 +43,10 @@ class AltrpForm {
 
   /**
    * Проверка полей перед отправкой
+   * @param {int |  null} modelID
    * @return {boolean}
    */
-  async submit(){
+  async submit(modelID){
     let success = true;
     this.fields.forEach(field=>{
       if(! field.fieldValidate()){
@@ -43,10 +56,32 @@ class AltrpForm {
     if(success){
       switch (this.method){
         case 'POST':{
-          return await this.resource.post(this.getData());
+          let res =  await this.resource.post(this.getData());
+          if(res.reload){
+            document.location.reload()
+          }
+          return res;
         }
         case 'PUT':{
-          return await this.resource.put(this.getData());
+          // return await alert(JSON.stringify(this.getData()));
+          let res;
+          if(modelID){
+            res =  await this.resource.put(modelID, this.getData());
+            import('./modules/ModelsManager').then(modelsManager=>{
+              modelsManager.default.updateModelWithData(this.modelName, modelID, res[this.modelName]);
+            });
+
+            return res;
+          }
+          console.error('Не удалось получить ИД модели для удаления!');
+        }
+        break;
+        case 'DELETE':{
+          if(modelID){
+            // return await await alert('Удаление!');
+            return await this.resource.delete(modelID);
+          }
+          console.error('Не удалось получить ИД модели для удаления!');
         }
       }
     } else {
@@ -61,7 +96,7 @@ class AltrpForm {
   getData(){
     let data = {};
     this.fields.forEach(field=>{
-      if(field.getValue()){
+      if(field.getValue() !== null){
         data[field.getSettings('field_id')] = field.getValue();
       }
     });

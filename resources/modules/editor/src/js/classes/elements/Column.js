@@ -35,9 +35,9 @@ class Column  extends BaseElement {
     this.addControl('layout_column_width', {
       type: CONTROLLER_NUMBER,
       label: 'Column width (%)',
-      default: 100,
+      default: null,
       rules: {
-        '{{ELEMENT}} .altrp-column': 'width: {{VALUE}}%'
+        '{{ELEMENT}}.altrp-element_column{{STATE}}': 'width: {{VALUE}}%',
       }
     });
 
@@ -76,12 +76,12 @@ class Column  extends BaseElement {
           }
         ],
         rules: {
-          '{{ELEMENT}} .altrp-column': 'align-content: {{VALUE}};',
+          '{{ELEMENT}} .altrp-column{{STATE}}': 'align-content: {{VALUE}};',
           '{{ELEMENT}} .altrp-column': 'align-items: {{VALUE}};',
         },
       }
     );
-  
+
     this.addControl(
       'layout_justify_content', {
         type: CONTROLLER_SELECT,
@@ -117,7 +117,7 @@ class Column  extends BaseElement {
           }
         ],
         rules: {
-          '{{ELEMENT}} .altrp-column': 'justify-content: {{VALUE}} !important;',
+          '{{ELEMENT}} .altrp-column{{STATE}}': 'justify-content: {{VALUE}} !important;',
         },
       }
     );
@@ -127,8 +127,8 @@ class Column  extends BaseElement {
       label: 'Widgets space (px)',
       default: 0,
       rules: {
-        '{{ELEMENT}} .altrp-element': 'margin-bottom: {{VALUE}}px',
-        '{{ELEMENT}} .altrp-element:last-child': 'margin-bottom: 0px'
+        '{{ELEMENT}} .altrp-element{{STATE}}': 'margin-bottom: {{VALUE}}px',
+        '{{ELEMENT}} .altrp-element:last-child{{STATE}}': 'margin-bottom: 0px'
       }
     });
 
@@ -205,7 +205,69 @@ class Column  extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-column": "background-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-column{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("style_position", {
+      tab: TAB_STYLE,
+      label: "Position"
+    });
+
+    this.addControl('style_position_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      default:{
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-column{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl("style_position_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 10,
+        right: 10,
+        bottom: 10,
+        left: 10,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-column{{STATE}}": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+
+    this.addControl('position_z_index', {
+      type: CONTROLLER_NUMBER,
+      label: "Z-index",
+      default: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-column{{STATE}}": "z-index: {{VALUE}}"
       }
     });
 
@@ -247,7 +309,7 @@ class Column  extends BaseElement {
         }
       ],
       rules: {
-        "{{ELEMENT}} .altrp-column": "border-style: {{VALUE}};"
+        "{{ELEMENT}} .altrp-column{{STATE}}": "border-style: {{VALUE}};"
       }
     });
 
@@ -259,7 +321,7 @@ class Column  extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-column":
+        "{{ELEMENT}} .altrp-column{{STATE}}":
           "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
       }
     });
@@ -272,7 +334,7 @@ class Column  extends BaseElement {
         colorPickedHex: "#32a852"
       },
       rules: {
-        "{{ELEMENT}} .altrp-column": "border-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-column{{STATE}}": "border-color: {{COLOR}};"
       }
     });
 
@@ -291,7 +353,7 @@ class Column  extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-column": "border-radius: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-column{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -302,93 +364,22 @@ class Column  extends BaseElement {
           blur: 0,
           horizontal: 0,
           vertical: 0,
+          spread: 0,
           opacity: 1,
           colorRGB: 'rgb(0, 0, 0)',
           color: 'rgb(0, 0, 0)',
           colorPickedHex: '#000000',
+          type: ""
         },
         presetColors: [
           '#eaeaea',
           '#9c18a8'
         ],
         rules: {
-          '{{ELEMENT}} .altrp-column': 'box-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
+          '{{ELEMENT}} .altrp-column{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
         },
       }
     );
-
-    this.endControlSection();
-
-    this.startControlSection("position_style", {
-      tab: TAB_STYLE,
-      label: "Position"
-    });
-
-    this.addControl("position_style_position_padding", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Padding",
-      default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit: "px",
-        bind: true
-      },
-      units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-column": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
-    });
-
-    this.addControl('position_style_position_margin', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Margin',
-      default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit:'px'
-      },
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-column': [ 
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
-    });
-
-    this.addControl('position_style_z_index', {
-      type: CONTROLLER_NUMBER,
-      label: "Z-index",
-      default: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-column": "z-index: {{VALUE}}"
-      }
-    });
-
-    this.addControl("position_style_css_id", {
-      type: CONTROLLER_TEXT,
-      label: "CSS ID"
-    });
-
-    this.addControl("position_style_css_classes", {
-      type: CONTROLLER_TEXT,
-      label: "CSS Classes"
-    });
 
     this.endControlSection();
 

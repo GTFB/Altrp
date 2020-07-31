@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import Resource from "../../../editor/src/js/classes/Resource";
-import {Redirect, withRouter} from "react-router";
+import {Redirect, withRouter} from 'react-router-dom';
+import AltrpSelect from "./altrp/AltrpSelect";
 
 /**
  * @class
@@ -16,18 +17,30 @@ class AddPage extends Component {
       value: {},
       redirectAfterSave: false,
       templates: [],
+      models: [],
     };
     this.resource = new Resource({route: '/admin/ajax/pages'});
+    this.model_resource = new Resource({route: '/admin/ajax/models'});
     this.templateResource = new Resource({route: '/admin/ajax/templates'});
     this.savePage = this.savePage.bind(this);
   }
+
+  /**
+   * Компонент загрузился
+   * получыаем данный страницы + опции для шаблона
+   * @return {Promise<void>}
+   */
   async componentDidMount(){
     let res = await this.templateResource.getOptions();
     this.setState(state=>{
       return{...state, templates: res}
     });
-    let id = this.props.location.pathname.split('/');
-    id = id[id.length - 1];
+
+    let models_res = await this.model_resource.getAll();
+    this.setState(state=>{
+      return{...state, models: models_res}
+    });
+    let id = this.props.match.params.id;
     id = parseInt(id);
     if(id){
       let pageData = await this.resource.get(id);
@@ -36,6 +49,12 @@ class AddPage extends Component {
       });
     }
   }
+
+  /**
+   * Сохранить страницу или добавить новую
+   * @param e
+   * @return {Promise<void>}
+   */
   async savePage(e){
     e.preventDefault();
     let res;
@@ -71,15 +90,15 @@ class AddPage extends Component {
     })
   }
   render() {
-    if(this.state.redirectAfterSave){
-      return<Redirect to="/admin/pages"/>
-    }
+    // if(this.state.redirectAfterSave){
+    //   return<Redirect to="/admin/pages"/>
+    // }
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
           <Link className="admin-breadcrumbs__link" to="/admin/pages">Pages</Link>
           <span className="admin-breadcrumbs__separator">/</span>
-          <span className="admin-breadcrumbs__current">Add New Page</span>
+          <span className="admin-breadcrumbs__current">{this.state.value.title || 'Add New Page'}</span>
         </div>
       </div>
       <div className="admin-content">
@@ -99,18 +118,48 @@ class AddPage extends Component {
                    className="form-control"/>
           </div>
           <div className="form-group">
-            <label htmlFor="page-path">Content Template</label>
-            <select id="page-path" required={1}
+            <label htmlFor="page-template">Content Template</label>
+            <select id="page-template" required={1}
                    value={this.state.value.template_id || ''}
                    onChange={e => {this.changeValue(e.target.value, 'template_id')}}
                    className="form-control">
               <option value=""/>
               {
                 this.state.templates.map(template=>{
-                  return <option value={template.id} key={template.id}>{template.title}</option>
+                  return <option value={template.value} key={template.value}>{template.label}</option>
                 })
               }
             </select>
+          </div>
+          <div className="form-group">
+            <label htmlFor="page-model">Model</label>
+            <select id="page-model"
+                   value={this.state.value.model_id || ''}
+                   onChange={e => {this.changeValue(e.target.value, 'model_id')}}
+                   className="form-control">
+              <option value=""/>
+              {
+                this.state.models.map(model=>{
+                  return <option value={model.id} key={model.id}>{model.name}</option>
+                })
+              }
+            </select>
+          </div>
+          <div className="form-group">
+            <label htmlFor="page-roles">Roles</label>
+            <AltrpSelect id="page-roles"
+                         isMulti={true}
+                         optionsRoute="/admin/ajax/role_options"
+                         placeholder="All"
+                         defaultOptions={[
+                           {
+                             value: 'guest',
+                             label: 'Guest',
+                           }
+                         ]}
+                         value={this.state.value.roles}
+                         onChange={value => {this.changeValue(value, 'roles')}}
+            />
           </div>
           <button className="btn btn_success">{this.state.id ? 'Save' : 'Add'}</button>
         </form>

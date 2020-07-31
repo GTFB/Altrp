@@ -13,3 +13,26 @@ export default store;
 export function getCurrentElement() {
   return store.getState().currentElement.currentElement;
 }
+
+export function getCurrentTab() {
+  return store.getState().currentTab.currentTab;
+}
+
+export function getElementState() {
+  return store.getState().currentState;
+}
+
+/**
+ * Возвращает текущие настройки окна редактора
+ *
+ * @return {{}} - объект содержит свойства:
+ * name
+ * icon
+ * id
+ * width
+ * css
+ *
+ */
+export function getCurrentScreen() {
+  return store.getState().currentScreen;
+}

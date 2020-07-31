@@ -1,5 +1,5 @@
-import {CONSTANTS} from "../../../../editor/src/js/helpers";
-import {getCurrentElement} from "../../../../editor/src/js/store/store";
+import CONSTANTS from "../../../../editor/src/js/consts";
+import {getMediaQueryByName} from "../helpers";
 
 class FrontElement {
 
@@ -15,7 +15,7 @@ class FrontElement {
     }
     this.parent = null;
     /**
-     *
+     * Список форм для текущего элемента (кнопки, интпута)
      * @type {AltrpForm[]}
      */
     this.forms = [];
@@ -23,7 +23,62 @@ class FrontElement {
      * Ссылка на компонент
      * @type {React.Component | null}
      */
-    this.component = null
+    this.component = null;
+
+    /**
+     * Ссылка на родителя
+     * @type {FrontElement}
+     */
+    /**
+     * Ссылка на корневой элемент шаблона
+     * @type {FrontElement}
+     */
+    this.root = null;
+
+    /**
+     * Список данных моделей для текущего шаблона. Например:
+     *  {
+     *      modelName: string
+     *      modelId: 1,
+     *  }
+     *  Для каждого шаблона типа content устанавливается одна обязательная модель Page
+     *  Для шаблонов header и footer нужно предусмотреть изменение данных моджели типа Page
+     *  (при смене страницы header footer могут не меняться)
+     *  * @type {array}
+     */
+    this.modelsList = []
+  }
+
+  /**
+   * Устанавливаем ссылку на элемент-родитель
+   * @param {FrontElement} parent
+   */
+  setParent(parent){
+    this.parent = parent;
+  }
+
+
+  /**
+   * Возвращает ссылку на корневой элемент шаблона
+   * @return {FrontElement}
+   */
+  getRoot(){
+    if(!this.root){
+      this.root = this.findClosestByType('root-element')
+    }
+    return this.root;
+  }
+
+  /**
+   * Возвращает ссылку на первый элемент указанного типа (поиск идет к корню дерева)
+   * @param {string} type
+   * @return {FrontElement}
+   */
+  findClosestByType(type){
+    if (this.getType() === type){
+      return this;
+    }
+    return this.parent.findClosestByType(type)
   }
 
   /**
@@ -36,6 +91,9 @@ class FrontElement {
         'input',
     ];
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_id')){
+      this.formInit()
+    }
+    if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_actions') === 'delete'){
       this.formInit()
     }
   }
@@ -52,8 +110,37 @@ class FrontElement {
     switch (this.getName()) {
       case 'button': {
         let method = 'POST';
-        if(this.getSettings('form_actions') === 'add_new'){
-          this.addForm(formsManager.registerForm(this.getSettings('form_id'), this.getSettings('choose_model'), method));
+        switch (this.getSettings('form_actions')){
+          case 'add_new':{
+            this.addForm(formsManager.registerForm(this.getSettings('form_id'), this.getSettings('choose_model'), method));
+          }
+          break;
+          case 'delete':{
+            method = 'DELETE';
+            let modelName = this.getModelName();
+            if(modelName){
+              this.addForm(formsManager.registerForm(this.getId(), modelName, method));
+            }
+          }
+          break;
+          case 'edit':{
+            method = 'PUT';
+            let modelName = this.getModelName();
+            if(modelName){
+              this.addForm(formsManager.registerForm(this.getSettings('form_id'), modelName, method));
+            }
+          }
+          break;
+          case 'login':{
+            method = 'POST';
+            this.addForm(formsManager.registerForm(this.getSettings('form_id'), 'login', method));
+          }
+          break;
+          case 'logout':{
+            method = 'POST';
+            this.addForm(formsManager.registerForm(this.getSettings('form_id'), 'logout', method));
+          }
+          break;
         }
       }
       break;
@@ -80,8 +167,8 @@ class FrontElement {
     this.forms.push(form);
   }
   /**
-   * Возвращает массив
-   * @return {[]}
+   * Возвращает массив потомков текущего элемента
+   * @return {array}
    */
 
   getChildren(){
@@ -120,11 +207,28 @@ class FrontElement {
     });
   }
 
+  /**
+   * Возвращает CSS-стили в виде строки
+   * для вставки в тег style текущего элемента
+   * @return {string}
+   */
   getStringifyStyles(){
     let styles = '';
     if(typeof this.settings.styles !== 'object'){
       return styles
     }
+    /**
+     * Чтобы сохранить последовательность медиа-запросов в CSS,
+     * добавлять будем в первоначальной последовательности.
+     * Для этого сначала создадим копию массива со всеми настройками экранов
+     * @type {{}[]}
+     */
+    let screens = _.cloneDeep(CONSTANTS.SCREENS);
+    /**
+     * Удалим дефолтный - он не нужен
+     * @type {{}[]}
+     */
+    screens.splice(0,1);
     for(let breakpoint in this.settings.styles){
       let rules = {};
       if(this.settings.styles.hasOwnProperty(breakpoint)){
@@ -139,15 +243,53 @@ class FrontElement {
             }
           }
         }
-      }
-      if(breakpoint === CONSTANTS.DEFAULT_BREAKPOINT){
-        for(let selector in rules){
-          if(rules.hasOwnProperty(selector)){
-            styles += `${selector} {` + rules[selector].join('') + '}';
+        /**
+         * Оборачиваем в медиа запрос при необходимости
+         *
+         */
+        if(breakpoint === CONSTANTS.DEFAULT_BREAKPOINT){
+          for(let selector in rules){
+            if(rules.hasOwnProperty(selector)){
+              styles += `${selector} {` + rules[selector].join('') + '}';
+            }
           }
+        } else {
+          // styles += `${getMediaQueryByName(breakpoint)}{`;
+          // for(let selector in rules){
+          //   if(rules.hasOwnProperty(selector)){
+          //     styles += `${selector} {` + rules[selector].join('') + '}';
+          //   }
+          // }
+          // styles += `}`;
+          screens.forEach(screen=>{
+            /**
+             * Для каждого breakpoint сохраним
+             * в соответствующей настройке экрана css правила
+             */
+            if(screen.name === breakpoint){
+              screen.rules = rules;
+            }
+          });
         }
       }
     }
+
+    screens.forEach(screen=>{
+
+      /**
+       * Если rules записаны, то добавим в styles в нужном порядке
+       */
+      if(!_.isObject(screen.rules)){
+        return;
+      }
+      styles += `${screen.mediaQuery}{`;
+      for(let selector in screen.rules){
+        if(screen.rules.hasOwnProperty(selector)){
+          styles += `${selector} {` + screen.rules[selector].join('') + '}';
+        }
+      }
+      styles += `}`;
+    });
     styles += this.settings.stringStyles || '';
 
     return styles;
@@ -192,7 +334,117 @@ class FrontElement {
     if(this.getName() !== 'input'){
       return null;
     }
-    return this.component.state.value;
+    let value = this.component.state.value;
+    /**
+     * Если значение динамическое и не менялось в виджете,
+     * то используем метод this.getContent для получения значения, а не динмического объекта
+     */
+    if(value.dynamic){
+      value = this.getContent('content_default_value')
+    }
+    return value;
+  }
+
+  /**
+   * Список моделей для шаблона включая модель Page
+   * @return {AltrpModelUpdater[]}
+   */
+  getModelsList(){
+    return this.getRoot().modelsList || [];
+  }
+
+  /**
+   * Имя модели
+   * из списка моделей извлекает имя модели не являющейся Page и возращает иэто имя
+   * @return {string | null}
+   */
+  getModelName(){
+    let modelName = null;
+    this.getModelsList().forEach(modelInfo=>{
+      if(modelInfo.modelName!=='page' && ! modelInfo.related){
+        modelName = modelInfo.modelName
+      }
+    });
+    return modelName;
+  }
+
+  /**
+   * Получаем данные о модели (modelName и modelId) из корневого элемента по названию модели
+   * @param {string} modelName
+   * @return {{}}
+   */
+  getModelsInfoByModelName(modelName){
+    let modelsList = this.getModelsList();
+    let modelInfo = null;
+    modelsList.forEach(_modelInfo=>{
+      if(_modelInfo.modelName === modelName){
+        modelInfo = _modelInfo;
+      }
+    });
+    return modelInfo
+  }
+
+  /**
+   * @param {AltrpModelUpdater[]} modelsList
+   */
+  setModelsList(modelsList){
+    this.getRoot().modelsList = modelsList;
+  }
+  /**
+   * Добавляет информацию о модели в список моделей
+   * @param {{}} modelInfo
+   */
+  addModelInfo(modelInfo){
+    this.getRoot().modelsList = this.getRoot().modelsList || [];
+    this.getRoot().modelsList.push({...modelInfo})
+  }
+
+  /**
+   * Задайет id для всех моделей корневого элемента не являющихся моделью страницы (page)
+   * todo: нужно вызывать в элементе при смене роута в том случае если роут имеет id
+   * @param {int} id
+   */
+  setModelsIds(id){
+
+  }
+
+  /**
+   * Получает данные для контента элемента
+   * делегирует на this.component
+   * @param {string} settingName
+   * @return {*}
+   */
+  getContent(settingName){
+    if(this.component){
+      return this.component.getContent(settingName)
+    }
+    return'';
+  }
+
+  /**
+   * Сохраняет данные модели
+   * @param modelName
+   * @param data
+   */
+  setModelData(modelName, data){
+    this.modelsStorage = this.modelsStorage || {};
+    this.modelsStorage[modelName] = {...data};
+    // this.forceUpdate();
+    console.log(modelName);
+    console.log(this.modelCallbacksStorage);
+    if(this.modelCallbacksStorage && this.modelCallbacksStorage[modelName]){
+      this.modelCallbacksStorage[modelName](this.modelsStorage[modelName]);
+    }
+  }
+  /**
+   * Подписывает на изменения модели
+   */
+  onUpdateModelStorage(modelName, callback){
+    this.modelCallbacksStorage = this.modelCallbacksStorage || {};
+    this.modelCallbacksStorage[modelName] = callback;
+    if(this.modelsStorage && this.modelsStorage[modelName]){
+      callback(this.modelsStorage[modelName]);
+    }
   }
   /**
    * Парсит объект и извлекает из него строку со всеми классами у которых есть свойство prefixClass
@@ -201,12 +453,11 @@ class FrontElement {
 
   getPrefixClasses() {
     let changeCss = _.toPairs(this.cssClassStorage);
-    console.log(changeCss);
     let classStorage = ' ';
     changeCss.forEach(element => {
       classStorage += `${element[1]} `;
       console.log(element[1]);
-    })
+    });
     return classStorage;
   }
 }

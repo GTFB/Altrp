@@ -1,39 +1,62 @@
-import React, {Component, useState} from "react";
-import {connect} from "react-redux";
+import React, { Component, useState } from "react";
+import { connect } from "react-redux";
 import Select from "react-select";
-import DesktopIcon from '../../../svgs/desktopNew.svg'
+import AsyncSelect from "react-select/async";
 import controllerDecorate from "../../decorators/controller";
+import Resource from "../../classes/Resource";
 // в rootElement при создании массива select, value никогда не должно повторятся
 class Select2Controller extends Component {
   constructor(props) {
     super(props);
+    controllerDecorate(this);
     this.change = this.change.bind(this);
-    let value = this.props.currentElement.getSettings(this.props.controlId);
-    // console.log(value);
-    if(value === null && this.props.default){
-      value = this.props.default ;
+    this.loadOptions = this.loadOptions.bind(this);
+    let value = this.getSettings(this.props.controlId);
+    if (value === null && this.props.default) {
+      value = this.props.default;
     }
     value = value || '';
     this.state = {
       value,
+      options: this.props.options || [],
       show: true
     };
-    controllerDecorate(this);
+    if (this.props.options_resource) {
+      this.resource = new Resource({ route: this.props.options_resource });
+    }
   };
 
-  getDefaultValue(){
+  getDefaultValue() {
     return '';
   }
 
-  change(value, action){
-    if(action.action === 'select-option'){
+  async loadOptions(searchString, callback) {
+    if (!searchString) {
+      return callback([]);
+    }
+    let options = await this.resource.search(searchString);
+    this.setState(state => ({
+      ...state,
+      options
+    }));
+    return callback(options);
+  }
+
+  change(value, action) {
+    if (action.action === 'select-option') {
       this._changeValue(
-          value.value
+        value.value
       );
     }
   };
 
   render() {
+
+    if (this.state.show === false) {
+      return '';
+    }
+
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
 
     const customStyles = {
       option: (provided, state) => ({
@@ -87,31 +110,34 @@ class Select2Controller extends Component {
       })
     };
 
-    if(this.state.show === false) {
-      return '';
-    }
-
-    let value = {};
-    this.props.options.forEach(option=>{
-      if(option.value === this.state.value){
-        value = {...option};
+    // let value = {};
+    this.state.options.forEach(option => {
+      if (option.value === value) {
+        value = { ...option };
       }
     });
+    let selectProps = {
+      onChange: this.change,
+      onInputChange: this.change,
+      options: this.state.options,
+      styles: customStyles,
+      placeholder: this.props.placeholder,
+      loadOptions: this.loadOptions,
+      noOptionsMessage: () => "no found",
+      value,
+    };
+
+    let SelectComponent = Select;
+    if (this.props.options_resource) {
+      SelectComponent = AsyncSelect;
+      selectProps.loadOptions = this.loadOptions;
+    }
     return <div className="controller-container controller-container_select2">
       <div className="control-select2-header">
         <div className="control-select2__label">{this.props.label}</div>
-        <DesktopIcon className="controller-container__label-svg" width="12"/>
       </div>
       <div className="control-container_select2-wrapper">
-        <Select
-          onChange={this.change}
-          value={value}
-          onInputChange={this.change}
-          options={this.props.options}
-          styles={customStyles}
-          placeholder={this.props.placeholder}
-          noOptionsMessage={() => "no found"}
-        />
+        <SelectComponent {...selectProps} />
       </div>
     </div>
 
@@ -119,8 +145,10 @@ class Select2Controller extends Component {
 }
 
 function mapStateToProps(state) {
-  return{
-    currentElement:state.currentElement.currentElement,
+  return {
+    currentElement: state.currentElement.currentElement,
+    currentState: state.currentState,
+    currentScreen: state.currentScreen
   };
 }
 export default connect(mapStateToProps)(Select2Controller);

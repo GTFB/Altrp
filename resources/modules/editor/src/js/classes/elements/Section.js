@@ -44,9 +44,28 @@ class Section extends BaseElement{
         {
           value: 'full',
           label: 'full width'
-        }
+        },
+        // {
+        //   value: 'full-fill',
+        //   label: 'full fill'
+        // }
       ]
     });
+
+    // this.addControl("layout_content_full_width", {
+    //   type: CONTROLLER_SLIDER,
+    //   label: "full fill width",
+    //   default: {
+    //     size: 100,
+    //     unit: "%"
+    //   },
+    //   units: ["px", "%", "vh"],
+    //   max: 1000,
+    //   min: 0,
+    //   rules: {
+    //     "{{ELEMENT}} .full-fill div": "width: {{SIZE}}{{UNIT}}"
+    //   }
+    // });
 
     this.addControl("layout_content_width", {
       type: CONTROLLER_SLIDER,
@@ -59,7 +78,7 @@ class Section extends BaseElement{
       max: 500,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-section": "width: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}": "width: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -69,30 +88,33 @@ class Section extends BaseElement{
       default: 'none',
       options: [
         {
-          value: 'none',
+          value: '',
           label: 'none'
         },
         {
-          value: 'no',
+          value: '0',
           label: 'No gap'
         },
         {
-          value: 'narrow',
+          value: '5',
           label: 'Narrow'
         },
         {
-          value: 'extended',
+          value: '15',
           label: 'Extended'
         },
         {
-          value: 'wide',
+          value: '20',
           label: 'Wide'
         },
         {
-          value: 'winder',
+          value: '30',
           label: 'Winder'
         }
-      ]
+      ],
+      rules: {
+        "{{ELEMENT}} .altrp-section{{STATE}} .altrp-column{{STATE}}": "padding: {{VALUE}}px"
+      }
     });
 
     this.addControl('layout_height', {
@@ -105,14 +127,14 @@ class Section extends BaseElement{
           label: 'default'
         },
         {
-          value: 'fit_to_screen',
+          value: 'fit',
           label: 'fit to screen'
         },
         {
           value: 'min_height',
           label: 'min height'
         }
-      ]
+      ],
     });
 
     this.addControl("label_style_min_height", {
@@ -126,7 +148,7 @@ class Section extends BaseElement{
       max: 1440,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-section": "min-height: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}": "min-height: {{SIZE}}{{UNIT}} "
       }
     });
 
@@ -136,63 +158,66 @@ class Section extends BaseElement{
       default: 'stretch',
       options: [
         {
-          value: 'stretch',
+          value: 'initial',
           label: 'Stretch'
         },
         {
-          value: 'top',
+          value: 'flex-start',
           label: 'Top'
         },
         {
-          value: 'middle',
+          value: 'center',
           label: 'Middle'
         },
         {
-          value: 'bottom',
+          value: 'flex-end',
           label: 'Bottom'
         }
-      ]
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}': 'align-items: {{VALUE}};',
+      }
     });
 
-    this.addControl('layout_ver_align', {
-        type: CONTROLLER_SELECT,
-        label: 'Vertical align',
-        options:[
-          {
-            'value' : '',
-            'label' : 'default',
-          },
-          {
-            'value' : 'flex-start',
-            'label' : 'top'
-          },
-          {
-            'value' : 'center',
-            'label' : 'middle'
-          },
-          {
-            'value' : 'flex-end',
-            'label' : 'bottom'
-          },
-          {
-            'value' : 'space-between',
-            'label' : 'space between'
-          },
-          {
-            'value' : 'space-around',
-            'label' : 'space around'
-          },
-          {
-            'value' : 'space-evenly',
-            'label' : 'space evenly'
-          }
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-section': ['align-content: {{VALUE}};',
-                                          'align-items: {{VALUE}};',]
-        },
-      }
-    );
+    // this.addControl('layout_ver_align', {
+    //     type: CONTROLLER_SELECT,
+    //     label: 'Vertical align',
+    //     options:[
+    //       {
+    //         'value' : '',
+    //         'label' : 'default',
+    //       },
+    //       {
+    //         'value' : 'flex-start',
+    //         'label' : 'top'
+    //       },
+    //       {
+    //         'value' : 'center',
+    //         'label' : 'middle'
+    //       },
+    //       {
+    //         'value' : 'flex-end',
+    //         'label' : 'bottom'
+    //       },
+    //       {
+    //         'value' : 'space-between',
+    //         'label' : 'space between'
+    //       },
+    //       {
+    //         'value' : 'space-around',
+    //         'label' : 'space around'
+    //       },
+    //       {
+    //         'value' : 'space-evenly',
+    //         'label' : 'space evenly'
+    //       }
+    //     ],
+    //     rules: {
+    //       '{{ELEMENT}} .altrp-section': ['align-content: {{VALUE}};',
+    //                                       'align-items: {{VALUE}};',]
+    //     },
+    //   }
+    // );
 
     this.addControl('layout_overflow', {
       type: CONTROLLER_SELECT,
@@ -209,7 +234,7 @@ class Section extends BaseElement{
         }
       ],
       rules: {
-        '{{ELEMENT}} .altrp-section': 'overflow: {{VALUE}};',
+        '{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}': 'overflow: {{VALUE}};',
       }
     });
 
@@ -303,7 +328,7 @@ class Section extends BaseElement{
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-section": "background-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
@@ -345,7 +370,7 @@ class Section extends BaseElement{
         }
       ],
       rules: {
-        "{{ELEMENT}} .altrp-section": "border-style: {{VALUE}};"
+        "{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}": "border-style: {{VALUE}};"
       }
     });
 
@@ -354,7 +379,7 @@ class Section extends BaseElement{
       label: "Border width",
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-section":
+        "{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}":
           "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
       }
     });
@@ -367,7 +392,7 @@ class Section extends BaseElement{
         colorPickedHex: "#32a852"
       },
       rules: {
-        "{{ELEMENT}} .altrp-section": "border-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}": "border-color: {{COLOR}};"
       }
     });
 
@@ -386,7 +411,7 @@ class Section extends BaseElement{
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-section": "border-radius: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -398,16 +423,18 @@ class Section extends BaseElement{
           horizontal: 0,
           vertical: 0,
           opacity: 1,
+          spread: 0,
           colorRGB: 'rgb(0, 0, 0)',
           color: 'rgb(0, 0, 0)',
           colorPickedHex: '#000000',
+          type: ""
         },
         presetColors: [
           '#eaeaea',
           '#9c18a8'
         ],
         rules: {
-          '{{ELEMENT}} .altrp-section': 'box-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
+          '{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
         },
       }
     );
@@ -417,27 +444,6 @@ class Section extends BaseElement{
     this.startControlSection("position_style", {
       tab: TAB_STYLE,
       label: "Position"
-    });
-
-    this.addControl("position_style_position_padding", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Padding",
-      default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit: "px"
-      },
-      units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-section": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
     });
 
     this.addControl('position_style_position_margin', {
@@ -456,7 +462,7 @@ class Section extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-section': [
+        '{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -465,12 +471,33 @@ class Section extends BaseElement{
       },
     });
 
+    this.addControl("position_style_position_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-section{{STATE}}": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+
     this.addControl('position_style_z_index', {
       type: CONTROLLER_NUMBER,
       label: "Z-index",
       default: 0,
       rules: {
-        "{{ELEMENT}} .altrp-section": "z-index: {{VALUE}}"
+        "{{ELEMENT}} .altrp-section{{STATE}}": "z-index: {{VALUE}}"
       }
     });
 

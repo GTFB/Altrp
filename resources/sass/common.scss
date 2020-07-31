@@ -112,3 +112,21 @@ input[type="checkbox"]{
 .pointer-event-none{
   pointer-events: none;
 }
+.altrp-inherit{
+  font-family: inherit;
+  font-size: inherit;
+  font-style: inherit;
+  line-height: inherit;
+  color: inherit;
+  text-decoration: inherit;
+  text-transform: inherit;
+}
+.altrp-scroll{
+  &__vertical-track{
+    bottom: 2px;
+    top: 2px;
+    right: 2px;
+    z-index: 1000;
+    border-radius: 3px;
+  }
+}

@@ -1,0 +1,1 @@
+<?php include public_path('modules/reports/index.html'); ?>

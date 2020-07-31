@@ -5,6 +5,7 @@ namespace App;
 use App\Constructor\Template;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Mockery\Exception;
 
@@ -12,6 +13,7 @@ use Mockery\Exception;
  * Class Page
  * @package App
  * @property User $user
+ * @property \App\Altrp\Model $model
  */
 
 class Page extends Model
@@ -23,12 +25,13 @@ class Page extends Model
     'author',
     'content',
     'path',
+    'model_id',
   ];
 
   /**
    * @return array
    */
-  static function get_frontend_routes()
+  static function get_frontend_routes( )
   {
     $pages = [];
     if( ! appIsInstalled()  ){
@@ -47,21 +50,46 @@ class Page extends Model
   }
 
   /**
+   * @param bool $lazy
    * @return array
    */
-  public static function get_pages_for_frontend()
+  public static function get_pages_for_frontend( $lazy = false )
   {
     $pages = [];
 
     $_pages = static::all();
 
+    /** @var Page $page */
     foreach ( $_pages as $page ) {
-      $pages[] = [
-        'path' => $page->path,
-        'id' => $page->id,
-        'title' => $page->title,
-        'areas' => self::get_areas_for_page( $page->id ),
-      ];
+      if( $page->allowedForUser() ){
+        $_page = [
+          'path' => $page->path,
+          'id' => $page->id,
+          'title' => $page->title,
+          'allowed' => true,
+          /**
+           * Если лениво загружаем области то возвращаем пустой массив
+           */
+          'areas' => $lazy ? [] : self::get_areas_for_page( $page->id ),
+//          'areas' => self::get_areas_for_page( $page->id ),
+        ];
+      } else {
+        $_page = [
+          'path' => $page->path,
+          'id' => $page->id,
+          'allowed' => false,
+          'redirect' => '/',
+        ];
+      }
+      $_page['lazy'] = $lazy;
+      if($page->model){
+        $_page['model'] = $page->model->toArray();
+        $_page['model']['modelName'] = $page->model->altrp_table->name;
+      }
+      if( $page->get_models() ){
+        $_page['models'] = $page->get_models();
+      }
+      $pages[] = $_page;
     }
 
     return $pages;
@@ -121,5 +149,134 @@ class Page extends Model
     }
     return $pages_template->template;
   }
+  
+  function model()
+  {
+    return $this->hasOne( "App\Altrp\Model", 'id', 'model_id' );
+  }
 
+  /**
+   * @return \App\Altrp\Model[]|null
+   */
+  function get_models(){
+    if( ! $this->model ){
+      return null;
+    }
+    $models[] = [
+      'modelName' => $this->model->altrp_table->name,
+      'name' => $this->model->name,
+    ];
+    $relations = $this->model->altrp_table->relationships;
+
+    foreach ( $relations as $relation ) {
+      if($relation->get_model_for_route()){
+        $models[] = $relation->get_model_for_route();
+      }
+    }
+
+    return $models;
+  }
+
+  /**
+   * Привязывает набор ролей к сттанице, удаляя старые связи
+   * @param {string | array}$roles
+   */
+  public function attachRoles( $roles ){
+    if( ! $this->id ){
+      return;
+    }
+    $roles = is_string( $roles ) ? [$roles] : $roles;
+    $page_role_table = DB::table( 'page_role' );
+    $page_role_table->where( 'page_id', $this->id )->delete();
+    foreach ( $roles as $role_id ) {
+      $page_role_table->insert( [
+        'page_id' => $this->id,
+        'role_id' => $role_id,
+      ] );
+    }
+  }
+
+
+  /**
+   * Перебирает массив от фронтенда и привязвает/удаляет роли;отмечает for_guest
+   * @param {string | array} $roles
+   */
+  public function parseRoles( $roles ){
+    $_roles = [];
+    $for_guest = false;
+    foreach ( $roles as $role ) {
+      if( ! is_string( $role['value'] ) ){
+        $_roles[] = $role['value'];
+      } else if( $role['value'] === 'guest' ){
+        $for_guest = true;
+      }
+    }
+    $this->attachRoles( $_roles );
+    $this->for_guest = $for_guest;
+  }
+
+  /**
+   * @return array
+   */
+  public function getRoles(){
+    if ( ! $this->id ){
+      return[];
+    }
+    $page_role_table = DB::table( 'page_role' );
+    $page_roles = $page_role_table->where( 'page_id', $this->id )->get();
+    $roles = [];
+    if( $this->for_guest ){
+      $roles[] = [
+        'value' => 'guest',
+        'label' => 'Guest',
+      ];
+    }
+    foreach ( $page_roles as $page_role ) {
+      $role = Role::find( $page_role->role_id );
+
+      $roles[] = [
+        'value' => $role->id,
+        'label' => $role->display_name,
+      ];
+    }
+    return $roles;
+  }
+
+  /**
+   * Проверяем доступна ли страница для текущего пользователя
+   * @param string $user_id
+   * @return bool
+   */
+  public function allowedForUser( $user_id = '' ){
+    if( ( ! auth()->user() ) ) {
+      return true;
+    }
+    if( ! $user_id ) {
+      $user = auth()->user();
+    } else {
+      $user = User::find( $user_id );
+    }
+    $allowed = false;
+
+    /** @var User $user */
+    $user = auth()->user();
+    $page_role_table = DB::table( 'page_role' );
+    $page_roles = $page_role_table->where( 'page_id', $this->id )->get();
+    /**
+     * Если никаких ролей не указано и for_guest false, то всегда доступно
+     */
+    if( ( ! $page_roles->count() ) && ! $this->for_guest ){
+      $allowed = true;
+    }
+    if( ! $user ){
+      return false;
+    }
+    foreach ( $page_roles as $page_role ) {
+      $role = Role::find( $page_role->role_id );
+      if( $user->hasRole( $role->name ) ){
+        $allowed = true;
+      }
+    }
+    return $allowed;
+  }
 }

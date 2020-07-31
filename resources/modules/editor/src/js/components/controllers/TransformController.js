@@ -1,17 +1,18 @@
-import React, {Component} from "react";
-import {connect} from "react-redux";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import DynamicIcon from '../../../svgs/dynamic.svg';
 import controllerDecorate from "../../decorators/controller";
 
 class TransformController extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
+    controllerDecorate(this);
     this.changeFunction = this.changeFunction.bind(this);
     this.inputUpdate = this.inputUpdate.bind(this);
     this.sliderChange = this.sliderChange.bind(this);
-    let value = this.props.currentElement.getSettings(this.props.controlId);
-    if(value === null && this.props.default){
-      value = this.props.default ;
+    let value = this.getSettings(this.props.controlId);
+    if (value === null && this.props.default) {
+      value = this.props.default;
     }
     value = value || false;
     this.state = {
@@ -20,17 +21,21 @@ class TransformController extends Component {
       min: 0,
       max: 0
     };
-    controllerDecorate(this);
   }
 
-  changeFunction(e){
+  getDefaultValue() {
+    return {
+    };
+  }
+
+  changeFunction(e) {
     let value = e.target.value;
     let slider = document.getElementById("transformSlider");
     let option = {};
 
     slider.classList.remove("control-slider-input-wrapper-transform-none");
 
-    switch(value) {
+    switch (value) {
       case "":
         option = {}
         slider.classList.add("control-slider-input-wrapper-transform-none")
@@ -100,21 +105,22 @@ class TransformController extends Component {
         break;
     }
 
-    if(value != "") {
+    if (value != "") {
+      let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
       this.setState({
         max: option.max,
         min: option.min
       })
       this._changeValue({
-        ...this.state.value,
+        ...value,
         function: option.function,
-        size:e.target.value,
+        size: e.target.value,
         unit: option.unit,
         step: option.step
       });
     } else {
       this._changeValue({
-        ...this.state.value,
+        ...value,
         function: "rotate",
         size: 0,
         unit: "deg",
@@ -124,43 +130,45 @@ class TransformController extends Component {
   }
 
   sliderChange(e) {
-    console.log(this.state.value)
-    if(this.state.value.function != "scaleX" || "scaleY") {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    // console.log(this.state.value)
+    if (value.function != "scaleX" || "scaleY") {
       this._changeValue({
-        ...this.state.value,
-        size:e.target.value * 0.1
+        ...value,
+        size: e.target.value * 0.1
       });
     } else {
       this._changeValue({
-        ...this.state.value,
-        size:e.target.value * 0
+        ...value,
+        size: e.target.value * 0
       });
     }
 
     // console.log(this.state.value)
   };
 
-  inputUpdate (e) {
+  inputUpdate(e) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
-      ...this.state.value,
-      size:e.target.value
+      ...value,
+      size: e.target.value
     });
   }
 
-  render(){
+  render() {
 
-    if(this.state.show === false) {
+    if (this.state.show === false) {
       return '';
     }
-
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     let options = [
       {
         value: "",
         label: "none"
       },
       {
-       value: "rotate",
-       label: "rotate"
+        value: "rotate",
+        label: "rotate"
       },
       {
         value: "scaleX",
@@ -187,6 +195,7 @@ class TransformController extends Component {
         label: "translateY"
       }
     ];
+
     return <div className="controller-container controller-container_transform">
       <div className="controller-container__label control-button-label">
         {this.props.label}
@@ -197,7 +206,7 @@ class TransformController extends Component {
           <div className="control-container_select_container">
             <div className="control-container_select-wrapper control-container_select-wrapper-transform">
               <select className="control-select control-field" onChange={this.changeFunction}>
-                {options.map(option => {return <option value={option.value} key={option.value}>{option.label}</option>})}
+                {options.map(option => { return <option value={option.value} key={option.value}>{option.label}</option> })}
               </select>
             </div>
           </div>
@@ -206,16 +215,16 @@ class TransformController extends Component {
       {/* слайдер */}
       <div id="transformSlider" className="control-slider-input-wrapper control-slider-input-wrapper-transform control-slider-input-wrapper-transform-none">
         <input type="range"
-                min={this.state.min}
-                max={this.state.max}
-                step={this.state.value.step || 1}
-                className="control-slider" value={this.state.value.size} onChange={this.inputUpdate} onInput={this.sliderChange}/>
-          <div className="control-slider-input-box">
-            <input className="control-slider-input" type="number"
-                min={this.state.min}
-                max={this.state.max}
-                step={this.state.value.step || 1}
-                value={this.state.value.size} onChange={this.inputUpdate} onInput={this.sliderChange}/>
+          min={this.state.min}
+          max={this.state.max}
+          step={value.step || 1}
+          className="control-slider" value={value.size || 0} onChange={this.inputUpdate} onInput={this.sliderChange} />
+        <div className="control-slider-input-box">
+          <input className="control-slider-input" type="number"
+            min={this.state.min}
+            max={this.state.max}
+            step={value.step || 1}
+            value={value.size || 0} onChange={this.inputUpdate} onInput={this.sliderChange} />
         </div>
       </div>
     </div>
@@ -224,8 +233,10 @@ class TransformController extends Component {
 }
 
 function mapStateToProps(state) {
-  return{
-    currentElement:state.currentElement.currentElement,
+  return {
+    currentElement: state.currentElement.currentElement,
+    currentState: state.currentState,
+    currentScreen: state.currentScreen,
   };
 }
 export default connect(mapStateToProps)(TransformController);

@@ -13,6 +13,7 @@ yarn-error.log
 /nbproject
 .idea
 storage/installed
+s.sql
 
 # IDE helpers
 /config/ide-helper.php
@@ -24,3 +25,4 @@ _ide_helper.php
 /app/AltrpModels
 /app/Http/Controllers/AltrpControllers
 /routes/AltrpRoutes.php
+/out

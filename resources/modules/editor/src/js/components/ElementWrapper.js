@@ -335,7 +335,6 @@ function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
     dragState: state.elementDrag.dragState,
-    columnWidth: state.columnWidth.columnWidth,
   };
 }
 

@@ -1,4 +1,6 @@
 import store from '../store/store';
+import {toggleDynamicContent} from "../store/dynamic-content/actions";
+import {getElementSettingsSuffix} from "../helpers";
 /**
  * Обновление значения в компоненте контроллера при загрузке нового экземпляра того же элемента
  */
@@ -19,6 +21,27 @@ function componentDidUpdate() {
 }
 
 /**
+ * Метод получения настроек для контроллера из текущего элемента
+ * с учетом текущего состояния
+ * @param {string }settingName
+ * @return {*}
+ */
+function getSettings(settingName){
+  if(! this.props.currentElement){
+    return '';
+  }
+  /**
+   * Если внутри репитера, то берем свойство из репитера, а не элемента
+   */
+  if(this.props.controller.data.repeater){
+    return this.props.controller.data.repeater.getSettings(this.props.controller.data.repeater.props.controlId)
+        [this.props.controller.data.itemIndex][this.props.controller.data.controlId];
+  }
+  return this.props.currentElement.getSettings(settingName +
+      getElementSettingsSuffix(this.props.controller))
+}
+
+/**
  * @function _changeValue
  * Обновление значения в  контроллере\
  * и передача в класс Controller
@@ -31,12 +54,23 @@ function _changeValue(value) {
   }else if(typeof value === 'object'){
     value = {...value};
   }
-  this.setState((state)=>{
-    return {
-      ...state,
-      value,
-    }
-  });
+
+  if(value && value.dynamic){
+    this.setState((state)=>{
+      return {
+        ...state,
+        value:'',
+        dynamicValue: value,
+      }
+    });
+  } else {
+    this.setState((state)=>{
+      return {
+        ...state,
+        value,
+      }
+    });
+  }
   this.props.controller.changeValue(value);
 
 }
@@ -47,31 +81,9 @@ function _changeValue(value) {
  */
 
 function conditionSubscriber() {
-  // const controllerValue = store.getState().controllerValue;
-  // if(this.props.condition) {
-  //   if(this.props.condition[controllerValue.controlId]) {
-  //     if(controllerValue.controlId === Object.keys(this.props.condition)[0]) {
-  //       if(controllerValue.value !== this.props.condition[controllerValue.controlId] && this.props.controlId !== controllerValue.controlId) {
-  //         this.setState((state) => {
-  //           return {
-  //             ...state,
-  //             show: false,
-  //           }
-  //         });
-  //       } else {
-  //         this.setState((state) => {
-  //           return {
-  //             ...state,
-  //             show: true,
-  //           }
-  //         });
-  //       }
-  //     }
-  //   }
-  // }
-  if(this.props.condition) {
+  if(this.props.conditions) {
     const controllerValue = store.getState().controllerValue;
-    if(Object.keys(this.props.condition).indexOf(controllerValue.controlId)>=0){
+    if(Object.keys(this.props.conditions).indexOf(controllerValue.controlId)>=0){
       this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController() ;
     }
   }
@@ -80,11 +92,25 @@ function conditionSubscriber() {
 /**
  * Метод вызывается, когда компонент контроллера загружается
  */
-function controllerComponentDidMount() {
+async function  controllerComponentDidMount() {
   /**
    * Сначала проверим нужно ли отрисовывать контроллер по умолчанию
    */
-  this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController() ;
+  this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController();
+
+  if(this.resource){
+    let options = await this.resource.getAll();
+    if(this.props.nullable){
+      options = _.concat([{'':''}], options);
+    }
+    this.setState(state=>({...state, options}));
+    if(options[0]) {
+    this._changeValue(options[0].value);
+    }
+  }
+  if(typeof this._componentDidMount === 'function'){
+    this._componentDidMount();
+  }
 }
 
 /**
@@ -97,7 +123,7 @@ function hideComponentController() {
     show: false,
   }));
   this.props.currentElement.deleteSetting();
-  this.props.controller.changeValue(null);
+  // this.props.controller.changeValue(null);todo: нельзя пробрасывать значение сразу, а то меняется только один контроллер в другие передаются данные с удаленного по условию
 }
 
 /**
@@ -111,6 +137,32 @@ function showComponentController() {
   }));
 }
 
+/**
+ * Клик по кнопке удалйющей длинамические настройки
+ */
+function removeDynamicSettings() {
+  this._changeValue(this.getDefaultValue());
+  this.props.currentElement.removeModelSettings(this.props.controlId);
+  this.setState(state=>({
+    ...state,
+    dynamicValue: null
+  }));
+}
+
+/**
+ * Открывает меню динамического контента при нажатии на иконку
+ */
+function openDynamicContent(e) {
+  e.stopPropagation();
+  this.props.dispatch(toggleDynamicContent({
+    type: 'text',
+    settingName: this.props.controlId,
+    onSelect: (dynamicValue) => {
+      this._changeValue(dynamicValue);
+      this.props.currentElement.component.subscribeToModels();
+    }
+  }, this.dynamicButton.current))
+}
 let controllerDecorate = function elementWrapperDecorate(component) {
   component.componentDidUpdate = componentDidUpdate.bind(component);
   component._changeValue = _changeValue.bind(component);
@@ -118,6 +170,9 @@ let controllerDecorate = function elementWrapperDecorate(component) {
   component.componentDidMount = controllerComponentDidMount.bind(component);
   component.hideComponentController = hideComponentController.bind(component);
   component.showComponentController = showComponentController.bind(component);
+  component.removeDynamicSettings = removeDynamicSettings.bind(component);
+  component.openDynamicContent = openDynamicContent.bind(component);
+  component.getSettings = getSettings.bind(component);
   store.subscribe(component.conditionSubscriber);
 };
 export default controllerDecorate;

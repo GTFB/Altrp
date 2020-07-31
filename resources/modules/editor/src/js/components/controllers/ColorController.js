@@ -1,20 +1,23 @@
-import React, {Component} from "react";
-import {connect} from "react-redux";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import { SketchPicker } from "react-color"
 import controllerDecorate from "../../decorators/controller";
+import ResponsiveDdMenu from "../ResponsiveDdMenu";
 
 class ColorController extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.openColorPicker = this.openColorPicker.bind(this)
+    controllerDecorate(this);
+    this.openColorPicker = this.openColorPicker.bind(this);
     this.colorChange = this.colorChange.bind(this);
     // this.inputHex = this.inputHex.bind(this)
-    let value = this.props.currentElement.getSettings(this.props.controlId);
-    if(value === null && this.props.default){
-      value = this.props.default ;
+    let value = this.getSettings(this.props.controlId);
+    if (value === null && this.props.default) {
+      value = this.props.default;
     }
     value = value || '';
-    this.state = {value,
+    this.state = {
+      value,
       show: true,
       colorPickedHex: this.props.colorPickedHex,
       opacity: 1,
@@ -22,20 +25,19 @@ class ColorController extends Component {
       colorPickedRGB: this.props.colorPickedRGB,
       active: false
     };
-    controllerDecorate(this);
   }
 
-  getDefaultValue(){
+  getDefaultValue() {
     return '';
   }
 
-  openColorPicker(){
+  openColorPicker() {
     this.setState({
       active: !this.state.active
     })
   }
 
-  colorChange(color){
+  colorChange(color) {
     this.setState({
       colorPickedHex: color.hex,
       colorPickedRGB: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
@@ -44,6 +46,7 @@ class ColorController extends Component {
     });
     this._changeValue({
       color: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+      colorPickedHex: color.hex,
     });
 
     // console.log(this.state.colorPickedRGB)
@@ -69,50 +72,58 @@ class ColorController extends Component {
   //   this.props.currentElement.setSettingValue(this.props.controlId, e.target.value);
   // };
 
-  render(){
+  render() {
+
+    if (this.state.show === false) {
+      return '';
+    }
+
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
 
     let colorPickedStyle = {
-      backgroundColor: this.state.value.color
+      backgroundColor: value.color
     };
 
     let colorPickerPosition = {
       marginTop: this.state.pickerPosition
     };
 
-    if(this.state.show === false) {
-      return '';
-    }
-      return <div className="controller-container controller-container_color">
-        <div className="control-color-header">
-          <div className="controller-container__label">{this.props.label}</div>
-          {/* <div className="controller-newColor"></div> */}
+    return <div className="controller-container controller-container_color">
+      <div className="control-color-header">
+        <div className="controller-container__label">
+          {this.props.label}
+          <ResponsiveDdMenu className="controller-container__label-svg" width="12" />
         </div>
-        <div className="control-color-wrapper" onClick={this.openColorPicker}>
-          <div className="control-color-input">
-            <div className="control-color-colorPicked-container">
-              <div className="control-color-colorPicked" style={colorPickedStyle}></div>
-            </div>
-            <label className="control-color-hex">{this.state.value.colorPickedHex}</label>
-          </div>
-          <div className="control-color-opacity-container">
-            <label className="control-color-opacity" >{(this.state.opacity * 100).toFixed() + "%"}</label>
-          </div>
-        </div>
-        {
-          this.state.active ?
-            <div id="colorPicker" className="control-color-colorPicker" style={colorPickerPosition}>
-              <SketchPicker width="90%" presetColors={this.props.presetColors} color={this.state.colorRGB} onChange={this.colorChange} name="colorPicker" className="sketchPicker" />
-            </div>
-            : <div></div>
-        }
-        {/* sketchPicker-none */}
+        {/* <div className="controller-newColor"></div> */}
       </div>
+      <div className="control-color-wrapper" onClick={this.openColorPicker}>
+        <div className="control-color-input">
+          <div className="control-color-colorPicked-container">
+            <div className="control-color-colorPicked" style={colorPickedStyle}></div>
+          </div>
+          <label className="control-color-hex">{value.colorPickedHex}</label>
+        </div>
+        <div className="control-color-opacity-container">
+          <label className="control-color-opacity" >{(this.state.opacity * 100).toFixed() + "%"}</label>
+        </div>
+      </div>
+      {
+        this.state.active ?
+          <div id="colorPicker" className="control-color-colorPicker" style={colorPickerPosition}>
+            <SketchPicker width="90%" presetColors={this.props.presetColors} color={this.state.colorRGB} onChange={this.colorChange} name="colorPicker" className="sketchPicker" />
+          </div>
+          : <div></div>
+      }
+      {/* sketchPicker-none */}
+    </div>
   }
 }
 
 function mapStateToProps(state) {
-  return{
-    currentElement:state.currentElement.currentElement,
+  return {
+    currentElement: state.currentElement.currentElement,
+    currentState: state.currentState,
+    currentScreen: state.currentScreen
   };
 }
 export default connect(mapStateToProps)(ColorController);

@@ -1,7 +1,5 @@
-export function getTemplates() {
-  return import('./classes/Templates.js');
+import CONSTANTS from "../../../editor/src/js/consts";
 
-}
 export function getRoutes() {
   return import('./classes/Routes.js');
 }
@@ -30,7 +28,65 @@ export function setTitle(title){
 }
 
 /**
+ * @return {boolean}
+ * */
+export function isEditor() {
+  return !!(window.altrpEditor || window.parent.altrpEditor);
+}
+
+/**
  * Переменная, в которой храниться измначальный заголовок
  * @var {string}
  */
 let defaultTitle;
+
+/**
+ * Парсит стрку вводимую пользователем для опций селекта
+ * @param string
+ */
+export function parseOptionsFromSettings(string) {
+  if(! string){
+    return[];
+  }
+  let options = string.split('\n');
+  options = options.map(option=>{
+    let value = option.split('|')[0];
+    value = value.trim();
+    let label = option.split('|')[1] || value;
+    label = label.trim();
+    return{
+      value,
+      label,
+    }
+  });
+  return options;
+}
+
+/**
+ * Получает медиа запрос для css по имени настройки
+ * @param {string} screenSettingName
+ * @return {string}
+ */
+export function getMediaQueryByName(screenSettingName) {
+  let mediaQuery = '';
+  CONSTANTS.SCREENS.forEach(screen=>{
+    if(screen.name === screenSettingName){
+      mediaQuery = screen.mediaQuery;
+    }
+  });
+  return mediaQuery;
+}
+/**
+ * Получает медиа запрос для css по имени настройки
+ * @param {string} screenSettingName
+ * @return {string}
+ */
+export function getMediaSettingsByName(screenSettingName) {
+  let screen = CONSTANTS.SCREENS[0];
+  CONSTANTS.SCREENS.forEach(_screen=>{
+    if(_screen.name === screenSettingName){
+      screen = _screen;
+    }
+  });
+  return screen;
+}
