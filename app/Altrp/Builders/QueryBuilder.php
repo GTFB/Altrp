@@ -126,6 +126,37 @@ class QueryBuilder
         $methodBody = "\n\n{$this->tabIndent}public function " . $this->getMethodName() . "()\n{$this->tabIndent}{\n"
             . "{$this->tabIndent}{$this->tabIndent}return \$this->model()\n"
             . implode("{$this->threeTabs}",$this->query) . $this->tabIndent . "}{$this->tabIndent}";
+        return $this->replaceConstants($methodBody);
+    }
+
+    /**
+     * Заменить пользовательские константы в методе
+     *
+     * @param $methodBody
+     * @return string|string[]
+     */
+    protected function replaceConstants($methodBody)
+    {
+        $pattern = "'?[A-Z_]+:[a-z0-9_.]+'?";
+        $methodBody = preg_replace_callback(
+            "#$pattern#",
+            function($matches) {
+                $param = $matches[0] ? explode(':',trim($matches[0], '\'')) : null;
+                if ($param && $param[0] == 'REQUEST') {
+                    if ( request()->has($param[1])) {
+                        return 'request()->' . $param[1];
+                    } else {
+                        return $param[1] == 'skip' || $param[1] == 'take' ? 10 : "''";
+                    }
+                }
+                if ($param && $param[0] == 'CURRENT_USER') {
+                    $relations = str_replace('.', '->', $param[1]);
+                    return 'auth()->user()->' . $relations;
+                }
+                return "''";
+            },
+            $methodBody
+        );
         return $methodBody;
     }
 
@@ -201,7 +232,7 @@ class QueryBuilder
     {
         $method = Str::kebab($method);
         $modelId = $this->data['model']->id;
-        $controllerId = $this->data['model']->table->controllers()->first()->id;
+        $controllerId = $this->data['model']->controller->id;
         $source = Source::where([
             ['model_id', $modelId],
             ['controller_id', $controllerId],
@@ -244,8 +275,13 @@ class QueryBuilder
                 }
             }
         }
-        SourceRole::whereIn('role_id', $rolesIds)->whereIn('source_id', [$source->id])->delete();
-        SourceRole::insert($rolesList);
+        try {
+            SourceRole::whereIn('role_id', $rolesIds)->whereIn('source_id', [$source->id])->delete();
+            SourceRole::insert($rolesList);
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -269,8 +305,13 @@ class QueryBuilder
                 }
             }
         }
-        SourcePermission::whereIn('permission_id', $permissionIds)->whereIn('source_id', [$source->id])->delete();
-        SourcePermission::insert($permissionsList);
+        try {
+            SourcePermission::whereIn('permission_id', $permissionIds)->whereIn('source_id', [$source->id])->delete();
+            SourcePermission::insert($permissionsList);
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -403,7 +444,7 @@ class QueryBuilder
         $condition = 'where([';
         $loop = 1;
         foreach ($conditions as $cond) {
-            $value = $cond['value'] != 'CURRENT_USER' ? "'{$cond['value']}'" : 'auth()->user()->id';
+            $value = $cond['value'];
             if (count($conditions) > 1 && $loop == 1) $condition .= "\n{$this->threeTabs}{$this->tabIndent}";
             $condition .= "['{$cond['column']}'," . "'{$cond['operator']}'," . $value . "], ";
             if (count($conditions) > 1 && count($conditions) != $loop)
@@ -413,6 +454,22 @@ class QueryBuilder
         $condition = trim($condition, ', ');
         $condition .= (count($conditions) > 1) ? "\n{$this->threeTabs}])" : "])";
         return '->' . $condition . "\n";
+    }
+
+    /**
+     * Сформировать и получить значение колонки при выборке по условию
+     *
+     * @param $value
+     * @return string
+     */
+    protected function getColumnValue($value)
+    {
+        if (Str::contains($value, 'CURRENT_USER')) {
+            $parts = explode(':', $value);
+            $relations = str_replace('.', '->', $parts[1]);
+            return 'auth()->user()->' . $relations;
+        }
+        return "'{$value}'";
     }
 
     /**
@@ -446,7 +503,7 @@ class QueryBuilder
                 $conditionList = $this->getConditions($cond['conditions']);
             }
 
-            $value = $cond['value'] != 'CURRENT_USER' ? "'{$cond['value']}'" : 'auth()->user()->id';
+            $value = $cond['value'];
             if (isset($cond['or_where'])) {
                 $condition = 'orWhere(function ($query) {' . "\n";
                 if (count($conditions) > 1 && $loop == 1) $condition .= "{$this->threeTabs}\$query";
@@ -515,7 +572,7 @@ class QueryBuilder
 
     /**
      * Получить условия по различным типам даты и времени
-     * Типы: Date / Month / Day / Year / Time
+     * Типы: Date / Month / Day / Year / Time / Datetime
      *
      * @param $conditions
      * @return string
@@ -524,8 +581,8 @@ class QueryBuilder
     {
         $conditionList = [];
         foreach ($conditions as $cond) {
-            $whereType = 'where' . ucfirst($cond['type']);
-            $conditionList[] = "{$whereType}('{$cond['column']}'," . "'{$cond['operator']}'," . "'{$cond['value']}')";
+            $whereType = $cond['type'] != 'datetime' ? ucfirst($cond['type']) : null;
+            $conditionList[] = "where{$whereType}('{$cond['column']}'," . "'{$cond['operator']}'," . "'{$cond['value']}')";
         }
         return "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
     }

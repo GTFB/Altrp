@@ -3,6 +3,8 @@
 namespace App\Altrp\Generators;
 
 use App\Altrp\Controller;
+use App\Altrp\Generators\Request\RequestFile;
+use App\Altrp\Generators\Request\RequestFileWriter;
 use App\Altrp\Source;
 use App\Altrp\SourcePermission;
 use App\Altrp\SourceRole;
@@ -90,7 +92,7 @@ class ControllerGenerator extends AppGenerator
     public function generate()
     {
         // Получить контроллер из базы
-        $controllerModel = $this->getControllerFromDb($this->data->table_id);
+        $controllerModel = $this->getControllerFromDb($this->data->model_id);
 
         if ($controllerModel) {
             $this->setController($controllerModel);
@@ -101,6 +103,9 @@ class ControllerGenerator extends AppGenerator
             if (! $this->writeControllerToDb()) {
                 throw new ControllerNotWrittenException('Failed to write controller to the database', 500);
             }
+            if (! $this->generateRequests()) {
+                throw new ControllerNotWrittenException('Failed to generate requests', 500);
+            }
             // Обновить файл контроллера
             if (! $this->updateControllerFile()) {
                 throw new CommandFailedException('Failed to update controller file', 500);
@@ -110,12 +115,15 @@ class ControllerGenerator extends AppGenerator
             if (! $this->writeControllerToDb()) {
                 throw new ControllerNotWrittenException('Failed to write controller to the database', 500);
             }
+            if (! $this->generateRequests()) {
+                throw new ControllerNotWrittenException('Failed to generate requests', 500);
+            }
             // Создать новый файл контроллера
             if (! $this->createControllerFile()) {
                 throw new CommandFailedException('Failed to create controller file', 500);
             }
         }
-        
+
         if ($this->getSourceActions()->isEmpty()) {
             // Записать основные действия над ресурсом в базу
             if (! $this->writeSourceActions()) {
@@ -166,9 +174,9 @@ class ControllerGenerator extends AppGenerator
      * @param $tableId
      * @return mixed
      */
-    protected function getControllerFromDb($tableId)
+    protected function getControllerFromDb($modelId)
     {
-        $controller = Controller::where('table_id', $tableId)->first();
+        $controller = Controller::where('model_id', $modelId)->first();
         return $controller;
     }
 
@@ -179,7 +187,7 @@ class ControllerGenerator extends AppGenerator
      */
     protected function writeSourceActions()
     {
-        $actions = ['get', 'show', 'add', 'update', 'delete'];
+        $actions = ['get', 'options', 'show', 'add', 'update', 'delete'];
         $sources = [];
         $tableName = $this->getTableName();
         $singleResource = Str::singular($tableName);
@@ -188,6 +196,9 @@ class ControllerGenerator extends AppGenerator
             if ($action == 'get') {
                 $url = $tableName;
                 $name = ucfirst($action) . ' ' . Str::studly($tableName);
+            } elseif ($action == 'options') {
+                $url = $singleResource . '_options';
+                $name = 'Get ' . ucfirst($tableName) . ' for options';
             } else {
                 $url = $tableName . "/{{$singleResource}}";
                 $name = ucfirst($action) . ' ' . Str::studly($singleResource);
@@ -200,7 +211,6 @@ class ControllerGenerator extends AppGenerator
                 "type" => $action,
                 "name" => $name,
                 "created_at" => $nowTime,
-                "updated_at" => $nowTime
             ];
         }
 
@@ -403,7 +413,7 @@ class ControllerGenerator extends AppGenerator
      */
     protected function getModelName()
     {
-        return $this->controllerModel->model()->name;
+        return $this->controllerModel->model->name;
     }
 
     /**
@@ -413,7 +423,7 @@ class ControllerGenerator extends AppGenerator
      */
     protected function getModelId()
     {
-        return $this->controllerModel->model()->id;
+        return $this->controllerModel->model->id;
     }
 
     /**
@@ -423,7 +433,7 @@ class ControllerGenerator extends AppGenerator
      */
     protected function getTableName()
     {
-        return $this->controllerModel->table()->first()->name;
+        return $this->controllerModel->table()->name;
     }
 
     /**
@@ -433,8 +443,8 @@ class ControllerGenerator extends AppGenerator
      */
     protected function getModelPath()
     {
-        return $this->controllerModel->model()->path
-            ? $this->controllerModel->model()->path . '\\'
+        return $this->controllerModel->model->path
+            ? $this->controllerModel->model->path . '\\'
             : '';
     }
 
@@ -466,9 +476,9 @@ class ControllerGenerator extends AppGenerator
     protected function generateRoutes()
     {
         $routeGenerator = new RouteGenerator();
-        $tableName = $this->controllerModel->table()->first()->name;
+        $tableName = $this->getTableName();
         $resourceId = Str::singular($tableName);
-        $userColumns = trim($this->controllerModel->model()->user_cols, ' ');
+        $userColumns = trim($this->controllerModel->model->user_cols, ' ');
         $middleware = ($userColumns) ? "'middleware' => [" . $this->getAuthMiddleware() . '], ' : null;
         $controllerName = $this->getFormedControllerName($this->controllerModel);
         $controller = trim($controllerName,"\\");
@@ -558,7 +568,7 @@ class ControllerGenerator extends AppGenerator
         $namespace = $this->getNamespace($controller);
 
         $controllerFilename = trim(str_replace('\\', '/', $namespace)
-            . '/' . $controller->model()->name, '/')
+            . '/' . $controller->model->name, '/')
             . 'Controller.php';
 
         return $controllerFilename;
@@ -575,7 +585,7 @@ class ControllerGenerator extends AppGenerator
         $namespace = $controller->namespace ? $controller->namespace . '\\' : '';
 
         $controllerName = trim('AltrpControllers\\' . $namespace
-                . $controller->model()->name, '\\')
+                . $controller->model->name, '\\')
                 . 'Controller';
 
         return $controllerName;
@@ -604,16 +614,50 @@ class ControllerGenerator extends AppGenerator
     {
         if ((array) $validationRules) {
             $validationArr = [];
-
             foreach ($validationRules as $name => $rules) {
                 $rules = (array) $rules;
                 if (! empty($rules)) {
                     $validationArr[] = $name . '#' . implode('|', $rules);
                 }
             }
-
             return implode(';', $validationArr);
         }
         return '';
+    }
+
+    /**
+     * Сформировать валидационные правила для файла запроса
+     *
+     * @return string
+     */
+    protected function getValidations()
+    {
+        $validations = [];
+        $validationRules = $this->getValidationRules();
+        foreach ($validationRules as $name => $rules) {
+            $validations[] = "'{$name}' => '" . implode('|', (array)$rules) . "',";
+        }
+        return implode(PHP_EOL . "\t\t\t", $validations);
+    }
+
+    /**
+     * Сгенерировать файл запроса
+     *
+     * @return bool
+     */
+    protected function generateRequests()
+    {
+        $requests = ['Store', 'Update'];
+        $validations = $this->getValidations();
+        foreach ($requests as $name) {
+            $request = new RequestFile(
+                $this->controllerModel->model,
+                $name,
+                $validations
+            );
+            $requestWriter = new RequestFileWriter();
+            $requestWriter->write($request);
+        }
+        return true;
     }
 }

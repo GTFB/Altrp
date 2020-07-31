@@ -14,6 +14,13 @@ class Table extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = [
+        'name',
+        'title',
+        'description',
+        'user_id'
+    ];
+
     public function migrations() {
         return $this->hasMany('App\Altrp\Migration');
     }

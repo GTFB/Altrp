@@ -6,6 +6,7 @@ use DummyRootNamespaceHttp\Controllers\ApiController;
 
 use DummyRootNamespace{{modelNamespace}}{{modelName}};
 use Illuminate\Http\Request;
+{{requestNamespaces}}
 // CUSTOM_NAMESPACES_BEGIN - IMPORTANT: Don't remove this comment! Write your namespaces between these comments.
 {{customNamespaces}}
 // CUSTOM_NAMESPACES_END - IMPORTANT: Don't remove this comment! Write your namespaces between these comments.
@@ -29,7 +30,20 @@ class DummyClass extends ApiController
     {
         ${{crudName}} = {{modelName}}::all(){{relations}};
 
-        return response()->json(${{crudName}}, 200, [], JSON_UNESCAPED_UNICODE);;
+        return response()->json(${{crudName}}, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function options(Request $request)
+    {
+        $options = {{modelName}}::select(['id as value', 'title as label'])->get();
+
+        return response()->json($options, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -39,9 +53,8 @@ class DummyClass extends ApiController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store({{storeRequest}} $request)
     {
-        {{validationRules}}
         ${{crudNameSingular}} = new {{modelName}}($request->all());
 
         if(${{crudNameSingular}}->save()){
@@ -54,7 +67,7 @@ class DummyClass extends ApiController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -73,13 +86,12 @@ class DummyClass extends ApiController
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update({{updateRequest}} $request, $id)
     {
-        {{validationRules}}
         ${{crudNameSingular}} = {{modelName}}::find($id);
 
         if(! ${{crudNameSingular}}) {
@@ -98,7 +110,7 @@ class DummyClass extends ApiController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */

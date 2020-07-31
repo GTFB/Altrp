@@ -22,6 +22,7 @@ class Relationship extends EloquentModel
 {
 
     protected $table = 'altrp_relationships';
+
     public $timestamps = false;
 
     protected $fillable = [
