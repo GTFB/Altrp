@@ -39,7 +39,7 @@ const conditionInitState = {
   id: 0
 };
 
-/*
+/**
   * Принимает строку тип поля where_date
   * @param {string} type
   * Возвращает строку формата отображаемыхданных
@@ -353,7 +353,7 @@ class SQLBuilderForm extends Component {
         </select>
       </div>
 
-      <p className="centred">Access</p>
+      <h2 className="admin-form__subheader centred">Access</h2>
 
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
@@ -387,8 +387,9 @@ class SQLBuilderForm extends Component {
         </div>
       </div>
 
-      <p className="centred">Aggregates</p>
+      <h2 className="admin-form__subheader centred">Aggregates</h2>
       {aggregates.map((item, index) => <Fragment key={item.id}>
+        {index !== 0 && <hr />}
         <AggregateComponent item={item}
           columnsOptions={columnsOptions}
           changeHandler={e => this.aggregateChangeHandler(e, index)}
@@ -405,9 +406,10 @@ class SQLBuilderForm extends Component {
         </button>
       </div>
 
-      <p className="centred">Conditions</p>
+      <h2 className="admin-form__subheader centred">Conditions</h2>
 
       {conditions.map((condition, index) => <Fragment key={condition.id}>
+        {index !== 0 && <hr />}
         <ConditionComponent
           item={condition}
           columnsOptions={columnsOptions}
@@ -425,9 +427,10 @@ class SQLBuilderForm extends Component {
         </button>
       </div>
 
-      <p className="centred">Order By</p>
+      <h2 className="admin-form__subheader centred">Order By</h2>
 
       {orderBy.map((item, index) => <Fragment key={item.id}>
+        {index !== 0 && <hr />}
         <OrderByComponent
           item={item}
           columnsOptions={columnsOptions}
@@ -445,7 +448,7 @@ class SQLBuilderForm extends Component {
         </button>
       </div>
 
-      <p className="centred">Group By</p>
+      <h2 className="admin-form__subheader centred">Group By</h2>
 
       <div className="form-group">
         <label htmlFor="group_by">Fields</label>
