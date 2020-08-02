@@ -5,6 +5,7 @@ import { titleToName } from "../../js/helpers";
 import AggregateComponent from "./AggregateComponent";
 import ConditionComponent from "./ConditionComponent";
 import OrderByComponent from "./OrderByComponent";
+import { cloneDeep } from "lodash";
 
 const mockedModels = [
   { value: 1, label: "Model title 1" },
@@ -39,13 +40,11 @@ const conditionInitState = {
   id: 0
 };
 
-/**
-  * Принимает строку тип поля where_date
-  * @param {string} type
-  * Возвращает строку формата отображаемыхданных
-  * Функция схожа с объявленой в файле ConditionComponent.js, стемразличием
-  * что moment возвращает запрашивает дату в формате DD - заглавные буквы
-  * @return {string}
+/** @function getDateFormat
+  * Функция схожа с объявленой в файле ConditionComponent.js, с тем различием
+  что moment запрашивает дату в формате DD - заглавные буквы
+  * @param {string} type - тип поля where_date
+  * @return {string | undefined} формат строки, получаемой из объекта Date
  */
 function getDateFormat(type) {
   switch (type) {
@@ -98,7 +97,7 @@ class SQLBuilderForm extends Component {
     this.changeHandler = this.changeHandler.bind(this);
     this.multipleSelectChangeHandler = this.multipleSelectChangeHandler.bind(this);
     this.aggregateChangeHandler = this.aggregateChangeHandler.bind(this);
-    this.aggregatesAddHandler = this.aggregatesAddHandler.bind(this);
+    this.aggregateAddHandler = this.aggregateAddHandler.bind(this);
     this.aggregateDeleteHandler = this.aggregateDeleteHandler.bind(this);
     this.conditionChangeHandler = this.conditionChangeHandler.bind(this);
     this.conditionAddHandler = this.conditionAddHandler.bind(this);
@@ -109,7 +108,7 @@ class SQLBuilderForm extends Component {
     this.orderByDeleteHandler = this.orderByDeleteHandler.bind(this);
     this.titleChangeHandler = this.titleChangeHandler.bind(this);
   }
-
+// запросы опций для селектов
   async componentDidMount() {
     const rolesOptions = await this.rolesOptions.getAll();
     this.setState(state => ({ ...state, rolesOptions }))
@@ -123,7 +122,7 @@ class SQLBuilderForm extends Component {
   changeHandler({ target: { value, name } }) {
     this.setState(_state => ({ [name]: value }));
   }
-
+// обработчик изменения поля title, изменяющий значение поля name
   titleChangeHandler(e) {
     e.persist();
     this.setState(state => ({
@@ -132,7 +131,7 @@ class SQLBuilderForm extends Component {
       name: titleToName(e.target.value)
     }))
   }
-
+// обработчики событий для массива aggregates
   aggregateChangeHandler({ target: { value, name } }, index) {
     this.setState(state => {
       const aggregates = [...state.aggregates];
@@ -141,7 +140,7 @@ class SQLBuilderForm extends Component {
     });
   }
 
-  aggregatesAddHandler() {
+  aggregateAddHandler() {
     this.counter++;
 
     this.setState(state => {
@@ -158,7 +157,7 @@ class SQLBuilderForm extends Component {
       return { ...state, aggregates };
     });
   }
-
+// обработчики событий для массива conditions
   conditionChangeHandler({ target: { value, name, checked } }, index) {
     this.setState(state => {
       const conditions = [...state.conditions];
@@ -184,7 +183,7 @@ class SQLBuilderForm extends Component {
       return { ...state, conditions };
     })
   }
-
+// обработчики событий для массива orderBy
   orderByChangeHandler({ target: { value, name } }, index) {
     this.setState(state => {
       const orderBy = [...state.orderBy];
@@ -210,7 +209,7 @@ class SQLBuilderForm extends Component {
       return { ...state, orderBy };
     })
   }
-
+// обработчик изменения для multiple-селектов
   multipleSelectChangeHandler({ target: { value, name } }) {
     this.setState(state => {
       const array = [...state[name]];
@@ -229,12 +228,12 @@ class SQLBuilderForm extends Component {
   submitHandler(e) {
     e.preventDefault();
     const { title, name, relations, columns, roles, permissions, aggregates,
-      conditions: stateConditions, orderBy, group_by } = this.state;
-
+      conditions: stateConditions, orderBy, group_by } = cloneDeep(this.state);
+    // удаляю свойства id не нужные на сервере
     aggregates.forEach(item => delete item.id);
     stateConditions.forEach(item => delete item.id);
     orderBy.forEach(item => delete item.id);
-
+    // формирую объект conditions на основе state  
     const where = stateConditions
       .filter(({ conditionType }) => conditionType === "where")
       .map(({ column, operator, value }) => ({ column, operator, value }));
@@ -253,7 +252,7 @@ class SQLBuilderForm extends Component {
         ({ or, not, column, values: values.split(",").map(item => item.trim()) })
       );
 
-    const where_date = stateConditions  //TODO: value брать из date в зависимости от type
+    const where_date = stateConditions
       .filter(({ conditionType }) => conditionType === "where_date")
       .map(({ type, column, operator, date }) => {
         const value = moment(date).format(getDateFormat(type));
@@ -401,7 +400,7 @@ class SQLBuilderForm extends Component {
         </button>
       </Fragment>)}
       <div className="centred">
-        <button className="btn btn_success" type="button" onClick={this.aggregatesAddHandler}>
+        <button className="btn btn_success" type="button" onClick={this.aggregateAddHandler}>
           + New
         </button>
       </div>

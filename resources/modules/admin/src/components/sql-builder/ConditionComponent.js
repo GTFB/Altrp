@@ -10,11 +10,9 @@ const dateTypesOptions = [
   { value: 'month', label: 'Month' },
   { value: 'year', label: 'Year' }
 ];
-/* 
-  * Принимает строку тип поля where_date
-  * @param {string} type
-  * Возвращает строку формата отображаемыхданных
-  * @return {string}
+/** @function getDateFormat
+  * @param {string} type тип поля where_date
+  * @return {string} формат отображаемых данных
  */
 function getDateFormat(type) {
   switch (type) {
@@ -171,7 +169,6 @@ class ConditionComponent extends Component {
       {conditionType === "where_date" &&
         <div className={`form-group ${["day", "month"].includes(type) ? "hide-blocks" : ""}`}>
           <label>Value</label>
-          {/* TODO: реализовать для типа year */}
           <DatePicker selected={date}
             showTimeSelect={["datetime", "time"].includes(type)}
             showYearPicker={type === "year"}
