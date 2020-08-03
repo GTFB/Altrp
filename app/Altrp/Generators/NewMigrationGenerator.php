@@ -13,28 +13,28 @@ use File;
 use Artisan;
 
 class NewMigrationGenerator extends AppGenerator{
-    
+
     public $is_created;
     public $is_updated;
     public $is_deleted;
-    
+
     public function __construct($data) {
-        
+
         $this->data = $data;
-        
+
         $this->is_created = false;
         $this->is_deleted = false;
         $this->is_updated = false;
     }
 
     public function generate($name, $template) {
-        
+
         $fileName = date('Y_m_d_His').'_'.strtolower($name).'.php';
         $full_path = $this->getPath().$fileName;
-        
+
         //5. создаем файл
         $d = file_put_contents($full_path, $template);
-        
+
         if($d !== false) return $full_path;
         else return false;
     }
@@ -47,7 +47,7 @@ class NewMigrationGenerator extends AppGenerator{
     public function getMigrationName($name)
     {
         $data = Migration::select("id", "name")->where("name","=",$name)->get();
-            
+
         if(count($data) == 0) {
             return $name;
         }
@@ -56,7 +56,7 @@ class NewMigrationGenerator extends AppGenerator{
 
         return $name."_v".$version;
     }
-    
+
     /**
      * Получаем путь до папки миграций
      *
@@ -66,14 +66,14 @@ class NewMigrationGenerator extends AppGenerator{
     {
         $folder_name = config('altrp.admin.migrations_folder_name');
         $directory = database_path('/'.$folder_name.'/');
-        
+
         if(!File::exists($directory)) {
             return $this->createMigrationFolder($directory);
         }
-        
+
         return $directory;
     }
-    
+
     /**
      * Добавляем папку для миграций
      *
@@ -81,14 +81,14 @@ class NewMigrationGenerator extends AppGenerator{
      */
     protected function createMigrationFolder($directory)
     {
-        
+
         if(File::makeDirectory($directory)) {
             return $directory;
         }
-        
+
         return false;
     }
-    
+
     /**
      * Получаем путь к файлу шаблона
      *
@@ -103,18 +103,19 @@ class NewMigrationGenerator extends AppGenerator{
             return app_path().'/Altrp/Commands/stubs/migrations/update_migration.stub';
         }
     }
-    
+
     public static function runMigration() {
-        
+
         $folder_name = config('altrp.admin.migrations_folder_name');
-        
+
         try {
             Artisan::call('migrate', array('--force' => true, '--path' => "database/".$folder_name."/",));
         }
         catch (\Exception $e) {
+            echo $e;
             return false;
         }
         return true;
     }
-    
+
 }

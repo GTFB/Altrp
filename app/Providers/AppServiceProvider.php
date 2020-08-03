@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Altrp\Controller;
+use App\Altrp\Model;
+use App\Observers\AltrpControllerObserver;
+use App\Observers\AltrpModelObserver;
 use App\Services\AltrpSettingsService;
 use App\Services\AltrpUpdateService;
 use Illuminate\Support\ServiceProvider;
@@ -43,10 +47,12 @@ class AppServiceProvider extends ServiceProvider
   public function boot()
   {
     Schema::defaultStringLength( 191 );
-    
+
     Table::observe(AltrpTableObserver::class);
     Migration::observe(AltrpMigrationObserver::class);
     Column::observe(AltrpColumnObserver::class);
     Relationship::observe(AltrpRelationshipObserver::class);
+    Model::observe(AltrpModelObserver::class);
+    Controller::observe(AltrpControllerObserver::class);
   }
 }

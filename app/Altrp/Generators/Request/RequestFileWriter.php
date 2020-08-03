@@ -21,6 +21,13 @@ class RequestFileWriter
         $this->writeToFile($request->getFile(), implode(PHP_EOL, $stubContent));
     }
 
+    public function remove(RequestFile $request)
+    {
+        if (file_exists($request->getFile())) {
+            unlink($request->getFile());
+        }
+    }
+
     /**
      * Записать контент в файл
      *

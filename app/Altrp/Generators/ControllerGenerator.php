@@ -61,11 +61,14 @@ class ControllerGenerator extends AppGenerator
 
     /**
      * ControllerGenerator constructor.
-     * @param $data
+     * @param Controller $controller
+     * @param array $data
      */
-    public function __construct($data)
+    public function __construct(Controller $controller, $data = [])
     {
-        $this->controllerModel = new Controller();
+        $this->controllerModel = $controller;
+        $this->controllerFilename = $this->getFormedFileName($this->controllerModel);
+        $this->controllerFile = app_path($this->controllerFilename);
         parent::__construct($data);
     }
 
@@ -185,7 +188,7 @@ class ControllerGenerator extends AppGenerator
      *
      * @return bool
      */
-    protected function writeSourceActions()
+    public function writeSourceActions()
     {
         $actions = ['get', 'options', 'show', 'add', 'update', 'delete'];
         $sources = [];
@@ -217,9 +220,21 @@ class ControllerGenerator extends AppGenerator
         try {
             Source::insert($sources);
         } catch (\Exception $e) {
+            echo $e;
             return false;
         }
 
+        return true;
+    }
+
+    public function deleteSourceActions()
+    {
+        $sources = Source::where([
+            ['model_id', $this->controllerModel->model->id],
+            ['controller_id',$this->controllerModel->id]
+        ])->get(['id'])->implode('id', ',');
+        $ids = explode(',', $sources);
+        Source::destroy($ids);
         return true;
     }
 
@@ -228,7 +243,7 @@ class ControllerGenerator extends AppGenerator
      *
      * @return bool
      */
-    protected function writeSourceRoles()
+    public function writeSourceRoles()
     {
         $sourceRoles = $this->getAccessRoles();
 
@@ -251,7 +266,7 @@ class ControllerGenerator extends AppGenerator
      *
      * @return bool
      */
-    protected function writeSourcePermissions()
+    public function writeSourcePermissions()
     {
         $sourcePermissions = $this->getAccessPermissions();
 
@@ -274,7 +289,7 @@ class ControllerGenerator extends AppGenerator
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    protected function getSourceActions()
+    public function getSourceActions()
     {
         return $this->controllerModel->sources()->get();
     }
@@ -290,7 +305,7 @@ class ControllerGenerator extends AppGenerator
         $modelPath = $this->getModelPath();
         $prefix = $this->getRoutePrefix();
         $modelNamespace = 'AltrpModels\\' . $modelPath;
-        $validations = $this->validationsToString($this->getValidationRules());
+        $validations = $this->getValidationRules();
         $crudName = $this->toSnakeCase($this->getTableName());
         $namespace = $this->getNamespace($this->controllerModel);
         $relations = $this->getRelations();
@@ -331,9 +346,9 @@ class ControllerGenerator extends AppGenerator
     {
         $roles = [];
         $nowTime = Carbon::now();
-        if (isset($this->data->access) && !empty($this->data->access)) {
+        if (isset($this->controllerModel->access) && !empty($this->controllerModel->access)) {
             $sourceActions = $this->getSourceActions();
-            foreach ($this->data->access as $access) {
+            foreach ($this->controllerModel->access as $access) {
                 if ($access->type == 'role') {
                     $sourceId = null;
                     foreach ($sourceActions as $action) {
@@ -391,19 +406,32 @@ class ControllerGenerator extends AppGenerator
      *
      * @return bool
      */
-    protected function updateControllerFile()
+    public function updateControllerFile()
     {
         return $this->createControllerFile();
     }
 
     /**
+     * Удалить файл контроллера
+     *
+     * @return bool
+     */
+    public function deleteControllerFile()
+    {
+        if (file_exists($this->controllerFile)) {
+            return unlink($this->controllerFile);
+        }
+        return true;
+    }
+
+    /**
      * Получить валидационные правила
      *
-     * @return array
+     * @return string
      */
     protected function getValidationRules()
     {
-        return $this->data->validations ?? [];
+        return $this->controllerModel->validations ?? null;
     }
 
     /**
@@ -451,11 +479,11 @@ class ControllerGenerator extends AppGenerator
     /**
      * Получить связи для контроллера
      *
-     * @return string
+     * @return mixed
      */
     protected function getRelations()
     {
-        return $this->data->relations ?? '';
+        return $this->controllerModel->relations ?? '';
     }
 
     /**
@@ -465,7 +493,7 @@ class ControllerGenerator extends AppGenerator
      */
     protected function getRoutePrefix()
     {
-        return $this->data->prefix ?? null;
+        return $this->controllerModel->prefix ?? null;
     }
 
     /**
@@ -473,7 +501,7 @@ class ControllerGenerator extends AppGenerator
      *
      * @return bool
      */
-    protected function generateRoutes()
+    public function generateRoutes()
     {
         $routeGenerator = new RouteGenerator();
         $tableName = $this->getTableName();
@@ -497,6 +525,17 @@ class ControllerGenerator extends AppGenerator
         $routeGenerator->addDynamicVariable('column', 'column');
         $routeGenerator->addDynamicVariable('controllerName', $controller);
         return $routeGenerator->generate($tableName, $controller);
+    }
+
+    /**
+     * Удалить маршруты из файла маршрутов
+     *
+     * @return false|int
+     */
+    public function removeRoutes()
+    {
+        $routeGenerator = new RouteGenerator();
+        return $routeGenerator->deleteRoutes($this->controllerModel);
     }
 
     /**
@@ -634,18 +673,21 @@ class ControllerGenerator extends AppGenerator
     {
         $validations = [];
         $validationRules = $this->getValidationRules();
-        foreach ($validationRules as $name => $rules) {
-            $validations[] = "'{$name}' => '" . implode('|', (array)$rules) . "',";
+        $validationRules = explode(';', $validationRules);
+        foreach ($validationRules as $rule) {
+            $parts = explode('#', $rule);
+            $validations[] = "'{$parts[0]}' => '" . $parts[1] . "',";
+
         }
         return implode(PHP_EOL . "\t\t\t", $validations);
     }
 
     /**
-     * Сгенерировать файл запроса
+     * Сгенерировать файлы запросов для валидации
      *
      * @return bool
      */
-    protected function generateRequests()
+    public function generateRequests()
     {
         $requests = ['Store', 'Update'];
         $validations = $this->getValidations();
@@ -657,6 +699,21 @@ class ControllerGenerator extends AppGenerator
             );
             $requestWriter = new RequestFileWriter();
             $requestWriter->write($request);
+        }
+        return true;
+    }
+
+    public function removeRequests()
+    {
+        $requests = ['Store', 'Update'];
+        foreach ($requests as $name) {
+            $request = new RequestFile(
+                $this->controllerModel->model,
+                $name,
+                []
+            );
+            $requestWriter = new RequestFileWriter();
+            $requestWriter->remove($request);
         }
         return true;
     }

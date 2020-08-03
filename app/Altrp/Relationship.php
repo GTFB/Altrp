@@ -33,7 +33,6 @@ class Relationship extends EloquentModel
         'model_class',
         'foreign_key',
         'local_key',
-        'table_id',
         'model_id',
         'target_model_id',
         'add_belong_to',
@@ -87,16 +86,11 @@ class Relationship extends EloquentModel
         return $fields;
     }
 
-    public function altrp_table()
-    {
-        return $this->belongsTo(Table::class, 'table_id');
-    }
-    
     public function altrp_model()
     {
         return $this->belongsTo(Model::class, 'model_id');
     }
-    
+
     public function altrp_target_model()
     {
         return $this->belongsTo(Model::class, 'target_model_id');

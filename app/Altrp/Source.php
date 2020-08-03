@@ -29,14 +29,14 @@ class Source extends Model
 
     public static function getBySearch($search)
     {
-        return self::where('title','like', "%{$search}%")
+        return self::where('name','like', "%{$search}%")
             ->orWhere('id', $search)
             ->get();
     }
 
     public static function getBySearchWithPaginate($search, $offset, $limit)
     {
-        return self::where('title','like', "%{$search}%")
+        return self::where('name','like', "%{$search}%")
             ->orWhere('id', $search)
             ->skip($offset)
             ->take($limit)
@@ -57,7 +57,7 @@ class Source extends Model
 
     public static function getCountWithSearch($search)
     {
-        return self::where('title','like', "%{$search}%")
+        return self::where('name','like', "%{$search}%")
             ->orWhere('id', $search)
             ->toBase()
             ->count();

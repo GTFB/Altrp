@@ -14,7 +14,7 @@ class UpdateRelationshipsTable extends Migration
     public function up()
     {
         Schema::table('altrp_relationships', function (Blueprint $table) {
-            
+
             $table->string("title")->nullable();
             $table->text("description")->nullable();
             $table->bigInteger('model_id')->unsigned()->nullable();
@@ -23,7 +23,7 @@ class UpdateRelationshipsTable extends Migration
             $table->boolean("add_belong_to")->default(false);
             $table->string("onDelete")->nullable()->default("restrict");
             $table->string("onUpdate")->nullable()->default("restrict");
-            
+
             $table->foreign('model_id')->references('id')->on('altrp_models');
             $table->foreign('target_model_id')->references('id')->on('altrp_models');
             $table->foreign('altrp_migration_id')->references('id')->on('altrp_migrations');
