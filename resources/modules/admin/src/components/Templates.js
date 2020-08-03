@@ -3,7 +3,7 @@ import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
 import store from "../js/store/store";
 import {setModalSettings, toggleModal} from "../js/store/modal-settings/actions";
-import { generateId, redirect, deleteIdsDeep } from "../js/helpers";
+import { generateId, redirect, objectDeepCleaning } from "../js/helpers";
 import Pagination from "./Pagination";
 
 
@@ -85,11 +85,12 @@ export default class Templates extends Component{
   * @return {strig} Строка в формате JSON
   */
   generateTemplateJSON(template) {
-    const data = deleteIdsDeep(JSON.parse(template.data))
+    const data = objectDeepCleaning(JSON.parse(template.data))
     const json = JSON.stringify({ 
       template_area: this.state.activeTemplateArea.name, 
       data
     });
+    console.log(JSON.parse(json))
     return json;
   }
   /** @function downloadJSONFile
