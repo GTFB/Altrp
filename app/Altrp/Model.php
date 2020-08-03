@@ -56,6 +56,11 @@ class Model extends EloquentModel
         return $this->hasMany(Accessor::class);
     }
 
+    public function altrp_relationships()
+    {
+        return $this->hasMany(Relationship::class, 'model_id', 'id');
+    }
+
     public function getTimeStampsAttribute($value)
     {
         return (bool)$value;

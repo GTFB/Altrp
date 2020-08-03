@@ -15,11 +15,22 @@ class Controller extends EloquentModel
         'prefix',
         'relations',
         'model_id',
-    ];
-
-    protected $hidden = [
         'validations'
     ];
+
+    public function setValidationsAttribute($validationRules)
+    {
+        $validationArr = [];
+        if ((array) $validationRules) {
+            foreach ($validationRules as $name => $rules) {
+                $rules = (array) $rules;
+                if (! empty($rules)) {
+                    $validationArr[] = $name . '#' . implode('|', $rules);
+                }
+            }
+        }
+        $this->attributes['validations'] = implode(';', $validationArr);
+    }
 
     public function model()
     {

@@ -23,14 +23,7 @@ class PagesController extends Controller
 
     $_pages = Page::all();
     $pages = [];
-//    echo '<pre style="padding-left: 200px;">';
-//    var_dump( $_pages );
-//    echo '</pre>';
-
     foreach ( $_pages as $page ) {
-//      echo '<pre style="padding-left: 200px;">';
-//      var_dump( $page );
-//      echo '</pre>';
 
       $content_template = $page->get_content_template();
       $pages[] = [

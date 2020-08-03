@@ -53,12 +53,18 @@ class ModelGenerator extends AppGenerator
 
     /**
      * ModelGenerator constructor.
-     * @param $data
+     * @param Model | array $model
+     * @param array $data
      */
-    public function __construct($data)
+    public function __construct( $model, $data = [])
     {
-        $this->model = new Model();
-        parent::__construct($data);
+        $this->model = $model;
+        $this->modelFilename = $this->getFormedFileName(
+            $this->model->path,
+            $this->model->name
+        );
+        $this->modelFile = $this->getModelFile();
+        parent::__construct($model);
     }
 
     /**
@@ -154,8 +160,9 @@ class ModelGenerator extends AppGenerator
     /**
      * @throws \Exception
      */
-    protected function updateModelFile()
+    public function updateModelFile()
     {
+
         return $this->createModelFile();
     }
 
@@ -165,10 +172,10 @@ class ModelGenerator extends AppGenerator
      * @return bool
      * @throws \Exception
      */
-    private function createModelFile()
+    public function createModelFile()
     {
         $relationships = $this->screenBacklashes($this->relationshipsToString());
-        $fullModelName = $this->getFormedFileName($this->data->path, $this->data->name);
+        $fullModelName = $this->modelFilename;
         $fillableColumns = $this->getFillableColumns();
         $softDeletes = $this->isSoftDeletes();
         $createdAt = $this->getCreatedAt();
@@ -206,13 +213,26 @@ class ModelGenerator extends AppGenerator
     }
 
     /**
+     * Удалить файл модели
+     *
+     * @return bool
+     */
+    public function deleteModelFile()
+    {
+        if (file_exists($this->modelFile)) {
+            return unlink($this->modelFile);
+        }
+        return true;
+    }
+
+    /**
      * Получить первичный ключ
      *
      * @return string
      */
     protected function getPrimaryKey()
     {
-        return $this->data->pk ?? 'id';
+        return $this->model->pk ?? 'id';
     }
 
     /**
@@ -252,11 +272,11 @@ class ModelGenerator extends AppGenerator
      */
     protected function getAndWriteRelationships()
     {
-        if (isset($this->data->relationships)) {
+        if (isset($this->model->relationships)) {
             if (count($this->getRelationships($this->model->id)) > 0) {
                 $this->deleteRelationships($this->model->id);
             }
-            $this->relationships = $this->data->relationships;
+            $this->relationships = $this->model->relationships;
 
             return $this->writeRelationships();
         }
@@ -394,8 +414,8 @@ class ModelGenerator extends AppGenerator
 
         foreach ($actions as $action) {
             $permissions[] = [
-                'name' => $action . '-' . strtolower($this->data->name),
-                'display_name' => ucfirst($action) . ' ' . \Str::plural($this->data->name),
+                'name' => $action . '-' . strtolower($this->model->name),
+                'display_name' => ucfirst($action) . ' ' . \Str::plural($this->model->name),
                 'created_at' => $nowTime,
                 'updated_at' => $nowTime,
             ];
@@ -425,7 +445,7 @@ class ModelGenerator extends AppGenerator
      */
     protected function getFillableColumns()
     {
-        if (!isset($this->data->fillable_cols)) return '';
+        if (! isset($this->model->fillable_cols) || empty($this->model->fillable_cols)) return null;
 
         $table = $this->getTableById($this->model->table_id);
 
@@ -435,7 +455,7 @@ class ModelGenerator extends AppGenerator
 
         $columns = $this->getColumns($table);
 
-        if (! $columns) return '';
+        if ($columns->isEmpty()) return null;
 
         $columnsList = $this->getColumnsList($columns);
 
@@ -470,7 +490,7 @@ class ModelGenerator extends AppGenerator
             ['table_id', $this->model->table_id],
             ['altrp_migration_id', $last_migration->id]
         ])
-            ->whereIn('name', (array) $this->data->fillable_cols)
+            ->whereIn('name', (array) $this->model->fillable_cols)
             ->get();
 
         return $columns;
@@ -536,7 +556,7 @@ class ModelGenerator extends AppGenerator
      */
     protected function getUserColumns()
     {
-        if (! isset($this->data->user_cols) || empty((array)$this->data->user_cols)) return null;
-        return '\'' . implode("','", (array) $this->data->user_cols) . '\'';
+        if (! isset($this->model->user_cols) || empty($this->model->user_cols)) return null;
+        return '\'' . implode("','", (array) $this->model->user_cols) . '\'';
     }
 }

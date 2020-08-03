@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Altrp\Builders\QueryBuilder;
+use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
 use App\Altrp\Generators\ModelGenerator;
 use App\Altrp\Column;
@@ -11,12 +12,12 @@ use App\Altrp\Model;
 use App\Altrp\Table;
 use App\Altrp\Relationship;
 use App\Altrp\Source;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Controller as HttpController;
 use Illuminate\Http\Request;
 use App\Http\Requests\ApiRequest;
 
 
-class ModelsController extends Controller
+class ModelsController extends HttpController
 {
     /**
      * @return \Illuminate\Http\JsonResponse
@@ -73,8 +74,8 @@ class ModelsController extends Controller
         return response()->json(Model::getModelsWithFieldsOptions(), 200, [], JSON_UNESCAPED_UNICODE);
     }
 
-    
-    
+
+
     /**
      * Получить модель и кол-во страниц
      *
@@ -160,6 +161,12 @@ class ModelsController extends Controller
         return compact('pageCount', 'relations');
     }
 
+    /**
+     * Получить источники данных и кол-во страниц
+     *
+     * @param ApiRequest $request
+     * @return array
+     */
     private function getDataSourcesAndPageCount(ApiRequest $request)
     {
         $search = $request->get('s');
@@ -192,11 +199,7 @@ class ModelsController extends Controller
     public function getModels(ApiRequest $request)
     {
         $result = $this->getModelsAndPageCount($request);
-        $models = [
-            'models' => $result['models'],
-            'pageCount' => $result['pageCount']
-        ];
-        return response()->json($models, 200, [], JSON_UNESCAPED_UNICODE);
+        return response()->json($result, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -221,7 +224,7 @@ class ModelsController extends Controller
         ];
         return response()->json($models, 200, [], JSON_UNESCAPED_UNICODE);
     }
-    
+
     /**
      * Создание модели
      *
@@ -260,8 +263,11 @@ class ModelsController extends Controller
             }
         }
 
+        $model = new Model(array_merge($request->all(), ['table_id' => $table->id]));
+
+
         $generator = new ModelGenerator(
-            array_merge($request->all(), ['table_id' => $table->id])
+          $model
         );
 
         $result = $generator->generate();
@@ -322,13 +328,12 @@ class ModelsController extends Controller
         }
         $result = $model->delete();
         if ($result) {
-            return response()->json($model, 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json("Successfully deleted!", 200, [], JSON_UNESCAPED_UNICODE);
         }
         return response()->json('Failed to delete model', 500, [], JSON_UNESCAPED_UNICODE);
     }
-    
-    // Fields
 
+    // Fields
     /**
      * Получить поля медели
      *
@@ -341,7 +346,7 @@ class ModelsController extends Controller
         if (! $model) {
             return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
         }
-        $fields = $model->table->actual_columns;
+        $fields = $model->table->columns;
         return response()->json($fields, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -383,17 +388,17 @@ class ModelsController extends Controller
     public function storeModelField(ApiRequest $request, $model_id)
     {
         $model = Model::find($model_id);
-        
+
         if (! $model) {
             return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
         }
-        
+
         $field = new Column($request->all());
-        
+
         $field->user_id = auth()->user()->id;
         $field->table_id = $model->altrp_table->id;
         $field->model_id = $model->id;
-        
+
         $result = $field->save();
         if ($result) {
             return response()->json($field, 200, [], JSON_UNESCAPED_UNICODE);
@@ -461,7 +466,7 @@ class ModelsController extends Controller
         }
         $result = $field->delete();
         if ($result) {
-            return response()->json($field, 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json('Field successfully deleted', 200, [], JSON_UNESCAPED_UNICODE);
         }
         return response()->json('Failed to delete field', 500, [], JSON_UNESCAPED_UNICODE);
     }
@@ -480,7 +485,7 @@ class ModelsController extends Controller
         if (! $model) {
             return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
         }
-        $relations = $model->table->relationships;
+        $relations = $model->altrp_relationships;
         return response()->json($relations, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -519,11 +524,10 @@ class ModelsController extends Controller
      * @param $model_id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeModelRelation(ApiRequest $request)
+    public function storeModelRelation(ApiRequest $request, $model_id)
     {
-        
         $relation = new Relationship($request->all());
-        $relation->model_id = $request->model_id;
+        $relation->model_id = $model_id;
         $result = $relation->save();
         if ($result) {
             return response()->json($relation, 200, [], JSON_UNESCAPED_UNICODE);
@@ -615,7 +619,7 @@ class ModelsController extends Controller
         foreach ($result['data_sources'] as $source) {
             $options[] = [
                 'value' => $source->id,
-                'label' => $source->title,
+                'label' => $source->name,
             ];
         }
         $options = [
@@ -698,8 +702,6 @@ class ModelsController extends Controller
         return response()->json('Failed to delete data source', 500, [], JSON_UNESCAPED_UNICODE);
     }
 
-
-    
     /**
      * Создать контроллер
      *
@@ -714,24 +716,65 @@ class ModelsController extends Controller
     public function storeController(ApiRequest $request, $model_id)
     {
         $model = Model::find($model_id);
-
         if (! $model)
             return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
-
-        $generator = new ControllerGenerator(
-            array_merge($request->all(), ['model_id' => $model_id])
-        );
-
-        $result = $generator->generate();
-
+        $controller = new Controller($request->all());
+        $controller->model_id = $model_id;
+        $result = $controller->save();
         if ($result) {
-            return response()->json('Success', 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json('Successfully created!', 200, [], JSON_UNESCAPED_UNICODE);
         }
-
-        return response()->json('Error', 404, [], JSON_UNESCAPED_UNICODE);
+        return response()->json('Failed to create controller!', 500, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
+     * Обновить контроллер
+     *
+     * @param ApiRequest $request
+     * @param $model_id
+     * @param $controller_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateController(ApiRequest $request, $model_id, $controller_id)
+    {
+        $model = Model::find($model_id);
+        if (! $model)
+            return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
+        $controller = Controller::find($controller_id);
+        if (! $controller)
+            return response()->json('Controller not found', 404, [], JSON_UNESCAPED_UNICODE);
+        $result = $controller->update($request->all());
+        if ($result) {
+            return response()->json('Successfully updated!', 200, [], JSON_UNESCAPED_UNICODE);
+        }
+        return response()->json('Failed to update controller!', 500, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Удалить контроллер
+     *
+     * @param $model_id
+     * @param $controller_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroyController($model_id, $controller_id)
+    {
+        $model = Model::find($model_id);
+        if (! $model)
+            return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
+        $controller = Controller::find($controller_id);
+        if (! $controller)
+            return response()->json('Controller not found', 404, [], JSON_UNESCAPED_UNICODE);
+        $result = $controller->delete();
+        if ($result) {
+            return response()->json('Successfully deleted!', 200, [], JSON_UNESCAPED_UNICODE);
+        }
+        return response()->json('Failed to delete controller!', 500, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Добавить SQl запрос
+     *
      * @param ApiRequest $request
      * @param $model_id
      * @return \Illuminate\Http\JsonResponse
@@ -741,19 +784,15 @@ class ModelsController extends Controller
     public function addQuery(ApiRequest $request, $model_id)
     {
         $model = Model::find($model_id);
-
         if (! $model)
             return response()->json('Model not found!', 404, [], JSON_UNESCAPED_UNICODE);
-
         $builder = new QueryBuilder(
             array_merge($request->all(), ['model' => $model])
         );
         $result = $builder->build();
-
         if ($result) {
             return response()->json('Successfully added!', 200, [], JSON_UNESCAPED_UNICODE);
         }
-
         return response()->json('Error!', 404, [], JSON_UNESCAPED_UNICODE);
     }
 

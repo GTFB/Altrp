@@ -49,13 +49,17 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
 
         // Models
         Route::get( '/models', 'Admin\ModelsController@getModels');
-        Route::post( '/models/{model_id}/sql_builder', 'Admin\ModelsController@addQuery');
-
         Route::get( '/model_options', 'Admin\ModelsController@getModelOptions');
         Route::post( '/models', 'Admin\ModelsController@storeModel');
         Route::put( '/models/{model_id}', 'Admin\ModelsController@updateModel');
         Route::get( '/models/{model_id}', 'Admin\ModelsController@showModel');
         Route::delete( '/models/{model_id}', 'Admin\ModelsController@destroyModel');
+
+        Route::post( '/models/{model_id}/sql_builder', 'Admin\ModelsController@addQuery');
+
+        Route::post( '/models/{model_id}/controllers', 'Admin\ModelsController@storeController');
+        Route::put( '/models/{model_id}/controllers/{controller_id}', 'Admin\ModelsController@updateController');
+        Route::delete( '/models/{model_id}/controllers/{controller_id}', 'Admin\ModelsController@destroyController');
 
         // Fields
         Route::get( '/models/{model_id}/fields', 'Admin\ModelsController@getModelFields');
@@ -73,7 +77,7 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::get( '/models/{model_id}/relations/{field_id}', 'Admin\ModelsController@showModelRelation');
         Route::delete( '/models/{model_id}/relations/{field_id}', 'Admin\ModelsController@destroyModelRelation');
 
-        // Data Source
+        // Data Sources
         Route::get( '/data_sources', 'Admin\ModelsController@getDataSources');
         Route::get( '/data_source_options', 'Admin\ModelsController@getDataSourceOptions');
         Route::post( '/data_sources', 'Admin\ModelsController@storeDataSource');
