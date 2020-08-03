@@ -9,15 +9,16 @@ use App\Exceptions\AltrpMigrationRunExceptions;
 
 class AltrpMigrationObserver
 {
-    /**
-     * Вызываем после создания таблицы
-     * @param Migration $migration
-     */
+  /**
+   * Вызываем после создания таблицы
+   * @param Migration $migration
+   * @throws AltrpMigrationRunExceptions
+   */
     public function created(Migration $migration)
     {
         
         if(!NewMigrationGenerator::runMigration()) {
-            throw new AltrpMigrationRunExceptions("Failed to run migration file");
+            throw new AltrpMigrationRunExceptions("Failed to run migration file on creating migration");
         }
         
         

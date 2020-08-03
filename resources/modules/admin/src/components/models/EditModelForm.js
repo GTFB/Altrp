@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import { titleToName }from "../../js/helpers";
+import Resource from "../../../../editor/src/js/classes/Resource";
 
 class EditModelForm extends Component {
   constructor(props) {
@@ -62,13 +63,17 @@ class EditModelForm extends Component {
     }
   }
 
-  deleteHandler() {
-    // delete: /admin/ajax/models/{model_id} 
-    console.log("deleting model id-" + this.props.model.id);
+  async deleteHandler() {
+    // delete: /admin/ajax/models/{model_id}
+    let res = await (new Resource({route: '/admin/ajax/models'}).delete(this.props.model.id));
+    this.setState(state=>({...state, redirect: '/admin/tables/models/'}))
   }
 
   render() {
     const { model } = this.props;
+    if(this.state.redirect){
+      return <Redirect to={this.state.redirect} push={true}/>
+    }
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="form-group">
         <label htmlFor="page-title">Model Title</label>
@@ -86,7 +91,7 @@ class EditModelForm extends Component {
       </div>
       <div className="form-group form-group_width65">
         <label htmlFor="page-description">Model Description</label>
-        <input type="text" id="page-description" required
+        <input type="text" id="page-description"
           value={this.state.value.description || model.description || ''}
           onChange={e => { this.changeValue(e.target.value, 'description') }}
           className="form-control" />

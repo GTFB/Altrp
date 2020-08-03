@@ -240,16 +240,19 @@ class ModelsController extends Controller
             $table->name = strtolower(\Str::plural($request->name));
             $table->title = ucfirst(\Str::plural($request->name));
             $table->user_id = auth()->user()->id;
-            try {
+//            try {
                 $table->save();
-            } catch (\Exception $e) {
-                return response()->json(
-                    'Table already exists!',
-                    200,
-                    [],
-                    JSON_UNESCAPED_UNICODE
-                );
-            }
+//            } catch (\Exception $e) {
+//                return response()->json(
+//                    [
+//                      'success'=> false,
+//                      'message' => $e->getMessage() ? $e->getMessage() : 'Table already exists!',
+//                    ],
+//                    500,
+//                    [],
+//                    JSON_UNESCAPED_UNICODE
+//                );
+//            }
         } else {
             $table = Table::find($request->table_id);
             if(! $table) {

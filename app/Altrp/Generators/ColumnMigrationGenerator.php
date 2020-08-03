@@ -18,7 +18,7 @@ class ColumnMigrationGenerator extends NewMigrationGenerator{
         $name = $this->getMigrationName();
         $className = Str::studly($name);
         $factory = new MigrationFieldFactory();
-        $table_name = $this->data->altrp_model->altrp_table->name;
+        $table_name = $this->data->altrp_table->name;
         
         
         $obj = $factory->getField($this->data, false);
@@ -106,8 +106,8 @@ class ColumnMigrationGenerator extends NewMigrationGenerator{
      */
     public function getMigrationName($name = "")
     {
-        $table_name = $this->data->altrp_model->altrp_table->name;
-        
+        $table_name = $this->data->altrp_table->name;
+
         if($this->is_created) {
            $name = "update_".$table_name."_table_insert_".$this->data->name."_field";
         }

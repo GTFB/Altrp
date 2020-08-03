@@ -8,21 +8,26 @@ use App\Altrp\Migration;
 use App\Altrp\Generators\ColumnMigrationGenerator;
 use App\Altrp\Generators\NewMigrationGenerator;
 
+use App\Exceptions\AltrpMigrationCreateFileExceptions;
 use App\Exceptions\AltrpMigrationRunExceptions;
 
 class AltrpColumnObserver
 {
-    /**
-     * Вызываем после создания колонки
-     * @param Column $column
-     */
+  /**
+   * Вызываем после создания колонки
+   * @param Column $column
+   * @throws AltrpMigrationCreateFileExceptions
+   */
     public function creating(Column $column)
     {
         $model = Model::find($column->model_id);
-        
+
         $generator = new ColumnMigrationGenerator($column);
         $file = $generator->createColumnGenerate();
         $name = $generator->getMigrationName();
+        if($column->name === 'id'){
+          return;
+        }
         
         if(!$file) {
             throw new AltrpMigrationCreateFileExceptions("Failed to create migration file");
@@ -32,7 +37,7 @@ class AltrpColumnObserver
         $migration->name = $name;
         $migration->file_path = $file;
         $migration->user_id = auth()->user()->id;
-        $migration->table_id = $column->altrp_model->altrp_table->id;
+        $migration->table_id = $column->altrp_table->id;
         $migration->status = "1";
         $migration->data = "";
         $migration->save();

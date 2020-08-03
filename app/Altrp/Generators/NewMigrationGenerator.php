@@ -112,6 +112,10 @@ class NewMigrationGenerator extends AppGenerator{
             Artisan::call('migrate', array('--force' => true, '--path' => "database/".$folder_name."/",));
         }
         catch (\Exception $e) {
+          echo '<pre style="padding-left: 200px;">';
+          var_dump( $e->getMessage() );
+          echo '</pre>';
+
             return false;
         }
         return true;

@@ -9,13 +9,15 @@ use App\Altrp\Generators\MigrationGenerator;
 use App\Altrp\Generators\TableMigrationGenerator;
 
 use App\Exceptions\AltrpMigrationCreateFileExceptions;
+use App\Exceptions\AltrpMigrationRunExceptions;
 
 class AltrpTableObserver
 {
-    /**
-     * Вызываем после создания таблицы
-     * @param Table $table
-     */
+  /**
+   * Вызываем после создания таблицы
+   * @param Table $table
+   * @throws AltrpMigrationCreateFileExceptions
+   */
     public function created(Table $table)
     {
         $generator = new TableMigrationGenerator($table);
@@ -44,6 +46,7 @@ class AltrpTableObserver
         $column->table_id = $table->id;
         $column->user_id = auth()->user()->id;
         $column->altrp_migration_id = $migration->id;
+        $column->model_id = $migration->id;
         $column->save();
         
     }
@@ -83,10 +86,12 @@ class AltrpTableObserver
         
     }
 
-    /**
-     * Вызываем после удаления таблицы
-     * @param Table $table
-     */
+  /**
+   * Вызываем после удаления таблицы
+   * @param Table $table
+   * @throws AltrpMigrationRunExceptions
+   * @throws AltrpMigrationCreateFileExceptions
+   */
     public function deleting(Table $table)
     {
         $generator = new TableMigrationGenerator($table);
@@ -99,7 +104,7 @@ class AltrpTableObserver
         }
         
         if(!TableMigrationGenerator::runMigration()) {
-            throw new AltrpMigrationRunExceptions("Failed to run migration file");
+            throw new AltrpMigrationRunExceptions("Failed to run migration file on delete table");
         }
         
         $table->columns()->delete();
