@@ -3,7 +3,7 @@ import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
 import store from "../js/store/store";
 import {setModalSettings, toggleModal} from "../js/store/modal-settings/actions";
-import {generateId, redirect} from "../js/helpers";
+import { generateId, redirect, deleteIdsDeep } from "../js/helpers";
 import Pagination from "./Pagination";
 
 
@@ -27,6 +27,7 @@ export default class Templates extends Component{
     this.onClick = this.onClick.bind(this);
     this.changePage = this.changePage.bind(this);
     this.changeActiveArea = this.changeActiveArea.bind(this);
+    this.generateTemplateJSON = this.generateTemplateJSON.bind(this);
   }
   changeActiveArea(e){
     let areaId = parseInt(e.target.dataset.area);
@@ -77,6 +78,32 @@ export default class Templates extends Component{
         }
       });
     });
+  }
+  /** @function generateTemplateJSON
+  * Генерируем контент файла template в формате JSON
+  * @param {object} template Данные, получаемые с сервера
+  * @return {strig} Строка в формате JSON
+  */
+  generateTemplateJSON(template) {
+    const data = deleteIdsDeep(JSON.parse(template.data))
+    const json = JSON.stringify({ 
+      template_area: this.state.activeTemplateArea, 
+      data
+    });
+    return json;
+  }
+  /** @function downloadJSONFile
+  * Скачиваем файл
+  * @param {object} template Данные, получаемые с сервера
+  */
+  downloadJSONFile(template) {
+    const element = document.createElement("a");
+    const file = new Blob([this.generateTemplateJSON(template)], { type: 'text/plain' });
+    element.href = URL.createObjectURL(file);
+    element.download = `${template.name}.json`;
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
+
   }
   async componentDidMount(){
     let templateAreas = await this.templateTypesResource.getAll();
@@ -193,7 +220,13 @@ export default class Templates extends Component{
             method: 'delete',
             // className: ''
             title: 'Clear History'
-            }, {
+          }, {
+            tag: 'button',
+            route: '/admin/ajax/templates',
+            method: 'get',
+            after: response => this.downloadJSONFile(response),
+            title: 'Export'
+          }, {
             tag: 'button',
             route: '/admin/ajax/templates/:id',
             method: 'delete',

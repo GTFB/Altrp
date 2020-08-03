@@ -86,8 +86,17 @@ class AdminTable extends Component {
                               }
                               const resource = new Resource({ route: quickAction.route.replace(':id', row.id)});
                               if (_.isFunction(resource[quickAction.method])) {
-                                await resource[quickAction.method]();
-                                _.isFunction(quickAction.after) ? quickAction.after() : ''
+                                let response;
+                                switch (quickAction.method) {
+                                  case 'get':
+                                    response = await resource[quickAction.method](row.id);
+                                    break;
+                                
+                                  default:
+                                    response = await resource[quickAction.method]();
+                                    break;
+                                }
+                                _.isFunction(quickAction.after) ? quickAction.after(response) : ''
                               }
                             }}
                             >{quickAction.title}</button>;
