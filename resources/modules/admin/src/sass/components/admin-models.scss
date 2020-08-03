@@ -12,9 +12,10 @@
 .form-group__inline-wrapper {
   display: flex;
   justify-content: space-between;
-  &__divider {
+  &__divider, .form-group_checkbox {
     align-self: flex-end;
   }
+
 }
 
 .form-group.form-group_width30 {
@@ -22,11 +23,19 @@
 }
 
 .form-group.form-group_width65 {
-  flex-basis: 65%
+  flex-basis: 65%;
 }
 
 .form-group.form-group_width47 {
-  flex-basis: 47.5%
+  flex-basis: 47.5%;
+}
+
+.form-group.form-group_width30 {
+  flex-basis: 30%;
+}
+
+.form-group.form-group_width15 {
+  flex-basis: 15%;
 }
 
 .sub-header {
@@ -38,7 +47,7 @@
   color: $purple;
 }
 
-.field-form {
+.field-form, .admin-form {
   p {
     color: $black;
     display: block;

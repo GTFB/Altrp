@@ -14,11 +14,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap');
 @import "components/admin-users";
 @import "components/admin-models";
+@import "~react-datepicker/dist/react-datepicker.css";
+@import "components/admin-sql-builder";
 
 
 .admin {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   padding-left: 271px;
   &__logo{
     width: 120px;
@@ -114,6 +116,13 @@
     text-align: center;
     font-size: 13px;
     color: #fff;
+  }
+  &-form__subheader {
+    text-transform: uppercase;
+    margin-top: 25px;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
   }
 }
 

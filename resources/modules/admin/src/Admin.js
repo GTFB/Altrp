@@ -42,6 +42,7 @@ import EditModel from "./components/models/EditModel";
 import EditField from "./components/models/EditField";
 import AddRelation from "./components/models/AddRelation";
 import AddDataSource from "./components/models/AddDataSource";
+import SQLBuilder from "./components/SQLBuilder";
 
 import AddTable from "./components/tables/AddTable";
 import EditTable from "./components/tables/EditTable";
@@ -249,6 +250,9 @@ class Admin extends Component {
             <Route path="/admin/tables/data-sources/add">
               <AddDataSource />
             </Route>            
+            <Route path="/admin/sql-builder">
+              <SQLBuilder />
+            </Route>
           </Switch>
         </Router>
         <AdminModal/>
