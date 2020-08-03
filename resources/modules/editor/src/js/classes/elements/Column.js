@@ -37,7 +37,7 @@ class Column  extends BaseElement {
       label: 'Column width (%)',
       default: null,
       rules: {
-        '{{ELEMENT}}.altrp-element_column': 'width: {{VALUE}}%',
+        '{{ELEMENT}}.altrp-element_column{{STATE}}': 'width: {{VALUE}}%',
       }
     });
 
@@ -76,12 +76,12 @@ class Column  extends BaseElement {
           }
         ],
         rules: {
-          '{{ELEMENT}} .altrp-column': 'align-content: {{VALUE}};',
+          '{{ELEMENT}} .altrp-column{{STATE}}': 'align-content: {{VALUE}};',
           '{{ELEMENT}} .altrp-column': 'align-items: {{VALUE}};',
         },
       }
     );
-  
+
     this.addControl(
       'layout_justify_content', {
         type: CONTROLLER_SELECT,
@@ -117,7 +117,7 @@ class Column  extends BaseElement {
           }
         ],
         rules: {
-          '{{ELEMENT}} .altrp-column': 'justify-content: {{VALUE}} !important;',
+          '{{ELEMENT}} .altrp-column{{STATE}}': 'justify-content: {{VALUE}} !important;',
         },
       }
     );
@@ -127,8 +127,8 @@ class Column  extends BaseElement {
       label: 'Widgets space (px)',
       default: 0,
       rules: {
-        '{{ELEMENT}} .altrp-element': 'margin-bottom: {{VALUE}}px',
-        '{{ELEMENT}} .altrp-element:last-child': 'margin-bottom: 0px'
+        '{{ELEMENT}} .altrp-element{{STATE}}': 'margin-bottom: {{VALUE}}px',
+        '{{ELEMENT}} .altrp-element:last-child{{STATE}}': 'margin-bottom: 0px'
       }
     });
 
@@ -205,7 +205,7 @@ class Column  extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-column": "background-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-column{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
@@ -232,7 +232,7 @@ class Column  extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-column': [ 
+        '{{ELEMENT}} .altrp-column{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -253,7 +253,7 @@ class Column  extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-column": [
+        "{{ELEMENT}} .altrp-column{{STATE}}": [
           "padding-top: {{TOP}}{{UNIT}};",
           "padding-right: {{RIGHT}}{{UNIT}};",
           "padding-bottom: {{BOTTOM}}{{UNIT}};",
@@ -261,13 +261,13 @@ class Column  extends BaseElement {
         ]
       }
     });
-    
+
     this.addControl('position_z_index', {
       type: CONTROLLER_NUMBER,
       label: "Z-index",
       default: 0,
       rules: {
-        "{{ELEMENT}} .altrp-column": "z-index: {{VALUE}}"
+        "{{ELEMENT}} .altrp-column{{STATE}}": "z-index: {{VALUE}}"
       }
     });
 
@@ -309,7 +309,7 @@ class Column  extends BaseElement {
         }
       ],
       rules: {
-        "{{ELEMENT}} .altrp-column": "border-style: {{VALUE}};"
+        "{{ELEMENT}} .altrp-column{{STATE}}": "border-style: {{VALUE}};"
       }
     });
 
@@ -321,7 +321,7 @@ class Column  extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-column":
+        "{{ELEMENT}} .altrp-column{{STATE}}":
           "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
       }
     });
@@ -334,7 +334,7 @@ class Column  extends BaseElement {
         colorPickedHex: "#32a852"
       },
       rules: {
-        "{{ELEMENT}} .altrp-column": "border-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-column{{STATE}}": "border-color: {{COLOR}};"
       }
     });
 
@@ -353,7 +353,7 @@ class Column  extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-column": "border-radius: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-column{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -376,7 +376,7 @@ class Column  extends BaseElement {
           '#9c18a8'
         ],
         rules: {
-          '{{ELEMENT}} .altrp-column': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+          '{{ELEMENT}} .altrp-column{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
         },
       }
     );

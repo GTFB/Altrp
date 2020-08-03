@@ -4,9 +4,20 @@
 ## Changelog
 
 
+### 0.7.0
++ Add Hover, Active, Disabled States Styling
++ Add Breakpoints Settings for Templates
++ Optimize Front App
+
+
 ### 0.6.0
 + Add Related Models Field in Dynamic Content Options
 + Update Related Models Data in Forms
++ Element States in Editor
++ Clear All History for Templates
++ Pagination and Quick Actions for Templates Page
++ Reports Editor
++ Added the Ability to Show Pages to Certain Roles and Redirect to the Main Page if there is no View Permission
 
 ### 0.5.0
 + Add Delete/Edit Form Action to Button Widget

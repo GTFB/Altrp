@@ -13,6 +13,7 @@ yarn-error.log
 /nbproject
 .idea
 storage/installed
+s.sql
 
 # IDE helpers
 /config/ide-helper.php

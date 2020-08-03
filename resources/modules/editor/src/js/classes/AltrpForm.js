@@ -10,6 +10,17 @@ class AltrpForm {
     this.method = method;
     this.modelName = modelName;
     let route = `/ajax/models/${modelName}`;
+    if(modelName === 'login'){
+      route = `/login`
+    }
+    switch (modelName){
+      case 'login':{
+        route = `/login`
+      }break;
+      case 'logout':{
+        route = `/logout`
+      }break;
+    }
     this.resource = new Resource({route})
   }
 
@@ -45,7 +56,11 @@ class AltrpForm {
     if(success){
       switch (this.method){
         case 'POST':{
-          return await this.resource.post(this.getData());
+          let res =  await this.resource.post(this.getData());
+          if(res.reload){
+            document.location.reload()
+          }
+          return res;
         }
         case 'PUT':{
           // return await alert(JSON.stringify(this.getData()));
@@ -60,6 +75,7 @@ class AltrpForm {
           }
           console.error('Не удалось получить ИД модели для удаления!');
         }
+        break;
         case 'DELETE':{
           if(modelID){
             // return await await alert('Удаление!');

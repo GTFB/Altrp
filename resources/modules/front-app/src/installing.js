@@ -3,7 +3,6 @@ import frontDecorate from './js/decorators/front-element-component';
 /**
  * Elements Wrapper
  * */
-
 window.ElementWrapper = ElementWrapper;
 
 /**

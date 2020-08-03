@@ -109,7 +109,7 @@ class Divider extends BaseElement {
         'vh',
       ],
       rules: {
-        "{{ELEMENT}} .altrp-divider-separator": "width: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-divider-separator{{STATE}}": "width: {{SIZE}}{{UNIT}}",
       }
     });
 
@@ -163,7 +163,7 @@ class Divider extends BaseElement {
     });
 
     this.endControlSection();
-    
+
     this.startControlSection("divider_style", {
       tab: TAB_STYLE,
       label: "Divider",
@@ -221,7 +221,7 @@ class Divider extends BaseElement {
       max: 50,
       min: 2,
       rules: {
-        "{{ELEMENT}} .altrp-divider": ["padding-bottom: {{SIZE}}px", "padding-top: {{SIZE}}px"]
+        "{{ELEMENT}} .altrp-divider{{STATE}}": ["padding-bottom: {{SIZE}}px", "padding-top: {{SIZE}}px"]
       }
     });
 
@@ -231,7 +231,7 @@ class Divider extends BaseElement {
       tab: TAB_STYLE,
       label: "Text",
     });
-    
+
     this.addControl("text_style_color", {
       type: CONTROLLER_COLOR,
       label: "Color",
@@ -241,10 +241,10 @@ class Divider extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-divider-label": "color: {{COLOR}}"
+        "{{ELEMENT}} .altrp-divider-label{{STATE}}": "color: {{COLOR}}"
       }
     });
-    
+
     this.addControl('text_style_typographic', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
@@ -257,7 +257,7 @@ class Divider extends BaseElement {
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-divider-label': [
+          '{{ELEMENT}} .altrp-divider-label{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -270,7 +270,7 @@ class Divider extends BaseElement {
         },
       }
     );
-    
+
     this.addControl('text_style_position', {
         type: CONTROLLER_CHOOSE,
         label: 'position',

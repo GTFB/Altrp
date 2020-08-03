@@ -40,7 +40,7 @@ class Nav extends BaseElement{
       tab: TAB_CONTENT,
       label: 'Type',
     });
-    
+
     this.addControl("type_type", {
       type: CONTROLLER_SELECT,
       label: "type",
@@ -123,7 +123,7 @@ class Nav extends BaseElement{
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-text": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-text{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -138,8 +138,10 @@ class Nav extends BaseElement{
       max: 20,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-text": "padding-left: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-text": "padding-right: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-text{{STATE}}": [
+          "padding-left: {{SIZE}}{{UNIT}}",
+          "padding-right: {{SIZE}}{{UNIT}}"
+        ],
       }
     });
 
@@ -185,7 +187,7 @@ class Nav extends BaseElement{
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-heading': [
+          '{{ELEMENT}} .altrp-heading{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -208,7 +210,7 @@ class Nav extends BaseElement{
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-text": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-text{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -231,7 +233,7 @@ class Nav extends BaseElement{
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-heading': [
+          '{{ELEMENT}} .altrp-heading{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -254,7 +256,7 @@ class Nav extends BaseElement{
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-text": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-text{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -277,7 +279,7 @@ class Nav extends BaseElement{
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-heading': [
+          '{{ELEMENT}} .altrp-heading{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -300,7 +302,7 @@ class Nav extends BaseElement{
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-text": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-text{{STATE}}": "color: {{COLOR}};"
       }
     });
 

@@ -16,7 +16,7 @@ class UpdateAltrpControllersTableV4 extends Migration
         Schema::table('altrp_controllers', function (Blueprint $table) {
             $table->dropForeign(['table_id']);
             $table->dropColumn('table_id');
-            $table->bigInteger('model_id')->after('namespace')->unsigned();
+            $table->bigInteger('model_id')->after('namespace')->unsigned()->default( null )->nullable();
             $table->foreign('model_id')->references('id')->on('altrp_models');
         });
     }

@@ -1,0 +1,24 @@
+.state-section {
+    background: #fff;
+    margin-bottom: 10px;
+    &__wrapper {
+        text-align: center;
+    }
+    &__button {
+        display: inline-block;
+        margin: 10px 5px 10px 0;
+        padding: 3px 6px;
+        background: transparent;
+        border: 2px solid #3c455b;
+        border-radius: 2px;
+        font-weight: bold;
+        color: #3c455b;
+        cursor: pointer;
+        &_active {
+            background: #3c455b;
+            color: #fff;
+        }
+    }
+}
+
+

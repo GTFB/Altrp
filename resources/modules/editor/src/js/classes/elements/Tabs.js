@@ -8,6 +8,7 @@ import {
   CONTROLLER_DIMENSIONS,
   CONTROLLER_SELECT2,
   CONTROLLER_SELECT,
+  CONTROLLER_HEADING,
   CONTROLLER_MEDIA,
   CONTROLLER_TEXT,
   CONTROLLER_REPEATER,
@@ -150,7 +151,7 @@ class Tabs extends BaseElement {
         },
       ],
       rules: {
-            '{{ELEMENT}} .altrp-tab-btn-container': 'justify-content: {{VALUE}};',
+            '{{ELEMENT}} .altrp-tab-btn-container{{STATE}}': 'justify-content: {{VALUE}};',
       },
     });
 
@@ -165,8 +166,8 @@ class Tabs extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn-column": "margin-right: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-tab-btn-row": "margin-bottom: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-tab-btn-column{{STATE}}": "margin-right: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-tab-btn-row{{STATE}}": "margin-bottom: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -181,11 +182,103 @@ class Tabs extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn-top": "margin-bottom: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-tab-btn-bottom": "margin-top: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-tab-btn-left": "margin-right: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-tab-btn-right": "margin-left: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-tab-btn-top{{STATE}}": "margin-bottom: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-tab-btn-bottom{{STATE}}": "margin-top: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-tab-btn-left{{STATE}}": "margin-right: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-tab-btn-right{{STATE}}": "margin-left: {{SIZE}}{{UNIT}}"
       }
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("section_one_content", {
+      tab: TAB_CONTENT,
+      label: "Section 1"
+    });
+
+    this.addControl('title_section_one', {
+      type: CONTROLLER_TEXT,
+      label: 'Title',
+      default: 'Section 1'
+    });
+
+    this.addControl('type_section_one', {
+        type: CONTROLLER_SELECT,
+        label: 'Type',
+        default: "text",
+        options:[
+          {
+            'value' : 'image',
+            'label' : 'image',
+          },
+          {
+            'value' : 'text',
+            'label' : 'text editor',
+          },
+        ],
+      }
+    );
+
+    this.addControl("wysiwyg_section_one", {
+      // conditions: {
+      //   'type_section_one': 'text',
+      // },
+      type: CONTROLLER_WYSIWYG,
+      label: "Text editor",
+    });
+
+    this.addControl('media_section_one', {
+      conditions: {
+        'type_section_one': 'image',
+      },
+      type: CONTROLLER_MEDIA,
+      label: 'Choose image',
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("section_two_content", {
+      tab: TAB_CONTENT,
+      label: "Section 2"
+    });
+
+    this.addControl('title_section_two', {
+      type: CONTROLLER_TEXT,
+      label: 'Title',
+      default: 'Section 2'
+    });
+
+    this.addControl('type_section_two', {
+        type: CONTROLLER_SELECT,
+        label: 'Type',
+        default: "text",
+        options:[
+          {
+            'value' : 'image',
+            'label' : 'image',
+          },
+          {
+            'value' : 'text',
+            'label' : 'text editor',
+          },
+        ],
+      }
+    );
+
+    this.addControl("wysiwyg_section_two", {
+      // conditions: {
+      //   'type_section_two': 'text',
+      // },
+      type: CONTROLLER_WYSIWYG,
+      label: "Text editor",
+    });
+
+    this.addControl('media_section_two', {
+      conditions: {
+        'type_section_two': 'image',
+      },
+      type: CONTROLLER_MEDIA,
+      label: 'Choose image',
     });
 
     this.endControlSection();
@@ -204,7 +297,7 @@ class Tabs extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn-container": "background-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-tab-btn-container{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
@@ -217,7 +310,7 @@ class Tabs extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn": "background-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
@@ -230,7 +323,7 @@ class Tabs extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -253,7 +346,7 @@ class Tabs extends BaseElement {
           '#9c18a8'
         ],
         rules: {
-          '{{ELEMENT}} .altrp-tab-btn': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+          '{{ELEMENT}} .altrp-tab-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
         },
       }
     );
@@ -270,7 +363,7 @@ class Tabs extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn": [
+        "{{ELEMENT}} .altrp-tab-btn{{STATE}}": [
           "padding-top: {{TOP}}{{UNIT}};",
           "padding-right: {{RIGHT}}{{UNIT}};",
           "padding-bottom: {{BOTTOM}}{{UNIT}};",
@@ -310,7 +403,7 @@ class Tabs extends BaseElement {
         }
       ],
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn": "border-style: {{VALUE}};"
+        "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "border-style: {{VALUE}};"
       }
     });
 
@@ -319,7 +412,7 @@ class Tabs extends BaseElement {
       label: "Border width",
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn":
+        "{{ELEMENT}} .altrp-tab-btn{{STATE}}":
           "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
       }
     });
@@ -332,7 +425,7 @@ class Tabs extends BaseElement {
         colorPickedHex: "#32a852"
       },
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn": "border-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "border-color: {{COLOR}};"
       }
     });
 
@@ -351,7 +444,7 @@ class Tabs extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn": "border-radius: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -367,7 +460,7 @@ class Tabs extends BaseElement {
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-tab-btn': [
+          '{{ELEMENT}} .altrp-tab-btn{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -397,7 +490,7 @@ class Tabs extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-tab-content": "background-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-tab-content{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
@@ -410,7 +503,7 @@ class Tabs extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-tab-content div": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-tab-content div{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -426,7 +519,7 @@ class Tabs extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-tab-content": [
+        "{{ELEMENT}} .altrp-tab-content{{STATE}}": [
           "padding-top: {{TOP}}{{UNIT}};",
           "padding-right: {{RIGHT}}{{UNIT}};",
           "padding-bottom: {{BOTTOM}}{{UNIT}};",
@@ -466,7 +559,7 @@ class Tabs extends BaseElement {
         }
       ],
       rules: {
-        "{{ELEMENT}} .altrp-tab-content": "border-style: {{VALUE}};"
+        "{{ELEMENT}} .altrp-tab-content{{STATE}}": "border-style: {{VALUE}};"
       }
     });
 
@@ -475,7 +568,7 @@ class Tabs extends BaseElement {
       label: "Border width",
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-tab-content":
+        "{{ELEMENT}} .altrp-tab-content{{STATE}}":
           "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
       }
     });
@@ -488,7 +581,7 @@ class Tabs extends BaseElement {
         colorPickedHex: "#32a852"
       },
       rules: {
-        "{{ELEMENT}} .altrp-tab-content": "border-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-tab-content{{STATE}}": "border-color: {{COLOR}};"
       }
     });
 
@@ -507,7 +600,7 @@ class Tabs extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-tab-content": "border-radius: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-tab-content{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -515,15 +608,15 @@ class Tabs extends BaseElement {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
         default:{
-          lineHeight: 1.5,
+          lineHeight: 1.4,
           spacing: 0,
-          size: 14,
+          size: 16,
           weight: "normal",
           family: '"roboto"',
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-tab-content div': [
+          '{{ELEMENT}} .altrp-tab-content div{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -568,7 +661,7 @@ class Tabs extends BaseElement {
         colorPickedHex: "#32a852"
       },
       rules: {
-        "{{ELEMENT}} .altrp-tab-btn-icon svg path": "fill: {{COLOR}};"
+        "{{ELEMENT}} .altrp-tab-btn-icon{{STATE}} svg path": "fill: {{COLOR}};"
       }
     });
 
@@ -582,6 +675,331 @@ class Tabs extends BaseElement {
       units: ["px", "%", "vh"],
       max: 100,
       min: 0,
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("switch_button_style", {
+      tab: TAB_STYLE,
+      label: "Switch button"
+    });
+
+    this.addControl("box_around_color_after_switch_button_style", {
+      type: CONTROLLER_COLOR,
+      label: "Box around color after",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-tabs-switcher_off": "background: {{COLOR}};"
+      }
+    });
+
+    this.addControl("box_around_color_before_switch_button_style", {
+      type: CONTROLLER_COLOR,
+      label: "Box around color before",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-tabs-switcher_on": "background: {{COLOR}};"
+      }
+    });
+
+    this.addControl("switch_after_color_switch_button_style", {
+      type: CONTROLLER_COLOR,
+      label: "Switch color after",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-tabs-switcher__caret": "background: {{COLOR}};"
+      }
+    });
+
+    this.addControl("switch_before_color_switch_button_style", {
+      type: CONTROLLER_COLOR,
+      label: "Switch color before",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-tabs-switcher_on .altrp-tabs-switcher__caret": "background: {{COLOR}};"
+      }
+    });
+
+    // https://prnt.sc/tk4s77
+
+    this.addControl("size_switch_button_style", {
+      type: CONTROLLER_SLIDER,
+      label: 'Size',
+      default:{
+        size: '16',
+        unit: 'px',
+      },
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-tabs-switcher-container": "font-size: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("spacing_switch_button_style", {
+      type: CONTROLLER_SLIDER,
+      label: 'Spacing',
+      default:{
+        size: null,
+        unit: 'px',
+      },
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-tabs-switcher": [
+          "margin-left: {{SIZE}}{{UNIT}}",
+          "margin-right: {{SIZE}}{{UNIT}}",
+        ]
+      }
+    });
+
+    this.addControl("margin_bottom_switch_button_style", {
+      type: CONTROLLER_SLIDER,
+      label: 'Margin bottom',
+      default:{
+        size: null,
+        unit: 'px',
+      },
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-tabs-switcher-container": "margin-bottom: {{SIZE}}{{UNIT}}",
+      }
+    });
+
+    this.addControl('border_radius_box_switch_button_style', {
+      type: CONTROLLER_SLIDER,
+      label: 'Box around border radius',
+      default:{
+        size: 100,
+        unit: 'vh',
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-tabs-switcher': 'border-radius: {{SIZE}}{{UNIT}}',
+      },
+    });
+
+    this.addControl('border_radius_switch_switch_button_style', {
+      type: CONTROLLER_SLIDER,
+      label: 'Switch border radius',
+      default:{
+        size: 100,
+        unit: 'vh',
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-tabs-switcher__caret': 'border-radius: {{SIZE}}{{UNIT}}',
+      },
+    });
+    this.endControlSection();
+
+    this.startControlSection("section_one_style", {
+      tab: TAB_STYLE,
+      label: "Section 1"
+    });
+
+    this.addControl('heading_title_section_one_style', {
+      type: CONTROLLER_HEADING,
+      label: 'Title',
+    });
+
+    this.addControl('typographic_title_section_one_style', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default:{
+          lineHeight: 1.4,
+          spacing: 0,
+          size: 16,
+          weight: "normal",
+          family: '"roboto"',
+          decoration: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-tabs-switcher-label-section-one': [
+            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
+    this.addControl("color_title_section_one_style", {
+      type: CONTROLLER_COLOR,
+      label: "Switch color before",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-tabs-switcher-label-section-one": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('heading_content_section_one_style', {
+      type: CONTROLLER_HEADING,
+      label: 'Content',
+    });
+
+    this.addControl('typographic_content_section_one_style', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default:{
+          lineHeight: 1.4,
+          spacing: 0,
+          size: 16,
+          weight: "normal",
+          family: '"roboto"',
+          decoration: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-tabs-switcher-section-one-text p': [
+            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
+    this.addControl("color_content_section_one_style", {
+      type: CONTROLLER_COLOR,
+      label: "Switch color before",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-tabs-switcher-section-one-text": "color: {{COLOR}};"
+      }
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("section_two_style", {
+      tab: TAB_STYLE,
+      label: "Section 2"
+    });
+
+    this.addControl('heading_title_section_two_style', {
+      type: CONTROLLER_HEADING,
+      label: 'Title',
+    });
+
+    this.addControl('typographic_title_section_two_style', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default:{
+          lineHeight: 1.4,
+          spacing: 0,
+          size: 16,
+          weight: "normal",
+          family: '"roboto"',
+          decoration: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-tabs-switcher-label-section-two': [
+            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
+    this.addControl("color_title_section_two_style", {
+      type: CONTROLLER_COLOR,
+      label: "Switch color before",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-tabs-switcher-label-section-two": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('heading_content_section_two_style', {
+      type: CONTROLLER_HEADING,
+      label: 'Content',
+    });
+
+    this.addControl('typographic_content_section_two_style', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default:{
+          lineHeight: 1.4,
+          spacing: 0,
+          size: 16,
+          weight: "normal",
+          family: '"roboto"',
+          decoration: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-tabs-switcher-section-two-text p': [
+            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
+    this.addControl("color_content_section_two_style", {
+      type: CONTROLLER_COLOR,
+      label: "Switch color before",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-tabs-switcher-section-two-text": "color: {{COLOR}};"
+      }
     });
 
     this.endControlSection();

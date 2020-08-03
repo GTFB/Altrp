@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\ApiRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use App\Reports;
 
@@ -19,7 +20,7 @@ class ReportsController extends ApiController
         // Получаем все отчеты
         $reports = Reports::all();
         $result = $reports->map(function($item) {
-            $item->url = url("/admin/editor-reports?id=" . $item->id);
+            $item->url = "/admin/editor-reports?id=" . $item->id;
             $item->author = $item->user->name;
             return $item;
         });
@@ -31,15 +32,16 @@ class ReportsController extends ApiController
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(ApiRequest $request)
     {
         $report = new Reports( $request->toArray() );
         $report->user_id  = auth()->user()->id;
-        
+
         if( $report->save() ){
-            return response()->json($report, 200, [], JSON_UNESCAPED_UNICODE);
+          $report->url  = '/admin/editor-reports?id=' . $report->id;
+          return response()->json($report, 200, [], JSON_UNESCAPED_UNICODE);
         }
         return \response()->json( ['report' => $report], 500);
     }
@@ -50,20 +52,11 @@ class ReportsController extends ApiController
      * @param  \App\Reports  $reports
      * @return \Illuminate\Http\Response
      */
-    public function show(Reports $reports)
+    public function show(ApiRequest $request, Reports $reports, $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Reports  $reports
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Reports $reports)
-    {
-        //
+        //$request->expectsJson();
+        //$report = Reports.find($id);
+        return response()->json(['id' => $id], 200, [],JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -73,7 +66,7 @@ class ReportsController extends ApiController
      * @param  \App\Reports  $reports
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Reports $reports)
+    public function update(ApiRequest $request, Reports $reports)
     {
         //
     }

@@ -177,4 +177,29 @@ class Roles extends ApiController
         
         return response()->json($result, 200, [],JSON_UNESCAPED_UNICODE);
     }
+
+  /**
+   * Получение опций select
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function get_options( Request $request ){
+
+    $_roles = Role::all();
+    if( $request->get( 's' ) ){
+      $searchRequest = $request->get( 's' );
+
+      $_roles= Role::where('display_name', 'like', "%{$searchRequest}%")
+        ->orWhere('name', 'like', "%{$searchRequest}%")
+        ->orWhere('id','like', "%{$searchRequest}%")->get();
+    }
+    $roles = [];
+    foreach ( $_roles as $role ) {
+      $roles[] = [
+        'value' => $role->id,
+        'label' => $role->display_name,
+      ];
+    }
+    return response()->json( $roles, 200, [],JSON_UNESCAPED_UNICODE );
+  }
 }

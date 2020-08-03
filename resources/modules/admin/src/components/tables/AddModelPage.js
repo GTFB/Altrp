@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Redirect, withRouter} from "react-router";
+import {Redirect, withRouter} from 'react-router-dom';
 import AdminTable from "../AdminTable";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import {Link} from "react-router-dom";

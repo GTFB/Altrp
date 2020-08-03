@@ -17,6 +17,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Template extends Model
 {
   use SoftDeletes;
+
+  protected $casts = [
+    'template_type' => 'string',
+  ];
+
   protected $fillable =
     [ 'name',
       'title',
@@ -37,4 +42,21 @@ class Template extends Model
     return Area::find( $this->area );
   }
 
+  /**
+   * Тип шаблона (область/карточка)
+   * @return string
+   */
+  public function getTemplateTypeAttribute(){
+    if( ! $this->area() instanceof Area ){
+      return '';
+    }
+    return $this->area()->name;
+  }
+
+  /**
+   * Связь с настройками шаблона
+   */
+  public function template_settings(){
+    return $this->belongsTo( TemplateSetting::class, 'template_id', 'id' );
+  }
 }

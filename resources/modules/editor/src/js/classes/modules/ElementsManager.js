@@ -18,6 +18,14 @@ import TableWidget from "../../components/widgets/TableWidget";
 import NavWidget from "../../components/widgets/NavWidget";
 import DividerWidget from "../../components/widgets/DividerWidget";
 import TabsWidget from "../../components/widgets/TabsWidget";
+import PosterWidget from "../../components/widgets/PosterWidget";
+import ListWidget from "../../components/widgets/ListWidget";
+import AccordionWidget from "../../components/widgets/AccordionWidget";
+import CarouselWidget from "../../components/widgets/CarouselWidget";
+import Carousel from "../elements/Carousel";
+import Accordion from "../elements/Accordion";
+import List from "../elements/List";
+import Poster from "../elements/Poster";
 import Tabs from "../elements/Tabs";
 import Divider from "../elements/Divider";
 import Nav from "../elements/Nav";
@@ -43,6 +51,10 @@ export default class ElementsManger {
     this.elements[Nav.getName()] = Nav;
     this.elements[Divider.getName()] = Divider;
     this.elements[Tabs.getName()] = Tabs;
+    this.elements[Poster.getName()] = Poster;
+    this.elements[List.getName()] = List;
+    this.elements[Accordion.getName()] = Accordion;
+    this.elements[Carousel.getName()] = Carousel;
     //список компонентов
     this.components = {};
     this.components[RootElement.getName()] = RootComponent;
@@ -57,6 +69,10 @@ export default class ElementsManger {
     this.components[Nav.getName()] = NavWidget;
     this.components[Divider.getName()] = DividerWidget;
     this.components[Tabs.getName()] = TabsWidget;
+    this.components[Poster.getName()] = PosterWidget;
+    this.components[List.getName()] = ListWidget;
+    this.components[Accordion.getName()] = AccordionWidget;
+    this.components[Carousel.getName()] = CarouselWidget;
   }
 
   getElements(){
