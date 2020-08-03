@@ -76,7 +76,7 @@ class FieldCalculationLogic extends Component {
   }
 
   render() {
-    const { item, fieldsOptions, changeHandler, deleteItemHandler } = this.props;
+    const { item, index, fieldsOptions, changeHandler, deleteItemHandler } = this.props;
     const { rightType, right, is1stString, is2ndString } = this.state;
     return <>
       <div className="flex-container">
@@ -87,8 +87,8 @@ class FieldCalculationLogic extends Component {
       </div>
 
       <div className="form-group">
-        <label htmlFor="left">Field Name</label>
-        <select className="form-control" id="left" name="left"
+        <label htmlFor={"left" + index}>Field Name</label>
+        <select className="form-control" id={"left" + index} name="left"
           value={item.left}
           onChange={({ target: { value, name } }) => changeHandler({ value, name })}
         >
@@ -137,13 +137,13 @@ class FieldCalculationLogic extends Component {
           <p className="form-group__inline-wrapper__divider">or</p>
 
           <div className="form-group form-group_width47">
-            <label htmlFor="right">Field Name
+            <label htmlFor={"right" + index}>Field Name
               <input type="radio" className="disabling-radio"
                 checked={rightType === "object"}
                 onChange={() => this.rightTypeHandler("object")}
               />
             </label>
-            <select className="form-control" id="right" name="fieldId"
+            <select className="form-control" id={"right" + index} name="fieldId"
               value={right.fieldId}
               disabled={rightType !== "object"}
               onChange={this.rightChangeHandler}
@@ -174,13 +174,13 @@ class FieldCalculationLogic extends Component {
           <p className="form-group__inline-wrapper__divider">or</p>
 
           <div className="form-group form-group_width47">
-            <label htmlFor="right">Field Name
+            <label htmlFor={"right" + index}>Field Name
               <input type="radio" className="disabling-radio"
                 checked={!is1stString}
                 onChange={() => this.setState({ is1stString: false }, this.setRight)}
               />
             </label>
-            <select className="form-control" id="right" name="fieldId_1"
+            <select className="form-control" id={"right" + index} name="fieldId_1"
               value={right.fieldId_1}
               disabled={is1stString}
               onChange={this.rightChangeHandler}
@@ -212,13 +212,13 @@ class FieldCalculationLogic extends Component {
           <p className="form-group__inline-wrapper__divider">or</p>
 
           <div className="form-group form-group_width47">
-            <label htmlFor="right">Field Name
+            <label htmlFor={"right" + index}>Field Name
               <input type="radio" className="disabling-radio"
                 checked={!is2ndString}
                 onChange={() => this.setState({ is2ndString: false }, this.setRight)}
               />
             </label>
-            <select className="form-control" id="right" name="fieldId_2"
+            <select className="form-control" id={"right" + index} name="fieldId_2"
               value={right.fieldId_2}
               disabled={is2ndString}
               onChange={this.rightChangeHandler}
@@ -234,8 +234,8 @@ class FieldCalculationLogic extends Component {
       <p>Then = </p>
 
       <div className="form-group">
-        <label htmlFor="result">Value</label>
-        <input type="text" className="form-control" id="result" name="result"
+        <label htmlFor={"result" + index}>Value</label>
+        <input type="text" className="form-control" id={"result" + index} name="result"
           value={item.result}
           onChange={({ target: { value, name } }) => changeHandler({ value, name })}
         />

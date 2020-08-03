@@ -150,7 +150,7 @@ class AddFieldForm extends Component {
         <>
           <div className="form-group col-6 form-check-inline">
             <input type="checkbox" id="always"
-              className="form-check-input form-check-input"
+              className="form-check-input"
               checked={this.state.isAlways}
               onChange={e => this.setState({ isAlways: e.target.checked })}
             />
@@ -170,6 +170,7 @@ class AddFieldForm extends Component {
             </> :
             <>
               {this.state.value.calculation_logic.map((item, index) => <>
+                {index !== 0 && <hr />}
                 <FieldCalculationLogic
                   item={item}
                   index={index}
