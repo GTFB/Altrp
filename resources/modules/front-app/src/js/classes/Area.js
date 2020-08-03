@@ -9,8 +9,8 @@ class Area {
     area.settings = areaData.settings;
     area.id = areaData.id;
     area.template = new Template();
-    area.template.data = JSON.parse(areaData.template.data);
-    area.template.id = areaData.template.id;
+    area.template.data = areaData.template ? JSON.parse(areaData.template.data) : null;
+    area.template.id = areaData.template ? areaData.template.id : null;
     return area;
   }
 }

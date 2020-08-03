@@ -119,7 +119,7 @@ class InputWidget extends Component {
         {this.state.settings.content_label_position_type == "left" ? label : ""}
             {/* .altrp-field-label-container */}
         {
-          required 
+          required
         }
       {input}
       {/* <InputMask mask="99/99/9999" onChange={this.onChange} value={this.state.value} /> */}

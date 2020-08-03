@@ -33,7 +33,7 @@ Route::group([
   'middleware' => [ 'installation.checker'],
 ], function () {
   Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-  Route::post('login', 'Auth\LoginController@login');
+  Route::post('login', 'Auth\LoginController@login')->name( 'post.login' );
   Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 });
 
@@ -61,7 +61,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::put('/global-elements/{element}', "Constructor\GlobalElements@update");
     Route::delete('/global-elements/{element}', "Constructor\GlobalElements@trashed");
     Route::get( 'templates/options', 'TemplateController@options' );
-    Route::get( '/template/{template_id}/reviews', 'TemplateController@reviews' );
+    Route::get( '/templates/{template_id}/reviews', 'TemplateController@reviews' );
+    Route::delete('/templates/{template_id}/reviews', 'TemplateController@deleteReviews');
+    Route::delete('/templates/{template_id}/reviews/{review_id}', 'TemplateController@deleteReview');
+    Route::get('/templates/{template_id}/reviews/{review_id}', 'TemplateController@getReview')->name( 'admin.get-review' );
+    Route::delete('/reviews', 'TemplateController@deleteAllReviews')->name( 'admin.delete-all-reviews' );
+
     Route::resource( 'pages', 'Admin\PagesController' );
     Route::get( '/pages_options', 'Admin\PagesController@pages_options' )->name( 'admin.pages_options.all' );
     Route::get( '/pages_options/{page_id}', 'Admin\PagesController@show_pages_options' )->name( 'admin.pages_options.show' );
@@ -72,6 +77,17 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::delete('/permissions/{permission}', "Users\Permissions@delete");
 
     Route::get('/roles', "Users\Roles@getRoles");
+    /**
+     * URL: /admin/ajax/role_options?s=search_string
+     * response:
+     * [
+     *  {
+     *    value - role id
+     *    label - role display_name
+     *  }
+     * ]
+     */
+    Route::get('/role_options', "Users\Roles@get_options")->name( 'admin.role_options' );
     Route::get('/roles/{role}', "Users\Roles@getRole");
     Route::post('/roles', "Users\Roles@insert");
     Route::put('/roles/{role}', "Users\Roles@update");
@@ -98,9 +114,23 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get('/users/{user}/usermeta', "Users\UsersMeta@getUserMeta");
     Route::post('/users/{user}/usermeta', "Users\UsersMeta@saveUserMeta");
     Route::delete('/users/{user}/roles', "Users\Users@detachRole");
-
+    /**
+     * Areas Routes
+     */
     Route::resource( 'areas', 'Admin\AreasController' );
+    /**
+     * Templates Routes
+     */
     Route::resource( 'templates', 'TemplateController' );
+    /**
+     * templates settings
+     */
+    Route::get( 'templates/{template_id}/settings/{setting_name}', 'TemplateController@settingGet' )
+      ->name( 'get-template-setting' );
+    Route::put( 'templates/{template_id}/settings/{setting_name}', 'TemplateController@settingSet' )
+      ->name( 'set-template-setting' );
+    //Route::get('reports/{id}', "TemplateController@show");
+    //Route::put('reports/{id}', "TemplateController@update");
     Route::resource( 'reports', 'ReportsController' );
     Route::resource( 'media', 'Admin\MediaController' );
     Route::resource( 'settings', 'Admin\SettingsController' );
@@ -152,6 +182,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::put( '/data_sources/{field_id}', 'Admin\ModelsController@updateDataSource');
     Route::get( '/data_sources/{field_id}', 'Admin\ModelsController@showDataSource');
     Route::delete( '/data_sources/{field_id}', 'Admin\ModelsController@destroyDataSource');
+
 
 
     Route::get('/tables', "Admin\TableController@getTables");
@@ -232,8 +263,20 @@ foreach ( $frontend_routes as $frontend_route ) {
 
 Route::group( ['prefix' => 'ajax'], function(){
 
+  /**
+   * Отдает данные страницы как модели для динамического контента
+   */
   Route::get( 'models/page/{page_id}', 'Frontend\PageController@show' )->name( 'front.page.show' );
+
+  /**
+   * Отдает данные роутов для фронтенда
+   */
   Route::resource( 'routes', 'Frontend\RouteController' );
+
+  /**
+   * Отдает данные страниц внутри роутов ( с areas и шаблонами)
+   */
+  Route::get( 'pages/{page_id}', 'Frontend\PageController@pageForRoutes' )->name( 'front.page-for-routes' );
   /**
    * todo: реализовать в контроллерах моделей
    */

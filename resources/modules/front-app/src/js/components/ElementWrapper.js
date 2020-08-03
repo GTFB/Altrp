@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import { withRouter } from "react-router";
+import { withRouter } from "react-router-dom";
 
 class ElementWrapper extends Component {
   constructor(props){
@@ -8,6 +8,7 @@ class ElementWrapper extends Component {
 
   render() {
     let classes = `altrp-element altrp-element${this.props.element.getId()} altrp-element_${this.props.element.getType()}`;
+    classes += this.props.element.getPrefixClasses() + " ";
     if(this.props.element.getType() === 'widget'){
       classes += ` altrp-widget_${this.props.element.getName()}`;
     }

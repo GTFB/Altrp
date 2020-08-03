@@ -303,6 +303,8 @@ class InstallationController extends Controller
 
       $this->writeEnv( $request );
 
+      $this->writeFiles( $request );
+
       $this->migrate( $request );
 
       return redirect( 'admin' );
@@ -414,5 +416,27 @@ class InstallationController extends Controller
     sleep(2);
     Artisan::call('view:clear');
     sleep(1);
+  }
+
+  /**
+   * Создаем необходимые файлы
+   * @param $request
+   */
+  private function writeFiles( $request )
+  {
+    /**
+     * Файл AltrpRoutes.php для пользовательских роутов
+     */
+
+    $filename = base_path( 'routes/AltrpRoutes.php' );
+    $content = '<?php
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+/**
+ * File for user routes
+ */
+';
+    File::put( $filename, $content );
   }
 }

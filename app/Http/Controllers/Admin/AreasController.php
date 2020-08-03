@@ -31,9 +31,10 @@ class AreasController extends Controller
   /**
    * Show the form for creating a new resource.
    *
+   * @param Request $request
    * @return \Illuminate\Http\Response
    */
-  public function create()
+  public function create( Request $request )
   {
     //
   }
@@ -46,6 +47,15 @@ class AreasController extends Controller
    */
   public function store( Request $request )
   {
+
+    $area = new Area(
+      $request->toArray()
+    );
+
+    if( ! $area->save() ){
+      return response()->json( ['message' => 'Area not Saved'], 500, [], JSON_UNESCAPED_UNICODE );
+    }
+    return response()->json( $area->toArray(), 200, [], JSON_UNESCAPED_UNICODE );
   }
 
   /**
@@ -72,7 +82,7 @@ class AreasController extends Controller
    * @param Request $request
    * @return \Illuminate\Http\Response
    */
-  public function edit( $id, $request )
+  public function edit( $id, Request $request )
   {
 
   }
@@ -87,17 +97,37 @@ class AreasController extends Controller
   public function update( Request $request, $id )
   {
 
+
+    $area = Area::find( $id );
+
+    if( ! $area ){
+      return response()->json( ['message' => 'Area not Found'], 404, [], JSON_UNESCAPED_UNICODE );
+    }
+    $area->fill( $request->toArray() );
+
+    if( ! $area->save() ){
+      return response()->json( ['message' => 'Area not Saved'], 500, [], JSON_UNESCAPED_UNICODE );
+    }
+    return response()->json( $area->toArray(), 200, [], JSON_UNESCAPED_UNICODE );
   }
 
   /**
    * Remove the specified resource from storage.
    *
-   * @param Media $media
+   * @param Area $area
    * @param string $id
-   * @return \Illuminate\Http\Response
-   * @throws \Exception
+   * @return \Illuminate\Http\JsonResponse
    */
-  public function destroy( Media $media, $id )
+  public function destroy( Area $area, $id )
   {
+    $area = $area->find( $id );
+    if( ! $area ){
+      return response()->json( ['message' => 'Area not Found'], 404, [], JSON_UNESCAPED_UNICODE );
+    }
+
+    if( ! $area->delete() ){
+      return response()->json( ['message' => 'Area not Deleted'], 500, [], JSON_UNESCAPED_UNICODE );
+    }
+    return response()->json( ['success' => true], 200, [], JSON_UNESCAPED_UNICODE );
   }
 }

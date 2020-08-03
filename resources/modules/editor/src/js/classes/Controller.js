@@ -1,8 +1,9 @@
-import store, {getCurrentElement} from '../store/store';
-import {CONSTANTS} from "../helpers";
+import store, { getCurrentElement,  } from '../store/store';
+import {getElementSettingsSuffix} from "../helpers";
+import CONSTANTS from "../consts";
 import CSSRule from "../classes/CSSRule";
-import {changeTemplateStatus} from "../store/template-status/actions";
-import {controllerValue} from "../store/controller-value/actions";
+import { changeTemplateStatus } from "../store/template-status/actions";
+import { controllerValue } from "../store/controller-value/actions";
 
 /**
  * Класс-контроллер
@@ -26,6 +27,10 @@ class Controller {
         }
       }
     }
+
+    if(this.data.prefixClass) {
+      currentElement.setCssClass(this.getSettingName(), this.data.prefixClass + this.data.default);
+    }
     if (this.rules.length) {
       currentElement.addStyles(this.getSettingName(), this.rules);
     }
@@ -40,7 +45,7 @@ class Controller {
      * @member {BaseElement} currentElement
      * */
     let currentElement = getCurrentElement();
-    if (!this.data.repeater) {
+    if (! this.data.repeater) {
       currentElement.setSettingValue(this.getSettingName(), value);
       this.rules.forEach(rule => {
         rule.insertValue(value);
@@ -48,7 +53,13 @@ class Controller {
       if (this.rules.length) {
 
         value ? currentElement.addStyles(this.getSettingName(), this.rules)
-            : currentElement.removeStyle(this.getSettingName());
+          : currentElement.removeStyle(this.getSettingName());
+      }
+      /**
+       * Вызываем currentElement setCssClass в случае если есть this.data.prefixClass
+       */
+      if(this.data.prefixClass) {
+        currentElement.setCssClass(this.getSettingName(), this.data.prefixClass + value);
       }
       store.dispatch(controllerValue(value, this.getSettingName()));
 
@@ -59,11 +70,11 @@ class Controller {
        * @public
        */
       this.data.repeater.changeValue(
-          this.data.itemIndex,
-          this.data.controlId,
-          value);
+        this.data.itemIndex,
+        this.data.controlId,
+        value);
     }
-    if(this.getSettingName() === 'element_css_editor'){
+    if (this.getSettingName() === 'element_css_editor') {
       currentElement.setStringStyles(value);
     }
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
@@ -83,9 +94,9 @@ class Controller {
      */
     let conditionPairs = _.toPairs(this.data.conditions);
     let show = true;
-    conditionPairs.forEach(condition=>{
+    conditionPairs.forEach(condition => {
       let [controlId, value] = condition;
-      if(getCurrentElement().getSettings(controlId) !== value){
+      if (getCurrentElement().getSettings(controlId) !== value) {
         show = false;
       }
     });
@@ -93,10 +104,17 @@ class Controller {
   }
 
   /**
+   * Получеаем название свойства добавив суффикс
    * @return {string}
    * */
   getSettingName() {
-    return this.data.controlId;
+    /**
+     * Если css редактор, то добавляем суффикс
+     */
+    if(this.data.controlId === 'element_css_editor'){
+      return 'element_css_editor';
+    }
+    return this.data.controlId + getElementSettingsSuffix(this);
   }
 }
 

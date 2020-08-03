@@ -44,6 +44,7 @@ module.exports = {
       },
       {
         test: /\.svg$/,
+        exclude: /slick.svg$/,
         use: [
           {
             loader: "babel-loader",
@@ -63,6 +64,12 @@ module.exports = {
           name: "[path][name].[ext]",
         },
       },
+      {
+        test: /(\.(woff|woff2|eot|ttf|otf)|slick.svg)$/,
+        use: [
+           'file-loader',
+         ],
+       },
     ],
   },
   resolve: {

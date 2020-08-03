@@ -1,5 +1,6 @@
 import RootElement from "../elements/RootElement";
-import {CONSTANTS, getEditor, getTemplateId} from "../../helpers";
+import { getEditor, getTemplateId} from "../../helpers";
+import CONSTANTS from "../../consts";
 import BaseModule from "./BaseModule";
 import store from '../../store/store';
 import {setCurrentElement, SET_CURRENT_ELEMENT} from '../../store/current-element/actions'

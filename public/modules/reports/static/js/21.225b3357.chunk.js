@@ -1,0 +1,2 @@
+(this["webpackJsonprrbe-editor"]=this["webpackJsonprrbe-editor"]||[]).push([[21],{195:function(e,r,n){"use strict";n.r(r),n.d(r,"sourceTypes",(function(){return s})),n.d(r,"sourceTypesList",(function(){return t}));var s={API:"api",CUSTOM:"custom",RENDER:"rendering"},t=[{name:"API",value:s.API},{name:"\u0412 \u0440\u0443\u0447\u043d\u0443\u044e",value:s.CUSTOM},{name:"\u0414\u043b\u044f \u0440\u0435\u043d\u0434\u0435\u0440\u0438\u043d\u0433\u0430",value:s.RENDER}]}}]);
+//# sourceMappingURL=21.225b3357.chunk.js.map

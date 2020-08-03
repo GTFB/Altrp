@@ -1,5 +1,5 @@
 import { CHANGE_TEMPLATE_STATUS } from "./actions";
-import { CONSTANTS } from "../../helpers";
+import  CONSTANTS  from "../../consts";
 
 const defaultState = {
   status: CONSTANTS.TEMPLATE_UPDATED,
