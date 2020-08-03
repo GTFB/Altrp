@@ -21,6 +21,7 @@ import WysiwygController from "../../components/controllers/WysisygController";
 import RepetaerController from "../../components/controllers/RepeaterController";
 import QueryController from "../../components/controllers/QueryController";
 import FiltersController from "../../components/controllers/FiltersController";
+import ColumnWidthController from "../../components/controllers/ColumnWidthController";
 
 export const TAB_CONTENT = 'content';
 export const TAB_STYLE = 'style';
@@ -47,6 +48,7 @@ export const CONTROLLER_TYPOGRAPHIC = 'typographic';
 export const CONTROLLER_REPEATER = 'repeater';
 export const CONTROLLER_QUERY = 'query';
 export const CONTROLLER_FILTERS = 'filters';
+export const CONTROLLER_COLWIDTH = 'colwidth';
 
 
 class ControllersManager {
@@ -74,6 +76,7 @@ class ControllersManager {
     this.conttrollers[CONTROLLER_REPEATER] = RepetaerController;
     this.conttrollers[CONTROLLER_QUERY] = QueryController;
     this.conttrollers[CONTROLLER_FILTERS] = FiltersController;
+    this.conttrollers[CONTROLLER_COLWIDTH] = ColumnWidthController;
     this.elementsControls = null;
     this._cache = {
       controls: {},

@@ -1,8 +1,9 @@
+
 import { TAB_CONTENT, TAB_STYLE } from "../modules/ControllersManager";
 import { getTemplateDataStorage, getEditor, getFactory } from "../../helpers";
 import CONSTANTS from "../../consts";
 import { changeTemplateStatus } from "../../store/template-status/actions";
-import store, { getElementState } from "../../store/store";
+import store, {getCurrentScreen, getElementState} from "../../store/store";
 import ControlStack from "./ControlStack";
 import { isEditor } from "../../../../../front-app/src/js/helpers";
 
@@ -15,6 +16,7 @@ class BaseElement extends ControlStack {
     super();
     this.settings = {};
     this.controls = {};
+    this.cssClassStorage = {};
     this.controlsIds = [];
     this.controllersRegistered = false;
     this.children = [];
@@ -43,7 +45,17 @@ class BaseElement extends ControlStack {
     return this.id;
   }
 
-  getName() {
+  /**
+   * Сохранить prefixClass и value, которое будет браться из variants.
+   * @param settingName
+   * @param value
+   */
+
+ setCssClass(settingName, value) {
+    this.cssClassStorage[settingName] = value;
+ }
+
+  getName(){
     return this.constructor.getName();
   }
 
@@ -71,6 +83,7 @@ class BaseElement extends ControlStack {
     if (this.dynamicContentSettings && this.dynamicContentSettings.length) {
       data.dynamicContentSettings = [...this.dynamicContentSettings];
     }
+    data.cssClassStorage = {...this.cssClassStorage};
     let children = this.getChildrenForImport();
     if (children) {
       data.children = children;
@@ -400,14 +413,15 @@ class BaseElement extends ControlStack {
   /**
    * @param {string} settingName
    * @param {CSSRule[]} rules
-   * @param {string} breakpoint
    * */
-  addStyles(settingName, rules, breakpoint = CONSTANTS.DEFAULT_BREAKPOINT) {
+  addStyles(settingName, rules) {
+    let breakpoint = CONSTANTS.DEFAULT_BREAKPOINT;
+    if(getCurrentScreen().name){
+      breakpoint = getCurrentScreen().name;
+    }
     this.settings.styles = this.settings.styles || {};
     this.settings.styles[breakpoint] = this.settings.styles[breakpoint] || {};
 
-    // this.settings.styles[breakpoint][settingName] = this.settings.styles[breakpoint][settingName] || {};
-    //todo: проверить работает ли такое поведение (при обновлении стилей стили записанные на текущем свойстве перед изменением удаляются)
     this.settings.styles[breakpoint][settingName] = {};
     rules.forEach(rule => {
       let finalSelector = rule.selector;

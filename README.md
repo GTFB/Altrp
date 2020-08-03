@@ -6,6 +6,7 @@
 
 ### 0.7.0
 + Add Hover, Active, Disabled States Styling
++ Add Breakpoints Settings for Templates
 + Optimize Front App
 
 

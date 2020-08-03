@@ -11,6 +11,7 @@ import {
   TAB_CONTENT,
   CONTROLLER_SHADOW,
   CONTROLLER_LINK,
+  CONTROLLER_COLWIDTH,
   TAB_STYLE
 } from "../modules/ControllersManager";
 
@@ -292,6 +293,23 @@ class Section extends BaseElement{
         noFollow: false
       },
       label: 'Link',
+    });
+
+    this.endControlSection();
+
+    /**
+     * Разработка структуры ширины
+     */
+
+    this.startControlSection('Structure', {
+      tab: TAB_CONTENT,
+      label: 'Structure',
+    });
+
+    this.addControl('layout_colwidth', {
+      type: CONTROLLER_COLWIDTH,
+      label: 'Column width',
+      prefixClass: 'column-structure_',
     });
 
     this.endControlSection();

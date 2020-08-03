@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import DynamicIcon from "../../../svgs/dynamic.svg";
-import DesktopIcon from "../../../svgs/desktopNew.svg";
 import BindIcon from "../../../svgs/bind.svg";
 import controllerDecorate from "../../decorators/controller";
+import ResponsiveDdMenu from "../ResponsiveDdMenu";
 
 class DimensionsController extends Component {
   constructor(props) {
@@ -55,7 +55,6 @@ class DimensionsController extends Component {
       }
 
       if (active === "top") {
-        let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
         this._changeValue({
           ...value,
           top: e.target.value || 0,
@@ -63,7 +62,6 @@ class DimensionsController extends Component {
       }
 
       if (active === "right") {
-        let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
         this._changeValue({
           ...value,
           right: e.target.value || 0,
@@ -71,7 +69,6 @@ class DimensionsController extends Component {
       }
 
       if (active === "bottom") {
-        let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
         this._changeValue({
           ...value,
           bottom: e.target.value || 0,
@@ -79,7 +76,6 @@ class DimensionsController extends Component {
       }
 
       if (active === "left") {
-        let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
         this._changeValue({
           ...value,
           left: e.target.value || 0,
@@ -111,15 +107,14 @@ class DimensionsController extends Component {
     if (this.state.show === false) {
       return '';
     }
-    // console.log(this.getSettings(this.props.controlId));
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
-    console.log(value);
 
     return <div className="controller-container controller-container_dimensions">
       <div className="control-dimensions-header">
-        <div className="controller-dimensions__label">{this.props.label}</div>
-        <DesktopIcon className="controller-container__label-svg" width="12" />
-
+        <div className="controller-dimensions__label">
+          {this.props.label}
+        </div>
+        <ResponsiveDdMenu />
         <div className="control-slider-type">
           {
             this.state.units.map(unit => {
@@ -142,6 +137,7 @@ class DimensionsController extends Component {
           <input className="control-field control-field-dimensions control-field-top-l"
             onChange={this.changeValue}
             data-active="top"
+
             value={value.top || 0}
             type="number" />
           <label className="control-field-top-l-label control-field-dimensions-label">TOP</label>
@@ -150,6 +146,7 @@ class DimensionsController extends Component {
           <input className="control-field control-field-dimensions control-field-top-r"
             onChange={this.changeValue}
             data-active="right"
+
             value={value.right || 0}
             type="number" />
           <label className="control-field-top-r-label control-field-dimensions-label">RIGHT</label>
@@ -184,6 +181,7 @@ function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
     currentState: state.currentState,
+    currentScreen: state.currentScreen
   };
 }
 

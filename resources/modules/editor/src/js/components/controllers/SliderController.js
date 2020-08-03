@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import DesktopIcon from '../../../svgs/desktopNew.svg'
 import controllerDecorate from "../../decorators/controller";
+import ResponsiveDdMenu from "../ResponsiveDdMenu";
 
 class SliderController extends Component {
   constructor(props) {
@@ -11,6 +11,7 @@ class SliderController extends Component {
     this.sliderChange = this.sliderChange.bind(this);
     this.changeUnit = this.changeUnit.bind(this);
     let value = this.getSettings(this.props.controlId);
+
     if (value === null && this.props.default) {
       value = this.props.default;
     }
@@ -66,8 +67,7 @@ class SliderController extends Component {
         <div className="control-slider-label">
           {this.props.label}
         </div>
-        <DesktopIcon className="controller-container__label-svg" width="12" />
-
+        <ResponsiveDdMenu />
         <div className="control-slider-type">
           {
             this.state.units.map(unit => {
@@ -96,6 +96,7 @@ class SliderController extends Component {
           <input className="control-slider-input" type="number"
             min={this.state.min}
             max={this.state.max}
+
             value={value.size || 0} onChange={this.inputUpdate} onInput={this.sliderChange} />
         </div>
       </div>
@@ -107,6 +108,7 @@ function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
     currentState: state.currentState,
+    currentScreen: state.currentScreen
   };
 }
 export default connect(mapStateToProps)(SliderController);

@@ -1,4 +1,5 @@
 import CONSTANTS from "../../../../editor/src/js/consts";
+import {getMediaQueryByName} from "../helpers";
 
 class FrontElement {
 
@@ -6,6 +7,7 @@ class FrontElement {
     this.name = data.name;
     this.settings = data.settings;
     this.children = data.children;
+    this.cssClassStorage = data.cssClassStorage;
     this.type = data.type;
     this.id = data.id;
     if(window.frontElementsManager){
@@ -215,6 +217,18 @@ class FrontElement {
     if(typeof this.settings.styles !== 'object'){
       return styles
     }
+    /**
+     * Чтобы сохранить последовательность медиа-запросов в CSS,
+     * добавлять будем в первоначальной последовательности.
+     * Для этого сначала создадим копию массива со всеми настройками экранов
+     * @type {{}[]}
+     */
+    let screens = _.cloneDeep(CONSTANTS.SCREENS);
+    /**
+     * Удалим дефолтный - он не нужен
+     * @type {{}[]}
+     */
+    screens.splice(0,1);
     for(let breakpoint in this.settings.styles){
       let rules = {};
       if(this.settings.styles.hasOwnProperty(breakpoint)){
@@ -229,15 +243,53 @@ class FrontElement {
             }
           }
         }
-      }
-      if(breakpoint === CONSTANTS.DEFAULT_BREAKPOINT){
-        for(let selector in rules){
-          if(rules.hasOwnProperty(selector)){
-            styles += `${selector} {` + rules[selector].join('') + '}';
+        /**
+         * Оборачиваем в медиа запрос при необходимости
+         *
+         */
+        if(breakpoint === CONSTANTS.DEFAULT_BREAKPOINT){
+          for(let selector in rules){
+            if(rules.hasOwnProperty(selector)){
+              styles += `${selector} {` + rules[selector].join('') + '}';
+            }
           }
+        } else {
+          // styles += `${getMediaQueryByName(breakpoint)}{`;
+          // for(let selector in rules){
+          //   if(rules.hasOwnProperty(selector)){
+          //     styles += `${selector} {` + rules[selector].join('') + '}';
+          //   }
+          // }
+          // styles += `}`;
+          screens.forEach(screen=>{
+            /**
+             * Для каждого breakpoint сохраним
+             * в соответствующей настройке экрана css правила
+             */
+            if(screen.name === breakpoint){
+              screen.rules = rules;
+            }
+          });
         }
       }
     }
+
+    screens.forEach(screen=>{
+
+      /**
+       * Если rules записаны, то добавим в styles в нужном порядке
+       */
+      if(!_.isObject(screen.rules)){
+        return;
+      }
+      styles += `${screen.mediaQuery}{`;
+      for(let selector in screen.rules){
+        if(screen.rules.hasOwnProperty(selector)){
+          styles += `${selector} {` + screen.rules[selector].join('') + '}';
+        }
+      }
+      styles += `}`;
+    });
     styles += this.settings.stringStyles || '';
 
     return styles;
@@ -393,6 +445,20 @@ class FrontElement {
     if(this.modelsStorage && this.modelsStorage[modelName]){
       callback(this.modelsStorage[modelName]);
     }
+  }
+  /**
+   * Парсит объект и извлекает из него строку со всеми классами у которых есть свойство prefixClass
+   * @return {string}
+   */
+
+  getPrefixClasses() {
+    let changeCss = _.toPairs(this.cssClassStorage);
+    let classStorage = ' ';
+    changeCss.forEach(element => {
+      classStorage += `${element[1]} `;
+      console.log(element[1]);
+    });
+    return classStorage;
   }
 }
 

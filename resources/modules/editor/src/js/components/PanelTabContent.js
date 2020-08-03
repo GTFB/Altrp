@@ -5,8 +5,6 @@ import DynamicContent from "./DynamicContent/DynamicContent";
 
 class PanelTabContent extends Component {
 
-
-
   render() {
     let sections = this.props.sections || [];
     return <div className="settings-controllers">
