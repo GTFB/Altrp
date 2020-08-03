@@ -109,7 +109,7 @@ class Model extends EloquentModel
              */
             $models[] = [
                 'label' => $model->name,
-                'value' => $model->altrp_table->name,
+                'value' => $model->id,
             ];
         }
         return $models;

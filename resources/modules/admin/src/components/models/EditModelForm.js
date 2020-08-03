@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {Link, Redirect} from "react-router-dom";
 import { titleToName }from "../../js/helpers";
 import Resource from "../../../../editor/src/js/classes/Resource";
+import AltrpSelect from "../altrp/AltrpSelect";
 
 class EditModelForm extends Component {
   constructor(props) {
@@ -74,29 +75,43 @@ class EditModelForm extends Component {
     if(this.state.redirect){
       return <Redirect to={this.state.redirect} push={true}/>
     }
-    return <form className="admin-form" onSubmit={this.submitHandler}>
-      <div className="form-group">
+    return <form className="admin-form row" onSubmit={this.submitHandler}>
+      <div className="form-group col-12">
         <label htmlFor="page-title">Model Title</label>
         <input type="text" id="page-title" required
           value={this.state.value.title || model.title || ''}
           onChange={this.titleChangeHandler}
           className="form-control" />
       </div>
-      <div className="form-group form-group_width30">
+      <div className="form-group col-4">
         <label htmlFor="page-name">Model Name</label>
         <input type="text" id="page-name" required
           value={this.state.value.name || model.name || ''}
           onChange={e => { this.changeValue(e.target.value, 'name') }}
           className="form-control" />
       </div>
-      <div className="form-group form-group_width65">
+      <div className="form-group col-8">
         <label htmlFor="page-description">Model Description</label>
         <input type="text" id="page-description"
           value={this.state.value.description || model.description || ''}
           onChange={e => { this.changeValue(e.target.value, 'description') }}
           className="form-control" />
       </div>
-      <div className="row">
+      <div className="form-group col-12 ">
+        <label htmlFor="model-table_id" className="label_checkbox">Table</label>
+        <AltrpSelect
+            id="model-table_id"
+            defaultOptions={[
+              {
+                value: '',
+                label: ' ',
+              }
+            ]}
+            value={this.state.value.table_id || ''}
+            onChange={value => {this.changeValue(value, 'table_id')}}
+            optionsRoute="/admin/ajax/tables/options"/>
+      </div>
+      <div className="row col-12">
         <div className="form-group col-6 form-check-inline">
           <input type="checkbox" id="page-soft_delete"
             value={this.state.value.soft_delete || model.soft_delete || ''}
@@ -111,6 +126,7 @@ class EditModelForm extends Component {
             className="form-check-input form-check-input_inline" />
           <label htmlFor="page-time_stamps" className="label_checkbox">Time Stamps</label>
         </div>
+
       </div>
       <div className="btn__wrapper">
         <button className="btn btn_success" type="submit">{this.props.submitText}</button>

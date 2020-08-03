@@ -20,7 +20,7 @@ class AddPage extends Component {
       models: [],
     };
     this.resource = new Resource({route: '/admin/ajax/pages'});
-    this.model_resource = new Resource({route: '/admin/ajax/models'});
+    this.model_resource = new Resource({route: '/admin/ajax/models_options'});
     this.templateResource = new Resource({route: '/admin/ajax/templates'});
     this.savePage = this.savePage.bind(this);
   }
@@ -140,7 +140,7 @@ class AddPage extends Component {
               <option value=""/>
               {
                 this.state.models.map(model=>{
-                  return <option value={model.id} key={model.id}>{model.name}</option>
+                  return <option value={model.value} key={model.value}>{model.label}</option>
                 })
               }
             </select>
