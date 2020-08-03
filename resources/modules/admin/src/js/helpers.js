@@ -72,16 +72,3 @@ export function deleteEmptyPropsDeep(collection) {
     }
   }
 }
-
-// export function deleteEmptyPropsDeep(collection) {
-//   for (const key in collection) {
-//     if (collection.hasOwnProperty(key)) {
-//       if (collection[key] === null) return delete collection[key];
-//       if (collection[key] === "") return delete collection[key];
-//       if (typeof collection[key] === "object") {
-//         deleteEmptyPropsDeep(collection[key]);
-//         if (isEmpty(collection[key])) delete collection[key];
-//       }
-//     }
-//   }
-// }
