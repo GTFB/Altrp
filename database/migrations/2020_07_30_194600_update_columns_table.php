@@ -61,7 +61,7 @@ class UpdateColumnsTable extends Migration
                 $model_id = $model->id;
             }
             
-            Column::withoutEvents(function () use ($column) {
+            Column::withoutEvents(function () use ($column, $model_id) {
                 $column->update([
                     'model_id' => $model_id
                 ]);

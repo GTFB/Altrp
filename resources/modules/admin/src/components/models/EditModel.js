@@ -84,7 +84,7 @@ class EditModel extends Component {
         <div className="admin-breadcrumbs">
           <Link className="admin-breadcrumbs__link" to="/admin/tables/models">Tables / All Models</Link>
           <span className="admin-breadcrumbs__separator">/</span>
-          <span className="admin-breadcrumbs__current">Edit Model</span>
+          <span className="admin-breadcrumbs__current">{this.state.id ? 'Edit Model' : 'Add Model'}</span>
         </div>
       </div>
       <div className="admin-content">
