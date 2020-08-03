@@ -183,8 +183,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get( '/data_sources/{field_id}', 'Admin\ModelsController@showDataSource');
     Route::delete( '/data_sources/{field_id}', 'Admin\ModelsController@destroyDataSource');
 
-
-
     Route::get('/tables', "Admin\TableController@getTables");
     Route::get('/tables/{table}', "Admin\TableController@getTable");
     Route::post('/tables', "Admin\TableController@insert");

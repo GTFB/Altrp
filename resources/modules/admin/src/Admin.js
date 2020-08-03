@@ -37,6 +37,11 @@ import AdminModal from "./components/AdminModal";
 import AddPage from "./components/AddPage";
 import UserTopPanel from "./components/UserTopPanel";
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
+import Models from "./components/Models";
+import EditModel from "./components/models/EditModel";
+import EditField from "./components/models/EditField";
+import AddRelation from "./components/models/AddRelation";
+import AddDataSource from "./components/models/AddDataSource";
 
 import AddTable from "./components/tables/AddTable";
 import EditTable from "./components/tables/EditTable";
@@ -111,6 +116,15 @@ class Admin extends Component {
                     <TableSvg className="icon"/>
                     <span>Tables</span>
                   </Link>
+                  <ul className="admin-nav-sublist">
+
+                    <li>
+                      <Link to="/admin/tables/models" className="admin-nav-list__link">
+                        <TableSvg className="icon"/>
+                        <span>Tables/Models</span>
+                      </Link>
+                    </li>
+                  </ul>
                 </li>
                 <li>
                   <Link to="/admin/templates" className="admin-nav-list__link">
@@ -129,7 +143,7 @@ class Admin extends Component {
                     <UserSvg className="icon"/>
                     <span>Users</span>
                   </Link>
-                </li>
+                </li>                
                 <li>
                   <Link to="/admin/tools" className="admin-nav-list__link">
                     <span>Tools</span>
@@ -214,6 +228,27 @@ class Admin extends Component {
             <Route path="/admin/pages/add">
               <AddPage/>
             </Route>
+            <Route path="/admin/tables/models" exact>
+              <Models />
+            </Route>
+            <Route path="/admin/tables/models/add">
+              <EditModel />
+            </Route>
+            <Route path="/admin/tables/models/edit/:id" exact>
+              <EditModel />
+            </Route>
+            <Route path="/admin/tables/models/:modelId/fields/add">
+              <EditField/>
+            </Route>
+            <Route path="/admin/tables/models/:modelId/fields/edit/:id">
+              <EditField/>
+            </Route>
+            <Route path="/admin/tables/models/:modelId/relations/add">
+              <AddRelation />
+            </Route>
+            <Route path="/admin/tables/data-sources/add">
+              <AddDataSource />
+            </Route>            
           </Switch>
         </Router>
         <AdminModal/>

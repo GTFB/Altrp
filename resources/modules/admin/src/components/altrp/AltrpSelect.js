@@ -35,11 +35,7 @@ class AltrpSelect extends Component {
    *
    */
   loadOptions = async (searchString, callback)=>{
-    // console.log(searchString);
-    console.log(this.optionsResource);
-
     let options = await this.optionsResource.search(searchString);
-    console.log(options);
     this.setState(state=>({
       ...state,
       options
