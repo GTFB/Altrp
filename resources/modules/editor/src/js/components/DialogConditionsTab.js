@@ -16,6 +16,9 @@ export default class DialogConditionsTab extends Component {
           Set the conditions that determine where your Template is used throughout your site.<br />
           For example, choose 'Entire Site' to display the template across your site.
         </div>
+        <div className="modal-condition-button-wrapper">
+          <button className="modal-condition-button">Add condition</button>
+        </div>
       </div>
     )
   }

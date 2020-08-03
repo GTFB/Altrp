@@ -45,6 +45,8 @@ import tabletIcon from '../../../svgs/tablet.svg'
 import bigPhoneIcon from '../../../svgs/bigphonescreen.svg'
 import smallPhoneIcon from '../../../svgs/smallphonescreen.svg'
 import conditionsTab from '../../../svgs/conditions-tab.svg'
+import triggersTab from '../../../svgs/triggers_tab.svg'
+import advancedTab from '../../../svgs/timing_tab.svg'
 
 class IconsManager {
   constructor() {
@@ -97,6 +99,8 @@ class IconsManager {
     this.icons.push(new Icon('big_phone', bigPhoneIcon))
     this.icons.push(new Icon('small_phone', smallPhoneIcon))
     this.icons.push(new Icon('conditions_tab', conditionsTab))
+    this.icons.push(new Icon('triggers_tab', triggersTab))
+    this.icons.push(new Icon('advanced_tab', advancedTab))
   }
   /**
    * @param {string} iconName

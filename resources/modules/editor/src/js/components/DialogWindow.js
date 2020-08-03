@@ -10,9 +10,9 @@ class DialogWindow extends Component {
     this.state = {
       activeTab: 'Conditions',
       tabs: [
-        { image: 'Image', title: 'Conditions', desc: 'Apply current template to these pages' },
-        { image: 'Image', title: 'Triggers', desc: 'What action the user needs to do for the popup to open.' },
-        { image: 'Image', title: 'Advanced Rules', desc: 'Requirements that have to be met for the popup to open.' },
+        { icon: 'conditions_tab', title: 'Conditions', desc: 'Apply current template to these pages' },
+        { icon: 'triggers_tab', title: 'Triggers', desc: 'What action the user needs to do for the popup to open.' },
+        { icon: 'triggers_tab', title: 'Advanced Rules', desc: 'Requirements that have to be met for the popup to open.' },
       ],
     }
   }
@@ -24,14 +24,28 @@ class DialogWindow extends Component {
   };
 
   handleClose() {
-    console.log('closed');
-    // this.setState({
-    //   open: false,
-    // })
+    this.props.showModalWindow()
   };
 
-  render() {
+  renderSwitch(activeTab) {
+    switch (this.state.activeTab) {
+      case 'Conditions':
+        return <DialogConditionsTab />
+      case 'Triggers':
+        return <div>TRIGGERS</div>
+      case 'Advanced Rules':
+        return <div>ADVANCED</div>
+      default:
+        return null;
+    }
+  }
 
+  // (this.state.activeTab === 'Conditions' && <DialogConditionsTab /> ||
+  //   this.state.activeTab === 'Triggers' && <div>Triggers</div> ||
+  //   this.state.activeTab === 'Advanced Rules' && <div>Advanced Rules</div>
+  // )
+
+  render() {
     return (
       <div className="modal-overlay">
         <div className="modal-window">
@@ -50,12 +64,7 @@ class DialogWindow extends Component {
               }
             </div>
             <div className="modal-body__content">
-              {
-                (this.state.activeTab === 'Conditions' && <DialogConditionsTab /> ||
-                  this.state.activeTab === 'Triggers' && <div>Triggers</div> ||
-                  this.state.activeTab === 'Advanced Rules' && <div>Advanced Rules</div>
-                )
-              }
+              {this.renderSwitch(this.state.activeTab)}
             </div>
           </div>
           <div className="modal-footer">

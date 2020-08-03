@@ -49,6 +49,7 @@ class Editor extends Component {
       // activePanel: 'widgets',
       activePanel: "settings",
       templateStatus: CONSTANTS.TEMPLATE_UPDATED,
+      showDialogWindow: false,
     };
     this.openPageSettings = this.openPageSettings.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
@@ -85,6 +86,15 @@ class Editor extends Component {
       activePanel: "widgets",
     });
   }
+
+  /** 
+   * Показывает Dialog окно
+   */
+  showModalWindow() {
+    this.setState({
+      showDialogWindow: !this.state.showDialogWindow
+    })
+  };
 
   /**
    * Показывает панель с настройками текущего виджета
@@ -205,10 +215,11 @@ class Editor extends Component {
                 <Preview className="icon" />
               </button>
               <UpdateButton />
+              <button onClick={() => this.showModalWindow()} style={{ width: '10px', height: '10px', marginRight: '20px' }}>M</button>
             </div>
           </div>
           <div className="right-panel">
-            <DialogWindow />
+            {this.state.showDialogWindow && <DialogWindow state={this.state.showDialogWindow} showModalWindow={() => this.showModalWindow()} />}
             <EditorWindow />
           </div>
         </div>
