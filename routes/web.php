@@ -129,6 +129,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
       ->name( 'get-template-setting' );
     Route::put( 'templates/{template_id}/settings/{setting_name}', 'TemplateController@settingSet' )
       ->name( 'set-template-setting' );
+    //Route::get('reports/{id}', "TemplateController@show");
+    //Route::put('reports/{id}', "TemplateController@update");
     Route::resource( 'reports', 'ReportsController' );
     Route::resource( 'media', 'Admin\MediaController' );
     Route::resource( 'settings', 'Admin\SettingsController' );
