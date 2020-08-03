@@ -87,7 +87,7 @@ export default class Templates extends Component{
   generateTemplateJSON(template) {
     const data = deleteIdsDeep(JSON.parse(template.data))
     const json = JSON.stringify({ 
-      template_area: this.state.activeTemplateArea, 
+      template_area: this.state.activeTemplateArea.name, 
       data
     });
     return json;
@@ -103,7 +103,7 @@ export default class Templates extends Component{
     element.download = `${template.name}.json`;
     document.body.appendChild(element); // Required for this to work in FireFox
     element.click();
-
+    debugger
   }
   async componentDidMount(){
     let templateAreas = await this.templateTypesResource.getAll();
