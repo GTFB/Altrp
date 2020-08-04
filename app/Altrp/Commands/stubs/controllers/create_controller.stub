@@ -22,15 +22,11 @@ class DummyClass extends ApiController
     // CUSTOM_PROPERTIES_END - IMPORTANT: Don't remove this comment! Write your properties between these comments.
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * {{modelName}}Controller constructor.
      */
-    public function index()
+    public function __construct()
     {
-        ${{crudName}} = {{modelName}}::all(){{relations}};
-
-        return response()->json(${{crudName}}, 200, [], JSON_UNESCAPED_UNICODE);
+        $this->modelClass = {{modelName}}::class;
     }
 
     /**

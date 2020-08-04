@@ -58,8 +58,6 @@ class RouteGenerator
     {
         $this->routeStub = $this->fillStub();
 
-
-
         if ($items = $this->routeExists($tableName, $controller)) {
             $this->routeRewrite($items);
         } else {
@@ -85,7 +83,7 @@ class RouteGenerator
         for ($i = 0; $i < count($this->routeContents); $i++) {
             if (Str::contains($this->routeContents[$i], ' '.$tableName . ' resource')
                 || Str::contains($this->routeContents[$i], '/'.$tableName)
-                || Str::contains($this->routeContents[$i], '\\'.$controller)) {
+                || Str::contains($this->routeContents[$i], $controller)) {
                 $indexes[] = $i;
             }
         }
