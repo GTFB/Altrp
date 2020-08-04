@@ -17,6 +17,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::resource( '/api/reports', 'ReportsController' )->middleware('auth:api');
+
 Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], function () {
 
     Route::group(['prefix' => 'ajax'], function () {
