@@ -383,6 +383,9 @@ button{
     color: $grey;
   }
 }
+.control-shadow-label {
+  width: 0px;
+}
 .repeater{
   &-item{
     margin-bottom: 5px;
@@ -442,6 +445,9 @@ button{
 .responsive-absolute {
   position: absolute;
   left: 32%;
+  &-shadow {
+    left: 63px;
+  }
 }
 
 .textcontroller-responsive {
@@ -1193,7 +1199,7 @@ display: none;
   background-color: #FFFFFF;
   box-shadow: 0px 2px 15px rgba(0,0,0,.3);
   border-radius: 3px;
-  left: -100px;
+  left: -25px;
   padding: 15px;
   right: 0;
   margin-top: 35px;
@@ -1250,7 +1256,7 @@ display: none;
   background-color: #FFFFFF;
   box-shadow: 0px 2px 15px rgba(0,0,0,.3);
   border-radius: 3px;
-  left: -100px;
+  left: -25px;
   padding: 15px;
   right: 0;
   margin-top: 35px;
@@ -1604,10 +1610,13 @@ display: none;
     margin: 0;
     padding: 0;
     background: #FFFFFF;
-    list-style: none;
-    text-align: center;
     transition: max-height .3s ease-out;
     z-index: 9999;
+    & > button {
+      margin: 3px 0;
+      padding: 0;
+      background-color: #fff;
+    }
     &__open {
       max-height: 200px;
       border: 1px solid #E5E6EA;
@@ -1618,10 +1627,6 @@ display: none;
       transition: max-height .3s ease-in;
     }
     &__item  {
-      width: 100%;
-      display: inline-block;
-      margin: 3px;
-      text-decoration: none;
       cursor: pointer;
       & > svg {
         text-align: center;
@@ -1668,6 +1673,11 @@ display: none;
     width: 30px;
     background-color: #343b4c;
     transition: max-height .3s ease-out;
+    & > button{
+      margin: 3px 0;
+      padding: 0;
+      background-color: #343b4c;
+    }
     &-open {
       max-height: 200px;
       background-color: #343b4c;
@@ -1679,7 +1689,6 @@ display: none;
       }
     }
     &__item {
-      margin: 3px;
       &:hover {
         & > svg > path {
           fill:#fff;

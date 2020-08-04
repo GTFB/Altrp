@@ -31,10 +31,10 @@ class ResponsiveDdMenu extends Component {
             iconsManager().renderIcon(this.props.currentScreen.icon)
           }
         </span>
-        <div className={"screens-list " + (this.state.open && 'screens-list__open')} >
+        <div className={"screens-list " + (this.state.open ? 'screens-list__open' : '')} >
           {
             this.state.screens.map(screen => {
-              return <div onClick={() => this.setCurrentScreen(screen)} className={"screens-list__item " + (this.props.currentScreen.id === screen.id && 'screens-list__item-active')} key={screen.id}>{iconsManager().renderIcon(screen.icon)}</div>
+              return <button onClick={() => this.setCurrentScreen(screen)} className={"screens-list__item " + (this.props.currentScreen.id === screen.id ? 'screens-list__item-active' : '')} key={screen.id}>{iconsManager().renderIcon(screen.icon)}</button>
             })
           }
         </div>

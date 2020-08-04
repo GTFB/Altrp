@@ -17,6 +17,7 @@
     "pack": "npm run front-build && npm run editor-build && npm run admin-build && gulp pack",
     "only-pack": "gulp pack",
     "run-all": "npm-run-all --parallel admin-start editor-start front-start",
+    "reports:dev": "cd resources/modules/reports && react-scripts start",
     "reports:build": "cd resources/modules/reports && PUBLIC_URL=/modules/reports/ react-scripts build",
     "reports:move": "mv -f resources/modules/reports/build public/modules/",
     "reports:rename": "mv public/modules/build public/modules/reports"

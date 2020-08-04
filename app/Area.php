@@ -13,6 +13,10 @@ class Area extends Model
     'title',
   ];
 
+  protected $casts = [
+    'settings' => 'array',
+  ];
+
   static function get_areas_names(){
     return static::all()->map( function ( $area ) {
       return $area->name;

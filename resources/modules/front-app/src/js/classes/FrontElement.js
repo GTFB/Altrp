@@ -7,6 +7,7 @@ class FrontElement {
     this.name = data.name;
     this.settings = data.settings;
     this.children = data.children;
+    this.cssClassStorage = data.cssClassStorage;
     this.type = data.type;
     this.id = data.id;
     if(window.frontElementsManager){
@@ -281,7 +282,6 @@ class FrontElement {
       if(!_.isObject(screen.rules)){
         return;
       }
-      console.log(screen);
       styles += `${screen.mediaQuery}{`;
       for(let selector in screen.rules){
         if(screen.rules.hasOwnProperty(selector)){
@@ -445,6 +445,20 @@ class FrontElement {
     if(this.modelsStorage && this.modelsStorage[modelName]){
       callback(this.modelsStorage[modelName]);
     }
+  }
+  /**
+   * Парсит объект и извлекает из него строку со всеми классами у которых есть свойство prefixClass
+   * @return {string}
+   */
+
+  getPrefixClasses() {
+    let changeCss = _.toPairs(this.cssClassStorage);
+    let classStorage = ' ';
+    changeCss.forEach(element => {
+      classStorage += `${element[1]} `;
+      console.log(element[1]);
+    });
+    return classStorage;
   }
 }
 

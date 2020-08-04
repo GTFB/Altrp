@@ -26,15 +26,16 @@ class ResponsiveDdFooter extends Component {
   render() {
     return (
       <div className="responsive-footer-wrapper">
-        <span className={"responsive-footer-title " + (this.state.open && 'responsive-footer-icon__close')} onClick={() => this.toggleOpen()}>{iconsManager().renderIcon(this.props.currentScreen.icon)}</span>
-        <div className={"responsive-footer-submenu " + (this.state.open && "responsive-footer-submenu-open")} >
+        <span className={"responsive-footer-title " + (this.state.open ? 'responsive-footer-icon__close' : '')} onClick={() => this.toggleOpen()}>{iconsManager().renderIcon(this.props.currentScreen.icon)}</span>
+        <div className={"responsive-footer-submenu " + (this.state.open ? "responsive-footer-submenu-open" : '')} >
           {
-            [...this.state.screens].reverse().map(screen => {
-              return <div className={"responsive-footer-submenu__item " + (this.props.currentScreen.id === screen.id && "responsive-footer-submenu__item__active")}
-                          onClick={() => this.setCurrentScreen(screen)}
-                          key={screen.id}>
+            this.state.screens.map(screen => {
+              return <button
+                className={"responsive-footer-submenu__item " + (this.props.currentScreen.id === screen.id ? "responsive-footer-submenu__item__active" : '')}
+                onClick={() => this.setCurrentScreen(screen)}
+                key={screen.id}>
                 {iconsManager().renderIcon(screen.icon)}
-                </div>
+              </button>
             })
           }
         </div>

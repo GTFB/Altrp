@@ -107,9 +107,7 @@ class DimensionsController extends Component {
     if (this.state.show === false) {
       return '';
     }
-    // console.log(this.getSettings(this.props.controlId));
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
-
 
     return <div className="controller-container controller-container_dimensions">
       <div className="control-dimensions-header">
@@ -183,6 +181,7 @@ function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
     currentState: state.currentState,
+    currentScreen: state.currentScreen
   };
 }
 

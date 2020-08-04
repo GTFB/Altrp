@@ -114,9 +114,23 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get('/users/{user}/usermeta', "Users\UsersMeta@getUserMeta");
     Route::post('/users/{user}/usermeta', "Users\UsersMeta@saveUserMeta");
     Route::delete('/users/{user}/roles', "Users\Users@detachRole");
-
+    /**
+     * Areas Routes
+     */
     Route::resource( 'areas', 'Admin\AreasController' );
+    /**
+     * Templates Routes
+     */
     Route::resource( 'templates', 'TemplateController' );
+    /**
+     * templates settings
+     */
+    Route::get( 'templates/{template_id}/settings/{setting_name}', 'TemplateController@settingGet' )
+      ->name( 'get-template-setting' );
+    Route::put( 'templates/{template_id}/settings/{setting_name}', 'TemplateController@settingSet' )
+      ->name( 'set-template-setting' );
+    //Route::get('reports/{id}', "TemplateController@show");
+    //Route::put('reports/{id}', "TemplateController@update");
     Route::resource( 'reports', 'ReportsController' );
     Route::resource( 'media', 'Admin\MediaController' );
     Route::resource( 'settings', 'Admin\SettingsController' );

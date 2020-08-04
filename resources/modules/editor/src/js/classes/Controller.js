@@ -27,6 +27,10 @@ class Controller {
         }
       }
     }
+
+    if(this.data.prefixClass) {
+      currentElement.setCssClass(this.getSettingName(), this.data.prefixClass + this.data.default);
+    }
     if (this.rules.length) {
       currentElement.addStyles(this.getSettingName(), this.rules);
     }
@@ -50,6 +54,12 @@ class Controller {
 
         value ? currentElement.addStyles(this.getSettingName(), this.rules)
           : currentElement.removeStyle(this.getSettingName());
+      }
+      /**
+       * Вызываем currentElement setCssClass в случае если есть this.data.prefixClass
+       */
+      if(this.data.prefixClass) {
+        currentElement.setCssClass(this.getSettingName(), this.data.prefixClass + value);
       }
       store.dispatch(controllerValue(value, this.getSettingName()));
 

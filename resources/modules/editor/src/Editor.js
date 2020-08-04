@@ -208,9 +208,9 @@ class Editor extends Component {
               <button className="btn ">
                 <History className="icon" />
               </button>
-              <button className="btn">
+              <div className="btn ">
                 <ResponsiveDdFooter />
-              </button>
+              </div>
               <button className="btn ">
                 <Preview className="icon" />
               </button>

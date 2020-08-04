@@ -1,5 +1,6 @@
 import {getCurrentScreen, getElementState} from "./store/store";
 import {isEditor} from "../../../front-app/src/js/helpers";
+import CONSTANTS from "./consts";
 
 export function getTemplateId(){
   return (new URL(window.location)).searchParams.get('template_id');
@@ -129,7 +130,9 @@ export function getWindowWidth() {
  * @return {string}
  */
 export function getElementSettingsSuffix(controller) {
-  if(! getElementState().value){
+  let suffix_1 = getElementState().value;
+  let suffix_2 = (getCurrentScreen().name === CONSTANTS.DEFAULT_BREAKPOINT) ? '' : getCurrentScreen().name;
+  if(! (suffix_2 || suffix_1)){
     return '';
   }
   return `_${getElementState().value}_${getCurrentScreen().name}`

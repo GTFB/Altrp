@@ -34,7 +34,7 @@ class ReportsController extends ApiController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(ApiRequest $request)
     {
         $report = new Reports( $request->toArray() );
         $report->user_id  = auth()->user()->id;
@@ -52,20 +52,11 @@ class ReportsController extends ApiController
      * @param  \App\Reports  $reports
      * @return \Illuminate\Http\Response
      */
-    public function show(Reports $reports)
+    public function show(ApiRequest $request, Reports $reports, $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Reports  $reports
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Reports $reports)
-    {
-        //
+        //$request->expectsJson();
+        //$report = Reports.find($id);
+        return response()->json(['id' => $id], 200, [],JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -75,7 +66,7 @@ class ReportsController extends ApiController
      * @param  \App\Reports  $reports
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Reports $reports)
+    public function update(ApiRequest $request, Reports $reports)
     {
         //
     }
