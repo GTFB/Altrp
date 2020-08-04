@@ -147,9 +147,14 @@ class AltrpUpdateService
    * Запись пользовательских роутов
    */
 
-  private function upgrade_0_6_1()
+  private function upgrade_user_routes()
   {
 
+  }
+
+  private function upgrade_0_6_1()
+  {
+    $this->upgrade_user_routes();
   }
 
   /**
