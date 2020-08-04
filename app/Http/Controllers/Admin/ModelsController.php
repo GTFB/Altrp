@@ -440,7 +440,7 @@ class ModelsController extends HttpController
         if (! $model) {
             return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
         }
-        $field = Column::where([['model_id', $model_id], ['id', $field_id]])->first();
+        $field = Column::where([['id', $field_id]])->first();
         if ($field) {
             return response()->json($field, 200, [], JSON_UNESCAPED_UNICODE);
         }

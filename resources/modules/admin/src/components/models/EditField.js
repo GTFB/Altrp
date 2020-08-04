@@ -7,20 +7,40 @@ class EditField extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      modelTitle: 'Model Title'
+      modelTitle: 'Model Title',
+      field: {},
     };
     this.modelsResource = new Resource({ route: '/admin/ajax/models' });
+    this.filedsResource = new Resource({ route: `/admin/ajax/models/${this.props.match.params.modelId}/fields` });
   }
   async componentDidMount() {
     const { modelId } = this.props.match.params;
     let model = await this.modelsResource.get(modelId);
-    this.setState({ modelTitle: model.title })
+    this.setState({ modelTitle: model.title });
+    if(this.props.match.params.id){
+      let field = await this.filedsResource.get(this.props.match.params.id);
+      this.setState(state=>({...state, field}))
+    }
   }
+
+  /**
+   * отправка данных
+   * @return {*}
+   */
+  onSubmit = async data =>{
+    const { modelId } = this.props.match.params;
+    if(this.props.match.params.id){
+      let res = await this.filedsResource.put(this.props.match.params.id, data);
+      this.setState(state=>({...state, redirect: `/admin/tables/models/edit/${modelId}`}))
+    } else {
+      let res = await this.filedsResource.post(data);
+      this.setState(state=>({...state, redirect: `/admin/tables/models/edit/${modelId}`}))
+    }
+  };
 
   render() {
     const { modelTitle } = this.state;
     const { modelId } = this.props.match.params;
-    console.log(this.props.match.params);
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
@@ -34,7 +54,10 @@ class EditField extends Component {
         </div>
       </div>
       <div className="admin-content">
-        <AddFieldForm />
+        <AddFieldForm
+            field={this.state.field}
+            onSubmit={this.onSubmit}
+        />
       </div>
     </div>;
   }
