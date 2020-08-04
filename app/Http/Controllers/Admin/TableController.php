@@ -34,6 +34,29 @@ class TableController extends ApiController
         $modules = Table::all();
         return response()->json($modules, 200, [],JSON_UNESCAPED_UNICODE);
     }
+    /**
+     * Получение списка сущностей для селекта
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    function getTablesOptions( Request $request ) {
+      if( ! $request->get( 's' ) ){
+        $tables = Table::all();
+      } else {
+        $search = $request->get( 's' );
+        $tables = Table::where( 'name', 'like', "%$search%" )
+          ->where( 'title', 'like', "%$search%" )
+          ->where( 'id', 'like', "%$search%" );
+      }
+      $res = [];
+      foreach ( $tables as $table ) {
+        $res[] = [
+          'label' => $table->title,
+          'id' => $table->id,
+        ];
+      }
+      return response()->json( $res, 200, [],JSON_UNESCAPED_UNICODE );
+    }
 
     /**
      * Получение сущности по идентификатору
