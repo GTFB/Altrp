@@ -88,7 +88,7 @@ class FieldCalculationLogic extends Component {
 
       <div className="form-group">
         <label htmlFor={"left" + index}>Field Name</label>
-        <select className="form-control" id={"left" + index} name="left"
+        <select className="form-control" id={"left" + index} name="left" required
           value={item.left}
           onChange={({ target: { value, name } }) => changeHandler({ value, name })}
         >
@@ -101,7 +101,7 @@ class FieldCalculationLogic extends Component {
       <p>Comparison Operators</p>
 
       <div className="form-group">
-        <select className="form-control" name="operator"
+        <select className="form-control" name="operator" required
           value={item.operator}
           onChange={({ target: { value } }) => this.operatorChangeHandler(value)}
         >
@@ -127,7 +127,8 @@ class FieldCalculationLogic extends Component {
                 onChange={() => this.rightTypeHandler("string")}
               />
             </label>
-            <input type="text" className="form-control" name="string"
+            <input type="text" className="form-control" name="string" 
+              required={rightType === "string"}
               value={right.string}
               disabled={rightType !== "string"}
               onChange={this.rightChangeHandler}
@@ -144,6 +145,7 @@ class FieldCalculationLogic extends Component {
               />
             </label>
             <select className="form-control" id={"right" + index} name="fieldId"
+              required={rightType === "object"}
               value={right.fieldId}
               disabled={rightType !== "object"}
               onChange={this.rightChangeHandler}
@@ -165,6 +167,7 @@ class FieldCalculationLogic extends Component {
               />
             </label>
             <input type="text" className="form-control" name="string_1"
+              required={is1stString}
               value={right.string_1}
               disabled={!is1stString}
               onChange={this.rightChangeHandler}
@@ -181,6 +184,7 @@ class FieldCalculationLogic extends Component {
               />
             </label>
             <select className="form-control" id={"right" + index} name="fieldId_1"
+              required={!is1stString}
               value={right.fieldId_1}
               disabled={is1stString}
               onChange={this.rightChangeHandler}
@@ -203,6 +207,7 @@ class FieldCalculationLogic extends Component {
               />
             </label>
             <input type="text" className="form-control" name="string_2"
+              required={is2ndString}
               value={right.string_2}
               disabled={!is2ndString}
               onChange={this.rightChangeHandler}
@@ -219,6 +224,7 @@ class FieldCalculationLogic extends Component {
               />
             </label>
             <select className="form-control" id={"right" + index} name="fieldId_2"
+              required={!is2ndString}
               value={right.fieldId_2}
               disabled={is2ndString}
               onChange={this.rightChangeHandler}
@@ -235,7 +241,7 @@ class FieldCalculationLogic extends Component {
 
       <div className="form-group">
         <label htmlFor={"result" + index}>Value</label>
-        <input type="text" className="form-control" id={"result" + index} name="result"
+        <input type="text" className="form-control" id={"result" + index} name="result" required
           value={item.result}
           onChange={({ target: { value, name } }) => changeHandler({ value, name })}
         />
