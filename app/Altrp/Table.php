@@ -105,7 +105,7 @@ class Table extends Model
         return self::select(['id as value', 'title as label'])
             ->where('title', 'like', "%{$search}%")
             ->orWhere('name', 'like', "%{$search}%")
-            ->orWhere('id', $search)
+            ->orWhere('id', 'like', "%{$search}%")
             ->get();
     }
 }

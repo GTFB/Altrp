@@ -185,7 +185,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
 
     Route::get('/tables', "Admin\TableController@getTables");
     Route::get('/tables/options', "Admin\TableController@getTablesForOptions");
-    Route::get('/tables_options', "Admin\TableController@getTablesOptions");
+    Route::get('/tables_options', "Admin\TableController@getTablesForOptions");
     Route::get('/tables/{table}', "Admin\TableController@getTable");
     Route::post('/tables', "Admin\TableController@insert");
     Route::put('/tables/{table}', "Admin\TableController@update");
@@ -301,10 +301,10 @@ Route::group( ['prefix' => 'ajax'], function(){
   Route::get( 'templates/{template_id}', 'TemplateController@show_frontend' )->name( 'templates.show.frontend' );
 } );
 
-/*
+
 
     // Require users routes
-    if ( file_exists( app_path( '/routes/AltrpRoutes.php' ) ) )
-    {
-        require_once ('AltrpRoutes.php');
-    }*/
+if ( file_exists( base_path( '/routes/AltrpRoutes.php' ) ) )
+{
+    require_once ('AltrpRoutes.php');
+}
