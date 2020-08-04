@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 
-const relationTypeOptions = ['varchar', 'int', 'bigint', 'boolean', 'text', 'long text', 'calculated'];
+const relationTypeOptions = ['hasOne', 'belongsTo', 'hasMany'];
 const mockedOptions = [
   { value: 1, label: "Model title 1" },
   { value: 2, label: "Model title 2" },
@@ -44,8 +44,9 @@ class AddRelationForm extends Component {
 
   submitHandler(e) {
     e.preventDefault();
-    // post: /admin/ajax/models (value)
-    console.log(this.state.value);
+    const data = this.state.value;
+    // post: /admin/ajax/models (data)
+    console.log(data);
   }
 
   render() {
