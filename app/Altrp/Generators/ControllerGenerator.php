@@ -2,6 +2,7 @@
 
 namespace App\Altrp\Generators;
 
+use App\Altrp\Column;
 use App\Altrp\Controller;
 use App\Altrp\Generators\Request\RequestFile;
 use App\Altrp\Generators\Request\RequestFileWriter;
@@ -190,7 +191,7 @@ class ControllerGenerator extends AppGenerator
      */
     public function writeSourceActions()
     {
-        $actions = ['get', 'options', 'show', 'add', 'update', 'delete'];
+        $actions = ['get', 'options', 'show', 'add', 'update', 'delete', 'get_column'];
         $sources = [];
         $tableName = $this->getTableName();
         $singleResource = Str::singular($tableName);
@@ -202,6 +203,9 @@ class ControllerGenerator extends AppGenerator
             } elseif ($action == 'options') {
                 $url = $singleResource . '_options';
                 $name = 'Get ' . ucfirst($tableName) . ' for options';
+            } elseif ($action == 'get_column') {
+                $url = $tableName . "/{{$singleResource}}/{column}";
+                $name = ucfirst($action) . ' ' . Str::studly($singleResource);
             } else {
                 $url = $tableName . "/{{$singleResource}}";
                 $name = ucfirst($action) . ' ' . Str::studly($singleResource);
@@ -309,7 +313,11 @@ class ControllerGenerator extends AppGenerator
         $crudName = $this->toSnakeCase($this->getTableName());
         $namespace = $this->getNamespace($this->controllerModel);
         $relations = $this->getRelations();
-        $customCode = $this->getCustomCode($this->controllerFile);
+        $oldControllerFile = $this->getOldControllerFile();
+        $customCode = $this->getCustomCode($oldControllerFile);
+        $options = $this->getOptions();
+
+        if(file_exists($oldControllerFile)) unlink($oldControllerFile);
 
         try {
             Artisan::call('crud:controller', [
@@ -324,7 +332,8 @@ class ControllerGenerator extends AppGenerator
                 '--custom-namespaces' => $this->getCustomCodeBlock($customCode,'custom_namespaces'),
                 '--custom-traits' => $this->getCustomCodeBlock($customCode,'custom_traits'),
                 '--custom-properties' => $this->getCustomCodeBlock($customCode,'custom_properties'),
-                '--custom-methods' => $this->getCustomCodeBlock($customCode,'custom_methods')
+                '--custom-methods' => $this->getCustomCodeBlock($customCode,'custom_methods'),
+                '--options' => $options
             ]);
         } catch (\Exception $e) {
             if(file_exists($this->controllerFile . '.bak'))
@@ -334,6 +343,8 @@ class ControllerGenerator extends AppGenerator
 
         if(file_exists($this->controllerFile . '.bak'))
             unlink($this->controllerFile . '.bak');
+        if(file_exists($oldControllerFile . '.bak'))
+            unlink($oldControllerFile . '.bak');
         return true;
     }
 
@@ -422,6 +433,13 @@ class ControllerGenerator extends AppGenerator
             return unlink($this->controllerFile);
         }
         return true;
+    }
+
+    protected function getOptions()
+    {
+        $label = Column::where([['table_id', $this->controllerModel->model->table->id],['is_label', 1]])->first();
+        $label = $label ? $label->name : 'id';
+        return 'select([\'id as value\',\'' . $label . ' as label\'])';
     }
 
     /**
@@ -614,6 +632,25 @@ class ControllerGenerator extends AppGenerator
     }
 
     /**
+     * Получить старый файл контроллера
+     *
+     * @return string
+     */
+    protected function getOldControllerFile()
+    {
+        $namespace = $this->getNamespace($this->controllerModel);
+        $controllerFilename = trim(str_replace('\\', '/', $namespace)
+            . '/' . $this->getOldModelName(), '/')
+            . 'Controller.php';
+        return app_path($controllerFilename);
+    }
+
+    protected function getOldModelName()
+    {
+        return $this->data->old_model_name ?? $this->controllerModel->model->name;
+    }
+
+    /**
      * Получить сформированный путь к файлу контроллера
      *
      * @param Controller $controller контроллер
@@ -673,6 +710,7 @@ class ControllerGenerator extends AppGenerator
     {
         $validations = [];
         $validationRules = $this->getValidationRules();
+        if (! $validationRules) return null;
         $validationRules = explode(';', $validationRules);
         foreach ($validationRules as $rule) {
             $parts = explode('#', $rule);
