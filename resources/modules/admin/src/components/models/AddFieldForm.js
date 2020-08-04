@@ -32,12 +32,7 @@ class AddFieldForm extends Component {
         indexed: false,
         editable: false,
         calculation: '',
-        calculation_logic: [{
-          left: '',
-          operator: '',
-          result: '',
-          right: ''
-        }],
+        calculation_logic: [{ left: '', operator: '', result: '', right: '' }],
       },
     };
     this.submitHandler = this.submitHandler.bind(this);
@@ -72,8 +67,24 @@ class AddFieldForm extends Component {
 
   submitHandler(e) {
     e.preventDefault();
+    const { name, title, description, is_label, is_title, type, length_value, default: default_, attribute, input_type,
+      options, nullable, indexed, editable, calculation, calculation_logic, isAlways } = this.state.value;
+
+    let data = {}
+
+    if (type === "calculated") {
+      isAlways ?
+        data = { title, description, type, calculation } :
+        data = { title, description, type, calculation_logic };
+    } else {
+      data = { name, title, description, is_label, is_title, type, length_value, default: default_, attribute, input_type, nullable, indexed, editable };
+      if (['select', 'checkbox', 'radio button'].includes(input_type)) {
+        data = { ...data, options };
+      }
+    }
+
     // post: /admin/ajax/models (value)
-    console.log(this.state.value);
+    console.log(data);
   }
 
   addItemHandler() {
@@ -195,7 +206,7 @@ class AddFieldForm extends Component {
               <label className="checkbox-label" htmlFor="field-is_label">As Label</label>
             </div>
             <div className="form-group">
-              <input type="checkbox" id="field-is_title" required
+              <input type="checkbox" id="field-is_title"
                 checked={this.state.value.is_title}
                 onChange={e => { this.changeValue(e.target.checked, 'is_title') }}
               />

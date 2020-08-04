@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import AddFieldForm from "./AddFieldForm";
+import Resource from "../../../../editor/src/js/classes/Resource";
 
 class EditField extends Component {
   constructor(props) {
@@ -8,13 +9,12 @@ class EditField extends Component {
     this.state = {
       modelTitle: 'Model Title'
     };
+    this.modelsResource = new Resource({ route: '/admin/ajax/models' });
   }
-  componentDidMount() {
-    //const { modelId } = this.props.match.params;
-
-    // get: /admin/ajax/models/${modelId} .then(({ title }) => {
-    //   this.setState({modelTitle: title});
-    // });
+  async componentDidMount() {
+    const { modelId } = this.props.match.params;
+    let model = await this.modelsResource.get(modelId);
+    this.setState({ modelTitle: model.title })
   }
 
   render() {
