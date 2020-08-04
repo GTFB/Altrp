@@ -185,6 +185,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
 
     Route::get('/tables', "Admin\TableController@getTables");
     Route::get('/tables/options', "Admin\TableController@getTablesForOptions");
+    Route::get('/tables_options', "Admin\TableController@getTablesOptions");
     Route::get('/tables/{table}', "Admin\TableController@getTable");
     Route::post('/tables', "Admin\TableController@insert");
     Route::put('/tables/{table}', "Admin\TableController@update");
