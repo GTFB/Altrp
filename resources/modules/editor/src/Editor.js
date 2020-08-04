@@ -214,8 +214,7 @@ class Editor extends Component {
               <button className="btn ">
                 <Preview className="icon" />
               </button>
-              <UpdateButton />
-              <button onClick={() => this.showModalWindow()} style={{ width: '10px', height: '10px', marginRight: '20px' }}>M</button>
+              <UpdateButton onClick={() => this.showModalWindow()} showModalWindow={() => this.showModalWindow()} />
             </div>
           </div>
           <div className="right-panel">

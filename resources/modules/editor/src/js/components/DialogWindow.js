@@ -3,6 +3,7 @@ import Logo from "../../svgs/logo.svg";
 import '../../sass/dialog-content.scss'
 import DialogTab from './DialogTab';
 import DialogConditionsTab from './DialogConditionsTab';
+import DialogTriggersTab from './DialogTriggersTab';
 
 class DialogWindow extends Component {
   constructor(props) {
@@ -14,6 +15,7 @@ class DialogWindow extends Component {
         { icon: 'triggers_tab', title: 'Triggers', desc: 'What action the user needs to do for the popup to open.' },
         { icon: 'triggers_tab', title: 'Advanced Rules', desc: 'Requirements that have to be met for the popup to open.' },
       ],
+      
     }
   }
 
@@ -32,7 +34,7 @@ class DialogWindow extends Component {
       case 'Conditions':
         return <DialogConditionsTab />
       case 'Triggers':
-        return <div>TRIGGERS</div>
+        return <DialogTriggersTab />
       case 'Advanced Rules':
         return <div>ADVANCED</div>
       default:
@@ -57,7 +59,7 @@ class DialogWindow extends Component {
             <div className="modal-body__tabs">
               {
                 this.state.tabs.map((tab, index) => {
-                  return <div key={index} onClick={() => this.handleOpen(tab.title)}>
+                  return <div key={tab.title} onClick={() => this.handleOpen(tab.title)}>
                     <DialogTab active={this.state.activeTab === tab.title ? true : false} tab={tab} />
                   </div>
                 })

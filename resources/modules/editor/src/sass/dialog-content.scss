@@ -1,4 +1,3 @@
-
 // MODAL WINDOW STYLES
 
 .modal {
@@ -32,27 +31,27 @@
     background-color: #343b4c;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.28);
+    box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.28);
     &__logo {
       margin-left: 10px;
     }
     & > button {
-    background-color: #343b4c;
+      background-color: #343b4c;
     }
   }
-  &-body{
+  &-body {
     height: 100%;
     display: flex;
     background-color: #4c565c;
-    &__tabs{
+    &__tabs {
       width: 30%;
       padding-top: 50px;
-      box-shadow: 4px 0px 3px 0px rgba(0,0,0,0.10);
-      &-active{
+      box-shadow: 4px 0px 3px 0px rgba(0, 0, 0, 0.1);
+      &-active {
         background: red;
       }
     }
-    &__content{
+    &__content {
       padding: 50px;
       overflow: auto;
       width: 100%;
@@ -66,10 +65,10 @@
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     background-color: #4c565c;
-    box-shadow: 0px -4px 3px 0px rgba(0,0,0,0.10);
+    box-shadow: 0px -4px 3px 0px rgba(0, 0, 0, 0.1);
     &__button {
       width: 110px;
-      height: 40px;      
+      height: 40px;
       margin: 0 5px;
       padding: 0;
       text-transform: uppercase;
@@ -77,7 +76,7 @@
       color: #fff;
     }
   }
-  &-save{
+  &-save {
     text-decoration: underline;
   }
   &-next {
@@ -99,7 +98,7 @@
     cursor: pointer;
     &-active {
       background-color: #404349;
-      &::after{
+      &::after {
         content: "";
         position: absolute;
         top: 0;
@@ -110,7 +109,7 @@
       }
     }
   }
-  &__image{
+  &__image {
     width: 50px;
     height: 50px;
   }
@@ -132,16 +131,15 @@
 }
 // MODAL TAB STYLES
 // DIALOG CONDITION TAB
-
 .modal-condition {
-  &-tab{
+  &-tab {
     text-align: center;
     color: #fff;
   }
-  &-image{
+  &-image {
     margin-top: 45px;
   }
-  &-title{
+  &-title {
     margin-top: 40px;
     font-size: 30px;
   }
@@ -159,5 +157,186 @@
     font-weight: bold;
   }
 }
+// DIALOG TRIGGERS TAB
 
+.triggers {
+  &-wrapper {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-bottom: 10px;
+    height: 65px;
+    background: #fff;
+    color: #000;
+    border-radius: 3px;
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+  }
+  &-icon {
+  }
+  &-icon-wrapper {
+    display: flex;
+    align-items: center;
+    width: 50px;
+    height: 100%;
+    margin:0 10px;
+    border-right: solid 1px;
+  }
+  &-title {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    width: 30%;
+  }
+  &-control {
+    &-field {
+      display: flex;
+      align-items: center;
+    }
+    &-field {
+      & > label {
+        margin-right: 10px;
+        width: 60px;
+        font-size: 12px;
+      }
+    }
+    &-input-wrapper {
+      & > input[type="number"] {
+        width: 54px;
+      }
+    }
+    &-content {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-grow: 1;
+      margin-right: 15px;
+      &-switch {
+        display: flex;
+        justify-content: flex-end;
+        flex-grow: 1;
+      }
+    }
+  }
+}
 
+.toggle-switch {
+  position: relative;
+  width: 75px;
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  text-align: left;
+  margin-right: 15px;
+  &-checkbox {
+    display: none;
+  }
+  &-label {
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+    border: 0 solid #ccc;
+    border-radius: 20px;
+    margin: 0;
+  }
+  &-inner {
+    display: block;
+    width: 200%;
+    margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+    &:before,
+    &:after {
+      display: block;
+      float: left;
+      width: 50%;
+      height: 25px;
+      padding: 0;
+      line-height: 25px;
+      font-size: 14px;
+      color: white;
+      font-weight: bold;
+      box-sizing: border-box;
+    }
+    &:before {
+      content: "Yes";
+      text-transform: uppercase;
+      padding-left: 10px;
+      background-color: #70d6f5;
+      color: #fff;
+    }
+  }
+  &-disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    &:before {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+  &-inner:after {
+    content: "No";
+    text-transform: uppercase;
+    padding-right: 10px;
+    background-color: #ccc;
+    color: #fff;
+    text-align: right;
+  }
+  &-switch {
+    display: block;
+    width: 24px;
+    margin: 5px;
+    background: #fff;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 40px;
+    border: 0 solid #ccc;
+    border-radius: 20px;
+    transition: all 0.3s ease-in 0s;
+  }
+  &-checkbox:checked + &-label {
+    .toggle-switch-inner {
+      margin-left: 0;
+    }
+    .toggle-switch-switch {
+      right: 0px;
+    }
+  }
+  &.small-switch {
+    width: 40px;
+    .toggle-switch-inner {
+      &:after,
+      &:before {
+        content: "";
+        height: 20px;
+        line-height: 20px;
+      }
+    }
+    .toggle-switch-switch {
+      width: 16px;
+      right: 20px;
+      margin: 2px;
+    }
+  }
+}
+// INPUTS IN TRIGGER
+
+.triggers-control {
+  &-inputText {
+    width: 50%;
+    height: 30px;
+  }
+  &-input-wrapper {
+    & > input {
+      height: 25px;
+      padding: 5px;
+      border: 1px solid;
+      border-radius: 3px;
+    }
+    & > select {
+      width: 80px;
+      height: 25px;
+    }
+  }
+}
