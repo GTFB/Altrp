@@ -83,6 +83,7 @@ class RouteGenerator
         for ($i = 0; $i < count($this->routeContents); $i++) {
             if (Str::contains($this->routeContents[$i], ' '.$tableName . ' resource')
                 || Str::contains($this->routeContents[$i], '/'.$tableName)
+                || Str::contains($this->routeContents[$i], '/'.Str::singular($tableName).'_options')
                 || Str::contains($this->routeContents[$i], $controller)) {
                 $indexes[] = $i;
             }
@@ -122,6 +123,7 @@ class RouteGenerator
     public function deleteRoutes($controller)
     {
         $contents = $this->routeContents;
+        if (! $contents) return true;
         foreach ($contents as $line => $content) {
             if (Str::contains($content, ' '.$controller->model->table->name . ' resource')
                 || Str::contains($content, '/'.$controller->model->table->name)

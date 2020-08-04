@@ -37,7 +37,7 @@ class DummyClass extends ApiController
      */
     public function options(Request $request)
     {
-        $options = {{modelName}}::select(['id as value', 'title as label'])->get();
+        $options = {{modelName}}::{{options}}->get();
 
         return response()->json($options, 200, [], JSON_UNESCAPED_UNICODE);
     }
