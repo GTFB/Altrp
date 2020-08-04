@@ -67,6 +67,10 @@ class AltrpUpdateService
     if ( ! File::exists( base_path( '.env' ) ) ) {
       return redirect( '/install' );
     }
+    /**
+     * Проверяем нужно производить агрейд
+     */
+    $this->checkVersion( $version );
 
     // Get eventual new version value & the current (installed) version value
     Artisan::call( 'config:clear' );
@@ -170,5 +174,26 @@ class AltrpUpdateService
     if ( File::exists( $robotsFile ) ) {
       File::delete( $robotsFile );
     }
+  }
+
+  /**
+   * @param string $new_version
+   */
+  private function checkVersion( $new_version )
+  {
+    $old_version = env( 'APP_VERSION' );
+    /**
+     * Если версия меньше либо равна 0.6.1 вызываем апгредйер
+     */
+    if( version_compare( $old_version , '0.6.1', '>=' ) ){
+      $this->upgrade_0_6_1();
+    }
+  }
+  /**
+   * Запись пользовательских роутов
+   */
+
+  private function upgrade_0_6_1(){
+
   }
 }

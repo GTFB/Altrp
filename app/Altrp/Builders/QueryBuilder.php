@@ -53,13 +53,14 @@ class QueryBuilder
         $this->data = $data;
     }
 
-    /**
-     * Построить запрос
-     *
-     * @return bool
-     * @throws RepositoryFileException
-     * @throws \App\Exceptions\Controller\ControllerFileException
-     */
+  /**
+   * Построить запрос
+   *
+   * @return bool
+   * @throws RepositoryFileException
+   * @throws \App\Exceptions\Controller\ControllerFileException
+   * @throws \App\Exceptions\Route\RouteFileException
+   */
     public function build()
     {
         foreach ($this->data as $item => $value) {
@@ -176,9 +177,10 @@ class QueryBuilder
         return false;
     }
 
-    /**
-     * Записать маршрут в файл маршрутов
-     */
+  /**
+   * Записать маршрут в файл маршрутов
+   * @throws \App\Exceptions\Route\RouteFileException
+   */
     protected function writeRoute()
     {
         $routeFile = new RouteFile($this->data['model']);
@@ -222,12 +224,13 @@ class QueryBuilder
         $fileWriter->addMethod($this->getMethodName());
     }
 
-    /**
-     * Записать ресурс
-     *
-     * @param string $method
-     * @return mixed
-     */
+  /**
+   * Записать ресурс
+   *
+   * @param string $method
+   * @return mixed
+   * @throws RepositoryFileException
+   */
     protected function writeSource($method)
     {
         $method = Str::kebab($method);
