@@ -33,6 +33,7 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::delete('/global-elements/{element}', "Constructor\GlobalElements@trashed");
 
         Route::get('/tables', "Admin\TableController@getTables");
+        Route::get('/tables/options', "Admin\TableController@getTablesForOptions");
         Route::get('/tables/{table}', "Admin\TableController@getTable");
         Route::post('/tables', "Admin\TableController@insert");
         Route::put('/tables/{table}', "Admin\TableController@update");

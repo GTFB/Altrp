@@ -28,7 +28,8 @@ class CrudControllerCommand extends GeneratorCommand
                             {--custom-namespaces= : Custom namespaces of the controller.}
                             {--custom-traits= : Custom traits of the controller.}
                             {--custom-properties= : Custom props of the controller.}
-                            {--custom-methods= : Custom methods of the controller.}';
+                            {--custom-methods= : Custom methods of the controller.}
+                            {--options= : Resource data for select options.}';
 
     /**
      * The console command description.
@@ -110,6 +111,7 @@ class CrudControllerCommand extends GeneratorCommand
         $customTraits = $this->option('custom-traits') ?? '';
         $customProperties = $this->option('custom-properties') ?? '';
         $customMethods = $this->option('custom-methods') ?? '';
+        $options = $this->option('options') ?? '';
 
         $storeRequest = $modelName . 'StoreRequest';
         $updateRequest = $modelName . 'UpdateRequest';
@@ -199,10 +201,17 @@ EOD;
             ->replaceCustomTraits($stub, $customTraits)
             ->replaceCustomProperties($stub, $customProperties)
             ->replaceCustomMethods($stub, $customMethods)
+            ->replaceOptions($stub, $options)
             ->replacePaginationNumber($stub, $perPage)
             ->replaceFileSnippet($stub, $fileSnippet)
             ->replaceWhereSnippet($stub, $whereSnippet)
             ->replaceClass($stub, $name);
+    }
+
+    protected function replaceOptions(&$stub, $options)
+    {
+        $stub = str_replace('{{options}}', $options, $stub);
+        return $this;
     }
 
     protected function replaceStoreRequest(&$stub, $storeRequest)

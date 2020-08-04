@@ -181,9 +181,10 @@ class ModelGenerator extends AppGenerator
         $createdAt = $this->getCreatedAt();
         $updatedAt = $this->getUpdatedAt();
         $primaryKey = $this->getPrimaryKey();
-        $customCode = $this->getCustomCode($this->modelFile);
+        $oldModelFile = $this->getOldModelFile();
+        $customCode = $this->getCustomCode($oldModelFile);
         $userColumns = $this->getUserColumns();
-
+        if(file_exists($oldModelFile)) unlink($oldModelFile);
         try {
             \Artisan::call('crud:model', [
                 'name' => "{$fullModelName}",
@@ -209,6 +210,8 @@ class ModelGenerator extends AppGenerator
         }
         if(file_exists($this->modelFile . '.bak'))
             unlink($this->modelFile . '.bak');
+        if(file_exists($oldModelFile . '.bak'))
+            unlink($oldModelFile . '.bak');
         return true;
     }
 
@@ -281,7 +284,7 @@ class ModelGenerator extends AppGenerator
             return $this->writeRelationships();
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -547,6 +550,15 @@ class ModelGenerator extends AppGenerator
     protected function getModelFile()
     {
         return base_path('app/' . "{$this->modelFilename}.php");
+    }
+
+    protected function getOldModelFile()
+    {
+        $modelFilename = $this->getFormedFileName(
+            $this->model->getOriginal('path'),
+            $this->model->getOriginal('name')
+        );
+        return app_path("{$modelFilename}.php");
     }
 
     /**
