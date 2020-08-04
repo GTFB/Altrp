@@ -69,10 +69,6 @@ class DialogWindow extends Component {
               {this.renderSwitch(this.state.activeTab)}
             </div>
           </div>
-          <div className="modal-footer">
-            <button className="modal-footer__button modal-save">Save & close</button>
-            <button className="modal-footer__button modal-next">Next</button>
-          </div>
         </div>
       </div>
     )

@@ -1,57 +1,85 @@
 import React, { Component } from 'react';
 import '../../sass/dialog-content.scss';
 import { iconsManager } from '../../../../front-app/src/js/helpers';
+import { getTemplateId } from '../helpers';
+import Resource from '../classes/Resource';
 
 export default class DialogTriggersTab extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      "on_page_load": 1.0,
-      "on_scroll": {
-        "direction": "down",
-        "size": 23,
-      },
-      "to_element": ".selector",
-      "on_click": 1,
-      "inactivity": 23.3,
-      "on_exit": true,
+      value: {},
+      onLoad: false,
+      onScroll: false,
+      scrollElement: false,
+      onClick: false,
+      afterInactivity: false,
+      on_exit: false,
     }
+    this.resource = new Resource({ route: `/admin/ajax/templates/${getTemplateId()}/settings` })
   }
 
-  // handleChange() {
-  //   this.setState({
-  //     isChecked: !this.state.isChecked
-  //   });
-  // };
+  async updateTriggers() {
+    let res = await this.resource.put('triggers', {data: this.state.value});
+    console.log(res);
+  }
+
+  async componentDidMount() {
+    let triggers = await this.resource.get('triggers')
+    this.setState({
+      value: triggers.data,
+    })
+  }
 
   handleChangePage(e) {
     if (e.target.name === 'direction') {
       this.setState({
-        ...this.state,
-        on_scroll: {
-          direction: e.target.value,
-          size: this.state.on_scroll.size
+        value: {
+          ...this.state.value,
+          on_scroll: {
+            ...this.state.value.on_scroll,
+            direction: e.target.value,
+          }
         }
       })
-    return;
-    } else if(e.target.name === 'size'){
+      return;
+    } else if (e.target.name === 'size') {
       this.setState({
-        ...this.state,
-        on_scroll: {
-          direction: this.state.on_scroll.direction,
-          size: e.target.value,
+        value: {
+          ...this.state.value,
+          on_scroll: {
+            ...this.state.value.on_scroll,
+            size: e.target.value,
+          }
         }
       })
       return;
     }
     this.setState({
-      ...this.state,
-      [e.target.name]: e.target.value,
+      value: {
+        ...this.state.value,
+        [e.target.name]: e.target.value
+      }
     })
   }
-  
+
+  handleCheck(e) {
+    if (e.target.name === 'on_exit') {
+      this.setState({
+        [e.target.name]: e.target.checked,
+        value:{
+          ...this.state.value,
+          [e.target.name]: e.target.checked,
+        }
+      })
+    }
+    this.setState({
+      [e.target.name]: e.target.checked
+    })
+  }
+
   render() {
-    console.log('full state', this.state);
+    console.log('state', this.state);
     return (
       <div className="triggers-tab">
         <div className="triggers-wrapper">
@@ -62,27 +90,31 @@ export default class DialogTriggersTab extends Component {
           </div>
           <div className="triggers-title">On Page Load</div>
           <div className="triggers-control-content">
-            <div className="triggers-control-field">
-              <label htmlFor="triggers-control-field-pageLoad">Within(sec)</label>
-              <div className="triggers-control-input-wrapper">
-                <input className="triggers-control-input"
-                  id="triggers-control-field-pageLoad"
-                  onChange={(e) => this.handleChangePage(e)} type="number"
-                  min="0"
-                  step="0.1"
-                  value={this.state.on_page_load}
-                  name="on_page_load"
-                />
+            {this.state.onLoad &&
+              <div className="triggers-control-field">
+                <label htmlFor="triggers-control-field-pageLoad">Within(sec)</label>
+                <div className="triggers-control-input-wrapper">
+                  <input className="triggers-control-input"
+                    id="triggers-control-field-pageLoad"
+                    onChange={(e) => this.handleChangePage(e)} type="number"
+                    min="0"
+                    step="0.1"
+                    value={this.state.on_page_load}
+                    name="on_page_load"
+                  />
+                </div>
               </div>
-            </div>
+            }
           </div>
           <div className="triggers-control-content-switch">
             <div className="toggle-switch">
               <input
                 type="checkbox"
                 className="toggle-switch-checkbox"
-                name="toggleSwitch"
+                name="onLoad"
+                checked={this.state[name]}
                 id="toggleSwitch"
+                onChange={(e) => this.handleCheck(e)}
               />
               <label className="toggle-switch-label" htmlFor="toggleSwitch">
                 <span className="toggle-switch-inner" />
@@ -99,40 +131,46 @@ export default class DialogTriggersTab extends Component {
           </div>
           <div className="triggers-title">On Scroll</div>
           <div className="triggers-control-content">
-            <div className="triggers-control-field">
-              <label htmlFor="triggers-control-field-inputSelect">Direction</label>
-              <div className="triggers-control-input-wrapper">
-                <select value={this.state.on_scroll.direction}
-                  name="direction"
-                  onChange={(e) => this.handleChangePage(e)}
-                  id="triggers-control-field-inputSelect">
-                  <option value="down">Down</option>
-                  <option value="up">Up</option>
-                </select>
+            {this.state.onScroll &&
+              <div className="triggers-control-field">
+                <label htmlFor="triggers-control-field-inputSelect">Direction</label>
+                <div className="triggers-control-input-wrapper">
+                  <select
+                    name="direction"
+                    onChange={(e) => this.handleChangePage(e)}
+                    id="triggers-control-field-inputSelect">
+                    <option value="down">Down</option>
+                    <option value="up">Up</option>
+                  </select>
+                </div>
               </div>
-            </div>
+            }
           </div>
           <div className="triggers-control-content">
-            <div className="triggers-control-field">
-              <label htmlFor="triggers-control-field-inputNumber2">Within(%)</label>
-              <div className="triggers-control-input-wrapper">
-                <input type="number"
-                  min="1"
-                  max="100"
-                  id="triggers-control-field-inputNumber2"
-                  value={this.state.on_scroll.size}
-                  name="size"
-                  onChange={(e) => this.handleChangePage(e)}
-                />
+            {
+              this.state.onScroll &&
+              <div className="triggers-control-field">
+                <label htmlFor="triggers-control-field-inputNumber2">Within(%)</label>
+                <div className="triggers-control-input-wrapper">
+                  <input type="number"
+                    min="1"
+                    max="100"
+                    id="triggers-control-field-inputNumber2"
+                    name="size"
+                    onChange={(e) => this.handleChangePage(e)}
+                  />
+                </div>
               </div>
-            </div>
+            }
           </div>
           <div className="triggers-control-content-switch">
             <div className="toggle-switch">
               <input
                 type="checkbox"
                 className="toggle-switch-checkbox"
-                name="toggleSwitch2"
+                name="onScroll"
+                checked={this.state[name]}
+                onClick={(e) => this.handleCheck(e)}
                 id="toggleSwitch2"
               />
               <label className="toggle-switch-label" htmlFor="toggleSwitch2">
@@ -150,26 +188,31 @@ export default class DialogTriggersTab extends Component {
           </div>
           <div className="triggers-title">On Scroll To Element</div>
           <div className="triggers-control-content">
-            <div className="triggers-control-field">
-              <label htmlFor="triggers-control-field-inputText">Selector</label>
-              <div className="triggers-control-input-wrapper">
-                <input className="triggers-control-inputText"
-                  id="triggers-control-field-Text"
-                  type="text"
-                  name="to_element"
-                  placeholder=".my class"
-                  value={this.state.to_element}
-                  onChange={(e) => this.handleChangePage(e)}
-                />
+            {
+              this.state.scrollElement &&
+              <div className="triggers-control-field">
+                <label htmlFor="triggers-control-field-inputText">Selector</label>
+                <div className="triggers-control-input-wrapper">
+                  <input className="triggers-control-inputText"
+                    id="triggers-control-field-Text"
+                    type="text"
+                    name="to_element"
+                    placeholder=".my class"
+                    defaultValue=''
+                    onChange={(e) => this.handleChangePage(e)}
+                  />
+                </div>
               </div>
-            </div>
+            }
           </div>
           <div className="triggers-control-content-switch">
             <div className="toggle-switch">
               <input
                 type="checkbox"
                 className="toggle-switch-checkbox"
-                name="toggleSwitch"
+                checked={this.state[name]}
+                name="scrollElement"
+                onClick={(e) => this.handleCheck(e)}
                 id="toggleSwitchText"
               />
               <label className="toggle-switch-label" htmlFor="toggleSwitchText">
@@ -187,26 +230,31 @@ export default class DialogTriggersTab extends Component {
           </div>
           <div className="triggers-title">On Click</div>
           <div className="triggers-control-content">
-            <div className="triggers-control-field">
-              <label htmlFor="triggers-control-field-Clicks">Clicks</label>
-              <div className="triggers-control-input-wrapper">
-                <input className="triggers-control-input"
-                  id="triggers-control-field-Clicks"
-                  type="number"
-                  min="1"
-                  name="on_click"
-                  value={this.state.on_click}
-                  onChange={(e) => this.handleChangePage(e)}
-                />
+            {
+              this.state.onClick &&
+              <div className="triggers-control-field">
+                <label htmlFor="triggers-control-field-Clicks">Clicks</label>
+                <div className="triggers-control-input-wrapper">
+                  <input className="triggers-control-input"
+                    id="triggers-control-field-Clicks"
+                    type="number"
+                    min="1"
+                    name="on_click"
+                    value={this.state.on_click}
+                    onChange={(e) => this.handleChangePage(e)}
+                  />
+                </div>
               </div>
-            </div>
+            }
           </div>
           <div className="triggers-control-content-switch">
             <div className="toggle-switch">
               <input
                 type="checkbox"
                 className="toggle-switch-checkbox"
-                name="toggleSwitch"
+                checked={this.state[name]}
+                name="onClick"
+                onClick={(e) => this.handleCheck(e)}
                 id="toggleSwitchClicks"
               />
               <label className="toggle-switch-label" htmlFor="toggleSwitchClicks">
@@ -226,27 +274,31 @@ export default class DialogTriggersTab extends Component {
           </div>
           <div className="triggers-title">After Inactivity</div>
           <div className="triggers-control-content">
-            <div className="triggers-control-field">
-              <label htmlFor="triggers-control-field-inactivity">Within(sec)</label>
-              <div className="triggers-control-input-wrapper">
-                <input className="triggers-control-input"
-                  id="triggers-control-field-inactivity"
-                  type="number"
-                  value={this.state.inactivity}
-                  min="1"
-                  step="0.1"
-                  name="inactivity"
-                  onChange={(e) => this.handleChangePage(e)}
-                />
+            {this.state.afterInactivity &&
+              <div className="triggers-control-field">
+                <label htmlFor="triggers-control-field-inactivity">Within(sec)</label>
+                <div className="triggers-control-input-wrapper">
+                  <input className="triggers-control-input"
+                    id="triggers-control-field-inactivity"
+                    type="number"
+                    value={this.state.inactivity}
+                    min="1"
+                    step="0.1"
+                    name="inactivity"
+                    onChange={(e) => this.handleChangePage(e)}
+                  />
+                </div>
               </div>
-            </div>
+            }
           </div>
           <div className="triggers-control-content-switch">
             <div className="toggle-switch">
               <input
                 type="checkbox"
                 className="toggle-switch-checkbox"
-                name="toggleSwitch"
+                checked={this.state[name]}
+                name="afterInactivity"
+                onClick={(e) => this.handleCheck(e)}
                 id="toggleSwitchInactivity"
               />
               <label className="toggle-switch-label" htmlFor="toggleSwitchInactivity">
@@ -270,7 +322,9 @@ export default class DialogTriggersTab extends Component {
               <input
                 type="checkbox"
                 className="toggle-switch-checkbox"
+                checked={this.state[name]}
                 name="on_exit"
+                onClick={(e) => this.handleCheck(e)}
                 id="toggleSwitchIntent"
                 onChange={(e) => this.setState({ on_exit: !this.state.on_exit })}
               />
@@ -281,7 +335,10 @@ export default class DialogTriggersTab extends Component {
             </div>
           </div>
         </div>
-
+        <div className="modal-footer">
+          <button onClick={() => this.updateTriggers()} className="modal-footer__button modal-save">Save & close</button>
+          <button onClick={() => this.updateTriggers()} className="modal-footer__button modal-next">Next</button>
+        </div>
       </div>
     )
   }

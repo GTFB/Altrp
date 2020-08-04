@@ -19,6 +19,11 @@ export default class DialogConditionsTab extends Component {
         <div className="modal-condition-button-wrapper">
           <button className="modal-condition-button">Add condition</button>
         </div>
+        
+        <div className="modal-footer">
+            <button className="modal-footer__button modal-save">Save & close</button>
+            <button className="modal-footer__button modal-next">Next</button>
+          </div>
       </div>
     )
   }
