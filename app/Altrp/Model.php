@@ -219,7 +219,8 @@ class Model extends EloquentModel
     {
         return self::where('title','like', "%{$search}%")
             ->orWhere('id', $search)
-            ->get();
+          ->orderByDesc('id')
+          ->get();
     }
 
     public static function getBySearchWithPaginate($search, $offset, $limit)
@@ -227,6 +228,7 @@ class Model extends EloquentModel
         return self::where('title','like', "%{$search}%")
             ->orWhere('id', $search)
             ->skip($offset)
+          ->orderByDesc('id')
             ->take($limit)
             ->get();
     }
@@ -235,6 +237,7 @@ class Model extends EloquentModel
     {
         return self::skip($offset)
             ->take($limit)
+          ->orderByDesc('id')
             ->get();
     }
 
@@ -251,4 +254,16 @@ class Model extends EloquentModel
             ->count();
     }
 
+  public function getFieldsOptions(){
+    return self::where( 'altrp_models.id', $this->id )
+      ->join( 'tables', 'altrp_models.table_id', '=', 'tables.id' )
+      ->join( 'altrp_columns', 'altrp_columns.table_id', '=', 'tables.id' )
+      ->select( ['altrp_columns.id as value', 'altrp_columns.title as label'] )->get();
+  }
+//  public function getFieldsOptions(){
+//    return self::where( 'altrp_columns.id', $this->id )
+//      ->join( 'tables', 'altrp_models.table_id', '=', 'tables.id' )
+//      ->join( 'altrp_columns', 'altrp_columns.table_id', '=', 'tables.id' )
+//      ->select( ['altrp_columns.id as value', 'altrp_columns.title as label'] )->get();
+//  }
 }

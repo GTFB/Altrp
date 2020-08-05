@@ -66,7 +66,7 @@ class ConditionComponent extends Component {
           >
             <option disabled value="" />
             {columnsOptions.map(({ value, label }) =>
-              <option key={value} value={label}>
+              <option key={value} value={value}>
                 {label}
               </option>)}
           </select>
@@ -190,7 +190,7 @@ class ConditionComponent extends Component {
           >
             <option disabled value="" />
             {columnsOptions.map(({ value, label }) =>
-              <option key={value} value={label}>
+              <option key={value} value={value}>
                 {label}
               </option>)}
           </select>
@@ -205,7 +205,7 @@ class ConditionComponent extends Component {
           >
             <option disabled value="" />
             {columnsOptions.map(({ value, label }) =>
-              <option key={value} value={label}>
+              <option key={value} value={value}>
                 {label}
               </option>)}
           </select>
