@@ -62,7 +62,10 @@ class TableController extends ApiController
         $table = Table::find($id);
 
         if(!$table) {
-            return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Table not found'
+            ], 404, [],JSON_UNESCAPED_UNICODE);
         }
 
         return response()->json($table, 200, [],JSON_UNESCAPED_UNICODE);
@@ -89,10 +92,13 @@ class TableController extends ApiController
         $table->user_id = auth()->user()->id;
 
         if($table->save()){
-            return response()->json($table, 200, [],JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [],JSON_UNESCAPED_UNICODE);
         }
 
-        return response()->json(trans("responses.dberror"), 400, [],JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to create table'
+        ], 500, [],JSON_UNESCAPED_UNICODE);
 
     }
 
@@ -112,7 +118,10 @@ class TableController extends ApiController
         $table = Table::find($request->table);
 
         if(!$table) {
-            return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Table not found'
+            ], 404, [],JSON_UNESCAPED_UNICODE);
         }
 
         if($request->name) $table->name = $request->name;
@@ -122,10 +131,13 @@ class TableController extends ApiController
         $table->user_id = auth()->user()->id;
 
         if($table->save()){
-            return response()->json($table, 200, [],JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [],JSON_UNESCAPED_UNICODE);
         }
 
-        return response()->json(trans("responses.dberror"), 400, [],JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update table'
+        ], 500, [],JSON_UNESCAPED_UNICODE);
 
     }
 
@@ -140,14 +152,20 @@ class TableController extends ApiController
         $table = Table::find($request->table);
 
         if(!$table) {
-            return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Table not found'
+            ], 404, [],JSON_UNESCAPED_UNICODE);
         }
 
         if($table->delete()) {
-            return response()->json(trans("responses.delete.table"), 200, [],JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [],JSON_UNESCAPED_UNICODE);
         }
 
-        return response()->json(trans("deleteerror"), 400, [],JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to delete table'
+        ], 500, [],JSON_UNESCAPED_UNICODE);
     }
 
 
@@ -166,7 +184,10 @@ class TableController extends ApiController
         $table = Table::find($id);
 
         if(!$table) {
-            return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Table not found'
+            ], 404, [],JSON_UNESCAPED_UNICODE);
         }
 
         return response()->json($table->migrations, 200, [],JSON_UNESCAPED_UNICODE);
@@ -190,7 +211,10 @@ class TableController extends ApiController
         $table = Table::find($id);
 
         if(!$table) {
-            return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Table not found'
+            ], 404, [],JSON_UNESCAPED_UNICODE);
         }
 
         $request->validate([
@@ -206,14 +230,20 @@ class TableController extends ApiController
         $migration->table_id = $table->id;
 
         if(!$migration->save()){
-            return response()->json('Ошибка генерации', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create migration'
+            ], 500, [], JSON_UNESCAPED_UNICODE);
         }
 
         if($migration->run()) {
-            return response()->json('Успешно сгенерировано', 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
 
-        return response()->json('Ошибка генерации', 404, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to run migration'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
 
         /*$id = $request->table;
         $table = Table::find($id);
@@ -254,18 +284,31 @@ class TableController extends ApiController
         $table = Table::find($id);
 
         if(!$table) {
-            return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Table not found'
+            ], 404, [],JSON_UNESCAPED_UNICODE);
         }
 
         $migration_id = $request->migration;
+        /**
+         * @var Migration $migration
+         */
         $migration = Migration::find($migration_id);
 
         if(!$migration) {
-            return response()->json(trans("responses.not_found.migration"), 404, [],JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Migration not found'
+            ], 404, [],JSON_UNESCAPED_UNICODE);
         }
-
-        return response()->json($migration->run(), 200, [],JSON_UNESCAPED_UNICODE);
-
+        $result = $migration->run();
+        if ($result)
+            return response()->json(['success' => true], 200, [],JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to run migration'
+        ], 500, [],JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -280,7 +323,10 @@ class TableController extends ApiController
         $table = Table::find($id);
 
         if(!$table) {
-            return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Table not found'
+            ], 404, [],JSON_UNESCAPED_UNICODE);
         }
 
         return response()->json($table->actual_columns, 200, [],JSON_UNESCAPED_UNICODE);
@@ -299,7 +345,10 @@ class TableController extends ApiController
         $table = Table::find($id);
 
         if(!$table) {
-            return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Table not found'
+            ], 404, [],JSON_UNESCAPED_UNICODE);
         }
 
         return response()->json($table->actual_keys, 200, [],JSON_UNESCAPED_UNICODE);
@@ -321,7 +370,10 @@ class TableController extends ApiController
         $model = Model::where("table_id", $tableId)->with('table.relationships')->first();
 
         if(! $model) {
-            return response()->json(trans("responses.not_found.table"), 404, [],JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [],JSON_UNESCAPED_UNICODE);
         }
 
         return response()->json($model, 200, [],JSON_UNESCAPED_UNICODE);
@@ -341,7 +393,10 @@ class TableController extends ApiController
         $model = Model::find($modelId);
 
         if (! $model) {
-            return response()->json('Модель не найдена!', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
         }
 
         return response()->json($model->altrp_accessors, 200, [],JSON_UNESCAPED_UNICODE);
@@ -362,7 +417,10 @@ class TableController extends ApiController
         $model = Model::find($modelId);
 
         if (! $model) {
-            return response()->json('Модель не найдена!', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
         }
 
         $accessor = new Accessor();
@@ -374,10 +432,13 @@ class TableController extends ApiController
         );
 
         if ($accessorBuilder->build()) {
-            return response()->json($accessor, 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
 
-        return response()->json('Failed to add accessor!', 404, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to create accessor'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -390,15 +451,24 @@ class TableController extends ApiController
     {
         $table = Table::find($request->table);
         if(! $table) {
-            return response()->json('Table not found!', 404, [],JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Table not found'
+            ], 404, [],JSON_UNESCAPED_UNICODE);
         }
         $model = Model::find($request->model);
         if(! $model) {
-            return response()->json('Model not found!', 404, [],JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [],JSON_UNESCAPED_UNICODE);
         }
         $accessor = Accessor::find($request->accessor);
         if(! $accessor) {
-            return response()->json('Accessor not found!', 404, [],JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Accessor not found'
+            ], 404, [],JSON_UNESCAPED_UNICODE);
         }
 
         $accessorBuilder = new AccessorBuilder(
@@ -407,10 +477,13 @@ class TableController extends ApiController
         );
 
         if ($accessorBuilder->delete()) {
-            return response()->json('Successfully deleted!', 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
 
-        return response()->json('Failed to delete accessor!', 404, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to delete accessor'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -427,15 +500,24 @@ class TableController extends ApiController
     {
         $table = Table::find($tableId);
         if(! $table) {
-            return response()->json('Table not found!', 404, [],JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Table not found'
+            ], 404, [],JSON_UNESCAPED_UNICODE);
         }
         $model = Model::find($modelId);
         if(! $model) {
-            return response()->json('Model not found!', 404, [],JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [],JSON_UNESCAPED_UNICODE);
         }
         $accessor = Accessor::find($accessorId);
         if(! $accessor) {
-            return response()->json('Accessor not found!', 404, [],JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Accessor not found'
+            ], 404, [],JSON_UNESCAPED_UNICODE);
         }
 
         $accessorBuilder = new AccessorBuilder(
@@ -445,10 +527,13 @@ class TableController extends ApiController
         );
 
         if ($accessorBuilder->update()) {
-            return response()->json($accessor, 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
 
-        return response()->json('Error!', 404, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update accessor'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
 }
