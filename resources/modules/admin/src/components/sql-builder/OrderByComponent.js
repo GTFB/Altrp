@@ -28,7 +28,7 @@ class OrderByComponent extends Component {
           onChange={changeHandler}
           className="form-control"
         >
-          <option disabled value="" />
+          {/*<option disabled value="" />*/}
           <option value="asc">Asc</option>
           <option value="desc">Desc</option>
         </select>
