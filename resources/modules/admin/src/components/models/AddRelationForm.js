@@ -40,6 +40,7 @@ class AddRelationForm extends Component {
       },
     };
     this.modelsResource = new Resource({ route: '/admin/ajax/model_options' });
+    this.relationsResource = new Resource({ route: `/admin/ajax/models/${this.props.match.params.modelId}/relations` });
     this.submitHandler = this.submitHandler.bind(this);
   }
 
@@ -56,11 +57,16 @@ class AddRelationForm extends Component {
     })
   }
 
-  submitHandler(e) {
+  async submitHandler(e) {
     e.preventDefault();
     const { history, match } = this.props;
     const data = this.state.value;
     // post: /admin/ajax/models (data)
+    if (this.props.match.params.id) {
+      let res = await this.relationsResource.put(this.props.match.params.id, data);
+    } else {
+      let res = await this.relationsResource.post(data);
+    }
     console.log(data);
     history.push(`/admin/tables/models/edit/${match.params.modelId}`);
   }
