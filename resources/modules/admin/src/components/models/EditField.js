@@ -28,7 +28,8 @@ class EditField extends Component {
    * @return {*}
    */
   onSubmit = async data =>{
-    const { modelId, history } = this.props.match.params;
+    const { modelId } = this.props.match.params;
+    const { history } = this.props;
     if(this.props.match.params.id){
       let res = await this.filedsResource.put(this.props.match.params.id, data);
       history.push(`/admin/tables/models/edit/${modelId}`);
