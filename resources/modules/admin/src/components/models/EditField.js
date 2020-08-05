@@ -17,20 +17,16 @@ class EditField extends Component {
     const { modelId } = this.props.match.params;
     let model = await this.modelsResource.get(modelId);
     this.setState({ modelTitle: model.title });
-    if(this.props.match.params.id){
-      let field = await this.filedsResource.get(this.props.match.params.id);
-      this.setState(state=>({...state, field}))
-    }
   }
 
   /**
    * отправка данных
    * @return {*}
    */
-  onSubmit = async data =>{
+  onSubmit = async data => {
     const { modelId } = this.props.match.params;
     const { history } = this.props;
-    if(this.props.match.params.id){
+    if (this.props.match.params.id) {
       let res = await this.filedsResource.put(this.props.match.params.id, data);
       history.push(`/admin/tables/models/edit/${modelId}`);
     } else {
@@ -55,10 +51,7 @@ class EditField extends Component {
         </div>
       </div>
       <div className="admin-content">
-        <AddFieldForm
-            field={this.state.field}
-            onSubmit={this.onSubmit}
-        />
+        <AddFieldForm onSubmit={this.onSubmit} />
       </div>
     </div>;
   }

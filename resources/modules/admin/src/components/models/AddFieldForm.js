@@ -52,28 +52,28 @@ class AddFieldForm extends Component {
     super(props);
     this.state = {
       isAlways: false,
-      fieldsOptions: [{ value: 1, label: "field1" }, { value: 2, label: "field2" }, { value: 3, label: "field3" }],
-      // value: {
-      //   name: '',
-      //   title: '',
-      //   description: '',
-      //   is_label: false,
-      //   is_title: false,
-      //   type: '',
-      //   length_value: '',
-      //   default: '',
-      //   attribute: '',
-      //   input_type: '',
-      //   options: '',
-      //   nullable: false,
-      //   indexed: false,
-      //   editable: false,
-      //   calculation: '',
-      //   calculation_logic: [
-      //       { left: '', operator: '', result: '', right: '' }
-      //       ],
-      // },
-      value: this.props.field || {},
+      fieldsOptions: [],
+      value: {
+        name: '',
+        title: '',
+        description: '',
+        is_label: false,
+        is_title: false,
+        type: '',
+        length_value: '',
+        default: '',
+        attribute: '',
+        input_type: '',
+        options: '',
+        nullable: false,
+        indexed: false,
+        editable: false,
+        calculation: '',
+        calculation_logic: [
+          { left: '', operator: '', result: '', right: '' }
+        ],
+      },
+      // value: this.props.field || {},
     };
     this.submitHandler = this.submitHandler.bind(this);
     this.itemChangeHandler = this.itemChangeHandler.bind(this);
@@ -81,6 +81,7 @@ class AddFieldForm extends Component {
     this.deleteItemHandler = this.deleteItemHandler.bind(this);
     this.titleChangeHandler = this.titleChangeHandler.bind(this);
 
+    this.filedsResource = new Resource({ route: `/admin/ajax/models/${this.props.match.params.modelId}/fields` });
     this.fieldsOptionsResource = new Resource({
       route: `/admin/ajax/models/${this.props.match.params.modelId}/field_options`
     });
@@ -88,15 +89,15 @@ class AddFieldForm extends Component {
   /**
    * новый field в props
    * */
-  componentDidUpdate(prevProps){
-    if(this.props !== prevProps){
-      this.setState(state => {
-        state = { ...state };
-        state.value = {...this.props.field};
-        return state
-      });
-    }
-  }
+  // componentDidUpdate(prevProps){
+  //   if(this.props !== prevProps){
+  //     this.setState(state => {
+  //       state = { ...state };
+  //       state.value = {...this.props.field};
+  //       return state
+  //     });
+  //   }
+  // }
 
   changeValue(value, field) {
     this.setState(state => {
@@ -121,12 +122,12 @@ class AddFieldForm extends Component {
     e.preventDefault();
     const { history, match } = this.props;
     const { name, title, description, is_label, is_title, type, length_value, default: default_, attribute, input_type,
-      options, nullable, indexed, editable, calculation, calculation_logic, isAlways } = this.state.value;
+      options, nullable, indexed, editable, calculation, calculation_logic } = this.state.value;
 
     let data = {};
-
+    
     if (type === "calculated") {
-      isAlways ?
+      this.state.isAlways ?
         data = { title, description, type, calculation } :
         data = { title, description, type, calculation_logic };
     } else {
@@ -135,9 +136,8 @@ class AddFieldForm extends Component {
         data = { ...data, options };
       }
     }
-
-    // post: /admin/ajax/models (value)
-    if(_.isFunction(this.props.onSubmit)){
+    console.log(data);
+    if (_.isFunction(this.props.onSubmit)) {
       this.props.onSubmit(data);
     }
   }
@@ -165,33 +165,37 @@ class AddFieldForm extends Component {
   }
 
   async componentDidMount() {
-    let fieldsOptions = await this.fieldsOptionsResource.getAll();
-    this.setState(state => ({ ...state, fieldsOptions }))
+    let { options } = await this.fieldsOptionsResource.getAll();
+
+    if (this.props.match.params.id) {
+      let value = await this.filedsResource.get(this.props.match.params.id);
+      this.setState(state => ({ ...state, value: { ...state.value, ...value } }));
+    }
+    this.setState(state => ({ ...state, fieldsOptions: options }));
   }
 
   render() {
     return <form className="admin-form field-form" onSubmit={this.submitHandler}>
-
       <div className="form-group ">
         <label htmlFor="field-title">Field Title</label>
         <input type="text" id="field-title" required
-               value={this.state.value.title || ''}
-               onChange={this.titleChangeHandler}
-               className="form-control" />
+          value={this.state.value.title}
+          onChange={this.titleChangeHandler}
+          className="form-control" />
       </div>
       <div className="form-group__inline-wrapper">
 
         <div className="form-group form-group_width30">
           <label htmlFor="field-name">Field Name</label>
           <input type="text" id="field-name" required
-                 value={this.state.value.name || ''}
-                 onChange={e => { this.changeValue(e.target.value, 'name') }}
-                 className="form-control" />
+            value={this.state.value.name}
+            onChange={e => { this.changeValue(e.target.value, 'name') }}
+            className="form-control" />
         </div>
         <div className="form-group form-group_width65">
           <label htmlFor="field-description">Field Description</label>
           <input type="text" id="field-description"
-            value={this.state.value.description || ''}
+            value={this.state.value.description}
             onChange={e => { this.changeValue(e.target.value, 'description') }}
             className="form-control" />
         </div>
@@ -273,7 +277,7 @@ class AddFieldForm extends Component {
             <div className="form-group form-group_width47">
               <label htmlFor="field-length_value">Length/Value</label>
               <input type="text" id="field-length_value"
-                value={this.state.value.length_value || ''}
+                value={this.state.value.length_value}
                 onChange={e => { this.changeValue(e.target.value, 'length_value') }}
                 className="form-control" />
             </div>
@@ -281,7 +285,7 @@ class AddFieldForm extends Component {
             <div className="form-group form-group_width47">
               <label htmlFor="field-default">Default</label>
               <input type="text" id="field-default"
-                value={this.state.value.default || ''}
+                value={this.state.value.default}
                 onChange={e => { this.changeValue(e.target.value, 'default') }}
                 className="form-control" />
             </div>
@@ -294,7 +298,7 @@ class AddFieldForm extends Component {
               onChange={e => { this.changeValue(e.target.value, 'attribute') }}
               className="form-control"
             >
-              <option  value="" />
+              <option value="" />
               {attributeOptions.map(item =>
                 <option key={item} value={item}>
                   {item}
@@ -305,7 +309,7 @@ class AddFieldForm extends Component {
           <div className="form-group">
             <label htmlFor="field-input_type">Input Type</label>
             <select id="field-input_type" required
-              value={this.state.value.input_type || ''}
+              value={this.state.value.input_type}
               onChange={e => { this.changeValue(e.target.value, 'input_type') }}
               className="form-control"
             >
@@ -356,12 +360,12 @@ class AddFieldForm extends Component {
           </div>
         </>
       }
-
-
       <div className="btn__wrapper btn_add">
         <button className="btn btn_success" type="submit">Add</button>
         <Link className="btn" to="/admin/tables/models">Cancel</Link>
-        {/* <button className="btn btn_failure">Delete</button> */}
+        {/* TODO: отображать кнопку если в форме редактируются данные
+          повесить обработчик удаления
+        <button className="btn btn_failure">Delete</button> */}
       </div>
     </form>;
   }
