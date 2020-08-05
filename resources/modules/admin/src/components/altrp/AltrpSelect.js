@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import AsyncSelect from "react-select/async";
 import Resource from "../../../../editor/src/js/classes/Resource";
+import Select from "react-select";
 
 
 class AltrpSelect extends Component {
@@ -9,7 +10,9 @@ class AltrpSelect extends Component {
     this.state = {
 
     };
-    this.optionsResource = new Resource({route: props.optionsRoute});
+    if(props.optionsRoute){
+      this.optionsResource = new Resource({route: props.optionsRoute});
+    }
   }
 
   /**
@@ -35,7 +38,10 @@ class AltrpSelect extends Component {
    *
    */
   loadOptions = async (searchString, callback)=>{
-    let options = await this.optionsResource.search(searchString);
+    let options = [];
+    if(this.optionsResource){
+      let options = await this.optionsResource.search(searchString);
+    }
     this.setState(state=>({
       ...state,
       options
@@ -47,26 +53,25 @@ class AltrpSelect extends Component {
    */
 
   render(){
-
     let selectProps = {
       onChange: this.onChange,
       onInputChange: this.onInputChange,
       options: this.state.options || [],
-      // styles: altrpSelectStyles,
       placeholder: this.props.placeholder,
       loadOptions: this.loadOptions,
       noOptionsMessage: () => "not found",
-      // value,
-      // SelectContainer: {
-      //     ...this.props
-      // }
     };
-    _.assign(selectProps, this.props);
-    console.log(selectProps);
 
-    return <AsyncSelect
-        {...selectProps}
-    />
+    _.assign(selectProps, this.props);
+    if( this.optionsResource){
+      return <AsyncSelect
+          {...selectProps}
+      />
+    } else {
+      return <Select
+          {...selectProps}
+      />
+    }
   }
 }
 

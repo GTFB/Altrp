@@ -11,8 +11,8 @@ const fieldTypeOptions = [
     label: 'String'
   },
   {
-    value: 'int',
-    label: 'Int'
+    value: 'integer',
+    label: 'integer'
   },
   {
     value: 'bigint',
@@ -119,6 +119,7 @@ class AddFieldForm extends Component {
 
   submitHandler(e) {
     e.preventDefault();
+    const { history, match } = this.props;
     const { name, title, description, is_label, is_title, type, length_value, default: default_, attribute, input_type,
       options, nullable, indexed, editable, calculation, calculation_logic, isAlways } = this.state.value;
 
@@ -136,7 +137,6 @@ class AddFieldForm extends Component {
     }
 
     // post: /admin/ajax/models (value)
-    console.log(data);
     if(_.isFunction(this.props.onSubmit)){
       this.props.onSubmit(data);
     }

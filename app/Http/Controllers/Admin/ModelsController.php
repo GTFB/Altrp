@@ -91,7 +91,7 @@ class ModelsController extends HttpController
             $pageCount = 0;
             $models = $search
                 ? Model::getBySearch($search)
-                : Model::all();
+                : Model::all()->sortByDesc( 'id' )->values();
         } else {
             $modelsCount = $search ? Model::getCountWithSearch($search) : Model::getCount();
             $limit = $request->get('pageSize', 10);
@@ -360,23 +360,18 @@ class ModelsController extends HttpController
      */
     public function getModelFieldOptions(ApiRequest $request, $model_id)
     {
-        $model = Model::find($model_id);
-        if (! $model) {
-            return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
-        }
-        $result = $this->getModelFieldsAndPageCount($request);
-        $options = [];
-        foreach ($result['fields'] as $field) {
-            $options[] = [
-                'value' => $field->id,
-                'label' => $field->title,
-            ];
-        }
-        $options = [
-            'options' => $options,
-            'pageCount' => $result['pageCount']
-        ];
-        return response()->json($options, 200, [], JSON_UNESCAPED_UNICODE);
+      $model = Model::find( $model_id );
+      $options = $model->getFieldsOptions();
+//      echo '<pre style="padding-left: 200px;">';
+//      var_dump( $options );
+//      echo '</pre>';
+
+
+//        $options = [
+//            'options' => $options,
+//            'pageCount' => $result['pageCount']
+//        ];
+      return response()->json($options, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -511,10 +506,10 @@ class ModelsController extends HttpController
                 'label' => $relation->title,
             ];
         }
-        $options = [
-            'options' => $options,
-            'pageCount' => $result['pageCount']
-        ];
+//        $options = [
+//            'options' => $options,
+//            'pageCount' => $result['pageCount']
+//        ];
         return response()->json($options, 200, [], JSON_UNESCAPED_UNICODE);
     }
 

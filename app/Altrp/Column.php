@@ -62,9 +62,11 @@ class Column extends Model
 
     public static function getBySearch($search, $modelId)
     {
+
         return self::where('model_id', $modelId)
             ->where('title','like', "%{$search}%")
-            ->orWhere('id', $search)
+            ->orWhere('name','like', "%{$search}%")
+            ->orWhere('id','like', "%{$search}%")
             ->get();
     }
 

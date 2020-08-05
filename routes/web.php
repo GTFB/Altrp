@@ -71,6 +71,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get( '/pages_options', 'Admin\PagesController@pages_options' )->name( 'admin.pages_options.all' );
     Route::get( '/pages_options/{page_id}', 'Admin\PagesController@show_pages_options' )->name( 'admin.pages_options.show' );
     Route::get('/permissions', "Users\Permissions@getPermissions");
+    Route::get('/permissions_options', "Users\Permissions@getPermissionsOptions");
     Route::get('/permissions/{permission}', "Users\Permissions@getPermission");
     Route::post('/permissions', "Users\Permissions@insert");
     Route::put('/permissions/{permission}', "Users\Permissions@update");
@@ -280,20 +281,20 @@ Route::group( ['prefix' => 'ajax'], function(){
   /**
    * todo: реализовать в контроллерах моделей
    */
-  Route::get( 'models/{model_name}', 'Frontend\ModelsController@models' )
-    ->name( 'front.models.all' );
-
-  Route::get( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@show' )
-    ->name( 'front.models.show' );
-
-  Route::delete( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@delete' )
-    ->name( 'front.models.delete' );
-
-  Route::put( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@edit' )
-    ->name( 'front.models.edit' );
-
-  Route::post( 'models/{model_name}', 'Frontend\ModelsController@create' )
-    ->name( 'front.models.create' );
+//  Route::get( 'models/{model_name}', 'Frontend\ModelsController@models' )
+//    ->name( 'front.models.all' );
+//
+//  Route::get( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@show' )
+//    ->name( 'front.models.show' );
+//
+//  Route::delete( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@delete' )
+//    ->name( 'front.models.delete' );
+//
+//  Route::put( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@edit' )
+//    ->name( 'front.models.edit' );
+//
+//  Route::post( 'models/{model_name}', 'Frontend\ModelsController@create' )
+//    ->name( 'front.models.create' );
 
   /**
    * todo: для загрузчика шаблонов для виджетов
@@ -302,9 +303,3 @@ Route::group( ['prefix' => 'ajax'], function(){
 } );
 
 
-
-    // Require users routes
-if ( file_exists( base_path( '/routes/AltrpRoutes.php' ) ) )
-{
-    require_once ('AltrpRoutes.php');
-}

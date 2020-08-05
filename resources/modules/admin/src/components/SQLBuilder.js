@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import SQLBuilderForm from "./sql-builder/SQLBuilderForm";
+import {withRouter} from "react-router-dom";
 
-export default class SQLBuilder extends Component {
+class SQLBuilder extends Component {
   render() {
     return <div className="admin-settings admin-page">
       <div className="admin-heading">
@@ -15,3 +16,5 @@ export default class SQLBuilder extends Component {
     </div>
   }
 }
+
+export default withRouter(SQLBuilder);

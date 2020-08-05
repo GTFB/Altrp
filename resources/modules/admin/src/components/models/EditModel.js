@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, Redirect } from "react-router-dom";
 import EditModelForm from "./EditModelForm";
 import AdminTable from "../AdminTable";
 import Resource from "../../../../editor/src/js/classes/Resource";
@@ -31,7 +31,8 @@ class EditModel extends Component {
       model: {},
       fields: null,
       relations: null,
-      id
+      id,
+      queries: [],
       // model: {},   TODO: заменить замоканые данные
       // fields: [],
       // relations: []
@@ -41,7 +42,7 @@ class EditModel extends Component {
     if(id){
       this.fieldsResource = new Resource({route: `/admin/ajax/models/${id}/fields`});
       this.relationsResource = new Resource({route: `/admin/ajax/models/${id}/relations`});
-
+      this.queriesResource = new Resource({route: `/admin/ajax/models/${id}/queries`});
     }
   }
 
@@ -55,6 +56,7 @@ class EditModel extends Component {
       let model = await this.modelsResource.get(this.state.id);
       let relations = await this.relationsResource.getAll();
       let fields = await this.fieldsResource.getAll();
+      fields = fields.filter(({name}) => name !== 'id');
       this.setState(state=>({
           ...state,
         model,
@@ -74,10 +76,10 @@ class EditModel extends Component {
     } else {
       res = await this.modelsResource.post(model);
     }
-    console.log(res);
+    this.props.history.push("/admin/tables/models");
   };
   render() {
-    const { model, fields, relations } = this.state;
+    const { model, fields, relations, queries } = this.state;
 
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
@@ -108,6 +110,14 @@ class EditModel extends Component {
           rows={relations.map(relation => ({ ...relation, editUrl: `/admin/tables/models/${model.id}/relations/edit/${relation.id}` }))}
         />
         <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/relations/add`}>Add Relation</Link>
+        </> : ''}
+        {queries ? <>
+        <h2 className="sub-header">Queries</h2>
+        <AdminTable
+          columns={columns}
+          rows={queries.map(query => ({ ...query, editUrl: `/admin/tables/models/${model.id}/queries/edit/${query.id}` }))}
+        />
+        <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/queries/add`}>Add Query</Link>
         </> : ''}
       </div>
     </div>;

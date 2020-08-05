@@ -46,6 +46,7 @@ class Resource {
     });
   }
   /**
+   * простой запрос
    * @return {Promise}
    * */
   getAll(){
@@ -67,7 +68,6 @@ class Resource {
   }
 
   /**
-   *
    * Запрос со строкой для поиска вхождений
    * @param {string} searchString
    * @return {Promise}
@@ -206,6 +206,7 @@ class Resource {
   }
 
   /**
+   * GET запрос с параметрами
    * @param {object} params
    * @return {Promise}
    * */

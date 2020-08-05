@@ -1,37 +1,52 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
+import Resource from "../../../../editor/src/js/classes/Resource";
 
 const relationTypeOptions = ['hasOne', 'belongsTo', 'hasMany'];
-const mockedOptions = [
-  { value: 1, label: "Model title 1" },
-  { value: 2, label: "Model title 2" },
-  { value: 3, label: "Model title 3" },
-];
+const deleteUpdateOptions = [
+  {
+    value: 'cascade',
+    label: 'cascade'
+  },
+  {
+    value: 'set null',
+    label: 'set null'
+  },
+  {
+    value: 'no action',
+    label: 'no action'
+  },
+  {
+    value: 'restrict',
+    label: 'restrict'
+  }
+]
 
 class AddRelationForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // modelsOptions: [],   TODO: заменить замоканые данные
-      modelsOptions: mockedOptions,
+      modelsOptions: [],
       value: {
         title: '',
         description: '',
         type: '',
         model_id: '',
         add_belong_to: false,
-        local_field: '',
-        foreign_field: '',
-        delete_cascade: false
+        local_key: '',
+        foreign_key: '',
+        onDelete: '',
+        onUpdate: ''
       },
     };
+    this.modelsResource = new Resource({ route: '/admin/ajax/model_options' });
+    this.relationsResource = new Resource({ route: `/admin/ajax/models/${this.props.match.params.modelId}/relations` });
     this.submitHandler = this.submitHandler.bind(this);
   }
 
-  componentDidMount() {
-    // get: get: /admin/ajax/model_options .then(modelsOptions => {
-    //   this.setState({ modelsOptions });
-    // });
+  async componentDidMount() {
+    const { options } = await this.modelsResource.getAll();
+    this.setState({ modelsOptions: options });
   }
 
   changeValue(value, field) {
@@ -42,11 +57,18 @@ class AddRelationForm extends Component {
     })
   }
 
-  submitHandler(e) {
+  async submitHandler(e) {
     e.preventDefault();
+    const { history, match } = this.props;
     const data = this.state.value;
     // post: /admin/ajax/models (data)
+    if (this.props.match.params.id) {
+      let res = await this.relationsResource.put(this.props.match.params.id, data);
+    } else {
+      let res = await this.relationsResource.post(data);
+    }
     console.log(data);
+    history.push(`/admin/tables/models/edit/${match.params.modelId}`);
   }
 
   render() {
@@ -111,20 +133,19 @@ class AddRelationForm extends Component {
 
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
-          <label htmlFor="relation-local_field">Local Field</label>
-          <input type="text" id="relation-local_field" required
-            value={this.state.value.local_field}
-            onChange={e => { this.changeValue(e.target.value, 'local_field') }}
+          <label htmlFor="relation-local_key">Local Key</label>
+          <input type="text" id="relation-local_key" required
+            value={this.state.value.local_key}
+            onChange={e => { this.changeValue(e.target.value, 'local_key') }}
             className="form-control"
           />
         </div>
 
-
         <div className="form-group form-group_width47">
-          <label htmlFor="relation-foreign_field">Foreign field</label>
-          <select id="relation-foreign_field" required
-            value={this.state.value.foreign_field}
-            onChange={e => { this.changeValue(e.target.value, 'foreign_field') }}
+          <label htmlFor="relation-foreign_key">Foreign Key</label>
+          <select id="relation-foreign_key" required
+            value={this.state.value.foreign_key}
+            onChange={e => { this.changeValue(e.target.value, 'foreign_key') }}
             className="form-control"
           >
             <option disabled value="" />
@@ -136,12 +157,36 @@ class AddRelationForm extends Component {
         </div>
       </div>
 
-      <div className="form-group">
-        <input type="checkbox" id="relation-delete_cascade"
-          checked={this.state.value.delete_cascade}
-          onChange={e => { this.changeValue(e.target.checked, 'delete_cascade') }}
-        />
-        <label className="checkbox-label" htmlFor="relation-delete_cascade">Delete Cascade</label>
+      <div className="form-group__inline-wrapper">
+        <div className="form-group form-group_width47">
+          <label htmlFor="onDelete">On Delete</label>
+          <select id="onDelete" required
+            value={this.state.value.onDelete}
+            onChange={e => { this.changeValue(e.target.value, 'onDelete') }}
+            className="form-control"
+          >
+            <option disabled value="" />
+            {deleteUpdateOptions.map(({ value, label }) =>
+              <option key={value} value={value}>
+                {label.toUpperCase()}
+              </option>)}
+          </select>
+        </div>
+
+        <div className="form-group form-group_width47">
+          <label htmlFor="onUpdate">On Update</label>
+          <select id="onUpdate" required
+            value={this.state.value.onUpdate}
+            onChange={e => { this.changeValue(e.target.value, 'onUpdate') }}
+            className="form-control"
+          >
+            <option disabled value="" />
+            {deleteUpdateOptions.map(({ value, label }) =>
+              <option key={value} value={value}>
+                {label.toUpperCase()}
+              </option>)}
+          </select>
+        </div>
       </div>
 
       <div className="btn__wrapper">

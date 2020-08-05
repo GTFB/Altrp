@@ -20,6 +20,22 @@ class Permissions extends ApiController
         $permissions = Permission::all();
         return response()->json($permissions, 200, [],JSON_UNESCAPED_UNICODE);
     }
+
+  /**
+   * Получение опций прав действия
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   */
+    function getPermissionsOptions( Request $request ) {
+        if( $request->get( 's' ) ){
+          $permissions = Permission::where('id', 'like', '%' . $request->get( 's' ) . '%')
+            ->where('display_name', 'like', '%' . $request->get( 's' ) . '%')
+            ->select(['id as value', 'display_name as label'])->get();
+        } else {
+          $permissions = Permission::select(['id as value', 'display_name as label'])->get();
+        }
+        return response()->json($permissions, 200, [],JSON_UNESCAPED_UNICODE);
+    }
     
     /**
      * Получение права доступа по идентификатору
