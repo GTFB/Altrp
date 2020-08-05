@@ -137,7 +137,6 @@ class AddFieldForm extends Component {
     }
 
     // post: /admin/ajax/models (value)
-    console.log(data);
     if(_.isFunction(this.props.onSubmit)){
       this.props.onSubmit(data);
     }
