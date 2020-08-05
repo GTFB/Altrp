@@ -28,13 +28,13 @@ class EditField extends Component {
    * @return {*}
    */
   onSubmit = async data =>{
-    const { modelId } = this.props.match.params;
+    const { modelId, history } = this.props.match.params;
     if(this.props.match.params.id){
       let res = await this.filedsResource.put(this.props.match.params.id, data);
-      this.setState(state=>({...state, redirect: `/admin/tables/models/edit/${modelId}`}))
+      history.push(`/admin/tables/models/edit/${modelId}`);
     } else {
       let res = await this.filedsResource.post(data);
-      this.setState(state=>({...state, redirect: `/admin/tables/models/edit/${modelId}`}))
+      history.push(`/admin/tables/models/edit/${modelId}`);
     }
   };
 
