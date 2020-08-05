@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, Redirect } from "react-router-dom";
 import EditModelForm from "./EditModelForm";
 import AdminTable from "../AdminTable";
 import Resource from "../../../../editor/src/js/classes/Resource";
@@ -76,6 +76,7 @@ class EditModel extends Component {
       res = await this.modelsResource.post(model);
     }
     console.log(res);
+    this.props.history.push("/admin/tables/models");
   };
   render() {
     const { model, fields, relations } = this.state;

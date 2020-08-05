@@ -58,9 +58,11 @@ class AddRelationForm extends Component {
 
   submitHandler(e) {
     e.preventDefault();
+    const { history, match } = this.props;
     const data = this.state.value;
     // post: /admin/ajax/models (data)
     console.log(data);
+    history.push(`/admin/tables/models/edit/${match.params.modelId}`);
   }
 
   render() {
