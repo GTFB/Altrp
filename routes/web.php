@@ -71,6 +71,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get( '/pages_options', 'Admin\PagesController@pages_options' )->name( 'admin.pages_options.all' );
     Route::get( '/pages_options/{page_id}', 'Admin\PagesController@show_pages_options' )->name( 'admin.pages_options.show' );
     Route::get('/permissions', "Users\Permissions@getPermissions");
+    Route::get('/permissions_options', "Users\Permissions@getPermissionsOpyions");
     Route::get('/permissions/{permission}', "Users\Permissions@getPermission");
     Route::post('/permissions', "Users\Permissions@insert");
     Route::put('/permissions/{permission}', "Users\Permissions@update");
