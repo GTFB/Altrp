@@ -55,6 +55,7 @@ class EditModel extends Component {
       let model = await this.modelsResource.get(this.state.id);
       let relations = await this.relationsResource.getAll();
       let fields = await this.fieldsResource.getAll();
+      fields = fields.filter(({name}) => name !== 'id');
       this.setState(state=>({
           ...state,
         model,
