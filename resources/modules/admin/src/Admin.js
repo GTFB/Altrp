@@ -247,11 +247,11 @@ class Admin extends Component {
             <Route path="/admin/tables/models/:modelId/relations/add">
               <AddRelation />
             </Route>
+            <Route path="/admin/tables/models/:modelId/queries/add">
+              <SQLBuilder/>
+            </Route>
             <Route path="/admin/tables/data-sources/add">
               <AddDataSource />
-            </Route>            
-            <Route path="/admin/sql-builder">
-              <SQLBuilder />
             </Route>
           </Switch>
         </Router>

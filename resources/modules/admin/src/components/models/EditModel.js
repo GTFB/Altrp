@@ -31,7 +31,8 @@ class EditModel extends Component {
       model: {},
       fields: null,
       relations: null,
-      id
+      id,
+      queries: [],
       // model: {},   TODO: заменить замоканые данные
       // fields: [],
       // relations: []
@@ -41,7 +42,7 @@ class EditModel extends Component {
     if(id){
       this.fieldsResource = new Resource({route: `/admin/ajax/models/${id}/fields`});
       this.relationsResource = new Resource({route: `/admin/ajax/models/${id}/relations`});
-
+      this.queriesResource = new Resource({route: `/admin/ajax/models/${id}/queries`});
     }
   }
 
@@ -75,7 +76,6 @@ class EditModel extends Component {
     } else {
       res = await this.modelsResource.post(model);
     }
-    console.log(res);
     this.props.history.push("/admin/tables/models");
   };
   render() {
@@ -111,8 +111,8 @@ class EditModel extends Component {
         />
         <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/relations/add`}>Add Relation</Link>
         </> : ''}
-        {queries ?<>
-        <h2 className="sub-header">Relations</h2>
+        {queries ? <>
+        <h2 className="sub-header">Queries</h2>
         <AdminTable
           columns={columns}
           rows={queries.map(query => ({ ...query, editUrl: `/admin/tables/models/${model.id}/queries/edit/${query.id}` }))}

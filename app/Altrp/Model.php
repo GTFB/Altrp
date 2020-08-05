@@ -254,4 +254,16 @@ class Model extends EloquentModel
             ->count();
     }
 
+  public function getFieldsOptions(){
+    return self::where( 'altrp_models.id', $this->id )
+      ->join( 'tables', 'altrp_models.table_id', '=', 'tables.id' )
+      ->join( 'altrp_columns', 'altrp_columns.table_id', '=', 'tables.id' )
+      ->select( ['altrp_columns.id as value', 'altrp_columns.title as label'] )->get();
+  }
+//  public function getFieldsOptions(){
+//    return self::where( 'altrp_columns.id', $this->id )
+//      ->join( 'tables', 'altrp_models.table_id', '=', 'tables.id' )
+//      ->join( 'altrp_columns', 'altrp_columns.table_id', '=', 'tables.id' )
+//      ->select( ['altrp_columns.id as value', 'altrp_columns.title as label'] )->get();
+//  }
 }

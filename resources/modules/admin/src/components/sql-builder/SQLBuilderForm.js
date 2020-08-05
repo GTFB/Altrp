@@ -6,6 +6,8 @@ import AggregateComponent from "./AggregateComponent";
 import ConditionComponent from "./ConditionComponent";
 import OrderByComponent from "./OrderByComponent";
 import { cloneDeep } from "lodash";
+import AltrpSelect from "../altrp/AltrpSelect";
+import {withRouter} from "react-router-dom";
 
 const mockedModels = [
   { value: 1, label: "Model title 1" },
@@ -17,12 +19,6 @@ const mockedRelations = [
   { value: 2, label: "Relation title 2" },
   { value: 3, label: "Relation title 3" },
 ];
-const mockedColumns = [
-  { value: 1, label: "Coolumn title 1" },
-  { value: 2, label: "Coolumn title 2" },
-  { value: 3, label: "Coolumn title 3" },
-];
-
 const conditionInitState = {
   conditionType: '',
   column: '',
@@ -69,30 +65,30 @@ function getDateFormat(type) {
 class SQLBuilderForm extends Component {
   constructor(props) {
     super(props);
+    const { modelId } = this.props.match.params;
     this.state = {
       title: '',
       name: '',
-      modelId: '',
       relations: [],
       columns: [],
       roles: [],
       permissions: [],
-      aggregates: [{ type: '', column: '', alias: '', id: 0 }],
+      // aggregates: [{ type: '', column: '', alias: '', id: 0 }],
+      aggregates: [],
       conditions: [conditionInitState],
       orderBy: [{ type: '', column: '', id: 0 }],
       group_by: [],
-      // modelsOptions: [],   TODO: заменить замоканые данные
-      // relationsOptions: [],
-      // columnsOptions: [],
       modelsOptions: mockedModels,
-      relationsOptions: mockedRelations,
-      columnsOptions: mockedColumns,
+      relationsOptions: [],
       rolesOptions: [],
       permissionsOptions: [],
-
+      selfFields: [],
     };
     this.counter = 0;
     this.rolesOptions = new Resource({ route: '/admin/ajax/role_options' });
+    this.permissionsOptions = new Resource({ route: '/admin/ajax/permissions_options' });
+    this.selfFieldsResource = new Resource({ route: `/admin/ajax/models/${modelId}/field_options` });
+    this.relationsResource = new Resource({ route: `/admin/ajax/models/${modelId}/relation_options` });
     this.submitHandler = this.submitHandler.bind(this);
     this.changeHandler = this.changeHandler.bind(this);
     this.multipleSelectChangeHandler = this.multipleSelectChangeHandler.bind(this);
@@ -108,16 +104,44 @@ class SQLBuilderForm extends Component {
     this.orderByDeleteHandler = this.orderByDeleteHandler.bind(this);
     this.titleChangeHandler = this.titleChangeHandler.bind(this);
   }
-// запросы опций для селектов
+/**
+ * запросы опций для селектов
+ *
+ */
   async componentDidMount() {
     const rolesOptions = await this.rolesOptions.getAll();
-    this.setState(state => ({ ...state, rolesOptions }))
+    this.setState(state => ({ ...state, rolesOptions }));
+    const permissionsOptions = await this.permissionsOptions.getAll();
+    this.setState(state => ({ ...state, permissionsOptions }));
+    const selfFields = await this.selfFieldsResource.getAll();
+    this.setState(state => ({ ...state, selfFields }));
+    const relationsOptions = await this.relationsResource.getAll();
+    this.setState(state => ({ ...state, relationsOptions }));
     // TODO: GET
     // modelsOptions
     // relationsOptions
-    // columnsOptions
     // permissionsOptions
   }
+
+  /**
+   * Добавляет поля из добавленных связей
+   * @return {Promise<void>}
+   */
+  async addForeignFields(){
+
+  }
+  /**
+   * Смена ролей
+   */
+  changeRoles = (roles)=>{
+    this.setState(state=>({...state, roles}))
+  };
+  /**
+   * Смена разрешений
+   */
+  changePermission = (permissions)=>{
+    this.setState(state=>({...state, permissions}))
+  };
 
   changeHandler({ target: { value, name } }) {
     this.setState(_state => ({ [name]: value }));
@@ -279,110 +303,101 @@ class SQLBuilderForm extends Component {
       ]
     };
     const access = { roles, permissions };
-    const data = { title, name, columns, aggregates, conditions, relations, orderBy, access, group_by }
+    const data = { title, name, columns, aggregates, conditions, relations, orderBy, access, group_by };
     console.log(data);
   }
-
+  /**
+   * сохранить связи
+   */
+  setRelations = (relations) =>{
+    let _relations = [];
+    relations.forEach(r=>{
+      _relations.push(r.value);
+    });
+    this.setState(state=>({...state, relations: _relations}))
+  };
+  /**
+   * сохранить колонки
+   */
+  setColumns = (columns) =>{
+    let _columns = [];
+    columns.forEach(c=>{
+      _columns.push(c.value)
+    });
+    this.setState(state=>({...state, columns: _columns}))
+  };
   render() {
-    const { title, name, modelId, relations, columns, roles, permissions,
+    const { title, name, relations, columns, roles, permissions,
       aggregates, conditions, orderBy, group_by, modelsOptions,
-      permissionsOptions, relationsOptions, columnsOptions, rolesOptions } = this.state;
+      permissionsOptions, relationsOptions, rolesOptions, selfFields } = this.state;
+    // console.log(modelId);
+    // const
+    const { modelId } = this.props.match.params;
 
     return <form className="admin-form" onSubmit={this.submitHandler}>
-      <div className="form-group">
-        <label htmlFor="title">Title</label>
-        <input type="text" id="title" required name="title"
-          value={title}
-          onChange={this.titleChangeHandler}
-          className="form-control" />
-      </div>
+      <div className="row">
+        <div className="form-group  col-6">
+          <label htmlFor="title">Title</label>
+          <input type="text" id="title" required name="title"
+            value={title}
+            onChange={this.titleChangeHandler}
+            className="form-control" />
+        </div>
 
-      <div className="form-group">
-        <label htmlFor="name">Name</label>
-        <input type="text" id="name" required name="name"
-          value={name}
-          onChange={this.changeHandler}
-          className="form-control" />
-      </div>
-
-      <div className="form-group__inline-wrapper">
-        <div className="form-group form-group_width47">
-          <label htmlFor="modelId">Model</label>
-          <select id="modelId" required name="modelId"
-            value={modelId}
+        <div className="form-group col-6 ">
+          <label htmlFor="name">Name</label>
+          <input type="text" id="name" required name="name"
+            value={name}
             onChange={this.changeHandler}
-            className="form-control"
-          >
-            <option disabled value="" />
-            {modelsOptions.map(({ value, label }) =>
-              <option key={value} value={value}>
-                {label}
-              </option>)}
-          </select>
+            className="form-control" />
         </div>
 
-        <div className="form-group form-group_width47">
+        <div className="form-group col-6">
           <label htmlFor="relations">With</label>
-          <select id="relations" required name="relations" multiple
-            value={relations}
-            onChange={this.multipleSelectChangeHandler}
-            className="form-control"
-          >
-            <option disabled value="" />
-            {relationsOptions.map(({ value, label }) =>
-              <option key={value} value={label}>
-                {label}
-              </option>)}
-          </select>
+          <AltrpSelect
+              closeMenuOnSelect={false}
+              onChange={relations => {this.setState(state=>({...state, relations}))}}
+              value={relations}
+              options={relationsOptions}
+              isMulti={true}/>
+        </div>
+
+        <div className="form-group col-6">
+          <label htmlFor="columns">Fields</label>
+
+          <AltrpSelect
+              closeMenuOnSelect={false}
+              onChange={columns => {this.setState(state=>({...state, columns}))}}
+              value={columns}
+              options={selfFields}
+              isMulti={true}/>
+
         </div>
       </div>
 
-      <div className="form-group">
-        <label htmlFor="columns">Fields</label>
-        <select id="columns" required name="columns" multiple
-          value={columns}
-          onChange={this.multipleSelectChangeHandler}
-          className="form-control"
-        >
-          <option disabled value="" />
-          {columnsOptions.map(({ value, label }) =>
-            <option key={value} value={label}>
-              {label}
-            </option>)}
-        </select>
-      </div>
 
       <h2 className="admin-form__subheader centred">Access</h2>
 
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
           <label htmlFor="roles">Roles</label>
-          <select id="roles" /* required */ name="roles" multiple //TODO: раскоментировать required
-            value={roles}
-            onChange={this.changeHandler}
-            className="form-control"
-          >
-            <option disabled value="" />
-            {rolesOptions.map(({ value, label }) =>
-              <option key={value} value={value}>
-                {label}
-              </option>)}
-          </select>
+
+          <AltrpSelect id="roles"
+                       closeMenuOnSelect={false}
+                       value={roles}
+                       isMulti={true}
+                       onChange={this.changeRoles}
+                       options={rolesOptions}/>
         </div>
 
         <div className="form-group form-group_width47">
           <label htmlFor="permissions">Permissions</label>
-          <select id="permissions" /* required */ name="permissions" multiple //TODO: раскоментировать required
-            value={permissions}
-            onChange={this.multipleSelectChangeHandler}
-            className="form-control"
-          >
-            <option disabled value="" />
-            {permissionsOptions.map(({ value, label }) =>
-              <option key={value} value={label}>
-                {label}
-              </option>)}
-          </select>
+            <AltrpSelect id="roles"
+                         value={permissions}
+                         closeMenuOnSelect={false}
+                         isMulti={true}
+                         onChange={this.changePermission}
+                         options={permissionsOptions}/>
         </div>
       </div>
 
@@ -390,7 +405,7 @@ class SQLBuilderForm extends Component {
       {aggregates.map((item, index) => <Fragment key={item.id}>
         {index !== 0 && <hr />}
         <AggregateComponent item={item}
-          columnsOptions={columnsOptions}
+          columnsOptions={selfFields}
           changeHandler={e => this.aggregateChangeHandler(e, index)}
           deleteHandler={() => this.aggregateDeleteHandler(index)} />
         <button className="btn btn_failure" type="button"
@@ -411,7 +426,7 @@ class SQLBuilderForm extends Component {
         {index !== 0 && <hr />}
         <ConditionComponent
           item={condition}
-          columnsOptions={columnsOptions}
+          columnsOptions={selfFields}
           changeHandler={e => this.conditionChangeHandler(e, index)}
         />
         <button className="btn btn_failure" type="button"
@@ -432,7 +447,7 @@ class SQLBuilderForm extends Component {
         {index !== 0 && <hr />}
         <OrderByComponent
           item={item}
-          columnsOptions={columnsOptions}
+          columnsOptions={selfFields}
           changeHandler={e => this.orderByChangeHandler(e, index)}
         />
         <button className="btn btn_failure" type="button"
@@ -451,17 +466,14 @@ class SQLBuilderForm extends Component {
 
       <div className="form-group">
         <label htmlFor="group_by">Fields</label>
-        <select id="group_by" required name="group_by" multiple
-          value={group_by}
-          onChange={this.multipleSelectChangeHandler}
-          className="form-control"
-        >
-          <option disabled value="" />
-          {columnsOptions.map(({ value, label }) =>
-            <option key={value} value={label}>
-              {label}
-            </option>)}
-        </select>
+
+        <AltrpSelect
+            id="group_by"
+            closeMenuOnSelect={false}
+            onChange={group_by => {this.setState(state=>({...state, group_by}))}}
+            value={group_by}
+            options={selfFields}
+            isMulti={true}/>
       </div>
 
       <div className="btn__wrapper btn_add centred">
@@ -472,4 +484,4 @@ class SQLBuilderForm extends Component {
   }
 }
 
-export default SQLBuilderForm;
+export default withRouter(SQLBuilderForm);
