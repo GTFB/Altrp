@@ -97,7 +97,7 @@ class EditModelForm extends Component {
           onChange={e => { this.changeValue(e.target.value, 'description') }}
           className="form-control" />
       </div>
-      <div className="form-group col-12 ">
+      {(model.id) ? '' : <div className="form-group col-12 ">
         <label htmlFor="model-table_id" className="label_checkbox">Table</label>
         <AltrpSelect
             id="model-table_id"
@@ -108,9 +108,10 @@ class EditModelForm extends Component {
               }
             ]}
             value={this.state.value.table_id || ''}
+            isDisabled={model.id}
             onChange={value => {this.changeValue(value, 'table_id')}}
             optionsRoute="/admin/ajax/tables/options"/>
-      </div>
+      </div>}
       <div className="row col-12">
         <div className="form-group col-6 form-check-inline">
           <input type="checkbox" id="page-soft_delete"

@@ -99,4 +99,13 @@ class Table extends Model
 
         return $columns;
     }
+
+    public static function getBySearch($search)
+    {
+        return self::select(['id as value', 'title as label'])
+            ->where('title', 'like', "%{$search}%")
+            ->orWhere('name', 'like', "%{$search}%")
+            ->orWhere('id', 'like', "%{$search}%")
+            ->get();
+    }
 }
