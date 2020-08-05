@@ -20,8 +20,8 @@ class AddRelationForm extends Component {
         type: '',
         model_id: '',
         add_belong_to: false,
-        local_field: '',
-        foreign_field: '',
+        local_key: '',
+        foreign_key: '',
         delete_cascade: false
       },
     };
@@ -111,20 +111,20 @@ class AddRelationForm extends Component {
 
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
-          <label htmlFor="relation-local_field">Local Field</label>
-          <input type="text" id="relation-local_field" required
-            value={this.state.value.local_field}
-            onChange={e => { this.changeValue(e.target.value, 'local_field') }}
+          <label htmlFor="relation-local_key">Local Key</label>
+          <input type="text" id="relation-local_key" required
+            value={this.state.value.local_key}
+            onChange={e => { this.changeValue(e.target.value, 'local_key') }}
             className="form-control"
           />
         </div>
 
 
         <div className="form-group form-group_width47">
-          <label htmlFor="relation-foreign_field">Foreign field</label>
-          <select id="relation-foreign_field" required
-            value={this.state.value.foreign_field}
-            onChange={e => { this.changeValue(e.target.value, 'foreign_field') }}
+          <label htmlFor="relation-foreign_key">Foreign Key</label>
+          <select id="relation-foreign_key" required
+            value={this.state.value.foreign_key}
+            onChange={e => { this.changeValue(e.target.value, 'foreign_key') }}
             className="form-control"
           >
             <option disabled value="" />
