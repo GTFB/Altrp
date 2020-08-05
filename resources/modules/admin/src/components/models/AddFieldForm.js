@@ -141,7 +141,6 @@ class AddFieldForm extends Component {
     if(_.isFunction(this.props.onSubmit)){
       this.props.onSubmit(data);
     }
-    history.push(`/admin/tables/models/edit/${match.params.modelId}`);
   }
 
   addItemHandler() {
