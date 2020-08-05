@@ -5,7 +5,9 @@ namespace App\Services;
 
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
+use App\Altrp\Model;
 use App\Exceptions\CommandFailedException;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
@@ -60,6 +62,7 @@ class AltrpUpdateService
     if ( ! File::exists( base_path( '.env' ) ) ) {
       return redirect( '/install' );
     }
+
 
     // Get eventual new version value & the current (installed) version value
     Artisan::call( 'config:clear' );
@@ -247,5 +250,18 @@ class AltrpUpdateService
     return true;
   }
 
-
+  /**
+   * Upgrade all resources entities (models, controllers, routes)
+   *
+   * @return bool
+   */
+  public function upgradeAllResources()
+  {
+    $models = Model::all();
+    if (! $models) return true;
+    foreach ($models as $model) {
+      $model->update(['last_upgrade' => Carbon::now()]);
+    }
+    return true;
+  }
 }
