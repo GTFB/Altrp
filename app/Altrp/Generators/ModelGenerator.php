@@ -273,17 +273,15 @@ class ModelGenerator extends AppGenerator
      *
      * @throws TableNotFoundException
      */
-    protected function getAndWriteRelationships()
+    public function getAndWriteRelationships()
     {
-        if (isset($this->model->relationships)) {
-            if (count($this->getRelationships($this->model->id)) > 0) {
+        if ($this->model->altrp_relationships && $this->model->altrp_relationships->isNotEmpty()) {
+            $this->relationships = $this->model->altrp_relationships;
+            if (count($this->model->altrp_relationships) > 0) {
                 $this->deleteRelationships($this->model->id);
             }
-            $this->relationships = $this->model->relationships;
-
             return $this->writeRelationships();
         }
-
         return true;
     }
 
@@ -319,26 +317,18 @@ class ModelGenerator extends AppGenerator
     protected function relationshipsToString()
     {
         if (! $this->relationships) return null;
-
         $relArr = [];
-
         foreach ($this->relationships as $rel) {
-
             $relItem = $rel->name . '#' . $rel->type . '#'
                 . trim($this->screenBacklashes($rel->model_class), '\\');
-
             if (isset($rel->foreign_key)) {
-
                 $relItem .= "|{$rel->foreign_key}";
-
                 if (isset($rel->local_key)) {
                     $relItem .= "|{$rel->local_key}";
                 }
             }
-
             $relArr[] = $relItem;
         }
-
         return implode(';', $relArr);
     }
 
@@ -350,7 +340,7 @@ class ModelGenerator extends AppGenerator
      */
     protected function writeRelationships()
     {
-        if (! $this->getTableById($this->model->table_id)) {
+        if (! $this->model->table) {
             throw new TableNotFoundException('Table not found', 404);
         }
 
@@ -448,20 +438,13 @@ class ModelGenerator extends AppGenerator
      */
     protected function getFillableColumns()
     {
-        if (! isset($this->model->fillable_cols) || empty($this->model->fillable_cols)) return null;
-
-        $table = $this->getTableById($this->model->table_id);
-
+        $table = $this->model->table;
         if (!$table) {
             throw new TableNotFoundException("Table not found", 500);
         }
-
         $columns = $this->getColumns($table);
-
-        if ($columns->isEmpty()) return null;
-
+        if (!$columns || $columns->isEmpty()) return null;
         $columnsList = $this->getColumnsList($columns);
-
         return '\'' . implode("','", $columnsList) . '\'';
     }
 
@@ -485,17 +468,7 @@ class ModelGenerator extends AppGenerator
      */
     protected function getColumns($table)
     {
-        $last_migration = $table->actual_migration();
-
-        if (! $last_migration) return false;
-
-        $columns = Column::where([
-            ['table_id', $this->model->table_id],
-            ['altrp_migration_id', $last_migration->id]
-        ])
-            ->whereIn('name', (array) $this->model->fillable_cols)
-            ->get();
-
+        $columns = Column::where([['table_id', $table->id],['editable',1]])->get();
         return $columns;
     }
 
@@ -569,6 +542,6 @@ class ModelGenerator extends AppGenerator
     protected function getUserColumns()
     {
         if (! isset($this->model->user_cols) || empty($this->model->user_cols)) return null;
-        return '\'' . implode("','", (array) $this->model->user_cols) . '\'';
+        return '\'' . implode("','",explode(",", $this->model->user_cols)) . '\'';
     }
 }

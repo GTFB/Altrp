@@ -184,6 +184,16 @@ class ControllerGenerator extends AppGenerator
         return $controller;
     }
 
+    protected function deleteAction($actions, $actionName)
+    {
+        foreach ($actions as $key => $name) {
+            if ($actionName == $name) {
+                unset($actions[$key]);
+                break;
+            }
+        }
+    }
+
     /**
      * Записать в таблицу действий над ресурсами основные действия
      *
@@ -192,6 +202,16 @@ class ControllerGenerator extends AppGenerator
     public function writeSourceActions()
     {
         $actions = ['get', 'options', 'show', 'add', 'update', 'delete', 'get_column'];
+        $oldSources = $this->getSourceActions();
+        if ($oldSources) {
+            foreach ($oldSources as $source) {
+                if(in_array($source->type, $actions)) {
+                    $actions = $this->deleteAction($actions, $source->type);
+                    if (! $actions) break;
+                }
+            }
+        }
+        if (! $actions) return true;
         $sources = [];
         $tableName = $this->getTableName();
         $singleResource = Str::singular($tableName);
@@ -213,8 +233,8 @@ class ControllerGenerator extends AppGenerator
             $sources[] = [
                 "model_id" => $this->getModelId(),
                 "controller_id" => $this->controllerModel->id,
-                "url" => '/ajax/models/' . $url,
-                "api_url" => '/api/ajax/models/' . $url,
+                "url" => '/' . $url,
+                "api_url" => '/' . $url,
                 "type" => $action,
                 "name" => $name,
                 "created_at" => $nowTime,
@@ -229,6 +249,37 @@ class ControllerGenerator extends AppGenerator
         }
 
         return true;
+    }
+
+    protected function getSources($actions, $tableName, $nowTime)
+    {
+        $sources = [];
+        $singleResource = Str::singular($tableName);
+        foreach ($actions as $action) {
+            if ($action == 'get') {
+                $url = $tableName;
+                $name = ucfirst($action) . ' ' . Str::studly($tableName);
+            } elseif ($action == 'options') {
+                $url = $singleResource . '_options';
+                $name = 'Get ' . ucfirst($tableName) . ' for options';
+            } elseif ($action == 'get_column') {
+                $url = $tableName . "/{{$singleResource}}/{column}";
+                $name = ucfirst($action) . ' ' . Str::studly($singleResource);
+            } else {
+                $url = $tableName . "/{{$singleResource}}";
+                $name = ucfirst($action) . ' ' . Str::studly($singleResource);
+            }
+            $sources[] = [
+                "model_id" => $this->getModelId(),
+                "controller_id" => $this->controllerModel->id,
+                "url" => '/' . $url,
+                "api_url" => '/' . $url,
+                "type" => $action,
+                "name" => $name,
+                "created_at" => $nowTime,
+            ];
+        }
+        return $sources;
     }
 
     public function deleteSourceActions()
@@ -521,7 +572,7 @@ class ControllerGenerator extends AppGenerator
      */
     public function generateRoutes()
     {
-        $routeGenerator = new RouteGenerator();
+        $routeGenerator = new RouteGenerator($this->controllerModel);
         $tableName = $this->getTableName();
         $resourceId = Str::singular($tableName);
         $userColumns = trim($this->controllerModel->model->user_cols, ' ');

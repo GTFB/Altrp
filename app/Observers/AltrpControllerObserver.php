@@ -84,11 +84,9 @@ class AltrpControllerObserver
         if (! $generator->updateControllerFile()) {
             throw new CommandFailedException('Failed to update controller file', 500);
         }
-        if ($generator->getSourceActions()->isEmpty()) {
-            // Записать основные действия над ресурсом в базу
-            if (! $generator->writeSourceActions()) {
-                throw new ModelNotWrittenException('Failed to write source action to the database', 500);
-            }
+        // Записать основные действия над ресурсом в базу
+        if (! $generator->writeSourceActions()) {
+            throw new ModelNotWrittenException('Failed to write source action to the database', 500);
         }
         // Записать роли для действий над ресурсами в базу
         if (! $generator->writeSourceRoles()) {

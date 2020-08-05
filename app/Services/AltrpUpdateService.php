@@ -5,7 +5,9 @@ namespace App\Services;
 
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
+use App\Altrp\Model;
 use App\Exceptions\CommandFailedException;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
@@ -126,6 +128,21 @@ class AltrpUpdateService
             if (! $generator->updateControllerFile()) {
                 throw new CommandFailedException('Failed to update ' . $controller->name . ' file.');
             }
+        }
+        return true;
+    }
+
+    /**
+     * Upgrade all resources entities (models, controllers, routes)
+     *
+     * @return bool
+     */
+    public function upgradeAllResources()
+    {
+        $models = Model::all();
+        if (! $models) return true;
+        foreach ($models as $model) {
+            $model->update(['last_upgrade' => Carbon::now()]);
         }
         return true;
     }
