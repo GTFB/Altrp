@@ -71,7 +71,7 @@ class EditModelForm extends Component {
   }
 
   render() {
-    const { model } = this.props;
+    const model = this.state.value;
     if(this.state.redirect){
       return <Redirect to={this.state.redirect} push={true}/>
     }
@@ -79,21 +79,21 @@ class EditModelForm extends Component {
       <div className="form-group col-12">
         <label htmlFor="page-title">Model Title</label>
         <input type="text" id="page-title" required
-          value={this.state.value.title || model.title || ''}
+          value={model.title}
           onChange={this.titleChangeHandler}
           className="form-control" />
       </div>
       <div className="form-group col-4">
         <label htmlFor="page-name">Model Name</label>
         <input type="text" id="page-name" required
-          value={this.state.value.name || model.name || ''}
+          value={model.name}
           onChange={e => { this.changeValue(e.target.value, 'name') }}
           className="form-control" />
       </div>
       <div className="form-group col-8">
         <label htmlFor="page-description">Model Description</label>
         <input type="text" id="page-description"
-          value={this.state.value.description || model.description || ''}
+          value={model.description}
           onChange={e => { this.changeValue(e.target.value, 'description') }}
           className="form-control" />
       </div>
@@ -114,16 +114,16 @@ class EditModelForm extends Component {
       </div>}
       <div className="row col-12">
         <div className="form-group col-6 form-check-inline">
-          <input type="checkbox" id="page-soft_delete"
-            value={this.state.value.soft_delete || model.soft_delete || ''}
-            onChange={e => { this.changeValue(e.target.value, 'soft_delete') }}
+          <input type="checkbox" id="page-soft_deletes"
+            checked={model.soft_deletes}
+            onChange={e => { this.changeValue(e.target.checked, 'soft_deletes') }}
             className="form-check-input form-check-input" />
-          <label htmlFor="page-soft_delete" className="label_checkbox">Soft Delete</label>
+          <label htmlFor="page-soft_deletes" className="label_checkbox">Soft Deletes</label>
         </div>
         <div className="form-group col-6 form-check-inline">
           <input type="checkbox" id="page-time_stamps"
-            value={this.state.value.soft_delete || model.soft_delete || ''}
-            onChange={e => { this.changeValue(e.target.value, 'time_stamps') }}
+            checked={model.time_stamps}
+            onChange={e => { this.changeValue(e.target.checked, 'time_stamps') }}
             className="form-check-input form-check-input_inline" />
           <label htmlFor="page-time_stamps" className="label_checkbox">Time Stamps</label>
         </div>

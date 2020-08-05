@@ -28,7 +28,14 @@ class EditModel extends Component {
     super(props);
     const { id } = this.props.match.params;
     this.state = {
-      model: {},
+      model: {
+        name: '',
+        title: '',
+        description: '',
+        bounded_model: '',
+        soft_deletes: false,
+        time_stamps: false
+      },
       fields: null,
       relations: null,
       id
@@ -75,7 +82,6 @@ class EditModel extends Component {
     } else {
       res = await this.modelsResource.post(model);
     }
-    console.log(res);
     this.props.history.push("/admin/tables/models");
   };
   render() {
