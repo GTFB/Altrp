@@ -222,7 +222,7 @@ class SQLBuilderForm extends Component {
     this.rolesOptions = new Resource({route: '/admin/ajax/role_options'});
     this.permissionsOptions = new Resource({route: '/admin/ajax/permissions_options'});
     this.selfFieldsResource = new Resource({route: `/admin/ajax/models/${modelId}/fields`});
-    this.relationsResource = new Resource({route: `/admin/ajax/models/${modelId}/relation_options`});
+    this.relationsResource = new Resource({route: `/admin/ajax/models/${modelId}/relations`});
     this.submitHandler = this.submitHandler.bind(this);
     this.changeHandler = this.changeHandler.bind(this);
     this.multipleSelectChangeHandler = this.multipleSelectChangeHandler.bind(this);
@@ -256,12 +256,14 @@ class SQLBuilderForm extends Component {
       };
     });
     this.setState(state => ({...state, selfFields, selfFieldsOptions}));
-    const relationsOptions = await this.relationsResource.getAll();
+    const relations = await this.relationsResource.getAll();
+    let relationsOptions = relations.map(relation=>{
+      return {
+        label: relation.title,
+        value: relation.name,
+      };
+    });
     this.setState(state => ({...state, relationsOptions}));
-    // TODO: GET
-    // modelsOptions
-    // relationsOptions
-    // permissionsOptions
   }
 
   /**
