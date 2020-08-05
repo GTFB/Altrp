@@ -7,6 +7,24 @@ const mockedOptions = [
   { value: 2, label: "Model title 2" },
   { value: 3, label: "Model title 3" },
 ];
+const deleteUpdateOptions = [
+  {
+    value: 'cascade',
+    label: 'cascade'
+  },
+  {
+    value: 'set null',
+    label: 'set null'
+  },
+  {
+    value: 'no action',
+    label: 'no action'
+  },
+  {
+    value: 'restrict',
+    label: 'restrict'
+  }
+]
 
 class AddRelationForm extends Component {
   constructor(props) {
@@ -22,6 +40,8 @@ class AddRelationForm extends Component {
         add_belong_to: false,
         local_key: '',
         foreign_key: '',
+        onDelete: '',
+        onUpdate: ''
       },
     };
     this.submitHandler = this.submitHandler.bind(this);
@@ -118,7 +138,6 @@ class AddRelationForm extends Component {
           />
         </div>
 
-
         <div className="form-group form-group_width47">
           <label htmlFor="relation-foreign_key">Foreign Key</label>
           <select id="relation-foreign_key" required
@@ -130,6 +149,38 @@ class AddRelationForm extends Component {
             {this.state.modelsOptions.map(({ value, label }) =>
               <option key={value} value={value}>
                 {label}
+              </option>)}
+          </select>
+        </div>
+      </div>
+
+      <div className="form-group__inline-wrapper">
+        <div className="form-group form-group_width47">
+          <label htmlFor="onDelete">On Delete</label>
+          <select id="onDelete" required
+            value={this.state.value.onDelete}
+            onChange={e => { this.changeValue(e.target.value, 'onDelete') }}
+            className="form-control"
+          >
+            <option disabled value="" />
+            {deleteUpdateOptions.map(({ value, label }) =>
+              <option key={value} value={value}>
+                {label.toUpperCase()}
+              </option>)}
+          </select>
+        </div>
+
+        <div className="form-group form-group_width47">
+          <label htmlFor="onUpdate">On Update</label>
+          <select id="onUpdate" required
+            value={this.state.value.onUpdate}
+            onChange={e => { this.changeValue(e.target.value, 'onUpdate') }}
+            className="form-control"
+          >
+            <option disabled value="" />
+            {deleteUpdateOptions.map(({ value, label }) =>
+              <option key={value} value={value}>
+                {label.toUpperCase()}
               </option>)}
           </select>
         </div>
