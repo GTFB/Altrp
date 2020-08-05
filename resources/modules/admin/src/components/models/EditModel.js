@@ -79,7 +79,7 @@ class EditModel extends Component {
     this.props.history.push("/admin/tables/models");
   };
   render() {
-    const { model, fields, relations } = this.state;
+    const { model, fields, relations, queries } = this.state;
 
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
@@ -110,6 +110,14 @@ class EditModel extends Component {
           rows={relations.map(relation => ({ ...relation, editUrl: `/admin/tables/models/${model.id}/relations/edit/${relation.id}` }))}
         />
         <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/relations/add`}>Add Relation</Link>
+        </> : ''}
+        {queries ?<>
+        <h2 className="sub-header">Relations</h2>
+        <AdminTable
+          columns={columns}
+          rows={queries.map(query => ({ ...query, editUrl: `/admin/tables/models/${model.id}/queries/edit/${query.id}` }))}
+        />
+        <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/queries/add`}>Add Query</Link>
         </> : ''}
       </div>
     </div>;

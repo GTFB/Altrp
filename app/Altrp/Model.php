@@ -219,7 +219,8 @@ class Model extends EloquentModel
     {
         return self::where('title','like', "%{$search}%")
             ->orWhere('id', $search)
-            ->get();
+          ->orderByDesc('id')
+          ->get();
     }
 
     public static function getBySearchWithPaginate($search, $offset, $limit)
@@ -227,6 +228,7 @@ class Model extends EloquentModel
         return self::where('title','like', "%{$search}%")
             ->orWhere('id', $search)
             ->skip($offset)
+          ->orderByDesc('id')
             ->take($limit)
             ->get();
     }
@@ -235,6 +237,7 @@ class Model extends EloquentModel
     {
         return self::skip($offset)
             ->take($limit)
+          ->orderByDesc('id')
             ->get();
     }
 

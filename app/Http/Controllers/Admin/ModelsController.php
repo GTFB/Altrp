@@ -90,7 +90,7 @@ class ModelsController extends HttpController
             $pageCount = 0;
             $models = $search
                 ? Model::getBySearch($search)
-                : Model::all();
+                : Model::all()->sortByDesc( 'id' )->values();
         } else {
             $modelsCount = $search ? Model::getCountWithSearch($search) : Model::getCount();
             $limit = $request->get('pageSize', 10);
