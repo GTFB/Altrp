@@ -1,12 +1,8 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
+import Resource from "../../../../editor/src/js/classes/Resource";
 
 const relationTypeOptions = ['hasOne', 'belongsTo', 'hasMany'];
-const mockedOptions = [
-  { value: 1, label: "Model title 1" },
-  { value: 2, label: "Model title 2" },
-  { value: 3, label: "Model title 3" },
-];
 const deleteUpdateOptions = [
   {
     value: 'cascade',
@@ -30,8 +26,7 @@ class AddRelationForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // modelsOptions: [],   TODO: заменить замоканые данные
-      modelsOptions: mockedOptions,
+      modelsOptions: [],
       value: {
         title: '',
         description: '',
@@ -44,13 +39,13 @@ class AddRelationForm extends Component {
         onUpdate: ''
       },
     };
+    this.modelsResource = new Resource({ route: '/admin/ajax/model_options' });
     this.submitHandler = this.submitHandler.bind(this);
   }
 
-  componentDidMount() {
-    // get: get: /admin/ajax/model_options .then(modelsOptions => {
-    //   this.setState({ modelsOptions });
-    // });
+  async componentDidMount() {
+    const { options } = await this.modelsResource.getAll();
+    this.setState({ modelsOptions: options });
   }
 
   changeValue(value, field) {
