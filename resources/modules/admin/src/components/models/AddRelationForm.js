@@ -22,7 +22,6 @@ class AddRelationForm extends Component {
         add_belong_to: false,
         local_key: '',
         foreign_key: '',
-        delete_cascade: false
       },
     };
     this.submitHandler = this.submitHandler.bind(this);
@@ -134,14 +133,6 @@ class AddRelationForm extends Component {
               </option>)}
           </select>
         </div>
-      </div>
-
-      <div className="form-group">
-        <input type="checkbox" id="relation-delete_cascade"
-          checked={this.state.value.delete_cascade}
-          onChange={e => { this.changeValue(e.target.checked, 'delete_cascade') }}
-        />
-        <label className="checkbox-label" htmlFor="relation-delete_cascade">Delete Cascade</label>
       </div>
 
       <div className="btn__wrapper">
