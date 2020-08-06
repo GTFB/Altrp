@@ -59,6 +59,7 @@ class SQLBuilderForm extends Component {
     this.state = {
       value:
       {
+        title: "",
         "name": "getAllRecords",
         "columns": [
           "id",
@@ -215,7 +216,6 @@ class SQLBuilderForm extends Component {
     this.selfFieldsResource = new Resource({ route: `/admin/ajax/models/${modelId}/fields` });
     this.relationsResource = new Resource({ route: `/admin/ajax/models/${modelId}/relations` });
     this.submitHandler = this.submitHandler.bind(this);
-    this.changeHandler = this.changeHandler.bind(this);
     this.multipleSelectChangeHandler = this.multipleSelectChangeHandler.bind(this);
     this.aggregateChangeHandler = this.aggregateChangeHandler.bind(this);
     this.aggregateAddHandler = this.aggregateAddHandler.bind(this);
@@ -318,8 +318,8 @@ class SQLBuilderForm extends Component {
     this.setState(state => ({ ...state, permissions: _permissions }))
   };
 
-  changeHandler({ target: { value, name } }) {
-    this.setState(_state => ({ [name]: value }));
+  valueChangeHandler = ({ target: { value, name } }) => {
+    this.setState(state => ({ ...state, value: { ...state.value, [name]: value } }));
   }
 
   // обработчик изменения поля title, изменяющий значение поля name
@@ -327,8 +327,11 @@ class SQLBuilderForm extends Component {
     e.persist();
     this.setState(state => ({
       ...state,
-      title: e.target.value,
-      name: titleToName(e.target.value)
+      value: {
+        ...state.value,
+        title: e.target.value,
+        name: titleToName(e.target.value)
+      }
     }))
   }
 
@@ -641,7 +644,7 @@ class SQLBuilderForm extends Component {
           <label htmlFor="name">Name</label>
           <input type="text" id="name" required name="name"
             value={name}
-            onChange={this.changeHandler}
+            onChange={this.valueChangeHandler}
             className="form-control" />
         </div>
 
