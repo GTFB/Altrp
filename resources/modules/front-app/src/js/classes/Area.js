@@ -11,7 +11,29 @@ class Area {
     area.template = new Template();
     area.template.data = areaData.template ? JSON.parse(areaData.template.data) : null;
     area.template.id = areaData.template ? areaData.template.id : null;
+    if(areaData.area_name === 'popups'){
+      // area.templates = [];
+      // area.templates = new Template();
+      area.templates = [];
+      areaData.templates = areaData.templates || [];
+      areaData.templates.forEach(_t=>{
+        let template = new Template();
+        template.data = _t ? JSON.parse(_t.data) : null;
+        template.id = _t ? JSON.parse(_t.id) : null;
+        template.template_settings = _t ? JSON.parse(_t.template_settings) : null;
+        area.templates.push(template);
+      });
+    }
     return area;
+  }
+
+  /**
+   * Массив шаблонов
+   * @return {*|Array}
+   */
+  getTemplates(){
+    this.templates = this.templates || [];
+    return this.templates;
   }
 }
 

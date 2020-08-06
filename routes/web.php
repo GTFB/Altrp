@@ -61,6 +61,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::put('/global-elements/{element}', "Constructor\GlobalElements@update");
     Route::delete('/global-elements/{element}', "Constructor\GlobalElements@trashed");
     Route::get( 'templates/options', 'TemplateController@options' );
+    Route::get( 'popups/options', 'TemplateController@popupsOptions' );
     Route::get( '/templates/{template_id}/reviews', 'TemplateController@reviews' );
     Route::delete('/templates/{template_id}/reviews', 'TemplateController@deleteReviews');
     Route::delete('/templates/{template_id}/reviews/{review_id}', 'TemplateController@deleteReview');
@@ -132,7 +133,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
       ->name( 'set-template-setting' );
     //Route::get('reports/{id}', "TemplateController@show");
     //Route::put('reports/{id}', "TemplateController@update");
-    Route::resource( 'reports', 'ReportsController' );
+    //Route::resource( 'reports', 'ReportsController' );
     Route::resource( 'media', 'Admin\MediaController' );
     Route::resource( 'settings', 'Admin\SettingsController' );
     Route::resource('diagrams', 'Admin\AltrpDiagramController');
