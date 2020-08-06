@@ -436,6 +436,11 @@ class SQLBuilderForm extends Component {
         value.conditions[conditionType].splice(index, 1);
       } else {
         //todo: реализовать вариант для where_column
+        value.conditions[condition.conditionType] = value.conditions[condition.conditionType] || [];
+        value.conditions[condition.conditionType].push(_condition);
+        or ?
+          value.conditions[conditionType][1].data.splice(index, 1) :
+          value.conditions[conditionType][0].data.splice(index, 1);
       }
     } else {
       /**
@@ -445,6 +450,9 @@ class SQLBuilderForm extends Component {
         value.conditions[conditionType].splice(index, 1, _condition);
       } else {
         //todo: реализовать вариант для where_column
+        or ?
+          value.conditions[conditionType][1].data.splice(index, 1, _condition) :
+          value.conditions[conditionType][0].data.splice(index, 1, _condition);
       }
     }
     this.setState(state => ({ ...state, value }));
