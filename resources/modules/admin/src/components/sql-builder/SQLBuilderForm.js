@@ -285,7 +285,7 @@ class SQLBuilderForm extends Component {
     columns.forEach(c => {
       _columns.push(c.value)
     });
-    this.setState(state => ({ ...state, columns: _columns }))
+    this.setState(state => ({ ...state, value: { ...state.value, columns: _columns } }));
   };
   /**
    * Смена связей
@@ -315,7 +315,11 @@ class SQLBuilderForm extends Component {
     permissions.forEach(p => {
       _permissions.push(p.value)
     });
-    this.setState(state => ({ ...state, permissions: _permissions }))
+    this.setState(state => {
+      const newState = _.cloneDeep(state);
+      newState.value.access.permissions = _permissions;
+      return newState;
+    });
   };
 
   valueChangeHandler = ({ target: { value, name } }) => {
