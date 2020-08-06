@@ -37,6 +37,7 @@ function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
     currentState: state.currentState,
+    currentScreen: state.currentScreen
   };
 }
 export default connect(mapStateToProps)(HeadingController);

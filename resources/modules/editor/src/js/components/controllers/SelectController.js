@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import DesktopIcon from '../../../svgs/desktopNew.svg'
 import controllerDecorate from "../../decorators/controller";
 import Resource from '../../classes/Resource';
+import ResponsiveDdMenu from "../ResponsiveDdMenu";
 
 class SelectController extends Component {
   constructor(props) {
@@ -41,7 +41,7 @@ class SelectController extends Component {
     return <div className="controller-container controller-container_select">
       <div className="controller-container__label control-select__label">
         {this.props.label}
-        <DesktopIcon className="controller-container__label-svg" width="12" />
+        <ResponsiveDdMenu />
       </div>
       <div className="control-container_select-wrapper">
 
@@ -57,6 +57,7 @@ function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
     currentState: state.currentState,
+    currentScreen: state.currentScreen
   };
 }
 export default connect(mapStateToProps)(SelectController);

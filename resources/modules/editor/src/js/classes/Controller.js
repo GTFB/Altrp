@@ -104,7 +104,7 @@ class Controller {
     if(this.data.controlId === 'element_css_editor'){
       return 'element_css_editor';
     }
-    return this.data.controlId + getElementSettingsSuffix();
+    return this.data.controlId + getElementSettingsSuffix(this);
   }
 }
 
