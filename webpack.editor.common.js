@@ -19,8 +19,15 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: "css-loader",
+        // loader: "css-loader",
+        use: [
+          // Creates `style` nodes from JS strings
+          "style-loader",
+          // Translates CSS into CommonJS
+          "css-loader",
+        ],
       },
+
       // {
       //   test: /\.(js|jsx)$/,
       //   use: 'react-hot-loader/webpack',
