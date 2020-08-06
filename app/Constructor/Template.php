@@ -57,6 +57,10 @@ class Template extends Model
    * Связь с настройками шаблона
    */
   public function template_settings(){
-    return $this->belongsTo( TemplateSetting::class, 'template_id', 'id' );
+    if( ! $this->id ){
+      return [];
+    }
+
+    return TemplateSetting::where( 'template_id',  $this->id )->get()->toArray();
   }
 }
