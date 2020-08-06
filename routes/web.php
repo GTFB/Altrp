@@ -61,6 +61,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::put('/global-elements/{element}', "Constructor\GlobalElements@update");
     Route::delete('/global-elements/{element}', "Constructor\GlobalElements@trashed");
     Route::get( 'templates/options', 'TemplateController@options' );
+    Route::get( 'popups/options', 'TemplateController@popupsOptions' );
     Route::get( '/templates/{template_id}/reviews', 'TemplateController@reviews' );
     Route::delete('/templates/{template_id}/reviews', 'TemplateController@deleteReviews');
     Route::delete('/templates/{template_id}/reviews/{review_id}', 'TemplateController@deleteReview');
