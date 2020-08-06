@@ -8,6 +8,7 @@ import {
   CONTROLLER_SELECT2,
   CONTROLLER_SELECT,
   CONTROLLER_TEXT,
+  CONTROLLER_HEADING,
   CONTROLLER_LINK,
   CONTROLLER_TYPOGRAPHIC,
   CONTROLLER_REPEATER,
@@ -17,7 +18,7 @@ import {
   CONTROLLER_SHADOW,
   TAB_CONTENT,
   TAB_STYLE,
-  TAB_ADVANCED, CONTROLLER_MEDIA
+  TAB_ADVANCED, CONTROLLER_MEDIA, CONTROLLER_SWITCHER
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 
@@ -46,7 +47,7 @@ class Carousel extends BaseElement{
       label: 'Slides',
     });
 
-    this.addControl('slin_slides_content', {
+    this.addControl('skin_slides_content', {
       type: CONTROLLER_SELECT,
       label: 'Skin',
       default: 'solid',
@@ -105,6 +106,739 @@ class Carousel extends BaseElement{
       fields: repeater.getControls(),
       default: [
       ]
+    });
+
+    this.addControl('per_view_slides_content', {
+      type: CONTROLLER_SELECT,
+      label: 'Slides per view',
+      default: 1,
+      options: [
+        {
+          value: 1,
+          label: '1'
+        },
+        {
+          value: 2,
+          label: '2'
+        },
+        {
+          value: 3,
+          label: '3'
+        },
+        {
+          value: 4,
+          label: '4'
+        },
+        {
+          value: 5,
+          label: '5'
+        },
+        {
+          value: 6,
+          label: '6'
+        },
+        {
+          value: 7,
+          label: '7'
+        },
+        {
+          value: 8,
+          label: '8'
+        },
+        {
+          value: 9,
+          label: '9'
+        },
+        {
+          value: 10,
+          label: '10'
+        },
+      ]
+    });
+
+    this.addControl('to_scroll_slides_content', {
+      type: CONTROLLER_SELECT,
+      label: 'Slides to scroll',
+      default: 1,
+      options: [
+        {
+          value: 1,
+          label: '1'
+        },
+        {
+          value: 2,
+          label: '2'
+        },
+        {
+          value: 3,
+          label: '3'
+        },
+        {
+          value: 4,
+          label: '4'
+        },
+        {
+          value: 5,
+          label: '5'
+        },
+        {
+          value: 6,
+          label: '6'
+        },
+        {
+          value: 7,
+          label: '7'
+        },
+        {
+          value: 8,
+          label: '8'
+        },
+        {
+          value: 9,
+          label: '9'
+        },
+        {
+          value: 10,
+          label: '10'
+        },
+      ]
+    });
+
+    this.addControl('per_row_slides_content', {
+      type: CONTROLLER_SELECT,
+      label: 'Slides per row',
+      default: 1,
+      options: [
+        {
+          value: 1,
+          label: '1'
+        },
+        {
+          value: 2,
+          label: '2'
+        },
+        {
+          value: 3,
+          label: '3'
+        },
+        {
+          value: 4,
+          label: '4'
+        },
+        {
+          value: 5,
+          label: '5'
+        },
+        {
+          value: 6,
+          label: '6'
+        },
+        {
+          value: 7,
+          label: '7'
+        },
+        {
+          value: 8,
+          label: '8'
+        },
+        {
+          value: 9,
+          label: '9'
+        },
+        {
+          value: 10,
+          label: '10'
+        },
+      ]
+    });
+
+    this.addControl("height_slides_content", {
+      type: CONTROLLER_SLIDER,
+      label: 'Height',
+      default:{
+        size: 220,
+        unit: 'px',
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 1000,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-carousel-slide{{STATE}}": "height: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("width_slides_content", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default:{
+        size: 100,
+        unit: '%',
+      },
+      units:[
+        'px',
+        '%',
+      ],
+      max: 1000,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .slick-list{{STATE}}": "width: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('navigation_content', {
+      tab: TAB_CONTENT,
+      label: 'Navigation',
+    });
+
+    this.addControl('arrows_navigation_content', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Arrows',
+      default: false
+    });
+
+    this.addControl('arrows_position_navigation_content', {
+      conditions: {
+        'arrows_navigation_content': true,
+      },
+      type: CONTROLLER_SELECT,
+      label: 'Arrows position',
+      default: 'center',
+      options: [
+        {
+          value: 'topLeft',
+          label: 'top left'
+        },
+        {
+          value: 'top',
+          label: 'top center'
+        },
+        {
+          value: 'topRight',
+          label: 'top right'
+        },
+        {
+          value: 'center',
+          label: 'center'
+        },
+        {
+          value: 'bottomLeft',
+          label: 'bottom left'
+        },
+        {
+          value: 'bottom',
+          label: 'bottom center'
+        },
+        {
+          value: 'bottomRight',
+          label: 'bottom right'
+        },
+      ]
+    });
+
+    this.addControl('dots_navigation_content', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Dots',
+      default: true
+    });
+
+    this.addControl('dots_position_navigation_content', {
+      conditions: {
+        'dots_navigation_content': true,
+      },
+      type: CONTROLLER_SELECT,
+      label: 'Arrows position',
+      default: 'bottom',
+      options: [
+        {
+          value: 'topLeft',
+          label: 'top left'
+        },
+        {
+          value: 'top',
+          label: 'top center'
+        },
+        {
+          value: 'topRight',
+          label: 'top right'
+        },
+        {
+          value: 'bottomLeft',
+          label: 'bottom left'
+        },
+        {
+          value: 'bottom',
+          label: 'bottom center'
+        },
+        {
+          value: 'bottomRight',
+          label: 'bottom right'
+        },
+      ]
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('additional_content', {
+      tab: TAB_CONTENT,
+      label: 'Additional options',
+    });
+
+    this.addControl('transition_duration_additional_content', {
+      type: CONTROLLER_NUMBER,
+      label: "Transition duration",
+      default: 500,
+    });
+
+    this.addControl('autoplay_additional_content', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Autoplay',
+      default: false
+    });
+
+    this.addControl('transition_autoplay_duration_additional_content', {
+      conditions: {
+        'autoplay_additional_content': true,
+      },
+      type: CONTROLLER_NUMBER,
+      label: "Transition duration autoplay",
+      default: 2000,
+    });
+
+    this.addControl('infinite_loop_additional_content', {
+      type: CONTROLLER_SWITCHER,
+      label: 'infinite',
+      default: true
+    });
+
+    this.addControl('pause_on_interaction_loop_additional_content', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Pause on interaction',
+      default: true
+    });
+
+    this.addControl('overlay_heading_additional_content', {
+      type: CONTROLLER_HEADING,
+      label: 'Overlay',
+    });
+
+    this.addControl('overlay_select_heading_additional_content', {
+        type: CONTROLLER_SELECT,
+        label: 'Overlay',
+        default: 'none',
+        options:[
+          {
+            'value' : 'none',
+            'label' : 'none',
+          },
+          {
+            'value' : 'text',
+            'label' : 'text',
+          },
+          {
+            'value' : 'icon',
+            'label' : 'icon',
+          },
+        ],
+        rules: {
+          '{{ELEMENT}} .altrp-carousel-slide-img{{STATE}}': 'background-size: {{VALUE}};',
+        },
+      }
+    );
+
+    this.addControl('image_heading_additional_content', {
+      type: CONTROLLER_HEADING,
+      label: 'Image',
+    });
+
+    this.addControl('image_fit_additional_content', {
+        type: CONTROLLER_SELECT,
+        label: 'Image fit',
+        default: 'cover',
+        options:[
+          {
+            'value' : 'cover',
+            'label' : 'cover',
+          },
+          {
+            'value' : 'contain',
+            'label' : 'contain',
+          },
+          {
+            'value' : 'auto',
+            'label' : 'auto',
+          },
+        ],
+        rules: {
+          '{{ELEMENT}} .altrp-carousel-slide-img{{STATE}}': 'background-size: {{VALUE}};',
+        },
+      }
+    );
+
+    this.endControlSection();
+
+    this.startControlSection('slides_style', {
+      tab: TAB_STYLE,
+      label: 'Slides',
+    });
+
+    this.addControl('space_between_slides_style', {
+      type: CONTROLLER_SLIDER,
+      label: 'Space between',
+      default:{
+        size: 15,
+        unit: 'px',
+      },
+      max: 50,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .slick-slide{{STATE}}': 'padding: 0 {{SIZE}}{{UNIT}}',
+        '{{ELEMENT}} .altrp-carousel-dots{{STATE}}': [
+          'padding-left: {{SIZE}}{{UNIT}}',
+          'padding-right: {{SIZE}}{{UNIT}}',
+        ],
+      },
+    });
+
+    this.addControl("background_slides_style", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}} .altrp-carousel-slide{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("border_width_slides_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-carousel-slide-img{{STATE}}":
+          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      }
+    });
+
+    this.addControl("border_color_slides_style", {
+      type: CONTROLLER_COLOR,
+      label: "Border color",
+      default: {
+        color: "rgb(50,168,82)",
+        colorPickedHex: "#32a852"
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-carousel-slide-img{{STATE}}": "border-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("padding_slides_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-carousel-slide{{STATE}}": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+
+    this.addControl("border_radius_slides_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border radius",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-carousel-slide{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+      }
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('navigation_style', {
+      tab: TAB_STYLE,
+      label: 'Navigation',
+    });
+
+    this.addControl('arrows_heading_navigation_style', {
+      conditions: {
+        'arrows_navigation_content': true,
+      },
+      type: CONTROLLER_HEADING,
+      label: 'Arrows'
+    })
+
+    this.addControl('arrows_size_navigation_style', {
+      conditions: {
+        'arrows_navigation_content': true,
+      },
+      type: CONTROLLER_SLIDER,
+      label: 'Arrows size',
+      default:{
+        size: 50,
+        unit: 'px',
+      },
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-carousel-arrow svg{{STATE}}': [
+          'width: {{SIZE}}{{UNIT}}',
+          'height: {{SIZE}}{{UNIT}}',
+        ],
+      },
+    });
+
+    this.addControl("arrows_background_navigation_style", {
+      conditions: {
+        'arrows_navigation_content': true,
+      },
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-carousel-arrow{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("arrows_color_navigation_style", {
+      conditions: {
+        'arrows_navigation_content': true,
+      },
+      type: CONTROLLER_COLOR,
+      label: "Arrows color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-carousel-arrow{{STATE}} svg path": "stroke: {{COLOR}};"
+      }
+    });
+
+    this.addControl('padding_arrows_navigation_style', {
+      conditions: {
+        'arrows_navigation_content': true,
+      },
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default:{
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit:'px',
+        bind: true
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-carousel-arrow{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('border_radius_arrows_navigation_style', {
+      conditions: {
+        'arrows_navigation_content': true,
+      },
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default:{
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit:'px',
+        bind: true
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-carousel-arrow{{STATE}}': 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    });
+
+    this.addControl('horizontal_offset_arrows_navigation_style', {
+      conditions: {
+        'arrows_navigation_content': true,
+        'arrows_position_navigation_content' : 'center'
+      },
+      type: CONTROLLER_SLIDER,
+      label: 'Horizontal offset',
+      default:{
+        size: 0,
+        unit: 'px',
+      },
+      max: 400,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-carousel-arrow-prev{{STATE}}': 'left: {{SIZE}}{{UNIT}}',
+        '{{ELEMENT}} .altrp-carousel-arrow-next{{STATE}}': 'right: {{SIZE}}{{UNIT}}',
+      },
+    });
+
+    this.addControl('vertical_no_center_offset_arrows_navigation_style', {
+      conditions: {
+        'arrows_navigation_content' : true,
+      },
+      type: CONTROLLER_SLIDER,
+      label: 'Vertical offset (no center)',
+      default:{
+        size: 0,
+        unit: 'px',
+      },
+      max: 200,
+      min: -200,
+      rules: {
+        '{{ELEMENT}} .altrp-carousel-arrows-container{{STATE}}': 'transform: translateY({{SIZE}}{{UNIT}})',
+      },
+    });
+
+    // this.addControl('horizontal_no_center_offset_arrows_navigation_style', {
+    //   conditions: {
+    //     'arrows_navigation_content' : true,
+    //   },
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Horizontal offset (no center)',
+    //   default:{
+    //     size: 0,
+    //     unit: 'px',
+    //   },
+    //   max: 200,
+    //   min: -200,
+    //   rules: {
+    //     '{{ELEMENT}} .altrp-carousel-arrows-container{{STATE}}': 'transform: translateX({{SIZE}}{{UNIT}})',
+    //   },
+    // });
+
+    this.addControl('dots_heading_navigation_style', {
+      conditions: {
+        'dots_navigation_content': true,
+      },
+      type: CONTROLLER_HEADING,
+      label: 'Dots'
+    })
+
+    this.addControl('dots_size_navigation_style', {
+      conditions: {
+        'dots_navigation_content': true,
+      },
+      type: CONTROLLER_SLIDER,
+      label: 'Dots size',
+      default:{
+        size: 10,
+        unit: 'px',
+      },
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-carousel-paging{{STATE}}': [
+          'width: {{SIZE}}{{UNIT}}',
+          'height: {{SIZE}}{{UNIT}}',
+        ],
+        '{{ELEMENT}} .altrp-carousel-dots li{{STATE}}': 'margin-left: calc({{SIZE}}{{UNIT}} * 0.5)',
+      },
+    });
+
+    this.addControl('background_color_dots_navigation_style', {
+      conditions: {
+        'dots_navigation_content': true,
+      },
+      type: CONTROLLER_COLOR,
+      label: 'Dots color',
+      default: {
+        color: "rgb(201,201,201)",
+        colorPickedHex: "#c9c9c9",
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-carousel-paging{{STATE}}': 'background-color: {{COLOR}};',
+      },
+    });
+
+    this.addControl('background_color_active_dots_navigation_style', {
+      conditions: {
+        'dots_navigation_content': true,
+      },
+      type: CONTROLLER_COLOR,
+      label: 'Active dots color',
+      default: {
+        color: "rgb(19,106,237)",
+        colorPickedHex: "#136aed",
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-carousel-dots .slick-active .altrp-carousel-paging{{STATE}}': 'background-color: {{COLOR}};',
+      },
+    });
+
+    this.addControl('horizontal_offset_dots_navigation_style', {
+      conditions: {
+        'dots_navigation_content': true,
+      },
+      type: CONTROLLER_SLIDER,
+      label: 'Horizontal offset',
+      default:{
+        size: 0,
+        unit: 'px',
+      },
+      max: 200,
+      min: -200,
+      rules: {
+        '{{ELEMENT}} .altrp-carousel-dots{{STATE}}': 'left: {{SIZE}}{{UNIT}}',
+      },
+    });
+
+    this.addControl('vertical_no_center_offset_dots_navigation_style', {
+      conditions: {
+        'dots_navigation_content': true,
+      },
+      type: CONTROLLER_SLIDER,
+      label: 'Vertical offset (no center)',
+      default:{
+        size: 0,
+        unit: 'px',
+      },
+      max: 200,
+      min: -200,
+      rules: {
+        '{{ELEMENT}} .altrp-carousel-dots{{STATE}}': 'transform: translateY({{SIZE}}{{UNIT}})',
+      },
     });
 
     this.endControlSection();

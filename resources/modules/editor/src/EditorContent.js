@@ -11,6 +11,7 @@ import ElementContextMenu from "./js/components/ElementContextMenu";
 import "slick-carousel/slick/slick.scss";
 import "slick-carousel/slick/slick-theme.scss";
 import './js/components/altrp-carousel/altrp-carousel.scss';
+import 'react-image-lightbox/style.css';
 
 
 class EditorContent extends Component {
