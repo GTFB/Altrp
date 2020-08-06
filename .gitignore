@@ -26,3 +26,4 @@ _ide_helper.php
 /app/Http/Controllers/AltrpControllers
 /routes/AltrpRoutes.php
 /out
+/app/Http/Requests/AltrpRequests
