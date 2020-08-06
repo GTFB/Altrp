@@ -10,17 +10,7 @@ export default class DialogConditionsTab extends Component {
   constructor(props) {
     super(props),
       this.state = {
-        value: [
-          {
-            id: 1,
-            include: [
-              {
-                type: 'all_site'
-              }
-            ],
-            exclude: []
-          }
-        ],
+        value: [],
         currentLogic: 'include',
         searchValue: ''
       }
@@ -32,7 +22,7 @@ export default class DialogConditionsTab extends Component {
     let conditions = await this.resource.get('conditions')
     console.log(conditions);
     this.setState({
-      value: conditions.data
+      value: conditions.data || []
     })
   };
 
