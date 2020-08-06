@@ -37,12 +37,12 @@ function getDateFormat(type) {
 class ConditionComponent extends Component {
   changeHandler = (name, value) => {
     const { conditionType, index, or } = this.props.item;
-    let item = {...this.props.item};
+    let item = { ...this.props.item };
     item[name] = value;
     this.props.changeCondition(conditionType, index, item, or);
   };
   render() {
-    const { columnsOptions, changeHandler } = this.props;
+    const { columnsOptions/* , changeHandler */ } = this.props;
     const { conditionType, column, operator, value, or, not, values, type,
       first_column, second_column, date, id } = this.props.item;
 
@@ -52,7 +52,7 @@ class ConditionComponent extends Component {
           <label htmlFor={"conditionType" + id}>Condition Type</label>
           <select id={"conditionType" + id} required name="conditionType"
             value={conditionType}
-            onChange={(e)=> (this.changeHandler('conditionType', e.target.value))}
+            onChange={(e) => (this.changeHandler('conditionType', e.target.value))}
             className="form-control"
           >
             <option disabled value="" />
@@ -67,7 +67,7 @@ class ConditionComponent extends Component {
           <label htmlFor={"column" + id}>Field</label>
           <select id={"column" + id} required name="column"
             value={column}
-            onChange={(value)=> (this.changeHandler('column', value))}
+            onChange={(value) => (this.changeHandler('column', value))}
             className="form-control"
           >
             <option disabled value="" />
@@ -83,7 +83,7 @@ class ConditionComponent extends Component {
             <label htmlFor={"operator" + id}>Operator</label>
             <select id={"operator" + id} required name="operator"
               value={operator}
-              onChange={changeHandler}
+              onChange={e => this.changeHandler('operator', e.target.value)}
               className="form-control"
             >
               <option value="" disabled />
@@ -104,7 +104,7 @@ class ConditionComponent extends Component {
             <input type="checkbox" id={"or" + id} name="or"
               className="form-check-input"
               checked={or}
-              onChange={changeHandler}
+              onChange={e => this.changeHandler('or', e.target.checked)}
             />
             <label htmlFor={"or" + id} className="label_checkbox">Or</label>
           </div>
@@ -113,7 +113,7 @@ class ConditionComponent extends Component {
             <input type="checkbox" id={"not" + id} name="not"
               className="form-check-input"
               checked={not}
-              onChange={changeHandler}
+              onChange={e => this.changeHandler('not', e.target.checked)}
             />
             <label htmlFor={"not" + id} className="label_checkbox">Not</label>
           </div>}
@@ -123,7 +123,7 @@ class ConditionComponent extends Component {
           <label htmlFor={"type" + id}>Type</label>
           <select id="type" required name="type"
             value={type}
-            onChange={changeHandler}
+            onChange={e => this.changeHandler('type', e.target.value)}
             className="form-control"
           >
             <option disabled value="" />
@@ -138,7 +138,7 @@ class ConditionComponent extends Component {
           <label htmlFor={"value" + id}>Value</label>
           <input type="text" id={"value" + id} required name="value"
             value={value}
-            onChange={changeHandler}
+            onChange={e => this.changeHandler('value', e.target.value)}
             className="form-control" />
         </div>}
 
@@ -148,7 +148,7 @@ class ConditionComponent extends Component {
             <label htmlFor={"value1" + id}>Value 1</label>
             <input type="text" id={"value1" + id} required name="value1"
               value={values[0]}
-              onChange={changeHandler}
+              onChange={e => this.changeHandler('values', [e.target.value, values[1]])}
               className="form-control" />
           </div>
 
@@ -156,7 +156,7 @@ class ConditionComponent extends Component {
             <label htmlFor={"value2" + id}>Value 2</label>
             <input type="text" id={"value2" + id} required name="value2"
               value={values[1]}
-              onChange={changeHandler}
+              onChange={e => this.changeHandler('values', [values[0], e.target.value])}
               className="form-control" />
           </div>
         </div>}
@@ -165,8 +165,8 @@ class ConditionComponent extends Component {
         <div className="form-group">
           <label htmlFor={"values" + id}>Values</label>
           <textarea id={"values" + id} required name="values"
-            value={values[1]}
-            onChange={changeHandler}
+            value={values.join(", ")}
+            onChange={e => this.changeHandler('values', e.target.value.split(",").trim())}
             className="form-control" />
         </div>
         <p>Comma Separated</p>
@@ -182,7 +182,7 @@ class ConditionComponent extends Component {
             showMonthYearPicker={type === "month"}
             dateFormat={getDateFormat(type)}
             className="form-control"
-            onChange={date => changeHandler({ target: { name: 'date', value: date } })}
+            onChange={date => this.changeHandler({ target: { name: 'date', value: date } })}
           />
         </div>}
 
@@ -191,7 +191,7 @@ class ConditionComponent extends Component {
           <label htmlFor={"first_column" + id}>First Field</label>
           <select id={"first_column" + id} required name="first_column"
             value={first_column}
-            onChange={changeHandler}
+            onChange={e => this.changeHandler('first_column', e.target.value)}
             className="form-control"
           >
             <option disabled value="" />
@@ -204,9 +204,9 @@ class ConditionComponent extends Component {
 
         <div className="form-group form-group_width47">
           <label htmlFor={"second_column" + id}>Second Field</label>
-          <select id={"first_column" + id} required name="second_column"
+          <select id={"second_column" + id} required name="second_column"
             value={second_column}
-            onChange={changeHandler}
+            onChange={e => this.changeHandler('second_column', e.target.value)}
             className="form-control"
           >
             <option disabled value="" />
