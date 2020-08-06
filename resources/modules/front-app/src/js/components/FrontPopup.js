@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-class AreaComponent extends Component {
+class FrontPopup extends Component {
     render(){
       let classes = [`app-popup`];
 
@@ -16,4 +16,4 @@ class AreaComponent extends Component {
     }
 }
 
-export default AreaComponent
+export default FrontPopup

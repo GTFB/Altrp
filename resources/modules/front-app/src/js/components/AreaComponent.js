@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import AreaPopup from "./AreaPopup";
+import FrontPopup from "./FrontPopup";
 
 class AreaComponent extends Component {
     render(){
@@ -10,7 +10,7 @@ class AreaComponent extends Component {
        */
       if (this.props.area.getTemplates().length){
         return <div className={classes.join(' ')}>{
-          this.props.area.getTemplates().map(template=><AreaPopup key={template.id} template={template}/>)
+          this.props.area.getTemplates().map(template=><FrontPopup key={template.id} template={template}/>)
         }</div>
       }
       /**
