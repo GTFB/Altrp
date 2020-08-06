@@ -102,7 +102,7 @@ class Page extends Model
   public static function get_areas_for_page( $page_id ){
     $areas = [];
 
-    $header = Template::where( 'area', 2 )->first();
+    $header = Template::where( 'area', 2 )->where( 'type', 'template' )->first();
     if( $header ){
       $areas[] = [
         'area_name' => 'header',
@@ -119,13 +119,25 @@ class Page extends Model
         ->where( 'template_type', 'content' )->first()->template
     ];
 
-    $footer = Template::where( 'area', 3 )->first();
+    $footer = Template::where( 'area', 3 )->where( 'type', 'template' )->first();
     if( $footer ){
       $areas[] = [
         'area_name' => 'footer',
         'id' => 'footer',
         'settings' => [],
         'template' => $footer
+      ];
+    }
+    $popups = Template::join( 'areas', 'areas.id', '=', 'templates.area' )
+      ->where( 'areas.name', '=', 'popup' )
+      ->where( 'type', 'template' )->with( 'template_settings' )->get();
+
+    if( $popups->count() ){
+      $areas[] = [
+        'area_name' => 'popups',
+        'id' => 'popups',
+        'settings' => [],
+        'templates' => $popups->toArray(),
       ];
     }
 

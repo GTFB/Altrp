@@ -25,7 +25,8 @@ class Model extends EloquentModel
         'name',
         'title',
         'table_id',
-        'pk'
+        'pk',
+        'last_upgrade'
     ];
 
     protected $hidden = [

@@ -28,7 +28,7 @@ class RouteContent extends Component {
       this.setState(state=>({
           ...state,
         areas,
-      }))
+      }));
     }
   }
   render(){
@@ -48,6 +48,7 @@ class RouteContent extends Component {
     <div className="route-content">{
       this.state.areas.map(area => <AreaComponent
           {...area}
+          area={area}
           page={this.props.id}
           models={this.props.models}
           key={'appArea_' + area.id}/>)

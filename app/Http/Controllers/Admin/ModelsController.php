@@ -13,6 +13,7 @@ use App\Altrp\Table;
 use App\Altrp\Relationship;
 use App\Altrp\Source;
 use App\Http\Controllers\Controller as HttpController;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\ApiRequest;
 
@@ -519,15 +520,19 @@ class ModelsController extends HttpController
      * @param $model_id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeModelRelation(ApiRequest $request, $model_id)
+    public function storeModelRelation( ApiRequest $request, $model_id )
     {
-        $relation = new Relationship($request->all());
-        $relation->model_id = $model_id;
-        $result = $relation->save();
-        if ($result) {
-            return response()->json($relation, 200, [], JSON_UNESCAPED_UNICODE);
-        }
-        return response()->json('Failed to create relation', 500, [], JSON_UNESCAPED_UNICODE);
+      $relation = $request->toArray();
+      $model = Model::find( $request->get( 'target_model_id' ) );
+      $model_class = '\App\AltrpModels\\' . $model->name ;
+      $relation['model_class'] = $model_class;
+      $relation = new Relationship( $relation );
+      $relation->model_id = $model_id;
+      $result = $relation->save();
+      if ( $result ) {
+          return response()->json($relation, 200, [], JSON_UNESCAPED_UNICODE);
+      }
+      return response()->json('Failed to create relation', 500, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**

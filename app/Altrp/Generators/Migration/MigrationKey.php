@@ -112,6 +112,7 @@ class MigrationKey{
         $source_column = $this->key->foreign_key;
         $parts = explode('\\', $this->key->model_class);
         $model_name = array_pop($parts);
+
         $target_table = Model::where('name', $model_name)->first()->altrp_table->name;
 
         $text = "\$table->bigInteger('".$source_column."')->unsigned();\n\t\t\t";
