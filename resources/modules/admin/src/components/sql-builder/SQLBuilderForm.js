@@ -438,6 +438,7 @@ class SQLBuilderForm extends Component {
         value.conditions[conditionType].splice(index, 1, _condition);
       }else {
         //todo: реализовать вариант для where_column
+        console.log(value.conditions[conditionType]);
       }
     }
     this.setState(state=>({...state, value}));
