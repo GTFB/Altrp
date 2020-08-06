@@ -247,6 +247,9 @@ class Admin extends Component {
             <Route path="/admin/tables/models/:modelId/relations/add">
               <AddRelation />
             </Route>
+            <Route path="/admin/tables/models/:modelId/relations/edit/:id">
+              <AddRelation />
+            </Route>
             <Route path="/admin/tables/models/:modelId/queries/add">
               <SQLBuilder/>
             </Route>
