@@ -66,7 +66,7 @@ class TemplateController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function options(Request $request)
+    public function options( Request $request )
     {
         $searchRequest = $request->s;
         if ($searchRequest) {
@@ -78,6 +78,44 @@ class TemplateController extends Controller
                         })->get();
         } else {
             $templates = Template::where('type', '!=', 'review')->get();
+        }
+
+        $options = [];
+
+        foreach ($templates as $template) {
+            $options[] = [
+                'value' => $template->id,
+                'label' => $template->title,
+            ];
+        }
+        return \response()->json($options);
+    }
+    /**
+     * Send array for frontend <option> tags ({
+     *     value,
+     *    label
+     * }). Только для popup
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function popupsOptions( Request $request )
+    {
+        $searchRequest = $request->s;
+        if ($searchRequest) {
+            $templates = Template::where('type', '!=', 'review')
+              ->join( 'areas', 'areas.id', '=', 'templates.area' )
+              ->where( 'areas.name', '=', 'popup' )
+              ->where(function ($query) use ($searchRequest) {
+                  $query->where('title', 'like', "%{$searchRequest}%")
+                      ->orWhere('name', 'like', "%{$searchRequest}%")
+                      ->orWhere('id', $searchRequest);
+              })->get( 'templates.*' );
+        } else {
+            $templates = Template::where('type', '!=', 'review')
+              ->join( 'areas', 'areas.id', '=', 'templates.area' )
+              ->where( 'areas.name', '=', 'popup' )
+              ->get( 'templates.*' );
         }
 
         $options = [];
