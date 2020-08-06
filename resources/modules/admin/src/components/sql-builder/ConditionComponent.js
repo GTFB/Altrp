@@ -35,6 +35,12 @@ function getDateFormat(type) {
 }
 
 class ConditionComponent extends Component {
+  changeHandler = (name, value) => {
+    const { conditionType, index, or } = this.props.item;
+    let item = {...this.props.item};
+    item[name] = value;
+    this.props.changeCondition(conditionType, index, item, or);
+  };
   render() {
     const { columnsOptions, changeHandler } = this.props;
     const { conditionType, column, operator, value, or, not, values, type,
@@ -46,7 +52,7 @@ class ConditionComponent extends Component {
           <label htmlFor={"conditionType" + id}>Condition Type</label>
           <select id={"conditionType" + id} required name="conditionType"
             value={conditionType}
-            onChange={changeHandler}
+            onChange={(e)=> (this.changeHandler('conditionType', e.target.value))}
             className="form-control"
           >
             <option disabled value="" />
@@ -61,7 +67,7 @@ class ConditionComponent extends Component {
           <label htmlFor={"column" + id}>Field</label>
           <select id={"column" + id} required name="column"
             value={column}
-            onChange={changeHandler}
+            onChange={(value)=> (this.changeHandler('column', value))}
             className="form-control"
           >
             <option disabled value="" />
@@ -159,7 +165,7 @@ class ConditionComponent extends Component {
         <div className="form-group">
           <label htmlFor={"values" + id}>Values</label>
           <textarea id={"values" + id} required name="values"
-            value={value[1]}
+            value={values[1]}
             onChange={changeHandler}
             className="form-control" />
         </div>

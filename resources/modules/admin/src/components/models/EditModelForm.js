@@ -79,21 +79,21 @@ class EditModelForm extends Component {
       <div className="form-group col-12">
         <label htmlFor="page-title">Model Title</label>
         <input type="text" id="page-title" required
-          value={model.title}
+          value={model.title || ''}
           onChange={this.titleChangeHandler}
           className="form-control" />
       </div>
       <div className="form-group col-4">
         <label htmlFor="page-name">Model Name</label>
         <input type="text" id="page-name" required
-          value={model.name}
+          value={model.name || ''}
           onChange={e => { this.changeValue(e.target.value, 'name') }}
           className="form-control" />
       </div>
       <div className="form-group col-8">
         <label htmlFor="page-description">Model Description</label>
         <input type="text" id="page-description"
-          value={model.description}
+          value={model.description || ''}
           onChange={e => { this.changeValue(e.target.value, 'description') }}
           className="form-control" />
       </div>

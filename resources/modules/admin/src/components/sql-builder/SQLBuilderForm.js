@@ -7,7 +7,7 @@ import ConditionComponent from "./ConditionComponent";
 import OrderByComponent from "./OrderByComponent";
 import { cloneDeep } from "lodash";
 import AltrpSelect from "../altrp/AltrpSelect";
-import { withRouter } from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 
 const conditionInitState = {
   conditionType: '',
@@ -22,7 +22,7 @@ const conditionInitState = {
   type: '',
   first_column: '',
   second_column: '',
-  date: new Date(),
+  // date: new Date(),
   id: 0
 };
 
@@ -196,64 +196,18 @@ class SQLBuilderForm extends Component {
         "offset": 10,
         "limit": 5
       },
+      initialCondition: {
+        conditionType: 'where',
+        column: '',
+        operator: 'not-null',
+      },
       "relationsOptions": [],
-      "rolesOptions": [{ "value": 1, "label": "Admin" }, { "value": 2, "label": "User" }],
-      "permissionsOptions": [{ "value": 1, "label": "Create Inners" }, { "value": 2, "label": "Read Inners" }, {
-        "value": 3,
-        "label": "Update Inners"
-      }, { "value": 4, "label": "Delete Inners" }, { "value": 5, "label": "All Inners" }, {
-        "value": 51,
-        "label": "Create Tests"
-      }, { "value": 52, "label": "Read Tests" }, { "value": 53, "label": "Update Tests" }, {
-        "value": 54,
-        "label": "Delete Tests"
-      }, { "value": 55, "label": "All Tests" }, { "value": 62, "label": "Create news" }, {
-        "value": 63,
-        "label": "Read news"
-      }, { "value": 64, "label": "Update news" }, { "value": 65, "label": "Delete news" }, {
-        "value": 66,
-        "label": "All news"
-      }, { "value": 67, "label": "Create new_3s" }, { "value": 68, "label": "Read new_3s" }, {
-        "value": 69,
-        "label": "Update new_3s"
-      }, { "value": 70, "label": "Delete new_3s" }, { "value": 71, "label": "All new_3s" }, {
-        "value": 72,
-        "label": "Create login123213s"
-      }, { "value": 73, "label": "Read login123213s" }, { "value": 74, "label": "Update login123213s" }, {
-        "value": 75,
-        "label": "Delete login123213s"
-      }, { "value": 76, "label": "All login123213s" }, {
-        "value": 77,
-        "label": "Create login123213123213213s"
-      }, { "value": 78, "label": "Read login123213123213213s" }, {
-        "value": 79,
-        "label": "Update login123213123213213s"
-      }, { "value": 80, "label": "Delete login123213123213213s" }, { "value": 81, "label": "All login123213123213213s" }],
-      "selfFields": [{
-        "id": 37,
-        "name": "id",
-        "title": "ID",
-        "description": "Identifier",
-        "type": "id",
-        "size": null,
-        "null": false,
-        "default": null,
-        "primary": null,
-        "unique": false,
-        "table_id": 63,
-        "user_id": 2,
-        "altrp_migration_id": 73,
-        "is_label": 0,
-        "is_title": 0,
-        "attribute": null,
-        "input_type": null,
-        "options": null,
-        "indexed": 0,
-        "editable": 0,
-        "hidden": 0,
-        "model_id": null
-      }],
-      "selfFieldsOptions": [{ "label": "ID", "value": "id" }]
+      "rolesOptions":
+          [],
+      "permissionsOptions":
+          [],
+      "selfFields": [],
+      "selfFieldsOptions": []
     };
     this.counter = 0;
     this.rolesOptions = new Resource({ route: '/admin/ajax/role_options' });
@@ -292,6 +246,7 @@ class SQLBuilderForm extends Component {
         value: field.name,
       };
     });
+    console.log(selfFieldsOptions);
     this.setState(state => ({ ...state, selfFields, selfFieldsOptions }));
     const relations = await this.relationsResource.getAll();
     let relationsOptions = relations.map(relation => {
@@ -415,12 +370,92 @@ class SQLBuilderForm extends Component {
       return { ...state, conditions };
     });
   }
-
+  /**
+   * Добавляем новый condition
+   */
   conditionAddHandler() {
-    this.counter++;
-    this.setState(state => {
-      return { ...state, conditions: [...state.conditions, { ...conditionInitState, id: this.counter }] };
-    });
+    // this.counter++;
+
+    let newCondition = {...this.state.initialCondition};
+    this.pushCondition(newCondition);
+    // console.log(this.state.value.conditions);
+    // this.setState(state => {
+    //   return { ...state, conditions: [...state.conditions, { ...conditionInitState, id: this.counter }] };
+    // });
+  }
+
+  /**
+   * @param {{}} condition - объект условия из компонента
+   */
+  pushCondition(condition){
+    let value = _.cloneDeep(this.state.value);
+    /**
+     * Удаляем ненужные свояства
+     */
+    let _condition = {...condition};
+    delete  _condition.conditionType;
+    delete  _condition.index;
+    delete  _condition.or;
+    value.conditions = value.conditions || {};
+    value.conditions[condition.conditionType] = value.conditions[condition.conditionType] || [];
+    value.conditions[condition.conditionType].push(_condition);
+    this.setState(state=>({...state, value}));
+  }
+
+  /**
+   *
+   * @param {string} conditionType - тип условия
+   * @param {int} index - номер в массиве
+   * @param {{}} condition - объект условия из компонента
+   * @param {boolean} or - для where_column
+   */
+  changeCondition = (conditionType, index, condition, or) => {
+    let value = _.cloneDeep(this.state.value);
+    let _condition = {...condition};
+    delete  _condition.conditionType;
+    delete  _condition.index;
+    delete  _condition.or;
+    value.conditions = value.conditions || {};
+    console.log(conditionType);
+    console.log(condition);
+    if(conditionType !== condition.conditionType){
+      /**
+       * если тип  меняется, то удаляем из старого вставляем в новый
+       */
+      value.conditions = value.conditions || {};
+      if(condition.conditionType !== 'where_column'){
+        value.conditions[condition.conditionType] = value.conditions[condition.conditionType] || [];
+        value.conditions[condition.conditionType].push(_condition);
+        value.conditions[conditionType].splice(index, 1);
+      } else {
+        //todo: реализовать вариант для where_column
+      }
+    } else {
+      /**
+       * удаляем старый заменяем на новый если тип не меняется
+       */
+      if(conditionType !== 'where_column') {
+        value.conditions[conditionType].splice(index, 1, _condition);
+      }else {
+        //todo: реализовать вариант для where_column
+      }
+    }
+    this.setState(state=>({...state, value}));
+  };
+
+  /**
+   * @param {string} conditionType - тип условия
+   * @param {int} index - номер в массиве
+   * @param {boolean} or - для where_column
+   */
+  deleteCondition(conditionType, index, or){
+    let value = _.cloneDeep(this.state.value);
+    if(conditionType !== 'where_column') {
+      value.conditions[conditionType].splice(index, 1);
+    } else {
+      //todo: реализовать вариант для where_column
+    }
+    this.setState(state=>({...state, value}));
   }
 
   conditionDeleteHandler(index) {
@@ -476,63 +511,62 @@ class SQLBuilderForm extends Component {
 
   submitHandler(e) {
     e.preventDefault();
-    const {
-      title, name, relations, columns, roles, permissions, aggregates,
-      conditions: stateConditions, orderBy, group_by
-    } = cloneDeep(this.state);
-    // удаляю свойства id не нужные на сервере
-    aggregates.forEach(item => delete item.id);
-    stateConditions.forEach(item => delete item.id);
-    orderBy.forEach(item => delete item.id);
-    // формирую объект conditions на основе state  
-    const where = stateConditions
-      .filter(({ conditionType }) => conditionType === "where")
-      .map(({ column, operator, value }) => ({ column, operator, value }));
-
-    const or_where = stateConditions
-      .filter(({ conditionType }) => conditionType === "or_where")
-      .map(({ column, operator, value }) => ({ column, operator, value }));
-
-    const where_between = stateConditions
-      .filter(({ conditionType }) => conditionType === "where_between")
-      .map(({ or, not, column, value1, value2 }) => ({ or, not, column, values: [value1, value2] }));
-
-    const where_in = stateConditions
-      .filter(({ conditionType }) => conditionType === "where_in")
-      .map(({ or, not, column, values }) =>
-        ({ or, not, column, values: values.split(",").map(item => item.trim()) })
-      );
-
-    const where_date = stateConditions
-      .filter(({ conditionType }) => conditionType === "where_date")
-      .map(({ type, column, operator, date }) => {
-        const value = moment(date).format(getDateFormat(type));
-        return { type, column, operator, value };
-      });
-
-    const where_column = stateConditions
-      .filter(({ conditionType, or }) => conditionType === "where_column" && !or)
-      .map(({ first_column, operator, second_column }) => ({ first_column, operator, second_column }));
-
-    const where_column_or = stateConditions
-      .filter(({ conditionType, or }) => conditionType === "where_column" && or)
-      .map(({ first_column, operator, second_column }) => ({ first_column, operator, second_column }));
-
-    const conditions = {
-      where,
-      or_where,
-      where_between,
-      where_in,
-      where_date,
-      where_column: [
-        { or: false, data: where_column },
-        { or: true, data: where_column_or }
-      ]
-    };
-    const access = { roles, permissions };
-    const data = { title, name, columns, aggregates, conditions, relations, orderBy, access, group_by };
-    console.log(data);
-    console.log(JSON.stringify(this.state));
+    // const {
+    //   title, name, relations, columns, roles, permissions, aggregates,
+    //   conditions: stateConditions, orderBy, group_by
+    // } = cloneDeep(this.state);
+    // // удаляю свойства id не нужные на сервере
+    // aggregates.forEach(item => delete item.id);
+    // stateConditions.forEach(item => delete item.id);
+    // orderBy.forEach(item => delete item.id);
+    // // формирую объект conditions на основе state
+    // const where = stateConditions
+    //   .filter(({ conditionType }) => conditionType === "where")
+    //   .map(({ column, operator, value }) => ({ column, operator, value }));
+    //
+    // const or_where = stateConditions
+    //   .filter(({ conditionType }) => conditionType === "or_where")
+    //   .map(({ column, operator, value }) => ({ column, operator, value }));
+    //
+    // const where_between = stateConditions
+    //   .filter(({ conditionType }) => conditionType === "where_between")
+    //   .map(({ or, not, column, value1, value2 }) => ({ or, not, column, values: [value1, value2] }));
+    //
+    // const where_in = stateConditions
+    //   .filter(({ conditionType }) => conditionType === "where_in")
+    //   .map(({ or, not, column, values }) =>
+    //     ({ or, not, column, values: values.split(",").map(item => item.trim()) })
+    //   );
+    //
+    // const where_date = stateConditions
+    //   .filter(({ conditionType }) => conditionType === "where_date")
+    //   .map(({ type, column, operator, date }) => {
+    //     const value = moment(date).format(getDateFormat(type));
+    //     return { type, column, operator, value };
+    //   });
+    //
+    // const where_column = stateConditions
+    //   .filter(({ conditionType, or }) => conditionType === "where_column" && !or)
+    //   .map(({ first_column, operator, second_column }) => ({ first_column, operator, second_column }));
+    //
+    // const where_column_or = stateConditions
+    //   .filter(({ conditionType, or }) => conditionType === "where_column" && or)
+    //   .map(({ first_column, operator, second_column }) => ({ first_column, operator, second_column }));
+    //
+    // const conditions = {
+    //   where,
+    //   or_where,
+    //   where_between,
+    //   where_in,
+    //   where_date,
+    //   where_column: [
+    //     { or: false, data: where_column },
+    //     { or: true, data: where_column_or }
+    //   ]
+    // };
+    // const access = { roles, permissions };
+    // const data = { title, name, columns, aggregates, conditions, relations, orderBy, access, group_by };
+    console.log(this.state.value);
   }
 
   /**
@@ -560,16 +594,39 @@ class SQLBuilderForm extends Component {
    */
   getConditions() {
     let conditions = [];
-    this.state.value.conditions
+    let conditionPairs = _.toPairs(this.state.value.conditions);
+    conditionPairs.forEach(pair=>{
+      // console.log(pair[0]);
+      if(pair[0] !== 'where_column'){
+        pair[1].forEach((_condition, idx) => {
+          let conditionForComponent = {..._condition};
+          conditionForComponent.conditionType = pair[0];
+          conditionForComponent.index = idx;
+          conditions.push(conditionForComponent);
+        });
+      } else {
+        pair[1].forEach(whereColumn=>{
+          let or = whereColumn.or;
+          whereColumn.data.forEach((whereColumnCondition, idx)=>{
+            let conditionForComponent = {...whereColumnCondition};
+            conditionForComponent.conditionType = pair[0];
+            conditionForComponent.index = idx;
+            conditionForComponent.or = or;
+            conditions.push(conditionForComponent);
+          })
+        });
+      }
+    });
     return conditions;
   }
   render() {
     const {
       title, name, relations, columns, roles, permissions,
-      aggregates, conditions, orderBy, group_by, modelsOptions, selfFieldsOptions,
-      permissionsOptions, relationsOptions, rolesOptions, selfFields
-    } = this.state;
-
+      aggregates, orderBy, group_by,
+    } = this.state.value;
+    const {  modelsOptions, selfFieldsOptions,
+      permissionsOptions, relationsOptions, rolesOptions, selfFields } = this.state;
+    const conditions = this.getConditions();
     const { modelId } = this.props.match.params;
 
     return <form className="admin-form" onSubmit={this.submitHandler}>
@@ -590,73 +647,73 @@ class SQLBuilderForm extends Component {
             className="form-control" />
         </div>
 
-        <div className="form-group col-6">
-          <label htmlFor="relations">With</label>
-          <AltrpSelect
-            closeMenuOnSelect={false}
-            onChange={this.changeRelations}
-            value={_.filter(relationsOptions, r => relations.indexOf(r.value) >= 0)}
-            options={relationsOptions}
-            isMulti={true} />
-        </div>
+        {/*<div className="form-group col-6">*/}
+          {/*<label htmlFor="relations">With</label>*/}
+          {/*<AltrpSelect*/}
+            {/*closeMenuOnSelect={false}*/}
+            {/*onChange={this.changeRelations}*/}
+            {/*value={_.filter(relationsOptions, r => relations.indexOf(r.value) >= 0)}*/}
+            {/*options={relationsOptions}*/}
+            {/*isMulti={true} />*/}
+        {/*</div>*/}
 
-        <div className="form-group col-6">
-          <label htmlFor="columns">Fields</label>
+        {/*<div className="form-group col-6">*/}
+          {/*<label htmlFor="columns">Fields</label>*/}
 
-          <AltrpSelect
-            closeMenuOnSelect={false}
-            onChange={this.changeColumns}
-            value={_.filter(selfFieldsOptions, c => columns.indexOf(c.value) >= 0)}
-            options={selfFieldsOptions}
-            isMulti={true} />
+          {/*<AltrpSelect*/}
+            {/*closeMenuOnSelect={false}*/}
+            {/*onChange={this.changeColumns}*/}
+            {/*value={_.filter(selfFieldsOptions, c => columns.indexOf(c.value) >= 0)}*/}
+            {/*options={selfFieldsOptions}*/}
+            {/*isMulti={true} />*/}
 
-        </div>
-      </div>
+        {/*</div>*/}
+      {/*</div>*/}
 
 
-      <h2 className="admin-form__subheader centred">Access</h2>
+      {/*<h2 className="admin-form__subheader centred">Access</h2>*/}
 
-      <div className="form-group__inline-wrapper">
-        <div className="form-group form-group_width47">
-          <label htmlFor="roles">Roles</label>
+      {/*<div className="form-group__inline-wrapper">*/}
+        {/*<div className="form-group form-group_width47">*/}
+          {/*<label htmlFor="roles">Roles</label>*/}
 
-          <AltrpSelect id="roles"
-            closeMenuOnSelect={false}
-            value={_.filter(rolesOptions, r => roles.indexOf(r.value) >= 0)}
-            isMulti={true}
-            onChange={this.changeRoles}
-            options={rolesOptions} />
-        </div>
+          {/*<AltrpSelect id="roles"*/}
+            {/*closeMenuOnSelect={false}*/}
+            {/*value={_.filter(rolesOptions, r => roles.indexOf(r.value) >= 0)}*/}
+            {/*isMulti={true}*/}
+            {/*onChange={this.changeRoles}*/}
+            {/*options={rolesOptions} />*/}
+        {/*</div>*/}
 
-        <div className="form-group form-group_width47">
-          <label htmlFor="permissions">Permissions</label>
-          <AltrpSelect id="roles"
-            value={_.filter(permissionsOptions, p => permissions.indexOf(p.value) >= 0)}
-            closeMenuOnSelect={false}
-            isMulti={true}
-            onChange={this.changePermission}
-            options={permissionsOptions} />
-        </div>
-      </div>
+        {/*<div className="form-group form-group_width47">*/}
+          {/*<label htmlFor="permissions">Permissions</label>*/}
+          {/*<AltrpSelect id="roles"*/}
+            {/*value={_.filter(permissionsOptions, p => permissions.indexOf(p.value) >= 0)}*/}
+            {/*closeMenuOnSelect={false}*/}
+            {/*isMulti={true}*/}
+            {/*onChange={this.changePermission}*/}
+            {/*options={permissionsOptions} />*/}
+        {/*</div>*/}
+      {/*</div>*/}
 
-      <h2 className="admin-form__subheader centred">Aggregates</h2>
-      {aggregates.map((item, index) => <Fragment key={index}>
-        {index !== 0 && <hr />}
-        <AggregateComponent item={item}
-          columnsOptions={selfFieldsOptions}
-          changeHandler={e => this.aggregateChangeHandler(e, index)}
-          deleteHandler={() => this.aggregateDeleteHandler(index)} />
-        <button className="btn btn_failure" type="button"
-          onClick={() => this.aggregateDeleteHandler(index)}
-        >
-          Delete
-        </button>
-      </Fragment>)}
-      <div className="centred">
-        <button className="btn btn_success" type="button" onClick={this.aggregateAddHandler}>
-          + New Aggregate
-        </button>
-      </div>
+      {/*<h2 className="admin-form__subheader centred">Aggregates</h2>*/}
+      {/*{aggregates.map((item, index) => <Fragment key={index}>*/}
+        {/*{index !== 0 && <hr />}*/}
+        {/*<AggregateComponent item={item}*/}
+          {/*columnsOptions={selfFieldsOptions}*/}
+          {/*changeHandler={e => this.aggregateChangeHandler(e, index)}*/}
+          {/*deleteHandler={() => this.aggregateDeleteHandler(index)} />*/}
+        {/*<button className="btn btn_failure" type="button"*/}
+          {/*onClick={() => this.aggregateDeleteHandler(index)}*/}
+        {/*>*/}
+          {/*Delete*/}
+        {/*</button>*/}
+      {/*</Fragment>)}*/}
+      {/*<div className="centred">*/}
+        {/*<button className="btn btn_success" type="button" onClick={this.aggregateAddHandler}>*/}
+          {/*+ New Aggregate*/}
+        {/*</button>*/}
+      {/*</div>*/}
 
       <h2 className="admin-form__subheader centred">Conditions</h2>
 
@@ -665,6 +722,7 @@ class SQLBuilderForm extends Component {
         <ConditionComponent
           item={condition}
           columnsOptions={selfFieldsOptions}
+          changeCondition={this.changeCondition}
           changeHandler={e => this.conditionChangeHandler(e, index)}
         />
         <button className="btn btn_failure" type="button"
@@ -681,7 +739,7 @@ class SQLBuilderForm extends Component {
 
       <h2 className="admin-form__subheader centred">Order By</h2>
 
-      {orderBy.map((item, index) => <Fragment key={index}>
+      {/*orderBy.map((item, index) => <Fragment key={index}>
         {index !== 0 && <hr />}
         <OrderByComponent
           item={item}
@@ -693,30 +751,30 @@ class SQLBuilderForm extends Component {
         >
           Delete
         </button>
-      </Fragment>)}
-      <div className="centred">
-        <button className="btn btn_success" type="button" onClick={this.orderByAddHandler}>
-          + New Order
-        </button>
+      </Fragment>)*/''}
+      {/*<div className="centred">*/}
+        {/*<button className="btn btn_success" type="button" onClick={this.orderByAddHandler}>*/}
+          {/*+ New Order*/}
+        {/*</button>*/}
+      {/*</div>*/}
+
+      {/*<h2 className="admin-form__subheader centred">Group By</h2>*/}
+
+      {/*<div className="form-group">*/}
+        {/*<label htmlFor="group_by">Fields</label>*/}
+
+        {/*<AltrpSelect*/}
+          {/*id="group_by"*/}
+          {/*closeMenuOnSelect={false}*/}
+          {/*onChange={this.changeGroupBy}*/}
+          {/*value={_.filter(selfFieldsOptions, f => group_by.indexOf(f.value) >= 0)}*/}
+          {/*options={selfFieldsOptions}*/}
+          {/*isMulti={true} />*/}
+      {/*</div>*/}
       </div>
-
-      <h2 className="admin-form__subheader centred">Group By</h2>
-
-      <div className="form-group">
-        <label htmlFor="group_by">Fields</label>
-
-        <AltrpSelect
-          id="group_by"
-          closeMenuOnSelect={false}
-          onChange={this.changeGroupBy}
-          value={_.filter(selfFieldsOptions, f => group_by.indexOf(f.value) >= 0)}
-          options={selfFieldsOptions}
-          isMulti={true} />
-      </div>
-
       <div className="btn__wrapper btn_add centred">
         <button className="btn btn_success" type="submit">Save</button>
-        {/* <Link className="btn" to="/admin/tables/models">Cancel</Link> */}
+         <Link className="btn" to="/admin/tables/models">Cancel</Link>
       </div>
     </form>
   }
