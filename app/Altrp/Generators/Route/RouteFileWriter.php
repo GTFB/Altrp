@@ -36,6 +36,7 @@ class RouteFileWriter
      * Добавить новый маршрут
      *
      * @param $methodName
+     * @return bool
      * @throws RouteFileException
      */
     public function addRoute($methodName)
@@ -45,6 +46,7 @@ class RouteFileWriter
             $result = $this->writeRoute($routeContent, $this->getRoute($methodName));
             if (! $result) throw new RouteFileException('Failed to write route to the routes file', 500);
         }
+        return true;
     }
 
     /**
@@ -119,9 +121,9 @@ class RouteFileWriter
     protected function getAccessMiddleware($methodName)
     {
         $source = Source::where('type', Str::kebab($methodName))->first();
-        
+
         if(!$source) return null;
-        
+
         $roles = $source->source_roles;
         $accessSource = [];
         $accessRoles = [];

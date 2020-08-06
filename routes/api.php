@@ -56,7 +56,9 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::get( '/models/{model_id}', 'Admin\ModelsController@showModel');
         Route::delete( '/models/{model_id}', 'Admin\ModelsController@destroyModel');
 
-        Route::post( '/models/{model_id}/sql_builder', 'Admin\ModelsController@addQuery');
+        Route::post( '/models/{model_id}/sql_builder', 'Admin\ModelsController@storeQuery');
+        Route::get('/models/{model_id}/sql_builder/{query_id}', 'Admin\ModelsController@getQuery');
+        Route::delete('/models/{model_id}/sql_builder/{query_id}', 'Admin\ModelsController@destroyQuery');
 
         Route::post( '/models/{model_id}/controllers', 'Admin\ModelsController@storeController');
         Route::put( '/models/{model_id}/controllers/{controller_id}', 'Admin\ModelsController@updateController');

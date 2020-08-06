@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Altrp\Controller;
 use App\Altrp\Model;
+use App\Altrp\Query;
 use App\Observers\AltrpControllerObserver;
 use App\Observers\AltrpModelObserver;
+use App\Observers\AltrpQueryObserver;
 use App\Services\AltrpSettingsService;
 use App\Services\AltrpUpdateService;
 use Illuminate\Database\Eloquent\Builder;
@@ -55,6 +57,7 @@ class AppServiceProvider extends ServiceProvider
         Relationship::observe(AltrpRelationshipObserver::class);
         Model::observe(AltrpModelObserver::class);
         Controller::observe(AltrpControllerObserver::class);
+        Query::observe(AltrpQueryObserver::class);
 
         Builder::macro('whereLike', function ($attributes, string $searchTerm) {
             $this->where(function (Builder $query) use ($attributes, $searchTerm) {

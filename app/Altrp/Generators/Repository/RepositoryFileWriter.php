@@ -58,6 +58,7 @@ class RepositoryFileWriter
      *
      * @param $name
      * @param $body
+     * @return bool
      * @throws RepositoryFileException
      */
     public function addMethod($name, $body)
@@ -77,6 +78,7 @@ class RepositoryFileWriter
         $this->writeRepository($contentRepo);
         $this->writeRepoInterface($contentRepoInterface);
         $this->writeToServiceProvider();
+        return true;
     }
 
     /**

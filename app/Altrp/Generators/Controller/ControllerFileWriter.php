@@ -84,6 +84,23 @@ class ControllerFileWriter
         return true;
     }
 
+    public function removeMethod($methodName)
+    {
+        $controllerContent = file($this->controller->getFile(), 2);
+
+        if ($line = $this->methodExists($controllerContent, $methodName)) {
+            for ($i = $line; true; $i++) {
+                if (Str::contains($controllerContent[$i], '}')) {
+                    unset($controllerContent[$i]);
+                    break;
+                }
+                unset($controllerContent[$i]);
+            }
+        }
+dd($controllerContent);
+        return \File::put($this->controller->getFile(), $newContent);
+    }
+
     /**
      * Проверить, существует ли следующее пространство имён в файле контроллера
      *
@@ -113,7 +130,7 @@ class ControllerFileWriter
         foreach ($controllerContent as $line => $content) {
             if (Str::contains($content, 'public function ' . $methodName . '(')
                 || Str::contains($content, 'protected function ' . $methodName . '(')) {
-                return true;
+                return $line;
             }
         }
         return false;

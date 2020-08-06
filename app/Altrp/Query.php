@@ -3,8 +3,9 @@
 
 namespace App\Altrp;
 
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 
-class Query extends \Illuminate\Database\Eloquent\Model
+class Query extends EloquentModel
 {
     protected $table = 'altrp_queries';
 
@@ -27,4 +28,80 @@ class Query extends \Illuminate\Database\Eloquent\Model
     {
         return $this->belongsTo(Source::class);
     }
+
+    public function model()
+    {
+        return $this->belongsTo(Model::class);
+    }
+
+    public function setColumnsAttribute($value)
+    {
+        $this->attributes['columns'] = json_encode($value);
+    }
+
+    public function setAggregatesAttribute($value)
+    {
+        $this->attributes['aggregates'] = json_encode($value);
+    }
+
+    public function setConditionsAttribute($value)
+    {
+        $this->attributes['conditions'] = json_encode($value);
+    }
+
+    public function setRelationsAttribute($value)
+    {
+        $this->attributes['relations'] = json_encode($value);
+    }
+
+    public function setOrderByAttribute($value)
+    {
+        $this->attributes['order_by'] = json_encode($value);
+    }
+
+    public function setGroupByAttribute($value)
+    {
+        $this->attributes['group_by'] = json_encode($value);
+    }
+
+    public function setAccessAttribute($value)
+    {
+        $this->attributes['access'] = json_encode($value);
+    }
+
+    public function getColumnsAttribute($value)
+    {
+        return json_decode($value, true);
+    }
+
+    public function getAggregatesAttribute($value)
+    {
+        return json_decode($value, true);
+    }
+
+    public function getConditionsAttribute($value)
+    {
+        return json_decode($value, true);
+    }
+
+    public function getRelationsAttribute($value)
+    {
+        return json_decode($value, true);
+    }
+
+    public function getOrderByAttribute($value)
+    {
+        return json_decode($value, true);
+    }
+
+    public function getGroupByAttribute($value)
+    {
+        return json_decode($value, true);
+    }
+
+    public function getAccessAttribute($value)
+    {
+        return json_decode($value, true);
+    }
+
 }

@@ -1,0 +1,133 @@
+<?php
+
+namespace App\Observers;
+
+use App\Altrp\Builders\QueryBuilder2;
+use App\Altrp\Query;
+use App\Altrp\SourcePermission;
+use App\Altrp\SourceRole;
+use App\Exceptions\ModelNotWrittenException;
+
+class AltrpQueryObserver
+{
+    /**
+     * Handle the query "creating" event.
+     *
+     * @param \App\Altrp\Query $query
+     * @return bool|void
+     * @throws \App\Exceptions\Repository\RepositoryFileException
+     */
+    public function creating(Query $query)
+    {
+        $builder = new QueryBuilder2($query);
+        $source = $builder->writeSource($query->name);
+        $query->user_id = auth()->user()->id;
+        $query->source_id = $source->id;
+        $oldQuery = Query::where('source_id', $source->id)->first();
+        if ($oldQuery) return false;
+    }
+
+    /**
+     * Handle the query "created" event.
+     *
+     * @param \App\Altrp\Query $query
+     * @return void
+     * @throws \App\Exceptions\Controller\ControllerFileException
+     * @throws \App\Exceptions\Repository\RepositoryFileException
+     * @throws \App\Exceptions\Route\RouteFileException
+     * @throws ModelNotWrittenException
+     */
+    public function created(Query $query)
+    {
+        $builder = new QueryBuilder2($query);
+        $methodBody = $builder->getMethodBody();
+        if (! $builder->writeSourceRoles($query->source)) {
+            throw new ModelNotWrittenException('Failed to write source roles', 500);
+        }
+        if (! $builder->writeSourcePermissions($query->source)) {
+            throw new ModelNotWrittenException('Failed to write source permissions', 500);
+        }
+        if (! $builder->writeMethodToController()) {
+            throw new ModelNotWrittenException('Failed to write method to controller', 500);
+        }
+        if (! $builder->writeMethodToRepo($methodBody)) {
+            throw new ModelNotWrittenException('Failed to write method to repository', 500);
+        }
+        if (! $builder->writeRoute()) {
+            throw new ModelNotWrittenException('Failed to write routes', 500);
+        }
+    }
+
+    /**
+     * Handle the query "updating" event.
+     *
+     * @param  \App\Altrp\Query  $query
+     * @return void
+     */
+    public function updating(Query $query)
+    {
+        //
+    }
+
+    /**
+     * Handle the query "updated" event.
+     *
+     * @param  \App\Altrp\Query  $query
+     * @return void
+     */
+    public function updated(Query $query)
+    {
+        //
+    }
+
+    /**
+     * Handle the query "deleting" event.
+     *
+     * @param  \App\Altrp\Query  $query
+     * @return void
+     */
+    public function deleting(Query $query)
+    {
+        $builder = new QueryBuilder2($query);
+        SourceRole::where('source_id', $query->source->id)->delete();
+        SourcePermission::where('source_id', $query->source->id)->delete();
+        $builder->removeMethodFromController();
+        return false;
+        $query->source->delete();
+
+
+    }
+
+    /**
+     * Handle the query "deleted" event.
+     *
+     * @param  \App\Altrp\Query  $query
+     * @return void
+     */
+    public function deleted(Query $query)
+    {
+        //
+    }
+
+    /**
+     * Handle the query "restored" event.
+     *
+     * @param  \App\Altrp\Query  $query
+     * @return void
+     */
+    public function restored(Query $query)
+    {
+        //
+    }
+
+    /**
+     * Handle the query "force deleted" event.
+     *
+     * @param  \App\Altrp\Query  $query
+     * @return void
+     */
+    public function forceDeleted(Query $query)
+    {
+        //
+    }
+}

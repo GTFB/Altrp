@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Altrp\Builders\QueryBuilder;
+use App\Altrp\Builders\QueryBuilder2;
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
 use App\Altrp\Generators\ModelGenerator;
 use App\Altrp\Column;
 use App\Altrp\Model;
+use App\Altrp\Query;
 use App\Altrp\Table;
 use App\Altrp\Relationship;
 use App\Altrp\Source;
@@ -777,19 +779,83 @@ class ModelsController extends HttpController
      * @throws \App\Exceptions\Controller\ControllerFileException
      * @throws \App\Exceptions\Repository\RepositoryFileException
      */
-    public function addQuery(ApiRequest $request, $model_id)
+    public function storeQuery(ApiRequest $request, $model_id)
     {
         $model = Model::find($model_id);
         if (! $model)
-            return response()->json('Model not found!', 404, [], JSON_UNESCAPED_UNICODE);
-        $builder = new QueryBuilder(
-            array_merge($request->all(), ['model' => $model])
-        );
-        $result = $builder->build();
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        $query = new Query($request->all());
+        $query->model_id = $model->id;
+        $result = $query->save();
         if ($result) {
-            return response()->json('Successfully added!', 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json('Error!', 404, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Query ' . $query->name . ' already exists'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Обновить SQl запрос
+     *
+     * @param ApiRequest $request
+     * @param $model_id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\Controller\ControllerFileException
+     * @throws \App\Exceptions\Repository\RepositoryFileException
+     */
+    public function updateQuery(ApiRequest $request, $model_id, $query_id)
+    {
+        $model = Model::find($model_id);
+        if (! $model)
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        $query = Query::find($query_id);
+        $result = $query->update($request->all());
+        if ($result) {
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update query'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Удалить SQl запрос
+     *
+     * @param $model_id
+     * @param $query_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroyQuery($model_id, $query_id)
+    {
+        $model = Model::find($model_id);
+        if (! $model)
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        $query = Query::find($query_id);
+        if (! $query)
+            return response()->json([
+                'success' => false,
+                'message' => 'Query not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        $result = $query->delete();
+        if ($result) {
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to delete query'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
 }
