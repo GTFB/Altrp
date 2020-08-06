@@ -85,10 +85,8 @@ class AddRelationForm extends Component {
       if(field === 'title'){
         state.value.name = titleToName(value);
       }
-      console.log(field);
-      if(field === 'local_key'){
+      if(field === 'foreign_key'){
         state.value[field] = titleToName(value);
-        console.log(state.value[field]);
       }
       if(field === 'target_model_id'){
         this.updateForeignFieldOptions(value)
@@ -198,17 +196,17 @@ class AddRelationForm extends Component {
         <div className="form-group form-group_width47">
           <label htmlFor="relation-local_key">Local Key</label>
           <input type="text" id="relation-local_key"
-                 value={this.state.value.local_key || ''}
+                 value={this.state.value.foreign_key || ''}
                  className="form-control"
-                 onChange={e => { this.changeValue(e.target.value, 'local_key') }}
+                 onChange={e => { this.changeValue(e.target.value, 'foreign_key') }}
           />
         </div>
 
         <div className="form-group form-group_width47">
           <label htmlFor="relation-foreign_key">Foreign Key</label>
           <select id="relation-foreign_key" required
-            value={this.state.value.foreign_key}
-            onChange={e => { this.changeValue(e.target.value, 'foreign_key') }}
+            value={this.state.value.local_key}
+            onChange={e => { this.changeValue(e.target.value, 'local_key') }}
             className="form-control"
           >
             <option disabled value="" />
