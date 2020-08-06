@@ -3,6 +3,7 @@
 namespace App\Altrp\Generators;
 
 use App\Altrp\Controller;
+use App\Altrp\Source;
 use Illuminate\Support\Str;
 
 class RouteGenerator
@@ -34,12 +35,17 @@ class RouteGenerator
      */
     private $dynamicVariables = [];
 
+    private $controllerModel;
+
 
     /**
      * RouteGenerator constructor.
+     * @param Controller $controller
      */
-    public function __construct()
+    public function __construct(Controller $controller)
     {
+        $this->controllerModel = $controller;
+
         $this->path = base_path('routes/AltrpRoutes.php');
 
         $this->routeContents = file($this->path, 2);
@@ -56,17 +62,36 @@ class RouteGenerator
      */
     public function generate($tableName, $controller)
     {
-        $this->routeStub = $this->fillStub();
+        $routes = $this->getRoutesFromSources($tableName, $controller);
+        $this->routeStub = array_merge($this->fillStub(), $routes);
 
         if ($items = $this->routeExists($tableName, $controller)) {
             $this->routeRewrite($items);
         } else {
             $this->routeWrite();
         }
-
         $result = file_put_contents($this->path, implode(PHP_EOL, $this->routeContents));
 
         return $result;
+    }
+
+    protected function getRoutesFromSources($tableName, $controller)
+    {
+        $routes = [];
+        $actions = ['get', 'options', 'show', 'add', 'update', 'delete', 'get_column'];
+        $sources = Source::where([
+            ['controller_id', $this->controllerModel->id],
+            ['model_id', $this->controllerModel->model->id],
+        ])->get();
+        if (! $sources) return [];
+        foreach ($sources as $source) {
+            if (! in_array($source->type, $actions)) {
+                $routes[] = 'Route::get(\'/queries/' . $tableName .'/'
+                . $source->type . '\', [\'uses\' =>\'' . $controller . '@'
+                . lcfirst(Str::studly($source->type)) . '\']);';
+            }
+        }
+        return $routes;
     }
 
     /**
@@ -83,6 +108,7 @@ class RouteGenerator
         for ($i = 0; $i < count($this->routeContents); $i++) {
             if (Str::contains($this->routeContents[$i], ' '.$tableName . ' resource')
                 || Str::contains($this->routeContents[$i], '/'.$tableName)
+                || Str::contains($this->routeContents[$i], '/queries/'.$tableName)
                 || Str::contains($this->routeContents[$i], '/'.Str::singular($tableName).'_options')
                 || Str::contains($this->routeContents[$i], $controller)) {
                 $indexes[] = $i;
@@ -99,8 +125,24 @@ class RouteGenerator
      */
     protected function routeRewrite($itemIndexes)
     {
+        $newIndexes = 0;
+        $countRouteStub = count($this->routeStub);
         for ($i = 0; $i < count($itemIndexes); $i++) {
-            $this->routeContents[$itemIndexes[$i]] = $this->routeStub[$i];
+
+            if ($i < $countRouteStub)
+                $this->routeContents[$itemIndexes[$i]] = $this->routeStub[$i];
+            else
+                unset($this->routeContents[$itemIndexes[$i]]);
+
+            $newIndexes = $itemIndexes[$i];
+            unset($this->routeStub[$i]);
+        }
+        if ($this->routeStub && $newIndexes) {
+            $newIndexes++;
+            $arr = array_values($this->routeStub);
+            for ($i = 0; $i < count($arr); $i++) {
+                array_splice($this->routeContents, $newIndexes,0, $arr[$i]);
+            }
         }
     }
 

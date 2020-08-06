@@ -18,8 +18,6 @@ use Carbon\Carbon;
 
 class AltrpModelObserver
 {
-    private $oldModel;
-
     /**
      * Вызываем перед созданием модели
      * @param Model $model
@@ -64,14 +62,15 @@ class AltrpModelObserver
      * Вызываем перед обновлением модели
      * @param Model $model
      * @throws CommandFailedException
+     * @throws \App\Exceptions\TableNotFoundException
      */
     public function updating(Model $model)
     {
-        $oldModel = Model::find($model->id);
-
         $generator = new ModelGenerator($model);
-        $result = $generator->updateModelFile();
-        if (! $result) {
+        if (! $generator->getAndWriteRelationships()) {
+            throw new CommandFailedException('Failed to write relations', 500);
+        }
+        if (! $generator->updateModelFile()) {
             throw new CommandFailedException('Failed to update model file', 500);
         }
     }
@@ -79,6 +78,7 @@ class AltrpModelObserver
     /**
      * Вызываем после обновления модели
      * @param Model $model
+     * @return bool|void
      * @throws CommandFailedException
      * @throws ControllerNotWrittenException
      * @throws ModelNotWrittenException
@@ -90,6 +90,7 @@ class AltrpModelObserver
          * @var Controller $controller
          */
         $controller = $model->altrp_controller;
+        if (! $controller) return true;
         $desc = $model->name . ' ' . $model->title . ' '
             . $model->description . ' ' . $model->time_stamps . ' ' . $model->soft_deletes;
         Controller::withoutEvents(function () use ($controller, $desc) {
@@ -104,10 +105,8 @@ class AltrpModelObserver
         if (! $generator->updateControllerFile()) {
             throw new CommandFailedException('Failed to update controller file', 500);
         }
-        if ($generator->getSourceActions()->isEmpty()) {
-            if (! $generator->writeSourceActions()) {
-                throw new ModelNotWrittenException('Failed to write source action to the database', 500);
-            }
+        if (! $generator->writeSourceActions()) {
+            throw new ModelNotWrittenException('Failed to write source action to the database', 500);
         }
         if (! $generator->writeSourceRoles()) {
             throw new ModelNotWrittenException('Failed to write source roles to the database', 500);
@@ -128,11 +127,11 @@ class AltrpModelObserver
      */
     public function deleting(Model $model)
     {
-        $table = Table::find($model->table_id);
-        \DB::table($table->name)->delete();
-        $migration = $table->actual_migration();
-        Column::where('altrp_migration_id', $migration->id)->delete();
-        $migration->delete();
+//        $table = Table::find($model->table_id);
+//        \DB::table($table->name)->delete();
+//        $migration = $table->actual_migration();
+//        Column::where('altrp_migration_id', $migration->id)->delete();
+//        $migration->delete();
         $generator = new ModelGenerator($model);
         $result = $generator->deleteModelFile();
         if (! $result) {
@@ -142,7 +141,7 @@ class AltrpModelObserver
         if (! $controller->delete()) {
             throw new ControllerFileException('Failed to delete controller',  500);
         }
-        $table->delete();
+//        $table->delete();
     }
 
     public function deleted(Model $model)
