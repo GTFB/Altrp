@@ -24,7 +24,7 @@ class DialogWindow extends Component {
       activeTab: title,
     })
   };
-
+  
   handleClose() {
     this.props.showModalWindow()
   };

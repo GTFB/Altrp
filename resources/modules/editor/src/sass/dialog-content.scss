@@ -158,6 +158,48 @@
     font-weight: bold;
   }
 }
+
+.modal-repeater {
+  &-fields {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    color: #000;
+    &-wrapper {
+      margin-top: 20px;
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+  }
+  &-field {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    width: 100%;
+    color: #000;
+  }
+  &-field {
+    width: 100%;
+    &-c1 {
+      min-width: 120px;
+    }
+    &-c2 {
+      width: 100%;
+    }
+    &-c3 {
+      flex-basis: 100%;
+    }
+  }
+  &-tool-remove {
+    margin-left: 5px;
+    background: #4c565c;
+    font-weight: bold;
+  }
+}
+
 // DIALOG TRIGGERS TAB
 
 .triggers {
@@ -179,7 +221,7 @@
     align-items: center;
     width: 50px;
     height: 100%;
-    margin:0 10px;
+    margin: 0 10px;
     border-right: solid 1px;
   }
   &-title {

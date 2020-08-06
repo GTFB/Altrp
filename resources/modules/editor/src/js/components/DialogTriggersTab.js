@@ -24,6 +24,9 @@ export default class DialogTriggersTab extends Component {
     console.log(res);
   }
 
+
+
+  /**  Отправляем get request, результат присваиваем  state.value */
   async componentDidMount() {
     let triggers = await this.resource.get('triggers')
     this.setState({
@@ -38,7 +41,7 @@ export default class DialogTriggersTab extends Component {
           ...this.state.value,
           on_scroll: {
             ...this.state.value.on_scroll,
-            direction: e.target.value,
+            direction: e.target.value, 
           }
         }
       })
@@ -79,7 +82,6 @@ export default class DialogTriggersTab extends Component {
   }
 
   render() {
-    console.log('state', this.state);
     return (
       <div className="triggers-tab">
         <div className="triggers-wrapper">
