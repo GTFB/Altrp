@@ -56,6 +56,8 @@ class ColumnMigrationGenerator extends NewMigrationGenerator{
         $template = file_get_contents($this->getStub());
 
         $template = str_replace('{{className}}', $className, $template);
+        $template = str_replace('{{old_column}}', $old_column->name, $template);
+        $template = str_replace('{{column}}', $this->data->name, $template);
         $template = str_replace('{{table}}', $table_name, $template);
         $template = str_replace('{{field}}', $field, $template);
 

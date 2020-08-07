@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Altrp\Column;
+use App\Altrp\Generators\ModelGenerator;
 use App\Altrp\Model;
 use App\Altrp\Migration;
 use App\Altrp\Generators\ColumnMigrationGenerator;
@@ -20,8 +21,6 @@ class AltrpColumnObserver
    */
     public function creating(Column $column)
     {
-        $model = Model::find($column->model_id);
-
         $generator = new ColumnMigrationGenerator($column);
         $file = $generator->createColumnGenerate();
         $name = $generator->getMigrationName();
@@ -43,7 +42,13 @@ class AltrpColumnObserver
         $migration->save();
 
         $column->altrp_migration_id = $migration->id;
+    }
 
+    public function created(Column $column)
+    {
+        $model = Model::find($column->model_id);
+        $generator = new ModelGenerator($model);
+        $generator->updateModelFile();
     }
 
     /**
@@ -52,7 +57,6 @@ class AltrpColumnObserver
      */
     public function updating(Column $column)
     {
-        $model = Model::find($column->model_id);
         $old_column = Column::find($column->id);
 
         $generator = new ColumnMigrationGenerator($column);
@@ -73,7 +77,13 @@ class AltrpColumnObserver
         $migration->save();
 
         $column->altrp_migration_id = $migration->id;
+    }
 
+    public function updated(Column $column)
+    {
+        $model = Model::find($column->model_id);
+        $generator  = new ModelGenerator($model);
+        $generator->updateModelFile();
     }
 
     /**
