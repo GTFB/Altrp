@@ -117,8 +117,8 @@ async function  controllerComponentDidMount() {
       options = _.concat([{'':''}], options);
     }
     this.setState(state=>({...state, options}));
-    if(options[0]) {
-    this._changeValue(options[0].value);
+    if(options[0].value) {
+      this._changeValue(options[0].value);
     }
   }
   if(typeof this._componentDidMount === 'function'){

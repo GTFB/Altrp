@@ -31,19 +31,35 @@ class Select2Controller extends Component {
   }
 
   /**
+   * Загрузим опцию, если есть значение
+   * @return {Promise<string>}
+   */
+  async _componentDidMount(){
+    if(this.state.value){
+      let resource = new Resource({route: this.getRoute()});
+      let options = await resource.search(this.state.value);
+      console.log(this.state.value);
+      console.log(resource);
+      console.log(options);
+      this.setState(state => ({
+        ...state,
+        options
+      }));
+    }
+  }
+  /**
    * Получить роут для запросов опций
    * если this.props.options_resource содержит строку с шаблоном,
    * то нужно вставить необходимое значение свзятое из текущего элемента
    */
   getRoute(){
     let route = this.props.options_resource;
-    console.log(
-        route.match(/{{([^}]*)}}/)
-    );
+    if(! route.match(/{{([^}]*)}}/)){
+      return route;
+    }
     let settingName = route.match(/{{([^}]*)}}/)[1];
     let match = route.match(/{{([^}]*)}}/)[0];
     let value = this.props.currentElement.getSettings(settingName);
-    console.log(value);
     return route.replace(match, value)
   }
   /**
