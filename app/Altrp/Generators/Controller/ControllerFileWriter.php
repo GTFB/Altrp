@@ -97,8 +97,7 @@ class ControllerFileWriter
                 unset($controllerContent[$i]);
             }
         }
-dd($controllerContent);
-        return \File::put($this->controller->getFile(), $newContent);
+        return \File::put($this->controller->getFile(), $controllerContent);
     }
 
     /**

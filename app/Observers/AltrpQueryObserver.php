@@ -92,6 +92,7 @@ class AltrpQueryObserver
         SourceRole::where('source_id', $query->source->id)->delete();
         SourcePermission::where('source_id', $query->source->id)->delete();
         $builder->removeMethodFromController();
+        $builder->removeMethodFromRepo();
         return false;
         $query->source->delete();
 
