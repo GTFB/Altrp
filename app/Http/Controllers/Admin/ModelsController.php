@@ -237,48 +237,18 @@ class ModelsController extends HttpController
      * @throws \App\Exceptions\RelationshipNotInsertedException
      * @throws \App\Exceptions\TableNotFoundException
      */
-    function storeModel(ApiRequest $request)
-    {
-        if (! $request->table_id) {
-            $table = new Table();
-            $table->name = strtolower(\Str::plural($request->name));
-            $table->title = ucfirst(\Str::plural($request->name));
-            $table->user_id = auth()->user()->id;
-//            try {
-                $table->save();
-//            } catch (\Exception $e) {
-//                return response()->json(
-//                    [
-//                      'success'=> false,
-//                      'message' => $e->getMessage() ? $e->getMessage() : 'Table already exists!',
-//                    ],
-//                    500,
-//                    [],
-//                    JSON_UNESCAPED_UNICODE
-//                );
-//            }
-        } else {
-            $table = Table::find($request->table_id);
-            if(! $table) {
-                return response()->json('Table not found!', 404, [],JSON_UNESCAPED_UNICODE);
-            }
-        }
-
-        $model = new Model(array_merge($request->all(), ['table_id' => $table->id]));
-
-
-        $generator = new ModelGenerator(
-          $model
-        );
-
-        $result = $generator->generate();
-
-        if ($result) {
-            return response()->json('Successfully created!', 200, [], JSON_UNESCAPED_UNICODE);
-        }
-
-        return response()->json('Failed to store model!', 500, [], JSON_UNESCAPED_UNICODE);
+  function storeModel(ApiRequest $request)
+  {
+    $model = new Model($request->all());
+    $result = $model->save();
+    if ($result) {
+      return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
     }
+    return response()->json([
+      'success' => false,
+      'message' => 'Failed to store model'
+    ], 500, [], JSON_UNESCAPED_UNICODE);
+  }
 
     /**
      * Обновить модель
