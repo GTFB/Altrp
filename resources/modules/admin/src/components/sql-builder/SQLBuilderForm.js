@@ -7,7 +7,7 @@ import ConditionComponent from "./ConditionComponent";
 import OrderByComponent from "./OrderByComponent";
 import { cloneDeep } from "lodash";
 import AltrpSelect from "../altrp/AltrpSelect";
-import {Link, withRouter} from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 const conditionInitState = {
   conditionType: '',
@@ -59,6 +59,7 @@ class SQLBuilderForm extends Component {
     this.state = {
       value:
       {
+        title: "",
         "name": "getAllRecords",
         "columns": [
           "id",
@@ -203,9 +204,9 @@ class SQLBuilderForm extends Component {
       },
       "relationsOptions": [],
       "rolesOptions":
-          [],
+        [],
       "permissionsOptions":
-          [],
+        [],
       "selfFields": [],
       "selfFieldsOptions": []
     };
@@ -215,7 +216,6 @@ class SQLBuilderForm extends Component {
     this.selfFieldsResource = new Resource({ route: `/admin/ajax/models/${modelId}/fields` });
     this.relationsResource = new Resource({ route: `/admin/ajax/models/${modelId}/relations` });
     this.submitHandler = this.submitHandler.bind(this);
-    this.changeHandler = this.changeHandler.bind(this);
     this.multipleSelectChangeHandler = this.multipleSelectChangeHandler.bind(this);
     this.aggregateChangeHandler = this.aggregateChangeHandler.bind(this);
     this.aggregateAddHandler = this.aggregateAddHandler.bind(this);
@@ -285,7 +285,7 @@ class SQLBuilderForm extends Component {
     columns.forEach(c => {
       _columns.push(c.value)
     });
-    this.setState(state => ({ ...state, columns: _columns }))
+    this.setState(state => ({ ...state, value: { ...state.value, columns: _columns } }));
   };
   /**
    * Смена связей
@@ -315,11 +315,15 @@ class SQLBuilderForm extends Component {
     permissions.forEach(p => {
       _permissions.push(p.value)
     });
-    this.setState(state => ({ ...state, permissions: _permissions }))
+    this.setState(state => {
+      const newState = _.cloneDeep(state);
+      newState.value.access.permissions = _permissions;
+      return newState;
+    });
   };
 
-  changeHandler({ target: { value, name } }) {
-    this.setState(_state => ({ [name]: value }));
+  valueChangeHandler = ({ target: { value, name } }) => {
+    this.setState(state => ({ ...state, value: { ...state.value, [name]: value } }));
   }
 
   // обработчик изменения поля title, изменяющий значение поля name
@@ -327,8 +331,11 @@ class SQLBuilderForm extends Component {
     e.persist();
     this.setState(state => ({
       ...state,
-      title: e.target.value,
-      name: titleToName(e.target.value)
+      value: {
+        ...state.value,
+        title: e.target.value,
+        name: titleToName(e.target.value)
+      }
     }))
   }
 
@@ -376,7 +383,7 @@ class SQLBuilderForm extends Component {
   conditionAddHandler() {
     // this.counter++;
 
-    let newCondition = {...this.state.initialCondition};
+    let newCondition = { ...this.state.initialCondition };
     this.pushCondition(newCondition);
     // console.log(this.state.value.conditions);
     // this.setState(state => {
@@ -387,19 +394,19 @@ class SQLBuilderForm extends Component {
   /**
    * @param {{}} condition - объект условия из компонента
    */
-  pushCondition(condition){
+  pushCondition(condition) {
     let value = _.cloneDeep(this.state.value);
     /**
      * Удаляем ненужные свояства
      */
-    let _condition = {...condition};
-    delete  _condition.conditionType;
-    delete  _condition.index;
-    delete  _condition.or;
+    let _condition = { ...condition };
+    delete _condition.conditionType;
+    delete _condition.index;
+    delete _condition.or;
     value.conditions = value.conditions || {};
     value.conditions[condition.conditionType] = value.conditions[condition.conditionType] || [];
     value.conditions[condition.conditionType].push(_condition);
-    this.setState(state=>({...state, value}));
+    this.setState(state => ({ ...state, value }));
   }
 
   /**
@@ -411,37 +418,44 @@ class SQLBuilderForm extends Component {
    */
   changeCondition = (conditionType, index, condition, or) => {
     let value = _.cloneDeep(this.state.value);
-    let _condition = {...condition};
-    delete  _condition.conditionType;
-    delete  _condition.index;
-    delete  _condition.or;
+    let _condition = { ...condition };
+    delete _condition.conditionType;
+    delete _condition.index;
+    delete _condition.or;
     value.conditions = value.conditions || {};
     console.log(conditionType);
     console.log(condition);
-    if(conditionType !== condition.conditionType){
+    if (conditionType !== condition.conditionType) {
       /**
        * если тип  меняется, то удаляем из старого вставляем в новый
        */
       value.conditions = value.conditions || {};
-      if(condition.conditionType !== 'where_column'){
+      if (condition.conditionType !== 'where_column') {
         value.conditions[condition.conditionType] = value.conditions[condition.conditionType] || [];
         value.conditions[condition.conditionType].push(_condition);
         value.conditions[conditionType].splice(index, 1);
       } else {
         //todo: реализовать вариант для where_column
+        value.conditions[condition.conditionType] = value.conditions[condition.conditionType] || [];
+        value.conditions[condition.conditionType].push(_condition);
+        or ?
+          value.conditions[conditionType][1].data.splice(index, 1) :
+          value.conditions[conditionType][0].data.splice(index, 1);
       }
     } else {
       /**
        * удаляем старый заменяем на новый если тип не меняется
        */
-      if(conditionType !== 'where_column') {
+      if (conditionType !== 'where_column') {
         value.conditions[conditionType].splice(index, 1, _condition);
-      }else {
+      } else {
         //todo: реализовать вариант для where_column
-        console.log(value.conditions[conditionType]);
+        or ?
+          value.conditions[conditionType][1].data.splice(index, 1, _condition) :
+          value.conditions[conditionType][0].data.splice(index, 1, _condition);
       }
     }
-    this.setState(state=>({...state, value}));
+    this.setState(state => ({ ...state, value }));
   };
 
   /**
@@ -449,14 +463,14 @@ class SQLBuilderForm extends Component {
    * @param {int} index - номер в массиве
    * @param {boolean} or - для where_column
    */
-  deleteCondition(conditionType, index, or){
+  deleteCondition(conditionType, index, or) {
     let value = _.cloneDeep(this.state.value);
-    if(conditionType !== 'where_column') {
+    if (conditionType !== 'where_column') {
       value.conditions[conditionType].splice(index, 1);
     } else {
       //todo: реализовать вариант для where_column
     }
-    this.setState(state=>({...state, value}));
+    this.setState(state => ({ ...state, value }));
   }
 
   conditionDeleteHandler(index) {
@@ -596,20 +610,20 @@ class SQLBuilderForm extends Component {
   getConditions() {
     let conditions = [];
     let conditionPairs = _.toPairs(this.state.value.conditions);
-    conditionPairs.forEach(pair=>{
+    conditionPairs.forEach(pair => {
       // console.log(pair[0]);
-      if(pair[0] !== 'where_column'){
+      if (pair[0] !== 'where_column') {
         pair[1].forEach((_condition, idx) => {
-          let conditionForComponent = {..._condition};
+          let conditionForComponent = { ..._condition };
           conditionForComponent.conditionType = pair[0];
           conditionForComponent.index = idx;
           conditions.push(conditionForComponent);
         });
       } else {
-        pair[1].forEach(whereColumn=>{
+        pair[1].forEach(whereColumn => {
           let or = whereColumn.or;
-          whereColumn.data.forEach((whereColumnCondition, idx)=>{
-            let conditionForComponent = {...whereColumnCondition};
+          whereColumn.data.forEach((whereColumnCondition, idx) => {
+            let conditionForComponent = { ...whereColumnCondition };
             conditionForComponent.conditionType = pair[0];
             conditionForComponent.index = idx;
             conditionForComponent.or = or;
@@ -621,11 +635,9 @@ class SQLBuilderForm extends Component {
     return conditions;
   }
   render() {
-    const {
-      title, name, relations, columns, roles, permissions,
-      aggregates, orderBy, group_by,
-    } = this.state.value;
-    const {  modelsOptions, selfFieldsOptions,
+    const { title, name, relations, columns, aggregates, order_by, group_by, } = this.state.value;
+    const { roles, permissions } = this.state.value.access;
+    const { modelsOptions, selfFieldsOptions,
       permissionsOptions, relationsOptions, rolesOptions, selfFields } = this.state;
     const conditions = this.getConditions();
     const { modelId } = this.props.match.params;
@@ -644,77 +656,76 @@ class SQLBuilderForm extends Component {
           <label htmlFor="name">Name</label>
           <input type="text" id="name" required name="name"
             value={name}
-            onChange={this.changeHandler}
+            onChange={this.valueChangeHandler}
             className="form-control" />
         </div>
 
-        {/*<div className="form-group col-6">*/}
-          {/*<label htmlFor="relations">With</label>*/}
-          {/*<AltrpSelect*/}
-            {/*closeMenuOnSelect={false}*/}
-            {/*onChange={this.changeRelations}*/}
-            {/*value={_.filter(relationsOptions, r => relations.indexOf(r.value) >= 0)}*/}
-            {/*options={relationsOptions}*/}
-            {/*isMulti={true} />*/}
-        {/*</div>*/}
+        <div className="form-group col-6">
+          <label htmlFor="relations">With</label>
+          <AltrpSelect
+            closeMenuOnSelect={false}
+            onChange={this.changeRelations}
+            value={_.filter(relationsOptions, r => relations.indexOf(r.value) >= 0)}
+            options={relationsOptions}
+            isMulti={true} />
+        </div>
 
-        {/*<div className="form-group col-6">*/}
-          {/*<label htmlFor="columns">Fields</label>*/}
+        <div className="form-group col-6">
+          <label htmlFor="columns">Fields</label>
 
-          {/*<AltrpSelect*/}
-            {/*closeMenuOnSelect={false}*/}
-            {/*onChange={this.changeColumns}*/}
-            {/*value={_.filter(selfFieldsOptions, c => columns.indexOf(c.value) >= 0)}*/}
-            {/*options={selfFieldsOptions}*/}
-            {/*isMulti={true} />*/}
+          <AltrpSelect
+            closeMenuOnSelect={false}
+            onChange={this.changeColumns}
+            value={_.filter(selfFieldsOptions, c => columns.indexOf(c.value) >= 0)}
+            options={selfFieldsOptions}
+            isMulti={true} />
+        </div>
+      </div>
 
-        {/*</div>*/}
-      {/*</div>*/}
 
+      <h2 className="admin-form__subheader centred">Access</h2>
 
-      {/*<h2 className="admin-form__subheader centred">Access</h2>*/}
+      <div className="form-group__inline-wrapper">
+        <div className="form-group form-group_width47">
+          <label htmlFor="roles">Roles</label>
 
-      {/*<div className="form-group__inline-wrapper">*/}
-        {/*<div className="form-group form-group_width47">*/}
-          {/*<label htmlFor="roles">Roles</label>*/}
+          <AltrpSelect id="roles"
+            closeMenuOnSelect={false}
+            value={_.filter(rolesOptions, r => roles.indexOf(r.value) >= 0)}
+            isMulti={true}
+            onChange={this.changeRoles}
+            options={rolesOptions} />
+        </div>
 
-          {/*<AltrpSelect id="roles"*/}
-            {/*closeMenuOnSelect={false}*/}
-            {/*value={_.filter(rolesOptions, r => roles.indexOf(r.value) >= 0)}*/}
-            {/*isMulti={true}*/}
-            {/*onChange={this.changeRoles}*/}
-            {/*options={rolesOptions} />*/}
-        {/*</div>*/}
+        <div className="form-group form-group_width47">
+          <label htmlFor="permissions">Permissions</label>
+          <AltrpSelect id="roles"
+            value={_.filter(permissionsOptions, p => permissions.indexOf(p.value) >= 0)}
+            closeMenuOnSelect={false}
+            isMulti={true}
+            onChange={this.changePermission}
+            options={permissionsOptions} />
+        </div>
+      </div>
 
-        {/*<div className="form-group form-group_width47">*/}
-          {/*<label htmlFor="permissions">Permissions</label>*/}
-          {/*<AltrpSelect id="roles"*/}
-            {/*value={_.filter(permissionsOptions, p => permissions.indexOf(p.value) >= 0)}*/}
-            {/*closeMenuOnSelect={false}*/}
-            {/*isMulti={true}*/}
-            {/*onChange={this.changePermission}*/}
-            {/*options={permissionsOptions} />*/}
-        {/*</div>*/}
-      {/*</div>*/}
-
-      {/*<h2 className="admin-form__subheader centred">Aggregates</h2>*/}
-      {/*{aggregates.map((item, index) => <Fragment key={index}>*/}
-        {/*{index !== 0 && <hr />}*/}
-        {/*<AggregateComponent item={item}*/}
-          {/*columnsOptions={selfFieldsOptions}*/}
-          {/*changeHandler={e => this.aggregateChangeHandler(e, index)}*/}
-          {/*deleteHandler={() => this.aggregateDeleteHandler(index)} />*/}
-        {/*<button className="btn btn_failure" type="button"*/}
-          {/*onClick={() => this.aggregateDeleteHandler(index)}*/}
-        {/*>*/}
-          {/*Delete*/}
-        {/*</button>*/}
-      {/*</Fragment>)}*/}
-      {/*<div className="centred">*/}
-        {/*<button className="btn btn_success" type="button" onClick={this.aggregateAddHandler}>*/}
-          {/*+ New Aggregate*/}
-        {/*</button>*/}
-      {/*</div>*/}
+      <h2 className="admin-form__subheader centred">Aggregates</h2>
+      {aggregates.map((item, index) => <Fragment key={index}>
+        {index !== 0 && <hr />}
+        <AggregateComponent item={item}
+          columnsOptions={selfFieldsOptions}
+          changeHandler={e => this.aggregateChangeHandler(e, index)}
+          deleteHandler={() => this.aggregateDeleteHandler(index)} />
+        <button className="btn btn_failure" type="button"
+          onClick={() => this.aggregateDeleteHandler(index)}
+        >
+          Delete
+        </button>
+      </Fragment>)}
+      <div className="centred">
+        <button className="btn btn_success" type="button" onClick={this.aggregateAddHandler}>
+          + New Aggregate
+        </button>
+      </div>
 
       <h2 className="admin-form__subheader centred">Conditions</h2>
 
@@ -740,7 +751,7 @@ class SQLBuilderForm extends Component {
 
       <h2 className="admin-form__subheader centred">Order By</h2>
 
-      {/*orderBy.map((item, index) => <Fragment key={index}>
+      {order_by.map((item, index) => <Fragment key={index}>
         {index !== 0 && <hr />}
         <OrderByComponent
           item={item}
@@ -752,32 +763,31 @@ class SQLBuilderForm extends Component {
         >
           Delete
         </button>
-      </Fragment>)*/''}
-      {/*<div className="centred">*/}
-        {/*<button className="btn btn_success" type="button" onClick={this.orderByAddHandler}>*/}
-          {/*+ New Order*/}
-        {/*</button>*/}
-      {/*</div>*/}
+      </Fragment>)}
+      <div className="centred">
+        <button className="btn btn_success" type="button" onClick={this.orderByAddHandler}>
+          + New Order
+        </button>
+      </div>
 
-      {/*<h2 className="admin-form__subheader centred">Group By</h2>*/}
+      <h2 className="admin-form__subheader centred">Group By</h2>
 
-      {/*<div className="form-group">*/}
-        {/*<label htmlFor="group_by">Fields</label>*/}
+      <div className="form-group">
+        <label htmlFor="group_by">Fields</label>
 
-        {/*<AltrpSelect*/}
-          {/*id="group_by"*/}
-          {/*closeMenuOnSelect={false}*/}
-          {/*onChange={this.changeGroupBy}*/}
-          {/*value={_.filter(selfFieldsOptions, f => group_by.indexOf(f.value) >= 0)}*/}
-          {/*options={selfFieldsOptions}*/}
-          {/*isMulti={true} />*/}
-      {/*</div>*/}
+        <AltrpSelect
+          id="group_by"
+          closeMenuOnSelect={false}
+          onChange={this.changeGroupBy}
+          value={_.filter(selfFieldsOptions, f => group_by.indexOf(f.value) >= 0)}
+          options={selfFieldsOptions}
+          isMulti={true} />
       </div>
       <div className="btn__wrapper btn_add centred">
         <button className="btn btn_success" type="submit">Save</button>
-         <Link className="btn" to="/admin/tables/models">Cancel</Link>
+        <Link className="btn" to="/admin/tables/models">Cancel</Link>
       </div>
-    </form>
+    </form >
   }
 }
 

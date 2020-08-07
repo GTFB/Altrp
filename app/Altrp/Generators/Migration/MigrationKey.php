@@ -115,7 +115,7 @@ class MigrationKey{
 
         $target_table = Model::where('name', $model_name)->first()->altrp_table->name;
 
-        $text = "\$table->bigInteger('".$source_column."')->unsigned();\n\t\t\t";
+        $text = "\$table->bigInteger('".$source_column."')->nullable()->unsigned();\n\t\t\t";
         $text .= "\$table->foreign('".$source_column."')->references('".$target_column."')->on('".$target_table."')".$modifiers;
         return $text;
     }
