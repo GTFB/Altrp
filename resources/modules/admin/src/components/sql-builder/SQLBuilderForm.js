@@ -756,7 +756,7 @@ class SQLBuilderForm extends Component {
           changeHandler={e => this.conditionChangeHandler(e, index)}
         />
         <button className="btn btn_failure" type="button"
-          onClick={() => this.deleteCondition(condition.conditionType, index, condition.or)}
+          onClick={() => this.deleteCondition(condition.conditionType, condition.index, condition.or)}
         >
           Delete
         </button>

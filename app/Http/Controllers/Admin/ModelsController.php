@@ -59,12 +59,13 @@ class ModelsController extends HttpController
         return response()->json(Model::getModelsForEditor());
     }
 
-    /**
-     * @return JsonResponse
-     */
-    public function models_options()
+  /**
+   * @param Request $request
+   * @return JsonResponse
+   */
+    public function models_options( Request $request )
     {
-        return response()->json(Model::getModelsOptions());
+      return response()->json(Model::getModelsOptions( $request->get( 'with_names' ) ));
     }
 
     /**

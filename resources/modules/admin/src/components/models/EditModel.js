@@ -88,6 +88,7 @@ class EditModel extends Component {
   render() {
     const { model, fields, relations, queries } = this.state;
 
+    const { id } = this.props.match.params;
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
@@ -104,8 +105,21 @@ class EditModel extends Component {
 
 
         {fields ?  <><h2 className="sub-header">Fields</h2>
-            <AdminTable
+        <AdminTable
           columns={columns}
+          quickActions={[{ tag: 'Link', props: {
+              href: `/admin/tables/models/${id}/fields/edit/:id`,
+            },
+            title: 'Edit'
+          } , {
+            tag: 'button',
+            route: `/admin/ajax/models/${id}/fields/:id`,
+            method: 'delete',
+            confirm: 'Are You Sure?',
+            after: () => this.updateModels(this.state.currentPage, this.state.activeTemplateArea),
+            className: 'quick-action-menu__item_danger',
+            title: 'Trash'
+          }]}
           rows={fields.map(field => ({ ...field, editUrl: `/admin/tables/models/${model.id}/fields/edit/${field.id}` }))}
         />
         <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/fields/add`}>Add Field</Link>
@@ -114,6 +128,19 @@ class EditModel extends Component {
         <h2 className="sub-header">Relations</h2>
         <AdminTable
           columns={columns}
+          quickActions={[{ tag: 'Link', props: {
+              href: `/admin/tables/models/${id}/relations/edit/:id`,
+            },
+            title: 'Edit'
+          } , {
+            tag: 'button',
+            route: `/admin/ajax/models/${id}/relations/:id`,
+            method: 'delete',
+            confirm: 'Are You Sure?',
+            after: () => this.updateModels(this.state.currentPage, this.state.activeTemplateArea),
+            className: 'quick-action-menu__item_danger',
+            title: 'Trash'
+          }]}
           rows={relations.map(relation => ({ ...relation, editUrl: `/admin/tables/models/${model.id}/relations/edit/${relation.id}` }))}
         />
         <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/relations/add`}>Add Relation</Link>
