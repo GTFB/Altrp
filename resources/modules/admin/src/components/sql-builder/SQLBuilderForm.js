@@ -472,7 +472,6 @@ class SQLBuilderForm extends Component {
    */
   deleteCondition = (conditionType, index, or) => {
     let value = _.cloneDeep(this.state.value);
-    debugger
     if (conditionType !== 'where_column') {
       value.conditions[conditionType].splice(index, 1);
     } else {
@@ -758,7 +757,7 @@ class SQLBuilderForm extends Component {
           changeHandler={e => this.conditionChangeHandler(e, index)}
         />
         <button className="btn btn_failure" type="button"
-          onClick={() => this.deleteCondition(condition.conditionType, index, condition.or)}
+          onClick={() => this.deleteCondition(condition.conditionType, condition.index, condition.or)}
         >
           Delete
         </button>
