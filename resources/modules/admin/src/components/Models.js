@@ -141,6 +141,27 @@ export default class Models extends Component {
             {/* TODO: что делать с колoнкой с чекбоксами? */}
             <AdminTable
               columns={columnsModel}
+              quickActions={[{ tag: 'a', props: {
+                  href: '/admin/editor?template_id=:id',
+                  target: '_blank',
+                  // className: ''
+                },
+                title: 'Edit'
+              }, {
+                tag: 'button',
+                route: '/admin/ajax/templates/:id/reviews',
+                method: 'delete',
+                // className: ''
+                title: 'Clear History'
+              }, {
+                tag: 'button',
+                route: '/admin/ajax/templates/:id',
+                method: 'delete',
+                confirm: 'Are You Sure?',
+                after: () => this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea),
+                className: 'quick-action-menu__item_danger',
+                title: 'Trash'
+              }]}
               rows={models.map(model => ({ 
                 ...model, 
                 editUrl: '/admin/tables/models/edit/' + model.id
