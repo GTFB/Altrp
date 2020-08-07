@@ -84,11 +84,11 @@ class Page extends Model
       $_page['lazy'] = $lazy;
       if($page->model){
         $_page['model'] = $page->model->toArray();
-        $_page['model']['modelName'] = $page->model->altrp_table->name;
+        $_page['model']['modelName'] = $page->model->name;
       }
-      if( $page->get_models() ){
-        $_page['models'] = $page->get_models();
-      }
+//      if( $page->get_models() ){
+//        $_page['models'] = $page->get_models();
+//      }
       $pages[] = $_page;
     }
 

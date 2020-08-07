@@ -60,6 +60,17 @@ class AdvancedSettings extends Component {
             </button>
           </td>
         </tr>
+        <tr className="admin-settings-table-row">
+          <td className="admin-settings-table__td row-text" width="10%">
+            Clear All Templates History
+          </td>
+          <td className="admin-settings-table__td">
+            <button className="btn btn_success"
+                    onClick={this.deleteAllTemplatesReviews}>
+              Clear
+            </button>
+          </td>
+        </tr>
         </tbody>
       </table>
     </div>

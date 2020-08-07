@@ -132,7 +132,7 @@ class AddFieldForm extends Component {
     e.preventDefault();
     const { history, match } = this.props;
     const { name, title, description, is_label, is_title, type, size, default: default_, attribute, input_type,
-      options, nullable, indexed, editable, calculation, calculation_logic } = this.state.value;
+      options, null: _null, indexed, editable, calculation, calculation_logic } = this.state.value;
 
     let data = {};
     
@@ -141,7 +141,7 @@ class AddFieldForm extends Component {
         data = { title, description, type, calculation } :
         data = { title, description, type, calculation_logic };
     } else {
-      data = { name, title, description, is_label, is_title, type, size, default: default_, attribute, input_type, nullable, indexed, editable };
+      data = { name, title, description, is_label, is_title, type, size, default: default_, attribute, input_type, null: _null, indexed, editable };
       if (['select', 'checkbox', 'radio button'].includes(input_type)) {
         data = { ...data, options };
       }
