@@ -603,7 +603,7 @@ class ControllerGenerator extends AppGenerator
      */
     public function removeRoutes()
     {
-        $routeGenerator = new RouteGenerator();
+        $routeGenerator = new RouteGenerator($this->controllerModel);
         return $routeGenerator->deleteRoutes($this->controllerModel);
     }
 

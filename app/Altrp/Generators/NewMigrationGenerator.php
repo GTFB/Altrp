@@ -17,6 +17,7 @@ class NewMigrationGenerator extends AppGenerator{
     public $is_created;
     public $is_updated;
     public $is_deleted;
+    public $is_timestamped;
 
     public function __construct($data) {
 
@@ -25,6 +26,7 @@ class NewMigrationGenerator extends AppGenerator{
         $this->is_created = false;
         $this->is_deleted = false;
         $this->is_updated = false;
+        $this->is_timestamped = false;
     }
 
     public function generate($name, $template) {
@@ -46,7 +48,7 @@ class NewMigrationGenerator extends AppGenerator{
      */
     public function getMigrationName($name)
     {
-        $data = Migration::select("id", "name")->where("name","=",$name)->get();
+        $data = Migration::select("id", "name")->where("name","like","%$name%")->get();
 
         if(count($data) == 0) {
             return $name;
