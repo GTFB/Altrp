@@ -62,6 +62,7 @@ class AltrpRelationshipObserver
     /**
      * Вызываем после обновления колонки
      * @param Relationship $relationship
+     * @throws AltrpMigrationCreateFileExceptions
      */
     public function updating(Relationship $relationship)
     {
@@ -103,6 +104,7 @@ class AltrpRelationshipObserver
     /**
      * Вызываем после удаления колонки
      * @param Relationship $relationship
+     * @throws AltrpMigrationCreateFileExceptions
      */
     public function deleting(Relationship $relationship)
     {
@@ -125,5 +127,18 @@ class AltrpRelationshipObserver
         $migration->save();
 
 
+    }
+
+    /**
+     * @param Relationship $relationship
+     * @throws CommandFailedException
+     */
+    public function deleted(Relationship $relationship)
+    {
+        $model = Model::find($relationship->model_id);
+        $generator = new ModelGenerator($model);
+        if (! $generator->updateModelFile()) {
+            throw new CommandFailedException('Failed to update model file', 500);
+        }
     }
 }
