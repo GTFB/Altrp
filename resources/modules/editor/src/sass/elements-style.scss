@@ -2,7 +2,6 @@
 
 .sections-wrapper {
   display: flex;
-  flex-direction: column;
   width: 1440px;
   max-width: 100%;
   margin-left: auto;
@@ -487,3 +486,15 @@
     align-items: center;
     justify-content: center;
 }
+
+.app-popup {
+  position: absolute;
+  display: none;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba($color: #000000, $alpha: 0.3);
+  z-index: 999999;
+}
+
