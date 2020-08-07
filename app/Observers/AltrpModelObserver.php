@@ -6,9 +6,11 @@ use App\Altrp\Column;
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
 use App\Altrp\Generators\ModelGenerator;
+use App\Altrp\Generators\TableMigrationGenerator;
 use App\Altrp\Migration;
 use App\Altrp\Model;
 use App\Altrp\Table;
+use App\Exceptions\AltrpMigrationCreateFileExceptions;
 use App\Exceptions\CommandFailedException;
 use App\Exceptions\Controller\ControllerFileException;
 use App\Exceptions\ControllerNotWrittenException;
@@ -56,6 +58,31 @@ class AltrpModelObserver
         if (! $controller->save()) {
             throw new ControllerFileException('Failed to create controller');
         }
+
+        if ($model->time_stamps || $model->soft_deletes) {
+            $table = $model->table;
+
+            $generator = new TableMigrationGenerator($table);
+
+            $file = $generator->updateTableTimestamps(
+                $model->time_stamps,
+                $model->soft_deletes
+            );
+            $name = $generator->getMigrationName();
+
+            if(!$file) {
+                throw new AltrpMigrationCreateFileExceptions("Failed to create migration file");
+            }
+
+            $migration = new Migration();
+            $migration->name = $name;
+            $migration->file_path = $file;
+            $migration->user_id = auth()->user()->id;
+            $migration->table_id = $table->id;
+            $migration->status = "1";
+            $migration->data = "";
+            $migration->save();
+        }
     }
 
     /**
@@ -83,6 +110,7 @@ class AltrpModelObserver
      * @throws ControllerNotWrittenException
      * @throws ModelNotWrittenException
      * @throws RouteGenerateFailedException
+     * @throws AltrpMigrationCreateFileExceptions
      */
     public function updated(Model $model)
     {
@@ -117,6 +145,31 @@ class AltrpModelObserver
         if (! $generator->generateRoutes()) {
             throw new RouteGenerateFailedException('Failed to generate routes', 500);
         }
+
+        if ($model->time_stamps != $model->getOriginal('time_stamps')
+            || $model->soft_deletes != $model->getOriginal('soft_deletes')) {
+            $table = $model->table;
+            $generator = new TableMigrationGenerator($table);
+
+            $file = $generator->updateTableTimestamps(
+                $model->time_stamps,
+                $model->soft_deletes
+            );
+            $name = $generator->getMigrationName();
+
+            if(!$file) {
+                throw new AltrpMigrationCreateFileExceptions("Failed to create migration file");
+            }
+
+            $migration = new Migration();
+            $migration->name = $name;
+            $migration->file_path = $file;
+            $migration->user_id = auth()->user()->id;
+            $migration->table_id = $table->id;
+            $migration->status = "1";
+            $migration->data = "";
+            $migration->save();
+        }
     }
 
     /**
@@ -127,7 +180,7 @@ class AltrpModelObserver
      */
     public function deleting(Model $model)
     {
-//        $table = Table::find($model->table_id);
+//        $table = $model->table;
 //        \DB::table($table->name)->delete();
 //        $migration = $table->actual_migration();
 //        Column::where('altrp_migration_id', $migration->id)->delete();
@@ -141,11 +194,10 @@ class AltrpModelObserver
         if (! $controller->delete()) {
             throw new ControllerFileException('Failed to delete controller',  500);
         }
-//        $table->delete();
     }
 
     public function deleted(Model $model)
     {
-
+//        $model->table->forceDelete();
     }
 }

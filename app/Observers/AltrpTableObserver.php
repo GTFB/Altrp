@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Altrp\Model;
 use App\Altrp\Table;
 use App\Altrp\Migration;
 use App\Altrp\Column;
@@ -78,6 +79,7 @@ class AltrpTableObserver
         $migration->status = "1";
         $migration->data = "";
         $migration->save();
+
     }
 
     /**

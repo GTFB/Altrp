@@ -64,6 +64,7 @@ class ModelGenerator extends AppGenerator
             $this->model->name
         );
         $this->modelFile = $this->getModelFile();
+        $this->relationships = $model->altrp_relationships;
         parent::__construct($model);
     }
 

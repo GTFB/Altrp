@@ -187,6 +187,21 @@ class MigrationField{
     }
 
     /**
+     * Получаем значение index
+     * @return string
+     */
+    protected function getIndex() {
+
+        $index = "";
+
+        if($this->column->indexed && !$this->checkAttribute("indexed")) {
+            $index = "->index()";
+        }
+
+        return $index;
+    }
+
+    /**
      * Получаем значение nullable
      * @return string
      */
@@ -215,10 +230,12 @@ class MigrationField{
 
     /**
      * Получаем все модификаторы индекса столбца
-     * @return type
+     * @return string
      */
     protected function getColumnIndexModifiers() {
-        $text = $this->getUnique();
+        $text = '';
+        $text .= $this->getUnique();
+        $text .= $this->getIndex();
         return $text;
     }
 

@@ -41,6 +41,7 @@ class AltrpRelationshipObserver
         $migration->save();
 
         $relationship->altrp_migration_id = $migration->id;
+
     }
 
     /**
@@ -53,9 +54,6 @@ class AltrpRelationshipObserver
     {
         $model = Model::find($relationship->model_id);
         $generator = new ModelGenerator($model);
-        if (! $generator->getAndWriteRelationships()) {
-            throw new CommandFailedException('Failed to write relations', 500);
-        }
         if (! $generator->updateModelFile()) {
             throw new CommandFailedException('Failed to update model file', 500);
         }
