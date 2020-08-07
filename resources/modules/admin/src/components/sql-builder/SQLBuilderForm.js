@@ -443,10 +443,11 @@ class SQLBuilderForm extends Component {
       } else {
         //todo: реализовать вариант для where_column
         value.conditions[condition.conditionType] = value.conditions[condition.conditionType] || [];
-        value.conditions[condition.conditionType].push(_condition);
         or ?
-          value.conditions[conditionType][1].data.splice(index, 1) :
-          value.conditions[conditionType][0].data.splice(index, 1);
+          value.conditions[condition.conditionType][1].data.push(_condition) :
+          value.conditions[condition.conditionType][0].data.push(_condition);
+
+        value.conditions[conditionType].splice(index, 1)
       }
     } else {
       /**
@@ -471,6 +472,7 @@ class SQLBuilderForm extends Component {
    */
   deleteCondition = (conditionType, index, or) => {
     let value = _.cloneDeep(this.state.value);
+    debugger
     if (conditionType !== 'where_column') {
       value.conditions[conditionType].splice(index, 1);
     } else {
