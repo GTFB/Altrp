@@ -493,27 +493,36 @@ class SQLBuilderForm extends Component {
   // обработчики событий для массива orderBy
   orderByChangeHandler({ target: { value, name } }, index) {
     this.setState(state => {
-      const orderBy = [...state.orderBy];
+      const orderBy = [...state.value.orderBy];
       orderBy[index] = { ...state.orderBy[index], [name]: value };
-      return { ...state, orderBy };
+      return {
+        ...state,
+        value: { ...state.value, orderBy }
+      };
     });
   }
 
   orderByAddHandler() {
-    this.counter++;
+    // this.counter++;
 
     this.setState(state => {
-      const orderBy = [...state.orderBy];
-      orderBy.push({ type: '', column: '', id: this.counter });
-      return { ...state, orderBy };
+      const orderBy = [...state.value.orderBy];
+      orderBy.push({ type: '', column: ''/* , id: this.counter */ });
+      return {
+        ...state,
+        value: { ...state.value, orderBy }
+      };
     });
   }
 
   orderByDeleteHandler(index) {
     this.setState(state => {
-      const orderBy = [...state.orderBy];
+      const orderBy = [...state.value.orderBy];
       orderBy.splice(index, 1);
-      return { ...state, orderBy };
+      return {
+        ...state,
+        value: { ...state.value, orderBy }
+      };
     })
   }
 
