@@ -8,10 +8,10 @@ const relationTypeOptions = [
     value: 'hasOne',
     label: 'Has One'
   },
-  {
-    value: 'belongsTo',
-    label: 'Belongs To'
-  },
+  // {
+  //   value: 'belongsTo',
+  //   label: 'Belongs To'
+  // },
   {
     value: 'hasMany',
     label: 'Has Many'
@@ -47,6 +47,7 @@ class AddRelationForm extends Component {
         type: '',
         model_id: this.props.match.params.modelId,
         add_belong_to: false,
+        editable: false,
         local_key: '',
         foreign_key: '',
         onDelete: '',
@@ -83,10 +84,14 @@ class AddRelationForm extends Component {
  * @param {string} field
  */
   changeValue(value, field) {
-    this.setState(state => {
+  const { id } = this.props.match.params;
+  this.setState(state => {
       state = { ...state };
       state.value[field] = value;
-      if(field === 'title'){
+      if(field === 'title' && ! id){
+        state.value.name = titleToName(value);
+      }
+      if((field === 'name')){
         state.value.name = titleToName(value);
       }
       if(field === 'foreign_key'){
@@ -134,7 +139,7 @@ class AddRelationForm extends Component {
       <div className="row">
         <div className="form-group col-12">
           <label htmlFor="relation-title">Relation Title</label>
-          <input type="text" id="relation-title" required readOnly={id}
+          <input type="text" id="relation-title" required
             value={this.state.value.title || ''}
             onChange={e => { this.changeValue(e.target.value, 'title') }}
             className="form-control" />
@@ -174,7 +179,7 @@ class AddRelationForm extends Component {
 
         <div className="form-group form-group_width47">
           <label htmlFor="relation-model_id">Model to Bound</label>
-          <select id="relation-model_id" required disabled={id}
+          <select id="relation-model_id" required
             value={this.state.value.target_model_id || ''}
             onChange={e => { this.changeValue(e.target.value, 'target_model_id') }}
             className="form-control"
@@ -187,15 +192,22 @@ class AddRelationForm extends Component {
           </select>
         </div>
       </div>
-
-      <div className="form-group">
-        <input type="checkbox" id="relation-add_belong_to"
-          checked={this.state.value.add_belong_to} readOnly={id}
-          onChange={e => { this.changeValue(e.target.checked, 'add_belong_to') }}
-        />
-        <label className="checkbox-label" htmlFor="relation-add_belong_to">Add Reverse Relation</label>
+      <div className="row">
+        <div className="form-group col-6">
+          <input type="checkbox" id="relation-add_belong_to"
+            checked={this.state.value.add_belong_to} readOnly={id}
+            onChange={e => { this.changeValue(e.target.checked, 'add_belong_to') }}
+          />
+          <label className="checkbox-label" htmlFor="relation-add_belong_to">Add Reverse Relation</label>
+        </div>
+        <div className="form-group col-6">
+          <input type="checkbox" id="relation-editable"
+            checked={this.state.value.editable} readOnly={id}
+            onChange={e => { this.changeValue(e.target.checked, 'editable') }}
+          />
+          <label className="checkbox-label" htmlFor="relation-editable">Editable</label>
+        </div>
       </div>
-
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
           <label htmlFor="relation-local_key">Local Key</label>
@@ -208,7 +220,7 @@ class AddRelationForm extends Component {
 
         <div className="form-group form-group_width47">
           <label htmlFor="relation-foreign_key">Foreign Key</label>
-          <select id="relation-foreign_key" required disabled={id}
+          <select id="relation-foreign_key" required
             value={this.state.value.local_key || ''}
             onChange={e => { this.changeValue(e.target.value, 'local_key') }}
             className="form-control"
@@ -225,7 +237,7 @@ class AddRelationForm extends Component {
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
           <label htmlFor="onDelete">On Delete</label>
-          <select id="onDelete" required disabled={id}
+          <select id="onDelete" required
             value={this.state.value.onDelete}
             onChange={e => { this.changeValue(e.target.value, 'onDelete') }}
             className="form-control"
@@ -240,7 +252,7 @@ class AddRelationForm extends Component {
 
         <div className="form-group form-group_width47">
           <label htmlFor="onUpdate">On Update</label>
-          <select id="onUpdate" required disabled={id}
+          <select id="onUpdate" required
             value={this.state.value.onUpdate}
             onChange={e => { this.changeValue(e.target.value, 'onUpdate') }}
             className="form-control"
@@ -254,11 +266,11 @@ class AddRelationForm extends Component {
         </div>
       </div>
 
-      {id ? '' : <div className="btn__wrapper">
+       <div className="btn__wrapper">
         <button className="btn btn_success" type="submit">Add</button>
         <Link className="btn" to="/admin/tables/models">Cancel</Link>
         {/* <button className="btn btn_failure">Delete</button> */}
-      </div>}
+      </div>
     </form>;
   }
 }

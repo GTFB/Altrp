@@ -139,7 +139,7 @@ class AddFieldForm extends Component {
       ...state, value: {
         ...state.value,
         title: e.target.value,
-        name: titleToName(e.target.value)
+        name: this.props.match.params.id ? state.value.name : titleToName(e.target.value)
       }
     }))
   }
@@ -204,7 +204,7 @@ class AddFieldForm extends Component {
     return <form className="admin-form field-form" onSubmit={this.submitHandler}>
       <div className="form-group ">
         <label htmlFor="field-title">Field Title</label>
-        <input type="text" id="field-title" required readOnly={this.props.match.params.id}
+        <input type="text" id="field-title" required
           value={this.state.value.title || ''}
           onChange={this.titleChangeHandler}
           className="form-control" />
