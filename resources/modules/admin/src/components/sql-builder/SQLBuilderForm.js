@@ -222,8 +222,6 @@ class SQLBuilderForm extends Component {
     this.aggregateDeleteHandler = this.aggregateDeleteHandler.bind(this);
     this.conditionChangeHandler = this.conditionChangeHandler.bind(this);
     this.conditionAddHandler = this.conditionAddHandler.bind(this);
-    this.conditionDeleteHandler = this.conditionDeleteHandler.bind(this);
-    this.conditionDeleteHandler = this.conditionDeleteHandler.bind(this);
     this.orderByChangeHandler = this.orderByChangeHandler.bind(this);
     this.orderByAddHandler = this.orderByAddHandler.bind(this);
     this.orderByDeleteHandler = this.orderByDeleteHandler.bind(this);
@@ -463,23 +461,26 @@ class SQLBuilderForm extends Component {
    * @param {int} index - номер в массиве
    * @param {boolean} or - для where_column
    */
-  deleteCondition(conditionType, index, or) {
+  deleteCondition = (conditionType, index, or) => {
     let value = _.cloneDeep(this.state.value);
     if (conditionType !== 'where_column') {
       value.conditions[conditionType].splice(index, 1);
     } else {
       //todo: реализовать вариант для where_column
+      or ?
+        value.conditions[conditionType][1].data.splice(index, 1) :
+        value.conditions[conditionType][0].data.splice(index, 1);
     }
     this.setState(state => ({ ...state, value }));
   }
 
-  conditionDeleteHandler(index) {
-    this.setState(state => {
-      const conditions = [...state.conditions];
-      conditions.splice(index, 1);
-      return { ...state, conditions };
-    })
-  }
+  // conditionDeleteHandler(index) {
+  //   this.setState(state => {
+  //     const conditions = [...state.conditions];
+  //     conditions.splice(index, 1);
+  //     return { ...state, conditions };
+  //   })
+  // }
 
   // обработчики событий для массива orderBy
   orderByChangeHandler({ target: { value, name } }, index) {
@@ -738,7 +739,7 @@ class SQLBuilderForm extends Component {
           changeHandler={e => this.conditionChangeHandler(e, index)}
         />
         <button className="btn btn_failure" type="button"
-          onClick={() => this.conditionDeleteHandler(index)}
+          onClick={() => this.deleteCondition(condition.conditionType, index, condition.or)}
         >
           Delete
         </button>
