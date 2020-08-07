@@ -123,7 +123,7 @@ EOD;
      *
      * @var string
      */
-    const CREATED_AT = '$createdAt';\n\n
+    const CREATED_AT = 'created_at';\n\n
 EOD;
         }
 
@@ -134,7 +134,7 @@ EOD;
      *
      * @var string
      */
-    const UPDATED_AT = '$updatedAt';\n
+    const UPDATED_AT = 'updated_at';\n
 EOD;
         }
 
