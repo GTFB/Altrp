@@ -249,6 +249,27 @@ class QueryBuilder2
     }
 
     /**
+     * Удалить метод из файла репозитория
+     *
+     * @param $method
+     * @return bool
+     * @throws \App\Exceptions\Repository\RepositoryFileException
+     */
+    public function removeMethodFromRepo($method)
+    {
+        $repoInterfaceFile = new RepositoryInterfaceFile($this->model);
+        $repoFile = new RepositoryFile($this->model);
+        $fileWriter = new RepositoryFileWriter(
+            $repoFile,
+            $repoInterfaceFile
+        );
+        if ($fileWriter->addMethod($this->getMethodName(), $method)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Записать метод в файл контроллера
      *
      * @throws \App\Exceptions\Controller\ControllerFileException
