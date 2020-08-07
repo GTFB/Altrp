@@ -94,9 +94,6 @@ class AltrpModelObserver
     public function updating(Model $model)
     {
         $generator = new ModelGenerator($model);
-        if (! $generator->getAndWriteRelationships()) {
-            throw new CommandFailedException('Failed to write relations', 500);
-        }
         if (! $generator->updateModelFile()) {
             throw new CommandFailedException('Failed to update model file', 500);
         }
