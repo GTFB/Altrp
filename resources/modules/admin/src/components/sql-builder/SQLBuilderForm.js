@@ -5,7 +5,6 @@ import { titleToName } from "../../js/helpers";
 import AggregateComponent from "./AggregateComponent";
 import ConditionComponent from "./ConditionComponent";
 import OrderByComponent from "./OrderByComponent";
-import { cloneDeep } from "lodash";
 import AltrpSelect from "../altrp/AltrpSelect";
 import { Link, withRouter } from "react-router-dom";
 
@@ -222,8 +221,6 @@ class SQLBuilderForm extends Component {
     this.aggregateDeleteHandler = this.aggregateDeleteHandler.bind(this);
     this.conditionChangeHandler = this.conditionChangeHandler.bind(this);
     this.conditionAddHandler = this.conditionAddHandler.bind(this);
-    this.conditionDeleteHandler = this.conditionDeleteHandler.bind(this);
-    this.conditionDeleteHandler = this.conditionDeleteHandler.bind(this);
     this.orderByChangeHandler = this.orderByChangeHandler.bind(this);
     this.orderByAddHandler = this.orderByAddHandler.bind(this);
     this.orderByDeleteHandler = this.orderByDeleteHandler.bind(this);
@@ -342,27 +339,36 @@ class SQLBuilderForm extends Component {
   // обработчики событий для массива aggregates
   aggregateChangeHandler({ target: { value, name } }, index) {
     this.setState(state => {
-      const aggregates = [...state.aggregates];
-      aggregates[index] = { ...state.aggregates[index], [name]: value };
-      return { ...state, aggregates };
+      const aggregates = [...state.value.aggregates];
+      aggregates[index] = { ...state.value.aggregates[index], [name]: value };
+      return {
+        ...state,
+        value: { ...state.value, aggregates }
+      };
     });
   }
 
   aggregateAddHandler() {
-    this.counter++;
+    // this.counter++;
 
     this.setState(state => {
-      const aggregates = [...state.aggregates];
-      aggregates.push({ type: '', column: '', alias: '', id: this.counter });
-      return { ...state, aggregates };
+      const aggregates = [...state.value.aggregates];
+      aggregates.push({ type: '', column: '', alias: ''/* , id: this.counter */ });
+      return {
+        ...state,
+        value: { ...state.value, aggregates }
+      };
     });
   }
 
   aggregateDeleteHandler(index) {
     this.setState(state => {
-      const aggregates = [...state.aggregates];
+      const aggregates = [...state.value.aggregates];
       aggregates.splice(index, 1);
-      return { ...state, aggregates };
+      return {
+        ...state,
+        value: { ...state.value, aggregates }
+      };
     });
   }
 
@@ -463,48 +469,60 @@ class SQLBuilderForm extends Component {
    * @param {int} index - номер в массиве
    * @param {boolean} or - для where_column
    */
-  deleteCondition(conditionType, index, or) {
+  deleteCondition = (conditionType, index, or) => {
     let value = _.cloneDeep(this.state.value);
     if (conditionType !== 'where_column') {
       value.conditions[conditionType].splice(index, 1);
     } else {
       //todo: реализовать вариант для where_column
+      or ?
+        value.conditions[conditionType][1].data.splice(index, 1) :
+        value.conditions[conditionType][0].data.splice(index, 1);
     }
     this.setState(state => ({ ...state, value }));
   }
 
-  conditionDeleteHandler(index) {
-    this.setState(state => {
-      const conditions = [...state.conditions];
-      conditions.splice(index, 1);
-      return { ...state, conditions };
-    })
-  }
+  // conditionDeleteHandler(index) {
+  //   this.setState(state => {
+  //     const conditions = [...state.conditions];
+  //     conditions.splice(index, 1);
+  //     return { ...state, conditions };
+  //   })
+  // }
 
   // обработчики событий для массива orderBy
   orderByChangeHandler({ target: { value, name } }, index) {
     this.setState(state => {
-      const orderBy = [...state.orderBy];
+      const orderBy = [...state.value.orderBy];
       orderBy[index] = { ...state.orderBy[index], [name]: value };
-      return { ...state, orderBy };
+      return {
+        ...state,
+        value: { ...state.value, orderBy }
+      };
     });
   }
 
   orderByAddHandler() {
-    this.counter++;
+    // this.counter++;
 
     this.setState(state => {
-      const orderBy = [...state.orderBy];
-      orderBy.push({ type: '', column: '', id: this.counter });
-      return { ...state, orderBy };
+      const orderBy = [...state.value.orderBy];
+      orderBy.push({ type: '', column: ''/* , id: this.counter */ });
+      return {
+        ...state,
+        value: { ...state.value, orderBy }
+      };
     });
   }
 
   orderByDeleteHandler(index) {
     this.setState(state => {
-      const orderBy = [...state.orderBy];
+      const orderBy = [...state.value.orderBy];
       orderBy.splice(index, 1);
-      return { ...state, orderBy };
+      return {
+        ...state,
+        value: { ...state.value, orderBy }
+      };
     })
   }
 
@@ -738,7 +756,7 @@ class SQLBuilderForm extends Component {
           changeHandler={e => this.conditionChangeHandler(e, index)}
         />
         <button className="btn btn_failure" type="button"
-          onClick={() => this.conditionDeleteHandler(index)}
+          onClick={() => this.deleteCondition(condition.conditionType, index, condition.or)}
         >
           Delete
         </button>
