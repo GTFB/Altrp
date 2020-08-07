@@ -30,19 +30,6 @@ class DummyClass extends ApiController
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function options(Request $request)
-    {
-        $options = {{modelName}}::{{options}}->get();
-
-        return response()->json($options, 200, [], JSON_UNESCAPED_UNICODE);
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param Request $request

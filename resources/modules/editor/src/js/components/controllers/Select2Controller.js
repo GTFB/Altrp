@@ -21,20 +21,43 @@ class Select2Controller extends Component {
       options: this.props.options || [],
       show: true
     };
-    if (this.props.options_resource) {
-      this.resource = new Resource({ route: this.props.options_resource });
-    }
+    // if (this.props.options_resource) {
+    //   this.resource = new Resource({ route: this.props.options_resource });
+    // }
   };
 
   getDefaultValue() {
     return '';
   }
 
+  /**
+   * Получить роут для запросов опций
+   * если this.props.options_resource содержит строку с шаблоном,
+   * то нужно вставить необходимое значение свзятое из текущего элемента
+   */
+  getRoute(){
+    let route = this.props.options_resource;
+    console.log(
+        route.match(/{{([^}]*)}}/)
+    );
+    let settingName = route.match(/{{([^}]*)}}/)[1];
+    let match = route.match(/{{([^}]*)}}/)[0];
+    let value = this.props.currentElement.getSettings(settingName);
+    console.log(value);
+    return route.replace(match, value)
+  }
+  /**
+   * Обновляет опции при помощи ajax
+   * @param searchString
+   * @param callback
+   * @return {Promise<*>}
+   */
   async loadOptions(searchString, callback) {
     if (!searchString) {
       return callback([]);
     }
-    let options = await this.resource.search(searchString);
+    let resource = new Resource({route: this.getRoute()});
+    let options = await resource.search(searchString);
     this.setState(state => ({
       ...state,
       options
@@ -51,7 +74,6 @@ class Select2Controller extends Component {
   };
 
   render() {
-
     if (this.state.show === false) {
       return '';
     }
@@ -148,7 +170,8 @@ function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
     currentState: state.currentState,
-    currentScreen: state.currentScreen
+    currentScreen: state.currentScreen,
+    controllerValue: state.controllerValue,
   };
 }
 export default connect(mapStateToProps)(Select2Controller);

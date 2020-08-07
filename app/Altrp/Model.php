@@ -106,9 +106,10 @@ class Model extends EloquentModel
   /**
    * Список моделей для select
    * @param bool $with_names
+   * @param bool $not_plural
    * @return array
    */
-    public static function getModelsOptions( $with_names = false )
+    public static function getModelsOptions( $with_names = false, $not_plural = false )
     {
         $models = [];
         $_models = self::all();
@@ -119,7 +120,7 @@ class Model extends EloquentModel
             if( $with_names ){
               $models[] = [
                 'label' => $model->title,
-                'value' => Str::plural( $model->name ),
+                'value' => $not_plural ? $model->name : Str::plural( $model->name ),
               ];
             } else {
               $models[] = [

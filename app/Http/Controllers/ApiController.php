@@ -8,6 +8,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiRequest;
 use Illuminate\Http\Request;
 
+/**
+ * Class ApiController
+ * @package App\Http\Controllers
+ * @property string $modelClass
+ */
 class ApiController extends Controller
 {
     /**
@@ -76,4 +81,41 @@ class ApiController extends Controller
         }
         return $columnsList;
     }
+
+  /**
+   * Список опций для селекта
+   * @param ApiRequest $request
+   */
+  public function options( ApiRequest $request )
+  {
+    /**
+     * @var \App\AltrpModels\test $model
+     */
+    $model = new $this->modelClass();
+    $label_name = $model->getLabelColumnName();
+    $title_name = $model->getTitleColumnName();
+    if( ! $request->get( 's' ) ){
+      $options = $model->all();
+    } else {
+      $options = $model->where( 'id', 'like', '%' . $request->get( 's' ) . '%' );
+
+      if( $title_name !== 'id' ){
+        $options->orWhere( $title_name, 'like', '%' . $request->get( 's' ) . '%' );
+      }
+      if( $title_name !== $label_name ){
+        $options->orWhere( $label_name, 'like', '%' . $request->get( 's' ) . '%' );
+      }
+      $options = $options->get();
+    }
+    $_options = [];
+
+    foreach ( $options as $option ) {
+
+      $_options[] = [
+        'value' => $option->id,
+        'label' => $option->$label_name,
+      ];
+    }
+    return response()->json( $_options, 200, [], JSON_UNESCAPED_UNICODE );
+  }
 }
