@@ -98,15 +98,31 @@ class AddFieldForm extends Component {
   //     });
   //   }
   // }
+  /**
+   * Изменение данны с валидацией
+   * @param {string} value
+   * @param {string} field
+   */
 
   changeValue(value, field) {
     this.setState(state => {
       state = { ...state };
       if(field === 'default'){
+
+        if(state.value.size && value.length > state.value.size){
+          value = value.substring(0, parseInt(state.value.size))
+        }
         switch (state.value.type) {
           case 'boolean':{
             if(value != 0 && value != 1){
               value = 1;
+            }
+          }
+          case 'integer':{
+            if(!Number.isNaN(parseInt(value))){
+              value = parseInt(value);
+            } else {
+              value = 0;
             }
           }
           break;
@@ -146,7 +162,6 @@ class AddFieldForm extends Component {
         data = { ...data, options };
       }
     }
-    console.log(data);
     if (_.isFunction(this.props.onSubmit)) {
       this.props.onSubmit(data);
     }
@@ -185,6 +200,7 @@ class AddFieldForm extends Component {
   }
 
   render() {
+    const { modelId } = this.props.match.params;
     return <form className="admin-form field-form" onSubmit={this.submitHandler}>
       <div className="form-group ">
         <label htmlFor="field-title">Field Title</label>
@@ -372,7 +388,7 @@ class AddFieldForm extends Component {
       }
       <div className="btn__wrapper btn_add">
         <button className="btn btn_success" type="submit">Add</button>
-        <Link className="btn" to="/admin/tables/models">Cancel</Link>
+        <Link className="btn" to={`/admin/tables/models/edit/${modelId}`}>Cancel</Link>
         {/* TODO: отображать кнопку если в форме редактируются данные
           повесить обработчик удаления
         <button className="btn btn_failure">Delete</button> */}
