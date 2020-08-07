@@ -436,17 +436,32 @@ class SQLBuilderForm extends Component {
        * если тип  меняется, то удаляем из старого вставляем в новый
        */
       value.conditions = value.conditions || {};
-      if (condition.conditionType !== 'where_column') {
-        value.conditions[condition.conditionType] = value.conditions[condition.conditionType] || [];
-        value.conditions[condition.conditionType].push(_condition);
-        value.conditions[conditionType].splice(index, 1);
-      } else {
-        //todo: реализовать вариант для where_column
-        value.conditions[condition.conditionType] = value.conditions[condition.conditionType] || [];
-        value.conditions[condition.conditionType].push(_condition);
-        or ?
-          value.conditions[conditionType][1].data.splice(index, 1) :
-          value.conditions[conditionType][0].data.splice(index, 1);
+      switch (condition.conditionType) {
+        case 'where_column':
+          value.conditions[condition.conditionType] = value.conditions[condition.conditionType] || [];
+          or ?
+            value.conditions[condition.conditionType][1].data.push(_condition) :
+            value.conditions[condition.conditionType][0].data.push(_condition);
+
+          value.conditions[conditionType].splice(index, 1)
+          break;
+        case "where_between":
+        case "where_in":
+          value.conditions[condition.conditionType] = value.conditions[condition.conditionType] || [];
+          const { or, not, column, values } = _condition;
+          value.conditions[condition.conditionType].push({
+            or: or || false,
+            not: not || false,
+            column: column || '',
+            values: values || []
+          });
+          value.conditions[conditionType].splice(index, 1);
+          break;
+        default:
+          value.conditions[condition.conditionType] = value.conditions[condition.conditionType] || [];
+          value.conditions[condition.conditionType].push(_condition);
+          value.conditions[conditionType].splice(index, 1);
+          break;
       }
     } else {
       /**
@@ -493,11 +508,11 @@ class SQLBuilderForm extends Component {
   // обработчики событий для массива orderBy
   orderByChangeHandler({ target: { value, name } }, index) {
     this.setState(state => {
-      const orderBy = [...state.value.orderBy];
-      orderBy[index] = { ...state.orderBy[index], [name]: value };
+      const order_by = [...state.value.order_by];
+      order_by[index] = { ...state.value.order_by[index], [name]: value };
       return {
         ...state,
-        value: { ...state.value, orderBy }
+        value: { ...state.value, order_by }
       };
     });
   }
@@ -506,22 +521,22 @@ class SQLBuilderForm extends Component {
     // this.counter++;
 
     this.setState(state => {
-      const orderBy = [...state.value.orderBy];
-      orderBy.push({ type: '', column: ''/* , id: this.counter */ });
+      const order_by = [...state.value.order_by];
+      order_by.push({ type: '', column: ''/* , id: this.counter */ });
       return {
         ...state,
-        value: { ...state.value, orderBy }
+        value: { ...state.value, order_by }
       };
     });
   }
 
   orderByDeleteHandler(index) {
     this.setState(state => {
-      const orderBy = [...state.value.orderBy];
-      orderBy.splice(index, 1);
+      const order_by = [...state.value.order_by];
+      order_by.splice(index, 1);
       return {
         ...state,
-        value: { ...state.value, orderBy }
+        value: { ...state.value, order_by }
       };
     })
   }
@@ -753,10 +768,9 @@ class SQLBuilderForm extends Component {
           item={condition}
           columnsOptions={selfFieldsOptions}
           changeCondition={this.changeCondition}
-          changeHandler={e => this.conditionChangeHandler(e, index)}
         />
         <button className="btn btn_failure" type="button"
-          onClick={() => this.deleteCondition(condition.conditionType, index, condition.or)}
+          onClick={() => this.deleteCondition(condition.conditionType, condition.index, condition.or)}
         >
           Delete
         </button>
