@@ -87,6 +87,20 @@ class AltrpRelationshipObserver
     }
 
     /**
+     * @param Relationship $relationship
+     * @throws CommandFailedException
+     * @throws \Exception
+     */
+    public function updated(Relationship $relationship)
+    {
+        $model = Model::find($relationship->model_id);
+        $generator = new ModelGenerator($model);
+        if (! $generator->updateModelFile()) {
+            throw new CommandFailedException('Failed to update model file', 500);
+        }
+    }
+
+    /**
      * Вызываем после удаления колонки
      * @param Relationship $relationship
      */
