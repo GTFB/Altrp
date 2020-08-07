@@ -191,9 +191,12 @@ class AltrpModelObserver
             throw new CommandFailedException('Failed to delete model file', 500);
         }
         $controller = $model->altrp_controller;
-        if (! $controller->delete()) {
-            throw new ControllerFileException('Failed to delete controller',  500);
+        if ($controller) {
+            if (! $controller->delete()) {
+                throw new ControllerFileException('Failed to delete controller',  500);
+            }
         }
+
     }
 
     public function deleted(Model $model)
