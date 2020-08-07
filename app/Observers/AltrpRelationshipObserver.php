@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Altrp\Generators\ModelGenerator;
 use App\Altrp\Relationship;
 use App\Altrp\Model;
 use App\Altrp\Migration;
@@ -10,12 +11,14 @@ use App\Altrp\Generators\NewMigrationGenerator;
 
 use App\Exceptions\AltrpMigrationCreateFileExceptions;
 use App\Exceptions\AltrpMigrationRunExceptions;
+use App\Exceptions\CommandFailedException;
 
 class AltrpRelationshipObserver
 {
     /**
      * Вызываем после создания связи
      * @param Relationship $relationship
+     * @throws AltrpMigrationCreateFileExceptions
      */
     public function creating(Relationship $relationship)
     {
@@ -38,6 +41,24 @@ class AltrpRelationshipObserver
         $migration->save();
 
         $relationship->altrp_migration_id = $migration->id;
+    }
+
+    /**
+     * @param Relationship $relationship
+     * @throws CommandFailedException
+     * @throws \App\Exceptions\TableNotFoundException
+     * @throws \Exception
+     */
+    public function created(Relationship $relationship)
+    {
+        $model = Model::find($relationship->model_id);
+        $generator = new ModelGenerator($model);
+        if (! $generator->getAndWriteRelationships()) {
+            throw new CommandFailedException('Failed to write relations', 500);
+        }
+        if (! $generator->updateModelFile()) {
+            throw new CommandFailedException('Failed to update model file', 500);
+        }
     }
 
     /**

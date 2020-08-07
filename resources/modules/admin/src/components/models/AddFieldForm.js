@@ -65,7 +65,7 @@ class AddFieldForm extends Component {
         attribute: '',
         input_type: '',
         options: '',
-        nullable: false,
+        null: false,
         indexed: false,
         editable: false,
         calculation: '',
@@ -102,6 +102,16 @@ class AddFieldForm extends Component {
   changeValue(value, field) {
     this.setState(state => {
       state = { ...state };
+      if(field === 'default'){
+        switch (state.value.type) {
+          case 'boolean':{
+            if(value != 0 && value != 1){
+              value = 1;
+            }
+          }
+          break;
+        }
+      }
       state.value[field] = value;
       return state
     })
@@ -121,7 +131,7 @@ class AddFieldForm extends Component {
   submitHandler(e) {
     e.preventDefault();
     const { history, match } = this.props;
-    const { name, title, description, is_label, is_title, type, length_value, default: default_, attribute, input_type,
+    const { name, title, description, is_label, is_title, type, size, default: default_, attribute, input_type,
       options, nullable, indexed, editable, calculation, calculation_logic } = this.state.value;
 
     let data = {};
@@ -131,7 +141,7 @@ class AddFieldForm extends Component {
         data = { title, description, type, calculation } :
         data = { title, description, type, calculation_logic };
     } else {
-      data = { name, title, description, is_label, is_title, type, length_value, default: default_, attribute, input_type, nullable, indexed, editable };
+      data = { name, title, description, is_label, is_title, type, size, default: default_, attribute, input_type, nullable, indexed, editable };
       if (['select', 'checkbox', 'radio button'].includes(input_type)) {
         data = { ...data, options };
       }
@@ -178,8 +188,8 @@ class AddFieldForm extends Component {
     return <form className="admin-form field-form" onSubmit={this.submitHandler}>
       <div className="form-group ">
         <label htmlFor="field-title">Field Title</label>
-        <input type="text" id="field-title" required
-          value={this.state.value.title}
+        <input type="text" id="field-title" required readOnly={this.props.match.params.id}
+          value={this.state.value.title || ''}
           onChange={this.titleChangeHandler}
           className="form-control" />
       </div>
@@ -187,15 +197,15 @@ class AddFieldForm extends Component {
 
         <div className="form-group form-group_width30">
           <label htmlFor="field-name">Field Name</label>
-          <input type="text" id="field-name" required
-            value={this.state.value.name}
+          <input type="text" id="field-name" required readOnly={this.props.match.params.id}
+            value={this.state.value.name || ''}
             onChange={e => { this.changeValue(e.target.value, 'name') }}
             className="form-control" />
         </div>
         <div className="form-group form-group_width65">
           <label htmlFor="field-description">Field Description</label>
           <input type="text" id="field-description"
-            value={this.state.value.description}
+            value={this.state.value.description || ''}
             onChange={e => { this.changeValue(e.target.value, 'description') }}
             className="form-control" />
         </div>
@@ -204,7 +214,7 @@ class AddFieldForm extends Component {
       <div className="form-group">
         <label htmlFor="field-type">Field Type</label>
         <select id="field-type" required
-          value={this.state.value.type}
+          value={this.state.value.type || ''}
           onChange={e => { this.changeValue(e.target.value, 'type') }}
           className="form-control"
         >
@@ -277,15 +287,15 @@ class AddFieldForm extends Component {
             <div className="form-group form-group_width47">
               <label htmlFor="field-length_value">Length/Value</label>
               <input type="text" id="field-length_value"
-                value={this.state.value.length_value}
-                onChange={e => { this.changeValue(e.target.value, 'length_value') }}
+                value={this.state.value.size || ''}
+                onChange={e => { this.changeValue(e.target.value, 'size') }}
                 className="form-control" />
             </div>
 
             <div className="form-group form-group_width47">
               <label htmlFor="field-default">Default</label>
               <input type="text" id="field-default"
-                value={this.state.value.default}
+                value={this.state.value.default || ''}
                 onChange={e => { this.changeValue(e.target.value, 'default') }}
                 className="form-control" />
             </div>
@@ -294,7 +304,7 @@ class AddFieldForm extends Component {
           <div className="form-group">
             <label htmlFor="field-attribute">Attribute</label>
             <select id="field-attribute"
-              value={this.state.value.attribute}
+              value={this.state.value.attribute || ''}
               onChange={e => { this.changeValue(e.target.value, 'attribute') }}
               className="form-control"
             >
@@ -309,7 +319,7 @@ class AddFieldForm extends Component {
           <div className="form-group">
             <label htmlFor="field-input_type">Input Type</label>
             <select id="field-input_type" required
-              value={this.state.value.input_type}
+              value={this.state.value.input_type || ''}
               onChange={e => { this.changeValue(e.target.value, 'input_type') }}
               className="form-control"
             >
@@ -325,7 +335,7 @@ class AddFieldForm extends Component {
             <div className="form-group">
               <label htmlFor="field-options">Options</label>
               <textarea id="field-options" required
-                value={this.state.value.options}
+                value={this.state.value.options || ''}
                 onChange={e => { this.changeValue(e.target.value, 'options') }}
                 className="form-control"
               />
@@ -338,8 +348,8 @@ class AddFieldForm extends Component {
           <div className="checkbox-group">
             <div className="form-group">
               <input type="checkbox" id="field-nullable"
-                checked={this.state.value.nullable}
-                onChange={e => { this.changeValue(e.target.checked, 'nullable') }}
+                checked={this.state.value.null}
+                onChange={e => { this.changeValue(e.target.checked, 'null') }}
               />
               <label className="checkbox-label" htmlFor="field-nullable">Nullable</label>
             </div>
