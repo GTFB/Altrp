@@ -551,11 +551,15 @@ class ModelsController extends HttpController
     public function storeModelRelation( ApiRequest $request, $model_id )
     {
 
-      $relation = new Relationship($request->all());
+
+      $relation = new Relationship($request->toArray());
       $relation->model_id = $model_id;
+      $model = Model::find( $request->get( 'target_model_id' ) );
+      $model_class = '\App\AltrpModels\\' . $model->name ;
+      $relation->model_class = $model_class;
       $result = $relation->save();
       if ($result) {
-          return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+        return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
       }
       return response()->json([
           'success' => false,

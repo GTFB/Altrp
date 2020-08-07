@@ -58,6 +58,8 @@ class EditModelForm extends Component {
   submitHandler(e) {
     e.preventDefault();
     if(_.isFunction(this.props.onSubmit)){
+      delete this.state.value.created_at;
+      delete this.state.value.updated_at;
       this.props.onSubmit(this.state.value);
     } else {
       console.log(this.state.value);

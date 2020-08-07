@@ -5,6 +5,7 @@ namespace App\Altrp;
 
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 /**
  * Class Model
@@ -118,7 +119,7 @@ class Model extends EloquentModel
             if( $with_names ){
               $models[] = [
                 'label' => $model->title,
-                'value' => $model->name,
+                'value' => Str::plural( $model->name ),
               ];
             } else {
               $models[] = [

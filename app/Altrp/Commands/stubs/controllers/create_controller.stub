@@ -54,10 +54,10 @@ class DummyClass extends ApiController
         ${{crudNameSingular}} = new {{modelName}}($request->all());
 
         if(${{crudNameSingular}}->save()){
-            return response()->json(${{crudNameSingular}}, 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success'=>true], 200, [], JSON_UNESCAPED_UNICODE);
         }
 
-        return response()->json(trans("responses.dberror"), 400, [], JSON_UNESCAPED_UNICODE);
+        return response()->json(['success'=>false, 'message' => trans("responses.dberror")], 400, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -91,16 +91,16 @@ class DummyClass extends ApiController
         ${{crudNameSingular}} = {{modelName}}::find($id);
 
         if(! ${{crudNameSingular}}) {
-            return response()->json(trans("responses.not_found.{{crudNameSingular}}"), 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success'=>false, 'message' => trans("responses.not_found.{{crudNameSingular}}")], 404, [], JSON_UNESCAPED_UNICODE);
         }
 
         $result = ${{crudNameSingular}}->update($request->all());
 
         if($result){
-            return response()->json($result, 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success'=>true], 200, [], JSON_UNESCAPED_UNICODE);
         }
 
-        return response()->json(trans("responses.dberror"), 400, [], JSON_UNESCAPED_UNICODE);
+        return response()->json(['success'=>false, 'message' => trans("responses.dberror")], 400, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
