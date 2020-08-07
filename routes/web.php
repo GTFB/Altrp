@@ -145,6 +145,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::post( 'update_altrp', 'Admin\UpdateController@update_altrp' )->name( 'admin.update_altrp' );
 
     /**
+     * Запрос на обновление всех пользовательских контроллеров
+     */
+    Route::post( 'update-all-controllers', 'Admin\UpdateController@updateAllControllers' )->name( 'admin.update-all-controllers' );
+
+    /**
+     * Запрос на обновление всех пользовательских ресурсов через обновление данных Models в БД
+     */
+    Route::post( 'update-all-resources', 'Admin\UpdateController@upgradeAllResources' )->name( 'admin.update-all-resources' );
+
+    /**
      * Роуты для теста запросов для виджета таблицы todo: удалить, после того как модели будут готовы
      */
     Route::get( '/models_list', 'Admin\ModelsController@models_list' )->name( 'admin.models_list' );
