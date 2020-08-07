@@ -5,7 +5,6 @@ import { titleToName } from "../../js/helpers";
 import AggregateComponent from "./AggregateComponent";
 import ConditionComponent from "./ConditionComponent";
 import OrderByComponent from "./OrderByComponent";
-import { cloneDeep } from "lodash";
 import AltrpSelect from "../altrp/AltrpSelect";
 import { Link, withRouter } from "react-router-dom";
 
@@ -340,27 +339,36 @@ class SQLBuilderForm extends Component {
   // обработчики событий для массива aggregates
   aggregateChangeHandler({ target: { value, name } }, index) {
     this.setState(state => {
-      const aggregates = [...state.aggregates];
-      aggregates[index] = { ...state.aggregates[index], [name]: value };
-      return { ...state, aggregates };
+      const aggregates = [...state.value.aggregates];
+      aggregates[index] = { ...state.value.aggregates[index], [name]: value };
+      return {
+        ...state,
+        value: { ...state.value, aggregates }
+      };
     });
   }
 
   aggregateAddHandler() {
-    this.counter++;
+    // this.counter++;
 
     this.setState(state => {
-      const aggregates = [...state.aggregates];
-      aggregates.push({ type: '', column: '', alias: '', id: this.counter });
-      return { ...state, aggregates };
+      const aggregates = [...state.value.aggregates];
+      aggregates.push({ type: '', column: '', alias: ''/* , id: this.counter */ });
+      return {
+        ...state,
+        value: { ...state.value, aggregates }
+      };
     });
   }
 
   aggregateDeleteHandler(index) {
     this.setState(state => {
-      const aggregates = [...state.aggregates];
+      const aggregates = [...state.value.aggregates];
       aggregates.splice(index, 1);
-      return { ...state, aggregates };
+      return {
+        ...state,
+        value: { ...state.value, aggregates }
+      };
     });
   }
 
