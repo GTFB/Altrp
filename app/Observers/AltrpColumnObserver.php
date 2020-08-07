@@ -14,13 +14,17 @@ use App\Exceptions\AltrpMigrationRunExceptions;
 
 class AltrpColumnObserver
 {
-  /**
-   * Вызываем после создания колонки
-   * @param Column $column
-   * @throws AltrpMigrationCreateFileExceptions
-   */
+    /**
+     * Вызываем после создания колонки
+     * @param Column $column
+     * @return bool|void
+     * @throws AltrpMigrationCreateFileExceptions
+     */
     public function creating(Column $column)
     {
+        $oldColumn = Column::where([['name', $column->name], ['table_id', $column->table_id]])->first();
+        if ($oldColumn) return false;
+
         $generator = new ColumnMigrationGenerator($column);
         $file = $generator->createColumnGenerate();
         $name = $generator->getMigrationName();
@@ -54,10 +58,15 @@ class AltrpColumnObserver
     /**
      * Вызываем после обновления колонки
      * @param Column $column
+     * @return bool|void
+     * @throws AltrpMigrationCreateFileExceptions
      */
     public function updating(Column $column)
     {
         $old_column = Column::find($column->id);
+        $columns = Column::where([['table_id', $column->table_id]])->get();
+
+        if ($columns->contains('name', $column->name)) return false;
 
         $generator = new ColumnMigrationGenerator($column);
         $file = $generator->updateColumnGenerate($old_column);
@@ -89,11 +98,10 @@ class AltrpColumnObserver
     /**
      * Вызываем после удаления колонки
      * @param Column $column
+     * @throws AltrpMigrationCreateFileExceptions
      */
     public function deleting(Column $column)
     {
-        $model = Model::find($column->model_id);
-
         $generator = new ColumnMigrationGenerator($column);
         $file = $generator->deleteColumnGenerate();
         $name = $generator->getMigrationName();
@@ -112,5 +120,12 @@ class AltrpColumnObserver
 
         $column->altrp_migration_id = $migration->id;
 
+    }
+
+    public function deleted(Column $column)
+    {
+        $model = Model::find($column->model_id);
+        $generator  = new ModelGenerator($model);
+        $generator->updateModelFile();
     }
 }
