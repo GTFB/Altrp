@@ -445,7 +445,9 @@ class ModelGenerator extends AppGenerator
         }
         $columns = $this->getColumns($table);
         if (!$columns || $columns->isEmpty()) return null;
+        $relations = $this->getRelations();
         $columnsList = $this->getColumnsList($columns);
+//        $relationsList = $this->getColumnsList($relations, 'foreign_key');
         return '\'' . implode("','", $columnsList) . '\'';
     }
 
@@ -473,17 +475,24 @@ class ModelGenerator extends AppGenerator
         return $columns;
     }
 
+    protected function getRelations()
+    {
+        $relations = Relationship::where([['model_id', $this->model->id], ['add_belongs_to', 1]])->get();
+        return $relations;
+    }
+
     /**
      * Получить список колонок
      *
      * @param $columns
+     * @param string $columnName
      * @return array
      */
-    protected function getColumnsList($columns)
+    protected function getColumnsList($columns, $columnName = 'name')
     {
         $columnsList = [];
         foreach ($columns as $column) {
-            $columnsList[] = $column->name;
+            $columnsList[] = $column->$columnName;
         }
         return $columnsList;
     }

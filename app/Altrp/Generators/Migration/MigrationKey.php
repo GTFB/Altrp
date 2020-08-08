@@ -115,7 +115,13 @@ class MigrationKey{
 
         $target_table = Model::where('name', $model_name)->first()->altrp_table->name;
 
-        $text = "\$table->bigInteger('".$source_column."')->nullable()->unsigned();\n\t\t\t";
+        $text = '';
+        if ($this->key->getOriginal('foreign_key') != $source_column) {
+            $text .= "\$table->bigInteger('".$source_column."')->nullable()->unsigned();\n\t\t\t";
+        } else {
+            $text .= "\$table->renameColumn('".$this->key->getOriginal('foreign_key')
+                ."', '" . $source_column ."');\n\t\t\t";
+        }
         $text .= "\$table->foreign('".$source_column."')->references('".$target_column."')->on('".$target_table."')".$modifiers;
         return $text;
     }
