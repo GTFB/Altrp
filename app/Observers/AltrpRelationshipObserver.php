@@ -57,6 +57,30 @@ class AltrpRelationshipObserver
         if (! $generator->updateModelFile()) {
             throw new CommandFailedException('Failed to update model file', 500);
         }
+
+        if ($relationship->add_belong_to && $relationship->target_model_id) {
+            $targetModel = Model::find($relationship->target_model_id);
+            $model_class = '\App\AltrpModels\\' . $model->name;
+            $relation = new Relationship([
+                "title" => "Inverse " . $relationship->title,
+                "description" => "",
+                "type" => $this->getInverseRelationType($relationship->type),
+                "model_id" => $targetModel->id,
+                "add_belong_to" => false,
+                "onDelete" => "restrict",
+                "onUpdate" => "restrict",
+                "name" => strtolower($model->name),
+                "target_model_id" => $model->id,
+                'model_class' => $model_class
+            ]);
+            Relationship::withoutEvents(function () use ($relation) {
+                $relation->save();
+            });
+            $generator = new ModelGenerator($targetModel);
+            if (! $generator->updateModelFile()) {
+                throw new CommandFailedException('Failed to update model file', 500);
+            }
+        }
     }
 
     /**
@@ -99,6 +123,46 @@ class AltrpRelationshipObserver
         if (! $generator->updateModelFile()) {
             throw new CommandFailedException('Failed to update model file', 500);
         }
+
+        if ($relationship->getOriginal('add_belong_to') != $relationship->add_belong_to
+            && $relationship->add_belong_to && $relationship->target_model_id) {
+            $targetModel = Model::find($relationship->target_model_id);
+            $model_class = '\App\AltrpModels\\' . $model->name;
+            $relation = new Relationship([
+                "title" => "Inverse " . $relationship->title,
+                "description" => "",
+                "type" => $this->getInverseRelationType($relationship->type),
+                "model_id" => $targetModel->id,
+                "add_belong_to" => false,
+                "onDelete" => "restrict",
+                "onUpdate" => "restrict",
+                "name" => strtolower($model->name),
+                "target_model_id" => $model->id,
+                'model_class' => $model_class
+            ]);
+            Relationship::withoutEvents(function () use ($relation) {
+                $relation->save();
+            });
+            $generator = new ModelGenerator($targetModel);
+            if (! $generator->updateModelFile()) {
+                throw new CommandFailedException('Failed to update model file', 500);
+            }
+        } elseif ($relationship->getOriginal('add_belong_to') != $relationship->add_belong_to
+            && !$relationship->add_belong_to) {
+            $targetModel = Model::find($relationship->target_model_id);
+            $relation = Relationship::where([
+                ['model_id', $relationship->target_model_id],
+                ['target_model_id', $relationship->model_id],
+                ['name', strtolower($model->name)]
+            ]);
+            Relationship::withoutEvents(function () use ($relation) {
+                $relation->delete();
+            });
+            $generator = new ModelGenerator($targetModel);
+            if (! $generator->updateModelFile()) {
+                throw new CommandFailedException('Failed to update model file', 500);
+            }
+        }
     }
 
     /**
@@ -140,5 +204,33 @@ class AltrpRelationshipObserver
         if (! $generator->updateModelFile()) {
             throw new CommandFailedException('Failed to update model file', 500);
         }
+        $targetModel = Model::find($relationship->target_model_id);
+        $relation = Relationship::where([
+            ['model_id', $relationship->target_model_id],
+            ['target_model_id', $relationship->model_id],
+            ['name', strtolower($model->name)]
+        ]);
+        Relationship::withoutEvents(function () use ($relation) {
+            $relation->delete();
+        });
+        $generator = new ModelGenerator($targetModel);
+        if (! $generator->updateModelFile()) {
+            throw new CommandFailedException('Failed to update model file', 500);
+        }
+    }
+
+    protected function getInverseRelationType($type)
+    {
+        $inverseType = null;
+        switch ($type) {
+            case 'hasOne':
+            case 'hasMany':
+                $inverseType = 'belongsTo';
+                break;
+            case 'belongsToMany':
+                $inverseType = 'belongsToMany';
+                break;
+        }
+        return $inverseType;
     }
 }

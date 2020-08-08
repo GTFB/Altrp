@@ -66,7 +66,7 @@ class AltrpColumnObserver
         $old_column = Column::find($column->id);
         $columns = Column::where([['table_id', $column->table_id]])->get();
 
-        if ($columns->contains('name', $column->name)) return false;
+        if ($column->isDirty('name') && $columns->contains('name', $column->name)) return false;
 
         $generator = new ColumnMigrationGenerator($column);
         $file = $generator->updateColumnGenerate($old_column);
