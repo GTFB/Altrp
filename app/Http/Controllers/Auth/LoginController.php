@@ -107,9 +107,9 @@ class LoginController extends Controller
     $this->clearLoginAttempts($request);
 
     return $this->authenticated($request, $this->guard()->user())
-      ?: response()->json([
+      ?: ( $request->method() === 'post' ) ? response()->json([
         'success' => true,
         'reload' => true,
-      ]);
+      ]) : redirect( '/' );
   }
 }

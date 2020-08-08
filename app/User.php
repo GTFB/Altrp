@@ -60,14 +60,6 @@ class User extends Authenticatable
      * Получение данных о пользователе
      * @return type
      */
-    function roles() {
-        return $this->belongsToMany('App\Role');
-    }
-    
-    /**
-     * Получение данных о пользователе
-     * @return type
-     */
     public function getFullNameAttribute() {
         if(!$this->usermeta) return "";
         

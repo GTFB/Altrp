@@ -15,7 +15,7 @@ const fieldTypeOptions = [
     label: 'integer'
   },
   {
-    value: 'bigint',
+    value: 'bigInteger',
     label: 'Bigint'
   },
   {
