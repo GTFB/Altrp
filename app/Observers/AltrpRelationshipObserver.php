@@ -23,6 +23,13 @@ class AltrpRelationshipObserver
     public function creating(Relationship $relationship)
     {
         $model = Model::find($relationship->model_id);
+        if ($model->altrp_relationships
+            && ($relationship->isDirty('name') || $relationship->isDirty('foreign_key'))
+            && ($model->altrp_relationships->contains('name',$relationship->name)
+                || $model->altrp_relationships->contains('foreign_key',$relationship->foreign_key))
+        ) {
+            return false;
+        }
         $generator = new KeyMigrationGenerator($relationship);
         $file = $generator->createKeyGenerate();
         $name = $generator->getMigrationName();
@@ -67,9 +74,11 @@ class AltrpRelationshipObserver
                 "type" => $this->getInverseRelationType($relationship->type),
                 "model_id" => $targetModel->id,
                 "add_belong_to" => false,
+                "foreign_key" => $relationship->foreign_key,
+                "local_key" => $relationship->local_key,
                 "onDelete" => "restrict",
                 "onUpdate" => "restrict",
-                "name" => strtolower($model->name),
+                "name" => $relationship->name,
                 "target_model_id" => $model->id,
                 'model_class' => $model_class
             ]);
@@ -86,11 +95,18 @@ class AltrpRelationshipObserver
     /**
      * Вызываем после обновления колонки
      * @param Relationship $relationship
+     * @return bool|void
      * @throws AltrpMigrationCreateFileExceptions
      */
     public function updating(Relationship $relationship)
     {
         $model = Model::find($relationship->model_id);
+        if (($model->altrp_relationships->contains('name', $relationship->name)
+            && $relationship->getOriginal('name') != $relationship->name)
+            || ($model->altrp_relationships->contains('foreign_key', $relationship->foreign_key)
+            && $relationship->getOriginal('foreign_key') != $relationship->foreign_key)) {
+            return false;
+        }
         $old_key = Relationship::find($relationship->id);
         $generator = new KeyMigrationGenerator($relationship);
         $file = $generator->updateKeyGenerate($old_key);
@@ -123,6 +139,24 @@ class AltrpRelationshipObserver
         if (! $generator->updateModelFile()) {
             throw new CommandFailedException('Failed to update model file', 500);
         }
+        if ($relationship->getOriginal('add_belong_to')) {
+            $targetModel = Model::find($relationship->target_model_id);
+            $relation = Relationship::where([
+                ['model_id', $relationship->target_model_id],
+                ['target_model_id', $relationship->model_id],
+                ['name', $relationship->getOriginal('name')]
+            ]);
+            Relationship::withoutEvents(function () use ($relation, $relationship) {
+                $relation->update([
+                    'name' => $relationship->name,
+                    'foreign_key' => $relationship->foreign_key
+                ]);
+            });
+            $generator = new ModelGenerator($targetModel);
+            if (! $generator->updateModelFile()) {
+                throw new CommandFailedException('Failed to update model file', 500);
+            }
+        }
 
         if ($relationship->getOriginal('add_belong_to') != $relationship->add_belong_to
             && $relationship->add_belong_to && $relationship->target_model_id) {
@@ -134,9 +168,11 @@ class AltrpRelationshipObserver
                 "type" => $this->getInverseRelationType($relationship->type),
                 "model_id" => $targetModel->id,
                 "add_belong_to" => false,
+                "foreign_key" => $relationship->foreign_key,
+                "local_key" => $relationship->local_key,
                 "onDelete" => "restrict",
                 "onUpdate" => "restrict",
-                "name" => strtolower($model->name),
+                "name" => $relationship->name,
                 "target_model_id" => $model->id,
                 'model_class' => $model_class
             ]);
@@ -153,7 +189,7 @@ class AltrpRelationshipObserver
             $relation = Relationship::where([
                 ['model_id', $relationship->target_model_id],
                 ['target_model_id', $relationship->model_id],
-                ['name', strtolower($model->name)]
+                ['name', $relationship->name]
             ]);
             Relationship::withoutEvents(function () use ($relation) {
                 $relation->delete();
@@ -208,7 +244,7 @@ class AltrpRelationshipObserver
         $relation = Relationship::where([
             ['model_id', $relationship->target_model_id],
             ['target_model_id', $relationship->model_id],
-            ['name', strtolower($model->name)]
+            ['name', $relationship->name]
         ]);
         Relationship::withoutEvents(function () use ($relation) {
             $relation->delete();
