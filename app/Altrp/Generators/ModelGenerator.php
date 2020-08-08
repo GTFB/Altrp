@@ -477,7 +477,7 @@ class ModelGenerator extends AppGenerator
 
     protected function getRelations()
     {
-        $relations = Relationship::where([['model_id', $this->model->id], ['add_belongs_to', 1]])->get();
+        $relations = Relationship::where([['model_id', $this->model->id], ['add_belong_to', 1]])->get();
         return $relations;
     }
 

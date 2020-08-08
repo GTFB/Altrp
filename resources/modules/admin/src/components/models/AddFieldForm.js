@@ -122,7 +122,7 @@ class AddFieldForm extends Component {
             if(!Number.isNaN(parseInt(value))){
               value = parseInt(value);
             } else {
-              value = 0;
+              value = '0';
             }
           }
           break;
@@ -161,7 +161,12 @@ class AddFieldForm extends Component {
       if (['select', 'checkbox', 'radio button'].includes(input_type)) {
         data = { ...data, options };
       }
+      console.log(default_);
+      if(['integer', 'bigInteger'].includes(type)){
+        data.default = Number(default_);
+      }
     }
+
     if (_.isFunction(this.props.onSubmit)) {
       this.props.onSubmit(data);
     }

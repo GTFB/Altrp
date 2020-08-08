@@ -31,11 +31,12 @@ const a = { "Ё": "Yo", "Й": "I", "Ц": "Ts", "У": "U", "К": "K", "Е": "E", 
 
 export function transliterate(str) {
   return str.split('').map(function (char) {
-    return a[char] || char;
+    return _.isUndefined(a[char]) ? char : a[char];
   }).join("");
 }
 
 export function titleToName(str) {
   str = transliterate(str);
+  console.log(str);
   return str.toLowerCase().replace(/^\d+/, '').replace(/[^\d\w]/g, '_');
 }
