@@ -54,7 +54,7 @@ class Select2Controller extends Component {
    */
   getRoute(){
     let route = this.props.options_resource;
-    if(! route.match(/{{([^}]*)}}/)){
+    if((! route) || (! route.match(/{{([^}]*)}}/))){
       return route;
     }
     let settingName = route.match(/{{([^}]*)}}/)[1];

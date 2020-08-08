@@ -90,9 +90,9 @@ class AddPage extends Component {
     })
   }
   render() {
-    // if(this.state.redirectAfterSave){
-    //   return<Redirect to="/admin/pages"/>
-    // }
+    if(this.state.redirectAfterSave){
+      return<Redirect to="/admin/pages"/>
+    }
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
