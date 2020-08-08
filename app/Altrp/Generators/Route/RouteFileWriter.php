@@ -6,6 +6,7 @@ namespace App\Altrp\Generators\Route;
 
 use App\Altrp\Generators\Controller\ControllerFile;
 use App\Altrp\Source;
+use App\Exceptions\Repository\RepositoryFileException;
 use App\Exceptions\Route\RouteFileException;
 use Illuminate\Support\Str;
 
@@ -41,12 +42,36 @@ class RouteFileWriter
      */
     public function addRoute($methodName)
     {
-        $routeContent = file($this->route->getFile(), 2);
+        $routeFile = $this->route->getFile();
+        if (! file_exists($routeFile)) {
+            throw new RouteFileException('Route file not found', 500);
+        }
+        $routeContent = file($routeFile, 2);
         if (! $this->routeExists($routeContent,$methodName)) {
             $result = $this->writeRoute($routeContent, $this->getRoute($methodName));
             if (! $result) throw new RouteFileException('Failed to write route to the routes file', 500);
         }
         return true;
+    }
+
+    /**
+     * Удалить маршрут
+     *
+     * @param $methodName
+     * @return bool|int
+     * @throws RouteFileException
+     */
+    public function removeRoute($methodName)
+    {
+        $routeFile = $this->route->getFile();
+        if (! file_exists($routeFile)) {
+            throw new RouteFileException('Route file not found', 500);
+        }
+        $routeContent = file($routeFile, 2);
+        if ($line = $this->routeExists($routeContent,$methodName)) {
+            unset($routeContent[$line]);
+        }
+        return \File::put($routeFile, implode(PHP_EOL, $routeContent));
     }
 
     /**
@@ -63,7 +88,7 @@ class RouteFileWriter
                 && Str::contains($content, $this->route->getModelName())
                 && Str::contains($content, 'Route::get')
             ) {
-                return true;
+                return $line;
             }
         }
         return false;
@@ -75,10 +100,15 @@ class RouteFileWriter
      * @param $routeContent
      * @param $route
      * @return bool
+     * @throws RouteFileException
      */
     protected function writeRoute(&$routeContent, $route)
     {
-        $resourceName = Str::snake(Str::plural($this->route->getModelName()));
+        $file = $this->route->getFile();
+        if (! file_exists($file)) {
+            throw new RouteFileException('Route file not found', 500);
+        }
+        $resourceName = Str::snake(Str::plural($this->route->getModelName()), '_');
         foreach ($routeContent as $line => $content) {
             if (Str::contains($content, 'Routes for the ' . $resourceName . ' resource')) {
                 array_splice($routeContent, $line + 1, 0, $route);
@@ -86,7 +116,7 @@ class RouteFileWriter
             }
         }
         return file_put_contents(
-            $this->route->getFile(),
+                $file,
             implode(PHP_EOL, $routeContent)
             ) !== false;
     }
@@ -104,7 +134,7 @@ class RouteFileWriter
         if ($accessMiddleware) $middleware[] = $accessMiddleware;
 
         $route = 'Route::get(\'/' . strtolower(Str::plural($this->route->getModelName())) . '/'
-            . Str::kebab($methodName) . '\', [';
+            . Str::snake($methodName) . '\', [';
         if ($middleware) $route .= "'middleware' => ['" . implode("','", $middleware) . "'], ";
         $route .= "'uses' => '"
             . str_replace('App\Http\Controllers\\', '',$this->controller->getNamespace())
@@ -120,7 +150,7 @@ class RouteFileWriter
      */
     protected function getAccessMiddleware($methodName)
     {
-        $source = Source::where('type', Str::kebab($methodName))->first();
+        $source = Source::where('type', Str::snake($methodName))->first();
 
         if(!$source) return null;
 

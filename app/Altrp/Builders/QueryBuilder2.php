@@ -139,34 +139,34 @@ class QueryBuilder2
                     return 'auth()->user()->' . $relations;
                 }
                 if ($param && $param[0] == 'CURRENT_DATE') {
-                    return 'Carbon::now()->format(\'Y-m-d\')';
+                    return '\Carbon::now()->format(\'Y-m-d\')';
                 }
                 if ($param && $param[0] == 'CURRENT_DAY') {
-                    return 'Carbon::now()->format(\'d\')';
+                    return '\Carbon::now()->format(\'d\')';
                 }
                 if ($param && $param[0] == 'CURRENT_MONTH') {
-                    return 'Carbon::now()->format(\'m\')';
+                    return '\Carbon::now()->format(\'m\')';
                 }
                 if ($param && $param[0] == 'CURRENT_YEAR') {
-                    return 'Carbon::now()->format(\'Y\')';
+                    return '\Carbon::now()->format(\'Y\')';
                 }
                 if ($param && $param[0] == 'CURRENT_HOUR') {
-                    return 'Carbon::now()->format(\'H\')';
+                    return '\Carbon::now()->format(\'H\')';
                 }
                 if ($param && $param[0] == 'CURRENT_MINUTE') {
-                    return 'Carbon::now()->format(\'i\')';
+                    return '\Carbon::now()->format(\'i\')';
                 }
                 if ($param && $param[0] == 'CURRENT_SECOND') {
-                    return 'Carbon::now()->format(\'s\')';
+                    return '\Carbon::now()->format(\'s\')';
                 }
                 if ($param && $param[0] == 'CURRENT_TIME') {
-                    return 'Carbon::now()->format(\'H:i:s\')';
+                    return '\Carbon::now()->format(\'H:i:s\')';
                 }
                 if ($param && $param[0] == 'CURRENT_DATETIME') {
-                    return 'Carbon::now()->format(\'Y-m-d H:i:s\')';
+                    return '\Carbon::now()->format(\'Y-m-d H:i:s\')';
                 }
                 if ($param && $param[0] == 'CURRENT_DAY_OF_WEEK') {
-                    return 'Carbon::now()->format(\'l\')';
+                    return '\Carbon::now()->format(\'l\')';
                 }
                 return "''";
             },
@@ -180,6 +180,12 @@ class QueryBuilder2
         return ;
     }
 
+    /**
+     * Удалить метод из контроллера
+     *
+     * @return bool
+     * @throws \App\Exceptions\Controller\ControllerFileException
+     */
     public function removeMethodFromController()
     {
         $controllerFile = new ControllerFile($this->model);
@@ -255,7 +261,7 @@ class QueryBuilder2
      * @return bool
      * @throws \App\Exceptions\Repository\RepositoryFileException
      */
-    public function removeMethodFromRepo($method)
+    public function removeMethodFromRepo()
     {
         $repoInterfaceFile = new RepositoryInterfaceFile($this->model);
         $repoFile = new RepositoryFile($this->model);
@@ -263,7 +269,27 @@ class QueryBuilder2
             $repoFile,
             $repoInterfaceFile
         );
-        if ($fileWriter->addMethod($this->getMethodName(), $method)) {
+        if (! $fileWriter->removeMethodFromRepository($this->getMethodName())) {
+            return false;
+        }
+        if (! $fileWriter->removeMethodFromRepoInterface($this->getMethodName())) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Удалить маршрут
+     *
+     * @return bool
+     * @throws \App\Exceptions\Route\RouteFileException
+     */
+    public function removeRoute()
+    {
+        $routeFile = new RouteFile($this->model);
+        $controllerFile = new ControllerFile($this->model);
+        $fileWriter = new RouteFileWriter($routeFile, $controllerFile);
+        if ($fileWriter->removeRoute($this->getMethodName())) {
             return true;
         }
         return false;

@@ -83,19 +83,27 @@ class AltrpQueryObserver
     /**
      * Handle the query "deleting" event.
      *
-     * @param  \App\Altrp\Query  $query
+     * @param \App\Altrp\Query $query
      * @return void
+     * @throws ModelNotWrittenException
+     * @throws \App\Exceptions\Controller\ControllerFileException
+     * @throws \App\Exceptions\Repository\RepositoryFileException
+     * @throws \App\Exceptions\Route\RouteFileException
      */
     public function deleting(Query $query)
     {
         $builder = new QueryBuilder2($query);
         SourceRole::where('source_id', $query->source->id)->delete();
         SourcePermission::where('source_id', $query->source->id)->delete();
-        $builder->removeMethodFromController();
-        $builder->removeMethodFromRepo();
-        return false;
-        $query->source->delete();
-
+        if (! $builder->removeMethodFromController()) {
+            throw new ModelNotWrittenException('Failed to remove method from controller', 500);
+        }
+        if (! $builder->removeMethodFromRepo()) {
+            throw new ModelNotWrittenException('Failed to remove method from repository', 500);
+        }
+        if (! $builder->removeRoute()) {
+            throw new ModelNotWrittenException('Failed to remove route', 500);
+        }
 
     }
 
@@ -107,7 +115,7 @@ class AltrpQueryObserver
      */
     public function deleted(Query $query)
     {
-        //
+        $query->source->delete();
     }
 
     /**

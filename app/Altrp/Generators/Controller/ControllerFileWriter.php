@@ -80,14 +80,24 @@ class ControllerFileWriter
 
         $result = $this->writeNamespaces($controllerContent, [$repoNamespace])
                     ->writeMethods($controllerContent, $methodContent);
-        if (! $result) throw new ControllerFileException('Failed to write method to tje controller', 500);
+        if (! $result) throw new ControllerFileException('Failed to write method to the controller', 500);
         return true;
     }
 
+    /**
+     * Удалить метод из контроллера
+     *
+     * @param $methodName
+     * @return bool|int
+     * @throws ControllerFileException
+     */
     public function removeMethod($methodName)
     {
-        $controllerContent = file($this->controller->getFile(), 2);
-
+        $controllerFile = $this->controller->getFile();
+        if (! file_exists($controllerFile)) {
+            throw new ControllerFileException('Controller file not found', 500);
+        }
+        $controllerContent = file($controllerFile, 2);
         if ($line = $this->methodExists($controllerContent, $methodName)) {
             for ($i = $line; true; $i++) {
                 if (Str::contains($controllerContent[$i], '}')) {
@@ -97,7 +107,10 @@ class ControllerFileWriter
                 unset($controllerContent[$i]);
             }
         }
-        return \File::put($this->controller->getFile(), $controllerContent);
+        return \File::put(
+            $controllerFile,
+            implode(PHP_EOL,$controllerContent)
+        );
     }
 
     /**
