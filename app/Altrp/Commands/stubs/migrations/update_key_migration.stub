@@ -13,6 +13,10 @@ class {{className}} extends Migration
     public function up()
     {
         Schema::table('{{table}}', function (Blueprint $table) {
+            {{dropForeign}}
+        });
+
+        Schema::table('{{table}}', function (Blueprint $table) {
             {{key}}
         });
     }
@@ -25,7 +29,7 @@ class {{className}} extends Migration
     public function down()
     {
         Schema::table('{{table}}', function (Blueprint $table) {
-            
+
         });
     }
 }

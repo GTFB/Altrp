@@ -53,6 +53,14 @@ class MigrationKey{
         return $this->create();
     }
 
+    public function dropForeign()
+    {
+        if(!$this->isNewKey()) {
+            $this->text = $this->setDeleteText();
+        }
+        return $this->text;
+    }
+
     /**
      * Откат ключа в миграции
      * @return string
@@ -80,10 +88,8 @@ class MigrationKey{
     public function update() {
 
         if(!$this->checkAllAttributes()) {
-            $this->text = $this->setDeleteText();
-            $this->addTabIndent();
 
-            $this->text .= $this->setText();
+            $this->text = $this->setText();
             $this->addTabIndent();
         }
 
@@ -116,11 +122,11 @@ class MigrationKey{
         $target_table = Model::where('name', $model_name)->first()->altrp_table->name;
 
         $text = '';
-        if ($this->key->getOriginal('foreign_key') != $source_column) {
+        if (!isset($this->old_key->foreign_key)) {
             $text .= "\$table->bigInteger('".$source_column."')->nullable()->unsigned();\n\t\t\t";
-        } else {
-            $text .= "\$table->renameColumn('".$this->key->getOriginal('foreign_key')
-                ."', '" . $source_column ."');\n\t\t\t";
+        } elseif(isset($this->old_key->foreign_key)
+            && $this->old_key->foreign_key == $source_column) {
+            $text .= "\$table->dropForeign(['".$this->old_key->foreign_key."']);\n\t\t\t";
         }
         $text .= "\$table->foreign('".$source_column."')->references('".$target_column."')->on('".$target_table."')".$modifiers;
         return $text;
@@ -131,7 +137,15 @@ class MigrationKey{
      * @return string
      */
     protected function setDeleteText() {
-        $text = "\$table->dropForeign(['".$this->old_key->foreign_key."'])";
+        $text = '';
+        if ($this->key && $this->old_key->foreign_key != $this->key->foreign_key) {
+            $text .= "\$table->dropForeign(['".$this->old_key->foreign_key."']);\n\t\t\t";
+            $text .= "\$table->renameColumn('".$this->old_key->foreign_key
+                ."', '" . $this->key->foreign_key ."');";
+        } elseif (!$this->key) {
+            $text .= "\$table->dropForeign(['".$this->old_key->foreign_key."']);\n\t\t\t";
+            $text .= "\$table->dropColumn('".$this->old_key->foreign_key."')";
+        }
         return $text;
     }
 

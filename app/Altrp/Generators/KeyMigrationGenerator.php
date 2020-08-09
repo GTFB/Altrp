@@ -49,6 +49,7 @@ class KeyMigrationGenerator extends NewMigrationGenerator{
 
         $table_name = $this->data->altrp_model->altrp_table->name;
         $key = new MigrationKey($this->data, $old_key);
+        $dropForeign = $key->dropForeign();
         $key = $key->up();
 
         $template = file_get_contents($this->getStub());
@@ -56,6 +57,7 @@ class KeyMigrationGenerator extends NewMigrationGenerator{
         $template = str_replace('{{className}}', $className, $template);
         $template = str_replace('{{table}}', $table_name, $template);
         $template = str_replace('{{key}}', $key, $template);
+        $template = str_replace('{{dropForeign}}', $dropForeign, $template);
 
         $fileName = date('Y_m_d_His').'_'.strtolower($name).'.php';
         $full_path = $this->getPath().$fileName;
