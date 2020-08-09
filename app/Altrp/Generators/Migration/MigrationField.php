@@ -219,14 +219,25 @@ class MigrationField{
 
     /**
      * Получаем все модификаторы столбца
-     * @return type
+     * @return string
      */
     protected function getColumnModifiers() {
         $text = "";
         $text .= $this->getNullable();
         $text .= $this->getDefault();
+        $text .= $this->getUnsigned();
         return $text;
     }
+  /**
+   * Получаем Unsigned-модификатор столбца
+   */
+  protected function getUnsigned(){
+    $unsigned = '';
+    if( ( $this->column->attribute === 'unsigned' ) && !$this->checkAttribute("attribute")) {
+      $unsigned = '->unsigned()';
+    }
+    return $unsigned;
+  }
 
     /**
      * Получаем все модификаторы индекса столбца

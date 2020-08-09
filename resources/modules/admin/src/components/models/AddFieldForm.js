@@ -361,8 +361,8 @@ class AddFieldForm extends Component {
             >
               <option value="" />
               {attributeOptions.map(item =>
-                <option key={item} value={item}>
-                  {item}
+                <option key={item.value} value={item.value}>
+                  {item.label}
                 </option>)}
             </select>
           </div>
@@ -385,7 +385,7 @@ class AddFieldForm extends Component {
           {['select', 'checkbox', 'radio button'].includes(this.state.value.input_type) && <>
             <div className="form-group">
               <label htmlFor="field-options">Options</label>
-              <textarea id="field-options" required
+              <textarea id="field-options"
                 value={this.state.value.options || ''}
                 onChange={e => { this.changeValue(e.target.value, 'options') }}
                 className="form-control"

@@ -23,11 +23,13 @@ class AltrpRelationshipObserver
     public function creating(Relationship $relationship)
     {
         $model = Model::find($relationship->model_id);
+
         if ($model->altrp_relationships
             && ($relationship->isDirty('name') || $relationship->isDirty('foreign_key'))
             && ($model->altrp_relationships->contains('name',$relationship->name)
-                || $model->altrp_relationships->contains('foreign_key',$relationship->foreign_key))
+                || $relationship->type === 'hasOne' && $model->altrp_relationships->contains('foreign_key',$relationship->foreign_key))
         ) {
+
             return false;
         }
         $generator = new KeyMigrationGenerator($relationship);
@@ -39,6 +41,7 @@ class AltrpRelationshipObserver
         }
 
         $migration = new Migration();
+
         $migration->name = $name;
         $migration->file_path = $file;
         $migration->user_id = auth()->user()->id;
@@ -61,6 +64,7 @@ class AltrpRelationshipObserver
     {
         $model = Model::find($relationship->model_id);
         $generator = new ModelGenerator($model);
+
         if (! $generator->updateModelFile()) {
             throw new CommandFailedException('Failed to update model file', 500);
         }
