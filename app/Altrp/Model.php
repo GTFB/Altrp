@@ -179,7 +179,7 @@ class Model extends EloquentModel
 //            }
             $models[] = [
                 'modelName' => $model->altrp_table->name,
-                'title' => $model->name,
+                'title' => $model->title,
                 'fields' => $fields,
             ];
         }

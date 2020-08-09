@@ -19,7 +19,8 @@ class AreaComponent extends Component {
       if(! this.props.template.data){
         return<div className={classes.join(' ')}/>;
       }
-      let rootElement  = window.frontElementsFabric.parseData(this.props.template.data, null, this.props.page, this.props.models);
+      let rootElement =
+          window.frontElementsFabric.parseData(this.props.template.data, null, this.props.page, this.props.models);
       return <div className={classes.join(' ')}>{
         React.createElement(rootElement.componentClass,
             {

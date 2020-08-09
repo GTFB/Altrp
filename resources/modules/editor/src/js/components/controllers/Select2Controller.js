@@ -35,12 +35,9 @@ class Select2Controller extends Component {
    * @return {Promise<string>}
    */
   async _componentDidMount(){
-    if(this.state.value){
+    if(this.state.value && this.getRoute()){
       let resource = new Resource({route: this.getRoute()});
       let options = await resource.search(this.state.value);
-      console.log(this.state.value);
-      console.log(resource);
-      console.log(options);
       this.setState(state => ({
         ...state,
         options
@@ -114,7 +111,8 @@ class Select2Controller extends Component {
         borderWidth: "0px 1px 1px 1px",
         borderStyle: "solid",
         borderColor: "#E5E6EA",
-        position: 'absolute'
+        position: 'absolute',
+        zIndex: '1000'
       }),
 
       menuList: () => ({

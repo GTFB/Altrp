@@ -16,7 +16,11 @@ const fieldTypeOptions = [
   },
   {
     value: 'bigInteger',
-    label: 'Bigint'
+    label: 'Big Integer'
+  },
+  {
+    value: 'float',
+    label: 'Float'
   },
   {
     value: 'boolean',
@@ -39,8 +43,24 @@ const fieldTypeOptions = [
     label: 'Date'
   },
   {
+    value: 'time',
+    label: 'Time'
+  },
+  {
+    value: 'year',
+    label: 'Year'
+  },
+  {
     value: 'dateTime',
     label: 'Datetime'
+  },
+  {
+    value: 'geometry',
+    label: 'Geometry'
+  },
+  {
+    value: 'json',
+    label: 'JSON'
   },
 ];
 const attributeOptions = ['BINARY', 'UNSIGNED', 'UNSIGNED ZEROFILL', 'on update'];

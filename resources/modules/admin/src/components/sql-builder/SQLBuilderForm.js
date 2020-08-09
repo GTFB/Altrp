@@ -5,7 +5,7 @@ import { titleToName } from "../../js/helpers";
 import AggregateComponent from "./AggregateComponent";
 import ConditionComponent from "./ConditionComponent";
 import OrderByComponent from "./OrderByComponent";
-import AltrpSelect from "../altrp/AltrpSelect";
+import AltrpSelect from "../altrp-select/AltrpSelect";
 import { Link, withRouter } from "react-router-dom";
 
 const conditionInitState = {
