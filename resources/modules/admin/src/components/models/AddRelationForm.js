@@ -8,10 +8,10 @@ const relationTypeOptions = [
     value: 'hasOne',
     label: 'Has One'
   },
-  // {
-  //   value: 'belongsTo',
-  //   label: 'Belongs To'
-  // },
+  {
+    value: 'belongsTo',
+    label: 'Belongs To'
+  },
   {
     value: 'hasMany',
     label: 'Has Many'
@@ -74,7 +74,7 @@ class AddRelationForm extends Component {
     this.setState(state=>({...state, selfFieldsOptions}));
     if(id){
       let value = await this.relationsResource.get(id);
-      console.log(value);
+      this.updateForeignFieldOptions(value.target_model_id);
       this.setState(state=>({...state, value}));
     }
   }
@@ -131,6 +131,49 @@ class AddRelationForm extends Component {
     }
     console.log(data);
     history.push(`/admin/tables/models/edit/${match.params.modelId}`);
+  }
+
+  /**
+   * вывод поля Local Key
+   */
+  renderLocalKey(){
+    const { id } = this.props.match.params;
+    switch (this.state.value.type){
+      case 'hasOne':{
+        return<div className="form-group form-group_width47">
+          <label htmlFor="relation-local_key">Local Key</label>
+          <input type="text" id="relation-local_key"
+                 value={this.state.value.foreign_key || ''}
+                 className="form-control"
+                 onChange={e => { this.changeValue(e.target.value, 'foreign_key') }}
+          />
+        </div>
+      }
+      case 'hasMany':{
+        return <div className="form-group form-group_width47">
+          <label htmlFor="relation-local_key">Local Key</label>
+          <select  id="relation-local_key"
+                 value={this.state.value.foreign_key || ''}
+                 className="form-control"
+                 onChange={e => { this.changeValue(e.target.value, 'foreign_key') }}
+          >
+            <option disabled value="" />
+            {this.state.selfFieldsOptions.map(({ value, label }) =>
+                <option key={value} value={value}>
+                  {label}
+                </option>)}
+          </select>
+        </div>
+      }
+    }
+    return<div className="form-group form-group_width47">
+      <label htmlFor="relation-local_key">Local Key</label>
+      <input type="text" id="relation-local_key" readOnly={id}
+             value={this.state.value.foreign_key || ''}
+             className="form-control"
+             onChange={e => { this.changeValue(e.target.value, 'foreign_key') }}
+      />
+    </div>
   }
 
   render() {
@@ -201,23 +244,18 @@ class AddRelationForm extends Component {
           <label className="checkbox-label" htmlFor="relation-add_belong_to">Add Reverse Relation</label>
         </div>
         <div className="form-group col-6">
-          <input type="checkbox" id="relation-editable"
-            checked={this.state.value.editable} readOnly={id}
-            onChange={e => { this.changeValue(e.target.checked, 'editable') }}
+          { (! ['hasMany', 'belongsTo'].includes(this.state.value.type)) ?
+              <><input type="checkbox"
+                       id="field-editable"
+                       checked={this.state.value.editable}
+                       onChange={e => { this.changeValue(e.target.checked, 'editable') }}
           />
-          <label className="checkbox-label" htmlFor="relation-editable">Editable</label>
+            <label className="checkbox-label" htmlFor="field-editable">Editable</label></> : ''}
+
         </div>
       </div>
       <div className="form-group__inline-wrapper">
-        <div className="form-group form-group_width47">
-          <label htmlFor="relation-local_key">Local Key</label>
-          <input type="text" id="relation-local_key" readOnly={id}
-                 value={this.state.value.foreign_key || ''}
-                 className="form-control"
-                 onChange={e => { this.changeValue(e.target.value, 'foreign_key') }}
-          />
-        </div>
-
+        {this.renderLocalKey()}
         <div className="form-group form-group_width47">
           <label htmlFor="relation-foreign_key">Foreign Key</label>
           <select id="relation-foreign_key" required

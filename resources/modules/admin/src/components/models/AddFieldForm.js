@@ -62,8 +62,18 @@ const fieldTypeOptions = [
     value: 'json',
     label: 'JSON'
   },
+  {
+    value: 'binary',
+    label: 'Binary'
+  },
 ];
-const attributeOptions = ['BINARY', 'UNSIGNED', 'UNSIGNED ZEROFILL', 'on update'];
+const attributeOptions = [
+
+  {
+    value: 'unsigned',
+    label: 'UNSIGNED'
+  }
+  ];
 const inputTipeOptions = ['textarea', 'text', 'number', 'slider', 'WYSIWYG', 'color', 'select', 'checkbox', 'radio button'];
 
 
