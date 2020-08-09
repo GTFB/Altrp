@@ -40,6 +40,7 @@ class EditModel extends Component {
       relations: null,
       id,
       queries: [],
+      sql_editors: [],
       // model: {},   TODO: заменить замоканые данные
       // fields: [],
       // relations: []
@@ -86,7 +87,7 @@ class EditModel extends Component {
     this.props.history.push("/admin/tables/models");
   };
   render() {
-    const { model, fields, relations, queries } = this.state;
+    const { model, fields, relations, queries, sql_editors } = this.state;
 
     const { id } = this.props.match.params;
     return <div className="admin-pages admin-page">
@@ -152,6 +153,14 @@ class EditModel extends Component {
           rows={queries.map(query => ({ ...query, editUrl: `/admin/tables/models/${model.id}/queries/edit/${query.id}` }))}
         />
         <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/queries/add`}>Add Query</Link>
+        </> : ''}
+        {sql_editors ? <>
+        <h2 className="sub-header">SQL Editors</h2>
+        <AdminTable
+          columns={columns}
+          rows={sql_editors.map(query => ({ ...query, editUrl: `/admin/tables/models/${model.id}/sql_editors/edit/${query.id}` }))}
+        />
+        <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/sql_editors/add`}>Add Editor</Link>
         </> : ''}
       </div>
     </div>;

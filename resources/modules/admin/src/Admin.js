@@ -43,6 +43,7 @@ import EditField from "./components/models/EditField";
 import AddRelation from "./components/models/AddRelation";
 import AddDataSource from "./components/models/AddDataSource";
 import SQLBuilder from "./components/SQLBuilder";
+import SqlEditor from "./components/models/SqlEditor";
 
 import AddTable from "./components/tables/AddTable";
 import EditTable from "./components/tables/EditTable";
@@ -252,6 +253,12 @@ class Admin extends Component {
             </Route>
             <Route path="/admin/tables/models/:modelId/queries/add">
               <SQLBuilder/>
+            </Route>
+            <Route path="/admin/tables/models/:modelId/sql_editors/edit/:id">
+              <SqlEditor/>
+            </Route>
+            <Route path="/admin/tables/models/:modelId/sql_editors/add">
+              <SqlEditor/>
             </Route>
             <Route path="/admin/tables/data-sources/add">
               <AddDataSource />

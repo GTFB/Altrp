@@ -136,7 +136,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     //Route::resource( 'reports', 'ReportsController' );
     Route::resource( 'media', 'Admin\MediaController' );
     Route::resource( 'settings', 'Admin\SettingsController' );
-    Route::resource('diagrams', 'Admin\AltrpDiagramController');
+    Route::resource( 'diagrams', 'Admin\AltrpDiagramController' );
+    Route::resource( 'sql_editor', 'Admin\SQLEditorController' );
 
     /**
      * Updates Check
