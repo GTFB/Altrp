@@ -71,8 +71,7 @@ class SQLEditorController extends Controller
    */
     public function show(SQLEditor $sQLEditor, $id)
     {
-      $res = $sQLEditor->find( $id )->with()->toArray();
-      $res['sql'] =  DB::select(DB::raw( 'SELECT * as `sql` FROM `migrations` limit 10 '));
+      $res = $sQLEditor->find( $id )->toArray();
       return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE );
     }
 
