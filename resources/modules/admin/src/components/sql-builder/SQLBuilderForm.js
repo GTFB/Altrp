@@ -200,6 +200,7 @@ class SQLBuilderForm extends Component {
         conditionType: 'where',
         column: '',
         operator: 'not-null',
+        value: ''
       },
       "relationsOptions": [],
       "rolesOptions":
