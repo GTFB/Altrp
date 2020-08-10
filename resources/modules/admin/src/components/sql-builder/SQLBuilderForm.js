@@ -424,7 +424,7 @@ class SQLBuilderForm extends Component {
     let _condition = { ...condition };
     delete _condition.conditionType;
     delete _condition.index;
-    delete _condition.or;
+    
     value.conditions = value.conditions || {};
     if (conditionType !== condition.conditionType) {
       /**
@@ -433,6 +433,7 @@ class SQLBuilderForm extends Component {
       value.conditions = value.conditions || {};
       switch (condition.conditionType) {
         case 'where_column':
+          delete _condition.or;
           value.conditions[condition.conditionType] = value.conditions[condition.conditionType] || [];
           or ?
             value.conditions[condition.conditionType][1].data.push(_condition) :
