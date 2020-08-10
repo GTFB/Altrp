@@ -114,6 +114,21 @@ class ControllerFileWriter
     }
 
     /**
+     * Обновить метод
+     *
+     * @param $oldMethodName
+     * @param $newMethodName
+     * @return bool
+     * @throws ControllerFileException
+     */
+    public function updateMethod($oldMethodName, $newMethodName)
+    {
+        $this->removeMethod($oldMethodName);
+        $this->addMethod($newMethodName);
+        return true;
+    }
+
+    /**
      * Проверить, существует ли следующее пространство имён в файле контроллера
      *
      * @param $controllerContent
@@ -144,6 +159,21 @@ class ControllerFileWriter
                 || Str::contains($content, 'protected function ' . $methodName . '(')) {
                 return $line;
             }
+        }
+        return false;
+    }
+
+    /**
+     * Проверить, существует ли метод в контроллере
+     *
+     * @param $methodName
+     * @return bool
+     */
+    public function checkMethodExists($methodName)
+    {
+        $controllerContent = file($this->controller->getFile(), 2);
+        if ($this->methodExists($controllerContent, $methodName)) {
+            return true;
         }
         return false;
     }

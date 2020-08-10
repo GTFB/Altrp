@@ -6,7 +6,11 @@ use App\Altrp\Builders\QueryBuilder2;
 use App\Altrp\Query;
 use App\Altrp\SourcePermission;
 use App\Altrp\SourceRole;
+use App\Exceptions\Controller\ControllerFileException;
 use App\Exceptions\ModelNotWrittenException;
+use App\Exceptions\Repository\RepositoryFileException;
+use App\Exceptions\Route\RouteFileException;
+use Illuminate\Support\Str;
 
 class AltrpQueryObserver
 {
@@ -61,23 +65,51 @@ class AltrpQueryObserver
     /**
      * Handle the query "updating" event.
      *
-     * @param  \App\Altrp\Query  $query
+     * @param \App\Altrp\Query $query
      * @return void
+     * @throws ModelNotWrittenException
+     * @throws \App\Exceptions\Controller\ControllerFileException
+     * @throws \App\Exceptions\Repository\RepositoryFileException
+     * @throws \App\Exceptions\Route\RouteFileException
      */
     public function updating(Query $query)
     {
-        //
+        $builder = new QueryBuilder2($query);
+        $methodBody = $builder->getMethodBody();
+        if (! $builder->updateControllerMethod()) {
+            throw new ControllerFileException('Failed to update controller', 500);
+        }
+        if (! $builder->updateRepoMethod($methodBody)) {
+            throw new RepositoryFileException('Failed to update repository', 500);
+        }
+        if (! $builder->updateRoute()) {
+            throw new RouteFileException('Failed to update route', 500);
+        }
+        $query->source->update([
+            'type' => Str::snake($query->name),
+            'name' => ucwords(str_replace('_', ' ',Str::snake($query->name)))
+        ]);
+        if (! $builder->updateSourceRoles($query->source)) {
+            throw new ControllerFileException('Failed to update source roles', 500);
+        }
+        if (! $builder->updateSourcePermissions($query->source)) {
+            throw new ControllerFileException('Failed to update source permissions', 500);
+        }
     }
 
     /**
      * Handle the query "updated" event.
      *
-     * @param  \App\Altrp\Query  $query
+     * @param \App\Altrp\Query $query
      * @return void
+     * @throws ModelNotWrittenException
+     * @throws \App\Exceptions\Controller\ControllerFileException
+     * @throws \App\Exceptions\Repository\RepositoryFileException
+     * @throws \App\Exceptions\Route\RouteFileException
      */
     public function updated(Query $query)
     {
-        //
+
     }
 
     /**

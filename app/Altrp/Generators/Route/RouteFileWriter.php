@@ -133,7 +133,7 @@ class RouteFileWriter
         $accessMiddleware = $this->getAccessMiddleware($methodName);
         if ($accessMiddleware) $middleware[] = $accessMiddleware;
 
-        $route = 'Route::get(\'/' . strtolower(Str::plural($this->route->getModelName())) . '/'
+        $route = 'Route::get(\'/queries/' . strtolower(Str::plural($this->route->getModelName())) . '/'
             . Str::snake($methodName) . '\', [';
         if ($middleware) $route .= "'middleware' => ['" . implode("','", $middleware) . "'], ";
         $route .= "'uses' => '"

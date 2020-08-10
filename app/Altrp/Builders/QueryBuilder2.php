@@ -16,6 +16,7 @@ use App\Altrp\Query;
 use App\Altrp\Source;
 use App\Altrp\SourcePermission;
 use App\Altrp\SourceRole;
+use App\Exceptions\Controller\ControllerFileException;
 use App\Exceptions\Repository\RepositoryFileException;
 use Illuminate\Support\Str;
 
@@ -100,7 +101,7 @@ class QueryBuilder2
      *
      * @return string|string[]
      */
-    protected function getQueryBody()
+    public function getQueryBody()
     {
         $queryBody = [];
         foreach ((array)$this->queryBody as $item) {
@@ -139,31 +140,31 @@ class QueryBuilder2
                     return 'auth()->user()->' . $relations;
                 }
                 if ($param && $param[0] == 'CURRENT_DATE') {
-                    return '\Carbon::now()->format(\'Y-m-d\')';
+                    return 'Carbon::now()->format(\'Y-m-d\')';
                 }
                 if ($param && $param[0] == 'CURRENT_DAY') {
-                    return '\Carbon::now()->format(\'d\')';
+                    return 'Carbon::now()->format(\'d\')';
                 }
                 if ($param && $param[0] == 'CURRENT_MONTH') {
-                    return '\Carbon::now()->format(\'m\')';
+                    return 'Carbon::now()->format(\'m\')';
                 }
                 if ($param && $param[0] == 'CURRENT_YEAR') {
-                    return '\Carbon::now()->format(\'Y\')';
+                    return 'Carbon::now()->format(\'Y\')';
                 }
                 if ($param && $param[0] == 'CURRENT_HOUR') {
-                    return '\Carbon::now()->format(\'H\')';
+                    return 'Carbon::now()->format(\'H\')';
                 }
                 if ($param && $param[0] == 'CURRENT_MINUTE') {
-                    return '\Carbon::now()->format(\'i\')';
+                    return 'Carbon::now()->format(\'i\')';
                 }
                 if ($param && $param[0] == 'CURRENT_SECOND') {
-                    return '\Carbon::now()->format(\'s\')';
+                    return 'Carbon::now()->format(\'s\')';
                 }
                 if ($param && $param[0] == 'CURRENT_TIME') {
-                    return '\Carbon::now()->format(\'H:i:s\')';
+                    return 'Carbon::now()->format(\'H:i:s\')';
                 }
                 if ($param && $param[0] == 'CURRENT_DATETIME') {
-                    return '\Carbon::now()->format(\'Y-m-d H:i:s\')';
+                    return 'Carbon::now()->format(\'Y-m-d H:i:s\')';
                 }
                 if ($param && $param[0] == 'CURRENT_DAY_OF_WEEK') {
                     return '\Carbon::now()->format(\'l\')';
@@ -173,11 +174,6 @@ class QueryBuilder2
             $methodBody
         );
         return $methodBody;
-    }
-
-    public function deleteMethod()
-    {
-        return ;
     }
 
     /**
@@ -255,6 +251,50 @@ class QueryBuilder2
     }
 
     /**
+     * Обновить метод в файле репозитория
+     *
+     * @param $method
+     * @return bool
+     * @throws \App\Exceptions\Repository\RepositoryFileException
+     */
+    public function updateRepoMethod($method)
+    {
+        $repoInterfaceFile = new RepositoryInterfaceFile($this->model);
+        $repoFile = new RepositoryFile($this->model);
+        $fileWriter = new RepositoryFileWriter(
+            $repoFile,
+            $repoInterfaceFile
+        );
+        $oldMethodName = $this->getOldMethodName();
+        if (! $fileWriter->removeMethodFromRepository($oldMethodName)) {
+            return false;
+        }
+        if (! $fileWriter->removeMethodFromRepoInterface($oldMethodName)) {
+            return false;
+        }
+        if (! $fileWriter->addMethod($this->getMethodName(), $method)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Обновить файл маршрутов
+     *
+     * @throws \App\Exceptions\Route\RouteFileException
+     */
+    public function updateRoute()
+    {
+        if (! $this->removeRoute()) {
+            return false;
+        }
+        if (! $this->writeRoute()) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Удалить метод из файла репозитория
      *
      * @param $method
@@ -289,7 +329,7 @@ class QueryBuilder2
         $routeFile = new RouteFile($this->model);
         $controllerFile = new ControllerFile($this->model);
         $fileWriter = new RouteFileWriter($routeFile, $controllerFile);
-        if ($fileWriter->removeRoute($this->getMethodName())) {
+        if ($fileWriter->removeRoute($this->getOldMethodName())) {
             return true;
         }
         return false;
@@ -310,6 +350,9 @@ class QueryBuilder2
             $repoFile,
             $repoInterfaceFile
         );
+        if ($fileWriter->checkMethodExists($this->getMethodName())) {
+            throw new ControllerFileException('Query already ' . $this->getOldMethodName() . ' exists', 500);
+        }
         if ($fileWriter->addMethod($this->getMethodName())) {
             return true;
         }
@@ -372,7 +415,7 @@ class QueryBuilder2
             }
         }
         try {
-            SourceRole::whereIn('role_id', $rolesIds)->whereIn('source_id', [$source->id])->delete();
+            SourceRole::where('source_id', $source->id)->delete();
             SourceRole::insert($rolesList);
         } catch (\Exception $e) {
             return false;
@@ -403,12 +446,49 @@ class QueryBuilder2
             }
         }
         try {
-            SourcePermission::whereIn('permission_id', $permissionIds)->whereIn('source_id', [$source->id])->delete();
+            SourcePermission::where('source_id', $source->id)->delete();
             SourcePermission::insert($permissionsList);
         } catch (\Exception $e) {
             return false;
         }
         return true;
+    }
+
+    public function updateSourceRoles($source)
+    {
+        return $this->writeSourceRoles($source);
+    }
+
+    public function updateSourcePermissions($source)
+    {
+        return $this->writeSourcePermissions($source);
+    }
+
+    /**
+     * Обновить метод в контроллере
+     *
+     * @return bool
+     * @throws \App\Exceptions\Controller\ControllerFileException
+     */
+    public function updateControllerMethod()
+    {
+        $controllerFile = new ControllerFile($this->model);
+        $repoFile = new RepositoryFile($this->model);
+        $repoInterfaceFile = new RepositoryInterfaceFile($this->model);
+        $fileWriter = new ControllerFileWriter(
+            $controllerFile,
+            $repoFile,
+            $repoInterfaceFile
+        );
+        if ($this->getOldMethodName() != $this->getMethodName()
+            && $fileWriter->checkMethodExists($this->getMethodName())) {
+            throw new ControllerFileException('Query ' . $this->getMethodName() . ' already exists', 500);
+        }
+        if ($fileWriter->updateMethod(
+            $this->getOldMethodName(),
+            $this->getMethodName())
+        ) return true;
+        return false;
     }
 
     /**
@@ -444,6 +524,11 @@ class QueryBuilder2
         return $this->query->name;
     }
 
+    public function getOldMethodName()
+    {
+        return $this->query->getOriginal('name') ?? $this->query->name;
+    }
+
     /**
      * Получить своойство, удаляющее дублткаты
      *
@@ -462,8 +547,9 @@ class QueryBuilder2
      * @param array $aggregates
      * @return $this
      */
-    protected function getAggregates($aggregates)
+    public function getAggregates($aggregates)
     {
+        if (! $aggregates) return $this;
         $aggregatesList = [];
         foreach ($aggregates as $aggregate) {
             $aggregatesList[] = $aggregate['type'] . "({$aggregate['column']}) as {$aggregate['alias']}";
@@ -478,7 +564,7 @@ class QueryBuilder2
      * @param $columns
      * @return $this
      */
-    protected function getColumns($columns)
+    public function getColumns($columns)
     {
         $this->reset();
         $this->queryBody->columns = $columns
@@ -528,8 +614,9 @@ class QueryBuilder2
      * @param $relations
      * @return $this
      */
-    protected function getRelations($relations)
+    public function getRelations($relations)
     {
+        if (! $relations) return $this;
         $eol = (count($relations) > 1) ? "\n" : null;
         $tab = (count($relations) > 1) ? "{$this->tabIndent}" : null;
         $this->queryBody->relations = "->with([$eol$tab$tab$tab$tab'"
@@ -543,7 +630,7 @@ class QueryBuilder2
      * @param $conditions
      * @return $this
      */
-    protected function getWhereConditions($conditions)
+    public function getWhereConditions($conditions)
     {
         if (! $conditions['where']) return $this;
         $condition = 'where([';
@@ -584,7 +671,7 @@ class QueryBuilder2
      * @param $conditions
      * @return $this
      */
-    protected function getOrWhereConditions($conditions)
+    public function getOrWhereConditions($conditions)
     {
         if (! $conditions['or_where']) return $this;
         $conditionList = [];
@@ -638,7 +725,7 @@ class QueryBuilder2
      * @param $conditions
      * @return $this
      */
-    protected function getWhereBetweenConditions($conditions)
+    public function getWhereBetweenConditions($conditions)
     {
         if (! $conditions['where_between']) return $this;
         $conditionList = [];
@@ -663,7 +750,7 @@ class QueryBuilder2
      * @param $conditions
      * @return $this
      */
-    protected function getWhereInConditions($conditions)
+    public function getWhereInConditions($conditions)
     {
         if (! $conditions['where_in']) return $this;
         $conditionList = [];
@@ -688,7 +775,7 @@ class QueryBuilder2
      * @param $conditions
      * @return $this
      */
-    protected function getWhereDateConditions($conditions)
+    public function getWhereDateConditions($conditions)
     {
         if (! $conditions['where_date']) return $this;
         $conditionList = [];
@@ -706,7 +793,7 @@ class QueryBuilder2
      * @param $conditions
      * @return $this
      */
-    protected function getWhereColumnConditions($conditions)
+    public function getWhereColumnConditions($conditions)
     {
         if (! $conditions['where_column']) return $this;
         $conditionList = [];
@@ -739,7 +826,7 @@ class QueryBuilder2
      * @param $orders
      * @return $this
      */
-    protected function getOrders($orders)
+    public function getOrders($orders)
     {
         if (! $orders) return $this;
         $ordersList = [];
@@ -756,7 +843,7 @@ class QueryBuilder2
      * @param $types
      * @return $this
      */
-    protected function getGroupTypes($types)
+    public function getGroupTypes($types)
     {
         if (! $types) return $this;
         $groupsList = "->groupBy('" . implode("','", $types) ."')\n";
@@ -770,7 +857,7 @@ class QueryBuilder2
      * @param $offset
      * @return $this
      */
-    protected function getOffset($offset)
+    public function getOffset($offset)
     {
         if (! $offset) return $this;
         $this->queryBody->offset = "->offset($offset)\n";
@@ -783,7 +870,7 @@ class QueryBuilder2
      * @param $limit
      * @return $this
      */
-    protected function getLimit($limit)
+    public function getLimit($limit)
     {
         if (! $limit) return $this;
         $this->queryBody->limit = "->limit($limit)\n";

@@ -771,6 +771,31 @@ class ModelsController extends HttpController
     }
 
     /**
+     * Получить все SQL запросы
+     *
+     * @param $model_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAllQueries($model_id)
+    {
+        $queries = Query::where('model_id',$model_id)->get();
+        return response()->json($queries, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Получить SQL запрос
+     *
+     * @param ApiRequest $request
+     * @param $query_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getQuery(ApiRequest $request, $query_id)
+    {
+        $queries = Query::find($request->query_id);
+        return response()->json($queries, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
      * Добавить SQl запрос
      *
      * @param ApiRequest $request

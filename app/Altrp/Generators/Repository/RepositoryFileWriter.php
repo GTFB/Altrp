@@ -288,8 +288,8 @@ class RepositoryFileWriter
     protected function existsInServiceProvider($serviceProviderContent)
     {
         foreach ($serviceProviderContent as $line => $content) {
-            if (Str::contains($content, $this->repoInterface->getNamespace())
-                && Str::contains($content, $this->repository->getNamespace())
+            if (Str::contains($content, $this->repository->getModelName() . 'Repository')
+                && Str::contains($content, $this->repository->getModelName() . 'RepositoryInterface')
             ) {
                 return true;
             }

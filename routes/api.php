@@ -56,13 +56,12 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::get( '/models/{model_id}', 'Admin\ModelsController@showModel');
         Route::delete( '/models/{model_id}', 'Admin\ModelsController@destroyModel');
 
+        // SQL Builder
+        Route::get( '/models/{model_id}/sql_builder', 'Admin\ModelsController@getAllQueries');
         Route::post( '/models/{model_id}/sql_builder', 'Admin\ModelsController@storeQuery');
+        Route::put( '/models/{model_id}/sql_builder/{query_id}', 'Admin\ModelsController@updateQuery');
         Route::get('/models/{model_id}/sql_builder/{query_id}', 'Admin\ModelsController@getQuery');
         Route::delete('/models/{model_id}/sql_builder/{query_id}', 'Admin\ModelsController@destroyQuery');
-
-        Route::post( '/models/{model_id}/controllers', 'Admin\ModelsController@storeController');
-        Route::put( '/models/{model_id}/controllers/{controller_id}', 'Admin\ModelsController@updateController');
-        Route::delete( '/models/{model_id}/controllers/{controller_id}', 'Admin\ModelsController@destroyController');
 
         // Fields
         Route::get( '/models/{model_id}/fields', 'Admin\ModelsController@getModelFields');
