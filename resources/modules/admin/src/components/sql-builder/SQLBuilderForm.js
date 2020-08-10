@@ -243,7 +243,6 @@ class SQLBuilderForm extends Component {
         value: field.name,
       };
     });
-    console.log(selfFieldsOptions);
     this.setState(state => ({ ...state, selfFields, selfFieldsOptions }));
     const relations = await this.relationsResource.getAll();
     let relationsOptions = relations.map(relation => {
@@ -268,7 +267,6 @@ class SQLBuilderForm extends Component {
    */
   changeGroupBy = (group_by) => {
     let _group_by = [];
-    console.log(group_by);
     group_by.forEach(g => {
       _group_by.push(g.value)
     });
@@ -391,7 +389,6 @@ class SQLBuilderForm extends Component {
 
     let newCondition = { ...this.state.initialCondition };
     this.pushCondition(newCondition);
-    // console.log(this.state.value.conditions);
     // this.setState(state => {
     //   return { ...state, conditions: [...state.conditions, { ...conditionInitState, id: this.counter }] };
     // });
@@ -429,8 +426,6 @@ class SQLBuilderForm extends Component {
     delete _condition.index;
     delete _condition.or;
     value.conditions = value.conditions || {};
-    console.log(conditionType);
-    console.log(condition);
     if (conditionType !== condition.conditionType) {
       /**
        * если тип  меняется, то удаляем из старого вставляем в новый
@@ -470,24 +465,24 @@ class SQLBuilderForm extends Component {
       if (conditionType !== 'where_column') {
         value.conditions[conditionType].splice(index, 1, _condition);
       } else {
-        //todo: реализовать вариант для where_column
-        or ?
-          value.conditions[conditionType][1].data.splice(index, 1, _condition) :
-          value.conditions[conditionType][0].data.splice(index, 1, _condition);
+        // вариант для where_column
+        if (or !== condition.or) {  /* если меняем or */
+          value.conditions[condition.conditionType] = value.conditions[condition.conditionType] || [];
+          or ?
+            value.conditions[condition.conditionType][0].data.push(_condition) :
+            value.conditions[condition.conditionType][1].data.push(_condition);
+
+          or ?
+            value.conditions[conditionType][1].data.splice(index, 1) :
+            value.conditions[conditionType][0].data.splice(index, 1);
+        } else {
+          or ?
+            value.conditions[conditionType][1].data.splice(index, 1, _condition) :
+            value.conditions[conditionType][0].data.splice(index, 1, _condition);
+        }
       }
     }
 
-    if (condition.conditionType === 'where_column' && or !== condition.or) {
-      // debugger;
-      value.conditions[condition.conditionType] = value.conditions[condition.conditionType] || [];
-      or ?
-        value.conditions[condition.conditionType][0].data.push(_condition) :
-        value.conditions[condition.conditionType][1].data.push(_condition);
-
-      or ?
-        value.conditions[conditionType][1].data.splice(index, 1) :
-        value.conditions[conditionType][0].data.splice(index, 1);
-    }
     this.setState(state => ({ ...state, value }));
   };
 
@@ -656,7 +651,6 @@ class SQLBuilderForm extends Component {
     let conditions = [];
     let conditionPairs = _.toPairs(this.state.value.conditions);
     conditionPairs.forEach(pair => {
-      // console.log(pair[0]);
       if (pair[0] !== 'where_column') {
         pair[1].forEach((_condition, idx) => {
           let conditionForComponent = { ..._condition };
