@@ -5,7 +5,7 @@ class OrderByComponent extends Component {
     const { type, column } = this.props.item;
     const { columnsOptions, changeHandler } = this.props;
 
-    return <div className="from-segment form-group__inline-wrapper">
+    return <div className="form-segment form-group__inline-wrapper">
       <div className="form-group form-group_width47">
         <label>Field
           <select required name="column"
