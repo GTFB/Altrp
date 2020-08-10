@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin  ;
 
+use App\Http\Controllers\Controller;
 use App\SQLEditor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SQLEditorController extends Controller
 {
@@ -28,7 +30,7 @@ class SQLEditorController extends Controller
         $page_count = ceil( $page_count / $page_size );
       }
       return \response()->json([
-        'sQLEditors' => $sQLEditors,
+        'sql_editors' => $sQLEditors,
         'pageCount' => $page_count,
       ]);
     }
@@ -60,18 +62,18 @@ class SQLEditorController extends Controller
       return response()->json( ['success' => false, 'Error on Delete'], 200,  [], JSON_UNESCAPED_UNICODE );
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\SQLEditor  $sQLEditor
-     * @return \Illuminate\Http\Response
-     */
-    public function show(SQLEditor $sQLEditor)
+  /**
+   * Display the specified resource.
+   *
+   * @param  \App\SQLEditor $sQLEditor
+   * @param string $id
+   * @return \Illuminate\Http\Response
+   */
+    public function show(SQLEditor $sQLEditor, $id)
     {
-        //
-
-      $res = $sQLEditor->toArray();
-      return response()->json( $res );
+      $res = $sQLEditor->find( $id )->with()->toArray();
+      $res['sql'] =  DB::select(DB::raw( 'SELECT * as `sql` FROM `migrations` limit 10 '));
+      return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE );
     }
 
     /**
@@ -106,12 +108,14 @@ class SQLEditorController extends Controller
    * Remove the specified resource from storage.
    *
    * @param  \App\SQLEditor $sQLEditor
+   * @param string $id
    * @return \Illuminate\Http\Response
    * @throws \Exception
    */
-    public function destroy(SQLEditor $sQLEditor)
+    public function destroy( SQLEditor $sQLEditor, $id )
     {
         //
+      $sQLEditor = $sQLEditor->find( $id );
       if( $sQLEditor->delete() ) {
         return response()->json( ['success' => true],200,  [], JSON_UNESCAPED_UNICODE );
       }

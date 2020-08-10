@@ -37,6 +37,5 @@ export function transliterate(str) {
 
 export function titleToName(str) {
   str = transliterate(str);
-  console.log(str);
   return str.toLowerCase().replace(/^\d+/, '').replace(/[^\d\w]/g, '_');
 }

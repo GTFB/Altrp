@@ -2,22 +2,49 @@ import React, {Component} from "react";
 import {Link, withRouter} from "react-router-dom";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import {titleToName} from "../../js/helpers";
+import store from '../../js/store/store';
 
 class SqlEditor extends Component {
   constructor(props) {
     super(props);
+    let storeState = store.getState();
     this.state = {
       modelTitle: 'Model Title',
       value: {},
+      modelsOptions: [],
+      AceEditor: storeState.aceEditorReducer.AceEditor
     };
-    this.modelsResource = new Resource({route: '/admin/ajax/models'});
-    this.filedsResource = new Resource({route: `/admin/ajax/models/${this.props.match.params.modelId}/fields`});
+    this.sqlEditorResource = new Resource({route: `/admin/ajax/sql_editors`});
+    this.modelsResource = new Resource({ route: '/admin/ajax/model_options' });
+
+    store.subscribe(this.aceEditorObserver);
   }
 
+  /**
+   * AceEditor загрузился
+   */
+  aceEditorObserver = () => {
+    let storeState = store.getState();
+    this.setState(state=>({
+        ...state,
+      AceEditor: storeState.aceEditorReducer.AceEditor
+    }))
+  };
+  /**
+   * Компонент загрузился
+   * @return {Promise<void>}
+   */
   async componentDidMount() {
-    const {modelId} = this.props.match.params;
-    let model = await this.modelsResource.get(modelId);
-    this.setState({modelTitle: model.title});
+    const {id} = this.props.match.params;
+    let { options } = await this.modelsResource.getAll();
+    this.setState({ modelsOptions: options });
+    if(id){
+      let value = await this.sqlEditorResource.get(id);
+      this.setState(state=>({
+          ...state,
+        value,
+      }))
+    }
   }
 
   /**
@@ -28,12 +55,12 @@ class SqlEditor extends Component {
   changeValue(value, field) {
     this.setState(state => {
       state = { ...state };
-      if(field !== 'name'){
+      if(field === 'name'){
         state.value[field] = titleToName(value);
       }else{
         state.value[field] = value;
       }
-      if(field !== 'title') {
+      if(field === 'title') {
         state.value.name = titleToName(value);
       }
       return state
@@ -43,35 +70,36 @@ class SqlEditor extends Component {
    * отправка данных
    * @return {*}
    */
-  onSubmit = async data => {
-    const {modelId} = this.props.match.params;
-    const {history} = this.props;
-    if (this.props.match.params.id) {
-      let res = await this.filedsResource.put(this.props.match.params.id, data);
-      history.push(`/admin/tables/models/edit/${modelId}`);
+  onSubmit = async e => {
+    const {id} = this.props.match.params;
+    e.preventDefault();
+    let res;
+    if(id){
+      res = await this.sqlEditorResource.put(id, this.state.value);
     } else {
-      let res = await this.filedsResource.post(data);
-      history.push(`/admin/tables/models/edit/${modelId}`);
+      res = await this.sqlEditorResource.post(this.state.value);
+    }
+    if(res.success){
+      this.props.history.push('/admin/tables/sql_editors');
+    } else {
+      alert(res.message);
     }
   };
 
   render() {
-    const {modelTitle} = this.state;
-    const {modelId} = this.props.match.params;
+    const {value} = this.state;
+    const {id} = this.props.match.params;
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
-          <Link className="admin-breadcrumbs__link" to="/admin/tables/models">Models / All Models</Link>
+          <Link className="admin-breadcrumbs__link" to="/admin/tables/sql_editors">All  SQL Editors</Link>
           <span className="admin-breadcrumbs__separator">/</span>
-          <Link className="admin-breadcrumbs__link" to={`/admin/tables/models/edit/${modelId}`}>
-            {modelTitle}
-          </Link>
-          <span className="admin-breadcrumbs__separator">/</span>
-          <span className="admin-breadcrumbs__current">Add New Field</span>
+
+          <span className="admin-breadcrumbs__current">Add SQL Query</span>
         </div>
       </div>
       <div className="admin-content">
-        <form className="admin-form field-form" onSubmit={this.submitHandler}>
+        <form className="admin-form field-form" onSubmit={this.onSubmit}>
           <div className="row">
             <div className="form-group col-6">
               <label htmlFor="field-title">Field Title</label>
@@ -84,17 +112,67 @@ class SqlEditor extends Component {
             </div>
             <div className="form-group col-6">
               <label htmlFor="field-name">Field Name</label>
-              <input type="text" id="field-name" required readOnly={this.props.match.params.id}
+              <input type="text" id="field-name" required readOnly={id}
                      value={this.state.value.name || ''}
                      onChange={e => {
                        this.changeValue(e.target.value, 'name')
                      }}
                      className="form-control"/>
             </div>
+            <div className="form-group col-6">
+              <label htmlFor="field-name">Description</label>
+              <input type="text" id="field-description"
+                     value={this.state.value.description || ''}
+                     onChange={e => {
+                       this.changeValue(e.target.value, 'description')
+                     }}
+                     className="form-control"/>
+            </div>
+            <div className="form-group col-6">
+              <input type="checkbox" id="relation-paged"
+                     checked={this.state.value.paged}
+                     onChange={e => { this.changeValue(e.target.checked, 'paged') }}
+              />
+              <label className="checkbox-label" htmlFor="relation-add_belong_to">With Pages</label>
+            </div>
+            <div className="form-group col-6">
+              <label htmlFor="relation-model_id">Model</label>
+              <select id="relation-model_id" required disabled={id}
+                      value={this.state.value.model_id || ''}
+                      onChange={e => { this.changeValue(e.target.value, 'model_id') }}
+                      className="form-control"
+              >
+                <option disabled value="" />
+                {this.state.modelsOptions.map(({ value, label }) =>
+                    <option key={value} value={value}>
+                      {label}
+                    </option>)}
+              </select>
+            </div>
+            <div className="form-group col-12">
+              <label htmlFor="field-name">SQL Query</label>
+              {this.state.AceEditor && (this.editor = (this.editor || <this.state.AceEditor
+                  mode="sql"
+                  theme="textmate"
+                  onChange={value => {
+                    this.changeValue(value, 'sql')
+                  }}
+                  className="field-ace"
+                  name="aceEditor"
+                  height="15em"
+                  setOptions={{
+                    value: this.state.value.sql || ''
+                  }}
+                  showPrintMargin={false}
+                  style={{
+                    width: '100%'
+                  }}
+                  enableLiveAutocompletion={true} />))}
+            </div>
           </div>
           <div className="btn__wrapper btn_add">
             <button className="btn btn_success" type="submit">Add</button>
-            <Link className="btn" to={`/admin/tables/models/edit/${modelId}`}>Cancel</Link>
+            <Link className="btn" to={`/admin/tables/sql_editors`}>Cancel</Link>
             {/* TODO: отображать кнопку если в форме редактируются данные
           повесить обработчик удаления
         <button className="btn btn_failure">Delete</button> */}

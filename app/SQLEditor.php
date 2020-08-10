@@ -11,5 +11,7 @@ class SQLEditor extends Model
     'name',
     'sql',
     'title',
+    'model_id',
+    'description',
   ];
 }
