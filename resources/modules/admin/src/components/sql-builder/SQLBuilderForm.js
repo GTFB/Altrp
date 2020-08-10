@@ -475,13 +475,13 @@ class SQLBuilderForm extends Component {
         // вариант для where_column
         if (or !== condition.or) {  /* если меняем or */
           value.conditions[condition.conditionType] = value.conditions[condition.conditionType] || [];
-          or ?
-            value.conditions[condition.conditionType][0].data.push(_condition) :
+          if (or) {
+            value.conditions[condition.conditionType][0].data.push(_condition);
+            value.conditions[conditionType][1].data.splice(index, 1);
+          } else {
             value.conditions[condition.conditionType][1].data.push(_condition);
-
-          or ?
-            value.conditions[conditionType][1].data.splice(index, 1) :
             value.conditions[conditionType][0].data.splice(index, 1);
+          }
         } else {
           or ?
             value.conditions[conditionType][1].data.splice(index, 1, _condition) :
