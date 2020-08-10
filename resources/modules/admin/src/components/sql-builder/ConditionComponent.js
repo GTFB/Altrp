@@ -154,7 +154,7 @@ class ConditionComponent extends Component {
           <div className="form-group form-group_width47">
             <label>Value 1
               <input type="text" required name="value1"
-                value={values[0]}
+                value={values[0] || ''}
                 onChange={e => this.changeHandler('values', [e.target.value, values[1]])}
                 className="form-control" />
             </label>
@@ -163,7 +163,7 @@ class ConditionComponent extends Component {
           <div className="form-group form-group_width47">
             <label>Value 2
               <input type="text" required name="value2"
-                value={values[1]}
+                value={values[1] || ''}
                 onChange={e => this.changeHandler('values', [values[0], e.target.value])}
                 className="form-control" />
             </label>
