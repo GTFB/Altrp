@@ -78,7 +78,9 @@ class QueryBuilder2
      */
     public function getMethodBody()
     {
-        $query = $this->getColumns($this->query->columns)
+        $query = $this
+                    ->getJoins($this->query->joins)
+                    ->getColumns($this->query->columns)
                     ->getAggregates($this->query->aggregates)
                     ->getWhereConditions($this->query->conditions)
                     ->getOrWhereConditions($this->query->conditions)
@@ -566,9 +568,13 @@ class QueryBuilder2
      */
     public function getColumns($columns)
     {
-        $this->reset();
+        $threeTabs = null;
+        if (! $this->query->joins) {
+            $this->reset();
+            $threeTabs = $this->threeTabs;
+        }
         $this->queryBody->columns = $columns
-            ? "{$this->threeTabs}->select(['" . implode("','", $columns) . "'])\n"
+            ? "{$threeTabs}->select(['" . implode("','", $columns) . "'])\n"
             : 'select(\'*\')';
         return $this;
     }
@@ -874,6 +880,34 @@ class QueryBuilder2
     {
         if (! $limit) return $this;
         $this->queryBody->limit = "->limit($limit)\n";
+        return $this;
+    }
+
+    /**
+     * Получить соединения с другими таблицами (джоины)
+     *
+     * @param $joins
+     * @return $this
+     */
+    public function getJoins($joins)
+    {
+        if (! $joins) return $this;
+        $this->reset();
+        $joinList = [];
+        foreach ($joins as $item => $join) {
+            if ($join['type'] == 'inner_join') {
+                $joinList[] = "join('{$join['target_table']}','{$join['source_table']}.{$join['source_column']}',"
+                    . "'{$join['operator']}','{$join['target_table']}.{$join['target_column']}'";
+            } elseif ($join['type'] == 'left_join') {
+                $joinList[] = "leftJoin('{$join['target_table']}','{$join['source_table']}.{$join['source_column']}',"
+                    . "'{$join['operator']}','{$join['target_table']}.{$join['target_column']}'";
+            } elseif ($join['type'] == 'right_join') {
+                $joinList[] = "rightJoin('{$join['target_table']}','{$join['source_table']}.{$join['source_column']}',"
+                    . "'{$join['operator']}','{$join['target_table']}.{$join['target_column']}'";
+            }
+        }
+        $this->queryBody->joins = "{$this->threeTabs}->" . implode("\n{$this->threeTabs}->",$joinList) . "\n";
+
         return $this;
     }
 }

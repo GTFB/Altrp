@@ -11,6 +11,7 @@ class Query extends EloquentModel
 
     protected $fillable = [
         'name',
+        'joins',
         'columns',
         'aggregates',
         'conditions',
@@ -32,6 +33,11 @@ class Query extends EloquentModel
     public function model()
     {
         return $this->belongsTo(Model::class);
+    }
+
+    public function setJoinsAttribute($value)
+    {
+        $this->attributes['joins'] = json_encode($value);
     }
 
     public function setColumnsAttribute($value)
@@ -67,6 +73,11 @@ class Query extends EloquentModel
     public function setAccessAttribute($value)
     {
         $this->attributes['access'] = json_encode($value);
+    }
+
+    public function getJoinsAttribute($value)
+    {
+        return json_decode($value, true);
     }
 
     public function getColumnsAttribute($value)
