@@ -175,7 +175,7 @@ class ConditionComponent extends Component {
           <label>Values
             <textarea required name="values"
               value={values.join(", ")}
-              onChange={e => this.changeHandler('values', e.target.value.split(",").trim())}
+              onChange={e => this.changeHandler('values', e.target.value.split(",").map(item => item.trim()))}
               className="form-control" />
           </label>
         </div>
