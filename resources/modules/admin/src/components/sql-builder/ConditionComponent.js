@@ -44,180 +44,193 @@ class ConditionComponent extends Component {
   render() {
     const { columnsOptions/* , changeHandler */ } = this.props;
     const { conditionType, column, operator, value, or, not, values, type,
-      first_column, second_column, date, id } = this.props.item;
+      first_column, second_column, date } = this.props.item;
 
-    return <>
+    return <div className="from-segment">
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width30">
-          <label htmlFor={"conditionType" + id}>Condition Type</label>
-          <select id={"conditionType" + id} required name="conditionType"
-            value={conditionType}
-            onChange={(e) => (this.changeHandler('conditionType', e.target.value))}
-            className="form-control"
-          >
-            <option disabled value="" />
-            {conditionTypeOptions.map(type =>
-              <option key={type} value={type}>
-                {type}
-              </option>)}
-          </select>
+          <label>Condition Type
+            <select required name="conditionType"
+              value={conditionType}
+              onChange={(e) => (this.changeHandler('conditionType', e.target.value))}
+              className="form-control"
+            >
+              <option disabled value="" />
+              {conditionTypeOptions.map(type =>
+                <option key={type} value={type}>
+                  {type}
+                </option>)}
+            </select>
+          </label>
         </div>
 
         {conditionType !== "where_column" && <div className="form-group form-group_width30">
-          <label htmlFor={"column" + id}>Field</label>
-          <select id={"column" + id} required name="column"
-            value={column}
-            onChange={(value) => (this.changeHandler('column', value))}
-            className="form-control"
-          >
-            <option disabled value="" />
-            {columnsOptions.map(({ value, label }) =>
-              <option key={value} value={value}>
-                {label}
-              </option>)}
-          </select>
+          <label>Field
+            <select required name="column"
+              value={column}
+              onChange={(value) => (this.changeHandler('column', value))}
+              className="form-control"
+            >
+              <option disabled value="" />
+              {columnsOptions.map(({ value, label }) =>
+                <option key={value} value={value}>
+                  {label}
+                </option>)}
+            </select>
+          </label>
         </div>}
 
         {['where', 'or_where', 'where_column'].includes(conditionType) &&
           <div className="form-group form-group_width30">
-            <label htmlFor={"operator" + id}>Operator</label>
-            <select id={"operator" + id} required name="operator"
-              value={operator}
-              onChange={e => this.changeHandler('operator', e.target.value)}
-              className="form-control"
-            >
-              <option value="" disabled />
-              <option value="not-null">Not Null</option>
-              <option value="null">Null</option>
-              <option value="=">Equals</option>
-              <option value="!=">Not Equals</option>
-              <option value="between">Between</option>
-              <option value=">">&gt;</option>
-              <option value=">=">&gt;=</option>
-              <option value="<">&lt;</option>
-              <option value="<=">&lt;=</option>
-            </select>
+            <label>Operator
+              <select required name="operator"
+                value={operator}
+                onChange={e => this.changeHandler('operator', e.target.value)}
+                className="form-control"
+              >
+                <option value="" disabled />
+                <option value="not-null">Not Null</option>
+                <option value="null">Null</option>
+                <option value="=">Equals</option>
+                <option value="!=">Not Equals</option>
+                <option value="between">Between</option>
+                <option value=">">&gt;</option>
+                <option value=">=">&gt;=</option>
+                <option value="<">&lt;</option>
+                <option value="<=">&lt;=</option>
+              </select>
+            </label>
           </div>}
 
         {['where_between', 'where_in', 'where_column'].includes(conditionType) && <>
           <div className="form-group form-group_checkbox form-group_width15">
-            <input type="checkbox" id={"or" + id} name="or"
-              className="form-check-input"
-              checked={or}
-              onChange={e => this.changeHandler('or', e.target.checked)}
-            />
-            <label htmlFor={"or" + id} className="label_checkbox">Or</label>
+            <label className="label_checkbox">
+              <input type="checkbox" name="or"
+                className="form-check-input"
+                checked={or}
+                onChange={e => this.changeHandler('or', e.target.checked)}
+              /> Or
+            </label>
           </div>
 
           {conditionType !== 'where_column' && <div className="form-group form-group_checkbox form-group_width15">
-            <input type="checkbox" id={"not" + id} name="not"
-              className="form-check-input"
-              checked={not}
-              onChange={e => this.changeHandler('not', e.target.checked)}
-            />
-            <label htmlFor={"not" + id} className="label_checkbox">Not</label>
+            <label className="label_checkbox">
+              <input type="checkbox" name="not"
+                className="form-check-input"
+                checked={not}
+                onChange={e => this.changeHandler('not', e.target.checked)}
+              /> Not
+            </label>
           </div>}
         </>}
 
         {conditionType === "where_date" && <div className="form-group form-group_width30">
-          <label htmlFor={"type" + id}>Type</label>
-          <select id="type" required name="type"
-            value={type}
-            onChange={e => this.changeHandler('type', e.target.value)}
-            className="form-control"
-          >
-            <option disabled value="" />
-            {dateTypesOptions.map(({ value, label }) =>
-              <option key={value} value={value}>{label}</option>)}
-          </select>
+          <label>Type
+            <select id="type" required name="type"
+              value={type}
+              onChange={e => this.changeHandler('type', e.target.value)}
+              className="form-control"
+            >
+              <option disabled value="" />
+              {dateTypesOptions.map(({ value, label }) =>
+                <option key={value} value={value}>{label}</option>)}
+            </select>
+          </label>
         </div>}
       </div>
 
       {['where', 'or_where'].includes(conditionType) &&
         <div className="form-group">
-          <label htmlFor={"value" + id}>Value</label>
-          <input type="text" id={"value" + id} required name="value"
-            value={value}
-            onChange={e => this.changeHandler('value', e.target.value)}
-            className="form-control" />
+          <label>Value
+            <input type="text" required name="value"
+              value={value}
+              onChange={e => this.changeHandler('value', e.target.value)}
+              className="form-control" />
+          </label>
         </div>}
 
       {['where_between'].includes(conditionType) &&
         <div className="form-group__inline-wrapper">
           <div className="form-group form-group_width47">
-            <label htmlFor={"value1" + id}>Value 1</label>
-            <input type="text" id={"value1" + id} required name="value1"
-              value={values[0]}
-              onChange={e => this.changeHandler('values', [e.target.value, values[1]])}
-              className="form-control" />
+            <label>Value 1
+              <input type="text" required name="value1"
+                value={values[0]}
+                onChange={e => this.changeHandler('values', [e.target.value, values[1]])}
+                className="form-control" />
+            </label>
           </div>
 
           <div className="form-group form-group_width47">
-            <label htmlFor={"value2" + id}>Value 2</label>
-            <input type="text" id={"value2" + id} required name="value2"
-              value={values[1]}
-              onChange={e => this.changeHandler('values', [values[0], e.target.value])}
-              className="form-control" />
+            <label>Value 2
+              <input type="text" required name="value2"
+                value={values[1]}
+                onChange={e => this.changeHandler('values', [values[0], e.target.value])}
+                className="form-control" />
+            </label>
           </div>
         </div>}
 
       {conditionType === "where_in" && <>
         <div className="form-group">
-          <label htmlFor={"values" + id}>Values</label>
-          <textarea id={"values" + id} required name="values"
-            value={values.join(", ")}
-            onChange={e => this.changeHandler('values', e.target.value.split(",").trim())}
-            className="form-control" />
+          <label>Values
+            <textarea required name="values"
+              value={values.join(", ")}
+              onChange={e => this.changeHandler('values', e.target.value.split(",").trim())}
+              className="form-control" />
+          </label>
         </div>
         <p>Comma Separated</p>
       </>}
 
       {conditionType === "where_date" &&
         <div className={`form-group ${["day", "month"].includes(type) ? "hide-blocks" : ""}`}>
-          <label>Value</label>
-          <DatePicker selected={date}
-            showTimeSelect={["datetime", "time"].includes(type)}
-            showYearPicker={type === "year"}
-            showTimeSelectOnly={type === "time"}
-            showMonthYearPicker={type === "month"}
-            dateFormat={getDateFormat(type)}
-            className="form-control"
-            onChange={date => this.changeHandler({ target: { name: 'date', value: date } })}
-          />
+          <label>Value
+            <DatePicker selected={date}
+              showTimeSelect={["datetime", "time"].includes(type)}
+              showYearPicker={type === "year"}
+              showTimeSelectOnly={type === "time"}
+              showMonthYearPicker={type === "month"}
+              dateFormat={getDateFormat(type)}
+              className="form-control"
+              onChange={date => this.changeHandler({ target: { name: 'date', value: date } })}
+            />
+          </label>
         </div>}
 
       {conditionType === "where_column" && <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
-          <label htmlFor={"first_column" + id}>First Field</label>
-          <select id={"first_column" + id} required name="first_column"
-            value={first_column}
-            onChange={e => this.changeHandler('first_column', e.target.value)}
-            className="form-control"
-          >
-            <option disabled value="" />
-            {columnsOptions.map(({ value, label }) =>
-              <option key={value} value={value}>
-                {label}
-              </option>)}
-          </select>
+          <label>First Field
+            <select required name="first_column"
+              value={first_column}
+              onChange={e => this.changeHandler('first_column', e.target.value)}
+              className="form-control"
+            >
+              <option disabled value="" />
+              {columnsOptions.map(({ value, label }) =>
+                <option key={value} value={value}>
+                  {label}
+                </option>)}
+            </select>
+          </label>
         </div>
 
         <div className="form-group form-group_width47">
-          <label htmlFor={"second_column" + id}>Second Field</label>
-          <select id={"second_column" + id} required name="second_column"
-            value={second_column}
-            onChange={e => this.changeHandler('second_column', e.target.value)}
-            className="form-control"
-          >
-            <option disabled value="" />
-            {columnsOptions.map(({ value, label }) =>
-              <option key={value} value={value}>
-                {label}
-              </option>)}
-          </select>
+          <label>Second Field
+            <select required name="second_column"
+              value={second_column}
+              onChange={e => this.changeHandler('second_column', e.target.value)}
+              className="form-control"
+            >
+              <option disabled value="" />
+              {columnsOptions.map(({ value, label }) =>
+                <option key={value} value={value}>
+                  {label}
+                </option>)}
+            </select>
+          </label>
         </div>
       </div>}
-    </>
+    </div>
   }
 }
 
