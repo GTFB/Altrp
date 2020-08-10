@@ -476,6 +476,16 @@ class SQLBuilderForm extends Component {
           value.conditions[conditionType][0].data.splice(index, 1, _condition);
       }
     }
+    
+    if (condition.conditionType === 'where_column' && or !== condition.or) {
+      debugger;
+      value.conditions[condition.conditionType] = value.conditions[condition.conditionType] || [];
+      or ?
+        value.conditions[condition.conditionType][1].data.push(_condition) :
+        value.conditions[condition.conditionType][0].data.push(_condition);
+
+      value.conditions[conditionType].splice(index, 1)
+    }
     this.setState(state => ({ ...state, value }));
   };
 
