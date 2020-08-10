@@ -47,7 +47,8 @@ class MigrationFieldInteger extends MigrationField implements IMigrationField {
      * @return boolean
      */
     protected function checkDefault() {
-        if ( filter_var($this->column->default, FILTER_VALIDATE_INT)) return true;
+      $this->column->default = (int) $this->column->default;
+      if ( filter_var( (int) $this->column->default, FILTER_VALIDATE_INT ) ) return true;
         return false;
     }
 }

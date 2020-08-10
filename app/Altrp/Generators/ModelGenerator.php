@@ -320,13 +320,23 @@ class ModelGenerator extends AppGenerator
         if (! $this->relationships) return null;
         $relArr = [];
         foreach ($this->relationships as $rel) {
+
             $relItem = $rel->name . '#' . $rel->type . '#'
                 . trim($this->screenBacklashes($rel->model_class), '\\');
-            if (isset($rel->foreign_key)) {
+            if( $rel->type === 'hasOne' ){
+              if (isset($rel->foreign_key)) {
                 $relItem .= "|{$rel->foreign_key}";
                 if (isset($rel->local_key)) {
-                    $relItem .= "|{$rel->local_key}";
+                  $relItem .= "|{$rel->local_key}";
                 }
+              }
+            } elseif ( in_array( $rel->type, ['hasMany', 'belongsTo'] ) ){
+              if (isset($rel->local_key)) {
+                $relItem .= "|{$rel->local_key}";
+                if (isset($rel->foreign_key)) {
+                  $relItem .= "|{$rel->foreign_key}";
+                }
+              }
             }
             $relArr[] = $relItem;
         }
@@ -477,7 +487,7 @@ class ModelGenerator extends AppGenerator
 
     protected function getRelations()
     {
-        $relations = Relationship::where([['model_id', $this->model->id], ['add_belongs_to', 1]])->get();
+        $relations = Relationship::where([['model_id', $this->model->id], ['add_belong_to', 1]])->get();
         return $relations;
     }
 

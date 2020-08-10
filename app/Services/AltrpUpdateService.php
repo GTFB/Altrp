@@ -218,7 +218,7 @@ class AltrpUpdateService
    */
   public function removeIndexMethods()
   {
-    $files = \File::allFiles( app_path( 'Http/Controllers/ALtrpControllers' ) );
+    $files = \File::allFiles( app_path( 'Http/Controllers/AltrpControllers' ) );
     if ( ! $files ) return true;
     foreach ( $files as $file ) {
       $oldContent = $file->getContents();

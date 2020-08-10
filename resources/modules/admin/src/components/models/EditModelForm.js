@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {Link, Redirect} from "react-router-dom";
 import { titleToName }from "../../js/helpers";
 import Resource from "../../../../editor/src/js/classes/Resource";
-import AltrpSelect from "../altrp/AltrpSelect";
+import AltrpSelect from "../altrp-select/AltrpSelect";
 
 class EditModelForm extends Component {
   constructor(props) {
@@ -58,6 +58,8 @@ class EditModelForm extends Component {
   submitHandler(e) {
     e.preventDefault();
     if(_.isFunction(this.props.onSubmit)){
+      delete this.state.value.created_at;
+      delete this.state.value.updated_at;
       this.props.onSubmit(this.state.value);
     } else {
       console.log(this.state.value);

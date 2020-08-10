@@ -15,8 +15,12 @@ const fieldTypeOptions = [
     label: 'integer'
   },
   {
-    value: 'bigint',
-    label: 'Bigint'
+    value: 'bigInteger',
+    label: 'Big Integer'
+  },
+  {
+    value: 'float',
+    label: 'Float'
   },
   {
     value: 'boolean',
@@ -39,11 +43,37 @@ const fieldTypeOptions = [
     label: 'Date'
   },
   {
+    value: 'time',
+    label: 'Time'
+  },
+  {
+    value: 'year',
+    label: 'Year'
+  },
+  {
     value: 'dateTime',
     label: 'Datetime'
   },
+  {
+    value: 'geometry',
+    label: 'Geometry'
+  },
+  {
+    value: 'json',
+    label: 'JSON'
+  },
+  {
+    value: 'binary',
+    label: 'Binary'
+  },
 ];
-const attributeOptions = ['BINARY', 'UNSIGNED', 'UNSIGNED ZEROFILL', 'on update'];
+const attributeOptions = [
+
+  {
+    value: 'unsigned',
+    label: 'UNSIGNED'
+  }
+  ];
 const inputTipeOptions = ['textarea', 'text', 'number', 'slider', 'WYSIWYG', 'color', 'select', 'checkbox', 'radio button'];
 
 
@@ -98,15 +128,31 @@ class AddFieldForm extends Component {
   //     });
   //   }
   // }
+  /**
+   * Изменение данны с валидацией
+   * @param {string} value
+   * @param {string} field
+   */
 
   changeValue(value, field) {
     this.setState(state => {
       state = { ...state };
       if(field === 'default'){
+
+        if(state.value.size && value.length > state.value.size){
+          value = value.substring(0, parseInt(state.value.size))
+        }
         switch (state.value.type) {
           case 'boolean':{
             if(value != 0 && value != 1){
               value = 1;
+            }
+          }
+          case 'integer':{
+            if(!Number.isNaN(parseInt(value))){
+              value = parseInt(value);
+            } else {
+              value = '0';
             }
           }
           break;
@@ -123,7 +169,7 @@ class AddFieldForm extends Component {
       ...state, value: {
         ...state.value,
         title: e.target.value,
-        name: titleToName(e.target.value)
+        name: this.props.match.params.id ? state.value.name : titleToName(e.target.value)
       }
     }))
   }
@@ -132,7 +178,7 @@ class AddFieldForm extends Component {
     e.preventDefault();
     const { history, match } = this.props;
     const { name, title, description, is_label, is_title, type, size, default: default_, attribute, input_type,
-      options, nullable, indexed, editable, calculation, calculation_logic } = this.state.value;
+      options, null: _null, indexed, editable, calculation, calculation_logic } = this.state.value;
 
     let data = {};
     
@@ -141,12 +187,16 @@ class AddFieldForm extends Component {
         data = { title, description, type, calculation } :
         data = { title, description, type, calculation_logic };
     } else {
-      data = { name, title, description, is_label, is_title, type, size, default: default_, attribute, input_type, nullable, indexed, editable };
+      data = { name, title, description, is_label, is_title, type, size, default: default_, attribute, input_type, null: _null, indexed, editable };
       if (['select', 'checkbox', 'radio button'].includes(input_type)) {
         data = { ...data, options };
       }
+      console.log(default_);
+      if(['integer', 'bigInteger'].includes(type)){
+        data.default = Number(default_);
+      }
     }
-    console.log(data);
+
     if (_.isFunction(this.props.onSubmit)) {
       this.props.onSubmit(data);
     }
@@ -185,10 +235,11 @@ class AddFieldForm extends Component {
   }
 
   render() {
+    const { modelId } = this.props.match.params;
     return <form className="admin-form field-form" onSubmit={this.submitHandler}>
       <div className="form-group ">
         <label htmlFor="field-title">Field Title</label>
-        <input type="text" id="field-title" required readOnly={this.props.match.params.id}
+        <input type="text" id="field-title" required
           value={this.state.value.title || ''}
           onChange={this.titleChangeHandler}
           className="form-control" />
@@ -310,8 +361,8 @@ class AddFieldForm extends Component {
             >
               <option value="" />
               {attributeOptions.map(item =>
-                <option key={item} value={item}>
-                  {item}
+                <option key={item.value} value={item.value}>
+                  {item.label}
                 </option>)}
             </select>
           </div>
@@ -334,7 +385,7 @@ class AddFieldForm extends Component {
           {['select', 'checkbox', 'radio button'].includes(this.state.value.input_type) && <>
             <div className="form-group">
               <label htmlFor="field-options">Options</label>
-              <textarea id="field-options" required
+              <textarea id="field-options"
                 value={this.state.value.options || ''}
                 onChange={e => { this.changeValue(e.target.value, 'options') }}
                 className="form-control"
@@ -372,7 +423,7 @@ class AddFieldForm extends Component {
       }
       <div className="btn__wrapper btn_add">
         <button className="btn btn_success" type="submit">Add</button>
-        <Link className="btn" to="/admin/tables/models">Cancel</Link>
+        <Link className="btn" to={`/admin/tables/models/edit/${modelId}`}>Cancel</Link>
         {/* TODO: отображать кнопку если в форме редактируются данные
           повесить обработчик удаления
         <button className="btn btn_failure">Delete</button> */}

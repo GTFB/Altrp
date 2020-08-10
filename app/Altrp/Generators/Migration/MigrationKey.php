@@ -3,6 +3,7 @@
 namespace App\Altrp\Generators\Migration;
 
 use App\Altrp\Model;
+use App\Altrp\Table;
 use App\Exceptions\AltrpMigrationIncorrectFieldTypeException;
 use App\Altrp\Generators\Migration\MigrationFieldInterface;
 
@@ -122,14 +123,27 @@ class MigrationKey{
         $target_table = Model::where('name', $model_name)->first()->altrp_table->name;
 
         $text = '';
-        if (!isset($this->old_key->foreign_key)) {
+        if( $this->key->type === 'hasOne' ){
+          if (!isset($this->old_key->foreign_key)) {
             $text .= "\$table->bigInteger('".$source_column."')->nullable()->unsigned();\n\t\t\t";
-        } elseif(isset($this->old_key->foreign_key)
+          } elseif(isset($this->old_key->foreign_key)
             && $this->old_key->foreign_key == $source_column) {
             $text .= "\$table->dropForeign(['".$this->old_key->foreign_key."']);\n\t\t\t";
+          }
+          $text .= "\$table->foreign('".$source_column."')->references('".$target_column."')->on('".$target_table."')".$modifiers;
+          return $text;
+        } elseif ( in_array( $this->key->type, ['belongsTo', 'hasMany'] ) ){
+          $target_table = Table::join('altrp_models', 'altrp_models.table_id', '=', 'tables.id')
+            ->where( 'altrp_models.id', $this->key->model_id )->get( 'tables.name' )->first()->name;
+
+          if(isset($this->old_key->foreign_key)
+            && $this->old_key->foreign_key == $source_column) {
+            $text .= "\$table->dropForeign(['".$this->old_key->foreign_key."']);\n\t\t\t";
+          }
+          $text .= "\$table->foreign('".$target_column."')->references('".$source_column."')->on('".$target_table."')".$modifiers;
+          return $text;
         }
-        $text .= "\$table->foreign('".$source_column."')->references('".$target_column."')->on('".$target_table."')".$modifiers;
-        return $text;
+
     }
 
     /**

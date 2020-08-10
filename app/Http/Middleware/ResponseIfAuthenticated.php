@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Page;
 use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Support\Facades\Auth;
@@ -20,10 +21,14 @@ class ResponseIfAuthenticated
   {
 
     if ( Auth::guard( $guard )->check() ) {
-      return response()->json( [
-        'success' => false,
-        'message' => 'Are Already Logged',
-      ] );
+      if( Page::where( 'path', '/login' )->first() ){
+        return response()->json( [
+          'success' => false,
+          'message' => 'Are Already Logged',
+        ] );
+      } else {
+        return redirect( '/' );
+      }
     }
 
     return $next( $request );

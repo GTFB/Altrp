@@ -21,20 +21,56 @@ class Select2Controller extends Component {
       options: this.props.options || [],
       show: true
     };
-    if (this.props.options_resource) {
-      this.resource = new Resource({ route: this.props.options_resource });
-    }
+    // if (this.props.options_resource) {
+    //   this.resource = new Resource({ route: this.props.options_resource });
+    // }
   };
 
   getDefaultValue() {
     return '';
   }
 
+  /**
+   * Загрузим опцию, если есть значение
+   * @return {Promise<string>}
+   */
+  async _componentDidMount(){
+    if(this.state.value && this.getRoute()){
+      let resource = new Resource({route: this.getRoute()});
+      let options = await resource.search(this.state.value);
+      this.setState(state => ({
+        ...state,
+        options
+      }));
+    }
+  }
+  /**
+   * Получить роут для запросов опций
+   * если this.props.options_resource содержит строку с шаблоном,
+   * то нужно вставить необходимое значение свзятое из текущего элемента
+   */
+  getRoute(){
+    let route = this.props.options_resource;
+    if((! route) || (! route.match(/{{([^}]*)}}/))){
+      return route;
+    }
+    let settingName = route.match(/{{([^}]*)}}/)[1];
+    let match = route.match(/{{([^}]*)}}/)[0];
+    let value = this.props.currentElement.getSettings(settingName);
+    return route.replace(match, value)
+  }
+  /**
+   * Обновляет опции при помощи ajax
+   * @param searchString
+   * @param callback
+   * @return {Promise<*>}
+   */
   async loadOptions(searchString, callback) {
     if (!searchString) {
       return callback([]);
     }
-    let options = await this.resource.search(searchString);
+    let resource = new Resource({route: this.getRoute()});
+    let options = await resource.search(searchString);
     this.setState(state => ({
       ...state,
       options
@@ -51,7 +87,6 @@ class Select2Controller extends Component {
   };
 
   render() {
-
     if (this.state.show === false) {
       return '';
     }
@@ -76,7 +111,8 @@ class Select2Controller extends Component {
         borderWidth: "0px 1px 1px 1px",
         borderStyle: "solid",
         borderColor: "#E5E6EA",
-        position: 'absolute'
+        position: 'absolute',
+        zIndex: '1000'
       }),
 
       menuList: () => ({
@@ -148,7 +184,8 @@ function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
     currentState: state.currentState,
-    currentScreen: state.currentScreen
+    currentScreen: state.currentScreen,
+    controllerValue: state.controllerValue,
   };
 }
 export default connect(mapStateToProps)(Select2Controller);

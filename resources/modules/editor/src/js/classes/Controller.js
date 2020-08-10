@@ -96,9 +96,21 @@ class Controller {
     let show = true;
     conditionPairs.forEach(condition => {
       let [controlId, value] = condition;
-      if (getCurrentElement().getSettings(controlId) !== value) {
-        show = false;
+      let negative = (controlId.indexOf('!') >= 0);
+      controlId = controlId.replace('!', '');
+      if(_.isString(value)){
+        if (getCurrentElement().getSettings(controlId) !== value) {
+          show = negative;
+        }
       }
+      if(_.isArray(value)){
+        if (value.indexOf(getCurrentElement().getSettings(controlId)) >= 0) {
+          show = !negative;
+        }
+      }
+      console.log(controlId);
+      console.log(getCurrentElement().getSettings(controlId));
+
     });
     return show;
   }

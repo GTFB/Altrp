@@ -49,4 +49,23 @@ class UpdateController extends Controller
     Artisan::call( 'up' );
     return response()->json( ['result' => $result] );
   }
+
+  /**
+   * Запрос на обновление всех пользовательских контроллеров
+   * @param AltrpUpdateService $updateService
+   * @return \Illuminate\Http\JsonResponse
+   * @throws \App\Exceptions\CommandFailedException
+   */
+  public function updateAllControllers( AltrpUpdateService $updateService ){
+    return response()->json( ['success' => $updateService->updateAllControllers()], 200, [], JSON_UNESCAPED_UNICODE );
+  }
+
+  /**
+   * Запрос на обновление всех пользовательских ресурсов через обновление данных Models в БД
+   * @param AltrpUpdateService $updateService
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function upgradeAllResources( AltrpUpdateService $updateService ){
+    return response()->json( ['success' => $updateService->upgradeAllResources()], 200, [], JSON_UNESCAPED_UNICODE );
+  }
 }

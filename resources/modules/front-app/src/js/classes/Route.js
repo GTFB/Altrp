@@ -9,6 +9,10 @@ class Route {
     this.path = data.path;
     this.model = data.model;
     this.models = data.models;
+    if(! this.models){
+      this.models = data.model ? [data.model] : [];
+    }
+    this.model = data.model;
     this.title = data.title || '';
     this.allowed = data.allowed;
     this.redirect = data.redirect;

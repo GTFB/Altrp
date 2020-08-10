@@ -102,7 +102,12 @@ export default class Models extends Component {
   changePage(currentPage, pagination) {
     this.setState(state => ({ ...state, [pagination]: { ...state[pagination], currentPage} }));
   }
-
+  /**
+   * Обновить список моделей
+   */
+  updateModels(){
+    
+  }
   async componentDidMount() {
     // get: /admin/ajax/models .then(models => {
     //   this.setState({models});
@@ -141,6 +146,19 @@ export default class Models extends Component {
             {/* TODO: что делать с колoнкой с чекбоксами? */}
             <AdminTable
               columns={columnsModel}
+              quickActions={[{ tag: 'Link', props: {
+                  href: '/admin/tables/models/edit/:id',
+                },
+                title: 'Edit'
+              } , {
+                tag: 'button',
+                route: '/admin/ajax/models/:id',
+                method: 'delete',
+                confirm: 'Are You Sure?',
+                after: () => this.updateModels(this.state.currentPage, this.state.activeTemplateArea),
+                className: 'quick-action-menu__item_danger',
+                title: 'Trash'
+              }]}
               rows={models.map(model => ({ 
                 ...model, 
                 editUrl: '/admin/tables/models/edit/' + model.id
