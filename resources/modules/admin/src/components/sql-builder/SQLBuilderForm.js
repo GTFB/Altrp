@@ -14,77 +14,72 @@ class SQLBuilderForm extends Component {
     super(props);
     const { modelId } = this.props.match.params;
     this.state = {
-
-     /* value:
-      {
+      value: {
         title: "",
-        "name": "getAllRecords",
-        "columns": [
+        name: "getAllRecords",
+        columns: [
           "id",
           "name",
           "email"
         ],
-        "aggregates": [
+        aggregates: [
           {
-            "type": "sum",
-            "column": "price",
-            "alias": "sum_price"
+            type: "sum",
+            column: "price",
+            alias: "sum_price"
           },
           {
-            "type": "max",
-            "column": "price",
-            "alias": "max_price"
+            type: "max",
+            column: "price",
+            alias: "max_price"
           }
         ],
-        "conditions": [
+        conditions: [
           {
-            "conditionType": "where",
-            "column": "user_id",
-            "operator": "=",
-            "value": "CURRENT_USER"
+            conditionType: "where",
+            column: "user_id",
+            operator: "=",
+            value: "CURRENT_USER"
           }
         ],
-        "relations": [
+        relations: [
           "post",
           "comments"
         ],
-        "order_by": [
+        order_by: [
           {
-            "column": "name",
-            "type": "desc"
+            column: "name",
+            type: "desc"
           }
         ],
-        "access": {
-          "roles": [
+        access: {
+          roles: [
             1,
             2
           ],
-          "permissions": [
+          permissions: [
             48,
             50
           ]
         },
-        "group_by": [
+        group_by: [
           "name",
           "surname"
         ],
-        "offset": 10,
-        "limit": 5
-      },*/
-      value:{},
+        offset: 10,
+        limit: 5
+      },
       initialCondition: {
         conditionType: 'where',
         column: '',
         operator: 'not-null',
         value: ''
       },
-      "relationsOptions": [],
-      "rolesOptions":
-        [],
-      "permissionsOptions":
-        [],
-      "selfFields": [],
-      "selfFieldsOptions": []
+      relationsOptions: [],
+      rolesOptions: [],
+      permissionsOptions: [],
+      selfFields: [],
+      selfFieldsOptions: []
     };
     this.counter = 0;
     this.rolesOptions = new Resource({ route: '/admin/ajax/role_options' });
@@ -276,7 +271,7 @@ class SQLBuilderForm extends Component {
           case 'where_column':
             condition = { conditionType: value, or: false, first_column: '', operator: '', second_column: '' };
             break;
-         
+
           default:
             throw new Error('invalid condition type');
         }
@@ -306,7 +301,7 @@ class SQLBuilderForm extends Component {
               type: value,
               value: moment(new Date()).format(getMomentFormat(value))
             };
-          break;
+            break;
 
           default:
             console.log({ value })
