@@ -79,7 +79,7 @@ class ConditionComponent extends Component {
             <label>Operator
               <select required name="operator"
                 value={operator}
-              onChange={changeHandler}
+                onChange={changeHandler}
                 className="form-control"
               >
                 <option value="" disabled />
@@ -138,7 +138,7 @@ class ConditionComponent extends Component {
           <label>Value
             <input type="text" required name="value"
               value={value}
-            onChange={changeHandler}
+              onChange={changeHandler}
               className="form-control" />
           </label>
         </div>}
@@ -149,7 +149,7 @@ class ConditionComponent extends Component {
             <label>Value 1
               <input type="text" required name="value1"
                 value={values[0] || ''}
-              onChange={changeHandler}
+                onChange={changeHandler}
                 className="form-control" />
             </label>
           </div>
@@ -158,7 +158,7 @@ class ConditionComponent extends Component {
             <label>Value 2
               <input type="text" required name="value2"
                 value={values[1] || ''}
-              onChange={changeHandler}
+                onChange={changeHandler}
                 className="form-control" />
             </label>
           </div>
@@ -186,7 +186,7 @@ class ConditionComponent extends Component {
               showMonthYearPicker={type === "month"}
               dateFormat={getDateFormat(type)}
               className="form-control"
-            onChange={changeHandler}
+              onChange={changeHandler}
             />
           </label>
         </div>}
@@ -195,6 +195,7 @@ class ConditionComponent extends Component {
         <div className="form-group form-group_width47">
           <label>First Field
             <select required name="first_column"
+
               value={first_column}
               onChange={changeHandler}
               className="form-control"

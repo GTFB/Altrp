@@ -304,10 +304,33 @@ class SQLBuilderForm extends Component {
             throw new Error('invalid condition type');
         }
       } else {
-        condition = {
-          ...state.value.conditions[index],
-          [name]: ['or', 'not'].includes(name) ? checked : value
-        };
+        switch (name) {
+          case 'value1':
+            condition = {
+              ...state.value.conditions[index],
+              values: [value, state.value.conditions[index].values[1]]
+            };
+            break;
+          case 'value2':
+            condition = {
+              ...state.value.conditions[index],
+              values: [state.value.conditions[index].values[0], value]
+            };
+            break;
+          case 'values':
+            condition = {
+              ...state.value.conditions[index],
+              [name]: value.split(',').map(item => item.trim())
+            };
+            break;
+          default:
+            condition = {
+              ...state.value.conditions[index],
+              [name]: ['or', 'not'].includes(name) ? checked : value
+            };
+            break;
+        }
+
       }
       conditions[index] = condition;
       return {
