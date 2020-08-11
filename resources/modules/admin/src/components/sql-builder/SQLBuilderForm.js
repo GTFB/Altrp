@@ -178,7 +178,7 @@ class SQLBuilderForm extends Component {
    */
   changePermission = (permissions) => {
     let _permissions = [];
-    permissions.forEach(p => {
+    if (permissions) permissions.forEach(p => {
       _permissions.push(p.value)
     });
     this.setState(state => {
