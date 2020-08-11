@@ -16,7 +16,7 @@ const dateTypesOptions = [
 class ConditionComponent extends Component {
   render() {
     const { columnsOptions, changeHandler } = this.props;
-    const { conditionType, column, operator, value, or, not, values, type,
+    const { conditionType, column, operator, value, or, values, type,
       first_column, second_column } = this.props.item;
     return <div className="form-segment">
       <div className="form-group__inline-wrapper">
@@ -77,7 +77,7 @@ class ConditionComponent extends Component {
         {['where_between', 'where_in', 'where_column'].includes(conditionType) && <>
           <div className="form-group form-group_checkbox form-group_width15">
             <label className="label_checkbox">
-              <input type="checkbox" name="or"
+              <input type="radio" name="or"
                 className="form-check-input"
                 checked={or}
                 onChange={changeHandler}
@@ -85,15 +85,15 @@ class ConditionComponent extends Component {
             </label>
           </div>
 
-          {conditionType !== 'where_column' && <div className="form-group form-group_checkbox form-group_width15">
+          <div className="form-group form-group_checkbox form-group_width15">
             <label className="label_checkbox">
-              <input type="checkbox" name="not"
+              <input type="radio" name="not"
                 className="form-check-input"
-                checked={not}
+                checked={!or}
                 onChange={changeHandler}
               /> Not
             </label>
-          </div>}
+          </div>
         </>}
 
         {conditionType === "where_date" && <div className="form-group form-group_width30">
