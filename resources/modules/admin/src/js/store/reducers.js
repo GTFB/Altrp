@@ -3,6 +3,7 @@ import {modalSettingsReducer} from "./modal-settings/reducers";
 import {changeEnableState} from "./admin-state/reducers";
 import {adminLogoReducer} from "./admin-logo/reducers";
 import {assetsSettingsReducer} from "../../../../editor/src/js/store/assets-browser/reducers";
+import {aceEditorReducer} from "./ace-editor/reducers";
 
 
 export default combineReducers({
@@ -10,4 +11,5 @@ export default combineReducers({
   adminState: changeEnableState,
   adminLogo: adminLogoReducer,
   assetsManagerSettings: assetsSettingsReducer,
+  aceEditorReducer: aceEditorReducer,
 });

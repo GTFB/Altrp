@@ -6,7 +6,7 @@ class AggregateComponent extends Component {
   render() {
     const { type, column, alias } = this.props.item;
     const { columnsOptions, changeHandler } = this.props;
-    return <div className="from-segment form-group__inline-wrapper">
+    return <div className="form-segment form-group__inline-wrapper">
       <div className="form-group form-group_width30">
         <label>Alias
           <input type="text" required name="alias"

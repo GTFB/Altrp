@@ -137,7 +137,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::resource( 'media', 'Admin\MediaController' );
     Route::resource( 'settings', 'Admin\SettingsController' );
     Route::resource( 'diagrams', 'Admin\AltrpDiagramController' );
-    Route::resource( 'sql_editor', 'Admin\SQLEditorController' );
+    Route::resource( 'sql_editors', 'Admin\SQLEditorController' );
 
     /**
      * Updates Check
@@ -313,5 +313,4 @@ Route::group( ['prefix' => 'ajax'], function(){
    */
   Route::get( 'templates/{template_id}', 'TemplateController@show_frontend' )->name( 'templates.show.frontend' );
 } );
-
 
