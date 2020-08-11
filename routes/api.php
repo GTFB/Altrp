@@ -103,6 +103,7 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::post('/reports', 'ReportsController@store');
 
         Route::post( 'update-all-resources', 'Admin\UpdateController@upgradeAllResources' );
+        Route::resource( 'sql_editors', 'Admin\SQLEditorController' );
     });
 
 });
