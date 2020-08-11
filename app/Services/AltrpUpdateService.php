@@ -6,6 +6,8 @@ namespace App\Services;
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
 use App\Altrp\Model;
+use App\Altrp\Source;
+use App\Altrp\SourcePermission;
 use App\Exceptions\CommandFailedException;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -259,6 +261,23 @@ class AltrpUpdateService
   {
     $models = Model::all();
     if (! $models) return true;
+    \DB::statement("SET foreign_key_checks=0");
+    SourcePermission::where('type','like','get-%')
+        ->orWhere('type','like','options-%')
+        ->orWhere('type','like','show-%')
+        ->orWhere('type','like','add-%')
+        ->orWhere('type','like','update-%')
+        ->orWhere('type','like','delete-%')
+        ->delete();
+    Source::where('type','=','get')
+      ->orWhere('type','=','options')
+      ->orWhere('type','=','show')
+      ->orWhere('type','=','add')
+      ->orWhere('type','=','update')
+      ->orWhere('type','=','delete')
+      ->orWhere('type','=','update_column')
+      ->orWhere('type','=','get_column')
+      ->delete();
     foreach ($models as $model) {
       $model->update(['last_upgrade' => Carbon::now()]);
     }

@@ -394,7 +394,7 @@ class ModelGenerator extends AppGenerator
      *
      * @return bool
      */
-    protected function writePermissions()
+    public function writePermissions()
     {
         $permissions = $this->preparePermissions();
         try {

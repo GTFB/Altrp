@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
+use App\Altrp\Source;
 use App\Exceptions\CommandFailedException;
 use App\Exceptions\ControllerNotWrittenException;
 use App\Exceptions\ModelNotWrittenException;
@@ -33,6 +34,7 @@ class AltrpControllerObserver
         if (! $generator->createControllerFile()) {
             throw new CommandFailedException('Failed to create controller file', 500);
         }
+
     }
 
     /**
@@ -46,6 +48,7 @@ class AltrpControllerObserver
     public function created(Controller $controller)
     {
         $generator = new ControllerGenerator($controller);
+
         if ($generator->getSourceActions()->isEmpty()) {
             // Записать основные действия над ресурсом в базу
             if (! $generator->writeSourceActions()) {

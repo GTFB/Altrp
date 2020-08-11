@@ -9,12 +9,14 @@ use App\Altrp\Generators\ModelGenerator;
 use App\Altrp\Generators\TableMigrationGenerator;
 use App\Altrp\Migration;
 use App\Altrp\Model;
+use App\Altrp\Source;
 use App\Altrp\Table;
 use App\Exceptions\AltrpMigrationCreateFileExceptions;
 use App\Exceptions\CommandFailedException;
 use App\Exceptions\Controller\ControllerFileException;
 use App\Exceptions\ControllerNotWrittenException;
 use App\Exceptions\ModelNotWrittenException;
+use App\Exceptions\PermissionNotWrittenException;
 use App\Exceptions\RouteGenerateFailedException;
 use Carbon\Carbon;
 
@@ -44,12 +46,16 @@ class AltrpModelObserver
         if (! $result) {
             throw new CommandFailedException('Failed to create model file', 500);
         }
+        if (! $generator->writePermissions()) {
+            throw new PermissionNotWrittenException("Failed to write permissions", 500);
+        }
     }
 
     /**
      * Вызываем после создания модели
      * @param Model $model
      * @throws ControllerFileException
+     * @throws AltrpMigrationCreateFileExceptions
      */
     public function created(Model $model)
     {
@@ -89,13 +95,16 @@ class AltrpModelObserver
      * Вызываем перед обновлением модели
      * @param Model $model
      * @throws CommandFailedException
-     * @throws \App\Exceptions\TableNotFoundException
+     * @throws \Exception
      */
     public function updating(Model $model)
     {
         $generator = new ModelGenerator($model);
         if (! $generator->updateModelFile()) {
             throw new CommandFailedException('Failed to update model file', 500);
+        }
+        if (! $generator->writePermissions()) {
+            throw new PermissionNotWrittenException("Failed to write permissions", 500);
         }
     }
 
