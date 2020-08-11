@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import DatePicker from "react-datepicker";
+import moment from "moment";
+import { getDatePickerFormat, getMomentFormat } from "./helpers";
 
 const conditionTypeOptions = ['where', 'or_where', 'where_between', 'where_in', 'where_date', 'where_column'];
 const dateTypesOptions = [
@@ -10,36 +12,12 @@ const dateTypesOptions = [
   { value: 'month', label: 'Month' },
   { value: 'year', label: 'Year' }
 ];
-/** @function getDateFormat
-  * @param {string} type тип поля where_date
-  * @return {string} формат отображаемых данных
- */
-function getDateFormat(type) {
-  switch (type) {
-    case 'datetime':
-      return "yyyy/MM/dd h:mm:ss";
-    case 'date':
-      return "yyyy/MM/dd";
-    case 'time':
-      return "h:mm:ss";
-    case 'day':
-      return "dd";
-    case 'month':
-      return "MM";
-    case 'year':
-      return "yyyy";
-
-    default:
-      break;
-  }
-}
 
 class ConditionComponent extends Component {
   render() {
     const { columnsOptions, changeHandler } = this.props;
     const { conditionType, column, operator, value, or, not, values, type,
-      first_column, second_column, date } = this.props.item;
-
+      first_column, second_column } = this.props.item;
     return <div className="form-segment">
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width30">
@@ -179,14 +157,19 @@ class ConditionComponent extends Component {
       {conditionType === "where_date" &&
         <div className={`form-group ${["day", "month"].includes(type) ? "hide-blocks" : ""}`}>
           <label>Value
-            <DatePicker selected={date}
+            <DatePicker selected={moment(value, getMomentFormat(type))._d}
               showTimeSelect={["datetime", "time"].includes(type)}
               showYearPicker={type === "year"}
               showTimeSelectOnly={type === "time"}
               showMonthYearPicker={type === "month"}
-              dateFormat={getDateFormat(type)}
+              dateFormat={getDatePickerFormat(type)}
               className="form-control"
-              onChange={changeHandler}
+              onChange={value => changeHandler({
+                target: {
+                  value: moment(value).format(getMomentFormat(type)),
+                  name: "value"
+                }
+              })}
             />
           </label>
         </div>}
