@@ -307,7 +307,7 @@ class InstallationController extends Controller
 
       $this->migrate( $request );
 
-      return redirect( 'admin' );
+      return redirect( '/linkstorage' );
     }
     return view( 'installation' );
   }
@@ -391,7 +391,7 @@ class InstallationController extends Controller
   public function migrate( Request $request )
   {
     Artisan::call( 'config:clear');
-    sleep(2);
+    sleep(1);
     Artisan::call( 'migrate', [ '--force' => true ] );
 
     $user = new User( [
@@ -413,7 +413,7 @@ class InstallationController extends Controller
 
     // Clear all Cache
     Artisan::call('cache:clear');
-    sleep(2);
+    sleep(1);
     Artisan::call('view:clear');
     sleep(1);
   }

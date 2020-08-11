@@ -314,3 +314,6 @@ Route::group( ['prefix' => 'ajax'], function(){
 } );
 
 
+Route::get('/linkstorage', function () {
+  return redirect('/admin');
+});
