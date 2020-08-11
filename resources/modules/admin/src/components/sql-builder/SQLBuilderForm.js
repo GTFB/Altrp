@@ -329,7 +329,7 @@ class SQLBuilderForm extends Component {
               or: !checked
             };
             break;
-            
+
           default:
             condition = {
               ...state.value.conditions[index],
@@ -512,15 +512,16 @@ class SQLBuilderForm extends Component {
       <h2 className="admin-form__subheader centred">Aggregates</h2>
       {aggregates.map((item, index) => <Fragment key={index}>
         {index !== 0 && <hr />}
+        <div className="text-right">
+          <button className="btn btn_failure" type="button" onClick={() => this.aggregateDeleteHandler(index)}>
+            ✖
+          </button>
+        </div>
         <AggregateComponent item={item}
           columnsOptions={selfFieldsOptions}
           changeHandler={e => this.aggregateChangeHandler(e, index)}
-          deleteHandler={() => this.aggregateDeleteHandler(index)} />
-        <button className="btn btn_failure" type="button"
-          onClick={() => this.aggregateDeleteHandler(index)}
-        >
-          Delete
-        </button>
+          deleteHandler={() => this.aggregateDeleteHandler(index)}
+        />
       </Fragment>)}
       <div className="centred">
         <button className="btn btn_success" type="button" onClick={this.aggregateAddHandler}>
@@ -531,15 +532,18 @@ class SQLBuilderForm extends Component {
       <h2 className="admin-form__subheader centred">Conditions</h2>
 
       {conditions.map((condition, index) => <Fragment key={index}>
+        <div className="text-right">
+          <button className="btn btn_failure" type="button" onClick={() => this.conditionDeleteHandler(index)}>
+            ✖
+          </button>
+        </div>
         {index !== 0 && <hr />}
         <ConditionComponent
           item={condition}
           columnsOptions={selfFieldsOptions}
           changeHandler={e => this.conditionChangeHandler(e, index)}
         />
-        <button className="btn btn_failure" type="button" onClick={() => this.conditionDeleteHandler(index)}        >
-          Delete
-        </button>
+
       </Fragment>)}
       <div className="centred">
         <button className="btn btn_success" type="button" onClick={this.conditionAddHandler}>
@@ -551,16 +555,16 @@ class SQLBuilderForm extends Component {
 
       {order_by.map((item, index) => <Fragment key={index}>
         {index !== 0 && <hr />}
+        <div className="text-right">
+          <button className="btn btn_failure" type="button" onClick={() => this.orderByDeleteHandler(index)}>
+            ✖
+          </button>
+        </div>
         <OrderByComponent
           item={item}
           columnsOptions={selfFieldsOptions}
           changeHandler={e => this.orderByChangeHandler(e, index)}
         />
-        <button className="btn btn_failure" type="button"
-          onClick={() => this.orderByDeleteHandler(index)}
-        >
-          Delete
-        </button>
       </Fragment>)}
       <div className="centred">
         <button className="btn btn_success" type="button" onClick={this.orderByAddHandler}>
