@@ -302,10 +302,23 @@ class SQLBuilderForm extends Component {
               value: moment(new Date()).format(getMomentFormat(value))
             };
             break;
+          case 'operator':
+            condition = {
+              ...state.value.conditions[index],
+              [name]: value
+            };
+            if (['not-null', 'null'].includes(value)) {
+              condition.conditionType === 'where_column' ?
+                delete condition.second_column :
+                delete condition.value
+            } else {
+              condition.conditionType === 'where_column' ?
+                condition.second_column = condition.second_column || '' :
+                condition.value = condition.value || ''
+            }
+            break;
 
           default:
-            console.log({ value })
-            console.log({ name })
             condition = {
               ...state.value.conditions[index],
               [name]: ['or', 'not'].includes(name) ? checked : value

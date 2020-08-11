@@ -111,7 +111,7 @@ class ConditionComponent extends Component {
         </div>}
       </div>
 
-      {['where', 'or_where'].includes(conditionType) &&
+      {['where', 'or_where'].includes(conditionType) && !['not-null', 'null'].includes(operator) &&
         <div className="form-group">
           <label>Value
             <input type="text" required name="value"
@@ -192,7 +192,7 @@ class ConditionComponent extends Component {
           </label>
         </div>
 
-        <div className="form-group form-group_width47">
+        {!['not-null', 'null'].includes(operator) && <div className="form-group form-group_width47">
           <label>Second Field
             <select required name="second_column"
               value={second_column}
@@ -206,7 +206,7 @@ class ConditionComponent extends Component {
                 </option>)}
             </select>
           </label>
-        </div>
+        </div>}
       </div>}
     </div>
   }
