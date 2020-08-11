@@ -184,8 +184,8 @@ class AddFieldForm extends Component {
     
     if (type === "calculated") {
       this.state.isAlways ?
-        data = { title, description, type, calculation } :
-        data = { title, description, type, calculation_logic };
+        data = { title, description, type, calculation, name, } :
+        data = { title, description, type, calculation_logic, name, };
     } else {
       data = { name, title, description, is_label, is_title, type, size, default: default_, attribute, input_type, null: _null, indexed, editable };
       if (['select', 'checkbox', 'radio button'].includes(input_type)) {

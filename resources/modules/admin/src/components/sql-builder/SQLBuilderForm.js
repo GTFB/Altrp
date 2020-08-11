@@ -14,7 +14,8 @@ class SQLBuilderForm extends Component {
     super(props);
     const { modelId } = this.props.match.params;
     this.state = {
-      value:
+
+     /* value:
       {
         title: "",
         "name": "getAllRecords",
@@ -69,7 +70,8 @@ class SQLBuilderForm extends Component {
         ],
         "offset": 10,
         "limit": 5
-      },
+      },*/
+      value:{},
       initialCondition: {
         conditionType: 'where',
         column: '',

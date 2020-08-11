@@ -16,7 +16,7 @@ class CreateSQLEditrosTableUpdate extends Migration
         Schema::table('s_q_l_editors', function (Blueprint $table) {
           $table->bigInteger('model_id')->unsigned();
           $table->foreign('model_id')->references('id')->on('altrp_models')->onDelete( 'cascade' );
-
+          $table->text('description')->nullable();
         });
     }
 
@@ -30,6 +30,7 @@ class CreateSQLEditrosTableUpdate extends Migration
       Schema::table('s_q_l_editors', function (Blueprint $table) {
         $table->dropIndex(['model_id']);
         $table->dropColumn('model_id');
+        $table->dropColumn('description');
 
       });
     }
