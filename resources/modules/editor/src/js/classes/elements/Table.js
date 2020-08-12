@@ -172,6 +172,31 @@ class Table extends BaseElement {
       fields: repeater.getControls(),
     });
 
+    let additionalTableHeadRowsRepeater =  new Repeater();
+    let additionalTableHeadCellsRepeater = new Repeater();
+    additionalTableHeadCellsRepeater.addControl('title',{
+      label: 'Title',
+    });
+    additionalTableHeadCellsRepeater.addControl('colspan',{
+      label: 'Colspan',
+      type: CONTROLLER_NUMBER
+    });
+    additionalTableHeadCellsRepeater.addControl('rowspan',{
+      label: 'Rowpan',
+      type: CONTROLLER_NUMBER
+    });
+
+    additionalTableHeadRowsRepeater.addControl('additional_cells', {
+      label: 'Cells',
+      type: CONTROLLER_REPEATER,
+      fields: additionalTableHeadCellsRepeater.getControls(),
+    });
+
+    this.addControl('additional_rows', {
+      label: 'Additional Heading',
+      type: CONTROLLER_REPEATER,
+      fields: additionalTableHeadRowsRepeater.getControls(),
+    });
     this.endControlSection();
 
     this.startControlSection("table_style_table", {

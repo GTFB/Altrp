@@ -15,6 +15,7 @@ use App\Altrp\Relationship;
 use App\Altrp\Source;
 use App\Http\Controllers\Controller as HttpController;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\ApiRequest;
 
@@ -22,7 +23,7 @@ use App\Http\Requests\ApiRequest;
 class ModelsController extends HttpController
 {
     /**
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function models_list()
     {
@@ -52,24 +53,25 @@ class ModelsController extends HttpController
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function models_list_for_query()
     {
         return response()->json(Model::getModelsForEditor());
     }
 
-    /**
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function models_options()
+  /**
+   * @param Request $request
+   * @return JsonResponse
+   */
+    public function models_options( Request $request )
     {
-        return response()->json(Model::getModelsOptions());
+      return response()->json(Model::getModelsOptions( $request->get( 'with_names' ),  $request->get( 'not_plural' ) ));
     }
 
     /**
      * обработка запроса на получение списка моделей с полями для динаимического контента и т. д.
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function models_with_fields_options()
     {
@@ -196,7 +198,7 @@ class ModelsController extends HttpController
      * Получение списка сгенерированных моделей
      *
      * @param ApiRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function getModels(ApiRequest $request)
     {
@@ -208,7 +210,7 @@ class ModelsController extends HttpController
      * Получить модели для списка опций: id, name
      *
      * @param ApiRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function getModelOptions(ApiRequest $request)
     {
@@ -231,81 +233,57 @@ class ModelsController extends HttpController
      * Создание модели
      *
      * @param ApiRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws \App\Exceptions\CommandFailedException
      * @throws \App\Exceptions\ModelNotWrittenException
      * @throws \App\Exceptions\PermissionNotWrittenException
      * @throws \App\Exceptions\RelationshipNotInsertedException
      * @throws \App\Exceptions\TableNotFoundException
      */
-    function storeModel(ApiRequest $request)
-    {
-        if (! $request->table_id) {
-            $table = new Table();
-            $table->name = strtolower(\Str::plural($request->name));
-            $table->title = ucfirst(\Str::plural($request->name));
-            $table->user_id = auth()->user()->id;
-//            try {
-                $table->save();
-//            } catch (\Exception $e) {
-//                return response()->json(
-//                    [
-//                      'success'=> false,
-//                      'message' => $e->getMessage() ? $e->getMessage() : 'Table already exists!',
-//                    ],
-//                    500,
-//                    [],
-//                    JSON_UNESCAPED_UNICODE
-//                );
-//            }
-        } else {
-            $table = Table::find($request->table_id);
-            if(! $table) {
-                return response()->json('Table not found!', 404, [],JSON_UNESCAPED_UNICODE);
-            }
-        }
-
-        $model = new Model(array_merge($request->all(), ['table_id' => $table->id]));
-
-
-        $generator = new ModelGenerator(
-          $model
-        );
-
-        $result = $generator->generate();
-
-        if ($result) {
-            return response()->json('Successfully created!', 200, [], JSON_UNESCAPED_UNICODE);
-        }
-
-        return response()->json('Failed to store model!', 500, [], JSON_UNESCAPED_UNICODE);
+  function storeModel(ApiRequest $request)
+  {
+    $model = new Model($request->all());
+    $result = $model->save();
+    if ($result) {
+      return response()->json( [ 'success' => true ], 200, [], JSON_UNESCAPED_UNICODE );
     }
+    return response()->json([
+      'success' => false,
+      'message' => 'Failed to store model'
+    ], 500, [], JSON_UNESCAPED_UNICODE);
+  }
 
     /**
      * Обновить модель
      *
      * @param ApiRequest $request
      * @param $model_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function updateModel(ApiRequest $request, $model_id)
     {
         $model = Model::find($model_id);
         if (! $model) {
-            return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $result = $model->update($request->all());
         if ($result) {
-            return response()->json($model, 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json('Failed to update model', 500, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update model'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
      * Получить модель по ID
      *
      * @param $model_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function showModel($model_id)
     {
@@ -313,26 +291,35 @@ class ModelsController extends HttpController
         if ($model) {
             return response()->json($model, 200, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Model not found'
+        ], 404, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
      * Удалить модель
      *
      * @param $model_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function destroyModel($model_id)
     {
         $model = Model::find($model_id);
         if (! $model) {
-            return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $result = $model->delete();
         if ($result) {
-            return response()->json("Successfully deleted!", 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json('Failed to delete model', 500, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to delete model'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
     // Fields
@@ -340,13 +327,16 @@ class ModelsController extends HttpController
      * Получить поля медели
      *
      * @param $model_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function getModelFields($model_id)
     {
         $model = Model::find($model_id);
         if (! $model) {
-            return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $fields = $model->table->columns;
         return response()->json($fields, 200, [], JSON_UNESCAPED_UNICODE);
@@ -357,21 +347,30 @@ class ModelsController extends HttpController
      *
      * @param ApiRequest $request
      * @param $model_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function getModelFieldOptions(ApiRequest $request, $model_id)
     {
-      $model = Model::find( $model_id );
-      $options = $model->getFieldsOptions();
-//      echo '<pre style="padding-left: 200px;">';
-//      var_dump( $options );
-//      echo '</pre>';
 
-
-//        $options = [
-//            'options' => $options,
-//            'pageCount' => $result['pageCount']
-//        ];
+      $model = Model::find($model_id);
+      if (! $model) {
+          return response()->json([
+              'success' => false,
+              'message' => 'Model not found'
+          ], 404, [], JSON_UNESCAPED_UNICODE);
+      }
+      $result = $this->getModelFieldsAndPageCount($request);
+      $options = [];
+      foreach ($result['fields'] as $field) {
+          $options[] = [
+              'value' => $field->id,
+              'label' => $field->title,
+          ];
+      }
+      $options = [
+          'options' => $options,
+          'pageCount' => $result['pageCount']
+      ];
       return response()->json($options, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -380,27 +379,29 @@ class ModelsController extends HttpController
      *
      * @param ApiRequest $request
      * @param $model_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function storeModelField(ApiRequest $request, $model_id)
     {
         $model = Model::find($model_id);
-
         if (! $model) {
-            return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
         }
-
         $field = new Column($request->all());
-
         $field->user_id = auth()->user()->id;
         $field->table_id = $model->altrp_table->id;
         $field->model_id = $model->id;
-
         $result = $field->save();
         if ($result) {
-            return response()->json($field, 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json('Failed to create field', 500, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to create field'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -409,19 +410,25 @@ class ModelsController extends HttpController
      * @param ApiRequest $request
      * @param $model_id
      * @param $field_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function updateModelField(ApiRequest $request, $model_id, $field_id)
     {
         $field = Column::where([['model_id', $model_id], ['id', $field_id]])->first();
         if (! $field) {
-            return response()->json('Field not found', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Field not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $result = $field->update($request->all());
         if ($result) {
-            return response()->json($field, 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json('Failed to create model', 500, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to create model'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -429,19 +436,25 @@ class ModelsController extends HttpController
      *
      * @param $model_id
      * @param $field_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function showModelField($model_id, $field_id)
     {
         $model = Model::find($model_id);
         if (! $model) {
-            return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $field = Column::where([['id', $field_id]])->first();
         if ($field) {
             return response()->json($field, 200, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json('Field not found', 404, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Field not found'
+        ], 404, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -449,23 +462,32 @@ class ModelsController extends HttpController
      *
      * @param $model_id
      * @param $field_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function destroyModelField($model_id, $field_id)
     {
         $model = Model::find($model_id);
         if (! $model) {
-            return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $field = Column::where([['model_id', $model_id], ['id', $field_id]])->first();
         if (! $field) {
-            return response()->json('Field not found', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Field not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $result = $field->delete();
         if ($result) {
-            return response()->json('Field successfully deleted', 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json('Failed to delete field', 500, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to delete field'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
     // Relations
@@ -474,13 +496,16 @@ class ModelsController extends HttpController
      * Получить связи медели
      *
      * @param $model_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function getModelRelations($model_id)
     {
         $model = Model::find($model_id);
         if (! $model) {
-            return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $relations = $model->altrp_relationships;
         return response()->json($relations, 200, [], JSON_UNESCAPED_UNICODE);
@@ -491,13 +516,16 @@ class ModelsController extends HttpController
      *
      * @param ApiRequest $request
      * @param $model_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function getModelRelationOptions(ApiRequest $request, $model_id)
     {
         $model = Model::find($model_id);
         if (! $model) {
-            return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $result = $this->getModelRelationsAndPageCount($request);
         $options = [];
@@ -519,17 +547,25 @@ class ModelsController extends HttpController
      *
      * @param ApiRequest $request
      * @param $model_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function storeModelRelation(ApiRequest $request, $model_id)
+    public function storeModelRelation( ApiRequest $request, $model_id )
     {
-        $relation = new Relationship($request->all());
-        $relation->model_id = $model_id;
-        $result = $relation->save();
-        if ($result) {
-            return response()->json($relation, 200, [], JSON_UNESCAPED_UNICODE);
-        }
-        return response()->json('Failed to create relation', 500, [], JSON_UNESCAPED_UNICODE);
+
+
+      $relation = new Relationship($request->toArray());
+      $relation->model_id = $model_id;
+      $model = Model::find( $request->get( 'target_model_id' ) );
+      $model_class = '\App\AltrpModels\\' . $model->name ;
+      $relation->model_class = $model_class;
+      $result = $relation->save();
+      if ($result) {
+        return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+      }
+      return response()->json([
+          'success' => false,
+          'message' => 'Failed to create relation'
+      ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -538,19 +574,25 @@ class ModelsController extends HttpController
      * @param ApiRequest $request
      * @param $model_id
      * @param $field_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function updateModelRelation(ApiRequest $request, $model_id, $field_id)
     {
         $relation = Relationship::where([['model_id', $model_id], ['id', $field_id]])->first();
         if (! $relation) {
-            return response()->json('Relation not found', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Relation not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $result = $relation->update($request->all());
         if ($result) {
-            return response()->json($relation, 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json('Failed to update relation', 500, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update relation'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -558,7 +600,7 @@ class ModelsController extends HttpController
      *
      * @param $model_id
      * @param $field_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function showModelRelation($model_id, $field_id)
     {
@@ -566,7 +608,10 @@ class ModelsController extends HttpController
         if ($relation) {
             return response()->json($relation, 200, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json('Relation not found', 404, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Relation not found'
+        ], 404, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -574,19 +619,25 @@ class ModelsController extends HttpController
      *
      * @param $model_id
      * @param $field_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function destroyModelRelation($model_id, $field_id)
     {
         $relation = Relationship::where([['model_id', $model_id], ['id', $field_id]])->first();
         if (! $relation) {
-            return response()->json('Relation not found', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Relation not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $result = $relation->delete();
         if ($result) {
-            return response()->json($relation, 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json('Failed to delete relation', 500, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to delete relation'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
     // Data Sources
@@ -595,7 +646,7 @@ class ModelsController extends HttpController
      * Получить источники данных
      *
      * @param ApiRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function getDataSources(ApiRequest $request)
     {
@@ -607,7 +658,7 @@ class ModelsController extends HttpController
      * Получить источники данных для списка опций
      *
      * @param ApiRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function getDataSourceOptions(ApiRequest $request)
     {
@@ -630,16 +681,19 @@ class ModelsController extends HttpController
      * Добавить новый источник данных
      *
      * @param ApiRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function storeDataSource(ApiRequest $request)
     {
         $dataSource = new Source($request->all());
         $result = $dataSource->save();
         if ($result) {
-            return response()->json($dataSource, 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json('Failed to create data source', 500, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to create data source'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -648,19 +702,25 @@ class ModelsController extends HttpController
      * @param ApiRequest $request
      * @param $model_id
      * @param $field_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function updateDataSource(ApiRequest $request, $model_id)
     {
         $dataSource = Source::where([['model_id', $model_id]])->first();
         if (! $dataSource) {
-            return response()->json('Data source not found', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Data source not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $result = $dataSource->update($request->all());
         if ($result) {
-            return response()->json($dataSource, 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json('Failed to update data source', 500, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update data source'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -668,7 +728,7 @@ class ModelsController extends HttpController
      *
      * @param $model_id
      * @param $field_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function showDataSource($model_id)
     {
@@ -676,7 +736,10 @@ class ModelsController extends HttpController
         if ($dataSource) {
             return response()->json($dataSource, 200, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json('Data source not found', 404, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Data source not found'
+        ], 404, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -684,19 +747,25 @@ class ModelsController extends HttpController
      *
      * @param $model_id
      * @param $field_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function destroyDataSource($model_id)
     {
         $dataSource = Source::where([['model_id', $model_id]])->first();
         if (! $dataSource) {
-            return response()->json('Data source not found', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Data source not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $result = $dataSource->delete();
         if ($result) {
-            return response()->json($dataSource, 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json('Failed to delete data source', 500, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to delete data source'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -704,7 +773,7 @@ class ModelsController extends HttpController
      *
      * @param ApiRequest $request
      * @param $model_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws \App\Exceptions\CommandFailedException
      * @throws \App\Exceptions\ControllerNotWrittenException
      * @throws \App\Exceptions\RouteGenerateFailedException
@@ -714,14 +783,21 @@ class ModelsController extends HttpController
     {
         $model = Model::find($model_id);
         if (! $model)
-            return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+
         $controller = new Controller($request->all());
         $controller->model_id = $model_id;
         $result = $controller->save();
         if ($result) {
-            return response()->json('Successfully created!', 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json('Failed to create controller!', 500, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to create controller'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -730,21 +806,32 @@ class ModelsController extends HttpController
      * @param ApiRequest $request
      * @param $model_id
      * @param $controller_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function updateController(ApiRequest $request, $model_id, $controller_id)
     {
         $model = Model::find($model_id);
         if (! $model)
-            return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+
         $controller = Controller::find($controller_id);
         if (! $controller)
-            return response()->json('Controller not found', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Controller not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+
         $result = $controller->update($request->all());
         if ($result) {
-            return response()->json('Successfully updated!', 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json('Failed to update controller!', 500, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update controller'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -752,21 +839,32 @@ class ModelsController extends HttpController
      *
      * @param $model_id
      * @param $controller_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function destroyController($model_id, $controller_id)
     {
         $model = Model::find($model_id);
         if (! $model)
-            return response()->json('Model not found', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+
         $controller = Controller::find($controller_id);
         if (! $controller)
-            return response()->json('Controller not found', 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'success' => false,
+                'message' => 'Controller not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+
         $result = $controller->delete();
         if ($result) {
-            return response()->json('Successfully deleted!', 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json('Failed to delete controller!', 500, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to delete controller'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -799,7 +897,7 @@ class ModelsController extends HttpController
      *
      * @param ApiRequest $request
      * @param $model_id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws \App\Exceptions\Controller\ControllerFileException
      * @throws \App\Exceptions\Repository\RepositoryFileException
      */
@@ -858,28 +956,32 @@ class ModelsController extends HttpController
      * @param $query_id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroyQuery($model_id, $query_id)
-    {
-        $model = Model::find($model_id);
-        if (! $model)
-            return response()->json([
-                'success' => false,
-                'message' => 'Model not found'
-            ], 404, [], JSON_UNESCAPED_UNICODE);
-        $query = Query::find($query_id);
-        if (! $query)
-            return response()->json([
-                'success' => false,
-                'message' => 'Query not found'
-            ], 404, [], JSON_UNESCAPED_UNICODE);
-        $result = $query->delete();
-        if ($result) {
-            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
-        }
-        return response()->json([
-            'success' => false,
-            'message' => 'Failed to delete query'
-        ], 500, [], JSON_UNESCAPED_UNICODE);
+  public function destroyQuery($model_id, $query_id)
+  {
+    $model = Model::find($model_id);
+    if (! $model){
+      return response()->json([
+        'success' => false,
+        'message' => 'Model not found'
+      ], 404, [], JSON_UNESCAPED_UNICODE);
     }
+
+    $query = Query::find($query_id);
+    if (! $query){
+      return response()->json([
+        'success' => false,
+        'message' => 'Query not found'
+      ], 404, [], JSON_UNESCAPED_UNICODE);
+    }
+    $result = $query->delete();
+
+    if ($result) {
+        return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+    return response()->json([
+        'success' => false,
+        'message' => 'Failed to delete query'
+    ], 500, [], JSON_UNESCAPED_UNICODE);
+  }
 
 }

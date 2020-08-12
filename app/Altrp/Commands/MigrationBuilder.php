@@ -181,6 +181,12 @@ class MigrationBuilder {
             $nullable = "->nullable()";
             $default = "";
         }
+
+        $unsigned = "";
+        if( ( $column->attribute === 'unsigned') && !$this->checkColumnAttribute($column, $old_column, "attribute")) {
+            $nullable = "->unsigned()";
+            $default = "";
+        }
         
         if($column->type == 'id' && $old_column === false) {
             $field = "\$table->bigIncrements('id')";
@@ -194,7 +200,7 @@ class MigrationBuilder {
             return $field;
         }
         
-        $field = "\$table->".$column->type."('".$column->name."'".$post_data.")".$default.$unique.$nullable;
+        $field = "\$table->".$column->type."('".$column->name."'".$post_data.")".$default.$unique.$nullable.$unsigned;
         
         
         if($this->checkColumnAttributes($column, $old_column)) {

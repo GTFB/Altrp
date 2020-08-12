@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Altrp\Column;
+use App\Altrp\Generators\ModelGenerator;
 use App\Altrp\Model;
 use App\Altrp\Migration;
 use App\Altrp\Generators\ColumnMigrationGenerator;
@@ -13,14 +14,16 @@ use App\Exceptions\AltrpMigrationRunExceptions;
 
 class AltrpColumnObserver
 {
-  /**
-   * Вызываем после создания колонки
-   * @param Column $column
-   * @throws AltrpMigrationCreateFileExceptions
-   */
+    /**
+     * Вызываем после создания колонки
+     * @param Column $column
+     * @return bool|void
+     * @throws AltrpMigrationCreateFileExceptions
+     */
     public function creating(Column $column)
     {
-        $model = Model::find($column->model_id);
+        $oldColumn = Column::where([['name', $column->name], ['table_id', $column->table_id]])->first();
+        if ($oldColumn) return false;
 
         $generator = new ColumnMigrationGenerator($column);
         $file = $generator->createColumnGenerate();
@@ -43,17 +46,27 @@ class AltrpColumnObserver
         $migration->save();
 
         $column->altrp_migration_id = $migration->id;
+    }
 
+    public function created(Column $column)
+    {
+        $model = Model::find($column->model_id);
+        $generator = new ModelGenerator($model);
+        $generator->updateModelFile();
     }
 
     /**
      * Вызываем после обновления колонки
      * @param Column $column
+     * @return bool|void
+     * @throws AltrpMigrationCreateFileExceptions
      */
     public function updating(Column $column)
     {
-        $model = Model::find($column->model_id);
         $old_column = Column::find($column->id);
+        $columns = Column::where([['table_id', $column->table_id]])->get();
+
+        if ($column->isDirty('name') && $columns->contains('name', $column->name)) return false;
 
         $generator = new ColumnMigrationGenerator($column);
         $file = $generator->updateColumnGenerate($old_column);
@@ -73,17 +86,22 @@ class AltrpColumnObserver
         $migration->save();
 
         $column->altrp_migration_id = $migration->id;
+    }
 
+    public function updated(Column $column)
+    {
+        $model = Model::find($column->model_id);
+        $generator  = new ModelGenerator($model);
+        $generator->updateModelFile();
     }
 
     /**
      * Вызываем после удаления колонки
      * @param Column $column
+     * @throws AltrpMigrationCreateFileExceptions
      */
     public function deleting(Column $column)
     {
-        $model = Model::find($column->model_id);
-
         $generator = new ColumnMigrationGenerator($column);
         $file = $generator->deleteColumnGenerate();
         $name = $generator->getMigrationName();
@@ -102,5 +120,12 @@ class AltrpColumnObserver
 
         $column->altrp_migration_id = $migration->id;
 
+    }
+
+    public function deleted(Column $column)
+    {
+        $model = Model::find($column->model_id);
+        $generator  = new ModelGenerator($model);
+        $generator->updateModelFile();
     }
 }

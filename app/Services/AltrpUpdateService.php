@@ -6,6 +6,8 @@ namespace App\Services;
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
 use App\Altrp\Model;
+use App\Altrp\Source;
+use App\Altrp\SourcePermission;
 use App\Exceptions\CommandFailedException;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -218,7 +220,7 @@ class AltrpUpdateService
    */
   public function removeIndexMethods()
   {
-    $files = \File::allFiles( app_path( 'Http/Controllers/ALtrpControllers' ) );
+    $files = \File::allFiles( app_path( 'Http/Controllers/AltrpControllers' ) );
     if ( ! $files ) return true;
     foreach ( $files as $file ) {
       $oldContent = $file->getContents();

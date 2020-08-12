@@ -13,6 +13,7 @@ use App\Exceptions\CommandFailedException;
 use App\Exceptions\ControllerNotWrittenException;
 use App\Exceptions\ModelNotWrittenException;
 use App\Exceptions\RouteGenerateFailedException;
+use App\Permission;
 use Artisan;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
@@ -104,49 +105,49 @@ class ControllerGenerator extends AppGenerator
             $this->controllerFile = app_path($this->controllerFilename);
 
             // Обновить контроллер в базе
-            if (! $this->writeControllerToDb()) {
+            if (!$this->writeControllerToDb()) {
                 throw new ControllerNotWrittenException('Failed to write controller to the database', 500);
             }
-            if (! $this->generateRequests()) {
+            if (!$this->generateRequests()) {
                 throw new ControllerNotWrittenException('Failed to generate requests', 500);
             }
             // Обновить файл контроллера
-            if (! $this->updateControllerFile()) {
+            if (!$this->updateControllerFile()) {
                 throw new CommandFailedException('Failed to update controller file', 500);
             }
         } else {
             // Записать конроллер в базу
-            if (! $this->writeControllerToDb()) {
+            if (!$this->writeControllerToDb()) {
                 throw new ControllerNotWrittenException('Failed to write controller to the database', 500);
             }
-            if (! $this->generateRequests()) {
+            if (!$this->generateRequests()) {
                 throw new ControllerNotWrittenException('Failed to generate requests', 500);
             }
             // Создать новый файл контроллера
-            if (! $this->createControllerFile()) {
+            if (!$this->createControllerFile()) {
                 throw new CommandFailedException('Failed to create controller file', 500);
             }
         }
 
         if ($this->getSourceActions()->isEmpty()) {
             // Записать основные действия над ресурсом в базу
-            if (! $this->writeSourceActions()) {
+            if (!$this->writeSourceActions()) {
                 throw new ModelNotWrittenException('Failed to write source action to the database', 500);
             }
         }
 
         // Записать роли для действий над ресурсами в базу
-        if (! $this->writeSourceRoles()) {
+        if (!$this->writeSourceRoles()) {
             throw new ModelNotWrittenException('Failed to write source roles to the database', 500);
         }
 
         // Записать права доступа к ресурсам в базу
-        if (! $this->writeSourcePermissions()) {
+        if (!$this->writeSourcePermissions()) {
             throw new ModelNotWrittenException('Failed to write source permissions to the database', 500);
         }
 
         // Сгенерировать маршруты для ресурса
-        if (! $this->generateRoutes()) {
+        if (!$this->generateRoutes()) {
             throw new RouteGenerateFailedException('Failed to generate routes', 500);
         }
 
@@ -201,19 +202,19 @@ class ControllerGenerator extends AppGenerator
      */
     public function writeSourceActions()
     {
-        $actions = ['get', 'options', 'show', 'add', 'update', 'delete', 'get_column'];
+        $actions = ['get', 'options', 'show', 'add', 'update', 'delete', 'update_column'];
         $oldSources = $this->getSourceActions();
-        if ($oldSources) {
-            foreach ($oldSources as $source) {
-                if(in_array($source->type, $actions)) {
-                    $actions = $this->deleteAction($actions, $source->type);
-                    if (! $actions) break;
-                }
-            }
-        }
-        if (! $actions) return true;
+//        if ($oldSources) {
+//            foreach ($oldSources as $source) {
+//                if (in_array($source->type, $actions)) {
+//                    $actions = $this->deleteAction($actions, $source->type);
+//                    if (!$actions) break;
+//                }
+//            }
+//        }
+//        if (!$actions) return true;
         $sources = [];
-        $tableName = $this->getTableName();
+        $tableName = Str::plural(strtolower($this->getModelName()));
         $singleResource = Str::singular($tableName);
         $nowTime = Carbon::now();
         foreach ($actions as $action) {
@@ -223,9 +224,10 @@ class ControllerGenerator extends AppGenerator
             } elseif ($action == 'options') {
                 $url = $singleResource . '_options';
                 $name = 'Get ' . ucfirst($tableName) . ' for options';
-            } elseif ($action == 'get_column') {
+            } elseif ($action == 'update_column') {
                 $url = $tableName . "/{{$singleResource}}/{column}";
-                $name = ucfirst($action) . ' ' . Str::studly($singleResource);
+                $name = ucfirst(str_replace('_', ' ', $action))
+                    . ' ' . Str::studly($singleResource);
             } else {
                 $url = $tableName . "/{{$singleResource}}";
                 $name = ucfirst($action) . ' ' . Str::studly($singleResource);
@@ -242,51 +244,65 @@ class ControllerGenerator extends AppGenerator
         }
 
         try {
-            Source::insert($sources);
+            if ($oldSources && $oldSources->isNotEmpty()) {
+                foreach ($oldSources as $oldSource) {
+                    $sourceObj = Source::find($oldSource->id);
+                    foreach ($sources as $source) {
+                        if ($sourceObj->type == $source['type']) {
+                            $sourceObj->update($source);
+                        }
+                    }
+                }
+            }
+            foreach ($sources as $source) {
+                if (! $oldSources->contains('type', $source['type'])) {
+                    $sourceObj = new Source($source);
+                    $sourceObj->save();
+                }
+            }
         } catch (\Exception $e) {
-            echo $e;
             return false;
         }
 
         return true;
     }
 
-    protected function getSources($actions, $tableName, $nowTime)
-    {
-        $sources = [];
-        $singleResource = Str::singular($tableName);
-        foreach ($actions as $action) {
-            if ($action == 'get') {
-                $url = $tableName;
-                $name = ucfirst($action) . ' ' . Str::studly($tableName);
-            } elseif ($action == 'options') {
-                $url = $singleResource . '_options';
-                $name = 'Get ' . ucfirst($tableName) . ' for options';
-            } elseif ($action == 'get_column') {
-                $url = $tableName . "/{{$singleResource}}/{column}";
-                $name = ucfirst($action) . ' ' . Str::studly($singleResource);
-            } else {
-                $url = $tableName . "/{{$singleResource}}";
-                $name = ucfirst($action) . ' ' . Str::studly($singleResource);
-            }
-            $sources[] = [
-                "model_id" => $this->getModelId(),
-                "controller_id" => $this->controllerModel->id,
-                "url" => '/' . $url,
-                "api_url" => '/' . $url,
-                "type" => $action,
-                "name" => $name,
-                "created_at" => $nowTime,
-            ];
-        }
-        return $sources;
-    }
+//    protected function getSources($actions, $tableName, $nowTime)
+//    {
+//        $sources = [];
+//        $singleResource = Str::singular($tableName);
+//        foreach ($actions as $action) {
+//            if ($action == 'get') {
+//                $url = $tableName;
+//                $name = ucfirst($action) . ' ' . Str::studly($tableName);
+//            } elseif ($action == 'options') {
+//                $url = $singleResource . '_options';
+//                $name = 'Get ' . ucfirst($tableName) . ' for options';
+//            } elseif ($action == 'get_column') {
+//                $url = $tableName . "/{{$singleResource}}/{column}";
+//                $name = ucfirst($action) . ' ' . Str::studly($singleResource);
+//            } else {
+//                $url = $tableName . "/{{$singleResource}}";
+//                $name = ucfirst($action) . ' ' . Str::studly($singleResource);
+//            }
+//            $sources[] = [
+//                "model_id" => $this->getModelId(),
+//                "controller_id" => $this->controllerModel->id,
+//                "url" => '/' . $url,
+//                "api_url" => '/' . $url,
+//                "type" => $action,
+//                "name" => $name,
+//                "created_at" => $nowTime,
+//            ];
+//        }
+//        return $sources;
+//    }
 
     public function deleteSourceActions()
     {
         $sources = Source::where([
             ['model_id', $this->controllerModel->model->id],
-            ['controller_id',$this->controllerModel->id]
+            ['controller_id', $this->controllerModel->id]
         ])->get(['id'])->implode('id', ',');
         $ids = explode(',', $sources);
         Source::destroy($ids);
@@ -300,43 +316,105 @@ class ControllerGenerator extends AppGenerator
      */
     public function writeSourceRoles()
     {
-        $sourceRoles = $this->getAccessRoles();
-
-        $roleIds = Arr::pluck($sourceRoles, 'role_id');
-        $sourceIds = Arr::pluck($sourceRoles, 'source_id');
-
-        if ($sourceRoles) {
-            try {
-                SourceRole::whereIn('role_id', $roleIds)->whereIn('source_id', $sourceIds)->delete();
-                SourceRole::insert($sourceRoles);
-            } catch (\Exception $e) {
-                return false;
-            }
-        }
+//        $sourceRoles = $this->getAccessRoles();
+//
+//        $roleIds = Arr::pluck($sourceRoles, 'role_id');
+//        $sourceIds = Arr::pluck($sourceRoles, 'source_id');
+//        if ($sourceRoles) {
+//            try {
+//                SourceRole::whereIn('role_id', $roleIds)->whereIn('source_id', $sourceIds)->delete();
+//                SourceRole::insert($sourceRoles);
+//            } catch (\Exception $e) {
+//                return false;
+//            }
+//        }
         return true;
     }
 
     /**
      * Записать в БД права доступа принадлежащие ресурсу
      *
+     * @param $model
      * @return bool
      */
-    public function writeSourcePermissions()
+    public function writeSourcePermissions($model)
     {
-        $sourcePermissions = $this->getAccessPermissions();
-
-        $permissionIds = Arr::pluck($sourcePermissions, 'permission_id');
-        $sourceIds = Arr::pluck($sourcePermissions, 'source_id');
-
-        if ($sourcePermissions) {
-            try {
-                SourcePermission::whereIn('permission_id', $permissionIds)->whereIn('source_id', $sourceIds)->delete();
-                SourcePermission::insert($sourcePermissions);
-            } catch (\Exception $e) {
-                return false;
+        $sourcePermissions = $this->prepareSourcePermissions();
+        $oldSourcePermissions = SourcePermission::where('type','like','%-'.strtolower(Str::snake($model->getOriginal('name'))))->get();
+        try {
+            foreach ($sourcePermissions as $sourcePermission) {
+                if (! $oldSourcePermissions->contains(
+                    'type',
+                    explode('-',$sourcePermission['type'])[0] . '-' . strtolower($model->getOriginal('name'))
+                )) {
+                    $sourcePermObj = new SourcePermission($sourcePermission);
+                    $sourcePermObj->save();
+                }
             }
+            if ($oldSourcePermissions && $oldSourcePermissions->isNotEmpty()) {
+                foreach ($oldSourcePermissions as $oldSourcePermission) {
+                    $sourcePermObj = SourcePermission::find($oldSourcePermission->id);
+                    foreach ($sourcePermissions as $sourcePermission) {
+                        if ($sourcePermObj->type == explode('-',$sourcePermission['type'])[0] . '-' . strtolower($model->getOriginal('name'))) {
+                            $sourcePermObj->update($sourcePermission);
+                        }
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            return false;
         }
         return true;
+    }
+
+    protected function prepareSourcePermissions()
+    {
+        $nowTime = Carbon::now();
+        $sources = $this->controllerModel->sources;
+        $modelName = $this->controllerModel->model->name;
+//        $oldSourcePermissions = SourcePermission::whereIn('source_id',explode(',',$sources->implode('id',',')))->get();
+        $sourcePermissions = [];
+        $permissions = Permission::where(
+            'name',
+            'like',
+            '%' . Str::snake(strtolower($modelName))
+        )->get();
+        foreach ($sources as $source) {
+            if (($source->type == 'get' || $source->type == 'options')) {
+                $sourcePermission = [
+                    'permission_id' => $permissions->firstWhere('name', 'all-' . Str::snake(strtolower($modelName)))->id,
+                ];
+            }
+            if ($source->type == 'add') {
+                $sourcePermission = [
+                    'permission_id' => $permissions->firstWhere('name', 'create-' . Str::snake(strtolower($modelName)))->id,
+                ];
+            }
+            if ($source->type == 'show') {
+                $sourcePermission = [
+                    'permission_id' => $permissions->firstWhere('name', 'read-' . Str::snake(strtolower($modelName)))->id,
+                ];
+            }
+            if ($source->type == 'update' || $source->type == 'update_column') {
+                $sourcePermission = [
+                    'permission_id' => $permissions->firstWhere('name', 'update-' . Str::snake(strtolower($modelName)))->id,
+                ];
+            }
+            if ($source->type == 'delete') {
+                $sourcePermission = [
+                    'permission_id' => $permissions->firstWhere('name', 'delete-' . Str::snake(strtolower($modelName)))->id,
+                ];
+            }
+            if ($source->type == 'get' || $source->type == 'options' || $source->type == 'add'
+                || $source->type == 'show' || $source->type == 'update' || $source->type == 'update_column' || $source->type == 'delete') {
+                $sourcePermission['source_id'] = $source->id;
+                $sourcePermission['type'] = $source->type . '-' . Str::snake(strtolower($modelName));
+                $sourcePermission['created_at'] = $nowTime;
+                $sourcePermission['updated_at'] = $nowTime;
+                $sourcePermissions[] = $sourcePermission;
+            }
+        }
+        return $sourcePermissions;
     }
 
     /**
@@ -368,11 +446,11 @@ class ControllerGenerator extends AppGenerator
         $customCode = $this->getCustomCode($oldControllerFile);
         $options = $this->getOptions();
 
-        if(file_exists($oldControllerFile)) unlink($oldControllerFile);
+        if (file_exists($oldControllerFile)) unlink($oldControllerFile);
 
         try {
             Artisan::call('crud:controller', [
-                'name' => $modelName.'Controller',
+                'name' => $modelName . 'Controller',
                 '--crud-name' => $crudName,
                 '--model-name' => $modelName,
                 '--model-namespace' => $modelNamespace,
@@ -380,21 +458,21 @@ class ControllerGenerator extends AppGenerator
                 '--route-group' => $prefix,
                 '--validations' => $validations,
                 '--relations' => $relations,
-                '--custom-namespaces' => $this->getCustomCodeBlock($customCode,'custom_namespaces'),
-                '--custom-traits' => $this->getCustomCodeBlock($customCode,'custom_traits'),
-                '--custom-properties' => $this->getCustomCodeBlock($customCode,'custom_properties'),
-                '--custom-methods' => $this->getCustomCodeBlock($customCode,'custom_methods'),
+                '--custom-namespaces' => $this->getCustomCodeBlock($customCode, 'custom_namespaces'),
+                '--custom-traits' => $this->getCustomCodeBlock($customCode, 'custom_traits'),
+                '--custom-properties' => $this->getCustomCodeBlock($customCode, 'custom_properties'),
+                '--custom-methods' => $this->getCustomCodeBlock($customCode, 'custom_methods'),
                 '--options' => $options
             ]);
         } catch (\Exception $e) {
-            if(file_exists($this->controllerFile . '.bak'))
+            if (file_exists($this->controllerFile . '.bak'))
                 rename($this->controllerFile . '.bak', $this->controllerFile);
             return false;
         }
 
-        if(file_exists($this->controllerFile . '.bak'))
+        if (file_exists($this->controllerFile . '.bak'))
             unlink($this->controllerFile . '.bak');
-        if(file_exists($oldControllerFile . '.bak'))
+        if (file_exists($oldControllerFile . '.bak'))
             unlink($oldControllerFile . '.bak');
         return true;
     }
@@ -408,26 +486,27 @@ class ControllerGenerator extends AppGenerator
     {
         $roles = [];
         $nowTime = Carbon::now();
-        if (isset($this->controllerModel->access) && !empty($this->controllerModel->access)) {
-            $sourceActions = $this->getSourceActions();
-            foreach ($this->controllerModel->access as $access) {
-                if ($access->type == 'role') {
-                    $sourceId = null;
-                    foreach ($sourceActions as $action) {
-                        if ($action->type == $access->action) {
-                            $sourceId = $action->id;
-                        }
-                    }
-                    $roles[] = [
-                        'source_id' => $sourceId,
-                        'role_id' => $access->id,
-                        'type' => null,
-                        'created_at' => $nowTime,
-                        'updated_at' => $nowTime
-                    ];
-                }
-            }
-        }
+
+        //        if (isset($this->controllerModel->access) && !empty($this->controllerModel->access)) {
+        //            $sourceActions = $this->getSourceActions();
+        //            foreach ($this->controllerModel->access as $access) {
+        //                if ($access->type == 'role') {
+        //                    $sourceId = null;
+        //                    foreach ($sourceActions as $action) {
+        //                        if ($action->type == $access->action) {
+        //                            $sourceId = $action->id;
+        //                        }
+        //                    }
+        //                    $roles[] = [
+        //                        'source_id' => $sourceId,
+        //                        'role_id' => $access->id,
+        //                        'type' => null,
+        //                        'created_at' => $nowTime,
+        //                        'updated_at' => $nowTime
+        //                    ];
+        //                }
+        //            }
+        //        }
         return $roles;
     }
 
@@ -438,29 +517,29 @@ class ControllerGenerator extends AppGenerator
      */
     protected function getAccessPermissions()
     {
-        $permissions = [];
-        $nowTime = Carbon::now();
-        if (isset($this->data->access) && !empty($this->data->access)) {
-            $sourceActions = $this->getSourceActions();
-            foreach ($this->data->access as $access) {
-                if ($access->type == 'permission') {
-                    $sourceId = null;
-                    foreach ($sourceActions as $action) {
-                        if ($action->type == $access->action) {
-                            $sourceId = $action->id;
-                        }
-                    }
-                    $permissions[] = [
-                        'source_id' => $sourceId,
-                        'permission_id' => $access->id,
-                        'type' => null,
-                        'created_at' => $nowTime,
-                        'updated_at' => $nowTime
-                    ];
-                }
-            }
-        }
-        return $permissions;
+        $sourcePermissions = [];
+
+        //        if (isset($this->data->access) && !empty($this->data->access)) {
+        //            $sourceActions = $this->getSourceActions();
+        //            foreach ($this->data->access as $access) {
+        //                if ($access->type == 'permission') {
+        //                    $sourceId = null;
+        //                    foreach ($sourceActions as $action) {
+        //                        if ($action->type == $access->action) {
+        //                            $sourceId = $action->id;
+        //                        }
+        //                    }
+        //                    $permissions[] = [
+        //                        'source_id' => $sourceId,
+        //                        'permission_id' => $access->id,
+        //                        'type' => null,
+        //                        'created_at' => $nowTime,
+        //                        'updated_at' => $nowTime
+        //                    ];
+        //                }
+        //            }
+        //        }
+        return $sourcePermissions;
     }
 
     /**
@@ -488,7 +567,7 @@ class ControllerGenerator extends AppGenerator
 
     protected function getOptions()
     {
-        $label = Column::where([['table_id', $this->controllerModel->model->table->id],['is_label', 1]])->first();
+        $label = Column::where([['table_id', $this->controllerModel->model->table->id], ['is_label', 1]])->first();
         $label = $label ? $label->name : 'id';
         return 'select([\'id as value\',\'' . $label . ' as label\'])';
     }
@@ -578,7 +657,7 @@ class ControllerGenerator extends AppGenerator
         $userColumns = trim($this->controllerModel->model->user_cols, ' ');
         $middleware = ($userColumns) ? "'middleware' => [" . $this->getAuthMiddleware() . '], ' : null;
         $controllerName = $this->getFormedControllerName($this->controllerModel);
-        $controller = trim($controllerName,"\\");
+        $controller = trim($controllerName, "\\");
         $prefix = $this->getRoutePrefix() ? '/' . trim($this->getRoutePrefix(), '/') : null;
         $access = $this->getAccessMiddleware($userColumns);
         $routeGenerator->addDynamicVariable('routePrefix', $prefix);
@@ -603,7 +682,7 @@ class ControllerGenerator extends AppGenerator
      */
     public function removeRoutes()
     {
-        $routeGenerator = new RouteGenerator();
+        $routeGenerator = new RouteGenerator($this->controllerModel);
         return $routeGenerator->deleteRoutes($this->controllerModel);
     }
 
@@ -623,7 +702,7 @@ class ControllerGenerator extends AppGenerator
             }
 
             if (isset($ability[$source->type]['roles'])) {
-                $ability[$source->type]['roles'] = implode('|',$ability[$source->type]['roles']);;
+                $ability[$source->type]['roles'] = implode('|', $ability[$source->type]['roles']);;
             }
 
             foreach ($source->source_permissions->all() as $sourcePermission) {
@@ -631,7 +710,7 @@ class ControllerGenerator extends AppGenerator
             }
 
             if (isset($ability[$source->type]['permissions'])) {
-                $ability[$source->type]['permissions'] = implode('|',$ability[$source->type]['permissions']);;
+                $ability[$source->type]['permissions'] = implode('|', $ability[$source->type]['permissions']);;
             }
         }
 
@@ -661,7 +740,7 @@ class ControllerGenerator extends AppGenerator
     protected function getAuthMiddleware()
     {
         $middlewares = ['auth:api', 'auth'];
-        if (! $middlewares) return null;
+        if (!$middlewares) return null;
         return '\'' . implode("','", $middlewares) . '\'';
     }
 
@@ -676,7 +755,7 @@ class ControllerGenerator extends AppGenerator
         $namespace = $this->getNamespace($controller);
 
         $controllerFilename = trim(str_replace('\\', '/', $namespace)
-            . '/' . $controller->model->name, '/')
+                . '/' . $controller->model->name, '/')
             . 'Controller.php';
 
         return $controllerFilename;
@@ -691,7 +770,7 @@ class ControllerGenerator extends AppGenerator
     {
         $namespace = $this->getNamespace($this->controllerModel);
         $controllerFilename = trim(str_replace('\\', '/', $namespace)
-            . '/' . $this->getOldModelName(), '/')
+                . '/' . $this->getOldModelName(), '/')
             . 'Controller.php';
         return app_path($controllerFilename);
     }
@@ -713,7 +792,7 @@ class ControllerGenerator extends AppGenerator
 
         $controllerName = trim('AltrpControllers\\' . $namespace
                 . $controller->model->name, '\\')
-                . 'Controller';
+            . 'Controller';
 
         return $controllerName;
     }
@@ -739,11 +818,11 @@ class ControllerGenerator extends AppGenerator
      */
     protected function validationsToString($validationRules)
     {
-        if ((array) $validationRules) {
+        if ((array)$validationRules) {
             $validationArr = [];
             foreach ($validationRules as $name => $rules) {
-                $rules = (array) $rules;
-                if (! empty($rules)) {
+                $rules = (array)$rules;
+                if (!empty($rules)) {
                     $validationArr[] = $name . '#' . implode('|', $rules);
                 }
             }
@@ -761,7 +840,7 @@ class ControllerGenerator extends AppGenerator
     {
         $validations = [];
         $validationRules = $this->getValidationRules();
-        if (! $validationRules) return null;
+        if (!$validationRules) return null;
         $validationRules = explode(';', $validationRules);
         foreach ($validationRules as $rule) {
             $parts = explode('#', $rule);
@@ -792,6 +871,11 @@ class ControllerGenerator extends AppGenerator
         return true;
     }
 
+    /**
+     * Удалить файлы запросов
+     *
+     * @return bool
+     */
     public function removeRequests()
     {
         $requests = ['Store', 'Update'];

@@ -128,6 +128,53 @@ class ControllerFileWriter
         return true;
     }
 
+
+    /**
+     * Добавить Sql метод
+     *
+     * @param $name
+     * @param $sql
+     * @return bool
+     */
+    public function writeSqlMethod($name, $sql)
+    {
+        $methodContent = file($this->getSqlControllerMethodStub(), 2);
+        $this->replaceSqlEditorName($methodContent, $name)
+            ->replaceModelName($methodContent, $this->controller->getModelName())
+            ->replaceSqlEditorSql($methodContent, $sql);
+        $controllerContent = file($this->controller->getFile(), 2);
+        $result = $this->writeMethods($controllerContent, $methodContent);
+        return $result;
+    }
+
+    /**
+     * Обновить SQl метод
+     *
+     * @param $oldName
+     * @param $name
+     * @param $sql
+     * @return bool
+     */
+    public function updateSqlMethod($oldName, $name, $sql)
+    {
+        $controllerContent = file($this->controller->getFile(), 2);
+        $this->removeMethod($controllerContent, $oldName);
+        $this->writeSqlMethod($name, $sql);
+        return true;
+    }
+
+    /**
+     * Проверить, существует ли sql-метод для редактора
+     *
+     * @param $methodName
+     * @return bool
+     */
+    public function methodSqlExists($methodName)
+    {
+        $controllerContent = file($this->controller->getFile(), 2);
+        return $this->methodExists($controllerContent, $methodName);
+    }
+
     /**
      * Проверить, существует ли следующее пространство имён в файле контроллера
      *
@@ -152,7 +199,7 @@ class ControllerFileWriter
      * @param $methodName
      * @return bool
      */
-    protected function methodExists($controllerContent, $methodName)
+    public function methodExists($controllerContent, $methodName)
     {
         foreach ($controllerContent as $line => $content) {
             if (Str::contains($content, 'public function ' . $methodName . '(')
@@ -318,6 +365,24 @@ class ControllerFileWriter
         return $this;
     }
 
+    protected function replaceSqlEditorName(&$methodContent, $sqlEditorName)
+    {
+        $methodContent = str_replace('{{sqlEditorName}}', $sqlEditorName, $methodContent);
+        return $this;
+    }
+
+    protected function replaceSqlEditorSql(&$methodContent, $sqlEditorSql)
+    {
+        $methodContent = str_replace('{{sqlEditorSql}}', $sqlEditorSql, $methodContent);
+        return $this;
+    }
+
+    protected function replaceModelName(&$methodContent, $modelName)
+    {
+        $methodContent = str_replace('{{modelName}}', $modelName, $methodContent);
+        return $this;
+    }
+
     /**
      * Получить стаб файл для создания метода в контроллере
      *
@@ -326,5 +391,15 @@ class ControllerFileWriter
     protected function getControllerMethodStub()
     {
         return app_path('Altrp/Commands/stubs/controllers/create_controller_method.stub');
+    }
+
+    /**
+     * Получить стаб файл для создания sql метода в контроллере
+     *
+     * @return string
+     */
+    protected function getSqlControllerMethodStub()
+    {
+        return app_path('Altrp/Commands/stubs/controllers/create_sql_controller_method.stub');
     }
 }

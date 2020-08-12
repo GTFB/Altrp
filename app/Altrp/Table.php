@@ -36,6 +36,11 @@ class Table extends Model
         return $this->hasMany('App\Altrp\Model');
     }
 
+    public function altrp_model()
+    {
+        return $this->hasOne('App\Altrp\Model');
+    }
+
     public function controllers()
     {
         return $this->hasMany('App\Altrp\Controller');

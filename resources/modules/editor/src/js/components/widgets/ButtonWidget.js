@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Redirect } from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import {isEditor} from "../../../../../front-app/src/js/helpers";
 
 class ButtonWidget extends Component {
@@ -65,12 +65,22 @@ class ButtonWidget extends Component {
     );
     let link = null;
     if (this.state.settings.link_link.url) {
-      link = (
-        <a href={this.state.settings.link_link.url} className={classes}>
-          {" "}
-          {this.state.settings.button_text || ""}
-        </a>
-      );
+      if(this.state.settings.link_link.tag === 'a' || isEditor()) {
+
+        link = (
+            <a href={this.state.settings.link_link.url} className={classes}>
+              {" "}
+              {this.state.settings.button_text || ""}
+            </a>
+        );
+      } else {
+        link = (
+            <Link to={this.state.settings.link_link.url} className={classes}>
+              {" "}
+              {this.state.settings.button_text || ""}
+            </Link>
+        );
+      }
     }
 
     return link || button;

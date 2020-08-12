@@ -54,6 +54,29 @@ class ModelsManager {
     model.subscribeToUpdates(callback);
     return model;
   }
+  /**
+   * удаляем подписчика
+   * @param {string} modelName
+   * @param {int} modelId
+   * @param {function} callback
+   * @return {AltrpModelUpdater | null}
+   */
+  unsubscribe(modelName, modelId, callback){
+    if(! modelId){
+      return null;
+    }
+    /**
+     * model
+     * @type {AltrpModelUpdater}
+     */
+    let model;
+    if(! this.modelsStorage[`${modelName}::${modelId}`]){
+      return
+    }
+    model = this.modelsStorage[`${modelName}::${modelId}`];
+    model.unsubscribe(callback);
+    return model;
+  }
 
   /**
    * Обновить названию и ИД модель данными

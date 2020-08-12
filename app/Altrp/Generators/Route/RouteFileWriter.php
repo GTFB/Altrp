@@ -74,6 +74,25 @@ class RouteFileWriter
         return \File::put($routeFile, implode(PHP_EOL, $routeContent));
     }
 
+    public function updateSqlRoute($oldMethodName, $methodName)
+    {
+        $routeContent = file($this->route->getFile(), 2);
+        $this->removeSqlRoute($routeContent,$oldMethodName);
+        $this->writeRoute($routeContent, $this->getRoute($methodName));
+        return true;
+    }
+
+    protected function removeSqlRoute(&$routeContent,$methodName)
+    {
+        if ($line = $this->routeExists($routeContent, $methodName)) {
+            unset($routeContent[$line]);
+            if (\File::put($this->route->getFile(), implode(PHP_EOL,$routeContent)) === false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Проверить, существует ли уже такой маршрут в файле маршрутов
      *

@@ -61,6 +61,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::put('/global-elements/{element}', "Constructor\GlobalElements@update");
     Route::delete('/global-elements/{element}', "Constructor\GlobalElements@trashed");
     Route::get( 'templates/options', 'TemplateController@options' );
+    Route::get( 'popups/options', 'TemplateController@popupsOptions' );
     Route::get( '/templates/{template_id}/reviews', 'TemplateController@reviews' );
     Route::delete('/templates/{template_id}/reviews', 'TemplateController@deleteReviews');
     Route::delete('/templates/{template_id}/reviews/{review_id}', 'TemplateController@deleteReview');
@@ -132,16 +133,27 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
       ->name( 'set-template-setting' );
     //Route::get('reports/{id}', "TemplateController@show");
     //Route::put('reports/{id}', "TemplateController@update");
-    Route::resource( 'reports', 'ReportsController' );
+    //Route::resource( 'reports', 'ReportsController' );
     Route::resource( 'media', 'Admin\MediaController' );
     Route::resource( 'settings', 'Admin\SettingsController' );
-    Route::resource('diagrams', 'Admin\AltrpDiagramController');
+    Route::resource( 'diagrams', 'Admin\AltrpDiagramController' );
+    Route::resource( 'sql_editors', 'Admin\SQLEditorController' );
 
     /**
      * Updates Check
      */
     Route::post( 'check_update', 'Admin\UpdateController@check_update' )->name( 'admin.check_update' );
     Route::post( 'update_altrp', 'Admin\UpdateController@update_altrp' )->name( 'admin.update_altrp' );
+
+    /**
+     * Запрос на обновление всех пользовательских контроллеров
+     */
+    Route::post( 'update-all-controllers', 'Admin\UpdateController@updateAllControllers' )->name( 'admin.update-all-controllers' );
+
+    /**
+     * Запрос на обновление всех пользовательских ресурсов через обновление данных Models в БД
+     */
+    Route::post( 'update-all-resources', 'Admin\UpdateController@upgradeAllResources' )->name( 'admin.update-all-resources' );
 
     /**
      * Роуты для теста запросов для виджета таблицы todo: удалить, после того как модели будут готовы
@@ -309,4 +321,6 @@ Route::group( ['prefix' => 'ajax'], function(){
   Route::get( 'templates/{template_id}', 'TemplateController@show_frontend' )->name( 'templates.show.frontend' );
 } );
 
-
+Route::get('/linkstorage', function () {
+  return redirect('/admin');
+});

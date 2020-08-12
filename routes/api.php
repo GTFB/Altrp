@@ -103,11 +103,8 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::get('/reports', 'ReportsController@index');
         Route::post('/reports', 'ReportsController@store');
 
-        // GeneratorController routes
-        // Route::post('/generators/{table}/model/create', 'Admin\GeneratorController@createModel');
-        // Route::post('/generators/{table}/controller/create', 'Admin\GeneratorController@createController');
-        // Route::post('/generators/{model}/accessor/create', 'Admin\GeneratorController@createAccessor');
-
+        Route::post( 'update-all-resources', 'Admin\UpdateController@upgradeAllResources' );
+        Route::resource( 'sql_editors', 'Admin\SQLEditorController' );
     });
 
 });

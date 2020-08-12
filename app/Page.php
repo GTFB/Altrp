@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Mockery\Exception;
 
 /**
@@ -84,11 +85,11 @@ class Page extends Model
       $_page['lazy'] = $lazy;
       if($page->model){
         $_page['model'] = $page->model->toArray();
-        $_page['model']['modelName'] = $page->model->altrp_table->name;
+        $_page['model']['modelName'] = Str::plural( $page->model->name );
       }
-      if( $page->get_models() ){
-        $_page['models'] = $page->get_models();
-      }
+//      if( $page->get_models() ){
+//        $_page['models'] = $page->get_models();
+//      }
       $pages[] = $_page;
     }
 
@@ -102,7 +103,7 @@ class Page extends Model
   public static function get_areas_for_page( $page_id ){
     $areas = [];
 
-    $header = Template::where( 'area', 2 )->first();
+    $header = Template::where( 'area', 2 )->where( 'type', 'template' )->first();
     if( $header ){
       $areas[] = [
         'area_name' => 'header',
@@ -119,13 +120,25 @@ class Page extends Model
         ->where( 'template_type', 'content' )->first()->template
     ];
 
-    $footer = Template::where( 'area', 3 )->first();
+    $footer = Template::where( 'area', 3 )->where( 'type', 'template' )->first();
     if( $footer ){
       $areas[] = [
         'area_name' => 'footer',
         'id' => 'footer',
         'settings' => [],
         'template' => $footer
+      ];
+    }
+    $popups = Template::join( 'areas', 'areas.id', '=', 'templates.area' )
+      ->where( 'areas.name', '=', 'popup' )
+      ->where( 'type', 'template' )->with( 'template_settings' )->get();
+
+    if( $popups->count() ){
+      $areas[] = [
+        'area_name' => 'popups',
+        'id' => 'popups',
+        'settings' => [],
+        'templates' => $popups->toArray(),
       ];
     }
 

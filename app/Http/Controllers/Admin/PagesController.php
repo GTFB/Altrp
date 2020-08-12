@@ -178,7 +178,8 @@ class PagesController extends Controller
   public function pages_options( Request $request )
   {
     $pages = Page::where( 'title', 'like', '%' . $request->get( 's' ) . '%' )
-      ->orWhere( 'path', 'like', '%' . $request->get( 's' ) . '%' )->get();
+      ->orWhere( 'path', 'like', '%' . $request->get( 's' ) . '%' )
+      ->orWhere( 'id', 'like', '%' . $request->get( 's' ) . '%' )->get();
 
     $pages_options = [];
     foreach ( $pages as $page ) {

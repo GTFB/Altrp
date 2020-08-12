@@ -43,12 +43,14 @@ import EditField from "./components/models/EditField";
 import AddRelation from "./components/models/AddRelation";
 import AddDataSource from "./components/models/AddDataSource";
 import SQLBuilder from "./components/SQLBuilder";
+import SqlEditor from "./components/models/SqlEditor";
 
 import AddTable from "./components/tables/AddTable";
 import EditTable from "./components/tables/EditTable";
 import SettingTable from "./components/tables/SettingTable";
 import AddMigrationPage from "./components/tables/AddMigrationPage";
 import AdminVersion from "./components/AdminVersion";
+import SQLEditors from "./components/SQLEditors";
 
 class Admin extends Component {
   constructor(props){
@@ -113,16 +115,22 @@ class Admin extends Component {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/admin/tables" className="admin-nav-list__link">
+                  {/*<Link to="/admin/tables" className="admin-nav-list__link">*/}
+                    {/*<TableSvg className="icon"/>*/}
+                    {/*<span>Tables</span>*/}
+                  {/*</Link>*/}
+
+                  <Link to="/admin/tables/models" className="admin-nav-list__link">
                     <TableSvg className="icon"/>
                     <span>Tables</span>
                   </Link>
                   <ul className="admin-nav-sublist">
 
                     <li>
-                      <Link to="/admin/tables/models" className="admin-nav-list__link">
+
+                      <Link to="/admin/tables/sql_editors" className="admin-nav-list__link">
                         <TableSvg className="icon"/>
-                        <span>Tables/Models</span>
+                        <span>SQL Editors</span>
                       </Link>
                     </li>
                   </ul>
@@ -232,6 +240,15 @@ class Admin extends Component {
             <Route path="/admin/tables/models" exact>
               <Models />
             </Route>
+            <Route path="/admin/tables/sql_editors" exact>
+              <SQLEditors />
+            </Route>
+            <Route path="/admin/tables/sql_editors/add">
+              <SqlEditor/>
+            </Route>
+            <Route path="/admin/tables/sql_editors/edit/:id">
+              <SqlEditor/>
+            </Route>
             <Route path="/admin/tables/models/add">
               <EditModel />
             </Route>
@@ -245,6 +262,9 @@ class Admin extends Component {
               <EditField/>
             </Route>
             <Route path="/admin/tables/models/:modelId/relations/add">
+              <AddRelation />
+            </Route>
+            <Route path="/admin/tables/models/:modelId/relations/edit/:id">
               <AddRelation />
             </Route>
             <Route path="/admin/tables/models/:modelId/queries/add">

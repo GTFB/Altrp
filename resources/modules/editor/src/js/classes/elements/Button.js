@@ -136,7 +136,7 @@ class Button extends BaseElement{
         'form_actions': 'add_new',
       },
       type: CONTROLLER_SELECT,
-      resource: '/admin/ajax/models_options',
+      resource: '/admin/ajax/models_options?with_names=true',
     });
 
     this.addControl('redirect_after', {

@@ -12,6 +12,12 @@ class {{className}} extends Migration
      */
     public function up()
     {
+        if ('{{old_column}}' !== '{{column}}') {
+            Schema::table('{{table}}', function (Blueprint $table) {
+                $table->renameColumn('{{old_column}}', '{{column}}');
+            });
+        }
+
         Schema::table('{{table}}', function (Blueprint $table) {
             {{field}}
         });
@@ -25,7 +31,7 @@ class {{className}} extends Migration
     public function down()
     {
         Schema::table('{{table}}', function (Blueprint $table) {
-            
+
         });
     }
 }

@@ -8,8 +8,10 @@ use App\Altrp\Query;
 use App\Observers\AltrpControllerObserver;
 use App\Observers\AltrpModelObserver;
 use App\Observers\AltrpQueryObserver;
+use App\Observers\AltrpSQLEditorObserver;
 use App\Services\AltrpSettingsService;
 use App\Services\AltrpUpdateService;
+use App\SQLEditor;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
@@ -58,6 +60,7 @@ class AppServiceProvider extends ServiceProvider
         Model::observe(AltrpModelObserver::class);
         Controller::observe(AltrpControllerObserver::class);
         Query::observe(AltrpQueryObserver::class);
+        SQLEditor::observe(AltrpSQLEditorObserver::class);
 
         Builder::macro('whereLike', function ($attributes, string $searchTerm) {
             $this->where(function (Builder $query) use ($attributes, $searchTerm) {

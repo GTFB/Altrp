@@ -5,6 +5,7 @@ namespace App\Altrp;
 
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 /**
  * Class Model
@@ -102,10 +103,13 @@ class Model extends EloquentModel
         return $this->altrp_table->actual_columns;
     }
 
-    /**
-     * Список моделей для select
-     */
-    public static function getModelsOptions()
+  /**
+   * Список моделей для select
+   * @param bool $with_names
+   * @param bool $not_plural
+   * @return array
+   */
+    public static function getModelsOptions( $with_names = false, $not_plural = false )
     {
         $models = [];
         $_models = self::all();
@@ -113,10 +117,17 @@ class Model extends EloquentModel
             /**
              * @var {Model} $model
              */
-            $models[] = [
-                'label' => $model->name,
+            if( $with_names ){
+              $models[] = [
+                'label' => $model->title,
+                'value' => $not_plural ? $model->name : Str::plural( $model->name ),
+              ];
+            } else {
+              $models[] = [
+                'label' => $model->title,
                 'value' => $model->id,
-            ];
+              ];
+            }
         }
         return $models;
     }
@@ -160,15 +171,15 @@ class Model extends EloquentModel
                     'title' => $actual_column->title ? $actual_column->title : $actual_column->name,
                 ];
             }
-            foreach ($model->altrp_table->relationships as $relationship) {
-                /**
-                 * @var Relationship $relationship
-                 */
-                $fields = array_merge($fields, $relationship->get_related_field_options());
-            }
+//            foreach ($model->altrp_table->relationships as $relationship) {
+//                /**
+//                 * @var Relationship $relationship
+//                 */
+//                $fields = array_merge($fields, $relationship->get_related_field_options());
+//            }
             $models[] = [
                 'modelName' => $model->altrp_table->name,
-                'title' => $model->name,
+                'title' => $model->title,
                 'fields' => $fields,
             ];
         }

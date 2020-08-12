@@ -28,7 +28,7 @@ class RouteContent extends Component {
       this.setState(state=>({
           ...state,
         areas,
-      }))
+      }));
     }
   }
   render(){
@@ -44,12 +44,12 @@ class RouteContent extends Component {
       renderTrackVertical={({style, ...props})=>{
         return<div className="altrp-scroll__vertical-track" style={style} {...props} />}}
     >
-
     <div className="route-content">{
       this.state.areas.map(area => <AreaComponent
           {...area}
+          area={area}
           page={this.props.id}
-          models={this.props.models}
+          models={[this.props.model]}
           key={'appArea_' + area.id}/>)
     }</div>
     </Scrollbars>

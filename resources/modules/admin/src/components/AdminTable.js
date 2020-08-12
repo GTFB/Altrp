@@ -3,8 +3,22 @@ import {Link} from 'react-router-dom'
 import Resource from "../../../editor/src/js/classes/Resource";
 
 class AdminTable extends Component {
+
+  /**
+   * Фильтр по ыыеденной строк
+   * @param {{}} e
+   */
+  filterByKeyboard = (e) => {
+
+    if(_.isFunction(this.props.filterByKeyboard)){
+      this.props.filterByKeyboard(e.target.value);
+    }
+  };
   render(){
     return<div className="admin-table">
+      <div className="admin-table">
+        <input type="text" className="form-group"/>
+      </div>
       <table>
         <thead className="admin-table-head">
         <tr className="admin-table-row">
@@ -64,34 +78,46 @@ class AdminTable extends Component {
                     {this.props.quickActions && this.props.quickActions.map((quickAction, index) => {
                       let item = '';
                       switch (quickAction.tag) {
-                        case 'a':
+                        case 'a': {
                           let href = quickAction.props.href.replace(':id', row.id);
 
                           item = <a
-                            className={'quick-action-menu__item ' + (quickAction.className || '')} 
-                            {...quickAction.props || {}}
-                            href={href}
-                            >{quickAction.title}</a>;
+                              className={'quick-action-menu__item ' + (quickAction.className || '')}
+                              {...quickAction.props || {}}
+                              href={href}
+                          >{quickAction.title}</a>;
+                        }
                           break;
-                        case 'button':
-                          quickAction.route = quickAction.route.replace(':id', row.id);
-                          item = <button 
-                            className={'quick-action-menu__item ' + (quickAction.className || '')}
-                            {...quickAction.props || {}}
-                            onClick={async () => {
-                              if(quickAction.confirm){
-                                if(! await confirm(quickAction.confirm)){
-                                  return;
+                        case 'Link': {
+                          let href = quickAction.props.href.replace(':id', row.id);
+
+                          item = <Link
+                              className={'quick-action-menu__item ' + (quickAction.className || '')}
+                              {...quickAction.props || {}}
+                              to={href}
+                          >{quickAction.title}</Link>;
+                        }
+                          break;
+                        case 'button': {
+                          let route = quickAction.route.replace(':id', row.id);
+                          item = <button
+                              className={'quick-action-menu__item ' + (quickAction.className || '')}
+                              {...quickAction.props || {}}
+                              onClick={async () => {
+                                if (quickAction.confirm) {
+                                  if (!await confirm(quickAction.confirm)) {
+                                    return;
+                                  }
                                 }
-                              }
-                              const resource = new Resource({ route: quickAction.route.replace(':id', row.id)});
-                              if (_.isFunction(resource[quickAction.method])) {
-                                await resource[quickAction.method]();
-                                _.isFunction(quickAction.after) ? quickAction.after() : ''
-                              }
-                            }}
-                            >{quickAction.title}</button>;
-                          break;
+                                let resource = new Resource({route: route});
+                                if (_.isFunction(resource[quickAction.method])) {
+                                  await resource[quickAction.method]();
+                                  _.isFunction(quickAction.after) ? quickAction.after() : ''
+                                }
+                              }}
+                          >{quickAction.title}</button>;
+                        }
+                        break;
                       
                         default:
                           break;

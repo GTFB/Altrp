@@ -6,13 +6,17 @@ use App\Altrp\Column;
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
 use App\Altrp\Generators\ModelGenerator;
+use App\Altrp\Generators\TableMigrationGenerator;
 use App\Altrp\Migration;
 use App\Altrp\Model;
+use App\Altrp\Source;
 use App\Altrp\Table;
+use App\Exceptions\AltrpMigrationCreateFileExceptions;
 use App\Exceptions\CommandFailedException;
 use App\Exceptions\Controller\ControllerFileException;
 use App\Exceptions\ControllerNotWrittenException;
 use App\Exceptions\ModelNotWrittenException;
+use App\Exceptions\PermissionNotWrittenException;
 use App\Exceptions\RouteGenerateFailedException;
 use Carbon\Carbon;
 
@@ -42,12 +46,16 @@ class AltrpModelObserver
         if (! $result) {
             throw new CommandFailedException('Failed to create model file', 500);
         }
+        if (! $generator->writePermissions()) {
+            throw new PermissionNotWrittenException("Failed to write permissions", 500);
+        }
     }
 
     /**
      * Вызываем после создания модели
      * @param Model $model
      * @throws ControllerFileException
+     * @throws AltrpMigrationCreateFileExceptions
      */
     public function created(Model $model)
     {
@@ -56,22 +64,47 @@ class AltrpModelObserver
         if (! $controller->save()) {
             throw new ControllerFileException('Failed to create controller');
         }
+
+        if ($model->time_stamps || $model->soft_deletes) {
+            $table = $model->table;
+
+            $generator = new TableMigrationGenerator($table);
+
+            $file = $generator->updateTableTimestamps(
+                $model->time_stamps,
+                $model->soft_deletes
+            );
+            $name = $generator->getMigrationName();
+
+            if(!$file) {
+                throw new AltrpMigrationCreateFileExceptions("Failed to create migration file");
+            }
+
+            $migration = new Migration();
+            $migration->name = $name;
+            $migration->file_path = $file;
+            $migration->user_id = auth()->user()->id;
+            $migration->table_id = $table->id;
+            $migration->status = "1";
+            $migration->data = "";
+            $migration->save();
+        }
     }
 
     /**
      * Вызываем перед обновлением модели
      * @param Model $model
      * @throws CommandFailedException
-     * @throws \App\Exceptions\TableNotFoundException
+     * @throws \Exception
      */
     public function updating(Model $model)
     {
         $generator = new ModelGenerator($model);
-        if (! $generator->getAndWriteRelationships()) {
-            throw new CommandFailedException('Failed to write relations', 500);
-        }
         if (! $generator->updateModelFile()) {
             throw new CommandFailedException('Failed to update model file', 500);
+        }
+        if (! $generator->writePermissions()) {
+            throw new PermissionNotWrittenException("Failed to write permissions", 500);
         }
     }
 
@@ -83,6 +116,7 @@ class AltrpModelObserver
      * @throws ControllerNotWrittenException
      * @throws ModelNotWrittenException
      * @throws RouteGenerateFailedException
+     * @throws AltrpMigrationCreateFileExceptions
      */
     public function updated(Model $model)
     {
@@ -111,11 +145,36 @@ class AltrpModelObserver
         if (! $generator->writeSourceRoles()) {
             throw new ModelNotWrittenException('Failed to write source roles to the database', 500);
         }
-        if (! $generator->writeSourcePermissions()) {
+        if (! $generator->writeSourcePermissions($model)) {
             throw new ModelNotWrittenException('Failed to write source permissions to the database', 500);
         }
         if (! $generator->generateRoutes()) {
             throw new RouteGenerateFailedException('Failed to generate routes', 500);
+        }
+
+        if ($model->time_stamps != $model->getOriginal('time_stamps')
+            || $model->soft_deletes != $model->getOriginal('soft_deletes')) {
+            $table = $model->table;
+            $generator = new TableMigrationGenerator($table);
+
+            $file = $generator->updateTableTimestamps(
+                $model->time_stamps,
+                $model->soft_deletes
+            );
+            $name = $generator->getMigrationName();
+
+            if(!$file) {
+                throw new AltrpMigrationCreateFileExceptions("Failed to create migration file");
+            }
+
+            $migration = new Migration();
+            $migration->name = $name;
+            $migration->file_path = $file;
+            $migration->user_id = auth()->user()->id;
+            $migration->table_id = $table->id;
+            $migration->status = "1";
+            $migration->data = "";
+            $migration->save();
         }
     }
 
@@ -127,7 +186,7 @@ class AltrpModelObserver
      */
     public function deleting(Model $model)
     {
-//        $table = Table::find($model->table_id);
+//        $table = $model->table;
 //        \DB::table($table->name)->delete();
 //        $migration = $table->actual_migration();
 //        Column::where('altrp_migration_id', $migration->id)->delete();
@@ -138,14 +197,16 @@ class AltrpModelObserver
             throw new CommandFailedException('Failed to delete model file', 500);
         }
         $controller = $model->altrp_controller;
-        if (! $controller->delete()) {
-            throw new ControllerFileException('Failed to delete controller',  500);
+        if ($controller) {
+            if (! $controller->delete()) {
+                throw new ControllerFileException('Failed to delete controller',  500);
+            }
         }
-//        $table->delete();
+
     }
 
     public function deleted(Model $model)
     {
-
+//        $model->table->forceDelete();
     }
 }

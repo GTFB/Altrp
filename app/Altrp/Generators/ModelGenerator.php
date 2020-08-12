@@ -64,6 +64,7 @@ class ModelGenerator extends AppGenerator
             $this->model->name
         );
         $this->modelFile = $this->getModelFile();
+        $this->relationships = $model->altrp_relationships;
         parent::__construct($model);
     }
 
@@ -319,13 +320,23 @@ class ModelGenerator extends AppGenerator
         if (! $this->relationships) return null;
         $relArr = [];
         foreach ($this->relationships as $rel) {
+
             $relItem = $rel->name . '#' . $rel->type . '#'
                 . trim($this->screenBacklashes($rel->model_class), '\\');
-            if (isset($rel->foreign_key)) {
+            if( $rel->type === 'hasOne' ){
+              if (isset($rel->foreign_key)) {
                 $relItem .= "|{$rel->foreign_key}";
                 if (isset($rel->local_key)) {
-                    $relItem .= "|{$rel->local_key}";
+                  $relItem .= "|{$rel->local_key}";
                 }
+              }
+            } elseif ( in_array( $rel->type, ['hasMany', 'belongsTo'] ) ){
+              if (isset($rel->local_key)) {
+                $relItem .= "|{$rel->local_key}";
+                if (isset($rel->foreign_key)) {
+                  $relItem .= "|{$rel->foreign_key}";
+                }
+              }
             }
             $relArr[] = $relItem;
         }
@@ -383,12 +394,36 @@ class ModelGenerator extends AppGenerator
      *
      * @return bool
      */
-    protected function writePermissions()
+    public function writePermissions()
     {
+        $actions = ['create', 'read', 'update', 'delete', 'all'];
         $permissions = $this->preparePermissions();
+        $oldPermissions = Permission::where('name','like','%-'.strtolower($this->model->getOriginal('name')))->get();
+
         try {
-            Permission::insertOrIgnore($permissions);
+            foreach ($permissions as $permission) {
+                if (! $oldPermissions->contains(
+                    'name',
+                    explode('-',$permission['name'])[0] . '-' . strtolower($this->model->getOriginal('name'))
+                )) {
+                    $newPermObj = new Permission($permission);
+                    $newPermObj->save();
+                }
+            }
+            if ($oldPermissions && $oldPermissions->isNotEmpty()) {
+                foreach ($oldPermissions as $oldPermission) {
+                    $permObj = Permission::find($oldPermission->id);
+                    foreach ($permissions as $permission) {
+                        if ($permObj->name == explode('-',$permission['name'])[0] . '-' . strtolower($this->model->getOriginal('name'))) {
+                            $permObj->update($permission);
+                            break;
+                        }
+                    }
+                }
+            }
+//            Permission::insertOrIgnore($permissions);
         } catch (\Exception $e) {
+            echo $e;
             return false;
         }
         return true;
@@ -444,7 +479,9 @@ class ModelGenerator extends AppGenerator
         }
         $columns = $this->getColumns($table);
         if (!$columns || $columns->isEmpty()) return null;
+        $relations = $this->getRelations();
         $columnsList = $this->getColumnsList($columns);
+//        $relationsList = $this->getColumnsList($relations, 'foreign_key');
         return '\'' . implode("','", $columnsList) . '\'';
     }
 
@@ -472,17 +509,24 @@ class ModelGenerator extends AppGenerator
         return $columns;
     }
 
+    protected function getRelations()
+    {
+        $relations = Relationship::where([['model_id', $this->model->id], ['add_belong_to', 1]])->get();
+        return $relations;
+    }
+
     /**
      * Получить список колонок
      *
      * @param $columns
+     * @param string $columnName
      * @return array
      */
-    protected function getColumnsList($columns)
+    protected function getColumnsList($columns, $columnName = 'name')
     {
         $columnsList = [];
         foreach ($columns as $column) {
-            $columnsList[] = $column->name;
+            $columnsList[] = $column->$columnName;
         }
         return $columnsList;
     }

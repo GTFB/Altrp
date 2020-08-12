@@ -94,7 +94,7 @@ class AltrpForm {
    * @return {object}
    */
   getData(){
-    let data = {};
+    let data = {altrp_ajax: true};
     this.fields.forEach(field=>{
       if(field.getValue() !== null){
         data[field.getSettings('field_id')] = field.getValue();

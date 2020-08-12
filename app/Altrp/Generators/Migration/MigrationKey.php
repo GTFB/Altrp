@@ -3,6 +3,7 @@
 namespace App\Altrp\Generators\Migration;
 
 use App\Altrp\Model;
+use App\Altrp\Table;
 use App\Exceptions\AltrpMigrationIncorrectFieldTypeException;
 use App\Altrp\Generators\Migration\MigrationFieldInterface;
 
@@ -53,6 +54,14 @@ class MigrationKey{
         return $this->create();
     }
 
+    public function dropForeign()
+    {
+        if(!$this->isNewKey()) {
+            $this->text = $this->setDeleteText();
+        }
+        return $this->text;
+    }
+
     /**
      * Откат ключа в миграции
      * @return string
@@ -80,10 +89,8 @@ class MigrationKey{
     public function update() {
 
         if(!$this->checkAllAttributes()) {
-            $this->text = $this->setDeleteText();
-            $this->addTabIndent();
 
-            $this->text .= $this->setText();
+            $this->text = $this->setText();
             $this->addTabIndent();
         }
 
@@ -112,10 +119,31 @@ class MigrationKey{
         $source_column = $this->key->foreign_key;
         $parts = explode('\\', $this->key->model_class);
         $model_name = array_pop($parts);
+
         $target_table = Model::where('name', $model_name)->first()->altrp_table->name;
 
-        $text = "\$table->foreign('".$source_column."')->references('".$target_column."')->on('".$target_table."')".$modifiers;
-        return $text;
+        $text = '';
+        if( $this->key->type === 'hasOne' ){
+          if (!isset($this->old_key->foreign_key)) {
+            $text .= "\$table->bigInteger('".$source_column."')->nullable()->unsigned();\n\t\t\t";
+          } elseif(isset($this->old_key->foreign_key)
+            && $this->old_key->foreign_key == $source_column) {
+            $text .= "\$table->dropForeign(['".$this->old_key->foreign_key."']);\n\t\t\t";
+          }
+          $text .= "\$table->foreign('".$source_column."')->references('".$target_column."')->on('".$target_table."')".$modifiers;
+          return $text;
+        } elseif ( in_array( $this->key->type, ['belongsTo', 'hasMany'] ) ){
+          $target_table = Table::join('altrp_models', 'altrp_models.table_id', '=', 'tables.id')
+            ->where( 'altrp_models.id', $this->key->model_id )->get( 'tables.name' )->first()->name;
+
+          if(isset($this->old_key->foreign_key)
+            && $this->old_key->foreign_key == $source_column) {
+            $text .= "\$table->dropForeign(['".$this->old_key->foreign_key."']);\n\t\t\t";
+          }
+          $text .= "\$table->foreign('".$target_column."')->references('".$source_column."')->on('".$target_table."')".$modifiers;
+          return $text;
+        }
+
     }
 
     /**
@@ -123,7 +151,15 @@ class MigrationKey{
      * @return string
      */
     protected function setDeleteText() {
-        $text = "\$table->dropForeign(['".$this->old_key->foreign_key."'])";
+        $text = '';
+        if ($this->key && $this->old_key->foreign_key != $this->key->foreign_key) {
+            $text .= "\$table->dropForeign(['".$this->old_key->foreign_key."']);\n\t\t\t";
+            $text .= "\$table->renameColumn('".$this->old_key->foreign_key
+                ."', '" . $this->key->foreign_key ."');";
+        } elseif (!$this->key) {
+            $text .= "\$table->dropForeign(['".$this->old_key->foreign_key."']);\n\t\t\t";
+            $text .= "\$table->dropColumn('".$this->old_key->foreign_key."')";
+        }
         return $text;
     }
 
