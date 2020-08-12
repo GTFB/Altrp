@@ -107,7 +107,7 @@ export default class Models extends Component {
     let models = await this.modelsResource.getAll();
     this.setState(state => ({
       ...state,
-      modelsCount: models.length
+      modelsCount: models.models.length
     }))
 
     this.getModels();
@@ -164,7 +164,7 @@ export default class Models extends Component {
             <Pagination pageCount={modelsPageCount}
               currentPage={modelsCurrentPage}
               changePage={modelsCurrentPage => this.setState({ modelsCurrentPage }, this.getModels)}
-              itemsCount={models.length}
+              itemsCount={modelsCount}
             />
           </TabPanel>
           <TabPanel>
