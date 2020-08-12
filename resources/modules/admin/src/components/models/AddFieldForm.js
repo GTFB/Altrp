@@ -97,7 +97,7 @@ class AddFieldForm extends Component {
         options: '',
         null: false,
         indexed: false,
-        editable: false,
+        editable: true,
         calculation: '',
         calculation_logic: [
           { left: '', operator: '', result: '', right: '' }
