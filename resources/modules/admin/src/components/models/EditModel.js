@@ -54,6 +54,12 @@ class EditModel extends Component {
     }
   }
 
+  updateFields = async() => {
+    let fields = await this.fieldsResource.getAll();
+    fields = fields.filter(({ name }) => name !== 'id');
+    this.setState(state => ({ ...state, fields }));
+  }
+
   /**
    * Загрузим данные модели
    * @return {Promise<void>}
@@ -117,7 +123,7 @@ class EditModel extends Component {
             route: `/admin/ajax/models/${id}/fields/:id`,
             method: 'delete',
             confirm: 'Are You Sure?',
-            after: () => this.updateModels(this.state.currentPage, this.state.activeTemplateArea),
+            after: () => this.updateFields(),
             className: 'quick-action-menu__item_danger',
             title: 'Trash'
           }]}
