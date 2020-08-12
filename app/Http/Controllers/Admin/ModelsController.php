@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Altrp\Builders\QueryBuilder;
-use App\Altrp\Builders\QueryBuilder2;
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
 use App\Altrp\Generators\ModelGenerator;

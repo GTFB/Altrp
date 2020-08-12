@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Altrp\Builders\QueryBuilder2;
+use App\Altrp\Builders\QueryBuilder;
 use App\Altrp\Query;
 use App\Altrp\SourcePermission;
 use App\Altrp\SourceRole;
@@ -23,7 +23,7 @@ class AltrpQueryObserver
      */
     public function creating(Query $query)
     {
-        $builder = new QueryBuilder2($query);
+        $builder = new QueryBuilder($query);
         $source = $builder->writeSource($query->name);
         $query->user_id = auth()->user()->id;
         $query->source_id = $source->id;
@@ -43,7 +43,7 @@ class AltrpQueryObserver
      */
     public function created(Query $query)
     {
-        $builder = new QueryBuilder2($query);
+        $builder = new QueryBuilder($query);
         $methodBody = $builder->getMethodBody();
         if (! $builder->writeSourceRoles($query->source)) {
             throw new ModelNotWrittenException('Failed to write source roles', 500);
@@ -74,7 +74,7 @@ class AltrpQueryObserver
      */
     public function updating(Query $query)
     {
-        $builder = new QueryBuilder2($query);
+        $builder = new QueryBuilder($query);
         $methodBody = $builder->getMethodBody();
         if (! $builder->updateControllerMethod()) {
             throw new ControllerFileException('Failed to update controller', 500);
@@ -126,7 +126,7 @@ class AltrpQueryObserver
      */
     public function deleting(Query $query)
     {
-        $builder = new QueryBuilder2($query);
+        $builder = new QueryBuilder($query);
         SourceRole::where('source_id', $query->source->id)->delete();
         SourcePermission::where('source_id', $query->source->id)->delete();
         if (! $builder->removeMethodFromController()) {
