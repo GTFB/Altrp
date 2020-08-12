@@ -142,11 +142,13 @@ class AltrpCarousel extends Component {
           {
             renderAsset(media, {
               className: "altrp-carousel-slide-img",
-              onClick: () => {
-                this.setState((state) => ({
-                  ...state,
-                  openLightBox: true
-                }))
+              onDoubleClick: () => {
+                if(this.props.lightbox_slides_content) {
+                  this.setState((state) => ({
+                    ...state,
+                    openLightBox: true
+                  }))
+                }
               }
             })
           }
@@ -193,26 +195,26 @@ class AltrpCarousel extends Component {
         <ArrowIcon/>
       </div>
     ) : "";
+
+    let lightbox = "";
+
+    if(this.props.lightbox_slides_content) {
+
+      lightbox =  this.state.openLightBox ? (
+        <AltrpLightbox
+          settings={{
+            mainSrc: this.state.sliderImages[this.state.activeSlide],
+            onCloseRequest: () => this.setState({openLightBox: false})
+          }}
+          color={this.props.color_lightbox_style}
+        />
+      ) : ""
+
+    }
+
     return <div className="altrp-carousel">
       {
-        this.state.openLightBox ? (
-          <AltrpLightbox
-            mainSrc={this.state.sliderImages[this.state.activeSlide]}
-            nextSrc={this.state.sliderImages[(this.state.activeSlide + 1) % this.state.sliderImages.length]}
-            prevSrc={this.state.sliderImages[(this.state.activeSlide + this.state.sliderImages.length - 1) % this.state.sliderImages.length]}
-            onMovePrevRequest={() =>
-              this.setState({
-                activeSlide: (this.state.activeSlide + this.state.sliderImages.length - 1) % this.state.sliderImages.length
-              })
-            }
-            onMoveNextRequest={() =>
-              this.setState({
-                activeSlide: (this.state.activeSlide + 1) % this.state.activeSlide.length
-              })
-            }
-            onCloseRequest={() => this.setState({openLightBox: false})}
-          />
-        ) : ""
+        this.props.lightbox_slides_content ? lightbox : ""
       }
       { this.props.arrows_position_navigation_content === "center" ?
         prevArrow

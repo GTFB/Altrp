@@ -108,6 +108,12 @@ class Carousel extends BaseElement{
       ]
     });
 
+    this.addControl('lightbox_slides_content', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Lightbox',
+      default: false
+    });
+
     this.addControl('per_view_slides_content', {
       type: CONTROLLER_SELECT,
       label: 'Slides per view',
@@ -445,9 +451,79 @@ class Carousel extends BaseElement{
             'label' : 'icon',
           },
         ],
-        rules: {
-          '{{ELEMENT}} .altrp-carousel-slide-img{{STATE}}': 'background-size: {{VALUE}};',
-        },
+      }
+    );
+
+    this.addControl('overlay_animation_text_heading_additional_content', {
+        type: CONTROLLER_SELECT,
+        label: 'Animation',
+        default: 'fade',
+        options:[
+          {
+            'value' : 'none',
+            'label' : 'none',
+          },
+          {
+            'value' : 'fade',
+            'label' : 'fade',
+          },
+          {
+            'value' : 'scaleUp',
+            'label' : 'scale up',
+          },
+          {
+            'value' : 'scaleDown',
+            'label' : 'scale down',
+          },
+          {
+            'value' : 'slideTop',
+            'label' : 'slide top',
+          },
+          {
+            'value' : 'slideBottom',
+            'label' : 'slide bottom',
+          },
+          {
+            'value' : 'slideLeft',
+            'label' : 'slide left',
+          },
+          {
+            'value' : 'slideRight',
+            'label' : 'slide right',
+          },
+          {
+            'value' : 'slideTopSmall',
+            'label' : 'slide top small',
+          },
+          {
+            'value' : 'slideBottomSmall',
+            'label' : 'slide bottom small',
+          },
+          {
+            'value' : 'slideLeftSmall',
+            'label' : 'slide left small',
+          },
+          {
+            'value' : 'slideRightSmall',
+            'label' : 'slide right small',
+          },
+          {
+            'value' : 'slideTopMedium',
+            'label' : 'slide top medium',
+          },
+          {
+            'value' : 'slideBottomMedium',
+            'label' : 'slide bottom medium',
+          },
+          {
+            'value' : 'slideLeftMedium',
+            'label' : 'slide left medium',
+          },
+          {
+            'value' : 'slideRightMedium',
+            'label' : 'slide right medium',
+          },
+        ],
       }
     );
 
@@ -839,6 +915,13 @@ class Carousel extends BaseElement{
       rules: {
         '{{ELEMENT}} .altrp-carousel-dots{{STATE}}': 'transform: translateY({{SIZE}}{{UNIT}})',
       },
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('lightbox_style', {
+      tab: TAB_STYLE,
+      label: 'Lightbox',
     });
 
     this.endControlSection();
