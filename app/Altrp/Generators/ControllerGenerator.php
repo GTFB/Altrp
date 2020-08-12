@@ -204,17 +204,17 @@ class ControllerGenerator extends AppGenerator
     {
         $actions = ['get', 'options', 'show', 'add', 'update', 'delete', 'update_column'];
         $oldSources = $this->getSourceActions();
-        if ($oldSources) {
-            foreach ($oldSources as $source) {
-                if (in_array($source->type, $actions)) {
-                    $actions = $this->deleteAction($actions, $source->type);
-                    if (!$actions) break;
-                }
-            }
-        }
-        if (!$actions) return true;
+//        if ($oldSources) {
+//            foreach ($oldSources as $source) {
+//                if (in_array($source->type, $actions)) {
+//                    $actions = $this->deleteAction($actions, $source->type);
+//                    if (!$actions) break;
+//                }
+//            }
+//        }
+//        if (!$actions) return true;
         $sources = [];
-        $tableName = $this->getTableName();
+        $tableName = Str::plural(strtolower($this->getModelName()));
         $singleResource = Str::singular($tableName);
         $nowTime = Carbon::now();
         foreach ($actions as $action) {
@@ -244,7 +244,22 @@ class ControllerGenerator extends AppGenerator
         }
 
         try {
-            Source::insert($sources);
+            if ($oldSources && $oldSources->isNotEmpty()) {
+                foreach ($oldSources as $oldSource) {
+                    $sourceObj = Source::find($oldSource->id);
+                    foreach ($sources as $source) {
+                        if ($sourceObj->type == $source['type']) {
+                            $sourceObj->update($source);
+                        }
+                    }
+                }
+            }
+            foreach ($sources as $source) {
+                if (! $oldSources->contains('type', $source['type'])) {
+                    $sourceObj = new Source($source);
+                    $sourceObj->save();
+                }
+            }
         } catch (\Exception $e) {
             return false;
         }
@@ -252,36 +267,36 @@ class ControllerGenerator extends AppGenerator
         return true;
     }
 
-    protected function getSources($actions, $tableName, $nowTime)
-    {
-        $sources = [];
-        $singleResource = Str::singular($tableName);
-        foreach ($actions as $action) {
-            if ($action == 'get') {
-                $url = $tableName;
-                $name = ucfirst($action) . ' ' . Str::studly($tableName);
-            } elseif ($action == 'options') {
-                $url = $singleResource . '_options';
-                $name = 'Get ' . ucfirst($tableName) . ' for options';
-            } elseif ($action == 'get_column') {
-                $url = $tableName . "/{{$singleResource}}/{column}";
-                $name = ucfirst($action) . ' ' . Str::studly($singleResource);
-            } else {
-                $url = $tableName . "/{{$singleResource}}";
-                $name = ucfirst($action) . ' ' . Str::studly($singleResource);
-            }
-            $sources[] = [
-                "model_id" => $this->getModelId(),
-                "controller_id" => $this->controllerModel->id,
-                "url" => '/' . $url,
-                "api_url" => '/' . $url,
-                "type" => $action,
-                "name" => $name,
-                "created_at" => $nowTime,
-            ];
-        }
-        return $sources;
-    }
+//    protected function getSources($actions, $tableName, $nowTime)
+//    {
+//        $sources = [];
+//        $singleResource = Str::singular($tableName);
+//        foreach ($actions as $action) {
+//            if ($action == 'get') {
+//                $url = $tableName;
+//                $name = ucfirst($action) . ' ' . Str::studly($tableName);
+//            } elseif ($action == 'options') {
+//                $url = $singleResource . '_options';
+//                $name = 'Get ' . ucfirst($tableName) . ' for options';
+//            } elseif ($action == 'get_column') {
+//                $url = $tableName . "/{{$singleResource}}/{column}";
+//                $name = ucfirst($action) . ' ' . Str::studly($singleResource);
+//            } else {
+//                $url = $tableName . "/{{$singleResource}}";
+//                $name = ucfirst($action) . ' ' . Str::studly($singleResource);
+//            }
+//            $sources[] = [
+//                "model_id" => $this->getModelId(),
+//                "controller_id" => $this->controllerModel->id,
+//                "url" => '/' . $url,
+//                "api_url" => '/' . $url,
+//                "type" => $action,
+//                "name" => $name,
+//                "created_at" => $nowTime,
+//            ];
+//        }
+//        return $sources;
+//    }
 
     public function deleteSourceActions()
     {
@@ -319,15 +334,45 @@ class ControllerGenerator extends AppGenerator
     /**
      * Записать в БД права доступа принадлежащие ресурсу
      *
+     * @param $model
      * @return bool
      */
-    public function writeSourcePermissions()
+    public function writeSourcePermissions($model)
+    {
+        $sourcePermissions = $this->prepareSourcePermissions();
+        $oldSourcePermissions = SourcePermission::where('type','like','%-'.strtolower(Str::snake($model->getOriginal('name'))))->get();
+        try {
+            foreach ($sourcePermissions as $sourcePermission) {
+                if (! $oldSourcePermissions->contains(
+                    'type',
+                    explode('-',$sourcePermission['type'])[0] . '-' . strtolower($model->getOriginal('name'))
+                )) {
+                    $sourcePermObj = new SourcePermission($sourcePermission);
+                    $sourcePermObj->save();
+                }
+            }
+            if ($oldSourcePermissions && $oldSourcePermissions->isNotEmpty()) {
+                foreach ($oldSourcePermissions as $oldSourcePermission) {
+                    $sourcePermObj = SourcePermission::find($oldSourcePermission->id);
+                    foreach ($sourcePermissions as $sourcePermission) {
+                        if ($sourcePermObj->type == explode('-',$sourcePermission['type'])[0] . '-' . strtolower($model->getOriginal('name'))) {
+                            $sourcePermObj->update($sourcePermission);
+                        }
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
+    }
+
+    protected function prepareSourcePermissions()
     {
         $nowTime = Carbon::now();
-        $actions = ['get','options','add','show','update','update_column','delete'];
         $sources = $this->controllerModel->sources;
         $modelName = $this->controllerModel->model->name;
-        $oldSourcePermissions = SourcePermission::whereIn('source_id',explode(',',$sources->implode('id',',')))->get();
+//        $oldSourcePermissions = SourcePermission::whereIn('source_id',explode(',',$sources->implode('id',',')))->get();
         $sourcePermissions = [];
         $permissions = Permission::where(
             'name',
@@ -335,51 +380,41 @@ class ControllerGenerator extends AppGenerator
             '%' . Str::snake(strtolower($modelName))
         )->get();
         foreach ($sources as $source) {
-                if (($source->type == 'get' || $source->type == 'options')) {
-                    $sourcePermission = [
-                        'permission_id' => $permissions->firstWhere('name', 'all-' . Str::snake(strtolower($modelName)))->id,
-                    ];
-                }
-                if ($source->type == 'add') {
-                    $sourcePermission = [
-                        'permission_id' => $permissions->firstWhere('name', 'create-' . Str::snake(strtolower($modelName)))->id,
-                    ];
-                }
-                if ($source->type == 'show') {
-                    $sourcePermission = [
-                        'permission_id' => $permissions->firstWhere('name', 'read-' . Str::snake(strtolower($modelName)))->id,
-                    ];
-                }
-                if ($source->type == 'update' || $source->type == 'update_column') {
-                    $sourcePermission = [
-                        'permission_id' => $permissions->firstWhere('name', 'update-' . Str::snake(strtolower($modelName)))->id,
-                    ];
-                }
-                if ($source->type == 'delete') {
-                    $sourcePermission = [
-                        'permission_id' => $permissions->firstWhere('name', 'delete-' . Str::snake(strtolower($modelName)))->id,
-                    ];
-                }
-                if ($source->type == 'get' || $source->type == 'options' || $source->type == 'add'
-                    || $source->type == 'show' || $source->type == 'update' || $source->type == 'delete') {
-                    $sourcePermission['source_id'] = $source->id;
-                    $sourcePermission['type'] = $source->type . '-' . Str::snake(strtolower($modelName));
-                    $sourcePermission['created_at'] = $nowTime;
-                    $sourcePermission['updated_at'] = $nowTime;
-                    $sourcePermissions[] = $sourcePermission;
-                }
-
-        }
-
-        if ($sourcePermissions) {
-            try {
-                SourcePermission::insertOrIgnore($sourcePermissions);
-            } catch (\Exception $e) {
-                echo $e;
-                return false;
+            if (($source->type == 'get' || $source->type == 'options')) {
+                $sourcePermission = [
+                    'permission_id' => $permissions->firstWhere('name', 'all-' . Str::snake(strtolower($modelName)))->id,
+                ];
+            }
+            if ($source->type == 'add') {
+                $sourcePermission = [
+                    'permission_id' => $permissions->firstWhere('name', 'create-' . Str::snake(strtolower($modelName)))->id,
+                ];
+            }
+            if ($source->type == 'show') {
+                $sourcePermission = [
+                    'permission_id' => $permissions->firstWhere('name', 'read-' . Str::snake(strtolower($modelName)))->id,
+                ];
+            }
+            if ($source->type == 'update' || $source->type == 'update_column') {
+                $sourcePermission = [
+                    'permission_id' => $permissions->firstWhere('name', 'update-' . Str::snake(strtolower($modelName)))->id,
+                ];
+            }
+            if ($source->type == 'delete') {
+                $sourcePermission = [
+                    'permission_id' => $permissions->firstWhere('name', 'delete-' . Str::snake(strtolower($modelName)))->id,
+                ];
+            }
+            if ($source->type == 'get' || $source->type == 'options' || $source->type == 'add'
+                || $source->type == 'show' || $source->type == 'update' || $source->type == 'update_column' || $source->type == 'delete') {
+                $sourcePermission['source_id'] = $source->id;
+                $sourcePermission['type'] = $source->type . '-' . Str::snake(strtolower($modelName));
+                $sourcePermission['created_at'] = $nowTime;
+                $sourcePermission['updated_at'] = $nowTime;
+                $sourcePermissions[] = $sourcePermission;
             }
         }
-        return true;
+        return $sourcePermissions;
     }
 
     /**

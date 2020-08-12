@@ -58,7 +58,7 @@ class AltrpControllerObserver
         if (! $generator->writeSourceRoles()) {
             throw new ModelNotWrittenException('Failed to write source roles to the database', 500);
         }
-        if (! $generator->writeSourcePermissions()) {
+        if (! $generator->writeSourcePermissions($controller->model)) {
             throw new ModelNotWrittenException('Failed to write source permissions to the database', 500);
         }
         if (! $generator->generateRoutes()) {
@@ -96,7 +96,7 @@ class AltrpControllerObserver
             throw new ModelNotWrittenException('Failed to write source roles to the database', 500);
         }
         // Записать права доступа к ресурсам в базу
-        if (! $generator->writeSourcePermissions()) {
+        if (! $generator->writeSourcePermissions($controller->model)) {
             throw new ModelNotWrittenException('Failed to write source permissions to the database', 500);
         }
         // Сгенерировать маршруты для ресурса

@@ -5,4 +5,4 @@ Route::post('{{routePrefix}}/{{tableName}}', [{{storeMiddleware}}'uses' =>'{{con
 Route::get('{{routePrefix}}/{{tableName}}/{{{resourceId}}}', [{{showMiddleware}}'uses' =>'{{controllerName}}@show']);
 Route::put('{{routePrefix}}/{{tableName}}/{{{resourceId}}}', [{{updateMiddleware}}'uses' =>'{{controllerName}}@update']);
 Route::delete('{{routePrefix}}/{{tableName}}/{{{resourceId}}}', [{{destroyMiddleware}}'uses' =>'{{controllerName}}@destroy']);
-Route::put('{{routePrefix}}/{{tableName}}/{{{id}}}/{{{column}}}', [{{middleware}}'uses' =>'{{controllerName}}@updateColumn']);
+Route::put('{{routePrefix}}/{{tableName}}/{{{id}}}/{{{column}}}', [{{updateMiddleware}}'uses' =>'{{controllerName}}@updateColumn']);

@@ -145,7 +145,7 @@ class AltrpModelObserver
         if (! $generator->writeSourceRoles()) {
             throw new ModelNotWrittenException('Failed to write source roles to the database', 500);
         }
-        if (! $generator->writeSourcePermissions()) {
+        if (! $generator->writeSourcePermissions($model)) {
             throw new ModelNotWrittenException('Failed to write source permissions to the database', 500);
         }
         if (! $generator->generateRoutes()) {
