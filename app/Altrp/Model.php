@@ -90,7 +90,7 @@ class Model extends EloquentModel
              * @var {Model} $model
              */
             $models[] = [
-                'title' => $model->name,
+                'title' => $model->title,
                 'name' => $model->altrp_table->name,
                 'ordering_fields' => $model->get_ordering_fields()
             ];

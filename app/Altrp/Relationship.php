@@ -38,6 +38,7 @@ class Relationship extends EloquentModel
         'add_belong_to',
         'onDelete',
         'onUpdate',
+        'always_with',
     ];
 
     /**

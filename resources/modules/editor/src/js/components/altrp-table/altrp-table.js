@@ -59,6 +59,7 @@ const AltrpTable = ({settings, query}) => {
   }
   let columns = [];
   columns = settingsToColumns(settings);
+
   let {
     getTableProps,
     getTableBodyProps,
@@ -106,6 +107,12 @@ const AltrpTable = ({settings, query}) => {
                     {row.cells.map((cell, _i) => {
                       let cellContent = cell.render('Cell');
                       let linkTag = isEditor() ? 'a': Link;
+                      /**
+                       * Если значение объект или масиив, то отобразим пустую строку
+                       */
+                      if(_.isObject(cell.value) || _.isArray(cell.value)){
+                        cellContent = '';
+                      }
                       /**
                        * Если в настройках колонки есть url, и в данных есть id, то делаем ссылку
                        */
@@ -165,8 +172,6 @@ function settingsToColumns(settings) {
       columns.push(_column);
     }
   });
-  // console.log(columns);
-
   return columns;
 }
 

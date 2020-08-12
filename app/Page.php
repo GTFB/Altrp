@@ -105,6 +105,7 @@ class Page extends Model
 
     $header = Template::where( 'area', 2 )->where( 'type', 'template' )->first();
     if( $header ){
+      $header->check_elements_conditions();
       $areas[] = [
         'area_name' => 'header',
         'id' => 'header',
@@ -112,16 +113,19 @@ class Page extends Model
         'template' => $header
       ];
     }
+    $content = PagesTemplate::where( 'page_id', $page_id )
+      ->where( 'template_type', 'content' )->first()->template;
+    $content->check_elements_conditions();
     $areas[] = [
       'area_name' => 'content',
       'id' => 'content',
       'settings' => [],
-      'template' => PagesTemplate::where( 'page_id', $page_id )
-        ->where( 'template_type', 'content' )->first()->template
+      'template' => $content,
     ];
 
     $footer = Template::where( 'area', 3 )->where( 'type', 'template' )->first();
     if( $footer ){
+      $footer->check_elements_conditions();
       $areas[] = [
         'area_name' => 'footer',
         'id' => 'footer',
@@ -132,8 +136,11 @@ class Page extends Model
     $popups = Template::join( 'areas', 'areas.id', '=', 'templates.area' )
       ->where( 'areas.name', '=', 'popup' )
       ->where( 'type', 'template' )->with( 'template_settings' )->get();
-
     if( $popups->count() ){
+      $popups->map( function ( $popup ){
+        $popup->check_elements_conditions();
+      } );
+
       $areas[] = [
         'area_name' => 'popups',
         'id' => 'popups',

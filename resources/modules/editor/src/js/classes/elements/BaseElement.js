@@ -425,9 +425,7 @@ class BaseElement extends ControlStack {
     this.settings.styles[breakpoint][settingName] = {};
     rules.forEach(rule => {
       let finalSelector = rule.selector;
-      console.log(getElementState().value);
       finalSelector = finalSelector.replace(/{{ELEMENT}}/g, this.getSelector()).replace(/{{STATE}}/g, getElementState().value);
-      console.log(finalSelector);
       /**
        * если this.settings.styles[breakpoint][settingName] массив, то преобразуем в объект
        */

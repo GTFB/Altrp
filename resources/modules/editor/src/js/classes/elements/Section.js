@@ -14,6 +14,7 @@ import {
   CONTROLLER_COLWIDTH,
   TAB_STYLE
 } from "../modules/ControllersManager";
+import {advancedTabControllers} from "../../decorators/register-controllers";
 
 class Section extends BaseElement{
 
@@ -511,7 +512,7 @@ class Section extends BaseElement{
       label: "CSS Classes"
     });
 
-
+    advancedTabControllers(this);
   }
 
   /**

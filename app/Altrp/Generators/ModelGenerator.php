@@ -178,6 +178,7 @@ class ModelGenerator extends AppGenerator
         $relationships = $this->screenBacklashes($this->relationshipsToString());
         $fullModelName = $this->modelFilename;
         $fillableColumns = $this->getFillableColumns();
+        $alwaysWithRelations= $this->getAlwaysWithRelations();
         $softDeletes = $this->isSoftDeletes();
         $createdAt = $this->getCreatedAt();
         $updatedAt = $this->getUpdatedAt();
@@ -187,10 +188,12 @@ class ModelGenerator extends AppGenerator
         $userColumns = $this->getUserColumns();
         if(file_exists($oldModelFile)) unlink($oldModelFile);
         try {
-            \Artisan::call('crud:model', [
+
+          \Artisan::call('crud:model', [
                 'name' => "{$fullModelName}",
                 '--table' => "{$this->model->table()->first()->name}",
                 '--fillable' => "[{$fillableColumns}]",
+                '--always-with' => "[{$alwaysWithRelations}]",
                 '--pk' => "$primaryKey",
                 '--soft-deletes' => "{$softDeletes}",
                 '--timestamps' => $this->model->time_stamps,
@@ -202,7 +205,7 @@ class ModelGenerator extends AppGenerator
                 '--custom-namespaces' => $this->getCustomCodeBlock($customCode,'custom_namespaces'),
                 '--custom-traits' => $this->getCustomCodeBlock($customCode,'custom_traits'),
                 '--custom-properties' => $this->getCustomCodeBlock($customCode,'custom_properties'),
-                '--custom-methods' => $this->getCustomCodeBlock($customCode,'custom_methods')
+                '--custom-methods' => $this->getCustomCodeBlock($customCode,'custom_methods'),
             ]);
         } catch(\Exception $e) {
             if(file_exists($this->modelFile . '.bak'))
@@ -323,14 +326,14 @@ class ModelGenerator extends AppGenerator
 
             $relItem = $rel->name . '#' . $rel->type . '#'
                 . trim($this->screenBacklashes($rel->model_class), '\\');
-            if( $rel->type === 'hasOne' ){
+            if( $rel->type === 'belongsTo' ){
               if (isset($rel->foreign_key)) {
                 $relItem .= "|{$rel->foreign_key}";
                 if (isset($rel->local_key)) {
                   $relItem .= "|{$rel->local_key}";
                 }
               }
-            } elseif ( in_array( $rel->type, ['hasMany', 'belongsTo'] ) ){
+            } elseif ( in_array( $rel->type, ['hasMany', 'hasOne'] ) ){
               if (isset($rel->local_key)) {
                 $relItem .= "|{$rel->local_key}";
                 if (isset($rel->foreign_key)) {
@@ -484,6 +487,20 @@ class ModelGenerator extends AppGenerator
 //        $relationsList = $this->getColumnsList($relations, 'foreign_key');
         return '\'' . implode("','", $columnsList) . '\'';
     }
+    /**
+     * Получить связи, который всегда идут c моделью
+     *
+     * @return string
+     */
+    protected function getAlwaysWithRelations()
+    {
+      $relations = $this->getRelationsAlwaysWith();
+      if( ! $relations->count() ){
+        return '';
+      }
+      $relationsList = $this->getColumnsList($relations);
+      return '\'' . implode("','", $relationsList) . '\'';
+    }
 
     /**
      * Получить таблицу по id
@@ -515,14 +532,25 @@ class ModelGenerator extends AppGenerator
         return $relations;
     }
 
-    /**
+  /**
+   * Список связей, который идут всегда с моделью
+   * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+   */
+  protected function getRelationsAlwaysWith()
+  {
+    $relations = Relationship::where([['model_id', $this->model->id], ['add_belong_to', 1], ['always_with', 1]])->get();
+    return $relations;
+  }
+
+
+  /**
      * Получить список колонок
      *
-     * @param $columns
+     * @param array $columns
      * @param string $columnName
      * @return array
      */
-    protected function getColumnsList($columns, $columnName = 'name')
+    protected function getColumnsList($columns = [], $columnName = 'name')
     {
         $columnsList = [];
         foreach ($columns as $column) {
