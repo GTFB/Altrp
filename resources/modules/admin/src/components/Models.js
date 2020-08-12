@@ -77,8 +77,13 @@ export default class Models extends Component {
   /**
    * Обновить список моделей
    */
-  updateModels(){
-    
+  updateModels = async() => {
+    let models = await this.modelsResource.getAll();
+    models = models.models;
+    this.setState(state => ({
+      ...state,
+      models
+    }))
   }
 
   slicePage = (array, page, itemsPerPage) => {
@@ -132,7 +137,7 @@ export default class Models extends Component {
                 route: '/admin/ajax/models/:id',
                 method: 'delete',
                 confirm: 'Are You Sure?',
-                after: () => this.updateModels(this.state.currentPage, this.state.activeTemplateArea),
+                after: () => this.updateModels(),
                 className: 'quick-action-menu__item_danger',
                 title: 'Trash'
               }]}
