@@ -60,6 +60,11 @@ class EditModel extends Component {
     this.setState(state => ({ ...state, fields }));
   }
 
+  updateRelations = async() => {
+    let relations = await this.relationsResource.getAll();
+    this.setState(state => ({ ...state, relations }));
+  }
+
   /**
    * Загрузим данные модели
    * @return {Promise<void>}
@@ -144,7 +149,7 @@ class EditModel extends Component {
             route: `/admin/ajax/models/${id}/relations/:id`,
             method: 'delete',
             confirm: 'Are You Sure?',
-            after: () => this.updateModels(this.state.currentPage, this.state.activeTemplateArea),
+            after: () => this.updateRelations(),
             className: 'quick-action-menu__item_danger',
             title: 'Trash'
           }]}
