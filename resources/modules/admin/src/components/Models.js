@@ -109,7 +109,7 @@ export default class Models extends Component {
       ...state,
       modelsCount: models.length
     }))
-    
+
     this.getModels();
   }
 
@@ -138,6 +138,10 @@ export default class Models extends Component {
           <TabPanel>
             <AdminTable
               columns={columnsModel}
+              search={{
+                value: modelsSearch,
+                changeHandler: e => this.setState({ modelsSearch: e.target.value }, this.getModels)
+              }}
               quickActions={[{
                 tag: 'Link', props: {
                   href: '/admin/tables/models/edit/:id',
