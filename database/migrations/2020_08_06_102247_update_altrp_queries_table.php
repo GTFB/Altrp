@@ -15,6 +15,7 @@ class UpdateAltrpQueriesTable extends Migration
     {
         Schema::table('altrp_queries', function (Blueprint $table)
         {
+            $table->longText('joins')->nullable()->after('columns');
             $table->bigInteger('model_id')->unsigned()->index()->after('source_id');
             $table->foreign('model_id')->references('id')->on('altrp_models');
         });

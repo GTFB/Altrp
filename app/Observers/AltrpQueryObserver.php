@@ -24,7 +24,6 @@ class AltrpQueryObserver
     public function creating(Query $query)
     {
         $builder = new QueryBuilder2($query);
-        dd($builder->getMethodBody());
         $source = $builder->writeSource($query->name);
         $query->user_id = auth()->user()->id;
         $query->source_id = $source->id;
@@ -86,10 +85,12 @@ class AltrpQueryObserver
         if (! $builder->updateRoute()) {
             throw new RouteFileException('Failed to update route', 500);
         }
-        $query->source->update([
-            'type' => Str::snake($query->name),
-            'name' => ucwords(str_replace('_', ' ',Str::snake($query->name)))
-        ]);
+        if ($query->source) {
+            $query->source->update([
+                'type' => Str::snake($query->name),
+                'name' => ucwords(str_replace('_', ' ',Str::snake($query->name)))
+            ]);
+        }
         if (! $builder->updateSourceRoles($query->source)) {
             throw new ControllerFileException('Failed to update source roles', 500);
         }
