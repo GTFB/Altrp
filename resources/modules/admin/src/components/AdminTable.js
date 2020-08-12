@@ -3,8 +3,22 @@ import {Link} from 'react-router-dom'
 import Resource from "../../../editor/src/js/classes/Resource";
 
 class AdminTable extends Component {
+
+  /**
+   * Фильтр по ыыеденной строк
+   * @param {{}} e
+   */
+  filterByKeyboard = (e) => {
+
+    if(_.isFunction(this.props.filterByKeyboard)){
+      this.props.filterByKeyboard(e.target.value);
+    }
+  };
   render(){
     return<div className="admin-table">
+      <div className="admin-table">
+        <input type="text" className="form-group"/>
+      </div>
       <table>
         <thead className="admin-table-head">
         <tr className="admin-table-row">
