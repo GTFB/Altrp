@@ -89,18 +89,17 @@ class SQLEditorController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\SQLEditor  $sQLEditor
+     * @param \Illuminate\Http\Request $request
+     * @param $sql_editor
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SQLEditor $sQLEditor)
+    public function update(Request $request, $sql_editor)
     {
-        //
-      $sQLEditor->fill( $request->all() );
-      if( $sQLEditor->save() ) {
+        $sQLEditor = SQLEditor::find($sql_editor);
+      if( $sQLEditor->update($request->all()) ) {
         return response()->json( ['success' => true], 200,  [], JSON_UNESCAPED_UNICODE );
       }
-      return response()->json( ['success' => false, 'Error on Delete'], 200,  [], JSON_UNESCAPED_UNICODE );
+      return response()->json( ['success' => false, 'Error on Update'], 200,  [], JSON_UNESCAPED_UNICODE );
     }
 
   /**

@@ -394,12 +394,36 @@ class ModelGenerator extends AppGenerator
      *
      * @return bool
      */
-    protected function writePermissions()
+    public function writePermissions()
     {
+        $actions = ['create', 'read', 'update', 'delete', 'all'];
         $permissions = $this->preparePermissions();
+        $oldPermissions = Permission::where('name','like','%-'.strtolower($this->model->getOriginal('name')))->get();
+
         try {
-            Permission::insertOrIgnore($permissions);
+            foreach ($permissions as $permission) {
+                if (! $oldPermissions->contains(
+                    'name',
+                    explode('-',$permission['name'])[0] . '-' . strtolower($this->model->getOriginal('name'))
+                )) {
+                    $newPermObj = new Permission($permission);
+                    $newPermObj->save();
+                }
+            }
+            if ($oldPermissions && $oldPermissions->isNotEmpty()) {
+                foreach ($oldPermissions as $oldPermission) {
+                    $permObj = Permission::find($oldPermission->id);
+                    foreach ($permissions as $permission) {
+                        if ($permObj->name == explode('-',$permission['name'])[0] . '-' . strtolower($this->model->getOriginal('name'))) {
+                            $permObj->update($permission);
+                            break;
+                        }
+                    }
+                }
+            }
+//            Permission::insertOrIgnore($permissions);
         } catch (\Exception $e) {
+            echo $e;
             return false;
         }
         return true;

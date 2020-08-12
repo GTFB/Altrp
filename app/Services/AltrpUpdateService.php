@@ -6,6 +6,8 @@ namespace App\Services;
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
 use App\Altrp\Model;
+use App\Altrp\Source;
+use App\Altrp\SourcePermission;
 use App\Exceptions\CommandFailedException;
 use Carbon\Carbon;
 use GuzzleHttp\Client;

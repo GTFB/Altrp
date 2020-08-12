@@ -47,6 +47,25 @@ class RouteFileWriter
         }
     }
 
+    public function updateSqlRoute($oldMethodName, $methodName)
+    {
+        $routeContent = file($this->route->getFile(), 2);
+        $this->removeSqlRoute($routeContent,$oldMethodName);
+        $this->writeRoute($routeContent, $this->getRoute($methodName));
+        return true;
+    }
+
+    protected function removeSqlRoute(&$routeContent,$methodName)
+    {
+        if ($line = $this->routeExists($routeContent, $methodName)) {
+            unset($routeContent[$line]);
+            if (\File::put($this->route->getFile(), implode(PHP_EOL,$routeContent)) === false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Проверить, существует ли уже такой маршрут в файле маршрутов
      *
@@ -61,7 +80,7 @@ class RouteFileWriter
                 && Str::contains($content, $this->route->getModelName())
                 && Str::contains($content, 'Route::get')
             ) {
-                return true;
+                return $line;
             }
         }
         return false;
@@ -119,9 +138,9 @@ class RouteFileWriter
     protected function getAccessMiddleware($methodName)
     {
         $source = Source::where('type', Str::kebab($methodName))->first();
-        
+
         if(!$source) return null;
-        
+
         $roles = $source->source_roles;
         $accessSource = [];
         $accessRoles = [];

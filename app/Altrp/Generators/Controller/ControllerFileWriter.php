@@ -80,8 +80,75 @@ class ControllerFileWriter
 
         $result = $this->writeNamespaces($controllerContent, [$repoNamespace])
                     ->writeMethods($controllerContent, $methodContent);
-        if (! $result) throw new ControllerFileException('Failed to write method to tje controller', 500);
+        if (! $result) throw new ControllerFileException('Failed to write method to the controller', 500);
         return true;
+    }
+
+    /**
+     * Удалить метод из контроллера
+     *
+     * @param $content
+     * @param $name
+     * @return bool|int
+     */
+    public function removeMethod($content, $name)
+    {
+        if ($line = $this->methodExists($content, $name)) {
+            for($i = $line; true; $i++) {
+                if (Str::contains($content[$i], '}')) {
+                    unset($content[$i]);
+                    break;
+                }
+                unset($content[$i]);
+            }
+        }
+        return \File::put($this->controller->getFile(), implode(PHP_EOL,$content));
+    }
+
+    /**
+     * Добавить Sql метод
+     *
+     * @param $name
+     * @param $sql
+     * @return bool
+     */
+    public function writeSqlMethod($name, $sql)
+    {
+        $methodContent = file($this->getSqlControllerMethodStub(), 2);
+        $this->replaceSqlEditorName($methodContent, $name)
+            ->replaceModelName($methodContent, $this->controller->getModelName())
+            ->replaceSqlEditorSql($methodContent, $sql);
+        $controllerContent = file($this->controller->getFile(), 2);
+        $result = $this->writeMethods($controllerContent, $methodContent);
+        return $result;
+    }
+
+    /**
+     * Обновить SQl метод
+     *
+     * @param $oldName
+     * @param $name
+     * @param $sql
+     * @return bool
+     */
+    public function updateSqlMethod($oldName, $name, $sql)
+    {
+        $controllerContent = file($this->controller->getFile(), 2);
+        $this->removeMethod($controllerContent, $oldName);
+        $this->writeSqlMethod($name, $sql);
+        return true;
+    }
+
+    /**
+     * Проверить, существует ли sql-метод для редактора
+     *
+     * @param $methodName
+     * @return bool
+     */
+    public function methodSqlExists($methodName)
+    {
+        $controllerContent = file($this->controller->getFile(), 2);
+        return $this->methodExists($controllerContent, $methodName);
     }
 
     /**
@@ -108,12 +175,12 @@ class ControllerFileWriter
      * @param $methodName
      * @return bool
      */
-    protected function methodExists($controllerContent, $methodName)
+    public function methodExists($controllerContent, $methodName)
     {
         foreach ($controllerContent as $line => $content) {
             if (Str::contains($content, 'public function ' . $methodName . '(')
                 || Str::contains($content, 'protected function ' . $methodName . '(')) {
-                return true;
+                return $line;
             }
         }
         return false;
@@ -259,6 +326,24 @@ class ControllerFileWriter
         return $this;
     }
 
+    protected function replaceSqlEditorName(&$methodContent, $sqlEditorName)
+    {
+        $methodContent = str_replace('{{sqlEditorName}}', $sqlEditorName, $methodContent);
+        return $this;
+    }
+
+    protected function replaceSqlEditorSql(&$methodContent, $sqlEditorSql)
+    {
+        $methodContent = str_replace('{{sqlEditorSql}}', $sqlEditorSql, $methodContent);
+        return $this;
+    }
+
+    protected function replaceModelName(&$methodContent, $modelName)
+    {
+        $methodContent = str_replace('{{modelName}}', $modelName, $methodContent);
+        return $this;
+    }
+
     /**
      * Получить стаб файл для создания метода в контроллере
      *
@@ -267,5 +352,15 @@ class ControllerFileWriter
     protected function getControllerMethodStub()
     {
         return app_path('Altrp/Commands/stubs/controllers/create_controller_method.stub');
+    }
+
+    /**
+     * Получить стаб файл для создания sql метода в контроллере
+     *
+     * @return string
+     */
+    protected function getSqlControllerMethodStub()
+    {
+        return app_path('Altrp/Commands/stubs/controllers/create_sql_controller_method.stub');
     }
 }
