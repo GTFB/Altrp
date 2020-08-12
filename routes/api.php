@@ -48,6 +48,14 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::get('/tables/{table}/columns', "Admin\TableController@getColumns");
         Route::get('/tables/{table}/keys', "Admin\TableController@getKeys");
 
+        /**
+         * Маршруты для проверки на уникальность имени
+         */
+        Route::get('/model_name_is_free', 'Admin\ModelsController@modelNameIsFree');
+        Route::get('/models/{model_id}/field_name_is_free', 'Admin\ModelsController@fieldNameIsFree');
+        Route::get('/models/{model_id}/relation_name_is_free', 'Admin\ModelsController@relationNameIsFree');
+        Route::get('/models/{model_id}/sql_builder_name_is_free', 'Admin\ModelsController@queryNameIsFree');
+
         // Models
         Route::get( '/models', 'Admin\ModelsController@getModels');
         Route::get( '/model_options', 'Admin\ModelsController@getModelOptions');
