@@ -89,7 +89,6 @@ export default class SQLEditors extends Component {
 
   render() {
     const { sql_editors, sql_editorsPagination} = this.state;
-  console.log(sql_editors);
     return <div className="admin-settings admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">

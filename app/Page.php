@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Mockery\Exception;
 
 /**
@@ -84,7 +85,7 @@ class Page extends Model
       $_page['lazy'] = $lazy;
       if($page->model){
         $_page['model'] = $page->model->toArray();
-        $_page['model']['modelName'] = $page->model->name;
+        $_page['model']['modelName'] = Str::plural( $page->model->name );
       }
 //      if( $page->get_models() ){
 //        $_page['models'] = $page->get_models();

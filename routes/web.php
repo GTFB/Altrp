@@ -314,3 +314,6 @@ Route::group( ['prefix' => 'ajax'], function(){
   Route::get( 'templates/{template_id}', 'TemplateController@show_frontend' )->name( 'templates.show.frontend' );
 } );
 
+Route::get('/linkstorage', function () {
+  return redirect('/admin');
+});

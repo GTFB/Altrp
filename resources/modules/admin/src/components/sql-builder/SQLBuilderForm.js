@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from "react";
+import { Link, withRouter } from "react-router-dom";
 import moment from "moment";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import { titleToName } from "../../js/helpers";
@@ -6,110 +7,79 @@ import AggregateComponent from "./AggregateComponent";
 import ConditionComponent from "./ConditionComponent";
 import OrderByComponent from "./OrderByComponent";
 import AltrpSelect from "../altrp-select/AltrpSelect";
-import { Link, withRouter } from "react-router-dom";
-
-/** @function getDateFormat
- * Функция схожа с объявленой в файле ConditionComponent.js, с тем различием
- что moment запрашивает дату в формате DD - заглавные буквы
- * @param {string} type - тип поля where_date
- * @return {string | undefined} формат строки, получаемой из объекта Date
- */
-function getDateFormat(type) {
-  switch (type) {
-    case 'datetime':
-      return "yyyy/MM/DD h:mm:ss";
-    case 'date':
-      return "yyyy/MM/DD";
-    case 'time':
-      return "h:mm:ss";
-    case 'day':
-      return "DD";
-    case 'month':
-      return "MM";
-    case 'year':
-      return "yyyy";
-
-    default:
-      break;
-  }
-}
+import { getMomentFormat } from "./helpers";
 
 class SQLBuilderForm extends Component {
   constructor(props) {
     super(props);
     const { modelId } = this.props.match.params;
     this.state = {
-
-     /* value:
-      {
+      value: {
         title: "",
-        "name": "getAllRecords",
-        "columns": [
+        name: "getAllRecords",
+        columns: [
           "id",
           "name",
           "email"
         ],
-        "aggregates": [
+        aggregates: [
           {
-            "type": "sum",
-            "column": "price",
-            "alias": "sum_price"
+            type: "sum",
+            column: "price",
+            alias: "sum_price"
           },
           {
-            "type": "max",
-            "column": "price",
-            "alias": "max_price"
+            type: "max",
+            column: "price",
+            alias: "max_price"
           }
         ],
-        "conditions": [
+        conditions: [
           {
-            "conditionType": "where",
-            "column": "user_id",
-            "operator": "=",
-            "value": "CURRENT_USER"
+            conditionType: "where",
+            column: "user_id",
+            operator: "=",
+            value: "CURRENT_USER"
           }
         ],
-        "relations": [
+        relations: [
           "post",
           "comments"
         ],
-        "order_by": [
+        order_by: [
           {
-            "column": "name",
-            "type": "desc"
+            column: "name",
+            type: "desc"
           }
         ],
-        "access": {
-          "roles": [
+        access: {
+          roles: [
             1,
             2
           ],
-          "permissions": [
+          permissions: [
             48,
             50
           ]
         },
-        "group_by": [
+        group_by: [
           "name",
           "surname"
         ],
-        "offset": 10,
-        "limit": 5
-      },*/
-      value:{},
+        offset: 10,
+        limit: 5
+      },
       initialCondition: {
         conditionType: 'where',
         column: '',
         operator: 'not-null',
         value: ''
       },
-      "relationsOptions": [],
-      "rolesOptions":
-        [],
-      "permissionsOptions":
-        [],
-      "selfFields": [],
-      "selfFieldsOptions": []
+      relationsOptions: [],
+      rolesOptions: [],
+      permissionsOptions: [],
+      selfFields: [],
+      selfFieldsOptions: []
     };
     this.counter = 0;
     this.rolesOptions = new Resource({ route: '/admin/ajax/role_options' });
@@ -208,7 +178,7 @@ class SQLBuilderForm extends Component {
    */
   changePermission = (permissions) => {
     let _permissions = [];
-    permissions.forEach(p => {
+    if (permissions) permissions.forEach(p => {
       _permissions.push(p.value)
     });
     this.setState(state => {
@@ -293,10 +263,10 @@ class SQLBuilderForm extends Component {
             break;
           case 'where_between':
           case 'where_in':
-            condition = { conditionType: value, or: false, not: false, column: '', values: [] };
+            condition = { conditionType: value, or: false, column: '', values: [] };
             break;
           case 'where_date':
-            condition = { conditionType: value, type: '', column: '', operator: '', value: new Date() };//TODO: замениить date на строку
+            condition = { conditionType: value, type: 'year', column: '', value: '2020' };
             break;
           case 'where_column':
             condition = { conditionType: value, or: false, first_column: '', operator: '', second_column: '' };
@@ -306,10 +276,68 @@ class SQLBuilderForm extends Component {
             throw new Error('invalid condition type');
         }
       } else {
-        condition = {
-          ...state.value.conditions[index],
-          [name]: ['or', 'not'].includes(name) ? checked : value
-        };
+        switch (name) {
+          case 'value1':
+            condition = {
+              ...state.value.conditions[index],
+              values: [value, state.value.conditions[index].values[1]]
+            };
+            break;
+          case 'value2':
+            condition = {
+              ...state.value.conditions[index],
+              values: [state.value.conditions[index].values[0], value]
+            };
+            break;
+          case 'values':
+            condition = {
+              ...state.value.conditions[index],
+              [name]: value.split(',').map(item => item.trim())
+            };
+            break;
+          case 'type':
+            condition = {
+              ...state.value.conditions[index],
+              type: value,
+              value: moment(new Date()).format(getMomentFormat(value))
+            };
+            break;
+          case 'operator':
+            condition = {
+              ...state.value.conditions[index],
+              [name]: value
+            };
+            if (['not-null', 'null'].includes(value)) {
+              condition.conditionType === 'where_column' ?
+                delete condition.second_column :
+                delete condition.value
+            } else {
+              condition.conditionType === 'where_column' ?
+                condition.second_column = condition.second_column || '' :
+                condition.value = condition.value || ''
+            }
+            break;
+          case 'or':
+            condition = {
+              ...state.value.conditions[index],
+              [name]: checked
+            };
+            break;
+          case 'not':
+            condition = {
+              ...state.value.conditions[index],
+              or: !checked
+            };
+            break;
+
+          default:
+            condition = {
+              ...state.value.conditions[index],
+              [name]: value
+            };
+            break;
+        }
+
       }
       conditions[index] = condition;
       return {
@@ -384,61 +412,6 @@ class SQLBuilderForm extends Component {
 
   submitHandler(e) {
     e.preventDefault();
-    // const {
-    //   title, name, relations, columns, roles, permissions, aggregates,
-    //   conditions: stateConditions, orderBy, group_by
-    // } = cloneDeep(this.state);
-    // // удаляю свойства id не нужные на сервере
-    // aggregates.forEach(item => delete item.id);
-    // stateConditions.forEach(item => delete item.id);
-    // orderBy.forEach(item => delete item.id);
-    // // формирую объект conditions на основе state
-    // const where = stateConditions
-    //   .filter(({ conditionType }) => conditionType === "where")
-    //   .map(({ column, operator, value }) => ({ column, operator, value }));
-    //
-    // const or_where = stateConditions
-    //   .filter(({ conditionType }) => conditionType === "or_where")
-    //   .map(({ column, operator, value }) => ({ column, operator, value }));
-    //
-    // const where_between = stateConditions
-    //   .filter(({ conditionType }) => conditionType === "where_between")
-    //   .map(({ or, not, column, value1, value2 }) => ({ or, not, column, values: [value1, value2] }));
-    //
-    // const where_in = stateConditions
-    //   .filter(({ conditionType }) => conditionType === "where_in")
-    //   .map(({ or, not, column, values }) =>
-    //     ({ or, not, column, values: values.split(",").map(item => item.trim()) })
-    //   );
-    //
-    // const where_date = stateConditions
-    //   .filter(({ conditionType }) => conditionType === "where_date")
-    //   .map(({ type, column, operator, date }) => {
-    //     const value = moment(date).format(getDateFormat(type));
-    //     return { type, column, operator, value };
-    //   });
-    //
-    // const where_column = stateConditions
-    //   .filter(({ conditionType, or }) => conditionType === "where_column" && !or)
-    //   .map(({ first_column, operator, second_column }) => ({ first_column, operator, second_column }));
-    //
-    // const where_column_or = stateConditions
-    //   .filter(({ conditionType, or }) => conditionType === "where_column" && or)
-    //   .map(({ first_column, operator, second_column }) => ({ first_column, operator, second_column }));
-    //
-    // const conditions = {
-    //   where,
-    //   or_where,
-    //   where_between,
-    //   where_in,
-    //   where_date,
-    //   where_column: [
-    //     { or: false, data: where_column },
-    //     { or: true, data: where_column_or }
-    //   ]
-    // };
-    // const access = { roles, permissions };
-    // const data = { title, name, columns, aggregates, conditions, relations, orderBy, access, group_by };
     console.log(this.state.value);
   }
 
@@ -539,15 +512,16 @@ class SQLBuilderForm extends Component {
       <h2 className="admin-form__subheader centred">Aggregates</h2>
       {aggregates.map((item, index) => <Fragment key={index}>
         {index !== 0 && <hr />}
+        <div className="text-right">
+          <button className="btn btn_failure" type="button" onClick={() => this.aggregateDeleteHandler(index)}>
+            ✖
+          </button>
+        </div>
         <AggregateComponent item={item}
           columnsOptions={selfFieldsOptions}
           changeHandler={e => this.aggregateChangeHandler(e, index)}
-          deleteHandler={() => this.aggregateDeleteHandler(index)} />
-        <button className="btn btn_failure" type="button"
-          onClick={() => this.aggregateDeleteHandler(index)}
-        >
-          Delete
-        </button>
+          deleteHandler={() => this.aggregateDeleteHandler(index)}
+        />
       </Fragment>)}
       <div className="centred">
         <button className="btn btn_success" type="button" onClick={this.aggregateAddHandler}>
@@ -558,15 +532,18 @@ class SQLBuilderForm extends Component {
       <h2 className="admin-form__subheader centred">Conditions</h2>
 
       {conditions.map((condition, index) => <Fragment key={index}>
+        <div className="text-right">
+          <button className="btn btn_failure" type="button" onClick={() => this.conditionDeleteHandler(index)}>
+            ✖
+          </button>
+        </div>
         {index !== 0 && <hr />}
         <ConditionComponent
           item={condition}
           columnsOptions={selfFieldsOptions}
           changeHandler={e => this.conditionChangeHandler(e, index)}
         />
-        <button className="btn btn_failure" type="button" onClick={() => this.conditionDeleteHandler(index)}        >
-          Delete
-        </button>
+
       </Fragment>)}
       <div className="centred">
         <button className="btn btn_success" type="button" onClick={this.conditionAddHandler}>
@@ -578,16 +555,16 @@ class SQLBuilderForm extends Component {
 
       {order_by.map((item, index) => <Fragment key={index}>
         {index !== 0 && <hr />}
+        <div className="text-right">
+          <button className="btn btn_failure" type="button" onClick={() => this.orderByDeleteHandler(index)}>
+            ✖
+          </button>
+        </div>
         <OrderByComponent
           item={item}
           columnsOptions={selfFieldsOptions}
           changeHandler={e => this.orderByChangeHandler(e, index)}
         />
-        <button className="btn btn_failure" type="button"
-          onClick={() => this.orderByDeleteHandler(index)}
-        >
-          Delete
-        </button>
       </Fragment>)}
       <div className="centred">
         <button className="btn btn_success" type="button" onClick={this.orderByAddHandler}>
