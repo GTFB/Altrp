@@ -59,8 +59,6 @@ const AltrpTable = ({settings, query}) => {
   }
   let columns = [];
   columns = settingsToColumns(settings);
-  // console.log(_data);
-  // debugger;
   let {
     getTableProps,
     getTableBodyProps,
@@ -82,7 +80,15 @@ const AltrpTable = ({settings, query}) => {
     {headerGroups.map(headerGroup => (
         <tr {...headerGroup.getHeaderGroupProps()} className="altrp-table-tr">
           {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()} className="altrp-table-th">{column.render('column_name')}</th>
+              <th {...column.getHeaderProps()} className="altrp-table-th">{column.render('column_name')}
+                <span className="altrp-table-th_sort">
+                    {column.isSorted
+                        ? column.isSortedDesc
+                            ? ' 🔽'
+                            : ' 🔼'
+                        : ''}
+                  </span>
+              </th>
           ))}
         </tr>
     ))}
