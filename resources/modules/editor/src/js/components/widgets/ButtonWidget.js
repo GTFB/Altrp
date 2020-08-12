@@ -18,6 +18,7 @@ class ButtonWidget extends Component {
   }
 
   async onClick(e) {
+    e.preventDefault();
     if (isEditor()) {
       console.log(this.state.settings);
     } else {
@@ -68,14 +69,14 @@ class ButtonWidget extends Component {
       if(this.state.settings.link_link.tag === 'a' || isEditor()) {
 
         link = (
-            <a href={this.state.settings.link_link.url} className={classes}>
+            <a href={this.state.settings.link_link.url} onClick={this.onClick} className={classes}>
               {" "}
               {this.state.settings.button_text || ""}
             </a>
         );
       } else {
         link = (
-            <Link to={this.state.settings.link_link.url} className={classes}>
+            <Link to={this.state.settings.link_link.url} onClick={this.onClick} className={classes}>
               {" "}
               {this.state.settings.button_text || ""}
             </Link>

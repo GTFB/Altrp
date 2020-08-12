@@ -4,15 +4,14 @@ import Resource from "./Resource";
  * Класс имитирующий поведение формы (собирает данные с виджетов полей и отправляет их на сервер)
  */
 class AltrpForm {
-  constructor(formId, modelName, method = 'POST'){
+  constructor(formId, modelName, method = 'POST', options = {}){
     this.formId = formId;
     this.fields = [];
     this.method = method;
+    this.options = options;
     this.modelName = modelName;
     let route = `/ajax/models/${modelName}`;
-    if(modelName === 'login'){
-      route = `/login`
-    }
+
     switch (modelName){
       case 'login':{
         route = `/login`
@@ -21,7 +20,7 @@ class AltrpForm {
         route = `/logout`
       }break;
     }
-    this.resource = new Resource({route})
+    this.resource = new Resource({route});
   }
 
   /**
@@ -57,8 +56,17 @@ class AltrpForm {
       switch (this.method){
         case 'POST':{
           let res =  await this.resource.post(this.getData());
+          if((this.modelName === 'login') && this.options.afterLoginRedirect){
+            document.location.replace(this.options.afterLoginRedirect);
+            return;
+          }
+          if((this.modelName === 'logout') && this.options.afterLogoutRedirect){
+            document.location.replace(this.options.afterLogoutRedirect);
+            return;
+          }
           if(res.reload){
-            document.location.reload()
+            document.location.reload();
+            return;
           }
           return res;
         }

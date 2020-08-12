@@ -78,7 +78,7 @@ class Section extends BaseElement{
       max: 500,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}": "width: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "width: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -148,7 +148,7 @@ class Section extends BaseElement{
       max: 1440,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}": "min-height: {{SIZE}}{{UNIT}} "
+        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "min-height: {{SIZE}}{{UNIT}} "
       }
     });
 
@@ -175,7 +175,7 @@ class Section extends BaseElement{
         }
       ],
       rules: {
-        '{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}': 'align-items: {{VALUE}};',
+        '{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}': 'align-items: {{VALUE}};',
       }
     });
 
@@ -234,7 +234,7 @@ class Section extends BaseElement{
         }
       ],
       rules: {
-        '{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}': 'overflow: {{VALUE}};',
+        '{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}': 'overflow: {{VALUE}};',
       }
     });
 
@@ -328,7 +328,7 @@ class Section extends BaseElement{
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}": "background-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
@@ -370,7 +370,7 @@ class Section extends BaseElement{
         }
       ],
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}": "border-style: {{VALUE}};"
+        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "border-style: {{VALUE}};"
       }
     });
 
@@ -379,7 +379,7 @@ class Section extends BaseElement{
       label: "Border width",
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}":
+        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}":
           "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
       }
     });
@@ -392,7 +392,7 @@ class Section extends BaseElement{
         colorPickedHex: "#32a852"
       },
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}": "border-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "border-color: {{COLOR}};"
       }
     });
 
@@ -411,7 +411,7 @@ class Section extends BaseElement{
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -434,7 +434,7 @@ class Section extends BaseElement{
           '#9c18a8'
         ],
         rules: {
-          '{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+          '{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
         },
       }
     );
@@ -462,7 +462,7 @@ class Section extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-section{{STATE}}, .altrp-section-full-fill{{STATE}}': [
+        '{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
