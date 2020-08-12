@@ -61,7 +61,7 @@ function Reports() {
   // Функция получения отчетов из БД
   const getReports = async () => {
     const req = await axios("/admin/ajax/reports");
-    if (req.status === 200) {
+    if (req.status === 200 && typeof req.data !== "string") {
       setReports(req.data);
     }
   };
@@ -89,7 +89,7 @@ function Reports() {
         </div>
       </div>
       <div className="admin-content">
-        <AdminTable columns={columns} rows={reports} />
+        {reports.length > 0 && <AdminTable columns={columns} rows={reports} />}
       </div>
     </div>
   );
