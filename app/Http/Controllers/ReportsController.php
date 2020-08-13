@@ -51,11 +51,10 @@ class ReportsController extends Controller
      * @param  \App\Reports  $reports
      * @return \Illuminate\Http\Response
      */
-    public function show(ApiRequest $request, Reports $reports, $id)
+    public function show(Request $request, $id)
     {
-        //$request->expectsJson();
-        //$report = Reports.find($id);
-        return response()->json(['id' => $id], 200, [],JSON_UNESCAPED_UNICODE);
+        $report = Reports::findOrFail($id);
+        return response()->json($report, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -65,9 +64,10 @@ class ReportsController extends Controller
      * @param  \App\Reports  $reports
      * @return \Illuminate\Http\Response
      */
-    public function update(ApiRequest $request, Reports $reports)
+    public function update(Request $request, $id)
     {
-        //
+        $reports = Reports::where('id', $id)->update($request->all());
+        return response()->json(array("result" => $reports), 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**

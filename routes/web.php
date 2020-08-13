@@ -136,8 +136,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     /**
      * Reports
      */
-    Route::get('reports/{id}', "TemplateController@show");
-    Route::put('reports/{id}', "TemplateController@update");
+    //Route::get('reports/{id}', "TemplateController@show");
+    //Route::put('reports/{id}', "TemplateController@update");
     Route::resource( 'reports', 'ReportsController' );
 
     Route::resource( 'media', 'Admin\MediaController' );
@@ -319,6 +319,9 @@ Route::group( ['prefix' => 'ajax'], function(){
    */
   Route::get( 'templates/{template_id}', 'TemplateController@show_frontend' )->name( 'templates.show.frontend' );
 } );
+
+Route::get('reports/{id}', "ReportsController@show");
+Route::post('reports/{id}', "ReportsController@update");
 
 Route::get('/linkstorage', function () {
   return redirect('/admin');
