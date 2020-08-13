@@ -47,15 +47,16 @@ class AddRelationForm extends Component {
         type: '',
         model_id: this.props.match.params.modelId,
         add_belong_to: false,
-        editable: false,
+        editable: true,
         always_with: false,
         local_key: '',
         foreign_key: '',
-        onDelete: '',
-        onUpdate: ''
+        onDelete: 'set null',
+        onUpdate: 'set null'
       },
       selfFieldsOptions: [],
       foreignFieldsOptions: [],
+      relationTypeOptions,
     };
     this.modelsResource = new Resource({ route: '/admin/ajax/model_options' });
     this.relationsResource = new Resource({ route: `/admin/ajax/models/${this.props.match.params.modelId}/relations` });
@@ -76,8 +77,34 @@ class AddRelationForm extends Component {
     if(id){
       let value = await this.relationsResource.get(id);
       this.updateForeignFieldOptions(value.target_model_id);
+      this.changeTargetModel(value.target_model_id);
       this.setState(state=>({...state, value}));
     }
+  }
+  /**
+   * Проверяем значение при смене модели
+   * если модель это User, то скроем Add Reverse Relation
+   * и уберем из вариантов связей Has many
+   * @param {string} value
+   */
+  changeTargetModel(value) {
+    let modelName = '';
+    this.state.modelsOptions.forEach(option=>{
+      if(parseInt(option.value) === parseInt(value)){
+        modelName = option.label;
+      }
+    });
+    let _relationTypeOptions = relationTypeOptions.filter(option=>{
+      if(modelName !== 'User'){
+        return true;
+      }
+      return option.value !== 'hasMany';
+    });
+    if(modelName === 'User'){
+      this.changeValue('hasOne', 'type');
+      this.changeValue(false, 'add_belong_to');
+    }
+    this.setState(state =>({...state, hideAddBelongTo:modelName === 'User', relationTypeOptions:_relationTypeOptions}));
   }
 /**
  * Изменить значение
@@ -86,6 +113,10 @@ class AddRelationForm extends Component {
  */
   changeValue(value, field) {
   const { id } = this.props.match.params;
+
+  if(field === 'target_model_id'){
+    this.changeTargetModel(value);
+  }
   this.setState(state => {
       state = { ...state };
       state.value[field] = value;
@@ -107,6 +138,7 @@ class AddRelationForm extends Component {
 
   /**
    * При изменении модели для связи изменяем опции
+   * @param {string} modelId
    */
   async updateForeignFieldOptions(modelId){
     let fields = await (new Resource({route: `/admin/ajax/models/${modelId}/fields`})).getAll();
@@ -124,13 +156,11 @@ class AddRelationForm extends Component {
     e.preventDefault();
     const { history, match } = this.props;
     const data = this.state.value;
-// post: /admin/ajax/models (data)
     if (this.props.match.params.id) {
       let res = await this.relationsResource.put(this.props.match.params.id, data);
     } else {
       let res = await this.relationsResource.post(data);
     }
-    console.log(data);
     history.push(`/admin/tables/models/edit/${match.params.modelId}`);
   }
 
@@ -193,6 +223,7 @@ class AddRelationForm extends Component {
     </div>
   }
 
+
   render() {
     const { id } = this.props.match.params;
     return <form className="admin-form" onSubmit={this.submitHandler}>
@@ -230,7 +261,7 @@ class AddRelationForm extends Component {
             className="form-control"
           >
             <option disabled value="" />
-            {relationTypeOptions.map(item =>
+            {this.state.relationTypeOptions.map(item =>
               <option key={item.value} value={item.value}>
                 {item.label}
               </option>)}
@@ -254,11 +285,11 @@ class AddRelationForm extends Component {
       </div>
       <div className="row">
         <div className="form-group col-4">
-          <input type="checkbox" id="relation-add_belong_to"
+          {this.state.hideAddBelongTo ? '' : <><input type="checkbox" id="relation-add_belong_to"
             checked={this.state.value.add_belong_to} readOnly={id}
             onChange={e => { this.changeValue(e.target.checked, 'add_belong_to') }}
           />
-          <label className="checkbox-label" htmlFor="relation-add_belong_to">Add Reverse Relation</label>
+          <label className="checkbox-label" htmlFor="relation-add_belong_to">Add Reverse Relation</label></>}
         </div>
         <div className="form-group col-4">
           { (! ['hasMany', 'belongsTo'].includes(this.state.value.type)) ?
@@ -336,6 +367,7 @@ class AddRelationForm extends Component {
       </div>
     </form>;
   }
+
 }
 
 export default withRouter(AddRelationForm);

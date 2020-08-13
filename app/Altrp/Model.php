@@ -3,6 +3,7 @@
 
 namespace App\Altrp;
 
+use App\Http\Requests\ApiRequest;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -241,22 +242,50 @@ class Model extends EloquentModel
           ->get();
     }
 
-    public static function getBySearchWithPaginate($search, $offset, $limit)
+  /**
+   * @param $search
+   * @param $offset
+   * @param $limit
+   * @param ApiRequest $request
+   * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
+   */
+  public static function getBySearchWithPaginate( $search, $offset, $limit, ApiRequest $request)
     {
+      if( $request->has( 'preset' ) ) {
         return self::where('title','like', "%{$search}%")
-            ->orWhere('id', $search)
-            ->skip($offset)
+          ->where( 'preset', $request->get( 'preset' ) )
+          ->orWhere('id', "%$search%")
+          ->skip($offset)
           ->orderByDesc('id')
-            ->take($limit)
-            ->get();
+          ->take($limit);
+      } else {
+        return self::where('title','like', "%{$search}%")
+          ->orWhere('id', "%$search%")
+          ->skip($offset)
+          ->orderByDesc('id')
+          ->take($limit);
+      }
     }
 
-    public static function getWithPaginate($offset, $limit)
+  /**
+   * @param $offset
+   * @param $limit
+   * @param ApiRequest $request
+   * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
+   */
+  public static function getWithPaginate( $offset, $limit , ApiRequest $request)
     {
+      if( $request->has( 'preset' ) ) {
+        return self::where('preset', $request->get( 'preset' ) )
+          ->skip($offset)
+          ->take($limit)
+          ->orderByDesc('id');
+      } else {
+
         return self::skip($offset)
-            ->take($limit)
-          ->orderByDesc('id')
-            ->get();
+          ->take($limit)
+          ->orderByDesc('id');
+      }
     }
 
     public static function getCount()

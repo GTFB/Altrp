@@ -15,7 +15,7 @@ class AdminTable extends Component {
     }
   };
   render(){
-    const { search } = this.props
+    const { search } = this.props;
     return<div className="admin-table">
       {search && <div className="admin-table">
         <input value={search.value} onChange={search.changeHandler} type="text" className="form-group"/>

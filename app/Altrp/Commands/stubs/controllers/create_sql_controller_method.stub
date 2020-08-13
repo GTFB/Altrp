@@ -1,5 +1,5 @@
     public function {{sqlEditorName}}(ApiRequest $request)
     {
-        $res = {{modelName}}::selectRaw(\DB::raw( '{{sqlEditorSql}}'))->get();
+        $res = DB::select(DB::raw( "{{sqlEditorSql}}"));
         return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE );
     }

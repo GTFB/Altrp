@@ -100,8 +100,10 @@ class ModelsController extends HttpController
             $pageCount = ceil($modelsCount / $limit);
             $offset = $limit * ($page - 1);
             $models = $search
-                ? Model::getBySearchWithPaginate($search, $offset, $limit)
-                : Model::getWithPaginate($offset, $limit);
+                ? Model::getBySearchWithPaginate($search, $offset, $limit, $request)
+                : Model::getWithPaginate($offset, $limit, $request);
+
+          $models = $models->get();
         }
         return compact('pageCount', 'models');
     }

@@ -7,6 +7,8 @@ use DummyRootNamespaceHttp\Controllers\ApiController;
 use DummyRootNamespace{{modelNamespace}}{{modelName}};
 use App\Http\Requests\ApiRequest;
 use Illuminate\Http\Request;
+use App\Http\Requests\ApiRequest;
+use Illuminate\Support\Facades\DB;
 {{requestNamespaces}}
 // CUSTOM_NAMESPACES_BEGIN - IMPORTANT: Don't remove this comment! Write your namespaces between these comments.
 {{customNamespaces}}
