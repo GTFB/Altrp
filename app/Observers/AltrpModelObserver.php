@@ -148,7 +148,7 @@ class AltrpModelObserver
         if (! $generator->writeSourcePermissions($model)) {
             throw new ModelNotWrittenException('Failed to write source permissions to the database', 500);
         }
-        if (! $generator->generateRoutes()) {
+        if (! $generator->generateRoutes($model)) {
             throw new RouteGenerateFailedException('Failed to generate routes', 500);
         }
 

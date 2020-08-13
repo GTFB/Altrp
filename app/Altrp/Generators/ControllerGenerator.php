@@ -6,6 +6,7 @@ use App\Altrp\Column;
 use App\Altrp\Controller;
 use App\Altrp\Generators\Request\RequestFile;
 use App\Altrp\Generators\Request\RequestFileWriter;
+use App\Altrp\Model;
 use App\Altrp\Source;
 use App\Altrp\SourcePermission;
 use App\Altrp\SourceRole;
@@ -147,7 +148,7 @@ class ControllerGenerator extends AppGenerator
         }
 
         // Сгенерировать маршруты для ресурса
-        if (!$this->generateRoutes()) {
+        if (!$this->generateRoutes($this->controllerModel->model)) {
             throw new RouteGenerateFailedException('Failed to generate routes', 500);
         }
 
@@ -214,22 +215,22 @@ class ControllerGenerator extends AppGenerator
 //        }
 //        if (!$actions) return true;
         $sources = [];
-        $tableName = Str::plural(strtolower($this->getModelName()));
-        $singleResource = Str::singular($tableName);
+        $modelName = strtolower(Str::plural(Str::snake($this->getModelName())));
+        $singleResource = Str::singular($modelName);
         $nowTime = Carbon::now();
         foreach ($actions as $action) {
             if ($action == 'get') {
-                $url = $tableName;
-                $name = ucfirst($action) . ' ' . Str::studly($tableName);
+                $url = $modelName;
+                $name = ucfirst($action) . ' ' . Str::studly($modelName);
             } elseif ($action == 'options') {
                 $url = $singleResource . '_options';
-                $name = 'Get ' . ucfirst($tableName) . ' for options';
+                $name = 'Get ' . ucfirst($modelName) . ' for options';
             } elseif ($action == 'update_column') {
-                $url = $tableName . "/{{$singleResource}}/{column}";
+                $url = $modelName . "/{{$singleResource}}/{column}";
                 $name = ucfirst(str_replace('_', ' ', $action))
                     . ' ' . Str::studly($singleResource);
             } else {
-                $url = $tableName . "/{{$singleResource}}";
+                $url = $modelName . "/{{$singleResource}}";
                 $name = ucfirst($action) . ' ' . Str::studly($singleResource);
             }
             $sources[] = [
@@ -345,7 +346,7 @@ class ControllerGenerator extends AppGenerator
             foreach ($sourcePermissions as $sourcePermission) {
                 if (! $oldSourcePermissions->contains(
                     'type',
-                    explode('-',$sourcePermission['type'])[0] . '-' . strtolower($model->getOriginal('name'))
+                    explode('-',$sourcePermission['type'])[0] . '-' . strtolower(Str::snake($model->getOriginal('name')))
                 )) {
                     $sourcePermObj = new SourcePermission($sourcePermission);
                     $sourcePermObj->save();
@@ -355,13 +356,14 @@ class ControllerGenerator extends AppGenerator
                 foreach ($oldSourcePermissions as $oldSourcePermission) {
                     $sourcePermObj = SourcePermission::find($oldSourcePermission->id);
                     foreach ($sourcePermissions as $sourcePermission) {
-                        if ($sourcePermObj->type == explode('-',$sourcePermission['type'])[0] . '-' . strtolower($model->getOriginal('name'))) {
+                        if ($sourcePermObj->type == explode('-',$sourcePermission['type'])[0] . '-' . strtolower(Str::snake($model->getOriginal('name')))) {
                             $sourcePermObj->update($sourcePermission);
                         }
                     }
                 }
             }
         } catch (\Exception $e) {
+            echo $e;
             return false;
         }
         return true;
@@ -372,43 +374,44 @@ class ControllerGenerator extends AppGenerator
         $nowTime = Carbon::now();
         $sources = $this->controllerModel->sources;
         $modelName = $this->controllerModel->model->name;
+        $resource = strtolower(Str::snake($modelName));
 //        $oldSourcePermissions = SourcePermission::whereIn('source_id',explode(',',$sources->implode('id',',')))->get();
         $sourcePermissions = [];
         $permissions = Permission::where(
             'name',
             'like',
-            '%' . Str::snake(strtolower($modelName))
+            '%' . strtolower(Str::snake($modelName))
         )->get();
         foreach ($sources as $source) {
             if (($source->type == 'get' || $source->type == 'options')) {
                 $sourcePermission = [
-                    'permission_id' => $permissions->firstWhere('name', 'all-' . Str::snake(strtolower($modelName)))->id,
+                    'permission_id' => $permissions->firstWhere('name', 'all-' . $resource)->id,
                 ];
             }
             if ($source->type == 'add') {
                 $sourcePermission = [
-                    'permission_id' => $permissions->firstWhere('name', 'create-' . Str::snake(strtolower($modelName)))->id,
+                    'permission_id' => $permissions->firstWhere('name', 'create-' . $resource)->id,
                 ];
             }
             if ($source->type == 'show') {
                 $sourcePermission = [
-                    'permission_id' => $permissions->firstWhere('name', 'read-' . Str::snake(strtolower($modelName)))->id,
+                    'permission_id' => $permissions->firstWhere('name', 'read-' . $resource)->id,
                 ];
             }
             if ($source->type == 'update' || $source->type == 'update_column') {
                 $sourcePermission = [
-                    'permission_id' => $permissions->firstWhere('name', 'update-' . Str::snake(strtolower($modelName)))->id,
+                    'permission_id' => $permissions->firstWhere('name', 'update-' . $resource)->id,
                 ];
             }
             if ($source->type == 'delete') {
                 $sourcePermission = [
-                    'permission_id' => $permissions->firstWhere('name', 'delete-' . Str::snake(strtolower($modelName)))->id,
+                    'permission_id' => $permissions->firstWhere('name', 'delete-' . $resource)->id,
                 ];
             }
             if ($source->type == 'get' || $source->type == 'options' || $source->type == 'add'
                 || $source->type == 'show' || $source->type == 'update' || $source->type == 'update_column' || $source->type == 'delete') {
                 $sourcePermission['source_id'] = $source->id;
-                $sourcePermission['type'] = $source->type . '-' . Str::snake(strtolower($modelName));
+                $sourcePermission['type'] = $source->type . '-' . $resource;
                 $sourcePermission['created_at'] = $nowTime;
                 $sourcePermission['updated_at'] = $nowTime;
                 $sourcePermissions[] = $sourcePermission;
@@ -565,6 +568,11 @@ class ControllerGenerator extends AppGenerator
         return true;
     }
 
+    /**
+     * Получить столбцы для опций
+     *
+     * @return string
+     */
     protected function getOptions()
     {
         $label = Column::where([['table_id', $this->controllerModel->model->table->id], ['is_label', 1]])->first();
@@ -647,13 +655,16 @@ class ControllerGenerator extends AppGenerator
     /**
      * Сгенерировать маршруты
      *
+     * @param Model $model
      * @return bool
      */
-    public function generateRoutes()
+    public function generateRoutes(Model $model)
     {
         $routeGenerator = new RouteGenerator($this->controllerModel);
-        $tableName = $this->getTableName();
-        $resourceId = Str::singular($tableName);
+//        $tableName = $this->getTableName();
+        $modelName = strtolower(Str::plural(Str::snake($this->getModelName())));
+        $oldModelName = strtolower(Str::plural(Str::snake($model->getOriginal('name'))));
+        $resourceId = Str::singular($modelName);
         $userColumns = trim($this->controllerModel->model->user_cols, ' ');
         $middleware = ($userColumns) ? "'middleware' => [" . $this->getAuthMiddleware() . '], ' : null;
         $controllerName = $this->getFormedControllerName($this->controllerModel);
@@ -667,12 +678,12 @@ class ControllerGenerator extends AppGenerator
         $routeGenerator->addDynamicVariable('storeMiddleware', $access['add']);
         $routeGenerator->addDynamicVariable('updateMiddleware', $access['update']);
         $routeGenerator->addDynamicVariable('destroyMiddleware', $access['delete']);
-        $routeGenerator->addDynamicVariable('tableName', $tableName);
+        $routeGenerator->addDynamicVariable('tableName', $modelName);
         $routeGenerator->addDynamicVariable('resourceId', $resourceId);
-        $routeGenerator->addDynamicVariable('id', \Str::singular($tableName));
+        $routeGenerator->addDynamicVariable('id', \Str::singular($modelName));
         $routeGenerator->addDynamicVariable('column', 'column');
         $routeGenerator->addDynamicVariable('controllerName', $controller);
-        return $routeGenerator->generate($tableName, $controller);
+        return $routeGenerator->generate($oldModelName, $modelName, $controller);
     }
 
     /**
@@ -775,6 +786,11 @@ class ControllerGenerator extends AppGenerator
         return app_path($controllerFilename);
     }
 
+    /**
+     * Получить старое имя модели
+     *
+     * @return mixed
+     */
     protected function getOldModelName()
     {
         return $this->data->old_model_name ?? $this->controllerModel->model->name;

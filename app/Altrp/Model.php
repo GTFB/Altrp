@@ -34,6 +34,11 @@ class Model extends EloquentModel
         'relationships'
     ];
 
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = Str::studly($value);
+    }
+
     public function setFillableColsAttribute($value)
     {
         $this->attributes['fillable_cols'] = isset($value)

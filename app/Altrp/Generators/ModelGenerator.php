@@ -15,6 +15,7 @@ use App\Exceptions\RelationshipNotInsertedException;
 use App\Exceptions\TableNotFoundException;
 use App\Permission;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class ModelGenerator extends AppGenerator
 {
@@ -59,9 +60,10 @@ class ModelGenerator extends AppGenerator
     public function __construct( $model, $data = [])
     {
         $this->model = $model;
+        $modelName = Str::studly($this->model->name);
         $this->modelFilename = $this->getFormedFileName(
             $this->model->path,
-            $this->model->name
+            $modelName
         );
         $this->modelFile = $this->getModelFile();
         $this->relationships = $model->altrp_relationships;
@@ -398,13 +400,13 @@ class ModelGenerator extends AppGenerator
     {
         $actions = ['create', 'read', 'update', 'delete', 'all'];
         $permissions = $this->preparePermissions();
-        $oldPermissions = Permission::where('name','like','%-'.strtolower($this->model->getOriginal('name')))->get();
+        $oldPermissions = Permission::where('name','like','%-'.strtolower(Str::snake($this->model->getOriginal('name'))))->get();
 
         try {
             foreach ($permissions as $permission) {
                 if (! $oldPermissions->contains(
                     'name',
-                    explode('-',$permission['name'])[0] . '-' . strtolower($this->model->getOriginal('name'))
+                    explode('-',$permission['name'])[0] . '-' . strtolower(Str::snake($this->model->getOriginal('name')))
                 )) {
                     $newPermObj = new Permission($permission);
                     $newPermObj->save();
@@ -414,16 +416,14 @@ class ModelGenerator extends AppGenerator
                 foreach ($oldPermissions as $oldPermission) {
                     $permObj = Permission::find($oldPermission->id);
                     foreach ($permissions as $permission) {
-                        if ($permObj->name == explode('-',$permission['name'])[0] . '-' . strtolower($this->model->getOriginal('name'))) {
+                        if ($permObj->name == explode('-',$permission['name'])[0] . '-' . strtolower(Str::snake($this->model->getOriginal('name')))) {
                             $permObj->update($permission);
                             break;
                         }
                     }
                 }
             }
-//            Permission::insertOrIgnore($permissions);
         } catch (\Exception $e) {
-            echo $e;
             return false;
         }
         return true;
@@ -442,7 +442,7 @@ class ModelGenerator extends AppGenerator
 
         foreach ($actions as $action) {
             $permissions[] = [
-                'name' => $action . '-' . strtolower($this->model->name),
+                'name' => $action . '-' . strtolower(Str::snake($this->model->name)),
                 'display_name' => ucfirst($action) . ' ' . \Str::plural($this->model->name),
                 'created_at' => $nowTime,
                 'updated_at' => $nowTime,
@@ -551,7 +551,6 @@ class ModelGenerator extends AppGenerator
      */
     protected function getFormedFileName($modelPath, $modelName)
     {
-
         $fullModelFilename = isset($modelPath)
             ? trim(config('crudgenerator.user_models_folder') . "/{$modelPath}/{$modelName}", '/')
             : trim(config('crudgenerator.user_models_folder') . "/{$modelName}", '/');
