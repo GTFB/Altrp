@@ -75,12 +75,13 @@ class Relationship extends EloquentModel
         /**
          * @var \App\Altrp\Model $instance
          */
+
         $table = Table::where('name', $instance->getTable())->first();
         if ($table) {
-            foreach ($table->actual_columns as $actual_column) {
+            foreach ($table->columns as $actual_column) {
                 $fields[] = [
-                    'fieldName' => $instance->getTable() . '.' . $actual_column->name,
-                    'title' => ($table->models->get(0)->name ? $table->models->get(0)->name : '') . ' - ' . ($actual_column->title ? $actual_column->title : $actual_column->name),
+                    'fieldName' => $this->name . '.' . $actual_column->name,
+                    'title' => ($this->title ? $this->title : '') . ' — ' . ($actual_column->title ? $actual_column->title : $actual_column->name),
                 ];
             }
         }

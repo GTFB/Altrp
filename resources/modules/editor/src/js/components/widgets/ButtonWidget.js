@@ -18,7 +18,6 @@ class ButtonWidget extends Component {
   }
 
   async onClick(e) {
-    e.preventDefault();
     if (isEditor()) {
       console.log(this.state.settings);
     } else {

@@ -68,6 +68,11 @@ class Model extends EloquentModel
         return $this->hasMany(Relationship::class, 'model_id', 'id');
     }
 
+    public function altrp_relationships_always_with()
+    {
+        return $this->altrp_relationships()->where( 'always_with', 1 )->get( '*' );
+    }
+
     public function getTimeStampsAttribute($value)
     {
         return (bool)$value;
@@ -165,18 +170,19 @@ class Model extends EloquentModel
         $_models = self::all();
         foreach ($_models as $model) {
             $fields = [];
-            foreach ($model->altrp_table->actual_columns as $actual_column) {
+            foreach ($model->altrp_table->columns as $column) {
                 $fields[] = [
-                    'fieldName' => $actual_column->name,
-                    'title' => $actual_column->title ? $actual_column->title : $actual_column->name,
+                    'fieldName' => $column->name,
+                    'title' => $column->title ? $column->title : $column->name,
                 ];
             }
-//            foreach ($model->altrp_table->relationships as $relationship) {
-//                /**
-//                 * @var Relationship $relationship
-//                 */
-//                $fields = array_merge($fields, $relationship->get_related_field_options());
-//            }
+
+            foreach ($model->altrp_relationships_always_with() as $relationship) {
+                /**
+                 * @var Relationship $relationship
+                 */
+                $fields = array_merge($fields, $relationship->get_related_field_options());
+            }
             $models[] = [
                 'modelName' => $model->altrp_table->name,
                 'title' => $model->title,

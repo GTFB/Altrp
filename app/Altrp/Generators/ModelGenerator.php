@@ -538,7 +538,7 @@ class ModelGenerator extends AppGenerator
    */
   protected function getRelationsAlwaysWith()
   {
-    $relations = Relationship::where([['model_id', $this->model->id], ['add_belong_to', 1], ['always_with', 1]])->get();
+    $relations = Relationship::where([['model_id', $this->model->id], ['always_with', 1]])->get();
     return $relations;
   }
 
