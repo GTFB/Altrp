@@ -165,6 +165,22 @@ class AddRelationForm extends Component {
           </select>
         </div>
       }
+      case 'belongsTo':{
+        return <div className="form-group form-group_width47">
+          <label htmlFor="relation-local_key">Local Key</label>
+          <select  id="relation-local_key"
+                 value={this.state.value.foreign_key || ''}
+                 className="form-control"
+                 onChange={e => { this.changeValue(e.target.value, 'foreign_key') }}
+          >
+            <option disabled value="" />
+            {this.state.selfFieldsOptions.map(({ value, label }) =>
+                <option key={value} value={value}>
+                  {label}
+                </option>)}
+          </select>
+        </div>
+      }
     }
     return<div className="form-group form-group_width47">
       <label htmlFor="relation-local_key">Local Key</label>

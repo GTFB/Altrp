@@ -19,6 +19,7 @@ function altrpZip() {
     '!./.git/**',
     '!./.idea/**',
     '!./node_modules/**',
+    '!./routes/AltrpRoutes.php',
     '!./storage/app/public/**',
     '!./storage/installed',
     '!./storage/logs/**',

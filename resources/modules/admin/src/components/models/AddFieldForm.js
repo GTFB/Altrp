@@ -73,7 +73,7 @@ const attributeOptions = [
     value: 'unsigned',
     label: 'UNSIGNED'
   }
-  ];
+];
 const inputTipeOptions = ['textarea', 'text', 'number', 'slider', 'WYSIWYG', 'color', 'select', 'checkbox', 'radio button'];
 
 
@@ -89,15 +89,15 @@ class AddFieldForm extends Component {
         description: '',
         is_label: false,
         is_title: false,
-        type: '',
+        type: 'string',
         length_value: '',
         default: '',
         attribute: '',
-        input_type: '',
+        input_type: 'text',
         options: '',
         null: false,
         indexed: false,
-        editable: false,
+        editable: true,
         calculation: '',
         calculation_logic: [
           { left: '', operator: '', result: '', right: '' }
@@ -137,7 +137,7 @@ class AddFieldForm extends Component {
   changeValue(value, field) {
     this.setState(state => {
       state = { ...state };
-      if(field === 'default'){
+      if (field === 'default') {
 
         if(state.value.size && value.length > state.value.size){
           value = value.substring(0, parseInt(state.value.size))
@@ -181,7 +181,7 @@ class AddFieldForm extends Component {
       options, null: _null, indexed, editable, calculation, calculation_logic } = this.state.value;
 
     let data = {};
-    
+
     if (type === "calculated") {
       this.state.isAlways ?
         data = { title, description, type, calculation, name, } :
@@ -192,7 +192,7 @@ class AddFieldForm extends Component {
         data = { ...data, options };
       }
       console.log(default_);
-      if(['integer', 'bigInteger'].includes(type)){
+      if (['integer', 'bigInteger'].includes(type)) {
         data.default = Number(default_);
       }
     }
@@ -337,9 +337,9 @@ class AddFieldForm extends Component {
           <div className="form-group__inline-wrapper">
             <div className="form-group form-group_width47">
               <label htmlFor="field-length_value">Length/Value</label>
-              <input type="text" id="field-length_value"
+              <input type="number" id="field-length_value"
                 value={this.state.value.size || ''}
-                onChange={e => { this.changeValue(e.target.value, 'size') }}
+                onChange={e => { this.changeValue(+e.target.value, 'size') }}
                 className="form-control" />
             </div>
 

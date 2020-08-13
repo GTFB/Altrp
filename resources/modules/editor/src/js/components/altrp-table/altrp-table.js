@@ -1,5 +1,5 @@
 import React, {useCallback, useState, useEffect} from "react";
-import {useTable} from "react-table";
+import {useTable, useSortBy} from "react-table";
 import {useQuery, usePaginatedQuery, queryCache} from  "react-query";
 import '../../../sass/altrp-pagination.scss';
 import {Link} from "react-router-dom";
@@ -59,6 +59,8 @@ const AltrpTable = ({settings, query}) => {
   }
   let columns = [];
   columns = settingsToColumns(settings);
+  // console.log(_data);
+  // debugger;
   let {
     getTableProps,
     getTableBodyProps,
@@ -73,7 +75,7 @@ const AltrpTable = ({settings, query}) => {
         [settings.tables_columns]
     ),
     data: React.useMemo(() => (_data || []), [_data]),
-  });
+  }, );
   return <><table className="altrp-table" {...getTableProps()}>
     <thead className="altrp-table-head">
     {renderAdditionalRows(settings)}
