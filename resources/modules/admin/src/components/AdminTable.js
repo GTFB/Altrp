@@ -15,10 +15,11 @@ class AdminTable extends Component {
     }
   };
   render(){
+    const { search } = this.props
     return<div className="admin-table">
-      <div className="admin-table">
-        <input type="text" className="form-group"/>
-      </div>
+      {search && <div className="admin-table">
+        <input value={search.value} onChange={search.changeHandler} type="text" className="form-group"/>
+      </div>}
       <table>
         <thead className="admin-table-head">
         <tr className="admin-table-row">

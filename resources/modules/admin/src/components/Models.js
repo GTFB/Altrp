@@ -57,13 +57,16 @@ export default class Models extends Component {
     this.state = {
       activeTab: 0,
       modelsCurrentPage: 1,
-      dataSourcesCurrentPage: 1,      
+      dataSourcesCurrentPage: 1,
       models: [],
+      modelsSearch: '',
       dataSources: [],
+      modelsPageCount: 1,
+      modelsCount: 0
     };
     this.switchTab = this.switchTab.bind(this);
     this.changePage = this.changePage.bind(this);
-    this.modelsResource = new Resource({route: '/admin/ajax/models'});
+    this.modelsResource = new Resource({ route: '/admin/ajax/models' });
     this.itemsPerPage = 10;
   }
 
@@ -72,38 +75,46 @@ export default class Models extends Component {
   }
 
   changePage(currentPage, pagination) {
-    this.setState(state => ({ ...state, [pagination]: { ...state[pagination], currentPage} }));
+    this.setState(state => ({ ...state, [pagination]: { ...state[pagination], currentPage } }));
   }
   /**
    * Обновить список моделей
    */
-  updateModels = async() => {
-    let models = await this.modelsResource.getAll();
-    models = models.models;
-    this.setState(state => ({
-      ...state,
-      models
-    }))
+  getModels = async () => {
+    this.modelsResource.getQueried({
+      page: this.state.modelsCurrentPage,
+      pageSize: this.itemsPerPage,
+      s: this.state.modelsSearch
+    }).then(res => {
+      this.setState(state => {
+        return {
+          ...state,
+          models: res.models,
+          modelsPageCount: res.pageCount
+        }
+      });
+    });
   }
 
-  slicePage = (array, page, itemsPerPage) => {
-    return array.slice(page * itemsPerPage - itemsPerPage, page * itemsPerPage);
-  }
+  // slicePage = (array, page, itemsPerPage) => {
+  //   return array.slice(page * itemsPerPage - itemsPerPage, page * itemsPerPage);
+  // }
 
   async componentDidMount() {
     // get: /admin/ajax/models .then(models => {
     //   this.setState({models});
     // });
     let models = await this.modelsResource.getAll();
-    models = models.models;
-    this.setState(state=>({
-        ...state,
-        models
+    this.setState(state => ({
+      ...state,
+      modelsCount: models.models.length
     }))
+
+    this.getModels();
   }
 
   render() {
-    const { activeTab, models, dataSources, modelsCurrentPage, dataSourcesCurrentPage } = this.state;
+    const { activeTab, models, dataSources, modelsCurrentPage, dataSourcesCurrentPage, modelsSearch, modelsPageCount, modelsCount } = this.state;
 
     return <div className="admin-settings admin-page">
       <div className="admin-heading">
@@ -125,31 +136,35 @@ export default class Models extends Component {
             </Tab>
           </TabList>
           <TabPanel>
-            {/* TODO: что делать с колoнкой с чекбоксами? */}
             <AdminTable
               columns={columnsModel}
-              quickActions={[{ tag: 'Link', props: {
+              search={{
+                value: modelsSearch,
+                changeHandler: e => this.setState({ modelsSearch: e.target.value }, this.getModels)
+              }}
+              quickActions={[{
+                tag: 'Link', props: {
                   href: '/admin/tables/models/edit/:id',
                 },
                 title: 'Edit'
-              } , {
+              }, {
                 tag: 'button',
                 route: '/admin/ajax/models/:id',
                 method: 'delete',
                 confirm: 'Are You Sure?',
-                after: () => this.updateModels(),
+                after: () => this.getModels(),
                 className: 'quick-action-menu__item_danger',
                 title: 'Trash'
               }]}
-              rows={this.slicePage(models, modelsCurrentPage, this.itemsPerPage).map(model => ({ 
-                ...model, 
+              rows={models.map(model => ({
+                ...model,
                 editUrl: '/admin/tables/models/edit/' + model.id
               }))}
             />
-            <Pagination pageCount={Math.ceil(models.length / this.itemsPerPage)}
+            <Pagination pageCount={modelsPageCount}
               currentPage={modelsCurrentPage}
-              changePage={modelsCurrentPage => this.setState({ modelsCurrentPage })}
-              itemsCount={models.length}
+              changePage={modelsCurrentPage => this.setState({ modelsCurrentPage }, this.getModels)}
+              itemsCount={modelsCount}
             />
           </TabPanel>
           <TabPanel>
