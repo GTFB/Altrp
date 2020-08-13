@@ -119,7 +119,7 @@ class AltrpSQLEditorObserver
         $controllerWriter->updateSqlMethod(
             $sQLEditor->getOriginal('name'),
             $sQLEditor->name,
-            $sQLEditor->sql
+            addslashes($sQLEditor->sql)
         );
     }
 
