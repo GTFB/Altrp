@@ -17,10 +17,9 @@
     "pack": "npm run front-build && npm run editor-build && npm run admin-build && gulp pack",
     "only-pack": "gulp pack",
     "run-all": "npm-run-all --parallel admin-start editor-start front-start",
-    "reports:dev": "cd resources/modules/reports && react-scripts start",
-    "reports:build": "cd resources/modules/reports && export PORT=3010 && PUBLIC_URL=/modules/reports/ react-scripts build",
-    "reports:move": "mv -f resources/modules/reports/build public/modules/",
-    "reports:rename": "mv public/modules/build public/modules/reports"
+    "reports:dev": "cd resources/modules/reports && PORT=3010 react-scripts start",
+    "reports:build": "rm -rf public/modules/reports && cd resources/modules/reports && PUBLIC_URL=/modules/reports/ react-scripts build",
+    "reports:move": "mv -f resources/modules/reports/build public/modules/reports"
   },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.10.4",
