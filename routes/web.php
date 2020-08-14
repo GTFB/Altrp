@@ -55,6 +55,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
 
   Route::group(['prefix' => 'ajax'], function () {
 
+    Route::get('/analytics', 'AnalyticsController@index');
+    Route::get('/analytics/none', 'AnalyticsController@none');
+
     Route::get('/global-elements', "Constructor\GlobalElements@getElements");
     Route::get('/global-elements/{element}', "Constructor\GlobalElements@getElement");
     Route::post('/global-elements', "Constructor\GlobalElements@insert");

@@ -26,9 +26,6 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::put('/templates/{template}', "Constructor\Templates@update");
         Route::delete('/templates/{template}', "Constructor\Templates@delete");
 
-        //Route::get('/reports', 'ReportsController@getReports');
-        //Route::post('/reports', 'ReportsController@store');
-
         Route::get('/global-elements', "Constructor\GlobalElements@getElements");
         Route::get('/global-elements/{element}', "Constructor\GlobalElements@getElement");
         Route::post('/global-elements', "Constructor\GlobalElements@insert");

@@ -11,25 +11,25 @@
 @import "components/admin-users";
 @import "components/users-tools";
 @import "components/admin-logo";
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap");
 @import "components/admin-users";
 @import "components/admin-models";
+@import "components/admin-charts";
 @import "~react-datepicker/dist/react-datepicker.css";
 @import "components/admin-sql-builder";
-
 
 .admin {
   display: flex;
   min-height: 100vh;
   padding-left: 271px;
-  &__logo{
+  &__logo {
     width: 120px;
     height: 44px;
     padding-left: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    & img{
+    & img {
       max-width: 100%;
       max-height: 100%;
     }
@@ -53,7 +53,7 @@
       width: 271px;
       padding-right: 5px;
       .nav-logo {
-        background-color: #2A2D36;
+        background-color: #2a2d36;
       }
     }
     &-list {
@@ -84,30 +84,29 @@
         bottom: 0;
         background-color: $dark-purple;
         transform: translate(100%, 0);
-        transition-duration: .3s;
+        transition-duration: 0.3s;
       }
-
     }
   }
   &-content {
     width: 100%;
   }
-  &-caption{
+  &-caption {
     margin-bottom: 15px;
     font-weight: 600;
     font-size: 18px;
   }
-  &__bars{
+  &__bars {
     margin: 12px 12px;
     float: right;
     cursor: pointer;
   }
-  &_pages-show{
-    & .admin-nav-list_pages{
+  &_pages-show {
+    & .admin-nav-list_pages {
       transform: translate(0, 0);
     }
   }
-  &__version{
+  &__version {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -127,44 +126,44 @@
 }
 
 .icon {
-    width: 16px;
-    height: 16px;
-    fill: white;
-    margin-right: 15px;
-    display: inline-block;
-    align-items: center;
+  width: 16px;
+  height: 16px;
+  fill: white;
+  margin-right: 15px;
+  display: inline-block;
+  align-items: center;
 }
 .admin-nav li {
-    list-style-type: none;
-    background: #343B4C;
-    &:hover{
-        background: #495267;
-    }
+  list-style-type: none;
+  background: #343b4c;
+  &:hover {
+    background: #495267;
+  }
 }
 ul {
-    margin-left: 0;
-    padding-left: 0;
+  margin-left: 0;
+  padding-left: 0;
 }
-p{
-    display: inline-block;
-    color: white;
-    font-weight: 500;
-    font-family: Montserrat, Arial, sans-serif;
+p {
+  display: inline-block;
+  color: white;
+  font-weight: 500;
+  font-family: Montserrat, Arial, sans-serif;
 }
-a{
-    text-decoration: none;
+a {
+  text-decoration: none;
 }
-.admin-page{
+.admin-page {
   width: 100%;
   display: flex;
   flex-direction: column;
 }
-.admin-content{
+.admin-content {
   background-color: $light-light-gray;
   flex-grow: 1;
   padding: 13px 25px;
 }
 
-.ace_editor{
-  font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
+.ace_editor {
+  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
 }
