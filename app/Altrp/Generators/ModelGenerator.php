@@ -482,6 +482,7 @@ class ModelGenerator extends AppGenerator
         $relations = $this->getRelations();
         $columnsList = $this->getColumnsList($columns);
 //        $relationsList = $this->getColumnsList($relations, 'foreign_key');
+//        $allColumns = array_merge($columnsList, $relationsList);
         return '\'' . implode("','", $columnsList) . '\'';
     }
 
@@ -509,6 +510,11 @@ class ModelGenerator extends AppGenerator
         return $columns;
     }
 
+    /**
+     * Получить обратные связи
+     *
+     * @return mixed
+     */
     protected function getRelations()
     {
         $relations = Relationship::where([['model_id', $this->model->id], ['add_belong_to', 1]])->get();

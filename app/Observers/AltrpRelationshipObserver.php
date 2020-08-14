@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Altrp\Column;
 use App\Altrp\Generators\ModelGenerator;
 use App\Altrp\Relationship;
 use App\Altrp\Model;
@@ -18,6 +19,7 @@ class AltrpRelationshipObserver
     /**
      * Вызываем после создания связи
      * @param Relationship $relationship
+     * @return bool|void
      * @throws AltrpMigrationCreateFileExceptions
      */
     public function creating(Relationship $relationship)
@@ -51,6 +53,28 @@ class AltrpRelationshipObserver
         $migration->save();
 
         $relationship->altrp_migration_id = $migration->id;
+
+        if ($relationship->type = 'hasOne') {
+//            $localColumn = Column::where([['table_id',Model::find($relationship->target_model_id)->first()->id]])->first();
+            $column = new Column([
+                'name' => $relationship->foreign_key,
+                'title' => $relationship->foreign_key,
+                'type' => 'bigInteger',
+                'null' => true,
+                'table_id' => $model->altrp_table->id,
+                'altrp_migration_id' => $migration->id,
+                'user_id' => auth()->user()->id,
+                'is_label' => false,
+                'is_title' => false,
+                'indexed' => false,
+                'editable' => true,
+                'hidden' => false,
+                'model_id' => $relationship->model_id
+            ]);
+            Column::withoutEvents(function () use ($column){
+                $column->save();
+            });
+        }
 
     }
 

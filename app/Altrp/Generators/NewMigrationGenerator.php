@@ -114,8 +114,11 @@ class NewMigrationGenerator extends AppGenerator{
             Artisan::call('migrate', array('--force' => true, '--path' => "database/".$folder_name."/",));
         }
         catch (\Exception $e) {
+            foreach ($e->getTrace() as $trace) {
+                dump($trace['file']);
+            }
             $migrationFile = $e->getTrace()[0]['file'];
-            if (file_exists($migrationFile)) {
+            if (file_exists($migrationFile) && Str::contains($migrationFile, '_')) {
                 unlink($migrationFile);
             }
             return false;
