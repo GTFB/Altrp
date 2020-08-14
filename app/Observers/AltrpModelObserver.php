@@ -10,6 +10,7 @@ use App\Altrp\Generators\TableMigrationGenerator;
 use App\Altrp\Migration;
 use App\Altrp\Model;
 use App\Altrp\Source;
+use App\Altrp\SourcePermission;
 use App\Altrp\Table;
 use App\Exceptions\AltrpMigrationCreateFileExceptions;
 use App\Exceptions\CommandFailedException;
@@ -18,6 +19,7 @@ use App\Exceptions\ControllerNotWrittenException;
 use App\Exceptions\ModelNotWrittenException;
 use App\Exceptions\PermissionNotWrittenException;
 use App\Exceptions\RouteGenerateFailedException;
+use App\Permission;
 use Carbon\Carbon;
 
 class AltrpModelObserver
@@ -191,6 +193,18 @@ class AltrpModelObserver
 //        $migration = $table->actual_migration();
 //        Column::where('altrp_migration_id', $migration->id)->delete();
 //        $migration->delete();
+        $sources = $model->altrp_sources();
+        $sourcePermissionsIds = [];
+        $permissionsIds = [];
+        foreach ($sources->get() as $source) {
+            $sourcePermissionsIds[] = $source->source_permissions->id;
+            $permissionsIds[] = $source->source_permissions->permission->id;
+        }
+        SourcePermission::destroy($sourcePermissionsIds);
+        Permission::destroy($permissionsIds);
+        $sources->delete();
+//        dd($sources);
+//        return false;
         $generator = new ModelGenerator($model);
         $result = $generator->deleteModelFile();
         if (! $result) {

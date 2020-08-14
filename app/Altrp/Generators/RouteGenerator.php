@@ -86,7 +86,7 @@ class RouteGenerator
     protected function getRoutesFromSources($tableName, $controller)
     {
         $routes = [];
-        $actions = ['get', 'options', 'show', 'add', 'update', 'delete', 'get_column'];
+        $actions = ['get', 'options', 'show', 'add', 'update', 'delete', 'update_column'];
         $sources = Source::where([
             ['controller_id', $this->controllerModel->id],
             ['model_id', $this->controllerModel->model->id],

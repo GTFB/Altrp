@@ -594,8 +594,6 @@ class ModelsController extends HttpController
      */
     public function storeModelRelation( ApiRequest $request, $model_id )
     {
-
-
       $relation = new Relationship($request->toArray());
       $relation->model_id = $model_id;
       $model = Model::find( $request->get( 'target_model_id' ) );

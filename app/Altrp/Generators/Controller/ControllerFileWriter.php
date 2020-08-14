@@ -139,6 +139,12 @@ class ControllerFileWriter
         return true;
     }
 
+    public function deleteSqlMethod($name)
+    {
+        $controllerContent = file($this->controller->getFile(), 2);
+        return $this->removeMethod($controllerContent, $name);
+    }
+
     /**
      * Проверить, существует ли sql-метод для редактора
      *

@@ -115,12 +115,18 @@ class NewMigrationGenerator extends AppGenerator{
         }
         catch (\Exception $e) {
             foreach ($e->getTrace() as $trace) {
-                dump($trace['file']);
+                if(isset($trace['file']) && is_file($trace['file'])) {
+                    if (file_exists($trace['file'])
+                        && Str::contains($trace['file'], 'altrp_migrations')) {
+                        unlink($trace['file']);
+                    }
+                }
             }
-            $migrationFile = $e->getTrace()[0]['file'];
-            if (file_exists($migrationFile) && Str::contains($migrationFile, '_')) {
-                unlink($migrationFile);
-            }
+            echo $e;
+//            $lastMigration = Migration::latest('id')->first();
+//            if ($lastMigration) {
+//
+//            }
             return false;
         }
         return true;

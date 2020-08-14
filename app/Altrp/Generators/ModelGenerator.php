@@ -60,7 +60,7 @@ class ModelGenerator extends AppGenerator
     public function __construct( $model, $data = [])
     {
         $this->model = $model;
-        $modelName = Str::studly($this->model->name);
+        $modelName = $this->model->name;
         $this->modelFilename = $this->getFormedFileName(
             $this->model->path,
             $modelName

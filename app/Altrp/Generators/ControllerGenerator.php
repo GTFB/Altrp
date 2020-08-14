@@ -670,7 +670,14 @@ class ControllerGenerator extends AppGenerator
         $controllerName = $this->getFormedControllerName($this->controllerModel);
         $controller = trim($controllerName, "\\");
         $prefix = $this->getRoutePrefix() ? '/' . trim($this->getRoutePrefix(), '/') : null;
-        $access = $this->getAccessMiddleware($userColumns);
+//        $access = $this->getAccessMiddleware($userColumns);
+        $access = [
+            'get' => '',
+            'show' => '',
+            'add' => '',
+            'update' => '',
+            'delete' => '',
+        ];
         $routeGenerator->addDynamicVariable('routePrefix', $prefix);
         $routeGenerator->addDynamicVariable('middleware', $middleware);
         $routeGenerator->addDynamicVariable('indexMiddleware', $access['get']);

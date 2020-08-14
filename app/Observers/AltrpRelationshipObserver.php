@@ -31,7 +31,6 @@ class AltrpRelationshipObserver
             && ($model->altrp_relationships->contains('name',$relationship->name)
                 || $relationship->type === 'hasOne' && $model->altrp_relationships->contains('foreign_key',$relationship->foreign_key))
         ) {
-
             return false;
         }
         $generator = new KeyMigrationGenerator($relationship);
@@ -60,14 +59,14 @@ class AltrpRelationshipObserver
                 'name' => $relationship->foreign_key,
                 'title' => $relationship->foreign_key,
                 'type' => 'bigInteger',
-                'null' => true,
+                'null' => false,
                 'table_id' => $model->altrp_table->id,
                 'altrp_migration_id' => $migration->id,
                 'user_id' => auth()->user()->id,
                 'is_label' => false,
                 'is_title' => false,
                 'indexed' => false,
-                'editable' => true,
+                'editable' => $relationship->editable,
                 'hidden' => false,
                 'model_id' => $relationship->model_id
             ]);
@@ -152,6 +151,27 @@ class AltrpRelationshipObserver
         $migration->status = "1";
         $migration->data = "";
         $migration->save();
+
+        if ($relationship->type = 'hasOne') {
+            $column = Column::where([['model_id',$relationship->model_id],['name',$relationship->getOriginal('foreign_key')]]);
+            Column::withoutEvents(function () use ($column, $relationship, $model, $migration){
+                $column->update([
+                    'name' => $relationship->foreign_key,
+                    'title' => $relationship->foreign_key,
+                    'type' => 'bigInteger',
+                    'null' => false,
+                    'table_id' => $model->altrp_table->id,
+                    'altrp_migration_id' => $migration->id,
+                    'user_id' => auth()->user()->id,
+                    'is_label' => false,
+                    'is_title' => false,
+                    'indexed' => false,
+                    'editable' => $relationship->editable,
+                    'hidden' => false,
+                    'model_id' => $relationship->model_id
+                ]);
+            });
+        }
 
     }
 
