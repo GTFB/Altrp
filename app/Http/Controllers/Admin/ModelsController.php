@@ -101,8 +101,10 @@ class ModelsController extends HttpController
             $pageCount = ceil($modelsCount / $limit);
             $offset = $limit * ($page - 1);
             $models = $search
-                ? Model::getBySearchWithPaginate($search, $offset, $limit)
-                : Model::getWithPaginate($offset, $limit);
+                ? Model::getBySearchWithPaginate($search, $offset, $limit, $request)
+                : Model::getWithPaginate($offset, $limit, $request);
+
+          $models = $models->get();
         }
         return compact('pageCount', 'models');
     }
@@ -597,7 +599,11 @@ class ModelsController extends HttpController
       $relation = new Relationship($request->toArray());
       $relation->model_id = $model_id;
       $model = Model::find( $request->get( 'target_model_id' ) );
-      $model_class = '\App\AltrpModels\\' . $model->name ;
+      if( $model->name !== 'user' ){
+        $model_class = '\App\AltrpModels\\' . $model->name ;
+      } else {
+        $model_class = '\App\\User' ;
+      }
       $relation->model_class = $model_class;
       $result = $relation->save();
       if ($result) {

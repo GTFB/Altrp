@@ -71,197 +71,228 @@ export function advancedTabControllers(element) {
   // );
 
   // element.endControlSection();
+  if(element.getType() !== 'section') {
 
-  element.startControlSection(
-    'element_positioning', {
-      tab: TAB_ADVANCED,
-      label: 'Positioning',
-    }
-  );
 
-  element.addControl('positioning_width_type', {
-    type: CONTROLLER_SELECT,
-    label: 'Width',
-    default: 'default',
-    options: [
-      {
-        value: 'default',
-        label: 'default'
-      },
-      {
-        value: '100%',
-        label: 'full width(100%)'
-      },
-      {
-        value: 'auto',
-        label: 'inline(auto)'
-      },
-      {
-        value: 'custom',
-        label: 'custom'
-      }
-    ],
-    rules: {
-      '{{ELEMENT}}.altrp-element': 'width: {{VALUE}};',
-    },
-  });
+    element.startControlSection(
+        'element_positioning', {
+          tab: TAB_ADVANCED,
+          label: 'Positioning',
+        }
+    );
 
-  element.addControl('positioning_custom_width', {
-    type: CONTROLLER_SLIDER,
-    label: 'Custom width',
-    default:{
-      size: "100%",
-      unit:'px'
-    },
-    units:[
-      'px',
-      '%',
-      'vh',
-    ],
-    max: 1000,
-    min: 0,
-    rules: {
-      'div{{ELEMENT}}.altrp-element': 'width: {{SIZE}}{{UNIT}};',
-    },
-    condition: {
-        'positioning_width_type': 'custom',
-      }
-    }
-  );
-
-  element.addControl('positioning_vertical_align', {
-    type: CONTROLLER_CHOOSE,
-    label: 'Vertical Align',
-    default: 'flex-start',
-    options:[
-      {
-        icon: 'block_top',
-        value: 'flex-start',
-      },
-      {
-        icon: 'block_horiz',
-        value: 'center',
-      },
-      {
-        icon: 'block_bottom',
-        value: 'flex-end',
-      },
-    ],
-    rules: {
-          '{{ELEMENT}}': 'align-self: {{VALUE}};',
-    },
-  });
-
-  element.addControl('positioning_position_type', {
-    type: CONTROLLER_SELECT,
-    label: 'Position',
-    default: 'relative',
-    options: [
-      {
-        value: 'relative',
-        label: 'default'
-      },
-      {
-        value: 'static',
-        label: 'default'
-      },
-      {
-        value: 'absolute',
-        label: 'absolute'
-      },
-      {
-        value: 'fixed',
-        label: 'fixed'
-      }
-    ],
-    rules: {
-          '{{ELEMENT}}': 'position: {{VALUE}};',
-    },
-  });
-
-  element.addControl('positioning_horizontal_orientation', {
-    type: CONTROLLER_CHOOSE,
-    label: 'Horizontal Align',
-    default: 'flex-start',
-    options:[
-      {
-        icon: 'block_left',
-        value: 'left',
-      },
-      {
-        icon: 'block_right',
-        value: 'right',
-      }
-    ],
-  });
-  
-  element.addControl('positioning_horizontal_offset', {
-      type: CONTROLLER_SLIDER,
-      label: 'offset',
-      default:{
-        size: "0",
-        unit:'px'
-      },
-      units:[
-        'px',
-        '%',
-        'vh',
+    element.addControl('positioning_width_type', {
+      type: CONTROLLER_SELECT,
+      label: 'Width',
+      default: 'default',
+      options: [
+        {
+          value: 'default',
+          label: 'default'
+        },
+        {
+          value: '100%',
+          label: 'full width(100%)'
+        },
+        {
+          value: 'auto',
+          label: 'inline(auto)'
+        },
+        {
+          value: 'custom',
+          label: 'custom'
+        }
       ],
-      max: 1000,
-      min: -1000,
       rules: {
-        '{{ELEMENT}}': 'left: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}}.altrp-element': 'width: {{VALUE}};',
       },
-    }
-  );
-  
-  element.addControl('positioning_vertical_orientation', {
-    type: CONTROLLER_CHOOSE,
-    label: 'Vertical align',
-    default: 'flex-start',
-    options:[
-      {
-        icon: 'block_top',
-        value: 'left',
-      },
-      {
-        icon: 'block_bottom',
-        value: 'right',
-      }
-    ],
-  });
-  
-  element.addControl('positioning_vertical_offset', {
-      type: CONTROLLER_SLIDER,
-      label: 'offset',
-      default:{
-        size: "0",
-        unit:'px'
-      },
-      units:[
-        'px',
-        '%',
-        'vh',
+    });
+
+    element.addControl('positioning_custom_width', {
+          type: CONTROLLER_SLIDER,
+          label: 'Custom width',
+          default: {
+            size: "100%",
+            unit: 'px'
+          },
+          units: [
+            'px',
+            '%',
+            'vh',
+          ],
+          max: 1000,
+          min: 0,
+          rules: {
+            'div{{ELEMENT}}.altrp-element': 'width: {{SIZE}}{{UNIT}};',
+          },
+          condition: {
+            'positioning_width_type': 'custom',
+          }
+        }
+    );
+
+    element.addControl('positioning_vertical_align', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Vertical Align',
+      default: 'flex-start',
+      options: [
+        {
+          icon: 'block_top',
+          value: 'flex-start',
+        },
+        {
+          icon: 'block_horiz',
+          value: 'center',
+        },
+        {
+          icon: 'block_bottom',
+          value: 'flex-end',
+        },
       ],
-      max: 1000,
-      min: -1000,
       rules: {
-        '{{ELEMENT}}': 'bottom: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}}': 'align-self: {{VALUE}};',
       },
-    }
-  );
-  element.endControlSection();
+    });
 
+    element.addControl('positioning_position_type', {
+      type: CONTROLLER_SELECT,
+      label: 'Position',
+      default: 'relative',
+      options: [
+        {
+          value: 'relative',
+          label: 'default'
+        },
+        {
+          value: 'static',
+          label: 'default'
+        },
+        {
+          value: 'absolute',
+          label: 'absolute'
+        },
+        {
+          value: 'fixed',
+          label: 'fixed'
+        }
+      ],
+      rules: {
+        '{{ELEMENT}}': 'position: {{VALUE}};',
+      },
+    });
+
+    element.addControl('positioning_horizontal_orientation', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Horizontal Align',
+      default: 'flex-start',
+      options: [
+        {
+          icon: 'block_left',
+          value: 'left',
+        },
+        {
+          icon: 'block_right',
+          value: 'right',
+        }
+      ],
+    });
+
+    element.addControl('positioning_horizontal_offset', {
+          type: CONTROLLER_SLIDER,
+          label: 'offset',
+          default: {
+            size: "0",
+            unit: 'px'
+          },
+          units: [
+            'px',
+            '%',
+            'vh',
+          ],
+          max: 1000,
+          min: -1000,
+          rules: {
+            '{{ELEMENT}}': 'left: {{SIZE}}{{UNIT}};',
+          },
+        }
+    );
+
+    element.addControl('positioning_vertical_orientation', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Vertical align',
+      default: 'flex-start',
+      options: [
+        {
+          icon: 'block_top',
+          value: 'left',
+        },
+        {
+          icon: 'block_bottom',
+          value: 'right',
+        }
+      ],
+    });
+
+    element.addControl('positioning_vertical_offset', {
+          type: CONTROLLER_SLIDER,
+          label: 'offset',
+          default: {
+            size: "0",
+            unit: 'px'
+          },
+          units: [
+            'px',
+            '%',
+            'vh',
+          ],
+          max: 1000,
+          min: -1000,
+          rules: {
+            '{{ELEMENT}}': 'bottom: {{SIZE}}{{UNIT}};',
+          },
+        }
+    );
+    element.endControlSection();
+
+    element.startControlSection(
+        'element_css', {
+          tab: TAB_ADVANCED,
+          label: 'CSS editor',
+        }
+    );
+
+    element.addControl(
+        'element_css_editor', {
+          type: CONTROLLER_CSSEDITOR,
+        }
+    );
+
+    element.endControlSection();
+  }
   element.startControlSection(
-    'element_css', {
+    'conditional_display', {
       tab: TAB_ADVANCED,
-      label: 'CSS editor',
+      label: 'Conditional Display',
     }
   );
 
-  element.addControl(
-    'element_css_editor', {
-      type: CONTROLLER_CSSEDITOR,
+  element.addControl('conditional_display_choose', {
+      type: CONTROLLER_SELECT,
+      label: 'Authorize Condition',
+      options: [
+        {
+          label: 'all',
+          value: '',
+        },
+        {
+          value: 'guest',
+          label: 'Guest Only',
+        },
+        {
+          value: 'auth',
+          label: 'Authorized Only',
+        },
+      ],
     }
   );
 

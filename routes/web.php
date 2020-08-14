@@ -116,6 +116,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get('/users/{user}/usermeta', "Users\UsersMeta@getUserMeta");
     Route::post('/users/{user}/usermeta', "Users\UsersMeta@saveUserMeta");
     Route::delete('/users/{user}/roles', "Users\Users@detachRole");
+
+    //Route::resource( 'reports', 'ReportsController' );
     /**
      * Areas Routes
      */
@@ -131,9 +133,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
       ->name( 'get-template-setting' );
     Route::put( 'templates/{template_id}/settings/{setting_name}', 'TemplateController@settingSet' )
       ->name( 'set-template-setting' );
+    /**
+     * Reports
+     */
     //Route::get('reports/{id}', "TemplateController@show");
     //Route::put('reports/{id}', "TemplateController@update");
-    //Route::resource( 'reports', 'ReportsController' );
+    Route::resource( 'reports', 'ReportsController' );
+
     Route::resource( 'media', 'Admin\MediaController' );
     Route::resource( 'settings', 'Admin\SettingsController' );
     Route::resource( 'diagrams', 'Admin\AltrpDiagramController' );
@@ -319,6 +325,9 @@ Route::group( ['prefix' => 'ajax'], function(){
    */
   Route::get( 'templates/{template_id}', 'TemplateController@show_frontend' )->name( 'templates.show.frontend' );
 } );
+
+Route::get('reports/{id}', "ReportsController@show");
+Route::post('reports/{id}', "ReportsController@update");
 
 Route::get('/linkstorage', function () {
   return redirect('/admin');

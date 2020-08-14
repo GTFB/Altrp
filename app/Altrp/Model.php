@@ -3,6 +3,7 @@
 
 namespace App\Altrp;
 
+use App\Http\Requests\ApiRequest;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -73,6 +74,11 @@ class Model extends EloquentModel
         return $this->hasMany(Relationship::class, 'model_id', 'id');
     }
 
+    public function altrp_relationships_always_with()
+    {
+        return $this->altrp_relationships()->where( 'always_with', 1 )->get( '*' );
+    }
+
     public function getTimeStampsAttribute($value)
     {
         return (bool)$value;
@@ -95,7 +101,7 @@ class Model extends EloquentModel
              * @var {Model} $model
              */
             $models[] = [
-                'title' => $model->name,
+                'title' => $model->title,
                 'name' => $model->altrp_table->name,
                 'ordering_fields' => $model->get_ordering_fields()
             ];
@@ -170,18 +176,19 @@ class Model extends EloquentModel
         $_models = self::all();
         foreach ($_models as $model) {
             $fields = [];
-            foreach ($model->altrp_table->actual_columns as $actual_column) {
+            foreach ($model->altrp_table->columns as $column) {
                 $fields[] = [
-                    'fieldName' => $actual_column->name,
-                    'title' => $actual_column->title ? $actual_column->title : $actual_column->name,
+                    'fieldName' => $column->name,
+                    'title' => $column->title ? $column->title : $column->name,
                 ];
             }
-//            foreach ($model->altrp_table->relationships as $relationship) {
-//                /**
-//                 * @var Relationship $relationship
-//                 */
-//                $fields = array_merge($fields, $relationship->get_related_field_options());
-//            }
+
+            foreach ($model->altrp_relationships_always_with() as $relationship) {
+                /**
+                 * @var Relationship $relationship
+                 */
+                $fields = array_merge($fields, $relationship->get_related_field_options());
+            }
             $models[] = [
                 'modelName' => $model->altrp_table->name,
                 'title' => $model->title,
@@ -240,22 +247,50 @@ class Model extends EloquentModel
           ->get();
     }
 
-    public static function getBySearchWithPaginate($search, $offset, $limit)
+  /**
+   * @param $search
+   * @param $offset
+   * @param $limit
+   * @param ApiRequest $request
+   * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
+   */
+  public static function getBySearchWithPaginate( $search, $offset, $limit, ApiRequest $request)
     {
+      if( $request->has( 'preset' ) ) {
         return self::where('title','like', "%{$search}%")
-            ->orWhere('id', $search)
-            ->skip($offset)
+          ->where( 'preset', $request->get( 'preset' ) )
+          ->orWhere('id', "%$search%")
+          ->skip($offset)
           ->orderByDesc('id')
-            ->take($limit)
-            ->get();
+          ->take($limit);
+      } else {
+        return self::where('title','like', "%{$search}%")
+          ->orWhere('id', "%$search%")
+          ->skip($offset)
+          ->orderByDesc('id')
+          ->take($limit);
+      }
     }
 
-    public static function getWithPaginate($offset, $limit)
+  /**
+   * @param $offset
+   * @param $limit
+   * @param ApiRequest $request
+   * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
+   */
+  public static function getWithPaginate( $offset, $limit , ApiRequest $request)
     {
+      if( $request->has( 'preset' ) ) {
+        return self::where('preset', $request->get( 'preset' ) )
+          ->skip($offset)
+          ->take($limit)
+          ->orderByDesc('id');
+      } else {
+
         return self::skip($offset)
-            ->take($limit)
-          ->orderByDesc('id')
-            ->get();
+          ->take($limit)
+          ->orderByDesc('id');
+      }
     }
 
     public static function getCount()

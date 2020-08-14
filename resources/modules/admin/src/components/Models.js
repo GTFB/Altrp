@@ -9,17 +9,16 @@ import Resource from "../../../editor/src/js/classes/Resource";
 
 const columnsModel = [
   {
-    name: 'name',
-    //name: 'title', todo: сменить, когда будет title
+    name: 'title',
     title: 'Title',
     url: true,
     editUrl: true,
     tag: 'Link'
   },
-  // {
-  //   name: 'name',
-  //   title: 'Name'
-  // },
+  {
+    name: 'name',
+    title: 'Name'
+  },
   {
     name: 'description',
     title: 'Description'
@@ -80,21 +79,22 @@ export default class Models extends Component {
   /**
    * Обновить список моделей
    */
-  getModels = async () => {
-    this.modelsResource.getQueried({
+  getModels = async (modelsSearch) => {
+    let res = await this.modelsResource.getQueried({
       page: this.state.modelsCurrentPage,
       pageSize: this.itemsPerPage,
-      s: this.state.modelsSearch
-    }).then(res => {
-      this.setState(state => {
-        return {
-          ...state,
-          models: res.models,
-          modelsPageCount: res.pageCount
-        }
-      });
+      preset: false,
+      s: modelsSearch
     });
-  }
+    this.setState(state => {
+      return {
+        ...state,
+        models: res.models,
+        modelsSearch,
+        modelsPageCount: res.pageCount
+      }
+    });
+  };
 
   // slicePage = (array, page, itemsPerPage) => {
   //   return array.slice(page * itemsPerPage - itemsPerPage, page * itemsPerPage);
@@ -108,11 +108,19 @@ export default class Models extends Component {
     this.setState(state => ({
       ...state,
       modelsCount: models.models.length
-    }))
+    }));
 
     this.getModels();
   }
 
+  /**
+   * фильтрация по строке
+   */
+  changeSearchHandler = e => {
+    let modelsSearch = e.target.value;
+    this.getModels(modelsSearch);
+
+  };
   render() {
     const { activeTab, models, dataSources, modelsCurrentPage, dataSourcesCurrentPage, modelsSearch, modelsPageCount, modelsCount } = this.state;
 
@@ -139,8 +147,8 @@ export default class Models extends Component {
             <AdminTable
               columns={columnsModel}
               search={{
-                value: modelsSearch,
-                changeHandler: e => this.setState({ modelsSearch: e.target.value }, this.getModels)
+                value: modelsSearch||'',
+                changeHandler:this.changeSearchHandler
               }}
               quickActions={[{
                 tag: 'Link', props: {
@@ -152,7 +160,7 @@ export default class Models extends Component {
                 route: '/admin/ajax/models/:id',
                 method: 'delete',
                 confirm: 'Are You Sure?',
-                after: () => this.getModels(),
+                after: () => {this.getModels()},
                 className: 'quick-action-menu__item_danger',
                 title: 'Trash'
               }]}
@@ -161,9 +169,13 @@ export default class Models extends Component {
                 editUrl: '/admin/tables/models/edit/' + model.id
               }))}
             />
-            <Pagination pageCount={modelsPageCount}
-              currentPage={modelsCurrentPage}
-              changePage={modelsCurrentPage => this.setState({ modelsCurrentPage }, this.getModels)}
+            <Pagination pageCount={modelsPageCount || 1}
+              currentPage={modelsCurrentPage || 1}
+              changePage={modelsCurrentPage => {
+                if(this.state.modelsCurrentPage !== modelsCurrentPage){
+                  this.setState({modelsCurrentPage}, this.getModels)}
+                }
+              }
               itemsCount={modelsCount}
             />
           </TabPanel>

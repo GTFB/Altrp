@@ -26,6 +26,9 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::put('/templates/{template}', "Constructor\Templates@update");
         Route::delete('/templates/{template}', "Constructor\Templates@delete");
 
+        //Route::get('/reports', 'ReportsController@getReports');
+        //Route::post('/reports', 'ReportsController@store');
+
         Route::get('/global-elements', "Constructor\GlobalElements@getElements");
         Route::get('/global-elements/{element}', "Constructor\GlobalElements@getElement");
         Route::post('/global-elements', "Constructor\GlobalElements@insert");
@@ -106,9 +109,6 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::post('/tables', "Admin\TableController@insert");
         Route::put('/tables/{table}', "Admin\TableController@update");
         Route::delete('/tables/{table}', "Admin\TableController@delete");*/
-
-        Route::get('/reports', 'ReportsController@index');
-        Route::post('/reports', 'ReportsController@store');
 
         Route::post( 'update-all-resources', 'Admin\UpdateController@upgradeAllResources' );
         Route::resource( 'sql_editors', 'Admin\SQLEditorController' );

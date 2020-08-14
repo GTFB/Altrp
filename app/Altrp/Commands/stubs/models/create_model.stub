@@ -34,6 +34,13 @@ class DummyClass extends Model
     protected $fillable = {{fillable}};
 
     /**
+     * Relations that should be always with.
+     *
+     * @var array
+     */
+    protected $with = {{always_with}};
+
+    /**
      * Columns that should be contains current user id
      *
      * @var array

@@ -8,6 +8,7 @@
 + Add Hover, Active, Disabled States Styling
 + Add Breakpoints Settings for Templates
 + Optimize Front App
++ Add Models with Relations and Fields Admin Settings 
 
 
 ### 0.6.0

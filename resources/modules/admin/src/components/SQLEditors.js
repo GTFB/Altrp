@@ -9,17 +9,16 @@ import Resource from "../../../editor/src/js/classes/Resource";
 
 const columns = [
   {
-    name: 'name',
-    //name: 'title', todo: сменить, когда будет title
+    name: 'title',
     title: 'Title',
     url: true,
     editUrl: true,
     tag: 'Link'
   },
-  // {
-  //   name: 'name',
-  //   title: 'Name'
-  // },
+  {
+    name: 'name',
+    title: 'Name'
+  },
   {
     name: 'description',
     title: 'Description'
@@ -113,7 +112,7 @@ export default class SQLEditors extends Component {
               route: '/admin/ajax/sql_editors/:id',
               method: 'delete',
               confirm: 'Are You Sure?',
-              after: () => this.updateModels(this.state.currentPage, this.state.activeTemplateArea),
+              // after: () => this.updateModels(this.state.currentPage, this.state.activeTemplateArea),
               className: 'quick-action-menu__item_danger',
               title: 'Trash'
             }]}
