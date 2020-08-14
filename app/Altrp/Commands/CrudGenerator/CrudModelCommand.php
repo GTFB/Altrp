@@ -23,6 +23,7 @@ class CrudModelCommand extends GeneratorCommand
                             {--updated-at= : The name of the updated-at column.}
                             {--user-columns= : The names of the user columns.}
                             {--accessors= : The accessors for the model.}
+                            {--always-with= : The names of the relation always with.}
                             {--custom-namespaces= : Custom namespaces of the model.}
                             {--custom-traits= : Custom traits of the model.}
                             {--custom-properties= : Custom props of the model.}
@@ -79,6 +80,7 @@ class CrudModelCommand extends GeneratorCommand
 
         $table = $this->option('table') ?: $this->argument('name');
         $fillable = $this->option('fillable');
+        $always_with = $this->option('always-with');
         $primaryKey = $this->option('pk');
         $relationships = trim($this->option('relationships')) != '' ? explode(';', trim($this->option('relationships'))) : [];
         $softDeletes = $this->option('soft-deletes');
@@ -141,6 +143,7 @@ EOD;
         $ret = $this->replaceNamespace($stub, $name)
             ->replaceTable($stub, $table)
             ->replaceFillable($stub, $fillable)
+            ->replaceAlwaysWith($stub, $always_with)
             ->replacePrimaryKey($stub, $primaryKey)
             ->replaceSoftDelete($stub, $softDeletes)
             ->replaceTimestamps($stub, $timestamps)
@@ -210,6 +213,21 @@ EOD;
     protected function replaceFillable(&$stub, $fillable)
     {
         $stub = str_replace('{{fillable}}', $fillable, $stub);
+
+        return $this;
+    }
+
+    /**
+     * Replace the fillable for the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $fillable
+     *
+     * @return $this
+     */
+    protected function replaceAlwaysWith(&$stub, $fillable)
+    {
+        $stub = str_replace('{{always_with}}', $fillable, $stub);
 
         return $this;
     }

@@ -59,8 +59,7 @@ const AltrpTable = ({settings, query}) => {
   }
   let columns = [];
   columns = settingsToColumns(settings);
-  // console.log(_data);
-  // debugger;
+
   let {
     getTableProps,
     getTableBodyProps,
@@ -82,7 +81,15 @@ const AltrpTable = ({settings, query}) => {
     {headerGroups.map(headerGroup => (
         <tr {...headerGroup.getHeaderGroupProps()} className="altrp-table-tr">
           {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()} className="altrp-table-th">{column.render('column_name')}</th>
+              <th {...column.getHeaderProps()} className="altrp-table-th">{column.render('column_name')}
+                <span className="altrp-table-th_sort">
+                    {column.isSorted
+                        ? column.isSortedDesc
+                            ? ' 🔽'
+                            : ' 🔼'
+                        : ''}
+                  </span>
+              </th>
           ))}
         </tr>
     ))}
@@ -100,6 +107,12 @@ const AltrpTable = ({settings, query}) => {
                     {row.cells.map((cell, _i) => {
                       let cellContent = cell.render('Cell');
                       let linkTag = isEditor() ? 'a': Link;
+                      /**
+                       * Если значение объект или масиив, то отобразим пустую строку
+                       */
+                      if(_.isObject(cell.value) || _.isArray(cell.value)){
+                        cellContent = '';
+                      }
                       /**
                        * Если в настройках колонки есть url, и в данных есть id, то делаем ссылку
                        */
@@ -159,8 +172,6 @@ function settingsToColumns(settings) {
       columns.push(_column);
     }
   });
-  // console.log(columns);
-
   return columns;
 }
 

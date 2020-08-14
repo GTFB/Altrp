@@ -133,12 +133,19 @@ class FrontElement {
           break;
           case 'login':{
             method = 'POST';
-            this.addForm(formsManager.registerForm(this.getSettings('form_id'), 'login', method));
+            this.addForm(formsManager.registerForm(this.getSettings('form_id'),
+                'login',
+                method,
+                {afterLoginRedirect:this.getSettings('redirect_after')}));
           }
           break;
           case 'logout':{
             method = 'POST';
-            this.addForm(formsManager.registerForm(this.getSettings('form_id'), 'logout', method));
+            this.addForm(formsManager.registerForm(this.getSettings('form_id'),
+                'logout',
+                method,
+                {afterLogoutRedirect:this.getSettings('redirect_after')}
+          ));
           }
           break;
         }
@@ -189,14 +196,15 @@ class FrontElement {
   /**
    * Получить настройку или все настройки
    * @param settingName
+   * @param {string} _default
    * @return {*}
    */
-  getSettings(settingName){
+  getSettings(settingName, _default = ''){
     if(! settingName)
     {
       return this.settings;
     }
-    return this.settings[settingName];
+    return this.settings[settingName] || _default;
   }
   updateStyles(){
     window.stylesModulePromise.then(stylesModule => {
