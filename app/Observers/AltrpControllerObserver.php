@@ -61,7 +61,7 @@ class AltrpControllerObserver
         if (! $generator->writeSourcePermissions($controller->model)) {
             throw new ModelNotWrittenException('Failed to write source permissions to the database', 500);
         }
-        if (! $generator->generateRoutes()) {
+        if (! $generator->generateRoutes($controller->model)) {
             throw new RouteGenerateFailedException('Failed to generate routes', 500);
         }
     }
@@ -100,7 +100,7 @@ class AltrpControllerObserver
             throw new ModelNotWrittenException('Failed to write source permissions to the database', 500);
         }
         // Сгенерировать маршруты для ресурса
-        if (! $generator->generateRoutes()) {
+        if (! $generator->generateRoutes($controller->model)) {
             throw new RouteGenerateFailedException('Failed to generate routes', 500);
         }
     }
