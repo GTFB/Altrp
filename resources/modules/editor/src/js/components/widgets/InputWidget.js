@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import { set } from "lodash";
 import {parseOptionsFromSettings} from "../../../../../front-app/src/js/helpers";
+import Resource from "../../classes/Resource";
 // import InputMask from "react-input-mask";
 
 class InputWidget extends Component {
@@ -9,7 +10,7 @@ class InputWidget extends Component {
     super(props);
     this.onChange = this.onChange.bind(this);
     this.state = {
-      settings: props.element.getSettings(),
+      settings: {...props.element.getSettings()},
       value: props.element.getSettings().content_default_value || '',
       options: parseOptionsFromSettings(props.element.getSettings('content_options'))
     };
@@ -19,6 +20,37 @@ class InputWidget extends Component {
     }
   }
 
+  /**
+   * Загрузка виджета
+   */
+  async _componentDidMount(){
+    if(this.state.settings.content_type === 'select' && this.state.settings.model_for_options){
+      let model_for_options = this.props.element.getSettings('model_for_options');
+      let options = await(new Resource({route: `/ajax/models/${model_for_options}_options`})).getAll();
+      console.log(options);
+      this.setState(state =>({...state, options}))
+    }
+  }
+  /**
+   * Обновление виджета
+   */
+  async componentDidUpdate(prevProps){
+    if(this.props.element.getSettings('content_type') === 'select' && this.props.element.getSettings('model_for_options') ){
+      if(this.state.settings.model_for_options === prevProps.element.getSettings('model_for_options')){
+        return;
+      }
+      let model_for_options = prevProps.element.getSettings('model_for_options');
+      let options = await (new Resource({route: `/ajax/models/${model_for_options}_options`})).getAll();
+      console.log(options);
+      this.setState(state =>({...state, options,model_for_options}))
+    }
+  }
+
+
+  /**
+   * Изменение значения в виджете
+   * @param e
+   */
   onChange(e){
     let value = e.target.value;
     this.setState(state=>({

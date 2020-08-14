@@ -202,7 +202,7 @@ class FrontElement {
   getSettings(settingName, _default = ''){
     if(! settingName)
     {
-      return this.settings;
+      return _.cloneDeep(this.settings);
     }
     return this.settings[settingName] || _default;
   }
