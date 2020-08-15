@@ -27,7 +27,6 @@ class InputWidget extends Component {
     if(this.state.settings.content_type === 'select' && this.state.settings.model_for_options){
       let model_for_options = this.props.element.getSettings('model_for_options');
       let options = await(new Resource({route: `/ajax/models/${model_for_options}_options`})).getAll();
-      console.log(options);
       this.setState(state =>({...state, options}))
     }
   }
@@ -41,7 +40,6 @@ class InputWidget extends Component {
       }
       let model_for_options = prevProps.element.getSettings('model_for_options');
       let options = await (new Resource({route: `/ajax/models/${model_for_options}_options`})).getAll();
-      console.log(options);
       this.setState(state =>({...state, options,model_for_options}))
     }
   }

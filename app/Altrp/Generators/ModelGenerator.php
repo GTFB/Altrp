@@ -482,11 +482,11 @@ class ModelGenerator extends AppGenerator
         }
         $columns = $this->getColumns($table);
         if (!$columns || $columns->isEmpty()) return null;
-        $relations = $this->getRelations();
+        $relations = $this->getEditableColumnsFromRelations();
         $columnsList = $this->getColumnsList($columns);
 //        $relationsList = $this->getColumnsList($relations, 'foreign_key');
 //        $allColumns = array_merge($columnsList, $relationsList);
-        return '\'' . implode("','", $columnsList) . '\'';
+        return '\'' . implode("','", array_merge( $columnsList, $relations)) . '\'';
     }
     /**
      * Получить связи, который всегда идут c моделью
@@ -621,4 +621,19 @@ class ModelGenerator extends AppGenerator
         if (! isset($this->model->user_cols) || empty($this->model->user_cols)) return null;
         return '\'' . implode("','",explode(",", $this->model->user_cols)) . '\'';
     }
+
+  /**
+   * Получить массив имен колонок из связей hasOne,
+   * которые можно править
+   * @return array;
+   */
+  private function getEditableColumnsFromRelations()
+  {
+    $relations = Relationship::where( [['model_id', $this->model->id], ['editable', 1], ['type' , 'hasOne']] )->get();
+    $_column_names = [];
+    foreach ( $relations as $relation ) {
+      $_column_names[] = $relation->foreign_key;
+    }
+    return $_column_names;
+  }
 }

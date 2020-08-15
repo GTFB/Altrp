@@ -76,7 +76,6 @@ class AltrpForm {
           if(modelID){
             res =  await this.resource.put(modelID, this.getData());
             import('./modules/ModelsManager').then(modelsManager=>{
-              console.log(this.getData());
               modelsManager.default.updateModelWithData(this.modelName, modelID, this.getData());
             });
 

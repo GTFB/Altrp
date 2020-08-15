@@ -89,7 +89,6 @@ class AltrpModelUpdater {
    */
   updateWithData(data){
     this.data = _.extend( this.data,{...data});
-    console.log(data);
     this.callSubscribers();
   }
 }
