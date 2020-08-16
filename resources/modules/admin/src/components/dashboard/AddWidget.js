@@ -7,26 +7,30 @@ import Button from "react-bootstrap/Button";
 
 import { schemes } from "reaviz";
 
+import dataSources from "./dataSources";
 import { TABLE, widgetTypes } from "./widgetTypes";
 import WidgetDiagram from "./WidgetDiagram";
 
-const WidgetParams = ({ itemIndex, show, setShow, list, setList }) => {
-  const [widget, setWidget] = useState(list[itemIndex]);
+const WidgetParams = ({ show, setShow, onSave }) => {
+  const [widget, setWidget] = useState({
+    name: "",
+    source: "",
+    type: TABLE,
+    width: 400,
+    options: {},
+    colorScheme: "Set1",
+  });
 
-  const dataSources = [
-    { name: "Информация о шаблонах", url: "/admin/ajax/analytics" },
-    { name: "Пустые данные", url: "/admin/ajax/analytics/none" },
-  ];
-
-  const onSave = () => {
-    setList(list.map((item, index) => (itemIndex === index ? widget : item)));
+  const handleSave = () => {
+    // Скрываем модальку
     setShow(false);
+    onSave(widget);
   };
 
   return (
     <Modal show={show} onHide={() => setShow(false)} animation={false} size="lg" centered>
       <Modal.Header closeButton>
-        <Modal.Title>Редактировать виджет</Modal.Title>
+        <Modal.Title>Добавить виджет</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Row>
@@ -90,7 +94,7 @@ const WidgetParams = ({ itemIndex, show, setShow, list, setList }) => {
                 <Form.Group>
                   <Form.Check
                     type="checkbox"
-                    checked={widget.options.isVertical}
+                    checked={widget.options?.isVertical}
                     label="Вертикальная таблица"
                     onChange={(e) =>
                       setWidget({
@@ -106,7 +110,7 @@ const WidgetParams = ({ itemIndex, show, setShow, list, setList }) => {
           <Col>
             <Row>
               <div className="widget-placeholder">
-                {widget && (
+                {widget.source && (
                   <WidgetDiagram
                     type={widget.type}
                     url={widget.source}
@@ -125,7 +129,7 @@ const WidgetParams = ({ itemIndex, show, setShow, list, setList }) => {
         <Button variant="secondary" onClick={() => setShow(false)}>
           Закрыть
         </Button>
-        <Button variant="warning" onClick={onSave} disabled={widget.name === ""}>
+        <Button variant="warning" onClick={handleSave} disabled={widget.name === ""}>
           Сохранить изменения
         </Button>
       </Modal.Footer>
