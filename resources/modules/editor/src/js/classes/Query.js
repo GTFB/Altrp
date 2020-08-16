@@ -1,9 +1,16 @@
 import Resource from "./Resource";
+import modelManager from "../../../../editor/src/js/classes/modules/ModelsManager";
+// import
 
 class Query {
 
-  constructor(data){
+  constructor(data, component){
+    this.component = component;
     this.modelName = data.modelName || '';
+    this.dataSource = data.dataSource;
+    if(data.dataSource&& data.dataSource.type === 'model_query'){
+      this.modelName = data.dataSource.value || '';
+    }
     this.pageSize = data.pageSize || 10;
     this.paginationType = data.paginationType || 'pages';
     this.orderingField = data.orderingField || 'name';
@@ -15,17 +22,37 @@ class Query {
    */
   getResource(){
     return new Resource({route: `/ajax/models/${this.modelName}`});
-    // return new Resource({route: `https://jsonplaceholder.typicode.com/posts`});
   }
 
 
+  /**
+   * Поулчить данные с модели, которая хранится в компоненте
+   * @param {{}} modelData
+   * @return {[]}
+   */
+  getFromModel(modelData){
+    if(! modelData){
+      return [];
+    }
+    if(_.isObject && _.isArray(modelData[this.dataSource.value])){
+      return [...modelData[this.dataSource.value]];
+    }
+  }
   /**
    * Делает запрос с параметрами
    * @param params
    * @return {Promise}
    */
   async getQueried(params){
-    return await this.getResource().getQueried(this.getParams(params))
+    if(this.dataSource && (this.dataSource.type === 'has_many_relation')){
+      if(!this.modelUpdater){
+        this.modelUpdater = modelManager.subscribeToModelUpdates(this.dataSource.model_name, this.component.getModelId(), this.component);
+      } else {
+        console.log(this.modelUpdater);
+      }
+    } else {
+      return await this.getResource().getQueried(this.getParams(params))
+    }
   }
 
   /**
@@ -34,7 +61,7 @@ class Query {
    * @return {object}
    */
   getParams(params) {
-    params = {..._.assign({...this}, params)};
+    params = {..._.assign({pageSize:this.pageSize}, params)};
     params.page = params.page || 1;
     return params;
   }

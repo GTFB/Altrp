@@ -27,27 +27,7 @@ class ModelsController extends HttpController
      */
     public function models_list()
     {
-        $test_res = [
 
-            [
-                'name' => 'post',
-                'title' => 'Post',
-                'ordering_fields' => [
-                    ['title' => 'Title',],
-                    ['date' => 'Date',],
-                    ['random' => 'Random',],
-                ],
-            ],
-            [
-                'name' => 'model1',
-                'title' => 'Model 1',
-                'ordering_fields' => [
-                    ['name' => 'Name',],
-                    ['date' => 'Date',],
-                    ['random' => 'Random',],
-                ],
-            ],
-        ];
 
         return response()->json(Model::getModelsForEditor());
     }
@@ -77,8 +57,50 @@ class ModelsController extends HttpController
     {
         return response()->json(Model::getModelsWithFieldsOptions(), 200, [], JSON_UNESCAPED_UNICODE);
     }
+  /**
+   * Источники данных для QueryController
+   */
+    public function data_sources_for_query(){
+      $data_sources = [];
+      $models = Model::all( );
+      $model_data_sources = [];
+      foreach ( $models as $model ) {
+        if( $model->name === 'user' ){
+          continue;
+        }
+        $model_data_sources[] = [
+          'label' => $model->title,
+          'value' => $model->altrp_table->name,
+          'type' => 'model_query'
+        ];
+      }
 
+      if( count( $model_data_sources ) ){
+        $data_sources[] = [
+          'label' => 'Models',
+          'options' => $model_data_sources,
+          'type' => 'models query'
+        ];
+      }
 
+      $relationships = Relationship::where( 'type', 'hasMany' )->get();
+      $relationship_data_sources = [];
+      foreach ( $relationships as $relationship ) {
+        $relationship_data_sources[] = [
+          'label' => $relationship->altrp_model->title . ': ' . $relationship->title,
+          'value' => $relationship->name,
+          'model_name' =>  $relationship->altrp_model->altrp_table->name,
+          'type' => 'has_many_relation'
+        ];
+      }
+      if( count( $relationship_data_sources ) ){
+        $data_sources[] = [
+          'label' => 'Relationships from Models',
+          'options' => $relationship_data_sources,
+        ];
+      }
+      return response()->json( $data_sources, 200, [], JSON_UNESCAPED_UNICODE);
+    }
 
     /**
      * Получить модель и кол-во страниц

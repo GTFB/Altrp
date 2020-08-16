@@ -56,6 +56,9 @@ class AltrpModelUpdater {
       if(_.isFunction(subscriber.updateModelData)){
         subscriber.updateModelData(this.getData());
       }
+      if(_.isFunction(subscriber)){
+        subscriber(this.getData());
+      }
     });
   }
 

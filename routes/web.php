@@ -189,6 +189,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::delete( '/models/{model_id}', 'Admin\ModelsController@destroyModel');
 
     /**
+     * Источники данных для QueryController
+     */
+    Route::get( '/data_sources_for_query', 'Admin\ModelsController@data_sources_for_query');
+
+    /**
     * Поля
     */
     Route::get( '/models/{model_id}/fields', 'Admin\ModelsController@getModelFields');

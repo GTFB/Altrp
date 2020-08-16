@@ -53,7 +53,7 @@ class AltrpRelationshipObserver
 
         $relationship->altrp_migration_id = $migration->id;
 
-        if ($relationship->type = 'hasOne') {
+        if ($relationship->type === 'hasOne') {
 //            $localColumn = Column::where([['table_id',Model::find($relationship->target_model_id)->first()->id]])->first();
             $column = new Column([
                 'name' => $relationship->foreign_key,
@@ -152,7 +152,7 @@ class AltrpRelationshipObserver
         $migration->data = "";
         $migration->save();
 
-        if ($relationship->type = 'hasOne') {
+        if ($relationship->type === 'hasOne') {
             $column = Column::where([['model_id',$relationship->model_id],['name',$relationship->getOriginal('foreign_key')]]);
             Column::withoutEvents(function () use ($column, $relationship, $model, $migration){
                 $column->update([
