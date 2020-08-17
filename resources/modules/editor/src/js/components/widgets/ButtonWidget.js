@@ -27,7 +27,7 @@ class ButtonWidget extends Component {
          * @param {AltrpForm} form
          */ async form => {
           try {
-            let res = await form.submit(this.hasMore());
+            let res = await form.submit(this.getModelId());
             if (res.success) {
               let redirect = this.state.settings.redirect_after
                 ? this.state.settings.redirect_after
@@ -38,6 +38,7 @@ class ButtonWidget extends Component {
             }
             this.setState(state => ({ ...state, pending: false }));
           } catch (e) {
+            console.error(e);
             this.setState(state => ({ ...state, pending: false }));
           }
         }
