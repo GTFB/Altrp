@@ -19,12 +19,12 @@ class Source extends Model
 
     public function source_roles()
     {
-        return $this->hasMany(SourceRole::class);
+        return $this->hasMany(SourceRole::class,'source_id');
     }
 
     public function source_permissions()
     {
-        return $this->hasMany(SourcePermission::class);
+        return $this->hasOne(SourcePermission::class,'source_id');
     }
 
     public static function getBySearch($search)

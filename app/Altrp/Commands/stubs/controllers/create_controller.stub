@@ -7,7 +7,6 @@ use DummyRootNamespaceHttp\Controllers\ApiController;
 use DummyRootNamespace{{modelNamespace}}{{modelName}};
 use App\Http\Requests\ApiRequest;
 use Illuminate\Http\Request;
-use App\Http\Requests\ApiRequest;
 use Illuminate\Support\Facades\DB;
 {{requestNamespaces}}
 // CUSTOM_NAMESPACES_BEGIN - IMPORTANT: Don't remove this comment! Write your namespaces between these comments.
@@ -105,14 +104,14 @@ class DummyClass extends ApiController
         ${{crudNameSingular}} = {{modelName}}::find($id);
 
         if(! ${{crudNameSingular}}) {
-            return response()->json(trans("responses.not_found.{{crudNameSingular}}"), 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success'=>false, 'message' => trans("responses.not_found.{{crudNameSingular}}")], 404, [], JSON_UNESCAPED_UNICODE);
         }
 
         if(${{crudNameSingular}}->delete()) {
-            return response()->json(trans("responses.delete.{{crudNameSingular}}"), 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success'=>true, 'message' => trans("responses.delete.{{crudNameSingular}}")], 200, [], JSON_UNESCAPED_UNICODE);
         }
 
-        return response()->json(trans("deleteerror"), 400, [], JSON_UNESCAPED_UNICODE);
+        return response()->json(['success'=>false, 'message' => trans("deleteerror")], 400, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**

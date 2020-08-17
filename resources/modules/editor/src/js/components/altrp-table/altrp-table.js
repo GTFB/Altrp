@@ -12,12 +12,9 @@ import {isEditor} from "../../../../../front-app/src/js/helpers";
  * @return {*}
  * @constructor
  */
-const AltrpTable = ({settings, query}) => {
+const AltrpTable = ({settings, query, data}) => {
   if (! (settings.tables_columns && settings.tables_columns.length)) {
     return <div children="Please Add Column"/>
-  }
-  if(! query.modelName){
-    return <div children="Please Choose Model"/>
   }
   let _data =[], _status, _error, _latestData;
   const [page, setPage] = useState(1);
@@ -59,7 +56,9 @@ const AltrpTable = ({settings, query}) => {
   }
   let columns = [];
   columns = settingsToColumns(settings);
-
+  if(! _data.length){
+    _data = data;
+  }
   let {
     getTableProps,
     getTableBodyProps,

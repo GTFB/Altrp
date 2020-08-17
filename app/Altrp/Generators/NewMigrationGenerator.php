@@ -114,10 +114,19 @@ class NewMigrationGenerator extends AppGenerator{
             Artisan::call('migrate', array('--force' => true, '--path' => "database/".$folder_name."/",));
         }
         catch (\Exception $e) {
-            $migrationFile = $e->getTrace()[0]['file'];
-            if (file_exists($migrationFile)) {
-                unlink($migrationFile);
+            foreach ($e->getTrace() as $trace) {
+                if(isset($trace['file']) && is_file($trace['file'])) {
+                    if (file_exists($trace['file'])
+                        && Str::contains($trace['file'], 'altrp_migrations')) {
+                        unlink($trace['file']);
+                    }
+                }
             }
+            echo $e;
+//            $lastMigration = Migration::latest('id')->first();
+//            if ($lastMigration) {
+//
+//            }
             return false;
         }
         return true;

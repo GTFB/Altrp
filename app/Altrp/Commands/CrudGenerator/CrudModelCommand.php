@@ -3,6 +3,7 @@
 namespace App\Altrp\Commands\CrudGenerator;
 
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Support\Str;
 
 class CrudModelCommand extends GeneratorCommand
 {
