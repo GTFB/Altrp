@@ -88,7 +88,8 @@ class Button extends BaseElement{
       default: {
         url: "",
         attributes: "",
-        noFollow: false
+        noFollow: false,
+        tag: 'Link'
       },
       label: 'Link',
     });
