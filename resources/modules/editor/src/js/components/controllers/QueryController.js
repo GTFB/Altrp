@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import controllerDecorate from "../../decorators/controller";
 import Resource from "../../classes/Resource";
+import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 
 /**
  * Контроллер настроек запроса
@@ -21,7 +22,7 @@ class QueryController extends Component {
     this.state = {
       value,
       show: true,
-      modelsList: [],
+      dataSourceList: [],
       orderingFieldsOptions: [],
       paginationTypeOption: [
         {
@@ -40,14 +41,14 @@ class QueryController extends Component {
   }
 
   async _componentDidMount() {
-    let modelsList = await new Resource({ route: '/admin/ajax/models_list_for_query' }).getAll();
-   console.log(modelsList);
-    let value = { ...value };
-    value.modelName = value.modelName || modelsList[0].name;
+    let dataSourceList = await new Resource({ route: '/admin/ajax/data_sources_for_query' }).getAll();
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    value = { ...value };
+    value.modelName = value.modelName || dataSourceList[0].name;
     if (!this.props.currentElement.getSettings(this.props.controlId)) {
-      this._changeModelName(modelsList[0].name)
+      this._changeModelName(dataSourceList[0].name)
     }
-    this.setState(state => ({ ...state, modelsList, value }));
+    this.setState(state => ({ ...state, dataSourceList, value }));
   }
 
   /**
@@ -57,6 +58,17 @@ class QueryController extends Component {
   changeModelName(e) {
     this._changeModelName(e.target.value);
   }
+
+  /**
+   * обработчик события смены DataSource
+   * @param {{}} dataSource
+   */
+  onChangeDataSource = (dataSource) => {
+    console.log(dataSource);
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    value.dataSource = {...dataSource};
+    this._changeValue({...value});
+  };
 
   /**
    * обработчик события изменения количество записей на странице
@@ -88,7 +100,7 @@ class QueryController extends Component {
 
     let value = { ..._value, modelName };
     let orderingFieldsOptions = [];
-    this.state.modelsList.forEach(model => {
+    this.state.dataSourceList.forEach(model => {
       if (model.name === modelName) {
         orderingFieldsOptions = model.ordering_fields;
       }
@@ -116,27 +128,35 @@ class QueryController extends Component {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
 
     return <div className="controller-container controller-container_query">
-      <div className="controller-field-group">
+      <div className="controller-field-group flex-wrap">
         <div className="controller-container__label">
           Source
         </div>
-        <div className="control-container_select-wrapper">
-          <select className="control-select control-field"
-            value={value.modelName || ''}
-            onChange={this.changeModelName}>
-            <option value="" />
-            {this.state.modelsList.map(option => {
-              return <option value={option.name}
-                key={option.name}>{option.title}</option>
-            })}
-          </select>
+        <div className="control-container_select-wrapper w-100">
+          {/*<select className="control-select control-field"*/}
+            {/*value={value.modelName || ''}*/}
+            {/*onChange={this.changeModelName}>*/}
+            {/*<option value="" />*/}
+            {/*{this.state.dataSourceList.map(option => {*/}
+              {/*return <option value={option.name}*/}
+                {/*key={option.name}>{option.title}</option>*/}
+            {/*})}*/}
+          {/*</select>*/}
+          <AltrpSelect options={this.state.dataSourceList}
+                       onChange={this.onChangeDataSource}
+                       value={value.dataSource}
+                       styles={{
+                         container:() => ({
+                            width: '100%',
+                         }),
+                       }}/>
         </div>
       </div>
-      <div className="controller-field-group">
+      <div className="controller-field-group ">
         <div className="controller-container__label">
           Page Size
         </div>
-        <div className="control-container_select-wrapper">
+        <div className="control-container_select-wrapper ">
           <input className="control-field control-field_number"
             type="number"
             value={value.pageSize || 10}

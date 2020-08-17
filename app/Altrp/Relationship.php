@@ -39,6 +39,7 @@ class Relationship extends EloquentModel
         'onDelete',
         'onUpdate',
         'always_with',
+        'editable'
     ];
 
     /**

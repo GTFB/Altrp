@@ -35,6 +35,11 @@ class Model extends EloquentModel
         'relationships'
     ];
 
+//    public function setNameAttribute($value)
+//    {
+//        $this->attributes['name'] = Str::studly($value);
+//    }
+
     public function setFillableColsAttribute($value)
     {
         $this->attributes['fillable_cols'] = isset($value)
@@ -52,6 +57,11 @@ class Model extends EloquentModel
     public function altrp_table()
     {
         return $this->belongsTo(Table::class, 'table_id');
+    }
+
+    public function altrp_sources()
+    {
+        return $this->hasMany(Source::class, 'model_id');
     }
 
     public function altrp_controller()

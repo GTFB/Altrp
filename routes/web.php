@@ -173,7 +173,17 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get( '/models_with_fields_options', 'Admin\ModelsController@models_with_fields_options' )
       ->name( 'admin.models_with_fields_options' );
 
-    // Models
+    /**
+    * Маршруты для проверки на уникальность имени
+    */
+    Route::get('/model_name_is_free', 'Admin\ModelsController@modelNameIsFree');
+    Route::get('/models/{model_id}/field_name_is_free', 'Admin\ModelsController@fieldNameIsFree');
+    Route::get('/models/{model_id}/relation_name_is_free', 'Admin\ModelsController@relationNameIsFree');
+    Route::get('/models/{model_id}/sql_builder_name_is_free', 'Admin\ModelsController@queryNameIsFree');
+
+    /**
+    * Модели
+    */
     Route::get( '/models', 'Admin\ModelsController@getModels');
     Route::get( '/model_options', 'Admin\ModelsController@getModelOptions');
     Route::post( '/models', 'Admin\ModelsController@storeModel');
@@ -181,7 +191,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get( '/models/{model_id}', 'Admin\ModelsController@showModel');
     Route::delete( '/models/{model_id}', 'Admin\ModelsController@destroyModel');
 
-    // Fields
+    /**
+     * Источники данных для QueryController
+     */
+    Route::get( '/data_sources_for_query', 'Admin\ModelsController@data_sources_for_query');
+
+    /**
+    * Поля
+    */
     Route::get( '/models/{model_id}/fields', 'Admin\ModelsController@getModelFields');
     Route::get( '/models/{model_id}/field_options', 'Admin\ModelsController@getModelFieldOptions');
     Route::post( '/models/{model_id}/fields', 'Admin\ModelsController@storeModelField');
@@ -189,7 +206,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@showModelField');
     Route::delete( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@destroyModelField');
 
-    // Relations
+    /**
+    * Связи
+    */
     Route::get( '/models/{model_id}/relations', 'Admin\ModelsController@getModelRelations');
     Route::get( '/models/{model_id}/relation_options', 'Admin\ModelsController@getModelRelationOptions');
     Route::post( '/models/{model_id}/relations', 'Admin\ModelsController@storeModelRelation');
@@ -197,7 +216,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::get( '/models/{model_id}/relations/{field_id}', 'Admin\ModelsController@showModelRelation');
     Route::delete( '/models/{model_id}/relations/{field_id}', 'Admin\ModelsController@destroyModelRelation');
 
-    // Data Source
+    /**
+    * Источники данных
+    */
     Route::get( '/data_sources', 'Admin\ModelsController@getDataSources');
     Route::get( '/data_source_options', 'Admin\ModelsController@getDataSourceOptions');
     Route::post( '/data_sources', 'Admin\ModelsController@storeDataSource');
@@ -236,16 +257,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
 
     Route::get('/tables/{table}/controller', "Admin\TableController@getController");
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
-
-
-    // GeneratorController routes
-    Route::post('/generators/{table}/model/create', 'Admin\GeneratorController@createModel');
-    Route::post('/generators/{table}/controller/create', 'Admin\GeneratorController@createController');
-    Route::post('/generators/{table}/migration/create', 'Admin\GeneratorController@createMigration');
-
-
-
-
   });
 
 });

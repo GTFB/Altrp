@@ -56,16 +56,17 @@ class RouteGenerator
     /**
      * Сгенерировать новые маршруты
      *
-     * @param $tableName
+     * @param $oldModelName
+     * @param $modelName
      * @param $controller
      * @return boolean
      */
-    public function generate($tableName, $controller)
+    public function generate($oldModelName, $modelName, $controller)
     {
-        $routes = $this->getRoutesFromSources($tableName, $controller);
+        $routes = $this->getRoutesFromSources($modelName, $controller);
         $this->routeStub = array_merge($this->fillStub(), $routes);
 
-        if ($items = $this->routeExists($tableName, $controller)) {
+        if ($items = $this->routeExists($oldModelName, $controller)) {
             $this->routeRewrite($items);
         } else {
             $this->routeWrite();
@@ -75,10 +76,17 @@ class RouteGenerator
         return $result;
     }
 
+    /**
+     * Сформировать и получить маршруты из источников данных
+     *
+     * @param $tableName
+     * @param $controller
+     * @return array
+     */
     protected function getRoutesFromSources($tableName, $controller)
     {
         $routes = [];
-        $actions = ['get', 'options', 'show', 'add', 'update', 'delete', 'get_column'];
+        $actions = ['get', 'options', 'show', 'add', 'update', 'delete', 'update_column'];
         $sources = Source::where([
             ['controller_id', $this->controllerModel->id],
             ['model_id', $this->controllerModel->model->id],

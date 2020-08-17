@@ -55,6 +55,12 @@ class RouteFileWriter
         return true;
     }
 
+    public function deleteSqlRoute($methodName)
+    {
+        $routeContent = file($this->route->getFile(), 2);
+        return $this->removeSqlRoute($routeContent,$methodName);
+    }
+
     protected function removeSqlRoute(&$routeContent,$methodName)
     {
         if ($line = $this->routeExists($routeContent, $methodName)) {
@@ -117,8 +123,9 @@ class RouteFileWriter
     protected function getRoute($methodName)
     {
         $middleware = $this->route->getModel()->user_cols ? ['auth:api','auth'] : [];
-        $accessMiddleware = $this->getAccessMiddleware($methodName);
-        if ($accessMiddleware) $middleware[] = $accessMiddleware;
+//        $accessMiddleware = $this->getAccessMiddleware($methodName);
+//        if ($accessMiddleware) $middleware[] = $accessMiddleware;
+        $middleware = [];
 
         $route = 'Route::get(\'/' . strtolower(Str::plural($this->route->getModelName())) . '/'
             . Str::kebab($methodName) . '\', [';

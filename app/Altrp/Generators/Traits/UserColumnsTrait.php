@@ -10,6 +10,7 @@ use App\Altrp\Model;
  * @package App\Altrp\Generators\Traits
  * @property $table_id
  * @self Model
+ * @parent \Illuminate\Database\Eloquent\Builder
  */
 trait UserColumnsTrait
 {
@@ -76,13 +77,13 @@ trait UserColumnsTrait
       ->where( 'altrp_columns.is_label', 1 )->get( 'altrp_columns.name' )->first();
 
 
-    if( ! $name->name ){
+    if( ! $name ){
       $name = Model::where( 'altrp_models.name', $modelName )
         ->join( 'tables', 'tables.id', '=', 'altrp_models.table_id' )
         ->join( 'altrp_columns', 'tables.id', '=', 'altrp_columns.table_id' )
         ->where( 'altrp_columns.is_title', 1 )->get( 'altrp_columns.name' )->first();
     }
-    if( ! $name->name ){
+    if( ! $name ){
       return 'id';
     }
 
@@ -110,5 +111,34 @@ trait UserColumnsTrait
       return 'id';
     }
     return $name->name;
+  }
+
+  /**
+   * Обновление с учетом связанных моделей
+   * @param array $values
+   * @param array $options
+   * @return boolean
+   */
+  public function update(array $attributes = [], array $options = []){
+    $result = parent::update( $attributes, $options );
+    if( ! $result ){
+      return $result;
+    }
+    $with_values = [];
+    foreach ( $this->with as $with_relation_name ) {
+      foreach ( $attributes as $key => $value ) {
+        $name_pairs = explode( '.', $key );
+        if( ( count( $name_pairs ) === 2 ) && $name_pairs[0] === $with_relation_name ){
+          $with_values[$with_relation_name][$name_pairs[1]] = $value;
+        }
+      }
+    }
+    foreach ( $with_values as $with_relation_name => $values ) {
+      $result = $this->$with_relation_name->update( $values );
+      if( ! $result ){
+        return $result;
+      }
+    }
+    return $result;
   }
 }
