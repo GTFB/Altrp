@@ -16,64 +16,16 @@ class SQLBuilderForm extends Component {
     this.state = {
       value: {
         title: "",
-        name: "getAllRecords",
-        columns: [
-          "id",
-          "name",
-          "email"
-        ],
-        aggregates: [
-          {
-            type: "sum",
-            column: "price",
-            alias: "sum_price"
-          },
-          {
-            type: "max",
-            column: "price",
-            alias: "max_price"
-          }
-        ],
-        conditions: [
-          {
-            conditionType: "where",
-            column: "user_id",
-            operator: "=",
-            value: "CURRENT_USER"
-          }
-        ],
-        relations: [
-          "post",
-          "comments"
-        ],
-        order_by: [
-          {
-            column: "name",
-            type: "desc"
-          }
-        ],
-        access: {
-          roles: [
-            1,
-            2
-          ],
-          permissions: [
-            48,
-            50
-          ]
-        },
-        group_by: [
-          "name",
-          "surname"
-        ],
+        name: "",
+        columns: [],
+        aggregates: [],
+        conditions: [],
+        relations: [],
+        order_by: [],
+        access: { roles: [], permissions: [] },
+        group_by: [],
         offset: 10,
         limit: 5
-      },
-      initialCondition: {
-        conditionType: 'where',
-        column: '',
-        operator: 'not-null',
-        value: ''
       },
       relationsOptions: [],
       rolesOptions: [],
