@@ -16,14 +16,14 @@ const dateTypesOptions = [
 class ConditionComponent extends Component {
   render() {
     const { columnsOptions, changeHandler } = this.props;
-    const { conditionType, column, operator, value, or, values, type,
+    const { condition_type, column, operator, value, or, values, type,
       first_column, second_column } = this.props.item;
     return <div className="form-segment">
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width30">
           <label>Condition Type
-            <select required name="conditionType"
-              value={conditionType}
+            <select required name="condition_type"
+              value={condition_type}
               onChange={changeHandler}
               className="form-control"
             >
@@ -36,7 +36,7 @@ class ConditionComponent extends Component {
           </label>
         </div>
 
-        {conditionType && conditionType !== "where_column" && <div className="form-group form-group_width30">
+        {condition_type && condition_type !== "where_column" && <div className="form-group form-group_width30">
           <label>Field
             <select required name="column"
               value={column}
@@ -52,7 +52,7 @@ class ConditionComponent extends Component {
           </label>
         </div>}
 
-        {['where', 'or_where', 'where_column'].includes(conditionType) &&
+        {['where', 'or_where', 'where_column'].includes(condition_type) &&
           <div className="form-group form-group_width30">
             <label>Operator
               <select required name="operator"
@@ -74,7 +74,7 @@ class ConditionComponent extends Component {
             </label>
           </div>}
 
-        {['where_between', 'where_in', 'where_column'].includes(conditionType) && <>
+        {['where_between', 'where_in', 'where_column'].includes(condition_type) && <>
           <div className="form-group form-group_checkbox form-group_width15">
             <label className="label_checkbox">
               <input type="radio" name="or"
@@ -96,7 +96,7 @@ class ConditionComponent extends Component {
           </div>
         </>}
 
-        {conditionType === "where_date" && <div className="form-group form-group_width30">
+        {condition_type === "where_date" && <div className="form-group form-group_width30">
           <label>Type
             <select id="type" required name="type"
               value={type}
@@ -111,7 +111,7 @@ class ConditionComponent extends Component {
         </div>}
       </div>
 
-      {['where', 'or_where'].includes(conditionType) && !['not-null', 'null'].includes(operator) &&
+      {['where', 'or_where'].includes(condition_type) && !['not-null', 'null'].includes(operator) &&
         <div className="form-group">
           <label>Value
             <input type="text" required name="value"
@@ -121,7 +121,7 @@ class ConditionComponent extends Component {
           </label>
         </div>}
 
-      {['where_between'].includes(conditionType) &&
+      {['where_between'].includes(condition_type) &&
         <div className="form-group__inline-wrapper">
           <div className="form-group form-group_width47">
             <label>Value 1
@@ -142,7 +142,7 @@ class ConditionComponent extends Component {
           </div>
         </div>}
 
-      {conditionType === "where_in" && <>
+      {condition_type === "where_in" && <>
         <div className="form-group">
           <label>Values
             <textarea required name="values"
@@ -154,7 +154,7 @@ class ConditionComponent extends Component {
         <p>Comma Separated</p>
       </>}
 
-      {conditionType === "where_date" &&
+      {condition_type === "where_date" &&
         <div className={`form-group ${["day", "month"].includes(type) ? "hide-blocks" : ""}`}>
           <label>Value
             <DatePicker selected={moment(value, getMomentFormat(type))._d}
@@ -174,7 +174,7 @@ class ConditionComponent extends Component {
           </label>
         </div>}
 
-      {conditionType === "where_column" && <div className="form-group__inline-wrapper">
+      {condition_type === "where_column" && <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
           <label>First Field
             <select required name="first_column"

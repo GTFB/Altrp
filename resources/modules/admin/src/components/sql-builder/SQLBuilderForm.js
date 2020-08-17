@@ -203,7 +203,7 @@ class SQLBuilderForm extends Component {
   conditionAddHandler = () => {
     this.setState(state => {
       const conditions = [...state.value.conditions];
-      conditions.push({ conditionType: '' });
+      conditions.push({ condition_type: '' });
       return {
         ...state,
         value: { ...state.value, conditions }
@@ -215,21 +215,21 @@ class SQLBuilderForm extends Component {
     this.setState(state => {
       const conditions = [...state.value.conditions];
       let condition;
-      if (name === 'conditionType') {
+      if (name === 'condition_type') {
         switch (value) {
           case 'where':
           case 'or_where':
-            condition = { conditionType: value, column: '', operator: '', value: '' };
+            condition = { condition_type: value, column: '', operator: '', value: '' };
             break;
           case 'where_between':
           case 'where_in':
-            condition = { conditionType: value, or: false, column: '', values: [] };
+            condition = { condition_type: value, or: false, column: '', values: [] };
             break;
           case 'where_date':
-            condition = { conditionType: value, type: 'year', column: '', value: '2020' };
+            condition = { condition_type: value, type: 'year', column: '', value: '2020' };
             break;
           case 'where_column':
-            condition = { conditionType: value, or: false, first_column: '', operator: '', second_column: '' };
+            condition = { condition_type: value, or: false, first_column: '', operator: '', second_column: '' };
             break;
 
           default:
@@ -268,11 +268,11 @@ class SQLBuilderForm extends Component {
               [name]: value
             };
             if (['not-null', 'null'].includes(value)) {
-              condition.conditionType === 'where_column' ?
+              condition.condition_type === 'where_column' ?
                 delete condition.second_column :
                 delete condition.value
             } else {
-              condition.conditionType === 'where_column' ?
+              condition.condition_type === 'where_column' ?
                 condition.second_column = condition.second_column || '' :
                 condition.value = condition.value || ''
             }
