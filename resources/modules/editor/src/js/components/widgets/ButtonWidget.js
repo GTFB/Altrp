@@ -27,7 +27,7 @@ class ButtonWidget extends Component {
          * @param {AltrpForm} form
          */ async form => {
           try {
-            let res = await form.submit(this.getModelId());
+            let res = await form.submit(this.hasMore());
             if (res.success) {
               let redirect = this.state.settings.redirect_after
                 ? this.state.settings.redirect_after
