@@ -4,7 +4,7 @@ import { iconsManager } from '../../../../front-app/src/js/helpers';
 import Select from 'react-select'
 import Resource from '../classes/Resource';
 import { getTemplateId } from '../helpers';
-import AltrpSelect from '../../../../admin/src/components/altrp/AltrpSelect';
+import AltrpSelect from '../../../../admin/src/components/altrp-select/AltrpSelect';
 
 export default class DialogConditionsTab extends Component {
   constructor(props) {
@@ -19,7 +19,7 @@ export default class DialogConditionsTab extends Component {
 
 
   async componentDidMount() {
-    let conditions = await this.resource.get('conditions')
+    let conditions = await this.resource.get('conditions');
     console.log(conditions);
     this.setState({
       value: conditions.data || []
