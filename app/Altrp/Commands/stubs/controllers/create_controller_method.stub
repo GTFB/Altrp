@@ -1,7 +1,3 @@
-    /**
-     * @param {{repoInterface}} ${{repo}}
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function {{methodName}}({{repoInterface}} ${{repo}})
     {
         ${{resource}} = ${{repo}}->{{methodName}}();

@@ -135,12 +135,15 @@ class Page extends Model
     }
     $popups = Template::join( 'areas', 'areas.id', '=', 'templates.area' )
       ->where( 'areas.name', '=', 'popup' )
-      ->where( 'type', 'template' )->with( 'template_settings' )->get();
-    if( $popups->count() ){
-      $popups->map( function ( $popup ){
-        $popup->check_elements_conditions();
-      } );
+      ->where( 'type', 'template' )->get( 'templates.*' );
 
+
+
+    if( $popups->count() ){
+      foreach ( $popups as $key => $popup ) {
+        $popups[$key]->template_settings = $popup->template_settings();
+
+      }
       $areas[] = [
         'area_name' => 'popups',
         'id' => 'popups',

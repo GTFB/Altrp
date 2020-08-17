@@ -44,6 +44,15 @@ import laptopIcon from '../../../svgs/laptop.svg'
 import tabletIcon from '../../../svgs/tablet.svg'
 import bigPhoneIcon from '../../../svgs/bigphonescreen.svg'
 import smallPhoneIcon from '../../../svgs/smallphonescreen.svg'
+import conditionsTab from '../../../svgs/conditions-tab.svg'
+import triggersTab from '../../../svgs/triggers_tab.svg'
+import advancedTab from '../../../svgs/timing_tab.svg'
+import pageLoad from '../../../svgs/page_load.svg'
+import scrollingIcon from '../../../svgs/scrolling.svg'
+import scrollingTo from '../../../svgs/scrolling_to.svg'
+import clickIcon from '../../../svgs/click.svg'
+import inactivityIcon from '../../../svgs/inactivity.svg'
+import exitIntent from '../../../svgs/exit_intent.svg'
 
 class IconsManager {
   constructor() {
@@ -95,6 +104,15 @@ class IconsManager {
     this.icons.push(new Icon('tablet', tabletIcon))
     this.icons.push(new Icon('big_phone', bigPhoneIcon))
     this.icons.push(new Icon('small_phone', smallPhoneIcon))
+    this.icons.push(new Icon('conditions_tab', conditionsTab))
+    this.icons.push(new Icon('triggers_tab', triggersTab))
+    this.icons.push(new Icon('advanced_tab', advancedTab))
+    this.icons.push(new Icon('page_load', pageLoad))
+    this.icons.push(new Icon('scrolling', scrollingIcon))
+    this.icons.push(new Icon('scrolling_to', scrollingTo))
+    this.icons.push(new Icon('click', clickIcon))
+    this.icons.push(new Icon('inactivity', inactivityIcon))
+    this.icons.push(new Icon('exit_intent', exitIntent))
   }
   /**
    * @param {string} iconName

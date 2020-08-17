@@ -62,7 +62,8 @@ class ApiController extends Controller
                 ? $this->modelClass::whereLike($indexedColumns, $search)->orderByDesc('id')->get()
                 : $this->modelClass::orderByDesc('id')->get();
         }
-        return compact('pageCount', $resource);
+        $hasMore = $pageCount > $page;
+        return compact('pageCount', $resource ,'hasMore');
     }
 
     /**

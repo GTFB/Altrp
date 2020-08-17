@@ -11,10 +11,12 @@ use App\Altrp\Generators\Repository\RepositoryFileWriter;
 use App\Altrp\Generators\Repository\RepositoryInterfaceFile;
 use App\Altrp\Generators\Route\RouteFile;
 use App\Altrp\Generators\Route\RouteFileWriter;
+use App\Altrp\Model;
 use App\Altrp\Query;
 use App\Altrp\Source;
 use App\Altrp\SourcePermission;
 use App\Altrp\SourceRole;
+use App\Exceptions\Controller\ControllerFileException;
 use App\Exceptions\Repository\RepositoryFileException;
 use Illuminate\Support\Str;
 
@@ -23,9 +25,19 @@ class QueryBuilder
     /**
      * Запрос
      *
-     * @var array
+     * @var Query
      */
-    protected $query = [];
+    protected $query;
+
+    /**
+     * @var object
+     */
+    protected $queryBody;
+
+    /**
+     * @var Model
+     */
+    protected $model;
 
     /**
      * Данные
@@ -46,87 +58,62 @@ class QueryBuilder
 
     /**
      * QueryBuilder constructor.
-     * @param $data
+     * @param Query $query
      */
-    public function __construct($data)
+    public function __construct(Query $query)
     {
-        $this->data = $data;
+        $this->query = $query;
+        $this->model = Model::find($query->model_id);
     }
 
-  /**
-   * Построить запрос
-   *
-   * @return bool
-   * @throws RepositoryFileException
-   * @throws \App\Exceptions\Controller\ControllerFileException
-   * @throws \App\Exceptions\Route\RouteFileException
-   */
-    public function build()
+    protected function reset()
     {
-        foreach ($this->data as $item => $value) {
-            switch ($item) {
-                case 'columns':
-                    $this->query[] = $this->getColumns($value);
-                    break;
-                case 'aggregates':
-                    $this->query[] = $this->getAggregates($value);
-                    break;
-                case 'conditions':
-                    $this->query[] = $this->getConditions($value);
-                    break;
-                case 'relations':
-                    $this->query[] = $this->getRelations($value);
-                    break;
-                case 'order_by':
-                    $this->query[] = $this->getOrders($value);
-                    break;
-                case 'group_by':
-                    $this->query[] = $this->getGroupTypes($value);
-                    break;
-                case 'offset':
-                    $this->query[] = $this->getOffset($value);
-                    break;
-                case 'limit':
-                    $this->query[] = $this->getLimit($value);
-                    break;
-                case 'distinct':
-                    $this->query[] = $this->getDistinct($value);
-                    break;
-            }
-        }
-
-        if (! $this->existsNotGetableData()) $this->query[] = "->get();\n";
-
-        $methodBody = $this->getMethodBody();
-
-        $source = $this->writeSource($this->getMethodName());
-
-        $this->saveQuery($source);
-
-        if (isset($this->data['access'])) {
-            $this->writeSourceRoles($source);
-            $this->writeSourcePermissions($source);
-        }
-
-        $this->writeMethodToController();
-
-        $this->writeMethodToRepo($methodBody);
-
-        $this->writeRoute();
-
-        return true;
+        $this->queryBody = new \stdClass();
     }
 
     /**
-     * Получить сформированный метод с SQL запросом
+     * Сформировать тело метода
      *
-     * @return string
+     * @return string|string[]
      */
-    protected function getMethodBody()
+    public function getMethodBody()
     {
+        $query = $this
+                    ->getJoins($this->query->joins)
+                    ->getColumns($this->query->columns)
+                    ->getAggregates($this->query->aggregates)
+                    ->getWhereConditions($this->query->conditions)
+                    ->getOrWhereConditions($this->query->conditions)
+                    ->getWhereBetweenConditions($this->query->conditions)
+                    ->getWhereInConditions($this->query->conditions)
+                    ->getWhereDateConditions($this->query->conditions)
+                    ->getWhereColumnConditions($this->query->conditions)
+                    ->getRelations($this->query->relations)
+                    ->getOrders($this->query->order_by)
+                    ->getGroupTypes($this->query->group_by)
+                    ->getOffset($this->query->offset)
+                    ->getLimit($this->query->limit)
+                    ->getQueryBody();
+
+        return $query;
+    }
+
+    /**
+     * Получить тело запроса
+     *
+     * @return string|string[]
+     */
+    public function getQueryBody()
+    {
+        $queryBody = [];
+        foreach ((array)$this->queryBody as $item) {
+            if (is_array($item)) $queryBody[] = implode($this->threeTabs, $item);
+            else $queryBody[] = $item;
+        }
+        $queryBody[] = "->get();\n";
         $methodBody = "\n\n{$this->tabIndent}public function " . $this->getMethodName() . "()\n{$this->tabIndent}{\n"
-            . "{$this->tabIndent}{$this->tabIndent}return \$this->model()\n"
-            . implode("{$this->threeTabs}",$this->query) . $this->tabIndent . "}{$this->tabIndent}";
+        . "{$this->tabIndent}{$this->tabIndent}return \$this->model()\n"
+        . implode("{$this->threeTabs}",$queryBody) . $this->tabIndent . "}{$this->tabIndent}";
         return $this->replaceConstants($methodBody);
     }
 
@@ -138,7 +125,7 @@ class QueryBuilder
      */
     protected function replaceConstants($methodBody)
     {
-        $pattern = "'?[A-Z_]+:[a-z0-9_.]+'?";
+        $pattern = "'?(CURRENT_[A-Z_]+|REQUEST)(:[a-z0-9_.]+)?'?";
         $methodBody = preg_replace_callback(
             "#$pattern#",
             function($matches) {
@@ -154,11 +141,63 @@ class QueryBuilder
                     $relations = str_replace('.', '->', $param[1]);
                     return 'auth()->user()->' . $relations;
                 }
+                if ($param && $param[0] == 'CURRENT_DATE') {
+                    return 'Carbon::now()->format(\'Y-m-d\')';
+                }
+                if ($param && $param[0] == 'CURRENT_DAY') {
+                    return 'Carbon::now()->format(\'d\')';
+                }
+                if ($param && $param[0] == 'CURRENT_MONTH') {
+                    return 'Carbon::now()->format(\'m\')';
+                }
+                if ($param && $param[0] == 'CURRENT_YEAR') {
+                    return 'Carbon::now()->format(\'Y\')';
+                }
+                if ($param && $param[0] == 'CURRENT_HOUR') {
+                    return 'Carbon::now()->format(\'H\')';
+                }
+                if ($param && $param[0] == 'CURRENT_MINUTE') {
+                    return 'Carbon::now()->format(\'i\')';
+                }
+                if ($param && $param[0] == 'CURRENT_SECOND') {
+                    return 'Carbon::now()->format(\'s\')';
+                }
+                if ($param && $param[0] == 'CURRENT_TIME') {
+                    return 'Carbon::now()->format(\'H:i:s\')';
+                }
+                if ($param && $param[0] == 'CURRENT_DATETIME') {
+                    return 'Carbon::now()->format(\'Y-m-d H:i:s\')';
+                }
+                if ($param && $param[0] == 'CURRENT_DAY_OF_WEEK') {
+                    return '\Carbon::now()->format(\'l\')';
+                }
                 return "''";
             },
             $methodBody
         );
         return $methodBody;
+    }
+
+    /**
+     * Удалить метод из контроллера
+     *
+     * @return bool
+     * @throws \App\Exceptions\Controller\ControllerFileException
+     */
+    public function removeMethodFromController()
+    {
+        $controllerFile = new ControllerFile($this->model);
+        $repoFile = new RepositoryFile($this->model);
+        $repoInterfaceFile = new RepositoryInterfaceFile($this->model);
+        $fileWriter = new ControllerFileWriter(
+            $controllerFile,
+            $repoFile,
+            $repoInterfaceFile
+        );
+        if ($fileWriter->removeMethod($this->getMethodName())) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -181,29 +220,121 @@ class QueryBuilder
    * Записать маршрут в файл маршрутов
    * @throws \App\Exceptions\Route\RouteFileException
    */
-    protected function writeRoute()
+    public function writeRoute()
     {
-        $routeFile = new RouteFile($this->data['model']);
-        $controllerFile = new ControllerFile($this->data['model']);
+        $routeFile = new RouteFile($this->model);
+        $controllerFile = new ControllerFile($this->model);
         $fileWriter = new RouteFileWriter($routeFile, $controllerFile);
-        $fileWriter->addRoute($this->getMethodName());
+        if ($fileWriter->addRoute($this->getMethodName())) {
+            return true;
+        }
+        return false;
     }
 
     /**
      * Записать метод в файл репозитория
      *
      * @param $method
+     * @return bool
      * @throws \App\Exceptions\Repository\RepositoryFileException
      */
-    protected function writeMethodToRepo($method)
+    public function writeMethodToRepo($method)
     {
-        $repoInterfaceFile = new RepositoryInterfaceFile($this->data['model']);
-        $repoFile = new RepositoryFile($this->data['model']);
+        $repoInterfaceFile = new RepositoryInterfaceFile($this->model);
+        $repoFile = new RepositoryFile($this->model);
         $fileWriter = new RepositoryFileWriter(
             $repoFile,
             $repoInterfaceFile
         );
-        $fileWriter->addMethod($this->getMethodName(), $method);
+        if ($fileWriter->addMethod($this->getMethodName(), $method)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Обновить метод в файле репозитория
+     *
+     * @param $method
+     * @return bool
+     * @throws \App\Exceptions\Repository\RepositoryFileException
+     */
+    public function updateRepoMethod($method)
+    {
+        $repoInterfaceFile = new RepositoryInterfaceFile($this->model);
+        $repoFile = new RepositoryFile($this->model);
+        $fileWriter = new RepositoryFileWriter(
+            $repoFile,
+            $repoInterfaceFile
+        );
+        $oldMethodName = $this->getOldMethodName();
+        if (! $fileWriter->removeMethodFromRepository($oldMethodName)) {
+            return false;
+        }
+        if (! $fileWriter->removeMethodFromRepoInterface($oldMethodName)) {
+            return false;
+        }
+        if (! $fileWriter->addMethod($this->getMethodName(), $method)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Обновить файл маршрутов
+     *
+     * @throws \App\Exceptions\Route\RouteFileException
+     */
+    public function updateRoute()
+    {
+        if (! $this->removeRoute()) {
+            return false;
+        }
+        if (! $this->writeRoute()) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Удалить метод из файла репозитория
+     *
+     * @param $method
+     * @return bool
+     * @throws \App\Exceptions\Repository\RepositoryFileException
+     */
+    public function removeMethodFromRepo()
+    {
+        $repoInterfaceFile = new RepositoryInterfaceFile($this->model);
+        $repoFile = new RepositoryFile($this->model);
+        $fileWriter = new RepositoryFileWriter(
+            $repoFile,
+            $repoInterfaceFile
+        );
+        if (! $fileWriter->removeMethodFromRepository($this->getMethodName())) {
+            return false;
+        }
+        if (! $fileWriter->removeMethodFromRepoInterface($this->getMethodName())) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Удалить маршрут
+     *
+     * @return bool
+     * @throws \App\Exceptions\Route\RouteFileException
+     */
+    public function removeRoute()
+    {
+        $routeFile = new RouteFile($this->model);
+        $controllerFile = new ControllerFile($this->model);
+        $fileWriter = new RouteFileWriter($routeFile, $controllerFile);
+        if ($fileWriter->removeRoute($this->getOldMethodName())) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -211,17 +342,23 @@ class QueryBuilder
      *
      * @throws \App\Exceptions\Controller\ControllerFileException
      */
-    protected function writeMethodToController()
+    public function writeMethodToController()
     {
-        $controllerFile = new ControllerFile($this->data['model']);
-        $repoFile = new RepositoryFile($this->data['model']);
-        $repoInterfaceFile = new RepositoryInterfaceFile($this->data['model']);
+        $controllerFile = new ControllerFile($this->model);
+        $repoFile = new RepositoryFile($this->model);
+        $repoInterfaceFile = new RepositoryInterfaceFile($this->model);
         $fileWriter = new ControllerFileWriter(
             $controllerFile,
             $repoFile,
             $repoInterfaceFile
         );
-        $fileWriter->addMethod($this->getMethodName());
+        if ($fileWriter->checkMethodExists($this->getMethodName())) {
+            throw new ControllerFileException('Query already ' . $this->getOldMethodName() . ' exists', 500);
+        }
+        if ($fileWriter->addMethod($this->getMethodName())) {
+            return true;
+        }
+        return false;
     }
 
   /**
@@ -231,11 +368,11 @@ class QueryBuilder
    * @return mixed
    * @throws RepositoryFileException
    */
-    protected function writeSource($method)
+    public function writeSource($method)
     {
         $method = Str::kebab($method);
-        $modelId = $this->data['model']->id;
-        $controllerId = $this->data['model']->controller->id;
+        $modelId = $this->model->id;
+        $controllerId = $this->model->altrp_controller->id;
         $source = Source::where([
             ['model_id', $modelId],
             ['controller_id', $controllerId],
@@ -245,10 +382,10 @@ class QueryBuilder
             $source =  new Source();
             $source->model_id = $modelId;
             $source->controller_id = $controllerId;
-            $source->url = '/ajax/models/' . $this->data['model']->table->name . '/' . $method;
-            $source->api_url = '/api/ajax/models/' . $this->data['model']->table->name . '/' . $method;
+            $source->url = '/ajax/models/' . $this->model->table->name . '/' . $method;
+            $source->api_url = '/api/ajax/models/' .$this->model->table->name . '/' . $method;
             $source->type = $method;
-            $source->name = ucwords(str_replace('-', ' ', $method));
+            $source->name = ucwords(str_replace('_', ' ', $method));
             if (! $source->save()) {
                 throw new RepositoryFileException('Failed to write source', 500);
             }
@@ -263,11 +400,12 @@ class QueryBuilder
      * @param Source $source
      * @return bool
      */
-    protected function writeSourceRoles($source)
+    public function writeSourceRoles($source)
     {
         $rolesIds = [];
         $rolesList = [];
-        foreach ($this->data['access'] as $type => $roles) {
+        if (! $this->query->access) return true;
+        foreach ($this->query->access as $type => $roles) {
             if ($type == 'roles') {
                 foreach ($roles as $role) {
                     $rolesIds[] = $role;
@@ -279,7 +417,7 @@ class QueryBuilder
             }
         }
         try {
-            SourceRole::whereIn('role_id', $rolesIds)->whereIn('source_id', [$source->id])->delete();
+            SourceRole::where('source_id', $source->id)->delete();
             SourceRole::insert($rolesList);
         } catch (\Exception $e) {
             return false;
@@ -293,11 +431,12 @@ class QueryBuilder
      * @param Source $source
      * @return bool
      */
-    protected function writeSourcePermissions($source)
+    public function writeSourcePermissions($source)
     {
         $permissionIds = [];
         $permissionsList = [];
-        foreach ($this->data['access'] as $type => $permissions) {
+        if (! $this->query->access) return true;
+        foreach ($this->query->access as $type => $permissions) {
             if ($type == 'permissions') {
                 foreach ($permissions as $permission) {
                     $permissionIds[] = $permission;
@@ -309,12 +448,49 @@ class QueryBuilder
             }
         }
         try {
-            SourcePermission::whereIn('permission_id', $permissionIds)->whereIn('source_id', [$source->id])->delete();
+            SourcePermission::where('source_id', $source->id)->delete();
             SourcePermission::insert($permissionsList);
         } catch (\Exception $e) {
             return false;
         }
         return true;
+    }
+
+    public function updateSourceRoles($source)
+    {
+        return $this->writeSourceRoles($source);
+    }
+
+    public function updateSourcePermissions($source)
+    {
+        return $this->writeSourcePermissions($source);
+    }
+
+    /**
+     * Обновить метод в контроллере
+     *
+     * @return bool
+     * @throws \App\Exceptions\Controller\ControllerFileException
+     */
+    public function updateControllerMethod()
+    {
+        $controllerFile = new ControllerFile($this->model);
+        $repoFile = new RepositoryFile($this->model);
+        $repoInterfaceFile = new RepositoryInterfaceFile($this->model);
+        $fileWriter = new ControllerFileWriter(
+            $controllerFile,
+            $repoFile,
+            $repoInterfaceFile
+        );
+        if ($this->getOldMethodName() != $this->getMethodName()
+            && $fileWriter->checkMethodExists($this->getMethodName())) {
+            throw new ControllerFileException('Query ' . $this->getMethodName() . ' already exists', 500);
+        }
+        if ($fileWriter->updateMethod(
+            $this->getOldMethodName(),
+            $this->getMethodName())
+        ) return true;
+        return false;
     }
 
     /**
@@ -345,9 +521,14 @@ class QueryBuilder
      *
      * @return mixed
      */
-    protected function getMethodName()
+    public function getMethodName()
     {
-        return $this->data['name'];
+        return $this->query->name;
+    }
+
+    public function getOldMethodName()
+    {
+        return $this->query->getOriginal('name') ?? $this->query->name;
     }
 
     /**
@@ -358,41 +539,51 @@ class QueryBuilder
      */
     protected function getDistinct($distinct)
     {
-        return '->distinct()' . "\n";
+        $this->queryBody->distinct = '->distinct()' . "\n";
+        return $this;
     }
 
     /**
      * Сформировать и получить агрегатную выборку
      *
      * @param array $aggregates
-     * @return string
+     * @return $this
      */
-    protected function getAggregates($aggregates)
+    public function getAggregates($aggregates)
     {
+        if (! $aggregates) return $this;
         $aggregatesList = [];
         foreach ($aggregates as $aggregate) {
             $aggregatesList[] = $aggregate['type'] . "({$aggregate['column']}) as {$aggregate['alias']}";
         }
-        return '->selectRaw(\'' . implode(', ', $aggregatesList) . '\')' . "\n";
+        $this->queryBody->aggregates = '->selectRaw(\'' . implode(', ', $aggregatesList) . '\')' . "\n";
+        return $this;
     }
 
     /**
      * Получить выбираемые колонки
      *
      * @param $columns
-     * @return string
+     * @return $this
      */
-    protected function getColumns($columns)
+    public function getColumns($columns)
     {
-        if (! $columns) return 'select(\'*\')';
-        return "{$this->threeTabs}->select(['" . implode("','", $columns) . "'])\n";
+        $threeTabs = null;
+        if (! $this->query->joins) {
+            $this->reset();
+            $threeTabs = $this->threeTabs;
+        }
+        $this->queryBody->columns = $columns
+            ? "{$threeTabs}->select(['" . implode("','", $columns) . "'])\n"
+            : 'select(\'*\')';
+        return $this;
     }
 
     /**
      * Сформировать список всех условий
      *
      * @param $conditions
-     * @return string
+     * @return $this
      */
     protected function getConditions($conditions)
     {
@@ -419,44 +610,49 @@ class QueryBuilder
                     break;
             }
         }
-        return implode("{$this->threeTabs}",$conditionsList);
+        $this->queryBody->conditions = implode("{$this->threeTabs}",$conditionsList);
+        return $this;
     }
 
     /**
      * Получить связи с другими таблицами
      *
      * @param $relations
-     * @return string
+     * @return $this
      */
-    protected function getRelations($relations)
+    public function getRelations($relations)
     {
+        if (! $relations) return $this;
         $eol = (count($relations) > 1) ? "\n" : null;
         $tab = (count($relations) > 1) ? "{$this->tabIndent}" : null;
-        return "->with([$eol$tab$tab$tab$tab'"
+        $this->queryBody->relations = "->with([$eol$tab$tab$tab$tab'"
             . implode("',$eol$tab$tab$tab$tab'", $relations) . "'$eol$tab$tab$tab])\n";
+        return $this;
     }
 
     /**
      * Получить список условий
      *
      * @param $conditions
-     * @return string
+     * @return $this
      */
-    protected function getWhereConditions($conditions)
+    public function getWhereConditions($conditions)
     {
+        if (! $conditions['where']) return $this;
         $condition = 'where([';
         $loop = 1;
-        foreach ($conditions as $cond) {
+        foreach ($conditions['where'] as $cond) {
             $value = $cond['value'];
-            if (count($conditions) > 1 && $loop == 1) $condition .= "\n{$this->threeTabs}{$this->tabIndent}";
+            if (count($conditions['where']) > 1 && $loop == 1) $condition .= "\n{$this->threeTabs}{$this->tabIndent}";
             $condition .= "['{$cond['column']}'," . "'{$cond['operator']}'," . $value . "], ";
-            if (count($conditions) > 1 && count($conditions) != $loop)
+            if (count($conditions['where']) > 1 && count($conditions['where']) != $loop)
                 $condition .= "\n{$this->threeTabs}{$this->tabIndent}";
             $loop++;
         }
         $condition = trim($condition, ', ');
-        $condition .= (count($conditions) > 1) ? "\n{$this->threeTabs}])" : "])";
-        return '->' . $condition . "\n";
+        $condition .= (count($conditions['where']) > 1) ? "\n{$this->threeTabs}])" : "])";
+        $this->queryBody->conditions[] = '->' . $condition . "\n";
+        return $this;
     }
 
     /**
@@ -479,17 +675,17 @@ class QueryBuilder
      * Получить список условий с пометкой ИЛИ
      *
      * @param $conditions
-     * @return string
+     * @return $this
      */
-    protected function getOrWhereConditions($conditions)
+    public function getOrWhereConditions($conditions)
     {
-
+        if (! $conditions['or_where']) return $this;
         $conditionList = [];
         //        if (count($conditions) < 2)
         //            return 'orWhere(' . "'{$conditions[0]['column']}'," . "'{$conditions[0]['operator']}'," . "'{$conditions[0]['value']}')";
 
         $loop = 1;
-        foreach ($conditions as $cond) {
+        foreach ($conditions['or_where'] as $cond) {
 //            $condition = 'orWhere(function ($query) {' . "\n";
 //            if (count($conditions) > 1 && $loop == 1) $condition .= "    \$query";
 //            $condition .= "->where('{$cond['column']}'," . "'{$cond['operator']}'," . "'{$cond['value']}')";
@@ -506,12 +702,12 @@ class QueryBuilder
                 $conditionList = $this->getConditions($cond['conditions']);
             }
 
-            $value = $cond['value'];
+            $value = '\'' . $cond['value'] . '\'';
             if (isset($cond['or_where'])) {
                 $condition = 'orWhere(function ($query) {' . "\n";
-                if (count($conditions) > 1 && $loop == 1) $condition .= "{$this->threeTabs}\$query";
+                if (count($conditions['or_where']) > 1 && $loop == 1) $condition .= "{$this->threeTabs}\$query";
                 $condition .= "->orWhere('{$cond['column']}'," . "'{$cond['operator']}'," . $value . ")";
-                if (count($conditions) > 1 && count($conditions) != $loop) $condition .= "\n{$this->threeTabs}";
+                if (count($conditions) > 1 && count($conditions['or_where']) != $loop) $condition .= "\n{$this->threeTabs}";
 //                $conditionList = $this->getOrWhereConditions($cond['or_where']);
             } else {
                 $condition = 'orWhere(';
@@ -524,7 +720,8 @@ class QueryBuilder
 //        if (count($conditions) > 1) $condition .= "\n";
 //        $condition .= '])';
 
-        return "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
+        $this->queryBody->conditions[] = "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
+        return $this;
     }
 
     /**
@@ -532,12 +729,13 @@ class QueryBuilder
      * Поддержка условия - OR, а также отрицания - NOT
      *
      * @param $conditions
-     * @return string
+     * @return $this
      */
-    protected function getWhereBetweenConditions($conditions)
+    public function getWhereBetweenConditions($conditions)
     {
+        if (! $conditions['where_between']) return $this;
         $conditionList = [];
-        foreach ($conditions as $cond) {
+        foreach ($conditions['where_between'] as $cond) {
             $prefix = $cond['or'] ? 'orW' : 'w';
             $isNot = $cond['not'] ? 'Not' : null;
             $values = array_map(function ($item) {
@@ -547,7 +745,8 @@ class QueryBuilder
             $values = implode(',', $values);
             $conditionList[] = "{$prefix}here{$isNot}Between('{$cond['column']}'," . "[{$values}])";
         }
-        return "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
+        $this->queryBody->conditions[] = "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
+        return $this;
     }
 
     /**
@@ -555,12 +754,13 @@ class QueryBuilder
      * Поддержка условия - OR, а также отрицания - NOT
      *
      * @param $conditions
-     * @return string
+     * @return $this
      */
-    protected function getWhereInConditions($conditions)
+    public function getWhereInConditions($conditions)
     {
+        if (! $conditions['where_in']) return $this;
         $conditionList = [];
-        foreach ($conditions as $cond) {
+        foreach ($conditions['where_in'] as $cond) {
             $isNot = $cond['not'] ? 'Not' : null;
             $prefix = $cond['or'] ? 'orW' : 'w';
             $values = array_map(function ($item) {
@@ -570,7 +770,8 @@ class QueryBuilder
             $values = implode(',', $values);
             $conditionList[] = "{$prefix}here{$isNot}In('{$cond['column']}'," . "[{$values}])";
         }
-        return "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
+        $this->queryBody->conditions[] = "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
+        return $this;
     }
 
     /**
@@ -578,30 +779,33 @@ class QueryBuilder
      * Типы: Date / Month / Day / Year / Time / Datetime
      *
      * @param $conditions
-     * @return string
+     * @return $this
      */
-    protected function getWhereDateConditions($conditions)
+    public function getWhereDateConditions($conditions)
     {
+        if (! $conditions['where_date']) return $this;
         $conditionList = [];
-        foreach ($conditions as $cond) {
+        foreach ($conditions['where_date'] as $cond) {
             $whereType = $cond['type'] != 'datetime' ? ucfirst($cond['type']) : null;
             $conditionList[] = "where{$whereType}('{$cond['column']}'," . "'{$cond['operator']}'," . "'{$cond['value']}')";
         }
-        return "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
+        $this->queryBody->conditions[] = "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
+        return $this;
     }
 
     /**
      * Получить условия сравнения колонок между собой
      *
      * @param $conditions
-     * @return string
+     * @return $this
      */
-    protected function getWhereColumnConditions($conditions)
+    public function getWhereColumnConditions($conditions)
     {
+        if (! $conditions['where_column']) return $this;
         $conditionList = [];
         $condition = '';
         $loop = 1;
-        foreach ($conditions as $cond) {
+        foreach ($conditions['where_column'] as $cond) {
             $prefix = $cond['or'] ? 'orW': 'w';
             if ($loop == 1) $condition .= "{$prefix}hereColumn([";
             if (count($cond['data']) > 1 && $loop == 1) $condition .= "\n{$this->threeTabs}{$this->tabIndent}";
@@ -618,55 +822,92 @@ class QueryBuilder
             $condition  = '';
             $loop = 1;
         }
-        return "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
+        $this->queryBody->conditions[] = "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
+        return $this;
     }
 
     /**
      * Получить сортировки по полям
      *
      * @param $orders
-     * @return string
+     * @return $this
      */
-    protected function getOrders($orders)
+    public function getOrders($orders)
     {
+        if (! $orders) return $this;
         $ordersList = [];
         foreach ($orders as $order) {
             $ordersList[] = "orderBy('{$order['column']}', '{$order['type']}')";
         }
-        return '->' . implode("\n{$this->threeTabs}->", $ordersList) . "\n";
+        $this->queryBody->orders = '->' . implode("\n{$this->threeTabs}->", $ordersList) . "\n";
+        return $this;
     }
 
     /**
      * Получить группировку по полям
      *
      * @param $types
-     * @return string
+     * @return $this
      */
-    protected function getGroupTypes($types)
+    public function getGroupTypes($types)
     {
+        if (! $types) return $this;
         $groupsList = "->groupBy('" . implode("','", $types) ."')\n";
-        return $groupsList;
+        $this->queryBody->group_by = $groupsList;
+        return $this;
     }
 
     /**
      * Получить смещение выборки
      *
      * @param $offset
-     * @return string
+     * @return $this
      */
-    protected function getOffset($offset)
+    public function getOffset($offset)
     {
-        return "->offset($offset)\n";
+        if (! $offset) return $this;
+        $this->queryBody->offset = "->offset($offset)\n";
+        return $this;
     }
 
     /**
      * Получить лимит выборки
      *
      * @param $limit
-     * @return string
+     * @return $this
      */
-    protected function getLimit($limit)
+    public function getLimit($limit)
     {
-        return "->limit($limit)\n";
+        if (! $limit) return $this;
+        $this->queryBody->limit = "->limit($limit)\n";
+        return $this;
+    }
+
+    /**
+     * Получить соединения с другими таблицами (джоины)
+     *
+     * @param $joins
+     * @return $this
+     */
+    public function getJoins($joins)
+    {
+        if (! $joins) return $this;
+        $this->reset();
+        $joinList = [];
+        foreach ($joins as $item => $join) {
+            if ($join['type'] == 'inner_join') {
+                $joinList[] = "join('{$join['target_table']}','{$join['source_table']}.{$join['source_column']}',"
+                    . "'{$join['operator']}','{$join['target_table']}.{$join['target_column']}'";
+            } elseif ($join['type'] == 'left_join') {
+                $joinList[] = "leftJoin('{$join['target_table']}','{$join['source_table']}.{$join['source_column']}',"
+                    . "'{$join['operator']}','{$join['target_table']}.{$join['target_column']}'";
+            } elseif ($join['type'] == 'right_join') {
+                $joinList[] = "rightJoin('{$join['target_table']}','{$join['source_table']}.{$join['source_column']}',"
+                    . "'{$join['operator']}','{$join['target_table']}.{$join['target_column']}'";
+            }
+        }
+        $this->queryBody->joins = "{$this->threeTabs}->" . implode("\n{$this->threeTabs}->",$joinList) . "\n";
+
+        return $this;
     }
 }

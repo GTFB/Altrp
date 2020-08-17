@@ -202,7 +202,7 @@ class FrontElement {
   getSettings(settingName, _default = ''){
     if(! settingName)
     {
-      return this.settings;
+      return _.cloneDeep(this.settings);
     }
     return this.settings[settingName] || _default;
   }
@@ -437,9 +437,6 @@ class FrontElement {
   setModelData(modelName, data){
     this.modelsStorage = this.modelsStorage || {};
     this.modelsStorage[modelName] = {...data};
-    // this.forceUpdate();
-    console.log(modelName);
-    console.log(this.modelCallbacksStorage);
     if(this.modelCallbacksStorage && this.modelCallbacksStorage[modelName]){
       this.modelCallbacksStorage[modelName](this.modelsStorage[modelName]);
     }

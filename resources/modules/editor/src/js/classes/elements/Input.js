@@ -153,9 +153,20 @@ class Input extends BaseElement{
       },
     });
 
+    this.addControl('model_for_options', {
+      type: CONTROLLER_SELECT2,
+      label: 'Choose Model for Select Options',
+      default: '',
+      conditions: {
+        'content_type': 'select',
+      },
+      nullable: true,
+      options_resource: '/admin/ajax/models_options?with_names=1&not_plural=1',
+    });
+
     this.addControl('content_options', {
       type: CONTROLLER_TEXTAREA,
-      label: 'Select Options',
+      label: 'Or Type Select Options',
       conditions: {
         'content_type': 'select',
       },
