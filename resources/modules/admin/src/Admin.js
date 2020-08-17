@@ -44,6 +44,9 @@ import AddRelation from "./components/models/AddRelation";
 import AddDataSource from "./components/models/AddDataSource";
 import SQLBuilder from "./components/SQLBuilder";
 import SqlEditor from "./components/models/SqlEditor";
+import AccessOptions from "./components/AccessOptions";
+import RolePage from "./components/access/RolePage";
+import PermissionPage from "./components/access/PermissionPage";
 
 import AddTable from "./components/tables/AddTable";
 import EditTable from "./components/tables/EditTable";
@@ -273,6 +276,22 @@ class Admin extends Component {
             <Route path="/admin/tables/data-sources/add">
               <AddDataSource />
             </Route>
+
+            <Route path="/admin/access/roles/add">
+              <RolePage />
+            </Route>
+            <Route path="/admin/access/roles/edit/:id">
+              <RolePage />
+            </Route>
+            <Route path="/admin/access/permissions/add">
+              <PermissionPage />
+            </Route>
+            <Route path="/admin/access/permissions/edit/:id">
+              <PermissionPage />
+            </Route>
+            <Route path="/admin/access">
+              <AccessOptions />
+            </Route>            
           </Switch>
         </Router>
         <AdminModal/>

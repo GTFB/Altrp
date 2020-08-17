@@ -119,7 +119,7 @@ class AltrpSQLEditorObserver
         $controllerWriter->updateSqlMethod(
             $sQLEditor->getOriginal('name'),
             $sQLEditor->name,
-            $sQLEditor->sql
+            addslashes($sQLEditor->sql)
         );
     }
 
@@ -174,7 +174,18 @@ class AltrpSQLEditorObserver
      */
     public function deleting(SQLEditor $sQLEditor)
     {
-        //
+        $model = Model::find($sQLEditor->model_id);
+        $controllerFile = new ControllerFile($model);
+        $repo = new RepositoryFile($model);
+        $repoInterface = new RepositoryInterfaceFile($model);
+        $controllerWriter = new ControllerFileWriter(
+            $controllerFile,
+            $repo,
+            $repoInterface
+        );
+        if ($controllerWriter->methodSqlExists($sQLEditor->name)) {
+            $controllerWriter->deleteSqlMethod($sQLEditor->getOriginal('name'));
+        }
     }
 
     /**
@@ -185,7 +196,26 @@ class AltrpSQLEditorObserver
      */
     public function deleted(SQLEditor $sQLEditor)
     {
-        //
+        $model = Model::find($sQLEditor->model_id);
+        $controllerFile = new ControllerFile($model);
+        $permission = Permission::where('name', 'sql-editor-' . $sQLEditor->getOriginal('name'));
+        $source = Source::where('type',Str::snake($sQLEditor->getOriginal('name')));
+        $currentPermission = Permission::where('name', 'sql-editor-' . $sQLEditor->name)->first();
+        $currentSource = Source::where('type',Str::snake($sQLEditor->name))->first();
+        if ($currentSource && $currentPermission) {
+            $sourcePermission = SourcePermission::where([
+                ['permission_id',$currentPermission->id],
+                ['source_id',$currentSource->id]
+            ]);
+            if ($sourcePermission->first()) {
+                $sourcePermission->delete();
+            }
+        }
+        $permission->delete();
+        $source->delete();
+        $routeFile = new RouteFile($model);
+        $routeWriter = new RouteFileWriter($routeFile, $controllerFile);
+        $routeWriter->deleteSqlRoute($sQLEditor->getOriginal('name'));
     }
 
     /**
