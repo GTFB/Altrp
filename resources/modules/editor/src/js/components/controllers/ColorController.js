@@ -40,12 +40,12 @@ class ColorController extends Component {
   colorChange(color) {
     this.setState({
       colorPickedHex: color.hex,
-      colorPickedRGB: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+      colorPickedRGB: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
       opacity: color.rgb.a,
       colorRGB: color.rgb
     });
     this._changeValue({
-      color: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+      color: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
       colorPickedHex: color.hex,
     });
 

@@ -89,6 +89,9 @@ export function renderAsset(asset, props = null) {
     case 'media': {
       return React.createElement('img', {...props, src: asset.url})
     }
+    case 'mediaBackground': {
+      return React.createElement('div', {...props, style:{backgroundImage: `url(${asset.url})`}})
+    }
     case undefined: {
       return React.createElement('img', {...props, src: '/img/nullImage.png'})
     }
