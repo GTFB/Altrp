@@ -20,7 +20,7 @@ class Area {
         let template = new Template();
         template.data = _t ? JSON.parse(_t.data) : null;
         template.id = _t ? JSON.parse(_t.id) : null;
-        template.template_settings = _t ? JSON.parse(_t.template_settings) : null;
+        template.template_settings = _t ? _t.template_settings : [];
         area.templates.push(template);
       });
     }
