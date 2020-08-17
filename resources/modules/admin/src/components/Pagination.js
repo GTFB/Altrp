@@ -30,6 +30,7 @@ class Pagination extends Component {
     }
     this.setState({currentPage: num});
     this.props.changePage(num)
+
   }
 
   /**

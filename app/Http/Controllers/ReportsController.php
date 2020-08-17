@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\ApiController;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use App\Reports;
 
-class ReportsController extends ApiController
+class ReportsController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Получение списка отчетов
+     * @return Reports
      */
     public function index()
     {
@@ -34,7 +33,7 @@ class ReportsController extends ApiController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(ApiRequest $request)
+    public function store(Request $request)
     {
         $report = new Reports( $request->toArray() );
         $report->user_id  = auth()->user()->id;
@@ -52,11 +51,10 @@ class ReportsController extends ApiController
      * @param  \App\Reports  $reports
      * @return \Illuminate\Http\Response
      */
-    public function show(ApiRequest $request, Reports $reports, $id)
+    public function show(Request $request, $id)
     {
-        //$request->expectsJson();
-        //$report = Reports.find($id);
-        return response()->json(['id' => $id], 200, [],JSON_UNESCAPED_UNICODE);
+        $report = Reports::findOrFail($id);
+        return response()->json($report, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -66,9 +64,10 @@ class ReportsController extends ApiController
      * @param  \App\Reports  $reports
      * @return \Illuminate\Http\Response
      */
-    public function update(ApiRequest $request, Reports $reports)
+    public function update(Request $request, $id)
     {
-        //
+        $reports = Reports::where('id', $id)->update($request->all());
+        return response()->json(array("result" => $reports), 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**

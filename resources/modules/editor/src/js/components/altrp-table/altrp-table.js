@@ -12,12 +12,9 @@ import {isEditor} from "../../../../../front-app/src/js/helpers";
  * @return {*}
  * @constructor
  */
-const AltrpTable = ({settings, query}) => {
+const AltrpTable = ({settings, query, data}) => {
   if (! (settings.tables_columns && settings.tables_columns.length)) {
     return <div children="Please Add Column"/>
-  }
-  if(! query.modelName){
-    return <div children="Please Choose Model"/>
   }
   let _data =[], _status, _error, _latestData;
   const [page, setPage] = useState(1);
@@ -59,8 +56,9 @@ const AltrpTable = ({settings, query}) => {
   }
   let columns = [];
   columns = settingsToColumns(settings);
-  // console.log(_data);
-  // debugger;
+  if(! _data.length){
+    _data = data;
+  }
   let {
     getTableProps,
     getTableBodyProps,
@@ -82,7 +80,15 @@ const AltrpTable = ({settings, query}) => {
     {headerGroups.map(headerGroup => (
         <tr {...headerGroup.getHeaderGroupProps()} className="altrp-table-tr">
           {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()} className="altrp-table-th">{column.render('column_name')}</th>
+              <th {...column.getHeaderProps()} className="altrp-table-th">{column.render('column_name')}
+                <span className="altrp-table-th_sort">
+                    {column.isSorted
+                        ? column.isSortedDesc
+                            ? ' 🔽'
+                            : ' 🔼'
+                        : ''}
+                  </span>
+              </th>
           ))}
         </tr>
     ))}
@@ -100,6 +106,12 @@ const AltrpTable = ({settings, query}) => {
                     {row.cells.map((cell, _i) => {
                       let cellContent = cell.render('Cell');
                       let linkTag = isEditor() ? 'a': Link;
+                      /**
+                       * Если значение объект или масиив, то отобразим пустую строку
+                       */
+                      if(_.isObject(cell.value) || _.isArray(cell.value)){
+                        cellContent = '';
+                      }
                       /**
                        * Если в настройках колонки есть url, и в данных есть id, то делаем ссылку
                        */
@@ -159,8 +171,6 @@ function settingsToColumns(settings) {
       columns.push(_column);
     }
   });
-  // console.log(columns);
-
   return columns;
 }
 

@@ -27,27 +27,7 @@ class ModelsController extends HttpController
      */
     public function models_list()
     {
-        $test_res = [
 
-            [
-                'name' => 'post',
-                'title' => 'Post',
-                'ordering_fields' => [
-                    ['title' => 'Title',],
-                    ['date' => 'Date',],
-                    ['random' => 'Random',],
-                ],
-            ],
-            [
-                'name' => 'model1',
-                'title' => 'Model 1',
-                'ordering_fields' => [
-                    ['name' => 'Name',],
-                    ['date' => 'Date',],
-                    ['random' => 'Random',],
-                ],
-            ],
-        ];
 
         return response()->json(Model::getModelsForEditor());
     }
@@ -77,8 +57,50 @@ class ModelsController extends HttpController
     {
         return response()->json(Model::getModelsWithFieldsOptions(), 200, [], JSON_UNESCAPED_UNICODE);
     }
+  /**
+   * Источники данных для QueryController
+   */
+    public function data_sources_for_query(){
+      $data_sources = [];
+      $models = Model::all( );
+      $model_data_sources = [];
+      foreach ( $models as $model ) {
+        if( $model->name === 'user' ){
+          continue;
+        }
+        $model_data_sources[] = [
+          'label' => $model->title,
+          'value' => $model->altrp_table->name,
+          'type' => 'model_query'
+        ];
+      }
 
+      if( count( $model_data_sources ) ){
+        $data_sources[] = [
+          'label' => 'Models',
+          'options' => $model_data_sources,
+          'type' => 'models query'
+        ];
+      }
 
+      $relationships = Relationship::where( 'type', 'hasMany' )->get();
+      $relationship_data_sources = [];
+      foreach ( $relationships as $relationship ) {
+        $relationship_data_sources[] = [
+          'label' => $relationship->altrp_model->title . ': ' . $relationship->title,
+          'value' => $relationship->name,
+          'model_name' =>  $relationship->altrp_model->altrp_table->name,
+          'type' => 'has_many_relation'
+        ];
+      }
+      if( count( $relationship_data_sources ) ){
+        $data_sources[] = [
+          'label' => 'Relationships from Models',
+          'options' => $relationship_data_sources,
+        ];
+      }
+      return response()->json( $data_sources, 200, [], JSON_UNESCAPED_UNICODE);
+    }
 
     /**
      * Получить модель и кол-во страниц
@@ -101,8 +123,10 @@ class ModelsController extends HttpController
             $pageCount = ceil($modelsCount / $limit);
             $offset = $limit * ($page - 1);
             $models = $search
-                ? Model::getBySearchWithPaginate($search, $offset, $limit)
-                : Model::getWithPaginate($offset, $limit);
+                ? Model::getBySearchWithPaginate($search, $offset, $limit, $request)
+                : Model::getWithPaginate($offset, $limit, $request);
+
+          $models = $models->get();
         }
         return compact('pageCount', 'models');
     }
@@ -322,6 +346,26 @@ class ModelsController extends HttpController
         ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
+    /**
+ * Проверить, свободно ли имя модели
+ *
+ * @param ApiRequest $request
+ * @return JsonResponse
+ */
+    public function modelNameIsFree(ApiRequest $request)
+    {
+        $name = (string) $request->get('name');
+        if (!$name)
+            return response()->json([
+                'success' => false,
+                'message' => 'Name not specified'
+            ], 500, [], JSON_UNESCAPED_UNICODE);
+        $model = Model::where('name', $name)->first();
+        return response()->json([
+            'taken' => !$model,
+        ], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
     // Fields
     /**
      * Получить поля медели
@@ -490,6 +534,27 @@ class ModelsController extends HttpController
         ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
+    /**
+     * Проверить, свободно ли имя поля
+     *
+     * @param ApiRequest $request
+     * @param $model_id
+     * @return JsonResponse
+     */
+    public function fieldNameIsFree(ApiRequest $request, $model_id)
+    {
+        $name = (string) $request->get('name');
+        if (!$name)
+            return response()->json([
+                'success' => false,
+                'message' => 'Name not specified'
+            ], 500, [], JSON_UNESCAPED_UNICODE);
+        $field = Column::where([['model_id', $model_id], ['name', $name]])->first();
+        return response()->json([
+            'taken' => !$field,
+        ], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
     // Relations
 
     /**
@@ -551,12 +616,14 @@ class ModelsController extends HttpController
      */
     public function storeModelRelation( ApiRequest $request, $model_id )
     {
-
-
       $relation = new Relationship($request->toArray());
       $relation->model_id = $model_id;
       $model = Model::find( $request->get( 'target_model_id' ) );
-      $model_class = '\App\AltrpModels\\' . $model->name ;
+      if( $model->name !== 'user' ){
+        $model_class = '\App\AltrpModels\\' . $model->name ;
+      } else {
+        $model_class = '\App\\User' ;
+      }
       $relation->model_class = $model_class;
       $result = $relation->save();
       if ($result) {
@@ -638,6 +705,27 @@ class ModelsController extends HttpController
             'success' => false,
             'message' => 'Failed to delete relation'
         ], 500, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Проверить, свободно ли имя связи
+     *
+     * @param ApiRequest $request
+     * @param $model_id
+     * @return JsonResponse
+     */
+    public function relationNameIsFree(ApiRequest $request, $model_id)
+    {
+        $name = (string) $request->get('name');
+        if (!$name)
+            return response()->json([
+                'success' => false,
+                'message' => 'Name not specified'
+            ], 500, [], JSON_UNESCAPED_UNICODE);
+        $relation = Relationship::where([['model_id', $model_id], ['name', $name]])->first();
+        return response()->json([
+            'taken' => !$relation,
+        ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     // Data Sources
@@ -888,8 +976,28 @@ class ModelsController extends HttpController
      */
     public function getQuery(ApiRequest $request, $query_id)
     {
-        $queries = Query::find($request->query_id);
-        return response()->json($queries, 200, [], JSON_UNESCAPED_UNICODE);
+      $queries = Query::find( $request->query_id );
+      return response()->json( $queries, 200, [], JSON_UNESCAPED_UNICODE );
+    }
+  /**
+   * Проверить, свободно ли имя запроса для sql_builder
+   *
+   * @param ApiRequest $request
+   * @param $model_id
+   * @return JsonResponse
+   */
+    public function queryNameIsFree(ApiRequest $request, $model_id)
+    {
+        $name = (string) $request->get('name');
+        if (!$name)
+            return response()->json([
+                'success' => false,
+                'message' => 'Name not specified'
+            ], 500, [], JSON_UNESCAPED_UNICODE);
+        $query = Query::where([['model_id', $model_id], ['name', $name]])->first();
+        return response()->json([
+            'taken' => !$query,
+        ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**

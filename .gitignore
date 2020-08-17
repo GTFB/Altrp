@@ -26,5 +26,7 @@ _ide_helper.php
 /app/Http/Controllers/AltrpControllers
 /app/Repositories/AltrpRepositories
 /app/Http/Requests/AltrpRequests
+/app/Providers/AltrpRepositoryServiceProvider.php
 /routes/AltrpRoutes.php
 /out
+/app/Http/Requests/AltrpRequests

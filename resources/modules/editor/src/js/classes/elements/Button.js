@@ -88,7 +88,8 @@ class Button extends BaseElement{
       default: {
         url: "",
         attributes: "",
-        noFollow: false
+        noFollow: false,
+        tag: 'Link'
       },
       label: 'Link',
     });
@@ -376,8 +377,7 @@ class Button extends BaseElement{
       rules: {
         '{{ELEMENT}} .altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
       },
-    }
-  );
+    });
 
   this.addControl('style_background_shadow', {
         type: CONTROLLER_SHADOW,

@@ -85,10 +85,10 @@ function getContent(settingName) {
     /**
      * Если this.state.modelsData еще не ициинировано или текущее свойство не загруженно
      */
-    if((! this.state.modelData) || ! this.state.modelData[content.fieldName]){
-        content = '';
+    if((! this.state.modelData) || ! _.get(this.state.modelData, content.fieldName)){
+        content = ' ';
     } else {
-        content = this.state.modelData[content.fieldName];
+        content = _.get(this.state.modelData, content.fieldName) || ' ';
     }
   }
   return content;

@@ -12,11 +12,16 @@ export default class AllPages extends Component{
     };
     this.resource = new Resource({route: '/admin/ajax/pages'});
   }
-  async componentDidMount(){
+
+  getPages = async () => {
     let res = await this.resource.getAll();
-    this.setState(state=>{
-      return{...state, pages:res}
+    this.setState(state => {
+      return { ...state, pages: res }
     })
+  }
+
+  componentDidMount(){
+    this.getPages();
   }
 
   render(){
@@ -34,23 +39,35 @@ export default class AllPages extends Component{
       </div>
       <div className="admin-content">
         <AdminTable columns={[
-          {
-            name: 'title',
-            title: 'Title',
-            editUrl: true,
-            tag: 'Link'
-          },
-          {
-            name: 'author',
-            title: 'Author'
-          },
-          {
-            name: 'path',
-            title: 'Path',
-            url: true,
-            target: '_blank',
-          },
-        ]} rows={this.state.pages}/>
+            {
+              name: 'title',
+              title: 'Title',
+              editUrl: true,
+              tag: 'Link'
+            },
+            {
+              name: 'author',
+              title: 'Author'
+            },
+            {
+              name: 'path',
+              title: 'Path',
+              url: true,
+              target: '_blank',
+            },
+          ]} 
+          quickActions={[
+            {
+            tag: 'button',
+            route: `/admin/ajax/pages/:id`,
+            method: 'delete',
+            confirm: 'Are You Sure?',
+            after: this.getPages,
+            className: 'quick-action-menu__item_danger',
+            title: 'Trash'
+           }
+          ]}
+          rows={this.state.pages}/>
       </div>
     </div>;
   }

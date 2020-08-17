@@ -9,17 +9,16 @@ import Resource from "../../../editor/src/js/classes/Resource";
 
 const columnsModel = [
   {
-    name: 'name',
-    //name: 'title', todo: сменить, когда будет title
+    name: 'title',
     title: 'Title',
     url: true,
     editUrl: true,
     tag: 'Link'
   },
-  // {
-  //   name: 'name',
-  //   title: 'Name'
-  // },
+  {
+    name: 'name',
+    title: 'Name'
+  },
   {
     name: 'description',
     title: 'Description'
@@ -50,49 +49,24 @@ const columnsDataSource = [
     title: 'Type'
   }
 ];
-const initPaginationProps = {
-  pageCount: 1,
-  currentPage: 1,
-};
-
-const mockedDataSources = [
-  {
-    id: 1,
-    name: 'test1',
-    title: 'Test1',
-    route: 'https://test1',
-    type: ['Get Queried', 'create', 'read', 'update', 'delete']
-  },
-  {
-    id: 2,
-    name: 'test2',
-    title: 'Test2',
-    route: 'https://test2',
-    type: ['resource', 'Get Queried', 'create', 'read', 'update', 'delete']
-  },
-  {
-    id: 3,
-    name: 'test3',
-    title: 'Test3',
-    route: 'https://test3',
-    type: ['Get Queried', 'create', 'read', 'options']
-  },
-];
 
 export default class Models extends Component {
   constructor(props) {
     super(props);
     this.state = {
       activeTab: 0,
-      modelsPagination: initPaginationProps,
-      dataSourcesPagination: initPaginationProps,      
+      modelsCurrentPage: 1,
+      dataSourcesCurrentPage: 1,
       models: [],
+      modelsSearch: '',
       dataSources: [],
-      // dataSources: mockedDataSources
+      modelsPageCount: 1,
+      modelsCount: 0
     };
     this.switchTab = this.switchTab.bind(this);
     this.changePage = this.changePage.bind(this);
-    this.modelsResource = new Resource({route: '/admin/ajax/models'});
+    this.modelsResource = new Resource({ route: '/admin/ajax/models' });
+    this.itemsPerPage = 10;
   }
 
   switchTab(activeTab) {
@@ -100,28 +74,55 @@ export default class Models extends Component {
   }
 
   changePage(currentPage, pagination) {
-    this.setState(state => ({ ...state, [pagination]: { ...state[pagination], currentPage} }));
+    this.setState(state => ({ ...state, [pagination]: { ...state[pagination], currentPage } }));
   }
   /**
    * Обновить список моделей
    */
-  updateModels(){
-    
-  }
+  getModels = async (modelsSearch) => {
+    let res = await this.modelsResource.getQueried({
+      page: this.state.modelsCurrentPage,
+      pageSize: this.itemsPerPage,
+      preset: false,
+      s: modelsSearch
+    });
+    this.setState(state => {
+      return {
+        ...state,
+        models: res.models,
+        modelsSearch,
+        modelsPageCount: res.pageCount
+      }
+    });
+  };
+
+  // slicePage = (array, page, itemsPerPage) => {
+  //   return array.slice(page * itemsPerPage - itemsPerPage, page * itemsPerPage);
+  // }
+
   async componentDidMount() {
     // get: /admin/ajax/models .then(models => {
     //   this.setState({models});
     // });
     let models = await this.modelsResource.getAll();
-    models = models.models;
-    this.setState(state=>({
-        ...state,
-        models
-    }))
+    this.setState(state => ({
+      ...state,
+      modelsCount: models.models.length
+    }));
+
+    this.getModels();
   }
 
+  /**
+   * фильтрация по строке
+   */
+  changeSearchHandler = e => {
+    let modelsSearch = e.target.value;
+    this.getModels(modelsSearch);
+
+  };
   render() {
-    const { activeTab, models, dataSources, modelsPagination, dataSourcesPagination} = this.state;
+    const { activeTab, models, dataSources, modelsCurrentPage, dataSourcesCurrentPage, modelsSearch, modelsPageCount, modelsCount } = this.state;
 
     return <div className="admin-settings admin-page">
       <div className="admin-heading">
@@ -143,31 +144,39 @@ export default class Models extends Component {
             </Tab>
           </TabList>
           <TabPanel>
-            {/* TODO: что делать с колoнкой с чекбоксами? */}
             <AdminTable
               columns={columnsModel}
-              quickActions={[{ tag: 'Link', props: {
+              search={{
+                value: modelsSearch||'',
+                changeHandler:this.changeSearchHandler
+              }}
+              quickActions={[{
+                tag: 'Link', props: {
                   href: '/admin/tables/models/edit/:id',
                 },
                 title: 'Edit'
-              } , {
+              }, {
                 tag: 'button',
                 route: '/admin/ajax/models/:id',
                 method: 'delete',
                 confirm: 'Are You Sure?',
-                after: () => this.updateModels(this.state.currentPage, this.state.activeTemplateArea),
+                after: () => {this.getModels()},
                 className: 'quick-action-menu__item_danger',
                 title: 'Trash'
               }]}
-              rows={models.map(model => ({ 
-                ...model, 
+              rows={models.map(model => ({
+                ...model,
                 editUrl: '/admin/tables/models/edit/' + model.id
               }))}
             />
-            <Pagination pageCount={modelsPagination.pageCount}
-              currentPage={modelsPagination.currentPage}
-              changePage={currentPage => this.changePage(currentPage, "modelsPagination")}
-              itemsCount={models.length}
+            <Pagination pageCount={modelsPageCount || 1}
+              currentPage={modelsCurrentPage || 1}
+              changePage={modelsCurrentPage => {
+                if(this.state.modelsCurrentPage !== modelsCurrentPage){
+                  this.setState({modelsCurrentPage}, this.getModels)}
+                }
+              }
+              itemsCount={modelsCount}
             />
           </TabPanel>
           <TabPanel>
@@ -179,10 +188,10 @@ export default class Models extends Component {
                 editUrl: '/admin/data-source/edit/' + dataSource.id
               }))}
             />
-            <Pagination pageCount={dataSourcesPagination.pageCount}
-              currentPage={dataSourcesPagination.currentPage}
-              changePage={currentPage => this.changePage(currentPage, "dataSourcesPagination")}
-              itemsCount={models.length}
+            <Pagination pageCount={Math.ceil(dataSources.length / this.itemsPerPage)}
+              currentPage={dataSourcesCurrentPage}
+              changePage={dataSourcesCurrentPage => this.setState({ dataSourcesCurrentPage })}
+              itemsCount={dataSources.length}
             />
           </TabPanel>
         </Tabs>

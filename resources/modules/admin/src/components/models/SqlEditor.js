@@ -10,7 +10,9 @@ class SqlEditor extends Component {
     let storeState = store.getState();
     this.state = {
       modelTitle: 'Model Title',
-      value: {},
+      value: {
+        paged: false,
+      },
       modelsOptions: [],
       AceEditor: storeState.aceEditorReducer.AceEditor
     };
@@ -37,9 +39,11 @@ class SqlEditor extends Component {
   async componentDidMount() {
     const {id} = this.props.match.params;
     let { options } = await this.modelsResource.getAll();
+    options = options.filter(option=>(option.label !== 'User'));
     this.setState({ modelsOptions: options });
     if(id){
       let value = await this.sqlEditorResource.get(id);
+      this.editor = null;
       this.setState(state=>({
           ...state,
         value,
@@ -74,6 +78,9 @@ class SqlEditor extends Component {
     const {id} = this.props.match.params;
     e.preventDefault();
     let res;
+    if(! this.state.value.sql){
+      return alert('Заполните SQL Query');
+    }
     if(id){
       res = await this.sqlEditorResource.put(id, this.state.value);
     } else {
@@ -87,8 +94,8 @@ class SqlEditor extends Component {
   };
 
   render() {
-    const {value} = this.state;
     const {id} = this.props.match.params;
+    console.log(this.state.value.sql);
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
@@ -102,7 +109,7 @@ class SqlEditor extends Component {
         <form className="admin-form field-form" onSubmit={this.onSubmit}>
           <div className="row">
             <div className="form-group col-6">
-              <label htmlFor="field-title">Field Title</label>
+              <label htmlFor="field-title">Title</label>
               <input type="text" id="field-title" required
                      value={this.state.value.title || ''}
                      onChange={e => {
@@ -111,7 +118,7 @@ class SqlEditor extends Component {
                      className="form-control"/>
             </div>
             <div className="form-group col-6">
-              <label htmlFor="field-name">Field Name</label>
+              <label htmlFor="field-name">Name</label>
               <input type="text" id="field-name" required readOnly={id}
                      value={this.state.value.name || ''}
                      onChange={e => {
@@ -119,7 +126,7 @@ class SqlEditor extends Component {
                      }}
                      className="form-control"/>
             </div>
-            <div className="form-group col-6">
+            <div className="form-group col-12">
               <label htmlFor="field-name">Description</label>
               <input type="text" id="field-description"
                      value={this.state.value.description || ''}
@@ -128,14 +135,14 @@ class SqlEditor extends Component {
                      }}
                      className="form-control"/>
             </div>
-            <div className="form-group col-6">
-              <input type="checkbox" id="relation-paged"
-                     checked={this.state.value.paged}
-                     onChange={e => { this.changeValue(e.target.checked, 'paged') }}
-              />
-              <label className="checkbox-label" htmlFor="relation-add_belong_to">With Pages</label>
-            </div>
-            <div className="form-group col-6">
+            {/*<div className="form-group col-12">*/}
+              {/*<input type="checkbox" id="relation-paged"*/}
+                     {/*checked={this.state.value.paged}*/}
+                     {/*onChange={e => { this.changeValue(e.target.checked, 'paged') }}*/}
+              {/*/>*/}
+              {/*<label className="checkbox-label" htmlFor="relation-paged">Paged</label>*/}
+            {/*</div>*/}
+            <div className="form-group col-12">
               <label htmlFor="relation-model_id">Model</label>
               <select id="relation-model_id" required disabled={id}
                       value={this.state.value.model_id || ''}

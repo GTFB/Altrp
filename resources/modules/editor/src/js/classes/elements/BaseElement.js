@@ -290,7 +290,7 @@ class BaseElement extends ControlStack {
   getSettings(settingName) {
     this._initDefaultSettings();
     if (!settingName) {
-      return this.settings;
+      return _.cloneDeep(this.settings);
     }
     if (this.settings[settingName] === undefined) {
       let control = window.controllersManager.getElementControl(this.getName(), settingName);
@@ -425,7 +425,7 @@ class BaseElement extends ControlStack {
     this.settings.styles[breakpoint][settingName] = {};
     rules.forEach(rule => {
       let finalSelector = rule.selector;
-      finalSelector = finalSelector.replace('{{ELEMENT}}', this.getSelector()).replace('{{STATE}}', getElementState().value);
+      finalSelector = finalSelector.replace(/{{ELEMENT}}/g, this.getSelector()).replace(/{{STATE}}/g, getElementState().value);
       /**
        * если this.settings.styles[breakpoint][settingName] массив, то преобразуем в объект
        */
