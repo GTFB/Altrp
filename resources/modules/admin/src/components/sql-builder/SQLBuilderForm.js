@@ -168,10 +168,14 @@ class SQLBuilderForm extends Component {
    */
   changeRoles = (roles) => {
     let _roles = [];
-    roles.forEach(r => {
+    if (roles) roles.forEach(r => {
       _roles.push(r.value)
     });
-    this.setState(state => ({ ...state, roles: _roles }))
+    this.setState(state => {
+      const newState = _.cloneDeep(state);
+      newState.value.access.roles = _roles;
+      return newState;
+    });
   };
   /**
    * Смена разрешений
