@@ -90,10 +90,14 @@ class SQLBuilderForm extends Component {
    */
   changeGroupBy = (group_by) => {
     let _group_by = [];
-    group_by.forEach(g => {
-      _group_by.push(g.value)
+    if (group_by) group_by.forEach(r => {
+      _group_by.push(r.value)
     });
-    this.setState(state => ({ ...state, group_by: _group_by }))
+    this.setState(state => {
+      const newState = _.cloneDeep(state);
+      newState.value.group_by = _group_by;
+      return newState;
+    });
   };
   /**
    * Смена колонок
