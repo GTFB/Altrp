@@ -43,16 +43,25 @@ class Map extends BaseElement {
     this.addControl("content_editable", {
       type: CONTROLLER_SWITCHER,
       label: "Editable",
+      default: false,
     });
 
     this.addControl("content_canvas", {
       type: CONTROLLER_SWITCHER,
       label: "Canvas",
+      default: true,
     });
 
-    this.addControl("content_center", {
+    this.addControl("content_lat", {
       type: CONTROLLER_TEXT,
-      label: "Center coordinates",
+      label: "Latitude",
+      default: 54.57299842212406,
+    });
+
+    this.addControl("content_lng", {
+      type: CONTROLLER_TEXT,
+      label: "Longitude",
+      default: 56.20845794677735,
     });
 
     this.addControl("content_zoom", {
