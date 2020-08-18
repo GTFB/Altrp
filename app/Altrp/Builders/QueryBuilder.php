@@ -4,6 +4,7 @@
 namespace App\Altrp\Builders;
 
 
+use App\Altrp\Builders\Traits\DynamicVariables;
 use App\Altrp\Generators\Controller\ControllerFile;
 use App\Altrp\Generators\Controller\ControllerFileWriter;
 use App\Altrp\Generators\Repository\RepositoryFile;
@@ -18,10 +19,12 @@ use App\Altrp\SourcePermission;
 use App\Altrp\SourceRole;
 use App\Exceptions\Controller\ControllerFileException;
 use App\Exceptions\Repository\RepositoryFileException;
+use App\Permission;
 use Illuminate\Support\Str;
 
 class QueryBuilder
 {
+    use DynamicVariables;
     /**
      * Запрос
      *
@@ -78,16 +81,16 @@ class QueryBuilder
      */
     public function getMethodBody()
     {
-        $query = $this
-                    ->getJoins($this->query->joins)
+        $query = $this->getJoins($this->query->joins)
                     ->getColumns($this->query->columns)
                     ->getAggregates($this->query->aggregates)
-                    ->getWhereConditions($this->query->conditions)
-                    ->getOrWhereConditions($this->query->conditions)
-                    ->getWhereBetweenConditions($this->query->conditions)
-                    ->getWhereInConditions($this->query->conditions)
-                    ->getWhereDateConditions($this->query->conditions)
-                    ->getWhereColumnConditions($this->query->conditions)
+                    ->getConditions($this->query->conditions)
+//                    ->getWhereConditions($this->query->conditions)
+//                    ->getOrWhereConditions($this->query->conditions)
+//                    ->getWhereBetweenConditions($this->query->conditions)
+//                    ->getWhereInConditions($this->query->conditions)
+//                    ->getWhereDateConditions($this->query->conditions)
+//                    ->getWhereColumnConditions($this->query->conditions)
                     ->getRelations($this->query->relations)
                     ->getOrders($this->query->order_by)
                     ->getGroupTypes($this->query->group_by)
@@ -114,68 +117,19 @@ class QueryBuilder
         $methodBody = "\n\n{$this->tabIndent}public function " . $this->getMethodName() . "()\n{$this->tabIndent}{\n"
         . "{$this->tabIndent}{$this->tabIndent}return \$this->model()\n"
         . implode("{$this->threeTabs}",$queryBody) . $this->tabIndent . "}{$this->tabIndent}";
-        return $this->replaceConstants($methodBody);
+        return $this->replaceDynamicVars($methodBody);
     }
 
     /**
-     * Заменить пользовательские константы в методе
+     * Проверить, существует ли запрос
      *
-     * @param $methodBody
-     * @return string|string[]
+     * @return bool
      */
-    protected function replaceConstants($methodBody)
+    public function checkQueryExist()
     {
-        $pattern = "'?(CURRENT_[A-Z_]+|REQUEST)(:[a-z0-9_.]+)?'?";
-        $methodBody = preg_replace_callback(
-            "#$pattern#",
-            function($matches) {
-                $param = $matches[0] ? explode(':',trim($matches[0], '\'')) : null;
-                if ($param && $param[0] == 'REQUEST') {
-                    if ( request()->has($param[1])) {
-                        return 'request()->' . $param[1];
-                    } else {
-                        return $param[1] == 'skip' || $param[1] == 'take' ? 10 : "''";
-                    }
-                }
-                if ($param && $param[0] == 'CURRENT_USER') {
-                    $relations = str_replace('.', '->', $param[1]);
-                    return 'auth()->user()->' . $relations;
-                }
-                if ($param && $param[0] == 'CURRENT_DATE') {
-                    return 'Carbon::now()->format(\'Y-m-d\')';
-                }
-                if ($param && $param[0] == 'CURRENT_DAY') {
-                    return 'Carbon::now()->format(\'d\')';
-                }
-                if ($param && $param[0] == 'CURRENT_MONTH') {
-                    return 'Carbon::now()->format(\'m\')';
-                }
-                if ($param && $param[0] == 'CURRENT_YEAR') {
-                    return 'Carbon::now()->format(\'Y\')';
-                }
-                if ($param && $param[0] == 'CURRENT_HOUR') {
-                    return 'Carbon::now()->format(\'H\')';
-                }
-                if ($param && $param[0] == 'CURRENT_MINUTE') {
-                    return 'Carbon::now()->format(\'i\')';
-                }
-                if ($param && $param[0] == 'CURRENT_SECOND') {
-                    return 'Carbon::now()->format(\'s\')';
-                }
-                if ($param && $param[0] == 'CURRENT_TIME') {
-                    return 'Carbon::now()->format(\'H:i:s\')';
-                }
-                if ($param && $param[0] == 'CURRENT_DATETIME') {
-                    return 'Carbon::now()->format(\'Y-m-d H:i:s\')';
-                }
-                if ($param && $param[0] == 'CURRENT_DAY_OF_WEEK') {
-                    return '\Carbon::now()->format(\'l\')';
-                }
-                return "''";
-            },
-            $methodBody
-        );
-        return $methodBody;
+        $query = Query::where([['name',$this->query->name],['model_id',$this->model->id]])->first();
+        if ($query) return true;
+        return false;
     }
 
     /**
@@ -353,7 +307,7 @@ class QueryBuilder
             $repoInterfaceFile
         );
         if ($fileWriter->checkMethodExists($this->getMethodName())) {
-            throw new ControllerFileException('Query already ' . $this->getOldMethodName() . ' exists', 500);
+            throw new ControllerFileException('Query ' . $this->getOldMethodName() . ' already exists', 500);
         }
         if ($fileWriter->addMethod($this->getMethodName())) {
             return true;
@@ -382,8 +336,8 @@ class QueryBuilder
             $source =  new Source();
             $source->model_id = $modelId;
             $source->controller_id = $controllerId;
-            $source->url = '/ajax/models/' . $this->model->table->name . '/' . $method;
-            $source->api_url = '/api/ajax/models/' .$this->model->table->name . '/' . $method;
+            $source->url = '/' . $this->model->table->name . '/' . $method;
+            $source->api_url = '/' .$this->model->table->name . '/' . $method;
             $source->type = $method;
             $source->name = ucwords(str_replace('_', ' ', $method));
             if (! $source->save()) {
@@ -402,26 +356,26 @@ class QueryBuilder
      */
     public function writeSourceRoles($source)
     {
-        $rolesIds = [];
-        $rolesList = [];
-        if (! $this->query->access) return true;
-        foreach ($this->query->access as $type => $roles) {
-            if ($type == 'roles') {
-                foreach ($roles as $role) {
-                    $rolesIds[] = $role;
-                    $rolesList[] = [
-                        'source_id' => $source->id,
-                        'role_id' => $role
-                    ];
-                }
-            }
-        }
-        try {
-            SourceRole::where('source_id', $source->id)->delete();
-            SourceRole::insert($rolesList);
-        } catch (\Exception $e) {
-            return false;
-        }
+//        $rolesIds = [];
+//        $rolesList = [];
+//        if (! $this->query->access) return true;
+//        foreach ($this->query->access as $type => $roles) {
+//            if ($type == 'roles') {
+//                foreach ($roles as $role) {
+//                    $rolesIds[] = $role;
+//                    $rolesList[] = [
+//                        'source_id' => $source->id,
+//                        'role_id' => $role
+//                    ];
+//                }
+//            }
+//        }
+//        try {
+//            SourceRole::where('source_id', $source->id)->delete();
+//            SourceRole::insert($rolesList);
+//        } catch (\Exception $e) {
+//            return false;
+//        }
         return true;
     }
 
@@ -433,34 +387,56 @@ class QueryBuilder
      */
     public function writeSourcePermissions($source)
     {
-        $permissionIds = [];
-        $permissionsList = [];
         if (! $this->query->access) return true;
-        foreach ($this->query->access as $type => $permissions) {
-            if ($type == 'permissions') {
-                foreach ($permissions as $permission) {
-                    $permissionIds[] = $permission;
-                    $permissionsList[] = [
-                        'source_id' => $source->id,
-                        'permission_id' => $permission
-                    ];
+        try {
+            foreach ($this->query->access as $type => $permissions) {
+                if ($type == 'permissions') {
+                    foreach ($permissions as $permission) {
+                        $permObj = Permission::find($permission);
+                        $action = explode('-',$permObj->name)[0] ?? null;
+                        $permissionData = [
+                            'source_id' => $source->id,
+                            'permission_id' => $permission,
+                            'type' => $action . '-' . $source->type
+                        ];
+                        $oldSourcePermission = SourcePermission::where([
+                            ['source_id', $source->id],
+                            ['permission_id',$permission]
+                        ]);
+                        if ($oldSourcePermission->first()) {
+                            $sourcePermission = $oldSourcePermission;
+                            $sourcePermission->update($permissionData);
+                        } else {
+                            $sourcePermission = new SourcePermission($permissionData);
+                            $sourcePermission->save();
+                        }
+                    }
                 }
             }
-        }
-        try {
-            SourcePermission::where('source_id', $source->id)->delete();
-            SourcePermission::insert($permissionsList);
         } catch (\Exception $e) {
+            echo $e;
             return false;
         }
         return true;
     }
 
+    /**
+     * Обновить роли источника данных
+     *
+     * @param $source
+     * @return bool
+     */
     public function updateSourceRoles($source)
     {
         return $this->writeSourceRoles($source);
     }
 
+    /**
+     * Обновить права доступа источника данных
+     *
+     * @param $source
+     * @return bool
+     */
     public function updateSourcePermissions($source)
     {
         return $this->writeSourcePermissions($source);
@@ -526,6 +502,11 @@ class QueryBuilder
         return $this->query->name;
     }
 
+    /**
+     * Получить старое имя метода
+     *
+     * @return array|mixed
+     */
     public function getOldMethodName()
     {
         return $this->query->getOriginal('name') ?? $this->query->name;
@@ -587,30 +568,32 @@ class QueryBuilder
      */
     protected function getConditions($conditions)
     {
-        $conditionsList = [];
-        foreach ($conditions as $condition => $data) {
-            switch ($condition) {
+        foreach ($conditions as $condition) {
+            switch ($condition['condition_type']) {
                 case 'where':
-                    $conditionsList[] = $this->getWhereConditions($data);
+                    $this->getWhereConditions($condition);
                     break;
                 case 'or_where':
-                    $conditionsList[] = $this->getOrWhereConditions($data);
+                    $this->getOrWhereConditions($condition);
                     break;
                 case 'where_between':
-                    $conditionsList[] = $this->getWhereBetweenConditions($data);
+                    $this->getWhereBetweenConditions($condition);
                     break;
                 case 'where_in':
-                    $conditionsList[] = $this->getWhereInConditions($data);
+                    $this->getWhereInConditions($condition);
                     break;
                 case 'where_date':
-                    $conditionsList[] = $this->getWhereDateConditions($data);
+                    $this->getWhereDateConditions($condition);
                     break;
                 case 'where_column':
-                    $conditionsList[] = $this->getWhereColumnConditions($data);
+                    $this->getWhereColumnConditions($condition);
+                    break;
+                case 'where_null':
+                    $this->getWhereNullConditions($condition);
                     break;
             }
         }
-        $this->queryBody->conditions = implode("{$this->threeTabs}",$conditionsList);
+        $this->queryBody->conditions = implode("{$this->threeTabs}",$this->queryBody->conditions);
         return $this;
     }
 
@@ -631,31 +614,6 @@ class QueryBuilder
     }
 
     /**
-     * Получить список условий
-     *
-     * @param $conditions
-     * @return $this
-     */
-    public function getWhereConditions($conditions)
-    {
-        if (! $conditions['where']) return $this;
-        $condition = 'where([';
-        $loop = 1;
-        foreach ($conditions['where'] as $cond) {
-            $value = $cond['value'];
-            if (count($conditions['where']) > 1 && $loop == 1) $condition .= "\n{$this->threeTabs}{$this->tabIndent}";
-            $condition .= "['{$cond['column']}'," . "'{$cond['operator']}'," . $value . "], ";
-            if (count($conditions['where']) > 1 && count($conditions['where']) != $loop)
-                $condition .= "\n{$this->threeTabs}{$this->tabIndent}";
-            $loop++;
-        }
-        $condition = trim($condition, ', ');
-        $condition .= (count($conditions['where']) > 1) ? "\n{$this->threeTabs}])" : "])";
-        $this->queryBody->conditions[] = '->' . $condition . "\n";
-        return $this;
-    }
-
-    /**
      * Сформировать и получить значение колонки при выборке по условию
      *
      * @param $value
@@ -672,54 +630,36 @@ class QueryBuilder
     }
 
     /**
-     * Получить список условий с пометкой ИЛИ
+     * Получить список условий
      *
-     * @param $conditions
+     * @param $cond
      * @return $this
      */
-    public function getOrWhereConditions($conditions)
+    public function getWhereConditions($cond)
     {
-        if (! $conditions['or_where']) return $this;
+        if (! $cond) return $this;
+        $condition = 'where([';
+        $value = '\'' . $cond['value'] . '\'';
+        $condition .= "['{$cond['column']}'," . "'{$cond['operator']}'," . $value . "]";
+        $condition .= "])";
+        $this->queryBody->conditions[] = '->' . $condition . "\n";
+        return $this;
+    }
+
+    /**
+     * Получить список условий с пометкой ИЛИ
+     *
+     * @param $cond
+     * @return $this
+     */
+    public function getOrWhereConditions($cond)
+    {
+        if (! $cond) return $this;
         $conditionList = [];
-        //        if (count($conditions) < 2)
-        //            return 'orWhere(' . "'{$conditions[0]['column']}'," . "'{$conditions[0]['operator']}'," . "'{$conditions[0]['value']}')";
-
-        $loop = 1;
-        foreach ($conditions['or_where'] as $cond) {
-//            $condition = 'orWhere(function ($query) {' . "\n";
-//            if (count($conditions) > 1 && $loop == 1) $condition .= "    \$query";
-//            $condition .= "->where('{$cond['column']}'," . "'{$cond['operator']}'," . "'{$cond['value']}')";
-//            if (count($conditions) > 1 && count($conditions) != $loop) $condition .= "\n        ";
-//            $loop++;
-//            $condition = 'orWhere(';
-//            if (count($conditions) > 1 && $loop == 1) $condition .= "    \$query";
-//            $condition .= "'{$cond['column']}'," . "'{$cond['operator']}'," . "'{$cond['value']}')";
-
-//            $conditionList[] = $condition;
-//            if (count($conditions) > 1 && count($conditions) != $loop) $condition .= "\n        ";
-//            $loop++;
-            if (isset($cond['conditions'])) {
-                $conditionList = $this->getConditions($cond['conditions']);
-            }
-
-            $value = '\'' . $cond['value'] . '\'';
-            if (isset($cond['or_where'])) {
-                $condition = 'orWhere(function ($query) {' . "\n";
-                if (count($conditions['or_where']) > 1 && $loop == 1) $condition .= "{$this->threeTabs}\$query";
-                $condition .= "->orWhere('{$cond['column']}'," . "'{$cond['operator']}'," . $value . ")";
-                if (count($conditions) > 1 && count($conditions['or_where']) != $loop) $condition .= "\n{$this->threeTabs}";
-//                $conditionList = $this->getOrWhereConditions($cond['or_where']);
-            } else {
-                $condition = 'orWhere(';
-                $condition .= "'{$cond['column']}'," . "'{$cond['operator']}'," . $value . ")";
-            }
-            $conditionList[] = $condition;
-            $loop++;
-        }
-//        $condition = trim($condition, ', ');
-//        if (count($conditions) > 1) $condition .= "\n";
-//        $condition .= '])';
-
+        $value = '\'' . $cond['value'] . '\'';
+        $condition = 'orWhere(';
+        $condition .= "'{$cond['column']}'," . "'{$cond['operator']}'," . $value . ")";
+        $conditionList[] = $condition;
         $this->queryBody->conditions[] = "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
         return $this;
     }
@@ -731,20 +671,18 @@ class QueryBuilder
      * @param $conditions
      * @return $this
      */
-    public function getWhereBetweenConditions($conditions)
+    public function getWhereBetweenConditions($cond)
     {
-        if (! $conditions['where_between']) return $this;
+        if (! $cond) return $this;
         $conditionList = [];
-        foreach ($conditions['where_between'] as $cond) {
-            $prefix = $cond['or'] ? 'orW' : 'w';
-            $isNot = $cond['not'] ? 'Not' : null;
-            $values = array_map(function ($item) {
-                if(is_string($item)) return "'$item'";
-                return $item;
-            }, $cond['values']);
-            $values = implode(',', $values);
-            $conditionList[] = "{$prefix}here{$isNot}Between('{$cond['column']}'," . "[{$values}])";
-        }
+        $prefix = isset($cond['or']) ? 'orW' : 'w';
+        $isNot = isset($cond['not']) ? 'Not' : null;
+        $values = array_map(function ($item) {
+            if(is_string($item)) return "'$item'";
+            return $item;
+        }, $cond['values']);
+        $values = implode(',', $values);
+        $conditionList[] = "{$prefix}here{$isNot}Between('{$cond['column']}'," . "[{$values}])";
         $this->queryBody->conditions[] = "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
         return $this;
     }
@@ -753,23 +691,21 @@ class QueryBuilder
      * Получить условия сравнения значения колонки со списком значений
      * Поддержка условия - OR, а также отрицания - NOT
      *
-     * @param $conditions
+     * @param $cond
      * @return $this
      */
-    public function getWhereInConditions($conditions)
+    public function getWhereInConditions($cond)
     {
-        if (! $conditions['where_in']) return $this;
+        if (! $cond) return $this;
         $conditionList = [];
-        foreach ($conditions['where_in'] as $cond) {
-            $isNot = $cond['not'] ? 'Not' : null;
-            $prefix = $cond['or'] ? 'orW' : 'w';
-            $values = array_map(function ($item) {
-                if(is_string($item)) return "'$item'";
-                return $item;
-            }, $cond['values']);
-            $values = implode(',', $values);
-            $conditionList[] = "{$prefix}here{$isNot}In('{$cond['column']}'," . "[{$values}])";
-        }
+        $isNot = isset($cond['not']) ? 'Not' : null;
+        $prefix = isset($cond['or']) ? 'orW' : 'w';
+        $values = array_map(function ($item) {
+            if(is_string($item)) return "'$item'";
+            return $item;
+        }, $cond['values']);
+        $values = implode(',', $values);
+        $conditionList[] = "{$prefix}here{$isNot}In('{$cond['column']}'," . "[{$values}])";
         $this->queryBody->conditions[] = "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
         return $this;
     }
@@ -781,14 +717,12 @@ class QueryBuilder
      * @param $conditions
      * @return $this
      */
-    public function getWhereDateConditions($conditions)
+    public function getWhereDateConditions($cond)
     {
-        if (! $conditions['where_date']) return $this;
+        if (! $cond) return $this;
         $conditionList = [];
-        foreach ($conditions['where_date'] as $cond) {
-            $whereType = $cond['type'] != 'datetime' ? ucfirst($cond['type']) : null;
-            $conditionList[] = "where{$whereType}('{$cond['column']}'," . "'{$cond['operator']}'," . "'{$cond['value']}')";
-        }
+        $whereType = $cond['type'] != 'datetime' ? ucfirst($cond['type']) : null;
+        $conditionList[] = "where{$whereType}('{$cond['column']}'," . "'{$cond['operator']}'," . "'{$cond['value']}')";
         $this->queryBody->conditions[] = "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
         return $this;
     }
@@ -796,33 +730,37 @@ class QueryBuilder
     /**
      * Получить условия сравнения колонок между собой
      *
-     * @param $conditions
+     * @param $cond
      * @return $this
      */
-    public function getWhereColumnConditions($conditions)
+    public function getWhereColumnConditions($cond)
     {
-        if (! $conditions['where_column']) return $this;
+        if (! $cond) return $this;
         $conditionList = [];
         $condition = '';
-        $loop = 1;
-        foreach ($conditions['where_column'] as $cond) {
-            $prefix = $cond['or'] ? 'orW': 'w';
-            if ($loop == 1) $condition .= "{$prefix}hereColumn([";
-            if (count($cond['data']) > 1 && $loop == 1) $condition .= "\n{$this->threeTabs}{$this->tabIndent}";
-            foreach ($cond['data'] as $data) {
-                $condition .= "['{$data['first_column']}',"
-                    . "'{$data['operator']}'," . "'{$data['second_column']}'],";
-                if (count($cond['data']) > 1 && count($cond['data']) != $loop)
-                    $condition .= "\n{$this->threeTabs}{$this->tabIndent}";
-                $loop++;
-            }
-            $condition = trim($condition, ', ');
-            $condition .= (count($cond['data']) > 1) ? "\n{$this->threeTabs}])" : "])";
-            $conditionList[] = $condition;
-            $condition  = '';
-            $loop = 1;
-        }
+        $prefix = isset($cond['or']) ? 'orW': 'w';
+        $condition .= "{$prefix}hereColumn([";
+        $condition .= "['{$cond['first_column']}',"
+            . "'{$cond['operator']}'," . "'{$cond['second_column']}']";
+        $condition .=  "])";
+        $conditionList[] = $condition;
         $this->queryBody->conditions[] = "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
+        return $this;
+    }
+
+    /**
+     * Получить нулевые условия
+     *
+     * @param $cond
+     * @return $this
+     */
+    public function getWhereNullConditions($cond)
+    {
+        if (! $cond) return $this;
+        $isNot = isset($cond['not']) ? 'Not' : null;
+        $prefix = isset($cond['or']) ? 'orW' : 'w';
+        $condition = "{$prefix}here{$isNot}Null('{$cond['column']}')";
+        $this->queryBody->conditions[] = "->" . $condition . "\n";
         return $this;
     }
 
