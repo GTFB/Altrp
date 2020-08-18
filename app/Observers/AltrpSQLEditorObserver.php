@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Altrp\Builders\Traits\DynamicVariables;
 use App\Altrp\Generators\Controller\ControllerFile;
 use App\Altrp\Generators\Controller\ControllerFileWriter;
 use App\Altrp\Generators\Repository\RepositoryFile;
@@ -19,6 +20,7 @@ use Illuminate\Support\Str;
 
 class AltrpSQLEditorObserver
 {
+    use DynamicVariables;
     /**
      * Handle the s q l editor "creating" event.
      *
@@ -40,7 +42,7 @@ class AltrpSQLEditorObserver
         if ($controllerWriter->methodSqlExists($sQLEditor->name)) {
             throw new ControllerFileException('Method already exists', 500);
         }
-        $controllerWriter->writeSqlMethod($sQLEditor->name, $sQLEditor->sql);
+        $controllerWriter->writeSqlMethod($sQLEditor->name, $this->replaceDynamicVars(addslashes($sQLEditor->sql), true));
     }
 
     /**
@@ -119,7 +121,7 @@ class AltrpSQLEditorObserver
         $controllerWriter->updateSqlMethod(
             $sQLEditor->getOriginal('name'),
             $sQLEditor->name,
-            addslashes($sQLEditor->sql)
+            $this->replaceDynamicVars(addslashes($sQLEditor->sql),true)
         );
     }
 
