@@ -50,6 +50,8 @@ Route::get( '/admin/editor-reports', function (){
   return view( 'editor-reports' );
 } )->middleware( 'auth' )->name('editor-reports');
 
+Route::get('/reports/html/{id}', "ReportsController@page");
+
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
 
