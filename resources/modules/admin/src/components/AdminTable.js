@@ -10,13 +10,14 @@ class AdminTable extends Component {
    */
   filterByKeyboard = (e) => {
 
-    if(_.isFunction(this.props.filterByKeyboard)){
+    if (_.isFunction(this.props.filterByKeyboard)) {
       this.props.filterByKeyboard(e.target.value);
     }
   };
-  render(){
-    const { search } = this.props;
-    return<div className="admin-table">
+
+  render() {
+    const {search} = this.props;
+    return <div className="admin-table">
       {search && <div className="admin-table">
         <input value={search.value} onChange={search.changeHandler} type="text" className="form-group"/>
       </div>}
@@ -24,58 +25,59 @@ class AdminTable extends Component {
         <thead className="admin-table-head">
         <tr className="admin-table-row">
           <td className="admin-table__td admin-table__td_check"><input type="checkbox"/></td>
-        {this.props.columns.map(column=>
-            <td className="admin-table__td " key={column.name} title={column.name}>{column.title}</td>)}
+          {this.props.columns.map(column =>
+              <td className="admin-table__td " key={column.name} title={column.name}>{column.title}</td>)}
         </tr>
         </thead>
         <tbody className="admin-table-body">
         {
-          this.props.rows.map((row, idx)=>
-          <tr className="admin-table-row" key={row.id} title={row.id}>
-            <td className="admin-table__td admin-table__td_check" key={'choose' + row.id} title={'choose' + row.id}><input type="checkbox"/></td>
-            {
-              this.props.columns.map((column, index)=>
-              {
-                let tag = 'span';
-                let childrens = null;
-                let props = {
-                  className: 'td__content',
-                  children: [row[column.name]]
-                };
-                if(column.url && row.url){
-                  tag = 'a';
-                  props.href = row.url;
-                  if(column.target){
-                    props.target = column.target;
-                  }
-                }
-                if(column.editUrl && row.editUrl){
-                  tag = (column.tag === 'Link') ? Link : 'a';
-                  props.href = row.editUrl;
-                  if(column.tag === 'Link'){
-                    props.to = {
-                      pathname: row.editUrl,
-                      data: row
-                    }
-                  }
-                  if(column.target){
-                    props.target = column.target;
-                  }
-                }
-                if(column.is_button){
-                  tag = 'button';
-                  props.title = column.button.title;
-                  props.children = column.button.title;
-                  props.onClick = () => { column.button.function(row)};
-                }
-                if(column.is_boolean){
-                  props.children = [row[column.name].toString()];
-                }
-                
-                return<td className="admin-table__td td" key={column.name + row.id} title={column.name + row.id}>
-                
-                  {React.createElement(tag, props)}
-                  {index === 0 && <span className="quick-action-menu">
+          this.props.rows.map((row) =>
+              <tr className="admin-table-row" key={row.id} title={row.id}>
+                <td className="admin-table__td admin-table__td_check" key={'choose' + row.id} title={'choose' + row.id}>
+                  <input type="checkbox"/></td>
+                {
+                  this.props.columns.map((column, index) => {
+                        let tag = 'span';
+                        let props = {
+                          className: 'td__content',
+                          children: [row[column.name]]
+                        };
+                        if (column.url && row.url) {
+                          tag = 'a';
+                          props.href = row.url;
+                          if (column.target) {
+                            props.target = column.target;
+                          }
+                        }
+                        if (column.editUrl && row.editUrl) {
+                          tag = (column.tag === 'Link') ? Link : 'a';
+                          props.href = row.editUrl;
+                          if (column.tag === 'Link') {
+                            props.to = {
+                              pathname: row.editUrl,
+                              data: row
+                            }
+                          }
+                          if (column.target) {
+                            props.target = column.target;
+                          }
+                        }
+                        if (column.is_button) {
+                          tag = 'button';
+                          props.title = column.button.title;
+                          props.children = column.button.title;
+                          props.onClick = () => {
+                            column.button.function(row)
+                          };
+                        }
+                        if (column.is_boolean) {
+                          props.children = [row[column.name].toString()];
+                        }
+
+                        return <td className="admin-table__td td" key={column.name + row.id} title={column.name + row.id}>
+
+                          {React.createElement(tag, props)}
+                          {index === 0 && <span className="quick-action-menu">
                     {this.props.quickActions && this.props.quickActions.map((quickAction, index) => {
                       let item = '';
                       switch (quickAction.tag) {
@@ -98,8 +100,8 @@ class AdminTable extends Component {
                               to={href}
                           >{quickAction.title}</Link>;
                         }
-                          break;
-                        case 'button': {
+                        break;
+                        case 'button':
                           let route = quickAction.route.replace(':id', row.id);
                           item = <button
                               className={'quick-action-menu__item ' + (quickAction.className || '')}
@@ -110,27 +112,55 @@ class AdminTable extends Component {
                                     return;
                                   }
                                 }
-                                let resource = new Resource({route: route});
+                                const resource = new Resource({route});
                                 if (_.isFunction(resource[quickAction.method])) {
-                                  await resource[quickAction.method]();
-                                  _.isFunction(quickAction.after) ? quickAction.after() : ''
+                                  let response;
+                                  switch (quickAction.method) {
+                                    case 'get':
+                                      response = await resource[quickAction.method](row.id);
+                                      break;
+
+                                    default:
+                                      response = await resource[quickAction.method]();
+                                      break;
+                                  }
+                                  _.isFunction(quickAction.after) ? quickAction.after(response) : ''
                                 }
                               }}
                           >{quickAction.title}</button>;
-                        }
-                        break;
-                      
+                          break;
+                          // case 'button': {
+                          //   let route = quickAction.route.replace(':id', row.id);
+                          //   item = <button
+                          //       className={'quick-action-menu__item ' + (quickAction.className || '')}
+                          //       {...quickAction.props || {}}
+                          //       onClick={async () => {
+                          //         if (quickAction.confirm) {
+                          //           if (!await confirm(quickAction.confirm)) {
+                          //             return;
+                          //           }
+                          //         }
+                          //         let resource = new Resource({route: route});
+                          //         if (_.isFunction(resource[quickAction.method])) {
+                          //           await resource[quickAction.method]();
+                          //           _.isFunction(quickAction.after) ? quickAction.after() : ''
+                          //         }
+                          //       }}
+                          //   >{quickAction.title}</button>;
+                          // }
+                          // break;
+
                         default:
                           break;
                       }
-                      return <span className="quick-action-menu__item_wrapper" key={index+row.id}>{item}</span>;
+                      return <span className="quick-action-menu__item_wrapper" key={index + row.id}>{item}</span>;
                     })}
                   </span>}
-                </td>
-              }
-             )
-            }
-          </tr>)
+                        </td>
+                      }
+                  )
+                }
+              </tr>)
         }
         </tbody>
       </table>

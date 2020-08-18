@@ -6,6 +6,7 @@ namespace App\Altrp\Generators\Repository;
 
 use App\Exceptions\Repository\RepositoryFileException;
 use Illuminate\Support\Str;
+use SebastianBergmann\CodeCoverage\Report\Xml\Source;
 
 class RepositoryFileWriter
 {
@@ -58,6 +59,7 @@ class RepositoryFileWriter
      *
      * @param $name
      * @param $body
+     * @return bool
      * @throws RepositoryFileException
      */
     public function addMethod($name, $body)
@@ -77,6 +79,78 @@ class RepositoryFileWriter
         $this->writeRepository($contentRepo);
         $this->writeRepoInterface($contentRepoInterface);
         $this->writeToServiceProvider();
+        return true;
+    }
+
+    /**
+     * Удалить метод из репозитория
+     *
+     * @param $name
+     * @return bool|int
+     * @throws RepositoryFileException
+     */
+    public function removeMethodFromRepository($name)
+    {
+        $repoFile = $this->repository->getFile();
+        if (! file_exists($repoFile)) {
+            throw new RepositoryFileException('Repository file not found', 500);
+        }
+        $contentRepo = file($repoFile, 2);
+        if ($line = $this->repoMethodExists($contentRepo, $name)) {
+            for ($i = $line; true; $i++) {
+                if (Str::contains($contentRepo[$i], '}')) {
+                    unset($contentRepo[$i]);
+                    break;
+                }
+                unset($contentRepo[$i]);
+            }
+        }
+        return \File::put(
+            $repoFile,
+            implode(PHP_EOL,$contentRepo)
+        );
+    }
+
+    /**
+     * Удалить метод из файла интерфейса репоситория
+     *
+     * @param $name
+     * @return bool|int
+     * @throws RepositoryFileException
+     */
+    public function removeMethodFromRepoInterface($name)
+    {
+        $repoInterfaceFile = $this->repoInterface->getFile();
+        if (! file_exists($repoInterfaceFile)) {
+            throw new RepositoryFileException('Repository file not found', 500);
+        }
+        $contentRepoInterface = file($repoInterfaceFile, 2);
+        if ($line = $this->repoMethodExists($contentRepoInterface, $name)) {
+            unset($contentRepoInterface[$line]);
+        }
+        return \File::put(
+            $repoInterfaceFile,
+            implode(PHP_EOL,$contentRepoInterface)
+        );
+    }
+
+    /**
+     * Проверить, существует ли метод в репозитории
+     * вернуть номер строки, на которой он найден
+     *
+     * @param $contents
+     * @param $methodName
+     * @return bool|int|string
+     */
+    protected function repoMethodExists($contents, $methodName)
+    {
+        foreach ($contents as $line => $content) {
+            if (Str::contains($content, 'public function ' . $methodName . '(')
+                || Str::contains($content, 'protected function ' . $methodName . '(')) {
+                return $line;
+            }
+        }
+        return false;
     }
 
     /**
@@ -214,8 +288,8 @@ class RepositoryFileWriter
     protected function existsInServiceProvider($serviceProviderContent)
     {
         foreach ($serviceProviderContent as $line => $content) {
-            if (Str::contains($content, $this->repoInterface->getNamespace())
-                && Str::contains($content, $this->repository->getNamespace())
+            if (Str::contains($content, $this->repository->getModelName() . 'Repository')
+                && Str::contains($content, $this->repository->getModelName() . 'RepositoryInterface')
             ) {
                 return true;
             }

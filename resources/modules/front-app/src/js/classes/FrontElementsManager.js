@@ -14,40 +14,40 @@ import PosterWidget from "../../../../editor/src/js/components/widgets/PosterWid
 import ListWidget from "../../../../editor/src/js/components/widgets/ListWidget";
 import AccordionWidget from "../../../../editor/src/js/components/widgets/AccordionWidget";
 import CarouselWidget from "../../../../editor/src/js/components/widgets/CarouselWidget";
+import MapWidget from "../../../../../editor/src/js/components/widgets/MapWidget.js";
 
 export default class FrontElementsManager {
-
-  constructor(){
+  constructor() {
     //список компонентов
     this.components = {};
-    this.components['root-element'] = RootComponent;
-    this.components['heading'] = HeadingWidget;
-    this.components['section'] = SectionComponent;
-    this.components['column'] = ColumnComponent;
-    this.components['input'] = InputWidget;
-    this.components['button'] = ButtonWidget;
-    this.components['text'] = TextWidget;
-    this.components['image'] = ImageWidget;
-    this.components['table'] = TableWidget;
-    this.components['nav'] = NavWidget;
-    this.components['divider'] = DividerWidget;
-    this.components['tabs'] = TabsWidget;
-    this.components['poster'] = PosterWidget;
-    this.components['list'] = ListWidget;
-    this.components['accordion'] = AccordionWidget;
-    this.components['carousel'] = CarouselWidget;
+    this.components["root-element"] = RootComponent;
+    this.components["heading"] = HeadingWidget;
+    this.components["section"] = SectionComponent;
+    this.components["column"] = ColumnComponent;
+    this.components["input"] = InputWidget;
+    this.components["button"] = ButtonWidget;
+    this.components["text"] = TextWidget;
+    this.components["image"] = ImageWidget;
+    this.components["table"] = TableWidget;
+    this.components["nav"] = NavWidget;
+    this.components["divider"] = DividerWidget;
+    this.components["tabs"] = TabsWidget;
+    this.components["poster"] = PosterWidget;
+    this.components["list"] = ListWidget;
+    this.components["accordion"] = AccordionWidget;
+    this.components["carousel"] = CarouselWidget;
+    this.components["map"] = MapWidget;
   }
 
-  getComponentClass(name){
-    if(! this.components[name] ){
-      throw 'Не найден компонент с именем ' + name;
+  getComponentClass(name) {
+    if (!this.components[name]) {
+      throw "Не найден компонент с именем " + name;
     }
     return this.components[name];
   }
 
-  checkElementExists(elementName){
-    return ! ! this.components[elementName];
+  checkElementExists(elementName) {
+    return !!this.components[elementName];
   }
 }
 window.frontElementsManager = new FrontElementsManager();
-

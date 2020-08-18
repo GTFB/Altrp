@@ -26,9 +26,6 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::put('/templates/{template}', "Constructor\Templates@update");
         Route::delete('/templates/{template}', "Constructor\Templates@delete");
 
-        //Route::get('/reports', 'ReportsController@getReports');
-        //Route::post('/reports', 'ReportsController@store');
-
         Route::get('/global-elements', "Constructor\GlobalElements@getElements");
         Route::get('/global-elements/{element}', "Constructor\GlobalElements@getElement");
         Route::post('/global-elements', "Constructor\GlobalElements@insert");
@@ -67,11 +64,12 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::get( '/models/{model_id}', 'Admin\ModelsController@showModel');
         Route::delete( '/models/{model_id}', 'Admin\ModelsController@destroyModel');
 
-        Route::post( '/models/{model_id}/sql_builder', 'Admin\ModelsController@addQuery');
-
-        Route::post( '/models/{model_id}/controllers', 'Admin\ModelsController@storeController');
-        Route::put( '/models/{model_id}/controllers/{controller_id}', 'Admin\ModelsController@updateController');
-        Route::delete( '/models/{model_id}/controllers/{controller_id}', 'Admin\ModelsController@destroyController');
+        // SQL Builder
+        Route::get( '/models/{model_id}/sql_builder', 'Admin\ModelsController@getAllQueries');
+        Route::post( '/models/{model_id}/sql_builder', 'Admin\ModelsController@storeQuery');
+        Route::put( '/models/{model_id}/sql_builder/{query_id}', 'Admin\ModelsController@updateQuery');
+        Route::get('/models/{model_id}/sql_builder/{query_id}', 'Admin\ModelsController@getQuery');
+        Route::delete('/models/{model_id}/sql_builder/{query_id}', 'Admin\ModelsController@destroyQuery');
 
         // Fields
         Route::get( '/models/{model_id}/fields', 'Admin\ModelsController@getModelFields');

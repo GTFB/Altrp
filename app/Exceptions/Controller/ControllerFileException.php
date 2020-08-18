@@ -14,6 +14,7 @@ class ControllerFileException extends Exception
     {
         if ($request->ajax() || $request->isJson() || $request->wantsJson()) {
             return response()->json([
+                'success' => false,
                 'message' => $this->getMessage()
             ], $this->getCode(), [], JSON_UNESCAPED_UNICODE);
         }

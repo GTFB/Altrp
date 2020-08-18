@@ -31,6 +31,7 @@ import { closeDynamicContent } from "./js/store/dynamic-content/actions";
 import { iconsManager } from "../../admin/src/js/helpers";
 import ResponsiveDdMenu from "./js/components/ResponsiveDdMenu";
 import ResponsiveDdFooter from "./js/components/ResponsiveDdFooter";
+import DialogWindow from "./js/components/DialogWindow";
 /**
  * Главный класс редактора.<br/>
  * Реакт-Компонент.<br/>
@@ -48,6 +49,7 @@ class Editor extends Component {
       // activePanel: 'widgets',
       activePanel: "settings",
       templateStatus: CONSTANTS.TEMPLATE_UPDATED,
+      showDialogWindow: false,
     };
     this.openPageSettings = this.openPageSettings.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
@@ -84,6 +86,15 @@ class Editor extends Component {
       activePanel: "widgets",
     });
   }
+
+  /** 
+   * Показывает Dialog окно
+   */
+  showModalWindow() {
+    this.setState({
+      showDialogWindow: !this.state.showDialogWindow
+    })
+  };
 
   /**
    * Показывает панель с настройками текущего виджета
@@ -203,10 +214,11 @@ class Editor extends Component {
               <button className="btn ">
                 <Preview className="icon" />
               </button>
-              <UpdateButton />
+              <UpdateButton onClick={() => this.showModalWindow()} showModalWindow={() => this.showModalWindow()} />
             </div>
           </div>
           <div className="right-panel">
+            {this.state.showDialogWindow && <DialogWindow state={this.state.showDialogWindow} showModalWindow={() => this.showModalWindow()} />}
             <EditorWindow />
           </div>
         </div>

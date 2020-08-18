@@ -87,23 +87,47 @@ class ControllerFileWriter
     /**
      * Удалить метод из контроллера
      *
-     * @param $content
-     * @param $name
+     * @param $methodName
      * @return bool|int
+     * @throws ControllerFileException
      */
-    public function removeMethod($content, $name)
+    public function removeMethod($methodName)
     {
-        if ($line = $this->methodExists($content, $name)) {
-            for($i = $line; true; $i++) {
-                if (Str::contains($content[$i], '}')) {
-                    unset($content[$i]);
+        $controllerFile = $this->controller->getFile();
+        if (! file_exists($controllerFile)) {
+            throw new ControllerFileException('Controller file not found', 500);
+        }
+        $controllerContent = file($controllerFile, 2);
+        if ($line = $this->methodExists($controllerContent, $methodName)) {
+            for ($i = $line; true; $i++) {
+                if (Str::contains($controllerContent[$i], '}')) {
+                    unset($controllerContent[$i]);
                     break;
                 }
-                unset($content[$i]);
+                unset($controllerContent[$i]);
             }
         }
-        return \File::put($this->controller->getFile(), implode(PHP_EOL,$content));
+        return \File::put(
+            $controllerFile,
+            implode(PHP_EOL,$controllerContent)
+        );
     }
+
+    /**
+     * Обновить метод
+     *
+     * @param $oldMethodName
+     * @param $newMethodName
+     * @return bool
+     * @throws ControllerFileException
+     */
+    public function updateMethod($oldMethodName, $newMethodName)
+    {
+        $this->removeMethod($oldMethodName);
+        $this->addMethod($newMethodName);
+        return true;
+    }
+
 
     /**
      * Добавить Sql метод
@@ -188,6 +212,21 @@ class ControllerFileWriter
                 || Str::contains($content, 'protected function ' . $methodName . '(')) {
                 return $line;
             }
+        }
+        return false;
+    }
+
+    /**
+     * Проверить, существует ли метод в контроллере
+     *
+     * @param $methodName
+     * @return bool
+     */
+    public function checkMethodExists($methodName)
+    {
+        $controllerContent = file($this->controller->getFile(), 2);
+        if ($this->methodExists($controllerContent, $methodName)) {
+            return true;
         }
         return false;
     }

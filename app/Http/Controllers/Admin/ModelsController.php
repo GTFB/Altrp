@@ -956,12 +956,36 @@ class ModelsController extends HttpController
     }
 
     /**
-     * Проверить, свободно ли имя запроса для sql_builder
+     * Получить все SQL запросы
+     *
+     * @param $model_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAllQueries($model_id)
+    {
+        $queries = Query::where('model_id',$model_id)->get();
+        return response()->json($queries, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Получить SQL запрос
      *
      * @param ApiRequest $request
-     * @param $model_id
-     * @return JsonResponse
+     * @param $query_id
+     * @return \Illuminate\Http\JsonResponse
      */
+    public function getQuery(ApiRequest $request, $query_id)
+    {
+      $queries = Query::find( $request->query_id );
+      return response()->json( $queries, 200, [], JSON_UNESCAPED_UNICODE );
+    }
+  /**
+   * Проверить, свободно ли имя запроса для sql_builder
+   *
+   * @param ApiRequest $request
+   * @param $model_id
+   * @return JsonResponse
+   */
     public function queryNameIsFree(ApiRequest $request, $model_id)
     {
         $name = (string) $request->get('name');
@@ -985,7 +1009,7 @@ class ModelsController extends HttpController
      * @throws \App\Exceptions\Controller\ControllerFileException
      * @throws \App\Exceptions\Repository\RepositoryFileException
      */
-    public function addQuery(ApiRequest $request, $model_id)
+    public function storeQuery(ApiRequest $request, $model_id)
     {
         $model = Model::find($model_id);
         if (! $model)
@@ -993,18 +1017,79 @@ class ModelsController extends HttpController
                 'success' => false,
                 'message' => 'Model not found'
             ], 404, [], JSON_UNESCAPED_UNICODE);
-
-        $builder = new QueryBuilder(
-            array_merge($request->all(), ['model' => $model])
-        );
-        $result = $builder->build();
+        $query = new Query($request->all());
+        $query->model_id = $model->id;
+        $result = $query->save();
         if ($result) {
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
         return response()->json([
-                'success' => false,
-                'message' => 'Failed to create query'
-            ], 500, [], JSON_UNESCAPED_UNICODE);
+            'success' => false,
+            'message' => 'Query ' . $query->name . ' already exists'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
+
+    /**
+     * Обновить SQl запрос
+     *
+     * @param ApiRequest $request
+     * @param $model_id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\Controller\ControllerFileException
+     * @throws \App\Exceptions\Repository\RepositoryFileException
+     */
+    public function updateQuery(ApiRequest $request, $model_id, $query_id)
+    {
+        $model = Model::find($model_id);
+        if (! $model)
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        $query = Query::find($query_id);
+        $result = $query->update($request->all());
+        if ($result) {
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update query'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Удалить SQl запрос
+     *
+     * @param $model_id
+     * @param $query_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+  public function destroyQuery($model_id, $query_id)
+  {
+    $model = Model::find($model_id);
+    if (! $model){
+      return response()->json([
+        'success' => false,
+        'message' => 'Model not found'
+      ], 404, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    $query = Query::find($query_id);
+    if (! $query){
+      return response()->json([
+        'success' => false,
+        'message' => 'Query not found'
+      ], 404, [], JSON_UNESCAPED_UNICODE);
+    }
+    $result = $query->delete();
+
+    if ($result) {
+        return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+    return response()->json([
+        'success' => false,
+        'message' => 'Failed to delete query'
+    ], 500, [], JSON_UNESCAPED_UNICODE);
+  }
 
 }

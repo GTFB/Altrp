@@ -27,10 +27,10 @@ class ApiRequest extends FormRequest
             //
         ];
     }
-    
+
     protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator) {
-        
+
         return response()->json($validator->errors(), 422, [],JSON_UNESCAPED_UNICODE);
-        
+
     }
 }
