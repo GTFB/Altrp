@@ -61,15 +61,16 @@ class ConditionComponent extends Component {
                 className="form-control"
               >
                 <option value="" disabled />
-                <option value="not-null">Not Null</option>
-                <option value="null">Null</option>
+                {/* <option value="not-null">Not Null</option>
+                <option value="null">Null</option> */}
                 <option value="=">Equals</option>
                 <option value="!=">Not Equals</option>
-                <option value="between">Between</option>
+                {/* <option value="between">Between</option> */}
                 <option value=">">&gt;</option>
                 <option value=">=">&gt;=</option>
                 <option value="<">&lt;</option>
                 <option value="<=">&lt;=</option>
+                <option value="like">Like</option>
               </select>
             </label>
           </div>}
@@ -111,7 +112,7 @@ class ConditionComponent extends Component {
         </div>}
       </div>
 
-      {['where', 'or_where'].includes(condition_type) && !['not-null', 'null'].includes(operator) &&
+      {['where', 'or_where'].includes(condition_type) /* && !['not-null', 'null'].includes(operator) */ &&
         <div className="form-group">
           <label>Value
             <input type="text" required name="value"
@@ -192,7 +193,7 @@ class ConditionComponent extends Component {
           </label>
         </div>
 
-        {!['not-null', 'null'].includes(operator) && <div className="form-group form-group_width47">
+        {/* {!['not-null', 'null'].includes(operator) &&  */}<div className="form-group form-group_width47">
           <label>Second Field
             <select required name="second_column"
               value={second_column}
@@ -206,7 +207,7 @@ class ConditionComponent extends Component {
                 </option>)}
             </select>
           </label>
-        </div>}
+        </div>{/* } */}
       </div>}
     </div>
   }

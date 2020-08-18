@@ -267,15 +267,15 @@ class SQLBuilderForm extends Component {
               ...state.value.conditions[index],
               [name]: value
             };
-            if (['not-null', 'null'].includes(value)) {
-              condition.condition_type === 'where_column' ?
-                delete condition.second_column :
-                delete condition.value
-            } else {
+            // if (['not-null', 'null'].includes(value)) {
+            //   condition.condition_type === 'where_column' ?
+            //     delete condition.second_column :
+            //     delete condition.value
+            // } else {
               condition.condition_type === 'where_column' ?
                 condition.second_column = condition.second_column || '' :
                 condition.value = condition.value || ''
-            }
+            // }
             break;
           case 'or':
             condition = {
