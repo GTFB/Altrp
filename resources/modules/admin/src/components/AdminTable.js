@@ -31,14 +31,13 @@ class AdminTable extends Component {
         </thead>
         <tbody className="admin-table-body">
         {
-          this.props.rows.map((row, idx) =>
+          this.props.rows.map((row) =>
               <tr className="admin-table-row" key={row.id} title={row.id}>
                 <td className="admin-table__td admin-table__td_check" key={'choose' + row.id} title={'choose' + row.id}>
                   <input type="checkbox"/></td>
                 {
                   this.props.columns.map((column, index) => {
                         let tag = 'span';
-                        let childrens = null;
                         let props = {
                           className: 'td__content',
                           children: [row[column.name]]
@@ -101,6 +100,7 @@ class AdminTable extends Component {
                               to={href}
                           >{quickAction.title}</Link>;
                         }
+                        break;
                         case 'button':
                           let route = quickAction.route.replace(':id', row.id);
                           item = <button

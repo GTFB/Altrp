@@ -1,3 +1,6 @@
 [submodule "resources/modules/reports"]
 	path = resources/modules/reports
 	url = https://github.com/chuikoffru/rrbe.git
+[submodule "resources/modules/editor/src/js/components/rrbe-map"]
+	path = resources/modules/editor/src/js/components/rrbe-map
+	url = git@github.com:chuikoffru/rrbe-map.git

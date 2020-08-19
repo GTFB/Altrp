@@ -38,6 +38,7 @@ class ButtonWidget extends Component {
             }
             this.setState(state => ({ ...state, pending: false }));
           } catch (e) {
+            console.error(e);
             this.setState(state => ({ ...state, pending: false }));
           }
         }

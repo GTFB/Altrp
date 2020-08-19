@@ -24,10 +24,11 @@ class KeyMigrationGenerator extends NewMigrationGenerator{
       /**
        * для 'belongsTo', 'hasMany ключи создаем в связанной модели
        */
-        if(  in_array( $this->data->type, ['belongsTo', 'hasMany'] ) ){
+        if( !$this->checkRelation() ){
           $table_name = Table::join('altrp_models', 'altrp_models.table_id', '=', 'tables.id')
             ->where( 'altrp_models.id',$this->data->target_model_id )->get( 'tables.name' )->first()->name;
         }
+
         $key = new MigrationKey($this->data, false);
         $key = $key->up();
 
@@ -41,7 +42,9 @@ class KeyMigrationGenerator extends NewMigrationGenerator{
         $full_path = $this->getPath().$fileName;
 
         //5. создаем файл
+        
         $d = file_put_contents($full_path, $template);
+        
 
         if($d !== false) return $full_path;
         else return false;
@@ -56,6 +59,15 @@ class KeyMigrationGenerator extends NewMigrationGenerator{
         $className = Str::studly($name);
 
         $table_name = $this->data->altrp_model->altrp_table->name;
+
+        /**
+         * для 'belongsTo', 'hasMany ключи создаем в связанной модели
+         */
+        if( !$this->checkRelation() ){
+          $table_name = Table::join('altrp_models', 'altrp_models.table_id', '=', 'tables.id')
+            ->where( 'altrp_models.id',$this->data->target_model_id )->get( 'tables.name' )->first()->name;
+        }
+
         $key = new MigrationKey($this->data, $old_key);
         $dropForeign = $key->dropForeign();
         $key = $key->up();
@@ -82,7 +94,16 @@ class KeyMigrationGenerator extends NewMigrationGenerator{
         $name = $this->getMigrationName();
         $className = Str::studly($name);
 
+        
         $table_name = $this->data->altrp_model->altrp_table->name;
+        /**
+         * для 'belongsTo', 'hasMany ключи создаем в связанной модели
+         */
+        if( !$this->checkRelation() ){
+          $table_name = Table::join('altrp_models', 'altrp_models.table_id', '=', 'tables.id')
+            ->where( 'altrp_models.id',$this->data->target_model_id )->get( 'tables.name' )->first()->name;
+        }
+
         $key = new MigrationKey(false, $this->data);
         $key = $key->up();
 
@@ -143,4 +164,13 @@ class KeyMigrationGenerator extends NewMigrationGenerator{
 
         return parent::getStub();
     }
+
+    protected function checkRelation() {
+        if($this->data->type == 'belongsTo' || $this->data->type == 'hasMany'){
+            return false;
+        }
+        return true;
+    }
+
+    
 }
