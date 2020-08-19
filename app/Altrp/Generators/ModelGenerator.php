@@ -190,7 +190,6 @@ class ModelGenerator extends AppGenerator
         $userColumns = $this->getUserColumns();
         if(file_exists($oldModelFile)) unlink($oldModelFile);
         try {
-
           \Artisan::call('crud:model', [
                 'name' => "{$fullModelName}",
                 '--table' => "{$this->model->table()->first()->name}",
@@ -328,9 +327,9 @@ class ModelGenerator extends AppGenerator
 
             $relItem = $rel->name . '#' . $rel->type . '#'
                 . trim($this->screenBacklashes($rel->model_class), '\\');
-            
+
             $post_args = "";
-            
+
             if($rel->type === 'hasOne') {
                 $post_args = "|" . $rel->foreign_key . "|" . $rel->local_key;
             }
@@ -340,7 +339,7 @@ class ModelGenerator extends AppGenerator
             else if($rel->type === 'belongsTo') {
                 $post_args = "|" . $rel->local_key . "|" . $rel->foreign_key;
             }
-            
+
             $relItem .= $post_args;
             /*
             if (isset($rel->local_key)) {
@@ -349,7 +348,7 @@ class ModelGenerator extends AppGenerator
                     $relItem .= "|{$foreign}";
                 }
             }*/
-            
+
             /*
             if( $rel->type === 'belongsTo' ){
               if (isset($rel->foreign_key)) {
