@@ -2,7 +2,8 @@ import React, {Component} from "react";
 import {hot} from "react-hot-loader/index";
 import NewSection from "./js/components/NewSection";
 import {getEditor} from "./js/helpers";
-import {Provider} from 'react-redux'
+import {Provider} from 'react-redux';
+import { BrowserRouter as Router } from "react-router-dom";
 import store from '../src/js/store/store'
 import RootElement from "./js/classes/elements/RootElement";
 import Styles from "./js/components/Styles";
@@ -71,21 +72,23 @@ class EditorContent extends Component {
 
   render() {
     return <Provider store={store}>
-      <div className="editor-content d-flex flex-column justify-center align-content-center"
-           onClick={this.onClick}
-                  ref={this.editorWindow}>
-        {
-          this.state.rootElement ? React.createElement(
-              this.state.rootElement.componentClass,{
-                children: this.state.rootElement.children,
-                element:this.state.rootElement,
-              }
-          ) : ''
-        }
-        <NewSection />
-      </div>
-      <Styles/>
-      <ElementContextMenu/>
+      <Router>
+        <div className="editor-content d-flex flex-column justify-center align-content-center"
+            onClick={this.onClick}
+                    ref={this.editorWindow}>
+          {
+            this.state.rootElement ? React.createElement(
+                this.state.rootElement.componentClass,{
+                  children: this.state.rootElement.children,
+                  element:this.state.rootElement,
+                }
+            ) : ''
+          }
+          <NewSection />
+        </div>
+        <Styles/>
+        <ElementContextMenu/>
+      </Router>
     </Provider>;
   }
 }

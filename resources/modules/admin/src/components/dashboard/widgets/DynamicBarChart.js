@@ -23,7 +23,7 @@ const DynamicBarChart = ({ dataUrl, width = 300, height = 300, colorScheme }) =>
 
   if (isLoading) return <Spinner />;
 
-  if (data.length === 0) return <EmptyWidget />;
+  if (!Array.isArray(data) || data.length === 0) return <EmptyWidget />;
 
   return (
     <BarChart

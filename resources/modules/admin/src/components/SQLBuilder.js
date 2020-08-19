@@ -4,7 +4,7 @@ import {withRouter} from "react-router-dom";
 
 class SQLBuilder extends Component {
   render() {
-    return <div className="admin-settings admin-page">
+    return <div className="admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
           <a className="admin-breadcrumbs__link" href="#">SQL</a>
