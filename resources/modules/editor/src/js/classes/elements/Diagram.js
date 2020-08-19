@@ -6,6 +6,7 @@ import {
   CONTROLLER_TEXT,
   CONTROLLER_SELECT,
   CONTROLLER_SWITCHER,
+  CONTROLLER_QUERY,
   TAB_CONTENT,
 } from "../modules/ControllersManager";
 
@@ -45,10 +46,8 @@ class Diagram extends BaseElement {
       options: types,
     });
 
-    this.addControl("source", {
-      type: CONTROLLER_TEXT,
-      label: "Source",
-      default: "/admin/ajax/analytics",
+    this.addControl("query", {
+      type: CONTROLLER_QUERY,
     });
 
     const colors = Object.keys(schemes).map((name) => {

@@ -14,4 +14,10 @@ class SQLEditor extends Model
     'model_id',
     'description',
   ];
+
+  /* public function model()
+  {
+    return $this->hasOne('App\Model', 'id', 'model_id');
+  } */
+
 }
