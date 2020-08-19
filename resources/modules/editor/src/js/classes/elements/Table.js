@@ -165,6 +165,11 @@ class Table extends BaseElement {
       label: 'Link Template',
       description: '/path/:id',
     });
+    repeater.addControl('column_isSorted', {
+      type: CONTROLLER_SWITCHER,
+      label: 'is Sorted',
+      default: false
+    });
 
     this.addControl('tables_columns', {
       label: 'Columns',

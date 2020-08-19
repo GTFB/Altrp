@@ -18,12 +18,18 @@ const AltrpTable = ({settings, query, data}) => {
   }
   let _data =[], _status, _error, _latestData;
   const [page, setPage] = useState(1);
-
+  const [sortSetting, setSortSettings] = useState(null);
   const fetchModels = useCallback(async (key, page = 1) => {
-    return query.getQueried({
-      page,
-    })
+    return query.getQueried(
+      sortSetting ?
+      { ...sortSetting, page } :
+      { page }
+    )
   });
+  useEffect(() => {
+    fetchModels()
+  }, [sortSetting]);
+
   if(query.pageSize){
     /**
      * Если есть пагинация
@@ -74,20 +80,25 @@ const AltrpTable = ({settings, query, data}) => {
     ),
     data: React.useMemo(() => (_data || []), [_data]),
   }, );
+
+  const sortingHandler = order_by => setSortSettings({ 
+    order_by, 
+    order: sortSetting && sortSetting.order === "DESC" ? "ASC" : "DESC"
+  });
+  
+
   return <><table className="altrp-table" {...getTableProps()}>
     <thead className="altrp-table-head">
     {renderAdditionalRows(settings)}
     {headerGroups.map(headerGroup => (
         <tr {...headerGroup.getHeaderGroupProps()} className="altrp-table-tr">
           {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()} className="altrp-table-th">{column.render('column_name')}
-                <span className="altrp-table-th_sort">
-                    {column.isSorted
-                        ? column.isSortedDesc
-                            ? ' 🔽'
-                            : ' 🔼'
-                        : ''}
-                  </span>
+              <th {...column.getHeaderProps()} className="altrp-table-th">
+                {column.render('column_name')}                
+                {column.column_isSorted && 
+                <button className="altrp-table-th_sort" onClick={() => sortingHandler(column.column_name)}>
+                  {sortSetting && sortSetting.order === "DESC" ? ' 🔽' : ' 🔼'}
+                </button>}        
               </th>
           ))}
         </tr>
