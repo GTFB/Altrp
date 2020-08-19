@@ -41,7 +41,7 @@ class Diagram extends BaseElement {
 
     this.addControl("type", {
       type: CONTROLLER_SELECT,
-      label: "Color Scheme",
+      label: "Type",
       default: TABLE,
       options: types,
     });

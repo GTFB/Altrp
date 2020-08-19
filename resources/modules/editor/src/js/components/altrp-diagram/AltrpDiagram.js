@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 
 import DynamicBarChart from "../../../../../admin/src/components/dashboard/widgets/DynamicBarChart";
 import DynamicPieChart from "../../../../../admin/src/components/dashboard/widgets/DynamicPieChart";
@@ -16,8 +15,6 @@ import {
   TABLE,
   DONUT,
 } from "../../../../../admin/src/components/dashboard/widgetTypes";
-
-//import Query from "../../classes/Query";
 
 const AltrpDiagram = ({ settings }) => {
   const model = settings.query?.dataSource?.value;
