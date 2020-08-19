@@ -1,18 +1,20 @@
-import React, { useState } from "react";
-import MapDesigner from "../rrbe-map/src/MapDesigner.js";
+import React, { useState, useEffect } from "react";
+import MapDesigner from "../altrp-map/MapDesigner";
 
 function MapWidget({ element }) {
-  const [settings, setSettings] = useState(element.getSettings());
-  const { content_editable, content_zoom, content_lat, content_lng } = settings;
+  const [settings, setSettings] = useState({});
+
+  useEffect(() => {
+    setSettings(element.getSettings());
+  }, [setSettings]);
+
   console.log("settings :>> ", settings);
   return (
     <MapDesigner
       className="altrp-map"
-      isEditable={content_editable}
-      center={[content_lat, content_lng]}
-      zoom={content_zoom}
       data={[]}
-      saveData={(data) => console.log("data :>> ", data)}
+      zoom={settings.zoom}
+      center={[settings.lat, settings.lng]}
     />
   );
 }

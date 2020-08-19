@@ -19,7 +19,6 @@ import {
 const AltrpDiagram = ({ settings }) => {
   const model = settings.query?.dataSource?.value;
   const sql = settings.query?.sql;
-
   if (!model || !sql) {
     return <div className="altrp-chart">Choose data for chart</div>;
   }

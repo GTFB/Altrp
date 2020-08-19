@@ -31,31 +31,32 @@ class Map extends BaseElement {
       label: "Content",
     });
 
-    this.addControl("content_editable", {
+    this.addControl("editable", {
       type: CONTROLLER_SWITCHER,
       label: "Editable",
-      default: true,
+      default: false,
     });
 
-    this.addControl("content_canvas", {
+    this.addControl("canvas", {
       type: CONTROLLER_SWITCHER,
       label: "Canvas",
       default: true,
     });
 
-    this.addControl("content_lat", {
+
+    this.addControl("lat", {
       type: CONTROLLER_TEXT,
       label: "Latitude",
-      default: 54.57299842212406,
+      default: 50.7496449,
     });
 
-    this.addControl("content_lng", {
+    this.addControl("lng", {
       type: CONTROLLER_TEXT,
       label: "Longitude",
-      default: 56.20845794677735,
+      default: 86.1250068,
     });
 
-    this.addControl("content_zoom", {
+    this.addControl("zoom", {
       type: CONTROLLER_NUMBER,
       label: "Zoom",
       default: 6,
