@@ -26,9 +26,9 @@ const AltrpTable = ({settings, query, data}) => {
       { page }
     )
   });
-  useEffect(() => {
-    fetchModels()
-  }, [sortSetting]);
+  // useEffect(() => {
+  //   fetchModels()
+  // }, [sortSetting]);
 
   if(query.pageSize){
     /**
