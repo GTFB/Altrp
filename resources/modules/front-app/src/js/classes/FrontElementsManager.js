@@ -14,7 +14,7 @@ import PosterWidget from "../../../../editor/src/js/components/widgets/PosterWid
 import ListWidget from "../../../../editor/src/js/components/widgets/ListWidget";
 import AccordionWidget from "../../../../editor/src/js/components/widgets/AccordionWidget";
 import CarouselWidget from "../../../../editor/src/js/components/widgets/CarouselWidget";
-import MapWidget from "../../../../../editor/src/js/components/widgets/MapWidget.js";
+// import MapWidget from "../../../../../editor/src/js/components/widgets/MapWidget.js";
 
 export default class FrontElementsManager {
   constructor() {
@@ -36,7 +36,7 @@ export default class FrontElementsManager {
     this.components["list"] = ListWidget;
     this.components["accordion"] = AccordionWidget;
     this.components["carousel"] = CarouselWidget;
-    this.components["map"] = MapWidget;
+    // this.components["map"] = MapWidget;
   }
 
   getComponentClass(name) {
