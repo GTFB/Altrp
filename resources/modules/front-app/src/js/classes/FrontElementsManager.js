@@ -17,6 +17,7 @@ import CarouselWidget from '../../../../editor/src/js/components/widgets/Carouse
 import MapWidget from '../../../../editor/src/js/components/widgets/MapWidget';
 import DiagramWidget from "../../../../editor/src/js/components/widgets/DiagramWidget";
 
+
 export default class FrontElementsManager {
   constructor() {
     //список компонентов
@@ -39,6 +40,7 @@ export default class FrontElementsManager {
     this.components['carousel'] = CarouselWidget;
     this.components['map'] = MapWidget;
     this.components['diagram'] = DiagramWidget;
+
   }
 
   getComponentClass(name) {
