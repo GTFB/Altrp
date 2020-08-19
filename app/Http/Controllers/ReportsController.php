@@ -20,6 +20,7 @@ class ReportsController extends Controller
         $reports = Reports::all();
         $result = $reports->map(function($item) {
             $item->url = "/admin/editor-reports?id=" . $item->id;
+            $item->preview = "/reports/html/" . $item->id;
             $item->author = $item->user->name;
             return $item;
         });
@@ -79,5 +80,17 @@ class ReportsController extends Controller
     public function destroy(Reports $reports)
     {
         //
+    }
+
+    /**
+     * Получение списка отчетов
+     * @return Reports
+     */
+    public function page(Request $request, $id)
+    {
+        // Получаем все отчеты
+        $reports = Reports::where('id', $id)->first();
+
+        return response($reports->html)->header('Content-Type', "text/html");
     }
 }

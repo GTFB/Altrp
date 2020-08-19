@@ -23,6 +23,7 @@ import ListWidget from "../../components/widgets/ListWidget";
 import AccordionWidget from "../../components/widgets/AccordionWidget";
 import CarouselWidget from "../../components/widgets/CarouselWidget";
 import MapWidget from "../../components/widgets/MapWidget";
+import DiagramWidget from "../../components/widgets/DiagramWidget";
 import Carousel from "../elements/Carousel";
 import Accordion from "../elements/Accordion";
 import List from "../elements/List";
@@ -32,6 +33,7 @@ import Divider from "../elements/Divider";
 import Nav from "../elements/Nav";
 import Table from "../elements/Table";
 import Map from "../elements/Map";
+import Diagram from "../elements/Diagram";
 
 export default class ElementsManger {
   constructor() {
@@ -55,6 +57,7 @@ export default class ElementsManger {
     this.elements[Accordion.getName()] = Accordion;
     this.elements[Carousel.getName()] = Carousel;
     this.elements[Map.getName()] = Map;
+    this.elements[Diagram.getName()] = Diagram;
     //список компонентов
     this.components = {};
     this.components[RootElement.getName()] = RootComponent;
@@ -74,6 +77,7 @@ export default class ElementsManger {
     this.components[Accordion.getName()] = AccordionWidget;
     this.components[Carousel.getName()] = CarouselWidget;
     this.components[Map.getName()] = MapWidget;
+    this.components[Diagram.getName()] = DiagramWidget;
   }
 
   getElements() {

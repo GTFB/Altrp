@@ -32,7 +32,7 @@ const DynamicAreaChart = ({ dataUrl, width = 300, height = 300, colorScheme, opt
 
   if (isLoading) return <Spinner />;
 
-  if (data.length === 0) return <EmptyWidget />;
+  if (!Array.isArray(data) || data.length === 0) return <EmptyWidget />;
 
   return <AreaChart height={height} width={width} data={data} colorScheme={colorScheme} />;
 };
