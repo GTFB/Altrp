@@ -33,4 +33,13 @@ class RouteFile
     {
         return base_path('routes/AltrpRoutes.php');
     }
+    
+    public function createFile()
+    {
+        if(!file_exists($this->getFile())) {
+            return file_put_contents($this->getFile(), "<?php /*comment*/");
+        }
+        
+        return false;
+    }
 }

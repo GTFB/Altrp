@@ -328,6 +328,29 @@ class ModelGenerator extends AppGenerator
 
             $relItem = $rel->name . '#' . $rel->type . '#'
                 . trim($this->screenBacklashes($rel->model_class), '\\');
+            
+            $post_args = "";
+            
+            if($rel->type === 'hasOne') {
+                $post_args = "|" . $rel->foreign_key . "|" . $rel->local_key;
+            }
+            else if($rel->type === 'hasMany') {
+                $post_args = "|" . $rel->foreign_key . "|" . $rel->local_key;
+            }
+            else if($rel->type === 'belongsTo') {
+                $post_args = "|" . $rel->local_key . "|" . $rel->foreign_key;
+            }
+            
+            $relItem .= $post_args;
+            /*
+            if (isset($rel->local_key)) {
+                $relItem .= "|{$local}";
+                if (isset($rel->foreign_key)) {
+                    $relItem .= "|{$foreign}";
+                }
+            }*/
+            
+            /*
             if( $rel->type === 'belongsTo' ){
               if (isset($rel->foreign_key)) {
                 $relItem .= "|{$rel->foreign_key}";
@@ -342,7 +365,7 @@ class ModelGenerator extends AppGenerator
                   $relItem .= "|{$rel->foreign_key}";
                 }
               }
-            }
+            }*/
             $relArr[] = $relItem;
         }
         return implode(';', $relArr);
