@@ -223,13 +223,17 @@ class SQLBuilderForm extends Component {
             break;
           case 'where_between':
           case 'where_in':
-            condition = { condition_type: value, or: false, not: false, column: '', values: [] };
+            condition = index === 0 ?
+              { condition_type: value, not: false, column: '', values: [] } :
+              { condition_type: value, or: false, not: false, column: '', values: [] };
             break;
           case 'where_date':
             condition = { condition_type: value, type: 'year', column: '', value: '2020' };
             break;
           case 'where_column':
-            condition = { condition_type: value, or: false, first_column: '', operator: '', second_column: '' };
+            condition = index === 0 ?
+              { condition_type: value, first_column: '', operator: '', second_column: '' } :
+              { condition_type: value, or: false, first_column: '', operator: '', second_column: '' };
             break;
 
           default:
@@ -267,28 +271,10 @@ class SQLBuilderForm extends Component {
               ...state.value.conditions[index],
               [name]: value
             };
-            // if (['not-null', 'null'].includes(value)) {
-            //   condition.condition_type === 'where_column' ?
-            //     delete condition.second_column :
-            //     delete condition.value
-            // } else {
-              condition.condition_type === 'where_column' ?
-                condition.second_column = condition.second_column || '' :
-                condition.value = condition.value || ''
-            // }
+            condition.condition_type === 'where_column' ?
+              condition.second_column = condition.second_column || '' :
+              condition.value = condition.value || ''
             break;
-          // case 'or':
-          //   condition = {
-          //     ...state.value.conditions[index],
-          //     [name]: checked
-          //   };
-          //   break;
-          // case 'not':
-          //   condition = {
-          //     ...state.value.conditions[index],
-          //     or: !checked
-          //   };
-          //   break;
 
           default:
             condition = {
@@ -399,9 +385,7 @@ class SQLBuilderForm extends Component {
   render() {
     const { title, name, relations, columns, aggregates, conditions, order_by, group_by, } = this.state.value;
     const { roles, permissions } = this.state.value.access;
-    const { modelsOptions, selfFieldsOptions,
-      permissionsOptions, relationsOptions, rolesOptions, selfFields } = this.state;
-    // const conditions = this.getConditions();
+    const { selfFieldsOptions, permissionsOptions, relationsOptions, rolesOptions } = this.state;
     const { modelId } = this.props.match.params;
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="row">
@@ -500,6 +484,7 @@ class SQLBuilderForm extends Component {
         {index !== 0 && <hr />}
         <ConditionComponent
           item={condition}
+          isFirst={index === 0}
           columnsOptions={selfFieldsOptions}
           changeHandler={e => this.conditionChangeHandler(e, index)}
         />
