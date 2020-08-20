@@ -4,6 +4,7 @@ import moment from "moment";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import { titleToName } from "../../js/helpers";
 import AggregateComponent from "./AggregateComponent";
+import JoinComponent from "./JoinComponent";
 import ConditionComponent from "./ConditionComponent";
 import OrderByComponent from "./OrderByComponent";
 import AltrpSelect from "../altrp-select/AltrpSelect";
@@ -19,6 +20,7 @@ class SQLBuilderForm extends Component {
         name: "",
         columns: [],
         aggregates: [],
+        joins: [],
         conditions: [],
         relations: [],
         order_by: [],
@@ -43,6 +45,9 @@ class SQLBuilderForm extends Component {
     this.aggregateChangeHandler = this.aggregateChangeHandler.bind(this);
     this.aggregateAddHandler = this.aggregateAddHandler.bind(this);
     this.aggregateDeleteHandler = this.aggregateDeleteHandler.bind(this);
+    this.joinChangeHandler = this.joinChangeHandler.bind(this);
+    this.joinAddHandler = this.joinAddHandler.bind(this);
+    this.joinDeleteHandler = this.joinDeleteHandler.bind(this);
     this.conditionChangeHandler = this.conditionChangeHandler.bind(this);
     this.orderByChangeHandler = this.orderByChangeHandler.bind(this);
     this.orderByAddHandler = this.orderByAddHandler.bind(this);
@@ -195,6 +200,42 @@ class SQLBuilderForm extends Component {
       return {
         ...state,
         value: { ...state.value, aggregates }
+      };
+    });
+  }
+
+  // обработчики событий для массива joins
+  joinChangeHandler({ target: { value, name } }, index) {
+    this.setState(state => {
+      const joins = [...state.value.joins];
+      joins[index] = { ...state.value.joins[index], [name]: value };
+      return {
+        ...state,
+        value: { ...state.value, joins }
+      };
+    });
+  }
+
+  joinAddHandler() {
+    this.setState(state => {
+      const joins = [...state.value.joins];
+      joins.push({
+        type: '', source_table: '', target_table: '', source_column: '', operator: '', target_column: ''
+      });
+      return {
+        ...state,
+        value: { ...state.value, joins }
+      };
+    });
+  }
+
+  joinDeleteHandler(index) {
+    this.setState(state => {
+      const joins = [...state.value.joins];
+      joins.splice(index, 1);
+      return {
+        ...state,
+        value: { ...state.value, joins }
       };
     });
   }
@@ -383,7 +424,7 @@ class SQLBuilderForm extends Component {
   };
 
   render() {
-    const { title, name, relations, columns, aggregates, conditions, order_by, group_by, } = this.state.value;
+    const { title, name, relations, columns, aggregates, joins, conditions, order_by, group_by, } = this.state.value;
     const { roles, permissions } = this.state.value.access;
     const { selfFieldsOptions, permissionsOptions, relationsOptions, rolesOptions } = this.state;
     const { modelId } = this.props.match.params;
@@ -427,7 +468,6 @@ class SQLBuilderForm extends Component {
         </div>
       </div>
 
-
       <h2 className="admin-form__subheader centred">Access</h2>
 
       <div className="form-group__inline-wrapper">
@@ -464,12 +504,29 @@ class SQLBuilderForm extends Component {
         <AggregateComponent item={item}
           columnsOptions={selfFieldsOptions}
           changeHandler={e => this.aggregateChangeHandler(e, index)}
-          deleteHandler={() => this.aggregateDeleteHandler(index)}
         />
       </Fragment>)}
       <div className="centred">
         <button className="btn btn_success" type="button" onClick={this.aggregateAddHandler}>
           + New Aggregate
+        </button>
+      </div>
+
+      <h2 className="admin-form__subheader centred">Joins</h2>
+      {joins.map((item, index) => <Fragment key={index}>
+        {index !== 0 && <hr />}
+        <div className="text-right">
+          <button className="btn btn_failure" type="button" onClick={() => this.joinDeleteHandler(index)}>
+            ✖
+          </button>
+        </div>
+        <JoinComponent item={item}
+          changeHandler={e => this.joinChangeHandler(e, index)}
+        />
+      </Fragment>)}
+      <div className="centred">
+        <button className="btn btn_success" type="button" onClick={this.joinAddHandler}>
+          + New Join
         </button>
       </div>
 
