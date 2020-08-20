@@ -223,7 +223,7 @@ class SQLBuilderForm extends Component {
             break;
           case 'where_between':
           case 'where_in':
-            condition = { condition_type: value, or: false, column: '', values: [] };
+            condition = { condition_type: value, or: false, not: false, column: '', values: [] };
             break;
           case 'where_date':
             condition = { condition_type: value, type: 'year', column: '', value: '2020' };
@@ -277,23 +277,23 @@ class SQLBuilderForm extends Component {
                 condition.value = condition.value || ''
             // }
             break;
-          case 'or':
-            condition = {
-              ...state.value.conditions[index],
-              [name]: checked
-            };
-            break;
-          case 'not':
-            condition = {
-              ...state.value.conditions[index],
-              or: !checked
-            };
-            break;
+          // case 'or':
+          //   condition = {
+          //     ...state.value.conditions[index],
+          //     [name]: checked
+          //   };
+          //   break;
+          // case 'not':
+          //   condition = {
+          //     ...state.value.conditions[index],
+          //     or: !checked
+          //   };
+          //   break;
 
           default:
             condition = {
               ...state.value.conditions[index],
-              [name]: value
+              [name]: ['or', 'not'].includes(name) ? checked : value
             };
             break;
         }

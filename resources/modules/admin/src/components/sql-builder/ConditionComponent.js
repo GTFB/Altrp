@@ -16,8 +16,9 @@ const dateTypesOptions = [
 class ConditionComponent extends Component {
   render() {
     const { columnsOptions, changeHandler } = this.props;
-    const { condition_type, column, operator, value, or, values, type,
+    const { condition_type, column, operator, value, or, not,  values, type,
       first_column, second_column } = this.props.item;
+
     return <div className="form-segment">
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width30">
@@ -65,12 +66,12 @@ class ConditionComponent extends Component {
                 <option value="null">Null</option> */}
                 <option value="=">Equals</option>
                 <option value="!=">Not Equals</option>
+                <option value="like">Like</option>
                 {/* <option value="between">Between</option> */}
                 <option value=">">&gt;</option>
                 <option value=">=">&gt;=</option>
                 <option value="<">&lt;</option>
                 <option value="<=">&lt;=</option>
-                <option value="like">Like</option>
               </select>
             </label>
           </div>}
@@ -78,7 +79,7 @@ class ConditionComponent extends Component {
         {['where_between', 'where_in', 'where_column'].includes(condition_type) && <>
           <div className="form-group form-group_checkbox form-group_width15">
             <label className="label_checkbox">
-              <input type="radio" name="or"
+              <input type="checkbox" name="or"
                 className="form-check-input"
                 checked={or}
                 onChange={changeHandler}
@@ -86,15 +87,15 @@ class ConditionComponent extends Component {
             </label>
           </div>
 
-          <div className="form-group form-group_checkbox form-group_width15">
+          {condition_type !== 'where_column' && <div className="form-group form-group_checkbox form-group_width15">
             <label className="label_checkbox">
-              <input type="radio" name="not"
+              <input type="checkbox" name="not"
                 className="form-check-input"
-                checked={!or}
+                checked={not}
                 onChange={changeHandler}
               /> Not
             </label>
-          </div>
+          </div>}
         </>}
 
         {condition_type === "where_date" && <div className="form-group form-group_width30">
