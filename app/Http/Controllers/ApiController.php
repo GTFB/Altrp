@@ -60,7 +60,7 @@ class ApiController extends Controller
             $pageCount = 0;
             $$resource = $search
                 ? $this->modelClass::whereLike($indexedColumns, $search)->orderByDesc('id')->get()
-                : $this->modelClass::orderByDesc('id')->with(["task"])->/*with(["belong"])->*/get();
+                : $this->modelClass::orderByDesc('id')->get();
         }
         $hasMore = $pageCount > $page;
         return compact('pageCount', $resource ,'hasMore');
