@@ -9,6 +9,10 @@ function Reports() {
   const dispatch = useDispatch();
   const [reports, setReports] = useState([]);
 
+  const openPreview = (item) => {
+    window.open(item.preview, "_blank");
+  };
+
   const columns = [
     {
       name: "id",
@@ -27,6 +31,16 @@ function Reports() {
     {
       name: "updated_at",
       title: "Updated At",
+    },
+    {
+      name: "preview",
+      title: "Preview",
+      is_button: true,
+      button: {
+        class: "",
+        function: openPreview,
+        title: "Preview",
+      },
     },
   ];
 

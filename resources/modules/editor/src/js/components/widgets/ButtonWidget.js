@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Link, Redirect} from 'react-router-dom';
+import {Link, Redirect, withRouter } from 'react-router-dom';
 import {isEditor} from "../../../../../front-app/src/js/helpers";
 
 class ButtonWidget extends Component {
@@ -8,7 +8,7 @@ class ButtonWidget extends Component {
     this.state = {
       settings: props.element.getSettings(),
       pending: false,
-      redirect: false
+      // redirect: false
     };
     props.element.component = this;
     if (window.elementDecorator) {
@@ -29,10 +29,18 @@ class ButtonWidget extends Component {
           try {
             let res = await form.submit(this.getModelId());
             if (res.success) {
-              let redirect = this.state.settings.redirect_after
-                ? this.state.settings.redirect_after
-                : false;
-              this.setState(state => ({ ...state, pending: false, redirect }));
+              const { redirect_to_prev_page, redirect_after } = this.state.settings;
+              if (redirect_to_prev_page) {
+                this.props.history.goBack();
+              }
+
+              if (redirect_after) {
+                this.props.history.push(redirect_after);
+              }
+              // let redirect = this.state.settings.redirect_after
+              //   ? this.state.settings.redirect_after
+              //   : false;
+              // this.setState(state => ({ ...state, pending: false, redirect }));
             } else if(res.message){
               alert(res.message);
             }
@@ -47,9 +55,9 @@ class ButtonWidget extends Component {
   }
 
   render() {
-    if (this.state.redirect) {
-      return <Redirect to={this.state.redirect} push={true} />;
-    }
+    // if (this.state.redirect) {
+    //   return <Redirect to={this.state.redirect} push={true} />;
+    // }
     let classes =
       "altrp-btn " + (this.state.settings.position_css_classes || "");
     if (this.state.pending) {
@@ -88,4 +96,4 @@ class ButtonWidget extends Component {
   }
 }
 
-export default ButtonWidget;
+export default withRouter(ButtonWidget);

@@ -14,6 +14,7 @@ import {
   CONTROLLER_SLIDER,
   CONTROLLER_COLOR,
   CONTROLLER_SHADOW,
+  CONTROLLER_SWITCHER,
   TAB_CONTENT,
   TAB_STYLE,
   TAB_ADVANCED
@@ -142,6 +143,11 @@ class Button extends BaseElement{
 
     this.addControl('redirect_after', {
       label: 'Redirect After',
+    });
+
+    this.addControl('redirect_to_prev_page', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Redirect To Prev Page',
     });
 
     this.endControlSection();
