@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin  ;
 
 use App\Http\Controllers\Controller;
+use App\Altrp\Model;
 use App\SQLEditor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -36,13 +37,20 @@ class SQLEditorController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+   * Display the specified resource.
+   *
+   * @param  \App\SQLEditor $sQLEditor
+   * @param string $id
+   * @return \Illuminate\Http\Response
+   */
+    public function listByName(Request $request, $name)
     {
-        //
+      $res = DB::table('s_q_l_editors')
+        ->join('altrp_models', 'altrp_models.id', 's_q_l_editors.model_id')
+        ->where('altrp_models.name', '=', $name)
+        ->select('s_q_l_editors.id', 's_q_l_editors.name', 's_q_l_editors.title')
+        ->get();
+      return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE );
     }
 
     /**

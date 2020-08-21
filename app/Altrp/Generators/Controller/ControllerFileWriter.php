@@ -158,7 +158,7 @@ class ControllerFileWriter
     public function updateSqlMethod($oldName, $name, $sql)
     {
         $controllerContent = file($this->controller->getFile(), 2);
-        $this->removeMethod($controllerContent, $oldName);
+        $this->removeMethod( $oldName);
         $this->writeSqlMethod($name, $sql);
         return true;
     }
@@ -166,7 +166,7 @@ class ControllerFileWriter
     public function deleteSqlMethod($name)
     {
         $controllerContent = file($this->controller->getFile(), 2);
-        return $this->removeMethod($controllerContent, $name);
+        return $this->removeMethod($name);
     }
 
     /**

@@ -53,6 +53,30 @@ class Section extends BaseElement{
       ]
     });
 
+    this.addControl(
+      'layout_flex_wrap_content', {
+        type: CONTROLLER_SELECT,
+        label: 'Column wrap',
+        options:[
+          {
+            'value' : 'nowrap',
+            'label' : 'nowrap'
+          },
+          {
+            'value' : 'wrap',
+            'label' : 'wrap'
+          },
+          {
+            'value' : 'wrap-reverse',
+            'label' : 'wrap reverse'
+          }
+        ],
+        rules: {
+          "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "flex-wrap: {{VALUE}} !important",
+        },
+      }
+    );
+
     // this.addControl("layout_content_full_width", {
     //   type: CONTROLLER_SLIDER,
     //   label: "full fill width",

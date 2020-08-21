@@ -59,6 +59,7 @@ class InputWidget extends Component {
 
   render(){
     let label = null;
+    let required = null;
     /**
      * Если значение загрузилось  динамическое,
      * то используем this.getContent для получение этого динамического значения
@@ -80,6 +81,7 @@ class InputWidget extends Component {
         styleLabel = {
             marginTop: this.state.settings.label_style_spacing.size + this.state.settings.label_style_spacing.unit || 2 + "px"
         };
+        classLabel = "";
         break;
       case "left":
         styleLabel = {
@@ -97,8 +99,7 @@ class InputWidget extends Component {
       label = null
     }
 
-    let required = null;
-    if(this.state.settings.content_required) {
+    if(this.state.settings.content_required != null) {
       required = <div className="altrp-field-label-container"><label className="altrp-field-required">*</label></div>
     } else {
       required = null
@@ -146,16 +147,14 @@ class InputWidget extends Component {
     }
     return <div className={"altrp-field-container " + classLabel}>
         {this.state.settings.content_label_position_type == "top" ? label : ""}
+        {this.state.settings.content_label_position_type == "top" ? required : ""}
         {this.state.settings.content_label_position_type == "left" ? label : ""}
+        {this.state.settings.content_label_position_type == "left" ? required : ""}
             {/* .altrp-field-label-container */}
-        {
-          required
-        }
       {input}
       {/* <InputMask mask="99/99/9999" onChange={this.onChange} value={this.state.value} /> */}
-      {
-        this.state.settings.content_label_position_type == "bottom" ? label : ""
-      }
+      {this.state.settings.content_label_position_type == "bottom" ? label : ""}
+      {this.state.settings.content_label_position_type == "bottom" ? required : ""}
     </div>
   }
 }

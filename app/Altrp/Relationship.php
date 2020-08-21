@@ -142,4 +142,82 @@ class Relationship extends EloquentModel
             ->toBase()
             ->count();
     }
+
+
+    public function checkForeignExist() {
+
+
+        $conditions = [
+            ["target_model_id","=",$this->target_model_id],
+            ["model_id","=",$this->model_id],
+            ["foreign_key","=",$this->foreign_key],
+            ["local_key","=",$this->local_key]
+        ];
+
+        if(isset($this->id)) {
+            $conditions[] = ["id","!=",$this->id];
+        }
+
+        $current_result = Relationship::where($conditions)->get();
+
+        $current_result_fields = Relationship::where([
+            ["target_model_id","=",$this->target_model_id],
+            ["model_id","=",$this->model_id],
+            ["foreign_key","=",$this->local_key],
+            ["local_key","=",$this->foreign_key]
+        ])->get();
+
+        $inverse_result = Relationship::where([
+            ["target_model_id","=",$this->model_id],
+            ["model_id","=",$this->target_model_id],
+            ["foreign_key","=",$this->foreign_key],
+            ["local_key","=",$this->local_key]
+        ])->get();
+
+        $inverse_result_fields = Relationship::where([
+            ["target_model_id","=",$this->model_id],
+            ["model_id","=",$this->target_model_id],
+            ["foreign_key","=",$this->local_key],
+            ["local_key","=",$this->foreign_key]
+        ])->get();
+
+        if(count($current_result) > 0 || count($inverse_result) > 0) {
+            return false;
+        }
+
+        if(count($current_result_fields) > 0 || count($inverse_result_fields) > 0) {
+            return false;
+        }
+
+        return true;
+    }
+    
+    /**
+     * Получаем обратную связь
+     */
+    public function getInverseRelationship() {
+        
+        $conditions = [
+            ["target_model_id","=",$this->model_id],
+            ["model_id","=",$this->target_model_id],
+            ["foreign_key","=",$this->local_key],
+            ["local_key","=",$this->foreign_key],
+        ];
+        
+        if($this->type === "hasOne") {
+            $conditions[] = ["type","=","belongsTo"];
+        }
+        
+        if($this->type === "hasMany") {
+            $conditions[] = ["type","=","belongsTo"];
+        }
+        
+        $result = Relationship::where($conditions);
+        
+        if($this->type === "belongsTo") {
+            $result->whereIn('type', ["hasOne", "hasMany"]);
+        }
+        
+        return $result->first();
+    }
 }

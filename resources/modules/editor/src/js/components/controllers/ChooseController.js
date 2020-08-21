@@ -1,9 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import Left from '../../../svgs/left.svg';
-import Center from '../../../svgs/center.svg';
-import Right from '../../../svgs/right.svg';
-import InWidth from '../../../svgs/in_width.svg';
 import controllerDecorate from "../../decorators/controller";
 import { iconsManager } from "../../helpers";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";

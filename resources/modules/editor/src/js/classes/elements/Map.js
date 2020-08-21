@@ -2,19 +2,10 @@ import BaseElement from "./BaseElement";
 import MapIcon from "../../../svgs/map.svg";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
-  CONTROLLER_TEXTAREA,
   CONTROLLER_TEXT,
-  CONTROLLER_SELECT,
   CONTROLLER_SWITCHER,
-  CONTROLLER_DIMENSIONS,
-  CONTROLLER_TYPOGRAPHIC,
   CONTROLLER_NUMBER,
-  CONTROLLER_SLIDER,
-  CONTROLLER_COLOR,
-  CONTROLLER_SELECT2,
   TAB_CONTENT,
-  TAB_STYLE,
-  CONTROLLER_CHOOSE,
 } from "../modules/ControllersManager";
 
 class Map extends BaseElement {
@@ -40,23 +31,33 @@ class Map extends BaseElement {
       label: "Content",
     });
 
-    this.addControl("content_editable", {
+    this.addControl("editable", {
       type: CONTROLLER_SWITCHER,
       label: "Editable",
+      default: false,
     });
 
-    this.addControl("content_canvas", {
+    this.addControl("canvas", {
       type: CONTROLLER_SWITCHER,
       label: "Canvas",
+      default: true,
     });
 
-    this.addControl("content_center", {
+
+    this.addControl("lat", {
       type: CONTROLLER_TEXT,
-      label: "Center coordinates",
+      label: "Latitude",
+      default: 50.7496449,
     });
 
-    this.addControl("content_zoom", {
+    this.addControl("lng", {
       type: CONTROLLER_TEXT,
+      label: "Longitude",
+      default: 86.1250068,
+    });
+
+    this.addControl("zoom", {
+      type: CONTROLLER_NUMBER,
       label: "Zoom",
       default: 6,
     });

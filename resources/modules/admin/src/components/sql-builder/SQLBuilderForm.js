@@ -4,6 +4,7 @@ import moment from "moment";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import { titleToName } from "../../js/helpers";
 import AggregateComponent from "./AggregateComponent";
+import JoinComponent from "./JoinComponent";
 import ConditionComponent from "./ConditionComponent";
 import OrderByComponent from "./OrderByComponent";
 import AltrpSelect from "../altrp-select/AltrpSelect";
@@ -19,6 +20,7 @@ class SQLBuilderForm extends Component {
         name: "",
         columns: [],
         aggregates: [],
+        joins: [],
         conditions: [],
         relations: [],
         order_by: [],
@@ -30,12 +32,14 @@ class SQLBuilderForm extends Component {
       relationsOptions: [],
       rolesOptions: [],
       permissionsOptions: [],
+      tablesOptions: [],
       selfFields: [],
       selfFieldsOptions: []
     };
     this.counter = 0;
     this.rolesOptions = new Resource({ route: '/admin/ajax/role_options' });
     this.permissionsOptions = new Resource({ route: '/admin/ajax/permissions_options' });
+    this.tablesOptions = new Resource({ route: '/admin/ajax/tables_options' });
     this.selfFieldsResource = new Resource({ route: `/admin/ajax/models/${modelId}/fields` });
     this.relationsResource = new Resource({ route: `/admin/ajax/models/${modelId}/relations` });
     this.submitHandler = this.submitHandler.bind(this);
@@ -43,6 +47,9 @@ class SQLBuilderForm extends Component {
     this.aggregateChangeHandler = this.aggregateChangeHandler.bind(this);
     this.aggregateAddHandler = this.aggregateAddHandler.bind(this);
     this.aggregateDeleteHandler = this.aggregateDeleteHandler.bind(this);
+    this.joinChangeHandler = this.joinChangeHandler.bind(this);
+    this.joinAddHandler = this.joinAddHandler.bind(this);
+    this.joinDeleteHandler = this.joinDeleteHandler.bind(this);
     this.conditionChangeHandler = this.conditionChangeHandler.bind(this);
     this.orderByChangeHandler = this.orderByChangeHandler.bind(this);
     this.orderByAddHandler = this.orderByAddHandler.bind(this);
@@ -59,6 +66,8 @@ class SQLBuilderForm extends Component {
     this.setState(state => ({ ...state, rolesOptions }));
     const permissionsOptions = await this.permissionsOptions.getAll();
     this.setState(state => ({ ...state, permissionsOptions }));
+    const tablesOptions = await this.tablesOptions.getAll();
+    this.setState(state => ({ ...state, tablesOptions }));
     const selfFields = await this.selfFieldsResource.getAll();
     let selfFieldsOptions = selfFields.map(field => {
       return {
@@ -199,6 +208,42 @@ class SQLBuilderForm extends Component {
     });
   }
 
+  // обработчики событий для массива joins
+  joinChangeHandler({ target: { value, name } }, index) {
+    this.setState(state => {
+      const joins = [...state.value.joins];
+      joins[index] = { ...state.value.joins[index], [name]: value };
+      return {
+        ...state,
+        value: { ...state.value, joins }
+      };
+    });
+  }
+
+  joinAddHandler() {
+    this.setState(state => {
+      const joins = [...state.value.joins];
+      joins.push({
+        type: '', source_table: '', target_table: '', source_column: '', operator: '', target_column: ''
+      });
+      return {
+        ...state,
+        value: { ...state.value, joins }
+      };
+    });
+  }
+
+  joinDeleteHandler(index) {
+    this.setState(state => {
+      const joins = [...state.value.joins];
+      joins.splice(index, 1);
+      return {
+        ...state,
+        value: { ...state.value, joins }
+      };
+    });
+  }
+
   // обработчики событий для массива conditions
   conditionAddHandler = () => {
     this.setState(state => {
@@ -223,13 +268,17 @@ class SQLBuilderForm extends Component {
             break;
           case 'where_between':
           case 'where_in':
-            condition = { condition_type: value, or: false, column: '', values: [] };
+            condition = index === 0 ?
+              { condition_type: value, not: false, column: '', values: [] } :
+              { condition_type: value, or: false, not: false, column: '', values: [] };
             break;
           case 'where_date':
             condition = { condition_type: value, type: 'year', column: '', value: '2020' };
             break;
           case 'where_column':
-            condition = { condition_type: value, or: false, first_column: '', operator: '', second_column: '' };
+            condition = index === 0 ?
+              { condition_type: value, first_column: '', operator: '', second_column: '' } :
+              { condition_type: value, or: false, first_column: '', operator: '', second_column: '' };
             break;
 
           default:
@@ -267,33 +316,15 @@ class SQLBuilderForm extends Component {
               ...state.value.conditions[index],
               [name]: value
             };
-            // if (['not-null', 'null'].includes(value)) {
-            //   condition.condition_type === 'where_column' ?
-            //     delete condition.second_column :
-            //     delete condition.value
-            // } else {
-              condition.condition_type === 'where_column' ?
-                condition.second_column = condition.second_column || '' :
-                condition.value = condition.value || ''
-            // }
-            break;
-          case 'or':
-            condition = {
-              ...state.value.conditions[index],
-              [name]: checked
-            };
-            break;
-          case 'not':
-            condition = {
-              ...state.value.conditions[index],
-              or: !checked
-            };
+            condition.condition_type === 'where_column' ?
+              condition.second_column = condition.second_column || '' :
+              condition.value = condition.value || ''
             break;
 
           default:
             condition = {
               ...state.value.conditions[index],
-              [name]: value
+              [name]: ['or', 'not'].includes(name) ? checked : value
             };
             break;
         }
@@ -397,11 +428,9 @@ class SQLBuilderForm extends Component {
   };
 
   render() {
-    const { title, name, relations, columns, aggregates, conditions, order_by, group_by, } = this.state.value;
+    const { title, name, relations, columns, aggregates, joins, conditions, order_by, group_by } = this.state.value;
     const { roles, permissions } = this.state.value.access;
-    const { modelsOptions, selfFieldsOptions,
-      permissionsOptions, relationsOptions, rolesOptions, selfFields } = this.state;
-    // const conditions = this.getConditions();
+    const { selfFieldsOptions, permissionsOptions, relationsOptions, rolesOptions, tablesOptions } = this.state;
     const { modelId } = this.props.match.params;
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="row">
@@ -443,7 +472,6 @@ class SQLBuilderForm extends Component {
         </div>
       </div>
 
-
       <h2 className="admin-form__subheader centred">Access</h2>
 
       <div className="form-group__inline-wrapper">
@@ -480,12 +508,30 @@ class SQLBuilderForm extends Component {
         <AggregateComponent item={item}
           columnsOptions={selfFieldsOptions}
           changeHandler={e => this.aggregateChangeHandler(e, index)}
-          deleteHandler={() => this.aggregateDeleteHandler(index)}
         />
       </Fragment>)}
       <div className="centred">
         <button className="btn btn_success" type="button" onClick={this.aggregateAddHandler}>
           + New Aggregate
+        </button>
+      </div>
+
+      <h2 className="admin-form__subheader centred">Joins</h2>
+      {joins.map((item, index) => <Fragment key={index}>
+        {index !== 0 && <hr />}
+        <div className="text-right">
+          <button className="btn btn_failure" type="button" onClick={() => this.joinDeleteHandler(index)}>
+            ✖
+          </button>
+        </div>
+        <JoinComponent item={item}
+          tablesOptions={tablesOptions}
+          changeHandler={e => this.joinChangeHandler(e, index)}
+        />
+      </Fragment>)}
+      <div className="centred">
+        <button className="btn btn_success" type="button" onClick={this.joinAddHandler}>
+          + New Join
         </button>
       </div>
 
@@ -500,6 +546,7 @@ class SQLBuilderForm extends Component {
         {index !== 0 && <hr />}
         <ConditionComponent
           item={condition}
+          isFirst={index === 0}
           columnsOptions={selfFieldsOptions}
           changeHandler={e => this.conditionChangeHandler(e, index)}
         />

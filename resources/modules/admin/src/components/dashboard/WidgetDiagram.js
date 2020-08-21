@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { BAR, PIE, LINE, AREA, TABLE, DONUT } from "./widgetTypes";
 

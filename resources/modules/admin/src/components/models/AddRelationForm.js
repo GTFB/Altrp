@@ -169,57 +169,43 @@ class AddRelationForm extends Component {
    */
   renderLocalKey(){
     const { id } = this.props.match.params;
-    switch (this.state.value.type){
-      case 'hasOne':{
-        return<div className="form-group form-group_width47">
-          <label htmlFor="relation-local_key">Local Key</label>
-          <input type="text" id="relation-local_key"
-                 value={this.state.value.foreign_key || ''}
-                 className="form-control"
-                 onChange={e => { this.changeValue(e.target.value, 'foreign_key') }}
-          />
-        </div>
-      }
-      case 'hasMany':{
-        return <div className="form-group form-group_width47">
-          <label htmlFor="relation-local_key">Local Key</label>
-          <select  id="relation-local_key"
-                 value={this.state.value.foreign_key || ''}
-                 className="form-control"
-                 onChange={e => { this.changeValue(e.target.value, 'foreign_key') }}
-          >
-            <option disabled value="" />
-            {this.state.selfFieldsOptions.map(({ value, label }) =>
-                <option key={value} value={value}>
-                  {label}
-                </option>)}
-          </select>
-        </div>
-      }
-      case 'belongsTo':{
-        return <div className="form-group form-group_width47">
-          <label htmlFor="relation-local_key">Local Key</label>
-          <select  id="relation-local_key"
-                 value={this.state.value.foreign_key || ''}
-                 className="form-control"
-                 onChange={e => { this.changeValue(e.target.value, 'foreign_key') }}
-          >
-            <option disabled value="" />
-            {this.state.selfFieldsOptions.map(({ value, label }) =>
-                <option key={value} value={value}>
-                  {label}
-                </option>)}
-          </select>
-        </div>
-      }
-    }
-    return<div className="form-group form-group_width47">
+    
+    return <div className="form-group form-group_width47">
       <label htmlFor="relation-local_key">Local Key</label>
-      <input type="text" id="relation-local_key" readOnly={id}
-             value={this.state.value.foreign_key || ''}
+      <select  id="relation-local_key"
+             value={this.state.value.local_key || ''}
              className="form-control"
-             onChange={e => { this.changeValue(e.target.value, 'foreign_key') }}
-      />
+             onChange={e => { this.changeValue(e.target.value, 'local_key') }}
+      >
+        <option disabled value="" />
+        {this.state.selfFieldsOptions.map(({ value, label }) =>
+            <option key={value} value={value}>
+              {label}
+            </option>)}
+      </select>
+    </div> 
+    
+  }
+
+/**
+   * вывод поля Foreign Key
+   */
+  renderForeignKey(){
+    const { id } = this.props.match.params;
+    
+    return<div className="form-group form-group_width47">
+      <label htmlFor="relation-foreign_key">Foreign Key</label>
+      <select id="relation-foreign_key" required
+        value={this.state.value.foreign_key || ''}
+        onChange={e => { this.changeValue(e.target.value, 'foreign_key') }}
+        className="form-control"
+      >
+        <option disabled value="" />
+        {this.state.foreignFieldsOptions.map(({ value, label }) =>
+          <option key={value} value={value}>
+            {label}
+          </option>)}
+      </select>
     </div>
   }
 
@@ -285,7 +271,7 @@ class AddRelationForm extends Component {
       </div>
       <div className="row">
         <div className="form-group col-4">
-          {this.state.hideAddBelongTo ? '' : <><input type="checkbox" id="relation-add_belong_to"
+          {this.state.hideAddBelongTo || this.state.value.type === 'belongsTo' ? '' : <><input type="checkbox" id="relation-add_belong_to"
             checked={this.state.value.add_belong_to} readOnly={id}
             onChange={e => { this.changeValue(e.target.checked, 'add_belong_to') }}
           />
@@ -312,20 +298,7 @@ class AddRelationForm extends Component {
       </div>
       <div className="form-group__inline-wrapper">
         {this.renderLocalKey()}
-        <div className="form-group form-group_width47">
-          <label htmlFor="relation-foreign_key">Foreign Key</label>
-          <select id="relation-foreign_key" required
-            value={this.state.value.local_key || ''}
-            onChange={e => { this.changeValue(e.target.value, 'local_key') }}
-            className="form-control"
-          >
-            <option disabled value="" />
-            {this.state.foreignFieldsOptions.map(({ value, label }) =>
-              <option key={value} value={value}>
-                {label}
-              </option>)}
-          </select>
-        </div>
+        {this.renderForeignKey()}
       </div>
 
       <div className="form-group__inline-wrapper">

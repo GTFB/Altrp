@@ -13,6 +13,7 @@ use App\Altrp\Generators\NewMigrationGenerator;
 use App\Exceptions\AltrpMigrationCreateFileExceptions;
 use App\Exceptions\AltrpMigrationRunExceptions;
 use App\Exceptions\CommandFailedException;
+use App\Exceptions\AltrpRelationshipNotFoundInverseRelationshipExceptions;
 
 class AltrpRelationshipObserver
 {
@@ -33,16 +34,34 @@ class AltrpRelationshipObserver
         ) {
             return false;
         }
+
+        //Cвязь belongsTo создается на существующую связь hasOne или hasMany
+        //Миграция не нужна, она уже выполнялась при добавлении связи hasOne или hasMany
+        if($relationship->type === "belongsTo") {
+            //Перед добавлением связи belongsTo проверяем есть ли уже обратная связь
+            if(!$relationship->getInverseRelationship()) {
+                throw new AltrpRelationshipNotFoundInverseRelationshipExceptions("Not Found Inverse Relationship");
+            }
+            return;
+        }
+        
+        //Проверяем есть ли уже такая связь или обратная связь
+        //Если есть, то внешний ключ уже был создан
+        if(!$relationship->checkForeignExist()) {
+            return;
+        }
+        
         $generator = new KeyMigrationGenerator($relationship);
         $file = $generator->createKeyGenerate();
         $name = $generator->getMigrationName();
-
+        
+        //Возвращаем ошибку если не удалось создать файл миграции
         if(!$file) {
             throw new AltrpMigrationCreateFileExceptions("Failed to create migration file");
         }
-
+        
+        //Создаем и выполняем миграцию (выполнение в MigrationObserver)
         $migration = new Migration();
-
         $migration->name = $name;
         $migration->file_path = $file;
         $migration->user_id = auth()->user()->id;
@@ -50,30 +69,46 @@ class AltrpRelationshipObserver
         $migration->status = "1";
         $migration->data = "";
         $migration->save();
-
+        
+        //Указываем у связи идентификатор миграции
         $relationship->altrp_migration_id = $migration->id;
+        
+        
+        
+        
+        /*if($relationship->checkForeignExist()) {
+            
 
-        if ($relationship->type === 'hasOne') {
-//            $localColumn = Column::where([['table_id',Model::find($relationship->target_model_id)->first()->id]])->first();
-            $column = new Column([
-                'name' => $relationship->foreign_key,
-                'title' => $relationship->foreign_key,
-                'type' => 'bigInteger',
-                'null' => false,
-                'table_id' => $model->altrp_table->id,
-                'altrp_migration_id' => $migration->id,
-                'user_id' => auth()->user()->id,
-                'is_label' => false,
-                'is_title' => false,
-                'indexed' => false,
-                'editable' => $relationship->editable,
-                'hidden' => false,
-                'model_id' => $relationship->model_id
-            ]);
-            Column::withoutEvents(function () use ($column){
-                $column->save();
-            });
-        }
+            
+
+            
+
+            
+
+            if ($relationship->type === 'hasOne') {
+    //            $localColumn = Column::where([['table_id',Model::find($relationship->target_model_id)->first()->id]])->first();
+                $column = new Column([
+                    'name' => $relationship->foreign_key,
+                    'title' => $relationship->foreign_key,
+                    'type' => 'bigInteger',
+                    'null' => false,
+                    'table_id' => $model->altrp_table->id,
+                    'altrp_migration_id' => $migration->id,
+                    'user_id' => auth()->user()->id,
+                    'is_label' => false,
+                    'is_title' => false,
+                    'indexed' => false,
+                    'editable' => $relationship->editable,
+                    'hidden' => false,
+                    'model_id' => $relationship->model_id
+                ]);
+                Column::withoutEvents(function () use ($column){
+                    $column->save();
+                });
+            }
+        }*/
+
+        
 
     }
 
@@ -91,21 +126,38 @@ class AltrpRelationshipObserver
         if (! $generator->updateModelFile()) {
             throw new CommandFailedException('Failed to update model file', 500);
         }
-
-        if ($relationship->add_belong_to && $relationship->target_model_id) {
+        
+        //После создания связи belongsTo нужно поставить галочку в обратной связи hasOne или hasMany
+        if($relationship->type === "belongsTo") {
+            $inverse_relationship = $relationship->getInverseRelationship();
+            $inverse_relationship->add_belong_to = true;
+            
+            Relationship::withoutEvents(function () use ($inverse_relationship) {
+                $inverse_relationship->save();
+            });
+            
+            return;
+        }
+        
+        //Добавление обратной связи если стоит галочка Add Reverse Relation
+        if ($relationship->add_belong_to && $relationship->target_model_id ) {
+            
             $targetModel = Model::find($relationship->target_model_id);
             $model_class = '\App\AltrpModels\\' . $model->name;
+            
+            $relation_name = strtolower($model->name);
+            
             $relation = new Relationship([
-                "title" => "Inverse " . $relationship->title,
+                "title" => $relation_name,
                 "description" => "",
                 "type" => $this->getInverseRelationType($relationship->type),
-                "model_id" => $targetModel->id,
+                "model_id" => $relationship->target_model_id,
                 "add_belong_to" => false,
                 "foreign_key" => $relationship->foreign_key,
                 "local_key" => $relationship->local_key,
                 "onDelete" => "restrict",
                 "onUpdate" => "restrict",
-                "name" => $relationship->name,
+                "name" => $relation_name,
                 "target_model_id" => $model->id,
                 'model_class' => $model_class
             ]);
@@ -128,21 +180,32 @@ class AltrpRelationshipObserver
     public function updating(Relationship $relationship)
     {
         $model = Model::find($relationship->model_id);
+        
         if (($model->altrp_relationships->contains('name', $relationship->name)
             && $relationship->getOriginal('name') != $relationship->name)
             || ($model->altrp_relationships->contains('foreign_key', $relationship->foreign_key)
             && $relationship->getOriginal('foreign_key') != $relationship->foreign_key)) {
             return false;
         }
+
+        //Cвязь belongsTo создается на существующую связь hasOne или hasMany
+        //Миграция не нужна, она уже выполнялась при добавлении связи hasOne или hasMany
+        /*if($relationship->type === "belongsTo") {
+            return;
+        }
+        
+        
         $old_key = Relationship::find($relationship->id);
         $generator = new KeyMigrationGenerator($relationship);
         $file = $generator->updateKeyGenerate($old_key);
         $name = $generator->getMigrationName();
-
+        
+        //Возвращаем ошибку если не удалось создать файл миграции
         if(!$file) {
             throw new AltrpMigrationCreateFileExceptions("Failed to create migration file");
         }
 
+        //Создаем и выполняем миграцию (выполнение в MigrationObserver)
         $migration = new Migration();
         $migration->name = $name;
         $migration->file_path = $file;
@@ -150,28 +213,36 @@ class AltrpRelationshipObserver
         $migration->table_id = $model->altrp_table->id;
         $migration->status = "1";
         $migration->data = "";
-        $migration->save();
+        $migration->save();*/
+        
+        
+        /*
+        if($relationship->checkForeignExist()) {
+            
 
-        if ($relationship->type === 'hasOne') {
-            $column = Column::where([['model_id',$relationship->model_id],['name',$relationship->getOriginal('foreign_key')]]);
-            Column::withoutEvents(function () use ($column, $relationship, $model, $migration){
-                $column->update([
-                    'name' => $relationship->foreign_key,
-                    'title' => $relationship->foreign_key,
-                    'type' => 'bigInteger',
-                    'null' => false,
-                    'table_id' => $model->altrp_table->id,
-                    'altrp_migration_id' => $migration->id,
-                    'user_id' => auth()->user()->id,
-                    'is_label' => false,
-                    'is_title' => false,
-                    'indexed' => false,
-                    'editable' => $relationship->editable,
-                    'hidden' => false,
-                    'model_id' => $relationship->model_id
-                ]);
-            });
-        }
+            if ($relationship->type === 'hasOne') {
+                $column = Column::where([['model_id',$relationship->model_id],['name',$relationship->getOriginal('foreign_key')]]);
+                Column::withoutEvents(function () use ($column, $relationship, $model, $migration){
+                    $column->update([
+                        'name' => $relationship->foreign_key,
+                        'title' => $relationship->foreign_key,
+                        'type' => 'bigInteger',
+                        'null' => false,
+                        'table_id' => $model->altrp_table->id,
+                        'altrp_migration_id' => $migration->id,
+                        'user_id' => auth()->user()->id,
+                        'is_label' => false,
+                        'is_title' => false,
+                        'indexed' => false,
+                        'editable' => $relationship->editable,
+                        'hidden' => false,
+                        'model_id' => $relationship->model_id
+                    ]);
+                });
+            }
+        }*/
+
+        
 
     }
 
@@ -256,6 +327,13 @@ class AltrpRelationshipObserver
      */
     public function deleting(Relationship $relationship)
     {
+
+        //Cвязь belongsTo создается на существующую связь hasOne или hasMany
+        //Миграция не нужна, она уже выполнялась при добавлении связи hasOne или hasMany
+        if($relationship->type === "belongsTo") {
+            return;
+        }
+        
         $model = Model::find($relationship->model_id);
         $generator = new KeyMigrationGenerator($relationship);
         $file = $generator->deleteKeyGenerate();
@@ -273,8 +351,7 @@ class AltrpRelationshipObserver
         $migration->status = "1";
         $migration->data = "";
         $migration->save();
-
-
+        
     }
 
     /**
@@ -288,6 +365,26 @@ class AltrpRelationshipObserver
         if (! $generator->updateModelFile()) {
             throw new CommandFailedException('Failed to update model file', 500);
         }
+        
+        //После удаления связи belongsTo нужно убрать галочку в обратной связи hasOne или hasMany
+        if($relationship->type === "belongsTo") {
+            $inverse_relationship = $relationship->getInverseRelationship();
+            $inverse_relationship->add_belong_to = false;
+            
+            Relationship::withoutEvents(function () use ($inverse_relationship) {
+                $inverse_relationship->save();
+            });
+        }
+        else {
+            $inverse_relationship = $relationship->getInverseRelationship();
+            
+            if($inverse_relationship) {
+                Relationship::withoutEvents(function () use ($inverse_relationship) {
+                    $inverse_relationship->delete();
+                });
+            }
+        }
+        
         $targetModel = Model::find($relationship->target_model_id);
         $relation = Relationship::where([
             ['model_id', $relationship->target_model_id],

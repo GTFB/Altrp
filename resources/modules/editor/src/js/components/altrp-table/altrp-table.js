@@ -4,11 +4,13 @@ import {useQuery, usePaginatedQuery, queryCache} from  "react-query";
 import '../../../sass/altrp-pagination.scss';
 import {Link} from "react-router-dom";
 import {isEditor} from "../../../../../front-app/src/js/helpers";
+import {iconsManager} from "../../../../../admin/src/js/helpers";
 
 /**
  *
  * @param settings
  * @param {Query} query
+ * @param {Query} data
  * @return {*}
  * @constructor
  */
@@ -18,18 +20,20 @@ const AltrpTable = ({settings, query, data}) => {
   }
   let _data =[], _status, _error, _latestData;
   const [page, setPage] = useState(1);
-  const [sortSetting, setSortSettings] = useState(null);
-  const fetchModels = useCallback(async (key, page = 1) => {
-    return query.getQueried(
-      sortSetting ?
-      { ...sortSetting, page } :
-      { page }
-    )
+  const [sortSetting, setSortSettings] = useState({});
+  const [filterSetting, setFilterSettings] = useState({});
+  const filterSettingJSON = JSON.stringify(filterSetting);
+  const fetchModels = useCallback(async (key, page = 1, sortSetting, filterSetting) => {
+    let queryData = {page};
+    const filterSettingJSON = JSON.stringify(filterSetting);
+    if(sortSetting){
+      queryData = _.assign(sortSetting, queryData);
+    }
+    if(filterSettingJSON.length > 2){
+      queryData.filters = filterSettingJSON;
+    }
+    return query.getQueried(queryData)
   });
-  // useEffect(() => {
-  //   fetchModels()
-  // }, [sortSetting]);
-
   if(query.pageSize){
     /**
      * Если есть пагинация
@@ -39,7 +43,7 @@ const AltrpTable = ({settings, query, data}) => {
       resolvedData,
       latestData,
       error,
-    } = usePaginatedQuery([query.modelName, page], fetchModels, {});
+    } = usePaginatedQuery([query.modelName, page, sortSetting, filterSetting ], fetchModels, {});
     _data = resolvedData ? resolvedData[query.modelName] : _data;
     _status = status;
     _error = error;
@@ -48,13 +52,13 @@ const AltrpTable = ({settings, query, data}) => {
       if (latestData?.hasMore) {
         queryCache.prefetchQuery([query.modelName, page + 1], fetchModels);
       }
-    }, [latestData, fetchModels, page]);
+    }, [latestData, fetchModels, page, sortSetting, filterSetting]);
   }else {
     /**
      * Если нет пагинации
      */
     const {status, data, error,} = useQuery(query.modelName, () => {
-      return query.getResource().getQueried()
+      return query.getResource().getQueried({...sortSetting,filters: filterSettingJSON})
     }, [query.modelName]);
     _data = data;
     _status = status;
@@ -80,11 +84,29 @@ const AltrpTable = ({settings, query, data}) => {
     ),
     data: React.useMemo(() => (_data || []), [_data]),
   }, );
-
-  const sortingHandler = order_by => setSortSettings({ 
+  /**
+   * Обработка клика для сортировки
+   */
+  const sortingHandler = order_by => {
+    setSortSettings({
     order_by, 
-    order: sortSetting && sortSetting.order === "DESC" ? "ASC" : "DESC"
+    order: sortSetting &&
+      (sortSetting.order_by === order_by) ? (sortSetting.order === "DESC" ? "ASC" :  "DESC") : "ASC"
   });
+  };
+  /**
+   * Изменение поля для фильтрации
+   */
+  const filterHandler = (filteredColumn, searchString) => {
+    setPage(1);
+    const filterParams = {...filterSetting};
+    if(searchString){
+      filterParams[filteredColumn] = searchString;
+    } else {
+      delete filterParams[filteredColumn];
+    }
+    setFilterSettings(filterParams);
+  };
   
 
   return <><table className="altrp-table" {...getTableProps()}>
@@ -92,15 +114,10 @@ const AltrpTable = ({settings, query, data}) => {
     {renderAdditionalRows(settings)}
     {headerGroups.map(headerGroup => (
         <tr {...headerGroup.getHeaderGroupProps()} className="altrp-table-tr">
-          {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()} className="altrp-table-th">
-                {column.render('column_name')}                
-                {column.column_isSorted && 
-                <button className="altrp-table-th_sort" onClick={() => sortingHandler(column.column_name)}>
-                  {sortSetting && sortSetting.order === "DESC" ? ' 🔽' : ' 🔼'}
-                </button>}        
-              </th>
-          ))}
+          {headerGroup.headers.map(column => {
+            return renderTh({column, sortSetting, sortingHandler, filterSetting, filterHandler});
+          }
+          )}
         </tr>
     ))}
     </thead>
@@ -179,6 +196,7 @@ function settingsToColumns(settings) {
    */
   tables_columns.forEach(_column => {
     if (_column.column_name && _column.accessor) {
+      _column._accessor = _column.accessor;
       columns.push(_column);
     }
   });
@@ -209,5 +227,46 @@ function renderAdditionalRows(settings) {
       })}
     </tr>
   })
+}
 
+/**
+ * Отрисовка главного заголовка колонки для таблицы
+ * @param {{}}column
+ * @param {{}}sortSetting
+ * @param {{}}filterSetting
+ * @param {function}sortingHandler
+ * @param {function}filterHandler
+ * @return {*}
+ */
+function renderTh({column, sortSetting, sortingHandler, filterSetting, filterHandler}){
+  let thProps = {...column.getHeaderProps()};
+  thProps.className = 'altrp-table-th';
+  if(column.column_is_sorted){
+    thProps.onClick = () => sortingHandler(column._accessor);
+    thProps.className += ' clickable'
+  }
+  if(column.column_width){
+    thProps.width = column.column_width + '%';
+  }
+  let thText = column.render('column_name');
+  return  <th {...thProps}>
+    {thText}
+    { sortSetting && (sortSetting.order_by === column._accessor)
+      && (sortSetting.order === "DESC" ?
+        iconsManager().renderIcon('chevron', {className:'rotate-180'}) :
+        iconsManager().renderIcon('chevron'))}
+    {column.column_is_filtered &&
+    <label className="altrp-label">
+    <input type="text"
+           onClick={e => {e.stopPropagation()}}
+           onChange={e=>{
+             e.stopPropagation();
+             let value = e.target.value;
+             filterHandler(column._accessor, value)
+           }}
+           value={filterSetting[column._accessor] || ''}
+           className="altrp-field"/>
+    </label>}
+
+  </th>
 }
