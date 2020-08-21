@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Mockery\Exception;
 
 /**
@@ -84,11 +85,11 @@ class Page extends Model
       $_page['lazy'] = $lazy;
       if($page->model){
         $_page['model'] = $page->model->toArray();
-        $_page['model']['modelName'] = $page->model->altrp_table->name;
+        $_page['model']['modelName'] = Str::plural( $page->model->name );
       }
-      if( $page->get_models() ){
-        $_page['models'] = $page->get_models();
-      }
+//      if( $page->get_models() ){
+//        $_page['models'] = $page->get_models();
+//      }
       $pages[] = $_page;
     }
 
@@ -102,8 +103,9 @@ class Page extends Model
   public static function get_areas_for_page( $page_id ){
     $areas = [];
 
-    $header = Template::where( 'area', 2 )->first();
+    $header = Template::where( 'area', 2 )->where( 'type', 'template' )->first();
     if( $header ){
+      $header->check_elements_conditions();
       $areas[] = [
         'area_name' => 'header',
         'id' => 'header',
@@ -111,21 +113,42 @@ class Page extends Model
         'template' => $header
       ];
     }
+    $content = PagesTemplate::where( 'page_id', $page_id )
+      ->where( 'template_type', 'content' )->first()->template;
+    $content->check_elements_conditions();
     $areas[] = [
       'area_name' => 'content',
       'id' => 'content',
       'settings' => [],
-      'template' => PagesTemplate::where( 'page_id', $page_id )
-        ->where( 'template_type', 'content' )->first()->template
+      'template' => $content,
     ];
 
-    $footer = Template::where( 'area', 3 )->first();
+    $footer = Template::where( 'area', 3 )->where( 'type', 'template' )->first();
     if( $footer ){
+      $footer->check_elements_conditions();
       $areas[] = [
         'area_name' => 'footer',
         'id' => 'footer',
         'settings' => [],
         'template' => $footer
+      ];
+    }
+    $popups = Template::join( 'areas', 'areas.id', '=', 'templates.area' )
+      ->where( 'areas.name', '=', 'popup' )
+      ->where( 'type', 'template' )->get( 'templates.*' );
+
+
+
+    if( $popups->count() ){
+      foreach ( $popups as $key => $popup ) {
+        $popups[$key]->template_settings = $popup->template_settings();
+
+      }
+      $areas[] = [
+        'area_name' => 'popups',
+        'id' => 'popups',
+        'settings' => [],
+        'templates' => $popups->toArray(),
       ];
     }
 

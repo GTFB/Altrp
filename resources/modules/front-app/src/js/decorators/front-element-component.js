@@ -7,6 +7,35 @@ function componentWillUnmount(){
   // if(this.model){
   //   this.model.uns
   // }
+  if(! this.props.element.dynamicContentSettings){
+    return
+  }
+  this.props.element.dynamicContentSettings.forEach(modelsSetting=>{
+    let modelInfo = this.props.element.getModelsInfoByModelName(modelsSetting.modelName);
+    if(modelInfo && ! modelInfo.relation) {
+      modelManager.unsubscribe(modelInfo.modelName, modelInfo.modelId ||this.getModelId(), this);
+    } else if( modelInfo && modelInfo.relation ){
+      // console.log(modelInfo);
+      // console.log(modelsSetting);
+      // console.log(this.state.modelData);
+    }
+  });
+}
+
+/**
+ * обновить данные модели
+ */
+function updateModelData (modelData) {
+  this.setState(state => {
+    /**
+     * state.modelsData
+     * @type {{}}
+     */
+    return {...state,
+      // modelsData,
+      modelData: {...modelData}}
+  });
+
 }
 /**
  * Подписываемся на изменеия моделей
@@ -24,26 +53,7 @@ function subscribeToModels(id){
   this.props.element.dynamicContentSettings.forEach(modelsSetting=>{
     let modelInfo = this.props.element.getModelsInfoByModelName(modelsSetting.modelName);
     if(modelInfo && ! modelInfo.relation) {
-      this.model = modelManager.subscribeToModelUpdates(modelInfo.modelName, modelInfo.modelId || id, modelData => {
-        this.setState(state => {
-          /**
-           * state.modelsData
-           * @type {{}}
-           */
-          let modelsData = state.modelsData || {};
-          modelsData = {...modelsData};
-          modelsData[modelsSetting.settingName] = modelData[modelsSetting.fieldName] || '';
-          /**
-           * Если возможно то берем данные из связанной модели
-           */
-          if((! modelsData[modelsSetting.settingName]) && modelsSetting.fieldName.split('.').length > 1){
-            modelsData[modelsSetting.settingName] = modelData[modelsSetting.fieldName.split('.')[0]] ?
-                modelData[modelsSetting.fieldName.split('.')[0]][modelsSetting.fieldName.split('.')[1]] : ''
-          }
-
-          return {...state, modelsData, modelData: {...modelData}}
-        });
-      });
+      this.model = modelManager.subscribeToModelUpdates(modelInfo.modelName, modelInfo.modelId || id, this);
     } else if( modelInfo && modelInfo.relation ){
       // console.log(modelInfo);
       // console.log(modelsSetting);
@@ -75,12 +85,11 @@ function getContent(settingName) {
     /**
      * Если this.state.modelsData еще не ициинировано или текущее свойство не загруженно
      */
-    if((! this.state.modelsData) || !this.state.modelsData[settingName]){
-      content = '';
+    if((! this.state.modelData) || ! _.get(this.state.modelData, content.fieldName)){
+        content = ' ';
     } else {
-      content = this.state.modelsData[settingName] || '';
+        content = _.get(this.state.modelData, content.fieldName) || ' ';
     }
-
   }
   return content;
 }
@@ -118,4 +127,5 @@ export default function frontDecorate(component) {
   component.componentDidMount = componentDidMount.bind(component);
   component.getContent = getContent.bind(component);
   component.getModelId = getModelId.bind(component);
+  component.updateModelData = updateModelData.bind(component);
 }

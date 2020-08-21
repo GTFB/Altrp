@@ -22,12 +22,13 @@ class FormsManager {
    * @param {string} formId
    * @param {string} modelName
    * @param {string} method
+   * @param {{}} options
    * @return {AltrpForm}
    */
-  registerForm(formId, modelName, method){
+  registerForm(formId, modelName, method, options = {}){
     let form = this.getForm(formId);
     if(! form){
-      form = new AltrpForm(formId, modelName, method);
+      form = new AltrpForm(formId, modelName, method, options);
       /**
        * Если в хранилище есть список полей для указанной формы,
        * то передаем их в форму, а на список ссылку удаляем

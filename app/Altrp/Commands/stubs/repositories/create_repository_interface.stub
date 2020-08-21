@@ -1,0 +1,10 @@
+<?php
+
+namespace {{repoInterfaceNamespace}};
+
+interface {{modelName}}RepositoryInterface
+{
+    // CUSTOM_METHODS_BEGIN
+    {{customMethods}}
+    // CUSTOM_METHODS_END
+}

@@ -7,6 +7,7 @@ class FrontElement {
     this.name = data.name;
     this.settings = data.settings;
     this.children = data.children;
+    this.cssClassStorage = data.cssClassStorage;
     this.type = data.type;
     this.id = data.id;
     if(window.frontElementsManager){
@@ -132,12 +133,19 @@ class FrontElement {
           break;
           case 'login':{
             method = 'POST';
-            this.addForm(formsManager.registerForm(this.getSettings('form_id'), 'login', method));
+            this.addForm(formsManager.registerForm(this.getSettings('form_id'),
+                'login',
+                method,
+                {afterLoginRedirect:this.getSettings('redirect_after')}));
           }
           break;
           case 'logout':{
             method = 'POST';
-            this.addForm(formsManager.registerForm(this.getSettings('form_id'), 'logout', method));
+            this.addForm(formsManager.registerForm(this.getSettings('form_id'),
+                'logout',
+                method,
+                {afterLogoutRedirect:this.getSettings('redirect_after')}
+          ));
           }
           break;
         }
@@ -188,14 +196,15 @@ class FrontElement {
   /**
    * Получить настройку или все настройки
    * @param settingName
+   * @param {string} _default
    * @return {*}
    */
-  getSettings(settingName){
+  getSettings(settingName, _default = ''){
     if(! settingName)
     {
-      return this.settings;
+      return _.cloneDeep(this.settings);
     }
-    return this.settings[settingName];
+    return this.settings[settingName] || _default;
   }
   updateStyles(){
     window.stylesModulePromise.then(stylesModule => {
@@ -354,7 +363,7 @@ class FrontElement {
 
   /**
    * Имя модели
-   * из списка моделей извлекает имя модели не являющейся Page и возращает иэто имя
+   * из списка моделей извлекает имя модели не являющейся Page и возращает и это имя
    * @return {string | null}
    */
   getModelName(){
@@ -428,9 +437,6 @@ class FrontElement {
   setModelData(modelName, data){
     this.modelsStorage = this.modelsStorage || {};
     this.modelsStorage[modelName] = {...data};
-    // this.forceUpdate();
-    console.log(modelName);
-    console.log(this.modelCallbacksStorage);
     if(this.modelCallbacksStorage && this.modelCallbacksStorage[modelName]){
       this.modelCallbacksStorage[modelName](this.modelsStorage[modelName]);
     }
@@ -444,6 +450,20 @@ class FrontElement {
     if(this.modelsStorage && this.modelsStorage[modelName]){
       callback(this.modelsStorage[modelName]);
     }
+  }
+  /**
+   * Парсит объект и извлекает из него строку со всеми классами у которых есть свойство prefixClass
+   * @return {string}
+   */
+
+  getPrefixClasses() {
+    let changeCss = _.toPairs(this.cssClassStorage);
+    let classStorage = ' ';
+    changeCss.forEach(element => {
+      classStorage += `${element[1]} `;
+      console.log(element[1]);
+    });
+    return classStorage;
   }
 }
 

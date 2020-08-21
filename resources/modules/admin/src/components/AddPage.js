@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import Resource from "../../../editor/src/js/classes/Resource";
 import {Redirect, withRouter} from 'react-router-dom';
-import AltrpSelect from "./altrp/AltrpSelect";
+import AltrpSelect from "./altrp-select/AltrpSelect";
 
 /**
  * @class
@@ -20,7 +20,7 @@ class AddPage extends Component {
       models: [],
     };
     this.resource = new Resource({route: '/admin/ajax/pages'});
-    this.model_resource = new Resource({route: '/admin/ajax/models'});
+    this.model_resource = new Resource({route: '/admin/ajax/models_options'});
     this.templateResource = new Resource({route: '/admin/ajax/templates'});
     this.savePage = this.savePage.bind(this);
   }
@@ -90,9 +90,9 @@ class AddPage extends Component {
     })
   }
   render() {
-    // if(this.state.redirectAfterSave){
-    //   return<Redirect to="/admin/pages"/>
-    // }
+    if(this.state.redirectAfterSave){
+      return<Redirect to="/admin/pages"/>
+    }
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
@@ -140,7 +140,7 @@ class AddPage extends Component {
               <option value=""/>
               {
                 this.state.models.map(model=>{
-                  return <option value={model.id} key={model.id}>{model.name}</option>
+                  return <option value={model.value} key={model.value}>{model.label}</option>
                 })
               }
             </select>

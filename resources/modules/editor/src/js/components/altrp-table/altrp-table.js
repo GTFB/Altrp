@@ -1,32 +1,38 @@
 import React, {useCallback, useState, useEffect} from "react";
-import {useTable} from "react-table";
+import {useTable, useSortBy} from "react-table";
 import {useQuery, usePaginatedQuery, queryCache} from  "react-query";
 import '../../../sass/altrp-pagination.scss';
 import {Link} from "react-router-dom";
 import {isEditor} from "../../../../../front-app/src/js/helpers";
+import {iconsManager} from "../../../../../admin/src/js/helpers";
 
 /**
  *
  * @param settings
  * @param {Query} query
+ * @param {Query} data
  * @return {*}
  * @constructor
  */
-const AltrpTable = ({settings, query}) => {
+const AltrpTable = ({settings, query, data}) => {
   if (! (settings.tables_columns && settings.tables_columns.length)) {
     return <div children="Please Add Column"/>
   }
-  if(! query.modelName){
-    return <div children="Please Choose Model"/>
-  }
   let _data =[], _status, _error, _latestData;
   const [page, setPage] = useState(1);
-
+  const [sortSetting, setSortSettings] = useState({});
+  const [filterSetting, setFilterSettings] = useState({});
   const fetchModels = useCallback(async (key, page = 1) => {
-    return query.getQueried({
-      page,
-    })
+    return query.getQueried(
+      sortSetting ?
+      { ...sortSetting, page } :
+      { page }
+    )
   });
+  // useEffect(() => {
+  //   fetchModels()
+  // }, [sortSetting]);
+
   if(query.pageSize){
     /**
      * Если есть пагинация
@@ -36,7 +42,7 @@ const AltrpTable = ({settings, query}) => {
       resolvedData,
       latestData,
       error,
-    } = usePaginatedQuery([query.modelName, page], fetchModels, {});
+    } = usePaginatedQuery([query.modelName, page, sortSetting], fetchModels, {});
     _data = resolvedData ? resolvedData[query.modelName] : _data;
     _status = status;
     _error = error;
@@ -45,27 +51,23 @@ const AltrpTable = ({settings, query}) => {
       if (latestData?.hasMore) {
         queryCache.prefetchQuery([query.modelName, page + 1], fetchModels);
       }
-    }, [latestData, fetchModels, page]);
+    }, [latestData, fetchModels, page, sortSetting]);
   }else {
     /**
      * Если нет пагинации
      */
     const {status, data, error,} = useQuery(query.modelName, () => {
-      return query.getResource().getQueried()
+      return query.getResource().getQueried({...sortSetting})
     }, [query.modelName]);
     _data = data;
     _status = status;
     _error = error;
   }
   let columns = [];
-  /**
-   * Если в колонке пустые поля, то мы их игнорируем, чтобы не было ошибки
-   */
-  settings.tables_columns.forEach(_column => {
-    if (_column.column_name && _column.accessor) {
-      columns.push(_column);
-    }
-  });
+  columns = settingsToColumns(settings);
+  if(! _data.length){
+    _data = data;
+  }
   let {
     getTableProps,
     getTableBodyProps,
@@ -80,14 +82,34 @@ const AltrpTable = ({settings, query}) => {
         [settings.tables_columns]
     ),
     data: React.useMemo(() => (_data || []), [_data]),
+  }, );
+
+  const sortingHandler = order_by => setSortSettings({ 
+    order_by, 
+    order: sortSetting &&
+      (sortSetting.order_by === order_by) ? (sortSetting.order === "DESC" ? "ASC" :  "DESC") : "ASC"
+
   });
+  const filterHandler = (filteredColumn, searchString) => {
+    const filterParams = {...filterSetting};
+    if(searchString){
+      filterParams[filteredColumn] = searchString;
+    } else {
+      delete filterParams[filteredColumn];
+    }
+    setFilterSettings(filterParams);
+  };
+  
+
   return <><table className="altrp-table" {...getTableProps()}>
     <thead className="altrp-table-head">
+    {renderAdditionalRows(settings)}
     {headerGroups.map(headerGroup => (
         <tr {...headerGroup.getHeaderGroupProps()} className="altrp-table-tr">
-          {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()} className="altrp-table-th">{column.render('column_name')}</th>
-          ))}
+          {headerGroup.headers.map(column => {
+            return renderTh({column, sortSetting, sortingHandler, filterSetting, filterHandler});
+          }
+          )}
         </tr>
     ))}
     </thead>
@@ -104,6 +126,12 @@ const AltrpTable = ({settings, query}) => {
                     {row.cells.map((cell, _i) => {
                       let cellContent = cell.render('Cell');
                       let linkTag = isEditor() ? 'a': Link;
+                      /**
+                       * Если значение объект или масиив, то отобразим пустую строку
+                       */
+                      if(_.isObject(cell.value) || _.isArray(cell.value)){
+                        cellContent = '';
+                      }
                       /**
                        * Если в настройках колонки есть url, и в данных есть id, то делаем ссылку
                        */
@@ -145,80 +173,96 @@ const AltrpTable = ({settings, query}) => {
 };
 
 export default AltrpTable
-/*
-import axios from "axios";
-import { usePaginatedQuery, queryCache } from "react-query";
 
-function Todos() {
-  const [page, setPage] = React.useState(0);
-
-  const fetchProjects = React.useCallback(async (key, page = 0) => {
-    const { data } = await axios.get("/api/projects?page=" + page);
-    return data;
-  }, []);
-
-  const {
-    status,
-    resolvedData,
-    latestData,
-    error,
-    isFetching
-  } = usePaginatedQuery(["projects", page], fetchProjects, {});
-
-  // Prefetch the next page!
-  React.useEffect(() => {
-    if (latestData?.hasMore) {
-      queryCache.prefetchQuery(["projects", page + 1], fetchProjects);
+/**
+ * Парсинг колонок из настроек в колонки для react-table
+ * @param settings
+ * @return {Array}
+ */
+function settingsToColumns(settings) {
+  let columns = [];
+  let { tables_columns } = settings;
+  tables_columns = tables_columns || [];
+  /**
+   * Если в колонке пустые поля, то мы их игнорируем, чтобы не было ошибки
+   */
+  tables_columns.forEach(_column => {
+    if (_column.column_name && _column.accessor) {
+      _column._accessor = _column.accessor;
+      columns.push(_column);
     }
-  }, [latestData, fetchProjects, page]);
-
-  return (
-      <div>
-        <p>
-          In this example, each page of data remains visible as the next page is
-          fetched. The buttons and capability to proceed to the next page are also
-          supressed until the next page cursor is known. Each page is cached as a
-          normal query too, so when going to previous pages, you'll see them
-          instantaneously while they are also refetched invisibly in the
-          background.
-        </p>
-        {status === "loading" ? (
-            <div>Loading...</div>
-        ) : status === "error" ? (
-            <div>Error: {error.message}</div>
-        ) : (
-            // `resolvedData` will either resolve to the latest page's data
-            // or if fetching a new page, the last successful page's data
-            <div>
-              {resolvedData.projects.map(project => (
-                  <p key={project.id}>{project.name}</p>
-              ))}
-            </div>
-        )}
-        <span>Current Page: {page + 1}</span>
-        <button
-            onClick={() => setPage(old => Math.max(old - 1, 0))}
-            disabled={page === 0}
-        >
-          Previous Page
-        </button>{" "}
-        <button
-            onClick={() =>
-                // Here, we use `latestData` so the Next Page
-                // button isn't relying on potentially old data
-                setPage(old => (!latestData || !latestData.hasMore ? old : old + 1))
-            }
-            disabled={!latestData || !latestData.hasMore}
-        >
-          Next Page
-        </button>
-        {// Since the last page's data potentially sticks around between page requests,
-          // we can use `isFetching` to show a background loading
-          // indicator since our `status === 'loading'` state won't be triggered
-          isFetching ? <span> Loading...</span> : null}{" "}
-      </div>
-  );
+  });
+  return columns;
 }
 
-export default Todos;
-*/
+/**
+ *
+ * @param {{}}settings
+ * @return {string|[]}
+ */
+function renderAdditionalRows(settings) {
+  let { additional_rows } = settings;
+  if(! _.isArray(additional_rows)){
+    return '';
+  }
+  return additional_rows.map(row=>{
+    row.additional_cells = row.additional_cells || [];
+    return<tr key={`additional-row-${row.id}`}>
+      {row.additional_cells.map(cell=>{
+        cell.rowspan = cell.rowspan || 1;
+        cell.colspan = cell.colspan || 1;
+        return<th key={`additional-cell-${row.id}-${cell.id}`}
+                  role="columnheader"
+                  className="altrp-table-th"
+                  colSpan={cell.colspan}
+                  rowSpan={cell.rowspan}>{cell.title}</th>
+      })}
+    </tr>
+  })
+}
+
+/**
+ * Отрисовка главного заголовка колонки для таблицы
+ * @param {{}}column
+ * @param {{}}sortSetting
+ * @param {{}}filterSetting
+ * @param {function}sortingHandler
+ * @param {function}filterHandler
+ * @return {*}
+ */
+function renderTh({column, sortSetting, sortingHandler, filterSetting, filterHandler}){
+  let thProps = {...column.getHeaderProps()};
+  thProps.className = 'altrp-table-th';
+  if(column.column_is_sorted){
+    thProps.onClick = () => sortingHandler(column._accessor);
+    thProps.className += ' clickable'
+  }
+  if(column.column_width){
+    thProps.width = column.column_width + '%';
+  }
+  let thText = column.render('column_name');
+  console.log(column);
+  return  <th {...thProps}>
+    {thText}
+    { sortSetting && (sortSetting.order_by === column._accessor)
+      && (sortSetting.order === "DESC" ?
+        iconsManager().renderIcon('chevron', {className:'rotate-180'}) :
+        iconsManager().renderIcon('chevron'))}
+    {/*{column.column_is_sorted &&*/}
+    {/*<button className="altrp-table-th_sort" onClick={}>*/}
+    {/*{sortSetting && sortSetting.order === "DESC" ? '∨' : '∧'}*/}
+    {/*</button>}        */}
+    {column.column_is_filtered &&
+    <label className="altrp-label">
+    <input type="text"
+           onClick={e=>{
+             e.stopPropagation();
+             let value = e.target.value;
+             filterHandler(column._accessor, value)
+           }}
+           value
+           className="altrp-field"/>
+    </label>}
+
+  </th>
+}

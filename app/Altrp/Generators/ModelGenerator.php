@@ -15,6 +15,7 @@ use App\Exceptions\RelationshipNotInsertedException;
 use App\Exceptions\TableNotFoundException;
 use App\Permission;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class ModelGenerator extends AppGenerator
 {
@@ -53,12 +54,20 @@ class ModelGenerator extends AppGenerator
 
     /**
      * ModelGenerator constructor.
-     * @param $data
+     * @param Model | array $model
+     * @param array $data
      */
-    public function __construct($data)
+    public function __construct( $model, $data = [])
     {
-        $this->model = new Model();
-        parent::__construct($data);
+        $this->model = $model;
+        $modelName = $this->model->name;
+        $this->modelFilename = $this->getFormedFileName(
+            $this->model->path,
+            $modelName
+        );
+        $this->modelFile = $this->getModelFile();
+        $this->relationships = $model->altrp_relationships;
+        parent::__construct($model);
     }
 
     /**
@@ -92,6 +101,7 @@ class ModelGenerator extends AppGenerator
      * @throws RelationshipNotInsertedException
      * @throws TableNotFoundException
      * @throws PermissionNotWrittenException
+     * @throws \Exception
      */
     public function generate()
     {
@@ -133,6 +143,12 @@ class ModelGenerator extends AppGenerator
         $attributes = json_decode(json_encode($this->data), true);
         $this->model->fill($attributes);
 
+        try {
+            $this->model->save();
+        } catch (\Exception $e) {
+            return false;
+        }
+
         if (! $this->getAndWriteRelationships()) {
             throw new RelationshipNotInsertedException("Failed to write relationships", 500);
         }
@@ -141,19 +157,15 @@ class ModelGenerator extends AppGenerator
             throw new PermissionNotWrittenException("Failed to write permissions", 500);
         }
 
-        try {
-            $this->model->save();
-        } catch (\Exception $e) {
-            return false;
-        }
         return true;
     }
 
     /**
      * @throws \Exception
      */
-    protected function updateModelFile()
+    public function updateModelFile()
     {
+
         return $this->createModelFile();
     }
 
@@ -163,23 +175,26 @@ class ModelGenerator extends AppGenerator
      * @return bool
      * @throws \Exception
      */
-    private function createModelFile()
+    public function createModelFile()
     {
         $relationships = $this->screenBacklashes($this->relationshipsToString());
-        $fullModelName = $this->getFormedFileName($this->data->path, $this->data->name);
+        $fullModelName = $this->modelFilename;
         $fillableColumns = $this->getFillableColumns();
+        $alwaysWithRelations= $this->getAlwaysWithRelations();
         $softDeletes = $this->isSoftDeletes();
         $createdAt = $this->getCreatedAt();
         $updatedAt = $this->getUpdatedAt();
         $primaryKey = $this->getPrimaryKey();
-        $customCode = $this->getCustomCode($this->modelFile);
+        $oldModelFile = $this->getOldModelFile();
+        $customCode = $this->getCustomCode($oldModelFile);
         $userColumns = $this->getUserColumns();
-
+        if(file_exists($oldModelFile)) unlink($oldModelFile);
         try {
-            \Artisan::call('crud:model', [
+          \Artisan::call('crud:model', [
                 'name' => "{$fullModelName}",
                 '--table' => "{$this->model->table()->first()->name}",
                 '--fillable' => "[{$fillableColumns}]",
+                '--always-with' => "[{$alwaysWithRelations}]",
                 '--pk' => "$primaryKey",
                 '--soft-deletes' => "{$softDeletes}",
                 '--timestamps' => $this->model->time_stamps,
@@ -191,7 +206,7 @@ class ModelGenerator extends AppGenerator
                 '--custom-namespaces' => $this->getCustomCodeBlock($customCode,'custom_namespaces'),
                 '--custom-traits' => $this->getCustomCodeBlock($customCode,'custom_traits'),
                 '--custom-properties' => $this->getCustomCodeBlock($customCode,'custom_properties'),
-                '--custom-methods' => $this->getCustomCodeBlock($customCode,'custom_methods')
+                '--custom-methods' => $this->getCustomCodeBlock($customCode,'custom_methods'),
             ]);
         } catch(\Exception $e) {
             if(file_exists($this->modelFile . '.bak'))
@@ -200,6 +215,21 @@ class ModelGenerator extends AppGenerator
         }
         if(file_exists($this->modelFile . '.bak'))
             unlink($this->modelFile . '.bak');
+        if(file_exists($oldModelFile . '.bak'))
+            unlink($oldModelFile . '.bak');
+        return true;
+    }
+
+    /**
+     * Удалить файл модели
+     *
+     * @return bool
+     */
+    public function deleteModelFile()
+    {
+        if (file_exists($this->modelFile)) {
+            return unlink($this->modelFile);
+        }
         return true;
     }
 
@@ -210,7 +240,7 @@ class ModelGenerator extends AppGenerator
      */
     protected function getPrimaryKey()
     {
-        return $this->data->pk ?? 'id';
+        return $this->model->pk ?? 'id';
     }
 
     /**
@@ -248,43 +278,39 @@ class ModelGenerator extends AppGenerator
      *
      * @throws TableNotFoundException
      */
-    protected function getAndWriteRelationships()
+    public function getAndWriteRelationships()
     {
-        if (isset($this->data->relationships)) {
-
-            if (count($this->getRelationships($this->data->table_id)) > 0) {
-                $this->deleteRelationships($this->data->table_id);
+        if ($this->model->altrp_relationships && $this->model->altrp_relationships->isNotEmpty()) {
+            $this->relationships = $this->model->altrp_relationships;
+            if (count($this->model->altrp_relationships) > 0) {
+                $this->deleteRelationships($this->model->id);
             }
-
-            $this->relationships = $this->data->relationships;
-
             return $this->writeRelationships();
         }
-        
-        return false;
+        return true;
     }
 
     /**
-     * Получить связи по указанному ID таблицы из БД
+     * Получить связи по указанному ID модели из БД
      *
-     * @param $tableId
+     * @param $modelId
      * @return mixed
      */
-    protected function getRelationships($tableId)
+    protected function getRelationships($modelId)
     {
-        $relationships = Relationship::where('table_id', $tableId)->get();
+        $relationships = Relationship::where('model_id', $modelId)->get();
         return $relationships;
     }
 
     /**
-     * Удалить связи по указанному ID таблицы из БД
+     * Удалить связи по указанному ID модели из БД
      *
-     * @param $tableId
+     * @param $modelId
      * @return mixed
      */
-    protected function deleteRelationships($tableId)
+    protected function deleteRelationships($modelId)
     {
-        return Relationship::where('table_id', $tableId)->delete();
+        return Relationship::where('model_id', $modelId)->delete();
     }
 
     /**
@@ -296,26 +322,51 @@ class ModelGenerator extends AppGenerator
     protected function relationshipsToString()
     {
         if (! $this->relationships) return null;
-
         $relArr = [];
-
         foreach ($this->relationships as $rel) {
 
             $relItem = $rel->name . '#' . $rel->type . '#'
                 . trim($this->screenBacklashes($rel->model_class), '\\');
 
-            if (isset($rel->foreign_key)) {
+            $post_args = "";
 
-                $relItem .= "|{$rel->foreign_key}";
-
-                if (isset($rel->local_key)) {
-                    $relItem .= "|{$rel->local_key}";
-                }
+            if($rel->type === 'hasOne') {
+                $post_args = "|" . $rel->foreign_key . "|" . $rel->local_key;
+            }
+            else if($rel->type === 'hasMany') {
+                $post_args = "|" . $rel->foreign_key . "|" . $rel->local_key;
+            }
+            else if($rel->type === 'belongsTo') {
+                $post_args = "|" . $rel->local_key . "|" . $rel->foreign_key;
             }
 
+            $relItem .= $post_args;
+            /*
+            if (isset($rel->local_key)) {
+                $relItem .= "|{$local}";
+                if (isset($rel->foreign_key)) {
+                    $relItem .= "|{$foreign}";
+                }
+            }*/
+
+            /*
+            if( $rel->type === 'belongsTo' ){
+              if (isset($rel->foreign_key)) {
+                $relItem .= "|{$rel->foreign_key}";
+                if (isset($rel->local_key)) {
+                  $relItem .= "|{$rel->local_key}";
+                }
+              }
+            } elseif ( in_array( $rel->type, ['hasMany', 'hasOne'] ) ){
+              if (isset($rel->local_key)) {
+                $relItem .= "|{$rel->local_key}";
+                if (isset($rel->foreign_key)) {
+                  $relItem .= "|{$rel->foreign_key}";
+                }
+              }
+            }*/
             $relArr[] = $relItem;
         }
-
         return implode(';', $relArr);
     }
 
@@ -327,7 +378,7 @@ class ModelGenerator extends AppGenerator
      */
     protected function writeRelationships()
     {
-        if (! $this->getTableById($this->model->table_id)) {
+        if (! $this->model->table) {
             throw new TableNotFoundException('Table not found', 404);
         }
 
@@ -353,7 +404,7 @@ class ModelGenerator extends AppGenerator
 
         foreach ($this->relationships as $rel) {
             $relData[] = [
-                'table_id' => $this->model->table_id,
+                'model_id' => $this->model->id,
                 'name' => $rel->name,
                 'type' => $rel->type,
                 'model_class' => $this->screenBacklashes($rel->model_class),
@@ -370,11 +421,33 @@ class ModelGenerator extends AppGenerator
      *
      * @return bool
      */
-    protected function writePermissions()
+    public function writePermissions()
     {
+        $actions = ['create', 'read', 'update', 'delete', 'all'];
         $permissions = $this->preparePermissions();
+        $oldPermissions = Permission::where('name','like','%-'.strtolower(Str::snake($this->model->getOriginal('name'))))->get();
+
         try {
-            Permission::insertOrIgnore($permissions);
+            foreach ($permissions as $permission) {
+                if (! $oldPermissions->contains(
+                    'name',
+                    explode('-',$permission['name'])[0] . '-' . strtolower(Str::snake($this->model->getOriginal('name')))
+                )) {
+                    $newPermObj = new Permission($permission);
+                    $newPermObj->save();
+                }
+            }
+            if ($oldPermissions && $oldPermissions->isNotEmpty()) {
+                foreach ($oldPermissions as $oldPermission) {
+                    $permObj = Permission::find($oldPermission->id);
+                    foreach ($permissions as $permission) {
+                        if ($permObj->name == explode('-',$permission['name'])[0] . '-' . strtolower(Str::snake($this->model->getOriginal('name')))) {
+                            $permObj->update($permission);
+                            break;
+                        }
+                    }
+                }
+            }
         } catch (\Exception $e) {
             return false;
         }
@@ -394,8 +467,8 @@ class ModelGenerator extends AppGenerator
 
         foreach ($actions as $action) {
             $permissions[] = [
-                'name' => $action . '-' . strtolower($this->data->name),
-                'display_name' => ucfirst($action) . ' ' . \Str::plural($this->data->name),
+                'name' => $action . '-' . strtolower(Str::snake($this->model->name)),
+                'display_name' => ucfirst($action) . ' ' . \Str::plural($this->model->name),
                 'created_at' => $nowTime,
                 'updated_at' => $nowTime,
             ];
@@ -425,21 +498,31 @@ class ModelGenerator extends AppGenerator
      */
     protected function getFillableColumns()
     {
-        if (!isset($this->data->fillable_cols)) return '';
-
-        $table = $this->getTableById($this->model->table_id);
-
+        $table = $this->model->table;
         if (!$table) {
             throw new TableNotFoundException("Table not found", 500);
         }
-
         $columns = $this->getColumns($table);
-
-        if ($columns->isEmpty()) return '';
-
+        if (!$columns || $columns->isEmpty()) return null;
+        $relations = $this->getEditableColumnsFromRelations();
         $columnsList = $this->getColumnsList($columns);
-
-        return '\'' . implode("','", $columnsList) . '\'';
+//        $relationsList = $this->getColumnsList($relations, 'foreign_key');
+//        $allColumns = array_merge($columnsList, $relationsList);
+        return '\'' . implode("','", array_merge( $columnsList, $relations)) . '\'';
+    }
+    /**
+     * Получить связи, который всегда идут c моделью
+     *
+     * @return string
+     */
+    protected function getAlwaysWithRelations()
+    {
+      $relations = $this->getRelationsAlwaysWith();
+      if( ! $relations->count() ){
+        return '';
+      }
+      $relationsList = $this->getColumnsList($relations);
+      return '\'' . implode("','", $relationsList) . '\'';
     }
 
     /**
@@ -462,29 +545,44 @@ class ModelGenerator extends AppGenerator
      */
     protected function getColumns($table)
     {
-        $last_migration = $table->actual_migration();
-
-        $columns = Column::where([
-            ['table_id', $this->model->table_id],
-            ['altrp_migration_id', $last_migration->id]
-        ])
-            ->whereIn('name', (array) $this->data->fillable_cols)
-            ->get();
-
+        $columns = Column::where([['table_id', $table->id],['editable',1]])->get();
         return $columns;
     }
 
     /**
+     * Получить обратные связи
+     *
+     * @return mixed
+     */
+    protected function getRelations()
+    {
+        $relations = Relationship::where([['model_id', $this->model->id], ['add_belong_to', 1]])->get();
+        return $relations;
+    }
+
+  /**
+   * Список связей, который идут всегда с моделью
+   * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+   */
+  protected function getRelationsAlwaysWith()
+  {
+    $relations = Relationship::where([['model_id', $this->model->id], ['always_with', 1]])->get();
+    return $relations;
+  }
+
+
+  /**
      * Получить список колонок
      *
-     * @param $columns
+     * @param array $columns
+     * @param string $columnName
      * @return array
      */
-    protected function getColumnsList($columns)
+    protected function getColumnsList($columns = [], $columnName = 'name')
     {
         $columnsList = [];
         foreach ($columns as $column) {
-            $columnsList[] = $column->name;
+            $columnsList[] = $column->$columnName;
         }
         return $columnsList;
     }
@@ -509,7 +607,6 @@ class ModelGenerator extends AppGenerator
      */
     protected function getFormedFileName($modelPath, $modelName)
     {
-
         $fullModelFilename = isset($modelPath)
             ? trim(config('crudgenerator.user_models_folder') . "/{$modelPath}/{$modelName}", '/')
             : trim(config('crudgenerator.user_models_folder') . "/{$modelName}", '/');
@@ -527,6 +624,15 @@ class ModelGenerator extends AppGenerator
         return base_path('app/' . "{$this->modelFilename}.php");
     }
 
+    protected function getOldModelFile()
+    {
+        $modelFilename = $this->getFormedFileName(
+            $this->model->getOriginal('path'),
+            $this->model->getOriginal('name')
+        );
+        return app_path("{$modelFilename}.php");
+    }
+
     /**
      * Получить пользовательские колонки в таблице модели
      *
@@ -534,7 +640,22 @@ class ModelGenerator extends AppGenerator
      */
     protected function getUserColumns()
     {
-        if (! isset($this->data->user_cols) || empty((array)$this->data->user_cols)) return null;
-        return '\'' . implode("','", (array) $this->data->user_cols) . '\'';
+        if (! isset($this->model->user_cols) || empty($this->model->user_cols)) return null;
+        return '\'' . implode("','",explode(",", $this->model->user_cols)) . '\'';
     }
+
+  /**
+   * Получить массив имен колонок из связей hasOne,
+   * которые можно править
+   * @return array;
+   */
+  private function getEditableColumnsFromRelations()
+  {
+    $relations = Relationship::where( [['model_id', $this->model->id], ['editable', 1], ['type' , 'hasOne']] )->get();
+    $_column_names = [];
+    foreach ( $relations as $relation ) {
+      $_column_names[] = $relation->foreign_key;
+    }
+    return $_column_names;
+  }
 }

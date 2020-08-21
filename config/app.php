@@ -33,7 +33,8 @@ return [
     |
     */
 
-    'altrp_version' => '0.6.2',
+    'altrp_version' => '0.7.15',
+
 
     /*
     |--------------------------------------------------------------------------
@@ -186,6 +187,8 @@ return [
         Laravel\Passport\PassportServiceProvider::class,
         App\Providers\CrudGeneratorServiceProvider::class,
 
+        App\Providers\RepositoryServiceProvider::class,
+        App\Providers\AltrpRepositoryServiceProvider::class,
     ],
 
     /*

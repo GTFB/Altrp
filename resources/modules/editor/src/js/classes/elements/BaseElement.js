@@ -1,3 +1,4 @@
+
 import { TAB_CONTENT, TAB_STYLE } from "../modules/ControllersManager";
 import { getTemplateDataStorage, getEditor, getFactory } from "../../helpers";
 import CONSTANTS from "../../consts";
@@ -15,6 +16,7 @@ class BaseElement extends ControlStack {
     super();
     this.settings = {};
     this.controls = {};
+    this.cssClassStorage = {};
     this.controlsIds = [];
     this.controllersRegistered = false;
     this.children = [];
@@ -43,7 +45,17 @@ class BaseElement extends ControlStack {
     return this.id;
   }
 
-  getName() {
+  /**
+   * Сохранить prefixClass и value, которое будет браться из variants.
+   * @param settingName
+   * @param value
+   */
+
+ setCssClass(settingName, value) {
+    this.cssClassStorage[settingName] = value;
+ }
+
+  getName(){
     return this.constructor.getName();
   }
 
@@ -71,6 +83,7 @@ class BaseElement extends ControlStack {
     if (this.dynamicContentSettings && this.dynamicContentSettings.length) {
       data.dynamicContentSettings = [...this.dynamicContentSettings];
     }
+    data.cssClassStorage = {...this.cssClassStorage};
     let children = this.getChildrenForImport();
     if (children) {
       data.children = children;
@@ -277,7 +290,7 @@ class BaseElement extends ControlStack {
   getSettings(settingName) {
     this._initDefaultSettings();
     if (!settingName) {
-      return this.settings;
+      return _.cloneDeep(this.settings);
     }
     if (this.settings[settingName] === undefined) {
       let control = window.controllersManager.getElementControl(this.getName(), settingName);
@@ -412,7 +425,7 @@ class BaseElement extends ControlStack {
     this.settings.styles[breakpoint][settingName] = {};
     rules.forEach(rule => {
       let finalSelector = rule.selector;
-      finalSelector = finalSelector.replace('{{ELEMENT}}', this.getSelector()).replace('{{STATE}}', getElementState().value);
+      finalSelector = finalSelector.replace(/{{ELEMENT}}/g, this.getSelector()).replace(/{{STATE}}/g, getElementState().value);
       /**
        * если this.settings.styles[breakpoint][settingName] массив, то преобразуем в объект
        */

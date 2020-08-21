@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
+use App\Altrp\Generators\Route\RouteFile;
+use App\Altrp\Model;
 class RouteServiceProvider extends ServiceProvider
 {
     /**
@@ -32,6 +34,8 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        $route_file = new RouteFile(new Model());
+        $route_file->createFile();
 
         parent::boot();
     }

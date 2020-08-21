@@ -30,11 +30,12 @@ class AltrpModelUpdater {
     if(this.updating){
       return;
     }
-    if(this.data){
+    if(this.data) {
       this.callSubscribers();
-    } else {
-      this.updateData();
     }
+    this.updateData();
+    // } else {
+    // }
   }
 
   /**
@@ -52,20 +53,30 @@ class AltrpModelUpdater {
    */
   callSubscribers(){
     this.subscribers.forEach(subscriber=>{
-      subscriber(this.getData());
+      if(_.isFunction(subscriber.updateModelData)){
+        subscriber.updateModelData(this.getData());
+      }
+      if(_.isFunction(subscriber)){
+        subscriber(this.getData());
+      }
     });
   }
+
 
   /**
    * Отписаться (отписываемся перед удалением компонента)
    * @param callback
    */
-  unsubscribe(callback){
-    this.subscribers = _.remove(this.subscribers, (idx, item)=>{
-      console.log(item);
-      return callback === item;
-    })
+  unsubscribe(subscriber){
+    this.subscribers = this.subscribers.filter(_s=>(_s !== subscriber))
   }
+  //
+  // unsubscribe(callback){
+  //   this.subscribers = _.remove(this.subscribers, (idx, item)=>{
+  //     console.log(item);
+  //     return callback === item;
+  //   })
+  // }
 
   /**
    * Получить данные модели
@@ -80,7 +91,7 @@ class AltrpModelUpdater {
    * @return void
    */
   updateWithData(data){
-    this.data = {...data};
+    this.data = _.extend( this.data,{...data});
     this.callSubscribers();
   }
 }

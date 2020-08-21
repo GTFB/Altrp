@@ -23,14 +23,7 @@ class PagesController extends Controller
 
     $_pages = Page::all();
     $pages = [];
-//    echo '<pre style="padding-left: 200px;">';
-//    var_dump( $_pages );
-//    echo '</pre>';
-
     foreach ( $_pages as $page ) {
-//      echo '<pre style="padding-left: 200px;">';
-//      var_dump( $page );
-//      echo '</pre>';
 
       $content_template = $page->get_content_template();
       $pages[] = [
@@ -185,7 +178,8 @@ class PagesController extends Controller
   public function pages_options( Request $request )
   {
     $pages = Page::where( 'title', 'like', '%' . $request->get( 's' ) . '%' )
-      ->orWhere( 'path', 'like', '%' . $request->get( 's' ) . '%' )->get();
+      ->orWhere( 'path', 'like', '%' . $request->get( 's' ) . '%' )
+      ->orWhere( 'id', 'like', '%' . $request->get( 's' ) . '%' )->get();
 
     $pages_options = [];
     foreach ( $pages as $page ) {

@@ -83,7 +83,20 @@ function _changeValue(value) {
 function conditionSubscriber() {
   if(this.props.conditions) {
     const controllerValue = store.getState().controllerValue;
-    if(Object.keys(this.props.conditions).indexOf(controllerValue.controlId)>=0){
+    /**
+     * Надло проверить, есть ли условие с ! на конце если есть то удалим !
+     * для проверки нужно ли обновлять компонент контроллера
+     * @type {string[]}
+     */
+    let keys = Object.keys(this.props.conditions);
+    keys = keys.map(key=>{
+      if(key.indexOf('!') === -1){
+        return key;
+      } else {
+        return key.replace('!', '');
+      }
+    });
+    if(keys.indexOf(controllerValue.controlId)>=0){
       this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController() ;
     }
   }
@@ -104,8 +117,8 @@ async function  controllerComponentDidMount() {
       options = _.concat([{'':''}], options);
     }
     this.setState(state=>({...state, options}));
-    if(options[0]) {
-    this._changeValue(options[0].value);
+    if(options[0].value) {
+      this._changeValue(options[0].value);
     }
   }
   if(typeof this._componentDidMount === 'function'){

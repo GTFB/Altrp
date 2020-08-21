@@ -33,6 +33,7 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::delete('/global-elements/{element}', "Constructor\GlobalElements@trashed");
 
         Route::get('/tables', "Admin\TableController@getTables");
+        Route::get('/tables/options', "Admin\TableController@getTablesForOptions");
         Route::get('/tables/{table}', "Admin\TableController@getTable");
         Route::post('/tables', "Admin\TableController@insert");
         Route::put('/tables/{table}', "Admin\TableController@update");
@@ -46,8 +47,53 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
 
         Route::get('/tables/{table}/columns', "Admin\TableController@getColumns");
         Route::get('/tables/{table}/keys', "Admin\TableController@getKeys");
-        
+
+        /**
+         * Маршруты для проверки на уникальность имени
+         */
+        Route::get('/model_name_is_free', 'Admin\ModelsController@modelNameIsFree');
+        Route::get('/models/{model_id}/field_name_is_free', 'Admin\ModelsController@fieldNameIsFree');
+        Route::get('/models/{model_id}/relation_name_is_free', 'Admin\ModelsController@relationNameIsFree');
+        Route::get('/models/{model_id}/sql_builder_name_is_free', 'Admin\ModelsController@queryNameIsFree');
+
+        // Models
         Route::get( '/models', 'Admin\ModelsController@getModels');
+        Route::get( '/model_options', 'Admin\ModelsController@getModelOptions');
+        Route::post( '/models', 'Admin\ModelsController@storeModel');
+        Route::put( '/models/{model_id}', 'Admin\ModelsController@updateModel');
+        Route::get( '/models/{model_id}', 'Admin\ModelsController@showModel');
+        Route::delete( '/models/{model_id}', 'Admin\ModelsController@destroyModel');
+
+        // SQL Builder
+        Route::get( '/models/{model_id}/sql_builder', 'Admin\ModelsController@getAllQueries');
+        Route::post( '/models/{model_id}/sql_builder', 'Admin\ModelsController@storeQuery');
+        Route::put( '/models/{model_id}/sql_builder/{query_id}', 'Admin\ModelsController@updateQuery');
+        Route::get('/models/{model_id}/sql_builder/{query_id}', 'Admin\ModelsController@getQuery');
+        Route::delete('/models/{model_id}/sql_builder/{query_id}', 'Admin\ModelsController@destroyQuery');
+
+        // Fields
+        Route::get( '/models/{model_id}/fields', 'Admin\ModelsController@getModelFields');
+        Route::get( '/models/{model_id}/field_options', 'Admin\ModelsController@getModelFieldOptions');
+        Route::post( '/models/{model_id}/fields', 'Admin\ModelsController@storeModelField');
+        Route::put( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@updateModelField');
+        Route::get( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@showModelField');
+        Route::delete( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@destroyModelField');
+
+        // Relations
+        Route::get( '/models/{model_id}/relations', 'Admin\ModelsController@getModelRelations');
+        Route::get( '/models/{model_id}/relation_options', 'Admin\ModelsController@getModelRelationOptions');
+        Route::post( '/models/{model_id}/relations', 'Admin\ModelsController@storeModelRelation');
+        Route::put( '/models/{model_id}/relations/{field_id}', 'Admin\ModelsController@updateModelRelation');
+        Route::get( '/models/{model_id}/relations/{field_id}', 'Admin\ModelsController@showModelRelation');
+        Route::delete( '/models/{model_id}/relations/{field_id}', 'Admin\ModelsController@destroyModelRelation');
+
+        // Data Sources
+        Route::get( '/data_sources', 'Admin\ModelsController@getDataSources');
+        Route::get( '/data_source_options', 'Admin\ModelsController@getDataSourceOptions');
+        Route::post( '/data_sources', 'Admin\ModelsController@storeDataSource');
+        Route::put( '/data_sources/{field_id}', 'Admin\ModelsController@updateDataSource');
+        Route::get( '/data_sources/{field_id}', 'Admin\ModelsController@showDataSource');
+        Route::delete( '/data_sources/{field_id}', 'Admin\ModelsController@destroyDataSource');
 
         Route::post('/tables/{table}/models', 'Admin\TableController@saveModel');
         Route::get('/tables/{table}/models/{model}', 'Admin\TableController@getModel');
@@ -62,14 +108,8 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::put('/tables/{table}', "Admin\TableController@update");
         Route::delete('/tables/{table}', "Admin\TableController@delete");*/
 
-        Route::get('/reports', 'ReportsController@index');
-        Route::post('/reports', 'ReportsController@store');
-
-        // GeneratorController routes
-        // Route::post('/generators/{table}/model/create', 'Admin\GeneratorController@createModel');
-        // Route::post('/generators/{table}/controller/create', 'Admin\GeneratorController@createController');
-        // Route::post('/generators/{model}/accessor/create', 'Admin\GeneratorController@createAccessor');
-
+        Route::post( 'update-all-resources', 'Admin\UpdateController@upgradeAllResources' );
+        Route::resource( 'sql_editors', 'Admin\SQLEditorController' );
     });
 
 });

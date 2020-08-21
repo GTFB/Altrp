@@ -17,6 +17,5 @@ class RouteGenerateFailedException extends Exception
                 'message' => $this->getMessage()
             ], $this->getCode(), [], JSON_UNESCAPED_UNICODE);
         }
-
     }
 }

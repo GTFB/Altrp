@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import axios from "axios";
 import controllerDecorate from "../../decorators/controller";
 import Resource from "../../classes/Resource";
+import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 
 /**
  * Контроллер настроек запроса
@@ -21,32 +23,37 @@ class QueryController extends Component {
     this.state = {
       value,
       show: true,
-      modelsList: [],
+      dataSourceList: [],
+      sqlQueries: [],
       orderingFieldsOptions: [],
       paginationTypeOption: [
         {
-          name: 'pages',
-          title: 'Pages',
+          name: "pages",
+          title: "Pages",
         },
         {
-          name: 'prev-next',
-          title: 'Prev/Next',
+          name: "prev-next",
+          title: "Prev/Next",
         },
-      ]
+      ],
     };
+    this.changeQueryName = this.changeQueryName.bind(this);
     this.changeModelName = this.changeModelName.bind(this);
     this.changePageSize = this.changePageSize.bind(this);
     this.changePaginationType = this.changePaginationType.bind(this);
   }
 
   async _componentDidMount() {
-    let modelsList = await new Resource({ route: '/admin/ajax/models_list_for_query' }).getAll();
-    let value = { ...value };
-    value.modelName = value.modelName || modelsList[0].name;
+    let dataSourceList = await new Resource({
+      route: "/admin/ajax/data_sources_for_query",
+    }).getAll();
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    value = { ...value };
+    value.modelName = value.modelName || dataSourceList[0].name;
     if (!this.props.currentElement.getSettings(this.props.controlId)) {
-      this._changeModelName(modelsList[0].name)
+      this._changeModelName(dataSourceList[0].name);
     }
-    this.setState(state => ({ ...state, modelsList, value }));
+    this.setState((state) => ({ ...state, dataSourceList, value }));
   }
 
   /**
@@ -58,6 +65,30 @@ class QueryController extends Component {
   }
 
   /**
+   * обработчик события смены DataSource
+   * @param {{}} dataSource
+   */
+  onChangeDataSource = async (dataSource) => {
+    console.log(dataSource);
+    const req = await axios(`/admin/ajax/sql_editors/list/${dataSource.value}`);
+    this.setState({ sqlQueries: req.data });
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    value.dataSource = { ...dataSource };
+    this._changeValue({ ...value });
+  };
+
+  /**
+   * обработчик события смены Query
+   * @param e
+   */
+  changeQueryName = async (e) => {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    let newValue = { ...value };
+    newValue.sql = e.target.value;
+    this._changeValue(newValue);
+  };
+
+  /**
    * обработчик события изменения количество записей на странице
    * @param e
    */
@@ -65,7 +96,7 @@ class QueryController extends Component {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     let newValue = { ...value };
     newValue.pageSize = parseInt(e.target.value);
-    this._changeValue(newValue)
+    this._changeValue(newValue);
   }
 
   /**
@@ -76,7 +107,7 @@ class QueryController extends Component {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     let newValue = { ...value };
     newValue.paginationType = e.target.value;
-    this._changeValue(newValue)
+    this._changeValue(newValue);
   }
   /**
    * смена названия модели для запроса
@@ -87,90 +118,113 @@ class QueryController extends Component {
 
     let value = { ..._value, modelName };
     let orderingFieldsOptions = [];
-    this.state.modelsList.forEach(model => {
+    this.state.dataSourceList.forEach((model) => {
       if (model.name === modelName) {
         orderingFieldsOptions = model.ordering_fields;
       }
     });
-    this.setState(state => ({ ...state, orderingFieldsOptions }));
+    this.setState((state) => ({ ...state, orderingFieldsOptions }));
     this._changeValue(value);
   }
 
   getDefaultValue() {
     return {
-      modelName: '',
+      modelName: "",
       pageSize: 10,
-      paginationType: 'pages',
-      orderingField: '',
-      order: 'ASC',
+      paginationType: "pages",
+      orderingField: "",
+      order: "ASC",
+      sql: "",
     };
   }
 
   render() {
-
     if (this.state.show === false) {
-      return '';
+      return "";
     }
 
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
 
-    return <div className="controller-container controller-container_query">
-      <div className="controller-field-group">
-        <div className="controller-container__label">
-          Source
-        </div>
-        <div className="control-container_select-wrapper">
-          <select className="control-select control-field"
-            value={value.modelName || ''}
-            onChange={this.changeModelName}>
-            <option value="" />
-            {this.state.modelsList.map(option => {
-              return <option value={option.name}
-                key={option.name}>{option.title}</option>
-            })}
-          </select>
-        </div>
-      </div>
-      <div className="controller-field-group">
-        <div className="controller-container__label">
-          Page Size
-        </div>
-        <div className="control-container_select-wrapper">
-          <input className="control-field control-field_number"
-            type="number"
-            value={value.pageSize || 10}
-            onChange={this.changePageSize} />
-        </div>
-      </div>
-      <div className="controller-field-group">
-        <div className="controller-container__label">
-          Page Size
+    return (
+      <div className="controller-container controller-container_query">
+        <div className="controller-field-group flex-wrap">
+          <div className="controller-container__label">Source</div>
+          <div className="control-container_select-wrapper w-100">
+            <AltrpSelect
+              options={this.state.dataSourceList}
+              onChange={this.onChangeDataSource}
+              value={value.dataSource}
+              styles={{
+                container: () => ({
+                  width: "100%",
+                }),
+              }}
+            />
           </div>
-        <div className="control-container_select-wrapper">
-          <input className="control-field control-field_number"
-            type="number"
-            value={value.pageSize || 10}
-            onChange={this.changePageSize} />
         </div>
-      </div>
-      <div className="controller-field-group">
-        <div className="controller-container__label">
-          Pagination Type
+        {this.state.sqlQueries.length > 0 && (
+          <div className="controller-field-group flex-wrap">
+            <div className="controller-container__label">SQL Query</div>
+            <div className="control-container_select-wrapper">
+              <select
+                className="control-select control-field"
+                value={value.sql || ""}
+                onChange={this.changeQueryName}
+              >
+                <option value="" />
+                {this.state.sqlQueries.map((option) => {
+                  return (
+                    <option value={option.name} key={option.id}>
+                      {option.title}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
           </div>
-        <div className="control-container_select-wrapper">
-          <select className="control-select control-field"
-            value={value.paginationType || ''}
-            onChange={this.changePaginationType}>
-            {this.state.paginationTypeOption.map(option => {
-              return <option value={option.name}
-                key={option.name}>{option.title}</option>
-            })}
-          </select>
+        )}
+        <div className="controller-field-group ">
+          <div className="controller-container__label">Page Size</div>
+          <div className="control-container_select-wrapper ">
+            <input
+              className="control-field control-field_number"
+              type="number"
+              value={value.pageSize || 10}
+              onChange={this.changePageSize}
+            />
+          </div>
+        </div>
+        <div className="controller-field-group">
+          <div className="controller-container__label">Page Size</div>
+          <div className="control-container_select-wrapper">
+            <input
+              className="control-field control-field_number"
+              type="number"
+              value={value.pageSize || 10}
+              onChange={this.changePageSize}
+            />
+          </div>
+        </div>
+        <div className="controller-field-group">
+          <div className="controller-container__label">Pagination Type</div>
+          <div className="control-container_select-wrapper">
+            <select
+              className="control-select control-field"
+              value={value.paginationType || ""}
+              onChange={this.changePaginationType}
+            >
+              {this.state.paginationTypeOption.map((option) => {
+                return (
+                  <option value={option.name} key={option.name}>
+                    {option.title}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
         </div>
       </div>
-    </div>
-
-
+    );
   }
 }
 
@@ -178,7 +232,7 @@ function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
     currentState: state.currentState,
-    currentScreen: state.currentScreen
+    currentScreen: state.currentScreen,
   };
 }
 
