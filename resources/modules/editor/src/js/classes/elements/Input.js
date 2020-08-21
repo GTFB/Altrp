@@ -13,7 +13,8 @@ import {
   CONTROLLER_COLOR,
   CONTROLLER_SELECT2,
   TAB_CONTENT,
-  TAB_STYLE, CONTROLLER_CHOOSE
+  TAB_STYLE, CONTROLLER_CHOOSE,
+  CONTROLLER_SHADOW
 } from "../modules/ControllersManager";
 
 class Input extends BaseElement{
@@ -568,6 +569,29 @@ class Input extends BaseElement{
         },
       }
     );
+
+    this.addControl('box_shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'Box shadow',
+      default: {
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        opacity: 1,
+        spread: 0,
+        colorRGB: 'rgb(0, 0, 0)',
+        color: 'rgb(0, 0, 0)',
+        colorPickedHex: '#000000',
+        type: ""
+      },
+      presetColors: [
+        '#eaeaea',
+        '#9c18a8'
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-field{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    });
 
     this.addControl('border_radius', {
       type: CONTROLLER_DIMENSIONS,
