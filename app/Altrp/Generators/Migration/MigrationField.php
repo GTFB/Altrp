@@ -156,16 +156,16 @@ class MigrationField{
 
         $default = "";
 
-        if(isset($this->column->default) && !$this->checkAttribute("default")) {
+        if($this->column->default === '0' || isset($this->column->default) && !$this->checkAttribute("default")) {
             $default = "->default('".$this->column->default."')";
         }
 
         //Если в default записан NULL, то делаем колонку nullable
-        if($this->column->default == "NULL" && $this->getNullable() !== "") {
+        if($this->column->default === null && $this->getNullable() !== "") {
             $default = "";
         }
-        else if($this->column->default == "NULL" && $this->getNullable() === "" && !$this->checkAttribute("default")) {
-            $default = "->nullable()";
+        else if($this->column->default === null && $this->getNullable() === "" && !$this->checkAttribute("default")) {
+            $default = "->default(null)";
         }
 
         return $default;

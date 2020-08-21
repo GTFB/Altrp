@@ -148,9 +148,22 @@ class AddFieldForm extends Component {
               value = 1;
             }
           }
-          case 'integer':{
-            if(!Number.isNaN(parseInt(value))){
+          break;
+          case 'bigInteger':{
+            if(!isNaN(value) && value !== '0'){
               value = parseInt(value);
+            } else if(value === ''){
+              value = null;
+            } else {
+              value = '0';
+            }
+          }
+          break;
+          case 'integer':{
+            if(!isNaN(value) && value !== '0'){
+              value = parseInt(value);
+            } else if(value === ''){
+              value = null;
             } else {
               value = '0';
             }

@@ -37,8 +37,10 @@ class MigrationFieldInteger extends MigrationField implements IMigrationField {
                 throw new AltrpMigrationFieldIncorrectDefaultException("Incorrect default value for integer field", 500);
             }
         }
-
-        $this->column->default = (int) $this->column->default;
+        if ($this->column->default !== null)
+            $this->column->default = (int) $this->column->default;
+        else
+            $this->column->default = null;
 
         return parent::getDefault();
     }
@@ -48,8 +50,8 @@ class MigrationFieldInteger extends MigrationField implements IMigrationField {
      * @return boolean
      */
     protected function checkDefault() {
-      if ( filter_var( (int) $this->column->default, FILTER_VALIDATE_INT )
-            || $this->column->default === '0') return true;
+        if ($this->column->default === 0 || $this->column->default === null) return true;
+        if ( filter_var( (int) $this->column->default, FILTER_VALIDATE_INT )) return true;
         return false;
     }
 }
