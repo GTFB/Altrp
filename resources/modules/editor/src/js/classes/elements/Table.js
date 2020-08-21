@@ -15,7 +15,7 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_NUMBER,
-  CONTROLLER_WYSIWYG, CONTROLLER_QUERY, CONTROLLER_REPEATER
+  CONTROLLER_WYSIWYG, CONTROLLER_QUERY, CONTROLLER_REPEATER, CONTROLLER_FILTERS
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import Repeater from "../Repeater";
@@ -213,6 +213,166 @@ class Table extends BaseElement {
     });
     this.endControlSection();
 
+    this.startControlSection("filter_style_table", {
+      tab: TAB_STYLE,
+      label: "Filter"
+    });
+
+    this.addControl("filter_style_table_text_color", {
+      type: CONTROLLER_COLOR,
+      label: "Text Color",
+      default: {
+        color: "rgb(186,186,186)",
+        colorPickedHex: "#32a852"
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-field{{STATE}}': 'color: {{COLOR}} !important'
+      }
+    });
+
+    this.addControl("filter_style_table_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Background Color",
+      default: {
+        color: "rgb(186,186,186)",
+        colorPickedHex: "#32a852"
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-field{{STATE}}': 'background: {{COLOR}} !important'
+      }
+    });
+
+    this.addControl('position_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default:{
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-field{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl(
+      'filter_style_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default:{
+          lineHeight: 0.8,
+          spacing: 0,
+          size: 16,
+          weight: 700,
+          family: 'Open Sans',
+          decoration: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-field{{STATE}}': [
+            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
+    this.addControl("filter_style_table_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Border Type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-field{{STATE}}': 'border-style: {{VALUE}} !important'
+      }
+    });
+
+    this.addControl("filter_style_table_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border Width",
+      default: {
+        top: 1,
+        right: 1,
+        bottom: 1,
+        left: 1,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        '{{ELEMENT}} .altrp-field{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
+      }
+    });
+
+    this.addControl("filter_style_table_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Border Color",
+      default: {
+        color: "rgb(186,186,186)",
+        colorPickedHex: "#32a852"
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-field{{STATE}}': 'border-color: {{COLOR}} !important'
+      }
+    });
+
+    this.addControl('filter_style_border_shadow', {
+        type: CONTROLLER_FILTERS,
+        label: 'filters',
+        rules: {
+          '{{ELEMENT}} .altrp-image{{STATE}}': [
+            'filter: blur({{BLUR}}px);',
+            'filter: brightness({{BRIGHTNESS}}%);',
+            'filter: contrast({{CONTRAST}}%);',
+            'filter: saturate({{SATURATION}}%);',
+            'filter: hue-rotate({{HUE}}deg);;'
+          ],
+        },
+      }
+    );
+    this.endControlSection();
+
     this.startControlSection("table_style_table", {
         tab: TAB_STYLE,
         label: "Table"
@@ -384,7 +544,7 @@ class Table extends BaseElement {
   this.addControl(
     'table_style_pagination_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: 'typographic',
+      label: 'Typographic',
       default:{
         lineHeight: 0.8,
         spacing: 0,
