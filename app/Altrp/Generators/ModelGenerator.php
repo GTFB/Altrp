@@ -504,7 +504,8 @@ class ModelGenerator extends AppGenerator
         }
         $columns = $this->getColumns($table);
         if (!$columns || $columns->isEmpty()) return null;
-        $relations = $this->getEditableColumnsFromRelations();
+//        $relations = $this->getEditableColumnsFromRelations();
+        $relations = [];
         $columnsList = $this->getColumnsList($columns);
 //        $relationsList = $this->getColumnsList($relations, 'foreign_key');
 //        $allColumns = array_merge($columnsList, $relationsList);

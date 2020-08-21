@@ -144,7 +144,9 @@ class AddFieldForm extends Component {
         }
         switch (state.value.type) {
           case 'boolean':{
-            if(value != 0 && value != 1){
+            if(value === ''){
+              value = null;
+            } else if (value != '0' && value != '1'){
               value = 1;
             }
           }
@@ -206,7 +208,7 @@ class AddFieldForm extends Component {
       }
       console.log(default_);
       if (['integer', 'bigInteger'].includes(type)) {
-        data.default = Number(default_);
+        data.default = default_;
       }
     }
 

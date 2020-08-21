@@ -46,7 +46,12 @@ class ModelsController extends HttpController
    */
     public function models_options( Request $request )
     {
-      return response()->json(Model::getModelsOptions( $request->get( 'with_names' ),  $request->get( 'not_plural' ) ));
+        return response()->json(
+        Model::getModelsOptions(
+            $request->get( 'with_names' ),
+            $request->get( 'not_plural' ),
+            $request->get('s')
+        ));
     }
 
     /**

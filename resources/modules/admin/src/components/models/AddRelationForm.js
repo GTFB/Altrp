@@ -169,7 +169,7 @@ class AddRelationForm extends Component {
    */
   renderLocalKey(){
     const { id } = this.props.match.params;
-    
+
     return <div className="form-group form-group_width47">
       <label htmlFor="relation-local_key">Local Key</label>
       <select  id="relation-local_key"
@@ -183,8 +183,8 @@ class AddRelationForm extends Component {
               {label}
             </option>)}
       </select>
-    </div> 
-    
+    </div>
+
   }
 
 /**
@@ -192,10 +192,10 @@ class AddRelationForm extends Component {
    */
   renderForeignKey(){
     const { id } = this.props.match.params;
-    
+
     return<div className="form-group form-group_width47">
       <label htmlFor="relation-foreign_key">Foreign Key</label>
-      <select id="relation-foreign_key" required
+      <select id="relation-foreign_key"
         value={this.state.value.foreign_key || ''}
         onChange={e => { this.changeValue(e.target.value, 'foreign_key') }}
         className="form-control"

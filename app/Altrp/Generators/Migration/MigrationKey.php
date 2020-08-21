@@ -134,8 +134,10 @@ class MigrationKey{
             $text .= "\$table->dropForeign(['".$key_field."']);\n\t\t\t";
         }
 
+        if (! $target_column) $target_column = 'id';
+
         $text .= "\$table->foreign('".$source_column."')->references('".$target_column."')->on('".$target_table."')".$modifiers;
-       
+
 
         return $text;
 

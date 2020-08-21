@@ -114,21 +114,27 @@ class Model extends EloquentModel
         return $models;
     }
 
+    /**
+     * Получить сортируемые колонки (поля)
+     *
+     * @return mixed
+     */
     public function get_ordering_fields()
     {
         return $this->altrp_table->actual_columns;
     }
 
-  /**
-   * Список моделей для select
-   * @param bool $with_names
-   * @param bool $not_plural
-   * @return array
-   */
-    public static function getModelsOptions( $with_names = false, $not_plural = false )
+    /**
+     * Список моделей для select
+     * @param bool $with_names
+     * @param bool $not_plural
+     * @param bool $search
+     * @return array
+     */
+    public static function getModelsOptions( $with_names = false, $not_plural = false, $search = false)
     {
         $models = [];
-        $_models = self::all();
+        $_models = $search ? self::getBySearch($search) : self::all();
         foreach ($_models as $model) {
             /**
              * @var {Model} $model
