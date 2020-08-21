@@ -137,19 +137,20 @@ class Table extends BaseElement {
       label: "Table Settings",
     });
 
+    this.addControl('not_found_text', {
+      label: 'Not Found Text',
+    });
+
     this.addControl('next_text', {
       label: 'Next Page Text',
-      type: CONTROLLER_TEXT,
     });
 
     this.addControl('prev_text', {
       label: 'Previous Page Text',
-      type: CONTROLLER_TEXT,
     });
 
     this.addControl('cur  title=rent_page_text', {
       label: 'Current Page Text',
-      type: CONTROLLER_TEXT,
     });
 
 
@@ -222,8 +223,8 @@ class Table extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Text Color",
       default: {
-        color: "rgb(186,186,186)",
-        colorPickedHex: "#32a852"
+        color: "rgb(27,27,27)",
+        colorPickedHex: "#1B1B1B"
       },
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}': 'color: {{COLOR}} !important'
@@ -235,16 +236,16 @@ class Table extends BaseElement {
       label: "Background Color",
       default: {
         color: "rgb(186,186,186)",
-        colorPickedHex: "#32a852"
+        colorPickedHex: "#BABABA"
       },
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}': 'background: {{COLOR}} !important'
       }
     });
 
-    this.addControl('position_padding', {
+    this.addControl('filter_padding', {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Padding',
+      label: 'Input Padding',
       default:{
         top: 0,
         right: 0,
@@ -259,6 +260,30 @@ class Table extends BaseElement {
       ],
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+    this.addControl('label_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Label Padding',
+      default:{
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-label{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',

@@ -20,6 +20,7 @@ class HeadingWidget extends Component {
       let linkProps = {
         rel: this.state.settings.link_link.noFollow ? "nofollow" : null,
         href: this.state.settings.link_link.url,
+        className: 'altrp-inherit',
       };
       let tag = 'a';
       if ((this.state.settings.link_link.tag === 'Link') && ! isEditor()) {
