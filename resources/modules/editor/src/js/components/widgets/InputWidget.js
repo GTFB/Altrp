@@ -99,7 +99,7 @@ class InputWidget extends Component {
       label = null
     }
 
-    if(this.state.settings.content_required != null) {
+    if(this.state.settings.content_required) {
       required = <div className="altrp-field-label-container"><label className="altrp-field-required">*</label></div>
     } else {
       required = null
