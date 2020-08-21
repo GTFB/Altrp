@@ -32,12 +32,14 @@ class SQLBuilderForm extends Component {
       relationsOptions: [],
       rolesOptions: [],
       permissionsOptions: [],
+      tablesOptions: [],
       selfFields: [],
       selfFieldsOptions: []
     };
     this.counter = 0;
     this.rolesOptions = new Resource({ route: '/admin/ajax/role_options' });
     this.permissionsOptions = new Resource({ route: '/admin/ajax/permissions_options' });
+    this.tablesOptions = new Resource({ route: '/admin/ajax/tables_options' });
     this.selfFieldsResource = new Resource({ route: `/admin/ajax/models/${modelId}/fields` });
     this.relationsResource = new Resource({ route: `/admin/ajax/models/${modelId}/relations` });
     this.submitHandler = this.submitHandler.bind(this);
@@ -64,6 +66,8 @@ class SQLBuilderForm extends Component {
     this.setState(state => ({ ...state, rolesOptions }));
     const permissionsOptions = await this.permissionsOptions.getAll();
     this.setState(state => ({ ...state, permissionsOptions }));
+    const tablesOptions = await this.tablesOptions.getAll();
+    this.setState(state => ({ ...state, tablesOptions }));
     const selfFields = await this.selfFieldsResource.getAll();
     let selfFieldsOptions = selfFields.map(field => {
       return {
@@ -424,9 +428,9 @@ class SQLBuilderForm extends Component {
   };
 
   render() {
-    const { title, name, relations, columns, aggregates, joins, conditions, order_by, group_by, } = this.state.value;
+    const { title, name, relations, columns, aggregates, joins, conditions, order_by, group_by } = this.state.value;
     const { roles, permissions } = this.state.value.access;
-    const { selfFieldsOptions, permissionsOptions, relationsOptions, rolesOptions } = this.state;
+    const { selfFieldsOptions, permissionsOptions, relationsOptions, rolesOptions, tablesOptions } = this.state;
     const { modelId } = this.props.match.params;
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="row">
@@ -521,6 +525,7 @@ class SQLBuilderForm extends Component {
           </button>
         </div>
         <JoinComponent item={item}
+          tablesOptions={tablesOptions}
           changeHandler={e => this.joinChangeHandler(e, index)}
         />
       </Fragment>)}
