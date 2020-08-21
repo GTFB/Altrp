@@ -108,8 +108,6 @@ class Controller {
           show = !negative;
         }
       }
-      console.log(controlId);
-      console.log(getCurrentElement().getSettings(controlId));
 
     });
     return show;

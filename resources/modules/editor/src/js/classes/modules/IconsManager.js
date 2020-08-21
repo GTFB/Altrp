@@ -99,19 +99,19 @@ class IconsManager {
     this.icons.push(new Icon('block_veric', blockVerticallyIcon));
     this.icons.push(new Icon('block_d_horiz', blockDHorizontallyIcon));
     this.icons.push(new Icon('block_d_vertic', blockDVerticallyIcon));
-    this.icons.push(new Icon('wide_screen', widescreenIcon))
-    this.icons.push(new Icon('laptop', laptopIcon))
-    this.icons.push(new Icon('tablet', tabletIcon))
-    this.icons.push(new Icon('big_phone', bigPhoneIcon))
-    this.icons.push(new Icon('small_phone', smallPhoneIcon))
-    this.icons.push(new Icon('conditions_tab', conditionsTab))
-    this.icons.push(new Icon('triggers_tab', triggersTab))
-    this.icons.push(new Icon('advanced_tab', advancedTab))
-    this.icons.push(new Icon('page_load', pageLoad))
-    this.icons.push(new Icon('scrolling', scrollingIcon))
-    this.icons.push(new Icon('scrolling_to', scrollingTo))
-    this.icons.push(new Icon('click', clickIcon))
-    this.icons.push(new Icon('inactivity', inactivityIcon))
+    this.icons.push(new Icon('wide_screen', widescreenIcon));
+    this.icons.push(new Icon('laptop', laptopIcon));
+    this.icons.push(new Icon('tablet', tabletIcon));
+    this.icons.push(new Icon('big_phone', bigPhoneIcon));
+    this.icons.push(new Icon('small_phone', smallPhoneIcon));
+    this.icons.push(new Icon('conditions_tab', conditionsTab));
+    this.icons.push(new Icon('triggers_tab', triggersTab));
+    this.icons.push(new Icon('advanced_tab', advancedTab));
+    this.icons.push(new Icon('page_load', pageLoad));
+    this.icons.push(new Icon('scrolling', scrollingIcon));
+    this.icons.push(new Icon('scrolling_to', scrollingTo));
+    this.icons.push(new Icon('click', clickIcon));
+    this.icons.push(new Icon('inactivity', inactivityIcon));
     this.icons.push(new Icon('exit_intent', exitIntent))
   }
   /**
@@ -152,7 +152,7 @@ class IconsManager {
    * @return {React.DetailedReactHTMLElement<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> | React.DetailedReactHTMLElement<React.HTMLAttributes<T>, HTMLElement> | React.ReactSVGElement | React.DOMElement<React.DOMAttributes<T>, Element> | React.FunctionComponentElement<{}> | React.CElement<{}, React.ClassicComponent<{}, React.ComponentState>> | React.CElement<{}, React.Component<P, React.ComponentState>> | React.ReactElement<{}>}
    * @throws Исключение если иконка не найдена
    * */
-  renderIcon(iconName, props = null) {
+  ;renderIcon(iconName, props = null) {
     let iconComponent = this.getIconComponent(iconName);
     if (!iconComponent) {
       iconComponent = this.getIconComponent('default');

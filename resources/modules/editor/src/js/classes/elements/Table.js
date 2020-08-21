@@ -165,9 +165,18 @@ class Table extends BaseElement {
       label: 'Link Template',
       description: '/path/:id',
     });
-    repeater.addControl('column_isSorted', {
+    repeater.addControl('column_width %',{
+      label: 'Column Width',
+      type: CONTROLLER_NUMBER,
+    });
+    repeater.addControl('column_is_sorted', {
       type: CONTROLLER_SWITCHER,
-      label: 'is Sorted',
+      label: 'Is Sorted',
+      default: false
+    });
+    repeater.addControl('column_is_filtered', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Add Filter Input',
       default: false
     });
 

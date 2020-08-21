@@ -40,6 +40,11 @@ class ApiController extends Controller
         $modelName = array_pop($parts);
         $indexedColumns = $this->getIndexedColumns($modelName);
         $resource = \Str::lower(\Str::plural($modelName));
+        $order_method = 'orderByDesc';
+        $order_column = $request->get( 'order_by', 'id' );
+        if( $request->get( 'order' ) === 'ASC'){
+          $order_method = 'orderBy';
+        }
         if ($page && $limit) {
             $modelsCount = $search
                 ? $this->modelClass::whereLike($indexedColumns, $search)->toBase()->count()
@@ -48,19 +53,19 @@ class ApiController extends Controller
             $offset = $limit * ($page - 1);
             $$resource = $search
                 ? $this->modelClass::whereLike($indexedColumns, $search)
-                    ->orderByDesc('id')
+                    ->$order_method( $order_column )
                     ->skip($offset)
                     ->take($limit)
                     ->get()
-                : $this->modelClass::orderByDesc('id')
+                : $this->modelClass::$order_method( $order_column )
                     ->skip($offset)
                     ->take($limit)
                     ->get();
         } else {
             $pageCount = 0;
             $$resource = $search
-                ? $this->modelClass::whereLike($indexedColumns, $search)->orderByDesc('id')->get()
-                : $this->modelClass::orderByDesc('id')->get();
+                ? $this->modelClass::whereLike($indexedColumns, $search)->$order_method( $order_column )->get()
+                : $this->modelClass::$order_method( $order_column )->get();
         }
         $hasMore = $pageCount > $page;
         return compact('pageCount', $resource ,'hasMore');
