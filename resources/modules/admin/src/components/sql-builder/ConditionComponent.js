@@ -15,9 +15,10 @@ const dateTypesOptions = [
 
 class ConditionComponent extends Component {
   render() {
-    const { columnsOptions, changeHandler } = this.props;
-    const { condition_type, column, operator, value, or, values, type,
+    const { columnsOptions, changeHandler, isFirst } = this.props;
+    const { condition_type, column, operator, value, or, not, values, type,
       first_column, second_column } = this.props.item;
+
     return <div className="form-segment">
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width30">
@@ -29,7 +30,7 @@ class ConditionComponent extends Component {
             >
               <option disabled value="" />
               {conditionTypeOptions.map(type =>
-                <option key={type} value={type}>
+                <option key={type} value={type} disabled={isFirst && type === 'or_where'}> 
                   {type}
                 </option>)}
             </select>
@@ -61,40 +62,37 @@ class ConditionComponent extends Component {
                 className="form-control"
               >
                 <option value="" disabled />
-                {/* <option value="not-null">Not Null</option>
-                <option value="null">Null</option> */}
                 <option value="=">Equals</option>
                 <option value="!=">Not Equals</option>
-                {/* <option value="between">Between</option> */}
+                <option value="like">Like</option>
                 <option value=">">&gt;</option>
                 <option value=">=">&gt;=</option>
                 <option value="<">&lt;</option>
                 <option value="<=">&lt;=</option>
-                <option value="like">Like</option>
               </select>
             </label>
           </div>}
 
         {['where_between', 'where_in', 'where_column'].includes(condition_type) && <>
-          <div className="form-group form-group_checkbox form-group_width15">
+          {!isFirst && <div className="form-group form-group_checkbox form-group_width15">
             <label className="label_checkbox">
-              <input type="radio" name="or"
+              <input type="checkbox" name="or"
                 className="form-check-input"
                 checked={or}
                 onChange={changeHandler}
               /> Or
             </label>
-          </div>
+          </div>}
 
-          <div className="form-group form-group_checkbox form-group_width15">
+          {condition_type !== 'where_column' && <div className="form-group form-group_checkbox form-group_width15">
             <label className="label_checkbox">
-              <input type="radio" name="not"
+              <input type="checkbox" name="not"
                 className="form-check-input"
-                checked={!or}
+                checked={not}
                 onChange={changeHandler}
               /> Not
             </label>
-          </div>
+          </div>}
         </>}
 
         {condition_type === "where_date" && <div className="form-group form-group_width30">
@@ -112,7 +110,7 @@ class ConditionComponent extends Component {
         </div>}
       </div>
 
-      {['where', 'or_where'].includes(condition_type) /* && !['not-null', 'null'].includes(operator) */ &&
+      {['where', 'or_where'].includes(condition_type) &&
         <div className="form-group">
           <label>Value
             <input type="text" required name="value"
@@ -193,7 +191,7 @@ class ConditionComponent extends Component {
           </label>
         </div>
 
-        {/* {!['not-null', 'null'].includes(operator) &&  */}<div className="form-group form-group_width47">
+        <div className="form-group form-group_width47">
           <label>Second Field
             <select required name="second_column"
               value={second_column}
@@ -207,7 +205,7 @@ class ConditionComponent extends Component {
                 </option>)}
             </select>
           </label>
-        </div>{/* } */}
+        </div>
       </div>}
     </div>
   }
