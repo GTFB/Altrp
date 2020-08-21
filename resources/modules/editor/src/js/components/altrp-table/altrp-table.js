@@ -22,17 +22,18 @@ const AltrpTable = ({settings, query, data}) => {
   const [page, setPage] = useState(1);
   const [sortSetting, setSortSettings] = useState({});
   const [filterSetting, setFilterSettings] = useState({});
-  const fetchModels = useCallback(async (key, page = 1) => {
-    return query.getQueried(
-      sortSetting ?
-      { ...sortSetting, page } :
-      { page }
-    )
+  const filterSettingJSON = JSON.stringify(filterSetting);
+  const fetchModels = useCallback(async (key, page = 1, sortSetting, filterSetting) => {
+    let queryData = {page};
+    const filterSettingJSON = JSON.stringify(filterSetting);
+    if(sortSetting){
+      queryData = _.assign(sortSetting, queryData);
+    }
+    if(filterSettingJSON.length > 2){
+      queryData.filters = filterSettingJSON;
+    }
+    return query.getQueried(queryData)
   });
-  // useEffect(() => {
-  //   fetchModels()
-  // }, [sortSetting]);
-
   if(query.pageSize){
     /**
      * Если есть пагинация
@@ -42,7 +43,7 @@ const AltrpTable = ({settings, query, data}) => {
       resolvedData,
       latestData,
       error,
-    } = usePaginatedQuery([query.modelName, page, sortSetting], fetchModels, {});
+    } = usePaginatedQuery([query.modelName, page, sortSetting, filterSetting ], fetchModels, {});
     _data = resolvedData ? resolvedData[query.modelName] : _data;
     _status = status;
     _error = error;
@@ -51,13 +52,13 @@ const AltrpTable = ({settings, query, data}) => {
       if (latestData?.hasMore) {
         queryCache.prefetchQuery([query.modelName, page + 1], fetchModels);
       }
-    }, [latestData, fetchModels, page, sortSetting]);
+    }, [latestData, fetchModels, page, sortSetting, filterSetting]);
   }else {
     /**
      * Если нет пагинации
      */
     const {status, data, error,} = useQuery(query.modelName, () => {
-      return query.getResource().getQueried({...sortSetting})
+      return query.getResource().getQueried({...sortSetting,filters: filterSettingJSON})
     }, [query.modelName]);
     _data = data;
     _status = status;
@@ -83,14 +84,21 @@ const AltrpTable = ({settings, query, data}) => {
     ),
     data: React.useMemo(() => (_data || []), [_data]),
   }, );
-
-  const sortingHandler = order_by => setSortSettings({ 
+  /**
+   * Обработка клика для сортировки
+   */
+  const sortingHandler = order_by => {
+    setSortSettings({
     order_by, 
     order: sortSetting &&
       (sortSetting.order_by === order_by) ? (sortSetting.order === "DESC" ? "ASC" :  "DESC") : "ASC"
-
   });
+  };
+  /**
+   * Изменение поля для фильтрации
+   */
   const filterHandler = (filteredColumn, searchString) => {
+    setPage(1);
     const filterParams = {...filterSetting};
     if(searchString){
       filterParams[filteredColumn] = searchString;
@@ -241,26 +249,22 @@ function renderTh({column, sortSetting, sortingHandler, filterSetting, filterHan
     thProps.width = column.column_width + '%';
   }
   let thText = column.render('column_name');
-  console.log(column);
   return  <th {...thProps}>
     {thText}
     { sortSetting && (sortSetting.order_by === column._accessor)
       && (sortSetting.order === "DESC" ?
         iconsManager().renderIcon('chevron', {className:'rotate-180'}) :
         iconsManager().renderIcon('chevron'))}
-    {/*{column.column_is_sorted &&*/}
-    {/*<button className="altrp-table-th_sort" onClick={}>*/}
-    {/*{sortSetting && sortSetting.order === "DESC" ? '∨' : '∧'}*/}
-    {/*</button>}        */}
     {column.column_is_filtered &&
     <label className="altrp-label">
     <input type="text"
-           onClick={e=>{
+           onClick={e => {e.stopPropagation()}}
+           onChange={e=>{
              e.stopPropagation();
              let value = e.target.value;
              filterHandler(column._accessor, value)
            }}
-           value
+           value={filterSetting[column._accessor] || ''}
            className="altrp-field"/>
     </label>}
 
