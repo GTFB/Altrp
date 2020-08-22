@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {Link, Redirect, withRouter } from 'react-router-dom';
 import {isEditor} from "../../../../../front-app/src/js/helpers";
+import {renderAssetIcon} from "../../helpers";
 
 class ButtonWidget extends Component {
   constructor(props) {
@@ -60,6 +61,7 @@ class ButtonWidget extends Component {
     // }
     let classes =
       "altrp-btn " + (this.state.settings.position_css_classes || "");
+    let buttonMedia = {...this.state.settings.button_icon};
     if (this.state.pending) {
       classes += " altrp-disabled";
     }
@@ -70,6 +72,7 @@ class ButtonWidget extends Component {
         id={this.state.settings.position_css_id}
       >
         {this.state.settings.button_text || ""}
+        <span className={"altrp-btn-icon "}>{ renderAssetIcon( buttonMedia ) } </span>
       </button>
     );
     let link = null;
@@ -92,7 +95,7 @@ class ButtonWidget extends Component {
       }
     }
 
-    return link || button;
+    return link || button || buttonMedia;
   }
 }
 
