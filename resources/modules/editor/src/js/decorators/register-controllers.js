@@ -7,7 +7,8 @@ import {
   CONTROLLER_SHADOW,
   CONTROLLER_CHOOSE,
   CONTROLLER_CSSEDITOR,
-  TAB_ADVANCED
+  TAB_ADVANCED,
+  CONTROLLER_SWITCHER
 } from "../classes/modules/ControllersManager";
 /**
  * Функция декорирует элемент неободимыми контроллерами
@@ -295,6 +296,30 @@ export function advancedTabControllers(element) {
       ],
     }
   );
+
+  element.endControlSection();
+
+  element.startControlSection(
+    'responsive_display', {
+    tab: TAB_ADVANCED,
+    label: 'Responsive',
+  }
+  );
+
+  element.addControl('hide_on_desktop', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Hide On Desktop',
+  });
+
+  element.addControl('hide_on_tablet', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Hide On Tablet',
+  });
+
+  element.addControl('hide_on_mobile', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Hide On Mobile',
+  });
 
   element.endControlSection();
 
