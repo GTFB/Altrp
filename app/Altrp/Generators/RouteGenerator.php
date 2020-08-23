@@ -92,10 +92,12 @@ class RouteGenerator
             ['model_id', $this->controllerModel->model->id],
         ])->get();
         if (! $sources) return [];
+        $authMiddleware = ['auth:api','auth'];
+        $middleware = "'middleware' => [" . '\'' . implode("','", $authMiddleware) . '\'' . '], ';
         foreach ($sources as $source) {
             if (! in_array($source->type, $actions)) {
                 $routes[] = 'Route::get(\'/queries/' . $tableName .'/'
-                . $source->type . '\', [\'uses\' =>\'' . $controller . '@'
+                . $source->type . '\', [' . $middleware .'\'uses\' =>\'' . $controller . '@'
                 . lcfirst(Str::studly($source->type)) . '\']);';
             }
         }

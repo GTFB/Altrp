@@ -666,7 +666,7 @@ class ControllerGenerator extends AppGenerator
         $oldModelName = strtolower(Str::plural(Str::snake($model->getOriginal('name'))));
         $resourceId = Str::singular($modelName);
         $userColumns = trim($this->controllerModel->model->user_cols, ' ');
-        $middleware = ($userColumns) ? "'middleware' => [" . $this->getAuthMiddleware() . '], ' : null;
+        $middleware = "'middleware' => [" . $this->getAuthMiddleware() . '], ';
         $controllerName = $this->getFormedControllerName($this->controllerModel);
         $controller = trim($controllerName, "\\");
         $prefix = $this->getRoutePrefix() ? '/' . trim($this->getRoutePrefix(), '/') : null;
