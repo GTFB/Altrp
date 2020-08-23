@@ -17,7 +17,8 @@ import {
   CONTROLLER_SWITCHER,
   TAB_CONTENT,
   TAB_STYLE,
-  TAB_ADVANCED
+  TAB_ADVANCED,
+  CONTROLLER_MEDIA
 } from "../modules/ControllersManager";
 
 class Button extends BaseElement{
@@ -75,6 +76,11 @@ class Button extends BaseElement{
       rules: {
             '{{ELEMENT}}': 'align-items: {{VALUE}};',
       },
+    });
+
+    this.addControl('button_icon', {
+      type: CONTROLLER_MEDIA,
+      label: 'icon',
     });
 
     this.endControlSection();
@@ -273,6 +279,53 @@ class Button extends BaseElement{
       },
     }
   );
+
+  this.endControlSection();
+
+  this.startControlSection("icon_style", {
+    tab: TAB_STYLE,
+    label: "Icon"
+  });
+
+  this.addControl('alignment_icon_style', {
+    type: CONTROLLER_CHOOSE,
+    label: 'Alignment',
+    default: 'left',
+    options: [
+      {
+        icon: 'block_left',
+        value: 'left',
+      },
+      {
+        icon: 'block_right',
+        value: 'right',
+      },
+    ],
+  });
+
+  this.addControl("color_icon_style", {
+    type: CONTROLLER_COLOR,
+    label: "Color",
+    default: {
+      color: "rgb(50,168,82)",
+      colorPickedHex: "#32a852"
+    },
+    // rules: {
+    //   "{{ELEMENT}} .altrp-tab-btn-icon{{STATE}} svg path": "fill: {{COLOR}};"
+    // }
+  });
+
+  this.addControl("spacing_icon_style", {
+    type: CONTROLLER_SLIDER,
+    label: "Spacing",
+    default: {
+      size: 8,
+      unit: "px"
+    },
+    units: ["px", "%", "vh"],
+    max: 100,
+    min: 0,
+  });
 
   this.endControlSection();
 
