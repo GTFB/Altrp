@@ -58,10 +58,14 @@ class ButtonWidget extends Component {
 
   render() {
     const { button_icon, alignment_icon_style, spacing_icon_style, color_icon_style } = this.state.settings;
-    let iconStyles = alignment_icon_style == "left" ? 
+    let iconStyles
+    if (alignment_icon_style)  {
+    iconStyles = alignment_icon_style == "left" ? 
       { paddingRight: spacing_icon_style.size + spacing_icon_style.unit} :
       { paddingLeft: spacing_icon_style.size + spacing_icon_style.unit }
-    const icon = <div className="altrp-button-icon" style={{ ...iconStyles, fill: color_icon_style.color }}>
+    }
+    const icon = <div className="altrp-button-icon" 
+      style={{ ...iconStyles, fill: color_icon_style ? color_icon_style.color : 'inherit' }}>
       {renderAssetIcon(button_icon)}
     </div>;
     // if (this.state.redirect) {
