@@ -303,9 +303,11 @@ class InstallationController extends Controller
 
       $this->writeEnv( $request );
 
+      $this->writeFiles( $request );
+
       $this->migrate( $request );
 
-      return redirect( 'admin' );
+      return redirect( '/linkstorage' );
     }
     return view( 'installation' );
   }
@@ -389,7 +391,7 @@ class InstallationController extends Controller
   public function migrate( Request $request )
   {
     Artisan::call( 'config:clear');
-    sleep(2);
+    sleep(1);
     Artisan::call( 'migrate', [ '--force' => true ] );
 
     $user = new User( [
@@ -411,8 +413,30 @@ class InstallationController extends Controller
 
     // Clear all Cache
     Artisan::call('cache:clear');
-    sleep(2);
+    sleep(1);
     Artisan::call('view:clear');
     sleep(1);
+  }
+
+  /**
+   * Создаем необходимые файлы
+   * @param $request
+   */
+  private function writeFiles( $request )
+  {
+    /**
+     * Файл AltrpRoutes.php для пользовательских роутов
+     */
+
+    $filename = base_path( 'routes/AltrpRoutes.php' );
+    $content = '<?php
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+/**
+ * File for user routes
+ */
+';
+    File::put( $filename, $content );
   }
 }

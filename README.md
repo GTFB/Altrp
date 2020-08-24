@@ -4,7 +4,14 @@
 ## Changelog
 
 
-### 0.5.7
+### 0.7.0
++ Add Hover, Active, Disabled States Styling
++ Add Breakpoints Settings for Templates
++ Optimize Front App
++ Add Models with Relations and Fields Admin Settings 
+
+
+### 0.6.0
 + Add Related Models Field in Dynamic Content Options
 + Update Related Models Data in Forms
 + Element States in Editor

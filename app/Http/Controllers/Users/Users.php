@@ -46,7 +46,7 @@ class Users extends Controller
      * @param Request $request
      * @return type
      */
-    function insert(ApiRequest $request) {
+    function insert( ApiRequest $request)  {
         //dd(123);
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -60,7 +60,14 @@ class Users extends Controller
         $user->password = Hash::make($request->password);
         
         if($user->save()){
-            return response()->json($user, 200, [],JSON_UNESCAPED_UNICODE);
+
+          if( is_array( $request->get( 'permissions' ) ) ){
+            $user->attachPermissions( $request->get( 'permissions' ) );
+          }
+          if( is_array( $request->get( 'roles' ) ) ){
+            $user->attachRoles( $request->get( 'roles' ) );
+          }
+          return response()->json($user, 200, [],JSON_UNESCAPED_UNICODE);
         }
         
         return response()->json(trans("responses.dberror"), 400, [],JSON_UNESCAPED_UNICODE);

@@ -24,5 +24,9 @@ _ide_helper.php
 /database/altrp_migrations
 /app/AltrpModels
 /app/Http/Controllers/AltrpControllers
+/app/Repositories/AltrpRepositories
+/app/Http/Requests/AltrpRequests
+/app/Providers/AltrpRepositoryServiceProvider.php
 /routes/AltrpRoutes.php
 /out
+/app/Http/Requests/AltrpRequests

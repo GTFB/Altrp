@@ -23,14 +23,7 @@ class PagesController extends Controller
 
     $_pages = Page::all();
     $pages = [];
-//    echo '<pre style="padding-left: 200px;">';
-//    var_dump( $_pages );
-//    echo '</pre>';
-
     foreach ( $_pages as $page ) {
-//      echo '<pre style="padding-left: 200px;">';
-//      var_dump( $page );
-//      echo '</pre>';
 
       $content_template = $page->get_content_template();
       $pages[] = [
@@ -167,14 +160,19 @@ class PagesController extends Controller
   /**
    * Remove the specified resource from storage.
    *
-   * @param Media $media
+   * @param Page $page
    * @param string $id
    * @return \Illuminate\Http\Response
    * @throws \Exception
    */
-  public function destroy( Media $media, $id )
+  public function destroy( Page $page, $id )
   {
     //
+    $page = $page->find( $id );
+    if( $page->delete() ){
+      return response()->json( ['success' => true,], 200, [], JSON_UNESCAPED_UNICODE );
+    }
+    return response()->json( ['success' => false, 'message' => 'Could not deleting'], 200, [], JSON_UNESCAPED_UNICODE );
   }
 
   /**
@@ -185,7 +183,8 @@ class PagesController extends Controller
   public function pages_options( Request $request )
   {
     $pages = Page::where( 'title', 'like', '%' . $request->get( 's' ) . '%' )
-      ->orWhere( 'path', 'like', '%' . $request->get( 's' ) . '%' )->get();
+      ->orWhere( 'path', 'like', '%' . $request->get( 's' ) . '%' )
+      ->orWhere( 'id', 'like', '%' . $request->get( 's' ) . '%' )->get();
 
     $pages_options = [];
     foreach ( $pages as $page ) {
@@ -199,7 +198,7 @@ class PagesController extends Controller
 
   /**
    * Обработка запроса на получение списка страниц
-   * @param string $request
+   * @param string $page_id
    * @return \Illuminate\Http\JsonResponse
    */
   public function show_pages_options( $page_id )

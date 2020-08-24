@@ -3,3 +3,12 @@
     width: 100% / $i;
   }
 }
+@for $i from 1 through 100 {
+    .column-width_#{$i} {
+        width: 1% * $i;
+    }
+}
+
+.altrp-control-structure-wrapper.active .altrp-control-left-block{
+    background-color: #a4afb7 !important;
+}

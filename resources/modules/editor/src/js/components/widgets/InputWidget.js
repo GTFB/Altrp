@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import { set } from "lodash";
 import {parseOptionsFromSettings} from "../../../../../front-app/src/js/helpers";
+import Resource from "../../classes/Resource";
 // import InputMask from "react-input-mask";
 
 class InputWidget extends Component {
@@ -9,7 +10,7 @@ class InputWidget extends Component {
     super(props);
     this.onChange = this.onChange.bind(this);
     this.state = {
-      settings: props.element.getSettings(),
+      settings: {...props.element.getSettings()},
       value: props.element.getSettings().content_default_value || '',
       options: parseOptionsFromSettings(props.element.getSettings('content_options'))
     };
@@ -19,6 +20,35 @@ class InputWidget extends Component {
     }
   }
 
+  /**
+   * Загрузка виджета
+   */
+  async _componentDidMount(){
+    if(this.state.settings.content_type === 'select' && this.state.settings.model_for_options){
+      let model_for_options = this.props.element.getSettings('model_for_options');
+      let options = await(new Resource({route: `/ajax/models/${model_for_options}_options`})).getAll();
+      this.setState(state =>({...state, options}))
+    }
+  }
+  /**
+   * Обновление виджета
+   */
+  async componentDidUpdate(prevProps){
+    if(this.props.element.getSettings('content_type') === 'select' && this.props.element.getSettings('model_for_options') ){
+      if(this.state.settings.model_for_options === prevProps.element.getSettings('model_for_options')){
+        return;
+      }
+      let model_for_options = prevProps.element.getSettings('model_for_options');
+      let options = await (new Resource({route: `/ajax/models/${model_for_options}_options`})).getAll();
+      this.setState(state =>({...state, options,model_for_options}))
+    }
+  }
+
+
+  /**
+   * Изменение значения в виджете
+   * @param e
+   */
   onChange(e){
     let value = e.target.value;
     this.setState(state=>({
@@ -29,6 +59,7 @@ class InputWidget extends Component {
 
   render(){
     let label = null;
+    let required = null;
     /**
      * Если значение загрузилось  динамическое,
      * то используем this.getContent для получение этого динамического значения
@@ -50,6 +81,7 @@ class InputWidget extends Component {
         styleLabel = {
             marginTop: this.state.settings.label_style_spacing.size + this.state.settings.label_style_spacing.unit || 2 + "px"
         };
+        classLabel = "";
         break;
       case "left":
         styleLabel = {
@@ -67,7 +99,6 @@ class InputWidget extends Component {
       label = null
     }
 
-    let required = null;
     if(this.state.settings.content_required) {
       required = <div className="altrp-field-label-container"><label className="altrp-field-required">*</label></div>
     } else {
@@ -116,16 +147,14 @@ class InputWidget extends Component {
     }
     return <div className={"altrp-field-container " + classLabel}>
         {this.state.settings.content_label_position_type == "top" ? label : ""}
+        {this.state.settings.content_label_position_type == "top" ? required : ""}
         {this.state.settings.content_label_position_type == "left" ? label : ""}
+        {this.state.settings.content_label_position_type == "left" ? required : ""}
             {/* .altrp-field-label-container */}
-        {
-          required
-        }
       {input}
       {/* <InputMask mask="99/99/9999" onChange={this.onChange} value={this.state.value} /> */}
-      {
-        this.state.settings.content_label_position_type == "bottom" ? label : ""
-      }
+      {this.state.settings.content_label_position_type == "bottom" ? label : ""}
+      {this.state.settings.content_label_position_type == "bottom" ? required : ""}
     </div>
   }
 }

@@ -28,7 +28,8 @@ class CrudControllerCommand extends GeneratorCommand
                             {--custom-namespaces= : Custom namespaces of the controller.}
                             {--custom-traits= : Custom traits of the controller.}
                             {--custom-properties= : Custom props of the controller.}
-                            {--custom-methods= : Custom methods of the controller.}';
+                            {--custom-methods= : Custom methods of the controller.}
+                            {--options= : Resource data for select options.}';
 
     /**
      * The console command description.
@@ -110,6 +111,14 @@ class CrudControllerCommand extends GeneratorCommand
         $customTraits = $this->option('custom-traits') ?? '';
         $customProperties = $this->option('custom-properties') ?? '';
         $customMethods = $this->option('custom-methods') ?? '';
+        $options = $this->option('options') ?? '';
+
+        $storeRequest = $modelName . 'StoreRequest';
+        $updateRequest = $modelName . 'UpdateRequest';
+        $requestNamespaces = "use App\Http\Requests\AltrpRequests\\"
+            . str_replace('AltrpModels\\', '', $modelNamespace) . $storeRequest . ";\n"
+            . "use App\Http\Requests\AltrpRequests\\"
+            . str_replace('AltrpModels\\', '', $modelNamespace) . $updateRequest . ";";
 
         $validationRules = '';
         if (trim($validations) != '') {
@@ -184,15 +193,43 @@ EOD;
             ->replaceRoutePrefix($stub, $routePrefix)
             ->replaceRoutePrefixCap($stub, $routePrefixCap)
             ->replaceValidationRules($stub, $validationRules)
+            ->replaceStoreRequest($stub, $storeRequest)
+            ->replaceUpdateRequest($stub, $updateRequest)
+            ->replaceRequestNamespaces($stub, $requestNamespaces)
             ->replaceRelations($stub, $relations)
             ->replaceCustomNamespaces($stub, $customNamespaces)
             ->replaceCustomTraits($stub, $customTraits)
             ->replaceCustomProperties($stub, $customProperties)
             ->replaceCustomMethods($stub, $customMethods)
+            ->replaceOptions($stub, $options)
             ->replacePaginationNumber($stub, $perPage)
             ->replaceFileSnippet($stub, $fileSnippet)
             ->replaceWhereSnippet($stub, $whereSnippet)
             ->replaceClass($stub, $name);
+    }
+
+    protected function replaceOptions(&$stub, $options)
+    {
+        $stub = str_replace('{{options}}', $options, $stub);
+        return $this;
+    }
+
+    protected function replaceStoreRequest(&$stub, $storeRequest)
+    {
+        $stub = str_replace('{{storeRequest}}', $storeRequest, $stub);
+        return $this;
+    }
+
+    protected function replaceUpdateRequest(&$stub, $updateRequest)
+    {
+        $stub = str_replace('{{updateRequest}}', $updateRequest, $stub);
+        return $this;
+    }
+
+    protected function replaceRequestNamespaces(&$stub, $requestNamespaces)
+    {
+        $stub = str_replace('{{requestNamespaces}}', $requestNamespaces, $stub);
+        return $this;
     }
 
     /**

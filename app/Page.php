@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Mockery\Exception;
 
 /**
@@ -31,7 +32,7 @@ class Page extends Model
   /**
    * @return array
    */
-  static function get_frontend_routes()
+  static function get_frontend_routes( )
   {
     $pages = [];
     if( ! appIsInstalled()  ){
@@ -50,9 +51,10 @@ class Page extends Model
   }
 
   /**
+   * @param bool $lazy
    * @return array
    */
-  public static function get_pages_for_frontend()
+  public static function get_pages_for_frontend( $lazy = false )
   {
     $pages = [];
 
@@ -66,7 +68,11 @@ class Page extends Model
           'id' => $page->id,
           'title' => $page->title,
           'allowed' => true,
-          'areas' => self::get_areas_for_page( $page->id ),
+          /**
+           * Если лениво загружаем области то возвращаем пустой массив
+           */
+          'areas' => $lazy ? [] : self::get_areas_for_page( $page->id ),
+//          'areas' => self::get_areas_for_page( $page->id ),
         ];
       } else {
         $_page = [
@@ -76,13 +82,14 @@ class Page extends Model
           'redirect' => '/',
         ];
       }
+      $_page['lazy'] = $lazy;
       if($page->model){
         $_page['model'] = $page->model->toArray();
-        $_page['model']['modelName'] = $page->model->altrp_table->name;
+        $_page['model']['modelName'] = Str::plural( $page->model->name );
       }
-      if( $page->get_models() ){
-        $_page['models'] = $page->get_models();
-      }
+//      if( $page->get_models() ){
+//        $_page['models'] = $page->get_models();
+//      }
       $pages[] = $_page;
     }
 
@@ -96,8 +103,9 @@ class Page extends Model
   public static function get_areas_for_page( $page_id ){
     $areas = [];
 
-    $header = Template::where( 'area', 2 )->first();
+    $header = Template::where( 'area', 2 )->where( 'type', 'template' )->first();
     if( $header ){
+      $header->check_elements_conditions();
       $areas[] = [
         'area_name' => 'header',
         'id' => 'header',
@@ -105,21 +113,42 @@ class Page extends Model
         'template' => $header
       ];
     }
+    $content = PagesTemplate::where( 'page_id', $page_id )
+      ->where( 'template_type', 'content' )->first()->template;
+    $content->check_elements_conditions();
     $areas[] = [
       'area_name' => 'content',
       'id' => 'content',
       'settings' => [],
-      'template' => PagesTemplate::where( 'page_id', $page_id )
-        ->where( 'template_type', 'content' )->first()->template
+      'template' => $content,
     ];
 
-    $footer = Template::where( 'area', 3 )->first();
+    $footer = Template::where( 'area', 3 )->where( 'type', 'template' )->first();
     if( $footer ){
+      $footer->check_elements_conditions();
       $areas[] = [
         'area_name' => 'footer',
         'id' => 'footer',
         'settings' => [],
         'template' => $footer
+      ];
+    }
+    $popups = Template::join( 'areas', 'areas.id', '=', 'templates.area' )
+      ->where( 'areas.name', '=', 'popup' )
+      ->where( 'type', 'template' )->get( 'templates.*' );
+
+
+
+    if( $popups->count() ){
+      foreach ( $popups as $key => $popup ) {
+        $popups[$key]->template_settings = $popup->template_settings();
+
+      }
+      $areas[] = [
+        'area_name' => 'popups',
+        'id' => 'popups',
+        'settings' => [],
+        'templates' => $popups->toArray(),
       ];
     }
 
@@ -242,7 +271,7 @@ class Page extends Model
    * @return bool
    */
   public function allowedForUser( $user_id = '' ){
-    if( ( ! auth()->user() ) && $this->for_guest ) {
+    if( ( ! auth()->user() ) ) {
       return true;
     }
     if( ! $user_id ) {
@@ -250,23 +279,26 @@ class Page extends Model
     } else {
       $user = User::find( $user_id );
     }
-    if( ! $user ){
-      return false;
-    }
     $allowed = false;
 
     /** @var User $user */
     $user = auth()->user();
     $page_role_table = DB::table( 'page_role' );
     $page_roles = $page_role_table->where( 'page_id', $this->id )->get();
+    /**
+     * Если никаких ролей не указано и for_guest false, то всегда доступно
+     */
+    if( ( ! $page_roles->count() ) && ! $this->for_guest ){
+      $allowed = true;
+    }
+    if( ! $user ){
+      return false;
+    }
     foreach ( $page_roles as $page_role ) {
       $role = Role::find( $page_role->role_id );
       if( $user->hasRole( $role->name ) ){
         $allowed = true;
       }
-    }
-    if( ( ! $page_roles->count() ) && ! $this->for_guest ){
-      $allowed = true;
     }
     return $allowed;
   }

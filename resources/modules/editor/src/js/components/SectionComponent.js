@@ -1,6 +1,50 @@
 import React, {Component} from "react";
-import '../../sass/section.scss'
+import '../../sass/section.scss';
+import {connect} from "react-redux";
+import store, {getCurrentElement} from "../store/store";
 import { styles } from "react-contexify/lib/utils/styles";
+import {changeWidthColumns} from "../store/column-width/actions";
+
+// const SectionComponent = ({ children, element }) => {
+//   if (!children.length) {
+//     throw `Section Component Must Contain at Least One Column as Child`;
+//   }
+//
+//   //const [columns, setColumns] = useState(children);
+//   //const [settings, setSettings] = useState(element.getSettings());
+//
+//   /* element.component = this;
+//
+//   if (window.elementDecorator) {
+//     window.elementDecorator(this);
+//   } */
+//
+//   const handleContext = e => {
+//     e.persist();
+//     e.preventDefault();
+//     contextMenu.show({
+//       id: "element-menu",
+//       event: e,
+//       props: {
+//         element,
+//         children
+//       }
+//     });
+//   };
+//
+//   return (
+//     <div className="altrp-section" onContextMenu={handleContext}>
+//       {children.map(column => (
+//         <ElementWrapper
+//           key={column.getId()}
+//           component={column.componentClass}
+//           element={column}
+//         />
+//       ))}
+//     </div>
+//   );
+// };
+import '../../sass/section.scss'
 import { isEditor, getWindowWidth } from "../helpers"
 
 class SectionComponent extends Component {
@@ -11,13 +55,14 @@ class SectionComponent extends Component {
     }
     this.state = {
       children: props.children,
-      settings: props.element.getSettings()
+      settings: props.element.getSettings(),
     };
     props.element.component = this;
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
   }
+
 
   render() {
     let styles = {};
@@ -69,4 +114,10 @@ class SectionComponent extends Component {
   }
 }
 
-export default SectionComponent;
+function mapStateToProps(state) {
+  return{
+    changeWidthColumns:state.columnWidth,
+  };
+}
+
+export default connect(mapStateToProps)(SectionComponent);

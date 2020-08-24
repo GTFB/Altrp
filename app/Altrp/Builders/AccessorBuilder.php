@@ -22,6 +22,11 @@ class AccessorBuilder
     protected $model;
 
     /**
+     * @var Accessor
+     */
+    protected $accessor;
+
+    /**
      * @var string
      */
     protected $modelFile;
@@ -39,16 +44,24 @@ class AccessorBuilder
     /**
      * AccessorBuilder constructor.
      * @param Model $model
-     * @param $data
+     * @param Accessor $accessor
+     * @param array $data
      */
-    public function __construct(Model $model, $data = [])
+    public function __construct(Model $model, Accessor $accessor, $data = [])
     {
         $this->model = $model;
         $this->data = $data;
+        $this->accessor = $accessor;
         $this->modelFile = $this->getModelFile($this->model->path, $this->model->name);
     }
 
     /**
+     * Добавить аксессор
+     *
+     * @return bool
+     * @throws AccessorNotWrittenException
+     * @throws ModelNotWrittenException
+     * @throws ParseFormulaException
      * @throws \Exception
      */
     public function build()
@@ -83,19 +96,14 @@ class AccessorBuilder
     /**
      * Удалить аксессор
      *
-     * @param $accessor
      * @return bool
      * @throws AccessorNotFoundException
      * @throws ModelNotWrittenException
      * @throws \Exception
      */
-    public function delete($accessor)
+    public function delete()
     {
-        if (! $accessor) {
-            throw new AccessorNotFoundException("Аксессор не найден!", 404);
-        }
-
-        if (! $this->removeAccessor($accessor)) {
+        if (! $this->removeAccessor()) {
             throw new AccessorNotFoundException("Ошибка удаления аксессора!", 500);
         }
 
@@ -105,7 +113,7 @@ class AccessorBuilder
 
         $modelFileContent = file($this->modelFile, 2);
         $appends = $this->getAppendColumns($modelFileContent);
-        $search = array_search("'{$accessor->name}'", $appends);
+        $search = array_search("'{$this->accessor->name}'", $appends);
         if ($search !== false) {
             array_splice($appends, $search ,1);
         }
@@ -151,12 +159,12 @@ class AccessorBuilder
     /**
      * Удалить аксессор из таблицы БД
      *
-     * @param $accessor
-     * @return int
+     * @return bool
+     * @throws \Exception
      */
-    protected function removeAccessor($accessor)
+    protected function removeAccessor()
     {
-        return Accessor::destroy($accessor->id);
+        return $this->accessor->delete() ? true : false;
     }
 
     /**
@@ -185,47 +193,41 @@ class AccessorBuilder
     /**
      * Сохранить аксессор в БД
      *
-     * @return bool
+     * @return Accessor|bool
      * @throws \Exception
      */
     protected function addAccessor()
     {
-        $accessor = new Accessor();
-        $accessor->user_id =  auth()->user()->id;
-        $accessor->status = 'created';
-        $accessor->name = $this->data['name'];
-        $accessor->formula = $this->data['formula'];
-        $accessor->description = $this->data['description'] ?? null;
-        $accessor->model_id = $this->model->id;
-        return $accessor->save();
+        $this->accessor->user_id =  auth()->user()->id;
+        $this->accessor->name = $this->data['name'];
+        $this->accessor->status = 'created';
+        $this->accessor->formula = $this->data['formula'];
+        $this->accessor->description = $this->data['description'] ?? null;
+        $this->accessor->model_id = $this->model->id;
+
+        return $this->accessor->save();
     }
 
     /**
      * Обновить аксессор в БД
      *
-     * @return bool
+     * @return Accessor|bool
      * @throws AccessorNotWrittenException
      */
     public function updateAccessor()
     {
-        $accessor = Accessor::where([
-            ['model_id', $this->model->id],
-            ['name', $this->data['old_name']]
-        ])->first();
-
-        if (! $accessor) return false;
-
-        if ($accessor && $accessor->user_id != auth()->user()->id) {
+        if ($this->accessor && $this->accessor->user_id != auth()->user()->id) {
             throw new AccessorNotWrittenException('Вы не можете обновить этот аксессор!', 500);
         }
 
-        $accessor->user_id =  auth()->user()->id;
-        $accessor->status = 'updated';
-        $accessor->name = $this->data['name'];
-        $accessor->formula = $this->data['formula'];
-        $accessor->description = $this->data['description'] ?? null;
-        $accessor->model_id = $this->model->id;
-        return $accessor->save();
+        $this->accessor->user_id =  auth()->user()->id;
+        $this->accessor->status = 'updated';
+        $this->accessor->name = $this->data['name'];
+        $this->accessor->formula = $this->data['formula'];
+        $this->accessor->description = $this->data['description'] ?? null;
+        $this->accessor->model_id = $this->model->id;
+
+        return $this->accessor->save();
     }
 
     /**
@@ -303,7 +305,7 @@ class AccessorBuilder
 
         for ($i = 0; $i < count($modelFileContent); $i++) {
             if (strpos($modelFileContent[$i], 'ACCESSORS') !== false) {
-                for ($j = $i + 1; $j < count($modelFileContent) + $i; $j++) {
+                for ($j = $i + 1; true; $j++) {
                     if (strpos($modelFileContent[$j], 'ACCESSORS') !== false) break;
                     unset($modelFileContent[$j]);
                 }

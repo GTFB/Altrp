@@ -74,7 +74,15 @@ class RootElement extends BaseElement {
 
     this.addControl('preview_model', {
       type: CONTROLLER_SELECT,
-      resource: '/admin/ajax/models_options',
+      resource: '/admin/ajax/models_options?with_names=1&not_plural=1',
+      nullable: true,
+    });
+    this.addControl('preview_model_instance', {
+      type: CONTROLLER_SELECT2,
+      options_resource: '/ajax/models/{{preview_model}}_options',
+      conditions:{
+        'preview_model!': [null, '', undefined],
+      },
       nullable: true,
     });
 

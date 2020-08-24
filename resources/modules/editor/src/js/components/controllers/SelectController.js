@@ -1,16 +1,17 @@
-import React, {Component} from "react";
-import {connect} from "react-redux";
-import DesktopIcon from '../../../svgs/desktopNew.svg'
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import controllerDecorate from "../../decorators/controller";
 import Resource from '../../classes/Resource';
+import ResponsiveDdMenu from "../ResponsiveDdMenu";
 
 class SelectController extends Component {
   constructor(props) {
     super(props);
-    let value = this.props.currentElement.getSettings(this.props.controlId);
+    controllerDecorate(this);
+    let value = this.getSettings(this.props.controlId);
     // console.log(value);
-    if(value === null && this.props.default){
-      value = this.props.default ;
+    if (value === null && this.props.default) {
+      value = this.props.default;
     }
     value = value || '';
     this.state = {
@@ -18,35 +19,34 @@ class SelectController extends Component {
       show: true,
       options: this.props.options || [],
     };
-    controllerDecorate(this);
     this.changeValue = this.changeValue.bind(this);
-    if(this.props.resource){
-      this.resource = new Resource({route: this.props.resource});
+    if (this.props.resource) {
+      this.resource = new Resource({ route: this.props.resource });
     }
   }
 
-  getDefaultValue(){
+  getDefaultValue() {
     return '';
   }
-  changeValue(e){
+  changeValue(e) {
     this._changeValue(e.target.value);
   }
 
   render() {
 
-    if(this.state.show === false) {
+    if (this.state.show === false) {
       return '';
     }
-
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     return <div className="controller-container controller-container_select">
       <div className="controller-container__label control-select__label">
         {this.props.label}
-        <DesktopIcon className="controller-container__label-svg" width="12"/>
+        <ResponsiveDdMenu />
       </div>
       <div className="control-container_select-wrapper">
 
-        <select className="control-select control-field" value={this.state.value} onChange={this.changeValue}>
-          {this.state.options.map(option => {return <option value={option.value} key={option.value || 'null'}>{option.label}</option>})}
+        <select className="control-select control-field" value={value || ''} onChange={this.changeValue}>
+          {this.state.options.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
         </select>
       </div>
     </div>
@@ -54,8 +54,10 @@ class SelectController extends Component {
 }
 
 function mapStateToProps(state) {
-  return{
-    currentElement:state.currentElement.currentElement,
+  return {
+    currentElement: state.currentElement.currentElement,
+    currentState: state.currentState,
+    currentScreen: state.currentScreen
   };
 }
 export default connect(mapStateToProps)(SelectController);

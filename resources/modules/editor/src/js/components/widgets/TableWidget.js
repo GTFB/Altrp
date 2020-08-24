@@ -20,16 +20,26 @@ class TableWidget extends Component {
     })
   }
 
-  // shouldComponentUpdate(nextProps, nextState){
-  //   console.log(this.state.TableComponent);
-  //   console.log(_.isEqual(nextState, this.state));
-  //   return false;
-  //   return ! (_.isEqual(nextState, this.state));
-  // }
+  /**
+   * Показывать ли таблицу
+   * @param{{}} query
+   * @return {boolean}
+   */
+  showTable(query = {}){
 
+    if(! query.modelName && ! query.dataSource){
+      return false;
+    }
+    return true;
+  }
   render(){
-    let query = new Query(this.props.element.getSettings().table_query || {});
-    return <this.state.TableComponent query={query} settings={this.props.element.getSettings()}/>;
+    let query = new Query(this.props.element.getSettings().table_query || {}, this);
+    if(! this.showTable(query)){
+      return <div children="Please Choose Source"/>
+    }
+    return <this.state.TableComponent query={query}
+                                      data={query.getFromModel(this.state.modelData)}
+                                      settings={this.props.element.getSettings()}/>;
   }
 }
 

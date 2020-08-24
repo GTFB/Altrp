@@ -44,6 +44,8 @@
 .altrp-btn {
   width: auto;
   text-decoration: none;
+  display: flex;
+  align-items: center;
   &_gray {
     background-color: $grey;
     color: #fff;
@@ -147,6 +149,7 @@
 .altrp-field-required {
   color: red;
   font-size: 18px;
+  padding-left: 10px;
 }
 
 .altrp-field-container-label {

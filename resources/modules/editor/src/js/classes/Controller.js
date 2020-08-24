@@ -27,6 +27,10 @@ class Controller {
         }
       }
     }
+
+    if(this.data.prefixClass) {
+      currentElement.setCssClass(this.getSettingName(), this.data.prefixClass + this.data.default);
+    }
     if (this.rules.length) {
       currentElement.addStyles(this.getSettingName(), this.rules);
     }
@@ -41,7 +45,7 @@ class Controller {
      * @member {BaseElement} currentElement
      * */
     let currentElement = getCurrentElement();
-    if (!this.data.repeater) {
+    if (! this.data.repeater) {
       currentElement.setSettingValue(this.getSettingName(), value);
       this.rules.forEach(rule => {
         rule.insertValue(value);
@@ -50,6 +54,12 @@ class Controller {
 
         value ? currentElement.addStyles(this.getSettingName(), this.rules)
           : currentElement.removeStyle(this.getSettingName());
+      }
+      /**
+       * Вызываем currentElement setCssClass в случае если есть this.data.prefixClass
+       */
+      if(this.data.prefixClass) {
+        currentElement.setCssClass(this.getSettingName(), this.data.prefixClass + value);
       }
       store.dispatch(controllerValue(value, this.getSettingName()));
 
@@ -86,9 +96,19 @@ class Controller {
     let show = true;
     conditionPairs.forEach(condition => {
       let [controlId, value] = condition;
-      if (getCurrentElement().getSettings(controlId) !== value) {
-        show = false;
+      let negative = (controlId.indexOf('!') >= 0);
+      controlId = controlId.replace('!', '');
+      if(_.isString(value)){
+        if (getCurrentElement().getSettings(controlId) !== value) {
+          show = negative;
+        }
       }
+      if(_.isArray(value)){
+        if (value.indexOf(getCurrentElement().getSettings(controlId)) >= 0) {
+          show = !negative;
+        }
+      }
+
     });
     return show;
   }
@@ -104,7 +124,7 @@ class Controller {
     if(this.data.controlId === 'element_css_editor'){
       return 'element_css_editor';
     }
-    return this.data.controlId + getElementSettingsSuffix();
+    return this.data.controlId + getElementSettingsSuffix(this);
   }
 }
 

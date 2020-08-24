@@ -1,5 +1,6 @@
-import {getElementState} from "./store/store";
+import {getCurrentScreen, getElementState} from "./store/store";
 import {isEditor} from "../../../front-app/src/js/helpers";
+import CONSTANTS from "./consts";
 
 export function getTemplateId(){
   return (new URL(window.location)).searchParams.get('template_id');
@@ -88,6 +89,9 @@ export function renderAsset(asset, props = null) {
     case 'media': {
       return React.createElement('img', {...props, src: asset.url})
     }
+    case 'mediaBackground': {
+      return React.createElement('div', {...props, style:{backgroundImage: `url(${asset.url})`}})
+    }
     case undefined: {
       return React.createElement('img', {...props, src: '/img/nullImage.png'})
     }
@@ -125,11 +129,14 @@ export function getWindowWidth() {
 /**
  * Генерирует суфикс для всех настроек
  * на основе elementState и разврешения
+ * @param {Controller} controller
  * @return {string}
  */
-export function getElementSettingsSuffix() {
-  if(! getElementState().value){
+export function getElementSettingsSuffix(controller) {
+  let suffix_1 = getElementState().value;
+  let suffix_2 = (getCurrentScreen().name === CONSTANTS.DEFAULT_BREAKPOINT) ? '' : getCurrentScreen().name;
+  if(! (suffix_2 || suffix_1)){
     return '';
   }
-  return `_${getElementState().value}`
+  return `_${getElementState().value}_${getCurrentScreen().name}`
 }

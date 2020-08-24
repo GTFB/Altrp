@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import { Redirect } from 'react-router-dom';
+import {Link, Redirect, withRouter } from 'react-router-dom';
 import {isEditor} from "../../../../../front-app/src/js/helpers";
+import { renderAssetIcon } from "../../helpers";
+import "../../../sass/altrp-button.scss";
 
 class ButtonWidget extends Component {
   constructor(props) {
@@ -8,7 +10,7 @@ class ButtonWidget extends Component {
     this.state = {
       settings: props.element.getSettings(),
       pending: false,
-      redirect: false
+      // redirect: false
     };
     props.element.component = this;
     if (window.elementDecorator) {
@@ -29,15 +31,24 @@ class ButtonWidget extends Component {
           try {
             let res = await form.submit(this.getModelId());
             if (res.success) {
-              let redirect = this.state.settings.redirect_after
-                ? this.state.settings.redirect_after
-                : false;
-              this.setState(state => ({ ...state, pending: false, redirect }));
+              const { redirect_to_prev_page, redirect_after } = this.state.settings;
+              if (redirect_to_prev_page) {
+                this.props.history.goBack();
+              }
+
+              if (redirect_after) {
+                this.props.history.push(redirect_after);
+              }
+              // let redirect = this.state.settings.redirect_after
+              //   ? this.state.settings.redirect_after
+              //   : false;
+              // this.setState(state => ({ ...state, pending: false, redirect }));
             } else if(res.message){
               alert(res.message);
             }
             this.setState(state => ({ ...state, pending: false }));
           } catch (e) {
+            console.error(e);
             this.setState(state => ({ ...state, pending: false }));
           }
         }
@@ -46,11 +57,20 @@ class ButtonWidget extends Component {
   }
 
   render() {
-    if (this.state.redirect) {
-      return <Redirect to={this.state.redirect} push={true} />;
+    const { button_icon, alignment_icon_style, spacing_icon_style, color_icon_style } = this.state.settings;
+    let iconStyles;
+    if (alignment_icon_style)  {
+    iconStyles = alignment_icon_style == "left" ? 
+      { paddingRight: spacing_icon_style.size + spacing_icon_style.unit} :
+      { paddingLeft: spacing_icon_style.size + spacing_icon_style.unit }
     }
+
+    // if (this.state.redirect) {
+    //   return <Redirect to={this.state.redirect} push={true} />;
+    // }
     let classes =
       "altrp-btn " + (this.state.settings.position_css_classes || "");
+    let buttonMedia = {...this.state.settings.button_icon};
     if (this.state.pending) {
       classes += " altrp-disabled";
     }
@@ -60,21 +80,38 @@ class ButtonWidget extends Component {
         className={classes}
         id={this.state.settings.position_css_id}
       >
+        {/*{button_icon && button_icon.assetType === 'icon' && alignment_icon_style === "left" && icon}*/}
         {this.state.settings.button_text || ""}
+{/*<<<<<<< HEAD*/}
+        {/*{button_icon && button_icon.assetType === 'icon' && alignment_icon_style === "right" && icon}*/}
+{/*=======*/}
+        {button_icon && button_icon.assetType && <span className={"altrp-btn-icon "}>{ renderAssetIcon( buttonMedia ) } </span>}
       </button>
     );
     let link = null;
     if (this.state.settings.link_link.url) {
-      link = (
-        <a href={this.state.settings.link_link.url} className={classes}>
-          {" "}
-          {this.state.settings.button_text || ""}
-        </a>
-      );
+      if(this.state.settings.link_link.tag === 'a' || isEditor()) {
+
+        link = (
+            <a href={this.state.settings.link_link.url} onClick={this.onClick} className={classes}>
+              {button_icon && button_icon.assetType === 'icon' && alignment_icon_style === "left" && icon}
+              {this.state.settings.button_text || ""}
+              {button_icon && button_icon.assetType === 'icon' && alignment_icon_style === "right" && icon}
+            </a>
+        );
+      } else {
+        link = (
+            <Link to={this.state.settings.link_link.url} onClick={this.onClick} className={classes}>
+              {button_icon && button_icon.assetType === 'icon' && alignment_icon_style === "left" && icon}
+              {this.state.settings.button_text || ""}
+              {button_icon && button_icon.assetType === 'icon' && alignment_icon_style === "right" && icon}
+            </Link>
+        );
+      }
     }
 
-    return link || button;
+    return link || button || buttonMedia;
   }
 }
 
-export default ButtonWidget;
+export default withRouter(ButtonWidget);

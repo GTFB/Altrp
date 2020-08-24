@@ -9,12 +9,12 @@ import SettingsPanel from "./js/components/SettingsPanel";
 import EditorWindow from "./js/components/EditorWindow";
 import HistoryPanel from "./js/components/HistoryPanel";
 import UpdateButton from "./js/components/UpdateButton";
-import { renderAsset} from "./js/helpers";
+import { renderAsset } from "./js/helpers";
 import CONSTANTS from "./js/consts";
 import { stopDrag } from "./js/store/element-drag/actions";
 import AssetsBrowser from "./js/classes/modules/AssetsBrowser";
 
-import store from "../src/js/store/store";
+import store, { getCurrentElement, getCurrentScreen } from "../src/js/store/store";
 
 
 import DesktopIcon from "./svgs/desktop.svg";
@@ -25,10 +25,13 @@ import Preview from "./svgs/preview.svg";
 import Settings from "./svgs/settings.svg";
 import Dots from "./svgs/dots.svg";
 import Hamburger from "./svgs/hamburger.svg";
-import {contextMenu} from "react-contexify";
+import { contextMenu } from "react-contexify";
 import DynamicContent from "./js/components/DynamicContent/DynamicContent";
-import {closeDynamicContent} from "./js/store/dynamic-content/actions";
-import {iconsManager} from "../../admin/src/js/helpers";
+import { closeDynamicContent } from "./js/store/dynamic-content/actions";
+import { iconsManager } from "../../admin/src/js/helpers";
+import ResponsiveDdMenu from "./js/components/ResponsiveDdMenu";
+import ResponsiveDdFooter from "./js/components/ResponsiveDdFooter";
+import DialogWindow from "./js/components/DialogWindow";
 /**
  * Главный класс редактора.<br/>
  * Реакт-Компонент.<br/>
@@ -46,6 +49,7 @@ class Editor extends Component {
       // activePanel: 'widgets',
       activePanel: "settings",
       templateStatus: CONSTANTS.TEMPLATE_UPDATED,
+      showDialogWindow: false,
     };
     this.openPageSettings = this.openPageSettings.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
@@ -82,6 +86,15 @@ class Editor extends Component {
       activePanel: "widgets",
     });
   }
+
+  /** 
+   * Показывает Dialog окно
+   */
+  showModalWindow() {
+    this.setState({
+      showDialogWindow: !this.state.showDialogWindow
+    })
+  };
 
   /**
    * Показывает панель с настройками текущего виджета
@@ -149,7 +162,7 @@ class Editor extends Component {
     if (
       store.getState().currentElement.currentElement.getType &&
       store.getState().currentElement.currentElement.getType() ===
-        "root-element" &&
+      "root-element" &&
       this.state.activePanel === "settings"
     ) {
       settingsActive = " active";
@@ -157,21 +170,21 @@ class Editor extends Component {
     return (
       <Provider store={store}>
         <div className={templateClasses}
-             onClick={this.onClick}
-             onDragEnd={this.onDragEnd}>
+          onClick={this.onClick}
+          onDragEnd={this.onDragEnd}>
           <div className="left-panel">
             <div className="editor-top-panel">
               <button
                 className="btn btn_hamburger"
-                // onClick={this.showSettingsPanel}
+              // onClick={this.showSettingsPanel}
               >
                 <Hamburger className="icon" />
               </button>
               <a href="/admin/templates" target="_blank" className="logo">
                 {
                   window.admin_logo
-                      ? renderAsset(window.admin_logo, {className:'editor__logo'})
-                      :<Logo viewBox="0 0 97 35" className="editor__logo"/>
+                    ? renderAsset(window.admin_logo, { className: 'editor__logo' })
+                    : <Logo viewBox="0 0 97 35" className="editor__logo" />
                 }
               </a>
               <button className="btn btn_dots" onClick={this.showWidgetsPanel}>
@@ -195,16 +208,17 @@ class Editor extends Component {
               <button className="btn ">
                 <History className="icon" />
               </button>
-              <button className="btn ">
-                <DesktopIcon className="icon" />
-              </button>
+              <div className="btn ">
+                <ResponsiveDdFooter />
+              </div>
               <button className="btn ">
                 <Preview className="icon" />
               </button>
-              <UpdateButton />
+              <UpdateButton onClick={() => this.showModalWindow()} showModalWindow={() => this.showModalWindow()} />
             </div>
           </div>
           <div className="right-panel">
+            {this.state.showDialogWindow && <DialogWindow state={this.state.showDialogWindow} showModalWindow={() => this.showModalWindow()} />}
             <EditorWindow />
           </div>
         </div>

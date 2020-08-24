@@ -5,31 +5,30 @@ namespace DummyNamespace;
 use DummyRootNamespaceHttp\Controllers\ApiController;
 
 use DummyRootNamespace{{modelNamespace}}{{modelName}};
+use App\Http\Requests\ApiRequest;
 use Illuminate\Http\Request;
-// CUSTOM_NAMESPACES - IMPORTANT: Don't remove this comment! Write your namespaces between these comments.
+use Illuminate\Support\Facades\DB;
+{{requestNamespaces}}
+// CUSTOM_NAMESPACES_BEGIN - IMPORTANT: Don't remove this comment! Write your namespaces between these comments.
 {{customNamespaces}}
-// CUSTOM_NAMESPACES - IMPORTANT: Don't remove this comment! Write your namespaces between these comments.
+// CUSTOM_NAMESPACES_END - IMPORTANT: Don't remove this comment! Write your namespaces between these comments.
 
 class DummyClass extends ApiController
 {
-    // CUSTOM_TRAITS - IMPORTANT: Don't remove this comment! Write your traits between these comments.
+    // CUSTOM_TRAITS_BEGIN - IMPORTANT: Don't remove this comment! Write your traits between these comments.
     {{customTraits}}
-    // CUSTOM_TRAITS - IMPORTANT: Don't remove this comment! Write your traits between these comments.
+    // CUSTOM_TRAITS_END - IMPORTANT: Don't remove this comment! Write your traits between these comments.
 
-    // CUSTOM_PROPERTIES - IMPORTANT: Don't remove this comment! Write your properties between these comments.
+    // CUSTOM_PROPERTIES_BEGIN - IMPORTANT: Don't remove this comment! Write your properties between these comments.
     {{customProperties}}
-    // CUSTOM_PROPERTIES - IMPORTANT: Don't remove this comment! Write your properties between these comments.
+    // CUSTOM_PROPERTIES_END - IMPORTANT: Don't remove this comment! Write your properties between these comments.
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * {{modelName}}Controller constructor.
      */
-    public function index()
+    public function __construct()
     {
-        ${{crudName}} = {{modelName}}::all(){{relations}};
-
-        return response()->json(${{crudName}}, 200, [], JSON_UNESCAPED_UNICODE);;
+        $this->modelClass = {{modelName}}::class;
     }
 
     /**
@@ -39,22 +38,21 @@ class DummyClass extends ApiController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store({{storeRequest}} $request)
     {
-        {{validationRules}}
         ${{crudNameSingular}} = new {{modelName}}($request->all());
 
         if(${{crudNameSingular}}->save()){
-            return response()->json(${{crudNameSingular}}, 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success'=>true], 200, [], JSON_UNESCAPED_UNICODE);
         }
 
-        return response()->json(trans("responses.dberror"), 400, [], JSON_UNESCAPED_UNICODE);
+        return response()->json(['success'=>false, 'message' => trans("responses.dberror")], 400, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -73,32 +71,31 @@ class DummyClass extends ApiController
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update({{updateRequest}} $request, $id)
     {
-        {{validationRules}}
         ${{crudNameSingular}} = {{modelName}}::find($id);
 
         if(! ${{crudNameSingular}}) {
-            return response()->json(trans("responses.not_found.{{crudNameSingular}}"), 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success'=>false, 'message' => trans("responses.not_found.{{crudNameSingular}}")], 404, [], JSON_UNESCAPED_UNICODE);
         }
 
         $result = ${{crudNameSingular}}->update($request->all());
 
         if($result){
-            return response()->json($result, 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success'=>true], 200, [], JSON_UNESCAPED_UNICODE);
         }
 
-        return response()->json(trans("responses.dberror"), 400, [], JSON_UNESCAPED_UNICODE);
+        return response()->json(['success'=>false, 'message' => trans("responses.dberror")], 400, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -107,14 +104,14 @@ class DummyClass extends ApiController
         ${{crudNameSingular}} = {{modelName}}::find($id);
 
         if(! ${{crudNameSingular}}) {
-            return response()->json(trans("responses.not_found.{{crudNameSingular}}"), 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success'=>false, 'message' => trans("responses.not_found.{{crudNameSingular}}")], 404, [], JSON_UNESCAPED_UNICODE);
         }
 
         if(${{crudNameSingular}}->delete()) {
-            return response()->json(trans("responses.delete.{{crudNameSingular}}"), 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success'=>true, 'message' => trans("responses.delete.{{crudNameSingular}}")], 200, [], JSON_UNESCAPED_UNICODE);
         }
 
-        return response()->json(trans("deleteerror"), 400, [], JSON_UNESCAPED_UNICODE);
+        return response()->json(['success'=>false, 'message' => trans("deleteerror")], 400, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -146,7 +143,7 @@ class DummyClass extends ApiController
         return response()->json('Failed to update', 400, [], JSON_UNESCAPED_UNICODE);
     }
 
-    // CUSTOM_METHODS - IMPORTANT: Don't remove this comment! Write your methods between these comments.
+    // CUSTOM_METHODS_BEGIN - IMPORTANT: Don't remove this comment! Write your methods between these comments.
     {{customMethods}}
-    // CUSTOM_METHODS - IMPORTANT: Don't remove this comment! Write your methods between these comments.
+    // CUSTOM_METHODS_END - IMPORTANT: Don't remove this comment! Write your methods between these comments.
 }

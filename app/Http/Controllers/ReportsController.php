@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\ApiController;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use App\Reports;
 
-class ReportsController extends ApiController
+class ReportsController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Получение списка отчетов
+     * @return Reports
      */
     public function index()
     {
@@ -21,6 +20,7 @@ class ReportsController extends ApiController
         $reports = Reports::all();
         $result = $reports->map(function($item) {
             $item->url = "/admin/editor-reports?id=" . $item->id;
+            $item->preview = "/reports/html/" . $item->id;
             $item->author = $item->user->name;
             return $item;
         });
@@ -52,20 +52,10 @@ class ReportsController extends ApiController
      * @param  \App\Reports  $reports
      * @return \Illuminate\Http\Response
      */
-    public function show(Reports $reports)
+    public function show(Request $request, $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Reports  $reports
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Reports $reports)
-    {
-        //
+        $report = Reports::findOrFail($id);
+        return response()->json($report, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -75,9 +65,10 @@ class ReportsController extends ApiController
      * @param  \App\Reports  $reports
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Reports $reports)
+    public function update(Request $request, $id)
     {
-        //
+        $reports = Reports::where('id', $id)->update($request->all());
+        return response()->json(array("result" => $reports), 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -89,5 +80,17 @@ class ReportsController extends ApiController
     public function destroy(Reports $reports)
     {
         //
+    }
+
+    /**
+     * Получение списка отчетов
+     * @return Reports
+     */
+    public function page(Request $request, $id)
+    {
+        // Получаем все отчеты
+        $reports = Reports::where('id', $id)->first();
+
+        return response($reports->html)->header('Content-Type', "text/html");
     }
 }

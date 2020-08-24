@@ -22,10 +22,12 @@ class TabsWidget extends Component {
     let currentTab = collectionTabs.children[button.dataset.key];
 
     for(let i = 0; i < collectionTabs.children.length; i++) {
-      collectionTabs.children[i].classList.remove("altrp-tab-show")
+      collectionTabs.children[i].classList.remove("altrp-tab-show");
+      e.currentTarget.parentNode.children[i].classList.remove("active");
     }
 
-    currentTab.classList.add("altrp-tab-show")
+    currentTab.classList.add("altrp-tab-show");
+    e.currentTarget.classList.add("active");
   }
 
   switcher() {

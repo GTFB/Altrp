@@ -17,7 +17,20 @@ module.exports = {
           presets: [
             "@babel/env",
             "@babel/preset-react",
-          ]}
+          ],
+          plugins: ["@babel/plugin-syntax-jsx", "inline-react-svg"],
+
+        }
+      },
+      {
+        test: /\.css$/,
+        // loader: "css-loader",
+        use: [
+          // Creates `style` nodes from JS strings
+          "style-loader",
+          // Translates CSS into CommonJS
+          "css-loader",
+        ],
       },
       // {
       //   test: /\.(js|jsx)$/,
@@ -42,6 +55,7 @@ module.exports = {
       },
       {
         test: /\.svg$/,
+        exclude: /slick.svg$|spritesheet.svg$/,
         use: [
           {
             loader: "babel-loader"
@@ -54,13 +68,19 @@ module.exports = {
           }
         ]
       },
-
       {
         test: /\.(png|jpg|gif)$/,
         loader:'file-loader',
         options: {
           name: '[path][name].[ext]',
         }
+      },
+
+      {
+        test: /(\.(woff|woff2|eot|ttf|otf)|slick.svg|spritesheet.svg)$/,
+        use: [
+          'file-loader',
+        ],
       },
     ]
   },

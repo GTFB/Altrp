@@ -37,12 +37,23 @@ import AdminModal from "./components/AdminModal";
 import AddPage from "./components/AddPage";
 import UserTopPanel from "./components/UserTopPanel";
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
+import Models from "./components/Models";
+import EditModel from "./components/models/EditModel";
+import EditField from "./components/models/EditField";
+import AddRelation from "./components/models/AddRelation";
+import AddDataSource from "./components/models/AddDataSource";
+import SQLBuilder from "./components/SQLBuilder";
+import SqlEditor from "./components/models/SqlEditor";
+import AccessOptions from "./components/AccessOptions";
+import RolePage from "./components/access/RolePage";
+import PermissionPage from "./components/access/PermissionPage";
 
 import AddTable from "./components/tables/AddTable";
 import EditTable from "./components/tables/EditTable";
 import SettingTable from "./components/tables/SettingTable";
 import AddMigrationPage from "./components/tables/AddMigrationPage";
 import AdminVersion from "./components/AdminVersion";
+import SQLEditors from "./components/SQLEditors";
 
 class Admin extends Component {
   constructor(props){
@@ -107,10 +118,25 @@ class Admin extends Component {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/admin/tables" className="admin-nav-list__link">
+                  {/*<Link to="/admin/tables" className="admin-nav-list__link">*/}
+                    {/*<TableSvg className="icon"/>*/}
+                    {/*<span>Tables</span>*/}
+                  {/*</Link>*/}
+
+                  <Link to="/admin/tables/models" className="admin-nav-list__link">
                     <TableSvg className="icon"/>
                     <span>Tables</span>
                   </Link>
+                  <ul className="admin-nav-sublist">
+
+                    <li>
+
+                      <Link to="/admin/tables/sql_editors" className="admin-nav-list__link">
+                        <TableSvg className="icon"/>
+                        <span>SQL Editors</span>
+                      </Link>
+                    </li>
+                  </ul>
                 </li>
                 <li>
                   <Link to="/admin/templates" className="admin-nav-list__link">
@@ -129,10 +155,16 @@ class Admin extends Component {
                     <UserSvg className="icon"/>
                     <span>Users</span>
                   </Link>
-                </li>
+                </li>                
                 <li>
                   <Link to="/admin/tools" className="admin-nav-list__link">
                     <span>Tools</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/access/roles" className="admin-nav-list__link">
+                    <UserSvg className="icon" />
+                    <span>Access</span>
                   </Link>
                 </li>
                 <li>
@@ -214,6 +246,58 @@ class Admin extends Component {
             <Route path="/admin/pages/add">
               <AddPage/>
             </Route>
+            <Route path="/admin/tables/models" exact>
+              <Models />
+            </Route>
+            <Route path="/admin/tables/sql_editors" exact>
+              <SQLEditors />
+            </Route>
+            <Route path="/admin/tables/sql_editors/add">
+              <SqlEditor/>
+            </Route>
+            <Route path="/admin/tables/sql_editors/edit/:id">
+              <SqlEditor/>
+            </Route>
+            <Route path="/admin/tables/models/add">
+              <EditModel />
+            </Route>
+            <Route path="/admin/tables/models/edit/:id" exact>
+              <EditModel />
+            </Route>
+            <Route path="/admin/tables/models/:modelId/fields/add">
+              <EditField/>
+            </Route>
+            <Route path="/admin/tables/models/:modelId/fields/edit/:id">
+              <EditField/>
+            </Route>
+            <Route path="/admin/tables/models/:modelId/relations/add">
+              <AddRelation />
+            </Route>
+            <Route path="/admin/tables/models/:modelId/relations/edit/:id">
+              <AddRelation />
+            </Route>
+            <Route path="/admin/tables/models/:modelId/queries/add">
+              <SQLBuilder/>
+            </Route>
+            <Route path="/admin/tables/data-sources/add">
+              <AddDataSource />
+            </Route>
+
+            <Route path="/admin/access/roles/add">
+              <RolePage />
+            </Route>
+            <Route path="/admin/access/roles/edit/:id">
+              <RolePage />
+            </Route>
+            <Route path="/admin/access/permissions/add">
+              <PermissionPage />
+            </Route>
+            <Route path="/admin/access/permissions/edit/:id">
+              <PermissionPage />
+            </Route>
+            <Route path="/admin/access">
+              <AccessOptions />
+            </Route>            
           </Switch>
         </Router>
         <AdminModal/>
