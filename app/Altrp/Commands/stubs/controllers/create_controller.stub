@@ -127,17 +127,17 @@ class DummyClass extends ApiController
         ${{crudNameSingular}} = {{modelName}}::find($id);
 
         if(! ${{crudNameSingular}}) {
-            return response()->json("Table not found", 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success'=>false, 'message' =>"{{modelName}} not found"], 404, [], JSON_UNESCAPED_UNICODE);
         }
 
         if (! isset(${{crudNameSingular}}->$column)) {
-            return response()->json('Column not exists', 400, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success'=>false, 'message'=>'Column not exists'], 400, [], JSON_UNESCAPED_UNICODE);
         }
 
         ${{crudNameSingular}}->$column = $request->column_value;
 
         if (${{crudNameSingular}}->save()) {
-            return response()->json('Successfully updated', 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success'=>true], 200, [], JSON_UNESCAPED_UNICODE);
         }
 
         return response()->json('Failed to update', 400, [], JSON_UNESCAPED_UNICODE);

@@ -58,8 +58,21 @@ class Query {
         console.log(this.modelUpdater);
       }
     } else {
-      return (await this.getResource().getQueried(this.getParams(params)))[this.dataSourceName]
+      this.lastQuery = (await this.getResource().getQueried(this.getParams(params)));
+      let res = this.lastQuery[this.dataSourceName];
+      res.hasMore = this.lastQuery.hasMore;
+      return res;
     }
+  }
+
+  /**
+   * Проверка есть ли еще
+   */
+  hasMore(){
+    if(! this.lastQuery){
+      return false;
+    }
+    return this.lastQuery.hasMore;
   }
 
   /**

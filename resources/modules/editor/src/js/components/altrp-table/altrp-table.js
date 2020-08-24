@@ -5,6 +5,7 @@ import '../../../sass/altrp-pagination.scss';
 import {Link} from "react-router-dom";
 import {isEditor} from "../../../../../front-app/src/js/helpers";
 import {iconsManager} from "../../../../../admin/src/js/helpers";
+import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput";
 
 /**
  *
@@ -20,8 +21,10 @@ const AltrpTable = ({settings, query, data}) => {
   }
   let _data =[], _status, _error, _latestData;
   const [page, setPage] = useState(1);
+  const [updatedData, setUpdatedData] = useState({});
   const [sortSetting, setSortSettings] = useState({});
   const [filterSetting, setFilterSettings] = useState({});
+  const [doubleClicked, setDoubleClicked] =  useState({});
   const filterSettingJSON = JSON.stringify(filterSetting);
   const fetchModels = useCallback(async (key, page = 1, sortSetting, filterSetting) => {
     let queryData = {page};
@@ -43,7 +46,7 @@ const AltrpTable = ({settings, query, data}) => {
       resolvedData,
       latestData,
       error,
-    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting ], fetchModels, {});
+    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting], fetchModels);
     _data = resolvedData ? resolvedData : _data;
     _status = status;
     _error = error;
@@ -72,6 +75,18 @@ const AltrpTable = ({settings, query, data}) => {
   if(! _.isArray(_data)){
     _data = [_data];
   }
+  /**
+   * обновление данных при изменении ячейки
+   * @type {any[]}
+   * @private
+   */
+  _data = _data.map((row)=>{
+    if(row.id === updatedData.rowId){
+      row[updatedData.column] = updatedData.value;
+      return{...row};
+    }
+    return row;
+  });
   let {
     getTableProps,
     getTableBodyProps,
@@ -137,10 +152,48 @@ const AltrpTable = ({settings, query, data}) => {
                     {row.cells.map((cell, _i) => {
                       let cellContent = cell.render('Cell');
                       let linkTag = isEditor() ? 'a': Link;
+                      const cellProps = {...cell.getCellProps()};
+                      let _cellContent = cell.value;
+
                       /**
-                       * Если значение объект или масиив, то отобразим пустую строку
+                       * Если в настройках колонки установлено редактирование и есть url запроса на редактирование
+                       * то добавляем особое поведение
                        */
-                      if(_.isObject(cell.value) || _.isArray(cell.value)){
+                      let doubleClickContent = '';
+                      if(columns[_i].column_is_editable && columns[_i].column_edit_url){
+                        let columnEditUrl = columns[_i].column_edit_url;
+                        columnEditUrl = columnEditUrl.replace(':id', row.original.id);
+                        doubleClickContent =
+                            <AutoUpdateInput className="altrp-inherit altrp-table-td__double-click-content"
+                                             route={columnEditUrl}
+                                             resourceid={''}
+                                             changevalue={(value)=>{
+                                               setUpdatedData({
+                                                 value,
+                                                 rowId:row.original.id,
+                                                 column:columns[_i]._accessor
+                                               });
+                                             }}
+                                             value={_cellContent}/>;
+                        cellProps.onDoubleClick = () => {
+                          if(doubleClicked.column === columns[_i]._accessor && doubleClicked.rowId === row.original.id){
+                            setDoubleClicked({});
+                          } else {
+                            setDoubleClicked({
+                              column: columns[_i]._accessor,
+                              rowId: row.original.id,
+                            });
+                          }
+                        };
+                      }
+                      let cellClassName = 'altrp-table-td';
+                      if(doubleClicked.column === columns[_i]._accessor && row.original.id === doubleClicked.rowId){
+                        cellClassName += ' altrp-table-td_double-clicked';
+                      }
+                      /**
+                       * Если значение объект или массив, то отобразим пустую строку
+                       */
+                      if(_.isObject(cell.value)){
                         cellContent = '';
                       }
                       /**
@@ -149,10 +202,14 @@ const AltrpTable = ({settings, query, data}) => {
                       if(columns[_i].column_link && row.original.id){
                         cellContent = React.createElement(linkTag, {
                           to: columns[_i].column_link.replace(':id', row.original.id),
-                          className: 'altrp-inherit',
+                          className: 'altrp-inherit altrp-table-td__default-content',
+                        }, cellContent)
+                      } else {
+                        cellContent = React.createElement('span', {
+                          className: 'altrp-inherit altrp-table-td__default-content',
                         }, cellContent)
                       }
-                      return <td {...cell.getCellProps()} className="altrp-table-td">{cellContent}</td>
+                      return <td {...cellProps} className={cellClassName}>{cellContent}{doubleClickContent}</td>
                     })}
                   </tr>
               )
@@ -162,7 +219,11 @@ const AltrpTable = ({settings, query, data}) => {
     {((query.paginationType === 'prev-next') && query.pageSize) ?
       <div className="altrp-pagination">
         <button className={"altrp-pagination__previous"}
-                onClick={() => setPage(old => Math.max(old - 1, 0))}
+                onClick={() => {
+                  setPage(old => Math.max(old - 1, 0));
+                  setDoubleClicked({});
+                  setUpdatedData({});
+                }}
                 disabled={page === 1}>
           {settings.prev_text || 'Previous Page'}
         </button>
@@ -171,9 +232,11 @@ const AltrpTable = ({settings, query, data}) => {
            {page}
         </div>
         <button className="altrp-pagination__next"
-                onClick={() =>
-                    setPage(old => (!_latestData || !_latestData.hasMore ? old : old + 1))
-                }
+                onClick={() => {
+                  setUpdatedData({});
+                  setDoubleClicked({});
+                  setPage(old => (!_latestData || !_latestData.hasMore ? old : old + 1))
+                }}
                 disabled={!_latestData || !_latestData.hasMore}>
           {settings.next_text || 'Next Page'}
 

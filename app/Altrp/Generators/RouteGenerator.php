@@ -96,7 +96,7 @@ class RouteGenerator
             if (! in_array($source->type, $actions)) {
                 $routes[] = 'Route::get(\'/queries/' . $tableName .'/'
                 . $source->type . '\', [\'uses\' =>\'' . $controller . '@'
-                . lcfirst(Str::studly($source->type)) . '\']);';
+                . lcfirst($source->type) . '\']);';
             }
         }
         return $routes;
