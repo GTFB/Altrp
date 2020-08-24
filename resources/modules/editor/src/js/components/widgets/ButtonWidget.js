@@ -74,7 +74,6 @@ class ButtonWidget extends Component {
     if (this.state.pending) {
       classes += " altrp-disabled";
     }
-    console.log(this.state.settings.button_icon);
     let button = (
       <button
         onClick={this.onClick}
