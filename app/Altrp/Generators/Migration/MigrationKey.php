@@ -117,12 +117,12 @@ class MigrationKey{
 
         $source_column = $this->key->local_key;
         $target_column = $this->key->foreign_key;
-        
+
         $target_table = Model::find($this->key->model_id)->altrp_table->name;
 
         $text = '';
 
-        if($this->key->type === 'belongsTo' || $this->key->type === 'hasMany') {
+        if($this->key->type === 'hasOne' || $this->key->type === 'hasMany') {
             $source_column = $this->key->foreign_key;
             $target_column = $this->key->local_key;
         }
@@ -133,7 +133,7 @@ class MigrationKey{
         }
 
         $text .= "\$table->foreign('".$source_column."')->references('".$target_column."')->on('".$target_table."')".$modifiers;
-       
+
 
         return $text;
 
