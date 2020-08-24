@@ -58,33 +58,35 @@ class ButtonWidget extends Component {
 
   render() {
     const { button_icon, alignment_icon_style, spacing_icon_style, color_icon_style } = this.state.settings;
-    let iconStyles
+    let iconStyles;
     if (alignment_icon_style)  {
     iconStyles = alignment_icon_style == "left" ? 
       { paddingRight: spacing_icon_style.size + spacing_icon_style.unit} :
       { paddingLeft: spacing_icon_style.size + spacing_icon_style.unit }
     }
-    const icon = <div className="altrp-button-icon" 
-      style={{ ...iconStyles, fill: color_icon_style ? color_icon_style.color : 'inherit' }}>
-      {renderAssetIcon(button_icon)}
-    </div>;
+
     // if (this.state.redirect) {
     //   return <Redirect to={this.state.redirect} push={true} />;
     // }
     let classes =
       "altrp-btn " + (this.state.settings.position_css_classes || "");
+    let buttonMedia = {...this.state.settings.button_icon};
     if (this.state.pending) {
       classes += " altrp-disabled";
     }
+    console.log(this.state.settings.button_icon);
     let button = (
       <button
         onClick={this.onClick}
         className={classes}
         id={this.state.settings.position_css_id}
       >
-        {button_icon && button_icon.assetType === 'icon' && alignment_icon_style === "left" && icon}
+        {/*{button_icon && button_icon.assetType === 'icon' && alignment_icon_style === "left" && icon}*/}
         {this.state.settings.button_text || ""}
-        {button_icon && button_icon.assetType === 'icon' && alignment_icon_style === "right" && icon}
+{/*<<<<<<< HEAD*/}
+        {/*{button_icon && button_icon.assetType === 'icon' && alignment_icon_style === "right" && icon}*/}
+{/*=======*/}
+        {button_icon && button_icon.assetType && <span className={"altrp-btn-icon "}>{ renderAssetIcon( buttonMedia ) } </span>}
       </button>
     );
     let link = null;
@@ -109,7 +111,7 @@ class ButtonWidget extends Component {
       }
     }
 
-    return link || button;
+    return link || button || buttonMedia;
   }
 }
 

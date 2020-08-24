@@ -172,7 +172,7 @@ class PagesController extends Controller
     if( $page->delete() ){
       return response()->json( ['success' => true,], 200, [], JSON_UNESCAPED_UNICODE );
     }
-    return response()->json( ['success' => false, 'message'=>'Could not deleting'], 200, [], JSON_UNESCAPED_UNICODE );
+    return response()->json( ['success' => false, 'message' => 'Could not deleting'], 200, [], JSON_UNESCAPED_UNICODE );
   }
 
   /**

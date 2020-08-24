@@ -80,7 +80,34 @@ class Button extends BaseElement{
 
     this.addControl('button_icon', {
       type: CONTROLLER_MEDIA,
-      label: 'icon',
+      label: 'Choose Icon',
+    });
+
+    this.addControl('button_icon_position', {
+      type: CONTROLLER_SELECT,
+      label: 'Icon Position',
+      default: 'default',
+      options: [
+        {
+          value: 'row',
+          label: 'Right'
+        },
+        {
+          value: 'row-reverse',
+          label: 'Left'
+        },
+        {
+          value: 'column',
+          label: 'Bottom'
+        },
+        {
+          value: 'column-reverse',
+          label: 'Top'
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'flex-direction: {{VALUE}};'
+      },
     });
 
     this.endControlSection();
@@ -463,6 +490,81 @@ class Button extends BaseElement{
     );
 
   this.endControlSection();
+
+    this.startControlSection("Icon", {
+      tab: TAB_STYLE,
+      label: "Icon"
+    });
+
+    this.addControl('icon_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default:{
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit:'px',
+        bind: true
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-btn-icon{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('icon_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Icon Color',
+        default: {
+          color: "rgb(255,255,255)",
+          colorPickedHex: "#fff",
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-btn-icon path{{STATE}}': 'fill: {{COLOR}};',
+        },
+      }
+    );
+
+    this.addControl('icon_color_background', {
+        type: CONTROLLER_COLOR,
+        label: 'Icon Color',
+        rules: {
+          '{{ELEMENT}} .altrp-btn-icon svg{{STATE}}': 'background: {{COLOR}};',
+        },
+      }
+    );
+
+    this.addControl('icon_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Icon Size',
+      default:{
+        size: 20,
+        unit: 'px',
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-btn-icon{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-btn-icon svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      },
+    });
+
+    this.endControlSection();
 
     this.startControlSection('button_advanced_tooltip', {
       tab: TAB_ADVANCED,

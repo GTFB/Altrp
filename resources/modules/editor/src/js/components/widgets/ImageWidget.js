@@ -15,7 +15,7 @@ class ImageWidget extends Component {
   }
 
   render(){
-    const link = this.state.settings.image_link;
+    const link = this.state.settings.image_link || {};
     
     let contentMedia = {...this.state.settings.content_media};
     contentMedia.url = contentMedia.url || '/img/nullImage.png';
@@ -25,9 +25,10 @@ class ImageWidget extends Component {
     const image = renderAsset(contentMedia, {
       className: this.state.settings.position_css_classes + " altrp-image",
       id: this.state.settings.position_css_id || "",
-    })
+    });
+
     return <div className="altrp-image-container">
-      {link.url ? 
+      {link.url ?
         link.tag === 'a' ?
           <a href={link.url}>{image}</a> :
           <Link to={link.url}>{image}</Link> :        
