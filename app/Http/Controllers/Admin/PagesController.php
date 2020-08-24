@@ -160,14 +160,19 @@ class PagesController extends Controller
   /**
    * Remove the specified resource from storage.
    *
-   * @param Media $media
+   * @param Page $page
    * @param string $id
    * @return \Illuminate\Http\Response
    * @throws \Exception
    */
-  public function destroy( Media $media, $id )
+  public function destroy( Page $page, $id )
   {
     //
+    $page = $page->find( $id );
+    if( $page->delete() ){
+      return response()->json( ['success' => true,], 200, [], JSON_UNESCAPED_UNICODE );
+    }
+    return response()->json( ['success' => false, 'message'=>'Could not deleting'], 200, [], JSON_UNESCAPED_UNICODE );
   }
 
   /**

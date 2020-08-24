@@ -108,8 +108,11 @@ class AppServiceProvider extends ServiceProvider
         });
         QueryBuilder::macro('whereLikeMany', function ( $params ) {
 
-          foreach ( $params as $param_key => $param){
-            $this->whereLikeAnd( $param_key, $param );
+          foreach ( $params as $column => $search){
+            $searches = explode( ' ', $search );
+            foreach ( $searches as $_search ) {
+              $this->whereLikeAnd( $column, trim( $_search ) );
+            }
           }
           return $this;
         });
