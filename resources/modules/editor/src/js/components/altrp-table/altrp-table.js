@@ -43,23 +43,23 @@ const AltrpTable = ({settings, query, data}) => {
       resolvedData,
       latestData,
       error,
-    } = usePaginatedQuery([query.modelName, page, sortSetting, filterSetting ], fetchModels, {});
-    _data = resolvedData ? resolvedData[query.modelName] : _data;
+    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting ], fetchModels, {});
+    _data = resolvedData ? resolvedData : _data;
     _status = status;
     _error = error;
     _latestData = latestData;
     useEffect(() => {
       if (latestData?.hasMore) {
-        queryCache.prefetchQuery([query.modelName, page + 1], fetchModels);
+        queryCache.prefetchQuery([query.dataSourceName, page + 1], fetchModels);
       }
     }, [latestData, fetchModels, page, sortSetting, filterSetting]);
   }else {
     /**
      * Если нет пагинации
      */
-    const {status, data, error,} = useQuery(query.modelName, () => {
+    const {status, data, error,} = useQuery(query.dataSourceName, () => {
       return query.getResource().getQueried({...sortSetting,filters: filterSettingJSON})
-    }, [query.modelName]);
+    }, [query.dataSourceName]);
     _data = data;
     _status = status;
     _error = error;
@@ -68,6 +68,9 @@ const AltrpTable = ({settings, query, data}) => {
   columns = settingsToColumns(settings);
   if(! _data.length){
     _data = data;
+  }
+  if(! _.isArray(_data)){
+    _data = [_data];
   }
   let {
     getTableProps,

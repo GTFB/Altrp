@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Requests\ApiRequest;
+
 /**
  * Get the script possible URL base
  *
@@ -315,4 +317,32 @@ function get_altrp_setting( $setting_name, $default = '' )
 
 function get_logo_url(){
   return json_decode( env( 'ALTRP_SETTING_ADMIN_LOGO' ), true )['url'];
+}
+
+/**
+ * Обработка запроса, чтобы работали фильтры и сортировка
+ * @param string $sql
+ * @param array $bindings
+ * @param array $sql_editor_params
+ * @param ApiRequest $request
+ * @return array
+ */
+function selectForSQLEditor( $sql, $bindings, $sql_editor_params, ApiRequest $request ){
+  if( $request->get( 'order' ) && $request->get( 'order_by' ) ){
+    $sql .= ' ORDER BY `' . $request->get( 'order_by') . '`' . ( $request->get( 'order' ) === 'DESC' ? ' DESC' : ' ');
+  }
+  $_sql = '';
+
+  if( $request->get( 'filters') ){
+    $_filters = json_decode( $request->get( 'filters' ), true );
+    foreach ( $_filters as $key => $value ) {
+      $_sql .= ' AND `' . $key . '` LIKE "%' . $value . '%" ';
+    }
+  }
+  echo '<pre style="padding-left: 200px;">';
+  var_dump( $sql );
+  echo '</pre>';
+
+  $sql = str_replace( '{{AND_FILTERS}}', $_sql, $sql ) ;
+  return [ $sql_editor_params['sql_name']=>DB::select( $sql, $bindings ) ];
 }
