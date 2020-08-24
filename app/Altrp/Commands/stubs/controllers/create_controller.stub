@@ -117,12 +117,12 @@ class DummyClass extends ApiController
     /**
      * Update column of resource from storage.
      *
-     * @param Request $request
+     * @param ApiRequest $request
      * @param $id
      * @param $column
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateColumn(Request $request, $id, $column)
+    public function updateColumn(ApiRequest $request, $id, $column)
     {
         ${{crudNameSingular}} = {{modelName}}::find($id);
 
@@ -141,6 +141,15 @@ class DummyClass extends ApiController
         }
 
         return response()->json('Failed to update', 400, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function getIndexedColumnsValueWithCount($column)
+    {
+        ${{crudName}} = {{modelName}}::selectRaw("$column as value, COUNT($column) as count")
+                            ->havingRaw("COUNT($column)")
+                            ->groupBy("$column")
+                            ->get();
+        return response()->json(${{crudName}}, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     // CUSTOM_METHODS_BEGIN - IMPORTANT: Don't remove this comment! Write your methods between these comments.

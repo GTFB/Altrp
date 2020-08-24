@@ -7,6 +7,7 @@ use App\Altrp\Model;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 /**
  * Class ApiController

@@ -6,3 +6,4 @@ Route::get('{{routePrefix}}/{{tableName}}/{{{resourceId}}}', [{{showMiddleware}}
 Route::put('{{routePrefix}}/{{tableName}}/{{{resourceId}}}', [{{updateMiddleware}}'uses' =>'{{controllerName}}@update']);
 Route::delete('{{routePrefix}}/{{tableName}}/{{{resourceId}}}', [{{destroyMiddleware}}'uses' =>'{{controllerName}}@destroy']);
 Route::put('{{routePrefix}}/{{tableName}}/{{{id}}}/{{{column}}}', [{{updateMiddleware}}'uses' =>'{{controllerName}}@updateColumn']);
+Route::get('{{routePrefix}}/filters/{{tableName}}/{{{column}}}', ['uses' =>'{{controllerName}}@getIndexedColumnsValueWithCount']);
