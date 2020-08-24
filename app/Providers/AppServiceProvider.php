@@ -2,36 +2,116 @@
 
 namespace App\Providers;
 
+use App\Altrp\Controller;
+use App\Altrp\Model;
+use App\Altrp\Query;
+use App\Observers\AltrpControllerObserver;
+use App\Observers\AltrpModelObserver;
+use App\Observers\AltrpQueryObserver;
+use App\Observers\AltrpSQLEditorObserver;
 use App\Services\AltrpSettingsService;
 use App\Services\AltrpUpdateService;
+use App\SQLEditor;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Query\Builder as QueryBuilder;
+
+use App\Altrp\Table;
+use App\Observers\AltrpTableObserver;
+use App\Altrp\Migration;
+use App\Observers\AltrpMigrationObserver;
+use App\Altrp\Column;
+use App\Observers\AltrpColumnObserver;
+use App\Altrp\Relationship;
+use App\Observers\AltrpRelationshipObserver;
+
 
 class AppServiceProvider extends ServiceProvider
 {
-  /**
-   * Register any application services.
-   *
-   * @return void
-   */
-  public function register()
-  {
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
 
-    $this->app->bind( 'App\Services\AltrpUpdateService', function ( $app ) {
-      return new AltrpUpdateService();
-    } );
-    $this->app->bind( 'App\Services\AltrpSettingsService', function ( $app ) {
-      return new AltrpSettingsService();
-    } );
-  }
+        $this->app->bind('App\Services\AltrpUpdateService', function ($app) {
+            return new AltrpUpdateService();
+        });
+        $this->app->bind('App\Services\AltrpSettingsService', function ($app) {
+            return new AltrpSettingsService();
+        });
+    }
 
-  /**
-   * Bootstrap any application services.
-   *
-   * @return void
-   */
-  public function boot()
-  {
-    Schema::defaultStringLength( 191 );
-  }
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        Schema::defaultStringLength(191);
+
+        Table::observe(AltrpTableObserver::class);
+        Migration::observe(AltrpMigrationObserver::class);
+        Column::observe(AltrpColumnObserver::class);
+        Relationship::observe(AltrpRelationshipObserver::class);
+        Model::observe(AltrpModelObserver::class);
+        Controller::observe(AltrpControllerObserver::class);
+        Query::observe(AltrpQueryObserver::class);
+        SQLEditor::observe(AltrpSQLEditorObserver::class);
+
+        Builder::macro('whereLike', function ($attributes, string $searchTerm) {
+            $this->where(function (Builder $query) use ($attributes, $searchTerm) {
+                foreach (\Arr::wrap($attributes) as $attribute) {
+                    $query->when(
+                        str_contains($attribute, '.'),
+                        function (Builder $query) use ($attribute, $searchTerm) {
+                            [$relationName, $relationAttribute] = explode('.', $attribute);
+
+                            $query->orWhereHas($relationName, function (Builder $query) use ($relationAttribute, $searchTerm) {
+                                $query->where($relationAttribute, 'LIKE', "%{$searchTerm}%");
+                            });
+                        },
+                        function (Builder $query) use ($attribute, $searchTerm) {
+                            $query->orWhere($attribute, 'LIKE', "%{$searchTerm}%");
+                        }
+                    );
+                }
+            });
+
+            return $this;
+        });
+        QueryBuilder::macro('whereLikeAnd', function ($attributes, string $searchTerm) {
+            $this->where(function (QueryBuilder $query) use ($attributes, $searchTerm) {
+                foreach (\Arr::wrap($attributes) as $attribute) {
+                    $query->when(
+                        str_contains($attribute, '.'),
+                        function (QueryBuilder $query) use ($attribute, $searchTerm) {
+                            [$relationName, $relationAttribute] = explode('.', $attribute);
+
+                            $query->whereHas($relationName, function (QueryBuilder $query) use ($relationAttribute, $searchTerm) {
+                                $query->where($relationAttribute, 'LIKE', "%{$searchTerm}%");
+                            });
+                        },
+                        function (QueryBuilder $query) use ($attribute, $searchTerm) {
+
+                            $query->where($attribute, 'LIKE', "%{$searchTerm}%");
+                        }
+                    );
+                }
+            });
+
+            return $this;
+        });
+        QueryBuilder::macro('whereLikeMany', function ( $params ) {
+
+          foreach ( $params as $param_key => $param){
+            $this->whereLikeAnd( $param_key, $param );
+          }
+          return $this;
+        });
+    }
 }

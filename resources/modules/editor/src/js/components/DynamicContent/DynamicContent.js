@@ -84,7 +84,6 @@ class DynamicContent extends Component {
     if(this.props.show){
       classes.push('altrp-dynamic-content_show')
     }
-
     return <div className={classes.join(' ')}  style={this.getPositionProps()}>
       <div className="altrp-menu">
         {
@@ -97,7 +96,7 @@ class DynamicContent extends Component {
                                        data-modelname={model.modelName}
                                        data-modeltitle={model.title}
                                        onClick={this.select}
-                                       key={field.fieldName}>{field.title}</div>))}
+                                       key={`${model.modelName}${field.fieldName}`}>{field.title}</div>))}
             </div>
           })
         }

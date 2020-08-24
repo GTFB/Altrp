@@ -14,6 +14,7 @@ import {
   CONTROLLER_SLIDER,
   CONTROLLER_COLOR,
   CONTROLLER_SHADOW,
+  CONTROLLER_SWITCHER,
   TAB_CONTENT,
   TAB_STYLE,
   TAB_ADVANCED
@@ -88,7 +89,8 @@ class Button extends BaseElement{
       default: {
         url: "",
         attributes: "",
-        noFollow: false
+        noFollow: false,
+        tag: 'Link'
       },
       label: 'Link',
     });
@@ -136,11 +138,16 @@ class Button extends BaseElement{
         'form_actions': 'add_new',
       },
       type: CONTROLLER_SELECT,
-      resource: '/admin/ajax/models_options',
+      resource: '/admin/ajax/models_options?with_names=true',
     });
 
     this.addControl('redirect_after', {
       label: 'Redirect After',
+    });
+
+    this.addControl('redirect_to_prev_page', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Redirect To Prev Page',
     });
 
     this.endControlSection();
@@ -376,8 +383,7 @@ class Button extends BaseElement{
       rules: {
         '{{ELEMENT}} .altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
       },
-    }
-  );
+    });
 
   this.addControl('style_background_shadow', {
         type: CONTROLLER_SHADOW,

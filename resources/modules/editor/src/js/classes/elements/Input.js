@@ -13,7 +13,8 @@ import {
   CONTROLLER_COLOR,
   CONTROLLER_SELECT2,
   TAB_CONTENT,
-  TAB_STYLE
+  TAB_STYLE, CONTROLLER_CHOOSE,
+  CONTROLLER_SHADOW
 } from "../modules/ControllersManager";
 
 class Input extends BaseElement{
@@ -153,9 +154,20 @@ class Input extends BaseElement{
       },
     });
 
+    this.addControl('model_for_options', {
+      type: CONTROLLER_SELECT2,
+      label: 'Choose Model for Select Options',
+      default: '',
+      conditions: {
+        'content_type': 'select',
+      },
+      nullable: true,
+      options_resource: '/admin/ajax/models_options?with_names=1&not_plural=1',
+    });
+
     this.addControl('content_options', {
       type: CONTROLLER_TEXTAREA,
-      label: 'Select Options',
+      label: 'Or Type Select Options',
       conditions: {
         'content_type': 'select',
       },
@@ -255,6 +267,29 @@ class Input extends BaseElement{
     this.startControlSection('position_section', {
       tab: TAB_STYLE,
       label: 'Position',
+    });
+
+    this.addControl('placeholder_and_value_alignment_position_section', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment, value',
+      default: 'left',
+      options:[
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        }
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-field{{STATE}}': 'text-align: {{VALUE}};',
+      },
     });
 
     this.addControl('position_margin', {
@@ -534,6 +569,29 @@ class Input extends BaseElement{
         },
       }
     );
+
+    this.addControl('box_shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'Box shadow',
+      default: {
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        opacity: 1,
+        spread: 0,
+        colorRGB: 'rgb(0, 0, 0)',
+        color: 'rgb(0, 0, 0)',
+        colorPickedHex: '#000000',
+        type: ""
+      },
+      presetColors: [
+        '#eaeaea',
+        '#9c18a8'
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-field{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    });
 
     this.addControl('border_radius', {
       type: CONTROLLER_DIMENSIONS,

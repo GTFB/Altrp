@@ -14,21 +14,32 @@ class Controller extends EloquentModel
         'namespace',
         'prefix',
         'relations',
-        'table_id',
-    ];
-
-    protected $hidden = [
+        'model_id',
         'validations'
     ];
 
+    public function setValidationsAttribute($validationRules)
+    {
+        $validationArr = [];
+        if ((array) $validationRules) {
+            foreach ($validationRules as $name => $rules) {
+                $rules = (array) $rules;
+                if (! empty($rules)) {
+                    $validationArr[] = $name . '#' . implode('|', $rules);
+                }
+            }
+        }
+        $this->attributes['validations'] = implode(';', $validationArr);
+    }
+
     public function model()
     {
-        return $this->table()->first()->models()->first();
+        return $this->belongsTo(Model::class, 'model_id', 'id');
     }
 
     public function table()
     {
-        return $this->belongsTo(Table::class);
+        return $this->model->table;
     }
 
     public function sources()
