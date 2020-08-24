@@ -152,7 +152,7 @@ class IconsManager {
    * @return {React.DetailedReactHTMLElement<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> | React.DetailedReactHTMLElement<React.HTMLAttributes<T>, HTMLElement> | React.ReactSVGElement | React.DOMElement<React.DOMAttributes<T>, Element> | React.FunctionComponentElement<{}> | React.CElement<{}, React.ClassicComponent<{}, React.ComponentState>> | React.CElement<{}, React.Component<P, React.ComponentState>> | React.ReactElement<{}>}
    * @throws Исключение если иконка не найдена
    * */
-  ;renderIcon(iconName, props = null) {
+  renderIcon(iconName, props = null) {
     let iconComponent = this.getIconComponent(iconName);
     if (!iconComponent) {
       iconComponent = this.getIconComponent('default');
