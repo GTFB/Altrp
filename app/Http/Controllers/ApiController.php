@@ -40,27 +40,42 @@ class ApiController extends Controller
         $modelName = array_pop($parts);
         $indexedColumns = $this->getIndexedColumns($modelName);
         $resource = \Str::lower(\Str::plural($modelName));
+        $order_method = 'orderByDesc';
+        $order_column = $request->get( 'order_by', 'id' );
+        $filters = [];
+        if( $request->get( 'filters') ){
+          $_filters = json_decode( $request->get( 'filters' ), true );
+          foreach ( $_filters as $key => $value ) {
+            $filters[$key] = $value;
+          }
+        }
+        if( $request->get( 'order' ) === 'ASC'){
+          $order_method = 'orderBy';
+        }
         if ($page && $limit) {
             $modelsCount = $search
-                ? $this->modelClass::whereLike($indexedColumns, $search)->toBase()->count()
-                : $this->modelClass::toBase()->count();
+                ? $this->modelClass::whereLike($indexedColumns, $search)->whereLikeMany( $filters )->toBase()->count()
+                : $this->modelClass::toBase()->whereLikeMany( $filters )->count();
             $pageCount = ceil($modelsCount / $limit);
             $offset = $limit * ($page - 1);
             $$resource = $search
                 ? $this->modelClass::whereLike($indexedColumns, $search)
-                    ->orderByDesc('id')
+                    ->whereLikeMany( $filters )
+                    ->$order_method( $order_column )
                     ->skip($offset)
                     ->take($limit)
                     ->get()
-                : $this->modelClass::orderByDesc('id')
+                : $this->modelClass::$order_method( $order_column )
+                    ->whereLikeMany( $filters )
                     ->skip($offset)
                     ->take($limit)
                     ->get();
         } else {
             $pageCount = 0;
             $$resource = $search
-                ? $this->modelClass::whereLike($indexedColumns, $search)->orderByDesc('id')->get()
-                : $this->modelClass::orderByDesc('id')->get();
+                ? $this->modelClass::whereLike($indexedColumns, $search)
+                    ->whereLikeMany( $filters )->$order_method( $order_column )->get()
+                : $this->modelClass::$order_method( $order_column )->whereLikeMany( $filters )->get();
         }
         $hasMore = $pageCount > $page;
         return compact('pageCount', $resource ,'hasMore');

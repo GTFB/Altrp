@@ -135,3 +135,22 @@ input[type="checkbox"] {
     border-radius: 3px;
   }
 }
+.clickable{
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.cursor-pointer{
+  cursor: pointer;
+}
+.rotate-180{
+  transform: rotatex(180deg);
+}
+.altrp-label{
+  display: block;
+}
+//.altrp-table-th svg{
+//
+//}

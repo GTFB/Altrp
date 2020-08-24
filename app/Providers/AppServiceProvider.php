@@ -15,6 +15,7 @@ use App\SQLEditor;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 
 use App\Altrp\Table;
 use App\Observers\AltrpTableObserver;
@@ -82,6 +83,38 @@ class AppServiceProvider extends ServiceProvider
             });
 
             return $this;
+        });
+        QueryBuilder::macro('whereLikeAnd', function ($attributes, string $searchTerm) {
+            $this->where(function (QueryBuilder $query) use ($attributes, $searchTerm) {
+                foreach (\Arr::wrap($attributes) as $attribute) {
+                    $query->when(
+                        str_contains($attribute, '.'),
+                        function (QueryBuilder $query) use ($attribute, $searchTerm) {
+                            [$relationName, $relationAttribute] = explode('.', $attribute);
+
+                            $query->whereHas($relationName, function (QueryBuilder $query) use ($relationAttribute, $searchTerm) {
+                                $query->where($relationAttribute, 'LIKE', "%{$searchTerm}%");
+                            });
+                        },
+                        function (QueryBuilder $query) use ($attribute, $searchTerm) {
+
+                            $query->where($attribute, 'LIKE', "%{$searchTerm}%");
+                        }
+                    );
+                }
+            });
+
+            return $this;
+        });
+        QueryBuilder::macro('whereLikeMany', function ( $params ) {
+
+          foreach ( $params as $column => $search){
+            $searches = explode( ' ', $search );
+            foreach ( $searches as $_search ) {
+              $this->whereLikeAnd( $column, trim( $_search ) );
+            }
+          }
+          return $this;
         });
     }
 }
