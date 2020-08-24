@@ -333,15 +333,18 @@ function selectForSQLEditor( $sql, $bindings, $sql_editor_params, ApiRequest $re
   }
   $_sql = '';
 
-  if( $request->get( 'filters') ){
+  if( $request->get( 'filters' ) ){
     $_filters = json_decode( $request->get( 'filters' ), true );
+
+    if( strpos( $sql, '{{FILTERS}}' ) !== false ){
+      $_sql = 'WHERE';
+    }
     foreach ( $_filters as $key => $value ) {
       $_sql .= ' AND `' . $key . '` LIKE "%' . $value . '%" ';
     }
+
   }
-  echo '<pre style="padding-left: 200px;">';
-  var_dump( $sql );
-  echo '</pre>';
+
 
   $sql = str_replace( '{{AND_FILTERS}}', $_sql, $sql ) ;
   return [ $sql_editor_params['sql_name']=>DB::select( $sql, $bindings ) ];
