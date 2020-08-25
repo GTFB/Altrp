@@ -210,6 +210,7 @@ class Relationship extends EloquentModel
         
         if($this->type === "hasMany") {
             $conditions[] = ["type","=","belongsTo"];
+            
         }
         
         $result = Relationship::where($conditions);

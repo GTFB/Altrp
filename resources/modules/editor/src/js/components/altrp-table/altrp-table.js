@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 import {isEditor} from "../../../../../front-app/src/js/helpers";
 import {iconsManager} from "../../../../../admin/src/js/helpers";
 import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput";
+import {parseURLTemplate} from "../../helpers";
 
 /**
  *
@@ -161,8 +162,8 @@ const AltrpTable = ({settings, query, data}) => {
                        */
                       let doubleClickContent = '';
                       if(columns[_i].column_is_editable && columns[_i].column_edit_url){
-                        let columnEditUrl = columns[_i].column_edit_url;
-                        columnEditUrl = columnEditUrl.replace(':id', row.original.id);
+                        let columnEditUrl = parseURLTemplate(columns[_i].column_edit_url, row.original);
+
                         doubleClickContent =
                             <AutoUpdateInput className="altrp-inherit altrp-table-td__double-click-content"
                                              route={columnEditUrl}
@@ -201,7 +202,7 @@ const AltrpTable = ({settings, query, data}) => {
                        */
                       if(columns[_i].column_link && row.original.id){
                         cellContent = React.createElement(linkTag, {
-                          to: columns[_i].column_link.replace(':id', row.original.id),
+                          to: parseURLTemplate(columns[_i].column_link,  row.original),
                           className: 'altrp-inherit altrp-table-td__default-content',
                         }, cellContent)
                       } else {

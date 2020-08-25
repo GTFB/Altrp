@@ -118,7 +118,7 @@ class NewMigrationGenerator extends AppGenerator{
                 if(isset($trace['file']) && is_file($trace['file'])) {
                     if (file_exists($trace['file'])
                         && Str::contains($trace['file'], 'altrp_migrations')) {
-                        //unlink($trace['file']);
+                        unlink($trace['file']);
                     }
                 }
             }

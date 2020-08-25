@@ -331,21 +331,27 @@ function selectForSQLEditor( $sql, $bindings, $sql_editor_params, ApiRequest $re
   if( $request->get( 'order' ) && $request->get( 'order_by' ) ){
     $sql .= ' ORDER BY `' . $request->get( 'order_by') . '`' . ( $request->get( 'order' ) === 'DESC' ? ' DESC' : ' ');
   }
-  $_sql = '';
-
+  $_sql_and_filters = '';
+  $_sql_filters = '';
   if( $request->get( 'filters' ) ){
     $_filters = json_decode( $request->get( 'filters' ), true );
 
-    if( strpos( $sql, '{{FILTERS}}' ) !== false ){
-      $_sql = 'WHERE';
+    if( strpos( $sql, 'ALTRP_FILTERS' ) !== false ){
+      $_sql_filters = 'WHERE';
+      foreach ( $_filters as $key => $value ) {
+        $_sql_filters .= ' AND `' . $key . '` LIKE "%' . $value . '%" ';
+      }
     }
-    foreach ( $_filters as $key => $value ) {
-      $_sql .= ' AND `' . $key . '` LIKE "%' . $value . '%" ';
+    if( strpos( $sql, 'ALTRP_AND_FILTERS' ) !== false ) {
+      $_sql_and_filters = '';
+      foreach ( $_filters as $key => $value ) {
+        $_sql_and_filters .= ' AND `' . $key . '` LIKE "%' . $value . '%" ';
+      }
     }
-
   }
+  $sql = str_replace( 'ALTRP_FILTERS', $_sql_filters, $sql ) ;
 
+  $sql = str_replace( 'ALTRP_AND_FILTERS', $_sql_and_filters, $sql ) ;
 
-  $sql = str_replace( '{{AND_FILTERS}}', $_sql, $sql ) ;
-  return [ $sql_editor_params['sql_name']=>DB::select( $sql, $bindings ) ];
+  return [ 'data' => DB::select( $sql, $bindings ) ];
 }
