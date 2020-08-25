@@ -157,7 +157,7 @@ class Resource {
         'Content-Type': 'application/json'
       },
     };
-    let url = this.route + '/' + id;
+    let url = this.route + (id ? '/' + id : '');
     return fetch(url, options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);

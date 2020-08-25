@@ -14,6 +14,7 @@ use App\Altrp\Table;
 use App\Altrp\Relationship;
 use App\Altrp\Source;
 use App\Http\Controllers\Controller as HttpController;
+use App\SQLEditor;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -97,6 +98,29 @@ class ModelsController extends HttpController
         $data_sources[] = [
           'label' => 'Relationships from Models',
           'options' => $relationship_data_sources,
+        ];
+      }
+
+      /**
+       * Добавляем варианты с SQL-editors
+       */
+      $sql_editors_data_sources = [];
+
+      $_sqls = SQLEditor::all();
+
+      foreach ( $_sqls as $sql ) {
+        $sql_editors_data_sources[] = [
+          'label' => $sql->model->title . ': ' . $sql->title,
+          'value' => '/ajax/models/queries/' . $sql->model->altrp_table->name . '/' . $sql->name,
+          'sql_name' => $sql->name,
+          'type' => 'sql_datasource'
+        ];
+      }
+
+      if( count( $sql_editors_data_sources ) ){
+        $data_sources[] = [
+          'label' => 'Data from SQLEditors',
+          'options' => $sql_editors_data_sources,
         ];
       }
       return response()->json( $data_sources, 200, [], JSON_UNESCAPED_UNICODE);

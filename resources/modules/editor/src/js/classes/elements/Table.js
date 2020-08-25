@@ -181,6 +181,18 @@ class Table extends BaseElement {
       default: false
     });
 
+    repeater.addControl('column_is_editable', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Editable',
+      default: false
+    });
+
+    repeater.addControl('column_edit_url', {
+      label: 'Edit URL',
+      description: '/ajax/models/tests/:id/title',
+      default: ''
+    });
+
     this.addControl('tables_columns', {
       label: 'Columns',
       type: CONTROLLER_REPEATER,

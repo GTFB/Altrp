@@ -7,15 +7,19 @@ class AutoUpdateInput extends Component {
     this.resource = new Resource({
       route: this.props.route,
     });
+
     this.state = {
-      value: '',
-      disabled: true,
+      value: this.props.value || '',
+      disabled: ! this.props.value,
     };
     this.changeValue = this.changeValue.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
   }
   async componentDidMount(){
+    if(this.props.value !== undefined){
+      return;
+    }
     let res = await this.resource.get(this.props.resourceid);
     this.setState(state=>{
       return{...state,
@@ -42,6 +46,9 @@ class AutoUpdateInput extends Component {
         value: newValue,
       }
     });
+    if(_.isFunction(this.props.changevalue)){
+      this.props.changevalue(newValue);
+    }
   }
 
   /**
@@ -56,7 +63,7 @@ class AutoUpdateInput extends Component {
         disabled: true,
       }
     });
-    let res = await this.resource.put(this.props.resourceid, {value: newValue});
+    let res = await this.resource.put(this.props.resourceid, {value: newValue, column_value: newValue});
     this.setState(state=>{
       return{...state,
         disabled: false,
@@ -68,7 +75,9 @@ class AutoUpdateInput extends Component {
     if(this.state.disabled){
       className += ' pointer-event-none';
     }
-    return<input{...this.props} className={className}
+    const inputProps = {...this.props};
+    delete inputProps.changevalue;
+    return<input{...inputProps} className={className}
                 onBlur={this.changeValue}
                 onKeyDown={this.onKeyDown}
                 onChange={this.onChange}

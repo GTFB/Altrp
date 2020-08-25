@@ -38,6 +38,11 @@ class ControllerFile
         return $this->model->name;
     }
 
+    public function getTableName()
+    {
+        return $this->model->altrp_table->name;
+    }
+
     public function getModelPath()
     {
         return $this->model->path;

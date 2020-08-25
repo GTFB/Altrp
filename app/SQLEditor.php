@@ -15,9 +15,9 @@ class SQLEditor extends Model
     'description',
   ];
 
-  /* public function model()
+   public function model()
   {
-    return $this->hasOne('App\Model', 'id', 'model_id');
-  } */
+    return $this->hasOne('App\Altrp\Model', 'id', 'model_id');
+  }
 
 }
