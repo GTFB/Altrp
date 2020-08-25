@@ -46,6 +46,7 @@
   text-decoration: none;
   display: flex;
   align-items: center;
+  justify-content: center;
   &_gray {
     background-color: $grey;
     color: #fff;
