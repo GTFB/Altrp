@@ -16,9 +16,8 @@ class SQLEditor extends Model
     'description',
   ];
 
-
-  public function altrp_source()
-  {
-      return $this->hasOne(Source::class);
-  }
+    public function altrp_source()
+    {
+        return $this->morphOne(Source::class, 'sourceable');
+    }
 }

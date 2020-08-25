@@ -74,7 +74,9 @@ class AltrpSQLEditorObserver
                 'url' => '/' . strtolower(Str::plural($model->name)) . '/{sql_builder}',
                 'api_url' => '/' . strtolower(Str::plural($model->name)) . '/{sql_builder}',
                 'type' => Str::snake($sQLEditor->name),
-                'name' => 'SQL Editor ' . Str::studly($sQLEditor->name)
+                'name' => 'SQL Editor ' . Str::studly($sQLEditor->name),
+                'sourceable_id' => $sQLEditor->id,
+                'sourceable_type' => SQLEditor::class
             ]);
             $source->save();
         }
@@ -164,6 +166,7 @@ class AltrpSQLEditorObserver
                 $sourcePermission->update(['type' => 'sql-editor-'.Str::kebab($sQLEditor->name)]);
             }
         }
+//        dump($sQLEditor->altrp_source->source_permissions->permission);
         $routeFile = new RouteFile($model);
         $routeWriter = new RouteFileWriter($routeFile, $controllerFile);
         $routeWriter->updateSqlRoute($sQLEditor->getOriginal('name'),$sQLEditor->name);

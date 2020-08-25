@@ -25,6 +25,11 @@ class Query extends EloquentModel
         'source_id'
     ];
 
+    public function altrp_source()
+    {
+        return $this->morphOne(Source::class, 'sourceable');
+    }
+
     public function source()
     {
         return $this->belongsTo(Source::class);

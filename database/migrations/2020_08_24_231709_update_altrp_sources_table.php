@@ -15,6 +15,8 @@ class UpdateAltrpSourcesTable extends Migration
     {
         Schema::table('altrp_sources', function (Blueprint $table) {
             $table->boolean('auth')->default(0);
+            $table->bigInteger('sourceable_id')->nullable();
+            $table->string('sourceable_type')->nullable();
         });
     }
 

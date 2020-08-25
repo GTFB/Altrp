@@ -178,11 +178,12 @@ class RouteFileWriter
 //        $middleware = $this->route->getModel()->user_cols ? ['auth:api','auth'] : [];
 //        $accessMiddleware = $this->getAccessMiddleware($methodName);
 //        if ($accessMiddleware) $middleware[] = $accessMiddleware;
-        $authMiddleware = ['auth:api','auth'];
+        $middleware = $this->getMiddleware($methodName);
 
         $route = 'Route::get(\'/queries/' . strtolower(Str::plural($this->route->getModelName())) . '/'
             . Str::snake($methodName) . '\', [';
-//        $route .= "'middleware' => ['" . implode("','", $authMiddleware) . "'], ";
+        if ($middleware)
+            $route .= "'middleware' => ['" . implode("','", $middleware) . "'], ";
         $route .= "'uses' => '"
             . str_replace('App\Http\Controllers\\', '',$this->controller->getNamespace())
             . "Controller@" . $methodName ."']);";
@@ -193,30 +194,35 @@ class RouteFileWriter
      * Получить и сформировать посредников доступа к маршруту
      *
      * @param $methodName
-     * @return string|null
+     * @return array
      */
-    protected function getAccessMiddleware($methodName)
+    protected function getMiddleware($methodName)
     {
         $source = Source::where('type', Str::snake($methodName))->first();
 
         if(!$source) return null;
 
-        $roles = $source->source_roles;
+        $sourceRoles = $source->source_roles;
         $accessSource = [];
         $accessRoles = [];
         $accessPermissions = [];
-        foreach ($roles as $role) {
-            $accessRoles[] = $role->role->name;
+        foreach ($sourceRoles as $sourceRole) {
+            $accessRoles[] = $sourceRole->role->name;
         }
-        $permissions = $source->source_permissions;
-        foreach ($permissions as $permission) {
-            $accessPermissions[] = $permission->permission->name;
+        $sourcePermissions = $source->source_permissions;
+        foreach ($sourcePermissions as $sourcePermission) {
+            $accessPermissions[] = $sourcePermission->permission->name;
         }
         if ($accessRoles) $accessSource[] = implode('|', $accessRoles);
         if ($accessPermissions) $accessSource[] = implode('|', $accessPermissions);
 
+        $middleware = [];
+        if ($source->auth) {
+//            $middleware[] = 'auth:api';
+            $middleware[] = 'auth';
+        }
         if ($accessSource)
-            return "ability:" . implode(',', $accessSource);
-        return null;
+            $middleware[] = "ability:" . implode(',', $accessSource);
+        return $middleware;
     }
 }
