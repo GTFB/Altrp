@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from 'react-router-dom'
 import {isEditor} from "../../../../../front-app/src/js/helpers";
 import "../../../sass/altrp-heading.scss";
+import {parseURLTemplate} from "../../helpers";
 
 class HeadingWidget extends Component {
   constructor(props) {
@@ -25,7 +26,10 @@ class HeadingWidget extends Component {
       let tag = 'a';
       if ((this.state.settings.link_link.tag === 'Link') && ! isEditor()) {
         tag = Link;
-        linkProps.to = parseURLTemplate(this.state.settings.link_link.url, this.state.modelData || {});
+        linkProps.to = this.state.settings.link_link.url.replace(':id', this.getModelId() || '');
+        if(_.isObject(this.state.modelData)){
+          linkProps.to = parseURLTemplate(this.state.settings.link_link.url, this.state.modelData);
+        }
       }
       if(isEditor()){
         linkProps.onClick = e => {e.preventDefault()}
