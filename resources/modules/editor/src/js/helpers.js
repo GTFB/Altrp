@@ -151,9 +151,6 @@ export function parseURLTemplate(URLTemplate, object = {}){
   let idTemplates = url.match(/:([\s\S]+?)(\/|$)/g);
   idTemplates.forEach(idTemplate=>{
     let replace = object[idTemplate.replace(/:|\//g, '')] || '';
-    console.log(idTemplate.replace(/:|\//g, ''));
-    console.log(new RegExp( replace,'g'));
-    console.log(replace);
     idTemplate = idTemplate.replace('/', '');
     url = url.replace(new RegExp(idTemplate,'g'), replace);
   });
