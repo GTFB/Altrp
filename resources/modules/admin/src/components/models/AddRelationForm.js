@@ -66,7 +66,8 @@ class AddRelationForm extends Component {
   async componentDidMount() {
     let { options } = await this.modelsResource.getAll();
     const { modelId, id } = this.props.match.params;
-    options = options.filter(option=>(Number(option.value) !== Number(modelId)));
+    //Модель может ссылаться на саму себя
+    //options = options.filter(option=>(Number(option.value) !== Number(modelId)));
     this.setState({ modelsOptions: options });
     let fields = await (new Resource({route: `/admin/ajax/models/${modelId}/fields`})).getAll();
     let selfFieldsOptions = fields.map(field=>({
