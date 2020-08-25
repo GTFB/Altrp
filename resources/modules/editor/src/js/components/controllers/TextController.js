@@ -109,6 +109,9 @@ class TextController extends Component {
           <DynamicIcon />
         </div>
       </div>
+      {this.props.description ? <div className="controller-container__description">
+        {this.props.description}
+      </div> : ''}
     </div>
 
   }

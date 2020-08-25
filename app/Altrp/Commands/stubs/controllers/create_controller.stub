@@ -117,30 +117,39 @@ class DummyClass extends ApiController
     /**
      * Update column of resource from storage.
      *
-     * @param Request $request
+     * @param ApiRequest $request
      * @param $id
      * @param $column
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateColumn(Request $request, $id, $column)
+    public function updateColumn(ApiRequest $request, $id, $column)
     {
         ${{crudNameSingular}} = {{modelName}}::find($id);
 
         if(! ${{crudNameSingular}}) {
-            return response()->json("Table not found", 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success'=>false, 'message' =>"{{modelName}} not found"], 404, [], JSON_UNESCAPED_UNICODE);
         }
 
         if (! isset(${{crudNameSingular}}->$column)) {
-            return response()->json('Column not exists', 400, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success'=>false, 'message'=>'Column not exists'], 400, [], JSON_UNESCAPED_UNICODE);
         }
 
         ${{crudNameSingular}}->$column = $request->column_value;
 
         if (${{crudNameSingular}}->save()) {
-            return response()->json('Successfully updated', 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success'=>true], 200, [], JSON_UNESCAPED_UNICODE);
         }
 
         return response()->json('Failed to update', 400, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function getIndexedColumnsValueWithCount($column)
+    {
+        ${{crudName}} = {{modelName}}::selectRaw("$column as value, COUNT($column) as count")
+                            ->havingRaw("COUNT($column)")
+                            ->groupBy("$column")
+                            ->get();
+        return response()->json(${{crudName}}, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     // CUSTOM_METHODS_BEGIN - IMPORTANT: Don't remove this comment! Write your methods between these comments.
