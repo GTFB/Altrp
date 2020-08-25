@@ -28,6 +28,7 @@ class TextareaController extends Component {
     return '';
   }
   render() {
+    console.log(this.getSettings(this.props.controlId))
     if (this.state.show === false) {
       return '';
     }
@@ -55,7 +56,7 @@ class TextareaController extends Component {
             iconsManager().renderIcon('times')
           }
         </div>
-      </div> : <textarea className="controller-container__textarea" onChange={this.changeValue} value={value} />
+      </div> : <textarea className="controller-container__textarea" onChange={this.changeValue} value={value || this.state.value} />
       }
       {this.props.description ? <div className="controller-container__description">
         {this.props.description}
