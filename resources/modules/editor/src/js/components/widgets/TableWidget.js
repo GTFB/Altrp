@@ -22,7 +22,7 @@ class TableWidget extends Component {
 
   /**
    * Показывать ли таблицу
-   * @param{{}} query
+   * @param{Query} query
    * @return {boolean}
    */
   showTable(query = {}){
@@ -37,6 +37,7 @@ class TableWidget extends Component {
     if(! this.showTable(query)){
       return <div children="Please Choose Source"/>
     }
+
     return <this.state.TableComponent query={query}
                                       data={query.getFromModel(this.state.modelData)}
                                       settings={this.props.element.getSettings()}/>;

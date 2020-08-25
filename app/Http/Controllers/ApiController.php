@@ -7,6 +7,7 @@ use App\Altrp\Model;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 /**
  * Class ApiController
@@ -78,6 +79,8 @@ class ApiController extends Controller
                 : $this->modelClass::$order_method( $order_column )->whereLikeMany( $filters )->get();
         }
         $hasMore = $pageCount > $page;
+
+
         return compact('pageCount', $resource ,'hasMore');
     }
 

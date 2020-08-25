@@ -69,9 +69,10 @@ class QueryController extends Component {
    * @param {{}} dataSource
    */
   onChangeDataSource = async (dataSource) => {
-    console.log(dataSource);
-    const req = await axios(`/admin/ajax/sql_editors/list/${dataSource.value}`);
-    this.setState({ sqlQueries: req.data });
+    if(dataSource.type === 'model_query'){
+      const req = await axios(`/admin/ajax/sql_editors/list/${dataSource.value}`);
+      this.setState({ sqlQueries: req.data || [] });
+    }
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     value.dataSource = { ...dataSource };
     this._changeValue({ ...value });
@@ -144,7 +145,6 @@ class QueryController extends Component {
     }
 
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
-
     return (
       <div className="controller-container controller-container_query">
         <div className="controller-field-group flex-wrap">

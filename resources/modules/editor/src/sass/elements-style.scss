@@ -206,6 +206,25 @@
 
 .altrp-table {
   border-collapse: collapse;
+  &-td {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    &__double-click-content {
+      display: none;
+    }
+    &_double-clicked{
+      & .altrp-table-td__double-click-content{
+        display: block;
+        width: 100%;
+        border-width: 2px;
+      }
+      & .altrp-table-td__default-content{
+        display: none;
+      }
+    }
+  }
 }
 
 .altrp-divider {
