@@ -28,7 +28,6 @@ class TextareaController extends Component {
     return '';
   }
   render() {
-    console.log(this.getSettings(this.props.controlId))
     if (this.state.show === false) {
       return '';
     }
