@@ -175,14 +175,14 @@ class RouteFileWriter
      */
     protected function getRoute($methodName)
     {
-        $middleware = $this->route->getModel()->user_cols ? ['auth:api','auth'] : [];
+//        $middleware = $this->route->getModel()->user_cols ? ['auth:api','auth'] : [];
 //        $accessMiddleware = $this->getAccessMiddleware($methodName);
 //        if ($accessMiddleware) $middleware[] = $accessMiddleware;
-        $middleware = ['auth:api','auth'];
+        $authMiddleware = ['auth:api','auth'];
 
         $route = 'Route::get(\'/queries/' . strtolower(Str::plural($this->route->getModelName())) . '/'
             . Str::snake($methodName) . '\', [';
-        $route .= "'middleware' => ['" . implode("','", $middleware) . "'], ";
+//        $route .= "'middleware' => ['" . implode("','", $authMiddleware) . "'], ";
         $route .= "'uses' => '"
             . str_replace('App\Http\Controllers\\', '',$this->controller->getNamespace())
             . "Controller@" . $methodName ."']);";

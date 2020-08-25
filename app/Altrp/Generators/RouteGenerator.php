@@ -93,9 +93,10 @@ class RouteGenerator
         ])->get();
         if (! $sources) return [];
         $authMiddleware = ['auth:api','auth'];
-        $middleware = "'middleware' => [" . '\'' . implode("','", $authMiddleware) . '\'' . '], ';
+
         foreach ($sources as $source) {
             if (! in_array($source->type, $actions)) {
+                $middleware = $source->auth ? "'middleware' => [" . '\'' . implode("','", $authMiddleware) . '\'' . '], ' : '';
                 $routes[] = 'Route::get(\'/queries/' . $tableName .'/'
                 . $source->type . '\', [' . $middleware .'\'uses\' =>\'' . $controller . '@'
                 . lcfirst(Str::studly($source->type)) . '\']);';

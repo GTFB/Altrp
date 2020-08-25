@@ -105,6 +105,7 @@ class AltrpSQLEditorObserver
      */
     public function updating(SQLEditor $sQLEditor)
     {
+//        dump($sQLEditor->permissions);
         $model = Model::find($sQLEditor->model_id);
         $controllerFile = new ControllerFile($model);
         $repo = new RepositoryFile($model);

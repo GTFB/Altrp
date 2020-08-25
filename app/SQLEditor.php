@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Altrp\Source;
 use Illuminate\Database\Eloquent\Model;
 
 class SQLEditor extends Model
@@ -14,4 +15,10 @@ class SQLEditor extends Model
     'model_id',
     'description',
   ];
+
+
+  public function altrp_source()
+  {
+      return $this->hasOne(Source::class);
+  }
 }
