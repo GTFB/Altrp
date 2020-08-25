@@ -80,8 +80,9 @@ class ApiController extends Controller
         }
         $hasMore = $pageCount > $page;
 
-
-        return compact('pageCount', $resource ,'hasMore');
+        $res = compact('pageCount' ,'hasMore');
+        $res['data'] = $$resource;
+        return $res;
     }
 
     /**

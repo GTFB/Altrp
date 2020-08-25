@@ -25,7 +25,7 @@ class HeadingWidget extends Component {
       let tag = 'a';
       if ((this.state.settings.link_link.tag === 'Link') && ! isEditor()) {
         tag = Link;
-        linkProps.to = this.state.settings.link_link.url.replace(':id', this.getModelId() || '')
+        linkProps.to = parseURLTemplate(this.state.settings.link_link.url, this.state.modelData || {});
       }
       if(isEditor()){
         linkProps.onClick = e => {e.preventDefault()}
