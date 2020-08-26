@@ -22,6 +22,7 @@ class LinkController extends Component {
     value.tag = value.tag || 'a';
     this.state = {
       value,
+      toPrevPage: false,
       show: true,
       tagsOptions: [
         {
@@ -68,11 +69,12 @@ class LinkController extends Component {
     };
   };
 
-  toggleSettingsNoFollow() {
+  toggleSettingsNoFollow() {    //TODO: надо порефакторить
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     let togglesettingsNoFollowCheckbox = document.getElementById("togglesettingsNoFollowCheckbox")
     let changeCheckBox = togglesettingsNoFollowCheckbox.hasAttribute("checked")
     if (changeCheckBox == false) {
+      
       this._changeValue({
         ...value,
         noFollow: changeCheckBox
@@ -87,6 +89,15 @@ class LinkController extends Component {
     };
 
   };
+
+  toggleSettingsToPrevPage = e => {
+    const value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+
+    this._changeValue({
+      ...value,
+      toPrevPage: e.target.checked
+    });
+  }
 
   changeAttribute(e) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
@@ -119,7 +130,13 @@ class LinkController extends Component {
         <div className="controller-container__label">{this.props.label}</div>
       </div>
       <div className="control-link-input-wrapper">
-        <input onChange={this.changeInput} value={value.url || ''} type="text" className="control-link" placeholder="введите ссылку"></input>
+        <input 
+          onChange={this.changeInput} 
+          value={value.toPrevPage ? 'На предыдущую страницу' : value.url || ''} 
+          type="text" 
+          className="control-link" 
+          placeholder="введите ссылку" 
+        />
         <div className="control-link-settings control-link-button" onClick={this.settings}>
           {/* тут есть проблема с размерами, просто нужно убрать width и height в самой svg но есть одна проблема*/}
           <SettingsIcon width="12" />
@@ -146,6 +163,16 @@ class LinkController extends Component {
           <input id="togglesettingsNoFollowCheckbox" type="checkbox" className="settings-checkbox" />
           <span className="settings-checkbox-container" />
           <label className="settings-checkbox__label">Добавить nofollow</label>
+        </div>
+        <div className="settings-checkbox-option">
+          <input 
+            checked={value.toPrevPage} 
+            id="toPrevPage" type="checkbox" 
+            className="settings-checkbox" 
+            onChange={this.toggleSettingsToPrevPage}
+          />
+          <span className="settings-checkbox-container" />
+          <label htmlFor="toPrevPage" className="settings-checkbox__label">На предыдущую страницу</label>
         </div>
         <div className="customAttributes">
           <div className="control-link-header">
