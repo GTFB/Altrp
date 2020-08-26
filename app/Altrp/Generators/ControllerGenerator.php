@@ -7,6 +7,7 @@ use App\Altrp\Controller;
 use App\Altrp\Generators\Request\RequestFile;
 use App\Altrp\Generators\Request\RequestFileWriter;
 use App\Altrp\Model;
+use App\Altrp\Query;
 use App\Altrp\Source;
 use App\Altrp\SourcePermission;
 use App\Altrp\SourceRole;
@@ -15,6 +16,7 @@ use App\Exceptions\ControllerNotWrittenException;
 use App\Exceptions\ModelNotWrittenException;
 use App\Exceptions\RouteGenerateFailedException;
 use App\Permission;
+use App\SQLEditor;
 use Artisan;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
@@ -448,6 +450,7 @@ class ControllerGenerator extends AppGenerator
         $oldControllerFile = $this->getOldControllerFile();
         $customCode = $this->getCustomCode($oldControllerFile);
         $options = $this->getOptions();
+        $sources = $this->controllerModel->model->altrp_sources;
 
         if (file_exists($oldControllerFile)) unlink($oldControllerFile);
 
@@ -471,6 +474,25 @@ class ControllerGenerator extends AppGenerator
             if (file_exists($this->controllerFile . '.bak'))
                 rename($this->controllerFile . '.bak', $this->controllerFile);
             return false;
+        }
+
+        if ($sources) {
+            $sql_editors = SQLEditor::where('model_id',$this->controllerModel->model->id)->get();
+            $sql_builders = Query::where('model_id',$this->controllerModel->model->id)->get();
+            foreach ($sql_editors as $sql_editor) {
+//                if (Str::contains($customCode['custom_methods'], $sql_editor->name)) {
+                $sqlEditorObj = SQLEditor::find($sql_editor->id);
+                $data = $sql_editor->toArray();
+                $data['updated_at'] = Carbon::now();
+                $sqlEditorObj->update($data);
+
+            }
+            foreach ($sql_builders as $sql_builder) {
+                $query = Query::find($sql_builder->id);
+                $data = $sql_builder->toArray();
+                $data['updated_at'] = Carbon::now();
+                $query->update($data);
+            }
         }
 
         if (file_exists($this->controllerFile . '.bak'))
@@ -666,6 +688,7 @@ class ControllerGenerator extends AppGenerator
         $oldModelName = strtolower(Str::plural(Str::snake($model->getOriginal('name'))));
         $resourceId = Str::singular($modelName);
         $userColumns = trim($this->controllerModel->model->user_cols, ' ');
+        $sources = $model->altrp_sources;
         $middleware = "'middleware' => [" . $this->getAuthMiddleware() . '], ';
         $controllerName = $this->getFormedControllerName($this->controllerModel);
         $controller = trim($controllerName, "\\");

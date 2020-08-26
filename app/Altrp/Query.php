@@ -22,7 +22,8 @@ class Query extends EloquentModel
         'offset',
         'limit',
         'user_id',
-        'source_id'
+        'source_id',
+        'updated_at'
     ];
 
     public function altrp_source()

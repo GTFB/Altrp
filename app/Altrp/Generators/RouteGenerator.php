@@ -63,8 +63,13 @@ class RouteGenerator
      */
     public function generate($oldModelName, $modelName, $controller)
     {
-        $routes = $this->getRoutesFromSources($modelName, $controller);
-        $this->routeStub = array_merge($this->fillStub(), $routes);
+        $sourceRoutes = $this->getRoutesFromSources($modelName, $controller);
+        $routes = $this->fillStub();
+        $comment = array_shift($routes);
+        $allRoutes = [];
+        $allRoutes[] = $comment;
+        $allRoutes = array_merge($allRoutes,$sourceRoutes,$routes);
+        $this->routeStub = $allRoutes;
 
         if ($items = $this->routeExists($oldModelName, $controller)) {
             $this->routeRewrite($items);
@@ -92,14 +97,13 @@ class RouteGenerator
             ['model_id', $this->controllerModel->model->id],
         ])->get();
         if (! $sources) return [];
-        $authMiddleware = ['auth:api','auth'];
-
         foreach ($sources as $source) {
             if (! in_array($source->type, $actions)) {
-                $middleware = $source->auth ? "'middleware' => [" . '\'' . implode("','", $authMiddleware) . '\'' . '], ' : '';
+                $middleware = $this->getMiddleware($source);
+                $middleware = $middleware ? "'middleware' => ['" . implode("','", $middleware) . "'], " : '';
                 $routes[] = 'Route::get(\'/queries/' . $tableName .'/'
                 . $source->type . '\', [' . $middleware .'\'uses\' =>\'' . $controller . '@'
-                . lcfirst(Str::studly($source->type)) . '\']);';
+                . lcfirst($source->type) . '\']);';
             }
         }
         return $routes;
@@ -227,5 +231,37 @@ class RouteGenerator
             : __DIR__ . '/../stubs/routes/create_route.stub';
 
         return file($stub, 2);
+    }
+
+    protected function getMiddleware($source)
+    {
+        if(!$source) return null;
+
+        $sourceRoles = $source->source_roles;
+        $accessSource = [];
+        $accessRoles = [];
+        $accessPermissions = [];
+        foreach ($sourceRoles as $sourceRole) {
+            $accessRoles[] = $sourceRole->role->name;
+        }
+        $sourcePermissions = $source->source_permissions;
+        foreach ($sourcePermissions as $sourcePermission) {
+            $accessPermissions[] = $sourcePermission->permission->name;
+        }
+        if ($accessRoles)
+            $accessSource[] = implode('|', $accessRoles);
+        else
+            $accessSource[] = 'admin';
+
+        if ($accessPermissions) $accessSource[] = implode('|', $accessPermissions);
+
+        $middleware = [];
+
+        if ($source->auth) {
+            $middleware[] = 'auth';
+        }
+        if ($accessSource)
+            $middleware[] = "ability:" . implode(',', $accessSource);
+        return $middleware;
     }
 }

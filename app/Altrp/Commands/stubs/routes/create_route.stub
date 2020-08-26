@@ -1,8 +1,8 @@
 // Routes for the {{tableName}} resource
-Route::get('{{routePrefix}}/{{tableName}}', ['uses' =>'{{controllerName}}@index']);
-Route::get('{{routePrefix}}/{{resourceId}}_options', ['uses' =>'{{controllerName}}@options']);
-Route::post('{{routePrefix}}/{{tableName}}', ['uses' =>'{{controllerName}}@store']);
-Route::get('{{routePrefix}}/{{tableName}}/{{{resourceId}}}', ['uses' =>'{{controllerName}}@show']);
-Route::put('{{routePrefix}}/{{tableName}}/{{{resourceId}}}', ['uses' =>'{{controllerName}}@update']);
-Route::delete('{{routePrefix}}/{{tableName}}/{{{resourceId}}}', ['uses' =>'{{controllerName}}@destroy']);
-Route::put('{{routePrefix}}/{{tableName}}/{{{id}}}/{{{column}}}', ['uses' =>'{{controllerName}}@updateColumn']);
+Route::get('{{routePrefix}}/{{tableName}}', [{{middleware}}'uses' =>'{{controllerName}}@index']);
+Route::get('{{routePrefix}}/{{resourceId}}_options', [{{middleware}}'uses' =>'{{controllerName}}@options']);
+Route::post('{{routePrefix}}/{{tableName}}', [{{middleware}}'uses' =>'{{controllerName}}@store']);
+Route::get('{{routePrefix}}/{{tableName}}/{{{resourceId}}}', [{{middleware}}'uses' =>'{{controllerName}}@show']);
+Route::put('{{routePrefix}}/{{tableName}}/{{{resourceId}}}', [{{middleware}}'uses' =>'{{controllerName}}@update']);
+Route::delete('{{routePrefix}}/{{tableName}}/{{{resourceId}}}', [{{middleware}}'uses' =>'{{controllerName}}@destroy']);
+Route::put('{{routePrefix}}/{{tableName}}/{{{id}}}/{{{column}}}', [{{middleware}}'uses' =>'{{controllerName}}@updateColumn']);

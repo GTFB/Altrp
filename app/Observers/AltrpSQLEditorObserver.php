@@ -71,8 +71,8 @@ class AltrpSQLEditorObserver
             $source = new Source([
                 'model_id' => $sQLEditor->model_id,
                 'controller_id' => $model->altrp_controller->id,
-                'url' => '/' . strtolower(Str::plural($model->name)) . '/{sql_builder}',
-                'api_url' => '/' . strtolower(Str::plural($model->name)) . '/{sql_builder}',
+                'url' => '/' . strtolower(Str::plural($model->name)) . '/' . $sQLEditor->name,
+                'api_url' => '/' . strtolower(Str::plural($model->name)) . '/' . $sQLEditor->name,
                 'type' => Str::snake($sQLEditor->name),
                 'name' => 'SQL Editor ' . Str::studly($sQLEditor->name),
                 'sourceable_id' => $sQLEditor->id,
@@ -150,10 +150,12 @@ class AltrpSQLEditorObserver
         $source->update([
             'model_id' => $sQLEditor->model_id,
             'controller_id' => $model->altrp_controller->id,
-            'url' => '/' . strtolower(Str::plural($model->name)) . '/{sql_builder}',
-            'api_url' => '/' . strtolower(Str::plural($model->name)) . '/{sql_builder}',
+            'url' => '/' . strtolower(Str::plural($model->name)) . '/' . $sQLEditor->name,
+            'api_url' => '/' . strtolower(Str::plural($model->name)) . '/' . $sQLEditor->name,
             'type' => Str::snake($sQLEditor->name),
-            'name' => 'SQL Editor ' . Str::studly($sQLEditor->name)
+            'name' => 'SQL Editor ' . Str::studly($sQLEditor->name),
+            'sourceable_id' => $sQLEditor->id,
+            'sourceable_type' => SQLEditor::class
         ]);
         $permission = Permission::where('name', 'sql-editor-' . $sQLEditor->name)->first();
         $source = Source::where('type',Str::snake($sQLEditor->name))->first();
