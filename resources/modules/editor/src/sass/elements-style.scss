@@ -432,6 +432,11 @@
   flex-direction: column;
 }
 
+.altrp-list-icon svg {
+  width: inherit;
+  height: inherit;
+}
+
 .altrp-list-icon-relative {
   position: relative;
 }
