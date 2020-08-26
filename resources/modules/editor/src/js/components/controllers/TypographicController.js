@@ -180,9 +180,14 @@ class TypographicController extends Component {
         label: 'Roboto'
       },
       {
+        value: 'PT Sans',
+        label: 'PT Sans'
+      },
+      {
         value: 'Open Sans',
         label: 'Open Sans'
       },
+
     ];
 
     const weightOptions = [

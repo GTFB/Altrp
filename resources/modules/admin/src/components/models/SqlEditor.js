@@ -3,6 +3,7 @@ import {Link, withRouter} from "react-router-dom";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import {titleToName} from "../../js/helpers";
 import store from '../../js/store/store';
+import AltrpSelect from "../altrp-select/AltrpSelect";
 
 class SqlEditor extends Component {
   constructor(props) {
@@ -156,6 +157,45 @@ class SqlEditor extends Component {
                     </option>)}
               </select>
             </div>
+            <div className="form-group col-12">
+              <input type="checkbox" id="field-auth"
+                     checked={this.state.value.auth} value={this.state.value.auth}
+                     onChange={e => { this.changeValue(e.target.checked, 'auth') }}
+              />
+              <label className="checkbox-label" htmlFor="field-auth">Auth</label>
+            </div>
+            {!this.state.value.auth ? '' : <><div className="form-group col-4">
+              <label htmlFor="field-roles">Roles</label>
+              <AltrpSelect id="field-roles"
+                           isMulti={true}
+                           optionsRoute="/admin/ajax/role_options"
+                           placeholder="All"
+                           defaultOptions={[
+                             {
+                               value: null,
+                               label: 'All',
+                             }
+                           ]}
+                           value={this.state.value.roles}
+                           onChange={value => {this.changeValue(value, 'roles')}}
+              />
+            </div>
+            <div className="form-group col-4">
+              <label htmlFor="field-permissions">Permissions</label>
+              <AltrpSelect id="field-permissions"
+                           isMulti={true}
+                           optionsRoute="/admin/ajax/permissions_options"
+                           placeholder="All"
+                           defaultOptions={[
+                             {
+                               value: null,
+                               label: 'All',
+                             }
+                           ]}
+                           value={this.state.value.permissions}
+                           onChange={value => {this.changeValue(value, 'permissions')}}
+              />
+            </div></>}
             <div className="form-group col-12">
               <label htmlFor="field-name">SQL Query</label>
               {this.state.AceEditor && (this.editor = (this.editor || <this.state.AceEditor
