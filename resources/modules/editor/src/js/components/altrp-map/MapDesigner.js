@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import L from "leaflet";
 
-import { Map, FeatureGroup, TileLayer, ZoomControl } from "react-leaflet";
+import { Map, FeatureGroup, TileLayer } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import Control from "react-leaflet-control";
 
@@ -31,6 +31,7 @@ function MapDesigner({
   isLoading = false,
   isTransformLatLng = false,
   interactionOptions = {},
+  style = {},
   saveData = noob,
   onTap = noob,
 }) {
@@ -165,16 +166,9 @@ function MapDesigner({
   useEffect(() => {
     if (state && state.features) {
       saveData(state);
-      whenReady();
+      //whenReady();
     }
-  }, [saveData, state, whenReady]);
-
-  // Обновляем состояние после каждого изменения пропса
-  useEffect(() => {
-    if (data && data.features) {
-      setState(data);
-    }
-  }, [data]);
+  }, [saveData, state]);
 
   return (
     <div className="rrbe-map">
@@ -192,12 +186,12 @@ function MapDesigner({
         keyboard={interactionOptions.keyboard}
         trackResize={interactionOptions.trackResize}
         noMoveStart={interactionOptions.noMoveStart}
+        style={style}
       >
         <TileLayer
           url="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution={"MapDesigner"}
         />
-        {/* {isEditable && <ZoomControl />} */}
         <FeatureGroup ref={FG}>
           <EditControl
             position="topleft"
@@ -240,4 +234,4 @@ function MapDesigner({
   );
 }
 
-export default MapDesigner;
+export default React.memo(MapDesigner);
