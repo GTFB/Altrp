@@ -15,7 +15,7 @@ class Query {
     this.paginationType = data.paginationType || 'pages';
     this.orderingField = data.orderingField || 'name';
     this.order = data.order || 'ASC';
-    this.route = `/ajax/models/${this.modelName}`;
+    this.route = `/ajax/models/${this.modelName || data.dataSource ? data.dataSource.value : ''}`;
     if(data.dataSource && data.dataSource.type === 'sql_datasource'){
       this.route = data.dataSource.value;
       this.dataSourceName = data.dataSource.sql_name || '';
@@ -59,7 +59,12 @@ class Query {
       }
     } else {
       this.lastQuery = (await this.getResource().getQueried(this.getParams(params)));
-      let res = this.lastQuery[this.dataSourceName];
+      let res;
+      if(_.isArray(this.lastQuery)){
+        res = [...this.lastQuery];
+      } else if(_.isArray(this.lastQuery.data)){
+        res = this.lastQuery.data;
+      }
       res.hasMore = this.lastQuery.hasMore;
       return res;
     }

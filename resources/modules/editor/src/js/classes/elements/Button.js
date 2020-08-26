@@ -309,53 +309,6 @@ class Button extends BaseElement{
 
   this.endControlSection();
 
-  this.startControlSection("icon_style", {
-    tab: TAB_STYLE,
-    label: "Icon"
-  });
-
-  this.addControl('alignment_icon_style', {
-    type: CONTROLLER_CHOOSE,
-    label: 'Alignment',
-    default: 'left',
-    options: [
-      {
-        icon: 'block_left',
-        value: 'left',
-      },
-      {
-        icon: 'block_right',
-        value: 'right',
-      },
-    ],
-  });
-
-  this.addControl("color_icon_style", {
-    type: CONTROLLER_COLOR,
-    label: "Color",
-    default: {
-      color: "rgb(50,168,82)",
-      colorPickedHex: "#32a852"
-    },
-    // rules: {
-    //   "{{ELEMENT}} .altrp-tab-btn-icon{{STATE}} svg path": "fill: {{COLOR}};"
-    // }
-  });
-
-  this.addControl("spacing_icon_style", {
-    type: CONTROLLER_SLIDER,
-    label: "Spacing",
-    default: {
-      size: 8,
-      unit: "px"
-    },
-    units: ["px", "%", "vh"],
-    max: 100,
-    min: 0,
-  });
-
-  this.endControlSection();
-
     this.startControlSection('border_section', {
       tab: TAB_STYLE,
       label: 'Border'
@@ -547,10 +500,6 @@ class Button extends BaseElement{
     this.addControl('icon_size', {
       type: CONTROLLER_SLIDER,
       label: 'Icon Size',
-      default:{
-        size: 20,
-        unit: 'px',
-      },
       units:[
         'px',
         '%',

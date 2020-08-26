@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import {Link, Redirect, withRouter } from 'react-router-dom';
 import {isEditor} from "../../../../../front-app/src/js/helpers";
-import { renderAssetIcon } from "../../helpers";
-import "../../../sass/altrp-button.scss";
+import {renderAssetIcon} from "../../helpers";
 
 class ButtonWidget extends Component {
   constructor(props) {
@@ -57,14 +56,6 @@ class ButtonWidget extends Component {
   }
 
   render() {
-    const { button_icon, alignment_icon_style, spacing_icon_style, color_icon_style } = this.state.settings;
-    let iconStyles;
-    if (alignment_icon_style)  {
-    iconStyles = alignment_icon_style == "left" ? 
-      { paddingRight: spacing_icon_style.size + spacing_icon_style.unit} :
-      { paddingLeft: spacing_icon_style.size + spacing_icon_style.unit }
-    }
-
     // if (this.state.redirect) {
     //   return <Redirect to={this.state.redirect} push={true} />;
     // }
@@ -80,12 +71,8 @@ class ButtonWidget extends Component {
         className={classes}
         id={this.state.settings.position_css_id}
       >
-        {/*{button_icon && button_icon.assetType === 'icon' && alignment_icon_style === "left" && icon}*/}
         {this.state.settings.button_text || ""}
-{/*<<<<<<< HEAD*/}
-        {/*{button_icon && button_icon.assetType === 'icon' && alignment_icon_style === "right" && icon}*/}
-{/*=======*/}
-        {button_icon && button_icon.assetType && <span className={"altrp-btn-icon "}>{ renderAssetIcon( buttonMedia ) } </span>}
+        {buttonMedia.assetType && <span className={"altrp-btn-icon "}>{ renderAssetIcon( buttonMedia ) } </span>}
       </button>
     );
     let link = null;
@@ -93,19 +80,17 @@ class ButtonWidget extends Component {
       if(this.state.settings.link_link.tag === 'a' || isEditor()) {
 
         link = (
-            <a href={this.state.settings.link_link.url} onClick={this.onClick} className={classes}>
-              {button_icon && button_icon.assetType === 'icon' && alignment_icon_style === "left" && icon}
-              {this.state.settings.button_text || ""}
-              {button_icon && button_icon.assetType === 'icon' && alignment_icon_style === "right" && icon}
-            </a>
+          <a href={this.state.settings.link_link.url} onClick={this.onClick} className={classes}>
+            {" "}
+            {this.state.settings.button_text || ""}
+          </a>
         );
       } else {
         link = (
-            <Link to={this.state.settings.link_link.url} onClick={this.onClick} className={classes}>
-              {button_icon && button_icon.assetType === 'icon' && alignment_icon_style === "left" && icon}
-              {this.state.settings.button_text || ""}
-              {button_icon && button_icon.assetType === 'icon' && alignment_icon_style === "right" && icon}
-            </Link>
+          <Link to={this.state.settings.link_link.url} onClick={this.onClick} className={classes}>
+            {" "}
+            {this.state.settings.button_text || ""}
+          </Link>
         );
       }
     }
