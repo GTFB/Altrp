@@ -170,7 +170,7 @@ class MigrationKey{
 
         $column = $this->old_key->local_key;
 
-        if($this->old_key->type === 'belongsTo' || $this->old_key->type === 'hasMany' ) {
+        if($this->old_key->type === 'hasOne' || $this->old_key->type === 'hasMany' ) {
             $column = $this->old_key->foreign_key;
         }
 
