@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import axios from "axios";
 import controllerDecorate from "../../decorators/controller";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
@@ -24,7 +23,6 @@ class QueryController extends Component {
       value,
       show: true,
       dataSourceList: [],
-      sqlQueries: [],
       orderingFieldsOptions: [],
       paginationTypeOption: [
         {
@@ -69,10 +67,6 @@ class QueryController extends Component {
    * @param {{}} dataSource
    */
   onChangeDataSource = async (dataSource) => {
-    if(dataSource.type === 'model_query'){
-      const req = await axios(`/admin/ajax/sql_editors/list/${dataSource.value}`);
-      this.setState({ sqlQueries: req.data || [] });
-    }
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     value.dataSource = { ...dataSource };
     this._changeValue({ ...value });
@@ -135,7 +129,6 @@ class QueryController extends Component {
       paginationType: "pages",
       orderingField: "",
       order: "ASC",
-      sql: "",
     };
   }
 
@@ -162,27 +155,6 @@ class QueryController extends Component {
             />
           </div>
         </div>
-        {this.state.sqlQueries.length > 0 && (
-          <div className="controller-field-group flex-wrap">
-            <div className="controller-container__label">SQL Query</div>
-            <div className="control-container_select-wrapper">
-              <select
-                className="control-select control-field"
-                value={value.sql || ""}
-                onChange={this.changeQueryName}
-              >
-                <option value="" />
-                {this.state.sqlQueries.map((option) => {
-                  return (
-                    <option value={option.name} key={option.id}>
-                      {option.title}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-          </div>
-        )}
         <div className="controller-field-group ">
           <div className="controller-container__label">Page Size</div>
           <div className="control-container_select-wrapper ">

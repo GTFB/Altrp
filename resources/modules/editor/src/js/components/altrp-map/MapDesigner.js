@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import L from "leaflet";
 
-import { Map, FeatureGroup, TileLayer } from "react-leaflet";
+import { Map, FeatureGroup, TileLayer, ZoomControl } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import Control from "react-leaflet-control";
 
@@ -16,6 +16,8 @@ import Loader from "./Loader";
 
 import MemoPaintIcon from "./Icons/PaintIcon";
 
+import "leaflet/dist/leaflet.css";
+import "leaflet-draw/dist/leaflet.draw.css";
 import "./style.scss";
 
 function noob() {}
@@ -28,6 +30,7 @@ function MapDesigner({
   isEditable = false,
   isLoading = false,
   isTransformLatLng = false,
+  interactionOptions = {},
   saveData = noob,
   onTap = noob,
 }) {
@@ -181,11 +184,20 @@ function MapDesigner({
         zoom={zoom}
         className={`rrbe-map__container ${className}`}
         whenReady={whenReady}
+        scrollWheelZoom={interactionOptions.scrollWheelZoom}
+        dragging={interactionOptions.dragging}
+        touchZoom={interactionOptions.touchZoom}
+        doubleClickZoom={interactionOptions.doubleClickZoom}
+        boxZoom={interactionOptions.boxZoom}
+        keyboard={interactionOptions.keyboard}
+        trackResize={interactionOptions.trackResize}
+        noMoveStart={interactionOptions.noMoveStart}
       >
         <TileLayer
           url="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution={"MapDesigner"}
         />
+        {/* {isEditable && <ZoomControl />} */}
         <FeatureGroup ref={FG}>
           <EditControl
             position="topleft"

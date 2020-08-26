@@ -1,22 +1,48 @@
-import React, { useState, useEffect } from "react";
-import MapDesigner from "../altrp-map/MapDesigner";
+import React, { Component, Suspense } from "react";
+const MapDesigner = React.lazy(() => import("../altrp-map/MapDesigner"));
+import "leaflet/dist/leaflet.css";
+import "leaflet-draw/dist/leaflet.draw.css";
 
-function MapWidget({ element }) {
-  const [settings, setSettings] = useState({});
+class MapWidget extends Component {
+  constructor(props) {
+    super(props);
 
-  useEffect(() => {
-    setSettings(element.getSettings());
-  }, [setSettings]);
+    this.state = {
+      settings: props.element.getSettings(),
+    };
 
-  console.log("settings :>> ", settings);
-  return (
-    <MapDesigner
-      className="altrp-map"
-      data={[]}
-      zoom={settings.zoom}
-      center={[settings.lat, settings.lng]}
-    />
-  );
+    props.element.component = this;
+
+    if (window.elementDecorator) {
+      window.elementDecorator(this);
+    }
+
+    console.log("this.state.settings :>> ", this.state.settings);
+  }
+
+  render() {
+    return (
+      <Suspense fallback={"Loading"}>
+        <MapDesigner
+          className="altrp-map"
+          data={[]}
+          isEditable={this.state.settings.editable}
+          preferCanvas={this.state.settings.canvas}
+          zoom={+this.state.settings.zoom}
+          center={[this.state.settings.lat, this.state.settings.lng]}
+          interactionOptions={{
+            doubleClickZoom: this.state.settings.editable,
+            scrollWheelZoom: this.state.settings.editable,
+            touchZoom: this.state.settings.editable,
+            boxZoom: this.state.settings.editable,
+            dragging: this.state.settings.editable,
+            keyboard: this.state.settings.editable,
+            noMoveStart: this.state.settings.editable,
+          }}
+        />
+      </Suspense>
+    );
+  }
 }
 
 export default MapWidget;
