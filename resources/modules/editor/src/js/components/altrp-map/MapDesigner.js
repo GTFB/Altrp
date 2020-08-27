@@ -175,7 +175,7 @@ function MapDesigner({
   }, [data]);
 
   return (
-    <div className="altrp-map">
+    <div className="altrp-map" style={style}>
       {isLoading && <Loader />}
       <Map
         center={center}
@@ -186,7 +186,7 @@ function MapDesigner({
         touchZoom={interactionOptions.touchZoom}
         doubleClickZoom={interactionOptions.doubleClickZoom}
         keyboard={interactionOptions.keyboard}
-        style={style}
+        style={{ height: style.height }}
       >
         <TileLayer url="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <FeatureGroup ref={FG}>
