@@ -311,7 +311,7 @@ class Table extends BaseElement {
         default:{
           lineHeight: 0.8,
           spacing: 0,
-          size: 16,
+          size: 14,
           weight: 700,
           family: 'Open Sans',
           decoration: ""
@@ -718,7 +718,7 @@ class Table extends BaseElement {
       default: {
         lineHeight: 1.5,
         spacing: 0,
-        size: 36,
+        size: 14,
         weight: "normal",
         family: '"roboto"',
         decoration: ""
@@ -926,7 +926,7 @@ class Table extends BaseElement {
       default: {
         lineHeight: 1.5,
         spacing: 0,
-        size: 36,
+        size: 14,
         weight: "normal",
         family: '"roboto"',
         decoration: ""
