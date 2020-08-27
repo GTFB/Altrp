@@ -1,12 +1,11 @@
 import React, { Component, Suspense } from "react";
 import axios from "axios";
-import isEqual from "lodash/isEqual";
 
 const MapDesigner = React.lazy(() => import("../altrp-map/MapDesigner"));
 
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
-
+import "../../../sass/altrp-map.scss";
 class MapWidget extends Component {
   constructor(props) {
     super(props);
@@ -27,7 +26,6 @@ class MapWidget extends Component {
   }
 
   async _componentDidMount() {
-    console.log("_componentDidMount :>> ");
     this.setState({ isLoading: true });
     try {
       const req = await axios(`/ajax/maps/${this.props.element.id}`);
@@ -53,7 +51,7 @@ class MapWidget extends Component {
     return (
       <Suspense fallback={"Loading"}>
         <MapDesigner
-          className="altrp-map"
+          //className="altrp-map"
           data={this.state.geojson}
           saveData={this.handleSave}
           isLoading={this.state.isLoading}

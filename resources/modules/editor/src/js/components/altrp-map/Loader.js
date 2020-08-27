@@ -1,11 +1,12 @@
 import React from "react";
-
-import gif from "./assets/loader.gif";
+import Spinner from "react-bootstrap/Spinner";
 
 const Loader = () => {
   return (
     <div className="rrbe-map__preloader">
-      <img src={gif} alt="Загрузка данных" />
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
     </div>
   );
 };

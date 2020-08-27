@@ -16,10 +16,6 @@ import Loader from "./Loader";
 
 import MemoPaintIcon from "./Icons/PaintIcon";
 
-import "leaflet/dist/leaflet.css";
-import "leaflet-draw/dist/leaflet.draw.css";
-import "./style.scss";
-
 function noob() {}
 
 function MapDesigner({
@@ -167,17 +163,24 @@ function MapDesigner({
   useEffect(() => {
     if (state && state.features) {
       saveData(state);
-      //whenReady();
+      whenReady();
     }
   }, [saveData, state]);
 
+  // Обновляем состояние после каждого изменения пропса
+  useEffect(() => {
+    if (data && data.features) {
+      setState(data);
+    }
+  }, [data]);
+
   return (
-    <div className="rrbe-map">
+    <div className="altrp-map">
       {isLoading && <Loader />}
       <Map
         center={center}
         zoom={zoom}
-        className={`rrbe-map__container ${className}`}
+        className={`altrp-map__container ${className}`}
         whenReady={whenReady}
         scrollWheelZoom={interactionOptions.scrollWheelZoom}
         touchZoom={interactionOptions.touchZoom}
@@ -185,10 +188,7 @@ function MapDesigner({
         keyboard={interactionOptions.keyboard}
         style={style}
       >
-        <TileLayer
-          url="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution={"MapDesigner"}
-        />
+        <TileLayer url="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <FeatureGroup ref={FG}>
           <EditControl
             position="topleft"
@@ -210,7 +210,7 @@ function MapDesigner({
           />
         </FeatureGroup>
         {isEditable && selected && (
-          <Control position="topleft" className="rrbe-map__paint">
+          <Control position="topleft" className="altrp-map__paint">
             <button type="button" onClick={() => setOpen(!open)}>
               <MemoPaintIcon width="15" height="15" fill="#464646" />
             </button>
@@ -231,4 +231,4 @@ function MapDesigner({
   );
 }
 
-export default React.memo(MapDesigner);
+export default MapDesigner;
