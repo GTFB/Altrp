@@ -26,7 +26,7 @@ function MapDesigner({
   className,
   center,
   zoom,
-  data,
+  data = {},
   isEditable = false,
   isLoading = false,
   isTransformLatLng = false,
@@ -122,8 +122,8 @@ function MapDesigner({
     // Очищаем старые слои
     FG.current.leafletElement.clearLayers();
     // Добавляем новые слои
-    state.length > 0 &&
-      state.features.forEach((geojson) => {
+    if (state.features?.length > 0) {
+      for (const geojson of state.features) {
         // Конвертируем geojson в слой leaflet
         L.geoJSON(geojson, {
           coordsToLatLng: (coords) => {
@@ -159,7 +159,8 @@ function MapDesigner({
             FG.current.leafletElement.addLayer(layer);
           },
         });
-      });
+      }
+    }
   }, [handleSelected, isTransformLatLng, state]);
 
   // Сохраняем данные после каждого изменения состояния
@@ -179,13 +180,9 @@ function MapDesigner({
         className={`rrbe-map__container ${className}`}
         whenReady={whenReady}
         scrollWheelZoom={interactionOptions.scrollWheelZoom}
-        dragging={interactionOptions.dragging}
         touchZoom={interactionOptions.touchZoom}
         doubleClickZoom={interactionOptions.doubleClickZoom}
-        boxZoom={interactionOptions.boxZoom}
         keyboard={interactionOptions.keyboard}
-        trackResize={interactionOptions.trackResize}
-        noMoveStart={interactionOptions.noMoveStart}
         style={style}
       >
         <TileLayer

@@ -1,6 +1,9 @@
 import React, { Component, Suspense } from "react";
+import axios from "axios";
 import isEqual from "lodash/isEqual";
+
 const MapDesigner = React.lazy(() => import("../altrp-map/MapDesigner"));
+
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 
@@ -8,9 +11,12 @@ class MapWidget extends Component {
   constructor(props) {
     super(props);
 
+    this.handleSave = this.handleSave.bind(this);
+
     this.state = {
       settings: props.element.getSettings(),
-      data: [],
+      geojson: {},
+      isLoading: false,
     };
 
     props.element.component = this;
@@ -20,26 +26,37 @@ class MapWidget extends Component {
     }
   }
 
-  shouldComponentUpdate(_, nextState) {
-    return isEqual(this.state, nextState);
+  async _componentDidMount() {
+    console.log("_componentDidMount :>> ");
+    this.setState({ isLoading: true });
+    try {
+      const req = await axios(`/ajax/maps/${this.props.element.id}`);
+      if (req.status === 200) {
+        this.setState({ geojson: req.data, isLoading: false });
+      }
+    } catch (error) {
+      this.setState({ isLoading: false });
+    }
   }
 
   handleSave(data) {
-    console.log("data :>> ", data);
-    this.setState((state) => {
-      return { ...state, data };
+    axios.post(`/ajax/maps/${this.props.element.id}`, {
+      data: JSON.stringify({
+        type: "FeatureCollection",
+        features: data.features,
+      }),
     });
   }
 
   render() {
-    console.log("this.state.settings :>> ", this.state.settings);
     const { editable, canvas, zoom, lat, lng, style_height, style_margin } = this.state.settings;
     return (
       <Suspense fallback={"Loading"}>
         <MapDesigner
           className="altrp-map"
-          data={this.state.data}
-          saveData={this.handleSave.bind(this)}
+          data={this.state.geojson}
+          saveData={this.handleSave}
+          isLoading={this.state.isLoading}
           style={{
             height: style_height.size + style_height.unit,
             marginTop: style_margin.top + style_margin.unit,
@@ -55,10 +72,7 @@ class MapWidget extends Component {
             doubleClickZoom: editable,
             scrollWheelZoom: editable,
             touchZoom: editable,
-            boxZoom: editable,
-            dragging: editable,
             keyboard: editable,
-            noMoveStart: editable,
           }}
         />
       </Suspense>

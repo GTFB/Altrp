@@ -307,6 +307,12 @@ foreach ( $frontend_routes as $frontend_route ) {
 
 Route::group( ['prefix' => 'ajax'], function(){
 
+  // Отдает данные для виджета карты
+  Route::get('maps/{id}', 'MapsController@index');
+
+  // Записывает данные карты с фронта
+  Route::post('maps/{id}', 'MapsController@store');
+
   /**
    * Отдает данные страницы как модели для динамического контента
    */
