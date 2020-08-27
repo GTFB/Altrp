@@ -47,6 +47,7 @@
   text-decoration: none;
   display: flex;
   align-items: center;
+  justify-content: center;
   &_gray {
     background-color: $grey;
     color: #fff;
@@ -429,6 +430,11 @@
 
 .altrp-list-ul-default {
   flex-direction: column;
+}
+
+.altrp-list-icon svg {
+  width: inherit;
+  height: inherit;
 }
 
 .altrp-list-icon-relative {

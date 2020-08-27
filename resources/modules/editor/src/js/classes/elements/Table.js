@@ -712,6 +712,31 @@ class Table extends BaseElement {
         }
     });
 
+    this.addControl('table_style_header_font', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 36,
+        weight: "normal",
+        family: '"roboto"',
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-table-th{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
+
     this.addControl("table_style_header_border_type", {
       type: CONTROLLER_SELECT,
       label: "Border type",
@@ -893,6 +918,31 @@ class Table extends BaseElement {
       rules: {
         '{{ELEMENT}} .altrp-table-td{{STATE}}': 'color: {{COLOR}};',
       }
+    });
+
+    this.addControl('table_style_body_font', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 36,
+        weight: "normal",
+        family: '"roboto"',
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-table-td{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
     });
 
     this.addControl("table_style_body_links_color", {

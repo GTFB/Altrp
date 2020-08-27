@@ -10,17 +10,17 @@ class StateSection extends Component {
     super(props);
     this.state = {
       buttons: [
-        { title: "Normal", value: "" },
-        { title: "Hover", value: ":hover" },
-        { title: "Active", value: ".active" },
-        { title: "Disabled", value: ".disabled" },
-        { title: "Focus", value: ":focus" },
+        { title: "N", value: "" },
+        { title: "H", value: ":hover" },
+        { title: "A", value: ".active" },
+        { title: "D", value: ".disabled" },
+        { title: "F", value: ":focus" },
       ]
     }
   }
 
   componentWillUnmount() {
-    this.props.dispatch(setCurrentState("Normal", ""));
+    this.props.dispatch(setCurrentState("N", ""));
   }
 
   setCurrentState(button) {
