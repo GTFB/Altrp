@@ -53,7 +53,7 @@ Route::get( '/admin/editor-reports', function (){
 Route::get('/reports/html/{id}', "ReportsController@page");
 
 
-Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 
   Route::group(['prefix' => 'ajax'], function () {
 
