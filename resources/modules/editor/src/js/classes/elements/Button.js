@@ -399,6 +399,30 @@ class Button extends BaseElement{
       },
     });
 
+    this.addControl('style_background_shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'Shadow',
+      default: {
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        opacity: 1,
+        spread: 0,
+        colorRGB: 'rgb(0, 0, 0)',
+        color: 'rgb(0, 0, 0)',
+        colorPickedHex: '#000000',
+        type: ""
+      },
+      presetColors: [
+        '#eaeaea',
+        '#9c18a8'
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    });
+
+
     this.endControlSection();
 
     this.startControlSection('background_section', {
@@ -417,30 +441,6 @@ class Button extends BaseElement{
         '{{ELEMENT}} .altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
       },
     });
-
-  this.addControl('style_background_shadow', {
-        type: CONTROLLER_SHADOW,
-        label: 'Shadow',
-        default:{
-          blur: 0,
-          horizontal: 0,
-          vertical: 0,
-          opacity: 1,
-          spread: 0,
-          colorRGB: 'rgb(0, 0, 0)',
-          color: 'rgb(0, 0, 0)',
-          colorPickedHex: '#000000',
-          type: ""
-        },
-        presetColors: [
-          '#eaeaea',
-          '#9c18a8'
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-        },
-      }
-    );
 
   this.endControlSection();
 
