@@ -654,6 +654,17 @@ background-color: red;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
+  &.control-slider-label--typographic {
+    flex-direction: row;
+    flex-grow: 1;
+    justify-content: space-between;
+    & .control-slider-type-label {
+      margin-right: 5px;
+      &--active  {
+        text-decoration: underline;
+      }
+    }
+  }
 }
 .control-slider-input-wrapper{
   display: flex;
@@ -758,6 +769,11 @@ background-color: red;
         text-decoration: none;
         cursor: default;
       }
+      // &.control-slider-type-label--typographic {
+      //   flex-direction: row;
+      //   flex-grow: 1;
+      //   justify-content: space-between;
+      // }
     }
   }
 }
