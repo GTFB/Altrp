@@ -182,7 +182,6 @@ class TypographicController extends Component {
       return '';
     }
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
-    console.log(value);
     const familyOptions = [
       {
         value: 'Roboto',
