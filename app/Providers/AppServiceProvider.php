@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Altrp\Accessor;
 use App\Altrp\Controller;
 use App\Altrp\Model;
 use App\Altrp\Query;
+use App\Observers\AltrpAccessorObserver;
 use App\Observers\AltrpControllerObserver;
 use App\Observers\AltrpModelObserver;
 use App\Observers\AltrpQueryObserver;
@@ -61,6 +63,7 @@ class AppServiceProvider extends ServiceProvider
         Controller::observe(AltrpControllerObserver::class);
         Query::observe(AltrpQueryObserver::class);
         SQLEditor::observe(AltrpSQLEditorObserver::class);
+        Accessor::observe(AltrpAccessorObserver::class);
 
         Builder::macro('whereLike', function ($attributes, string $searchTerm) {
             $this->where(function (Builder $query) use ($attributes, $searchTerm) {

@@ -18,7 +18,8 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^1.2",
         "pulkitjalan/geoip": "^4.1",
-        "santigarcor/laratrust": "5.2.*"
+        "santigarcor/laratrust": "5.2.*",
+        "ext-json": "*"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.7",

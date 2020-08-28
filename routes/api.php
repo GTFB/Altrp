@@ -79,6 +79,13 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::get( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@showModelField');
         Route::delete( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@destroyModelField');
 
+        // Accessors
+        Route::get( '/models/{model_id}/accessors', 'Admin\ModelsController@getModelAccessors');
+        Route::post( '/models/{model_id}/accessors', 'Admin\ModelsController@storeAccessor');
+        Route::put( '/models/{model_id}/accessors/{accessor_id}', 'Admin\ModelsController@updateAccessor');
+        Route::get( '/models/{model_id}/accessors/{accessor_id}', 'Admin\ModelsController@showAccessor');
+        Route::delete( '/models/{model_id}/accessors/{accessor_id}', 'Admin\ModelsController@destroyAccessor');
+
         // Relations
         Route::get( '/models/{model_id}/relations', 'Admin\ModelsController@getModelRelations');
         Route::get( '/models/{model_id}/relation_options', 'Admin\ModelsController@getModelRelationOptions');
