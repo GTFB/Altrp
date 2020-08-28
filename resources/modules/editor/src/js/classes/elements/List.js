@@ -322,10 +322,8 @@ class List extends BaseElement{
       max: 100,
       min: 0,
       rules: {
-        '{{ELEMENT}} .altrp-list-icon{{STATE}}': [
-          'width: {{SIZE}}{{UNIT}}',
-          'height: {{SIZE}}{{UNIT}}'
-        ],
+        '{{ELEMENT}} .altrp-list-icon{{STATE}}': ['width: {{SIZE}}{{UNIT}}', 'height: {{SIZE}}{{UNIT}}'],
+        '{{ELEMENT}} .altrp-list-icon svg{{STATE}}': ['width: {{SIZE}}{{UNIT}}', 'height: {{SIZE}}{{UNIT}}'],
 
       },
     });
