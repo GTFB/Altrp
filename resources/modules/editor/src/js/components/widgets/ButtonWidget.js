@@ -83,6 +83,7 @@ class ButtonWidget extends Component {
           <a href={this.state.settings.link_link.url} onClick={this.onClick} className={classes}>
             {" "}
             {this.state.settings.button_text || ""}
+            <span className={"altrp-btn-icon "}>{ renderAssetIcon( buttonMedia ) } </span>
           </a>
         );
       } else {
