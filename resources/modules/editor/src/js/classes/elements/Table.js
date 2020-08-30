@@ -166,9 +166,47 @@ class Table extends BaseElement {
       label: 'Link Template',
       description: '/path/:id',
     });
-    repeater.addControl('column_width %',{
+    repeater.addControl('column_width',{
       label: 'Column Width',
       type: CONTROLLER_NUMBER,
+    });
+    repeater.addControl('column_header_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Header alignment',
+      default: 'center',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ]
+    });
+    repeater.addControl('column_body_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Body alignment',
+      default: 'center',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ]
     });
     repeater.addControl('column_is_sorted', {
       type: CONTROLLER_SWITCHER,

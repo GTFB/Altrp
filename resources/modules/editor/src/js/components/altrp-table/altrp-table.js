@@ -153,6 +153,7 @@ const AltrpTable = ({settings, query, data}) => {
                     {row.cells.map((cell, _i) => {
                       let cellContent = cell.render('Cell');
                       let linkTag = isEditor() ? 'a': Link;
+                      const style = cell.column.column_body_alignment ? { textAlign: cell.column.column_body_alignment } : {};
                       const cellProps = {...cell.getCellProps()};
                       let _cellContent = cell.value;
 
@@ -210,7 +211,9 @@ const AltrpTable = ({settings, query, data}) => {
                           className: 'altrp-inherit altrp-table-td__default-content',
                         }, cellContent)
                       }
-                      return <td {...cellProps} className={cellClassName}>{cellContent}{doubleClickContent}</td>
+                      return <td {...cellProps} className={cellClassName} style={style}>
+                          {cellContent}{doubleClickContent}
+                        </td>
                     })}
                   </tr>
               )
@@ -306,7 +309,11 @@ function renderAdditionalRows(settings) {
  * @return {*}
  */
 function renderTh({column, sortSetting, sortingHandler, filterSetting, filterHandler}){
+  const { column_width, column_header_alignment } = column;
   let thProps = {...column.getHeaderProps()};
+  const style = {};
+  if (column_width) style.width = column_width;
+  if (column_header_alignment) style.textAlign = column_header_alignment;
   thProps.className = 'altrp-table-th';
   if(column.column_is_sorted){
     thProps.onClick = () => sortingHandler(column._accessor);
@@ -316,7 +323,7 @@ function renderTh({column, sortSetting, sortingHandler, filterSetting, filterHan
     thProps.width = column.column_width + '%';
   }
   let thText = column.render('column_name');
-  return  <th {...thProps}>
+  return <th {...thProps} style={style}>
     {thText}
     { sortSetting && (sortSetting.order_by === column._accessor)
       && (sortSetting.order === "DESC" ?
