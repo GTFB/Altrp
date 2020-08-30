@@ -149,7 +149,7 @@ const AltrpTable = ({settings, query, data}) => {
             : rows.map((row, i) => {
               prepareRow(row);
               return (
-                  <tr {...row.getRowProps()} className="altrp-table-tr">
+                  <tr {...row.getRowProps()} className={`altrp-table-tr ${settings.table_hover_row ? 'altrp-table-background' : ''}`}>
                     {row.cells.map((cell, _i) => {
                       let cellContent = cell.render('Cell');
                       let linkTag = isEditor() ? 'a': Link;
@@ -192,6 +192,13 @@ const AltrpTable = ({settings, query, data}) => {
                       if(doubleClicked.column === columns[_i]._accessor && row.original.id === doubleClicked.rowId){
                         cellClassName += ' altrp-table-td_double-clicked';
                       }
+                    /**
+                     * Если в настройках table_hover_row: false, - background для отдельной ячейки
+                     */
+                      if (!settings.table_hover_row) {
+                        cellClassName += ' altrp-table-background';
+                      }
+
                       /**
                        * Если значение объект или массив, то отобразим пустую строку
                        */

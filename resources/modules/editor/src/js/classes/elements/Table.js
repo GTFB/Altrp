@@ -88,6 +88,12 @@ class Table extends BaseElement {
         },
     });
 
+    this.addControl('table_hover_row', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hover Row',
+      default: false
+    });
+
     this.endControlSection();
 
     this.startControlSection("table_data_settings", {
@@ -942,7 +948,7 @@ class Table extends BaseElement {
         colorPickedHex: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-table-td{{STATE}}': 'background: {{COLOR}};',
+        '{{ELEMENT}} .altrp-table-background{{STATE}}': 'background: {{COLOR}};',
       }
     });
 
