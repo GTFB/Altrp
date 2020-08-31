@@ -8,6 +8,7 @@ use App\Altrp\Generators\Controller\ControllerFile;
 use App\Altrp\Source;
 use App\Exceptions\Repository\RepositoryFileException;
 use App\Exceptions\Route\RouteFileException;
+use App\Role;
 use Illuminate\Support\Str;
 
 class RouteFileWriter
@@ -206,14 +207,21 @@ class RouteFileWriter
         $accessSource = [];
         $accessRoles = [];
         $accessPermissions = [];
-        foreach ($sourceRoles as $sourceRole) {
-            $accessRoles[] = $sourceRole->role->name;
-        }
         $sourcePermissions = $source->source_permissions;
         foreach ($sourcePermissions as $sourcePermission) {
             $accessPermissions[] = $sourcePermission->permission->name;
         }
-        if ($accessRoles) $accessSource[] = implode('|', $accessRoles);
+        foreach ($sourceRoles as $sourceRole) {
+            $accessRoles[] = $sourceRole->role->name;
+        }
+
+        if ($accessRoles)
+            $accessSource[] = implode('|', $accessRoles);
+        elseif ($accessPermissions && !$accessRoles) {
+            $roles = Role::all();
+            $accessSource[] = implode('|', $roles->toArray());
+        }
+
         if ($accessPermissions) $accessSource[] = implode('|', $accessPermissions);
 
         $middleware = [];

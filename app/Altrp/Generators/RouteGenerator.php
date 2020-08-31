@@ -4,6 +4,7 @@ namespace App\Altrp\Generators;
 
 use App\Altrp\Controller;
 use App\Altrp\Source;
+use App\Role;
 use Illuminate\Support\Str;
 
 class RouteGenerator
@@ -241,17 +242,19 @@ class RouteGenerator
         $accessSource = [];
         $accessRoles = [];
         $accessPermissions = [];
-        foreach ($sourceRoles as $sourceRole) {
-            $accessRoles[] = $sourceRole->role->name;
-        }
         $sourcePermissions = $source->source_permissions;
         foreach ($sourcePermissions as $sourcePermission) {
             $accessPermissions[] = $sourcePermission->permission->name;
         }
+        foreach ($sourceRoles as $sourceRole) {
+            $accessRoles[] = $sourceRole->role->name;
+        }
         if ($accessRoles)
             $accessSource[] = implode('|', $accessRoles);
-        else
-            $accessSource[] = 'admin';
+        elseif ($accessPermissions && !$accessRoles) {
+            $roles = Role::all();
+            $accessSource[] = implode('|', $roles->toArray());
+        }
 
         if ($accessPermissions) $accessSource[] = implode('|', $accessPermissions);
 
