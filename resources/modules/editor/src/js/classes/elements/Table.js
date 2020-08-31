@@ -155,7 +155,7 @@ class Table extends BaseElement {
       label: 'Previous Page Text',
     });
 
-    this.addControl('cur  title=rent_page_text', {
+    this.addControl('current_page_text', {
       label: 'Current Page Text',
     });
 
