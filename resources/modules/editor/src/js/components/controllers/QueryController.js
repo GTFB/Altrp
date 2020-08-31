@@ -110,6 +110,16 @@ class QueryController extends Component {
     newValue.paginationType = e.target.value;
     this._changeValue(newValue);
   }
+
+  /**
+   * Изменение памраметров по умолчанию для query-настроек
+   */
+  changeDefaultParams = (e) => {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    let newValue = { ...value };
+    newValue.defaultParams = e.target.value;
+    this._changeValue(newValue);
+  };
   /**
    * смена названия модели для запроса
    * @param {string} modelName
@@ -136,6 +146,7 @@ class QueryController extends Component {
       orderingField: "",
       order: "ASC",
       sql: "",
+      defaultParams: ''
     };
   }
 
@@ -223,7 +234,14 @@ class QueryController extends Component {
             </select>
           </div>
         </div>
-      </div>
+        <div className="controller-field-group flex-wrap">
+          <textarea className="controller-container__textarea"
+                    onChange={this.changeDefaultParams} value={this.state.value.defaultParams || ''} />
+          <div className="controller-container__description">
+            Enter each param for Query in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {'{{title}}'} for Take title Value from Current Model
+          </div>
+        </div>
+        </div>
     );
   }
 }

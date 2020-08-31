@@ -90,3 +90,49 @@ export function getMediaSettingsByName(screenSettingName) {
   });
   return screen;
 }
+
+/**
+ *@param {string} URLTemplate
+ *@param {{}} object
+ */
+export function parseURLTemplate(URLTemplate, object = {}){
+  let url = URLTemplate;
+  // columnEditUrl = columnEditUrl.replace(':id', row.original.id);
+  let idTemplates = url.match(/:([\s\S]+?)(\/|$)/g);
+  if(! idTemplates){
+    return url;
+  }
+  idTemplates.forEach(idTemplate=>{
+    let replace = object[idTemplate.replace(/:|\//g, '')] || '';
+    idTemplate = idTemplate.replace('/', '');
+    url = url.replace(new RegExp(idTemplate,'g'), replace);
+  });
+  return url;
+}
+
+export function getWindowWidth() {
+  let window;
+  if(isEditor()) {
+    window = document.getElementById("editorWindow").offsetWidth;
+  } else {
+    window = document.getElementById("front-app").offsetWidth
+  }
+  return window
+}
+
+export function renderAssetIcon(asset, props = null) {
+  if(asset) {
+    switch (asset.assetType) {
+      case 'icon': {
+        return iconsManager().renderIcon(asset.name)
+      }
+      case 'image': {
+        return React.createElement('img', {...props, src: asset.url})
+      }
+      case 'media': {
+        return React.createElement('img', {...props, src: asset.url})
+      }
+    }
+  }
+  return '';
+}

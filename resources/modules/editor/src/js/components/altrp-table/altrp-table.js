@@ -3,10 +3,9 @@ import {useTable, useSortBy} from "react-table";
 import {useQuery, usePaginatedQuery, queryCache} from  "react-query";
 import '../../../sass/altrp-pagination.scss';
 import {Link} from "react-router-dom";
-import {isEditor} from "../../../../../front-app/src/js/helpers";
+import {isEditor, parseURLTemplate} from "../../../../../front-app/src/js/helpers";
 import {iconsManager} from "../../../../../admin/src/js/helpers";
 import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput";
-import {parseURLTemplate} from "../../helpers";
 
 /**
  *

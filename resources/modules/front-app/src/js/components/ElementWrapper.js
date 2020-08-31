@@ -1,9 +1,12 @@
 import React, {Component} from "react";
 import { withRouter } from "react-router-dom";
+import appStore from "../store/store"
 
 class ElementWrapper extends Component {
   constructor(props){
     super(props);
+    console.log(appStore.getState());
+    this.state = {};
   }
 
   render() {

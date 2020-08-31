@@ -10,7 +10,7 @@ import { settingSectionMenuReducer } from "./setting-section/reducers"
 import { currentTabReducer } from "./active-settings-tab/reducers";
 import { currentStateReducer } from "./state-section/reducers";
 import { currentScreenReducer } from './responsive-switcher/reducers';
-
+console.error('dsafdsa');
 
 export default combineReducers({
   currentElement: currentElementReducer,
@@ -24,4 +24,5 @@ export default combineReducers({
   currentTab: currentTabReducer,
   currentState: currentStateReducer,
   currentScreen: currentScreenReducer,
+
 });

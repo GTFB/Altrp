@@ -81,12 +81,30 @@ class Query {
   }
 
   /**
+   * Задать параметры по умолчанию
+   * @params {{}} defaultParams
+   */
+  setDefaultParams(defaultParams = {}){
+    this.defaultParams = defaultParams;
+  }
+
+  /**
+   * Вернуть значения по умолчанию
+   * @return {{}}
+   */
+  getDefaultParams(){
+    this.defaultParams = this.defaultParams || {};
+    this.defaultParams.pageSize = this.pageSize;
+    return this.defaultParams;
+  }
+
+  /**
    * Сливает параметры с параметрами по умолчанию
    * @param {object} params
    * @return {object}
    */
   getParams(params) {
-    params = {..._.assign({pageSize:this.pageSize}, params)};
+    params = {..._.assign(this.getDefaultParams(), params)};
     params.page = params.page || 1;
     return params;
   }

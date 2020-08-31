@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link, withRouter } from 'react-router-dom';
-import { isEditor } from "../../../../../front-app/src/js/helpers";
-import { renderAssetIcon } from "../../helpers";
+import {isEditor, renderAssetIcon} from "../../../../../front-app/src/js/helpers";
 
 class ButtonWidget extends Component {
   constructor(props) {
