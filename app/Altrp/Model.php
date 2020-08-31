@@ -21,6 +21,7 @@ class Model extends EloquentModel
         'description',
         'soft_deletes',
         'time_stamps',
+        'extend',
         'fillable_cols',
         'user_cols',
         'path',

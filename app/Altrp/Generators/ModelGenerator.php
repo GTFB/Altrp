@@ -165,7 +165,6 @@ class ModelGenerator extends AppGenerator
      */
     public function updateModelFile()
     {
-
         return $this->createModelFile();
     }
 
@@ -180,6 +179,13 @@ class ModelGenerator extends AppGenerator
         $relationships = $this->screenBacklashes($this->relationshipsToString());
         $fullModelName = $this->modelFilename;
         $fillableColumns = $this->getFillableColumns();
+        $extendsModelNamespace = $this->getExtendModelNamespace();
+        $modelNamespaceParts = explode('\\',$extendsModelNamespace);
+        $modelName = array_pop($modelNamespaceParts);
+        $extendsModelName = ($modelName == 'Model')
+            ? $modelName
+            : $modelName . 'Model';
+        $extendsModelNamespace .= ' as ' . $extendsModelName;
         $alwaysWithRelations= $this->getAlwaysWithRelations();
         $softDeletes = $this->isSoftDeletes();
         $createdAt = $this->getCreatedAt();
@@ -194,6 +200,8 @@ class ModelGenerator extends AppGenerator
                 'name' => "{$fullModelName}",
                 '--table' => "{$this->model->table()->first()->name}",
                 '--fillable' => "[{$fillableColumns}]",
+                '--model-namespace' => "use {$extendsModelNamespace};",
+                '--extends-model' => "{$extendsModelName}",
                 '--always-with' => "[{$alwaysWithRelations}]",
                 '--pk' => "$primaryKey",
                 '--soft-deletes' => "{$softDeletes}",
@@ -209,6 +217,7 @@ class ModelGenerator extends AppGenerator
                 '--custom-methods' => $this->getCustomCodeBlock($customCode,'custom_methods'),
             ]);
         } catch(\Exception $e) {
+            echo $e;
             if(file_exists($this->modelFile . '.bak'))
                 rename($this->modelFile . '.bak', $this->modelFile);
             return false;
@@ -559,6 +568,15 @@ class ModelGenerator extends AppGenerator
     {
         $relations = Relationship::where([['model_id', $this->model->id], ['add_belong_to', 1]])->get();
         return $relations;
+    }
+
+    protected function getExtendModelNamespace()
+    {
+        $modelNamespace = 'Illuminate\Database\Eloquent\Model';
+        if ($this->model->extend) {
+            $modelNamespace = $this->model->extend;
+        }
+        return $modelNamespace;
     }
 
   /**

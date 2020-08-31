@@ -16,6 +16,8 @@ class CrudModelCommand extends GeneratorCommand
                             {name : The name of the model.}
                             {--table= : The name of the table.}
                             {--fillable= : The names of the fillable columns.}
+                            {--model-namespace= : The namespace of extended model.}
+                            {--extends-model= : Name of the extended model.}
                             {--relationships= : The relationships for the model.}
                             {--pk=id : The name of the primary key.}
                             {--soft-deletes=no : Include soft deletes fields.}
@@ -82,6 +84,8 @@ class CrudModelCommand extends GeneratorCommand
         $table = $this->option('table') ?: $this->argument('name');
         $fillable = $this->option('fillable');
         $always_with = $this->option('always-with');
+        $usedModelNamespace = $this->option('model-namespace');
+        $extendsModel = $this->option('extends-model');
         $primaryKey = $this->option('pk');
         $relationships = trim($this->option('relationships')) != '' ? explode(';', trim($this->option('relationships'))) : [];
         $softDeletes = $this->option('soft-deletes');
@@ -143,6 +147,8 @@ EOD;
 
         $ret = $this->replaceNamespace($stub, $name)
             ->replaceTable($stub, $table)
+            ->replaceUsedModelNamespace($stub, $usedModelNamespace)
+            ->replaceExtendModel($stub, $extendsModel)
             ->replaceFillable($stub, $fillable)
             ->replaceAlwaysWith($stub, $always_with)
             ->replacePrimaryKey($stub, $primaryKey)
@@ -186,6 +192,18 @@ EOD;
         $ret->replaceRelationshipPlaceholder($stub);
 
         return $ret->replaceClass($stub, $name);
+    }
+
+    protected function replaceUsedModelNamespace(&$stub, $usedModelNamespace)
+    {
+        $stub = str_replace('{{useModelNamespace}}', $usedModelNamespace, $stub);
+        return $this;
+    }
+
+    protected function replaceExtendModel(&$stub, $extendsModel)
+    {
+        $stub = str_replace('{{extendsModel}}', $extendsModel, $stub);
+        return $this;
     }
 
     /**
