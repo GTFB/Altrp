@@ -132,6 +132,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+.altrp-image-container img{
+  position:  absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.altrp-image-container a {
+  width: 100%;
 }
 
 .altrp-field {

@@ -69,14 +69,14 @@ class Image extends BaseElement{
     this.startControlSection('style_section', {
       tab: TAB_STYLE,
       label: ''
-    })
+    });
 
     this.endControlSection();
 
     this.startControlSection('postion_style_section', {
       tab: TAB_STYLE,
-      label: ''
-    })
+      label: 'Position'
+    });
 
     this.addControl('position_margin', {
       type: CONTROLLER_DIMENSIONS,
@@ -181,12 +181,24 @@ class Image extends BaseElement{
         default: "cover",
         options:[
           {
-            'value' : 'cover',
-            'label' : 'cover',
+            'value' : 'fill',
+            'label' : 'Fill',
           },
           {
             'value' : 'contain',
-            'label' : 'contain',
+            'label' : 'Contain',
+          },
+          {
+            'value' : 'cover',
+            'label' : 'Cover',
+          },
+          {
+            'value' : 'none',
+            'label' : 'None',
+          },
+          {
+            'value' : 'scale-down',
+            'label' : 'Scale down',
           }
         ],
         rules: {
@@ -202,26 +214,27 @@ class Image extends BaseElement{
         options:[
           {
             'value' : '100',
-            'label' : 'default',
-          },
-          {
-            'value' : '-75',
-            'label' : '3:4',
+            'label' : '1:1',
           },
           {
             'value' : '56.25',
             'label' : '16:9',
           },
           {
-            'value' : '-56.25',
-            'label' : '9:16',
-          },
-          {
             'value' : '75',
             'label' : '4:3',
+          },
+          {
+            'value' : '133.33',
+            'label' : '3:4',
+          },
+          {
+            'value' : '177.78',
+            'label' : '9:16',
           }
         ],
         rules: {
+          '{{ELEMENT}} .altrp-image-container{{STATE}}': 'padding-top: {{VALUE}}%',
         },
       }
     );
