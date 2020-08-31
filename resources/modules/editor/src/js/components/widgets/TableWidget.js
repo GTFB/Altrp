@@ -1,5 +1,6 @@
-import React, {Component, Suspense} from "react";
+import React, {Component} from "react";
 import Query from "../../classes/Query";
+
 // const AltrpTable = React.lazy(() => import("../altrp-table/component"));
 
 class TableWidget extends Component {
