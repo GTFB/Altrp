@@ -189,6 +189,7 @@ return [
 
         App\Providers\RepositoryServiceProvider::class,
         App\Providers\AltrpRepositoryServiceProvider::class,
+        App\Providers\PluginServiceProvider::class
     ],
 
     /*
