@@ -336,6 +336,7 @@ function mapStateToProps(state) {
     currentElement: state.currentElement.currentElement,
     dragState: state.elementDrag.dragState,
     currentModel: state.currentModel,
+    controllerValue: state.controllerValue,
   };
 }
 

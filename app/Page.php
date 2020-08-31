@@ -27,6 +27,7 @@ class Page extends Model
     'content',
     'path',
     'model_id',
+    'redirect',
   ];
 
   /**
@@ -79,7 +80,7 @@ class Page extends Model
           'path' => $page->path,
           'id' => $page->id,
           'allowed' => false,
-          'redirect' => '/',
+          'redirect' => $page->redirect ? $page->redirect : '/',
         ];
       }
       $_page['lazy'] = $lazy;
@@ -271,9 +272,10 @@ class Page extends Model
    * @return bool
    */
   public function allowedForUser( $user_id = '' ){
-    if( ( ! auth()->user() ) ) {
-      return true;
-    }
+
+//    if( ( ! auth()->user() ) ) {
+//      return true;
+//    }
     if( ! $user_id ) {
       $user = auth()->user();
     } else {
@@ -282,7 +284,7 @@ class Page extends Model
     $allowed = false;
 
     /** @var User $user */
-    $user = auth()->user();
+//    $user = auth()->user();
     $page_role_table = DB::table( 'page_role' );
     $page_roles = $page_role_table->where( 'page_id', $this->id )->get();
     /**
@@ -290,6 +292,9 @@ class Page extends Model
      */
     if( ( ! $page_roles->count() ) && ! $this->for_guest ){
       $allowed = true;
+    }
+    if( ( ! $user ) && $this->for_guest ){
+      return true;
     }
     if( ! $user ){
       return false;
