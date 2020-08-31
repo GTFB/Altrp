@@ -285,9 +285,10 @@ class BaseElement extends ControlStack {
   /**
    * Возвращает значение настройки по id
    * @param {string} settingName
+   * @param {*}_default
    * @return {*}
    */
-  getSettings(settingName) {
+  getSettings(settingName, _default = '') {
     this._initDefaultSettings();
     if (!settingName) {
       return _.cloneDeep(this.settings);

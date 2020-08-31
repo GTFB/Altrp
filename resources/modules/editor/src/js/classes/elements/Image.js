@@ -210,7 +210,7 @@ class Image extends BaseElement{
     this.addControl('aspect_ratio_size', {
         type: CONTROLLER_SELECT,
         label: 'Aspect ratio',
-
+        default: '56.25',
         options:[
           {
             'value' : '100',
