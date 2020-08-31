@@ -507,7 +507,7 @@ class Table extends BaseElement {
         }
       ],
       rules: {
-        '{{ELEMENT}} .altrp-table-tbody{{STATE}}': 'border-style: {{VALUE}} !important'
+        '{{ELEMENT}} .altrp-table{{STATE}}': 'border-style: {{VALUE}} !important'
       }
     });
 
@@ -523,7 +523,7 @@ class Table extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        '{{ELEMENT}} .altrp-table-tbody{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
+        '{{ELEMENT}} .altrp-table{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
       }
     });
 
@@ -535,7 +535,7 @@ class Table extends BaseElement {
         colorPickedHex: "#32a852"
       },
       rules: {
-        '{{ELEMENT}} .altrp-table-tbody{{STATE}}': 'border-color: {{COLOR}} !important'
+        '{{ELEMENT}} .altrp-table{{STATE}}': 'border-color: {{COLOR}} !important'
       }
     });
 
