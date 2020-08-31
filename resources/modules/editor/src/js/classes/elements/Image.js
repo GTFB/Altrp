@@ -13,7 +13,8 @@ import {
   CONTROLLER_COLOR,
   TAB_CONTENT,
   TAB_STYLE,
-  TAB_ADVANCED
+  TAB_ADVANCED,
+  CONTROLLER_LINK
 } from "../modules/ControllersManager";
 
 class Image extends BaseElement{
@@ -43,6 +44,24 @@ class Image extends BaseElement{
     this.addControl('content_media', {
       type: CONTROLLER_MEDIA,
       label: 'Choose image',
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("link", {
+      tab: TAB_CONTENT,
+      label: "Link"
+    });
+
+    this.addControl('image_link', {
+      type: CONTROLLER_LINK,
+      default: {
+        url: "",
+        attributes: "",
+        noFollow: false,
+        tag: 'Link'
+      },
+      label: 'Link',
     });
 
     this.endControlSection();

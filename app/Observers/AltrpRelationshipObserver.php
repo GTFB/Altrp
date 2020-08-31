@@ -27,13 +27,14 @@ class AltrpRelationshipObserver
     {
         $model = Model::find($relationship->model_id);
 
-        if ($model->altrp_relationships
+        //Не пропускает hasOne нужно переделать
+        /*if ($model->altrp_relationships
             && ($relationship->isDirty('name') || $relationship->isDirty('foreign_key'))
             && ($model->altrp_relationships->contains('name',$relationship->name)
                 || $relationship->type === 'hasOne' && $model->altrp_relationships->contains('foreign_key',$relationship->foreign_key))
         ) {
             return false;
-        }
+        }*/
 
         //Cвязь belongsTo создается на существующую связь hasOne или hasMany
         //Миграция не нужна, она уже выполнялась при добавлении связи hasOne или hasMany
@@ -147,14 +148,17 @@ class AltrpRelationshipObserver
             
             $relation_name = strtolower($model->name);
             
+            $local_key = $relationship->foreign_key;
+            $foreign_key = $relationship->local_key;
+            
             $relation = new Relationship([
                 "title" => $relation_name,
                 "description" => "",
                 "type" => $this->getInverseRelationType($relationship->type),
                 "model_id" => $relationship->target_model_id,
                 "add_belong_to" => false,
-                "foreign_key" => $relationship->foreign_key,
-                "local_key" => $relationship->local_key,
+                "foreign_key" => $foreign_key,
+                "local_key" => $local_key,
                 "onDelete" => "restrict",
                 "onUpdate" => "restrict",
                 "name" => $relation_name,

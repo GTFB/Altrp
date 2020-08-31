@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\AltrpUpdateService;
+use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -23,13 +24,17 @@ class UpdateController extends Controller
       return response()->json( ['message' => $e->getMessage()], 404 );
     }
     $res = ['result' => false];
+
+    if( env( 'APP_ENV' ) === 'local'){
+      return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE );
+    }
     if( version_compare( $new_version, getLatestVersion()) > 0){
       $res = [
         'result' => true,
         'version' => $new_version,
       ];
     }
-    return response()->json( $res );
+    return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE );
   }
 
   /**

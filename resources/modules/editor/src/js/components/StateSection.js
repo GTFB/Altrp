@@ -14,6 +14,7 @@ class StateSection extends Component {
         { title: "Hover", value: ":hover" },
         { title: "Active", value: ".active" },
         { title: "Disabled", value: ".disabled" },
+        { title: "Focus", value: ":focus" },
       ]
     }
   }

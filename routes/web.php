@@ -50,6 +50,8 @@ Route::get( '/admin/editor-reports', function (){
   return view( 'editor-reports' );
 } )->middleware( 'auth' )->name('editor-reports');
 
+Route::get('/reports/html/{id}', "ReportsController@page");
+
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
 
@@ -147,6 +149,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth',], function () {
     Route::resource( 'settings', 'Admin\SettingsController' );
     Route::resource( 'diagrams', 'Admin\AltrpDiagramController' );
     Route::resource( 'sql_editors', 'Admin\SQLEditorController' );
+    Route::get( 'sql_editors/list/{name}', 'Admin\SQLEditorController@listByName');
 
     /**
      * Updates Check

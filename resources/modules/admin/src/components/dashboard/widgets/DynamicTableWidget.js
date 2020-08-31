@@ -22,7 +22,7 @@ const DynamicTableWidget = ({ dataUrl, options = {} }) => {
 
   if (isLoading) return <Spinner />;
 
-  if (data.length === 0) return <EmptyWidget />;
+  if (!Array.isArray(data) || data.length === 0) return <EmptyWidget />;
 
   if (options.isVertical) {
     return (

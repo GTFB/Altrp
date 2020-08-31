@@ -162,6 +162,12 @@ class Admin extends Component {
                   </Link>
                 </li>
                 <li>
+                  <Link to="/admin/access/roles" className="admin-nav-list__link">
+                    <UserSvg className="icon" />
+                    <span>Access</span>
+                  </Link>
+                </li>
+                <li>
                   <Link to="/admin/plugins" className="admin-nav-list__link">
                     <PluginSvg className="icon"/>
                     <span>Plugins</span>

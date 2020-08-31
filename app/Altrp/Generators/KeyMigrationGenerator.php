@@ -1,11 +1,9 @@
 <?php
 namespace App\Altrp\Generators;
 
-use App\Altrp\Column;
 use App\Altrp\Table;
 use Illuminate\Support\Str;
 use App\Altrp\Generators\NewMigrationGenerator;
-use App\Altrp\Generators\Migration\MigrationFieldFactory;
 use App\Altrp\Generators\Migration\MigrationKey;
 
 class KeyMigrationGenerator extends NewMigrationGenerator{
@@ -42,9 +40,9 @@ class KeyMigrationGenerator extends NewMigrationGenerator{
         $full_path = $this->getPath().$fileName;
 
         //5. создаем файл
-        
+
         $d = file_put_contents($full_path, $template);
-        
+
 
         if($d !== false) return $full_path;
         else return false;
@@ -94,7 +92,7 @@ class KeyMigrationGenerator extends NewMigrationGenerator{
         $name = $this->getMigrationName();
         $className = Str::studly($name);
 
-        
+
         $table_name = $this->data->altrp_model->altrp_table->name;
         /**
          * для 'belongsTo', 'hasMany ключи создаем в связанной модели
@@ -166,11 +164,11 @@ class KeyMigrationGenerator extends NewMigrationGenerator{
     }
 
     protected function checkRelation() {
-        if($this->data->type == 'belongsTo' || $this->data->type == 'hasMany'){
+        if($this->data->type == 'hasOne' || $this->data->type == 'hasMany'){
             return false;
         }
         return true;
     }
 
-    
+
 }
