@@ -58,13 +58,13 @@ class AccordionWidget extends Component {
       icon = renderAssetIcon(this.state.settings.icon_accordion_content,
         {className: "altrp-accordion-item-icon-svg"}
         );
-    };
+    }
 
     if(this.state.settings.active_icon_accordion_content) {
       active_icon = renderAssetIcon(this.state.settings.active_icon_accordion_content,
         {className: "altrp-accordion-item-active-icon-svg"}
       );
-    };
+    }
 
     let accordion_items = items.map((item, idx) => {
 

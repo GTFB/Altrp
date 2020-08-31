@@ -235,6 +235,7 @@ class QueryController extends Component {
           </div>
         </div>
         <div className="controller-field-group flex-wrap">
+          <div className="controller-container__label">Defaults Params for Query</div>
           <textarea className="controller-container__textarea"
                     onChange={this.changeDefaultParams} value={this.state.value.defaultParams || ''} />
           <div className="controller-container__description">

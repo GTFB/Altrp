@@ -4,7 +4,6 @@
  */
 class AltrpModel {
   constructor(data = {}) {
-    console.log(data);
     this.data = _.cloneDeep(data);
   }
 

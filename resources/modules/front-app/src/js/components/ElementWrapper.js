@@ -5,9 +5,21 @@ import appStore from "../store/store"
 class ElementWrapper extends Component {
   constructor(props){
     super(props);
-    console.log(appStore.getState());
-    this.state = {};
+    this.state = {
+      currentModel: appStore.getState().currentModel,
+    };
+    appStore.subscribe(this.updateCurrentModel)
   }
+
+  /**
+   * Подписываемся на обновление текущей модели
+   * (обновляем, только если currentModel изменилась)
+   */
+  updateCurrentModel = () => {
+    if(this.state.currentModel !== appStore.getState().currentModel){
+      this.setState(state => ({...state, currentModel: appStore.getState().currentModel}));
+    }
+  };
 
   render() {
     const { 
@@ -49,6 +61,7 @@ class ElementWrapper extends Component {
           element: this.props.element,
           children: this.props.element.getChildren(),
           match: this.props.match,
+          currentModel: this.state.currentModel,
         })
       }
     </div>

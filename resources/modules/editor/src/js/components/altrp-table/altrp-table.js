@@ -12,10 +12,11 @@ import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput
  * @param settings
  * @param {Query} query
  * @param {Query} data
+ * @param {AltrpModel} currentModel
  * @return {*}
  * @constructor
  */
-const AltrpTable = ({settings, query, data}) => {
+const AltrpTable = ({settings, query, data, currentModel}) => {
   if (! (settings.tables_columns && settings.tables_columns.length)) {
     return <div children="Please Add Column"/>
   }
@@ -46,7 +47,7 @@ const AltrpTable = ({settings, query, data}) => {
       resolvedData,
       latestData,
       error,
-    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting], fetchModels);
+    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting, currentModel], fetchModels);
     _data = resolvedData ? resolvedData : _data;
     _status = status;
     _error = error;

@@ -33,12 +33,16 @@ class TableWidget extends Component {
     return true;
   }
   render(){
+    if(! this.props.currentModel.getProperty('altrpModelUpdated')){
+      return '';
+    }
     let query = new Query(this.props.element.getSettings().table_query || {}, this);
     if(! this.showTable(query)){
       return <div children="Please Choose Source"/>
     }
 
     return <this.state.TableComponent query={query}
+                                      currentModel={this.props.currentModel}
                                       data={query.getFromModel(this.state.modelData)}
                                       settings={this.props.element.getSettings()}/>;
   }

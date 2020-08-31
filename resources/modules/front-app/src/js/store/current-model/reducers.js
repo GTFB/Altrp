@@ -12,5 +12,8 @@ export function currentModelReducer(model, action) {
       model = action.model;
     }break;
   }
+  if(model instanceof AltrpModel){
+    return model;
+  }
   return new AltrpModel(model);
 }

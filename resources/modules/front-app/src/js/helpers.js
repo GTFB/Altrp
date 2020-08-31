@@ -163,3 +163,34 @@ export function renderAsset(asset, props = null) {
   }
   return '';
 }
+
+/**
+ * Парсим данный из строки в объект, если значение - путь, то берем значение из context
+ * (если в context нет свойства, то не записываем)
+ * @param {string} string
+ * @param {AltrpModel} context
+ */
+export function parseParamsFromString(string, context = {}){
+  const params = {};
+
+  if(! string){
+    return params;
+  }
+  const lines = string.split('\n');
+  lines.forEach((line)=>{
+    let [left, right] = line.split('|');
+    if(! left || ! right){
+      return;
+    }
+    left = left.trim();
+    right = right.trim();
+    if(right.match(/(?<={{)([\s\S]+?)(?=}})/g)){
+      if(context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0])){
+        params[left] = context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0]);
+      }
+    } else {
+      params[left] = right;
+    }
+  });
+  return params;
+}

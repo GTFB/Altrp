@@ -2,9 +2,13 @@ import React, {Component} from "react";
 import AreaComponent from "./AreaComponent";
 import {setTitle} from "../helpers";
 import { Scrollbars } from "react-custom-scrollbars";
-import {Redirect} from "react-router-dom";
+import {Redirect, withRouter} from "react-router-dom";
 import pageLoader from './../classes/PageLoader'
 import Area from "../classes/Area";
+import Resource from "../../../../editor/src/js/classes/Resource";
+import appStore from "../store/store"
+import {changeCurrentModel} from "../store/current-model/actions";
+
 
 class RouteContent extends Component {
   constructor(props){
@@ -29,6 +33,36 @@ class RouteContent extends Component {
           ...state,
         areas,
       }));
+    }
+    /**
+     * Меняем текущую модель
+     */
+    this.changeRouteCurrentModel();
+  }
+  /**
+   * Меняем текущую модель
+   */
+  async changeRouteCurrentModel(){
+    if(_.get(this.props, 'model.modelName') && _.get(this.props, 'match.params.id')){
+      appStore.dispatch(changeCurrentModel({altrpModelUpdated: false}));
+      let model = await (new Resource({route:`/ajax/models/${this.props.model.modelName}`})).get(this.props.match.params.id);
+      model.altrpModelUpdated = true;
+      appStore.dispatch(changeCurrentModel(model));
+    } else {
+      appStore.dispatch(changeCurrentModel({altrpModelUpdated: true}));
+    }
+  }
+
+  /**
+   * Если меняется роут
+   * @params {{}} prevProps
+   * @return {Promise<void>}
+   */
+  async componentDidUpdate(prevProps){
+    if((_.get(this.props, 'model.modelName') !== _.get(prevProps, 'model.modelName'))
+        || (_.get(this.props, 'match.params.id') !== _.get(prevProps, 'match.params.id'))
+    ){
+      this.changeRouteCurrentModel();
     }
   }
   render(){
@@ -57,4 +91,4 @@ class RouteContent extends Component {
   }
 }
 
-export default RouteContent;
+export default withRouter(RouteContent);

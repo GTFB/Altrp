@@ -1,6 +1,6 @@
 import Resource from "./Resource";
 import modelManager from "../../../../editor/src/js/classes/modules/ModelsManager";
-// import
+import {parseParamsFromString} from "../../../../front-app/src/js/helpers";
 
 class Query {
 
@@ -20,6 +20,7 @@ class Query {
       this.route = data.dataSource.value;
       this.dataSourceName = data.dataSource.sql_name || '';
     }
+    this.setDefaultParams(parseParamsFromString(data.defaultParams, component.props.currentModel));
   }
   /**
    *
