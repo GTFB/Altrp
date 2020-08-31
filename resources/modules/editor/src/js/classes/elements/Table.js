@@ -464,6 +464,18 @@ class Table extends BaseElement {
         label: 'Striple style'
     });
 
+    this.addControl("table_style_table_stripe_color", {
+      type: CONTROLLER_COLOR,
+      label: "Stripe Color",
+      default: {
+        color: "rgba(0, 0, 50, .05)",
+        colorPickedHex: "#32a852"
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-table-tbody--striped tr:nth-child(2n)': 'background-color: {{COLOR}}'
+      }
+    });
+
     this.addControl("table_style_table_border_type", {
       type: CONTROLLER_SELECT,
       label: "Border Type",
@@ -948,7 +960,7 @@ class Table extends BaseElement {
         colorPickedHex: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-table-background{{STATE}}': 'background: {{COLOR}};',
+        '{{ELEMENT}} .altrp-table-tbody .altrp-table-background{{STATE}}': 'background: {{COLOR}};',
       }
     });
 
