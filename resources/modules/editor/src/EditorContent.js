@@ -25,7 +25,6 @@ class EditorContent extends Component {
     this.state = {};
     this.editorWindow = React.createRef();
     store.subscribe(this.currentElementListener.bind(this));
-    store.dispatch(changeCurrentModel({altrpModelUpdated: true}));
     window.altrpEditorContent = this;
   }
 
@@ -60,6 +59,7 @@ class EditorContent extends Component {
    */
   componentDidMount() {
     let rootElement = getEditor().modules.templateDataStorage.getRootElement();
+    store.dispatch(changeCurrentModel({altrpModelUpdated: true}));
     this.setState({
       rootElement
     });
