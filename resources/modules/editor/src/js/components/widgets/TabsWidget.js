@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import { renderAssetIcon, renderAsset } from "../../helpers"
+import {renderAsset, renderAssetIcon} from "../../../../../front-app/src/js/helpers";
 
 class TabsWidget extends Component {
   constructor(props){

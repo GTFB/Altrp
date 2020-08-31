@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import { renderAssetIcon } from "../../helpers"
+import {renderAssetIcon} from "../../../../../front-app/src/js/helpers";
 
 class ListWidget extends Component {
   constructor(props){

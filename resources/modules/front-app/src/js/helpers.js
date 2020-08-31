@@ -136,3 +136,30 @@ export function renderAssetIcon(asset, props = null) {
   }
   return '';
 }
+
+/**
+ * @param {object} asset
+ * @param {object} props
+ * @return {React.DetailedReactHTMLElement<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> | React.DetailedReactHTMLElement<React.HTMLAttributes<T>, HTMLElement> | React.ReactSVGElement | React.DOMElement<React.DOMAttributes<T>, Element> | React.FunctionComponentElement<{}> | React.CElement<{}, React.ClassicComponent<{}, React.ComponentState>> | React.CElement<{}, React.Component<P, React.ComponentState>> | React.ReactElement<{}> | string}
+ * @throws Исключение если иконка не найдена
+ * */
+export function renderAsset(asset, props = null) {
+  switch (asset.assetType) {
+    case 'icon': {
+      return iconsManager().renderIcon(asset.name)
+    }
+    case 'image': {
+      return React.createElement('img', {...props, src: asset.url})
+    }
+    case 'media': {
+      return React.createElement('img', {...props, src: asset.url})
+    }
+    case 'mediaBackground': {
+      return React.createElement('div', {...props, style:{backgroundImage: `url(${asset.url})`}})
+    }
+    case undefined: {
+      return React.createElement('img', {...props, src: '/img/nullImage.png'})
+    }
+  }
+  return '';
+}

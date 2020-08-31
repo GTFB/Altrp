@@ -1,11 +1,10 @@
 import React, {Component} from "react";
-
-import { renderAssetIcon } from "../../helpers"
+import {renderAssetIcon} from "../../../../../front-app/src/js/helpers";
 
 class AccordionWidget extends Component {
   constructor(props){
     super(props);
-    let settings = props.element.getSettings()
+    let settings = props.element.getSettings();
     this.state = {
       settings: settings,
       activeItem: {
