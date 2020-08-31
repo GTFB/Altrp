@@ -72,11 +72,11 @@ class ButtonWidget extends Component {
         id={this.state.settings.position_css_id}
       >
         {this.state.settings.button_text || ""}
-        {buttonMedia.assetType && <span className={"altrp-btn-icon "}>{ renderAssetIcon( buttonMedia ) } </span>}
+        {buttonMedia && buttonMedia.assetType && <span className={"altrp-btn-icon "}>{ renderAssetIcon( buttonMedia ) } </span>}
       </button>
     );
     let link = null;
-    if (this.state.settings.link_link.url) {
+    if (this.state.settings.link_link?.url) {
       if(this.state.settings.link_link.tag === 'a' || isEditor()) {
 
         link = (

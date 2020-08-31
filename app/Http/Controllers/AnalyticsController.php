@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constructor\Template;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
@@ -12,13 +13,15 @@ class AnalyticsController extends Controller
     public function index()
     {
         $reports = DB::table('reports')->count();
-        $templates = DB::table('templates')->count();
+        $templates = Template::where('type', 'template')->count();
+        $templates_history = Template::where('type', 'review')->count();
         $areas = DB::table('areas')->count();
 
         return response()->json([
           array('key' => 'Отчетов', 'data' => $reports),
           array('key' => 'Шаблонов', 'data' => $templates),
-          array('key' => 'Областей', 'data' => $areas)
+          array('key' => 'История Шаблонов', 'data' => $templates_history),
+          array('key' => 'Областей', 'data' => $areas),
         ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 

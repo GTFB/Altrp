@@ -15,7 +15,7 @@ class Query {
     this.paginationType = data.paginationType || 'pages';
     this.orderingField = data.orderingField || 'name';
     this.order = data.order || 'ASC';
-    this.route = `/ajax/models/${this.modelName || data.dataSource ? data.dataSource.value : ''}`;
+    this.route = `/ajax/models/${this.modelName || (data.dataSource ? data.dataSource.value : '')}`;
     if(data.dataSource && data.dataSource.type === 'sql_datasource'){
       this.route = data.dataSource.value;
       this.dataSourceName = data.dataSource.sql_name || '';
