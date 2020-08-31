@@ -461,7 +461,7 @@ class Table extends BaseElement {
 
     this.addControl('table_style_table_striple_style', {
         type: CONTROLLER_SWITCHER,
-        label: 'Striple style',
+        label: 'Striple style'
     });
 
     this.addControl("table_style_table_border_type", {

@@ -143,6 +143,10 @@
   border-collapse: separate;
 }
 
+.altrp-table-tbody--striped tr:nth-child(2n) {
+  background-color: rgba(0,0,50,.05);
+}
+
 .altrp-table-th_sort {
   padding: 0;
   margin-left: 10px;

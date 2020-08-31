@@ -140,7 +140,7 @@ const AltrpTable = ({settings, query, data}) => {
         </tr>
     ))}
     </thead>
-    <tbody {...getTableBodyProps()} className="altrp-table-tbody">
+    <tbody {...getTableBodyProps()} className={`altrp-table-tbody ${settings.table_style_table_striple_style ? ' altrp-table-tbody--striped' : ''}`}>
     {_status === "error" ? <tr>
               <td>{_error.message}</td>
             </tr> : _status === "loading" ? <tr>
