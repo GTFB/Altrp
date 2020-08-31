@@ -142,9 +142,12 @@ class ControllerFileWriter
     public function writeSqlMethod($name, $sql)
     {
         $methodContent = file($this->getSqlControllerMethodStub(), 2);
+
+
         $this->replaceSqlEditorName($methodContent, $name)
             ->replaceModelName($methodContent, $this->controller->getModelName())
-            ->replaceSqlEditorSql($methodContent, $sql);
+            ->replaceSqlEditorSql($methodContent, $sql)
+            ->replaceTableName( $methodContent, $this->controller->getTableName() );
         $controllerContent = file($this->controller->getFile(), 2);
         $result = $this->writeMethods($controllerContent, $methodContent);
         return $result;
@@ -383,6 +386,12 @@ class ControllerFileWriter
     protected function replaceSqlEditorSql(&$methodContent, $sqlEditorSql)
     {
         $methodContent = str_replace('{{sqlEditorSql}}', $sqlEditorSql, $methodContent);
+        return $this;
+    }
+
+    protected function replaceTableName(&$methodContent, $tableName)
+    {
+        $methodContent = str_replace('{{tableName}}', $tableName, $methodContent);
         return $this;
     }
 

@@ -8,20 +8,25 @@ class Query {
     this.component = component;
     this.modelName = data.modelName || '';
     this.dataSource = data.dataSource;
-    if(data.dataSource&& data.dataSource.type === 'model_query'){
-      this.modelName = data.dataSource.value || '';
+    if(data.dataSource && data.dataSource.type === 'model_query'){
+      this.dataSourceName = data.dataSource.value || '';
     }
     this.pageSize = data.pageSize || 10;
     this.paginationType = data.paginationType || 'pages';
     this.orderingField = data.orderingField || 'name';
     this.order = data.order || 'ASC';
+    this.route = `/ajax/models/${this.modelName || (data.dataSource ? data.dataSource.value : '')}`;
+    if(data.dataSource && data.dataSource.type === 'sql_datasource'){
+      this.route = data.dataSource.value;
+      this.dataSourceName = data.dataSource.sql_name || '';
+    }
   }
   /**
    *
    * @return {Resource}
    */
   getResource(){
-    return new Resource({route: `/ajax/models/${this.modelName}`});
+    return new Resource({route: this.route});
   }
 
 
@@ -34,8 +39,10 @@ class Query {
     if(! modelData){
       return [];
     }
-    if(_.isObject && _.isArray(modelData[this.dataSource.value])){
+    if(_.isArray(modelData[this.dataSource.value])){
       return [...modelData[this.dataSource.value]];
+    } else {
+      return [{...modelData[this.dataSource.value]}]
     }
   }
   /**
@@ -51,8 +58,26 @@ class Query {
         console.log(this.modelUpdater);
       }
     } else {
-      return await this.getResource().getQueried(this.getParams(params))
+      this.lastQuery = (await this.getResource().getQueried(this.getParams(params)));
+      let res;
+      if(_.isArray(this.lastQuery)){
+        res = [...this.lastQuery];
+      } else if(_.isArray(this.lastQuery.data)){
+        res = this.lastQuery.data;
+      }
+      res.hasMore = this.lastQuery.hasMore;
+      return res;
     }
+  }
+
+  /**
+   * Проверка есть ли еще
+   */
+  hasMore(){
+    if(! this.lastQuery){
+      return false;
+    }
+    return this.lastQuery.hasMore;
   }
 
   /**

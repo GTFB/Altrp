@@ -89,10 +89,10 @@ class ListWidget extends Component {
 
         li_icon_classes = li.position_relative_switcher_custom_repeater ? "altrp-list-icon-relative" : li_icon_classes;
 
-        let li_icon = li.icon_select_repeater == "custom" ? <span className={"altrp-list-icon " + li_icon_classes} style={li_icon_styles}>{renderAssetIcon(
-          li.icon_repeater
-          )}
-        </span>: null;
+        let li_icon = li.icon_select_repeater == "custom" ? 
+          <span className={"altrp-list-icon " + li_icon_classes} style={li_icon_styles}>
+            {renderAssetIcon(li.icon_repeater)}
+          </span> : null;
 
         if(li.link_switcher_custom_repeater) {
           if(!li.hover_all_switcher_custom_repeater) {

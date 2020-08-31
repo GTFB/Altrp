@@ -1,5 +1,9 @@
     public function {{sqlEditorName}}(ApiRequest $request)
     {
-        $res = DB::select("{{sqlEditorSql}}");
+        $res = selectForSQLEditor(
+        "{{sqlEditorSql}}",  [], [
+           'sql_name' => '{{sqlEditorName}}',
+           'table_name' => '{{tableName}}',
+         ], $request );
         return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE );
     }

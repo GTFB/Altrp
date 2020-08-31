@@ -1,5 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
-
+//@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@import url(https://fonts.googleapis.com/css?family=PT+Sans:400,700);
 .sections-wrapper {
   display: flex;
   width: 1440px;
@@ -46,6 +47,7 @@
   text-decoration: none;
   display: flex;
   align-items: center;
+  justify-content: center;
   &_gray {
     background-color: $grey;
     color: #fff;
@@ -206,6 +208,25 @@
 
 .altrp-table {
   border-collapse: collapse;
+  &-td {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    &__double-click-content {
+      display: none;
+    }
+    &_double-clicked{
+      & .altrp-table-td__double-click-content{
+        display: block;
+        width: 100%;
+        border-width: 2px;
+      }
+      & .altrp-table-td__default-content{
+        display: none;
+      }
+    }
+  }
 }
 
 .altrp-divider {
@@ -409,6 +430,11 @@
 
 .altrp-list-ul-default {
   flex-direction: column;
+}
+
+.altrp-list-icon svg {
+  width: inherit;
+  height: inherit;
 }
 
 .altrp-list-icon-relative {

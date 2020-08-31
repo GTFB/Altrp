@@ -26,7 +26,7 @@
         fill="#87CA00"/>
   </svg>
   @else
-    <img src="{{ get_logo_url() }}" alt="">
+    <img src="{{ get_logo_url() }}" alt="Logo">
   @endif
 </div>
 <form  method="POST" action="{{ route('login') }}" class="flex-center">

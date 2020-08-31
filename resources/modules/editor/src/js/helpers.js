@@ -140,3 +140,22 @@ export function getElementSettingsSuffix(controller) {
   }
   return `_${getElementState().value}_${getCurrentScreen().name}`
 }
+
+/**
+ *@param {string} URLTemplate
+ *@param {{}} object
+ */
+export function parseURLTemplate(URLTemplate, object = {}){
+  let url = URLTemplate;
+  // columnEditUrl = columnEditUrl.replace(':id', row.original.id);
+  let idTemplates = url.match(/:([\s\S]+?)(\/|$)/g);
+  if(! idTemplates){
+    return url;
+  }
+  idTemplates.forEach(idTemplate=>{
+    let replace = object[idTemplate.replace(/:|\//g, '')] || '';
+    idTemplate = idTemplate.replace('/', '');
+    url = url.replace(new RegExp(idTemplate,'g'), replace);
+  });
+  return url;
+}

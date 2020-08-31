@@ -30,15 +30,15 @@ const columnsModel = [
 ];
 const columnsDataSource = [
   {
-    name: 'title',
-    title: 'Title',
+    name: 'name',
+    title: 'Name',
     url: true,
     editUrl: true,
     tag: 'Link'
   },
   {
-    name: 'name',
-    title: 'Name'
+    name: 'model.title',
+    title: 'Model'
   },
   {
     name: 'route',
@@ -59,13 +59,17 @@ export default class Models extends Component {
       dataSourcesCurrentPage: 1,
       models: [],
       modelsSearch: '',
-      dataSources: [],
       modelsPageCount: 1,
-      modelsCount: 0
+      modelsCount: 0,
+      dataSources: [],
+      dataSourcesSearch: '',
+      dataSourcesPageCount: 1,
+      dataSourcesCount: 0,
     };
     this.switchTab = this.switchTab.bind(this);
     this.changePage = this.changePage.bind(this);
     this.modelsResource = new Resource({ route: '/admin/ajax/models' });
+    this.dataSourcesResource = new Resource({ route: '/admin/ajax/data_sources' });
     this.itemsPerPage = 10;
   }
 
@@ -76,6 +80,27 @@ export default class Models extends Component {
   changePage(currentPage, pagination) {
     this.setState(state => ({ ...state, [pagination]: { ...state[pagination], currentPage } }));
   }
+
+  /**
+   * Обновить список источников данных
+   */
+  getDataSources = async (dataSourcesSearch) => {
+    let res = await this.dataSourcesResource.getQueried({
+      page: this.state.dataSourcesCurrentPage,
+      pageSize: this.itemsPerPage,
+      preset: false,
+      s: dataSourcesSearch
+    });
+    this.setState(state => {
+      return {
+        ...state,
+        dataSources: res.data_sources,
+        dataSourcesSearch,
+        dataSourcesPageCount: res.pageCount
+      }
+    });
+  };
+
   /**
    * Обновить список моделей
    */
@@ -110,7 +135,14 @@ export default class Models extends Component {
       modelsCount: models.models.length
     }));
 
+    let data_sources = await this.dataSourcesResource.getAll();
+    this.setState(state => ({
+      ...state,
+      dataSourcesCount: data_sources.data_sources.length
+    }));
+
     this.getModels();
+    this.getDataSources();
   }
 
   /**
@@ -121,8 +153,18 @@ export default class Models extends Component {
     this.getModels(modelsSearch);
 
   };
+
+  /**
+   * фильтрация по строке
+   */
+  changeDataSourcesSearchHandler = e => {
+    let dataSourcesSearch = e.target.value;
+    this.getDataSources(dataSourcesSearch);
+  };
+
   render() {
-    const { activeTab, models, dataSources, modelsCurrentPage, dataSourcesCurrentPage, modelsSearch, modelsPageCount, modelsCount } = this.state;
+    const { activeTab, models, dataSources, modelsCurrentPage, dataSourcesCurrentPage, modelsSearch, dataSourcesSearch,
+      modelsPageCount, dataSourcesPageCount, modelsCount, dataSourcesCount } = this.state;
 
     return <div className="admin-settings admin-page">
       <div className="admin-heading">
@@ -182,10 +224,13 @@ export default class Models extends Component {
           <TabPanel>
             <AdminTable
               columns={columnsDataSource}
+              search={{
+                value: dataSourcesSearch||'',
+                changeHandler:this.changeDataSourcesSearchHandler
+              }}
               rows={dataSources.map(dataSource => ({
                 ...dataSource,
-                type: dataSource.type.join(', '),
-                editUrl: '/admin/data-source/edit/' + dataSource.id
+                editUrl: '/admin/tables/data-sources/edit/' + dataSource.id
               }))}
             />
             <Pagination pageCount={Math.ceil(dataSources.length / this.itemsPerPage)}
