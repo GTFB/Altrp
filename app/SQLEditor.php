@@ -21,4 +21,9 @@ class SQLEditor extends Model
     {
         return $this->morphOne(Source::class, 'sourceable');
     }
+
+    public function model()
+    {
+        return $this->belongsTo(\App\Altrp\Model::class);
+    }
 }
