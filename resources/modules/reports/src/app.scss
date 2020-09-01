@@ -31,12 +31,32 @@ body {
       }
     }
     &-bottom {
-      height: 60px;
+      height: 40px;
       background-color: #343b4c;
       .bottom {
-        padding: 15px;
+        padding: 5px 8px 8px;
         display: flex;
         justify-content: space-between;
+        .btn {
+          padding: 0 0.38rem 0.15rem;
+          font-size: 1rem;
+          background-color: #8e94aa;
+          border: 0;
+          font-weight: 600;
+        }
+        .btn-secondary:focus,
+        .show > .btn-secondary.dropdown-toggle:focus {
+          box-shadow: none;
+        }
+        .dropdown-toggle-split {
+          border-left: 1px solid #343b4c;
+          &[aria-expanded="true"] {
+            background-color: #8e94aa;
+          }
+        }
+        .dropdown-menu {
+          font-size: 0.8rem;
+        }
       }
     }
     &-container {

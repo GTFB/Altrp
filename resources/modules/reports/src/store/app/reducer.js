@@ -5,6 +5,7 @@ import {
   SHOW_WIDGETS,
   HIDE_WIDGETS,
   SWITCH_SETTINGS_TAB,
+  APP_SET_TITLE,
 } from "../types";
 
 import { ItemTypes } from "../../helpers/itemTypes";
@@ -17,6 +18,7 @@ const initialState = {
   alert: null,
   settingsTab: ItemTypes.GLOBAL,
   templateId: url.searchParams.get("id"),
+  title: "",
 };
 
 export const appReducer = (state = initialState, action) => {
@@ -33,6 +35,8 @@ export const appReducer = (state = initialState, action) => {
       return { ...state, showWidgets: false };
     case SWITCH_SETTINGS_TAB:
       return { ...state, settingsTab: action.payload };
+    case APP_SET_TITLE:
+      return { ...state, title: action.payload };
     default:
       return state;
   }

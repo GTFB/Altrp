@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Button } from "react-bootstrap";
 
 import { importStructure, selectSection, changeSettings } from "store/sections/actions";
-import { toggleWidgets } from "./store/app/actions";
+import { toggleWidgets, setTitle } from "./store/app/actions";
 
 import Preview from "./components/Preview";
 import Widgets from "./components/Widgets";
@@ -14,8 +14,8 @@ import Settings from "./components/Settings";
 import Bottom from "./components/bottom";
 import Resizer from "./components/Resizer";
 
-import { ReactComponent as WidgetsIcon } from "./icons/menu.svg";
-import { ReactComponent as MenuIcon } from "./icons/open-menu.svg";
+import GridGapFill from "react-bootstrap-icons/dist/icons/grid-3x3-gap-fill";
+import HouseFill from "react-bootstrap-icons/dist/icons/house-fill";
 
 import "./app.scss";
 import "./scss/print.scss";
@@ -43,6 +43,8 @@ function App() {
         }
         // Записываем глобальные настройки в глобальное хранилище
         dispatch(changeSettings(global));
+        // Задаем имя шаблона
+        dispatch(setTitle(req.data.name));
       }
       // Записываем данные в стор
       dispatch(importStructure(JSON.parse(req.data.json) || []));
@@ -50,6 +52,11 @@ function App() {
       dispatch(selectSection(0));
     }
   }, [dispatch, templateId]);
+
+  const handleHome = () => {
+    const url = new URL(window.location.href);
+    window.open(url.origin + "/admin");
+  };
 
   useEffect(() => {
     loadTemplate();
@@ -61,8 +68,8 @@ function App() {
         <div className="rrbe__left d-print-none" style={{ maxWidth: width }}>
           <div className="rrbe__left-top left-top">
             <div className="left-top__burger">
-              <Button variant="link">
-                <MenuIcon width="20" height="20" fill="#ffffff" />
+              <Button variant="link" onClick={handleHome}>
+                <HouseFill fill="#ffffff" />
               </Button>
             </div>
             <div className="left-top__title">
@@ -70,7 +77,7 @@ function App() {
             </div>
             <div className="left-top__widgets">
               <Button variant="link" onClick={() => dispatch(toggleWidgets(!showWidgets))}>
-                <WidgetsIcon width="20" height="20" fill="#ffffff" />
+                <GridGapFill color="#ffffff" />
               </Button>
             </div>
           </div>

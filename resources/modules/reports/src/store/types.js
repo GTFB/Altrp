@@ -30,5 +30,6 @@ export const SHOW_ALERT = "APP/SHOW_ALERT";
 export const HIDE_ALERT = "APP/HIDE_ALERT";
 export const SHOW_WIDGETS = "APP/SHOW_WIDGETS";
 export const HIDE_WIDGETS = "APP/HIDE_WIDGETS";
+export const APP_SET_TITLE = "APP/SET_TITLE";
 
 export const SWITCH_SETTINGS_TAB = "APP/SWITCH_SETTINGS_TAB";
