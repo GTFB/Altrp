@@ -16,7 +16,11 @@ class RouteGenerator
      */
     private $path;
 
-    /** @var string */
+    /**
+     * Содержимое файла маршрутов
+     *
+     * @var string
+     */
     private $routeContents;
 
     /**
@@ -26,7 +30,11 @@ class RouteGenerator
      */
     private $routeStubContents;
 
-    /** @var string */
+    /**
+     * Содержимое файла шаблона для генерации маршрутов
+     *
+     * @var string
+     */
     private $routeStub;
 
     /**
@@ -36,6 +44,9 @@ class RouteGenerator
      */
     private $dynamicVariables = [];
 
+    /**
+     * @var Controller
+     */
     private $controllerModel;
 
 
@@ -92,7 +103,7 @@ class RouteGenerator
     protected function getRoutesFromSources($tableName, $controller)
     {
         $routes = [];
-        $actions = ['get', 'options', 'show', 'add', 'update', 'delete', 'update_column'];
+        $actions = ['get', 'options', 'show', 'add', 'update', 'delete', 'update_column', 'filters'];
         $sources = Source::where([
             ['controller_id', $this->controllerModel->id],
             ['model_id', $this->controllerModel->model->id],
@@ -125,6 +136,7 @@ class RouteGenerator
             if (Str::contains($this->routeContents[$i], ' '.$tableName . ' resource')
                 || Str::contains($this->routeContents[$i], '/'.$tableName)
                 || Str::contains($this->routeContents[$i], '/queries/'.$tableName)
+                || Str::contains($this->routeContents[$i], '/filters/'.$tableName)
                 || Str::contains($this->routeContents[$i], '/'.Str::singular($tableName).'_options')
                 || Str::contains($this->routeContents[$i], $controller)) {
                 $indexes[] = $i;
@@ -138,6 +150,7 @@ class RouteGenerator
      * Перезаписать существующий маршрут
      *
      * @param $itemIndexes
+     * @return bool
      */
     protected function routeRewrite($itemIndexes)
     {
@@ -160,16 +173,20 @@ class RouteGenerator
                 array_splice($this->routeContents, $newIndexes,0, $arr[$i]);
             }
         }
+        return true;
     }
 
     /**
      * Записать новый маршрут в файл
+     *
+     * @return bool
      */
     protected function routeWrite()
     {
         for ($i = 0; $i < count($this->routeStub); $i++) {
             $this->routeContents[] = $this->routeStub[$i];
         }
+        return true;
     }
 
     /**
@@ -234,7 +251,7 @@ class RouteGenerator
         return file($stub, 2);
     }
 
-    protected function getMiddleware($source)
+    public function getMiddleware($source)
     {
         if(!$source) return null;
 
@@ -253,7 +270,7 @@ class RouteGenerator
             $accessSource[] = implode('|', $accessRoles);
         elseif ($accessPermissions && !$accessRoles) {
             $roles = Role::all();
-            $accessSource[] = implode('|', $roles->toArray());
+            $accessSource[] = $roles->implode('name','|');
         }
 
         if ($accessPermissions) $accessSource[] = implode('|', $accessPermissions);

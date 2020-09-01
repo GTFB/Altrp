@@ -219,7 +219,7 @@ class RouteFileWriter
             $accessSource[] = implode('|', $accessRoles);
         elseif ($accessPermissions && !$accessRoles) {
             $roles = Role::all();
-            $accessSource[] = implode('|', $roles->toArray());
+            $accessSource[] = $roles->implode('name','|');
         }
 
         if ($accessPermissions) $accessSource[] = implode('|', $accessPermissions);
