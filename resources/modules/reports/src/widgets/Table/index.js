@@ -1,6 +1,5 @@
 import React, { useEffect, useCallback, useState } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
-import paginationFactory from "react-bootstrap-table2-paginator";
 import axios from "axios";
 
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
@@ -16,13 +15,11 @@ const Table = ({
   hover = false,
   borderless = false,
 }) => {
-  //const [header, setHeader] = useState(columns);
   const [data, setData] = useState(rows);
 
   const getData = useCallback(async () => {
     if (source) {
       const req = await axios(source);
-      console.log("req", req);
       setData(req.data);
     }
   }, [source]);
@@ -43,7 +40,6 @@ const Table = ({
       keyField="id"
       data={data}
       columns={columns}
-      pagination={paginationFactory()}
     />
   ) : (
     "Нет данных"
