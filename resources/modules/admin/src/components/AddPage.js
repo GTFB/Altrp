@@ -63,7 +63,7 @@ class AddPage extends Component {
     path = (path[0] !== '/') ? `/${path}` : path;
 
     let redirect = this.state.value.redirect;
-    redirect = redirect.split('\\').join('/');
+    redirect = (redirect || '').split('\\').join('/');
     if(redirect){
       redirect = (redirect[0] !== '/') ? `/${redirect}` : redirect;
     }

@@ -210,6 +210,7 @@ class Image extends BaseElement{
     this.addControl('aspect_ratio_off', {
       type: CONTROLLER_SWITCHER,
       label: 'Aspect Ratio Off',
+      default: true,
       prefixClass: 'aspect-ratio-off_'
     });
 
@@ -217,7 +218,7 @@ class Image extends BaseElement{
     this.addControl('aspect_ratio_size', {
       type: CONTROLLER_SELECT,
       label: 'Aspect Ratio',
-      default: '56.25',
+      default: '0',
       options:[
         {
           'value' : '0',
@@ -253,10 +254,10 @@ class Image extends BaseElement{
     this.addControl('height_size', {
       type: CONTROLLER_SLIDER,
       label: 'height',
-      default:{
-        size: 100,
-        unit: '%',
-      },
+      // default:{
+      //   size: 100,
+      //   unit: '%',
+      // },
       units:[
         'px',
         '%',
