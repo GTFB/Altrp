@@ -38,6 +38,15 @@ class BaseElement extends ControlStack {
   setSettings(settings) {
     this.settings = settings || this.settings;
   }
+
+  /**
+   * Задать Хранилище CSS классов для контроллеров с prefixClass
+   * @param {{}} cssClassStorage
+   * @return {*|null}
+   */
+  setCSSStorage(cssClassStorage){
+    this.cssClassStorage = _.cloneDeep(cssClassStorage);
+  }
   getId() {
     if (!this.id) {
       this.id = BaseElement.generateId();
