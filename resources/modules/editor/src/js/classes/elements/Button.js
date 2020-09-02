@@ -494,7 +494,7 @@ class Button extends BaseElement{
 
     this.addControl('icon_color_background', {
         type: CONTROLLER_COLOR,
-        label: 'Icon Color',
+        label: 'Background Color',
         rules: {
           '{{ELEMENT}} .altrp-btn-icon svg{{STATE}}': 'background: {{COLOR}};',
         },
