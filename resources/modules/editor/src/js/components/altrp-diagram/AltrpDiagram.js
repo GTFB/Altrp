@@ -17,9 +17,9 @@ import {
 } from "../../../../../admin/src/components/dashboard/widgetTypes";
 
 const AltrpDiagram = ({ settings }) => {
-  const sql = settings.query?.dataSource?.value;
+  const source = settings.query?.dataSource?.value;
 
-  if (!sql) {
+  if (!source) {
     return <div className="altrp-chart">Choose data for chart</div>;
   }
 
@@ -27,37 +27,37 @@ const AltrpDiagram = ({ settings }) => {
     case BAR:
       return (
         <div className="altrp-chart">
-          <DynamicBarChart dataUrl={sql} colorScheme={settings.colorScheme} />
+          <DynamicBarChart source={source} colorScheme={settings.colorScheme} />
         </div>
       );
     case PIE:
       return (
         <div className="altrp-chart">
-          <DynamicPieChart dataUrl={sql} colorScheme={settings.colorScheme} />
+          <DynamicPieChart source={source} colorScheme={settings.colorScheme} />
         </div>
       );
     case DONUT:
       return (
         <div className="altrp-chart">
-          <DynamicDonutChart dataUrl={sql} colorScheme={settings.colorScheme} />
+          <DynamicDonutChart source={source} colorScheme={settings.colorScheme} />
         </div>
       );
     case LINE:
       return (
         <div className="altrp-chart">
-          <DynamicLineChart dataUrl={sql} colorScheme={settings.colorScheme} />
+          <DynamicLineChart source={source} colorScheme={settings.colorScheme} />
         </div>
       );
     case TABLE:
       return (
         <div className="altrp-chart">
-          <DynamicTableWidget dataUrl={sql} />
+          <DynamicTableWidget source={source} />
         </div>
       );
     case AREA:
       return (
         <div className="altrp-chart">
-          <DynamicAreaChart dataUrl={sql} colorScheme={settings.colorScheme} />
+          <DynamicAreaChart source={source} colorScheme={settings.colorScheme} />
         </div>
       );
     default:

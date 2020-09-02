@@ -4,15 +4,15 @@ import axios from "axios";
 import Spinner from "../Spinner";
 import EmptyWidget from "./EmptyWidget";
 
-const DynamicAreaChart = ({ dataUrl, width = 300, height = 300, colorScheme, options = {} }) => {
+const DynamicAreaChart = ({ source, width = 300, height = 300, colorScheme, options = {} }) => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getData = async (dataUrl) => {
+  const getData = async (source) => {
     setIsLoading(true);
-    const req = await axios(dataUrl);
+    const req = await axios(source);
     if (req.status === 200 && typeof req.data !== "string") {
-      const newData = req.data.map((item) => {
+      const newData = req.data.data.map((item) => {
         const key = new Date(item.key);
         if (key) {
           return {
@@ -27,8 +27,8 @@ const DynamicAreaChart = ({ dataUrl, width = 300, height = 300, colorScheme, opt
   };
 
   useEffect(() => {
-    getData(dataUrl);
-  }, [dataUrl]);
+    getData(source);
+  }, [source]);
 
   if (isLoading) return <Spinner />;
 

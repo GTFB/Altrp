@@ -5,7 +5,7 @@ import Spinner from "../Spinner";
 import EmptyWidget from "./EmptyWidget";
 
 const DynamicPieChart = ({
-  dataUrl,
+  source,
   width = 300,
   height = 300,
   colorScheme,
@@ -16,18 +16,18 @@ const DynamicPieChart = ({
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
 
-  const getData = async (dataUrl) => {
+  const getData = async (source) => {
     setIsLoading(true);
-    const req = await axios(dataUrl);
+    const req = await axios(source);
     if (req.status === 200 && typeof req.data !== "string") {
-      setData(req.data);
+      setData(req.data.data);
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    getData(dataUrl);
-  }, [dataUrl]);
+    getData(source);
+  }, [source]);
 
   if (isLoading) return <Spinner />;
 
