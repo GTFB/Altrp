@@ -138,7 +138,6 @@
 }
 
 .altrp-image-container img{
-  position:  absolute;
   top: 0;
   left: 0;
   bottom: 0;
@@ -555,5 +554,8 @@
   z-index: 999999;
 }
 .aspect-ratio-off_true .altrp-image{
-  position: static;
+  position: relative;
+}
+.aspect-ratio-off_false .altrp-image{
+  position: absolute;
 }

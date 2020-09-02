@@ -254,10 +254,10 @@ class Image extends BaseElement{
     this.addControl('height_size', {
       type: CONTROLLER_SLIDER,
       label: 'height',
-      // default:{
-      //   size: 100,
-      //   unit: '%',
-      // },
+      default:{
+        size: 100,
+        unit: '%',
+      },
       units:[
         'px',
         '%',
