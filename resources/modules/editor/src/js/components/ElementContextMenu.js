@@ -39,6 +39,23 @@ class ElementContextMenu extends Component{
     this.props.element.duplicate();
   }
   /**
+   * Сохраняем стили в locale storage
+   */
+  copySettings = e => {
+    const { name, settings } = e.props.element.toObject();
+    localStorage.setItem(name, JSON.stringify(settings));
+  }
+  /**
+   * Применяем для выбранного элемента стили из locale storage
+   */
+  pasteSettings = e => {
+    const name = e.props.element.getName();
+    const settings = JSON.parse(localStorage.getItem(name));
+
+    e.props.element.setSettings(settings);
+    e.props.element.updateStyles();
+  }
+  /**
    * Отборажает пункт удалить, если можно удалить текущую колонку (в секции обязательна одна колонка)
    * @return {boolean}
    */
@@ -54,6 +71,7 @@ class ElementContextMenu extends Component{
   }
   render() {
     let elementTitle =  this.props.element.getTitle ? this.props.element.getTitle() : '';
+    const isPasteEnable = Boolean(this.props.element.getName) && Boolean(localStorage.getItem(this.props.element.getName()));
 
     return (
         <Menu id="element-menu">
@@ -64,9 +82,9 @@ class ElementContextMenu extends Component{
           <Item onClick={this.onSelectItem}>Paste</Item>
           <Separator/>
           <Item onClick={this.onSelectItem}>Reset Styles</Item>
-          <Item onClick={this.onSelectItem}>Copy Styles</Item>
-          <Item disabled onClick={this.onSelectItem}>
-            Paste Styles
+          <Item onClick={this.copySettings}>Copy Settings</Item>
+          <Item disabled={!isPasteEnable} onClick={this.pasteSettings}>
+            Paste Settings
           </Item>
           {
             this.showAddNewColumnItem() ?

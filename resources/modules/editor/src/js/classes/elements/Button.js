@@ -281,12 +281,13 @@ class Button extends BaseElement{
           spacing: 0,
           size: 16,
           weight: "normal",
-          family: '"lato"',
+          family: "lato",
           decoration: ""
         },
         rules: {
           '{{ELEMENT}} .altrp-btn{{STATE}}': [
             'font-size: {{SIZE}}px;',
+            'font-family: {{FAMILY}}',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
             'font-weight: {{WEIGHT}}',

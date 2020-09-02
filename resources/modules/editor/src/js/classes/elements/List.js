@@ -174,6 +174,85 @@ class List extends BaseElement{
 
     this.endControlSection();
 
+    this.startControlSection('position_section', {
+      tab: TAB_STYLE,
+      label: 'Position',
+    });
+
+    this.addControl('position_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      default: {
+        top: 10,
+        right: 10,
+        bottom: 10,
+        left: 10,
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-list{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('position_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        top: 20,
+        right: 25,
+        bottom: 20,
+        left: 25,
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-list{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('position_z_index', {
+      type: CONTROLLER_NUMBER,
+      label: 'Z-index',
+      default: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-list{{STATE}}': 'z-index: {{VALUE}}'
+      }
+    });
+
+    this.addControl('position_css_id', {
+      type: CONTROLLER_TEXT,
+      label: 'CSS ID'
+    });
+
+    this.addControl('position_css_classes', {
+      type: CONTROLLER_TEXT,
+      label: 'CSS Classes',
+      default: ''
+    });
+
+    this.endControlSection();
+
     this.startControlSection('list_style', {
       tab: TAB_STYLE,
       label: 'List',
