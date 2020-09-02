@@ -199,6 +199,7 @@ class ModelGenerator extends AppGenerator
           \Artisan::call('crud:model', [
                 'name' => "{$fullModelName}",
                 '--table' => "{$this->model->table()->first()->name}",
+                '--model' => $this->model,
                 '--fillable' => "[{$fillableColumns}]",
                 '--model-namespace' => "use {$extendsModelNamespace};",
                 '--extends-model' => "{$extendsModelName}",
@@ -573,8 +574,8 @@ class ModelGenerator extends AppGenerator
     protected function getExtendModelNamespace()
     {
         $modelNamespace = 'Illuminate\Database\Eloquent\Model';
-        if ($this->model->extend) {
-            $modelNamespace = $this->model->extend;
+        if ($this->model->parent_model_id) {
+            $modelNamespace = $this->model->parent->namespace;
         }
         return $modelNamespace;
     }

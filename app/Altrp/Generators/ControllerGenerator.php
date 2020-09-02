@@ -693,6 +693,9 @@ class ControllerGenerator extends AppGenerator
         $resourceId = Str::singular($modelName);
         $userColumns = trim($this->controllerModel->model->user_cols, ' ');
         $sources = $model->altrp_sources;
+        if ($sources->isEmpty()) {
+            $sources = Source::where('model_id',$model->id)->get();
+        }
 //        $middleware = "'middleware' => [" . $this->getAuthMiddleware() . '], ';
         $controllerName = $this->getFormedControllerName($this->controllerModel);
         $controller = trim($controllerName, "\\");

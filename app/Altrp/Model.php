@@ -21,7 +21,8 @@ class Model extends EloquentModel
         'description',
         'soft_deletes',
         'time_stamps',
-        'extend',
+        'namespace',
+        'parent_model_id',
         'fillable_cols',
         'user_cols',
         'path',
@@ -35,6 +36,11 @@ class Model extends EloquentModel
     protected $hidden = [
         'relationships'
     ];
+
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_model_id');
+    }
 
 //    public function setNameAttribute($value)
 //    {

@@ -93,7 +93,7 @@ class RepositoryFileWriter
     {
         $repoFile = $this->repository->getFile();
         if (! file_exists($repoFile)) {
-            throw new RepositoryFileException('Repository file not found', 500);
+            return true;
         }
         $contentRepo = file($repoFile, 2);
         if ($line = $this->repoMethodExists($contentRepo, $name)) {
@@ -122,7 +122,7 @@ class RepositoryFileWriter
     {
         $repoInterfaceFile = $this->repoInterface->getFile();
         if (! file_exists($repoInterfaceFile)) {
-            throw new RepositoryFileException('Repository file not found', 500);
+            return true;
         }
         $contentRepoInterface = file($repoInterfaceFile, 2);
         if ($line = $this->repoMethodExists($contentRepoInterface, $name)) {

@@ -16,13 +16,7 @@ class DummyClass extends {{extendsModel}}
     // CUSTOM_TRAITS_END - IMPORTANT: Don't remove this comment! Write your traits between these comments.
     use UserColumnsTrait;
     {{softDeletes}}{{timestamps}}{{createdAt}}{{updatedAt}}
-
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = '{{table}}';
+    {{table}}
 
     {{primaryKey}}
 
@@ -39,13 +33,6 @@ class DummyClass extends {{extendsModel}}
      * @var array
      */
     protected $with = {{always_with}};
-
-    /**
-     * Columns that should be contains current user id
-     *
-     * @var array
-     */
-    protected static $userColumns = {{userColumns}};
 
     // CUSTOM_PROPERTIES_BEGIN - IMPORTANT: Don't remove this comment! Write your properties between these comments.
     {{customProperties}}

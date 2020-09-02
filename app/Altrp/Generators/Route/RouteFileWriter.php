@@ -217,20 +217,20 @@ class RouteFileWriter
 
         if ($accessRoles)
             $accessSource[] = implode('|', $accessRoles);
-        elseif ($accessPermissions && !$accessRoles) {
-            $roles = Role::all();
-            $accessSource[] = $roles->implode('name','|');
-        }
 
-        if ($accessPermissions) $accessSource[] = implode('|', $accessPermissions);
+        if ($accessPermissions)
+            $accessSource[] = implode('|', $accessPermissions);
 
         $middleware = [];
         if ($source->auth) {
 //            $middleware[] = 'auth:api';
             $middleware[] = 'auth';
         }
-        if ($accessSource)
+        if ($accessSource && $accessPermissions)
             $middleware[] = "ability:" . implode(',', $accessSource);
+        else
+            $middleware[] = "permission:" . implode('|', $accessPermissions);
+
         return $middleware;
     }
 }
