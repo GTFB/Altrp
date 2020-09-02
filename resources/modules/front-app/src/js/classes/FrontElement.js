@@ -458,11 +458,9 @@ class FrontElement {
 
   getPrefixClasses() {
     let changeCss = _.toPairs(this.cssClassStorage);
-    console.log(changeCss);
     let classStorage = ' ';
     changeCss.forEach(element => {
       classStorage += `${element[1]} `;
-      console.log(element[1]);
     });
     return classStorage;
   }
