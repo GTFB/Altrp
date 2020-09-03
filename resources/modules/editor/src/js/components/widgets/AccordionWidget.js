@@ -1,11 +1,10 @@
 import React, {Component} from "react";
-
-import { renderAssetIcon } from "../../helpers"
+import {renderAssetIcon} from "../../../../../front-app/src/js/helpers";
 
 class AccordionWidget extends Component {
   constructor(props){
     super(props);
-    let settings = props.element.getSettings()
+    let settings = props.element.getSettings();
     this.state = {
       settings: settings,
       activeItem: {
@@ -59,13 +58,13 @@ class AccordionWidget extends Component {
       icon = renderAssetIcon(this.state.settings.icon_accordion_content,
         {className: "altrp-accordion-item-icon-svg"}
         );
-    };
+    }
 
     if(this.state.settings.active_icon_accordion_content) {
       active_icon = renderAssetIcon(this.state.settings.active_icon_accordion_content,
         {className: "altrp-accordion-item-active-icon-svg"}
       );
-    };
+    }
 
     let accordion_items = items.map((item, idx) => {
 

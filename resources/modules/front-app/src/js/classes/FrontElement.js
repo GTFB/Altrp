@@ -461,7 +461,6 @@ class FrontElement {
     let classStorage = ' ';
     changeCss.forEach(element => {
       classStorage += `${element[1]} `;
-      console.log(element[1]);
     });
     return classStorage;
   }

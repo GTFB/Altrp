@@ -92,6 +92,10 @@ class Input extends BaseElement{
           value: 'select',
           label: 'Select'
         },
+        {
+          value: 'hidden',
+          label: 'Hidden'
+        },
       ]
     });
 

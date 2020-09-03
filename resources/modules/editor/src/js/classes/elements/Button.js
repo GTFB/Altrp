@@ -144,6 +144,10 @@ class Button extends BaseElement{
       label: 'Form Actions',
       options: [
         {
+          value: 'null',
+          label: 'Null',
+        },
+        {
           value: 'add_new',
           label: 'Add New',
         },

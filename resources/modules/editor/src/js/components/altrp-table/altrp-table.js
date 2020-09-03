@@ -3,20 +3,20 @@ import {useTable, useSortBy} from "react-table";
 import {useQuery, usePaginatedQuery, queryCache} from  "react-query";
 import '../../../sass/altrp-pagination.scss';
 import {Link} from "react-router-dom";
-import {isEditor} from "../../../../../front-app/src/js/helpers";
+import {isEditor, parseURLTemplate} from "../../../../../front-app/src/js/helpers";
 import {iconsManager} from "../../../../../admin/src/js/helpers";
 import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput";
-import {parseURLTemplate} from "../../helpers";
 
 /**
  *
  * @param settings
  * @param {Query} query
  * @param {Query} data
+ * @param {AltrpModel} currentModel
  * @return {*}
  * @constructor
  */
-const AltrpTable = ({settings, query, data}) => {
+const AltrpTable = ({settings, query, data, currentModel}) => {
   if (! (settings.tables_columns && settings.tables_columns.length)) {
     return <div children="Please Add Column"/>
   }
@@ -47,7 +47,7 @@ const AltrpTable = ({settings, query, data}) => {
       resolvedData,
       latestData,
       error,
-    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting], fetchModels);
+    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting, currentModel], fetchModels);
     _data = resolvedData ? resolvedData : _data;
     _status = status;
     _error = error;
