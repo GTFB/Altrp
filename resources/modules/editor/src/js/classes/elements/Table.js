@@ -776,7 +776,7 @@ class Table extends BaseElement {
         spacing: 0,
         size: 14,
         weight: "normal",
-        family: '"roboto"',
+        family: "Open Sans",
         decoration: ""
       },
       rules: {
@@ -984,7 +984,7 @@ class Table extends BaseElement {
         spacing: 0,
         size: 14,
         weight: "normal",
-        family: '"roboto"',
+        family: "Open Sans",
         decoration: ""
       },
       rules: {

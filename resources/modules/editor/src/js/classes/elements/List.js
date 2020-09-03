@@ -678,7 +678,7 @@ class List extends BaseElement{
           spacing: 0,
           size: 16,
           weight: "normal",
-          family: '"roboto"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {

@@ -150,7 +150,7 @@ class Heading extends BaseElement {
           spacing: 0,
           size: 36,
           weight: "normal",
-          family: '"roboto"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {

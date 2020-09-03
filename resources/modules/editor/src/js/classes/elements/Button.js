@@ -281,7 +281,7 @@ class Button extends BaseElement{
           spacing: 0,
           size: 16,
           weight: "normal",
-          family: "lato",
+          family: "Open Sans",
           decoration: ""
         },
         rules: {
