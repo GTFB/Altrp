@@ -229,7 +229,8 @@ class RouteFileWriter
         if ($accessSource && $accessPermissions)
             $middleware[] = "ability:" . implode(',', $accessSource);
         else
-            $middleware[] = "permission:" . implode('|', $accessPermissions);
+            $middleware = [];
+//            $middleware[] = "permission:" . implode('|', $accessPermissions);
 
         return $middleware;
     }
