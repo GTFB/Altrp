@@ -488,7 +488,7 @@ class Button extends BaseElement{
           colorPickedHex: "#fff",
         },
         rules: {
-          '{{ELEMENT}} .altrp-btn-icon path{{STATE}}': 'fill: {{COLOR}};',
+          '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon path': 'fill: {{COLOR}};',
         },
       }
     );
