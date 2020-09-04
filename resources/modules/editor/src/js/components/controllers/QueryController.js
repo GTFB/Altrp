@@ -178,17 +178,17 @@ class QueryController extends Component {
             />
           </div>
         </div>
-        <div className="controller-field-group">
-          <div className="controller-container__label">Page Size</div>
-          <div className="control-container_select-wrapper">
-            <input
-              className="control-field control-field_number"
-              type="number"
-              value={value.pageSize || 10}
-              onChange={this.changePageSize}
-            />
-          </div>
-        </div>
+        {/*<div className="controller-field-group">*/}
+          {/*<div className="controller-container__label">Page Size</div>*/}
+          {/*<div className="control-container_select-wrapper">*/}
+            {/*<input*/}
+              {/*className="control-field control-field_number"*/}
+              {/*type="number"*/}
+              {/*value={value.pageSize || 10}*/}
+              {/*onChange={this.changePageSize}*/}
+            {/*/>*/}
+          {/*</div>*/}
+        {/*</div>*/}
         <div className="controller-field-group">
           <div className="controller-container__label">Pagination Type</div>
           <div className="control-container_select-wrapper">

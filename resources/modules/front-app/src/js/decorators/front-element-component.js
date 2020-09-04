@@ -85,11 +85,13 @@ function getContent(settingName) {
     /**
      * Если this.state.modelsData еще не ициинировано или текущее свойство не загруженно
      */
-    if((! this.state.modelData) || ! _.get(this.state.modelData, content.fieldName)){
-        content = ' ';
-    } else {
-        content = _.get(this.state.modelData, content.fieldName) || ' ';
-    }
+    // if((! this.state.modelData) || ! _.get(this.props.modelData, content.fieldName)){
+    // if((! this.props.currentModel) || ! this.props.currentModel.getProperty(content.fieldName)){
+    //     content = ' ';
+    // } else {
+    //     content = _.get(this.state.modelData, content.fieldName) || ' ';
+    // }
+    content = this.props.currentModel ? this.props.currentModel.getProperty(content.fieldName) : ' ';
   }
   return content;
 }

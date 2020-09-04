@@ -95,7 +95,7 @@ export function getMediaSettingsByName(screenSettingName) {
  *@param {string} URLTemplate
  *@param {{}} object
  */
-export function parseURLTemplate(URLTemplate, object = {}){
+export function parseURLTemplate(URLTemplate = '', object = {}){
   let url = URLTemplate;
   // columnEditUrl = columnEditUrl.replace(':id', row.original.id);
   let idTemplates = url.match(/:([\s\S]+?)(\/|$)/g);

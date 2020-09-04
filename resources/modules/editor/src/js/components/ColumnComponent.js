@@ -16,16 +16,14 @@ class ColumnComponent extends Component {
   }
   
   render(){
-    let column = React.createElement(this.state.settings.layout_html_tag || "div",
-      {className: "altrp-column " + this.state.settings.position_style_css_classes || "", id:this.state.settings.position_style_css_id || ""},
+    return React.createElement(this.state.settings.layout_html_tag || "div",
+      {
+        className: "altrp-column " + (this.state.settings.position_style_css_classes || ""),
+        id:this.state.settings.position_style_css_id || ""},
       this.state.children.map(
         section => <ElementWrapper key={section.getId()} component={section.componentClass} element={section}/>
       )
     );
-    
-
-
-    return column
   }
 }
 

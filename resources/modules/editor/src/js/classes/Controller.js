@@ -38,10 +38,16 @@ class Controller {
   }
 
   /**
-   * Изменение значения либо в текущем элементе либо в репитере
+   * Изменение значения либо в текущем элементе, либо в репитере
    * @param {*} value
    */
   changeValue(value) {
+    /**
+     * Если значение контроллера объект, то создаем его копию
+     */
+    if(_.isObject(value)){
+      value = _.cloneDeep(value);
+    }
     /**
      * @member {BaseElement} currentElement
      * */
