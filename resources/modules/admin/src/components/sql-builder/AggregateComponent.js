@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-const typeOptions = ['sum', 'min', 'max', 'avg'];
+const typeOptions = ['sum', 'min', 'max', 'avg', 'count', 'distinct', 'count_distinct'];
 
 class AggregateComponent extends Component {
   render() {
@@ -40,6 +40,7 @@ class AggregateComponent extends Component {
             className="form-control"
           >
             <option disabled value="" />
+            <option value="*">All</option>
             {columnsOptions.map(({ value, label }) =>
               <option key={value} value={value}>
                 {label}
