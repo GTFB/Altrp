@@ -44,6 +44,7 @@ class SQLBuilderForm extends Component {
     this.tablesOptions = new Resource({ route: '/admin/ajax/tables_options' });
     this.selfFieldsResource = new Resource({ route: `/admin/ajax/models/${modelId}/fields` });
     this.relationsResource = new Resource({ route: `/admin/ajax/models/${modelId}/relations` });
+    this.sqlResource = new Resource({ route: `/admin/ajax/models/${modelId}/sql_builder` });
     this.submitHandler = this.submitHandler.bind(this);
     this.multipleSelectChangeHandler = this.multipleSelectChangeHandler.bind(this);
     this.aggregateChangeHandler = this.aggregateChangeHandler.bind(this);
@@ -406,6 +407,7 @@ class SQLBuilderForm extends Component {
   submitHandler(e) {
     e.preventDefault();
     console.log(this.state.value);
+    this.sqlResource.post(this.state.value);
   }
 
   /**
