@@ -26,14 +26,16 @@ class JoinComponent extends Component {
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width30">
           <label>Type
-          <select required name="type"
-            value={type}
-            onChange={changeHandler}
-            className="form-control"
-          >
-            <option disabled value="" />
-
-          </select>
+            <select required name="type"
+              value={type}
+              onChange={changeHandler}
+              className="form-control"
+            >
+              <option disabled value="" />
+              <option value="inner_join">Inner Join</option>
+              <option value="left_join">Left Join</option>
+              <option value="right_join">Right Join</option>
+            </select>
           </label>
         </div>
 
