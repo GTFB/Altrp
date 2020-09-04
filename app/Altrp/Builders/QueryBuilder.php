@@ -393,6 +393,7 @@ class QueryBuilder
                 if ($type == 'permissions') {
                     foreach ($permissions as $permission) {
                         $permObj = Permission::find($permission);
+                        if (! $permObj) continue;
                         $action = explode('-',$permObj->name)[0] ?? null;
                         $permissionData = [
                             'source_id' => $source->id,

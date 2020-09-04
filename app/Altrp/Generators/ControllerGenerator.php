@@ -345,32 +345,32 @@ class ControllerGenerator extends AppGenerator
      */
     public function writeSourcePermissions($model)
     {
-        $sourcePermissions = $this->prepareSourcePermissions();
-        $oldSourcePermissions = SourcePermission::where('type','like','%-'.strtolower(Str::snake($model->getOriginal('name'))))->get();
-        try {
-            foreach ($sourcePermissions as $sourcePermission) {
-                if (! $oldSourcePermissions->contains(
-                    'type',
-                    explode('-',$sourcePermission['type'])[0] . '-' . strtolower(Str::snake($model->getOriginal('name')))
-                )) {
-                    $sourcePermObj = new SourcePermission($sourcePermission);
-                    $sourcePermObj->save();
-                }
-            }
-            if ($oldSourcePermissions && $oldSourcePermissions->isNotEmpty()) {
-                foreach ($oldSourcePermissions as $oldSourcePermission) {
-                    $sourcePermObj = SourcePermission::find($oldSourcePermission->id);
-                    foreach ($sourcePermissions as $sourcePermission) {
-                        if ($sourcePermObj->type == explode('-',$sourcePermission['type'])[0] . '-' . strtolower(Str::snake($model->getOriginal('name')))) {
-                            $sourcePermObj->update($sourcePermission);
-                        }
-                    }
-                }
-            }
-        } catch (\Exception $e) {
-            echo $e;
-            return false;
-        }
+//        $sourcePermissions = $this->prepareSourcePermissions();
+//        $oldSourcePermissions = SourcePermission::where('type','like','%-'.strtolower(Str::snake($model->getOriginal('name'))))->get();
+//        try {
+//            foreach ($sourcePermissions as $sourcePermission) {
+//                if (! $oldSourcePermissions->contains(
+//                    'type',
+//                    explode('-',$sourcePermission['type'])[0] . '-' . strtolower(Str::snake($model->getOriginal('name')))
+//                )) {
+//                    $sourcePermObj = new SourcePermission($sourcePermission);
+//                    $sourcePermObj->save();
+//                }
+//            }
+//            if ($oldSourcePermissions && $oldSourcePermissions->isNotEmpty()) {
+//                foreach ($oldSourcePermissions as $oldSourcePermission) {
+//                    $sourcePermObj = SourcePermission::find($oldSourcePermission->id);
+//                    foreach ($sourcePermissions as $sourcePermission) {
+//                        if ($sourcePermObj->type == explode('-',$sourcePermission['type'])[0] . '-' . strtolower(Str::snake($model->getOriginal('name')))) {
+//                            $sourcePermObj->update($sourcePermission);
+//                        }
+//                    }
+//                }
+//            }
+//        } catch (\Exception $e) {
+//            echo $e;
+//            return false;
+//        }
         return true;
     }
 

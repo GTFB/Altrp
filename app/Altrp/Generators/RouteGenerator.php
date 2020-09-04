@@ -279,9 +279,8 @@ class RouteGenerator
         }
         if ($accessRoles && $accessPermissions)
             $middleware[] = "ability:" . implode(',', $accessSource);
-        else
-            $middleware = [];
-//            $middleware[] = "permission:" . implode('|', $accessPermissions);
+        elseif ($accessPermissions)
+            $middleware[] = "permission:" . implode('|', $accessPermissions);
 
         return $middleware;
     }

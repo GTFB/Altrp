@@ -439,7 +439,7 @@ class ModelGenerator extends AppGenerator
 
         try {
             foreach ($permissions as $permission) {
-                if (! $oldPermissions->contains(
+                if ($oldPermissions->isEmpty() || !$oldPermissions->contains(
                     'name',
                     explode('-',$permission['name'])[0] . '-' . strtolower(Str::snake($this->model->getOriginal('name')))
                 )) {
