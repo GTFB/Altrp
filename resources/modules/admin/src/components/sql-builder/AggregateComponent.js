@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-const typeOptions = ['sum', 'min', 'max'];
+const typeOptions = ['sum', 'min', 'max', 'avg'];
 
 class AggregateComponent extends Component {
   render() {
