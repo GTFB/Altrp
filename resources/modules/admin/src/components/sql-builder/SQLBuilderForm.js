@@ -497,25 +497,6 @@ class SQLBuilderForm extends Component {
         </div>
       </div>
 
-      <h2 className="admin-form__subheader centred">Aggregates</h2>
-      {aggregates.map((item, index) => <Fragment key={index}>
-        {index !== 0 && <hr />}
-        <div className="text-right">
-          <button className="btn btn_failure" type="button" onClick={() => this.aggregateDeleteHandler(index)}>
-            ✖
-          </button>
-        </div>
-        <AggregateComponent item={item}
-          columnsOptions={selfFieldsOptions}
-          changeHandler={e => this.aggregateChangeHandler(e, index)}
-        />
-      </Fragment>)}
-      <div className="centred">
-        <button className="btn btn_success" type="button" onClick={this.aggregateAddHandler}>
-          + New Aggregate
-        </button>
-      </div>
-
       <h2 className="admin-form__subheader centred">Joins</h2>
       {joins.map((item, index) => <Fragment key={index}>
         {index !== 0 && <hr />}
@@ -532,6 +513,25 @@ class SQLBuilderForm extends Component {
       <div className="centred">
         <button className="btn btn_success" type="button" onClick={this.joinAddHandler}>
           + New Join
+        </button>
+      </div>
+
+      <h2 className="admin-form__subheader centred">Aggregates</h2>
+      {aggregates.map((item, index) => <Fragment key={index}>
+        {index !== 0 && <hr />}
+        <div className="text-right">
+          <button className="btn btn_failure" type="button" onClick={() => this.aggregateDeleteHandler(index)}>
+            ✖
+          </button>
+        </div>
+        <AggregateComponent item={item}
+          columnsOptions={selfFieldsOptions}
+          changeHandler={e => this.aggregateChangeHandler(e, index)}
+        />
+      </Fragment>)}
+      <div className="centred">
+        <button className="btn btn_success" type="button" onClick={this.aggregateAddHandler}>
+          + New Aggregate
         </button>
       </div>
 
