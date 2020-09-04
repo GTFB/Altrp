@@ -88,7 +88,6 @@ class ButtonWidget extends Component {
       // console.log(this.props.currentModel);
       // console.log(link_link.url);
       url = parseURLTemplate(link_link.url || '', this.props.currentModel.getData());
-      console.log(url);
     }
 
     let button = (

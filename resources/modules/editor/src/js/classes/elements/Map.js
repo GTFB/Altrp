@@ -7,6 +7,7 @@ import {
   CONTROLLER_NUMBER,
   CONTROLLER_DIMENSIONS,
   CONTROLLER_SLIDER,
+  CONTROLLER_QUERY,
   TAB_CONTENT,
   TAB_STYLE,
 } from "../modules/ControllersManager";
@@ -62,6 +63,10 @@ class Map extends BaseElement {
       type: CONTROLLER_NUMBER,
       label: "Zoom",
       default: 6,
+    });
+
+    this.addControl("query", {
+      type: CONTROLLER_QUERY,
     });
 
     this.endControlSection();
