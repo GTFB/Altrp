@@ -123,10 +123,10 @@ class SQLBuilderForm extends Component {
    */
   changeRelations = (relations) => {
     let _relations = [];
-    relations.forEach(r => {
+    if (relations) relations.forEach(r => {
       _relations.push(r.value)
     });
-    this.setState(state => ({ ...state, relations: _relations }))
+    this.setState(state => ({ ...state, value: { ...state.value, relations: _relations } }));
   };
   /**
    * Смена ролей
