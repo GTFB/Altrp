@@ -301,6 +301,7 @@ class ElementWrapper extends Component {
         {React.createElement(this.props.component, {
           element: this.props.element,
           children: this.state.children,
+          currentModel: this.props.currentModel,
           wrapper: this,
         })}
         {emptyColumn}
@@ -334,6 +335,8 @@ function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
     dragState: state.elementDrag.dragState,
+    currentModel: state.currentModel,
+    controllerValue: state.controllerValue,
   };
 }
 

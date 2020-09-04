@@ -1,6 +1,6 @@
 import Resource from "./Resource";
 import modelManager from "../../../../editor/src/js/classes/modules/ModelsManager";
-// import
+import {parseParamsFromString} from "../../../../front-app/src/js/helpers";
 
 class Query {
 
@@ -20,6 +20,7 @@ class Query {
       this.route = data.dataSource.value;
       this.dataSourceName = data.dataSource.sql_name || '';
     }
+    this.setDefaultParams(parseParamsFromString(data.defaultParams, component.props.currentModel));
   }
   /**
    *
@@ -81,12 +82,30 @@ class Query {
   }
 
   /**
+   * Задать параметры по умолчанию
+   * @params {{}} defaultParams
+   */
+  setDefaultParams(defaultParams = {}){
+    this.defaultParams = defaultParams;
+  }
+
+  /**
+   * Вернуть значения по умолчанию
+   * @return {{}}
+   */
+  getDefaultParams(){
+    this.defaultParams = this.defaultParams || {};
+    this.defaultParams.pageSize = this.pageSize;
+    return this.defaultParams;
+  }
+
+  /**
    * Сливает параметры с параметрами по умолчанию
    * @param {object} params
    * @return {object}
    */
   getParams(params) {
-    params = {..._.assign({pageSize:this.pageSize}, params)};
+    params = {..._.assign(this.getDefaultParams(), params)};
     params.page = params.page || 1;
     return params;
   }

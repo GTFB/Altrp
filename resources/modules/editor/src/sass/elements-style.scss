@@ -1,6 +1,6 @@
-//@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&family=PT+Sans&family=Ubuntu&family=Fira+Sans&family=Roboto+Condensed&family=Montserrat");
 @import url(https://fonts.googleapis.com/css?family=PT+Sans:400,700);
+@import url("http://fonts.googleapis.com/css?family=PT+Sans:400,700");
 .sections-wrapper {
   display: flex;
   width: 1440px;
@@ -132,6 +132,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+.altrp-image-container img{
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.altrp-image-container a {
+  width: 100%;
 }
 
 .altrp-field {
@@ -216,13 +229,13 @@
     &__double-click-content {
       display: none;
     }
-    &_double-clicked{
-      & .altrp-table-td__double-click-content{
+    &_double-clicked {
+      & .altrp-table-td__double-click-content {
         display: block;
         width: 100%;
         border-width: 2px;
       }
-      & .altrp-table-td__default-content{
+      & .altrp-table-td__default-content {
         display: none;
       }
     }
@@ -529,13 +542,6 @@
   justify-content: center;
 }
 
-.altrp-map,
-.rrbe-map {
-  position: relative;
-  height: 400px;
-  overflow: hidden;
-}
-
 .app-popup {
   position: absolute;
   display: none;
@@ -545,4 +551,10 @@
   height: 100%;
   background-color: rgba($color: #000000, $alpha: 0.3);
   z-index: 999999;
+}
+.aspect-ratio-off_true .altrp-image{
+  position: relative;
+}
+.aspect-ratio-off_false .altrp-image{
+  position: absolute;
 }

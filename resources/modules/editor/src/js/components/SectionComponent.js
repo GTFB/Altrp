@@ -1,51 +1,8 @@
 import React, {Component} from "react";
 import '../../sass/section.scss';
 import {connect} from "react-redux";
-import store, {getCurrentElement} from "../store/store";
-import { styles } from "react-contexify/lib/utils/styles";
-import {changeWidthColumns} from "../store/column-width/actions";
-
-// const SectionComponent = ({ children, element }) => {
-//   if (!children.length) {
-//     throw `Section Component Must Contain at Least One Column as Child`;
-//   }
-//
-//   //const [columns, setColumns] = useState(children);
-//   //const [settings, setSettings] = useState(element.getSettings());
-//
-//   /* element.component = this;
-//
-//   if (window.elementDecorator) {
-//     window.elementDecorator(this);
-//   } */
-//
-//   const handleContext = e => {
-//     e.persist();
-//     e.preventDefault();
-//     contextMenu.show({
-//       id: "element-menu",
-//       event: e,
-//       props: {
-//         element,
-//         children
-//       }
-//     });
-//   };
-//
-//   return (
-//     <div className="altrp-section" onContextMenu={handleContext}>
-//       {children.map(column => (
-//         <ElementWrapper
-//           key={column.getId()}
-//           component={column.componentClass}
-//           element={column}
-//         />
-//       ))}
-//     </div>
-//   );
-// };
 import '../../sass/section.scss'
-import { isEditor, getWindowWidth } from "../helpers"
+import { isEditor, getWindowWidth } from "../../../../front-app/src/js/helpers"
 
 class SectionComponent extends Component {
   constructor(props) {

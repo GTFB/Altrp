@@ -59,9 +59,15 @@ class AddPage extends Component {
     e.preventDefault();
     let res;
     let path = this.state.value.path;
-
     path = path.split('\\').join('/');
     path = (path[0] !== '/') ? `/${path}` : path;
+
+    let redirect = this.state.value.redirect;
+    redirect = (redirect || '').split('\\').join('/');
+    if(redirect){
+      redirect = (redirect[0] !== '/') ? `/${redirect}` : redirect;
+    }
+    this.state.value.redirect = redirect;
     this.state.value.path = path;
     if(this.state.id){
       res = await this.resource.put(this.state.id, this.state.value);
@@ -82,6 +88,12 @@ class AddPage extends Component {
     if(field === 'path'){
       value = value.split('\\').join('/');
       value = (value[0] !== '/') ? `/${value}` : value;
+    }
+    if(field === 'redirect'){
+      value = value.split('\\').join('/');
+      if(value){
+        value = (value[0] !== '/') ? `/${value}` : value;
+      }
     }
     this.setState(state=>{
       state = {...state};
@@ -160,6 +172,13 @@ class AddPage extends Component {
                          value={this.state.value.roles}
                          onChange={value => {this.changeValue(value, 'roles')}}
             />
+          </div>
+          <div className="form-group">
+            <label htmlFor="redirect">Redirect</label>
+            <input type="text" id="redirect"
+                   value={this.state.value.redirect || ''}
+                   onChange={e => {this.changeValue(e.target.value, 'redirect')}}
+                   className="form-control"/>
           </div>
           <button className="btn btn_success">{this.state.id ? 'Save' : 'Add'}</button>
         </form>

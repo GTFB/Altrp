@@ -3,20 +3,20 @@ import {useTable, useSortBy} from "react-table";
 import {useQuery, usePaginatedQuery, queryCache} from  "react-query";
 import '../../../sass/altrp-pagination.scss';
 import {Link} from "react-router-dom";
-import {isEditor} from "../../../../../front-app/src/js/helpers";
+import {isEditor, parseURLTemplate} from "../../../../../front-app/src/js/helpers";
 import {iconsManager} from "../../../../../admin/src/js/helpers";
 import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput";
-import {parseURLTemplate} from "../../helpers";
 
 /**
  *
  * @param settings
  * @param {Query} query
  * @param {Query} data
+ * @param {AltrpModel} currentModel
  * @return {*}
  * @constructor
  */
-const AltrpTable = ({settings, query, data}) => {
+const AltrpTable = ({settings, query, data, currentModel}) => {
   if (! (settings.tables_columns && settings.tables_columns.length)) {
     return <div children="Please Add Column"/>
   }
@@ -47,7 +47,7 @@ const AltrpTable = ({settings, query, data}) => {
       resolvedData,
       latestData,
       error,
-    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting], fetchModels);
+    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting, currentModel], fetchModels);
     _data = resolvedData ? resolvedData : _data;
     _status = status;
     _error = error;
@@ -140,7 +140,7 @@ const AltrpTable = ({settings, query, data}) => {
         </tr>
     ))}
     </thead>
-    <tbody {...getTableBodyProps()} className="altrp-table-tbody">
+    <tbody {...getTableBodyProps()} className={`altrp-table-tbody ${settings.table_style_table_striple_style ? ' altrp-table-tbody--striped' : ''}`}>
     {_status === "error" ? <tr>
               <td>{_error.message}</td>
             </tr> : _status === "loading" ? <tr>
@@ -149,10 +149,11 @@ const AltrpTable = ({settings, query, data}) => {
             : rows.map((row, i) => {
               prepareRow(row);
               return (
-                  <tr {...row.getRowProps()} className="altrp-table-tr">
+                  <tr {...row.getRowProps()} className={`altrp-table-tr ${settings.table_hover_row ? 'altrp-table-background' : ''}`}>
                     {row.cells.map((cell, _i) => {
                       let cellContent = cell.render('Cell');
                       let linkTag = isEditor() ? 'a': Link;
+                      const style = cell.column.column_body_alignment ? { textAlign: cell.column.column_body_alignment } : {};
                       const cellProps = {...cell.getCellProps()};
                       let _cellContent = cell.value;
 
@@ -191,6 +192,13 @@ const AltrpTable = ({settings, query, data}) => {
                       if(doubleClicked.column === columns[_i]._accessor && row.original.id === doubleClicked.rowId){
                         cellClassName += ' altrp-table-td_double-clicked';
                       }
+                    /**
+                     * Если в настройках table_hover_row: false, - background для отдельной ячейки
+                     */
+                      if (!settings.table_hover_row) {
+                        cellClassName += ' altrp-table-background';
+                      }
+
                       /**
                        * Если значение объект или массив, то отобразим пустую строку
                        */
@@ -210,7 +218,9 @@ const AltrpTable = ({settings, query, data}) => {
                           className: 'altrp-inherit altrp-table-td__default-content',
                         }, cellContent)
                       }
-                      return <td {...cellProps} className={cellClassName}>{cellContent}{doubleClickContent}</td>
+                      return <td {...cellProps} className={cellClassName} style={style}>
+                          {cellContent}{doubleClickContent}
+                        </td>
                     })}
                   </tr>
               )
@@ -306,7 +316,11 @@ function renderAdditionalRows(settings) {
  * @return {*}
  */
 function renderTh({column, sortSetting, sortingHandler, filterSetting, filterHandler}){
+  const { column_width, column_header_alignment } = column;
   let thProps = {...column.getHeaderProps()};
+  const style = {};
+  if (column_width) style.width = column_width;
+  if (column_header_alignment) style.textAlign = column_header_alignment;
   thProps.className = 'altrp-table-th';
   if(column.column_is_sorted){
     thProps.onClick = () => sortingHandler(column._accessor);
@@ -316,7 +330,7 @@ function renderTh({column, sortSetting, sortingHandler, filterSetting, filterHan
     thProps.width = column.column_width + '%';
   }
   let thText = column.render('column_name');
-  return  <th {...thProps}>
+  return <th {...thProps} style={style}>
     {thText}
     { sortSetting && (sortSetting.order_by === column._accessor)
       && (sortSetting.order === "DESC" ?

@@ -88,6 +88,12 @@ class Table extends BaseElement {
         },
     });
 
+    this.addControl('table_hover_row', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hover Row',
+      default: false
+    });
+
     this.endControlSection();
 
     this.startControlSection("table_data_settings", {
@@ -149,7 +155,7 @@ class Table extends BaseElement {
       label: 'Previous Page Text',
     });
 
-    this.addControl('cur  title=rent_page_text', {
+    this.addControl('current_page_text', {
       label: 'Current Page Text',
     });
 
@@ -166,9 +172,47 @@ class Table extends BaseElement {
       label: 'Link Template',
       description: '/path/:id',
     });
-    repeater.addControl('column_width %',{
+    repeater.addControl('column_width',{
       label: 'Column Width',
       type: CONTROLLER_NUMBER,
+    });
+    repeater.addControl('column_header_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Header alignment',
+      default: 'center',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ]
+    });
+    repeater.addControl('column_body_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Body alignment',
+      default: 'center',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ]
     });
     repeater.addControl('column_is_sorted', {
       type: CONTROLLER_SWITCHER,
@@ -417,7 +461,19 @@ class Table extends BaseElement {
 
     this.addControl('table_style_table_striple_style', {
         type: CONTROLLER_SWITCHER,
-        label: 'Striple style',
+        label: 'Striple style'
+    });
+
+    this.addControl("table_style_table_stripe_color", {
+      type: CONTROLLER_COLOR,
+      label: "Stripe Color",
+      default: {
+        color: "rgba(0, 0, 50, .05)",
+        colorPickedHex: "#32a852"
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-table-tbody--striped tr:nth-child(2n)': 'background-color: {{COLOR}}'
+      }
     });
 
     this.addControl("table_style_table_border_type", {
@@ -451,7 +507,7 @@ class Table extends BaseElement {
         }
       ],
       rules: {
-        '{{ELEMENT}} .altrp-table-tbody{{STATE}}': 'border-style: {{VALUE}} !important'
+        '{{ELEMENT}} .altrp-table{{STATE}}': 'border-style: {{VALUE}} !important'
       }
     });
 
@@ -467,7 +523,7 @@ class Table extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        '{{ELEMENT}} .altrp-table-tbody{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
+        '{{ELEMENT}} .altrp-table{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
       }
     });
 
@@ -479,7 +535,7 @@ class Table extends BaseElement {
         colorPickedHex: "#32a852"
       },
       rules: {
-        '{{ELEMENT}} .altrp-table-tbody{{STATE}}': 'border-color: {{COLOR}} !important'
+        '{{ELEMENT}} .altrp-table{{STATE}}': 'border-color: {{COLOR}} !important'
       }
     });
 
@@ -904,7 +960,7 @@ class Table extends BaseElement {
         colorPickedHex: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-table-td{{STATE}}': 'background: {{COLOR}};',
+        '{{ELEMENT}} .altrp-table-tbody .altrp-table-background{{STATE}}': 'background: {{COLOR}};',
       }
     });
 

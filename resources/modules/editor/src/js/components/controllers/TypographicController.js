@@ -24,6 +24,7 @@ class TypographicController extends Component {
     this.horChange = this.horChange.bind(this);
     this.verChange = this.verChange.bind(this);
     this.inputVerUpdate = this.inputVerUpdate.bind(this);
+    this.units = ['px', 'em', 'rem', '%', 'vw', 'vh']
     let value = this.getSettings(this.props.controlId);
     if (value === null && this.props.default) {
       value = this.props.default;
@@ -84,6 +85,14 @@ class TypographicController extends Component {
     this._changeValue({
       ...value,
       size: e.target.value
+    });
+  }
+
+  changeSizeUnit = unit => {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    this._changeValue({
+      ...value,
+      sizeUnit: unit
     });
   }
 
@@ -169,7 +178,6 @@ class TypographicController extends Component {
   //конец letter spacing
 
   render() {
-
     if (this.state.show === false) {
       return '';
     }
@@ -384,9 +392,17 @@ class TypographicController extends Component {
         </div>
         {/* начало slider size */}
         <div className="control-slider-header control-shadow-blur-header">
-          <div className="control-slider-label">
+          <div className="control-slider-label control-slider-label--typographic">
             Size
-        </div>
+            <div className="control-slider-type-label__wrapper">
+              {this.units.map(unit => <button onClick={() => this.changeSizeUnit(unit)}
+                key={unit}
+                className={`control-slider-type-label ${unit === value.sizeUnit ? 'control-slider-type-label--active' : ''}`}
+              >
+                {unit}
+              </button>)}
+            </div>
+          </div>
         </div>
         <div className="control-slider-input-wrapper control-shadow-blur">
           <input type="range"

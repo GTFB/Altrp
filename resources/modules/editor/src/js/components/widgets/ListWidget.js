@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import { renderAssetIcon } from "../../helpers"
+import {renderAssetIcon} from "../../../../../front-app/src/js/helpers";
 
 class ListWidget extends Component {
   constructor(props){
@@ -110,7 +110,7 @@ class ListWidget extends Component {
               <div className="altrp-list-li-content" style={li_styles}>
                 {link_icon}
                 {
-                  li.link_switcher_custom_repeater ? <a className="altrp-list-li-content altrp-list-li-link" href={link_url} target={link_newTab} rel={link_noFollow} style={li_styles}>
+                  li.link_switcher_custom_repeater ? <a className="altrp-list-li-content altrp-list-li-link" href={link_url} target={link_newTab} rel={link_noFollow}>
                     {li.hover_all_switcher_custom_repeater ? li_icon : ""}
                     {li_label}
                   </a>
