@@ -569,6 +569,7 @@ class QueryBuilder
      */
     protected function getConditions($conditions)
     {
+        if (! $conditions) return $this;
         foreach ($conditions as $condition) {
             switch ($condition['condition_type']) {
                 case 'where':
