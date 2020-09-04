@@ -362,9 +362,9 @@ class Section extends BaseElement{
     //   type: CONTROLLER_GRADIENT,
     //   label: 'Gradient',
     //   default: {
-    //     firstColor: "#61CE70",
+    //     firstColor: "rgba(97,206,112,1)",
     //     firstPoint: '0',
-    //     secondColor: "#F2295B",
+    //     secondColor: "rgba(242,41,91,1)",
     //     secondPoint: "100",
     //     angle: "0"
     //   },

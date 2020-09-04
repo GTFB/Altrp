@@ -14,24 +14,26 @@ class GradientController extends Component {
     // }
     // value = value || '';
     this.state = {
-      opened: false
+      opened1: false
     };
   }
 
-  colorChange = (color) => {
+  colorChange = (color, name) => {
+    const { gradient } = this.props.currentElement.settings;
     this._changeValue({
-      color: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
-      colorPickedHex: color.hex,
-      opacity: color.rgb.a
+      ...gradient,
+      [name]: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+      // colorPickedHex: color.hex,
+      // opacity: color.rgb.a
     });
   };
 
   render() {
-    let { angle, firstColor, firstPoint, secondColor, secondPoint } = this.props.currentElement.gradient;
+    let { angle, firstColor, firstPoint, secondColor, secondPoint } = this.props.currentElement.settings.gradient;
+    // const firstColor = "black"
+    const { opened1 } = this.state;
 
-    const { opened } = this.state;
-
-    console.log(opened)
+    // console.log(firstColor.split(',')[3])
     return <>
       <div className="control-color-header">
         <div className="controller-container__label">
@@ -40,18 +42,19 @@ class GradientController extends Component {
         </div>
       </div>
       <div className="control-color-wrapper">
-        <div className="control-color-input" onClick={() => this.setState({ opened: !opened })}>
+        <div className="control-color-input" onClick={() => this.setState({ opened1: !opened1 })}>
           <div className="control-color-colorPicked-container">
-            <div className="control-color-colorPicked" style={{ backgroundColor: color }}></div>
+            <div className="control-color-colorPicked" style={{ backgroundColor: firstColor }}></div>
           </div>
-          {/* <label className="control-color-hex">{colorPickedHex}</label> */}
+          <label className="control-color-hex">{firstColor}</label>
         </div>
-        {opened && <div id="gradientColor" className="control-color-colorPicker" /* style={colorPickerPosition} */>
-          <SketchPicker width="90%" color={firstColor} onChange={this.colorChange} name="colorPicker" className="sketchPicker" />
+        {opened1 && <div id="gradientColor" className="control-color-colorPicker" /* style={colorPickerPosition} */>
+          <SketchPicker width="90%" color={firstColor} onChange={color => this.colorChange(color, 'firstColor')} className="sketchPicker" />
         </div>}
-        {/* <div className="control-color-opacity-container">
-          <label className="control-color-opacity" >{(this.state.opacity * 100).toFixed() + "%"}</label>
-        </div> */}
+        <div className="control-color-opacity-container">
+          {/* TODO: порефакторить */}
+          <label className="control-color-opacity" >{(parseFloat(firstColor.split(',')[3]) * 100).toFixed() + "%"}</label> 
+        </div>
       </div>
 
     </>
