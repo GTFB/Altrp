@@ -10,11 +10,11 @@ class JoinComponent extends Component {
 
   componentDidUpdate(prevProps) {
     const { source_table, target_table } = this.props.item;
-    if (prevProps.target_table !== target_table) {
+    if (prevProps.item.target_table !== target_table) {
       tablesOptions(target_table).getAll()
         .then(targetColumnOptions => this.setState({ targetColumnOptions }));
     }
-    if (prevProps.source_table !== source_table) {
+    if (prevProps.item.source_table !== source_table) {
       tablesOptions(source_table).getAll()
         .then(sourceColumnOptions => this.setState({ sourceColumnOptions }));
     }
