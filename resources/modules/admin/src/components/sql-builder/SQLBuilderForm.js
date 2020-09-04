@@ -26,15 +26,17 @@ class SQLBuilderForm extends Component {
         order_by: [],
         access: { roles: [], permissions: [] },
         group_by: [],
-        offset: 10,
-        limit: 5
+        offset: 'REQUEST:pageSize * (REQUEST:page - 1)',
+        limit: 'REQUEST:pageSize'
       },
       relationsOptions: [],
       rolesOptions: [],
       permissionsOptions: [],
       tablesOptions: [],
       selfFields: [],
-      selfFieldsOptions: []
+      selfFieldsOptions: [],
+      isOffsetDisable: true,
+      isLimitDisable: true
     };
     this.counter = 0;
     this.rolesOptions = new Resource({ route: '/admin/ajax/role_options' });
@@ -428,9 +430,9 @@ class SQLBuilderForm extends Component {
   };
 
   render() {
-    const { title, name, relations, columns, aggregates, joins, conditions, order_by, group_by } = this.state.value;
+    const { title, name, relations, columns, aggregates, joins, conditions, order_by, group_by, offset, limit } = this.state.value;
     const { roles, permissions } = this.state.value.access;
-    const { selfFieldsOptions, permissionsOptions, relationsOptions, rolesOptions, tablesOptions } = this.state;
+    const { selfFieldsOptions, permissionsOptions, relationsOptions, rolesOptions, tablesOptions, isOffsetDisable, isLimitDisable } = this.state;
     const { modelId } = this.props.match.params;
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="row">
@@ -595,6 +597,42 @@ class SQLBuilderForm extends Component {
       <div className="btn__wrapper btn_add centred">
         <button className="btn btn_success" type="submit">Save</button>
         <Link className="btn" to="/admin/tables/models">Cancel</Link>
+      </div>
+
+      <h2 className="admin-form__subheader centred">Pagination Settings</h2>
+
+      <div className="row">
+        <div className="form-group  col-6">
+          <label htmlFor="offset">Offset</label>
+          <label className="label_checkbox float-right">
+            <input type="checkbox"
+              className="form-check-input"
+              checked={isOffsetDisable}
+              onChange={() => this.setState({ isOffsetDisable: !isOffsetDisable })}
+            /> Blocked
+          </label>
+          <input type="text" id="offset" required name="offset"
+            value={offset}
+            disabled={isOffsetDisable}
+            onChange={this.valueChangeHandler}
+            className="form-control" />
+        </div>
+
+        <div className="form-group col-6 ">
+          <label htmlFor="limit">Limit</label>
+          <label className="label_checkbox float-right">
+            <input type="checkbox"
+              className="form-check-input"
+              checked={isLimitDisable}
+              onChange={() => this.setState({ isLimitDisable: !isLimitDisable })}
+            /> Blocked
+          </label>
+          <input type="text" id="limit" required name="limit"
+            value={limit}
+            disabled={isLimitDisable}
+            onChange={this.valueChangeHandler}
+            className="form-control" />
+        </div>
       </div>
     </form >
   }
