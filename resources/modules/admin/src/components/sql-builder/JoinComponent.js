@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Resource from "../../../../editor/src/js/classes/Resource";
 
-const tablesOptions = tableId => new Resource({ route: `/tables/${tableId}/columns` });
+const tablesOptions = tableId => new Resource({ route: `/admin/ajax/tables/${tableId}/columns` });
 class JoinComponent extends Component {
   state = {
     sourceColumnOptions: [],
@@ -9,6 +9,7 @@ class JoinComponent extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    const { source_table, target_table } = this.props.item;
     if (prevProps.target_table !== target_table) {
       tablesOptions(target_table).getAll()
         .then(targetColumnOptions => this.setState({ targetColumnOptions }));
@@ -26,13 +27,13 @@ class JoinComponent extends Component {
         <div className="form-group form-group_width30">
           <label>Type
           <select required name="type"
-              value={type}
-              onChange={changeHandler}
-              className="form-control"
-            >
-              <option disabled value="" />
+            value={type}
+            onChange={changeHandler}
+            className="form-control"
+          >
+            <option disabled value="" />
 
-            </select>
+          </select>
           </label>
         </div>
 
