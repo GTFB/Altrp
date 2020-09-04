@@ -281,12 +281,13 @@ class Button extends BaseElement{
           spacing: 0,
           size: 16,
           weight: "normal",
-          family: '"lato"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {
           '{{ELEMENT}} .altrp-btn{{STATE}}': [
             'font-size: {{SIZE}}px;',
+            'font-family: {{FAMILY}}',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
             'font-weight: {{WEIGHT}}',
@@ -487,7 +488,7 @@ class Button extends BaseElement{
           colorPickedHex: "#fff",
         },
         rules: {
-          '{{ELEMENT}} .altrp-btn-icon path{{STATE}}': 'fill: {{COLOR}};',
+          '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon path': 'fill: {{COLOR}};',
         },
       }
     );
