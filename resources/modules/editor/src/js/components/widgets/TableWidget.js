@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import Query from "../../classes/Query";
-import {queryCache} from "react-query";
 
 // const AltrpTable = React.lazy(() => import("../altrp-table/component"));
 
@@ -42,7 +41,6 @@ class TableWidget extends Component {
     if(! this.showTable(query)){
       return <div children="Please Choose Source"/>
     }
-    queryCache.clear();
 
     return <this.state.TableComponent query={query}
                                       currentModel={this.props.currentModel}

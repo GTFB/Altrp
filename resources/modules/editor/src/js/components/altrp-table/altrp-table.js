@@ -47,7 +47,9 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
       resolvedData,
       latestData,
       error,
-    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting, currentModel], fetchModels);
+    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting, query.getParams()], fetchModels ,{
+      forceFetchOnMount: true
+    });
     _data = resolvedData ? resolvedData : _data;
     _status = status;
     _error = error;
@@ -61,9 +63,11 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
     /**
      * Если нет пагинации
      */
-    const {status, data, error,} = useQuery(query.dataSourceName, () => {
+    const {status, data, error,} = useQuery([query.dataSourceName,query.getParams()], () => {
       return query.getResource().getQueried({...sortSetting,filters: filterSettingJSON})
-    }, [query.dataSourceName]);
+    }, {
+      forceFetchOnMount: true
+    });
     _data = data;
     _status = status;
     _error = error;
@@ -127,7 +131,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
     setFilterSettings(filterParams);
   };
   
-
+  console.log(_status);
   return <><table className="altrp-table" {...getTableProps()}>
     <thead className="altrp-table-head">
     {renderAdditionalRows(settings)}

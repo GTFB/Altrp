@@ -8,7 +8,6 @@ import Area from "../classes/Area";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import appStore from "../store/store"
 import {changeCurrentModel} from "../store/current-model/actions";
-import {queryCache} from  "react-query";
 
 
 class RouteContent extends Component {
@@ -60,7 +59,6 @@ class RouteContent extends Component {
    * @return {Promise<void>}
    */
   async componentDidUpdate(prevProps){
-    queryCache.clear();
     if((_.get(this.props, 'model.modelName') !== _.get(prevProps, 'model.modelName'))
         || (_.get(this.props, 'match.params.id') !== _.get(prevProps, 'match.params.id'))
     ){
