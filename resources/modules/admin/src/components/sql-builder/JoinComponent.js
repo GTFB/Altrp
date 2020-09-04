@@ -22,6 +22,7 @@ class JoinComponent extends Component {
   render() {
     const { type, source_table, target_table, source_column, operator, target_column } = this.props.item;
     const { changeHandler, tablesOptions } = this.props;
+    const { sourceColumnOptions, targetColumnOptions } = this.state;
     return <div className="form-segment">
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width30">
@@ -81,7 +82,7 @@ class JoinComponent extends Component {
               className="form-control"
             >
               <option disabled value="">{!source_table ? 'Choose Table First' : ''}</option>
-
+              {sourceColumnOptions.map(({ id, title }) => <option value={id} key={id}>{title}</option>)}
             </select>
           </label>
         </div>
@@ -113,6 +114,7 @@ class JoinComponent extends Component {
               className="form-control"
             >
               <option disabled value="">{!target_table ? 'Choose Table First' : ''}</option>
+              {targetColumnOptions.map(({ id, title }) => <option value={id} key={id}>{title}</option>)}
             </select>
           </label>
         </div>
