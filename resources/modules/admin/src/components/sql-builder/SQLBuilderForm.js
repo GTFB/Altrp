@@ -113,7 +113,7 @@ class SQLBuilderForm extends Component {
    */
   changeColumns = (columns) => {
     let _columns = [];
-    columns.forEach(c => {
+    if (columns) columns.forEach(c => {
       _columns.push(c.value)
     });
     this.setState(state => ({ ...state, value: { ...state.value, columns: _columns } }));
