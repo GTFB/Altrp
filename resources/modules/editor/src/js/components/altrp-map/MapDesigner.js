@@ -16,18 +16,18 @@ import Loader from "./Loader";
 
 import MemoPaintIcon from "./Icons/PaintIcon";
 
-import "./style.scss";
-
 function noob() {}
 
 function MapDesigner({
   className,
   center,
   zoom,
-  data,
+  data = {},
   isEditable = false,
   isLoading = false,
   isTransformLatLng = false,
+  interactionOptions = {},
+  style = {},
   saveData = noob,
   onTap = noob,
 }) {
@@ -118,8 +118,8 @@ function MapDesigner({
     // Очищаем старые слои
     FG.current.leafletElement.clearLayers();
     // Добавляем новые слои
-    state.length > 0 &&
-      state.features.forEach((geojson) => {
+    if (state.features?.length > 0) {
+      for (const geojson of state.features) {
         // Конвертируем geojson в слой leaflet
         L.geoJSON(geojson, {
           coordsToLatLng: (coords) => {
@@ -155,7 +155,8 @@ function MapDesigner({
             FG.current.leafletElement.addLayer(layer);
           },
         });
-      });
+      }
+    }
   }, [handleSelected, isTransformLatLng, state]);
 
   // Сохраняем данные после каждого изменения состояния
@@ -164,7 +165,7 @@ function MapDesigner({
       saveData(state);
       whenReady();
     }
-  }, [saveData, state, whenReady]);
+  }, [saveData, state]);
 
   // Обновляем состояние после каждого изменения пропса
   useEffect(() => {
@@ -174,18 +175,20 @@ function MapDesigner({
   }, [data]);
 
   return (
-    <div className="rrbe-map">
+    <div className="altrp-map" style={style}>
       {isLoading && <Loader />}
       <Map
         center={center}
         zoom={zoom}
-        className={`rrbe-map__container ${className}`}
+        className={`altrp-map__container ${className}`}
         whenReady={whenReady}
+        scrollWheelZoom={interactionOptions.scrollWheelZoom}
+        touchZoom={interactionOptions.touchZoom}
+        doubleClickZoom={interactionOptions.doubleClickZoom}
+        keyboard={interactionOptions.keyboard}
+        style={{ height: style.height }}
       >
-        <TileLayer
-          url="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution={"MapDesigner"}
-        />
+        <TileLayer url="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <FeatureGroup ref={FG}>
           <EditControl
             position="topleft"
@@ -207,7 +210,7 @@ function MapDesigner({
           />
         </FeatureGroup>
         {isEditable && selected && (
-          <Control position="topleft" className="rrbe-map__paint">
+          <Control position="topleft" className="altrp-map__paint">
             <button type="button" onClick={() => setOpen(!open)}>
               <MemoPaintIcon width="15" height="15" fill="#464646" />
             </button>

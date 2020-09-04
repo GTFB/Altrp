@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
+import "./installing";
 import ElementsManager from "./js/classes/modules/ElementsManager";
 import ControllersManager from "./js/classes/modules/ControllersManager";
 import store from "../src/js/store/store";
 import _ from "lodash";
 import IconsManager from "./js/classes/modules/IconsManager";
 import "./sass/editor-style.scss";
-import "./installing";
 
 window.React = React;
 window.ReactDOM = ReactDOM;

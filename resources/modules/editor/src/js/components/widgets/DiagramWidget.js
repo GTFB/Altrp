@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import AltrpDiagram from "../altrp-diagram/AltrpDiagram";
+import React, { Component, Suspense } from "react";
 
+const AltrpDiagram = React.lazy(() => import("../altrp-diagram/AltrpDiagram"));
 class DiagramWidget extends Component {
   constructor(props) {
     super(props);
@@ -17,7 +17,11 @@ class DiagramWidget extends Component {
   }
 
   render() {
-    return <AltrpDiagram settings={this.state.settings} />;
+    return (
+      <Suspense fallback={"Loading"}>
+        <AltrpDiagram settings={this.state.settings} />
+      </Suspense>
+    );
   }
 }
 

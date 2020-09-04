@@ -121,7 +121,7 @@ const ModalControl = ({ selected, state, open, onClose, setState, fg }) => {
   };
 
   return (
-    <div className="rrbe-map__modal modal">
+    <div className="altrp-map__modal modal">
       <div className={!open ? "modal__body" : "modal__body open"}>
         <button type="button" className="close" onClick={onClose}>
           X

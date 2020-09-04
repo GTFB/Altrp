@@ -22,6 +22,8 @@ class ElementsFactory extends BaseModule{
      * */
     let settings = (object.settings.length === 0) ? {} : object.settings;
     element.setSettings(settings);
+    let cssClassStorage = (object.cssClassStorage.length === 0) ? {} : object.cssClassStorage;
+    element.setCSSStorage(cssClassStorage);
     if(object.dynamicContentSettings){
       element.dynamicContentSettings = (object.dynamicContentSettings.length === 0) ? {} : object.dynamicContentSettings;
     }
