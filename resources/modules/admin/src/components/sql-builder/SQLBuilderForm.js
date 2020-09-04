@@ -594,10 +594,6 @@ class SQLBuilderForm extends Component {
           options={selfFieldsOptions}
           isMulti={true} />
       </div>
-      <div className="btn__wrapper btn_add centred">
-        <button className="btn btn_success" type="submit">Save</button>
-        <Link className="btn" to="/admin/tables/models">Cancel</Link>
-      </div>
 
       <h2 className="admin-form__subheader centred">Pagination Settings</h2>
 
@@ -633,6 +629,11 @@ class SQLBuilderForm extends Component {
             onChange={this.valueChangeHandler}
             className="form-control" />
         </div>
+      </div>
+
+      <div className="btn__wrapper btn_add centred">
+        <button className="btn btn_success" type="submit">Save</button>
+        <Link className="btn" to="/admin/tables/models">Cancel</Link>
       </div>
     </form >
   }

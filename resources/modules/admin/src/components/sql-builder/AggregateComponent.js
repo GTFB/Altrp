@@ -8,15 +8,6 @@ class AggregateComponent extends Component {
     const { columnsOptions, changeHandler } = this.props;
     return <div className="form-segment form-group__inline-wrapper">
       <div className="form-group form-group_width30">
-        <label>Alias
-          <input type="text" required name="alias"
-            value={alias}
-            onChange={changeHandler}
-            className="form-control" />
-        </label>
-      </div>
-
-      <div className="form-group form-group_width30">
         <label>Type
           <select required name="type"
             value={type}
@@ -46,6 +37,15 @@ class AggregateComponent extends Component {
                 {label}
               </option>)}
           </select>
+        </label>
+      </div>
+      
+      <div className="form-group form-group_width30">
+        <label>Alias
+          <input type="text" required name="alias"
+            value={alias}
+            onChange={changeHandler}
+            className="form-control" />
         </label>
       </div>
     </div>
