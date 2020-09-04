@@ -168,9 +168,27 @@ class ConditionComponent extends Component {
         <p>Comma Separated</p>
       </>}
 
-      {condition_type === "where_date" &&
-        <div className={`form-group ${["day", "month"].includes(type) ? "hide-blocks" : ""}`}>
-          <label>Value</label>
+      {condition_type === "where_date" && <div className="row">
+        <div className="form-group col-6">
+          <label>Operator
+              <select required name="operator"
+              value={operator}
+              onChange={changeHandler}
+              className="form-control"
+            >
+              <option value="" disabled />
+              <option value="=">Equals</option>
+              <option value="!=">Not Equals</option>
+              <option value=">">&gt;</option>
+              <option value=">=">&gt;=</option>
+              <option value="<">&lt;</option>
+              <option value="<=">&lt;=</option>
+            </select>
+          </label>
+        </div>
+
+        <div className={`form-group col-6 ${["day", "month"].includes(type) ? "hide-blocks" : ""}`}>
+          <label className="w-auto mb-0">Value</label>
           <label className="label_checkbox float-right w-auto">
             <input type="checkbox"
               className="form-check-input"
@@ -198,7 +216,8 @@ class ConditionComponent extends Component {
                 }
               })}
             />}
-        </div>}
+        </div>
+      </div>}
 
       {condition_type === "where_column" && <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
