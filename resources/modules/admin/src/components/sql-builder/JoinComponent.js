@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Resource from "../../../../editor/src/js/classes/Resource";
 
-const tablesOptions = tableId => new Resource({ route: `/tables/${tableId}/columns` });
+const tablesOptions = tableId => new Resource({ route: `/admin/ajax/tables/${tableId}/columns` });
 class JoinComponent extends Component {
   state = {
     sourceColumnOptions: [],
@@ -9,11 +9,12 @@ class JoinComponent extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.target_table !== target_table) {
+    const { source_table, target_table } = this.props.item;
+    if (prevProps.item.target_table !== target_table) {
       tablesOptions(target_table).getAll()
         .then(targetColumnOptions => this.setState({ targetColumnOptions }));
     }
-    if (prevProps.source_table !== source_table) {
+    if (prevProps.item.source_table !== source_table) {
       tablesOptions(source_table).getAll()
         .then(sourceColumnOptions => this.setState({ sourceColumnOptions }));
     }
@@ -21,17 +22,20 @@ class JoinComponent extends Component {
   render() {
     const { type, source_table, target_table, source_column, operator, target_column } = this.props.item;
     const { changeHandler, tablesOptions } = this.props;
+    const { sourceColumnOptions, targetColumnOptions } = this.state;
     return <div className="form-segment">
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width30">
           <label>Type
-          <select required name="type"
+            <select required name="type"
               value={type}
               onChange={changeHandler}
               className="form-control"
             >
               <option disabled value="" />
-
+              <option value="inner_join">Inner Join</option>
+              <option value="left_join">Left Join</option>
+              <option value="right_join">Right Join</option>
             </select>
           </label>
         </div>
@@ -78,7 +82,7 @@ class JoinComponent extends Component {
               className="form-control"
             >
               <option disabled value="">{!source_table ? 'Choose Table First' : ''}</option>
-
+              {sourceColumnOptions.map(({ id, title }) => <option value={id} key={id}>{title}</option>)}
             </select>
           </label>
         </div>
@@ -110,6 +114,7 @@ class JoinComponent extends Component {
               className="form-control"
             >
               <option disabled value="">{!target_table ? 'Choose Table First' : ''}</option>
+              {targetColumnOptions.map(({ id, title }) => <option value={id} key={id}>{title}</option>)}
             </select>
           </label>
         </div>
