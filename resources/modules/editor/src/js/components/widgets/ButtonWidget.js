@@ -50,10 +50,11 @@ class ButtonWidget extends Component {
   }
 
   render() {
-    const { link_link } = this.state.settings;
+    const { link_link, gradient } = this.state.settings;
     const { goBack } = this.props.history;
+
     let classes =
-      "altrp-btn " + (this.state.settings.position_css_classes || "");
+      "altrp-btn " + (this.state.settings.position_css_classes || "") + (gradient.isWithGradient ? " altrp-gradient" : "");
     let buttonMedia = { ...this.state.settings.button_icon };
     if (this.state.pending) {
       classes += " altrp-disabled";
