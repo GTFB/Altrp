@@ -358,21 +358,21 @@ class Section extends BaseElement{
       }
     });
 
-    // this.addControl('gradient', {
-    //   type: CONTROLLER_GRADIENT,
-    //   label: 'Gradient',
-    //   default: {
-    //     firstColor: "rgba(97,206,112,1)",
-    //     firstPoint: '0',
-    //     secondColor: "rgba(242,41,91,1)",
-    //     secondPoint: "100",
-    //     angle: "0"
-    //   },
-    //   rules: {
-    //     "{{ELEMENT}} .altrp-section{{STATE}}": "background-image: linear-gradient({{ANGLE}}deg, {{FIRSTCOLOR}} {{FIRSTPOINT}}%, {{SECONDCOLOR}} {{SECONDPOINT}}%);" 
-    //   }
-    //   //background-image: linear-gradient(360deg, #61CE70 0%, #F2295B 100%);
-    // });
+    this.addControl('gradient', {
+      type: CONTROLLER_GRADIENT,
+      label: 'Gradient',
+      default: {
+        isWithGradient: false,
+        firstColor: "rgba(97,206,112,1)",
+        firstPoint: '0',
+        secondColor: "rgba(242,41,91,1)",
+        secondPoint: "100",
+        angle: "0"
+      },
+      rules: {
+        "{{ELEMENT}} > .altrp-gradient{{STATE}}": "background-image: linear-gradient({{ANGLE}}deg, {{FIRSTCOLOR}} {{FIRSTPOINT}}%, {{SECONDCOLOR}} {{SECONDPOINT}}%);" 
+      }
+    });
 
     this.endControlSection();
 
