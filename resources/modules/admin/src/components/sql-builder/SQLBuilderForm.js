@@ -26,8 +26,8 @@ class SQLBuilderForm extends Component {
         order_by: [],
         access: { roles: [], permissions: [] },
         group_by: [],
-        offset: 'REQUEST:pageSize * (REQUEST:page - 1)',
-        limit: 'REQUEST:pageSize'
+        // offset: 'REQUEST:pageSize * (REQUEST:page - 1)',
+        // limit: 'REQUEST:pageSize'
       },
       relationsOptions: [],
       rolesOptions: [],
