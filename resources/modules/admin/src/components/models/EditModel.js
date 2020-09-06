@@ -70,17 +70,19 @@ class EditModel extends Component {
    * @return {Promise<void>}
    */
   async componentDidMount() {
-
+    // TODO: делать запросы асинхронно
     if(this.state.id){
       let model = await this.modelsResource.get(this.state.id);
       let relations = await this.relationsResource.getAll();
       let fields = await this.fieldsResource.getAll();
+      let queries = await this.queriesResource.getAll();
       fields = fields.filter(({name}) => name !== 'id');
       this.setState(state=>({
           ...state,
         model,
         relations,
         fields,
+        queries
       }))
     }
   }
