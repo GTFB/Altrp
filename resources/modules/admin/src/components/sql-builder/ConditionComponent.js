@@ -14,10 +14,25 @@ const dateTypesOptions = [
 ];
 
 class ConditionComponent extends Component {
+  state = { isDateVar: false }
+
+  dateValueFormatChange = () => {
+    const { isDateVar } = this.state;
+
+    this.props.changeHandler({
+      target: {
+        value: isDateVar ? moment(new Date()).format(getMomentFormat(this.props.item.type)) : '',
+        name: "value"
+      }
+    });
+    this.setState({ isDateVar: !isDateVar });
+  }
+
   render() {
     const { columnsOptions, changeHandler, isFirst } = this.props;
     const { condition_type, column, operator, value, or, not, values, type,
       first_column, second_column } = this.props.item;
+    const { isDateVar } = this.state;
 
     return <div className="form-segment">
       <div className="form-group__inline-wrapper">
@@ -30,7 +45,7 @@ class ConditionComponent extends Component {
             >
               <option disabled value="" />
               {conditionTypeOptions.map(type =>
-                <option key={type} value={type} disabled={isFirst && type === 'or_where'}> 
+                <option key={type} value={type} disabled={isFirst && type === 'or_where'}>
                   {type}
                 </option>)}
             </select>
@@ -153,9 +168,40 @@ class ConditionComponent extends Component {
         <p>Comma Separated</p>
       </>}
 
-      {condition_type === "where_date" &&
-        <div className={`form-group ${["day", "month"].includes(type) ? "hide-blocks" : ""}`}>
-          <label>Value
+      {condition_type === "where_date" && <div className="row">
+        <div className="form-group col-6">
+          <label>Operator
+              <select required name="operator"
+              value={operator}
+              onChange={changeHandler}
+              className="form-control"
+            >
+              <option value="" disabled />
+              <option value="=">Equals</option>
+              <option value="!=">Not Equals</option>
+              <option value=">">&gt;</option>
+              <option value=">=">&gt;=</option>
+              <option value="<">&lt;</option>
+              <option value="<=">&lt;=</option>
+            </select>
+          </label>
+        </div>
+
+        <div className={`form-group col-6 ${["day", "month"].includes(type) ? "hide-blocks" : ""}`}>
+          <label className="w-auto mb-0">Value</label>
+          <label className="label_checkbox float-right w-auto">
+            <input type="checkbox"
+              className="form-check-input"
+              checked={isDateVar}
+              onChange={this.dateValueFormatChange}
+            /> Set Variable
+            </label>
+          {isDateVar ?
+            <input type="text" required name="value"
+              value={value}
+              onChange={changeHandler}
+              className="form-control"
+            /> :
             <DatePicker selected={moment(value, getMomentFormat(type))._d}
               showTimeSelect={["datetime", "time"].includes(type)}
               showYearPicker={type === "year"}
@@ -169,9 +215,9 @@ class ConditionComponent extends Component {
                   name: "value"
                 }
               })}
-            />
-          </label>
-        </div>}
+            />}
+        </div>
+      </div>}
 
       {condition_type === "where_column" && <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">

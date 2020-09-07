@@ -17,9 +17,9 @@ import {
 } from "../../../../../admin/src/components/dashboard/widgetTypes";
 
 const AltrpDiagram = ({ settings }) => {
-  const model = settings.query?.dataSource?.value;
-  const sql = settings.query?.sql;
-  if (!model || !sql) {
+  const sql = settings.query?.dataSource?.value;
+
+  if (!sql) {
     return <div className="altrp-chart">Choose data for chart</div>;
   }
 
@@ -27,52 +27,37 @@ const AltrpDiagram = ({ settings }) => {
     case BAR:
       return (
         <div className="altrp-chart">
-          <DynamicBarChart
-            dataUrl={`/ajax/models/queries/${model}/${sql}`}
-            colorScheme={settings.colorScheme}
-          />
+          <DynamicBarChart dataUrl={sql} colorScheme={settings.colorScheme} />
         </div>
       );
     case PIE:
       return (
         <div className="altrp-chart">
-          <DynamicPieChart
-            dataUrl={`/ajax/models/queries/${model}/${sql}`}
-            colorScheme={settings.colorScheme}
-          />
+          <DynamicPieChart dataUrl={sql} colorScheme={settings.colorScheme} />
         </div>
       );
     case DONUT:
       return (
         <div className="altrp-chart">
-          <DynamicDonutChart
-            dataUrl={`/ajax/models/queries/${model}/${sql}`}
-            colorScheme={settings.colorScheme}
-          />
+          <DynamicDonutChart dataUrl={sql} colorScheme={settings.colorScheme} />
         </div>
       );
     case LINE:
       return (
         <div className="altrp-chart">
-          <DynamicLineChart
-            dataUrl={`/ajax/models/queries/${model}/${sql}`}
-            colorScheme={settings.colorScheme}
-          />
+          <DynamicLineChart dataUrl={sql} colorScheme={settings.colorScheme} />
         </div>
       );
     case TABLE:
       return (
         <div className="altrp-chart">
-          <DynamicTableWidget dataUrl={`/ajax/models/queries/${model}/${sql}`} />
+          <DynamicTableWidget dataUrl={sql} />
         </div>
       );
     case AREA:
       return (
         <div className="altrp-chart">
-          <DynamicAreaChart
-            dataUrl={`/ajax/models/queries/${model}/${sql}`}
-            colorScheme={settings.colorScheme}
-          />
+          <DynamicAreaChart dataUrl={sql} colorScheme={settings.colorScheme} />
         </div>
       );
     default:

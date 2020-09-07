@@ -33,7 +33,7 @@ return [
     |
     */
 
-    'altrp_version' => '0.7.22',
+    'altrp_version' => '0.7.29',
 
 
     /*
@@ -188,7 +188,7 @@ return [
         App\Providers\CrudGeneratorServiceProvider::class,
 
         App\Providers\RepositoryServiceProvider::class,
-        App\Providers\AltrpRepositoryServiceProvider::class,
+        'App\Providers\AltrpRepositoryServiceProvider',
     ],
 
     /*

@@ -2,6 +2,7 @@
 
 namespace App\Altrp\Commands\CrudGenerator;
 
+use App\Altrp\Model;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
 
@@ -15,6 +16,7 @@ class CrudModelCommand extends GeneratorCommand
     protected $signature = 'crud:model
                             {name : The name of the model.}
                             {--table= : The name of the table.}
+                            {--model= : The model object.}
                             {--fillable= : The names of the fillable columns.}
                             {--model-namespace= : The namespace of extended model.}
                             {--extends-model= : Name of the extended model.}
@@ -82,6 +84,10 @@ class CrudModelCommand extends GeneratorCommand
         $stub = $this->files->get($this->getStub());
 
         $table = $this->option('table') ?: $this->argument('name');
+        /**
+         * @var $model Model
+         */
+        $model = $this->option('model');
         $fillable = $this->option('fillable');
         $always_with = $this->option('always-with');
         $usedModelNamespace = $this->option('model-namespace');
@@ -100,7 +106,20 @@ class CrudModelCommand extends GeneratorCommand
         $customMethods = $this->option('custom-methods') ?? '';
 
 
-        if (! empty($primaryKey)) {
+        if (! empty($table) && !$model->parent_model_id) {
+            $table = <<<EOD
+/**
+    * The database table used by the model.
+    *
+    * @var string
+    */
+    protected \$table = '$table';
+EOD;
+        } else {
+            $table = '';
+        }
+
+        if (! empty($primaryKey) && !$model->parent_model_id) {
             $primaryKey = <<<EOD
 /**
     * The database primary key value.
@@ -109,9 +128,11 @@ class CrudModelCommand extends GeneratorCommand
     */
     protected \$primaryKey = '$primaryKey';
 EOD;
+        } else {
+            $primaryKey = '';
         }
 
-        if ($timestamps !== null) {
+        if ($timestamps !== null && !$model->parent_model_id) {
             $timestamps = $timestamps ? 'true' : 'false';
             $timestamps = <<<EOD
 /**
@@ -121,9 +142,11 @@ EOD;
      */
     public \$timestamps = $timestamps;\n\n
 EOD;
+        } else {
+            $timestamps = '';
         }
 
-        if (!empty($createdAt)) {
+        if (!empty($createdAt) && !$model->parent_model_id) {
             $createdAt = <<<EOD
     /**
      * The name of the "created at" column.
@@ -132,9 +155,11 @@ EOD;
      */
     const CREATED_AT = 'created_at';\n\n
 EOD;
+        } else {
+            $createdAt = '';
         }
 
-        if (!empty($updatedAt)) {
+        if (!empty($updatedAt) && !$model->parent_model_id) {
             $updatedAt = <<<EOD
     /**
      * The name of the "created at" column.
@@ -143,6 +168,8 @@ EOD;
      */
     const UPDATED_AT = 'updated_at';\n
 EOD;
+        } else {
+            $updatedAt = '';
         }
 
         $ret = $this->replaceNamespace($stub, $name)

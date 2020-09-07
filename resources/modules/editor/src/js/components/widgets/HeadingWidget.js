@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom'
-import {isEditor} from "../../../../../front-app/src/js/helpers";
+import {isEditor, parseURLTemplate} from "../../../../../front-app/src/js/helpers";
 import "../../../sass/altrp-heading.scss";
-import {parseURLTemplate} from "../../helpers";
 
 class HeadingWidget extends Component {
   constructor(props) {

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
-import { renderAsset } from "../../helpers"
-import { isEditor } from "../../../../../front-app/src/js/helpers";
+import {isEditor, renderAsset} from "../../../../../front-app/src/js/helpers";
 
 
 class ImageWidget extends Component {

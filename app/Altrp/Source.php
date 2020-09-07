@@ -22,6 +22,11 @@ class Source extends Model
         return $this->morphTo();
     }
 
+    public function model()
+    {
+        return $this->belongsTo(\App\Altrp\Model::class);
+    }
+
     public function source_roles()
     {
         return $this->hasMany(SourceRole::class,'source_id');

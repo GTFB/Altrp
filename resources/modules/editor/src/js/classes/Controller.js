@@ -29,7 +29,8 @@ class Controller {
     }
 
     if(this.data.prefixClass) {
-      currentElement.setCssClass(this.getSettingName(), this.data.prefixClass + this.data.default);
+      console.log(this.data);
+      currentElement.setCssClass(this.getSettingName(), this.data.prefixClass + currentElement.getSettings(this.getSettingName()));
     }
     if (this.rules.length) {
       currentElement.addStyles(this.getSettingName(), this.rules);
@@ -56,6 +57,7 @@ class Controller {
           : currentElement.removeStyle(this.getSettingName());
       }
       /**
+       *
        * Вызываем currentElement setCssClass в случае если есть this.data.prefixClass
        */
       if(this.data.prefixClass) {

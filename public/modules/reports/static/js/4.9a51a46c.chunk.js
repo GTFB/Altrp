@@ -1,0 +1,2 @@
+(this["webpackJsonprrbe-editor"]=this["webpackJsonprrbe-editor"]||[]).push([[4],{89:function(e,t,r){"use strict";r.r(t);var n=r(0),a=r.n(n),i=r(192);t.default=function(e){return a.a.createElement(i.a,e,e.text)}}}]);
+//# sourceMappingURL=4.9a51a46c.chunk.js.map

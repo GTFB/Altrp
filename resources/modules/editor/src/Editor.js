@@ -9,7 +9,6 @@ import SettingsPanel from "./js/components/SettingsPanel";
 import EditorWindow from "./js/components/EditorWindow";
 import HistoryPanel from "./js/components/HistoryPanel";
 import UpdateButton from "./js/components/UpdateButton";
-import { renderAsset } from "./js/helpers";
 import CONSTANTS from "./js/consts";
 import { stopDrag } from "./js/store/element-drag/actions";
 import AssetsBrowser from "./js/classes/modules/AssetsBrowser";
@@ -32,6 +31,7 @@ import { iconsManager } from "../../admin/src/js/helpers";
 import ResponsiveDdMenu from "./js/components/ResponsiveDdMenu";
 import ResponsiveDdFooter from "./js/components/ResponsiveDdFooter";
 import DialogWindow from "./js/components/DialogWindow";
+import {renderAsset} from "../../front-app/src/js/helpers";
 /**
  * Главный класс редактора.<br/>
  * Реакт-Компонент.<br/>

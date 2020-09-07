@@ -89,7 +89,7 @@ class SettingsPanel extends Component {
         </button>
       </div>
       {
-        (this.state.activeTab != 'content' && <StateSection />)
+        (this.state.activeTab === 'style' && <StateSection />)
       }
       <PanelTabContent sections={sections} />
     </div>

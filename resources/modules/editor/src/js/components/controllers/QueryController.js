@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import axios from "axios";
 import controllerDecorate from "../../decorators/controller";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
@@ -24,7 +23,6 @@ class QueryController extends Component {
       value,
       show: true,
       dataSourceList: [],
-      sqlQueries: [],
       orderingFieldsOptions: [],
       paginationTypeOption: [
         {
@@ -69,10 +67,6 @@ class QueryController extends Component {
    * @param {{}} dataSource
    */
   onChangeDataSource = async (dataSource) => {
-    if(dataSource.type === 'model_query'){
-      const req = await axios(`/admin/ajax/sql_editors/list/${dataSource.value}`);
-      this.setState({ sqlQueries: req.data || [] });
-    }
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     value.dataSource = { ...dataSource };
     this._changeValue({ ...value });
@@ -110,6 +104,16 @@ class QueryController extends Component {
     newValue.paginationType = e.target.value;
     this._changeValue(newValue);
   }
+
+  /**
+   * Изменение памраметров по умолчанию для query-настроек
+   */
+  changeDefaultParams = (e) => {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    let newValue = { ...value };
+    newValue.defaultParams = e.target.value;
+    this._changeValue(newValue);
+  };
   /**
    * смена названия модели для запроса
    * @param {string} modelName
@@ -136,6 +140,7 @@ class QueryController extends Component {
       orderingField: "",
       order: "ASC",
       sql: "",
+      defaultParams: ''
     };
   }
 
@@ -162,27 +167,6 @@ class QueryController extends Component {
             />
           </div>
         </div>
-        {this.state.sqlQueries.length > 0 && (
-          <div className="controller-field-group flex-wrap">
-            <div className="controller-container__label">SQL Query</div>
-            <div className="control-container_select-wrapper">
-              <select
-                className="control-select control-field"
-                value={value.sql || ""}
-                onChange={this.changeQueryName}
-              >
-                <option value="" />
-                {this.state.sqlQueries.map((option) => {
-                  return (
-                    <option value={option.name} key={option.id}>
-                      {option.title}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-          </div>
-        )}
         <div className="controller-field-group ">
           <div className="controller-container__label">Page Size</div>
           <div className="control-container_select-wrapper ">
@@ -223,7 +207,15 @@ class QueryController extends Component {
             </select>
           </div>
         </div>
-      </div>
+        <div className="controller-field-group flex-wrap">
+          <div className="controller-container__label">Defaults Params for Query</div>
+          <textarea className="controller-container__textarea"
+                    onChange={this.changeDefaultParams} value={this.state.value.defaultParams || ''} />
+          <div className="controller-container__description">
+            Enter each param for Query in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {'{{title}}'} for Take title Value from Current Model
+          </div>
+        </div>
+        </div>
     );
   }
 }

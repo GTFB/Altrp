@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Altrp\Column;
 use App\Altrp\Model;
+use App\Altrp\Relationship;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiRequest;
 use Illuminate\Http\Request;
@@ -79,6 +80,14 @@ class ApiController extends Controller
                 : $this->modelClass::$order_method( $order_column )->whereLikeMany( $filters )->get();
         }
         $hasMore = $pageCount > $page;
+
+        $model = Model::where('name', $modelName)->first();
+        $relations = Relationship::where([['model_id',$model->id],['always_with',1]])->get()->implode('name',',');
+        $relations = $relations ? explode(',',$relations) : false;
+        if ($relations) {
+            $$resource = $$resource->load($relations);
+        }
+
         $res = compact('pageCount' ,'hasMore');
         $res['data'] = $$resource;
         return $res;

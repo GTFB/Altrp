@@ -216,6 +216,27 @@ class Column  extends BaseElement {
       label: "Position"
     });
 
+    this.addControl("style_position_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 10,
+        right: 10,
+        bottom: 10,
+        left: 10,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-column{{STATE}}": [
+          "padding-top: {{TOP}}{{UNIT}} !important;",
+          "padding-right: {{RIGHT}}{{UNIT}} !important;",
+          "padding-bottom: {{BOTTOM}}{{UNIT}} !important;",
+          "padding-left: {{LEFT}}{{UNIT}} !important;"
+        ]
+      }
+    });
+
     this.addControl('style_position_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
@@ -233,33 +254,12 @@ class Column  extends BaseElement {
       ],
       rules: {
         '{{ELEMENT}} .altrp-column{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
+          'margin-top: {{TOP}}{{UNIT}} !important;',
+          'margin-right: {{RIGHT}}{{UNIT}} !important;',
+          'margin-bottom: {{BOTTOM}}{{UNIT}} !important;',
+          'margin-left: {{LEFT}}{{UNIT}} !important;'
         ]
       },
-    });
-
-    this.addControl("style_position_padding", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Padding",
-      default: {
-        top: 10,
-        right: 10,
-        bottom: 10,
-        left: 10,
-        unit: "px"
-      },
-      units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-column{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
     });
 
     this.addControl('position_z_index', {

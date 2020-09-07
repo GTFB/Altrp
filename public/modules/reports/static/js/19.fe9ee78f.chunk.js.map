@@ -1,1 +1,0 @@
-{"version":3,"sources":["widgets/News/fakeCategories.js"],"names":[],"mappings":"mHAAA,OAAe,WACb,GACA,mDACA,6CACA,yDACA,qHACA","file":"static/js/19.fe9ee78f.chunk.js","sourcesContent":["export default [\n  \"\",\n  \"Политика\",\n  \"Религия\",\n  \"Коммерция\",\n  \"Благотворительность\",\n  \"Разное\",\n];\n"],"sourceRoot":""}

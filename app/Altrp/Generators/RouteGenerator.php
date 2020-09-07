@@ -200,8 +200,8 @@ class RouteGenerator
         $contents = $this->routeContents;
         if (! $contents) return true;
         foreach ($contents as $line => $content) {
-            if (Str::contains($content, ' '.$controller->model->table->name . ' resource')
-                || Str::contains($content, '/'.$controller->model->table->name)
+            if (Str::contains($content, ' ' . Str::plural($controller->model->name) . ' resource')
+                || Str::contains($content, '/'.Str::plural($controller->model->name))
                 || Str::contains($content, '\\'.$controller->model->name.'Controller')) {
                 unset($contents[$line]);
             }
@@ -268,20 +268,20 @@ class RouteGenerator
         }
         if ($accessRoles)
             $accessSource[] = implode('|', $accessRoles);
-        elseif ($accessPermissions && !$accessRoles) {
-            $roles = Role::all();
-            $accessSource[] = $roles->implode('name','|');
-        }
 
-        if ($accessPermissions) $accessSource[] = implode('|', $accessPermissions);
+        if ($accessPermissions)
+            $accessSource[] = implode('|', $accessPermissions);
 
         $middleware = [];
 
         if ($source->auth) {
             $middleware[] = 'auth';
         }
-        if ($accessSource)
+        if ($accessRoles && $accessPermissions)
             $middleware[] = "ability:" . implode(',', $accessSource);
+        elseif ($accessPermissions)
+            $middleware[] = "permission:" . implode('|', $accessPermissions);
+
         return $middleware;
     }
 }

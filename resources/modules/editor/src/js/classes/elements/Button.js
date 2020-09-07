@@ -144,6 +144,10 @@ class Button extends BaseElement{
       label: 'Form Actions',
       options: [
         {
+          value: 'null',
+          label: 'Null',
+        },
+        {
           value: 'add_new',
           label: 'Add New',
         },
@@ -277,12 +281,13 @@ class Button extends BaseElement{
           spacing: 0,
           size: 16,
           weight: "normal",
-          family: '"lato"',
+          family: "lato",
           decoration: ""
         },
         rules: {
           '{{ELEMENT}} .altrp-btn{{STATE}}': [
             'font-size: {{SIZE}}px;',
+            'font-family: {{FAMILY}}',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
             'font-weight: {{WEIGHT}}',
@@ -399,6 +404,30 @@ class Button extends BaseElement{
       },
     });
 
+    this.addControl('style_background_shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'Shadow',
+      default: {
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        opacity: 1,
+        spread: 0,
+        colorRGB: 'rgb(0, 0, 0)',
+        color: 'rgb(0, 0, 0)',
+        colorPickedHex: '#000000',
+        type: ""
+      },
+      presetColors: [
+        '#eaeaea',
+        '#9c18a8'
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    });
+
+
     this.endControlSection();
 
     this.startControlSection('background_section', {
@@ -417,30 +446,6 @@ class Button extends BaseElement{
         '{{ELEMENT}} .altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
       },
     });
-
-  this.addControl('style_background_shadow', {
-        type: CONTROLLER_SHADOW,
-        label: 'Shadow',
-        default:{
-          blur: 0,
-          horizontal: 0,
-          vertical: 0,
-          opacity: 1,
-          spread: 0,
-          colorRGB: 'rgb(0, 0, 0)',
-          color: 'rgb(0, 0, 0)',
-          colorPickedHex: '#000000',
-          type: ""
-        },
-        presetColors: [
-          '#eaeaea',
-          '#9c18a8'
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-        },
-      }
-    );
 
   this.endControlSection();
 
