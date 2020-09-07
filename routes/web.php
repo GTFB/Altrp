@@ -357,3 +357,9 @@ Route::post('reports/{id}', "ReportsController@update");
 Route::get('/linkstorage', function () {
   return redirect('/admin');
 });
+
+
+/**
+ * Обновление всех ресурсов бэкенда
+ */
+Route::post( 'update-all-resources', 'Admin\UpdateController@upgradeAllResources' );
