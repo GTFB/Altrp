@@ -93,10 +93,10 @@ class EditModelForm extends Component {
           className="form-control" />
       </div>
       <div className="form-group col-4">
-        <label htmlFor="page-description">Extend Namespace</label>
+        <label htmlFor="page-description">Parent Model</label>
         <input type="text" id="page-description"
-               value={model.extend || ''}
-               onChange={e => { this.changeValue(e.target.value, 'extend') }}
+               value={model.parent_model_id || ''}
+               onChange={e => { this.changeValue(e.target.value, 'parent_model_id') }}
                className="form-control" />
       </div>
       <div className="form-group col-4">
