@@ -8,11 +8,6 @@ class GradientController extends Component {
   constructor(props) {
     super(props);
     controllerDecorate(this);
-    // let value = this.getSettings(this.props.controlId);
-    // if (value === null && this.props.default) {
-    //   value = this.props.default;
-    // }
-    // value = value || '';
     this.state = {
       opened1: false,
       opened2: false
@@ -20,7 +15,8 @@ class GradientController extends Component {
   }
 
   colorChange = (color, name) => {
-    const { gradient } = this.props.currentElement.settings;
+    // const { gradient } = this.props.currentElement.settings;
+    const gradient = this.getSettings(this.props.controlId) || {};
     this._changeValue({
       ...gradient,
       [name]: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
