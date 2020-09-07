@@ -109,6 +109,20 @@ class Query {
     params.page = params.page || 1;
     return params;
   }
+
+  /**
+   * Получить стартовое значение для счетчика, если нужно показать номер по порядку в таблице
+   * @param {int} page
+   */
+  getCounterStart(page){
+    let counterStart = 1;
+    if(this.pageSize < 1){
+      return counterStart;
+    }
+    page = parseInt(page) || 1;
+    counterStart = this.pageSize * (page - 1) + 1;
+    return counterStart;
+  }
 }
 
 export default Query
