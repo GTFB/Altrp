@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import DefaultLogo from '../svgs/admin__logo.svg'
-import {renderAsset} from "../../../editor/src/js/helpers";
+import {renderAsset} from "../../../front-app/src/js/helpers";
 
 class AdminLogo extends Component {
   constructor(props){

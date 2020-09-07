@@ -24,6 +24,7 @@
         "barryvdh/laravel-ide-helper": "^2.7",
         "facade/ignition": "^1.4",
         "fzaninotto/faker": "^1.4",
+        "kint-php/kint": "^3.3",
         "laracasts/generators": "^1.1",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",

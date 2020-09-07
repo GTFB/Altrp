@@ -79,15 +79,15 @@ class Heading extends BaseElement {
             '{{ELEMENT}}': 'text-align: {{VALUE}};',
       },
     });
-
+    
     this.addControl('heading_settings_html_tag', {
       type: CONTROLLER_SELECT,
       label: 'HTML tag',
-      default: 'h2',
+      default: 'p',
       options: [
         {
           value: 'h1',
-          label: 'default'
+          label: 'h1'
         },
         {
           value: 'h2',
@@ -108,6 +108,18 @@ class Heading extends BaseElement {
         {
           value: 'h6',
           label: 'h6'
+        },
+        {
+          value: 'p',
+          label: 'p'
+        },
+        {
+          value: 'span',
+          label: 'span'
+        },
+        {
+          value: 'div',
+          label: 'div'
         }
       ]
     });
@@ -150,7 +162,7 @@ class Heading extends BaseElement {
           spacing: 0,
           size: 36,
           weight: "normal",
-          family: '"roboto"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {

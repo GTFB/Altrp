@@ -92,6 +92,10 @@ class Input extends BaseElement{
           value: 'select',
           label: 'Select'
         },
+        {
+          value: 'hidden',
+          label: 'Hidden'
+        },
       ]
     });
 
@@ -245,7 +249,7 @@ class Input extends BaseElement{
           spacing: 0,
           size: 16,
           weight: "normal",
-          family: '"roboto"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {
@@ -389,7 +393,7 @@ class Input extends BaseElement{
           spacing: 0,
           size: 13,
           weight: "normal",
-          family: '"roboto"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {
@@ -435,7 +439,7 @@ class Input extends BaseElement{
           spacing: 0,
           size: 13,
           weight: "normal",
-          family: '"roboto"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {
