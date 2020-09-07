@@ -173,7 +173,7 @@ class Page extends Model
     }
     return $pages_template->template;
   }
-  
+
   function model()
   {
     return $this->hasOne( "App\Altrp\Model", 'id', 'model_id' );
