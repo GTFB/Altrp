@@ -22,7 +22,7 @@ class UpdateAltrpAccessorsTable extends Migration
         Schema::table('altrp_accessors', function (Blueprint $table) {
             $table->text('calculation_logic')->nullable()->after('title');
             $table->text('calculation')->nullable()->after('title');
-            $table->boolean('status')->change()->default(1);
+            $table->boolean('status')->default(1);
         });
     }
 
