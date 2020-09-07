@@ -6,7 +6,7 @@ class FrontElementsFabric {
    * @param {object} object
    * @param {FrontElement | null} parent
    * @param {int | null} pageId
-   * @param {[{}] | null} models
+   * @param {array | null} models
    * @return {FrontElement}
    */
   parseData(object, parent, pageId, models){

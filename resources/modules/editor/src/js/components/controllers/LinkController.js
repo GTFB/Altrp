@@ -14,7 +14,7 @@ class LinkController extends Component {
     this.changeAttribute = this.changeAttribute.bind(this);
     this.changeInput = this.changeInput.bind(this);
     this.changeTag = this.changeTag.bind(this);
-    let value = this.getSettings(this.props.controlId)
+    let value = this.getSettings(this.props.controlId);
     if (value === null && this.props.default) {
       value = this.props.default;
     }
@@ -58,15 +58,15 @@ class LinkController extends Component {
 
         ...value,
         openInNew: !changeCheckBox
-      })
+      });
       toggleSettingsNewPageCheckbox.setAttribute("checked", "checked");
     } else {
       this._changeValue({
         ...value,
         openInNew: changeCheckBox
-      })
+      });
       toggleSettingsNewPageCheckbox.removeAttribute("checked");
-    };
+    }
   };
 
   toggleSettingsNoFollow() {    //TODO: надо порефакторить
@@ -78,7 +78,7 @@ class LinkController extends Component {
       this._changeValue({
         ...value,
         noFollow: changeCheckBox
-      })
+      });
       togglesettingsNoFollowCheckbox.setAttribute("checked", "checked");
     } else {
       togglesettingsNoFollowCheckbox.removeAttribute("checked");
@@ -86,7 +86,7 @@ class LinkController extends Component {
         ...value,
         noFollow: changeCheckBox
       })
-    };
+    }
 
   };
 
@@ -97,7 +97,7 @@ class LinkController extends Component {
       ...value,
       toPrevPage: e.target.checked
     });
-  }
+  };
 
   changeAttribute(e) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();

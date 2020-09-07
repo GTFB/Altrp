@@ -4,6 +4,11 @@
 ## Changelog
 
 
+### 0.8.0
++ Add Filters and Sorting in Table Widget
++ Add Auth/not Auth Elements Conditions  
++ Redirects to Pages
+
 ### 0.7.0
 + Add Hover, Active, Disabled States Styling
 + Add Breakpoints Settings for Templates

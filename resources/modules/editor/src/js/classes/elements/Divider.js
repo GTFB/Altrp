@@ -332,7 +332,7 @@ class Divider extends BaseElement {
           spacing: 0,
           size: "medium",
           weight: "normal",
-          family: '"roboto"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {
