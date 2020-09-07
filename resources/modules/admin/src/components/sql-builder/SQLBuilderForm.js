@@ -13,7 +13,7 @@ import { getMomentFormat } from "./helpers";
 class SQLBuilderForm extends Component {
   constructor(props) {
     super(props);
-    const { modelId } = this.props.match.params;
+    const { modelId, id } = this.props.match.params;
     this.state = {
       value: {
         title: "",
@@ -65,6 +65,11 @@ class SQLBuilderForm extends Component {
    *
    */
   async componentDidMount() {
+    const { id } = this.props.match.params
+    if (id) {
+      const value = await this.sqlResource.get(id);
+      this.setState(state => ({ ...state, value }));
+    }
     const rolesOptions = await this.rolesOptions.getAll();
     this.setState(state => ({ ...state, rolesOptions }));
     const permissionsOptions = await this.permissionsOptions.getAll();
@@ -422,11 +427,13 @@ class SQLBuilderForm extends Component {
   }
 
   submitHandler(e) {
-    const { modelId } = this.props.match.params;
-
+    const { modelId, id } = this.props.match.params;
     e.preventDefault();
-    this.sqlResource.post(this.state.value)
-      .then(() => this.props.history.push(`/admin/tables/models/edit/${modelId}`));
+
+    (id ?
+      this.sqlResource.put(id, this.state.value) :
+      this.sqlResource.post(this.state.value))
+        .then(() => this.props.history.push(`/admin/tables/models/edit/${modelId}`));
   }
 
   /**
