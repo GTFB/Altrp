@@ -113,6 +113,9 @@ function appIsInstalled()
 {
   // Check if the app's installation files exist
 
+  if( env( 'APP_ENV' ) === 'local' ){
+    return true;
+  }
   if ( ! appInstallFilesExist() ) {
     return false;
   }

@@ -231,6 +231,29 @@ class Table extends BaseElement {
       default: false
     });
 
+    repeater.addControl('column_is_default_sorted', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Is Default Sorted',
+      default: false
+    });
+
+    repeater.addControl('column_is_default_sorted_direction', {
+      type: CONTROLLER_SELECT,
+      label: 'Default Sorted Direction',
+      responsive: false,
+      options: [
+        {
+          'label': 'ASC',
+          'value': 'ASC',
+        },
+        {
+          'label': 'DESC',
+          'value': 'DESC',
+        },
+      ],
+      default: 'ASC'
+    });
+
     repeater.addControl('column_edit_url', {
       label: 'Edit URL',
       description: '/ajax/models/tests/:id/title',
