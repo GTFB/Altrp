@@ -277,8 +277,11 @@ class RouteGenerator
         if ($source->auth) {
             $middleware[] = 'auth';
         }
+
         if ($accessRoles && $accessPermissions)
             $middleware[] = "ability:" . implode(',', $accessSource);
+        elseif ($accessRoles)
+            $middleware[] = "role:" . implode(',', $accessRoles);
         elseif ($accessPermissions)
             $middleware[] = "permission:" . implode('|', $accessPermissions);
 

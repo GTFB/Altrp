@@ -226,8 +226,10 @@ class RouteFileWriter
 //            $middleware[] = 'auth:api';
             $middleware[] = 'auth';
         }
-        if ($accessSource && $accessPermissions)
+        if ($accessRoles && $accessPermissions)
             $middleware[] = "ability:" . implode(',', $accessSource);
+        elseif ($accessRoles)
+            $middleware[] = "role:" . implode(',', $accessRoles);
         elseif ($accessPermissions)
             $middleware[] = "permission:" . implode('|', $accessPermissions);
 
