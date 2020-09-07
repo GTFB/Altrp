@@ -17,9 +17,12 @@ use App\Altrp\Query;
 use App\Altrp\Source;
 use App\Altrp\SourcePermission;
 use App\Altrp\SourceRole;
+use App\Altrp\Table;
 use App\Exceptions\Controller\ControllerFileException;
 use App\Exceptions\Repository\RepositoryFileException;
 use App\Permission;
+use App\Role;
+use Highlight\Mode;
 use Illuminate\Support\Str;
 
 class QueryBuilder
@@ -356,26 +359,40 @@ class QueryBuilder
      */
     public function writeSourceRoles($source)
     {
-//        $rolesIds = [];
-//        $rolesList = [];
-//        if (! $this->query->access) return true;
-//        foreach ($this->query->access as $type => $roles) {
-//            if ($type == 'roles') {
-//                foreach ($roles as $role) {
-//                    $rolesIds[] = $role;
-//                    $rolesList[] = [
-//                        'source_id' => $source->id,
-//                        'role_id' => $role
-//                    ];
-//                }
-//            }
-//        }
-//        try {
-//            SourceRole::where('source_id', $source->id)->delete();
-//            SourceRole::insert($rolesList);
-//        } catch (\Exception $e) {
-//            return false;
-//        }
+        if (!$this->query->access) return true;
+        try {
+            foreach ($this->query->access as $type => $roles) {
+                if ($type == 'roles') {
+                    foreach ($roles as $role) {
+                        $roleObj = Role::find($role);
+                        if (! $roleObj) continue;
+                        $roleData = [
+                            'source_id' => $source->id,
+                            'role_id' => $role,
+                        ];
+                        $oldSourceRoles = SourceRole::where([
+                            ['source_id', $source->id]
+                        ])->get();
+                        $deleteRoles = [];
+                        foreach ($oldSourceRoles as $oldSourceRole) {
+                            if (!in_array($oldSourceRole->role_id, $roles)) {
+                                $deleteRoles[] = $oldSourceRole->role_id;
+                            }
+                        }
+
+                        SourceRole::destroy($deleteRoles);
+
+                        if (!$oldSourceRoles->contains('role_id',$role)) {
+                            $sourceRole = new SourceRole($roleData);
+                            $sourceRole->save();
+                        }
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            echo $e;
+            return false;
+        }
         return true;
     }
 
@@ -387,7 +404,7 @@ class QueryBuilder
      */
     public function writeSourcePermissions($source)
     {
-        if (! $this->query->access) return true;
+        if (!$this->query->access) return true;
         try {
             foreach ($this->query->access as $type => $permissions) {
                 if ($type == 'permissions') {
@@ -400,14 +417,30 @@ class QueryBuilder
                             'permission_id' => $permission,
                             'type' => $action . '-' . $source->type
                         ];
-                        $oldSourcePermission = SourcePermission::where([
-                            ['source_id', $source->id],
-                            ['permission_id',$permission]
-                        ]);
-                        if ($oldSourcePermission->first()) {
-                            $sourcePermission = $oldSourcePermission;
-                            $sourcePermission->update($permissionData);
-                        } else {
+//                        $oldSourcePermission = SourcePermission::where([
+//                            ['source_id', $source->id],
+//                            ['permission_id',$permission]
+//                        ]);
+//                        if ($oldSourcePermission->first()) {
+//                            $sourcePermission = $oldSourcePermission;
+//                            $sourcePermission->update($permissionData);
+//                        } else {
+//                            $sourcePermission = new SourcePermission($permissionData);
+//                            $sourcePermission->save();
+//                        }
+                        $oldSourcePermissions = SourcePermission::where([
+                            ['source_id', $source->id]
+                        ])->get();
+                        $deletePermissions = [];
+                        foreach ($oldSourcePermissions as $oldSourcePermission) {
+                            if (!in_array($oldSourcePermission->permission_id, $permissions)) {
+                                $deletePermissions[] = $oldSourcePermission->permission_id;
+                            }
+                        }
+
+                        SourcePermission::destroy($deletePermissions);
+
+                        if (!$oldSourcePermissions->contains('permission_id',$permission)) {
                             $sourcePermission = new SourcePermission($permissionData);
                             $sourcePermission->save();
                         }
@@ -835,15 +868,24 @@ class QueryBuilder
         $this->reset();
         $joinList = [];
         foreach ($joins as $item => $join) {
-            if ($join['type'] == 'inner_join') {
-                $joinList[] = "join('{$join['target_table']}','{$join['source_table']}.{$join['source_column']}',"
-                    . "'{$join['operator']}','{$join['target_table']}.{$join['target_column']}'";
-            } elseif ($join['type'] == 'left_join') {
-                $joinList[] = "leftJoin('{$join['target_table']}','{$join['source_table']}.{$join['source_column']}',"
-                    . "'{$join['operator']}','{$join['target_table']}.{$join['target_column']}'";
-            } elseif ($join['type'] == 'right_join') {
-                $joinList[] = "rightJoin('{$join['target_table']}','{$join['source_table']}.{$join['source_column']}',"
-                    . "'{$join['operator']}','{$join['target_table']}.{$join['target_column']}'";
+            $targetTable = Table::find($join['target_table']);
+
+            $type = $join['type'];
+            $targetTableName = $targetTable->name;
+            $targetColumn = $targetTable->columns->firstWhere('id',$join['target_column'])->name;
+            $sourceTableName = $this->model->altrp_table->name;
+            $sourceColumn = $this->model->altrp_table->columns->firstWhere('id',$join['source_column'])->name;
+            $operator = $join['operator'];
+
+            if ($type == 'inner_join') {
+                $joinList[] = "join('{$targetTableName}','{$sourceTableName}.{$sourceColumn}',"
+                    . "'{$operator}','{$targetTableName}.{$targetColumn}')";
+            } elseif ($type == 'left_join') {
+                $joinList[] = "leftJoin('{$targetTableName}','{$sourceTableName}.{$sourceColumn}',"
+                    . "'{$operator}','{$targetTableName}.{$targetColumn}')";
+            } elseif ($type == 'right_join') {
+                $joinList[] = "rightJoin('{$targetTableName}','{$sourceTableName}.{$sourceColumn}',"
+                    . "'{$operator}','{$targetTableName}.{$targetColumn}')";
             }
         }
         $this->queryBody->joins = "{$this->threeTabs}->" . implode("\n{$this->threeTabs}->",$joinList) . "\n";

@@ -103,7 +103,7 @@ class ControllerFileWriter
                 $line = $line - 1;
             }
             for ($i = $line; true; $i++) {
-                if (preg_match('/^ {4}}$|^ {2}}$/', $controllerContent[$i])) {
+                if (preg_match('/^ {4}}$|^ {2}}$|^\t}$/', $controllerContent[$i])) {
                     unset($controllerContent[$i]);
                     break;
                 }
