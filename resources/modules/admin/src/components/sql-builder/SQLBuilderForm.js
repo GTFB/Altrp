@@ -405,9 +405,11 @@ class SQLBuilderForm extends Component {
   }
 
   submitHandler(e) {
+    const { modelId } = this.props.match.params;
+
     e.preventDefault();
-    console.log(this.state.value);
-    this.sqlResource.post(this.state.value);
+    this.sqlResource.post(this.state.value)
+      .then(() => this.props.history.push(`/admin/tables/models/edit/${modelId}`));
   }
 
   /**
