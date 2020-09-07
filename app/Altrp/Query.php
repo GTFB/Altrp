@@ -11,6 +11,7 @@ class Query extends EloquentModel
 
     protected $fillable = [
         'name',
+        'title',
         'joins',
         'columns',
         'aggregates',
