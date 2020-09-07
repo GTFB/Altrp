@@ -182,7 +182,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::get('/model_name_is_free', 'Admin\ModelsController@modelNameIsFree');
     Route::get('/models/{model_id}/field_name_is_free', 'Admin\ModelsController@fieldNameIsFree');
     Route::get('/models/{model_id}/relation_name_is_free', 'Admin\ModelsController@relationNameIsFree');
-    Route::get('/models/{model_id}/sql_builder_name_is_free', 'Admin\ModelsController@queryNameIsFree');
+    Route::get('/models/{model_id}/query_name_is_free', 'Admin\ModelsController@queryNameIsFree');
 
     /**
     * Модели
@@ -195,11 +195,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::delete( '/models/{model_id}', 'Admin\ModelsController@destroyModel');
 
     // SQL Builder
-    Route::get( '/models/{model_id}/sql_builder', 'Admin\ModelsController@getAllQueries');
-    Route::post( '/models/{model_id}/sql_builder', 'Admin\ModelsController@storeQuery');
-    Route::get('/models/{model_id}/sql_builder/{query_id}', 'Admin\ModelsController@getQuery');
-    Route::put( '/models/{model_id}/sql_builder/{query_id}', 'Admin\ModelsController@updateQuery');
-    Route::delete('/models/{model_id}/sql_builder/{query_id}', 'Admin\ModelsController@destroyQuery');
+    Route::get( '/models/{model_id}/queries', 'Admin\ModelsController@getAllQueries');
+    Route::post( '/models/{model_id}/queries', 'Admin\ModelsController@storeQuery');
+    Route::get('/models/{model_id}/queries/{query_id}', 'Admin\ModelsController@getQuery');
+    Route::put( '/models/{model_id}/queries/{query_id}', 'Admin\ModelsController@updateQuery');
+    Route::delete('/models/{model_id}/queries/{query_id}', 'Admin\ModelsController@destroyQuery');
 
     // Fields
     /**
