@@ -329,12 +329,12 @@ function get_logo_url(){
  * @return array
  */
 function selectForSQLEditor( $sql, $bindings, $sql_editor_params, ApiRequest $request ){
-  if( $request->get( 'order' ) && $request->get( 'order_by' ) ){
-    $sql .= ' ORDER BY `' . $request->get( 'order_by') . '`' . ( $request->get( 'order' ) === 'DESC' ? ' DESC' : ' ');
-  }
+
+  $_sql_order_by = '';
   $_sql_and_filters = '';
   $_sql_filters = '';
   $_sql_detail_filters = '';
+  $_sql_detail_and_filters = '';
 
   if( $request->get( 'filters' ) ){
     $_filters = json_decode( $request->get( 'filters' ), true );
@@ -351,44 +351,94 @@ function selectForSQLEditor( $sql, $bindings, $sql_editor_params, ApiRequest $re
         $_sql_and_filters .= ' AND `' . $key . '` LIKE "%' . $value . '%" ';
       }
     }
-    if( strpos( $sql, 'ALTRP_DETAIL_FILTERS' ) !== false || strpos( $sql, 'ALTRP_DETAIL_AND_FILTERS' ) !== false ) {
-      $_sql_detail_filters = '';
-      $_detail_filter = Str::after($sql, 'ALTRP_DETAIL_AND_FILTERS:');
+      if( strpos( $sql, 'ALTRP_DETAIL_FILTERS' ) !== false ) {
+          $_detail_filter_params = getDetailQueryValues($sql, 'ALTRP_DETAIL_FILTERS');
 
-      if(strpos( $sql, 'ALTRP_DETAIL_FILTERS' ) !== false) {
-          $_sql_detail_filters = 'WHERE';
-          $_detail_filter = Str::after($sql, 'ALTRP_DETAIL_FILTERS:');
+          $_detail_filter_conditionals = [];
+          foreach ( $_filters as $key => $value ) {
+              if(isset($_detail_filter_params[$key])) {
+                  $_detail_filter_params[$key] = str_replace(".", "`.`", $_detail_filter_params[$key]);
+                  $_detail_filter_conditionals[] = ' `' . $_detail_filter_params[$key] . '` LIKE "%' . $value . '%" ';
+              }
+          }
+
+          if(count($_detail_filter_conditionals) > 0) {
+              $_sql_detail_filters = " WHERE ";
+          }
+
+          $_sql_detail_filters .= implode(" AND ", $_detail_filter_conditionals);
       }
+      if( strpos( $sql, 'ALTRP_DETAIL_AND_FILTERS' ) !== false ) {
+          $_detail_and_filter_params = getDetailQueryValues($sql, 'ALTRP_DETAIL_AND_FILTERS');
 
-      $_detail_filter = Str::before($_detail_filter, ' ');
-      $_detail_filter_array = explode(':',$_detail_filter);
-      $_detail_filter_params = [];
+          $_detail_and_filter_conditionals = [];
+          foreach ( $_filters as $key => $value ) {
+              if(isset($_detail_and_filter_params[$key])) {
+                  $_detail_and_filter_params[$key] = str_replace(".", "`.`", $_detail_and_filter_params[$key]);
+                  $_detail_and_filter_and_conditionals[] = ' `' . $_detail_and_filter_params[$key] . '` LIKE "%' . $value . '%" ';
+              }
+          }
 
-      foreach ($_detail_filter_array as $param) {
-          $line = explode(',',$param);
-          $_detail_filter_params[$line[0]] = $line[1];
+          if(count($_detail_and_filter_conditionals) > 0) {
+              $_sql_detail_and_filters = " AND ";
+          }
+
+          $_sql_detail_and_filters .= implode(" AND ", $_detail_and_filter_conditionals);
       }
-
-      $i = 0;
-      foreach ( $_filters as $key => $value ) {
-         if(isset($_detail_filter_params[$key])) {
-             if($i != 0) {
-               $_sql_detail_filters .= ' AND ';
-             }
-             $_detail_filter_params[$key] = str_replace(".", "`.`", $_detail_filter_params[$key]);
-             $_sql_detail_filters .= ' `' . $_detail_filter_params[$key] . '` LIKE "%' . $value . '%" ';
-             $i++;
-         }
-      }
-    }
   }
+
+  if( $request->get( 'order' ) && $request->get( 'order_by' ) ){
+
+      $_sql_order_by = ' ORDER BY `' . $request->get( 'order_by') . '`' . ( $request->get( 'order' ) === 'DESC' ? ' DESC' : ' ');
+
+    if( strpos( $sql, 'ALTRP_DETAIL_FILTERS' ) !== false ) {
+        $_detail_filter_params = getDetailQueryValues($sql, 'ALTRP_DETAIL_FILTERS');
+
+        if(isset($_detail_filter_params[$request->get( 'order_by')])) {
+            $_sql_order_by = ' ORDER BY ' . $_detail_filter_params[$request->get( 'order_by')] . '' . ( $request->get( 'order' ) === 'DESC' ? ' DESC' : ' ');
+        }
+    }
+    else if(strpos( $sql, 'ALTRP_DETAIL_AND_FILTERS' ) !== false) {
+        $_detail_and_filter_params = getDetailQueryValues($sql, 'ALTRP_DETAIL_AND_FILTERS');
+
+        if(isset($_detail_and_filter_params[$request->get( 'order_by')])) {
+            $_sql_order_by = ' ORDER BY ' . $_detail_and_filter_params[$request->get( 'order_by')] . '' . ( $request->get( 'order' ) === 'DESC' ? ' DESC' : ' ');
+        }
+    }
+
+    $sql .= $_sql_order_by;
+  }
+
+
+
   $sql = str_replace( 'ALTRP_FILTERS', $_sql_filters, $sql ) ;
 
   $sql = str_replace( 'ALTRP_AND_FILTERS', $_sql_and_filters, $sql ) ;
 
-  $sql = preg_replace( "/'?(ALTRP_DETAIL_FILTERS|ALTRP_DETAIL_AND_FILTERS)(:[a-z0-9_,.:]+)?'?/", $_sql_detail_filters, $sql ) ;
+  $sql = preg_replace( "/'?(ALTRP_DETAIL_FILTERS)(:[a-z0-9_,.:]+)?'?/", $_sql_detail_filters, $sql ) ;
+
+  $sql = preg_replace( "/'?(ALTRP_DETAIL_AND_FILTERS)(:[a-z0-9_,.:]+)?'?/", $_sql_detail_and_filters, $sql ) ;
 
   return [ 'data' => DB::select( $sql, $bindings ) ];
+}
+
+function getDetailQueryValues($query, $filter) {
+
+    $filter .= ":";
+    $_detail_filter = Str::after($query, $filter);
+
+
+    $_detail_filter = Str::before($_detail_filter, ' ');
+
+    $_detail_filter_array = explode(':',$_detail_filter);
+    $_detail_filter_params = [];
+
+    foreach ($_detail_filter_array as $param) {
+        $line = explode(',',$param);
+        $_detail_filter_params[$line[0]] = $line[1];
+    }
+
+    return $_detail_filter_params;
 }
 
 function getFilterValues() {
