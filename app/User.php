@@ -44,25 +44,25 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    
-    
+
+
     protected $appends = ['full_name'];
-    
+
     /**
      * Получение данных о пользователе
      * @return type
      */
     function usermeta() {
-        return $this->hasOne(UserMeta::class);
+        return $this->hasOne(UserMeta::class, 'user_id');
     }
-    
+
     /**
      * Получение данных о пользователе
      * @return type
      */
     public function getFullNameAttribute() {
         if(!$this->usermeta) return "";
-        
+
         return $this->usermeta->first_name." ".$this->usermeta->second_name;
     }
 }

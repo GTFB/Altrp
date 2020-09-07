@@ -15,6 +15,7 @@ class UpdateAltrpAccessorsTable extends Migration
     {
         Schema::table('altrp_accessors', function (Blueprint $table) {
             $table->dropColumn('formula');
+            $table->dropColumn('status');
             $table->string('title')->after('name');
         });
 
