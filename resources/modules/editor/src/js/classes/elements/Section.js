@@ -13,7 +13,8 @@ import {
   CONTROLLER_LINK,
   CONTROLLER_COLWIDTH,
   TAB_STYLE,
-  CONTROLLER_GRADIENT
+  CONTROLLER_GRADIENT,
+  CONTROLLER_MEDIA
 } from "../modules/ControllersManager";
 import {advancedTabControllers} from "../../decorators/register-controllers";
 
@@ -371,6 +372,15 @@ class Section extends BaseElement{
       },
       rules: {
         "{{ELEMENT}} > .altrp-gradient{{STATE}}": "background-image: linear-gradient({{ANGLE}}deg, {{FIRSTCOLOR}} {{FIRSTPOINT}}%, {{SECONDCOLOR}} {{SECONDPOINT}}%);" 
+      }
+    });
+
+    this.addControl('image', {
+      type: CONTROLLER_MEDIA,
+      label: 'Background image',
+      default: {url: ""},
+      rules: {
+        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "background: repeat url({{URL}});"
       }
     });
 
