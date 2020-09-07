@@ -287,7 +287,7 @@ function settingsToColumns(settings) {
 /**
  *
  * @param {{}}settings
- * @return {string|[]}
+ * @return {string|array}
  */
 function renderAdditionalRows(settings) {
   let { additional_rows } = settings;

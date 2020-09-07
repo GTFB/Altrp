@@ -34,7 +34,7 @@ class Query {
   /**
    * Поулчить данные с модели, которая хранится в компоненте
    * @param {{}} modelData
-   * @return {[]}
+   * @return {array}
    */
   getFromModel(modelData){
     if(! modelData){

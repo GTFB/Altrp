@@ -291,8 +291,12 @@ class Page extends Model
      * Если никаких ролей не указано и for_guest false, то всегда доступно
      */
     if( ( ! $page_roles->count() ) && ! $this->for_guest ){
-      $allowed = true;
+      return true;
     }
+//    echo '<pre style="padding-left: 200px;">';
+//    var_dump( $this->for_guest );
+//    echo '</pre>';
+
     if( ( ! $user ) && $this->for_guest ){
       return true;
     }
