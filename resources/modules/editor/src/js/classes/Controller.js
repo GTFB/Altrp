@@ -29,7 +29,6 @@ class Controller {
     }
 
     if(this.data.prefixClass) {
-      console.log(this.data);
       currentElement.setCssClass(this.getSettingName(), this.data.prefixClass + currentElement.getSettings(this.getSettingName()));
     }
     if (this.rules.length) {

@@ -9,14 +9,19 @@ class SelectController extends Component {
     super(props);
     controllerDecorate(this);
     let value = this.getSettings(this.props.controlId);
-    // console.log(value);
     if (value === null && this.props.default) {
       value = this.props.default;
     }
+    /**
+     * Нужно ли добавлять выпадашку с брейкпоинтами
+     * По умолчанию, показываем
+     */
+    const responsive = _.get(props, 'responsive', true);
     value = value || '';
     this.state = {
       value,
       show: true,
+      responsive,
       options: this.props.options || [],
     };
     this.changeValue = this.changeValue.bind(this);
@@ -41,7 +46,7 @@ class SelectController extends Component {
     return <div className="controller-container controller-container_select">
       <div className="controller-container__label control-select__label">
         {this.props.label}
-        <ResponsiveDdMenu />
+        {this.state.responsive && <ResponsiveDdMenu />}
       </div>
       <div className="control-container_select-wrapper">
 
