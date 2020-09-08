@@ -12,6 +12,19 @@ class ElementWrapper extends Component {
   }
 
   /**
+   * Отлавливаем ошибки
+   * @param error
+   * @param errorInfo
+   */
+  componentDidCatch(error, errorInfo) {
+    this.setState(state=>({
+      ...state,
+      error: error,
+      errorInfo: errorInfo
+    }));
+  }
+
+  /**
    * Подписываемся на обновление текущей модели
    * (обновляем, только если currentModel изменилась)
    */
@@ -53,6 +66,16 @@ class ElementWrapper extends Component {
     }
     if (hide_on_small_phone) {
       classes += ' hide_on_small_phone';
+    }
+    if(this.state.errorInfo){
+      return  <div className="altrp-error">
+        <h2>Something went wrong.</h2>
+        <details style={{ whiteSpace: 'pre-wrap' }}>
+          {this.state.error && this.state.error.toString()}
+          <br />
+          {this.state.errorInfo.componentStack}
+        </details>
+      </div>
     }
     
     return <div className={classes}>

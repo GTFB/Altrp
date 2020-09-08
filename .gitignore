@@ -29,4 +29,3 @@ _ide_helper.php
 /app/Providers/AltrpRepositoryServiceProvider.php
 /routes/AltrpRoutes.php
 /out
-/app/Http/Requests/AltrpRequests

@@ -383,7 +383,7 @@ class Accordion extends BaseElement {
           spacing: 0,
           size: 16,
           weight: "normal",
-          family: '"lato"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {
@@ -555,7 +555,7 @@ class Accordion extends BaseElement {
           spacing: 0,
           size: 16,
           weight: "normal",
-          family: '"lato"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {

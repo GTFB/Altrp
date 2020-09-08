@@ -65,22 +65,29 @@ class EditModel extends Component {
     this.setState(state => ({ ...state, relations }));
   }
 
+  updateQueries = async () => {
+    let queries = await this.queriesResource.getAll();
+    this.setState(state => ({ ...state, queries }));
+  }
+
   /**
    * Загрузим данные модели
    * @return {Promise<void>}
    */
   async componentDidMount() {
-
+    // TODO: делать запросы асинхронно
     if(this.state.id){
       let model = await this.modelsResource.get(this.state.id);
       let relations = await this.relationsResource.getAll();
       let fields = await this.fieldsResource.getAll();
+      let queries = await this.queriesResource.getAll();
       fields = fields.filter(({name}) => name !== 'id');
       this.setState(state=>({
           ...state,
         model,
         relations,
         fields,
+        queries
       }))
     }
   }
@@ -162,6 +169,20 @@ class EditModel extends Component {
         <AdminTable
           columns={columns}
           rows={queries.map(query => ({ ...query, editUrl: `/admin/tables/models/${model.id}/queries/edit/${query.id}` }))}
+          quickActions={[{
+            tag: 'Link', props: {
+              href: `/admin/tables/models/${model.id}/queries/edit/:id`,
+            },
+            title: 'Edit'
+          }, {
+            tag: 'button',
+            route: `/admin/ajax/models/${model.id}/queries/:id`,
+            method: 'delete',
+            confirm: 'Are You Sure?',
+            after: () => this.updateQueries(),
+            className: 'quick-action-menu__item_danger',
+            title: 'Trash'
+          }]}
         />
         <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/queries/add`}>Add Query</Link>
         </> : ''}

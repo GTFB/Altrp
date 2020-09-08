@@ -14,7 +14,7 @@ import {
   TAB_CONTENT,
   TAB_STYLE,
   TAB_ADVANCED,
-  CONTROLLER_LINK
+  CONTROLLER_LINK, CONTROLLER_SWITCHER
 } from "../modules/ControllersManager";
 
 class Image extends BaseElement{
@@ -207,36 +207,48 @@ class Image extends BaseElement{
       }
     );
 
-    this.addControl('aspect_ratio_size', {
-        type: CONTROLLER_SELECT,
-        label: 'Aspect ratio',
+    this.addControl('aspect_ratio_off', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Aspect Ratio Off',
+      default: true,
+      prefixClass: 'aspect-ratio-off_'
+    });
 
-        options:[
-          {
-            'value' : '100',
-            'label' : '1:1',
-          },
-          {
-            'value' : '56.25',
-            'label' : '16:9',
-          },
-          {
-            'value' : '75',
-            'label' : '4:3',
-          },
-          {
-            'value' : '133.33',
-            'label' : '3:4',
-          },
-          {
-            'value' : '177.78',
-            'label' : '9:16',
-          }
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-image-container{{STATE}}': 'padding-top: {{VALUE}}%',
+
+    this.addControl('aspect_ratio_size', {
+      type: CONTROLLER_SELECT,
+      label: 'Aspect Ratio',
+      default: '0',
+      options:[
+        {
+          'value' : '0',
+          'label' : 'None',
         },
-      }
+        {
+          'value' : '100',
+          'label' : '1:1',
+        },
+        {
+          'value' : '56.25',
+          'label' : '16:9',
+        },
+        {
+          'value' : '75',
+          'label' : '4:3',
+        },
+        {
+          'value' : '133.33',
+          'label' : '3:4',
+        },
+        {
+          'value' : '177.78',
+          'label' : '9:16',
+        }
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-image-container{{STATE}}': 'padding-top: {{VALUE}}%',
+      },
+    }
     );
 
     this.addControl('height_size', {

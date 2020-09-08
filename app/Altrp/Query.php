@@ -11,6 +11,7 @@ class Query extends EloquentModel
 
     protected $fillable = [
         'name',
+        'title',
         'joins',
         'columns',
         'aggregates',
@@ -22,8 +23,14 @@ class Query extends EloquentModel
         'offset',
         'limit',
         'user_id',
-        'source_id'
+        'source_id',
+        'updated_at'
     ];
+
+    public function altrp_source()
+    {
+        return $this->morphOne(Source::class, 'sourceable');
+    }
 
     public function source()
     {

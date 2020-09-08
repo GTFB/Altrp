@@ -8,6 +8,7 @@ use App\Altrp\Generators\Controller\ControllerFile;
 use App\Altrp\Source;
 use App\Exceptions\Repository\RepositoryFileException;
 use App\Exceptions\Route\RouteFileException;
+use App\Role;
 use Illuminate\Support\Str;
 
 class RouteFileWriter
@@ -74,6 +75,14 @@ class RouteFileWriter
         return \File::put($routeFile, implode(PHP_EOL, $routeContent));
     }
 
+    /**
+     * Обновить маршрут SQL editor
+     *
+     * @param $oldMethodName
+     * @param $methodName
+     * @return bool
+     * @throws RouteFileException
+     */
     public function updateSqlRoute($oldMethodName, $methodName)
     {
         $routeContent = file($this->route->getFile(), 2);
@@ -82,12 +91,25 @@ class RouteFileWriter
         return true;
     }
 
+    /**
+     * Удалить маршрут SQL editor
+     *
+     * @param $methodName
+     * @return bool
+     */
     public function deleteSqlRoute($methodName)
     {
         $routeContent = file($this->route->getFile(), 2);
         return $this->removeSqlRoute($routeContent,$methodName);
     }
 
+    /**
+     * Очистить маршрут SQL editor
+     *
+     * @param $routeContent
+     * @param $methodName
+     * @return bool
+     */
     protected function removeSqlRoute(&$routeContent,$methodName)
     {
         if ($line = $this->routeExists($routeContent, $methodName)) {
@@ -154,14 +176,15 @@ class RouteFileWriter
      */
     protected function getRoute($methodName)
     {
-        $middleware = $this->route->getModel()->user_cols ? ['auth:api','auth'] : [];
+//        $middleware = $this->route->getModel()->user_cols ? ['auth:api','auth'] : [];
 //        $accessMiddleware = $this->getAccessMiddleware($methodName);
 //        if ($accessMiddleware) $middleware[] = $accessMiddleware;
-        $middleware = [];
+        $middleware = $this->getMiddleware($methodName);
 
         $route = 'Route::get(\'/queries/' . strtolower(Str::plural($this->route->getModelName())) . '/'
             . Str::snake($methodName) . '\', [';
-        if ($middleware) $route .= "'middleware' => ['" . implode("','", $middleware) . "'], ";
+        if ($middleware)
+            $route .= "'middleware' => ['" . implode("','", $middleware) . "'], ";
         $route .= "'uses' => '"
             . str_replace('App\Http\Controllers\\', '',$this->controller->getNamespace())
             . "Controller@" . $methodName ."']);";
@@ -172,30 +195,44 @@ class RouteFileWriter
      * Получить и сформировать посредников доступа к маршруту
      *
      * @param $methodName
-     * @return string|null
+     * @return array
      */
-    protected function getAccessMiddleware($methodName)
+    protected function getMiddleware($methodName)
     {
         $source = Source::where('type', Str::snake($methodName))->first();
 
         if(!$source) return null;
 
-        $roles = $source->source_roles;
+        $sourceRoles = $source->source_roles;
         $accessSource = [];
         $accessRoles = [];
         $accessPermissions = [];
-        foreach ($roles as $role) {
-            $accessRoles[] = $role->role->name;
+        $sourcePermissions = $source->source_permissions;
+        foreach ($sourcePermissions as $sourcePermission) {
+            $accessPermissions[] = $sourcePermission->permission->name;
         }
-        $permissions = $source->source_permissions;
-        foreach ($permissions as $permission) {
-            $accessPermissions[] = $permission->permission->name;
+        foreach ($sourceRoles as $sourceRole) {
+            $accessRoles[] = $sourceRole->role->name;
         }
-        if ($accessRoles) $accessSource[] = implode('|', $accessRoles);
-        if ($accessPermissions) $accessSource[] = implode('|', $accessPermissions);
 
-        if ($accessSource)
-            return "ability:" . implode(',', $accessSource);
-        return null;
+        if ($accessRoles)
+            $accessSource[] = implode('|', $accessRoles);
+
+        if ($accessPermissions)
+            $accessSource[] = implode('|', $accessPermissions);
+
+        $middleware = [];
+        if ($source->auth) {
+//            $middleware[] = 'auth:api';
+            $middleware[] = 'auth';
+        }
+        if ($accessRoles && $accessPermissions)
+            $middleware[] = "ability:" . implode(',', $accessSource);
+        elseif ($accessRoles)
+            $middleware[] = "role:" . implode(',', $accessRoles);
+        elseif ($accessPermissions)
+            $middleware[] = "permission:" . implode('|', $accessPermissions);
+
+        return $middleware;
     }
 }

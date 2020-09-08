@@ -229,12 +229,12 @@ class FrontElement {
      * Чтобы сохранить последовательность медиа-запросов в CSS,
      * добавлять будем в первоначальной последовательности.
      * Для этого сначала создадим копию массива со всеми настройками экранов
-     * @type {{}[]}
+     * @type {{}}
      */
     let screens = _.cloneDeep(CONSTANTS.SCREENS);
     /**
      * Удалим дефолтный - он не нужен
-     * @type {{}[]}
+     * @type {{}}
      */
     screens.splice(0,1);
     for(let breakpoint in this.settings.styles){
@@ -461,7 +461,6 @@ class FrontElement {
     let classStorage = ' ';
     changeCss.forEach(element => {
       classStorage += `${element[1]} `;
-      console.log(element[1]);
     });
     return classStorage;
   }

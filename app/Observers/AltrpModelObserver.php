@@ -32,16 +32,23 @@ class AltrpModelObserver
      */
     public function creating(Model $model)
     {
-        $table = Table::find($model->table_id);
-        if (! $table) {
+        if (!$model->parent_model_id) {
+            $table = Table::find($model->table_id);
+        } else {
+            $parentModel = Model::find($model->parent_model_id);
+            $table = Table::find($parentModel->table_id);
+        }
+
+        if (!$table) {
             $table = new Table();
             $table->name = strtolower(\Str::plural($model->name));
             $table->title = ucfirst(\Str::plural($model->name));
             $table->user_id = auth()->user()->id;
             $table->save();
-
         }
+
         $model->table_id = $table->id;
+        $model->namespace = 'App\\AltrpModels\\' . $model->name;
 
         $generator = new ModelGenerator($model);
         $result = $generator->createModelFile();
@@ -67,7 +74,7 @@ class AltrpModelObserver
             throw new ControllerFileException('Failed to create controller');
         }
 
-        if ($model->time_stamps || $model->soft_deletes) {
+        if (!$model->parent_model_id && ($model->time_stamps || $model->soft_deletes)) {
             $table = $model->table;
 
             $generator = new TableMigrationGenerator($table);
@@ -101,6 +108,8 @@ class AltrpModelObserver
      */
     public function updating(Model $model)
     {
+        if (!$model->getOriginal('preset'))
+            $model->namespace = 'App\\AltrpModels\\' . $model->name;
         $generator = new ModelGenerator($model);
         if (! $generator->updateModelFile()) {
             throw new CommandFailedException('Failed to update model file', 500);
@@ -154,8 +163,8 @@ class AltrpModelObserver
             throw new RouteGenerateFailedException('Failed to generate routes', 500);
         }
 
-        if ($model->time_stamps != $model->getOriginal('time_stamps')
-            || $model->soft_deletes != $model->getOriginal('soft_deletes')) {
+        if (!$model->parent_model_id && ($model->time_stamps != $model->getOriginal('time_stamps')
+            || $model->soft_deletes != $model->getOriginal('soft_deletes'))) {
             $table = $model->table;
             $generator = new TableMigrationGenerator($table);
 
@@ -197,14 +206,17 @@ class AltrpModelObserver
         $sourcePermissionsIds = [];
         $permissionsIds = [];
         foreach ($sources->get() as $source) {
-            $sourcePermissionsIds[] = $source->source_permissions->id;
-            $permissionsIds[] = $source->source_permissions->permission->id;
+            foreach ($source->source_permissions as $sPerm) {
+                $sourcePermissionsIds[] = $sPerm->id;
+            }
+
+            foreach ($source->source_permissions as $sPerm) {
+                $permissionsIds[] = $sPerm->permission->id;
+            }
         }
         SourcePermission::destroy($sourcePermissionsIds);
         Permission::destroy($permissionsIds);
         $sources->delete();
-//        dd($sources);
-//        return false;
         $generator = new ModelGenerator($model);
         $result = $generator->deleteModelFile();
         if (! $result) {

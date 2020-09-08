@@ -5,6 +5,7 @@ namespace App\Altrp\Generators\Repository;
 
 
 use App\Exceptions\Repository\RepositoryFileException;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use SebastianBergmann\CodeCoverage\Report\Xml\Source;
 
@@ -93,7 +94,7 @@ class RepositoryFileWriter
     {
         $repoFile = $this->repository->getFile();
         if (! file_exists($repoFile)) {
-            throw new RepositoryFileException('Repository file not found', 500);
+            return true;
         }
         $contentRepo = file($repoFile, 2);
         if ($line = $this->repoMethodExists($contentRepo, $name)) {
@@ -122,7 +123,7 @@ class RepositoryFileWriter
     {
         $repoInterfaceFile = $this->repoInterface->getFile();
         if (! file_exists($repoInterfaceFile)) {
-            throw new RepositoryFileException('Repository file not found', 500);
+            return true;
         }
         $contentRepoInterface = file($repoInterfaceFile, 2);
         if ($line = $this->repoMethodExists($contentRepoInterface, $name)) {
@@ -245,7 +246,9 @@ class RepositoryFileWriter
      */
     protected function writeToServiceProvider()
     {
-        $serviceProviderContent = file($this->getRepoServiceProvider(), 2);
+        $serviceProviderFile = $this->getRepoServiceProvider();
+
+        $serviceProviderContent = file($serviceProviderFile, 2);
         if(! $this->existsInServiceProvider($serviceProviderContent)) {
             foreach ($serviceProviderContent as $line => $content) {
                 if (Str::contains($content, 'public function register()')) {
@@ -415,5 +418,10 @@ class RepositoryFileWriter
     protected function getRepoServiceProvider()
     {
         return app_path('Providers/AltrpRepositoryServiceProvider.php');
+    }
+
+    protected function getRepoServiceProviderStub()
+    {
+        return app_path('Altrp/Commands/stubs/altrp_repository_service_provider.stub');
     }
 }

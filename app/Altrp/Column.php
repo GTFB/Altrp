@@ -11,7 +11,7 @@ class Column extends Model
 
     public $fillable = ["id","name","title","description","type","size","null",
         "default","primary","unique","user_id","table_id","altrp_migration_id",
-        "is_label","is_title","attribute","input_type","options",
+        "is_label","is_title","is_auth","attribute","input_type","options",
         "indexed","editable","hidden","model_id"];
 
     public function getNullAttribute($value) {

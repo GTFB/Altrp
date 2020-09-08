@@ -11,9 +11,17 @@ class Accessor extends Model
 
     protected $fillable = [
         'name',
-        'formula',
+        'title',
+        'calculation',
+        'calculation_logic',
         'model_id',
+        'description',
         'user_id',
         'status'
     ];
+
+    public function model()
+    {
+        return $this->belongsTo(\App\Altrp\Model::class);
+    }
 }

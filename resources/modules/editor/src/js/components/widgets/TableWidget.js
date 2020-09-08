@@ -1,8 +1,6 @@
 import React, {Component} from "react";
 import Query from "../../classes/Query";
 
-// const AltrpTable = React.lazy(() => import("../altrp-table/component"));
-
 class TableWidget extends Component {
   constructor(props){
     super(props);

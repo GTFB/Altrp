@@ -561,7 +561,7 @@ class Poster extends BaseElement{
           spacing: 0,
           size: 14,
           weight: "normal",
-          family: '"roboto"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {
@@ -832,7 +832,7 @@ class Poster extends BaseElement{
           spacing: 0,
           size: 14,
           weight: "normal",
-          family: '"roboto"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {
@@ -1126,7 +1126,7 @@ class Poster extends BaseElement{
           spacing: 0,
           size: 14,
           weight: "normal",
-          family: '"roboto"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {
@@ -1277,7 +1277,7 @@ class Poster extends BaseElement{
           spacing: 0,
           size: 14,
           weight: "normal",
-          family: '"roboto"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {

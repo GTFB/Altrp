@@ -108,7 +108,7 @@ class FieldCalculationLogic extends Component {
           <option value="" disabled />
           <option value="not-null">Not Null</option>
           <option value="null">Null</option>
-          <option value="=">Equals</option>
+          <option value="==">Equals</option>
           <option value="<>">Not Equals</option>
           <option value="between">Between</option>
           <option value=">">&gt;</option>
@@ -127,7 +127,7 @@ class FieldCalculationLogic extends Component {
                 onChange={() => this.rightTypeHandler("string")}
               />
             </label>
-            <input type="text" className="form-control" name="string" 
+            <input type="text" className="form-control" name="string"
               required={rightType === "string"}
               value={right.string}
               disabled={rightType !== "string"}
