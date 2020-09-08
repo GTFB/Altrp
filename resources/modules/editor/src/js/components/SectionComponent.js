@@ -1,6 +1,6 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import '../../sass/section.scss';
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import '../../sass/section.scss'
 import { isEditor, getWindowWidth } from "../../../../front-app/src/js/helpers"
 
@@ -24,15 +24,15 @@ class SectionComponent extends Component {
   render() {
     let styles = {};
     let width = {};
-    const { isWithGradient } = this.props.element.settings.gradient;
-    if(this.state.settings.layout_content_width_type === "full") {
+    const { gradient: { isWithGradient }, background_image } = this.props.element.settings;
+    if (this.state.settings.layout_content_width_type === "full") {
       width = {
         width: getWindowWidth() + "px"
       }
     } else {
       width = {}
     }
-    
+
 
     let sectionClasses = [
       'altrp-section',
@@ -43,25 +43,29 @@ class SectionComponent extends Component {
       sectionClasses.push('altrp-gradient');
     }
 
+    if (background_image.url) {
+      sectionClasses.push('altrp-background-image');      
+    }
+
     let sectionWrapper = this.state.children.map(column => (
       <ElementWrapper
         key={column.getId()}
         component={column.componentClass}
         element={column}
-        // columnCount={this.props.element.getColumnsCount()}
+      // columnCount={this.props.element.getColumnsCount()}
       />
     ));
 
-    if(this.state.settings.layout_content_width_type == "full") {
+    if (this.state.settings.layout_content_width_type == "full") {
       styles.width = getWindowWidth() + "px"
     }
 
-    if(this.state.settings.layout_height == "fit") {
+    if (this.state.settings.layout_height == "fit") {
       styles.height = "100vh"
     }
 
     let section = React.createElement(this.state.settings.layout_html_tag || "div",
-      {style: styles, className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: ""},
+      { style: styles, className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: "" },
       <div className={"get-column-count " + `altrp-element-column-count${this.props.element.id}`} id="columnCount" ></div>,
       sectionWrapper
     );
@@ -72,13 +76,13 @@ class SectionComponent extends Component {
     //   // <div className="full-fill" style={{width: getWindowWidth() + "px"}}>{section}</div>
     // }
 
-    return  section
+    return section
   }
 }
 
 function mapStateToProps(state) {
-  return{
-    changeWidthColumns:state.columnWidth,
+  return {
+    changeWidthColumns: state.columnWidth,
   };
 }
 

@@ -375,12 +375,12 @@ class Section extends BaseElement{
       }
     });
 
-    this.addControl('image', {
+    this.addControl('background_image', {
       type: CONTROLLER_MEDIA,
       label: 'Background image',
       default: {url: ""},
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "background: repeat url({{URL}});"
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background: repeat url({{URL}});"
       }
     });
 
