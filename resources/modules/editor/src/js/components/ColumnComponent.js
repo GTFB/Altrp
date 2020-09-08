@@ -16,6 +16,7 @@ class ColumnComponent extends Component {
   }
   
   render(){
+    const { gradient } = this.state.settings;
 
     return React.createElement(this.state.settings.layout_html_tag || "div",
       {

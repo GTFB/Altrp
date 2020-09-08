@@ -15,8 +15,7 @@ class GradientController extends Component {
   }
 
   colorChange = (color, name) => {
-    // const { gradient } = this.props.currentElement.settings;
-    const gradient = this.getSettings(this.props.controlId) || {};
+    const gradient = this.getSettings(this.props.controlId) || this.props.currentElement.settings.gradient;
     this._changeValue({
       ...gradient,
       [name]: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
@@ -24,7 +23,7 @@ class GradientController extends Component {
   };
 
   setNumber = ({ target: { name, value } }) => {
-    const { gradient } = this.props.currentElement.settings;
+    const gradient = this.getSettings(this.props.controlId) || this.props.currentElement.settings.gradient;
     this._changeValue({
       ...gradient,
       [name]: value
@@ -32,12 +31,13 @@ class GradientController extends Component {
   }
 
   toggle = () => {
-    const { gradient } = this.props.currentElement.settings;
+    const gradient = this.getSettings(this.props.controlId) || this.props.currentElement.settings.gradient;
     this._changeValue({ ...gradient, isWithGradient: !gradient.isWithGradient });
   }
 
   render() {
-    const { isWithGradient, angle, firstColor, firstPoint, secondColor, secondPoint } = this.props.currentElement.settings.gradient;
+    const { isWithGradient, angle, firstColor, firstPoint, secondColor, secondPoint } = 
+      this.getSettings(this.props.controlId) || this.props.currentElement.settings.gradient;
     const { opened1, opened2 } = this.state;
 
     return <>
