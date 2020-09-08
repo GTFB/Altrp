@@ -310,7 +310,7 @@ class BaseElement extends ControlStack {
       }
       this.settings[settingName] = control.default;
     }
-    return this.settings[settingName];
+    return this.settings[settingName] || _default;
   }
 
   _initDefaultSettings() {

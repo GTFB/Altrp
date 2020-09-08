@@ -62,7 +62,7 @@ class SectionComponent extends Component {
 
     let section = React.createElement(this.state.settings.layout_html_tag || "div",
       {style: styles, className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: ""},
-      <div className={"get-column-count " + `altrp-element-column-count${this.props.element.id}`} id="columnCount" data-column-count={"\n" + this.props.element.getColumnsCount()}></div>,
+      <div className={"get-column-count " + `altrp-element-column-count${this.props.element.id}`} id="columnCount" ></div>,
       sectionWrapper
     );
 

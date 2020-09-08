@@ -5,6 +5,7 @@ namespace {{repoNamespace}};
 use App\AltrpModels\{{modelNamespace}} as Model;
 use App\Repositories\AltrpRepositories\Interfaces\{{modelNamespace}}RepositoryInterface;
 use App\Repositories\Repository;
+use Carbon\Carbon;
 
 class {{modelName}}Repository extends Repository implements {{modelName}}RepositoryInterface
 {

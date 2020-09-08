@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link, withRouter } from 'react-router-dom';
-import {isEditor, renderAssetIcon} from "../../../../../front-app/src/js/helpers";
+import {isEditor, parseURLTemplate, renderAssetIcon} from "../../../../../front-app/src/js/helpers";
 
 class ButtonWidget extends Component {
   constructor(props) {
@@ -50,7 +50,7 @@ class ButtonWidget extends Component {
   }
 
   render() {
-    const { link_link, gradient } = this.state.settings;
+    const { link_link = {}, gradient } = this.state.settings;
     const { goBack } = this.props.history;
 
     let classes =
@@ -59,6 +59,38 @@ class ButtonWidget extends Component {
     if (this.state.pending) {
       classes += " altrp-disabled";
     }
+    // this.getContent('button_text');
+    // this.props.element.getSettings('button_text');
+    //todo: убрать лишние компоненты, создавать вомпонент при помощи React.createElement
+    /*let tag = 'a';
+
+    if(this.props.element.getSettings('form_id')){
+      tag = 'button';
+    } else if (this.props.element.getSettings('link_link', {})['tag'] === 'Link' && ! isEditor()){
+      tag = Link;
+    }
+
+    const buttonProps = {
+      className: classes,
+      // to:
+    };
+    console.log( this.props);
+    buttonProps.to = link_link.url ? link_link.url.replace(':id', this.getModelId() || '') : '';
+    buttonProps.href =  link_link.url ? link_link.url.replace(':id', this.getModelId() || '') : '';
+    if(_.isObject(this.state.modelData) && link_link.url){
+      buttonProps.to = parseURLTemplate(link_link.url, this.state.modelData);
+      buttonProps.href = parseURLTemplate(link_link.url, this.state.modelData);
+    }
+    let icon = (buttonMedia && buttonMedia.assetType) ? <span className={"altrp-btn-icon "}>{renderAssetIcon(buttonMedia)} </span> : '';
+
+*/
+    let url = link_link.url ? link_link.url.replace(':id', this.getModelId() || '') : '';
+    if(_.isObject(this.props.currentModel)){
+      // console.log(this.props.currentModel);
+      // console.log(link_link.url);
+      url = parseURLTemplate(link_link.url || '', this.props.currentModel.getData());
+    }
+
     let button = (
       <button
         onClick={link_link.toPrevPage && !isEditor() ? goBack : this.onClick}
@@ -75,7 +107,7 @@ class ButtonWidget extends Component {
       if (this.state.settings.link_link.tag === 'a' || isEditor()) {
 
         link = (
-          <a href={this.state.settings.link_link.url} onClick={this.onClick} className={classes}>
+          <a href={url} onClick={this.onClick} className={classes}>
             {" "}
             {this.state.settings.button_text || ""}
             <span className={"altrp-btn-icon "}>{renderAssetIcon(buttonMedia)} </span>
@@ -83,16 +115,21 @@ class ButtonWidget extends Component {
         );
       } else {
         link = (
-          <Link to={this.state.settings.link_link.url} onClick={this.onClick} className={classes}>
+          <Link to={url} onClick={this.onClick} className={classes}>
             {" "}
             {this.state.settings.button_text || ""}
+            <span className={"altrp-btn-icon "}>{renderAssetIcon(buttonMedia)} </span>
           </Link>
         );
       }
     }
 
+
+
     return link || button || buttonMedia;
+    // return React.createElement(tag, buttonProps, <>{this.state.settings.button_text}{icon}</>);
   }
+
 }
 
 export default withRouter(ButtonWidget);

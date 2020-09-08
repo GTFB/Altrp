@@ -279,6 +279,9 @@ class Admin extends Component {
             <Route path="/admin/tables/models/:modelId/queries/add">
               <SQLBuilder/>
             </Route>
+            <Route path="/admin/tables/models/:modelId/queries/edit/:id">
+              <SQLBuilder />
+            </Route>
             <Route path="/admin/tables/data-sources/add">
               <AddDataSource />
             </Route>

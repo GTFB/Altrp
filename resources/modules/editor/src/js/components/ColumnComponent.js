@@ -16,17 +16,16 @@ class ColumnComponent extends Component {
   }
   
   render(){
-    const { gradient } = this.state.settings;
-    let column = React.createElement(this.state.settings.layout_html_tag || "div",
-      { className: "altrp-column " + (this.state.settings.position_style_css_classes || "") + (gradient.isWithGradient ? " altrp-gradient" : ""), id:this.state.settings.position_style_css_id || ""},
+
+    return React.createElement(this.state.settings.layout_html_tag || "div",
+      {
+        className: "altrp-column " + (this.state.settings.position_style_css_classes || "") + (gradient.isWithGradient ? " altrp-gradient" : ""),
+        id:this.state.settings.position_style_css_id || ""
+      },
       this.state.children.map(
         section => <ElementWrapper key={section.getId()} component={section.componentClass} element={section}/>
       )
     );
-    
-
-
-    return column
   }
 }
 

@@ -33,6 +33,24 @@ class AdvancedSettings extends Component {
     }
     store.dispatch(setAdminEnable());
   };
+
+  /**
+   * Обновить всех ресурсы на бкенде (модели, шаблоны, контроллеры и т.д.)
+   * @param e
+   */
+  updateAllBackendResources = async (e) =>{
+    let result  = await confirm('Are You Sure');
+    if(! result){
+      return;
+    }
+    store.dispatch(setAdminDisable());
+
+    let res = await new Resource({route:'/admin/ajax/update-all-resources'}).post({});
+    if(res.success){
+      await alert('success');
+    }
+    store.dispatch(setAdminEnable());
+  };
   render() {
     return <div className="admin-styles-settings">
       <table>
@@ -57,6 +75,17 @@ class AdvancedSettings extends Component {
             <button className="btn btn_success"
                     onClick={this.deleteAllTemplatesReviews}>
               Clear
+            </button>
+          </td>
+        </tr>
+        <tr className="admin-settings-table-row">
+          <td className="admin-settings-table__td row-text" width="10%">
+            Update All Backend Resources
+          </td>
+          <td className="admin-settings-table__td">
+            <button className="btn btn_success"
+                    onClick={this.updateAllBackendResources}>
+              Update
             </button>
           </td>
         </tr>

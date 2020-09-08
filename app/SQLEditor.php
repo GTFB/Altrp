@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Altrp\Source;
 use Illuminate\Database\Eloquent\Model;
 
 class SQLEditor extends Model
@@ -13,11 +14,16 @@ class SQLEditor extends Model
     'title',
     'model_id',
     'description',
+      'updated_at'
   ];
 
-   public function model()
-  {
-    return $this->hasOne('App\Altrp\Model', 'id', 'model_id');
-  }
+    public function altrp_source()
+    {
+        return $this->morphOne(Source::class, 'sourceable');
+    }
 
+    public function model()
+    {
+        return $this->belongsTo(\App\Altrp\Model::class);
+    }
 }

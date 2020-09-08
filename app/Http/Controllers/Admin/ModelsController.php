@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Altrp\Accessor;
 use App\Altrp\Builders\QueryBuilder;
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
@@ -47,7 +48,12 @@ class ModelsController extends HttpController
    */
     public function models_options( Request $request )
     {
-      return response()->json(Model::getModelsOptions( $request->get( 'with_names' ),  $request->get( 'not_plural' ) ));
+        return response()->json(
+        Model::getModelsOptions(
+            $request->get( 'with_names' ),
+            $request->get( 'not_plural' ),
+            $request->get('s')
+        ));
     }
 
     /**
@@ -407,6 +413,8 @@ class ModelsController extends HttpController
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $fields = $model->table->columns;
+//        $accessors = $model->altrp_accessors;
+//        $fields = array_merge($columns, $accessors);
         return response()->json($fields, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -458,11 +466,20 @@ class ModelsController extends HttpController
                 'message' => 'Model not found'
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
-        $field = new Column($request->all());
-        $field->user_id = auth()->user()->id;
-        $field->table_id = $model->altrp_table->id;
-        $field->model_id = $model->id;
-        $result = $field->save();
+        if ($request->get('type') !== 'calculated') {
+            $field = new Column($request->all());
+            $field->user_id = auth()->user()->id;
+            $field->table_id = $model->altrp_table->id;
+            $field->model_id = $model->id;
+            $result = $field->save();
+        } else {
+            $accessor = new Accessor($request->all());
+            $accessor->calculation_logic = json_encode($accessor->calculation_logic);
+            $accessor->user_id = auth()->user()->id;
+            $accessor->model_id = $model->id;
+            $result = $accessor->save();
+        }
+
         if ($result) {
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
@@ -482,20 +499,30 @@ class ModelsController extends HttpController
      */
     public function updateModelField(ApiRequest $request, $model_id, $field_id)
     {
-        $field = Column::where([['model_id', $model_id], ['id', $field_id]])->first();
+        $data = $request->all();
+
+        if ($request->get('type') !== 'calculated')
+            $field = Column::where([['model_id', $model_id], ['id', $field_id]])->first();
+        else {
+            $field = Accessor::where([['model_id', $model_id], ['id', $field_id]])->first();
+            $data['calculation_logic'] = json_encode($data['calculation_logic']);
+        }
+
         if (! $field) {
             return response()->json([
                 'success' => false,
                 'message' => 'Field not found'
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
-        $result = $field->update($request->all());
+
+        $result = $field->update($data);
+
         if ($result) {
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
         return response()->json([
             'success' => false,
-            'message' => 'Failed to create model'
+            'message' => 'Failed to update model field'
         ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -1088,32 +1115,118 @@ class ModelsController extends HttpController
      * @param $query_id
      * @return \Illuminate\Http\JsonResponse
      */
-  public function destroyQuery($model_id, $query_id)
-  {
-    $model = Model::find($model_id);
-    if (! $model){
-      return response()->json([
-        'success' => false,
-        'message' => 'Model not found'
-      ], 404, [], JSON_UNESCAPED_UNICODE);
+    public function destroyQuery($model_id, $query_id)
+    {
+        $model = Model::find($model_id);
+        if (! $model){
+          return response()->json([
+            'success' => false,
+            'message' => 'Model not found'
+          ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        $query = Query::find($query_id);
+        if (! $query){
+          return response()->json([
+            'success' => false,
+            'message' => 'Query not found'
+          ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+        $result = $query->delete();
+
+        if ($result) {
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to delete query'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
-    $query = Query::find($query_id);
-    if (! $query){
-      return response()->json([
-        'success' => false,
-        'message' => 'Query not found'
-      ], 404, [], JSON_UNESCAPED_UNICODE);
+    public function getModelAccessors($model_id)
+    {
+        $accessors = Accessor::where('model_id',$model_id)->get();
+        return response()->json($accessors, 500, [], JSON_UNESCAPED_UNICODE);
     }
-    $result = $query->delete();
 
-    if ($result) {
-        return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+    public function showAccessor($model_id, $accessor_id)
+    {
+        $accessor = Accessor::find($accessor_id);
+        if (! $accessor){
+            return response()->json([
+                'success' => false,
+                'message' => 'Accessor not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+        return response()->json($accessor, 500, [], JSON_UNESCAPED_UNICODE);
     }
-    return response()->json([
-        'success' => false,
-        'message' => 'Failed to delete query'
-    ], 500, [], JSON_UNESCAPED_UNICODE);
-  }
+
+    public function storeAccessor(ApiRequest $request, $model_id)
+    {
+        $accessor = new Accessor($request->all());
+        $accessor->calculation_logic = json_encode($accessor->calculation_logic);
+        $accessor->user_id = auth()->user()->id;
+        $accessor->model_id = $model_id;
+        $result = $accessor->save();
+
+        if ($result) {
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to create field'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function updateAccessor(ApiRequest $request, $model_id, $accessor_id)
+    {
+        $data = $request->all();
+
+        $accessor = Accessor::where([['model_id', $model_id], ['id', $accessor_id]])->first();
+        $data['calculation_logic'] = json_encode($data['calculation_logic']);
+
+        if (! $accessor) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Accessor not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        $result = $accessor->update($data);
+
+        if ($result) {
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update model accessor'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Удалить аксессор
+     *
+     * @param $model_id
+     * @param $accessor_id
+     * @return JsonResponse
+     */
+    public function destroyAccessor($model_id, $accessor_id)
+    {
+        $accessor = Accessor::where([['model_id', $model_id], ['id', $accessor_id]])->first();
+        if (! $accessor) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Accessor not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+        $result = $accessor->delete();
+        if ($result) {
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to delete accessor'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
+    }
 
 }

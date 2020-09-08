@@ -122,11 +122,6 @@ class NewMigrationGenerator extends AppGenerator{
                     }
                 }
             }
-            echo $e;
-//            $lastMigration = Migration::latest('id')->first();
-//            if ($lastMigration) {
-//
-//            }
             return false;
         }
         return true;

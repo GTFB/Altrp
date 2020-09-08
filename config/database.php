@@ -56,7 +56,7 @@ return [
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => env('DB_TABLES_PREFIX', ''),
             'prefix_indexes' => true,
-            'strict' => true,
+            'strict' => false, // todo разобраться, почему не работает GROUP BY в SQL зпросах
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),

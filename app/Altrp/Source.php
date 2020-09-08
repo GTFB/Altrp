@@ -17,6 +17,16 @@ class Source extends Model
         'name',
     ];
 
+    public function sourceable()
+    {
+        return $this->morphTo();
+    }
+
+    public function model()
+    {
+        return $this->belongsTo(\App\Altrp\Model::class);
+    }
+
     public function source_roles()
     {
         return $this->hasMany(SourceRole::class,'source_id');
@@ -24,7 +34,7 @@ class Source extends Model
 
     public function source_permissions()
     {
-        return $this->hasOne(SourcePermission::class,'source_id');
+        return $this->hasMany(SourcePermission::class,'source_id');
     }
 
     public static function getBySearch($search)
