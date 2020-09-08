@@ -262,6 +262,7 @@ class Input extends BaseElement{
         },
       }
     );
+    
     this.endControlSection();
 
     this.startControlSection('position_section', {

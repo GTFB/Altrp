@@ -31,24 +31,21 @@ class AltrpCarousel extends Component {
         img.url = img.url || '/img/nullImage.png';
 
         state.sliderImages.push(img.url);
-        return ({...state})
-      })
-    })
+        return ({...state});
+      });
+    });
   }
 
   componentDidUpdate(prevProps) {
     if(this.props.slides_repeater !== prevProps.slides_repeater) {
+      let sliderImagesArray = [];
       this.props.slides_repeater.forEach(image => {
-        this.setState((state) => {
-
-          let img = {...image.image_slides_repeater} || {};
-          img.url = img.url || '/img/nullImage.png';
-
-          state.sliderImages.push(img.url);
-          return ({...state})
-        })
-      })
-    }
+        let img = {...image.image_slides_repeater} || {};
+        img.url = img.url || '/img/nullImage.png';
+        sliderImagesArray.push(img.url);
+      });
+      this.setState((state) => ({...state, sliderImages: sliderImagesArray}));
+    };
   }
 
   next() {
@@ -75,7 +72,7 @@ class AltrpCarousel extends Component {
       </a>
     );
 
-    let dotsClasses = "altrp-carousel-dots"
+    let dotsClasses = "altrp-carousel-dots";
 
     //позиция точек
     if(this.props.dots_navigation_content) {
@@ -134,8 +131,8 @@ class AltrpCarousel extends Component {
       media.name = media.name || 'null';
       media.assetType = media.assetType || "mediaBackground";
       if(media.assetType === "media") {
-        media.assetType = "mediaBackground"
-      }
+        media.assetType = "mediaBackground";
+      };
 
       return (
         <div className="altrp-carousel-slide" key={idx}>
@@ -151,6 +148,13 @@ class AltrpCarousel extends Component {
                 }
               }
             })
+          }
+          {
+            this.props.overlay_select_heading_additional_content === "text" ? (
+              <div className="altrp-carousel-slide-overlay">
+                <p className="altrp-carousel-slide-overlay-text">{slide.overlay_text_repeater}</p>
+              </div>
+            ) : null
           }
         </div>
       );
@@ -197,7 +201,6 @@ class AltrpCarousel extends Component {
     ) : "";
 
     let lightbox = "";
-
     if(this.props.lightbox_slides_content) {
 
       lightbox =  this.state.openLightBox ? (
@@ -211,7 +214,7 @@ class AltrpCarousel extends Component {
       ) : ""
 
     }
-
+    console.log(this.state.sliderImages)
     return <div className="altrp-carousel">
       {
         this.props.lightbox_slides_content ? lightbox : ""

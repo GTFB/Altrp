@@ -1,7 +1,7 @@
 .altrp-carousel-slide-img {
     background: no-repeat 50%;
     -webkit-background-size: cover;
-    cursor: pointer;
+    cursor: grab;
     background-size: cover;
     height: 100%;
     width: 100%;
@@ -14,6 +14,7 @@
 .altrp-carousel-slide {
     overflow: hidden;
     height: 100%;
+    position: relative;
 }
 
 //.altrp-carousel-prev {
@@ -45,7 +46,7 @@
 
 .altrp-carousel-paging {
     border-radius: 10vh;
-    background-color: #c9c9c9;
+    background-color: #a4a4a4;
     padding-right: 1px;
 }
 
@@ -176,3 +177,25 @@
     justify-content: center;
     align-items: center;
 }
+
+.altrp-carousel-slide-overlay {
+    width: calc(100% - 40px);
+    margin: 20px;
+    top: 0;
+    transition: 0.5s;
+    opacity: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 20px; 
+    height: calc(100% - 40px);
+    padding: 10px;
+    cursor: grab;
+    background-color: #ffffff;
+    z-index: 4;
+    position: absolute;
+}
+
+.altrp-carousel-slide:hover .altrp-carousel-slide-overlay {
+    opacity: 1;
+} 
