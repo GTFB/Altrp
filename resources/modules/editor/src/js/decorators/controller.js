@@ -4,7 +4,7 @@ import {getElementSettingsSuffix} from "../helpers";
 /**
  * Обновление значения в компоненте контроллера при загрузке нового экземпляра того же элемента
  */
-function componentDidUpdate() {
+function componentDidUpdate(prevProps, prevState) {
   if(!this.props.repeater){
     let elementValue = this.props.currentElement.getSettings(this.props.controlId);
     if(this.state.value !== elementValue){
@@ -17,6 +17,13 @@ function componentDidUpdate() {
       });
     }
   } else {
+  }
+  /**
+   * Если в самом компоненте контроллера объвлен метод _componentDidUpdate, то его тоже вызовем
+   * например RepeaterController
+   */
+  if(_.isFunction(this._componentDidUpdate)){
+    this._componentDidUpdate(prevProps, prevState);
   }
 }
 
@@ -34,8 +41,21 @@ function getSettings(settingName){
    * Если внутри репитера, то берем свойство из репитера, а не элемента
    */
   if(this.props.controller.data.repeater){
-    return this.props.controller.data.repeater.getSettings(this.props.controller.data.repeater.props.controlId)
-        [this.props.controller.data.itemIndex][this.props.controller.data.controlId];
+    /**
+     * todo: баг - если два одинаковых элемента с репитером,
+     * todo: при смене элементов может быть не соответствие this.props.controller.data.itemIndex и новым репитером
+     * todo: пока что вернем значение по умолчанию или строку
+     */
+    if(this.props.controller.data.repeater.getSettings(this.props.controller.data.repeater.props.controlId)
+        [this.props.controller.data.itemIndex]){
+      return this.props.controller.data.repeater.getSettings(this.props.controller.data.repeater.props.controlId)
+          [this.props.controller.data.itemIndex][this.props.controller.data.controlId];
+    }
+    /**
+     * todo: пока что вернем значение по умолчанию или строку в случае бага
+     * проблему, вроде решил, но на всякий случай оставим
+     */
+    return _.isFunction(this.getDefaultValue) ? this.getDefaultValue() : '';
   }
   return this.props.currentElement.getSettings(settingName +
       getElementSettingsSuffix(this.props.controller))

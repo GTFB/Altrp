@@ -12,7 +12,8 @@ import {
   CONTROLLER_SHADOW,
   CONTROLLER_LINK,
   CONTROLLER_COLWIDTH,
-  TAB_STYLE
+  TAB_STYLE,
+  CONTROLLER_GRADIENT
 } from "../modules/ControllersManager";
 import {advancedTabControllers} from "../../decorators/register-controllers";
 
@@ -357,6 +358,22 @@ class Section extends BaseElement{
       }
     });
 
+    // this.addControl('gradient', {
+    //   type: CONTROLLER_GRADIENT,
+    //   label: 'Gradient',
+    //   default: {
+    //     firstColor: "#61CE70",
+    //     firstPoint: '0',
+    //     secondColor: "#F2295B",
+    //     secondPoint: "100",
+    //     angle: "0"
+    //   },
+    //   rules: {
+    //     "{{ELEMENT}} .altrp-section{{STATE}}": "background-image: linear-gradient({{ANGLE}}deg, {{FIRSTCOLOR}} {{FIRSTPOINT}}%, {{SECONDCOLOR}} {{SECONDPOINT}}%);" 
+    //   }
+    //   //background-image: linear-gradient(360deg, #61CE70 0%, #F2295B 100%);
+    // });
+
     this.endControlSection();
 
     this.startControlSection("section_style_border", {
@@ -471,6 +488,27 @@ class Section extends BaseElement{
       label: "Position"
     });
 
+    this.addControl("position_style_position_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-section{{STATE}}": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+
     this.addControl('position_style_position_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
@@ -494,27 +532,6 @@ class Section extends BaseElement{
           'margin-left: {{LEFT}}{{UNIT}};'
         ]
       },
-    });
-
-    this.addControl("position_style_position_padding", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Padding",
-      default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit: "px"
-      },
-      units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
     });
 
     this.addControl('position_style_z_index', {

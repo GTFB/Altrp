@@ -99,8 +99,11 @@ class ControllerFileWriter
         }
         $controllerContent = file($controllerFile, 2);
         if ($line = $this->methodExists($controllerContent, $methodName)) {
+            if (!Str::contains($controllerContent[$line-1],'CUSTOM_METHODS_BEGIN')) {
+                $line = $line - 1;
+            }
             for ($i = $line; true; $i++) {
-                if (Str::contains($controllerContent[$i], '}')) {
+                if (preg_match('/^ {4}}$|^ {2}}$|^\t}$/', $controllerContent[$i])) {
                     unset($controllerContent[$i]);
                     break;
                 }

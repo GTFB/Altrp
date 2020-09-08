@@ -29,7 +29,7 @@ class Controller {
     }
 
     if(this.data.prefixClass) {
-      currentElement.setCssClass(this.getSettingName(), this.data.prefixClass + this.data.default);
+      currentElement.setCssClass(this.getSettingName(), this.data.prefixClass + currentElement.getSettings(this.getSettingName()));
     }
     if (this.rules.length) {
       currentElement.addStyles(this.getSettingName(), this.rules);
@@ -37,10 +37,16 @@ class Controller {
   }
 
   /**
-   * Изменение значения либо в текущем элементе либо в репитере
+   * Изменение значения либо в текущем элементе, либо в репитере
    * @param {*} value
    */
   changeValue(value) {
+    /**
+     * Если значение контроллера объект, то создаем его копию
+     */
+    if(_.isObject(value)){
+      value = _.cloneDeep(value);
+    }
     /**
      * @member {BaseElement} currentElement
      * */
@@ -56,6 +62,7 @@ class Controller {
           : currentElement.removeStyle(this.getSettingName());
       }
       /**
+       *
        * Вызываем currentElement setCssClass в случае если есть this.data.prefixClass
        */
       if(this.data.prefixClass) {

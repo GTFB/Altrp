@@ -103,9 +103,13 @@ class SQLEditorController extends Controller
      */
     public function update(Request $request, $sql_editor)
     {
-        $sQLEditor = SQLEditor::find($sql_editor);
+        $sQLEditor = SQLEditor::where('id',$sql_editor)
+            ->with([
+                'altrp_source.source_permissions.permission',
+            ])
+            ->first();
       if( $sQLEditor->update($request->all()) ) {
-        return response()->json( ['success' => true], 200,  [], JSON_UNESCAPED_UNICODE );
+        return response()->json( ['success' => $sQLEditor], 200,  [], JSON_UNESCAPED_UNICODE );
       }
       return response()->json( ['success' => false, 'Error on Update'], 200,  [], JSON_UNESCAPED_UNICODE );
     }

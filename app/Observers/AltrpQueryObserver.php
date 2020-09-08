@@ -83,9 +83,6 @@ class AltrpQueryObserver
         if (! $builder->updateRepoMethod($methodBody)) {
             throw new RepositoryFileException('Failed to update repository', 500);
         }
-        if (! $builder->updateRoute()) {
-            throw new RouteFileException('Failed to update route', 500);
-        }
         if ($query->source) {
             $query->source->update([
                 'type' => Str::snake($query->name),
@@ -97,6 +94,9 @@ class AltrpQueryObserver
         }
         if (! $builder->updateSourcePermissions($query->source)) {
             throw new ControllerFileException('Failed to update source permissions', 500);
+        }
+        if (! $builder->updateRoute()) {
+            throw new RouteFileException('Failed to update route', 500);
         }
     }
 

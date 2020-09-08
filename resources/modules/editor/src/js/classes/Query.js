@@ -1,6 +1,6 @@
 import Resource from "./Resource";
 import modelManager from "../../../../editor/src/js/classes/modules/ModelsManager";
-// import
+import {parseParamsFromString} from "../../../../front-app/src/js/helpers";
 
 class Query {
 
@@ -20,6 +20,7 @@ class Query {
       this.route = data.dataSource.value;
       this.dataSourceName = data.dataSource.sql_name || '';
     }
+    this.setDefaultParams(parseParamsFromString(data.defaultParams, component.props.currentModel));
   }
   /**
    *
@@ -33,7 +34,7 @@ class Query {
   /**
    * Поулчить данные с модели, которая хранится в компоненте
    * @param {{}} modelData
-   * @return {[]}
+   * @return {array}
    */
   getFromModel(modelData){
     if(! modelData){
@@ -81,14 +82,46 @@ class Query {
   }
 
   /**
+   * Задать параметры по умолчанию
+   * @params {{}} defaultParams
+   */
+  setDefaultParams(defaultParams = {}){
+    this.defaultParams = defaultParams;
+  }
+
+  /**
+   * Вернуть значения по умолчанию
+   * @return {{}}
+   */
+  getDefaultParams(){
+    this.defaultParams = this.defaultParams || {};
+    this.defaultParams.pageSize = this.pageSize;
+    return this.defaultParams;
+  }
+
+  /**
    * Сливает параметры с параметрами по умолчанию
    * @param {object} params
    * @return {object}
    */
   getParams(params) {
-    params = {..._.assign({pageSize:this.pageSize}, params)};
+    params = {..._.assign(this.getDefaultParams(), params)};
     params.page = params.page || 1;
     return params;
+  }
+
+  /**
+   * Получить стартовое значение для счетчика, если нужно показать номер по порядку в таблице
+   * @param {int} page
+   */
+  getCounterStart(page){
+    let counterStart = 1;
+    if(this.pageSize < 1){
+      return counterStart;
+    }
+    page = parseInt(page) || 1;
+    counterStart = this.pageSize * (page - 1) + 1;
+    return counterStart;
   }
 }
 

@@ -5,6 +5,7 @@ namespace App\Altrp\Builders;
 
 
 use App\Altrp\Accessor;
+use App\Altrp\Column;
 use App\Altrp\Model;
 use App\Exceptions\AccessorNotFoundException;
 use App\Exceptions\AccessorNotWrittenException;
@@ -12,6 +13,7 @@ use App\Exceptions\ColumnNotFoundException;
 use App\Exceptions\ModelNotWrittenException;
 use App\Exceptions\ParseFormulaException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class AccessorBuilder
@@ -42,6 +44,11 @@ class AccessorBuilder
     protected $data;
 
     /**
+     * @var string
+     */
+    protected $tabIndent = '    ';
+
+    /**
      * AccessorBuilder constructor.
      * @param Model $model
      * @param Accessor $accessor
@@ -53,83 +60,32 @@ class AccessorBuilder
         $this->data = $data;
         $this->accessor = $accessor;
         $this->modelFile = $this->getModelFile($this->model->path, $this->model->name);
+        $this->modelFileContent = file($this->modelFile, 2);
     }
 
     /**
      * Добавить аксессор
      *
      * @return bool
-     * @throws AccessorNotWrittenException
      * @throws ModelNotWrittenException
-     * @throws ParseFormulaException
-     * @throws \Exception
      */
-    public function build()
+    public function create()
     {
         if (! file_exists($this->modelFile)) {
             throw new ModelNotFoundException("Файл модели не найден!", 500);
         }
-
-        if (! $this->parseFormula($this->data['formula'])) {
-            throw new ParseFormulaException('Ошибка в формуле!', 500);
-        }
-
-        $modelFileContent = file($this->modelFile, 2);
-        $appends = $this->getAppendColumns($modelFileContent);
-
-        if ($this->accessorExists($modelFileContent, $this->data['name'])) {
-            throw new AccessorNotWrittenException("Аксессор {$this->data['name']} уже существует в модели!", 500);
-        }
-
-        if (! $this->addAccessor()) {
-            throw new AccessorNotWrittenException('Ошибка добавления аксессора!', 500);
-        }
-
-        if (! $this->writeAccessors($modelFileContent, $appends)) {
+        $appends = $this->getAppendColumns($this->modelFileContent);
+        if (! $this->writeAccessors($appends)) {
             throw new ModelNotWrittenException('Ошибка записи аксессора в файл модели!', 500);
         }
-
         return true;
     }
 
-
     /**
-     * Удалить аксессор
+     * Обновить аксессор
      *
      * @return bool
-     * @throws AccessorNotFoundException
      * @throws ModelNotWrittenException
-     * @throws \Exception
-     */
-    public function delete()
-    {
-        if (! $this->removeAccessor()) {
-            throw new AccessorNotFoundException("Ошибка удаления аксессора!", 500);
-        }
-
-        if (! file_exists($this->modelFile)) {
-            throw new ModelNotFoundException("Файл модели не найден!", 404);
-        }
-
-        $modelFileContent = file($this->modelFile, 2);
-        $appends = $this->getAppendColumns($modelFileContent);
-        $search = array_search("'{$this->accessor->name}'", $appends);
-        if ($search !== false) {
-            array_splice($appends, $search ,1);
-        }
-
-        if (! $this->writeAccessors($modelFileContent, $appends)) {
-            throw new ModelNotWrittenException('Ошибка записи аксессора в файл модели!', 500);
-        }
-
-        return true;
-    }
-
-    /**
-     * @return bool
-     * @throws AccessorNotWrittenException
-     * @throws ModelNotWrittenException
-     * @throws ParseFormulaException
      * @throws \Exception
      */
     public function update()
@@ -137,97 +93,66 @@ class AccessorBuilder
         if (! file_exists($this->modelFile)) {
             throw new ModelNotFoundException("Файл модели не найден!", 500);
         }
-
-        if (! $this->parseFormula($this->data['formula'])) {
-            throw new ParseFormulaException('Ошибка в формуле!', 500);
-        }
-
-        $modelFileContent = file($this->modelFile, 2);
-        $appends = $this->getAppendColumns($modelFileContent);
-
-        if (! $this->updateAccessor()) {
-            throw new AccessorNotWrittenException('Ошибка обновления аксессора!', 500);
-        }
-
-        if (! $this->writeAccessors($modelFileContent, $appends)) {
+        $appends = $this->getAppendColumns($this->modelFileContent);
+        if (! $this->writeAccessors($appends)) {
             throw new ModelNotWrittenException('Ошибка записи аксессора в файл модели!', 500);
         }
-
         return true;
     }
 
     /**
-     * Удалить аксессор из таблицы БД
+     * Удалить аксессор
      *
      * @return bool
+     * @throws ModelNotWrittenException
      * @throws \Exception
      */
-    protected function removeAccessor()
+    public function delete()
     {
-        return $this->accessor->delete() ? true : false;
+        $appends = $this->getAppendColumns($this->modelFileContent);
+        $search = array_search("'{$this->accessor->name}'", $appends);
+        if ($search !== false) {
+            array_splice($appends, $search ,1);
+        }
+        if (! $this->writeAccessors($appends)) {
+            throw new ModelNotWrittenException('Ошибка записи аксессора в файл модели!', 500);
+        }
+        return true;
+    }
+
+    /**
+     * Получить вычисляемое значение
+     *
+     * @param $accessor
+     * @return mixed
+     */
+    public function getCalc($accessor)
+    {
+        if (isset($accessor->calculation))
+            return $accessor->calculation;
+        return $accessor->calculation_logic;
     }
 
     /**
      * Проверить, существует ли аксессор в модели
      *
-     * @param $modelFileContent
      * @param $accessor
      * @return bool
      */
-    protected function accessorExists($modelFileContent, $accessor)
+    public function accessorExists($accessor)
     {
-        foreach ($modelFileContent as $line => $content) {
+        foreach ($this->modelFileContent as $line => $content) {
             $accessorName = Str::studly($accessor);
-            if ((Str::contains($content, 'function get' . $accessorName . 'Attribute')
+            if (Str::contains($content, 'function get' . $accessorName . 'Attribute')
                 || Str::contains($content, 'function ' . $accessor)
                 || Str::contains($content, 'public $' . $accessor)
                 || Str::contains($content, 'protected $' . $accessor)
-                || Str::contains($content, 'private $' . $accessor))
+                || Str::contains($content, 'private $' . $accessor)
             ) {
                 return true;
             }
         }
         return false;
-    }
-
-    /**
-     * Сохранить аксессор в БД
-     *
-     * @return Accessor|bool
-     * @throws \Exception
-     */
-    protected function addAccessor()
-    {
-        $this->accessor->user_id =  auth()->user()->id;
-        $this->accessor->name = $this->data['name'];
-        $this->accessor->status = 'created';
-        $this->accessor->formula = $this->data['formula'];
-        $this->accessor->description = $this->data['description'] ?? null;
-        $this->accessor->model_id = $this->model->id;
-
-        return $this->accessor->save();
-    }
-
-    /**
-     * Обновить аксессор в БД
-     *
-     * @return Accessor|bool
-     * @throws AccessorNotWrittenException
-     */
-    public function updateAccessor()
-    {
-        if ($this->accessor && $this->accessor->user_id != auth()->user()->id) {
-            throw new AccessorNotWrittenException('Вы не можете обновить этот аксессор!', 500);
-        }
-
-        $this->accessor->user_id =  auth()->user()->id;
-        $this->accessor->status = 'updated';
-        $this->accessor->name = $this->data['name'];
-        $this->accessor->formula = $this->data['formula'];
-        $this->accessor->description = $this->data['description'] ?? null;
-        $this->accessor->model_id = $this->model->id;
-
-        return $this->accessor->save();
     }
 
     /**
@@ -237,7 +162,7 @@ class AccessorBuilder
      */
     protected function getAccessors()
     {
-        return Accessor::where('model_id', $this->model->id)->get();
+        return $this->model->altrp_accessors;
     }
 
     /**
@@ -253,19 +178,21 @@ class AccessorBuilder
     /**
      * Записать акссессоры в файл модели
      *
-     * @param $modelFileContent
      * @param $appends
      * @return bool
-     * @throws \Exception
      */
-    protected function writeAccessors($modelFileContent, $appends)
+    protected function writeAccessors($appends)
     {
         $accessors = $this->getAccessors();
         $appendsStubContent = $this->getAppendsStubContent();
         $content = [];
 
         foreach ($accessors as $accessor) {
-            if (! in_array("'$accessor->name'",$appends))
+            /**
+             * @var $accessor Accessor
+             */
+            $accessorName = $accessor->getOriginal('name') ?? $accessor->name;
+            if (! in_array("'$accessorName'",$appends))
                 $appends[] = "'$accessor->name'";
         }
 
@@ -281,6 +208,7 @@ class AccessorBuilder
         try {
             foreach ($accessors as $accessor) {
                 $accessorStubContent = $this->getAccessorStubContent();
+                $calc = $this->getCalc($accessor);
                 $accessorStubContent = str_replace(
                     '{{accessorName}}',
                     Str::studly($accessor->name),
@@ -291,32 +219,31 @@ class AccessorBuilder
                     $accessor->description,
                     $accessorStubContent
                 );
-                $formula = $this->parseFormula($accessor->formula);
                 $accessorStubContent = str_replace(
                     '{{accessorBody}}',
-                    'return ' . $formula . ';',
+                    $this->parseFormula($calc),
                     $accessorStubContent
                 );
                 $content = array_merge($content, $accessorStubContent);
             }
         } catch (\Exception $e) {
-
+            return false;
         }
 
-        for ($i = 0; $i < count($modelFileContent); $i++) {
-            if (strpos($modelFileContent[$i], 'ACCESSORS') !== false) {
+        for ($i = 0; $i < count($this->modelFileContent); $i++) {
+            if (strpos($this->modelFileContent[$i], 'ACCESSORS') !== false) {
                 for ($j = $i + 1; true; $j++) {
-                    if (strpos($modelFileContent[$j], 'ACCESSORS') !== false) break;
-                    unset($modelFileContent[$j]);
+                    if (strpos($this->modelFileContent[$j], 'ACCESSORS') !== false) break;
+                    unset($this->modelFileContent[$j]);
                 }
                 for ($j = count($content) - 1; $j >= 0; $j--) {
-                    array_splice($modelFileContent, $i + 1, 0, $content[$j]);
+                    array_splice($this->modelFileContent, $i + 1, 0, $content[$j]);
                 }
                 break;
             }
         }
 
-        if (! file_put_contents($this->modelFile, implode(PHP_EOL, $modelFileContent))) {
+        if (! file_put_contents($this->modelFile, implode(PHP_EOL, $this->modelFileContent))) {
             return false;
         }
         return true;
@@ -389,19 +316,39 @@ class AccessorBuilder
     /**
      * Проанализировать и спарсить формулу
      *
-     * @param string $formula
-     * @return string|string[]
-     * @throws \Exception
+     * @param $calc
+     * @return string|bool
+     * @throws ColumnNotFoundException
      */
-    protected function parseFormula($formula)
+    public function parseFormula($calc)
     {
-        if (preg_match_all("/(?<columns>\{[a-z_]+\})|(?<accessors>\{[a-zа-я_]+\(?\)?\})/msiu", $formula, $operands)) {
+        if (is_array(json_decode($calc, true)))
+            $calc = json_decode($calc, true);
+
+        if (! is_array($calc))
+            return $this->parseCalculation($calc);
+        elseif (is_array($calc))
+            return $this->parseCalculationLogic($calc);
+        else
+            return false;
+    }
+
+    /**
+     * Спарсить вычисляемые поля
+     *
+     * @param $calculation
+     * @return string|string[]
+     * @throws ColumnNotFoundException
+     */
+    protected function parseCalculation($calculation)
+    {
+        if (preg_match_all("/(?<columns>\[[a-z_]+\])|(?<accessors>\[[a-zа-я_]+\(?\)?\])/msiu", $calculation, $operands)) {
             $operands['columns'] = array_map(function ($operand) {
-                return trim($operand, '{}');
+                return trim($operand, '[]');
             }, $operands['columns']);
 
             $operands['accessors'] = array_map(function ($operand) {
-                return trim($operand, '{}()');
+                return trim($operand, '[]()');
             }, $operands['accessors']);
 
             if (! $this->columnsExists(array_diff($operands['columns'], ['']))) {
@@ -409,32 +356,101 @@ class AccessorBuilder
             }
 
             foreach ($operands['columns'] as $column) {
-                $formula = str_replace(
-                    "{{$column}}",
+                $calculation = str_replace(
+                    "[{$column}]",
                     '$this->' . trim($column, '{}'),
-                    $formula
+                    $calculation
                 );
             }
 
             $accessors = array_diff($operands['accessors'], ['']);
-//            if (! $this->accessorsExists($accessors)) {
-//                throw new AccessorNotFoundException('Аксессор не найден в модели', 500);
-//            }
+
             if ($accessors) {
                 foreach ($accessors as $accessor) {
-                    $formula = str_replace(
-                        "{{$accessor}()}",
+                    $calculation = str_replace(
+                        "[{$accessor}()]",
                         '$this->' . trim($accessor, '{}()'),
-                        $formula
+                        $calculation
                     );
                 }
             }
         }
-        return $formula;
+        if ($calculation)
+            return 'return ' . $calculation . ';';
+        return $calculation;
     }
 
     /**
-     * Проверить, ли такие аксессоры в БД
+     * Спарсить вычисляемую логику
+     *
+     * @param $calculationLogic
+     * @return array|bool
+     * @throws ColumnNotFoundException
+     */
+    protected function parseCalculationLogic($calculationLogic)
+    {
+        $colIds = [];
+        foreach ($calculationLogic as $calc) {
+            $colIds[] = $calc['left'];
+            if (isset($calc['right']['id']))
+                $colIds[] = $calc['right']['id'];
+        }
+        $columns = Column::whereIn('id',$colIds)->get();
+        $calcLogic = $this->replaceColsIds($calculationLogic, $columns);
+        if ($calcLogic)
+            return implode(PHP_EOL, $calcLogic);
+        return false;
+    }
+
+    /**
+     * Заменить id колонок на имена
+     *
+     * @param $calculationLogic
+     * @param $columns
+     * @return array
+     * @throws ColumnNotFoundException
+     */
+    protected function replaceColsIds($calculationLogic, $columns)
+    {
+        $calcLogic = [];
+        /**
+         * @var $columns Collection
+         */
+        foreach ($calculationLogic as $key => $calc) {
+            if ($columns->contains('id', $calc['left']))
+                $calc['left'] = '$this->' . $columns->firstWhere('id',  $calc['left'])->name;
+
+            if (isset($calc['right']['id']) && $columns->contains('id', $calc['right']['id']))
+                $calc['right'] = '$this->' . $columns->firstWhere('id',  $calc['right']['id'])->name;
+
+            $calc['result'] = $this->parseCalculation($calc['result']);
+            $calcLogic[] = !$key
+                ? $this->getCalcString($calc)
+                : $this->tabIndent . $this->tabIndent . $this->getCalcString($calc);
+        }
+
+        $calcLogic[] = $this->tabIndent . $this->tabIndent . "return null;";
+
+        return $calcLogic;
+    }
+
+    /**
+     * Получить вычисляемую логически сроку
+     *
+     * @param $calc
+     * @return string
+     */
+    protected function getCalcString($calc)
+    {
+        $operator = $calc['operator'] == '=' ? '==' : $calc['operator'];
+        $str = "if ({$calc['left']} $operator {$calc['right']}) {";
+        $str .= "\n{$this->tabIndent}{$this->tabIndent}{$this->tabIndent}";
+        $str .= "{$calc['result']}\n{$this->tabIndent}{$this->tabIndent}}";
+        return $str;
+    }
+
+    /**
+     * Проверить, есть ли такие аксессоры в БД
      *
      * @param $accessors
      * @return bool
