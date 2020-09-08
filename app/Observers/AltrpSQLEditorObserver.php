@@ -42,7 +42,7 @@ class AltrpSQLEditorObserver
         if ($controllerWriter->methodSqlExists($sQLEditor->name)) {
             throw new ControllerFileException('Method already exists', 500);
         }
-        $controllerWriter->writeSqlMethod($sQLEditor->name, $this->replaceDynamicVars(addslashes($sQLEditor->sql), true));
+        $controllerWriter->writeSqlMethod($sQLEditor->name, $this->replaceDynamicVars(addslashes($sQLEditor->sql), true), $sQLEditor->is_object);
     }
 
     /**
@@ -124,7 +124,8 @@ class AltrpSQLEditorObserver
         $controllerWriter->updateSqlMethod(
             $sQLEditor->getOriginal('name'),
             $sQLEditor->name,
-            $this->replaceDynamicVars(addslashes($sQLEditor->sql),true)
+            $this->replaceDynamicVars(addslashes($sQLEditor->sql),true),
+            $sQLEditor->is_object
         );
     }
 
