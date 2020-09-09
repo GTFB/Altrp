@@ -14,6 +14,15 @@ class JoinComponent extends Component {
         .then(targetColumnOptions => this.setState({ targetColumnOptions }));
     }
   }
+
+  componentDidMount() {
+    const { target_table } = this.props.item;
+    if (target_table) {
+      tablesOptions(target_table).getAll()
+        .then(targetColumnOptions => this.setState({ targetColumnOptions }));
+    }
+  }
+
   render() {
     const { type, target_table, source_column, operator, target_column } = this.props.item;
     const { changeHandler, tablesOptions, sourceColumnOptions } = this.props;
