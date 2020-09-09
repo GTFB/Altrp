@@ -57,12 +57,12 @@
   }
 }
 
-.altrp-element.altrp-element_section .altrp-section {
+.altrp-section {
   position: relative;
   z-index: 50;
   width: calc(100vw - 20px);
   &.altrp-section--boxed > .altrp-element {
-    max-width: 1440px;
+    // width: 1440px;
     margin: 0 auto;
   }
 }
