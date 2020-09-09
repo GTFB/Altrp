@@ -20,6 +20,7 @@ class ColumnComponent extends Component {
       {
         className: "altrp-column " + (this.state.settings.position_style_css_classes || ""),
         id:this.state.settings.position_style_css_id || ""},
+
       this.state.children.map(
         section => <ElementWrapper key={section.getId()} component={section.componentClass} element={section}/>
       )
