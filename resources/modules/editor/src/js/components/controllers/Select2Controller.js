@@ -37,16 +37,19 @@ class Select2Controller extends Component {
   async _componentDidMount(){
     if(this.state.value && this.getRoute()){
       let resource = new Resource({route: this.getRoute()});
-      let options = await resource.search(this.state.value);
+      let options = await resource.search(this.props.currentElement.getSettings(this.props.controlId));
+      if(this.props.nullable){
+        options = _.union([{label:'None',value:'',}], options);
+      }
+
       this.setState(state => ({
         ...state,
         options
       }));
     } else if(this.props.nullable){
-      let options = _.merge([{label:'None',value:'',}], options);
       this.setState(state => ({
         ...state,
-        options
+        options: [{label:'None',value:'',}],
       }));
     }
   }
@@ -78,7 +81,7 @@ class Select2Controller extends Component {
     let resource = new Resource({route: this.getRoute()});
     let options = await resource.search(searchString);
     if(this.props.nullable){
-      options = _.merge([{label:'None',value:'',}], options);
+      options = _.union([{label:'None',value:'',}], options);
     }
     this.setState(state => ({
       ...state,
@@ -159,6 +162,13 @@ class Select2Controller extends Component {
     this.state.options.forEach(option => {
       if (option.value === value) {
         value = { ...option };
+      }
+      if(_.isArray(option.options)){
+        option.options.forEach(option => {
+          if (option.value === value) {
+            value = { ...option };
+          }
+        })
       }
     });
     let selectProps = {

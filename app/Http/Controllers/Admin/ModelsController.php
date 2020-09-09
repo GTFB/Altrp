@@ -48,12 +48,63 @@ class ModelsController extends HttpController
    */
     public function models_options( Request $request )
     {
+      if( ! $request->get( 'with_sql_queries' ) ){
         return response()->json(
-        Model::getModelsOptions(
+          Model::getModelsOptions(
             $request->get( 'with_names' ),
             $request->get( 'not_plural' ),
             $request->get( 's' )
-        ));
+          ));
+      } else {
+        $data_sources = [];
+        $model_data_sources = [];
+        foreach ( Model::getModelsOptions(
+          $request->get( 'with_names' ),
+          $request->get( 'not_plural' ),
+          $request->get( 's' )
+        ) as $modelsOption ) {
+          if( $modelsOption['value'] === 'user' ){
+            continue;
+          }
+          $model_data_sources[] = [
+            'label' => $modelsOption['label'],
+            'value' => $modelsOption['value'],
+            'type' => 'model_query'
+          ];
+        }
+
+        if( count( $model_data_sources ) ){
+          $data_sources[] = [
+            'label' => 'Models',
+            'options' => $model_data_sources,
+            'type' => 'models query'
+          ];
+        }
+        /**
+         * Добавляем варианты с SQL-editors
+         */
+        $sql_editors_data_sources = [];
+
+        $_sqls = SQLEditor::all();
+
+        foreach ( $_sqls as $sql ) {
+          $sql_editors_data_sources[] = [
+            'label' => $sql->model->title . ': ' . $sql->title,
+            'value' => '/ajax/models/queries/' . $sql->model->altrp_table->name . '/' . $sql->name,
+            'sql_name' => $sql->name,
+            'type' => 'sql_datasource'
+          ];
+        }
+
+        if( count( $sql_editors_data_sources ) ){
+          $data_sources[] = [
+            'label' => 'Data from SQLEditors',
+            'options' => $sql_editors_data_sources,
+          ];
+        }
+
+        return response()->json( $data_sources, 200, [],JSON_UNESCAPED_UNICODE );
+      }
     }
 
     /**
