@@ -38,6 +38,7 @@ class SectionComponent extends Component {
       `altrp-section_columns-${this.props.element.getColumnsCount()}`
     ];
 
+
     let sectionWrapper = this.state.children.map(column => (
       <ElementWrapper
         key={column.getId()}
