@@ -57,9 +57,14 @@
   }
 }
 
-.altrp-section {
+.altrp-element.altrp-element_section .altrp-section {
   position: relative;
   z-index: 50;
+  width: calc(100vw - 20px);
+  &.altrp-section--boxed > .altrp-element {
+    max-width: 1440px;
+    margin: 0 auto;
+  }
 }
 
 .altrp-column {
@@ -218,6 +223,7 @@
   margin-left: auto !important;
   margin-right: auto !important;
 }
+
 
 .altrp-table {
   border-collapse: collapse;

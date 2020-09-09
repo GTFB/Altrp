@@ -23,15 +23,16 @@ class SectionComponent extends Component {
 
   render() {
     let styles = {};
-    let width = {};
+    // let width = {};
     const { gradient: { isWithGradient }, background_image } = this.props.element.settings;
-    if (this.state.settings.layout_content_width_type === "full") {
-      width = {
-        width: getWindowWidth() + "px"
-      }
-    } else {
-      width = {}
-    }
+    const isContentBoxed = this.state.settings.layout_content_width_type === "boxed";
+    // if (this.state.settings.layout_content_width_type === "full") {
+    //   width = {
+    //     width: getWindowWidth() + "px"
+    //   }
+    // } else {
+    //   width = {}
+    // }
 
 
     let sectionClasses = [
@@ -47,6 +48,10 @@ class SectionComponent extends Component {
       sectionClasses.push('altrp-background-image');      
     }
 
+    if (isContentBoxed) {
+      sectionClasses.push('altrp-section--boxed');
+    }
+
     let sectionWrapper = this.state.children.map(column => (
       <ElementWrapper
         key={column.getId()}
@@ -56,9 +61,9 @@ class SectionComponent extends Component {
       />
     ));
 
-    if (this.state.settings.layout_content_width_type == "full") {
-      styles.width = getWindowWidth() + "px"
-    }
+    // if (this.state.settings.layout_content_width_type == "full") {
+    //   styles.width = getWindowWidth() + "px"
+    // }
 
     if (this.state.settings.layout_height == "fit") {
       styles.height = "100vh"
