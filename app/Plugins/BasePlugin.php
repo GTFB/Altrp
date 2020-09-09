@@ -2,7 +2,8 @@
 
 namespace App\Plugins;
 
-abstract class BasePlugin{
+abstract class BasePlugin
+{
 
       public $pluginImage;
       public $pluginName; //на будущее, возможность изменять имя плагина
@@ -11,56 +12,69 @@ abstract class BasePlugin{
       public function __construct()
       {
             $this->pluginImage = asset('/img/plugin.png');
-            $this->pluginsFile = config_path('plugins');
+            $this->pluginsFile = file_get_contents(app_path() . "/Plugins/plugins.json");
       }
 
-      public function getImage(){
-            return $this->pluginImage!=null ? $this->pluginImage : asset('/img/plugin.png');
+      public function getImage()
+      {
+            return $this->pluginImage != null ? $this->pluginImage : asset('/img/plugin.png');
       }
 
-      public function getPluginName(){
-            $path = explode('\\',get_called_class());
+      public function getPluginName()
+      {
+            $path = explode('\\', get_called_class());
             return $path[sizeof($path) - 1];
       }
 
-      public function pluginEnabled(){
-            return in_array($this->getPluginName(), config('plugins')) ? true : false;
+      public function pluginEnabled()
+      {
+            $pluginsConf = file_get_contents(app_path() . "/Plugins/plugins.json");
+            $enabledPlugins = json_decode($pluginsConf, true)['enabled'];
+            return in_array($this->getPluginName(), $enabledPlugins) ? true : false;
       }
 
-      public function enable(){
-            return !$this->pluginEnabled() ? $this->enablePlugin() : 'Plugin is already activated';
+      public function enable()
+      {
+            return !$this->pluginEnabled() ? $this->enablePlugin() : false;
       }
 
-      public function disable(){
-            return $this->pluginEnabled() ? $this->disablePlugin() : 'Plugin is already disabled';
+      public function disable()
+      {
+            return $this->pluginEnabled() ? $this->disablePlugin() : false;
       }
 
-      private function disablePlugin(){
-            $data = file_get_contents(config_path('plugins').'.php');
+      private function disablePlugin()
+      {
+            $pluginsFile =  app_path() . "/Plugins/plugins.json";
+            $pluginsFileStream = file_get_contents($pluginsFile);
+            $plugins = json_decode($pluginsFileStream, true);
+
+            if (in_array($this->getPluginName(), $plugins['enabled'])) {
+                  $pluginKey = array_search($this->getPluginName(),$plugins['enabled']);
+                  unset($plugins['enabled'][$pluginKey]);
+            }
             
-            $pluginName = $this->getPluginName();
+            $putData = json_encode($plugins);
 
-            $str = str_replace("'$pluginName'," ?? "'$pluginName'", '',$data);
-            
-            file_put_contents(config_path('plugins').'.php',$str);
+            file_put_contents($pluginsFile, $putData);
 
-            return 'Plugin has been successful disabled';
+            return true;
       }
 
-      private function enablePlugin(){
-            $data = file_get_contents(config_path('plugins').'.php');
-            $pos = strrpos($data, "\r\n");
-            $pluginName = $this->getPluginName();
-            
-            if($pos !== false)
-            {
-                $str = substr_replace($data, "'$pluginName',\r\n", $pos, strlen("\r\n"));
+      private function enablePlugin()
+      {
+            $pluginsFile =  app_path() . "/Plugins/plugins.json";
+            $pluginsFileStream = file_get_contents($pluginsFile);
+            $plugins = json_decode($pluginsFileStream, true);
+
+            if (!in_array($this->getPluginName(), $plugins['enabled'])) {
+                  $plugins['enabled'][] = $this->getPluginName();
             }
 
-            file_put_contents(config_path('plugins').'.php',$str);
+            $putData = json_encode($plugins);
 
-            return 'Plugin has been successful enabled';
+            file_put_contents($pluginsFile, $putData);
+
+            return true;
       }
-
-
 }

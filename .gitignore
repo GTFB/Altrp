@@ -33,3 +33,4 @@ _ide_helper.php
 /out
 /app/Http/Requests/AltrpRequests
 /app/Plugins/*/
+/app/Plugins/plugins.json
