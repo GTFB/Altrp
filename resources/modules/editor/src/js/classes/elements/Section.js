@@ -13,7 +13,8 @@ import {
   CONTROLLER_LINK,
   CONTROLLER_COLWIDTH,
   TAB_STYLE,
-  CONTROLLER_GRADIENT
+  CONTROLLER_GRADIENT,
+  CONTROLLER_MEDIA
 } from "../modules/ControllersManager";
 import {advancedTabControllers} from "../../decorators/register-controllers";
 
@@ -358,21 +359,30 @@ class Section extends BaseElement{
       }
     });
 
-    // this.addControl('gradient', {
-    //   type: CONTROLLER_GRADIENT,
-    //   label: 'Gradient',
-    //   default: {
-    //     firstColor: "#61CE70",
-    //     firstPoint: '0',
-    //     secondColor: "#F2295B",
-    //     secondPoint: "100",
-    //     angle: "0"
-    //   },
-    //   rules: {
-    //     "{{ELEMENT}} .altrp-section{{STATE}}": "background-image: linear-gradient({{ANGLE}}deg, {{FIRSTCOLOR}} {{FIRSTPOINT}}%, {{SECONDCOLOR}} {{SECONDPOINT}}%);" 
-    //   }
-    //   //background-image: linear-gradient(360deg, #61CE70 0%, #F2295B 100%);
-    // });
+    this.addControl('gradient', {
+      type: CONTROLLER_GRADIENT,
+      label: 'Gradient',
+      default: {
+        isWithGradient: false,
+        firstColor: "rgba(97,206,112,1)",
+        firstPoint: '0',
+        secondColor: "rgba(242,41,91,1)",
+        secondPoint: "100",
+        angle: "0"
+      },
+      rules: {
+        "{{ELEMENT}} > .altrp-gradient{{STATE}}": "background-image: linear-gradient({{ANGLE}}deg, {{FIRSTCOLOR}} {{FIRSTPOINT}}%, {{SECONDCOLOR}} {{SECONDPOINT}}%);" 
+      }
+    });
+
+    this.addControl('image', {
+      type: CONTROLLER_MEDIA,
+      label: 'Background image',
+      default: {url: ""},
+      rules: {
+        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "background: repeat url({{URL}});"
+      }
+    });
 
     this.endControlSection();
 
