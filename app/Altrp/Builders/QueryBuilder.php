@@ -120,7 +120,7 @@ class QueryBuilder
         $methodBody = "\n\n{$this->tabIndent}public function " . $this->getMethodName() . "()\n{$this->tabIndent}{\n"
         . "{$this->tabIndent}{$this->tabIndent}return \$this->model()\n"
         . implode("{$this->threeTabs}",$queryBody) . $this->tabIndent . "}{$this->tabIndent}";
-        return $this->replaceDynamicVars($methodBody);
+        return $this->replaceDynamicVars($methodBody,1);
     }
 
     /**
@@ -568,9 +568,14 @@ class QueryBuilder
     {
         if (! $aggregates) return $this;
         $aggregatesList = [];
-        foreach ($aggregates as $aggregate) {
-            $aggregatesList[] = $aggregate['type'] . "({$aggregate['column']}) as {$aggregate['alias']}";
+        if (is_array($aggregates)) {
+            foreach ($aggregates as $aggregate) {
+                $aggregatesList[] = $aggregate['type'] . "({$aggregate['column']}) as {$aggregate['alias']}";
+            }
+        } else {
+            $aggregatesList[] = $aggregates;
         }
+
         $this->queryBody->aggregates = '->selectRaw(\'' . implode(', ', $aggregatesList) . '\')' . "\n";
         return $this;
     }
@@ -756,8 +761,9 @@ class QueryBuilder
     {
         if (! $cond) return $this;
         $conditionList = [];
+        $operator = $cond['operator'] ?? '=';
         $whereType = $cond['type'] != 'datetime' ? ucfirst($cond['type']) : null;
-        $conditionList[] = "where{$whereType}('{$cond['column']}'," . "'{$cond['operator']}'," . "'{$cond['value']}')";
+        $conditionList[] = "where{$whereType}(\"{$cond['column']}\"," . "\"{$operator}\"," . "\"{$cond['value']}\")";
         $this->queryBody->conditions[] = "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
         return $this;
     }
@@ -839,6 +845,7 @@ class QueryBuilder
     public function getOffset($offset)
     {
         if (! $offset) return $this;
+        $offset = filter_var($offset, FILTER_VALIDATE_INT) ? $offset : '"' . $offset . '"';
         $this->queryBody->offset = "->offset($offset)\n";
         return $this;
     }
@@ -852,6 +859,7 @@ class QueryBuilder
     public function getLimit($limit)
     {
         if (! $limit) return $this;
+        $limit = filter_var($limit, FILTER_VALIDATE_INT) ? $limit : '"' . $limit . '"';
         $this->queryBody->limit = "->limit($limit)\n";
         return $this;
     }
@@ -874,7 +882,8 @@ class QueryBuilder
             $targetTableName = $targetTable->name;
             $targetColumn = $targetTable->columns->firstWhere('id',$join['target_column'])->name;
             $sourceTableName = $this->model->altrp_table->name;
-            $sourceColumn = $this->model->altrp_table->columns->firstWhere('id',$join['source_column'])->name;
+//            $sourceColumn = $this->model->altrp_table->columns->firstWhere('id',$join['source_column'])->name;
+            $sourceColumn = $join['source_column'];
             $operator = $join['operator'];
 
             if ($type == 'inner_join') {

@@ -42,6 +42,19 @@ class ModelsController extends HttpController
         return response()->json(Model::getModelsForEditor());
     }
 
+    /**
+     * Получить модели без родительской модели
+     *
+     * @return JsonResponse
+     */
+    public function getModelsWithoutParent()
+    {
+        $models = Model::select(['id as value', 'title as label'])
+            ->whereNull('parent_model_id')
+            ->get();
+        return response()->json($models, 200);
+    }
+
   /**
    * @param Request $request
    * @return JsonResponse
