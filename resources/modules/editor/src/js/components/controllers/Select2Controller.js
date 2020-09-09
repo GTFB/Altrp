@@ -42,6 +42,12 @@ class Select2Controller extends Component {
         ...state,
         options
       }));
+    } else if(this.props.nullable){
+      let options = _.merge([{label:'None',value:'',}], options);
+      this.setState(state => ({
+        ...state,
+        options
+      }));
     }
   }
   /**
@@ -51,7 +57,7 @@ class Select2Controller extends Component {
    */
   getRoute(){
     let route = this.props.options_resource;
-    if((! route) || (! route.match(/{{([^}]*)}}/))){
+    if((route === undefined) || (! route.match(/{{([^}]*)}}/))){
       return route;
     }
     let settingName = route.match(/{{([^}]*)}}/)[1];
@@ -71,6 +77,9 @@ class Select2Controller extends Component {
     }
     let resource = new Resource({route: this.getRoute()});
     let options = await resource.search(searchString);
+    if(this.props.nullable){
+      options = _.merge([{label:'None',value:'',}], options);
+    }
     this.setState(state => ({
       ...state,
       options

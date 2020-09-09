@@ -93,6 +93,10 @@ class Input extends BaseElement{
           label: 'Select'
         },
         {
+          value: 'select2',
+          label: 'Select2'
+        },
+        {
           value: 'hidden',
           label: 'Hidden'
         },
@@ -167,6 +171,7 @@ class Input extends BaseElement{
       },
       nullable: true,
       options_resource: '/admin/ajax/models_options?with_names=1&not_plural=1',
+      prefetchOptions: true,
     });
 
     this.addControl('content_options', {

@@ -1,7 +1,7 @@
 import React, {Component} from "react";
-import { set } from "lodash";
 import {parseOptionsFromSettings} from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
+import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 // import InputMask from "react-input-mask";
 
 class InputWidget extends Component {
@@ -24,7 +24,13 @@ class InputWidget extends Component {
    * Загрузка виджета
    */
   async _componentDidMount(){
-    if(this.state.settings.content_type === 'select' && this.state.settings.model_for_options){
+    // if(this.state.settings.content_type === 'select' && this.state.settings.model_for_options){
+    //   let model_for_options = this.props.element.getSettings('model_for_options');
+    //   let options = await(new Resource({route: `/ajax/models/${model_for_options}_options`})).getAll();
+    //   this.setState(state =>({...state, options}))
+    // }
+    console.log(this.state.settings.model_for_options);
+    if((['select','select2'].indexOf(this.state.settings.content_type) >= 0) && this.state.settings.model_for_options){
       let model_for_options = this.props.element.getSettings('model_for_options');
       let options = await(new Resource({route: `/ajax/models/${model_for_options}_options`})).getAll();
       this.setState(state =>({...state, options}))
@@ -144,6 +150,10 @@ class InputWidget extends Component {
         </select>
       }
       break;
+      case 'select2':{
+        input = this.renderSelect2();
+      }
+      break;
     }
     return <div className={"altrp-field-container " + classLabel}>
         {this.state.settings.content_label_position_type == "top" ? label : ""}
@@ -156,6 +166,21 @@ class InputWidget extends Component {
       {this.state.settings.content_label_position_type == "bottom" ? label : ""}
       {this.state.settings.content_label_position_type == "bottom" ? required : ""}
     </div>
+  }
+
+  /**
+   * Выводит инпут-select2, используя компонент AltrpSelect
+   */
+  renderSelect2() {
+
+    // console.log(AltrpSelect);
+
+    const select2Props = {
+      className: 'altrp-field-select2',
+      classNamePrefix: 'altrp-field-select2',
+      options: this.state.options
+    };
+    return <AltrpSelect {...select2Props} />;
   }
 }
 

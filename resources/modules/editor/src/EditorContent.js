@@ -16,8 +16,6 @@ import './js/components/altrp-lightbox/altrp-lightbox.scss';
 import 'react-image-lightbox/style.css';
 import {changeCurrentModel} from "../../front-app/src/js/store/current-model/actions";
 
-// console.log('dsaf');
-
 
 class EditorContent extends Component {
   constructor(props) {
@@ -26,6 +24,7 @@ class EditorContent extends Component {
     this.editorWindow = React.createRef();
     store.subscribe(this.currentElementListener.bind(this));
     window.altrpEditorContent = this;
+    this.editorContent = React.createRef();
   }
 
   currentElementListener(data){

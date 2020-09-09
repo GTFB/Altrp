@@ -79,7 +79,12 @@ class Resource {
         'Content-Type': 'application/json'
       },
     };
-    let url = this.route + `?s=${searchString}`;
+    let url;
+    if(this.route.indexOf('?') === -1){
+      url = this.route + `?s=${searchString}`;
+    } else {
+      url = this.route + `&s=${searchString}`;
+    }
     return fetch(url, options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);

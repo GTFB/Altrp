@@ -260,7 +260,7 @@ class Model extends EloquentModel
     public static function getBySearch($search)
     {
         return self::where('title','like', "%{$search}%")
-            ->orWhere('id', $search)
+            ->orWhere('id', 'like', "%{$search}%")
           ->orderByDesc('id')
           ->get();
     }

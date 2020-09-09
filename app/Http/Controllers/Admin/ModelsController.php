@@ -52,7 +52,7 @@ class ModelsController extends HttpController
         Model::getModelsOptions(
             $request->get( 'with_names' ),
             $request->get( 'not_plural' ),
-            $request->get('s')
+            $request->get( 's' )
         ));
     }
 
