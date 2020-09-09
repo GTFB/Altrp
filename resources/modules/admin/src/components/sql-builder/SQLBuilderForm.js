@@ -232,7 +232,7 @@ class SQLBuilderForm extends Component {
     this.setState(state => {
       const joins = [...state.value.joins];
       joins.push({
-        type: '', source_table: '', target_table: '', source_column: '', operator: '', target_column: ''
+        type: '', target_table: '', source_column: '', operator: '', target_column: ''
       });
       return {
         ...state,
@@ -537,6 +537,7 @@ class SQLBuilderForm extends Component {
         </div>
         <JoinComponent item={item}
           tablesOptions={tablesOptions}
+          sourceColumnOptions={selfFieldsOptions}
           changeHandler={e => this.joinChangeHandler(e, index)}
         />
       </Fragment>)}
