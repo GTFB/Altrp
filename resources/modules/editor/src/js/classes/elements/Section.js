@@ -369,10 +369,11 @@ class Section extends BaseElement{
         firstPoint: '0',
         secondColor: "rgba(242,41,91,1)",
         secondPoint: "100",
-        angle: "0"
+        angle: "0",
+        value: ""
       },
       rules: {
-        "{{ELEMENT}} > .altrp-gradient{{STATE}}": "background-image: linear-gradient({{ANGLE}}deg, {{FIRSTCOLOR}} {{FIRSTPOINT}}%, {{SECONDCOLOR}} {{SECONDPOINT}}%);" 
+        "{{ELEMENT}} .altrp-section{{STATE}}": "background-image: {{VALUE}}" 
       }
     });
 

@@ -15,28 +15,43 @@ class GradientController extends Component {
   }
 
   colorChange = (color, name) => {
-    const gradient = this.getSettings(this.props.controlId) || this.props.currentElement.settings.gradient;
+    let gradient = this.getSettings(this.props.controlId) || this.props.currentElement.settings.gradient;
+    gradient = { ...gradient, [name]: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})` };
+    const { isWithGradient, angle, firstColor, firstPoint, secondColor, secondPoint } = gradient;
+
     this._changeValue({
       ...gradient,
-      [name]: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
+      value: isWithGradient ? 
+        `linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%);` : ''
     });
   };
 
   setNumber = ({ target: { name, value } }) => {
-    const gradient = this.getSettings(this.props.controlId) || this.props.currentElement.settings.gradient;
+    let gradient = this.getSettings(this.props.controlId) || this.props.currentElement.settings.gradient;
+    gradient = { ...gradient, [name]: value };
+    const { isWithGradient, angle, firstColor, firstPoint, secondColor, secondPoint } = gradient;
+
     this._changeValue({
       ...gradient,
-      [name]: value
+      value: isWithGradient ?
+        `linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%);` : ''
     });
   }
 
   toggle = () => {
-    const gradient = this.getSettings(this.props.controlId) || this.props.currentElement.settings.gradient;
-    this._changeValue({ ...gradient, isWithGradient: !gradient.isWithGradient });
+    let gradient = this.getSettings(this.props.controlId) || this.props.currentElement.settings.gradient;
+    gradient = { ...gradient, isWithGradient: !gradient.isWithGradient };
+    const { isWithGradient, angle, firstColor, firstPoint, secondColor, secondPoint } = gradient;
+
+    this._changeValue({ 
+      ...gradient, 
+      value: isWithGradient ? 
+        `linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%);` : ''
+    });
   }
 
   render() {
-    const { isWithGradient, angle, firstColor, firstPoint, secondColor, secondPoint } = 
+    const { isWithGradient, angle, firstColor, firstPoint, secondColor, secondPoint } =
       this.getSettings(this.props.controlId) || this.props.currentElement.settings.gradient;
     const { opened1, opened2 } = this.state;
 

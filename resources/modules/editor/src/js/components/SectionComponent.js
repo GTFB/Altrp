@@ -24,7 +24,7 @@ class SectionComponent extends Component {
   render() {
     let styles = {};
     // let width = {};
-    const { gradient: { isWithGradient }, background_image } = this.props.element.settings;
+    const { background_image } = this.props.element.settings;
     const isContentBoxed = this.state.settings.layout_content_width_type === "boxed";
     // if (this.state.settings.layout_content_width_type === "full") {
     //   width = {
@@ -39,10 +39,6 @@ class SectionComponent extends Component {
       'altrp-section',
       `altrp-section_columns-${this.props.element.getColumnsCount()}`
     ];
-
-    if (isWithGradient) {
-      sectionClasses.push('altrp-gradient');
-    }
 
     if (background_image.url) {
       sectionClasses.push('altrp-background-image');      
