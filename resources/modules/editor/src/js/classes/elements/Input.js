@@ -255,7 +255,7 @@ class Input extends BaseElement{
 
     this.addControl("label_style_font_color", {
       type: CONTROLLER_COLOR,
-      label: "font color",
+      label: "Font Color",
       default: {
         color: "",
         colorPickedHex: "",
@@ -498,13 +498,14 @@ class Input extends BaseElement{
 
     this.addControl('background_style_background_color', {
         type: CONTROLLER_COLOR,
-        label: 'Border Color',
+        label: 'Background Color',
         default: {
           color: "",
           colorPickedHex: "",
         },
         rules: {
           '{{ELEMENT}} .altrp-field{{STATE}}': 'background-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'background-color: {{COLOR}};',
         },
       }
     );
