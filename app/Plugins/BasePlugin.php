@@ -7,12 +7,10 @@ abstract class BasePlugin
 
       public $pluginImage;
       public $pluginName; //на будущее, возможность изменять имя плагина
-      private $pluginsFile;
 
       public function __construct()
       {
             $this->pluginImage = asset('/img/plugin.png');
-            $this->pluginsFile = file_get_contents(app_path() . "/Plugins/plugins.json");
       }
 
       public function getImage()
@@ -53,7 +51,7 @@ abstract class BasePlugin
                   $pluginKey = array_search($this->getPluginName(),$plugins['enabled']);
                   unset($plugins['enabled'][$pluginKey]);
             }
-            
+
             $putData = json_encode($plugins);
 
             file_put_contents($pluginsFile, $putData);
