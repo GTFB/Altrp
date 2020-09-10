@@ -25,7 +25,7 @@ class SectionComponent extends Component {
     let styles = {};
     // let width = {};
     const { background_image } = this.props.element.settings;
-    const isContentBoxed = this.state.settings.layout_content_width_type === "boxed";
+    const widthType = this.state.settings.layout_content_width_type;
     // if (this.state.settings.layout_content_width_type === "full") {
     //   width = {
     //     width: getWindowWidth() + "px"
@@ -44,8 +44,12 @@ class SectionComponent extends Component {
       sectionClasses.push('altrp-background-image');      
     }
 
-    if (isContentBoxed) {
+    if (widthType === "boxed") {
       sectionClasses.push('altrp-section--boxed');
+    }
+
+    if (widthType === "full") {
+      sectionClasses.push('altrp-section--full-width');
     }
 
     let sectionWrapper = this.state.children.map(column => (
