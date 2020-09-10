@@ -16,12 +16,9 @@ class ColumnComponent extends Component {
   }
   
   render(){
-    // const { gradient } = this.state.settings;
-    const  gradient  = this.props.element.getSettings('gradient', {});
-
     return React.createElement(this.state.settings.layout_html_tag || "div",
       {
-        className: "altrp-column " + (this.state.settings.position_style_css_classes || "") + (gradient.isWithGradient ? " altrp-gradient" : ""),
+        className: "altrp-column " + (this.state.settings.position_style_css_classes || ""),
         id:this.state.settings.position_style_css_id || ""
       },
       this.state.children.map(
