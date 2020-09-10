@@ -4,10 +4,14 @@
 ## Changelog
 
 
+### 0.9.0
++ Add Map, Diagram Widgets
+
 ### 0.8.0
 + Add Filters and Sorting in Table Widget
 + Add Auth/not Auth Elements Conditions  
-+ Redirects to Pages
++ Redirects Settings to Pages
++ Add Settings for Sorting by Default, and Numbering in order for Table Widgets
 
 ### 0.7.0
 + Add Hover, Active, Disabled States Styling

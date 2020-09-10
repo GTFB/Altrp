@@ -14,7 +14,8 @@ class SQLEditor extends Model
     'title',
     'model_id',
     'description',
-      'updated_at'
+    'updated_at',
+    'is_object',
   ];
 
     public function altrp_source()

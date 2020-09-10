@@ -60,7 +60,16 @@
 .altrp-section {
   position: relative;
   z-index: 50;
+  &.altrp-section--boxed > .altrp-element {
+    // width: 1440px;
+    margin: 0 auto;
+  }
+  &.altrp-section--full-width, &.altrp-section--boxed {
+    width: calc(100vw - 20px);
+  }
 }
+
+
 
 .altrp-column {
   display: flex;
@@ -218,6 +227,7 @@
   margin-left: auto !important;
   margin-right: auto !important;
 }
+
 
 .altrp-table {
   border-collapse: collapse;

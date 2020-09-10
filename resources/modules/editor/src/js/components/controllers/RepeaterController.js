@@ -88,6 +88,21 @@ class RepeaterController extends Component {
     this._changeValue(items);
   }
 
+  /**
+   * При смене элемента, нужно заново взять значение репитера
+   * @param {Object} prevProps
+   */
+  _componentDidUpdate(prevProps){
+    /**
+     *  если элемент другой обновим items
+     */
+    if(prevProps.currentElement.getId() !== this.props.currentElement.getId()){
+      let items = prevProps.default || [];
+      items = this.getSettings(this.props.controlId) || items;
+      this.setState(state => ({...state, items}))
+    }
+  }
+
   render() {
     if (this.state.show === false) {
       return '';

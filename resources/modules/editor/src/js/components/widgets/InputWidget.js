@@ -1,7 +1,9 @@
 import React, {Component} from "react";
-import { set } from "lodash";
-import {parseOptionsFromSettings} from "../../../../../front-app/src/js/helpers";
+import {parseOptionsFromSettings, parseParamsFromString} from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
+import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
+import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
+import AltrpModel from "../../classes/AltrpModel";
 // import InputMask from "react-input-mask";
 
 class InputWidget extends Component {
@@ -12,8 +14,12 @@ class InputWidget extends Component {
     this.state = {
       settings: {...props.element.getSettings()},
       value: props.element.getSettings().content_default_value || '',
-      options: parseOptionsFromSettings(props.element.getSettings('content_options'))
+      options: parseOptionsFromSettings(props.element.getSettings('content_options')),
+      paramsForUpdate: null,
     };
+    if(props.element.getSettings('content_default_value')){
+      this.dispatchFieldValueToStore(props.element.getSettings('content_default_value'));
+    }
     props.element.component = this;
     if(window.elementDecorator){
       window.elementDecorator(this);
@@ -24,23 +30,63 @@ class InputWidget extends Component {
    * Загрузка виджета
    */
   async _componentDidMount(){
-    if(this.state.settings.content_type === 'select' && this.state.settings.model_for_options){
-      let model_for_options = this.props.element.getSettings('model_for_options');
-      let options = await(new Resource({route: `/ajax/models/${model_for_options}_options`})).getAll();
+    if((['select','select2'].indexOf(this.state.settings.content_type) >= 0) && this.state.settings.model_for_options){
+      let options = await(new Resource({route: this.getRoute()})).getAll();
+      options = (! _.isArray(options)) ? options.data : options;
+      options = (_.isArray(options)) ? options : [];
       this.setState(state =>({...state, options}))
     }
+  }
+
+  /**
+   * Получить url для запросов
+   */
+  getRoute(){
+    let url = this.props.element.getSettings('model_for_options');
+
+    if(url.indexOf('/') === -1){
+      return `/ajax/models/${url}_options`
+    }
+    return url;
   }
   /**
    * Обновление виджета
    */
-  async componentDidUpdate(prevProps){
+  async componentDidUpdate(prevProps, prevState){
     if(this.props.element.getSettings('content_type') === 'select' && this.props.element.getSettings('model_for_options') ){
-      if(this.state.settings.model_for_options === prevProps.element.getSettings('model_for_options')){
-        return;
+      if(! (this.state.settings.model_for_options === prevProps.element.getSettings('model_for_options'))) {
+        let model_for_options = prevProps.element.getSettings('model_for_options');
+        let options = await (new Resource({route: this.getRoute()})).getAll();
+        options = (!_.isArray(options)) ? options.data : options;
+        options = (_.isArray(options)) ? options : [];
+        this.setState(state => ({...state, options, model_for_options}))
       }
-      let model_for_options = prevProps.element.getSettings('model_for_options');
-      let options = await (new Resource({route: `/ajax/models/${model_for_options}_options`})).getAll();
-      this.setState(state =>({...state, options,model_for_options}))
+    }
+    /**
+     * Если обновилось  хранилище данных форм
+     */
+    if(this.props.formsStore !== prevProps.formsStore){
+      let formId = this.props.element.getSettings('form_id');
+      let paramsForUpdate = this.props.element.getSettings('params_for_update');
+      let formData = _.get(this.props.formsStore, [formId], {});
+      paramsForUpdate = parseParamsFromString(paramsForUpdate, new AltrpModel(formData));
+      /**
+       * Сохраняем параметры запроса, и если надо обновляем опции
+       */
+      if(! _.isEqual(paramsForUpdate, this.state.paramsForUpdate)){
+        let options = this.state.options;
+        if(! _.isEmpty(paramsForUpdate)){
+          options = await (new Resource({route: this.getRoute()})).getQueried(paramsForUpdate);
+          options = (!_.isArray(options)) ? options.data : options;
+          options = (_.isArray(options)) ? options : [];
+        }
+        this.setState(state=>({
+            ...state,
+          paramsForUpdate,
+          options,
+          value: ''
+        }))
+      }
     }
   }
 
@@ -50,12 +96,34 @@ class InputWidget extends Component {
    * @param e
    */
   onChange(e){
-    let value = e.target.value;
+    let value = '';
+    if(e.target){
+      value = e.target.value;
+    }
+    if(e.value){
+      value = e.value;
+    }
+    this.dispatchFieldValueToStore(value);
+
     this.setState(state=>({
       ...state,
       value
     }));
   }
+
+  /**
+   * Передадим значение в хранилище формы
+   */
+  dispatchFieldValueToStore = (value) => {
+    let formId = this.props.element.getSettings('form_id');
+    let fieldName = this.props.element.getSettings('field_id');
+    if(_.isObject(this.props.appStore) && fieldName && formId){
+      this.props.appStore.dispatch(changeFormFieldValue(fieldName,
+          value,
+          formId
+      ))
+    }
+  };
 
   render(){
     let label = null;
@@ -144,6 +212,10 @@ class InputWidget extends Component {
         </select>
       }
       break;
+      case 'select2':{
+        input = this.renderSelect2();
+      }
+      break;
     }
     return <div className={"altrp-field-container " + classLabel}>
         {this.state.settings.content_label_position_type == "top" ? label : ""}
@@ -156,6 +228,42 @@ class InputWidget extends Component {
       {this.state.settings.content_label_position_type == "bottom" ? label : ""}
       {this.state.settings.content_label_position_type == "bottom" ? required : ""}
     </div>
+  }
+
+  /**
+   * Выводит инпут-select2, используя компонент AltrpSelect
+   */
+  renderSelect2() {
+
+    let options = this.state.options;
+    if(this.state.settings.content_options_nullable){
+      options = _.union([{label:'None',value:'',}], options);
+    }
+
+    let value = this.state.value;
+    if(value.dynamic){
+      value = this.getContent('content_default_value');
+    }
+    options.forEach(option => {
+      if (option.value === value) {
+        value = { ...option };
+      }
+      if(_.isArray(option.options)){
+        option.options.forEach(option => {
+          if (option.value === value) {
+            value = { ...option };
+          }
+        })
+      }
+    });
+    const select2Props = {
+      className: 'altrp-field-select2',
+      classNamePrefix: 'altrp-field-select2',
+      options,
+      onChange: this.onChange,
+      value
+    };
+    return <AltrpSelect {...select2Props} />;
   }
 }
 
