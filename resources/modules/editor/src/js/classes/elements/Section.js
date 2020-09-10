@@ -102,8 +102,8 @@ class Section extends BaseElement{
       type: CONTROLLER_SLIDER,
       label: "width",
       default: {
-        size: 100,
-        unit: "%"
+        size: 1440,
+        unit: "px"
       },
       units: ["px", "%", "vh"],
       max: 2000,
