@@ -318,6 +318,7 @@ class Input extends BaseElement{
       ],
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}': 'text-align: {{VALUE}};',
+        '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'text-align: {{VALUE}};'
       },
     });
 
@@ -367,6 +368,12 @@ class Input extends BaseElement{
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
           'padding-left: {{LEFT}}{{UNIT}};'
+        ],
+        '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
         ]
       },
     });
@@ -376,7 +383,8 @@ class Input extends BaseElement{
       label: 'Z-index',
       default: 0,
       rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}': 'z-index: {{VALUE}}'
+        '{{ELEMENT}} .altrp-field{{STATE}}': 'z-index: {{VALUE}}',
+        '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'z-index: {{VALUE}}'
       }
     });
 
@@ -406,7 +414,8 @@ class Input extends BaseElement{
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-field::placeholder{{STATE}}": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-field::placeholder{{STATE}}": "color: {{COLOR}};",
+        "{{ELEMENT}} .altrp-field-select2__placeholder{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -423,6 +432,16 @@ class Input extends BaseElement{
         },
         rules: {
           '{{ELEMENT}} .altrp-field::placeholder{{STATE}}': [
+            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+          '{{ELEMENT}} .altrp-field-select2__placeholder{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -563,6 +582,8 @@ class Input extends BaseElement{
         ],
         rules: {
           '{{ELEMENT}} .altrp-field{{STATE}}': 'border-style: {{VALUE}};',
+          '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'border-style: {{VALUE}};'
+          
         },
       }
     );
@@ -583,6 +604,7 @@ class Input extends BaseElement{
         },
         rules: {
           '{{ELEMENT}} .altrp-field{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
         },
       }
     );
@@ -596,6 +618,7 @@ class Input extends BaseElement{
         },
         rules: {
           '{{ELEMENT}} .altrp-field{{STATE}}': 'border-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'border-color: {{COLOR}};'
         },
       }
     );
@@ -620,6 +643,7 @@ class Input extends BaseElement{
       ],
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+        '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};'
       },
     });
 
@@ -640,6 +664,9 @@ class Input extends BaseElement{
       ],
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}': [
+          'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        ],
+        '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': [
           'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         ]
       },
