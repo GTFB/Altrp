@@ -20,6 +20,10 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
   if (! (settings.tables_columns && settings.tables_columns.length)) {
     return <div children="Please Add Column"/>
   }
+  const useQuerySettings = {
+    forceFetchOnMount: true,
+    refetchOnWindowFocus: true,
+  };
   /**
    * проверим есть ли настройки для сортировок по умолчанию
    */
@@ -60,9 +64,9 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
       resolvedData,
       latestData,
       error,
-    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting, query.getParams()], fetchModels ,{
-      forceFetchOnMount: true
-    });
+    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting, query.getParams()],
+        fetchModels,
+        useQuerySettings);
     _data = resolvedData ? resolvedData : _data;
     _status = status;
     _error = error;
@@ -76,11 +80,10 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
     /**
      * Если нет пагинации
      */
-    const {status, data, error,} = useQuery([query.dataSourceName,query.getParams()], () => {
+    const {status, data, error,} = useQuery([query.dataSourceName,query.getParams()],
+        () => {
       return query.getResource().getQueried({...sortSetting,filters: filterSettingJSON})
-    }, {
-      forceFetchOnMount: true
-    });
+    }, useQuerySettings);
     _data = data;
     _status = status;
     _error = error;

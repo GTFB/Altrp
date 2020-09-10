@@ -137,17 +137,19 @@ class ControllerFileWriter
      *
      * @param $name
      * @param $sql
+     * @param $is_object
      * @return bool
      */
-    public function writeSqlMethod($name, $sql)
+    public function writeSqlMethod($name, $sql, $is_object)
     {
         $methodContent = file($this->getSqlControllerMethodStub(), 2);
-
 
         $this->replaceSqlEditorName($methodContent, $name)
             ->replaceModelName($methodContent, $this->controller->getModelName())
             ->replaceSqlEditorSql($methodContent, $sql)
-            ->replaceTableName( $methodContent, $this->controller->getTableName() );
+            ->replaceTableName( $methodContent, $this->controller->getTableName() )
+            ->replaceSqlEditorIsObject($methodContent, $is_object);
+
         $controllerContent = file($this->controller->getFile(), 2);
         $result = $this->writeMethods($controllerContent, $methodContent);
         return $result;
@@ -159,13 +161,14 @@ class ControllerFileWriter
      * @param $oldName
      * @param $name
      * @param $sql
+     * @param $is_object
      * @return bool
      */
-    public function updateSqlMethod($oldName, $name, $sql)
+    public function updateSqlMethod($oldName, $name, $sql, $is_object)
     {
         $controllerContent = file($this->controller->getFile(), 2);
         $this->removeMethod( $oldName);
-        $this->writeSqlMethod($name, $sql);
+        $this->writeSqlMethod($name, $sql, $is_object);
         return true;
     }
 
@@ -389,6 +392,18 @@ class ControllerFileWriter
         return $this;
     }
 
+    protected function replaceSqlEditorIsObject(&$methodContent, $sqlEditorIsObject)
+    {
+        $code = "";
+
+        if($sqlEditorIsObject) {
+            $code =  implode(PHP_EOL,file($this->getIsObjectConditionStub(), 2));
+        }
+
+        $methodContent = str_replace('{{sqlEditorIsObject}}', $code, $methodContent);
+        return $this;
+    }
+
     protected function replaceTableName(&$methodContent, $tableName)
     {
         $methodContent = str_replace('{{tableName}}', $tableName, $methodContent);
@@ -419,5 +434,15 @@ class ControllerFileWriter
     protected function getSqlControllerMethodStub()
     {
         return app_path('Altrp/Commands/stubs/controllers/create_sql_controller_method.stub');
+    }
+
+    /**
+     * Получить стаб файл для создания проверки и возвраении объекта
+     *
+     * @return string
+     */
+    protected function getIsObjectConditionStub()
+    {
+        return app_path('Altrp/Commands/stubs/controllers/create_is_object_condition.stub');
     }
 }

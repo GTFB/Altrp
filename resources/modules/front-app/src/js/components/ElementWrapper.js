@@ -7,8 +7,9 @@ class ElementWrapper extends Component {
     super(props);
     this.state = {
       currentModel: appStore.getState().currentModel,
+      formsStore: appStore.getState().formsStore,
     };
-    appStore.subscribe(this.updateCurrentModel)
+    appStore.subscribe(this.updateStore)
   }
 
   /**
@@ -25,12 +26,18 @@ class ElementWrapper extends Component {
   }
 
   /**
-   * Подписываемся на обновление текущей модели
+   * Подписываемся на обновление store редакса
    * (обновляем, только если currentModel изменилась)
    */
-  updateCurrentModel = () => {
+  updateStore = () => {
     if(this.state.currentModel !== appStore.getState().currentModel){
       this.setState(state => ({...state, currentModel: appStore.getState().currentModel}));
+    }
+
+    if((this.props.element.getName() === 'input') && this.state.formsStore !== appStore.getState().formsStore){
+      // console.log(this.state.formsStore);
+      // console.log(appStore.getState().formsStore);
+      this.setState(state => ({...state, formsStore: appStore.getState().formsStore}));
     }
   };
 
@@ -77,7 +84,6 @@ class ElementWrapper extends Component {
         </details>
       </div>
     }
-    
     return <div className={classes}>
       {
         React.createElement(this.props.component, {
@@ -85,6 +91,8 @@ class ElementWrapper extends Component {
           children: this.props.element.getChildren(),
           match: this.props.match,
           currentModel: this.state.currentModel,
+          formsStore: this.state.formsStore,
+          appStore
         })
       }
     </div>

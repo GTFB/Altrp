@@ -13,6 +13,8 @@ class SqlEditor extends Component {
       modelTitle: 'Model Title',
       value: {
         paged: false,
+        is_object: false,
+        auth: false,
       },
       modelsOptions: [],
       AceEditor: storeState.aceEditorReducer.AceEditor
@@ -163,6 +165,13 @@ class SqlEditor extends Component {
                      onChange={e => { this.changeValue(e.target.checked, 'auth') }}
               />
               <label className="checkbox-label" htmlFor="field-auth">Auth</label>
+            </div>
+            <div className="form-group col-12">
+              <input type="checkbox" id="field-is_object"
+                     checked={this.state.value.is_object} value={this.state.value.is_object}
+                     onChange={e => { this.changeValue(e.target.checked, 'is_object') }}
+              />
+              <label className="checkbox-label" htmlFor="field-is_object">As Object</label>
             </div>
             {!this.state.value.auth ? '' : <><div className="form-group col-4">
               <label htmlFor="field-roles">Roles</label>

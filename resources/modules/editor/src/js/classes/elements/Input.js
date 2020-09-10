@@ -93,6 +93,10 @@ class Input extends BaseElement{
           label: 'Select'
         },
         {
+          value: 'select2',
+          label: 'Select2'
+        },
+        {
           value: 'hidden',
           label: 'Hidden'
         },
@@ -154,26 +158,47 @@ class Input extends BaseElement{
       label: 'Select Nullable',
       default: false,
       conditions: {
-        'content_type': 'select',
+        'content_type':
+          [
+            'select',
+            'select2',
+          ]
       },
     });
 
     this.addControl('model_for_options', {
       type: CONTROLLER_SELECT2,
-      label: 'Choose Model for Select Options',
+      label: 'Choose Datasource for Select Options',
       default: '',
       conditions: {
-        'content_type': 'select',
+        'content_type':
+          [
+            'select',
+            'select2',
+          ]
       },
       nullable: true,
-      options_resource: '/admin/ajax/models_options?with_names=1&not_plural=1',
+      options_resource: '/admin/ajax/models_options?with_names=1&not_plural=1&with_sql_queries=1',
+      prefetch_options: true,
+    });
+
+    this.addControl('params_for_update', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Params for Update Options',
+      conditions: {
+        'model_for_options!': '',
+      },
+      description: 'Enter each param for Query in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n',
     });
 
     this.addControl('content_options', {
       type: CONTROLLER_TEXTAREA,
       label: 'Or Type Select Options',
       conditions: {
-        'content_type': 'select',
+        'content_type':[
+          'select',
+          'select2',
+        ],
       },
       description: 'Enter each option in a separate line. To differentiate between label and value, separate them with a pipe char ("|"). For example: First Name|f_name',
     });
@@ -230,7 +255,7 @@ class Input extends BaseElement{
 
     this.addControl("label_style_font_color", {
       type: CONTROLLER_COLOR,
-      label: "font color",
+      label: "Font Color",
       default: {
         color: "",
         colorPickedHex: "",
@@ -473,13 +498,14 @@ class Input extends BaseElement{
 
     this.addControl('background_style_background_color', {
         type: CONTROLLER_COLOR,
-        label: 'Border Color',
+        label: 'Background Color',
         default: {
           color: "",
           colorPickedHex: "",
         },
         rules: {
           '{{ELEMENT}} .altrp-field{{STATE}}': 'background-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'background-color: {{COLOR}};',
         },
       }
     );

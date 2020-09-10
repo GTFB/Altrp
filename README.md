@@ -4,6 +4,9 @@
 ## Changelog
 
 
+### 0.9.0
++ Add Map, Diagram Widgets
+
 ### 0.8.0
 + Add Filters and Sorting in Table Widget
 + Add Auth/not Auth Elements Conditions  
