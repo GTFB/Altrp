@@ -219,6 +219,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::delete( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@destroyModelField');
 
     /**
+    * Аксессоры
+    */
+    Route::get( '/models/{model_id}/accessors', 'Admin\ModelsController@getModelAccessors');
+    Route::post( '/models/{model_id}/accessors', 'Admin\ModelsController@storeAccessor');
+    Route::put( '/models/{model_id}/accessors/{accessor_id}', 'Admin\ModelsController@updateAccessor');
+    Route::get( '/models/{model_id}/accessors/{accessor_id}', 'Admin\ModelsController@showAccessor');
+    Route::delete( '/models/{model_id}/accessors/{accessor_id}', 'Admin\ModelsController@destroyAccessor');
+
+    /**
     * Связи
     */
     Route::get( '/models/{model_id}/relations', 'Admin\ModelsController@getModelRelations');

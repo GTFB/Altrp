@@ -595,7 +595,7 @@ class QueryBuilder
         }
         $this->queryBody->columns = $columns
             ? "{$threeTabs}->select(['" . implode("','", $columns) . "'])\n"
-            : 'select(\'*\')';
+            : "{$threeTabs}->select('*')\n";
         return $this;
     }
 
@@ -679,7 +679,7 @@ class QueryBuilder
     {
         if (! $cond) return $this;
         $condition = 'where([';
-        $value = '\'' . $cond['value'] . '\'';
+        $value = '"' . $cond['value'] . '"';
         $condition .= "['{$cond['column']}'," . "'{$cond['operator']}'," . $value . "]";
         $condition .= "])";
         $this->queryBody->conditions[] = '->' . $condition . "\n";
@@ -696,7 +696,7 @@ class QueryBuilder
     {
         if (! $cond) return $this;
         $conditionList = [];
-        $value = '\'' . $cond['value'] . '\'';
+        $value = '"' . $cond['value'] . '"';
         $condition = 'orWhere(';
         $condition .= "'{$cond['column']}'," . "'{$cond['operator']}'," . $value . ")";
         $conditionList[] = $condition;
@@ -800,7 +800,7 @@ class QueryBuilder
         if (! $cond) return $this;
         $isNot = isset($cond['not']) ? 'Not' : null;
         $prefix = isset($cond['or']) ? 'orW' : 'w';
-        $condition = "{$prefix}here{$isNot}Null('{$cond['column']}')";
+        $condition = "{$prefix}here{$isNot}Null(\"{$cond['column']}\")";
         $this->queryBody->conditions[] = "->" . $condition . "\n";
         return $this;
     }
