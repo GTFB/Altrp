@@ -33,7 +33,7 @@ function updateModelData (modelData) {
      */
     return {...state,
       // modelsData,
-      modelData: {...modelData}}
+     modelData}
   });
 
 }

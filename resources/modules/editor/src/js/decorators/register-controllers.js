@@ -8,7 +8,7 @@ import {
   CONTROLLER_CHOOSE,
   CONTROLLER_CSSEDITOR,
   TAB_ADVANCED,
-  CONTROLLER_SWITCHER
+  CONTROLLER_SWITCHER, CONTROLLER_SELECT2
 } from "../classes/modules/ControllersManager";
 /**
  * Функция декорирует элемент неободимыми контроллерами
@@ -74,7 +74,6 @@ export function advancedTabControllers(element) {
   // element.endControlSection();
   if(element.getType() !== 'section') {
 
-
     element.startControlSection(
         'element_positioning', {
           tab: TAB_ADVANCED,
@@ -110,27 +109,26 @@ export function advancedTabControllers(element) {
     });
 
     element.addControl('positioning_custom_width', {
-          type: CONTROLLER_SLIDER,
-          label: 'Custom width',
-          default: {
-            size: "100%",
-            unit: 'px'
-          },
-          units: [
-            'px',
-            '%',
-            'vh',
-          ],
-          max: 1000,
-          min: 0,
-          rules: {
-            'div{{ELEMENT}}.altrp-element': 'width: {{SIZE}}{{UNIT}};',
-          },
-          condition: {
-            'positioning_width_type': 'custom',
-          }
-        }
-    );
+      type: CONTROLLER_SLIDER,
+      label: 'Custom width',
+      default: {
+        size: "100%",
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 1000,
+      min: 0,
+      rules: {
+        'div{{ELEMENT}}.altrp-element': 'width: {{SIZE}}{{UNIT}};',
+      },
+      condition: {
+        'positioning_width_type': 'custom',
+      }
+    });
 
     element.addControl('positioning_vertical_align', {
       type: CONTROLLER_CHOOSE,
@@ -278,24 +276,35 @@ export function advancedTabControllers(element) {
   );
 
   element.addControl('conditional_display_choose', {
-      type: CONTROLLER_SELECT,
-      label: 'Authorize Condition',
-      options: [
-        {
-          label: 'all',
-          value: '',
-        },
-        {
-          value: 'guest',
-          label: 'Guest Only',
-        },
-        {
-          value: 'auth',
-          label: 'Authorized Only',
-        },
-      ],
-    }
-  );
+    type: CONTROLLER_SELECT,
+    label: 'Authorize Condition',
+    options: [
+      {
+        label: 'all',
+        value: '',
+      },
+      {
+        value: 'guest',
+        label: 'Guest Only',
+      },
+      {
+        value: 'auth',
+        label: 'Authorized Only',
+      },
+    ],
+  });
+
+  element.addControl('conditional_role', {
+    type: CONTROLLER_SELECT2,
+    label: 'Authorize Condition',
+    conditions: {
+      'conditional_display_choose' : 'auth',
+    },
+    options_resource: '/admin/ajax/role_options',
+    isMulti: true,
+    prefetch_options: true,
+    isClearable: true,
+  });
 
   element.endControlSection();
 

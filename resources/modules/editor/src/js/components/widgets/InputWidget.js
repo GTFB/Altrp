@@ -4,7 +4,6 @@ import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
-// import InputMask from "react-input-mask";
 
 class InputWidget extends Component {
 
@@ -85,14 +84,17 @@ class InputWidget extends Component {
           }
           options = (!_.isArray(options)) ? options.data : options;
           options = (_.isArray(options)) ? options : [];
+          if(! options.length){
+            value = '';
+          }
         } else
         if(this.state.paramsForUpdate){
           options = await (new Resource({route: this.getRoute()})).getAll();
           options = (! _.isArray(options)) ? options.data : options;
           options = (_.isArray(options)) ? options : [];
-        }
-        if(! options.length){
-          value = '';
+          if(! options.length){
+            value = '';
+          }
         }
       }
       this.setState(state=>({
@@ -114,6 +116,7 @@ class InputWidget extends Component {
     if(e.target){
       value = e.target.value;
     }
+
     if(e.value){
       value = e.value;
     }
@@ -121,8 +124,6 @@ class InputWidget extends Component {
       ...state,
       value
     }), ()=>{this.dispatchFieldValueToStore(value);});
-
-
   }
 
   /**
@@ -260,10 +261,22 @@ class InputWidget extends Component {
       options = _.union([{label:'None',value:'',}], options);
     }
 
+
     let value = this.state.value;
-    if(value.dynamic){
+    /**
+     * Если динамическое значение загрузилось,
+     * то используем this.getContent для получение этого динамического значения
+     * */
+    if(value.dynamic && this.props.currentModel.getProperty('altrpModelUpdated')){
       value = this.getContent('content_default_value');
     }
+    /**
+     * Пока динамический контент загружается, нужно вывести пустую строку
+     */
+    if(value.dynamic){
+      value = '';
+    }
+
     options.forEach(option => {
       if (option.value === value) {
         value = { ...option };
@@ -281,7 +294,8 @@ class InputWidget extends Component {
       classNamePrefix: 'altrp-field-select2',
       options,
       onChange: this.onChange,
-      value
+      value,
+      // menuIsOpen: true,
     };
     return <AltrpSelect {...select2Props} />;
   }

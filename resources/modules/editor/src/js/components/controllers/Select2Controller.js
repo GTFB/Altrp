@@ -92,11 +92,42 @@ class Select2Controller extends Component {
 
   change(value, action) {
     if (action.action === 'select-option') {
-      this._changeValue(
-        value.value
-      );
+      if(this.props.isMulti){
+        let _v = value.map(v=>{
+          return v.value;
+        });
+        console.log(value);
+        console.log(_v);
+        this._changeValue(
+          _v
+        );
+      } else {
+        this._changeValue(
+          value.value
+        );
+      }
     }
-  };
+    console.log(action);
+    if(action.action === 'clear'){
+      if(this.props.isMulti){
+        this._changeValue(
+            value
+        );
+      }
+    }
+    if(action.action === 'remove-value') {
+      if(this.props.isMulti){
+        value = this.state.value.filter(v=>{
+          return v !== action.removedValue.value;
+        });
+
+        this._changeValue(
+            value
+        );
+      }
+    }
+  }
+
 
   render() {
     if (this.state.show === false) {
@@ -159,18 +190,39 @@ class Select2Controller extends Component {
     };
 
     // let value = {};
-    this.state.options.forEach(option => {
-      if (option.value === value) {
-        value = { ...option };
+    if(this.props.isMulti){
+      if(_.isArray(value)){
+        let _value = _.cloneDeep(value);
+        value = [];
+        _value.forEach(v=>{
+          this.state.options.forEach(option => {
+            if (option.value === v) {
+              value.push({ ...option });
+            }
+            if(_.isArray(option.options)){
+              option.options.forEach(option => {
+                if (option.value === v) {
+                  value.push({ ...option });
+                }
+              })
+            }
+          });
+        });
       }
-      if(_.isArray(option.options)){
-        option.options.forEach(option => {
-          if (option.value === value) {
-            value = { ...option };
-          }
-        })
-      }
-    });
+    } else {
+      this.state.options.forEach(option => {
+        if (option.value === value) {
+          value = { ...option };
+        }
+        if(_.isArray(option.options)){
+          option.options.forEach(option => {
+            if (option.value === value) {
+              value = { ...option };
+            }
+          })
+        }
+      });
+    }
     let selectProps = {
       onChange: this.change,
       onInputChange: this.change,
@@ -180,10 +232,12 @@ class Select2Controller extends Component {
       loadOptions: this.loadOptions,
       noOptionsMessage: () => "no found",
       value,
+      isMulti: this.props.isMulti,
+      isClearable: this.props.isClearable,
     };
 
     let SelectComponent = Select;
-    if (this.props.options_resource) {
+    if (this.props.options_resource && ! this.props.prefetch_options) {
       SelectComponent = AsyncSelect;
       selectProps.loadOptions = this.loadOptions;
     }

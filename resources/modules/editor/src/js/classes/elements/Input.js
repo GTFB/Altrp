@@ -179,7 +179,6 @@ class Input extends BaseElement{
       },
       nullable: true,
       options_resource: '/admin/ajax/models_options?with_names=1&not_plural=1&with_sql_queries=1',
-      prefetch_options: true,
     });
 
     this.addControl('params_for_update', {
