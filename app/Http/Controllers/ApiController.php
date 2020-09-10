@@ -90,6 +90,8 @@ class ApiController extends Controller
 
         $res = compact('pageCount' ,'hasMore');
         $res['data'] = $$resource;
+
+
         return $res;
     }
 

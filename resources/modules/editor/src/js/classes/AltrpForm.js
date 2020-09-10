@@ -58,11 +58,11 @@ class AltrpForm {
           let res =  await this.resource.post(this.getData());
           if((this.modelName === 'login') && this.options.afterLoginRedirect){
             document.location.replace(this.options.afterLoginRedirect);
-            return;
+            return res;
           }
           if((this.modelName === 'logout') && this.options.afterLogoutRedirect){
             document.location.replace(this.options.afterLogoutRedirect);
-            return;
+            return res;
           }
           if(res.reload){
             document.location.reload();

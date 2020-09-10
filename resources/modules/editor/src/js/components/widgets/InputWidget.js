@@ -76,7 +76,8 @@ class InputWidget extends Component {
       if(! _.isEqual(paramsForUpdate, this.state.paramsForUpdate)){
         let options = this.state.options;
         if(! _.isEmpty(paramsForUpdate)){
-          options = await (new Resource({route: this.getRoute()})).getQueried(paramsForUpdate);
+          paramsForUpdate = JSON.parse(paramsForUpdate);
+          options = await (new Resource({route: this.getRoute()})).getQueried({filters:paramsForUpdate});
           options = (!_.isArray(options)) ? options.data : options;
           options = (_.isArray(options)) ? options : [];
         }
@@ -84,7 +85,6 @@ class InputWidget extends Component {
             ...state,
           paramsForUpdate,
           options,
-          value: ''
         }))
       }
     }
@@ -103,12 +103,12 @@ class InputWidget extends Component {
     if(e.value){
       value = e.value;
     }
-    this.dispatchFieldValueToStore(value);
-
     this.setState(state=>({
       ...state,
       value
-    }));
+    }), ()=>{this.dispatchFieldValueToStore(value);});
+
+
   }
 
   /**
@@ -128,13 +128,20 @@ class InputWidget extends Component {
   render(){
     let label = null;
     let required = null;
+
+    let value = this.state.value;
     /**
-     * Если значение загрузилось  динамическое,
+     * Если динамическое значение загрузилось,
      * то используем this.getContent для получение этого динамического значения
      * */
-    let value = this.state.value;
-    if(value.dynamic){
+    if(value.dynamic && this.props.currentModel.getProperty('altrpModelUpdated')){
       value = this.getContent('content_default_value');
+    }
+    /**
+     * Пока динамический контент загружается, нужно вывести пустую строку
+     */
+    if(value.dynamic){
+      value = '';
     }
     let classLabel = "";
     let styleLabel = {};
@@ -179,7 +186,6 @@ class InputWidget extends Component {
     } else {
       autocomplete = "off";
     }
-
     let input = <input type={this.state.settings.content_type}
                        value={value || ''}
                        autoComplete={autocomplete}

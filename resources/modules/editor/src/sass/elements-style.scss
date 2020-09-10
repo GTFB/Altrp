@@ -200,8 +200,12 @@
 
 .app-area_content {
   flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
 }
-
+.app-area_content > .sections-wrapper {
+  flex: 1 0 auto;
+}
 .app-area_header {
   flex: 0 0 auto;
 }
