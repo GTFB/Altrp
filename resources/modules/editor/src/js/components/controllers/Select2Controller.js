@@ -52,6 +52,14 @@ class Select2Controller extends Component {
         options: [{label:'None',value:'',}],
       }));
     }
+    if(this.props.prefetch_options){
+      let resource = new Resource({route: this.getRoute()});
+      let options = await resource.getAll();
+      this.setState(state => ({
+        ...state,
+        options
+      }));
+    }
   }
   /**
    * Получить роут для запросов опций
@@ -107,7 +115,6 @@ class Select2Controller extends Component {
         );
       }
     }
-    console.log(action);
     if(action.action === 'clear'){
       if(this.props.isMulti){
         this._changeValue(
@@ -150,6 +157,8 @@ class Select2Controller extends Component {
         margin: 0,
         padding: 0,
         width: "100%",
+        height: '150px',
+        overflow: 'auto',
         borderRadius: "0px 0px 3px 3px",
         borderWidth: "0px 1px 1px 1px",
         borderStyle: "solid",
@@ -165,7 +174,7 @@ class Select2Controller extends Component {
 
       control: (state) => ({
         display: "flex",
-        height: 28,
+        // height: 28,
         borderRadius: 3,
         borderWidth: 1,
         borderStyle: "solid",
@@ -233,7 +242,9 @@ class Select2Controller extends Component {
       noOptionsMessage: () => "no found",
       value,
       isMulti: this.props.isMulti,
+      closeMenuOnSelect: ! this.props.isMulti,
       isClearable: this.props.isClearable,
+      // menuIsOpen: true,
     };
 
     let SelectComponent = Select;

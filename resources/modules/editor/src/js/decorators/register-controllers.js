@@ -294,13 +294,25 @@ export function advancedTabControllers(element) {
     ],
   });
 
-  element.addControl('conditional_role', {
+  element.addControl('conditional_roles', {
     type: CONTROLLER_SELECT2,
-    label: 'Authorize Condition',
+    label: 'Allowed for Roles',
     conditions: {
       'conditional_display_choose' : 'auth',
     },
     options_resource: '/admin/ajax/role_options',
+    isMulti: true,
+    prefetch_options: true,
+    isClearable: true,
+  });
+
+  element.addControl('conditional_permissions', {
+    type: CONTROLLER_SELECT2,
+    label: 'Allowed for Permissions',
+    conditions: {
+      'conditional_display_choose' : 'auth',
+    },
+    options_resource: '/admin/ajax/permissions_options',
     isMulti: true,
     prefetch_options: true,
     isClearable: true,
