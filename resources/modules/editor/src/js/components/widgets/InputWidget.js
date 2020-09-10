@@ -73,20 +73,34 @@ class InputWidget extends Component {
       /**
        * Сохраняем параметры запроса, и если надо обновляем опции
        */
+      let options = this.state.options;
+      let value = this.state.value;
       if(! _.isEqual(paramsForUpdate, this.state.paramsForUpdate)){
-        let options = this.state.options;
         if(! _.isEmpty(paramsForUpdate)){
-          paramsForUpdate = JSON.parse(paramsForUpdate);
-          options = await (new Resource({route: this.getRoute()})).getQueried({filters:paramsForUpdate});
+          if(this.props.element.getSettings('params_as_filters', false)){
+            paramsForUpdate = JSON.stringify(paramsForUpdate);
+            options = await (new Resource({route: this.getRoute()})).getQueried({filters:paramsForUpdate});
+          } else {
+            options = await (new Resource({route: this.getRoute()})).getQueried(paramsForUpdate);
+          }
           options = (!_.isArray(options)) ? options.data : options;
           options = (_.isArray(options)) ? options : [];
+        } else
+        if(this.state.paramsForUpdate){
+          options = await (new Resource({route: this.getRoute()})).getAll();
+          options = (! _.isArray(options)) ? options.data : options;
+          options = (_.isArray(options)) ? options : [];
         }
-        this.setState(state=>({
-            ...state,
-          paramsForUpdate,
-          options,
-        }))
+        if(! options.length){
+          value = '';
+        }
       }
+      this.setState(state=>({
+        ...state,
+        paramsForUpdate,
+        options,
+        value
+      }));
     }
   }
 
