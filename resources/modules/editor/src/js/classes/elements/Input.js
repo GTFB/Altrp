@@ -166,6 +166,11 @@ class Input extends BaseElement{
       },
     });
 
+    this.addControl('nulled_option_title', {
+      type: CONTROLLER_TEXT,
+      label: 'Nulled Option Label',
+    });
+
     this.addControl('model_for_options', {
       type: CONTROLLER_SELECT2,
       label: 'Choose Datasource for Select Options',

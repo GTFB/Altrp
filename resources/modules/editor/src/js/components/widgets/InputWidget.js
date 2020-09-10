@@ -234,10 +234,11 @@ class InputWidget extends Component {
    * Выводит инпут-select2, используя компонент AltrpSelect
    */
   renderSelect2() {
-
+    const { content_options_nullable, nulled_option_title } = this.state.settings;
     let options = this.state.options;
-    if(this.state.settings.content_options_nullable){
-      options = _.union([{label:'None',value:'',}], options);
+
+    if(content_options_nullable){
+      options = _.union([{ label: nulled_option_title, value: '', }], options);
     }
 
     let value = this.state.value;
