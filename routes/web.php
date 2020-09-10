@@ -313,6 +313,12 @@ Route::group( ['prefix' => 'ajax'], function(){
   // Записывает данные карты с фронта
   Route::post('maps/{id}', 'MapsController@store');
 
+  // Отдает данные для виджета панели аналитики
+  Route::get('dashboards/{id}', 'DashboardsController@index');
+
+  // Записывает данные для виджета панели аналитики
+  Route::post('dashboards/{id}', 'DashboardsController@store');
+
   /**
    * Отдает данные страницы как модели для динамического контента
    */

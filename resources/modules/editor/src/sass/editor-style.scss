@@ -1,6 +1,7 @@
 @import "../../../../sass/common";
 @import "./elements-style";
 @import "./altrp-pagination";
+@import "altrp-dashboards";
 
 //google fonts
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&display=swap");
@@ -658,7 +659,7 @@ button {
     justify-content: space-between;
     & .control-slider-type-label {
       margin-right: 5px;
-      &--active  {
+      &--active {
         text-decoration: underline;
       }
     }

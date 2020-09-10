@@ -9,35 +9,20 @@ import DynamicLineChart from "./widgets/DynamicLineChart";
 import DynamicTableWidget from "./widgets/DynamicTableWidget";
 import DynamicDonutChart from "./widgets/DynamicDonutChart";
 
-const WidgetDiagram = ({ type, url, filter = {}, options = {}, width = 300, colorScheme }) => {
-  switch (type) {
+const WidgetDiagram = ({ widget, width = 360, height = 360 }) => {
+  switch (widget.type) {
     case BAR:
-      return (
-        <DynamicBarChart width={width} dataUrl={url} options={options} colorScheme={colorScheme} />
-      );
+      return <DynamicBarChart width={width} height={height} widget={widget} />;
     case PIE:
-      return (
-        <DynamicPieChart width={width} dataUrl={url} options={options} colorScheme={colorScheme} />
-      );
+      return <DynamicPieChart width={width} height={height} widget={widget} />;
     case DONUT:
-      return (
-        <DynamicDonutChart
-          width={width}
-          dataUrl={url}
-          options={options}
-          colorScheme={colorScheme}
-        />
-      );
+      return <DynamicDonutChart width={width} height={height} widget={widget} />;
     case LINE:
-      return (
-        <DynamicLineChart width={width} dataUrl={url} options={options} colorScheme={colorScheme} />
-      );
+      return <DynamicLineChart width={width} height={height} widget={widget} />;
     case TABLE:
-      return <DynamicTableWidget width={width} dataUrl={url} options={options} />;
+      return <DynamicTableWidget width={width} height={height} widget={widget} />;
     case AREA:
-      return (
-        <DynamicAreaChart width={width} dataUrl={url} options={options} colorScheme={colorScheme} />
-      );
+      return <DynamicAreaChart width={width} height={height} widget={widget} />;
     default:
       return <></>;
   }

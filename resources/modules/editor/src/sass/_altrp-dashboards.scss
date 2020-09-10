@@ -1,0 +1,17 @@
+.altrp-dashboard {
+  &__widgets {
+    display: flex;
+    .card {
+      width: 300px;
+      &-header {
+        text-align: center;
+        font-weight: bold;
+        height: 30px;
+        vertical-align: middle;
+        .card-title {
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
