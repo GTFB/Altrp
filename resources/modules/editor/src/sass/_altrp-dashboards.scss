@@ -1,15 +1,42 @@
 .altrp-dashboard {
   &__widgets {
     display: flex;
+    flex-wrap: wrap;
     .card {
-      width: 300px;
+      max-width: 500px;
+      box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.15);
+      margin: 5px 10px 5px;
+      padding: 10px;
+      &:first-child {
+        margin-top: 10px;
+      }
+      &:last-child {
+        margin-bottom: 10px;
+      }
       &-header {
-        text-align: center;
-        font-weight: bold;
-        height: 30px;
-        vertical-align: middle;
+        display: flex;
+        justify-content: space-between;
         .card-title {
-          display: inline-block;
+          button {
+            background-color: transparent;
+            padding: 5px;
+          }
+        }
+      }
+      &-body {
+        form {
+          padding: 10px 0;
+          .form-group {
+            width: 100%;
+            margin-bottom: 10px;
+            label {
+              font-size: 0.8rem;
+            }
+            input,
+            select {
+              width: 100%;
+            }
+          }
         }
       }
     }

@@ -14,7 +14,7 @@ class DashboardsController extends Controller
      */
     public function index(Request $request, $id)
     {
-        $panel = Dashboards::findOrFail($id);
+        $panel = Dashboards::where('widget_id', '=', $id)->get();
         return response()->json($panel, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -27,7 +27,13 @@ class DashboardsController extends Controller
     public function store(Request $request, $id)
     {
         $panel = Dashboards::firstOrNew(['id' => $id]);
-        //$panel->data = $request->input('data');
+        $panel->title = $request->input('title');
+        $panel->type = $request->input('type');
+        $panel->source = $request->input('source');
+        $panel->filter = $request->input('filter');
+        $panel->options = $request->input('options');
+        $panel->user_id = auth()->user()->id;
+        $panel->widget_id = $id;
         $panel->save();
         return response()->json($panel, 200, [], JSON_UNESCAPED_UNICODE);
     }

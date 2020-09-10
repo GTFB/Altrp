@@ -1,6 +1,5 @@
-import React, { useEffect, useCallback, useState, useRef } from "react";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
+import React, { useState, useRef } from "react";
+import axios from "axios";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
@@ -13,7 +12,7 @@ import LegendField from "./fields/LegendField";
 import SourceField from "./fields/SourceField";
 import ColorSchemeField from "./fields/colorSchemeField";
 
-const AddWidget = ({ onAdd, setIsShow }) => {
+const AddWidget = ({ id, onAdd, setIsShow }) => {
   const [widget, setWidget] = useState({
     type: TABLE,
     source: "",
@@ -30,9 +29,13 @@ const AddWidget = ({ onAdd, setIsShow }) => {
       ...widget,
       title: title.current.value,
       options: JSON.stringify(widget.options),
+      filter: JSON.stringify({}),
     };
-    onAdd(data);
-    setIsShow(false);
+    const req = await axios.post(`/ajax/dashboards/${id}`, data);
+    if (req.status === 200) {
+      onAdd(req.data);
+      setIsShow(false);
+    }
   };
 
   const handleFocus = (e) => {
@@ -55,49 +58,42 @@ const AddWidget = ({ onAdd, setIsShow }) => {
         <Card.Title>Добавить виджет</Card.Title>
       </Card.Header>
       <Card.Body>
-        <Row>
-          <Col xs={12} sm={6}>
-            <Form>
-              <Form.Group>
-                <Form.Label>Название виджета</Form.Label>
-                <Form.Control
-                  type="text"
-                  ref={title}
-                  onFocus={handleFocus}
-                  onBlur={handleBlur}
-                  defaultValue="Новый виджет"
-                  required
-                />
-              </Form.Group>
+        <Form>
+          <Form.Group>
+            <Form.Label>Название виджета</Form.Label>
+            <Form.Control
+              type="text"
+              ref={title}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              defaultValue="Новый виджет"
+              required
+            />
+          </Form.Group>
 
-              <TypeField
-                widget={widget}
-                setWidget={setWidget}
-                allowedTypes={[BAR, PIE, DONUT, TABLE]}
-              />
+          <TypeField
+            widget={widget}
+            setWidget={setWidget}
+            allowedTypes={[BAR, PIE, DONUT, TABLE]}
+          />
 
-              <ColorSchemeField widget={widget} setWidget={setWidget} />
+          <ColorSchemeField widget={widget} setWidget={setWidget} />
 
-              <SourceField
-                widget={widget}
-                setWidget={setWidget}
-                sources={[
-                  { name: "Информация о шаблонах", url: "/admin/ajax/analytics" },
-                  { name: "Пустые данные", url: "/admin/ajax/analytics/none" },
-                ]}
-              />
+          <SourceField
+            widget={widget}
+            setWidget={setWidget}
+            sources={[
+              { name: "Информация о шаблонах", url: "/admin/ajax/analytics" },
+              { name: "Пустые данные", url: "/admin/ajax/analytics/none" },
+            ]}
+          />
 
-              <LegendField widget={widget} setWidget={setWidget} />
-            </Form>
-          </Col>
-          <Col xs={12} sm={6}>
-            <Row>
-              <div className="widget-placeholder">
-                {widget.source && <WidgetDiagram widget={widget} width={360} height={360} />}
-              </div>
-            </Row>
-          </Col>
-        </Row>
+          <LegendField widget={widget} setWidget={setWidget} />
+        </Form>
+
+        <div className="widget-placeholder">
+          {widget.source && <WidgetDiagram widget={widget} width={360} height={360} />}
+        </div>
       </Card.Body>
       <Card.Footer>
         <Button variant="secondary" onClick={() => setIsShow(false)}>

@@ -1,6 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
+import Card from "react-bootstrap/Card";
+import GearFill from "react-bootstrap-icons/dist/icons/gear-fill";
+import TrashFill from "react-bootstrap-icons/dist/icons/trash-fill";
+
 import AddWidget from "./AddWidget";
+import WidgetDiagram from "../../../../../admin/src/components/dashboard/WidgetDiagram";
 
 const AltrpDashboards = ({ id, settings }) => {
   const [widgets, setWidgets] = useState([]);
@@ -19,7 +24,7 @@ const AltrpDashboards = ({ id, settings }) => {
   );
 
   const handleAdd = (widget) => {
-    console.log("widget :>> ", widget);
+    setWidgets([widget, ...widgets]);
   };
 
   useEffect(() => {
@@ -32,9 +37,24 @@ const AltrpDashboards = ({ id, settings }) => {
         <button onClick={() => setIsShow(true)}>Добавить виджет</button>
       </div>
       <div className="altrp-dashboard__widgets">
-        {isShow && <AddWidget isShow={isShow} setIsShow={setIsShow} onAdd={handleAdd} />}
+        {isShow && <AddWidget id={id} setIsShow={setIsShow} onAdd={handleAdd} />}
         {widgets.map((widget) => (
-          <div key={widget.id}>{widget.title}</div>
+          <Card key={widget.id}>
+            <Card.Header>
+              <Card.Title>{widget.title}</Card.Title>
+              <Card.Title>
+                <button type="button" title="Настроить виджет">
+                  <GearFill />
+                </button>
+                <button type="button" title="Удалить виджет">
+                  <TrashFill />
+                </button>
+              </Card.Title>
+            </Card.Header>
+            <Card.Body>
+              <WidgetDiagram widget={widget} width={360} height={300} />
+            </Card.Body>
+          </Card>
         ))}
       </div>
     </div>
