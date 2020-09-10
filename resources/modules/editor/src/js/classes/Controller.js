@@ -106,14 +106,10 @@ class Controller {
       let negative = (controlId.indexOf('!') >= 0);
       controlId = controlId.replace('!', '');
       if(_.isString(value)){
-        if (getCurrentElement().getSettings(controlId) !== value) {
-          show = negative;
-        }
+        show = getCurrentElement().getSettings(controlId) !== value ? negative : ! negative;
       }
-      if(_.isArray(value)){
-        if (value.indexOf(getCurrentElement().getSettings(controlId)) >= 0) {
-          show = !negative;
-        }
+      if(_.isArray(value) ){
+        show = value.indexOf(getCurrentElement().getSettings(controlId)) === -1 ? negative : ! negative;
       }
 
     });

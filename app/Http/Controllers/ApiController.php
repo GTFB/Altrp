@@ -119,6 +119,9 @@ class ApiController extends Controller
     /**
      * @var \App\AltrpModels\test $model
      */
+    if( $request->get('test')){
+      return response()->json( [['label' => 'test', 'value' => $request->get('test')]], 200, [], JSON_UNESCAPED_UNICODE );
+    }
     $model = new $this->modelClass();
     $label_name = $model->getLabelColumnName();
     $title_name = $model->getTitleColumnName();

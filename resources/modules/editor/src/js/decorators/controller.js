@@ -16,6 +16,15 @@ function componentDidUpdate(prevProps, prevState) {
         value: elementValue
       });
     }
+    if(prevProps.currentElement.getId() !== this.props.currentElement.getId()){
+      /**
+       * обновляем компонент контроллера, если изменился элемент
+       */
+      this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController();
+      if(_.isFunction(this._componentDidMount)){
+        this._componentDidMount();
+      }
+    }
   } else {
   }
   /**

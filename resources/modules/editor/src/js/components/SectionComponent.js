@@ -23,8 +23,8 @@ class SectionComponent extends Component {
 
   render() {
     let styles = {};
-    // let width = {};
-    const { background_image } = this.props.element.settings;
+    const  background_image  = this.props.element.getSettings('background_image', {});
+    const isContentBoxed = this.state.settings.layout_content_width_type === "boxed";
     const widthType = this.state.settings.layout_content_width_type;
     // if (this.state.settings.layout_content_width_type === "full") {
     //   width = {
@@ -65,13 +65,13 @@ class SectionComponent extends Component {
     //   styles.width = getWindowWidth() + "px"
     // }
 
-    if (this.state.settings.layout_height == "fit") {
+    if (this.state.settings.layout_height === "fit") {
       styles.height = "100vh"
     }
 
-    let section = React.createElement(this.state.settings.layout_html_tag || "div",
+    return React.createElement(this.state.settings.layout_html_tag || "div",
       { style: styles, className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: "" },
-      <div className={"get-column-count " + `altrp-element-column-count${this.props.element.id}`} id="columnCount" ></div>,
+      <div className={"get-column-count " + `altrp-element-column-count${this.props.element.id}`} id="columnCount" />,
       sectionWrapper
     );
 
@@ -81,7 +81,6 @@ class SectionComponent extends Component {
     //   // <div className="full-fill" style={{width: getWindowWidth() + "px"}}>{section}</div>
     // }
 
-    return section
   }
 }
 
