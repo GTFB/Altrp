@@ -541,7 +541,7 @@ class Section extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}': [
+        '{{ELEMENT}}{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
