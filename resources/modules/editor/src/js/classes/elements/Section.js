@@ -38,7 +38,7 @@ class Section extends BaseElement{
     this.addControl('layout_content_width_type', {
       type: CONTROLLER_SELECT,
       label: 'Content width',
-      default: 'boxed',
+      default: 'section_boxed',
       options: [
         {
           value: 'boxed',
@@ -47,6 +47,10 @@ class Section extends BaseElement{
         {
           value: 'full',
           label: 'full width'
+        },
+        {
+          value: 'section_boxed',
+          label: 'section-boxed'
         },
         // {
         //   value: 'full-fill',
@@ -98,8 +102,8 @@ class Section extends BaseElement{
       type: CONTROLLER_SLIDER,
       label: "width",
       default: {
-        size: 1440,
-        unit: "px"
+        size: 100,
+        unit: "%"
       },
       units: ["px", "%", "vh"],
       max: 2000,

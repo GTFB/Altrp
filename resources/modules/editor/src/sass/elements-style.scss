@@ -60,12 +60,16 @@
 .altrp-section {
   position: relative;
   z-index: 50;
-  width: calc(100vw - 20px);
   &.altrp-section--boxed > .altrp-element {
     // width: 1440px;
     margin: 0 auto;
   }
+  &.altrp-section--full-width, &.altrp-section--boxed {
+    width: calc(100vw - 20px);
+  }
 }
+
+
 
 .altrp-column {
   display: flex;
