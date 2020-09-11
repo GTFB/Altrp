@@ -1,45 +1,65 @@
-import React, { useState, useEffect } from "react";
-import { PieChart, PieArcSeries } from "reaviz";
-import axios from "axios";
-import Spinner from "../Spinner";
+import React, { useState, useEffect, useCallback } from "react";
+import { PieChart, PieArcSeries, PieArcLabel, DiscreteLegend, DiscreteLegendEntry } from "reaviz";
+
+import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
-const DynamicPieChart = ({
-  dataUrl,
-  width = 300,
-  height = 300,
-  colorScheme,
-  options = {
-    explode: false,
-  },
-}) => {
+import { getWidgetData } from "../services/getWidgetData";
+
+const DynamicPieChart = ({ widget, width = 300, height = 300 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
 
-  const getData = async (dataUrl) => {
+  const getData = useCallback(async () => {
     setIsLoading(true);
-    const req = await axios(dataUrl);
-    if (req.status === 200 && typeof req.data !== "string") {
-      setData(req.data);
+    const charts = await getWidgetData(widget.source, widget.filter);
+    if (charts.status === 200) {
+      setData(charts.data);
       setIsLoading(false);
     }
-  };
+  }, [widget]);
 
   useEffect(() => {
-    getData(dataUrl);
-  }, [dataUrl]);
+    getData();
+  }, [getData]);
 
   if (isLoading) return <Spinner />;
 
-  if (!Array.isArray(data) || data.length === 0) return <EmptyWidget />;
+  if (data.length === 0) return <EmptyWidget />;
+
+  // Формируем легенду
+  const entries = data.map((item, i) => {
+    return (
+      <DiscreteLegendEntry
+        className="discrete__legend-item"
+        label={`${item.key} (${item.data})`}
+        //color={colorScheme(item, i)}
+      />
+    );
+  });
 
   return (
-    <PieChart
-      height={height}
-      width={width}
-      data={data || []}
-      series={<PieArcSeries explode={options.explode} colorScheme={colorScheme} />}
-    />
+    <>
+      <PieChart
+        height={height}
+        width={width}
+        data={data || []}
+        series={
+          <PieArcSeries
+            explode={widget.options.explode}
+            colorScheme={widget.options.colorScheme}
+            label={<PieArcLabel fontSize={12} fontFill="#000000" />}
+          />
+        }
+      />
+      {widget.options?.legend && (
+        <DiscreteLegend
+          className="discrete__legend"
+          orientation={widget.options.legend}
+          entries={entries}
+        />
+      )}
+    </>
   );
 };
 

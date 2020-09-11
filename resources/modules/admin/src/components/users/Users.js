@@ -39,8 +39,6 @@ export default class Users extends Component{
         let users_result = await this.resource.getAll()
         this.setState(state=>{
             return{...state, data: users_result};
-        }, () => {
-            console.log(this.state);
         });
     }
     
