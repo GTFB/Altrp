@@ -106,11 +106,11 @@ class FieldCalculationLogic extends Component {
           onChange={({ target: { value } }) => this.operatorChangeHandler(value)}
         >
           <option value="" disabled />
-          <option value="not-null">Not Null</option>
-          <option value="null">Null</option>
+          {/* <option value="not-null">Not Null</option>
+          <option value="null">Null</option> */}
           <option value="==">Equals</option>
           <option value="<>">Not Equals</option>
-          <option value="between">Between</option>
+          {/* <option value="between">Between</option> */}
           <option value=">">&gt;</option>
           <option value=">=">&gt;=</option>
           <option value="<">&lt;</option>
