@@ -93,6 +93,10 @@ class Input extends BaseElement{
           label: 'Select'
         },
         {
+          value: 'select2',
+          label: 'Select2'
+        },
+        {
           value: 'hidden',
           label: 'Hidden'
         },
@@ -154,26 +158,56 @@ class Input extends BaseElement{
       label: 'Select Nullable',
       default: false,
       conditions: {
-        'content_type': 'select',
+        'content_type':
+          [
+            'select',
+            'select2',
+          ]
       },
     });
 
     this.addControl('model_for_options', {
       type: CONTROLLER_SELECT2,
-      label: 'Choose Model for Select Options',
+      label: 'Choose Datasource for Select Options',
       default: '',
       conditions: {
-        'content_type': 'select',
+        'content_type':
+          [
+            'select',
+            'select2',
+          ]
       },
       nullable: true,
-      options_resource: '/admin/ajax/models_options?with_names=1&not_plural=1',
+      options_resource: '/admin/ajax/models_options?with_names=1&not_plural=1&with_sql_queries=1',
+      prefetch_options: true,
+    });
+
+    this.addControl('params_for_update', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Params for Update Options',
+      conditions: {
+        'model_for_options!': '',
+      },
+      description: 'Enter each param for Query in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n',
+    });
+
+    this.addControl('params_as_filters', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Use Params as Filters',
+      default: false,
+      conditions: {
+        'params_for_update!': '',
+      },
     });
 
     this.addControl('content_options', {
       type: CONTROLLER_TEXTAREA,
       label: 'Or Type Select Options',
       conditions: {
-        'content_type': 'select',
+        'content_type':[
+          'select',
+          'select2',
+        ],
       },
       description: 'Enter each option in a separate line. To differentiate between label and value, separate them with a pipe char ("|"). For example: First Name|f_name',
     });
@@ -230,7 +264,7 @@ class Input extends BaseElement{
 
     this.addControl("label_style_font_color", {
       type: CONTROLLER_COLOR,
-      label: "font color",
+      label: "Font Color",
       default: {
         color: "",
         colorPickedHex: "",
@@ -293,6 +327,7 @@ class Input extends BaseElement{
       ],
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}': 'text-align: {{VALUE}};',
+        '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'text-align: {{VALUE}};'
       },
     });
 
@@ -342,6 +377,12 @@ class Input extends BaseElement{
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
           'padding-left: {{LEFT}}{{UNIT}};'
+        ],
+        '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
         ]
       },
     });
@@ -351,7 +392,8 @@ class Input extends BaseElement{
       label: 'Z-index',
       default: 0,
       rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}': 'z-index: {{VALUE}}'
+        '{{ELEMENT}} .altrp-field{{STATE}}': 'z-index: {{VALUE}}',
+        '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'z-index: {{VALUE}}'
       }
     });
 
@@ -381,7 +423,8 @@ class Input extends BaseElement{
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-field::placeholder{{STATE}}": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-field::placeholder{{STATE}}": "color: {{COLOR}};",
+        "{{ELEMENT}} .altrp-field-select2__placeholder{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -398,6 +441,16 @@ class Input extends BaseElement{
         },
         rules: {
           '{{ELEMENT}} .altrp-field::placeholder{{STATE}}': [
+            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+          '{{ELEMENT}} .altrp-field-select2__placeholder{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -473,13 +526,14 @@ class Input extends BaseElement{
 
     this.addControl('background_style_background_color', {
         type: CONTROLLER_COLOR,
-        label: 'Border Color',
+        label: 'Background Color',
         default: {
           color: "",
           colorPickedHex: "",
         },
         rules: {
           '{{ELEMENT}} .altrp-field{{STATE}}': 'background-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'background-color: {{COLOR}};',
         },
       }
     );
@@ -537,6 +591,8 @@ class Input extends BaseElement{
         ],
         rules: {
           '{{ELEMENT}} .altrp-field{{STATE}}': 'border-style: {{VALUE}};',
+          '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'border-style: {{VALUE}};'
+          
         },
       }
     );
@@ -557,6 +613,7 @@ class Input extends BaseElement{
         },
         rules: {
           '{{ELEMENT}} .altrp-field{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
         },
       }
     );
@@ -570,6 +627,7 @@ class Input extends BaseElement{
         },
         rules: {
           '{{ELEMENT}} .altrp-field{{STATE}}': 'border-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'border-color: {{COLOR}};'
         },
       }
     );
@@ -594,6 +652,7 @@ class Input extends BaseElement{
       ],
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+        '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};'
       },
     });
 
@@ -614,6 +673,9 @@ class Input extends BaseElement{
       ],
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}': [
+          'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        ],
+        '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': [
           'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         ]
       },

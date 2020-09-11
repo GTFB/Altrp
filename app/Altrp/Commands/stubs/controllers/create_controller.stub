@@ -45,7 +45,7 @@ class DummyClass extends ApiController
         ${{crudNameSingular}} = new {{modelName}}($request->all());
 
         if(${{crudNameSingular}}->save()){
-            return response()->json(['success'=>true], 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(['success'=>true, 'data'=>${{crudNameSingular}}], 200, [], JSON_UNESCAPED_UNICODE);
         }
 
         return response()->json(['success'=>false, 'message' => trans("responses.dberror")], 400, [], JSON_UNESCAPED_UNICODE);

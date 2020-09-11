@@ -52,6 +52,7 @@ class ButtonWidget extends Component {
   render() {
     const { link_link = {} } = this.state.settings;
     const { goBack } = this.props.history;
+
     let classes =
       "altrp-btn " + (this.state.settings.position_css_classes || "");
     let buttonMedia = { ...this.state.settings.button_icon };
@@ -60,7 +61,7 @@ class ButtonWidget extends Component {
     }
     // this.getContent('button_text');
     // this.props.element.getSettings('button_text');
-    //todo: убрать лишние компоненты, создавать вомпонент при помощи React.createElement
+    //todo: убрать лишние компоненты, создавать компонент при помощи React.createElement
     /*let tag = 'a';
 
     if(this.props.element.getSettings('form_id')){

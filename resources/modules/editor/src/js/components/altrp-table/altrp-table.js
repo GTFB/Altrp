@@ -11,7 +11,7 @@ import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput
  *
  * @param settings
  * @param {Query} query
- * @param {Query} data
+ * @param {{}} data
  * @param {AltrpModel} currentModel
  * @return {*}
  * @constructor
@@ -20,10 +20,27 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
   if (! (settings.tables_columns && settings.tables_columns.length)) {
     return <div children="Please Add Column"/>
   }
-  let _data =[], _status, _error, _latestData;
+  const useQuerySettings = {
+    forceFetchOnMount: true,
+    refetchOnWindowFocus: true,
+  };
+  /**
+   * проверим есть ли настройки для сортировок по умолчанию
+   */
+  const defaultSortSettings =  {};
+  settings.tables_columns.forEach(column => {
+    if(column.column_is_default_sorted && !defaultSortSettings.order_by){
+      defaultSortSettings.order_by = column.accessor;
+      defaultSortSettings.order = _.get(column, 'column_is_default_sorted_direction', 'ASC')
+    }
+  });
   const [page, setPage] = useState(1);
+
+  let counter = query.getCounterStart(page);
+  let _data =[], _status, _error, _latestData;
+
   const [updatedData, setUpdatedData] = useState({});
-  const [sortSetting, setSortSettings] = useState({});
+  const [sortSetting, setSortSettings] = useState(defaultSortSettings);
   const [filterSetting, setFilterSettings] = useState({});
   const [doubleClicked, setDoubleClicked] =  useState({});
   const filterSettingJSON = JSON.stringify(filterSetting);
@@ -36,6 +53,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
     if(filterSettingJSON.length > 2){
       queryData.filters = filterSettingJSON;
     }
+    console.log(queryData);
     return query.getQueried(queryData)
   });
   if(query.pageSize){
@@ -47,9 +65,9 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
       resolvedData,
       latestData,
       error,
-    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting, query.getParams()], fetchModels ,{
-      forceFetchOnMount: true
-    });
+    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting, query.getParams()],
+        fetchModels,
+        useQuerySettings);
     _data = resolvedData ? resolvedData : _data;
     _status = status;
     _error = error;
@@ -63,11 +81,10 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
     /**
      * Если нет пагинации
      */
-    const {status, data, error,} = useQuery([query.dataSourceName,query.getParams()], () => {
+    const {status, data, error,} = useQuery([query.dataSourceName,query.getParams()],
+        () => {
       return query.getResource().getQueried({...sortSetting,filters: filterSettingJSON})
-    }, {
-      forceFetchOnMount: true
-    });
+    }, useQuerySettings);
     _data = data;
     _status = status;
     _error = error;
@@ -131,7 +148,6 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
     setFilterSettings(filterParams);
   };
   
-  console.log(_status);
   return <><table className="altrp-table" {...getTableProps()}>
     <thead className="altrp-table-head">
     {renderAdditionalRows(settings)}
@@ -221,6 +237,12 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
                         cellContent = React.createElement('span', {
                           className: 'altrp-inherit altrp-table-td__default-content',
                         }, cellContent)
+                      }
+                      /**
+                       * Если нужно указать номер по порядку
+                       */
+                      if(cell.column._accessor.trim() === '##'){
+                        cellContent = counter++;
                       }
                       return <td {...cellProps} className={cellClassName} style={style}>
                           {cellContent}{doubleClickContent}
@@ -336,10 +358,10 @@ function renderTh({column, sortSetting, sortingHandler, filterSetting, filterHan
   let thText = column.render('column_name');
   return <th {...thProps} style={style}>
     {thText}
-    { sortSetting && (sortSetting.order_by === column._accessor)
+    { sortSetting && column.column_is_sorted && (sortSetting.order_by === column._accessor)
       && (sortSetting.order === "DESC" ?
-        iconsManager().renderIcon('chevron', {className:'rotate-180'}) :
-        iconsManager().renderIcon('chevron'))}
+        iconsManager().renderIcon('chevron', {className:'rotate-180 sort-icon '}) :
+        iconsManager().renderIcon('chevron', {className: 'sort-icon'}))}
     {column.column_is_filtered &&
     <label className="altrp-label">
     <input type="text"

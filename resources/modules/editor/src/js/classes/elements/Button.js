@@ -18,7 +18,8 @@ import {
   TAB_CONTENT,
   TAB_STYLE,
   TAB_ADVANCED,
-  CONTROLLER_MEDIA
+  CONTROLLER_MEDIA,
+  CONTROLLER_GRADIENT
 } from "../modules/ControllersManager";
 
 class Button extends BaseElement{
@@ -445,6 +446,23 @@ class Button extends BaseElement{
       rules: {
         '{{ELEMENT}} .altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
       },
+    });
+
+    this.addControl('gradient', {
+      type: CONTROLLER_GRADIENT,
+      label: 'Gradient',
+      default: {
+        isWithGradient: false,
+        firstColor: "rgba(97,206,112,1)",
+        firstPoint: '0',
+        secondColor: "rgba(242,41,91,1)",
+        secondPoint: "100",
+        angle: "0",
+        value: ""
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-btn{{STATE}}": "background-image: {{VALUE}}" 
+      }
     });
 
   this.endControlSection();
