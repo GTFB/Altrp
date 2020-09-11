@@ -487,10 +487,24 @@ class ModelsController extends HttpController
             $result = $field->save();
         } else {
             $accessor = new Accessor($request->all());
-            $accessor->calculation_logic = json_encode($accessor->calculation_logic);
+            if ($request->has('calculation_logic'))
+                $accessor->calculation_logic = json_encode($accessor->calculation_logic);
             $accessor->user_id = auth()->user()->id;
             $accessor->model_id = $model->id;
             $result = $accessor->save();
+
+            $field = new Column([
+                'name' => $request->name,
+                'title' => $request->title,
+                'description' => $request->description,
+                'type' => $request->type,
+            ]);
+            $field->user_id = auth()->user()->id;
+            $field->table_id = $model->altrp_table->id;
+            $field->model_id = $model->id;
+            Column::withoutEvents(function () use ($field) {
+                $field->save();
+            });
         }
 
         if ($result) {
@@ -518,7 +532,8 @@ class ModelsController extends HttpController
             $field = Column::where([['model_id', $model_id], ['id', $field_id]])->first();
         else {
             $field = Accessor::where([['model_id', $model_id], ['id', $field_id]])->first();
-            $data['calculation_logic'] = json_encode($data['calculation_logic']);
+            if (isset($data['calculation_logic']))
+                $data['calculation_logic'] = json_encode($data['calculation_logic']);
         }
 
         if (! $field) {
@@ -556,6 +571,8 @@ class ModelsController extends HttpController
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $field = Column::where([['id', $field_id]])->first();
+        if ($field->type === 'calculated')
+            $field = Accessor::where([['model_id',$model_id],['name',$field->name]])->first();
         if ($field) {
             return response()->json($field, 200, [], JSON_UNESCAPED_UNICODE);
         }
@@ -588,7 +605,16 @@ class ModelsController extends HttpController
                 'message' => 'Field not found'
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
-        $result = $field->delete();
+        if ($field->type !== 'calculated') {
+            $result = $field->delete();
+        } else {
+            Column::withoutEvents(function () use ($field) {
+                $field->delete();
+            });
+            $accessor = Accessor::where([['model_id', $model_id], ['name', $field->name]])->first();
+            $result = $accessor->delete();
+        }
+
         if ($result) {
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }

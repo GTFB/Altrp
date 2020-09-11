@@ -4,6 +4,7 @@
 namespace App\Altrp\Generators\Traits;
 use App\Altrp\Column;
 use App\Altrp\Model;
+use App\Altrp\Table;
 use Illuminate\Support\Str;
 
 /**
