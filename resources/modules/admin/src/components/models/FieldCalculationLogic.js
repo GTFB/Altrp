@@ -21,6 +21,15 @@ class FieldCalculationLogic extends Component {
     this.setRight = this.setRight.bind(this);
   }
 
+  componentDidMount() {
+    const { right } = this.props.item;
+    if (right) {
+      typeof this.props.item.right === "string" ?
+        this.setState({ rightType: "string", right: { ...this.state.right, string: right } }) :
+        this.setState({ rightType: "object", right: { ...this.state.right, fieldId: right.id } })
+    }
+  }
+
   rightTypeHandler(type) {
     this.setState(_state => ({ rightType: type }), this.setRight)
   }
