@@ -124,7 +124,8 @@ class Template extends Model
    */
   public function check_auth_conditions( $settings = [] ){
     $result = true;
-    if(! ( $settings['conditional_roles'] || $settings['conditional_permissions'] ) ){
+    if(! ( isset( $settings['conditional_roles'] ) && $settings['conditional_roles']
+      || isset( $settings['conditional_permissions'] ) && $settings['conditional_permissions'] ) ){
       return $result;
     }
     $roles = Role::find( $settings['conditional_roles'] );

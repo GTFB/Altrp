@@ -323,16 +323,27 @@ class Input extends BaseElement{
         decoration: ""
       },
       rules: {
+        '{{ELEMENT}} .altrp-field-select2__single-value{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px;',
+          'font-weight: {{WEIGHT}};',
+          'text-transform: {{TRANSFORM}};',
+          'font-style: {{STYLE}};',
+          'text-decoration: {{DECORATION}};'
+        ],
         '{{ELEMENT}} .altrp-field{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-sefir;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
+          'letter-spacing: {{SPACING}}px;',
+          'font-weight: {{WEIGHT}};',
+          'text-transform: {{TRANSFORM}};',
+          'font-style: {{STYLE}};',
+          'text-decoration: {{DECORATION}};'
+        ]
+        
       },
     });
 
@@ -345,9 +356,8 @@ class Input extends BaseElement{
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}': [
-          'color: {{COLOR}};'
-        ],
+        '{{ELEMENT}} .altrp-field-select2__single-value{{STATE}}': 'color : {{COLOR}};',
+        '{{ELEMENT}} .altrp-field{{STATE}}': 'color : {{COLOR}};'
       }
     });
 
