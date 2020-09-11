@@ -39,17 +39,6 @@ class DashboardsController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Dashboards  $dashboards
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Dashboards $dashboards)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

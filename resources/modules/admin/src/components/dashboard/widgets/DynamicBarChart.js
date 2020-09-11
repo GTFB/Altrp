@@ -7,7 +7,6 @@ import {
   GradientStop,
   DiscreteLegend,
   DiscreteLegendEntry,
-  BarLabel,
 } from "reaviz";
 
 import Spinner from "./Spinner";
@@ -55,14 +54,8 @@ const DynamicBarChart = ({ widget, width = 300, height = 300 }) => {
         data={data}
         series={
           <BarSeries
-            layout={widget.options.layout || "horizontal"}
             colorScheme={widget.options.colorScheme}
-            bar={
-              <Bar
-                label={<BarLabel fill="#000000" fontSize={10} />}
-                gradient={<Gradient stops={[<GradientStop stopOpacity={1} />]} />}
-              />
-            }
+            bar={<Bar gradient={<Gradient stops={[<GradientStop stopOpacity={1} />]} />} />}
           />
         }
       />
