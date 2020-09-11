@@ -622,8 +622,10 @@ class ModelsController extends HttpController
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $field = Column::where([['id', $field_id]])->first();
+            $column = $field;
         if ($field->type === 'calculated')
             $field = Accessor::where([['model_id',$model_id],['name',$field->name]])->first();
+            $field->type = $column->type;
         if ($field) {
             return response()->json($field, 200, [], JSON_UNESCAPED_UNICODE);
         }
