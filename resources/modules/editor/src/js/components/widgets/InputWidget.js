@@ -234,11 +234,11 @@ class InputWidget extends Component {
    * Выводит инпут-select2, используя компонент AltrpSelect
    */
   renderSelect2() {
-    const { content_options_nullable, nulled_option_title } = this.state.settings;
+    const { content_options_nullable, nulled_option_title, content_placeholder, field_font_typographic, field_font_color } = this.state.settings;
     let options = this.state.options;
-
+    // console.log(field_font_color)
     if(content_options_nullable){
-      options = _.union([{ label: nulled_option_title, value: '', }], options);
+      options = _.union([{ label: nulled_option_title, value: 'all', }], options);
     }
 
     let value = this.state.value;
@@ -262,7 +262,10 @@ class InputWidget extends Component {
       classNamePrefix: 'altrp-field-select2',
       options,
       onChange: this.onChange,
-      value
+      value,
+      placeholder: content_placeholder,
+      // fontSettings: field_font_typographic,
+      // color: field_font_color ? field_font_color.color : ''
     };
     return <AltrpSelect {...select2Props} />;
   }

@@ -241,7 +241,7 @@ class Input extends BaseElement{
 
     this.startControlSection('label_style_section', {
       tab: TAB_STYLE,
-      label: 'label',
+      label: 'Label',
     });
 
     this.addControl("label_style_spacing", {
@@ -296,6 +296,49 @@ class Input extends BaseElement{
         },
       }
     );
+    this.endControlSection();
+
+    this.startControlSection('font_style_section', {
+      tab: TAB_STYLE,
+      label: 'Font',
+    });
+
+    this.addControl('field_font_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-field-label{{STATE}}': [
+      //     'font-family: "{{FAMILY}}", sans-sefir;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
+    });
+
+    this.addControl("field_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "Font Color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {      }
+    });
+
     this.endControlSection();
 
     this.startControlSection('position_section', {
@@ -407,7 +450,7 @@ class Input extends BaseElement{
 
     this.startControlSection('placeholder_style_section', {
       tab: TAB_STYLE,
-      label: 'placeholder',
+      label: 'Placeholder',
     });
 
     this.addControl("placeholder_style_font_color", {
