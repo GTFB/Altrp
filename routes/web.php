@@ -319,6 +319,9 @@ Route::group( ['prefix' => 'ajax'], function(){
   // Записывает данные для виджета панели аналитики
   Route::post('dashboards/{id}', 'DashboardsController@store');
 
+  // Удаляем виджет из панели аналитики
+  Route::delete('dashboards/{id}', 'DashboardsController@destroy');
+
   /**
    * Отдает данные страницы как модели для динамического контента
    */

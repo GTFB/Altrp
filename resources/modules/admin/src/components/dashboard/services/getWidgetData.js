@@ -14,7 +14,6 @@ export const getWidgetData = async (url, filter) => {
   try {
     return await axios(url + params);
   } catch (error) {
-    console.log("error :>> ", error);
     return { status: 500 };
   }
 };

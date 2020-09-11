@@ -14,7 +14,7 @@ class DashboardsController extends Controller
      */
     public function index(Request $request, $id)
     {
-        $panel = Dashboards::where('widget_id', '=', $id)->get();
+        $panel = Dashboards::where('widget_id', '=', $id)->orderBy('id', 'desc')->get();
         return response()->json($panel, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -67,8 +67,11 @@ class DashboardsController extends Controller
      * @param  \App\Dashboards  $dashboards
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Dashboards $dashboards)
+    public function destroy(Dashboards $dashboards, $id)
     {
-        //
+        $panel = Dashboards::findOrFail($id);
+        $panel->delete();
+
+        return response()->json(null, 204);
     }
 }

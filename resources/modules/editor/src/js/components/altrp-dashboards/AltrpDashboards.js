@@ -27,6 +27,11 @@ const AltrpDashboards = ({ id, settings }) => {
     setWidgets([widget, ...widgets]);
   };
 
+  const handleRemove = (widget) => {
+    setWidgets(widgets.filter((w) => w.id !== widget.id));
+    axios.delete(`/ajax/dashboards/${widget.id}`);
+  };
+
   useEffect(() => {
     getWidgets(id);
   }, [id]);
@@ -46,7 +51,7 @@ const AltrpDashboards = ({ id, settings }) => {
                 <button type="button" title="Настроить виджет">
                   <GearFill />
                 </button>
-                <button type="button" title="Удалить виджет">
+                <button type="button" title="Удалить виджет" onClick={() => handleRemove(widget)}>
                   <TrashFill />
                 </button>
               </Card.Title>
