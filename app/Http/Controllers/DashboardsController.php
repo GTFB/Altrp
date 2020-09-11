@@ -56,9 +56,11 @@ class DashboardsController extends Controller
      * @param  \App\Dashboards  $dashboards
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Dashboards $dashboards)
+    public function update(Request $request, $id)
     {
-        //
+        $panel = Dashboards::findOrFail($id);
+        $panel->update($request->all());
+        return response()->json($panel, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**

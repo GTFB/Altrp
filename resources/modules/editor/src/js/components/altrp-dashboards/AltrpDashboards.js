@@ -1,11 +1,8 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import Card from "react-bootstrap/Card";
-import GearFill from "react-bootstrap-icons/dist/icons/gear-fill";
-import TrashFill from "react-bootstrap-icons/dist/icons/trash-fill";
 
 import AddWidget from "./AddWidget";
-import WidgetDiagram from "../../../../../admin/src/components/dashboard/WidgetDiagram";
+import CardWidget from "./CardWidget";
 
 const AltrpDashboards = ({ id, settings }) => {
   const [widgets, setWidgets] = useState([]);
@@ -16,7 +13,15 @@ const AltrpDashboards = ({ id, settings }) => {
       try {
         const req = await axios(`/ajax/dashboards/${id}`);
         if (req.status === 200) {
-          setWidgets(req.data);
+          setWidgets(
+            req.data.map((w) => {
+              return {
+                ...w,
+                options: JSON.parse(w.options),
+                filter: JSON.parse(w.filter),
+              };
+            })
+          );
         }
       } catch (error) {}
     },
@@ -32,6 +37,15 @@ const AltrpDashboards = ({ id, settings }) => {
     axios.delete(`/ajax/dashboards/${widget.id}`);
   };
 
+  const handleEdit = (widget) => {
+    setWidgets(widgets.map((w) => (w.id === widget.id ? widget : w)));
+    axios.put(`/ajax/dashboards/${widget.id}`, {
+      ...widget,
+      options: JSON.stringify(widget.options),
+      filter: JSON.stringify(widget.filter),
+    });
+  };
+
   useEffect(() => {
     getWidgets(id);
   }, [id]);
@@ -44,22 +58,12 @@ const AltrpDashboards = ({ id, settings }) => {
       <div className="altrp-dashboard__widgets">
         {isShow && <AddWidget id={id} setIsShow={setIsShow} onAdd={handleAdd} />}
         {widgets.map((widget) => (
-          <Card key={widget.id}>
-            <Card.Header>
-              <Card.Title>{widget.title}</Card.Title>
-              <Card.Title>
-                <button type="button" title="Настроить виджет">
-                  <GearFill />
-                </button>
-                <button type="button" title="Удалить виджет" onClick={() => handleRemove(widget)}>
-                  <TrashFill />
-                </button>
-              </Card.Title>
-            </Card.Header>
-            <Card.Body>
-              <WidgetDiagram widget={widget} width={360} height={300} />
-            </Card.Body>
-          </Card>
+          <CardWidget
+            key={widget.id}
+            widget={widget}
+            onDeleted={handleRemove}
+            onEdited={handleEdit}
+          />
         ))}
       </div>
     </div>
