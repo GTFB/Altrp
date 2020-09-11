@@ -53,6 +53,7 @@ class AltrpSelect extends Component {
    */
 
   render(){
+    // const { fontSettings, color } = this.props;
     let selectProps = {
       onChange: this.onChange,
       onInputChange: this.onInputChange,
@@ -60,21 +61,16 @@ class AltrpSelect extends Component {
       placeholder: this.props.placeholder,
       loadOptions: this.loadOptions,
       noOptionsMessage: this.props.noOptionsMessage || (() => "not found"),
-      styles:{
-        menu: (provided, state) =>{
-          return{...provided, zIndex: 1000}
-        },
-      }
+      styles: { menuPortal: base => ({ ...base, zIndex: 99999/* , ...fontSettings, color */ }) },
+      menuPortalTarget: document.body,
+      menuPlacement: 'bottom'
     };
+    
     _.assign(selectProps, this.props);
     if( this.optionsResource){
-      return <AsyncSelect
-          {...selectProps}
-      />
+      return <AsyncSelect {...selectProps} />
     } else {
-      return <Select
-          {...selectProps}
-      />
+      return <Select {...selectProps} />
     }
   }
 }
