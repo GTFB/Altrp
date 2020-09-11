@@ -271,7 +271,7 @@ class Column  extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}}{{STATE}}': [
+        '{{ELEMENT}} .altrp-column{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}} !important;',
           'margin-right: {{RIGHT}}{{UNIT}} !important;',
           'margin-bottom: {{BOTTOM}}{{UNIT}} !important;',
