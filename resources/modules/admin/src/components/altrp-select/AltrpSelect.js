@@ -62,7 +62,6 @@ class AltrpSelect extends Component {
       noOptionsMessage: this.props.noOptionsMessage || (() => "not found"),
       styles:{
         menu: (provided, state) =>{
-          console.log(state);
           return{...provided, zIndex: 1000}
         },
       }

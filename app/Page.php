@@ -114,6 +114,9 @@ class Page extends Model
         'template' => $header
       ];
     }
+    /**
+     * @var Template $content
+     */
     $content = PagesTemplate::where( 'page_id', $page_id )
       ->where( 'template_type', 'content' )->first()->template;
     $content->check_elements_conditions();
