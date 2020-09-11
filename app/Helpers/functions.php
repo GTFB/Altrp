@@ -378,7 +378,7 @@ function selectForSQLEditor( $sql, $bindings, $sql_editor_params, ApiRequest $re
           foreach ( $_filters as $key => $value ) {
               if(isset($_detail_and_filter_params[$key])) {
                   $_detail_and_filter_params[$key] = str_replace(".", "`.`", $_detail_and_filter_params[$key]);
-                  $_detail_and_filter_and_conditionals[] = ' `' . $_detail_and_filter_params[$key] . '` LIKE "%' . $value . '%" ';
+                  $_detail_and_filter_conditionals[] = ' `' . $_detail_and_filter_params[$key] . '` LIKE "%' . $value . '%" ';
               }
           }
 
