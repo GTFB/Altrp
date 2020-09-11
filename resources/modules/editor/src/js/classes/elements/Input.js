@@ -322,18 +322,18 @@ class Input extends BaseElement{
         family: "Open Sans",
         decoration: ""
       },
-      // rules: {
-      //   '{{ELEMENT}} .altrp-field-label{{STATE}}': [
-      //     'font-family: "{{FAMILY}}", sans-sefir;',
-      //     'font-size: {{SIZE}}px;',
-      //     'line-height: {{LINEHEIGHT}};',
-      //     'letter-spacing: {{SPACING}}px',
-      //     'font-weight: {{WEIGHT}}',
-      //     'text-transform: {{TRANSFORM}}',
-      //     'font-style: {{STYLE}}',
-      //     'text-decoration: {{DECORATION}}'
-      //   ],
-      // },
+      rules: {
+        '{{ELEMENT}} .altrp-field{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
     });
 
     this.addControl("field_font_color", {
@@ -344,7 +344,11 @@ class Input extends BaseElement{
         colorPickedHex: "",
       },
       presetColors: ["#eaeaea", "#9c18a8"],
-      rules: {      }
+      rules: {
+        '{{ELEMENT}} .altrp-field{{STATE}}': [
+          'color: {{COLOR}};'
+        ],
+      }
     });
 
     this.endControlSection();

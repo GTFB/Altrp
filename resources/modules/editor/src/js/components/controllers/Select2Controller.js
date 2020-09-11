@@ -157,7 +157,7 @@ class Select2Controller extends Component {
         margin: 0,
         padding: 0,
         width: "100%",
-        height: '150px',
+        maxHeight: '150px',
         overflow: 'auto',
         borderRadius: "0px 0px 3px 3px",
         borderWidth: "0px 1px 1px 1px",
