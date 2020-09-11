@@ -38,7 +38,7 @@ class Section extends BaseElement{
     this.addControl('layout_content_width_type', {
       type: CONTROLLER_SELECT,
       label: 'Content width',
-      default: 'boxed',
+      default: 'section_boxed',
       options: [
         {
           value: 'boxed',
@@ -47,6 +47,10 @@ class Section extends BaseElement{
         {
           value: 'full',
           label: 'full width'
+        },
+        {
+          value: 'section_boxed',
+          label: 'section-boxed'
         },
         // {
         //   value: 'full-fill',
@@ -98,14 +102,15 @@ class Section extends BaseElement{
       type: CONTROLLER_SLIDER,
       label: "width",
       default: {
-        size: 100,
-        unit: "%"
+        size: 1440,
+        unit: "px"
       },
       units: ["px", "%", "vh"],
-      max: 500,
+      max: 2000,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "width: {{SIZE}}{{UNIT}}"
+        // "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "width: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-section--boxed{{STATE}} > .altrp-element": "width: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -368,19 +373,20 @@ class Section extends BaseElement{
         firstPoint: '0',
         secondColor: "rgba(242,41,91,1)",
         secondPoint: "100",
-        angle: "0"
+        angle: "0",
+        value: ""
       },
       rules: {
-        "{{ELEMENT}} > .altrp-gradient{{STATE}}": "background-image: linear-gradient({{ANGLE}}deg, {{FIRSTCOLOR}} {{FIRSTPOINT}}%, {{SECONDCOLOR}} {{SECONDPOINT}}%);" 
+        "{{ELEMENT}} .altrp-section{{STATE}}": "background-image: {{VALUE}}" 
       }
     });
 
-    this.addControl('image', {
+    this.addControl('background_image', {
       type: CONTROLLER_MEDIA,
       label: 'Background image',
       default: {url: ""},
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "background: repeat url({{URL}});"
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background: repeat url({{URL}});"
       }
     });
 

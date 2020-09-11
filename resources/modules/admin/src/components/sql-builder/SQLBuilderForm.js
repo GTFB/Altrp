@@ -35,6 +35,7 @@ class SQLBuilderForm extends Component {
       tablesOptions: [],
       selfFields: [],
       selfFieldsOptions: [],
+      isAggregateRaw: false
       // isOffsetDisable: true,
       // isLimitDisable: true
     };
@@ -216,6 +217,16 @@ class SQLBuilderForm extends Component {
     });
   }
 
+  aggregateToggle = () => {
+    this.setState(state => ({
+      isAggregateRaw: !state.isAggregateRaw,
+      value: {
+        ...state.value,
+        aggregates: state.isAggregateRaw ? [{ type: '', column: '', alias: '' }] : ''
+      }
+    }));
+  }
+
   // обработчики событий для массива joins
   joinChangeHandler({ target: { value, name } }, index) {
     this.setState(state => {
@@ -232,7 +243,7 @@ class SQLBuilderForm extends Component {
     this.setState(state => {
       const joins = [...state.value.joins];
       joins.push({
-        type: '', source_table: '', target_table: '', source_column: '', operator: '', target_column: ''
+        type: '', target_table: '', source_column: '', operator: '', target_column: ''
       });
       return {
         ...state,
@@ -374,7 +385,7 @@ class SQLBuilderForm extends Component {
 
     this.setState(state => {
       const order_by = [...state.value.order_by];
-      order_by.push({ type: '', column: ''/* , id: this.counter */ });
+      order_by.push({ type: 'asc', column: ''/* , id: this.counter */ });
       return {
         ...state,
         value: { ...state.value, order_by }
@@ -433,7 +444,7 @@ class SQLBuilderForm extends Component {
     (id ?
       this.sqlResource.put(id, this.state.value) :
       this.sqlResource.post(this.state.value))
-        .then(() => this.props.history.push(`/admin/tables/models/edit/${modelId}`));
+      .then(() => this.props.history.push(`/admin/tables/models/edit/${modelId}`));
   }
 
   /**
@@ -460,7 +471,7 @@ class SQLBuilderForm extends Component {
   render() {
     const { title, name, relations, columns, aggregates, joins, conditions, order_by, group_by, offset, limit } = this.state.value;
     const { roles, permissions } = this.state.value.access;
-    const { selfFieldsOptions, permissionsOptions, relationsOptions, rolesOptions, tablesOptions, /* isOffsetDisable, isLimitDisable  */ } = this.state;
+    const { selfFieldsOptions, permissionsOptions, relationsOptions, rolesOptions, tablesOptions, isAggregateRaw /* isOffsetDisable, isLimitDisable  */ } = this.state;
     const { modelId } = this.props.match.params;
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="row">
@@ -537,6 +548,7 @@ class SQLBuilderForm extends Component {
         </div>
         <JoinComponent item={item}
           tablesOptions={tablesOptions}
+          sourceColumnOptions={selfFieldsOptions}
           changeHandler={e => this.joinChangeHandler(e, index)}
         />
       </Fragment>)}
@@ -547,23 +559,39 @@ class SQLBuilderForm extends Component {
       </div>
 
       <h2 className="admin-form__subheader centred">Aggregates</h2>
-      {aggregates.map((item, index) => <Fragment key={index}>
-        {index !== 0 && <hr />}
-        <div className="text-right">
-          <button className="btn btn_failure" type="button" onClick={() => this.aggregateDeleteHandler(index)}>
-            ✖
+
+      {(!!aggregates.length || isAggregateRaw) &&
+        <div className="text-center">
+          <button className={`btn ${isAggregateRaw ? 'btn_success' : ''}`} type="button" onClick={this.aggregateToggle}>
+            Aggregate Raw
           </button>
-        </div>
-        <AggregateComponent item={item}
-          columnsOptions={selfFieldsOptions}
-          changeHandler={e => this.aggregateChangeHandler(e, index)}
-        />
-      </Fragment>)}
-      <div className="centred">
+        </div>}
+
+      {isAggregateRaw ?
+        <div className="form-group">
+          <input type="text" id="aggregates" required name="aggregates"
+            value={aggregates}
+            onChange={this.valueChangeHandler}
+            className="form-control" />
+        </div> :
+        aggregates.map((item, index) => <Fragment key={index}>
+          {index !== 0 && <hr />}
+          <div className="text-right">
+            <button className="btn btn_failure" type="button" onClick={() => this.aggregateDeleteHandler(index)}>
+              ✖
+            </button>
+          </div>
+          <AggregateComponent item={item}
+            columnsOptions={selfFieldsOptions}
+            changeHandler={e => this.aggregateChangeHandler(e, index)}
+          />
+        </Fragment>)}
+
+      {!isAggregateRaw && <div className="centred">
         <button className="btn btn_success" type="button" onClick={this.aggregateAddHandler}>
           + New Aggregate
         </button>
-      </div>
+      </div>}
 
       <h2 className="admin-form__subheader centred">Conditions</h2>
 

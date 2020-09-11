@@ -60,6 +60,11 @@ class AltrpSelect extends Component {
       placeholder: this.props.placeholder,
       loadOptions: this.loadOptions,
       noOptionsMessage: this.props.noOptionsMessage || (() => "not found"),
+      styles:{
+        menu: (provided, state) =>{
+          return{...provided, zIndex: 1000}
+        },
+      }
     };
     _.assign(selectProps, this.props);
     if( this.optionsResource){

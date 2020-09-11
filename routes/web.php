@@ -189,6 +189,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     */
     Route::get( '/models', 'Admin\ModelsController@getModels');
     Route::get( '/model_options', 'Admin\ModelsController@getModelOptions');
+    Route::get( '/models_without_parent', 'Admin\ModelsController@getModelsWithoutParent');
     Route::post( '/models', 'Admin\ModelsController@storeModel');
     Route::put( '/models/{model_id}', 'Admin\ModelsController@updateModel');
     Route::get( '/models/{model_id}', 'Admin\ModelsController@showModel');
@@ -216,6 +217,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::put( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@updateModelField');
     Route::get( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@showModelField');
     Route::delete( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@destroyModelField');
+
+    /**
+    * Аксессоры
+    */
+    Route::get( '/models/{model_id}/accessors', 'Admin\ModelsController@getModelAccessors');
+    Route::post( '/models/{model_id}/accessors', 'Admin\ModelsController@storeAccessor');
+    Route::put( '/models/{model_id}/accessors/{accessor_id}', 'Admin\ModelsController@updateAccessor');
+    Route::get( '/models/{model_id}/accessors/{accessor_id}', 'Admin\ModelsController@showAccessor');
+    Route::delete( '/models/{model_id}/accessors/{accessor_id}', 'Admin\ModelsController@destroyAccessor');
 
     /**
     * Связи

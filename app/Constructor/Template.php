@@ -3,6 +3,8 @@
 namespace App\Constructor;
 
 use App\Area;
+use App\Permission;
+use App\Role;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -110,8 +112,34 @@ class Template extends Model
       return ! Auth::check();
     }
     if( $settings['conditional_display_choose'] === 'auth' ){
-      return Auth::check();
+      return $this->check_auth_conditions( $settings );
     }
     return true;
   }
+
+  /**
+   * Проверяам роли разрешения пользователя
+   * @param array $settings
+   * @return boolean
+   */
+  public function check_auth_conditions( $settings = [] ){
+    $result = true;
+    if(! ( $settings['conditional_roles'] || $settings['conditional_permissions'] ) ){
+      return $result;
+    }
+    $roles = Role::find( $settings['conditional_roles'] );
+    if( $roles->count() ){
+      $roles = $roles->toArray();
+      return Auth::user()->hasRole( $roles );
+    }
+
+    $permissions = Permission::find( $settings['conditional_permissions'] );
+    if( $permissions->count() ){
+      $permissions = $permissions->toArray();
+
+      return Auth::user()->hasPermission( $permissions );
+    }
+    return $result;
+  }
+
 }

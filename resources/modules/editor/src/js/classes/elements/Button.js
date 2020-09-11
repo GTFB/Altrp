@@ -171,10 +171,21 @@ class Button extends BaseElement{
       ],
     });
 
+    this.addControl('form_confirm', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Confirm Submit Form Text',
+      conditions: {
+        'form_actions!': 'null',
+      },
+      default: '',
+    });
+
     this.addControl('choose_model', {
       conditions: {
         'form_actions': 'add_new',
       },
+      label: 'Choose Model',
+      responsive: false,
       type: CONTROLLER_SELECT,
       resource: '/admin/ajax/models_options?with_names=true',
     });
@@ -457,10 +468,11 @@ class Button extends BaseElement{
         firstPoint: '0',
         secondColor: "rgba(242,41,91,1)",
         secondPoint: "100",
-        angle: "0"
+        angle: "0",
+        value: ""
       },
       rules: {
-        "{{ELEMENT}} > .altrp-gradient{{STATE}}": "background-image: linear-gradient({{ANGLE}}deg, {{FIRSTCOLOR}} {{FIRSTPOINT}}%, {{SECONDCOLOR}} {{SECONDPOINT}}%);"
+        "{{ELEMENT}} .altrp-btn{{STATE}}": "background-image: {{VALUE}}" 
       }
     });
 

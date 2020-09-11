@@ -53,6 +53,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
     if(filterSettingJSON.length > 2){
       queryData.filters = filterSettingJSON;
     }
+    console.log(queryData);
     return query.getQueried(queryData)
   });
   if(query.pageSize){

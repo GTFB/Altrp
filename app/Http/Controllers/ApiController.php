@@ -90,6 +90,8 @@ class ApiController extends Controller
 
         $res = compact('pageCount' ,'hasMore');
         $res['data'] = $$resource;
+
+
         return $res;
     }
 
@@ -116,17 +118,26 @@ class ApiController extends Controller
    */
   public function options( ApiRequest $request )
   {
+
+    $filters = [];
+    if( $request->get( 'filters') ){
+      $_filters = json_decode( $request->get( 'filters' ), true );
+      foreach ( $_filters as $key => $value ) {
+        $filters[$key] = $value;
+      }
+    }
     /**
      * @var \App\AltrpModels\test $model
      */
-    if( $request->get('test')){
-      return response()->json( [['label' => 'test', 'value' => $request->get('test')]], 200, [], JSON_UNESCAPED_UNICODE );
-    }
     $model = new $this->modelClass();
     $label_name = $model->getLabelColumnName();
     $title_name = $model->getTitleColumnName();
     if( ! $request->get( 's' ) ){
-      $options = $model->all();
+      if( ! count( $filters ) ){
+        $options = $model->all();
+      } else {
+        $options = $model->whereLikeMany( $filters );
+      }
     } else {
       $options = $model->where( 'id', 'like', '%' . $request->get( 's' ) . '%' );
 
@@ -136,6 +147,11 @@ class ApiController extends Controller
       if( $title_name !== $label_name ){
         $options->orWhere( $label_name, 'like', '%' . $request->get( 's' ) . '%' );
       }
+      $options = $options->whereLikeMany( $filters );
+//      echo '<pre style="padding-left: 200px;">';
+//      var_dump( $filters );
+//      echo '</pre>';
+
       $options = $options->get();
     }
     $_options = [];
@@ -144,7 +160,7 @@ class ApiController extends Controller
 
       $_options[] = [
         'value' => $option->id,
-        'label' => $option->$label_name,
+        'label' => $option->$label_name ? $option->$label_name : $option->id,
       ];
     }
     return response()->json( $_options, 200, [], JSON_UNESCAPED_UNICODE );

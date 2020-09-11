@@ -19,8 +19,8 @@ class ColumnComponent extends Component {
     return React.createElement(this.state.settings.layout_html_tag || "div",
       {
         className: "altrp-column " + (this.state.settings.position_style_css_classes || ""),
-        id:this.state.settings.position_style_css_id || ""},
-
+        id:this.state.settings.position_style_css_id || ""
+      },
       this.state.children.map(
         section => <ElementWrapper key={section.getId()} component={section.componentClass} element={section}/>
       )
