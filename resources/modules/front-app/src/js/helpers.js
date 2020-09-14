@@ -186,10 +186,15 @@ export function parseParamsFromString(string, context = {}){
     right = right.trim();
     if(right.match(/(?<={{)([\s\S]+?)(?=}})/g)){
       if(context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0])){
-        params[left] = context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0]);
+        params[left] = context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0]) || '';
+      } else {
+        params[left] = '';
       }
     } else {
       params[left] = right;
+    }
+    if(_.isObject(params[left])){
+      delete params[left];
     }
   });
   return params;

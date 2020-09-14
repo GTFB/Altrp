@@ -21,12 +21,12 @@ class Template extends Model
 {
   use SoftDeletes;
 
+
   protected $casts = [
     'template_type' => 'string',
   ];
 
-  protected $fillable =
-    [ 'name',
+  protected $fillable =[ 'name',
       'title',
       'data',
       'type',
@@ -142,5 +142,11 @@ class Template extends Model
     }
     return $result;
   }
+
+  public function template_area(){
+    return $this->hasOne( Area::class, 'id', 'area' );
+  }
+
+
 
 }

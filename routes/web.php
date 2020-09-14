@@ -139,6 +139,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::put( 'templates/{template_id}/settings/{setting_name}', 'TemplateController@settingSet' )
       ->name( 'set-template-setting' );
     /**
+     * Templates Conditions
+     */
+    Route::get( 'templates/{template_id}/conditions', 'TemplateController@conditionsGet' )
+      ->name( 'get-template-setting' );
+    Route::put( 'templates/{template_id}/conditions', 'TemplateController@conditionsSet' )
+      ->name( 'set-template-setting' );
+    /**
      * Reports
      */
     //Route::get('reports/{id}', "TemplateController@show");

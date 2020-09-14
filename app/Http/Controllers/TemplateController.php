@@ -368,4 +368,34 @@ class TemplateController extends Controller
     return response()->json( ['success' => true], 200, [], JSON_UNESCAPED_UNICODE );
   }
 
+  /**
+   * Получение условий текущего шаблона
+   * @param $template_id
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function conditionsGet( $template_id, Request $request ){
+
+    $data = [];
+
+    return response()->json( [
+      'success' => true,
+      'data' => $data,
+    ], 200, [], JSON_UNESCAPED_UNICODE );
+  }
+  /**
+   * Сохранение условий текущего шаблона
+   * @param $template_id
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function conditionsSet( $template_id, Request $request ){
+
+    $data = [];
+
+    return response()->json( [
+      'success' => true,
+      'data' => $data,
+    ], 200, [], JSON_UNESCAPED_UNICODE );
+  }
 }

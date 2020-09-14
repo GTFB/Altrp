@@ -218,7 +218,9 @@ class Editor extends Component {
             </div>
           </div>
           <div className="right-panel">
-            {this.state.showDialogWindow && <DialogWindow state={this.state.showDialogWindow} showModalWindow={() => this.showModalWindow()} />}
+            {this.state.showDialogWindow &&
+            <DialogWindow state={this.state.showDialogWindow}
+                          showModalWindow={() => this.showModalWindow()} />}
             <EditorWindow />
           </div>
         </div>

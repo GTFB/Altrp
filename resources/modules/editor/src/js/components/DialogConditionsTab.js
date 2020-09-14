@@ -8,18 +8,18 @@ import AltrpSelect from '../../../../admin/src/components/altrp-select/AltrpSele
 
 export default class DialogConditionsTab extends Component {
   constructor(props) {
-    super(props),
+    super(props);
       this.state = {
         value: [],
         currentLogic: 'include',
         searchValue: ''
-      }
-    this.resource = new Resource({ route: `/admin/ajax/templates/${getTemplateId()}/settings` });
+      };
+    this.resource = new Resource({ route: `/admin/ajax/templates/${getTemplateId()}/conditions` });
   }
 
 
   async componentDidMount() {
-    let conditions = await this.resource.get('conditions');
+    let conditions = await this.resource.getAll();
     console.log(conditions);
     this.setState({
       value: conditions.data || []
@@ -27,7 +27,7 @@ export default class DialogConditionsTab extends Component {
   };
 
   async updateConditions() {
-    let res = await this.resource.put('conditions', { data: this.state.value });
+    let res = await this.resource.put('', { data: this.state.value });
     console.log(res);
   }
 
@@ -63,12 +63,12 @@ export default class DialogConditionsTab extends Component {
     if (e.value === 'include') {
       this.setState({
         currentLogic: e.value,
-      })
+      });
       return;
     } else if (e.value === 'exclude') {
       this.setState({
         currentLogic: e.value,
-      })
+      });
       return;
     }
     if (this.state.currentLogic === 'include') {
@@ -107,13 +107,13 @@ export default class DialogConditionsTab extends Component {
       { name: 'type', value: 'model', label: 'Model' },
       { name: 'type', value: 'not_authorized_page', label: 'Not Authorized' },
       { name: 'type', value: 'not_found_page', label: 'Not found: 404' },
-    ]
+    ];
     const model_options = [
       { name: 'model_name', value: 'model1', label: 'model1' },
       { name: 'model_name', value: 'model2', label: 'model2' },
       { name: 'model_name', value: 'model3', label: 'model3' },
       { name: 'model_name', value: 'model4', label: 'model4' },
-    ]
+    ];
     return (
       <div className="modal-condition-tab">
         <div className="modal-condition-image">
@@ -146,27 +146,27 @@ export default class DialogConditionsTab extends Component {
                       options={main_options}
                       defaultValue={main_options[0]}
                     />
-                    {
-                      (test.include[0]) &&
-                      (test.include[0].type === 'model'
-                        &&
-                        <Select
-                          onChange={(e) => this.handleChange(e, test)}
-                          className="modal-repeater-field-c3"
-                          defaultValue={model_options[0]}
-                          options={model_options}
-                        />)
-                    }
-                    {
-                      (test.exclude[0]) &&
-                      (test.exclude[0].type === 'model' &&
-                        <Select
-                          onChange={(e) => this.handleChange(e, test)}
-                          className="modal-repeater-field-c3"
-                          defaultValue={model_options[0]}
-                          options={model_options}
-                        />)
-                    }
+                    {/*{*/}
+                      {/*(test.include[0]) &&*/}
+                      {/*(test.include[0].type === 'model'*/}
+                        {/*&&*/}
+                        {/*<Select*/}
+                          {/*onChange={(e) => this.handleChange(e, test)}*/}
+                          {/*className="modal-repeater-field-c3"*/}
+                          {/*defaultValue={model_options[0]}*/}
+                          {/*options={model_options}*/}
+                        {/*/>)*/}
+                    {/*}*/}
+                    {/*{*/}
+                      {/*(test.exclude[0]) &&*/}
+                      {/*(test.exclude[0].type === 'model' &&*/}
+                        {/*<Select*/}
+                          {/*onChange={(e) => this.handleChange(e, test)}*/}
+                          {/*className="modal-repeater-field-c3"*/}
+                          {/*defaultValue={model_options[0]}*/}
+                          {/*options={model_options}*/}
+                        {/*/>)*/}
+                    {/*}*/}
                     {
                       (test.include[0]) &&
                       (((test.include[0].type === 'model' && test.include[0].model_name) || test.include[0].type === 'page') &&
