@@ -418,8 +418,8 @@ class ModelGenerator extends AppGenerator
                 'name' => $rel->name,
                 'type' => $rel->type,
                 'model_class' => $this->screenBacklashes($rel->model_class),
-                'foreign_key' => $rel->foreign_key ?? '',
-                'local_key' => $rel->local_key ?? ''
+                'foreign_key' => $rel->foreign_key ?? 'id',
+                'local_key' => $rel->local_key ?? 'id'
             ];
         }
 

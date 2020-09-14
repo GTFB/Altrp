@@ -32,6 +32,8 @@ class Users extends Controller
 
         $id = $request->user;
         $user = User::find($id);
+        $user->_roles = $user->roles->map(function ($role) {return $role->id;})->toArray();
+        $user->_permissions = $user->permissions->map(function ($permission) {return $permission->id;})->toArray();
 
         if(!$user) {
             return response()->json(trans("responses.not_found.user"), 404, [],JSON_UNESCAPED_UNICODE);
@@ -61,11 +63,15 @@ class Users extends Controller
 
         if($user->save()){
 
-          if( is_array( $request->get( 'permissions' ) ) ){
-            $user->attachPermissions( $request->get( 'permissions' ) );
+          $permissions = $request->get( '_permissions' );
+          if( $permissions ){
+            $permissions = Permission::find( $permissions );
+            $user->attachPermissions( $permissions );
           }
-          if( is_array( $request->get( 'roles' ) ) ){
-            $user->attachRoles( $request->get( 'roles' ) );
+          $roles = $request->get( '_roles' );
+          if( $roles ){
+            $roles = Permission::find( $roles );
+            $user->attachRoles( $roles );
           }
           return response()->json($user, 200, [],JSON_UNESCAPED_UNICODE);
         }
@@ -81,12 +87,6 @@ class Users extends Controller
      */
     function update(ApiRequest $request) {
 
-        $request->validate([
-            'name' => ['string', 'max:255'],
-            'email' => ['string', 'email', 'max:255', 'unique:users'],
-            'password' => ['string', 'min:8', 'confirmed'],
-        ]);
-
         $user = User::find($request->user);
 
         if(!$user) {
@@ -98,7 +98,19 @@ class Users extends Controller
         if($request->passsword) $user->password = Hash::make($request->password);
 
         if($user->save()){
-            return response()->json($user, 200, [],JSON_UNESCAPED_UNICODE);
+          $permissions = $request->get( '_permissions' );
+          $user->detachPermissions();
+          if( $permissions ){
+            $permissions = Permission::find( $permissions );
+            $user->attachPermissions( $permissions );
+          }
+          $roles = $request->get( '_roles' );
+          $user->detachRoles();
+          if( $roles ){
+            $roles = Permission::find( $roles );
+            $user->attachRoles( $roles );
+          }
+          return response()->json($user, 200, [],JSON_UNESCAPED_UNICODE);
         }
 
         return response()->json(trans("responses.dberror"), 400, [],JSON_UNESCAPED_UNICODE);

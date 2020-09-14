@@ -36,11 +36,9 @@ export default class Users extends Component{
     }
     
     async componentDidMount(){
-        let users_result = await this.resource.getAll()
+        let users_result = await this.resource.getAll();
         this.setState(state=>{
             return{...state, data: users_result};
-        }, () => {
-            console.log(this.state);
         });
     }
     

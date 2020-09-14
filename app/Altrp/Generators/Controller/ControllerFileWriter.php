@@ -67,7 +67,7 @@ class ControllerFileWriter
             );
 
         $controllerContent = file($this->controller->getFile(), 2);
-        $methods = array_merge($this->getFileMethods($controllerContent), [''],$methodContent);
+//        $methods = array_merge($this->getFileMethods($controllerContent), [''],$methodContent);
         if ($this->methodExists($controllerContent, $methodName)) {
             throw new ControllerFileException('Method already exists!', 500);
         }
@@ -143,7 +143,6 @@ class ControllerFileWriter
     public function writeSqlMethod($name, $sql, $is_object)
     {
         $methodContent = file($this->getSqlControllerMethodStub(), 2);
-
         $this->replaceSqlEditorName($methodContent, $name)
             ->replaceModelName($methodContent, $this->controller->getModelName())
             ->replaceSqlEditorSql($methodContent, $sql)
@@ -163,18 +162,24 @@ class ControllerFileWriter
      * @param $sql
      * @param $is_object
      * @return bool
+     * @throws ControllerFileException
      */
     public function updateSqlMethod($oldName, $name, $sql, $is_object)
     {
-        $controllerContent = file($this->controller->getFile(), 2);
         $this->removeMethod( $oldName);
         $this->writeSqlMethod($name, $sql, $is_object);
         return true;
     }
 
+    /**
+     * Удалить sql метод
+     *
+     * @param $name
+     * @return bool|int
+     * @throws ControllerFileException
+     */
     public function deleteSqlMethod($name)
     {
-        $controllerContent = file($this->controller->getFile(), 2);
         return $this->removeMethod($name);
     }
 

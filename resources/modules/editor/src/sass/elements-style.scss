@@ -58,8 +58,8 @@
 }
 
 .altrp-section {
-  position: relative;
-  z-index: 50;
+  //position: relative;
+  //z-index: 50;
   &.altrp-section--boxed > .altrp-element {
     // width: 1440px;
     margin: 0 auto;
@@ -75,6 +75,7 @@
   display: flex;
   flex-wrap: wrap;
   padding: 10px;
+  align-content: flex-start;
 }
 
 .altrp-tooltip {
@@ -200,8 +201,13 @@
 
 .app-area_content {
   flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
 }
-
+.app-area_content > .sections-wrapper {
+  flex: 1 0 auto;
+  align-content: flex-start;
+}
 .app-area_header {
   flex: 0 0 auto;
 }

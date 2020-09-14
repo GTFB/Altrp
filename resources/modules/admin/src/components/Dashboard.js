@@ -130,14 +130,7 @@ function Dashboard() {
                 </div>
               </div>
               <div className="card-body">
-                <WidgetDiagram
-                  type={widget.type}
-                  filter={widget.filter}
-                  url={widget.source}
-                  options={widget.options}
-                  width={widget.width}
-                  colorScheme={schemes[widget.colorScheme]}
-                />
+                <WidgetDiagram widget={widget} width={360} />
               </div>
             </div>
           ))}

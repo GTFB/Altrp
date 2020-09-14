@@ -171,10 +171,21 @@ class Button extends BaseElement{
       ],
     });
 
+    this.addControl('form_confirm', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Confirm Submit Form Text',
+      conditions: {
+        'form_actions!': 'null',
+      },
+      default: '',
+    });
+
     this.addControl('choose_model', {
       conditions: {
         'form_actions': 'add_new',
       },
+      label: 'Choose Model',
+      responsive: false,
       type: CONTROLLER_SELECT,
       resource: '/admin/ajax/models_options?with_names=true',
     });

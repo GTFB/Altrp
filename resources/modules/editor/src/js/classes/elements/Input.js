@@ -184,7 +184,6 @@ class Input extends BaseElement{
       },
       nullable: true,
       options_resource: '/admin/ajax/models_options?with_names=1&not_plural=1&with_sql_queries=1',
-      prefetch_options: true,
     });
 
     this.addControl('params_for_update', {
@@ -194,6 +193,15 @@ class Input extends BaseElement{
         'model_for_options!': '',
       },
       description: 'Enter each param for Query in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n',
+    });
+
+    this.addControl('params_as_filters', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Use Params as Filters',
+      default: false,
+      conditions: {
+        'params_for_update!': '',
+      },
     });
 
     this.addControl('content_options', {

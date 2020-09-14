@@ -4,6 +4,7 @@
 @import "../js/components/altrp-carousel/altrp-carousel";
 @import "../js/components/altrp-lightbox/altrp-lightbox";
 @import "./altrp-pagination";
+@import "altrp-dashboards";
 
 //google fonts
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&display=swap");
@@ -661,7 +662,7 @@ button {
     justify-content: space-between;
     & .control-slider-type-label {
       margin-right: 5px;
-      &--active  {
+      &--active {
         text-decoration: underline;
       }
     }
@@ -1744,4 +1745,9 @@ button {
 }
 .w-100 {
   width: 100%;
+}
+
+.altrp-section {
+  position: relative;
+  z-index: 50;
 }

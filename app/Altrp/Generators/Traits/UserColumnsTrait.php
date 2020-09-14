@@ -4,6 +4,7 @@
 namespace App\Altrp\Generators\Traits;
 use App\Altrp\Column;
 use App\Altrp\Model;
+use App\Altrp\Table;
 use Illuminate\Support\Str;
 
 /**
@@ -38,8 +39,7 @@ trait UserColumnsTrait
      */
     public static function setAuthId($model)
     {
-        $modelName = Str::singular($model->table);
-        $_model = Model::where('name',$modelName)->first();
+        $_model = Table::where('name', $model->table)->first()->altrp_model;
         $columns = Column::where([['model_id',$_model->id],['is_auth',1]])->get();
         if ($columns) {
             foreach ($columns as $column) {
