@@ -2,6 +2,8 @@
 
 namespace App\Observers;
 
+use App\Altrp\Accessor;
+use App\Altrp\Builders\AccessorBuilder;
 use App\Altrp\Column;
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
@@ -111,6 +113,13 @@ class AltrpModelObserver
         if (!$model->getOriginal('preset'))
             $model->namespace = 'App\\AltrpModels\\' . $model->name;
         $generator = new ModelGenerator($model);
+        if ($model->altrp_accessors) {
+            foreach ($model->altrp_accessors as $accessor) {
+                $accessor->updated_at = Carbon::now();
+                $accessorBuilder = new AccessorBuilder($model, $accessor);
+                $accessorBuilder->update();
+            }
+        }
         if (! $generator->updateModelFile()) {
             throw new CommandFailedException('Failed to update model file', 500);
         }
