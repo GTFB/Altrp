@@ -21,6 +21,15 @@ class FieldCalculationLogic extends Component {
     this.setRight = this.setRight.bind(this);
   }
 
+  componentDidMount() {
+    const { right } = this.props.item;
+    if (right) {
+      typeof this.props.item.right === "string" ?
+        this.setState({ rightType: "string", right: { ...this.state.right, string: right } }) :
+        this.setState({ rightType: "object", right: { ...this.state.right, fieldId: right.id } })
+    }
+  }
+
   rightTypeHandler(type) {
     this.setState(_state => ({ rightType: type }), this.setRight)
   }
@@ -106,11 +115,11 @@ class FieldCalculationLogic extends Component {
           onChange={({ target: { value } }) => this.operatorChangeHandler(value)}
         >
           <option value="" disabled />
-          <option value="not-null">Not Null</option>
-          <option value="null">Null</option>
+          {/* <option value="not-null">Not Null</option>
+          <option value="null">Null</option> */}
           <option value="==">Equals</option>
           <option value="<>">Not Equals</option>
-          <option value="between">Between</option>
+          {/* <option value="between">Between</option> */}
           <option value=">">&gt;</option>
           <option value=">=">&gt;=</option>
           <option value="<">&lt;</option>

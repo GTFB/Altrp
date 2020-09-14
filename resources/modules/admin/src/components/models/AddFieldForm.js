@@ -245,7 +245,11 @@ class AddFieldForm extends Component {
 
     if (this.props.match.params.id) {
       let value = await this.filedsResource.get(this.props.match.params.id);
-      this.setState(state => ({ ...state, value: { ...state.value, ...value } }));
+
+      if (typeof value.calculation_logic === 'string') {
+        value.calculation_logic = JSON.parse(value.calculation_logic);
+      }  
+      this.setState(state => ({ ...state, isAlways: value.calculation ? true : false ,  value: { ...state.value, ...value } }));
     }
     this.setState(state => ({ ...state, fieldsOptions: options }));
   }
