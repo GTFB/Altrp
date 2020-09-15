@@ -130,28 +130,30 @@ export function advancedTabControllers(element) {
       }
     });
 
-    element.addControl('positioning_vertical_align', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Vertical Align',
-      default: 'flex-start',
-      options: [
-        {
-          icon: 'block_top',
-          value: 'flex-start',
+    if (element.getType() === 'widget') {
+      element.addControl('positioning_vertical_align', {
+        type: CONTROLLER_CHOOSE,
+        label: 'Vertical Align',
+        default: 'flex-start',
+        options: [
+          {
+            icon: 'block_top',
+            value: 'flex-start',
+          },
+          {
+            icon: 'block_horiz',
+            value: 'center',
+          },
+          {
+            icon: 'block_bottom',
+            value: 'flex-end',
+          },
+        ],
+        rules: {
+          '{{ELEMENT}}': 'align-self: {{VALUE}};',
         },
-        {
-          icon: 'block_horiz',
-          value: 'center',
-        },
-        {
-          icon: 'block_bottom',
-          value: 'flex-end',
-        },
-      ],
-      rules: {
-        '{{ELEMENT}}': 'align-self: {{VALUE}};',
-      },
-    });
+      });
+    }    
 
     element.addControl('positioning_position_type', {
       type: CONTROLLER_SELECT,
