@@ -4,6 +4,7 @@ import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
+import { cutString } from "../../helpers";
 
 class InputWidget extends Component {
 
@@ -227,7 +228,7 @@ class InputWidget extends Component {
           {this.state.settings.content_options_nullable ? <option value=""/> : ''}
           {
             this.state.options.map(option=>{
-              return <option value={option.value} key={option.value}>{option.label}</option>
+              return <option value={option.value} key={option.value} title={option.label}>{cutString(option.label, 30)}</option>
             })
           }
         </select>
