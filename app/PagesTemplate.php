@@ -12,6 +12,7 @@ class PagesTemplate extends Model
     'page_id',
     'template_id',
     'template_type',
+    'condition_type',
   ];
   public function template(){
     return $this->belongsTo( Template::class, 'template_id' );

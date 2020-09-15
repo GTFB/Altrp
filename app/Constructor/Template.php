@@ -11,6 +11,7 @@ use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -34,6 +35,20 @@ class Template extends Model
       'type',
       'area',
       'user_id' ];
+
+  /**
+   * Вернуть json для data пустого шаблона для front-app
+   * @return string
+   */
+  private static function getDefaultData()
+  {
+    return json_encode([
+      "name"=>"root-element",
+      "type"=>"root-element",
+      "children"=> [],
+      'settings' => [],
+    ]);
+  }
 
 
   public function user(){
@@ -225,5 +240,52 @@ class Template extends Model
     return $this->hasMany( PagesTemplate::class,
       'template_id',
       'id' );
+  }
+
+  /**
+   * Получить объект шаблона по параметрам
+   * @param array $param
+   * @return array | Template
+   */
+  public static function getTemplate( $param = [] ){
+
+    $template = new Template( ['data'=> self::getDefaultData()] );
+
+    $template_type = Arr::get( $param, 'template_type', 'content' );
+    $page_id = Arr::get( $param, 'page_id' );
+
+    /**
+     * Сначала проверим есть ли конкретный шаблон для стрницы
+     */
+
+    $_template = Template::join( 'pages_templates', 'templates.id', '=', 'pages_templates.template_id')
+      ->where( 'pages_templates.condition_type', 'include' )
+      ->where( 'pages_templates.page_id', $page_id )
+      ->where( 'pages_templates.template_type', $template_type )->first();
+
+    if( $_template ){
+      $_template->check_elements_conditions();
+      return $_template->toArray();
+    }
+
+    /**
+     * Потом ищем шаблон, который отмечен 'all_site'
+     */
+    $_template = Template::join( 'areas', 'templates.area', '=', 'areas.id' )
+      ->where( 'areas.name', $template_type  )
+      ->where( 'templates.all_site', 1 )->first();
+
+    /**
+     * И проверяем, есть ли шаблон в исключениях
+     */
+    if( $_template && ! Template::join( 'pages_templates', 'templates.id', '=', 'pages_templates.template_id')
+      ->where( 'pages_templates.condition_type', 'exclude' )
+      ->where( 'pages_templates.page_id', $page_id )
+      ->where( 'pages_templates.template_type', $template_type )->first() ){
+      $_template->check_elements_conditions();
+      return $_template->toArray();
+    }
+
+    return $template->toArray();
   }
 }

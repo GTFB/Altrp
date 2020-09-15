@@ -69,8 +69,7 @@ class InputWidget extends Component {
 
       this.dispatchFieldValueToStore(this.getContent('content_default_value'));
     }
-    console.log(this.getContent('content_default_value'));
-    console.log(this.props.formsStore);
+
     /**
      * Если обновилось хранилище данных формы или модель, то получаем новые опции
      */

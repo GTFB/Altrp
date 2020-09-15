@@ -50,20 +50,10 @@ export default class DialogConditionsTab extends Component {
       id: randomNumber,
       condition_type: 'include',
     });
-    this.setState(state => {
-      this.state.value.push
-        (
-          {
-            id: randomNumber,
-            "include": [
-              {
-                type: 'all_site'
-              }
-            ],
-            "exclude": []
-          }
-        )
-    });
+    this.setState(state => ({
+      ...state,
+      value
+    }));
     this.forceUpdate();
   };
 

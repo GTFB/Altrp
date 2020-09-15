@@ -393,7 +393,7 @@ class TemplateController extends Controller
   public function conditionsSet( $template_id, Request $request ){
 
     /**
-     * Сначала сами сохраним настройки
+     * Сначала сохраним сами настройки
      */
     $setting = TemplateSetting::where( [
       'template_id' => $template_id,
@@ -414,10 +414,17 @@ class TemplateController extends Controller
     }
     $template = Template::find( $template_id );
     /**
-     * Обновим/добавим необходимые таблицы в БД
+     * Обновим/добавим необходимые данные в БД
      */
 
     if( $template ){
+      $template->all_site = false;
+      if( ! $template->save() ){
+        return response()->json( ['message' => 'Conditions "all_site" not Saved'],
+          500,
+          [],
+          JSON_UNESCAPED_UNICODE );
+      }
       $template->pages()->detach();
       foreach ( $request->get( 'data' ) as $datum ) {
 

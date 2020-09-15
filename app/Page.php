@@ -104,39 +104,81 @@ class Page extends Model
   public static function get_areas_for_page( $page_id ){
     $areas = [];
 
-    $header = Template::where( 'area', 2 )->where( 'type', 'template' )->first();
-    if( $header ){
-      $header->check_elements_conditions();
-      $areas[] = [
-        'area_name' => 'header',
-        'id' => 'header',
-        'settings' => [],
-        'template' => $header
-      ];
-    }
+//    $header = Template::where( 'area', 2 )->where( 'type', 'template' )->first();
+//    if( $header ){
+//      $header->check_elements_conditions();
+//      $areas[] = [
+//        'area_name' => 'header',
+//        'id' => 'header',
+//        'settings' => [],
+//        'template' => $header
+//      ];
+//    }
     /**
      * @var Template $content
      */
-    $content = PagesTemplate::where( 'page_id', $page_id )
-      ->where( 'template_type', 'content' )->first()->template;
-    $content->check_elements_conditions();
+//    $content = PagesTemplate::where( 'page_id', $page_id )
+//      ->where( 'template_type', 'content' )
+//      ->where( 'condition_type', 'include' )
+//      ->first();
+//    if( $content ){
+//      $content = $content->template;
+//      $content->check_elements_conditions();
+//      $areas[] = [
+//        'area_name' => 'content',
+//        'id' => 'content',
+//        'settings' => [],
+//        'template' => $content,
+//      ];
+//    } else {
+//      /**
+//       * Пустой контент, если страницы нет
+//       */
+//      $areas[] = [
+//        'area_name' => 'content',
+//        'id' => 'content',
+//        'settings' => [],
+//        'template' => [
+//          'data' => json_encode([
+//            "name"=>"root-element",
+//            "type"=>"root-element",
+//            "children"=> [],
+//            'settings' => [],
+//          ])
+//        ],
+//      ];
+//    }
+
+    $areas[] = [
+      'area_name' => 'header',
+      'id' => 'header',
+      'settings' => [],
+      'template' => Template::getTemplate([
+        'page_id' => $page_id,
+        'template_type' => 'header',
+      ]),
+    ];
+
     $areas[] = [
       'area_name' => 'content',
       'id' => 'content',
       'settings' => [],
-      'template' => $content,
+      'template' => Template::getTemplate([
+        'page_id' => $page_id,
+        'template_type' => 'content',
+      ]),
     ];
 
-    $footer = Template::where( 'area', 3 )->where( 'type', 'template' )->first();
-    if( $footer ){
-      $footer->check_elements_conditions();
-      $areas[] = [
-        'area_name' => 'footer',
-        'id' => 'footer',
-        'settings' => [],
-        'template' => $footer
-      ];
-    }
+    $areas[] = [
+      'area_name' => 'footer',
+      'id' => 'footer',
+      'settings' => [],
+      'template' => Template::getTemplate([
+      'page_id' => $page_id,
+      'template_type' => 'footer',
+      ]),
+    ];
+
     $popups = Template::join( 'areas', 'areas.id', '=', 'templates.area' )
       ->where( 'areas.name', '=', 'popup' )
       ->where( 'type', 'template' )->get( 'templates.*' );

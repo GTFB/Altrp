@@ -56,7 +56,7 @@ class AltrpUpdateService
     }
 
     /**
-     * Проверяем нужно производить агрейд
+     * Проверяем нужно ли производить агрейд
      */
     $this->checkVersion( $version );
 
