@@ -4,7 +4,7 @@ import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
-import { cutString } from "../../helpers";
+import { cutString, sortOptions } from "../../helpers";
 
 class InputWidget extends Component {
 
@@ -144,6 +144,7 @@ class InputWidget extends Component {
   render(){
     let label = null;
     let required = null;
+    const { options_sorting } = this.state.settings;
 
     let value = this.state.value;
     /**
@@ -226,11 +227,10 @@ class InputWidget extends Component {
                         id={this.state.settings.position_css_id}
                         className={"altrp-field " + this.state.settings.position_css_classes}>
           {this.state.settings.content_options_nullable ? <option value=""/> : ''}
-          {
-            this.state.options.map(option=>{
+          {(options_sorting ? sortOptions(this.state.options, options_sorting) : this.state.options)
+            .map(option=>{
               return <option value={option.value} key={option.value} title={option.label}>{cutString(option.label, 30)}</option>
-            })
-          }
+            })}
         </select>
       }
       break;
@@ -256,7 +256,7 @@ class InputWidget extends Component {
    * Выводит инпут-select2, используя компонент AltrpSelect
    */
   renderSelect2() {
-    const { content_options_nullable, nulled_option_title, content_placeholder } = this.state.settings;
+    const { content_options_nullable, nulled_option_title, content_placeholder, options_sorting } = this.state.settings;
     let options = this.state.options;
     if(content_options_nullable){
       options = _.union([{ label: nulled_option_title, value: 'all', }], options);
@@ -293,7 +293,7 @@ class InputWidget extends Component {
     const select2Props = {
       className: 'altrp-field-select2',
       classNamePrefix: 'altrp-field-select2',
-      options,
+      options: options_sorting ? sortOptions(options, options_sorting) : options,
       onChange: this.onChange,
       value,
       // menuIsOpen: true,

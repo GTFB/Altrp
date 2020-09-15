@@ -105,3 +105,7 @@ export function cutString(string, maxLength = 80) {
   return string.slice(0, maxLength) + '...';
 }
 
+export function sortOptions(options, sortDirection) {
+  options.sort((a, b) => a.label > b.label ? 1 : b.label > a.label ? -1 : 0);
+  return sortDirection === "asc" ? options : options.reverse();
+}
