@@ -52,7 +52,6 @@
 
 .altrp-carousel-container {
     width: 100%;
-    //float: left;
 }
 
 .altrp-carousel-dots .slick-active .altrp-carousel-paging {
@@ -68,31 +67,25 @@
 }
 
 .altrp-carousel-dots-top-left {
-    top: 0 !important;
     text-align: left !important;
-    bottom: auto !important;
 }
 
 .altrp-carousel-dots-top {
-    top: 0 !important;
+    text-align: center !important;
     bottom: auto !important;
 }
 
 .altrp-carousel-dots-top-right {
-    top: 0 !important;
     text-align: right !important;
-    bottom: auto !important;
 }
 
 .altrp-carousel-dots {
-    position: absolute;
+    position: relative;
     list-style: none;
-    display: block;
-    text-align: center;
     padding: 0;
+    text-align: center;
     margin: 0;
     bottom: 0;
-    width: 100%;
 }
 
 .altrp-carousel-dots li {
@@ -126,9 +119,7 @@
 }
 
 .altrp-carousel-arrow-top {
-    position: absolute;
     top: 0;
-    margin-top: 10px;
 }
 
 .altrp-carousel-arrows-container .altrp-carousel-arrow-prev {
@@ -142,40 +133,47 @@
 }
 
 .altrp-carousel-arrow-top-right {
-    position: absolute;
     top: 0;
     right: 0;
     margin-right: 10px;
-    margin-top: 10px;
 }
 
 .altrp-carousel-arrow-bottom-left {
-    position: absolute;
     bottom: 0;
     left: 0;
     margin-left: 10px;
-    margin-bottom: 10px;
 }
 
 .altrp-carousel-arrow-bottom {
-    position: absolute;
     bottom: 0;
-    margin-bottom: 10px;
+
 }
 
 .altrp-carousel-arrow-bottom-right {
-    position: absolute;
     bottom: 0;
     right: 0;
-    margin-bottom: 10px;
     margin-right: 10px;
 }
 
-.slick-slider {
+.altrp-carousel-slides {
     width: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
+}
+
+.altrp-carousel-slides-dots-top {
+    flex-direction: column-reverse;
+}
+
+.altrp-carousel-slides-dots-top .altrp-carousel-dots {
+    margin-bottom: 15px;
+}
+
+.altrp-carousel-slides-dots-bottom {
+    flex-direction: column;
+}
+
+.altrp-carousel-slides-dots-bottom .altrp-carousel-dots {
+    margin-bottom: -15px;
 }
 
 .altrp-carousel-slide-overlay {
@@ -198,4 +196,4 @@
 
 .altrp-carousel-slide:hover .altrp-carousel-slide-overlay {
     opacity: 1;
-} 
+}

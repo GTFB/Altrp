@@ -74,31 +74,33 @@ class AltrpCarousel extends Component {
 
     let dotsClasses = "altrp-carousel-dots";
 
+    let sliderClasses = "altrp-carousel-slides";
+
     //позиция точек
     if(this.props.dots_navigation_content) {
       switch (this.props.dots_position_navigation_content) {
         case "topLeft":
           dotsClasses += " altrp-carousel-dots-top-left";
-          carouselContainerClasses += " altrp-carousel-dots-top-container";
+          sliderClasses += " altrp-carousel-slides-dots-top";
           break
         case "top":
           dotsClasses += " altrp-carousel-dots-top";
-          carouselContainerClasses += " altrp-carousel-dots-top-container";
+          sliderClasses += " altrp-carousel-slides-dots-top";
           break
         case "topRight":
           dotsClasses += " altrp-carousel-dots-top-right";
-          carouselContainerClasses += " altrp-carousel-dots-top-container";
+          sliderClasses += " altrp-carousel-slides-dots-top";
           break
         case "bottomLeft":
           dotsClasses += " altrp-carousel-dots-bottom-left";
-          carouselContainerClasses += " altrp-carousel-dots-bottom-container";
+          sliderClasses += " altrp-carousel-slides-dots-bottom";
           break
         case "bottom":
-          carouselContainerClasses += " altrp-carousel-dots-bottom-container";
+          sliderClasses += " altrp-carousel-slides-dots-bottom";
           break
         case "bottomRight":
           dotsClasses += " altrp-carousel-dots-bottom-right";
-          carouselContainerClasses += " altrp-carousel-dots-bottom-container";
+          sliderClasses += " altrp-carousel-slides-dots-bottom";
           break
       };
     };
@@ -112,7 +114,7 @@ class AltrpCarousel extends Component {
       infinite: this.props.infinite_loop_additional_content,
       pauseOnHover: this.props.pause_on_interaction_loop_additional_content,
       autoplay: this.props.autoplay_additional_content,
-      className: "altrp-carousel-slides",
+      className: sliderClasses,
       autoplaySpeed: Number(this.props.transition_autoplay_duration_additional_content),
       speed: Number(this.props.transition_duration_additional_content),
       slidesToShow: Number(this.props.per_view_slides_content),
@@ -135,18 +137,19 @@ class AltrpCarousel extends Component {
       };
 
       return (
-        <div className="altrp-carousel-slide" key={idx}>
+        <div className="altrp-carousel-slide" key={idx}
+          onDoubleClick={ () => {
+            if(this.props.lightbox_slides_content) {
+              this.setState((state) => ({
+                ...state,
+                openLightBox: true
+              }))
+            }
+          }}
+        >
           {
             renderAsset(media, {
               className: "altrp-carousel-slide-img",
-              onDoubleClick: () => {
-                if(this.props.lightbox_slides_content) {
-                  this.setState((state) => ({
-                    ...state,
-                    openLightBox: true
-                  }))
-                }
-              }
             })
           }
           {
@@ -168,22 +171,22 @@ class AltrpCarousel extends Component {
 
     switch (this.props.arrows_position_navigation_content) {
       case "topLeft":
-        arrowsClasses += " altrp-carousel-arrow-top-left";
+        arrowsClasses += " altrp-carousel-arrow-top-left altrp-carousel-arrow-top-wrapper";
         break
       case "top":
-        arrowsClasses += " altrp-carousel-arrow-top"
+        arrowsClasses += " altrp-carousel-arrow-top altrp-carousel-arrow-top-wrapper"
         break
       case "topRight":
-        arrowsClasses += " altrp-carousel-arrow-top-right"
+        arrowsClasses += " altrp-carousel-arrow-top-right altrp-carousel-arrow-top-wrapper"
         break
       case "bottomLeft":
-        arrowsClasses += " altrp-carousel-arrow-bottom-left"
+        arrowsClasses += " altrp-carousel-arrow-bottom-left altrp-carousel-arrow-bottom-wrapper"
         break
       case "bottom":
-        arrowsClasses += " altrp-carousel-arrow-bottom"
+        arrowsClasses += " altrp-carousel-arrow-bottom altrp-carousel-arrow-bottom-wrapper"
         break
       case "bottomRight":
-        arrowsClasses += " altrp-carousel-arrow-bottom-right"
+        arrowsClasses += " altrp-carousel-arrow-bottom-right altrp-carousel-arrow-bottom-wrapper"
         break
     }
 
@@ -214,21 +217,24 @@ class AltrpCarousel extends Component {
       ) : ""
 
     }
-    console.log(this.state.sliderImages)
+    
     return <div className="altrp-carousel">
       {
         this.props.lightbox_slides_content ? lightbox : ""
       }
       { this.props.arrows_position_navigation_content === "center" ?
         prevArrow
-        : (
-         <div className={"altrp-carousel-arrows-container" + arrowsClasses}>
-           {prevArrow}
-           {nextArrow}
-         </div>
-        )
+        : ""
       }
       <div className={carouselContainerClasses}>
+        {
+          this.props.arrows_position_navigation_content !== "center" ? (
+            <div className={"altrp-carousel-arrows-container" + arrowsClasses}>
+              {prevArrow}
+              {nextArrow}
+            </div>
+          ) : ""
+        }
         <Slider ref={c => (this.slider = c)} {...settings}>
           {
             slidesMap

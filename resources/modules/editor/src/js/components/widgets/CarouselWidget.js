@@ -27,7 +27,7 @@ class CarouselWidget extends Component {
   }
 
   render(){
-    return <this.state.AltrpCarousel {...this.state.settings}/>
+    return <this.state.AltrpCarousel {...this.props.element.getSettings()}/>
   }
 }
 
