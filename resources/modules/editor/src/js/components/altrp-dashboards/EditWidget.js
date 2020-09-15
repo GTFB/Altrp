@@ -11,7 +11,7 @@ import LegendField from "./fields/LegendField";
 import SourceField from "./fields/SourceField";
 import ColorSchemeField from "./fields/colorSchemeField";
 
-const EditWidget = ({ data, onEdited, setIsEdit }) => {
+const EditWidget = ({ data, onEdited, setIsEdit, sources }) => {
   const [widget, setWidget] = useState(data);
 
   const title = useRef(widget.title);
@@ -47,10 +47,9 @@ const EditWidget = ({ data, onEdited, setIsEdit }) => {
           <SourceField
             widget={widget}
             setWidget={setWidget}
-            sources={[
-              { name: "Информация о шаблонах", url: "/admin/ajax/analytics" },
-              { name: "Пустые данные", url: "/admin/ajax/analytics/none" },
-            ]}
+            sources={sources.map((item) => {
+              return { name: item.label, url: `/ajax/models/queries/${item.model}/${item.value}` };
+            })}
           />
 
           <LegendField widget={widget} setWidget={setWidget} />

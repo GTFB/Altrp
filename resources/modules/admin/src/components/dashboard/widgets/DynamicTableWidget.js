@@ -32,7 +32,7 @@ const DynamicTableWidget = ({ widget }) => {
     setIsLoading(true);
     const charts = await getWidgetData(widget.source, widget.filter);
     if (charts.status === 200) {
-      setData(charts.data.sort(sortData("data")));
+      setData(charts.data.data.sort(sortData("data")));
       setIsLoading(false);
     }
   }, [widget]);

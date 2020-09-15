@@ -155,8 +155,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::resource( 'media', 'Admin\MediaController' );
     Route::resource( 'settings', 'Admin\SettingsController' );
     Route::resource( 'diagrams', 'Admin\AltrpDiagramController' );
+    Route::get( 'sql_editors/list', 'Admin\SQLEditorController@listByName');
     Route::resource( 'sql_editors', 'Admin\SQLEditorController' );
-    Route::get( 'sql_editors/list/{name}', 'Admin\SQLEditorController@listByName');
 
     /**
      * Updates Check

@@ -29,7 +29,7 @@ const DynamicAreaChart = ({ widget, width = 300, height = 300, color = "#FFD51F"
     setIsLoading(true);
     const charts = await getWidgetData(widget.source, widget.filter);
     if (charts.status === 200 && typeof charts.data !== "string") {
-      const newData = charts.data.map((item) => {
+      const newData = charts.data.data.map((item) => {
         const key = new Date(item.key);
         if (key) {
           return {

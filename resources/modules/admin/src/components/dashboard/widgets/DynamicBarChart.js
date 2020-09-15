@@ -22,7 +22,7 @@ const DynamicBarChart = ({ widget, width = 300, height = 300 }) => {
     setIsLoading(true);
     const charts = await getWidgetData(widget.source, widget.filter);
     if (charts.status === 200) {
-      setData(charts.data);
+      setData(charts.data.data);
       setIsLoading(false);
     }
   }, [widget]);
@@ -39,6 +39,7 @@ const DynamicBarChart = ({ widget, width = 300, height = 300 }) => {
   const entries = data.map((item, i) => {
     return (
       <DiscreteLegendEntry
+        key={i}
         className="discrete__legend-item"
         label={`${item.key} (${item.data})`}
         //color={colorScheme(item, i)}

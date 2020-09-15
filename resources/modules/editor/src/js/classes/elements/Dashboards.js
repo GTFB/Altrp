@@ -10,6 +10,7 @@ import {
   CONTROLLER_QUERY,
   TAB_CONTENT,
   TAB_STYLE,
+  CONTROLLER_SQL,
 } from "../modules/ControllersManager";
 
 class Dashboards extends BaseElement {
@@ -33,6 +34,11 @@ class Dashboards extends BaseElement {
     this.startControlSection("content_section", {
       tab: TAB_CONTENT,
       label: "Content",
+    });
+
+    this.addControl("sql", {
+      type: CONTROLLER_SQL,
+      default: [],
     });
 
     this.endControlSection();

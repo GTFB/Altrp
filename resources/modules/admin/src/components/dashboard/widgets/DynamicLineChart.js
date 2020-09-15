@@ -24,7 +24,7 @@ const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3 }
     setIsLoading(true);
     const charts = await getWidgetData(widget.source, widget.filter);
     if (charts.status === 200) {
-      const newData = charts.data.map((item) => {
+      const newData = charts.data.data.map((item) => {
         const key = new Date(item.key);
         if (key) {
           return {

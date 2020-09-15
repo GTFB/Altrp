@@ -6,7 +6,7 @@ import TrashFill from "react-bootstrap-icons/dist/icons/trash-fill";
 import EditWidget from "./EditWidget";
 import WidgetDiagram from "../../../../../admin/src/components/dashboard/WidgetDiagram";
 
-function CardWidget({ widget, onDeleted, onEdited }) {
+function CardWidget({ widget, onDeleted, onEdited, sources }) {
   const [isEdit, setIsEdit] = useState(false);
   return (
     <Card key={widget.id}>
@@ -23,7 +23,7 @@ function CardWidget({ widget, onDeleted, onEdited }) {
       </Card.Header>
       <Card.Body>
         {isEdit ? (
-          <EditWidget data={widget} onEdited={onEdited} setIsEdit={setIsEdit} />
+          <EditWidget sources={sources} data={widget} onEdited={onEdited} setIsEdit={setIsEdit} />
         ) : (
           <WidgetDiagram widget={widget} width={360} height={300} />
         )}

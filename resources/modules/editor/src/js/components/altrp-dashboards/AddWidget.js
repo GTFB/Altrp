@@ -12,7 +12,7 @@ import LegendField from "./fields/LegendField";
 import SourceField from "./fields/SourceField";
 import ColorSchemeField from "./fields/colorSchemeField";
 
-const AddWidget = ({ id, onAdd, setIsShow }) => {
+const AddWidget = ({ id, onAdd, setIsShow, sources }) => {
   const [widget, setWidget] = useState({
     type: TABLE,
     source: "",
@@ -82,10 +82,9 @@ const AddWidget = ({ id, onAdd, setIsShow }) => {
           <SourceField
             widget={widget}
             setWidget={setWidget}
-            sources={[
-              { name: "Информация о шаблонах", url: "/admin/ajax/analytics" },
-              { name: "Пустые данные", url: "/admin/ajax/analytics/none" },
-            ]}
+            sources={sources.map((item) => {
+              return { name: item.label, url: `/ajax/models/queries/${item.model}/${item.value}` };
+            })}
           />
 
           <LegendField widget={widget} setWidget={setWidget} />

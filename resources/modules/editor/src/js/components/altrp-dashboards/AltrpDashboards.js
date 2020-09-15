@@ -7,6 +7,7 @@ import CardWidget from "./CardWidget";
 const AltrpDashboards = ({ id, settings }) => {
   const [widgets, setWidgets] = useState([]);
   const [isShow, setIsShow] = useState(false);
+  console.log("settings :>> ", settings);
 
   const getWidgets = useCallback(
     async (id) => {
@@ -56,9 +57,12 @@ const AltrpDashboards = ({ id, settings }) => {
         <button onClick={() => setIsShow(true)}>Добавить виджет</button>
       </div>
       <div className="altrp-dashboard__widgets">
-        {isShow && <AddWidget id={id} setIsShow={setIsShow} onAdd={handleAdd} />}
+        {isShow && (
+          <AddWidget sources={settings.sql} id={id} setIsShow={setIsShow} onAdd={handleAdd} />
+        )}
         {widgets.map((widget) => (
           <CardWidget
+            sources={settings.sql}
             key={widget.id}
             widget={widget}
             onDeleted={handleRemove}
