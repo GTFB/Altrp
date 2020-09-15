@@ -268,6 +268,7 @@ export function advancedTabControllers(element) {
 
     element.endControlSection();
   }
+
   element.startControlSection(
     'conditional_display', {
       tab: TAB_ADVANCED,
@@ -307,6 +308,58 @@ export function advancedTabControllers(element) {
   });
 
   element.addControl('conditional_permissions', {
+    type: CONTROLLER_SELECT2,
+    label: 'Allowed for Permissions',
+    conditions: {
+      'conditional_display_choose' : 'auth',
+    },
+    options_resource: '/admin/ajax/permissions_options',
+    isMulti: true,
+    prefetch_options: true,
+    isClearable: true,
+  });
+
+  element.endControlSection();
+
+   element.startControlSection(
+    'conditional_disabled', {
+      tab: TAB_ADVANCED,
+      label: 'Conditional Disabled',
+    }
+  );
+
+  element.addControl('conditional_disabled_choose', {
+    type: CONTROLLER_SELECT,
+    label: 'Authorize Condition',
+    options: [
+      {
+        label: 'all',
+        value: '',
+      },
+      {
+        value: 'guest',
+        label: 'Guest Only',
+      },
+      {
+        value: 'auth',
+        label: 'Authorized Only',
+      },
+    ],
+  });
+
+  element.addControl('conditional_disabled_roles', {
+    type: CONTROLLER_SELECT2,
+    label: 'Allowed for Roles',
+    conditions: {
+      'conditional_display_choose' : 'auth',
+    },
+    options_resource: '/admin/ajax/role_options',
+    isMulti: true,
+    prefetch_options: true,
+    isClearable: true,
+  });
+
+  element.addControl('conditional_disabled_permissions', {
     type: CONTROLLER_SELECT2,
     label: 'Allowed for Permissions',
     conditions: {

@@ -179,24 +179,27 @@ class Page extends Model
       ]),
     ];
 
-    $popups = Template::join( 'areas', 'areas.id', '=', 'templates.area' )
-      ->where( 'areas.name', '=', 'popup' )
-      ->where( 'type', 'template' )->get( 'templates.*' );
-
-
-
-    if( $popups->count() ){
-      foreach ( $popups as $key => $popup ) {
-        $popups[$key]->template_settings = $popup->template_settings();
-
-      }
-      $areas[] = [
-        'area_name' => 'popups',
-        'id' => 'popups',
-        'settings' => [],
-        'templates' => $popups->toArray(),
-      ];
-    }
+//    $popups = Template::join( 'areas', 'areas.id', '=', 'templates.area' )
+//      ->where( 'areas.name', '=', 'popup' )
+//      ->where( 'type', 'template' )->get( 'templates.*' );
+//
+//
+//
+//    if( $popups->count() ){
+//      foreach ( $popups as $key => $popup ) {
+//        $popups[$key]->template_settings = $popup->template_settings();
+//
+//      }
+    $areas[] = [
+      'area_name' => 'popups',
+      'id' => 'popups',
+      'settings' => [],
+      'templates' => Template::getTemplates([
+        'page_id' => $page_id,
+        'template_type' => 'popup',
+      ]),
+    ];
+//    }
 
     return $areas;
   }

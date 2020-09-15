@@ -261,7 +261,7 @@ class Template extends Model
     $_template = Template::join( 'pages_templates', 'templates.id', '=', 'pages_templates.template_id')
       ->where( 'pages_templates.condition_type', 'include' )
       ->where( 'pages_templates.page_id', $page_id )
-      ->where( 'pages_templates.template_type', $template_type )->first();
+      ->where( 'pages_templates.template_type', $template_type )->get( 'templates.*' )->first();
 
     if( $_template ){
       $_template->check_elements_conditions();
@@ -273,7 +273,7 @@ class Template extends Model
      */
     $_template = Template::join( 'areas', 'templates.area', '=', 'areas.id' )
       ->where( 'areas.name', $template_type  )
-      ->where( 'templates.all_site', 1 )->first();
+      ->where( 'templates.all_site', 1 )->get( 'templates.*' )->first();
 
     /**
      * И проверяем, есть ли шаблон в исключениях
@@ -287,5 +287,59 @@ class Template extends Model
     }
 
     return $template->toArray();
+  }
+  /**
+   * Получить объект шаблона по параметрам
+   * @param array $param
+   * @return array | Template
+   */
+  public static function getTemplates( $param = [] ){
+
+    $templates = [];
+
+    $template_type = Arr::get( $param, 'template_type', 'content' );
+    $page_id = Arr::get( $param, 'page_id' );
+
+    /**
+     * Сначала проверим есть ли конкретный шаблон для стрницы
+     */
+
+    $templates = Template::join( 'pages_templates', 'templates.id', '=', 'pages_templates.template_id')
+      ->where( 'pages_templates.condition_type', 'include' )
+      ->where( 'pages_templates.page_id', $page_id )
+      ->where( 'pages_templates.template_type', $template_type )->get( 'templates.*' );
+
+
+
+
+    /**
+     * Потом ищем шаблон, который отмечен 'all_site'
+     */
+    $_templates = Template::join( 'areas', 'templates.area', '=', 'areas.id' )
+      ->where( 'areas.name', $template_type  )
+      ->where( 'templates.all_site', 1 )->get( 'templates.*' );
+
+    /**
+     * И проверяем, есть ли шаблон в исключениях
+     */
+
+    $_templates = $_templates->filter( function( Template $_template ) use ( $page_id ){
+      $pages_template = PagesTemplate::where( 'template_id', $_template->id )
+        ->where( 'page_id', $page_id )
+        ->where( 'condition_type', '=', 'exclude' )->first();
+
+      return ! $pages_template;
+    } );
+
+
+
+
+    $templates = $templates->merge( $_templates );
+
+
+    $templates->each( function( Template $_template ){
+      $_template->check_elements_conditions();
+    } );
+    return $templates->toArray();
   }
 }

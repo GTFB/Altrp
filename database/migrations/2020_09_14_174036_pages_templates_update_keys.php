@@ -16,9 +16,10 @@ class PagesTemplatesUpdateKeys extends Migration
     //
     Schema::table( 'pages_templates', function ( Blueprint $table ) {
 
-      $table->dropIndex( 'pages_templates_template_id_page_id_unique' );
+      $table->dropIndex( DB::getTablePrefix() . 'pages_templates_template_id_page_id_unique' );
       $table->string( 'condition_type', 50 )->default( 'include' );
-      $table->unique( ['template_id', 'page_id', 'template_type', 'condition_type'], 'pages_templates_main_key' );
+      $table->unique( ['template_id', 'page_id', 'template_type', 'condition_type'],
+        DB::getTablePrefix() . 'pages_templates_main_key' );
 
     } );
     Schema::table( 'templates', function ( Blueprint $table ) {
@@ -39,7 +40,7 @@ class PagesTemplatesUpdateKeys extends Migration
 
     Schema::table( 'pages_templates', function ( Blueprint $table ) {
 
-      $table->dropIndex( 'pages_templates_main_key' );
+      $table->dropIndex(  DB::getTablePrefix() . 'pages_templates_main_key' );
       $table->dropColumn( 'condition_type' );
     } );
     Schema::table( 'templates', function ( Blueprint $table ) {
