@@ -90,7 +90,7 @@ class Editor extends Component {
   /** 
    * Показывает Dialog окно
    */
-  showModalWindow() {
+  toggleModalWindow() {
     this.setState({
       showDialogWindow: !this.state.showDialogWindow
     })
@@ -214,13 +214,13 @@ class Editor extends Component {
               <button className="btn ">
                 <Preview className="icon" />
               </button>
-              <UpdateButton onClick={() => this.showModalWindow()} showModalWindow={() => this.showModalWindow()} />
+              <UpdateButton onClick={() => this.toggleModalWindow()} toggleModalWindow={() => this.toggleModalWindow()} />
             </div>
           </div>
           <div className="right-panel">
             {this.state.showDialogWindow &&
             <DialogWindow state={this.state.showDialogWindow}
-                          showModalWindow={() => this.showModalWindow()} />}
+                          toggleModalWindow={() => this.toggleModalWindow()} />}
             <EditorWindow />
           </div>
         </div>

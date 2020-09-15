@@ -33,7 +33,7 @@ class DialogWindow extends Component {
   };
   
   handleClose() {
-    this.props.showModalWindow()
+    this.props.toggleModalWindow()
   };
 
   renderSwitch(activeTab) {
@@ -55,7 +55,6 @@ class DialogWindow extends Component {
   // )
 
   render() {
-    console.log(this.props.templateData);
     return (
       <div className="modal-overlay">
         <div className="modal-window">

@@ -3,6 +3,8 @@
 namespace App\Constructor;
 
 use App\Area;
+use App\Page;
+use App\PagesTemplate;
 use App\Permission;
 use App\Role;
 use App\User;
@@ -147,6 +149,81 @@ class Template extends Model
     return $this->hasOne( Area::class, 'id', 'area' );
   }
 
+  /**
+   * Получить настройки условий отображения шаблона
+   * возвращает
+   * [
+   *  array['condition_type'] - 'include', 'exclude'
+   *  array['object_ids'] - список id объектов
+   *  array['object_type'] - 'page', 'model', 'all_site'
+   * ]
+   * @return array
+   */
+  public function getTemplateConditions(){
+    $conditions = [];
 
+    $settings = $this->template_settings();
 
+    foreach ( $settings as $setting ) {
+      if( $setting['setting_name'] === 'conditions' ){
+        $conditions = $setting['data'];
+      }
+    }
+
+    if( ! count( $conditions ) ){
+      if( $this->all_site ){
+        $conditions[] = [
+          'object_type' => 'all_site',
+          'condition_type' => 'include',
+          'id' => uniqid(),
+        ];
+      }
+      if( $this->pages_templates->filter( function( $value ){
+        return $value->condition_type === 'include';
+      } )->count() ){
+        $conditions[] = [
+          'object_type' => 'page',
+          'condition_type' => 'include',
+          'id' => uniqid(),
+          'object_ids' => $this->pages_templates->map(function( $value ){
+            return $value->id;
+          } )->toArray(),
+        ];
+      }
+      if( $this->pages_templates->filter( function( $value ){
+        return $value->condition_type === 'exclude';
+      } )->count() ){
+        $conditions[] = [
+          'object_type' => 'page',
+          'condition_type' => 'exclude',
+          'id' => uniqid(),
+          'object_ids' => $this->pages_templates->map(function( $value ){
+            return $value->id;
+          } )->toArray(),
+        ];
+      }
+    }
+
+    return $conditions;
+  }
+
+  /**
+   * Связанные страницы
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+   */
+  public function pages(){
+    return $this->belongsToMany( Page::class,
+      'pages_templates',
+      'template_id',
+      'page_id' );
+  }
+  /**
+   * Список связей с таблицами
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function pages_templates(){
+    return $this->hasMany( PagesTemplate::class,
+      'template_id',
+      'id' );
+  }
 }
