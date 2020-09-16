@@ -4,6 +4,8 @@ import {getRoutes} from "./js/helpers";
 import appStore from "./js/store/store";
 import AppContent from "./js/components/AppContent";
 import {Provider} from 'react-redux';
+import Resource from "../../editor/src/js/classes/Resource";
+import {changeCurrentUser} from "./js/store/current-user/actions";
 
 class FrontApp extends Component {
   constructor(props){
@@ -15,6 +17,15 @@ class FrontApp extends Component {
     return getRoutes().then(res => {
       this.routes = res.default;
     });
+  }
+
+  /**
+   * Обновляем текущего пользователя
+   */
+  async componentDidMount() {
+    let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
+    currentUser = currentUser.data;
+    appStore.dispatch(changeCurrentUser(currentUser));
   }
   render(){
     return <Provider store={appStore}>

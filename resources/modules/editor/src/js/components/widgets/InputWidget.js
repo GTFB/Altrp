@@ -5,6 +5,7 @@ import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpS
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
 import { cutString, sortOptions } from "../../helpers";
+import {connect} from "react-redux";
 
 class InputWidget extends Component {
 
@@ -63,9 +64,28 @@ class InputWidget extends Component {
       }
     }
     /**
-     * Если обновилось  хранилище данных форм
+     * Если обнолвилась модель, то пробрасываем в стор новое значение
      */
-    if(this.props.formsStore !== prevProps.formsStore){
+    if((! _.isEqual(this.props.currentModel, prevProps.currentModel)) && this.state.value && this.state.value.dynamic ){
+
+      this.dispatchFieldValueToStore(this.getContent('content_default_value'));
+    }
+
+    /**
+     * Если обновилось хранилище данных формы или модель, то получаем новые опции
+     */
+    if((this.props.formsStore !== prevProps.formsStore)
+        || (this.props.currentModel !== prevProps.currentModel)){
+      this.updateOptions();
+
+    }
+  }
+
+  /**
+   * Обновляет опции для селекта при обновлении данных, полей формы
+   */
+  async updateOptions(){
+    {
       let formId = this.props.element.getSettings('form_id');
       let paramsForUpdate = this.props.element.getSettings('params_for_update');
       let formData = _.get(this.props.formsStore, [formId], {});
@@ -74,7 +94,6 @@ class InputWidget extends Component {
        * Сохраняем параметры запроса, и если надо обновляем опции
        */
       let options = this.state.options;
-      let value = this.state.value;
       if(! _.isEqual(paramsForUpdate, this.state.paramsForUpdate)){
         if(! _.isEmpty(paramsForUpdate)){
           if(this.props.element.getSettings('params_as_filters', false)){
@@ -83,30 +102,24 @@ class InputWidget extends Component {
           } else {
             options = await (new Resource({route: this.getRoute()})).getQueried(paramsForUpdate);
           }
-          options = (!_.isArray(options)) ? options.data : options;
+          options = (! _.isArray(options)) ? options.data : options;
           options = (_.isArray(options)) ? options : [];
-          if(! options.length){
-            value = '';
-          }
+
         } else
         if(this.state.paramsForUpdate){
           options = await (new Resource({route: this.getRoute()})).getAll();
           options = (! _.isArray(options)) ? options.data : options;
           options = (_.isArray(options)) ? options : [];
-          if(! options.length){
-            value = '';
-          }
+
         }
+        this.setState(state=>({
+          ...state,
+          paramsForUpdate,
+          options,
+        }));
       }
-      this.setState(state=>({
-        ...state,
-        paramsForUpdate,
-        options,
-        value
-      }));
     }
   }
-
 
   /**
    * Изменение значения в виджете
@@ -144,7 +157,6 @@ class InputWidget extends Component {
   render(){
     let label = null;
     let required = null;
-    const { options_sorting } = this.state.settings;
 
     let value = this.state.value;
     /**
@@ -155,9 +167,10 @@ class InputWidget extends Component {
       value = this.getContent('content_default_value');
     }
     /**
-     * Пока динамический контент загружается, нужно вывести пустую строку
+     * Пока динамический контент загружается (Еесли это динамический контент),
+     * нужно вывести пустую строку
      */
-    if(value.dynamic){
+    if(value && value.dynamic){
       value = '';
     }
     let classLabel = "";
@@ -222,15 +235,19 @@ class InputWidget extends Component {
       }
       break;
       case 'select':{
+        let options = this.state.options || [];
+        options = _.sortBy(options, (o => o.label ? o.label.toString() : o));
         input = <select value={value || ''}
                         onChange={this.onChange}
                         id={this.state.settings.position_css_id}
                         className={"altrp-field " + this.state.settings.position_css_classes}>
           {this.state.settings.content_options_nullable ? <option value=""/> : ''}
-          {(options_sorting ? sortOptions(this.state.options, options_sorting) : this.state.options)
-            .map(option=>{
-              return <option value={option.value} key={option.value} title={option.label}>{cutString(option.label, 30)}</option>
-            })}
+
+          {
+            options.map(option=>{
+              return <option value={option.value} key={option.value}>{option.label}</option>
+            })
+          }
         </select>
       }
       break;
@@ -256,7 +273,7 @@ class InputWidget extends Component {
    * Выводит инпут-select2, используя компонент AltrpSelect
    */
   renderSelect2() {
-    const { content_options_nullable, nulled_option_title, content_placeholder, options_sorting } = this.state.settings;
+    const { content_options_nullable, nulled_option_title, content_placeholder } = this.state.settings;
     let options = this.state.options;
     if(content_options_nullable){
       options = _.union([{ label: nulled_option_title, value: 'all', }], options);
@@ -290,10 +307,11 @@ class InputWidget extends Component {
         })
       }
     });
+    options = _.sortBy(options, (o => o.label ? o.label.toString() : o));
     const select2Props = {
       className: 'altrp-field-select2',
       classNamePrefix: 'altrp-field-select2',
-      options: options_sorting ? sortOptions(options, options_sorting) : options,
+      options,
       onChange: this.onChange,
       value,
       // menuIsOpen: true,
@@ -303,5 +321,6 @@ class InputWidget extends Component {
     return <AltrpSelect {...select2Props} />;
   }
 }
+
 
 export default InputWidget

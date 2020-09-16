@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Users;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\ApiRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 use App\User;
@@ -261,4 +262,27 @@ class Users extends Controller
         return response()->json($result, 200, [],JSON_UNESCAPED_UNICODE);
     }
 
+  /**
+   * Обработка запроса на получение данных текущего пользователя
+   * @param ApiRequest $request
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function getCurrentUser( ApiRequest $request ){
+    $user = Auth::user();
+    if( ! $user ){
+      return response()->json(
+        ['data' => ['is_guest' => true]]
+        , 200,
+        [],
+        JSON_UNESCAPED_UNICODE);
+    }
+    $user = $user->toArray();
+    $user['roles'] = Auth::user()->roles;
+    $user['permissions'] = Auth::user()->permissions;
+    return response()->json(
+      ['data' => $user]
+      , 200,
+      [],
+      JSON_UNESCAPED_UNICODE);
+  }
 }

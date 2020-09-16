@@ -178,32 +178,32 @@ class Input extends BaseElement{
       },
     });
 
-    this.addControl('options_sorting', {
-      type: CONTROLLER_SELECT,
-      label: 'Options Sorting',
-      default: '',
-      conditions: {
-        'content_type':
-          [
-            'select',
-            'select2',
-          ]
-      },
-      options: [
-        {
-          value: '',
-          label: 'None'
-        },
-        {
-          value: 'asc',
-          label: 'ASC'
-        },
-        {
-          value: 'desc',
-          label: 'DESC'
-        }
-      ]
-    });
+    // this.addControl('options_sorting', {
+    //   type: CONTROLLER_SELECT,
+    //   label: 'Options Sorting',
+    //   default: '',
+    //   conditions: {
+    //     'content_type':
+    //       [
+    //         'select',
+    //         'select2',
+    //       ]
+    //   },
+    //   options: [
+    //     {
+    //       value: '',
+    //       label: 'None'
+    //     },
+    //     {
+    //       value: 'asc',
+    //       label: 'ASC'
+    //     },
+    //     {
+    //       value: 'desc',
+    //       label: 'DESC'
+    //     }
+    //   ]
+    // });
 
     this.addControl('model_for_options', {
       type: CONTROLLER_SELECT2,

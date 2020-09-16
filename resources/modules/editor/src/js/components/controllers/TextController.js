@@ -87,7 +87,7 @@ class TextController extends Component {
     return <div className="controller-container controller-container_text">
       <div className="controller-container__label textcontroller-responsive">
         {this.props.label}
-        <ResponsiveDdMenu />
+        {this.props.responsive === false ? null : <ResponsiveDdMenu />}
       </div>
       <div className="control-group">
         {this.state.dynamicValue ? <div className="dynamic-placeholder control-field">

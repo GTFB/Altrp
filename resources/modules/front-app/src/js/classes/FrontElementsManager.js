@@ -40,6 +40,7 @@ export default class FrontElementsManager {
     this.components['carousel'] = CarouselWidget;
     this.components['map'] = MapWidget;
     this.components['diagram'] = DiagramWidget;
+    // this.components['diagram'] = DiagramWidget;
 
   }
 
