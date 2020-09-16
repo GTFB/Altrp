@@ -5,11 +5,7 @@ import Select from "react-select";
 import { Scrollbars } from "react-custom-scrollbars";
 
 const renderScrollbar = (props) => {
-  return (
-    <div style={{ height: 250 }}>
-      <Scrollbars>{props.children}</Scrollbars>
-    </div>
-  );
+  return <Scrollbars autoHeight >{props.children}</Scrollbars>;
 };
 
 class AltrpSelect extends Component {
@@ -61,6 +57,17 @@ class AltrpSelect extends Component {
    */
 
   render(){
+    const { background } = this.props;
+    const customStyles = {
+      menuPortal: base => ({ ...base, zIndex: 99999 }),
+      option: (provided, state) => ({
+        ...provided,
+        backgroundColor: state.isSelected ? 
+          background.selected.color : 
+          state.isFocused ? background.focused.color : background.normal.color
+      })
+    }
+
     let selectProps = {
       onChange: this.onChange,
       onInputChange: this.onInputChange,
@@ -68,7 +75,7 @@ class AltrpSelect extends Component {
       placeholder: this.props.placeholder,
       loadOptions: this.loadOptions,
       noOptionsMessage: this.props.noOptionsMessage || (() => "not found"),
-      styles: { menuPortal: base => ({ ...base, zIndex: 99999 }) },
+      styles: customStyles,
       menuPortalTarget: document.body,
       menuPlacement: 'auto',
       menuPosition: 'absolute',

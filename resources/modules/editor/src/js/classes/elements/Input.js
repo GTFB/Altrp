@@ -633,6 +633,36 @@ class Input extends BaseElement{
       }
     );
 
+    this.addControl('option_background_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Option Background Color',
+      default: {
+        color: "#FFF",
+        colorPickedHex: "#FFF",
+      },
+      conditions: { 'content_type': ['select2'] },
+    });
+
+    this.addControl('option_focused_background_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Focused Option Background Color',
+      default: {
+        color: "#DEEBFF",
+        colorPickedHex: "#DEEBFF",
+      },
+      conditions: { 'content_type': ['select2'] },
+    });
+
+    this.addControl('option_selected_background_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Selected Option Background Color',
+      default: {
+        color: "#2684FF",
+        colorPickedHex: "#2684FF",
+      },
+      conditions: { 'content_type': ['select2'] },
+    });    
+
     this.addControl('background_section_opacity', {
       type: CONTROLLER_SLIDER,
       label: 'Opacity',

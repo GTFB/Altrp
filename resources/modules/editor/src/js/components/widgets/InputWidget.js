@@ -256,7 +256,16 @@ class InputWidget extends Component {
    * Выводит инпут-select2, используя компонент AltrpSelect
    */
   renderSelect2() {
-    const { content_options_nullable, nulled_option_title, content_placeholder, options_sorting } = this.state.settings;
+    const { 
+      content_options_nullable, 
+      nulled_option_title, 
+      content_placeholder, 
+      options_sorting, 
+      option_background_color: normal,
+      option_focused_background_color: focused,
+      option_selected_background_color: selected 
+    } = this.props.element.getSettings();
+
     let options = this.state.options;
     if(content_options_nullable){
       options = _.union([{ label: nulled_option_title, value: 'all', }], options);
@@ -296,11 +305,9 @@ class InputWidget extends Component {
       options: options_sorting ? sortOptions(options, options_sorting) : options,
       onChange: this.onChange,
       value,
-      // menuIsOpen: true,
       placeholder: content_placeholder,
-      // closeMenuOnScroll: true,
     };
-    return <AltrpSelect {...select2Props} />;
+    return <AltrpSelect background={{ normal, focused, selected }}  {...select2Props} />;
   }
 }
 
