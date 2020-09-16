@@ -2,7 +2,15 @@ import React, {Component} from "react";
 import AsyncSelect from "react-select/async";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import Select from "react-select";
+import { Scrollbars } from "react-custom-scrollbars";
 
+const renderScrollbar = (props) => {
+  return (
+    <div style={{ height: 250 }}>
+      <Scrollbars>{props.children}</Scrollbars>
+    </div>
+  );
+};
 
 class AltrpSelect extends Component {
   constructor(props){
@@ -64,6 +72,7 @@ class AltrpSelect extends Component {
       menuPortalTarget: document.body,
       menuPlacement: 'auto',
       menuPosition: 'absolute',
+      components: { MenuList: renderScrollbar }
     };
     
     _.assign(selectProps, this.props);
