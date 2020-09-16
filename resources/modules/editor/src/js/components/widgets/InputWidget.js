@@ -276,11 +276,7 @@ class InputWidget extends Component {
     const { 
       content_options_nullable, 
       nulled_option_title, 
-      content_placeholder, 
-      options_sorting, 
-      option_background_color: normal,
-      option_focused_background_color: focused,
-      option_selected_background_color: selected 
+      content_placeholder,
     } = this.props.element.getSettings();
 
     let options = this.state.options;
@@ -319,13 +315,14 @@ class InputWidget extends Component {
     options = _.sortBy(options, (o => o.label ? o.label.toString() : o));
     const select2Props = {
       className: 'altrp-field-select2',
-      classNamePrefix: 'altrp-field-select2',
+      classNamePrefix: this.props.element.getId() +' altrp-field-select2',
       options,
       onChange: this.onChange,
       value,
       placeholder: content_placeholder,
+      // menuIsOpen: true,
     };
-    return <AltrpSelect background={{ normal, focused, selected }}  {...select2Props} />;
+    return <AltrpSelect  {...select2Props} />;
   }
 }
 

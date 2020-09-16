@@ -57,16 +57,15 @@ class AltrpSelect extends Component {
    */
 
   render(){
-    const { background } = this.props;
     const customStyles = {
       menuPortal: base => ({ ...base, zIndex: 99999 }),
-      option: (provided, state) => ({
-        ...provided,
-        backgroundColor: state.isSelected ? 
-          background.selected.color : 
-          state.isFocused ? background.focused.color : background.normal.color
-      })
-    }
+      // option: (provided, state) => ({
+      //   ...provided,
+      //   backgroundColor: state.isSelected ?
+      //     background.selected.color :
+      //     state.isFocused ? background.focused.color : background.normal.color
+      // })
+    };
 
     let selectProps = {
       onChange: this.onChange,

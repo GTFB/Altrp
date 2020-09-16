@@ -641,6 +641,9 @@ class Input extends BaseElement{
         colorPickedHex: "#FFF",
       },
       conditions: { 'content_type': ['select2'] },
+      rules: {
+        '.{{ID}}.altrp-field-select2__option{{STATE}}': 'background-color: {{COLOR}};',
+      },
     });
 
     this.addControl('option_focused_background_color', {
