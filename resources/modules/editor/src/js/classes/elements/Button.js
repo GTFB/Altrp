@@ -333,11 +333,10 @@ class Button extends BaseElement{
       type: CONTROLLER_SLIDER,
       label: 'Width',
       default:{
-        size: 100,
         unit: 'px',
       },
       max: 1000,
-      min: 100,
+      min: 0,
       rules: {
         // "{{ELEMENT}} .altrp-text{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
       }

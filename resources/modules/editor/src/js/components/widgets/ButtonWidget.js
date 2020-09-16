@@ -127,7 +127,6 @@ class Dropbar extends Component {
     
     if(this.state.show) {
       let contentWidth = this.content.current.offsetWidth - 1;
-      console.log(contentWidth)
     }
 
     switch(this.state.activePosition) {
@@ -226,6 +225,12 @@ class Dropbar extends Component {
 
     let contentPosition = " altrp-dropbar-variant-" + this.state.positionVariants[this.state.activePosition].class || "";
 
+    let contentStyles = {};
+
+    if(this.props.width) {
+      contentStyles = {width: this.props.width + "px"}
+    }
+
     return (
       <div className={"altrp-dropbar altrp-dropbar-" + mainClass + contentPosition}>
         <span className={"altrp-dropbar-children-wrapper " + mainClass + "-wrapper"}>
@@ -242,7 +247,7 @@ class Dropbar extends Component {
         </span>
         {
           this.state.show ? (
-            <div ref={this.content} style={this.state.contentPosition} className={"altrp-dropbar-container " + mainClass + "-containter"}>
+            <div ref={this.content} style={{...this.state.contentPosition, ...contentStyles}} className={"altrp-dropbar-container " + mainClass + "-containter"}>
               {
                 React.createElement("div",
                   {
@@ -340,7 +345,8 @@ class ButtonWidget extends Component {
       ) : (
         <Dropbar 
           offset={this.state.settings.offset_dropbar_options} 
-          className="btn" 
+          className="btn"
+          width={this.state.settings.width_dropbar_options.size}
           position={this.state.settings.position_dropbar_options} 
           mode={this.state.settings.mode_dropbar_options} 
           content={this.state.settings.content_dropbar_section}
