@@ -11,6 +11,8 @@ import { currentTabReducer } from "./active-settings-tab/reducers";
 import { currentStateReducer } from "./state-section/reducers";
 import { currentScreenReducer } from './responsive-switcher/reducers';
 import {currentModelReducer} from "../../../../front-app/src/js/store/current-model/reducers";
+import {templateDataReducer} from "./template-data/reducers";
+import {currentUserReducer} from "../../../../front-app/src/js/store/current-user/reducers";
 
 export default combineReducers({
   currentElement: currentElementReducer,
@@ -25,4 +27,6 @@ export default combineReducers({
   currentState: currentStateReducer,
   currentScreen: currentScreenReducer,
   currentModel: currentModelReducer,
+  templateData: templateDataReducer,
+  currentUser: currentUserReducer,
 });

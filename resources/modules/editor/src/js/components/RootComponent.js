@@ -20,7 +20,7 @@ class RootComponent extends Component {
         .replace(".", "")}`;
 
     return (
-        <div className={classes}>{this.state.settings['test-text-4']}
+        <div className={classes}>{this.props.element.getSettings('test-text-4')}
             {this.state.children.map(section => (
                 <ElementWrapper
                     key={section.getId()}

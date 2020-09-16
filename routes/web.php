@@ -52,6 +52,9 @@ Route::get( '/admin/editor-reports', function (){
 
 Route::get('/reports/html/{id}', "ReportsController@page");
 
+/**
+ * Роуты Админки
+ */
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 
@@ -137,6 +140,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::get( 'templates/{template_id}/settings/{setting_name}', 'TemplateController@settingGet' )
       ->name( 'get-template-setting' );
     Route::put( 'templates/{template_id}/settings/{setting_name}', 'TemplateController@settingSet' )
+      ->name( 'set-template-setting' );
+    /**
+     * Templates Conditions
+     */
+    Route::get( 'templates/{template_id}/conditions', 'TemplateController@conditionsGet' )
+      ->name( 'get-template-setting' );
+    Route::put( 'templates/{template_id}/conditions', 'TemplateController@conditionsSet' )
       ->name( 'set-template-setting' );
     /**
      * Reports
@@ -317,6 +327,11 @@ foreach ( $frontend_routes as $frontend_route ) {
 
 Route::group( ['prefix' => 'ajax'], function(){
 
+  /**
+   * Роут текущий пользователь
+   */
+  Route::get( 'current-user', "Users\Users@getCurrentUser" )->name( 'users.current-user' );
+  
   // Отдает данные для виджета карты
   Route::get('maps/{id}', 'MapsController@index');
 
@@ -380,7 +395,13 @@ Route::get('/linkstorage', function () {
   return redirect('/admin');
 });
 
+/**
+ * Роуты для зарегистрированных пользователей
+ */
+Route::group( ['prefix' => 'ajax', 'middleware' => 'auth'], function() {
 
+
+} );
 /**
  * Обновление всех ресурсов бэкенда
  */

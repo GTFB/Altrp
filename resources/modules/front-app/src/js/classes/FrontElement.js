@@ -91,10 +91,12 @@ class FrontElement {
         'input',
     ];
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_id')){
-      this.formInit()
+      this.formInit();
+      return;
     }
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_actions') === 'delete'){
-      this.formInit()
+      this.formInit();
+      return;
     }
   }
 
