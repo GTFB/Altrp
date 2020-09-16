@@ -72,7 +72,8 @@ class AltrpSelect extends Component {
       menuPortalTarget: document.body,
       menuPlacement: 'auto',
       menuPosition: 'absolute',
-      components: { MenuList: renderScrollbar }
+      components: { MenuList: renderScrollbar },
+      captureMenuScroll: false
     };
     
     _.assign(selectProps, this.props);
