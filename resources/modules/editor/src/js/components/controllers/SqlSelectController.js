@@ -2,12 +2,13 @@ import React, { useState, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import axios from "axios";
+import { widgetTypes } from "../../../../../admin/src/components/dashboard/widgetTypes";
 
 const SqlSelectController = ({ controller, controlId, label }) => {
   const currentElement = useSelector((state) => state.currentElement.currentElement);
-  const value = currentElement.getSettings(controlId) || [];
   const [options, setOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [settings, setSettings] = useState(currentElement.getSettings(controlId));
 
   const getOptions = useCallback(async () => {
     setIsLoading(true);
@@ -30,6 +31,31 @@ const SqlSelectController = ({ controller, controlId, label }) => {
     }
   }, []);
 
+  const handleSelected = (opts) => {
+    setSettings(opts);
+  };
+
+  //Изменяем настройки
+  useEffect(() => {
+    controller.changeValue(settings);
+  }, [settings]);
+
+  const handleTypes = (opts, source) => {
+    console.log("opts :>> ", settings);
+    setSettings(
+      settings.map((item) => {
+        if (item.value === source.value) {
+          return {
+            ...item,
+            types: opts,
+          };
+        } else {
+          return item;
+        }
+      })
+    );
+  };
+
   // Подгружаем sql запросы
   useEffect(() => {
     options.length === 0 && getOptions();
@@ -38,19 +64,46 @@ const SqlSelectController = ({ controller, controlId, label }) => {
   if (!controller.isShow()) {
     return "";
   }
+
+  console.log("value :>> ", settings);
+
   return (
-    <>
-      <label>{label}</label>
-      <Select
-        isMulti
-        isClearable
-        isSearchable
-        defaultValue={value}
-        isLoading={isLoading}
-        onChange={(opts) => controller.changeValue(opts)}
-        options={options}
-      />
-    </>
+    <div className="controller-container controller-container_query">
+      <div className="controller-field-group flex-wrap">
+        <div className="controller-container__label">Select SQL queries</div>
+        <div className="control-container_select-wrapper w-100">
+          <Select
+            isMulti
+            isClearable
+            isSearchable
+            defaultValue={settings}
+            isLoading={isLoading}
+            onChange={handleSelected}
+            options={options}
+          />
+        </div>
+      </div>
+      <div className="controller-field-group flex-wrap">
+        <div className="controller-container__label">Assign types to queries</div>
+        <div className="control-container_select-wrapper assigning-types">
+          {settings.map((source, key) => (
+            <div className="assigning-types__item" key={key}>
+              {source.label}
+              <Select
+                isMulti
+                isClearable
+                isSearchable
+                defaultValue={source.types}
+                onChange={(opts) => handleTypes(opts, source)}
+                options={widgetTypes.map((item) => {
+                  return { label: item.name, value: item.value };
+                })}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 
