@@ -45,6 +45,8 @@ class QueryBuilder
      */
     protected $model;
 
+    protected $table;
+
     /**
      * Данные
      *
@@ -60,6 +62,11 @@ class QueryBuilder
     /**
      * @var string
      */
+    private $twoTabs = '        ';
+
+    /**
+     * @var string
+     */
     private $threeTabs = '            ';
 
     /**
@@ -70,6 +77,7 @@ class QueryBuilder
     {
         $this->query = $query;
         $this->model = Model::find($query->model_id);
+        $this->table = $this->model->table;
     }
 
     protected function reset()
@@ -87,6 +95,7 @@ class QueryBuilder
         $query = $this->getJoins($this->query->joins)
                     ->getColumns($this->query->columns)
                     ->getAggregates($this->query->aggregates)
+                    ->getFiltration()
                     ->getConditions($this->query->conditions)
 //                    ->getWhereConditions($this->query->conditions)
 //                    ->getOrWhereConditions($this->query->conditions)
@@ -116,10 +125,11 @@ class QueryBuilder
             if (is_array($item)) $queryBody[] = implode($this->threeTabs, $item);
             else $queryBody[] = $item;
         }
-        $queryBody[] = "->get();\n";
+        $queryBody[] = "->get();\n{$this->twoTabs}return \$model;\n";
         $methodBody = "\n\n{$this->tabIndent}public function " . $this->getMethodName() . "()\n{$this->tabIndent}{\n"
-        . "{$this->tabIndent}{$this->tabIndent}return \$this->model()\n"
-        . implode("{$this->threeTabs}",$queryBody) . $this->tabIndent . "}{$this->tabIndent}";
+        . "{$this->tabIndent}{$this->tabIndent}\$model = \$this->model();\n"
+        . implode("{$this->twoTabs}",$queryBody) . $this->tabIndent . "}";
+
         return $this->replaceDynamicVars($methodBody,1);
     }
 
@@ -576,7 +586,7 @@ class QueryBuilder
             $aggregatesList[] = $aggregates;
         }
 
-        $this->queryBody->aggregates = '->selectRaw(\'' . implode(', ', $aggregatesList) . '\')' . "\n";
+        $this->queryBody->aggregates = '$model = $model->selectRaw(\'' . implode(', ', $aggregatesList) . '\');' . "\n";
         return $this;
     }
 
@@ -591,11 +601,11 @@ class QueryBuilder
         $threeTabs = null;
         if (! $this->query->joins) {
             $this->reset();
-            $threeTabs = $this->threeTabs;
+            $threeTabs = $this->twoTabs;
         }
         $this->queryBody->columns = $columns
-            ? "{$threeTabs}->select(['" . implode("','", $columns) . "'])\n"
-            : "{$threeTabs}->select('*')\n";
+            ? "{$threeTabs}\$model = \$model->select(['" . implode("','", $columns) . "']);\n"
+            : "{$threeTabs}\$model = \$model->select('*');\n";
         return $this;
     }
 
@@ -633,7 +643,8 @@ class QueryBuilder
                     break;
             }
         }
-        $this->queryBody->conditions = implode("{$this->threeTabs}",$this->queryBody->conditions);
+        $this->queryBody->conditions = '$model = $model'
+            . rtrim(implode("{$this->twoTabs}",$this->queryBody->conditions), "\n") . ";\n";
         return $this;
     }
 
@@ -648,7 +659,7 @@ class QueryBuilder
         if (! $relations) return $this;
         $eol = (count($relations) > 1) ? "\n" : null;
         $tab = (count($relations) > 1) ? "{$this->tabIndent}" : null;
-        $this->queryBody->relations = "->with([$eol$tab$tab$tab$tab'"
+        $this->queryBody->relations = "\$model = \$model->with([$eol$tab$tab$tab$tab'"
             . implode("',$eol$tab$tab$tab$tab'", $relations) . "'$eol$tab$tab$tab])\n";
         return $this;
     }
@@ -754,7 +765,7 @@ class QueryBuilder
      * Получить условия по различным типам даты и времени
      * Типы: Date / Month / Day / Year / Time / Datetime
      *
-     * @param $conditions
+     * @param $cond
      * @return $this
      */
     public function getWhereDateConditions($cond)
@@ -818,7 +829,7 @@ class QueryBuilder
         foreach ($orders as $order) {
             $ordersList[] = "orderBy('{$order['column']}', '{$order['type']}')";
         }
-        $this->queryBody->orders = '->' . implode("\n{$this->threeTabs}->", $ordersList) . "\n";
+        $this->queryBody->orders = "\$model = \$model" . '->' . implode("\n{$this->threeTabs}->", $ordersList) . "\n";
         return $this;
     }
 
@@ -831,7 +842,7 @@ class QueryBuilder
     public function getGroupTypes($types)
     {
         if (! $types) return $this;
-        $groupsList = "->groupBy('" . implode("','", $types) ."')\n";
+        $groupsList = "\$model = \$model" . "->groupBy('" . implode("','", $types) ."');\n";
         $this->queryBody->group_by = $groupsList;
         return $this;
     }
@@ -846,7 +857,7 @@ class QueryBuilder
     {
         if (! $offset) return $this;
         $offset = filter_var($offset, FILTER_VALIDATE_INT) ? $offset : '"' . $offset . '"';
-        $this->queryBody->offset = "->offset($offset)\n";
+        $this->queryBody->offset = "\$model = \$model" . "->offset($offset);\n";
         return $this;
     }
 
@@ -860,7 +871,7 @@ class QueryBuilder
     {
         if (! $limit) return $this;
         $limit = filter_var($limit, FILTER_VALIDATE_INT) ? $limit : '"' . $limit . '"';
-        $this->queryBody->limit = "->limit($limit)\n";
+        $this->queryBody->limit = "\$model = \$model" . "->limit($limit);\n";
         return $this;
     }
 
@@ -897,8 +908,22 @@ class QueryBuilder
                     . "'{$operator}','{$targetTableName}.{$targetColumn}')";
             }
         }
-        $this->queryBody->joins = "{$this->threeTabs}->" . implode("\n{$this->threeTabs}->",$joinList) . "\n";
+        $this->queryBody->joins = "{$this->twoTabs}\$model = \$model->" . implode("\n{$this->threeTabs}->",$joinList) . ";\n";
 
+        return $this;
+    }
+
+    public function getFiltration()
+    {
+        $filtration = '$filters = [];' . "\n";
+        $filtration .= $this->twoTabs . 'if (request()->filters) {' . "\n";
+        $filtration .= $this->threeTabs . '$_filters = json_decode(request()->filters, true);' . "\n";
+        $filtration .= $this->threeTabs . 'foreach ($_filters as $key => $value) {' . "\n";
+        $filtration .= $this->threeTabs . $this->tabIndent . '$filters[$key] = $value;' . "\n";
+        $filtration .= $this->threeTabs . '}' . "\n";
+        $filtration .= $this->twoTabs . '}' . "\n";
+        $filtration .= $this->twoTabs . 'if (count($filters)) $model = $model->whereLikeMany($filters);' . "\n";
+        $this->queryBody->zfiltration = $filtration;
         return $this;
     }
 }

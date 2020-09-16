@@ -484,7 +484,6 @@ class ControllerGenerator extends AppGenerator
             $sql_editors = SQLEditor::where('model_id',$this->controllerModel->model->id)->get();
             $sql_builders = Query::where('model_id',$this->controllerModel->model->id)->get();
             foreach ($sql_editors as $sql_editor) {
-//                if (Str::contains($customCode['custom_methods'], $sql_editor->name)) {
                 $sqlEditorObj = SQLEditor::find($sql_editor->id);
                 $data = $sql_editor->toArray();
                 $data['updated_at'] = Carbon::now();
