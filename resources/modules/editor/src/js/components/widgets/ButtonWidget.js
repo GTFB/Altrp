@@ -96,22 +96,52 @@ class Dropbar extends Component {
     this.changePosition = this.changePosition.bind(this);
 
     this.children = React.createRef();
-    this.content = React.createRef();
   };
 
   show() {
     //this.children.current.getBoundingClientRect()
     // left: this.children.current.getBoundingClientRect().left - 10 + "px"
-    this.setState((state) => ({ show: !state.show }));
+    if(this.props.showDelay.size) {
+      if(!this.state.show) {
+        setTimeout(() => {
+          this.setState((state) => ({ show: !state.show }));
+        }, this.props.showDelay.size)
+      } else {
+        setTimeout(() => {
+          this.setState((state) => ({ show: !state.show }));
+        }, this.props.hideDelay.size)
+      }
+    } else {
+      this.setState((state) => ({ show: !state.show }));
+    }
+
     this.changePosition()
   }
 
   leaveHide() {
-    this.setState({ show: false });
+    if(this.props.hideDelay.size) {
+      setTimeout(() => {
+        this.setState({ show: false });
+      }, this.props.hideDelay.size)
+    } else {
+      this.setState({ show: false });
+    }
   }
   
-  enterShow() {
-    this.setState({ show: true });
+  enterShow(e) {
+    let current = e.currentTarget;
+
+    if(this.props.showDelay.size && !this.state.show) {
+      setTimeout(() => {
+        if(this.children.current === current) {
+          this.setState({ show: true });
+        } else {
+          this.setState({ show: false });
+        }
+      }, this.props.showDelay.size)
+    } else {
+      this.setState((state) => ({ show: !state.show }));
+    }
     this.changePosition()
   }
 
@@ -124,10 +154,6 @@ class Dropbar extends Component {
     let position = {};
     let offsetY = height + Number(this.state.offset.size) + "px";
     let offsetXLeft = width + Number(this.state.offset.size);
-    
-    if(this.state.show) {
-      let contentWidth = this.content.current.offsetWidth - 1;
-    }
 
     switch(this.state.activePosition) {
       case 0:
@@ -247,7 +273,7 @@ class Dropbar extends Component {
         </span>
         {
           this.state.show ? (
-            <div ref={this.content} style={{...this.state.contentPosition, ...contentStyles}} className={"altrp-dropbar-container " + mainClass + "-containter"}>
+            <div style={{...this.state.contentPosition, ...contentStyles}} className={"altrp-dropbar-container " + mainClass + "-containter"}>
               {
                 React.createElement("div",
                   {
@@ -350,6 +376,8 @@ class ButtonWidget extends Component {
           position={this.state.settings.position_dropbar_options} 
           mode={this.state.settings.mode_dropbar_options} 
           content={this.state.settings.content_dropbar_section}
+          hideDelay={this.state.settings.hide_delay_dropbar_options}
+          showDelay={this.state.settings.show_delay_dropbar_options}
         >
           <button
             onClick={this.onClick}

@@ -370,12 +370,6 @@ class Button extends BaseElement{
       }
     });
 
-    this.addControl('flip_dropbar_options', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Flip dropbar',
-      default: false
-    });
-
     this.addControl("offset_dropbar_options", {
       type: CONTROLLER_SLIDER,
       label: 'Dropbar offset',
