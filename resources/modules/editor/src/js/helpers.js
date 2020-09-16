@@ -106,6 +106,6 @@ export function cutString(string, maxLength = 80) {
 }
 
 export function sortOptions(options, sortDirection) {
-  options.sort((a, b) => a.label > b.label ? 1 : b.label > a.label ? -1 : 0);
+  options.sort((a, b) => a.label.toLowerCase() > b.label.toLowerCase() ? 1 : b.label.toLowerCase() > a.label.toLowerCase() ? -1 : 0);
   return sortDirection === "asc" ? options : options.reverse();
 }
