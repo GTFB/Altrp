@@ -8,8 +8,9 @@ import {
   CONTROLLER_CHOOSE,
   CONTROLLER_CSSEDITOR,
   TAB_ADVANCED,
-  CONTROLLER_SWITCHER, CONTROLLER_SELECT2, CONTROLLER_HEADING
+  CONTROLLER_SWITCHER, CONTROLLER_SELECT2, CONTROLLER_HEADING, CONTROLLER_REPEATER
 } from "../classes/modules/ControllersManager";
+import Repeater from "../classes/Repeater";
 /**
  * Функция декорирует элемент неободимыми контроллерами
  * @param {BaseElement} element
@@ -318,6 +319,98 @@ export function advancedTabControllers(element) {
     isMulti: true,
     prefetch_options: true,
     isClearable: true,
+  });
+
+  element.addControl('conditional_other', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Other Conditions',
+    default: false,
+  });
+
+  element.addControl('conditional_other_display', {
+    type: CONTROLLER_SELECT,
+    label: 'Display on',
+    responsive: false,
+    options: [
+      {
+        label: 'All Conditions Met',
+        value: 'AND',
+      },
+      {
+        label: 'Any Condition Met',
+        value: 'OR',
+      },
+    ],
+    default: 'AND',
+    conditions: {
+      'conditional_other': true,
+    },
+  });
+
+  const modelRepeater = new Repeater();
+
+  modelRepeater.addControl('conditional_model_field', {
+    responsive: false,
+    label: 'Model Field',
+  });
+
+  modelRepeater.addControl('conditional_other_operator', {
+    type: CONTROLLER_SELECT,
+    responsive: false,
+    default: 'empty',
+    options: [
+      {
+        value: 'empty',
+        label: 'Empty',
+      },
+      {
+        value: 'not_empty',
+        label: 'Not Empty',
+      },
+      {
+        value: '==',
+        label: 'Equals',
+      },
+      {
+        value: '<>',
+        label: 'Not Equals',
+      },
+      {
+        value: 'between',
+        label: 'Between',
+      },
+      {
+        value: '>',
+        label: '>',
+      },
+      {
+        value: '>=',
+        label: '>=',
+      },
+      {
+        value: '<',
+        label: '<',
+      },
+      {
+        value: '<=',
+        label: '<=',
+      },
+    ]
+  });
+
+  modelRepeater.addControl('conditional_other_condition_value', {
+    responsive: false,
+  });
+
+  element.addControl('conditions', {
+    label: 'Conditions',
+    type: CONTROLLER_REPEATER,
+    fields: modelRepeater.getControls(),
+    default: [
+    ],
+    conditions: {
+      'conditional_other': true,
+    },
   });
 
   element.endControlSection();

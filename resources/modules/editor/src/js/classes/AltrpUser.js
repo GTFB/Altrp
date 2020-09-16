@@ -23,6 +23,8 @@ class AltrpUser extends AltrpModel{
 
   /**
    * Проверяет наличие permission у пользователя
+   * @param {[]} permissions
+   * $return {boolean}
    */
   hasPermissions(permissions = []){
     let ownPermissions = this.getProperty('permissions', []);
@@ -34,6 +36,8 @@ class AltrpUser extends AltrpModel{
   }
   /**
    * Проверяет наличие роли у пользователя
+   * @param {[]} roles
+   * $return {boolean}
    */
   hasRoles(roles = []){
     let ownRoles = this.getProperty('roles', []);

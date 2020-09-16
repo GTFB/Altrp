@@ -199,3 +199,77 @@ export function parseParamsFromString(string, context = {}){
   });
   return params;
 }
+
+/**
+ * Функция для проверки условий
+ * @param {[]} conditions
+ * @param {boolean} AND - логичекое И или ИЛИ
+ * @param {AltrpModel} model
+ * @return {boolean}
+ */
+export function conditionsChecker(conditions = [], AND = true, model){
+  if(! conditions.length){
+    return true;
+  }
+  let result = AND;
+  _.each(conditions, c =>{
+    const {
+      conditional_model_field: modelField,
+      conditional_other_operator: operator,
+      conditional_other_condition_value: value,
+    } = c;
+    const condition = {
+      modelField,
+      operator,
+      value,
+    };
+    if(AND){
+      result *= _conditionChecker(condition, model);
+    } else {
+      result += _conditionChecker(condition, model);
+    }
+  });
+  return result;
+}
+
+/**
+ * Функция для проверки одного условия
+ * @param c
+ * @param {AltrpModel} model
+ * @return {boolean}
+ */
+function _conditionChecker(c, model){
+  let result = 0;
+  const {
+     modelField,
+     operator,
+     value,
+  } = c;
+  switch(operator){
+    case 'empty':{
+      return ! model.getProperty(modelField, '');
+    }
+    case 'not_empty':{
+      return ! ! model.getProperty(modelField, '');
+    }
+    case '==':{
+      return _.isEqual(model.getProperty(modelField, ''), value );
+    }
+    case '<>':{
+      return ! _.isEqual(model.getProperty(modelField, ''), value );
+    }
+    case '>':{
+      return Number(model.getProperty(modelField, '')) > Number(value);
+    }
+    case '>=':{
+      return Number(model.getProperty(modelField, '')) >= Number(value);
+    }
+    case '<':{
+      return Number(model.getProperty(modelField, '')) < Number(value);
+    }
+    case '<=':{
+      return Number(model.getProperty(modelField, '')) <= Number(value);
+    }
+  }
+  return result;
+}
