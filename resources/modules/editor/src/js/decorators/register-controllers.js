@@ -8,7 +8,7 @@ import {
   CONTROLLER_CHOOSE,
   CONTROLLER_CSSEDITOR,
   TAB_ADVANCED,
-  CONTROLLER_SWITCHER, CONTROLLER_SELECT2
+  CONTROLLER_SWITCHER, CONTROLLER_SELECT2, CONTROLLER_HEADING
 } from "../classes/modules/ControllersManager";
 /**
  * Функция декорирует элемент неободимыми контроллерами
@@ -279,6 +279,7 @@ export function advancedTabControllers(element) {
   element.addControl('conditional_display_choose', {
     type: CONTROLLER_SELECT,
     label: 'Authorize Condition',
+    responsive:false,
     options: [
       {
         label: 'all',
@@ -328,9 +329,15 @@ export function advancedTabControllers(element) {
     }
   );
 
+  element.addControl('conditional_disabled_head', {
+    type: CONTROLLER_HEADING,
+    label: 'Disabled for ...',
+  });
+
   element.addControl('conditional_disabled_choose', {
     type: CONTROLLER_SELECT,
     label: 'Authorize Condition',
+    responsive:false,
     options: [
       {
         label: 'all',
@@ -349,9 +356,9 @@ export function advancedTabControllers(element) {
 
   element.addControl('conditional_disabled_roles', {
     type: CONTROLLER_SELECT2,
-    label: 'Allowed for Roles',
+    label: 'User has Roles',
     conditions: {
-      'conditional_display_choose' : 'auth',
+      'conditional_disabled_choose' : 'auth',
     },
     options_resource: '/admin/ajax/role_options',
     isMulti: true,
@@ -361,9 +368,9 @@ export function advancedTabControllers(element) {
 
   element.addControl('conditional_disabled_permissions', {
     type: CONTROLLER_SELECT2,
-    label: 'Allowed for Permissions',
+    label: 'User has Permissions',
     conditions: {
-      'conditional_display_choose' : 'auth',
+      'conditional_disabled_choose' : 'auth',
     },
     options_resource: '/admin/ajax/permissions_options',
     isMulti: true,

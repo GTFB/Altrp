@@ -32,6 +32,9 @@ import ResponsiveDdMenu from "./js/components/ResponsiveDdMenu";
 import ResponsiveDdFooter from "./js/components/ResponsiveDdFooter";
 import DialogWindow from "./js/components/DialogWindow";
 import {renderAsset} from "../../front-app/src/js/helpers";
+import {changeCurrentUser} from "../../front-app/src/js/store/current-user/actions";
+import Resource from "./js/classes/Resource";
+import appStore from "../../front-app/src/js/store/store";
 /**
  * Главный класс редактора.<br/>
  * Реакт-Компонент.<br/>
@@ -137,8 +140,12 @@ class Editor extends Component {
    * Вызывается после загрузки компонента
    * @see {@link https://ru.reactjs.org/docs/react-component.html#componentdidmount}
    * */
-  componentDidMount() {
+  async componentDidMount() {
     this.initModules();
+
+    let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
+    currentUser = currentUser.data;
+    appStore.dispatch(changeCurrentUser(currentUser));
   }
 
   /**

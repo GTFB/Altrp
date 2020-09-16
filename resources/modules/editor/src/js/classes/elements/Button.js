@@ -278,6 +278,17 @@ class Button extends BaseElement{
       default: ''
     });
 
+    this.addControl('position_opacity', {
+      type: CONTROLLER_SLIDER,
+      label: 'Opacity',
+      step: 0.01,
+      min: 0,
+      max: 1,
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'opacity: {{SIZE}};'
+      },
+    });
+
     this.endControlSection();
 
     this.startControlSection('font_section', {

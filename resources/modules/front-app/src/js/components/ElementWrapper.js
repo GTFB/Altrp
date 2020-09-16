@@ -7,6 +7,7 @@ class ElementWrapper extends Component {
     super(props);
     this.state = {
       currentModel: appStore.getState().currentModel,
+      currentUser: appStore.getState().currentUser,
       formsStore: appStore.getState().formsStore,
     };
     appStore.subscribe(this.updateStore)
@@ -32,6 +33,9 @@ class ElementWrapper extends Component {
   updateStore = () => {
     if(this.state.currentModel !== appStore.getState().currentModel){
       this.setState(state => ({...state, currentModel: appStore.getState().currentModel}));
+    }
+    if(this.state.currentUser !== appStore.getState().currentUser){
+      this.setState(state => ({...state, currentModel: appStore.getState().currentUser}));
     }
 
     if((this.props.element.getName() === 'input') && this.state.formsStore !== appStore.getState().formsStore){
@@ -91,6 +95,7 @@ class ElementWrapper extends Component {
           children: this.props.element.getChildren(),
           match: this.props.match,
           currentModel: this.state.currentModel,
+          currentUser: this.state.currentUser,
           formsStore: this.state.formsStore,
           appStore
         })

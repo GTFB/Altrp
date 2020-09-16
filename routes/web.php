@@ -52,6 +52,9 @@ Route::get( '/admin/editor-reports', function (){
 
 Route::get('/reports/html/{id}', "ReportsController@page");
 
+/**
+ * Роуты Админки
+ */
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 
@@ -324,6 +327,11 @@ foreach ( $frontend_routes as $frontend_route ) {
 
 Route::group( ['prefix' => 'ajax'], function(){
 
+  /**
+   * Роут текущий пользователь
+   */
+  Route::get( 'current-user', "Users\Users@getCurrentUser" )->name( 'users.current-user' );
+  
   // Отдает данные для виджета карты
   Route::get('maps/{id}', 'MapsController@index');
 
@@ -387,7 +395,13 @@ Route::get('/linkstorage', function () {
   return redirect('/admin');
 });
 
+/**
+ * Роуты для зарегистрированных пользователей
+ */
+Route::group( ['prefix' => 'ajax', 'middleware' => 'auth'], function() {
 
+
+} );
 /**
  * Обновление всех ресурсов бэкенда
  */
