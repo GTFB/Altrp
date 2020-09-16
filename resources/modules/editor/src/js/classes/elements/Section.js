@@ -83,6 +83,50 @@ class Section extends BaseElement{
       }
     );
 
+    this.addControl(
+      'layout_align_content', {
+      type: CONTROLLER_SELECT,
+      label: 'Align Content',
+      options: [
+        {
+          'value': 'baseline',
+          'label': 'baseline'
+        },
+        {
+          'value': 'center',
+          'label': 'center'
+        },
+        {
+          'value': 'flex-start',
+          'label': 'flex-start'
+        },
+        {
+          'value': 'flex-end',
+          'label': 'flex-end'
+        },
+        {
+          'value': 'space-around',
+          'label': 'space-around'
+        },
+        {
+          'value': 'space-between',
+          'label': 'space-between'
+        },
+        {
+          'value': 'space-evenly',
+          'label': 'space-evenly'
+        },
+        {
+          'value': 'unset',
+          'label': 'unset'
+        },
+      ],
+      rules: {
+        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "align-content: {{VALUE}}",
+      },
+    }
+    );
+
     // this.addControl("layout_content_full_width", {
     //   type: CONTROLLER_SLIDER,
     //   label: "full fill width",
