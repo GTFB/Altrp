@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Constructor\Template;
 use App\Constructor\TemplateSetting;
+use App\PagesTemplate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
@@ -376,7 +377,7 @@ class TemplateController extends Controller
    */
   public function conditionsGet( $template_id, Request $request ){
 
-    $data = [];
+    $data = Template::find( $template_id )->getTemplateConditions();
 
     return response()->json( [
       'success' => true,
@@ -391,11 +392,73 @@ class TemplateController extends Controller
    */
   public function conditionsSet( $template_id, Request $request ){
 
-    $data = [];
+    /**
+     * Сначала сохраним сами настройки
+     */
+    $setting = TemplateSetting::where( [
+      'template_id' => $template_id,
+      'setting_name' => 'conditions',
+    ] )->first();
+    if( ! $setting ){
+      $setting = new TemplateSetting( [
+        'template_id' => $template_id,
+        'setting_name' => 'conditions',
+        'data' => $request->get( 'data' ),
+      ] );
+    } else {
+      $setting->data = $request->get( 'data' );
+    }
 
-    return response()->json( [
-      'success' => true,
-      'data' => $data,
-    ], 200, [], JSON_UNESCAPED_UNICODE );
+    if( ! $setting->save() ){
+      return response()->json( ['message' => 'Conditions not Saved'], 500, [], JSON_UNESCAPED_UNICODE );
+    }
+    $template = Template::find( $template_id );
+    /**
+     * Обновим/добавим необходимые данные в БД
+     */
+
+    if( $template ){
+      $template->all_site = false;
+      if( ! $template->save() ){
+        return response()->json( ['message' => 'Conditions "all_site" not Saved'],
+          500,
+          [],
+          JSON_UNESCAPED_UNICODE );
+      }
+      $template->pages()->detach();
+      foreach ( $request->get( 'data' ) as $datum ) {
+
+        switch ($datum['object_type']) {
+          case 'all_site';{
+            $template->all_site = $datum['condition_type'] !== 'exclude';
+            if( ! $template->save() ){
+              return response()->json( ['message' => 'Conditions "all_site" not Saved'],
+                500,
+                [],
+                JSON_UNESCAPED_UNICODE );
+            }
+          }
+            break;
+          case 'page';{
+            foreach ( $datum['object_ids'] as $id ) {
+              $pages_template = new PagesTemplate([
+                'page_id' => $id,
+                'template_id' => $template_id,
+                'condition_type' => $datum['condition_type'],
+                'template_type' => $template->template_type
+              ]);
+            }
+            if( ! $pages_template->save() ){
+              return response()->json( ['message' => 'Conditions "page" not Saved'],
+                500,
+                [],
+                JSON_UNESCAPED_UNICODE );
+            }          }
+            break;
+
+        }
+      }
+    }
+    return response()->json( ['success' => true], 200, [], JSON_UNESCAPED_UNICODE );
   }
 }

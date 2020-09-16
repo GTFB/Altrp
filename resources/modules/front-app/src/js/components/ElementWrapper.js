@@ -1,13 +1,16 @@
 import React, {Component} from "react";
 import { withRouter } from "react-router-dom";
 import appStore from "../store/store"
+import {conditionsChecker} from "../helpers";
 
 class ElementWrapper extends Component {
   constructor(props){
     super(props);
     this.state = {
       currentModel: appStore.getState().currentModel,
+      currentUser: appStore.getState().currentUser,
       formsStore: appStore.getState().formsStore,
+      elementDisplay: true,
     };
     appStore.subscribe(this.updateStore)
   }
@@ -33,6 +36,9 @@ class ElementWrapper extends Component {
     if(this.state.currentModel !== appStore.getState().currentModel){
       this.setState(state => ({...state, currentModel: appStore.getState().currentModel}));
     }
+    if(this.state.currentUser !== appStore.getState().currentUser){
+      this.setState(state => ({...state, currentModel: appStore.getState().currentUser}));
+    }
 
     if((this.props.element.getName() === 'input') && this.state.formsStore !== appStore.getState().formsStore){
       // console.log(this.state.formsStore);
@@ -40,6 +46,37 @@ class ElementWrapper extends Component {
       this.setState(state => ({...state, formsStore: appStore.getState().formsStore}));
     }
   };
+
+  /**
+   * Нужно ли обновить отображение обертки элементов
+   */
+  componentDidUpdate(){
+    this.checkElementDisplay();
+  }
+
+  /**
+   * Проверка видимости элемента
+   */
+  checkElementDisplay(){
+    /**
+     * @member {FrontElement} element
+     */
+    const {element} = this.props;
+    if(! element.getSettings('conditional_other')){
+      return;
+    }
+    let conditions = element.getSettings('conditions',[]);
+    // console.log(this.state.currentModel);
+    let elementDisplay = conditionsChecker(conditions,
+        element.getSettings('conditional_other_display') === 'AND',
+        this.state.currentModel);
+    if(this.state.elementDisplay === elementDisplay){
+      return;
+    }
+    this.setState(({
+      elementDisplay
+    }));
+  }
 
   render() {
     const { 
@@ -84,13 +121,18 @@ class ElementWrapper extends Component {
         </details>
       </div>
     }
-    return <div className={classes}>
+    const styles = {};
+    if(! this.state.elementDisplay){
+      styles.display = 'none';
+    }
+    return <div className={classes} style={styles}>
       {
         React.createElement(this.props.component, {
           element: this.props.element,
           children: this.props.element.getChildren(),
           match: this.props.match,
           currentModel: this.state.currentModel,
+          currentUser: this.state.currentUser,
           formsStore: this.state.formsStore,
           appStore
         })

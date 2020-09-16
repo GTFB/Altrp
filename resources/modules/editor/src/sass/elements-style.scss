@@ -65,7 +65,7 @@
     margin: 0 auto;
   }
   &.altrp-section--full-width, &.altrp-section--boxed {
-    width: calc(100vw - 20px);
+    width: 100vw;
   }
 }
 
@@ -168,6 +168,10 @@
 
 .altrp-table-th_sort {
   padding: 0;
+  margin-left: 10px;
+}
+
+.altrp-table-th .sort-icon {
   margin-left: 10px;
 }
 
@@ -576,6 +580,32 @@
 }
 
 // background меню селекта
-.css-tl8qiy-Menu {
+.css-tl8qiy-Menu, .css-l1wtd9-Menu {
   background-color: white;
+}
+
+// уменьшил минимальную высоту select2
+.altrp-field-select2__indicator.altrp-field-select2__dropdown-indicator {
+  padding: 0 8px;
+  max-height: 14px;
+  overflow: hidden;
+}
+
+.altrp-field-select2 {
+  .altrp-field-select2__value-container {
+    padding: 0px 8px;
+  }
+
+  .css-b8ldur-Input {
+    padding-bottom: 0px;
+    padding-top: 0px;
+    margin: 0 2px;
+  }
+
+  .altrp-field-select2__control {
+    min-height: 14px;
+  }
+}
+.state-disabled{
+  pointer-events: none;
 }

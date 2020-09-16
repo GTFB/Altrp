@@ -20,6 +20,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\ApiRequest;
+use Illuminate\Support\Collection;
 
 
 class ModelsController extends HttpController
@@ -538,10 +539,24 @@ class ModelsController extends HttpController
             $result = $field->save();
         } else {
             $accessor = new Accessor($request->all());
-            $accessor->calculation_logic = json_encode($accessor->calculation_logic);
+            if ($request->has('calculation_logic'))
+                $accessor->calculation_logic = json_encode($accessor->calculation_logic);
             $accessor->user_id = auth()->user()->id;
             $accessor->model_id = $model->id;
             $result = $accessor->save();
+
+            $field = new Column([
+                'name' => $request->name,
+                'title' => $request->title,
+                'description' => $request->description,
+                'type' => $request->type,
+            ]);
+            $field->user_id = auth()->user()->id;
+            $field->table_id = $model->altrp_table->id;
+            $field->model_id = $model->id;
+            Column::withoutEvents(function () use ($field) {
+                $field->save();
+            });
         }
 
         if ($result) {
@@ -565,11 +580,24 @@ class ModelsController extends HttpController
     {
         $data = $request->all();
 
-        if ($request->get('type') !== 'calculated')
-            $field = Column::where([['model_id', $model_id], ['id', $field_id]])->first();
-        else {
-            $field = Accessor::where([['model_id', $model_id], ['id', $field_id]])->first();
-            $data['calculation_logic'] = json_encode($data['calculation_logic']);
+        /**
+         * @var $field Column
+         */
+        $field = Column::where([['model_id', $model_id], ['id', $field_id]])->first();
+
+        if ($field->getOriginal() == 'calculated' && $field->getOriginal() != $data['type']) {
+            $accessor = Accessor::where([['model_id', $model_id], ['name', $field->name]])->first();
+            $accessor->delete();
+        }
+
+        if ($data['type'] === 'calculated') {
+            $field = Accessor::where([['model_id', $model_id], ['name', $field->name]])->first();
+            if (isset($data['calculation_logic'])) {
+                $data['calculation_logic'] = json_encode($data['calculation_logic']);
+                $data['calculation'] = null;
+            } else {
+                $data['calculation_logic'] = null;
+            }
         }
 
         if (! $field) {
@@ -607,6 +635,15 @@ class ModelsController extends HttpController
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $field = Column::where([['id', $field_id]])->first();
+        $column = $field;
+
+        if ($field->type === 'calculated') {
+            $field = Accessor::where([['model_id',$model_id],['name',$field->name]])->first();
+            $field->type = $column->type;
+            if (!$field->calculation) $field->calculation = '';
+            if (!$field->calculation_logic) $field->calculation_logic = [];
+        }
+
         if ($field) {
             return response()->json($field, 200, [], JSON_UNESCAPED_UNICODE);
         }
@@ -639,7 +676,16 @@ class ModelsController extends HttpController
                 'message' => 'Field not found'
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
-        $result = $field->delete();
+        if ($field->type !== 'calculated') {
+            $result = $field->delete();
+        } else {
+            Column::withoutEvents(function () use ($field) {
+                $field->delete();
+            });
+            $accessor = Accessor::where([['model_id', $model_id], ['name', $field->name]])->first();
+            $result = $accessor->delete();
+        }
+
         if ($result) {
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }

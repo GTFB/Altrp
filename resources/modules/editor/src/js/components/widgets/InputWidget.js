@@ -4,6 +4,7 @@ import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
+import { cutString, sortOptions } from "../../helpers";
 import {connect} from "react-redux";
 
 class InputWidget extends Component {
@@ -69,8 +70,7 @@ class InputWidget extends Component {
 
       this.dispatchFieldValueToStore(this.getContent('content_default_value'));
     }
-    console.log(this.getContent('content_default_value'));
-    console.log(this.props.formsStore);
+
     /**
      * Если обновилось хранилище данных формы или модель, то получаем новые опции
      */
@@ -242,6 +242,7 @@ class InputWidget extends Component {
                         id={this.state.settings.position_css_id}
                         className={"altrp-field " + this.state.settings.position_css_classes}>
           {this.state.settings.content_options_nullable ? <option value=""/> : ''}
+
           {
             options.map(option=>{
               return <option value={option.value} key={option.value}>{option.label}</option>

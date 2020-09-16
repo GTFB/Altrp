@@ -119,7 +119,7 @@ trait UserColumnsTrait
 
   /**
    * Обновление с учетом связанных моделей
-   * @param array $values
+   * @param array $attributes
    * @param array $options
    * @return boolean
    */
@@ -129,7 +129,10 @@ trait UserColumnsTrait
       return $result;
     }
     $with_values = [];
-    foreach ( $this->with as $with_relation_name ) {
+    if( ! isset( $this->altrp_with ) ){
+      return true;
+    }
+    foreach ( $this->altrp_with as $with_relation_name ) {
       foreach ( $attributes as $key => $value ) {
         $name_pairs = explode( '.', $key );
         if( ( count( $name_pairs ) === 2 ) && $name_pairs[0] === $with_relation_name ){

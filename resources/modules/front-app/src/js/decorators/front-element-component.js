@@ -23,6 +23,33 @@ function componentWillUnmount(){
 }
 
 /**
+ * Вернуть класс активного/неактивного состояния
+ */
+function classStateDisabled(){
+  let conditional_disabled_choose = this.props.element.getSettings('conditional_disabled_choose');
+  if(conditional_disabled_choose){
+    switch(conditional_disabled_choose){
+      case 'guest':{
+        if(this.props.currentUser.isGuest()){
+          return ' state-disabled ';
+        }
+      }
+      break;
+      case 'auth':{
+        if(this.props.currentUser.checkUserAllowed(
+            this.props.element.getSettings('conditional_disabled_permissions'),
+            this.props.element.getSettings('conditional_disabled_roles')
+        )){
+          return ' state-disabled ';
+        }
+      }
+      break;
+    }
+  }
+
+  return ' '
+}
+/**
  * обновить данные модели
  */
 function updateModelData (modelData) {
@@ -130,4 +157,5 @@ export default function frontDecorate(component) {
   component.getContent = getContent.bind(component);
   component.getModelId = getModelId.bind(component);
   component.updateModelData = updateModelData.bind(component);
+  component.classStateDisabled = classStateDisabled.bind(component);
 }

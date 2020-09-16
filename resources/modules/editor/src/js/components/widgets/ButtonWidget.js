@@ -93,7 +93,7 @@ class ButtonWidget extends Component {
       // console.log(link_link.url);
       url = parseURLTemplate(link_link.url || '', this.props.currentModel.getData());
     }
-
+    classes += this.classStateDisabled();
     let button = (
       <button
         onClick={link_link.toPrevPage && !isEditor() ? goBack : this.onClick}
