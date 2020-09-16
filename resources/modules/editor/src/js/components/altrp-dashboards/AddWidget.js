@@ -52,6 +52,11 @@ const AddWidget = ({ id, onAdd, setIsShow, sources }) => {
     }
   };
 
+  const getTypesBySource = (s) => {
+    const source = sources.find((item) => s === `/ajax/models/queries/${item.model}/${item.value}`);
+    return source?.types?.map((type) => type.value) || [];
+  };
+
   return (
     <Card>
       <Card.Header>
@@ -71,14 +76,6 @@ const AddWidget = ({ id, onAdd, setIsShow, sources }) => {
             />
           </Form.Group>
 
-          <TypeField
-            widget={widget}
-            setWidget={setWidget}
-            allowedTypes={[BAR, PIE, DONUT, TABLE]}
-          />
-
-          <ColorSchemeField widget={widget} setWidget={setWidget} />
-
           <SourceField
             widget={widget}
             setWidget={setWidget}
@@ -86,6 +83,14 @@ const AddWidget = ({ id, onAdd, setIsShow, sources }) => {
               return { name: item.label, url: `/ajax/models/queries/${item.model}/${item.value}` };
             })}
           />
+
+          <TypeField
+            widget={widget}
+            setWidget={setWidget}
+            allowedTypes={getTypesBySource(widget.source)}
+          />
+
+          <ColorSchemeField widget={widget} setWidget={setWidget} />
 
           <LegendField widget={widget} setWidget={setWidget} />
         </Form>

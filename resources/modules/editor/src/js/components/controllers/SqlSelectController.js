@@ -65,8 +65,6 @@ const SqlSelectController = ({ controller, controlId, label }) => {
     return "";
   }
 
-  console.log("value :>> ", settings);
-
   return (
     <div className="controller-container controller-container_query">
       <div className="controller-field-group flex-wrap">

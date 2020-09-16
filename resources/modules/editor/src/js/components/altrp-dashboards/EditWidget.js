@@ -3,8 +3,6 @@ import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 
-import { BAR, PIE, TABLE, DONUT } from "../../../../../admin/src/components/dashboard/widgetTypes";
-
 import WidgetDiagram from "../../../../../admin/src/components/dashboard/WidgetDiagram";
 import TypeField from "./fields/TypeField";
 import LegendField from "./fields/LegendField";
@@ -24,6 +22,11 @@ const EditWidget = ({ data, onEdited, setIsEdit, sources }) => {
     setIsEdit(false);
   };
 
+  const getTypesBySource = (s) => {
+    const source = sources.find((item) => s === `/ajax/models/queries/${item.model}/${item.value}`);
+    return source?.types?.map((type) => type.value) || [];
+  };
+
   return (
     <Card>
       <Card.Header>
@@ -36,14 +39,6 @@ const EditWidget = ({ data, onEdited, setIsEdit, sources }) => {
             <Form.Control type="text" ref={title} defaultValue={widget.title} required />
           </Form.Group>
 
-          <TypeField
-            widget={widget}
-            setWidget={setWidget}
-            allowedTypes={[BAR, PIE, DONUT, TABLE]}
-          />
-
-          <ColorSchemeField widget={widget} setWidget={setWidget} />
-
           <SourceField
             widget={widget}
             setWidget={setWidget}
@@ -51,6 +46,14 @@ const EditWidget = ({ data, onEdited, setIsEdit, sources }) => {
               return { name: item.label, url: `/ajax/models/queries/${item.model}/${item.value}` };
             })}
           />
+
+          <TypeField
+            widget={widget}
+            setWidget={setWidget}
+            allowedTypes={getTypesBySource(widget.source)}
+          />
+
+          <ColorSchemeField widget={widget} setWidget={setWidget} />
 
           <LegendField widget={widget} setWidget={setWidget} />
         </Form>
