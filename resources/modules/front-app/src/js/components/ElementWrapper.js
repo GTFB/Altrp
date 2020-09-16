@@ -67,6 +67,18 @@ class ElementWrapper extends Component {
     }
     let conditions = element.getSettings('conditions',[]);
     // console.log(this.state.currentModel);
+    conditions = conditions.map(c=>{
+      const {
+        conditional_model_field: modelField,
+        conditional_other_operator: operator,
+        conditional_other_condition_value: value,
+      } = c;
+      return {
+        modelField,
+        operator,
+        value,
+      };
+    });
     let elementDisplay = conditionsChecker(conditions,
         element.getSettings('conditional_other_display') === 'AND',
         this.state.currentModel);

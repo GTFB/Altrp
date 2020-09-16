@@ -473,6 +473,98 @@ export function advancedTabControllers(element) {
     isClearable: true,
   });
 
+  element.addControl('disabled_conditional_other', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Other Conditions',
+    default: false,
+  });
+
+  element.addControl('disabled_conditional_other_display', {
+    type: CONTROLLER_SELECT,
+    label: 'Display on',
+    responsive: false,
+    options: [
+      {
+        label: 'All Conditions Met',
+        value: 'AND',
+      },
+      {
+        label: 'Any Condition Met',
+        value: 'OR',
+      },
+    ],
+    default: 'AND',
+    conditions: {
+      'disabled_conditional_other': true,
+    },
+  });
+
+  const disabledModelRepeater = new Repeater();
+
+  disabledModelRepeater.addControl('conditional_model_field', {
+    responsive: false,
+    label: 'Model Field',
+  });
+
+  disabledModelRepeater.addControl('conditional_other_operator', {
+    type: CONTROLLER_SELECT,
+    responsive: false,
+    default: 'empty',
+    options: [
+      {
+        value: 'empty',
+        label: 'Empty',
+      },
+      {
+        value: 'not_empty',
+        label: 'Not Empty',
+      },
+      {
+        value: '==',
+        label: 'Equals',
+      },
+      {
+        value: '<>',
+        label: 'Not Equals',
+      },
+      {
+        value: 'between',
+        label: 'Between',
+      },
+      {
+        value: '>',
+        label: '>',
+      },
+      {
+        value: '>=',
+        label: '>=',
+      },
+      {
+        value: '<',
+        label: '<',
+      },
+      {
+        value: '<=',
+        label: '<=',
+      },
+    ]
+  });
+
+  disabledModelRepeater.addControl('disabled_conditional_other_condition_value', {
+    responsive: false,
+  });
+
+  element.addControl('disabled_conditions', {
+    label: 'Conditions',
+    type: CONTROLLER_REPEATER,
+    fields: disabledModelRepeater.getControls(),
+    default: [
+    ],
+    conditions: {
+      'disabled_conditional_other': true,
+    },
+  });
+
   element.endControlSection();
 
   element.startControlSection(

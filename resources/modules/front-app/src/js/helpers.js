@@ -213,20 +213,10 @@ export function conditionsChecker(conditions = [], AND = true, model){
   }
   let result = AND;
   _.each(conditions, c =>{
-    const {
-      conditional_model_field: modelField,
-      conditional_other_operator: operator,
-      conditional_other_condition_value: value,
-    } = c;
-    const condition = {
-      modelField,
-      operator,
-      value,
-    };
     if(AND){
-      result *= _conditionChecker(condition, model);
+      result *= _conditionChecker(c, model);
     } else {
-      result += _conditionChecker(condition, model);
+      result += _conditionChecker(c, model);
     }
   });
   return result;

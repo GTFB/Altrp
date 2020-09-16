@@ -1,4 +1,5 @@
 import modelManager from "../../../../editor/src/js/classes/modules/ModelsManager";
+import {conditionsChecker} from "../helpers";
 
 /**
  * Срабатываает перед удалением компонента элемента
@@ -26,19 +27,20 @@ function componentWillUnmount(){
  * Вернуть класс активного/неактивного состояния
  */
 function classStateDisabled(){
-  let conditional_disabled_choose = this.props.element.getSettings('conditional_disabled_choose');
+  const { element, currentModel, currentUser } = this.props;
+  let conditional_disabled_choose = element.getSettings('conditional_disabled_choose');
   if(conditional_disabled_choose){
     switch(conditional_disabled_choose){
       case 'guest':{
-        if(this.props.currentUser.isGuest()){
+        if(currentUser.isGuest()){
           return ' state-disabled ';
         }
       }
       break;
       case 'auth':{
-        if(this.props.currentUser.checkUserAllowed(
-            this.props.element.getSettings('conditional_disabled_permissions'),
-            this.props.element.getSettings('conditional_disabled_roles')
+        if(currentUser.checkUserAllowed(
+            element.getSettings('conditional_disabled_permissions'),
+            element.getSettings('conditional_disabled_roles')
         )){
           return ' state-disabled ';
         }
@@ -46,7 +48,27 @@ function classStateDisabled(){
       break;
     }
   }
+  let conditions = element.getSettings('disabled_conditions',[]);
+  conditions = conditions.map(c=>{
+    const {
+      conditional_model_field: modelField,
+      conditional_other_operator: operator,
+      conditional_other_condition_value: value,
+    } = c;
+    return {
+      modelField,
+      operator,
+      value,
+    };
+  });
+  if(element.getSettings('disabled_conditional_other', false)) {
 
+    if (conditionsChecker(conditions,
+        element.getSettings('disabled_conditional_other_display') === 'AND',
+        currentModel)) {
+      return ' state-disabled ';
+    }
+  }
   return ' '
 }
 /**
