@@ -27,6 +27,13 @@ class DummyClass extends {{extendsModel}}
      */
     protected $fillable = {{fillable}};
 
+    /**
+     * Relations that should be always with.
+     *
+     * @var array
+     */
+    protected $altrp_with = {{always_with}};
+
     // CUSTOM_PROPERTIES_BEGIN - IMPORTANT: Don't remove this comment! Write your properties between these comments.
     {{customProperties}}
     // CUSTOM_PROPERTIES_END - IMPORTANT: Don't remove this comment! Write your properties between these comments.
