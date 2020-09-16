@@ -16,6 +16,8 @@ import AccordionWidget from '../../../../editor/src/js/components/widgets/Accord
 import CarouselWidget from '../../../../editor/src/js/components/widgets/CarouselWidget';
 import MapWidget from '../../../../editor/src/js/components/widgets/MapWidget';
 import DiagramWidget from "../../../../editor/src/js/components/widgets/DiagramWidget";
+import Dashboards from "../../../../editor/src/js/classes/elements/Dashboards";
+import DashboardsWidget from "../../../../editor/src/js/components/widgets/DashboardsWidget";
 
 
 export default class FrontElementsManager {
@@ -40,7 +42,7 @@ export default class FrontElementsManager {
     this.components['carousel'] = CarouselWidget;
     this.components['map'] = MapWidget;
     this.components['diagram'] = DiagramWidget;
-    // this.components['diagram'] = DiagramWidget;
+    this.components['dashboards'] = DashboardsWidget;
 
   }
 

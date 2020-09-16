@@ -17,9 +17,10 @@ const SqlSelectController = ({ controller, controlId, label }) => {
       if (req.status === 200) {
         setOptions(
           req.data.map((item) => {
+            console.log(item);
             return {
               value: item.name,
-              label: item.description,
+              label: item.title,
               model: item.model,
             };
           })
@@ -84,7 +85,7 @@ const SqlSelectController = ({ controller, controlId, label }) => {
       <div className="controller-field-group flex-wrap">
         <div className="controller-container__label">Assign types to queries</div>
         <div className="control-container_select-wrapper assigning-types">
-          {settings.map((source, key) => (
+          {settings && settings.map((source, key) => (
             <div className="assigning-types__item" key={key}>
               {source.label}
               <Select

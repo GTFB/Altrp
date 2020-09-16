@@ -14,7 +14,7 @@ const DynamicPieChart = ({ widget, width = 300, height = 300 }) => {
     setIsLoading(true);
     const charts = await getWidgetData(widget.source, widget.filter);
     if (charts.status === 200) {
-      setData(charts.data.data);
+      setData(charts.data.data || []);
       setIsLoading(false);
     }
   }, [widget]);
@@ -25,7 +25,7 @@ const DynamicPieChart = ({ widget, width = 300, height = 300 }) => {
 
   if (isLoading) return <Spinner />;
 
-  if (data.length === 0) return <EmptyWidget />;
+  if ((! data) || data.length === 0) return <EmptyWidget />;
 
   // Формируем легенду
   const entries = data.map((item, i) => {
