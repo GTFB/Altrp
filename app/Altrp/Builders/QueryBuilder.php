@@ -45,6 +45,9 @@ class QueryBuilder
      */
     protected $model;
 
+    /**
+     * @var string
+     */
     protected $table;
 
     /**
@@ -893,7 +896,6 @@ class QueryBuilder
             $targetTableName = $targetTable->name;
             $targetColumn = $targetTable->columns->firstWhere('id',$join['target_column'])->name;
             $sourceTableName = $this->model->altrp_table->name;
-//            $sourceColumn = $this->model->altrp_table->columns->firstWhere('id',$join['source_column'])->name;
             $sourceColumn = $join['source_column'];
             $operator = $join['operator'];
 

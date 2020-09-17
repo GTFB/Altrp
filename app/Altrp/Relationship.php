@@ -91,12 +91,12 @@ class Relationship extends EloquentModel
 
     public function altrp_model()
     {
-        return $this->belongsTo(Model::class, 'model_id');
+        return $this->belongsTo(\App\Altrp\Model::class, 'model_id');
     }
 
     public function altrp_target_model()
     {
-        return $this->belongsTo(Model::class, 'target_model_id');
+        return $this->belongsTo(\App\Altrp\Model::class, 'target_model_id');
     }
 
     public static function getBySearch($search, $modelId)
@@ -191,34 +191,34 @@ class Relationship extends EloquentModel
 
         return true;
     }
-    
+
     /**
      * Получаем обратную связь
      */
     public function getInverseRelationship() {
-        
+
         $conditions = [
             ["target_model_id","=",$this->model_id],
             ["model_id","=",$this->target_model_id],
             ["foreign_key","=",$this->local_key],
             ["local_key","=",$this->foreign_key],
         ];
-        
+
         if($this->type === "hasOne") {
             $conditions[] = ["type","=","belongsTo"];
         }
-        
+
         if($this->type === "hasMany") {
             $conditions[] = ["type","=","belongsTo"];
-            
+
         }
-        
+
         $result = Relationship::where($conditions);
-        
+
         if($this->type === "belongsTo") {
             $result->whereIn('type', ["hasOne", "hasMany"]);
         }
-        
+
         return $result->first();
     }
 }

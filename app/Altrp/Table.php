@@ -31,6 +31,11 @@ class Table extends Model
         return $this->hasMany('App\Altrp\Column');
     }
 
+    public function onlyColumns()
+    {
+        return $this->columns()->where('type','!=','calculated')->get('*');
+    }
+
     public function models()
     {
         return $this->hasMany('App\Altrp\Model');
