@@ -3,6 +3,7 @@ import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import 'react-tabs/style/react-tabs.scss';
 import Updates from "./Updates";
 import StylesSettings from "./StylesSettings";
+import Import from "./settings/Import";
 const AdvancedSettings = React.lazy(()=>import('./AdvancedSettings'));
 
 
@@ -46,6 +47,9 @@ export default class AdminSettings extends Component {
             </Tab>
             <Tab >
               UPDATES
+            </Tab>
+            <Tab >
+              IMPORT
             </Tab>
           </TabList>
           <TabPanel>
@@ -103,6 +107,9 @@ export default class AdminSettings extends Component {
           </TabPanel>
           <TabPanel>
             <Updates attr={'attr'}/>
+          </TabPanel>
+          <TabPanel>
+            <Import />
           </TabPanel>
         </Tabs>
       </div>
