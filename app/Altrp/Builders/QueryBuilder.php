@@ -128,7 +128,7 @@ class QueryBuilder
             if (is_array($item)) $queryBody[] = implode($this->threeTabs, $item);
             else $queryBody[] = $item;
         }
-        $queryBody[] = "->get();\n{$this->twoTabs}return \$model;\n";
+        $queryBody[] = "\$model = \$model->get();\n{$this->twoTabs}return \$model;\n";
         $methodBody = "\n\n{$this->tabIndent}public function " . $this->getMethodName() . "()\n{$this->tabIndent}{\n"
         . "{$this->tabIndent}{$this->tabIndent}\$model = \$this->model();\n"
         . implode("{$this->twoTabs}",$queryBody) . $this->tabIndent . "}";
@@ -663,7 +663,7 @@ class QueryBuilder
         $eol = (count($relations) > 1) ? "\n" : null;
         $tab = (count($relations) > 1) ? "{$this->tabIndent}" : null;
         $this->queryBody->relations = "\$model = \$model->with([$eol$tab$tab$tab$tab'"
-            . implode("',$eol$tab$tab$tab$tab'", $relations) . "'$eol$tab$tab$tab])\n";
+            . implode("',$eol$tab$tab$tab$tab'", $relations) . "'$eol$tab$tab$tab]);\n";
         return $this;
     }
 
@@ -832,7 +832,7 @@ class QueryBuilder
         foreach ($orders as $order) {
             $ordersList[] = "orderBy('{$order['column']}', '{$order['type']}')";
         }
-        $this->queryBody->orders = "\$model = \$model" . '->' . implode("\n{$this->threeTabs}->", $ordersList) . "\n";
+        $this->queryBody->orders = "\$model = \$model" . '->' . implode("\n{$this->threeTabs}->", $ordersList) . ";\n";
         return $this;
     }
 

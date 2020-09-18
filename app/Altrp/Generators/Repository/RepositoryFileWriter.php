@@ -103,7 +103,7 @@ class RepositoryFileWriter
                     $line = $line - 1;
                 }
                 for ($i = $line; true; $i++) {
-                    if (preg_match('/^ {4}}$|^ {2}}$|^\t}$/', $contentRepo[$i])) {
+                    if (preg_match('/^ {4}}( *)$|^ {2}}( *)$|^\t}( *)$/', $contentRepo[$i])) {
                         unset($contentRepo[$i]);
                         break;
                     }

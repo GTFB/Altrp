@@ -8,6 +8,7 @@ use App\Altrp\Column;
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
 use App\Altrp\Generators\ModelGenerator;
+use App\Altrp\Generators\RouteGenerator;
 use App\Altrp\Generators\TableMigrationGenerator;
 use App\Altrp\Migration;
 use App\Altrp\Model;
@@ -168,8 +169,11 @@ class AltrpModelObserver
         if (! $generator->writeSourcePermissions($model)) {
             throw new ModelNotWrittenException('Failed to write source permissions to the database', 500);
         }
-        if (! $generator->generateRoutes($model)) {
+        if (! $generator->generateRoutes($controller->model, new RouteGenerator($controller))) {
             throw new RouteGenerateFailedException('Failed to generate routes', 500);
+        }
+        if (! $generator->generateRoutes($controller->model, new RouteGenerator($controller, 'AltrpApiRoutes'), true)) {
+            throw new RouteGenerateFailedException('Failed to generate api routes', 500);
         }
 
         if (!$model->parent_model_id && ($model->time_stamps != $model->getOriginal('time_stamps')
