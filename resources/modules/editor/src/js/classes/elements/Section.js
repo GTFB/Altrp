@@ -477,7 +477,7 @@ class Section extends BaseElement{
       label: 'Background Position',
       default: 'top left',
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}}": "background-position: {{VALUE}};"
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-position: {{VALUE}};"
       }
     });
 
@@ -500,7 +500,7 @@ class Section extends BaseElement{
       label: 'Background Attachment',
       default: 'scroll',
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}}": "background-attachment: {{VALUE}};"
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-attachment: {{VALUE}};"
       }
     });
 
@@ -535,7 +535,7 @@ class Section extends BaseElement{
       label: 'Background Repeat',
       default: 'repeat',
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}}": "background-repeat: {{VALUE}};"
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-repeat: {{VALUE}};"
       }
     });
 
@@ -557,7 +557,7 @@ class Section extends BaseElement{
       max: 1000,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
       }
     });
 
@@ -584,8 +584,13 @@ class Section extends BaseElement{
       label: 'Background Size',
       default: 'unset',
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}}": "background-size: {{VALUE}};"
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
       }
+    });
+
+    this.addControl('isScrollEffect', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Scroll Effects',
     });
 
     this.endControlSection();
