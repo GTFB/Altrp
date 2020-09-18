@@ -299,13 +299,16 @@ class Image extends BaseElement{
     this.addControl('image_style_text_shadow', {
         type: CONTROLLER_FILTERS,
         label: 'filters',
+        default: {
+          blur: 0,
+          brightness: 100,
+          contrast: 100,
+          saturate: 100,
+          hue: 0,
+        },
         rules: {
           '{{ELEMENT}} .altrp-image{{STATE}}': [
-            'filter: blur({{BLUR}}px);',
-            'filter: brightness({{BRIGHTNESS}}%);',
-            'filter: contrast({{CONTRAST}}%);',
-            'filter: saturate({{SATURATION}}%);',
-            'filter: hue-rotate({{HUE}}deg);;'
+            'filter: blur({{BLUR}}px)  brightness({{BRIGHTNESS}}%) contrast({{CONTRAST}}%) saturate({{SATURATE}}%) hue-rotate({{HUE}}deg);'
         ],
         },
       }
