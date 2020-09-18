@@ -10,7 +10,9 @@ class PagesTemplate extends Model
     //
   protected $fillable = [
     'page_id',
+    'page_guid',
     'template_id',
+    'template_guid',
     'template_type',
     'condition_type',
   ];

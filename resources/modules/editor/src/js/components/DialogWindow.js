@@ -12,7 +12,7 @@ class DialogWindow extends Component {
     let tabs = [
       { icon: 'conditions_tab', title: 'Conditions', desc: 'Apply current template to these pages' },
     ];
-    if(['footer', 'header'].indexOf(this.props.templateData.template_type) >= 0){
+    if(['popup'].indexOf(this.props.templateData.template_type) >= 0){
       tabs = [
         { icon: 'conditions_tab', title: 'Conditions', desc: 'Apply current template to these pages' },
         { icon: 'triggers_tab', title: 'Triggers', desc: 'What action the user needs to do for the popup to open.' },
