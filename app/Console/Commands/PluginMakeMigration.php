@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -32,23 +33,22 @@ class PluginMakeMigration extends Command
 
     public function handle()
     {
-          $pluginName = $this->argument('plugin');
-          $migrationName = $this->argument('migration_name');
-          $pathToMigrationFolder = "app/Plugins/$pluginName/Migrations";
-          if(!is_dir($pathToMigrationFolder)){
+        $pluginName = $this->argument('plugin');
+        $migrationName = $this->argument('migration_name');
+        $pathToMigrationFolder = "app/Plugins/$pluginName/Migrations";
+        if (!is_dir($pathToMigrationFolder)) {
             echo "Can't find this plugin or migration folder!\n";
             return;
-          }
-          
-          try {
-              Artisan::call("make:migration",[
-                  'name'=> $migrationName,
-                '--path'=>$pathToMigrationFolder
-                ]);
-                echo "Migration created successfully!\n";
-          } catch (\Throwable $th) {
-             dd($th);
-          }
-        
+        }
+
+        try {
+            Artisan::call("make:migration", [
+                'name' => $migrationName,
+                '--path' => $pathToMigrationFolder
+            ]);
+            echo "Migration created successfully!\n";
+        } catch (\Throwable $th) {
+            dd($th);
+        }
     }
 }

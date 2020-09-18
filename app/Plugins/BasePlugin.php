@@ -48,7 +48,7 @@ abstract class BasePlugin
             $plugins = json_decode($pluginsFileStream, true);
 
             if (in_array($this->getPluginName(), $plugins['enabled'])) {
-                  $pluginKey = array_search($this->getPluginName(),$plugins['enabled']);
+                  $pluginKey = array_search($this->getPluginName(), $plugins['enabled']);
                   unset($plugins['enabled'][$pluginKey]);
             }
 
