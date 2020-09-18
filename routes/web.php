@@ -291,11 +291,18 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 
 
   });
+
   /**
    * Роуты загрузок Админки
    */
   Route::group(['prefix' => 'downloads'], function () {
     Route::get( 'settings', 'Admin\DownloadsController@exportAltrpSettings' )->name( 'admin.download.settings' );
+  } );
+  /**
+   * Роуты ипортов Админки
+   */
+  Route::group(['prefix' => 'import'], function () {
+    Route::post( 'settings', 'Admin\ImportsController@importAltrpSettings' )->name( 'admin.download.settings' );
   } );
 
 });

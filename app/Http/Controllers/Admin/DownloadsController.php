@@ -24,6 +24,7 @@ class DownloadsController extends Controller{
       );
     }
     return response()->download( $filename )->deleteFileAfterSend();
-//    return response()->download( $filename );
   }
+
+
 }
