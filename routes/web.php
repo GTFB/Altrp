@@ -288,7 +288,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 
     Route::get('/tables/{table}/controller', "Admin\TableController@getController");
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
+
+
   });
+  /**
+   * Роуты загрузок Админки
+   */
+  Route::group(['prefix' => 'downloads'], function () {
+    Route::get( 'settings', 'Admin\DownloadsController@exportAltrpSettings' )->name( 'admin.download.settings' );
+  } );
 
 });
 
@@ -386,6 +394,7 @@ Route::group( ['prefix' => 'ajax'], function(){
    * todo: для загрузчика шаблонов для виджетов
    */
   Route::get( 'templates/{template_id}', 'TemplateController@show_frontend' )->name( 'templates.show.frontend' );
+
 } );
 
 Route::get('reports/{id}', "ReportsController@show");

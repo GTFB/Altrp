@@ -190,7 +190,7 @@ class TemplateController extends Controller
     {
         $template = Template::find($template_id);
 
-        return response()->json($template->toArray());
+        return response()->json( $template->toArray() );
     }
     /**
      * Show the form for editing the specified resource.

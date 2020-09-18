@@ -8,8 +8,7 @@ use App\PagesTemplate;
 use App\Permission;
 use App\Role;
 use App\User;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\WithGuid;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -20,10 +19,9 @@ use Illuminate\Support\Facades\Auth;
  * @property Area $area
  * @property User $user
  */
-class Template extends Model
+class Template extends WithGuid
 {
   use SoftDeletes;
-
 
   protected $casts = [
     'template_type' => 'string',
