@@ -18,6 +18,7 @@ const Widget = ({ widget }) => {
         widgets__item: true,
         isDragging,
       })}
+      title={widget.name}
     >
       <Card>
         <Card.Body>{widget.icon}</Card.Body>

@@ -56,7 +56,7 @@ Route::get('/reports/html/{id}', "ReportsController@page");
  * Роуты Админки
  */
 
-Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'admin'/* , 'middleware' => 'auth' */], function () {
 
   Route::group(['prefix' => 'ajax'], function () {
 
@@ -274,6 +274,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 
     Route::post('/tables/{table}/models', 'Admin\TableController@saveModel');
     Route::get('/tables/{table}/models/{model}', 'Admin\TableController@getModel');
+    Route::get('/tables/{table_name}/items', 'Admin\TableController@getItems');
+    Route::get('/tables/{table_name}/items/{item_id}', 'Admin\TableController@getItemById');
     Route::post('/tables/{table}/models/{model}/accessors', 'Admin\TableController@saveAccessor');
     Route::get('/tables/{table}/models/{model}/accessors', 'Admin\TableController@getAccessors');
     Route::delete('/tables/{table}/models/{model}/accessors/{accessor}', 'Admin\TableController@deleteAccessor');

@@ -108,6 +108,17 @@ const Widgets = (props) => {
         api: "https://regagro.herokuapp.com/animals",
       },
     },
+    {
+      id: 9,
+      name: "DText",
+      type: ItemTypes.ELEMENTS,
+      icon: <TextEditorIcon />,
+      params: {
+        text: "<p>Текст</p>",
+        styles: {},
+        applyStylesToWidget: true,
+      },
+    },
   ];
 
   return (
