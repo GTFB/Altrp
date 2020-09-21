@@ -3,50 +3,57 @@ import '../../sass/dialog-content.scss';
 import { iconsManager } from '../../../../front-app/src/js/helpers';
 import Select from 'react-select'
 import Resource from '../classes/Resource';
-import { getTemplateId } from '../helpers';
+import {getEditor, getTemplateId} from '../helpers';
 import AltrpSelect from '../../../../admin/src/components/altrp-select/AltrpSelect';
 
 export default class DialogConditionsTab extends Component {
   constructor(props) {
-    super(props),
+    super(props);
       this.state = {
         value: [],
         currentLogic: 'include',
-        searchValue: ''
-      }
-    this.resource = new Resource({ route: `/admin/ajax/templates/${getTemplateId()}/settings` });
+        searchValue: '',
+        pageOptions: [],
+      };
+    this.resource = new Resource({ route: `/admin/ajax/templates/${getTemplateId()}/conditions` });
   }
 
 
   async componentDidMount() {
-    let conditions = await this.resource.get('conditions');
-    console.log(conditions);
+    let conditions = await this.resource.getAll();
+    let pageOptions = await (new Resource({route: "/admin/ajax/pages_options" })).getAll();
     this.setState({
-      value: conditions.data || []
+      value: conditions.data || [],
+      pageOptions
+      // value: []
     })
   };
 
-  async updateConditions() {
-    let res = await this.resource.put('conditions', { data: this.state.value });
-    console.log(res);
+  /**
+   * запрос на обнровление условий
+   * @param {boolean} close
+   * @return {Promise<void>}
+   */
+  async updateConditions(close = false) {
+    let res = await (new Resource({ route: `/admin/ajax/templates/${getTemplateId()}/conditions` })).put('', { data: this.state.value });
+    if(close){
+      getEditor().toggleModalWindow()
+    }
   }
 
   addCondition() {
     let randomNumber = Math.floor(1 + Math.random() * (1000 - 1));
-    this.setState(state => {
-      this.state.value.push
-        (
-          {
-            id: randomNumber,
-            "include": [
-              {
-                type: 'all_site'
-              }
-            ],
-            "exclude": []
-          }
-        )
-    })
+    let value = _.cloneDeep(this.state.value);
+    value.push({
+      object_type: 'all_site',
+      object_ids: [],
+      id: randomNumber,
+      condition_type: 'include',
+    });
+    this.setState(state => ({
+      ...state,
+      value
+    }));
     this.forceUpdate();
   };
 
@@ -63,12 +70,12 @@ export default class DialogConditionsTab extends Component {
     if (e.value === 'include') {
       this.setState({
         currentLogic: e.value,
-      })
+      });
       return;
     } else if (e.value === 'exclude') {
       this.setState({
         currentLogic: e.value,
-      })
+      });
       return;
     }
     if (this.state.currentLogic === 'include') {
@@ -89,7 +96,55 @@ export default class DialogConditionsTab extends Component {
       })
     }
   }
-
+  /**
+   * именение object_type для условий
+   * @param {object} e
+   * @param {integer} conditionId
+   */
+  handleObjectTypeChange = (e, conditionId) => {
+    let value = _.cloneDeep(this.state.value);
+    value.forEach(v=>{
+      if(v.id === conditionId){
+        v.object_type = e.value;
+        v.object_ids = [];
+      }
+    });
+    this.setState(state =>({
+      ...state, value,
+    }));
+  };
+  /**
+   * изменение спика ид объектов
+   * @param {[]} ids
+   * @param {integer} conditionId
+   */
+  handleIdsSelect = (ids, conditionId)=>{
+    let value = _.cloneDeep(this.state.value);
+    value.forEach(v=>{
+      if(v.id === conditionId){
+        v.object_ids = ids.map(id=>id.value);
+      }
+    });
+    this.setState(state =>({
+      ...state, value,
+    }));
+  };
+  /**
+   * изменение типа  условия
+   * @param {[]} e
+   * @param {integer} conditionId
+   */
+  handleChangeConditionType = (e, conditionId)=>{
+    let value = _.cloneDeep(this.state.value);
+    value.forEach(v=>{
+      if(v.id === conditionId){
+        v.condition_type = e.value;
+      }
+    });
+    this.setState(state =>({
+      ...state, value,
+    }));
+  };
   handleSelect(e) {
 
   }
@@ -104,16 +159,16 @@ export default class DialogConditionsTab extends Component {
     const main_options = [
       { name: 'type', value: 'all_site', label: 'All Site' },
       { name: 'type', value: 'page', label: 'Page' },
-      { name: 'type', value: 'model', label: 'Model' },
-      { name: 'type', value: 'not_authorized_page', label: 'Not Authorized' },
-      { name: 'type', value: 'not_found_page', label: 'Not found: 404' },
-    ]
+      // { name: 'type', value: 'model', label: 'Model' },
+      // { name: 'type', value: 'not_authorized_page', label: 'Not Authorized' },
+      // { name: 'type', value: 'not_found_page', label: 'Not found: 404' },
+    ];
     const model_options = [
       { name: 'model_name', value: 'model1', label: 'model1' },
       { name: 'model_name', value: 'model2', label: 'model2' },
       { name: 'model_name', value: 'model3', label: 'model3' },
       { name: 'model_name', value: 'model4', label: 'model4' },
-    ]
+    ];
     return (
       <div className="modal-condition-tab">
         <div className="modal-condition-image">
@@ -130,62 +185,55 @@ export default class DialogConditionsTab extends Component {
           <div className="modal-repeater-fields">
             {
               this.state.value.map(test => {
+                console.log(test);
                 return (
                   <div className="modal-repeater-field" key={test.id}>
-                    <Select
-                      onChange={(e) => this.handleChange(e, test)}
+                    <AltrpSelect
+                      onChange={(e) => this.handleChangeConditionType(e, test.id)}
                       className="modal-repeater-field-c1"
                       options={logic_options}
-                      defaultValue={
-                        logic_options[0]
-                      }
+                      value={_.find(logic_options, o=>o.value === test.condition_type) || logic_options[0]}
                     />
-                    <Select
-                      onChange={(e) => this.handleChange(e, test)}
+                    <AltrpSelect
+                      onChange={(value) => this.handleObjectTypeChange(value, test.id)}
                       className="modal-repeater-field-c2"
                       options={main_options}
-                      defaultValue={main_options[0]}
+                      value={_.find(main_options, o=>o.value === test.object_type) || main_options[0]}
+                      // defaultValue={main_options[0]}
                     />
+                    {/*{*/}
+                      {/*(test.include[0]) &&*/}
+                      {/*(test.include[0].type === 'model'*/}
+                        {/*&&*/}
+                        {/*<Select*/}
+                          {/*onChange={(e) => this.handleChange(e, test)}*/}
+                          {/*className="modal-repeater-field-c3"*/}
+                          {/*defaultValue={model_options[0]}*/}
+                          {/*options={model_options}*/}
+                        {/*/>)*/}
+                    {/*}*/}
+                    {/*{*/}
+                      {/*(test.exclude[0]) &&*/}
+                      {/*(test.exclude[0].type === 'model' &&*/}
+                        {/*<Select*/}
+                          {/*onChange={(e) => this.handleChange(e, test)}*/}
+                          {/*className="modal-repeater-field-c3"*/}
+                          {/*defaultValue={model_options[0]}*/}
+                          {/*options={model_options}*/}
+                        {/*/>)*/}
+                    {/*}*/}
                     {
-                      (test.include[0]) &&
-                      (test.include[0].type === 'model'
-                        &&
-                        <Select
-                          onChange={(e) => this.handleChange(e, test)}
-                          className="modal-repeater-field-c3"
-                          defaultValue={model_options[0]}
-                          options={model_options}
-                        />)
-                    }
-                    {
-                      (test.exclude[0]) &&
-                      (test.exclude[0].type === 'model' &&
-                        <Select
-                          onChange={(e) => this.handleChange(e, test)}
-                          className="modal-repeater-field-c3"
-                          defaultValue={model_options[0]}
-                          options={model_options}
-                        />)
-                    }
-                    {
-                      (test.include[0]) &&
-                      (((test.include[0].type === 'model' && test.include[0].model_name) || test.include[0].type === 'page') &&
+                      test.object_type === 'page' &&
                         <AltrpSelect
-                          value={this.state.searchValue}
-                          onChange={(e) => this.handleSelect(e)}
-                          placeholder="All"
+                          // value={(test.object_ids || []).map(o=>this.state.pageOptions.find())}
+                          value={_.filter(this.state.pageOptions, p => test.object_ids && test.object_ids.indexOf(p.value) >= 0)}
+                          onChange={(e) => this.handleIdsSelect(e, test.id)}
+                          isMulti={true}
+                          closeMenuOnSelect={false}
+                          placeholder="Choose Pages"
+                          options={this.state.pageOptions}
                           className="modal-repeater-field-c3"
-                          optionsRoute="/admin/ajax/pages_options"
-                        />)
-                    }
-                    {
-                      (test.exclude[0]) &&
-                      (((test.exclude[0].type === 'model' && test.exclude[0].model_name) || test.exclude[0].type === 'page') &&
-                        <AltrpSelect
-                          placeholder="All"
-                          className="modal-repeater-field-c3"
-                          optionsRoute="/admin/ajax/pages_options"
-                        />)
+                        />
                     }
                     <button onClick={() => this.removeCondition(test.id)} className="modal-repeater-tool-remove">X</button>
                   </div>
@@ -198,7 +246,7 @@ export default class DialogConditionsTab extends Component {
           <button onClick={() => this.addCondition()} className="modal-condition-button">Add condition</button>
         </div>
         <div className="modal-footer">
-          <button onClick={() => this.updateConditions()} className="modal-footer__button modal-save">Save & close</button>
+          <button onClick={() => this.updateConditions(true)} className="modal-footer__button modal-save">Save & close</button>
           <button onClick={() => this.updateConditions()} className="modal-footer__button modal-next">Next</button>
         </div>
       </div>

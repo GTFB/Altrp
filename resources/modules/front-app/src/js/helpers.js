@@ -186,11 +186,80 @@ export function parseParamsFromString(string, context = {}){
     right = right.trim();
     if(right.match(/(?<={{)([\s\S]+?)(?=}})/g)){
       if(context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0])){
-        params[left] = context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0]);
+        params[left] = context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0]) || '';
+      } else {
+        params[left] = '';
       }
     } else {
       params[left] = right;
     }
+    if(_.isObject(params[left])){
+      delete params[left];
+    }
   });
   return params;
+}
+
+/**
+ * Функция для проверки условий
+ * @param {[]} conditions
+ * @param {boolean} AND - логичекое И или ИЛИ
+ * @param {AltrpModel} model
+ * @return {boolean}
+ */
+export function conditionsChecker(conditions = [], AND = true, model){
+  if(! conditions.length){
+    return true;
+  }
+  let result = AND;
+  _.each(conditions, c =>{
+    if(AND){
+      result *= _conditionChecker(c, model);
+    } else {
+      result += _conditionChecker(c, model);
+    }
+  });
+  return result;
+}
+
+/**
+ * Функция для проверки одного условия
+ * @param c
+ * @param {AltrpModel} model
+ * @return {boolean}
+ */
+function _conditionChecker(c, model){
+  let result = 0;
+  const {
+     modelField,
+     operator,
+     value,
+  } = c;
+  switch(operator){
+    case 'empty':{
+      return ! model.getProperty(modelField, '');
+    }
+    case 'not_empty':{
+      return ! ! model.getProperty(modelField, '');
+    }
+    case '==':{
+      return _.isEqual(model.getProperty(modelField, ''), value );
+    }
+    case '<>':{
+      return ! _.isEqual(model.getProperty(modelField, ''), value );
+    }
+    case '>':{
+      return Number(model.getProperty(modelField, '')) > Number(value);
+    }
+    case '>=':{
+      return Number(model.getProperty(modelField, '')) >= Number(value);
+    }
+    case '<':{
+      return Number(model.getProperty(modelField, '')) < Number(value);
+    }
+    case '<=':{
+      return Number(model.getProperty(modelField, '')) <= Number(value);
+    }
+  }
+  return result;
 }

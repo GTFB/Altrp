@@ -6,6 +6,10 @@
 
 ### 0.9.0
 + Add Map, Diagram Widgets
++ Add Conditions and Disabled Conditions for Elements by Current User Permissions, Roles 
++ Add Conditions for Templates by Current Page
++ Add SQL-Builder
+
 
 ### 0.8.0
 + Add Filters and Sorting in Table Widget

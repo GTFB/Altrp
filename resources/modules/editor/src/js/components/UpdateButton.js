@@ -16,7 +16,7 @@ class UpdateButton extends Component {
     getEditor().modules.saveImportModule.saveTemplate();
   }
   showModal() {
-    this.props.showModalWindow();
+    this.props.toggleModalWindow();
   }
 
   render() {

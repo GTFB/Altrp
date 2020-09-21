@@ -105,7 +105,7 @@ class Controller {
       let [controlId, value] = condition;
       let negative = (controlId.indexOf('!') >= 0);
       controlId = controlId.replace('!', '');
-      if(_.isString(value)){
+      if(_.isString(value) || _.isBoolean(value)){
         show = getCurrentElement().getSettings(controlId) !== value ? negative : ! negative;
       }
       if(_.isArray(value) ){

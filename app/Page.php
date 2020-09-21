@@ -2,9 +2,12 @@
 
 namespace App;
 
+use App\Altrp\Model as AltrpModel;
 use App\Constructor\Template;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -14,12 +17,12 @@ use Mockery\Exception;
  * Class Page
  * @package App
  * @property User $user
- * @property \App\Altrp\Model $model
+ * @property AltrpModel $model
  */
 
 class Page extends Model
 {
-  //
+
   use SoftDeletes;
   protected $fillable = [
     'title',
@@ -28,7 +31,10 @@ class Page extends Model
     'path',
     'model_id',
     'redirect',
+    'guid',
   ];
+
+//  protected $table = 'altrp_pages';
 
   /**
    * @return array
@@ -104,54 +110,102 @@ class Page extends Model
   public static function get_areas_for_page( $page_id ){
     $areas = [];
 
-    $header = Template::where( 'area', 2 )->where( 'type', 'template' )->first();
-    if( $header ){
-      $header->check_elements_conditions();
-      $areas[] = [
-        'area_name' => 'header',
-        'id' => 'header',
-        'settings' => [],
-        'template' => $header
-      ];
-    }
-    $content = PagesTemplate::where( 'page_id', $page_id )
-      ->where( 'template_type', 'content' )->first()->template;
-    $content->check_elements_conditions();
+//    $header = Template::where( 'area', 2 )->where( 'type', 'template' )->first();
+//    if( $header ){
+//      $header->check_elements_conditions();
+//      $areas[] = [
+//        'area_name' => 'header',
+//        'id' => 'header',
+//        'settings' => [],
+//        'template' => $header
+//      ];
+//    }
+    /**
+     * @var Template $content
+     */
+//    $content = PagesTemplate::where( 'page_id', $page_id )
+//      ->where( 'template_type', 'content' )
+//      ->where( 'condition_type', 'include' )
+//      ->first();
+//    if( $content ){
+//      $content = $content->template;
+//      $content->check_elements_conditions();
+//      $areas[] = [
+//        'area_name' => 'content',
+//        'id' => 'content',
+//        'settings' => [],
+//        'template' => $content,
+//      ];
+//    } else {
+//      /**
+//       * Пустой контент, если страницы нет
+//       */
+//      $areas[] = [
+//        'area_name' => 'content',
+//        'id' => 'content',
+//        'settings' => [],
+//        'template' => [
+//          'data' => json_encode([
+//            "name"=>"root-element",
+//            "type"=>"root-element",
+//            "children"=> [],
+//            'settings' => [],
+//          ])
+//        ],
+//      ];
+//    }
+
+    $areas[] = [
+      'area_name' => 'header',
+      'id' => 'header',
+      'settings' => [],
+      'template' => Template::getTemplate([
+        'page_id' => $page_id,
+        'template_type' => 'header',
+      ]),
+    ];
+
     $areas[] = [
       'area_name' => 'content',
       'id' => 'content',
       'settings' => [],
-      'template' => $content,
+      'template' => Template::getTemplate([
+        'page_id' => $page_id,
+        'template_type' => 'content',
+      ]),
     ];
 
-    $footer = Template::where( 'area', 3 )->where( 'type', 'template' )->first();
-    if( $footer ){
-      $footer->check_elements_conditions();
-      $areas[] = [
-        'area_name' => 'footer',
-        'id' => 'footer',
-        'settings' => [],
-        'template' => $footer
-      ];
-    }
-    $popups = Template::join( 'areas', 'areas.id', '=', 'templates.area' )
-      ->where( 'areas.name', '=', 'popup' )
-      ->where( 'type', 'template' )->get( 'templates.*' );
+    $areas[] = [
+      'area_name' => 'footer',
+      'id' => 'footer',
+      'settings' => [],
+      'template' => Template::getTemplate([
+      'page_id' => $page_id,
+      'template_type' => 'footer',
+      ]),
+    ];
 
-
-
-    if( $popups->count() ){
-      foreach ( $popups as $key => $popup ) {
-        $popups[$key]->template_settings = $popup->template_settings();
-
-      }
-      $areas[] = [
-        'area_name' => 'popups',
-        'id' => 'popups',
-        'settings' => [],
-        'templates' => $popups->toArray(),
-      ];
-    }
+//    $popups = Template::join( 'areas', 'areas.id', '=', 'templates.area' )
+//      ->where( 'areas.name', '=', 'popup' )
+//      ->where( 'type', 'template' )->get( 'templates.*' );
+//
+//
+//
+//    if( $popups->count() ){
+//      foreach ( $popups as $key => $popup ) {
+//        $popups[$key]->template_settings = $popup->template_settings();
+//
+//      }
+    $areas[] = [
+      'area_name' => 'popups',
+      'id' => 'popups',
+      'settings' => [],
+      'templates' => Template::getTemplates([
+        'page_id' => $page_id,
+        'template_type' => 'popup',
+      ]),
+    ];
+//    }
 
     return $areas;
   }
@@ -180,7 +234,7 @@ class Page extends Model
   }
 
   /**
-   * @return \App\Altrp\Model[]|null
+   * @return AltrpModel[]|null
    */
   function get_models(){
     if( ! $this->model ){
@@ -310,5 +364,27 @@ class Page extends Model
       }
     }
     return $allowed;
+  }
+
+  /**
+   * Испортирует страницы
+   * @param array $imported_pages
+   */
+  static public function import( $imported_pages = []){
+    foreach ( $imported_pages as $imported_page ) {
+      if( self::where( 'guid', $imported_page['guid'] )->first() ){
+        continue;
+      }
+      $new_page = new self( $imported_page );
+      $new_page->author = Auth::user()->id;
+      if( Arr::get( $imported_page, 'model_name' ) ){
+        $model = AltrpModel::where( 'name', $imported_page['model_name'] )->first();
+        $model_id = $model ? $model->id : null;
+      } else {
+        $model_id = null;
+      }
+      $new_page->model_id = $model_id;
+      $new_page->save();
+    }
   }
 }

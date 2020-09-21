@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link, withRouter } from 'react-router-dom';
 import {isEditor, parseURLTemplate, renderAssetIcon} from "../../../../../front-app/src/js/helpers";
+import AltrpModel from "../../classes/AltrpModel";
 
 class ButtonWidget extends Component {
   constructor(props) {
@@ -26,14 +27,16 @@ class ButtonWidget extends Component {
          * @param {AltrpForm} form
          */ async form => {
           try {
-            let res = await form.submit(this.getModelId());
+            let res = await form.submit(this.getModelId(), this.props.element.getSettings('form_confirm'));
+            console.log(res);
             if (res.success) {
-              const { redirect_to_prev_page, redirect_after } = this.state.settings;
+              let { redirect_to_prev_page, redirect_after } = this.state.settings;
               if (redirect_to_prev_page) {
                 return this.props.history.goBack();
               }
-
               if (redirect_after) {
+
+                redirect_after = parseURLTemplate(redirect_after, res.data);
                 return this.props.history.push(redirect_after);
               }
             } else if (res.message) {
@@ -90,7 +93,7 @@ class ButtonWidget extends Component {
       // console.log(link_link.url);
       url = parseURLTemplate(link_link.url || '', this.props.currentModel.getData());
     }
-
+    classes += this.classStateDisabled();
     let button = (
       <button
         onClick={link_link.toPrevPage && !isEditor() ? goBack : this.onClick}
