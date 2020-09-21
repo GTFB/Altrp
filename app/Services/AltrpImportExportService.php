@@ -210,7 +210,7 @@ class AltrpImportExportService
      * импортируем настройки моделей
      */
 
-    Table::import( Arr::get( $data, 'tables', [] ) );
+//    Table::import( Arr::get( $data, 'tables', [] ) );
     AltrpModel::import( Arr::get( $data, 'models', [] ) );
     Column::import( Arr::get( $data, 'columns', [] ) );
     Relationship::import( Arr::get( $data, 'relations', [] ) );
