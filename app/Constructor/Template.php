@@ -67,7 +67,7 @@ class Template extends Model
       $new_template->user_id = Auth::user()->id;
       if( Arr::get( $imported_template, 'area_name' ) ){
         $area = Area::where( 'name', $imported_template['area_name'] )->first();
-        $area_name = $area ? $area->name : 1;
+        $area_name = $area ? $area->id : 1;
       } else {
         $area_name = 1;
       }
