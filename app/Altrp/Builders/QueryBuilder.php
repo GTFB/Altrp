@@ -665,6 +665,10 @@ class QueryBuilder
         if (! $relations) return $this;
         $eol = (count($relations) > 1) ? "\n" : null;
         $tab = (count($relations) > 1) ? "{$this->tabIndent}" : null;
+        $closure = '';
+        if ($this->query->order_by) {
+            $orders = $this->query->order_by;
+        }
         $this->queryBody->relations = "{$this->twoTabs}\$model = \$model->with([$eol$tab$tab$tab$tab'"
             . implode("',$eol$tab$tab$tab$tab'", $relations) . "'$eol$tab$tab$tab]);\n";
         return $this;
@@ -832,8 +836,15 @@ class QueryBuilder
     {
         if (! $orders) return $this;
         $ordersList = [];
+        $columnsListArr = [];
         foreach ($orders as $order) {
-            $ordersList[] = "orderBy('{$this->model->table->name}.{$order['column']}', '{$order['type']}')";
+            if (!Str::contains($order['column'], '.')) {
+                $order = $this->model->table->name . '.' . $order['column'];
+            }
+            $columnsListArr[] = $order;
+        }
+        foreach ($columnsListArr as $order) {
+            $ordersList[] = "orderBy('{$order['column']}', '{$order['type']}')";
         }
         $this->queryBody->orders = "\$model = \$model" . '->' . implode("\n{$this->threeTabs}->", $ordersList) . ";\n";
         return $this;
@@ -939,6 +950,12 @@ class QueryBuilder
         return $this;
     }
 
+    /**
+     * Проверить, существуют ли в значении динамические переменные
+     *
+     * @param $value
+     * @return string
+     */
     protected function parseValue($value)
     {
         if (Str::contains($value, 'REQUEST')

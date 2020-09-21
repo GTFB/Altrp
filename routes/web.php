@@ -76,6 +76,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::resource( 'pages', 'Admin\PagesController' );
     Route::get( '/pages_options', 'Admin\PagesController@pages_options' )->name( 'admin.pages_options.all' );
     Route::get( '/pages_options/{page_id}', 'Admin\PagesController@show_pages_options' )->name( 'admin.pages_options.show' );
+
+    Route::get('/page_data_sources', 'Admin\PageDatasourceController@index');
+    Route::get('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@show");
+    Route::post('/page_data_sources', "Admin\PageDatasourceController@store");
+    Route::put('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@update");
+    Route::delete('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@destroy");
+
     Route::get('/permissions', "Users\Permissions@getPermissions");
     Route::get('/permissions_options', "Users\Permissions@getPermissionsOptions");
     Route::get('/permissions/{permission}', "Users\Permissions@getPermission");
