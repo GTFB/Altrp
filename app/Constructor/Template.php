@@ -9,7 +9,6 @@ use App\Permission;
 use App\Role;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -24,17 +23,21 @@ class Template extends Model
 {
   use SoftDeletes;
 
+//  protected $table = 'altrp_templates'; todo: переименовать все altrp таблицы
 
   protected $casts = [
     'template_type' => 'string',
   ];
 
-  protected $fillable =[ 'name',
-      'title',
-      'data',
-      'type',
-      'area',
-      'user_id' ];
+  protected $fillable =[
+    'name',
+    'title',
+    'data',
+    'type',
+    'area',
+    'guid',
+    'user_id'
+  ];
 
   /**
    * Вернуть json для data пустого шаблона для front-app
@@ -48,6 +51,29 @@ class Template extends Model
       "children"=> [],
       'settings' => [],
     ]);
+  }
+
+  /**
+   * Импортирует шаблоны
+   * @param array $imported_templates
+   */
+  public static function import( $imported_templates = [] )
+  {
+    foreach ( $imported_templates as $imported_template ) {
+      if( self::where( 'guid', $imported_template['guid'] )->first() ){
+        continue;
+      }
+      $new_template = new self( $imported_template );
+      $new_template->user_id = Auth::user()->id;
+      if( Arr::get( $imported_template, 'area_name' ) ){
+        $area = Area::where( 'name', $imported_template['area_name'] )->first();
+        $area_name = $area ? $area->id : 1;
+      } else {
+        $area_name = 1;
+      }
+      $new_template->area = $area_name;
+      $new_template->save();
+    }
   }
 
 

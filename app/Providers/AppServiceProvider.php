@@ -11,6 +11,7 @@ use App\Observers\AltrpControllerObserver;
 use App\Observers\AltrpModelObserver;
 use App\Observers\AltrpQueryObserver;
 use App\Observers\AltrpSQLEditorObserver;
+use App\Services\AltrpImportExportService;
 use App\Services\AltrpSettingsService;
 use App\Services\AltrpUpdateService;
 use App\SQLEditor;
@@ -44,6 +45,9 @@ class AppServiceProvider extends ServiceProvider
         });
         $this->app->bind('App\Services\AltrpSettingsService', function ($app) {
             return new AltrpSettingsService();
+        });
+        $this->app->bind('App\Services\AltrpImportExportService', function ($app) {
+            return new AltrpImportExportService();
         });
     }
 

@@ -4,6 +4,7 @@
 namespace App\Altrp;
 
 use Illuminate\Database\Eloquent\Model as EloquentModel;
+use App\Altrp\Model as AltrpModel;
 
 class Query extends EloquentModel
 {
@@ -27,7 +28,30 @@ class Query extends EloquentModel
         'updated_at'
     ];
 
-    public function altrp_source()
+  /**
+   * ИМпортируем данные sql-buidler
+   * @param array $imported_queries
+   */
+  public static function import( $imported_queries = [] )
+  {
+    foreach ( $imported_queries as $imported_query ) {
+      $model = AltrpModel::where( 'name', $imported_query['model_name'] )->first();
+      if( ! $model ){
+        continue;
+      }
+      foreach ( $model->altrp_queries as $altrp_query ) {
+        if( $imported_query['name'] === $altrp_query->name ){
+          continue 2;
+        }
+      }
+      $new_query = new self( $imported_query );
+      $new_query->model_id = $model->id;
+
+      $new_query->save();
+    }
+  }
+
+  public function altrp_source()
     {
         return $this->morphOne(Source::class, 'sourceable');
     }

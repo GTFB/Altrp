@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Altrp\Source;
 use App\Constructor\Template;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

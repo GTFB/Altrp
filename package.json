@@ -30,6 +30,7 @@
     "bootstrap-switch-button-react": "^1.2.0",
     "classnames": "^2.2.6",
     "dot-prop-immutable": "^2.1.0",
+    "gsap": "^3.5.1",
     "highlight.js": "^10.1.1",
     "immutability-helper": "^3.1.1",
     "leaflet": "^1.6.0",

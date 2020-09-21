@@ -129,7 +129,6 @@ class Resource {
       // 'Content-Type': 'multipart/form-data; boundary=' + boundary
     };
     let formData = new FormData();
-    console.log(files);
     for (let i = 0; i < files.length; i++) {
       if(files[i].size > MAX_FILE_SIZE || files[i].type.indexOf(fileType) !== 0){
         console.log(files[i]);

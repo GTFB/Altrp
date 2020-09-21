@@ -296,7 +296,7 @@ class InputWidget extends Component {
     /**
      * Пока динамический контент загружается, нужно вывести пустую строку
      */
-    if(value.dynamic){
+    if(value && value.dynamic){
       value = '';
     }
 
