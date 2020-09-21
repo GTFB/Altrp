@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Area;
 use App\Constructor\Template;
 use App\Helpers\Classes\AltrpZip;
 use App\Media;
@@ -70,7 +71,7 @@ class AltrpImportExportService
     $data = [];
     $data['templates'] = Template::all()->toArray();
     foreach ( $data['templates'] as $key => $template ) {
-      $_area = Area::where( 'name',  $template['area'] )->first();
+      $_area = Area::find( $template['area'] );
       if( $_area ){
         $data['templates'][$key]['area_name'] = $_area->name;
       }
