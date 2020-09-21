@@ -48,7 +48,7 @@ class Model extends EloquentModel
       if( self::where( 'name', $imported_model['name'] )->first() ){
         continue;
       }
-      $table = Table::where( 'name', $imported_model['table_name'] );
+      $table = Table::where( 'name', $imported_model['table_name'] )->first();
       if( ! $table ){
         error_log( 'Не удалось сохранить модель ' . $imported_model['name'] .
           ' таблица ' . $imported_model['table_name'] . ' не найдена!' );

@@ -102,7 +102,7 @@ class AltrpImportExportService
 
     $data['models'] = Model::all();
     foreach ( $data['models'] as $key => $model ) {
-      $table = Table::find( $model['tables_id'] );
+      $table = Table::find( $model['table_id'] );
       if( ! $table ){
         continue;
       }
