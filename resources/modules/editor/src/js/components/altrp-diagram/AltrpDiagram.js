@@ -31,6 +31,7 @@ const AltrpDiagram = ({ settings }) => {
       colorScheme: settings.colorScheme,
       legend: "",
       animated: settings.animated,
+      isVertical: settings.isVertical,
     },
     filter: {},
   };

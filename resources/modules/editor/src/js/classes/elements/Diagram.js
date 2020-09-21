@@ -37,6 +37,17 @@ class Diagram extends BaseElement {
       label: "Content",
     });
 
+    this.addControl("query", {
+      type: CONTROLLER_QUERY,
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("style", {
+      tab: TAB_STYLE,
+      label: "Visual type",
+    });
+
     const types = widgetTypes.map((type) => {
       return { label: type.name, value: type.value };
     });
@@ -48,15 +59,10 @@ class Diagram extends BaseElement {
       options: types,
     });
 
-    this.addControl("query", {
-      type: CONTROLLER_QUERY,
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("style", {
-      tab: TAB_STYLE,
-      label: "Size",
+    this.addControl("isVertical", {
+      type: CONTROLLER_SWITCHER,
+      label: "Vertical table",
+      default: false,
     });
 
     const colors = Object.keys(schemes).map((name) => {
@@ -76,6 +82,13 @@ class Diagram extends BaseElement {
       type: CONTROLLER_SWITCHER,
       label: "Animated",
       default: true,
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("size", {
+      tab: TAB_STYLE,
+      label: "Size",
     });
 
     this.addControl("width", {
