@@ -61,6 +61,7 @@ class Column extends Model
       }
       $new_column = new self( $imported_column );
       $new_column->model_id = $model->id;
+      $new_column->user_id = auth()->user()->id;
       $new_column->table_id = $table->id;
       $new_column->save();
 //      if( $existed_column )

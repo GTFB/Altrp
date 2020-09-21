@@ -47,7 +47,7 @@ class Query extends EloquentModel
       }
       $new_query = new self( $imported_query );
       $new_query->model_id = $model->id;
-
+      $new_query->user_id = auth()->user()->id;
       $new_query->save();
     }
   }

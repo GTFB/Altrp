@@ -106,6 +106,9 @@ class AltrpImportExportService
       if( ! $table ){
         continue;
       }
+      if( $model['name'] === 'user' ){
+        continue;
+      }
       $data['models'][$key]['table_name'] = $table->name;
     }
 
@@ -120,6 +123,7 @@ class AltrpImportExportService
         continue;
       }
       $data['columns'][$key]['table_name'] = $table->name;
+      $data['columns'][$key]['model_name'] = $model->name;
     }
 
     $data['s_q_l_editors'] = SQLEditor::all();
