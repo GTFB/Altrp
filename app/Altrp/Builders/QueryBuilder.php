@@ -95,18 +95,13 @@ class QueryBuilder
      */
     public function getMethodBody()
     {
-        $query = $this->getJoins($this->query->joins)
+        $query = $this->getRelations($this->query->relations)
+                    ->getJoins($this->query->joins)
                     ->getColumns($this->query->columns)
                     ->getAggregates($this->query->aggregates)
                     ->getFiltration()
                     ->getConditions($this->query->conditions)
-//                    ->getWhereConditions($this->query->conditions)
-//                    ->getOrWhereConditions($this->query->conditions)
-//                    ->getWhereBetweenConditions($this->query->conditions)
-//                    ->getWhereInConditions($this->query->conditions)
-//                    ->getWhereDateConditions($this->query->conditions)
-//                    ->getWhereColumnConditions($this->query->conditions)
-                    ->getRelations($this->query->relations)
+
                     ->getOrders($this->query->order_by)
                     ->getGroupTypes($this->query->group_by)
                     ->getOffset($this->query->offset)
@@ -602,12 +597,19 @@ class QueryBuilder
     public function getColumns($columns)
     {
         $threeTabs = null;
-        if (! $this->query->joins) {
+        if (!$this->query->joins && !$this->query->relations) {
             $this->reset();
             $threeTabs = $this->twoTabs;
         }
+        $columnsList = [];
+        foreach ($columns as $column) {
+            if (!Str::contains($column, '.')) {
+                $column = $this->model->table->name . '.' . $column;
+            }
+            $columnsList[] = $column;
+        }
         $this->queryBody->columns = $columns
-            ? "{$threeTabs}\$model = \$model->select(['" . implode("','", $columns) . "']);\n"
+            ? "{$threeTabs}\$model = \$model->select(['" . implode("','", $columnsList) . "']);\n"
             : "{$threeTabs}\$model = \$model->select('*');\n";
         return $this;
     }
@@ -659,10 +661,11 @@ class QueryBuilder
      */
     public function getRelations($relations)
     {
+        $this->reset();
         if (! $relations) return $this;
         $eol = (count($relations) > 1) ? "\n" : null;
         $tab = (count($relations) > 1) ? "{$this->tabIndent}" : null;
-        $this->queryBody->relations = "\$model = \$model->with([$eol$tab$tab$tab$tab'"
+        $this->queryBody->relations = "{$this->twoTabs}\$model = \$model->with([$eol$tab$tab$tab$tab'"
             . implode("',$eol$tab$tab$tab$tab'", $relations) . "'$eol$tab$tab$tab]);\n";
         return $this;
     }
@@ -693,8 +696,8 @@ class QueryBuilder
     {
         if (! $cond) return $this;
         $condition = 'where([';
-        $value = '"' . $cond['value'] . '"';
-        $condition .= "['{$cond['column']}'," . "'{$cond['operator']}'," . $value . "]";
+        $value = $this->parseValue($cond['value']);
+        $condition .= "['{$this->model->table->name}.{$cond['column']}'," . "'{$cond['operator']}'," . $value . "]";
         $condition .= "])";
         $this->queryBody->conditions[] = '->' . $condition . "\n";
         return $this;
@@ -710,9 +713,9 @@ class QueryBuilder
     {
         if (! $cond) return $this;
         $conditionList = [];
-        $value = '"' . $cond['value'] . '"';
+        $value = $this->parseValue($cond['value']);
         $condition = 'orWhere(';
-        $condition .= "'{$cond['column']}'," . "'{$cond['operator']}'," . $value . ")";
+        $condition .= "'{$this->model->table->name}.{$cond['column']}'," . "'{$cond['operator']}'," . $value . ")";
         $conditionList[] = $condition;
         $this->queryBody->conditions[] = "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
         return $this;
@@ -736,7 +739,7 @@ class QueryBuilder
             return $item;
         }, $cond['values']);
         $values = implode(',', $values);
-        $conditionList[] = "{$prefix}here{$isNot}Between('{$cond['column']}'," . "[{$values}])";
+        $conditionList[] = "{$prefix}here{$isNot}Between('{$this->model->table->name}.{$cond['column']}'," . "[{$values}])";
         $this->queryBody->conditions[] = "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
         return $this;
     }
@@ -759,7 +762,7 @@ class QueryBuilder
             return $item;
         }, $cond['values']);
         $values = implode(',', $values);
-        $conditionList[] = "{$prefix}here{$isNot}In('{$cond['column']}'," . "[{$values}])";
+        $conditionList[] = "{$prefix}here{$isNot}In('{$this->model->table->name}.{$cond['column']}'," . "[{$values}])";
         $this->queryBody->conditions[] = "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
         return $this;
     }
@@ -777,7 +780,7 @@ class QueryBuilder
         $conditionList = [];
         $operator = $cond['operator'] ?? '=';
         $whereType = $cond['type'] != 'datetime' ? ucfirst($cond['type']) : null;
-        $conditionList[] = "where{$whereType}(\"{$cond['column']}\"," . "\"{$operator}\"," . "\"{$cond['value']}\")";
+        $conditionList[] = "where{$whereType}(\"{$this->model->table->name}.{$cond['column']}\"," . "\"{$operator}\"," . "\"{$cond['value']}\")";
         $this->queryBody->conditions[] = "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
         return $this;
     }
@@ -795,8 +798,8 @@ class QueryBuilder
         $condition = '';
         $prefix = isset($cond['or']) ? 'orW': 'w';
         $condition .= "{$prefix}hereColumn([";
-        $condition .= "['{$cond['first_column']}',"
-            . "'{$cond['operator']}'," . "'{$cond['second_column']}']";
+        $condition .= "['{$this->model->table->name}.{$cond['first_column']}',"
+            . "'{$cond['operator']}'," . "'{$this->model->table->name}.{$cond['second_column']}']";
         $condition .=  "])";
         $conditionList[] = $condition;
         $this->queryBody->conditions[] = "->" . implode("\n{$this->threeTabs}->",$conditionList) . "\n";
@@ -814,7 +817,7 @@ class QueryBuilder
         if (! $cond) return $this;
         $isNot = isset($cond['not']) ? 'Not' : null;
         $prefix = isset($cond['or']) ? 'orW' : 'w';
-        $condition = "{$prefix}here{$isNot}Null(\"{$cond['column']}\")";
+        $condition = "{$prefix}here{$isNot}Null(\"{$this->model->table->name}.{$cond['column']}\")";
         $this->queryBody->conditions[] = "->" . $condition . "\n";
         return $this;
     }
@@ -830,7 +833,7 @@ class QueryBuilder
         if (! $orders) return $this;
         $ordersList = [];
         foreach ($orders as $order) {
-            $ordersList[] = "orderBy('{$order['column']}', '{$order['type']}')";
+            $ordersList[] = "orderBy('{$this->model->table->name}.{$order['column']}', '{$order['type']}')";
         }
         $this->queryBody->orders = "\$model = \$model" . '->' . implode("\n{$this->threeTabs}->", $ordersList) . ";\n";
         return $this;
@@ -859,7 +862,7 @@ class QueryBuilder
     public function getOffset($offset)
     {
         if (! $offset) return $this;
-        $offset = filter_var($offset, FILTER_VALIDATE_INT) ? $offset : '"' . $offset . '"';
+//        $offset = filter_var($offset, FILTER_VALIDATE_INT) ? $offset : '"' . $offset . '"';
         $this->queryBody->offset = "\$model = \$model" . "->offset($offset);\n";
         return $this;
     }
@@ -873,7 +876,7 @@ class QueryBuilder
     public function getLimit($limit)
     {
         if (! $limit) return $this;
-        $limit = filter_var($limit, FILTER_VALIDATE_INT) ? $limit : '"' . $limit . '"';
+//        $limit = filter_var($limit, FILTER_VALIDATE_INT) ? $limit : '"' . $limit . '"';
         $this->queryBody->limit = "\$model = \$model" . "->limit($limit);\n";
         return $this;
     }
@@ -887,7 +890,9 @@ class QueryBuilder
     public function getJoins($joins)
     {
         if (! $joins) return $this;
-        $this->reset();
+        if (!$this->query->relations) {
+            $this->reset();
+        }
         $joinList = [];
         foreach ($joins as $item => $join) {
             $targetTable = Table::find($join['target_table']);
@@ -910,11 +915,16 @@ class QueryBuilder
                     . "'{$operator}','{$targetTableName}.{$targetColumn}')";
             }
         }
-        $this->queryBody->joins = "{$this->twoTabs}\$model = \$model->" . implode("\n{$this->threeTabs}->",$joinList) . ";\n";
+        $this->queryBody->joins = "\$model = \$model->" . implode("\n{$this->threeTabs}->",$joinList) . ";\n";
 
         return $this;
     }
 
+    /**
+     * Сформировать фильтрацию
+     *
+     * @return $this
+     */
     public function getFiltration()
     {
         $filtration = '$filters = [];' . "\n";
@@ -927,5 +937,15 @@ class QueryBuilder
         $filtration .= $this->twoTabs . 'if (count($filters)) $model = $model->whereLikeMany($filters);' . "\n";
         $this->queryBody->zfiltration = $filtration;
         return $this;
+    }
+
+    protected function parseValue($value)
+    {
+        if (Str::contains($value, 'REQUEST')
+            || Str::contains($value, 'CURRENT_USER')
+            || Str::contains($value, 'CURRENT_')) {
+            return $value;
+        }
+        return '"' . $value . '"';
     }
 }

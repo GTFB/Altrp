@@ -492,12 +492,15 @@ class ModelsController extends HttpController
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $fields = $model->table->onlyColumns();
-//        $relFields = [];
-//        $relations = $model->altrp_relationships;
-//        foreach ($relations as $relation) {
-//            $relFields = array_merge($relFields, $relation->altrp_target_model->table->columns->toArray());
-//        }
-//        $fields = array_merge($fields->toArray(), $relFields);
+        $relFields = [];
+        $relations = $model->altrp_relationships;
+        foreach ($relations as $relation) {
+            $relFields = array_merge($relFields, $relation->altrp_target_model->table->columns->each(function ($column) use ($relation){
+                $column->name = $relation->altrp_target_model->table->name . '.' . $column->name;
+                $column->title = $relation->altrp_target_model->table->name . '.' . $column->title;
+            })->toArray());
+        }
+        $fields = array_merge($fields->toArray(), $relFields);
         return response()->json($fields, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
