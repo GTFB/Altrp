@@ -9,6 +9,7 @@ use App\PagesTemplate;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
@@ -121,11 +122,16 @@ class AltrpImportExportService
     $zip->extractTo( storage_path( 'tmp/imports'), 'altrp-settings/altrp-data.json' );
     $data = File::get( storage_path( 'tmp/imports/altrp-settings/altrp-data.json') );
     $data = json_decode( $data, true );
-
-    Template::import( $data['templates'] );
-    Media::import( $data['media'] );
-    Page::import( $data['pages'] );
-    PagesTemplate::import( $data['media'] );
+    /**
+     * импортируем настройки фронт приложения
+     */
+    Template::import( Arr::get( $data, 'templates', [] ) );
+    Media::import( Arr::get( $data, 'media', [] ) );
+    Page::import( Arr::get( $data, 'pages', [] ) );
+    PagesTemplate::import( Arr::get( $data, 'pages_templates', [] ) );
+    /**
+     * импортируем настройки моделей
+     */
   }
 
   /**

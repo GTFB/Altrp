@@ -17,8 +17,26 @@ class PagesTemplate extends Model
     'condition_type',
   ];
 
-  public static function import( $media )
+  /**
+   * Импортируем данный для таблицы связей страниц с шаблонами
+   * @param array $imported_data
+   */
+  public static function import( $imported_data = [] )
   {
+    foreach ( $imported_data as $imported_datum ) {
+      if( self::where([
+        'page_guid' => $imported_datum['page_guid'],
+        'template_guid' => $imported_datum['template_guid'],
+        'condition_type' => $imported_datum['condition_type'],
+      ])->first() ){
+        continue;
+      }
+      $new_data =  (new self( $imported_datum ));
+      $template = Template::where( 'guid', $imported_datum['template_guid'])->first();
+
+      $new_data->template_type = $template->area;
+      $new_data->save();
+    }
   }
 
   public function template(){
