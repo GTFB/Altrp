@@ -244,9 +244,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::get( '/data_sources', 'Admin\ModelsController@getDataSources');
     Route::get( '/data_source_options', 'Admin\ModelsController@getDataSourceOptions');
     Route::post( '/data_sources', 'Admin\ModelsController@storeDataSource');
-    Route::put( '/data_sources/{field_id}', 'Admin\ModelsController@updateDataSource');
-    Route::get( '/data_sources/{field_id}', 'Admin\ModelsController@showDataSource');
-    Route::delete( '/data_sources/{field_id}', 'Admin\ModelsController@destroyDataSource');
+    Route::put( '/data_sources/{source_id}', 'Admin\ModelsController@updateDataSource');
+    Route::get( '/data_sources/{source_id}', 'Admin\ModelsController@showDataSource');
+    Route::delete( '/data_sources/{source_id}', 'Admin\ModelsController@destroyDataSource');
 
     Route::get('/tables', "Admin\TableController@getTables");
     Route::get('/tables/options', "Admin\TableController@getTablesForOptions");

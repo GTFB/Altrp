@@ -100,9 +100,9 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::get( '/data_sources', 'Admin\ModelsController@getDataSources');
         Route::get( '/data_source_options', 'Admin\ModelsController@getDataSourceOptions');
         Route::post( '/data_sources', 'Admin\ModelsController@storeDataSource');
-        Route::put( '/data_sources/{field_id}', 'Admin\ModelsController@updateDataSource');
-        Route::get( '/data_sources/{field_id}', 'Admin\ModelsController@showDataSource');
-        Route::delete( '/data_sources/{field_id}', 'Admin\ModelsController@destroyDataSource');
+        Route::put( '/data_sources/{source_id}', 'Admin\ModelsController@updateDataSource');
+        Route::get( '/data_sources/{source_id}', 'Admin\ModelsController@showDataSource');
+        Route::delete( '/data_sources/{source_id}', 'Admin\ModelsController@destroyDataSource');
 
         Route::post('/tables/{table}/models', 'Admin\TableController@saveModel');
         Route::get('/tables/{table}/models/{model}', 'Admin\TableController@getModel');
