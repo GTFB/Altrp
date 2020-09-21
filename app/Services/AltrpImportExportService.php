@@ -69,6 +69,12 @@ class AltrpImportExportService
   private function createJSONDataFile(){
     $data = [];
     $data['templates'] = Template::all()->toArray();
+    foreach ( $data['templates'] as $key => $template ) {
+      $_area = Area::where( 'name',  $template['area'] )->first();
+      if( $_area ){
+        $data['templates'][$key]['area_name'] = $_area->name;
+      }
+    }
     $data['pages'] = Page::all()->toArray();
     foreach ( $data['pages'] as $key => $page ) {
       $_page = Page::find( $page['id'] );
@@ -77,6 +83,7 @@ class AltrpImportExportService
       }
     }
     $data['media'] = Media::all()->toArray();
+
     $data['pages_templates'] = PagesTemplate::all()->toArray();
     $data['admin_logo'] = json_decode( env( 'ALTRP_SETTING_ADMIN_LOGO' ), true );
     $content = json_encode( $data );
