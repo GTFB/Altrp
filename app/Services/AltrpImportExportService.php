@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Constructor\Template;
+use App\Helpers\Classes\AltrpZip;
 use App\Media;
 use App\Page;
 use App\PagesTemplate;
@@ -71,7 +72,9 @@ class AltrpImportExportService
     $data['pages'] = Page::all()->toArray();
     foreach ( $data['pages'] as $key => $page ) {
       $_page = Page::find( $page['id'] );
-      $data['pages'][$key]['model_name'] = $_page->model->name;
+      if( $_page->model ){
+        $data['pages'][$key]['model_name'] = $_page->model->name ;
+      }
     }
     $data['media'] = Media::all()->toArray();
     $data['pages_templates'] = PagesTemplate::all()->toArray();
@@ -110,18 +113,28 @@ class AltrpImportExportService
    * @throws Exception
    */
   public function importAltrpSettings( Request $request ){
-//    echo '<pre style="padding-left: 200px;">';
-//    var_dump( $request->file( 'files' ));
-//    echo '</pre>';
     $filename = $this->saveFileTmp( $request->file( 'files' )[0], 'altrp-settings.zip' );
-    $zip = new ZipArchive();
+    $zip = new AltrpZip();
     if( $zip->open( $filename ) !== true ){
       return;
     }
+
+    /**
+     * Извлекаем медиа
+     */
+    File::ensureDirectoryExists( storage_path( 'app/public/media' ) );
+    $zip->extractSubdirTo( storage_path( 'app/public/media' ), 'media' );
+
+//     ;echo '<pre style="padding-left: 200px;">';
+//     var_dump( $zip->error );
+//     echo '</pre>';
+
+
     File::ensureDirectoryExists( storage_path( 'tmp/imports' ) );
     $zip->extractTo( storage_path( 'tmp/imports'), 'altrp-settings/altrp-data.json' );
     $data = File::get( storage_path( 'tmp/imports/altrp-settings/altrp-data.json') );
     $data = json_decode( $data, true );
+    $this->deleteFileTmp( 'imports' );
     /**
      * импортируем настройки фронт приложения
      */
@@ -132,6 +145,14 @@ class AltrpImportExportService
     /**
      * импортируем настройки моделей
      */
+
+    /**
+     * Удаляем архив
+     */
+    $zip->close();
+    $filename = $this->deleteFileTmp( 'altrp-settings.zip' );
+
+
   }
 
   /**
@@ -146,5 +167,22 @@ class AltrpImportExportService
     File::ensureDirectoryExists( storage_path( 'tmp' ) );
     File::put( $filename, $archive->get() );
     return $filename;
+  }
+
+  /**
+   * @param $filename
+   * @return boolean
+   */
+  private function deleteFileTmp( $filename )
+  {
+    $filename = storage_path( 'tmp/') . $filename;
+    if( File::isDirectory( $filename ) ){
+      $result = File::deleteDirectory( $filename );
+    } elseif( File::isFile( $filename ) ){
+      $result = File::delete( $filename );
+    } else {
+      $result = true;
+    }
+    return $result;
   }
 }
