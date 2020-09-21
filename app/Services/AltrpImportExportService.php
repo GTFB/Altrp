@@ -145,6 +145,16 @@ class AltrpImportExportService
       $data['relations'][$key]['target_model_name'] = $target_model->name;
     }
 
+    $data['queries'] = Query::all();
+    foreach ( $data['queries'] as $key => $query ) {
+      $model = Model::find( $query['model_id'] );
+      if( ! $model ){
+        continue;
+      }
+      $data['queries'][$key]['model_name'] = $model->name;
+
+    }
+
     $content = json_encode( $data );
     File::put( storage_path( 'tmp/altrp-settings/altrp-data.json' ), $content);
   }

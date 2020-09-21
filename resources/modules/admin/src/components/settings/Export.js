@@ -10,7 +10,6 @@ class Export extends Component {
       </div>
 
       <a className="btn_success btn"
-         target="_blank"
          href="/admin/downloads/settings"
       >Download ZIP Archive</a>
     </div>
