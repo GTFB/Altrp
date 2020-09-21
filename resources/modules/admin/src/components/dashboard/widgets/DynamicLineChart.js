@@ -1,18 +1,30 @@
-import React, { useState, useEffect } from "react";
-import { LineChart, LineSeries, Line } from "reaviz";
-import axios from "axios";
-import Spinner from "../Spinner";
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  LineChart,
+  LineSeries,
+  Line,
+  LinearXAxis,
+  LinearXAxisTickSeries,
+  LinearXAxisTickLabel,
+} from "reaviz";
+import format from "date-fns/format";
+import formatDistanceStrict from "date-fns/formatDistanceStrict";
+import ru from "date-fns/locale/ru";
+
+import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
-const DynamicLineChart = ({ dataUrl, width = 300, height = 300, strokeWidth = 3, colorScheme }) => {
+import { getWidgetData } from "../services/getWidgetData";
+
+const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
 
-  const getData = async (dataUrl) => {
+  const getData = useCallback(async () => {
     setIsLoading(true);
-    const req = await axios(dataUrl);
-    if (req.status === 200 && typeof req.data !== "string") {
-      const newData = req.data.map((item) => {
+    const charts = await getWidgetData(widget.source, widget.filter);
+    if (charts.status === 200) {
+      const newData = charts.data.data.map((item) => {
         const key = new Date(item.key);
         if (key) {
           return {
@@ -24,23 +36,62 @@ const DynamicLineChart = ({ dataUrl, width = 300, height = 300, strokeWidth = 3,
       setData(newData);
       setIsLoading(false);
     }
+  }, [widget]);
+
+  const formattingDate = (d) => {
+    //  Первая дата
+    const firstDate = data.slice().shift();
+    // Последняя дата
+    const lastDate = data.slice().pop();
+    // Разница между датами в месяцах
+    const diff = parseInt(
+      formatDistanceStrict(firstDate.key, lastDate.key, {
+        unit: "month",
+      })
+    );
+
+    if (diff >= 0 && diff <= 12) {
+      return format(d, "d MMM", { locale: ru });
+    } else {
+      return format(d, "d MMM yy", { locale: ru });
+    }
   };
 
   useEffect(() => {
-    getData(dataUrl);
-  }, [dataUrl]);
+    getData();
+  }, [getData]);
 
   if (isLoading) return <Spinner />;
 
-  if (!Array.isArray(data) || data.length === 0) return <EmptyWidget />;
+  if (data.length === 0) return <EmptyWidget />;
 
   return (
-    <LineChart
-      height={height}
-      width={width}
-      data={data}
-      series={<LineSeries line={<Line strokeWidth={strokeWidth} />} colorScheme={colorScheme} />}
-    />
+    <>
+      <LineChart
+        height={height}
+        width={width}
+        data={data}
+        xAxis={
+          <LinearXAxis
+            type="time"
+            tickSeries={
+              <LinearXAxisTickSeries
+                label={
+                  <LinearXAxisTickLabel
+                    //fontSize={12}
+                    //fill="#000000"
+                    format={formattingDate}
+                  />
+                }
+              />
+            }
+          />
+        }
+        series={
+          <LineSeries line={<Line strokeWidth={strokeWidth} />} colorScheme={widget.colorScheme} />
+        }
+      />
+    </>
   );
 };
 

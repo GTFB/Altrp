@@ -166,6 +166,45 @@ class Input extends BaseElement{
       },
     });
 
+    this.addControl('nulled_option_title', {
+      type: CONTROLLER_TEXT,
+      label: 'Nulled Option Label',
+      conditions: {
+        'content_type':
+          [
+            'select',
+            'select2',
+          ]
+      },
+    });
+
+    // this.addControl('options_sorting', {
+    //   type: CONTROLLER_SELECT,
+    //   label: 'Options Sorting',
+    //   default: '',
+    //   conditions: {
+    //     'content_type':
+    //       [
+    //         'select',
+    //         'select2',
+    //       ]
+    //   },
+    //   options: [
+    //     {
+    //       value: '',
+    //       label: 'None'
+    //     },
+    //     {
+    //       value: 'asc',
+    //       label: 'ASC'
+    //     },
+    //     {
+    //       value: 'desc',
+    //       label: 'DESC'
+    //     }
+    //   ]
+    // });
+
     this.addControl('model_for_options', {
       type: CONTROLLER_SELECT2,
       label: 'Choose Datasource for Select Options',
@@ -179,7 +218,6 @@ class Input extends BaseElement{
       },
       nullable: true,
       options_resource: '/admin/ajax/models_options?with_names=1&not_plural=1&with_sql_queries=1',
-      prefetch_options: true,
     });
 
     this.addControl('params_for_update', {
@@ -245,7 +283,7 @@ class Input extends BaseElement{
 
     this.startControlSection('label_style_section', {
       tab: TAB_STYLE,
-      label: 'label',
+      label: 'Label',
     });
 
     this.addControl("label_style_spacing", {
@@ -300,6 +338,63 @@ class Input extends BaseElement{
         },
       }
     );
+    this.endControlSection();
+
+    this.startControlSection('font_style_section', {
+      tab: TAB_STYLE,
+      label: 'Font',
+    });
+
+    this.addControl('field_font_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-field-select2__single-value{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px;',
+          'font-weight: {{WEIGHT}};',
+          'text-transform: {{TRANSFORM}};',
+          'font-style: {{STYLE}};',
+          'text-decoration: {{DECORATION}};'
+        ],
+        '{{ELEMENT}} .altrp-field{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px;',
+          'font-weight: {{WEIGHT}};',
+          'text-transform: {{TRANSFORM}};',
+          'font-style: {{STYLE}};',
+          'text-decoration: {{DECORATION}};'
+        ]
+        
+      },
+    });
+
+    this.addControl("field_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "Font Color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        '{{ELEMENT}} .altrp-field-select2__single-value{{STATE}}': 'color : {{COLOR}};',
+        '{{ELEMENT}} .altrp-field{{STATE}}': 'color : {{COLOR}};'
+      }
+    });
+
     this.endControlSection();
 
     this.startControlSection('position_section', {
@@ -411,7 +506,7 @@ class Input extends BaseElement{
 
     this.startControlSection('placeholder_style_section', {
       tab: TAB_STYLE,
-      label: 'placeholder',
+      label: 'Placeholder',
     });
 
     this.addControl("placeholder_style_font_color", {
@@ -537,6 +632,39 @@ class Input extends BaseElement{
         },
       }
     );
+
+    this.addControl('option_background_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Option Background Color',
+      default: {
+        color: "#FFF",
+        colorPickedHex: "#FFF",
+      },
+      conditions: { 'content_type': ['select2'] },
+      rules: {
+        '.{{ID}}.altrp-field-select2__option{{STATE}}': 'background-color: {{COLOR}};',
+      },
+    });
+
+    this.addControl('option_focused_background_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Focused Option Background Color',
+      default: {
+        color: "#DEEBFF",
+        colorPickedHex: "#DEEBFF",
+      },
+      conditions: { 'content_type': ['select2'] },
+    });
+
+    this.addControl('option_selected_background_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Selected Option Background Color',
+      default: {
+        color: "#2684FF",
+        colorPickedHex: "#2684FF",
+      },
+      conditions: { 'content_type': ['select2'] },
+    });    
 
     this.addControl('background_section_opacity', {
       type: CONTROLLER_SLIDER,

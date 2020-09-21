@@ -4,17 +4,24 @@ import '../../sass/dialog-content.scss'
 import DialogTab from './DialogTab';
 import DialogConditionsTab from './DialogConditionsTab';
 import DialogTriggersTab from './DialogTriggersTab';
+import {connect} from 'react-redux';
 
 class DialogWindow extends Component {
   constructor(props) {
-    super(props)
-    this.state = {
-      activeTab: 'Conditions',
-      tabs: [
+    super(props);
+    let tabs = [
+      { icon: 'conditions_tab', title: 'Conditions', desc: 'Apply current template to these pages' },
+    ];
+    if(['footer', 'header'].indexOf(this.props.templateData.template_type) >= 0){
+      tabs = [
         { icon: 'conditions_tab', title: 'Conditions', desc: 'Apply current template to these pages' },
         { icon: 'triggers_tab', title: 'Triggers', desc: 'What action the user needs to do for the popup to open.' },
         { icon: 'triggers_tab', title: 'Advanced Rules', desc: 'Requirements that have to be met for the popup to open.' },
-      ],
+      ];
+    }
+    this.state = {
+      activeTab: 'Conditions',
+      tabs,
       
     }
   }
@@ -26,17 +33,17 @@ class DialogWindow extends Component {
   };
   
   handleClose() {
-    this.props.showModalWindow()
+    this.props.toggleModalWindow()
   };
 
   renderSwitch(activeTab) {
     switch (this.state.activeTab) {
       case 'Conditions':
-        return <DialogConditionsTab />
+        return <DialogConditionsTab />;
       case 'Triggers':
-        return <DialogTriggersTab />
+        return <DialogTriggersTab />;
       case 'Advanced Rules':
-        return <div>ADVANCED</div>
+        return <div>ADVANCED</div>;
       default:
         return null;
     }
@@ -73,6 +80,8 @@ class DialogWindow extends Component {
       </div>
     )
   }
-};
-
-export default DialogWindow;
+}
+function mapStateToProps(state) {
+  return {templateData: state.templateData};
+}
+export default connect(mapStateToProps)(DialogWindow);

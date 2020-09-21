@@ -1,4 +1,5 @@
 import modelManager from "../../../../editor/src/js/classes/modules/ModelsManager";
+import {conditionsChecker} from "../helpers";
 
 /**
  * Срабатываает перед удалением компонента элемента
@@ -23,6 +24,54 @@ function componentWillUnmount(){
 }
 
 /**
+ * Вернуть класс активного/неактивного состояния
+ */
+function classStateDisabled(){
+  const { element, currentModel, currentUser } = this.props;
+  let conditional_disabled_choose = element.getSettings('conditional_disabled_choose');
+  if(conditional_disabled_choose){
+    switch(conditional_disabled_choose){
+      case 'guest':{
+        if(currentUser.isGuest()){
+          return ' state-disabled ';
+        }
+      }
+      break;
+      case 'auth':{
+        if(currentUser.checkUserAllowed(
+            element.getSettings('conditional_disabled_permissions'),
+            element.getSettings('conditional_disabled_roles')
+        )){
+          return ' state-disabled ';
+        }
+      }
+      break;
+    }
+  }
+  let conditions = element.getSettings('disabled_conditions',[]);
+  conditions = conditions.map(c=>{
+    const {
+      conditional_model_field: modelField,
+      conditional_other_operator: operator,
+      conditional_other_condition_value: value,
+    } = c;
+    return {
+      modelField,
+      operator,
+      value,
+    };
+  });
+  if(element.getSettings('disabled_conditional_other', false)) {
+
+    if (conditionsChecker(conditions,
+        element.getSettings('disabled_conditional_other_display') === 'AND',
+        currentModel)) {
+      return ' state-disabled ';
+    }
+  }
+  return ' '
+}
+/**
  * обновить данные модели
  */
 function updateModelData (modelData) {
@@ -33,7 +82,7 @@ function updateModelData (modelData) {
      */
     return {...state,
       // modelsData,
-      modelData: {...modelData}}
+     modelData}
   });
 
 }
@@ -130,4 +179,5 @@ export default function frontDecorate(component) {
   component.getContent = getContent.bind(component);
   component.getModelId = getModelId.bind(component);
   component.updateModelData = updateModelData.bind(component);
+  component.classStateDisabled = classStateDisabled.bind(component);
 }

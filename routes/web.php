@@ -52,6 +52,9 @@ Route::get( '/admin/editor-reports', function (){
 
 Route::get('/reports/html/{id}', "ReportsController@page");
 
+/**
+ * Роуты Админки
+ */
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 
@@ -146,6 +149,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::put( 'templates/{template_id}/settings/{setting_name}', 'TemplateController@settingSet' )
       ->name( 'set-template-setting' );
     /**
+     * Templates Conditions
+     */
+    Route::get( 'templates/{template_id}/conditions', 'TemplateController@conditionsGet' )
+      ->name( 'get-template-setting' );
+    Route::put( 'templates/{template_id}/conditions', 'TemplateController@conditionsSet' )
+      ->name( 'set-template-setting' );
+    /**
      * Reports
      */
     //Route::get('reports/{id}', "TemplateController@show");
@@ -155,8 +165,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::resource( 'media', 'Admin\MediaController' );
     Route::resource( 'settings', 'Admin\SettingsController' );
     Route::resource( 'diagrams', 'Admin\AltrpDiagramController' );
+    Route::get( 'sql_editors/list', 'Admin\SQLEditorController@listByName');
     Route::resource( 'sql_editors', 'Admin\SQLEditorController' );
-    Route::get( 'sql_editors/list/{name}', 'Admin\SQLEditorController@listByName');
 
     /**
      * Updates Check
@@ -325,11 +335,28 @@ foreach ( $frontend_routes as $frontend_route ) {
 
 Route::group( ['prefix' => 'ajax'], function(){
 
+  /**
+   * Роут текущий пользователь
+   */
+  Route::get( 'current-user', "Users\Users@getCurrentUser" )->name( 'users.current-user' );
+  
   // Отдает данные для виджета карты
   Route::get('maps/{id}', 'MapsController@index');
 
   // Записывает данные карты с фронта
   Route::post('maps/{id}', 'MapsController@store');
+
+  // Отдает данные для виджета панели аналитики
+  Route::get('dashboards/{id}', 'DashboardsController@index');
+
+  // Записывает данные для виджета панели аналитики
+  Route::post('dashboards/{id}', 'DashboardsController@store');
+
+  // Обновляем виджет на панели аналитики
+  Route::put('dashboards/{id}', 'DashboardsController@update');
+
+  // Удаляем виджет из панели аналитики
+  Route::delete('dashboards/{id}', 'DashboardsController@destroy');
 
   /**
    * Отдает данные страницы как модели для динамического контента
@@ -376,7 +403,13 @@ Route::get('/linkstorage', function () {
   return redirect('/admin');
 });
 
+/**
+ * Роуты для зарегистрированных пользователей
+ */
+Route::group( ['prefix' => 'ajax', 'middleware' => 'auth'], function() {
 
+
+} );
 /**
  * Обновление всех ресурсов бэкенда
  */

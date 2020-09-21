@@ -6,6 +6,7 @@ import RootElement from "../elements/RootElement";
 import store from "../../store/store";
 import {changeTemplateStatus} from "../../store/template-status/actions";
 import {setTitle} from "../../../../../front-app/src/js/helpers";
+import {setTemplateData} from "../../store/template-data/actions";
 
 class SaveImportModule extends BaseModule{
 
@@ -25,6 +26,7 @@ class SaveImportModule extends BaseModule{
       let res = this.resource.get(this.template_id).then(templateData => {
         setTitle(templateData.title);
         let data = JSON.parse(templateData.data);
+        store.dispatch(setTemplateData(templateData));
         let parsedData = this.modules.elementsFactory.parseData(data);
         let templateDataStorage = getEditor().modules.templateDataStorage;
         templateDataStorage.replaceAll(parsedData);

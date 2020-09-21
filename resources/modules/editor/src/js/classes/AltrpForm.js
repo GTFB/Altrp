@@ -43,10 +43,17 @@ class AltrpForm {
   /**
    * Проверка полей перед отправкой
    * @param {int |  null} modelID
+   * @param {string} submitText
    * @return {boolean}
    */
-  async submit(modelID){
+  async submit(modelID, submitText = ''){
     let success = true;
+    if(submitText){
+      let confirmed =  await confirm(submitText);
+      if(! confirmed){
+        return{success: false};
+      }
+    }
     this.fields.forEach(field=>{
       if(! field.fieldValidate()){
         success = false;

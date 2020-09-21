@@ -83,6 +83,50 @@ class Section extends BaseElement{
       }
     );
 
+    this.addControl(
+      'layout_align_content', {
+      type: CONTROLLER_SELECT,
+      label: 'Align Content',
+      options: [
+        {
+          'value': 'baseline',
+          'label': 'baseline'
+        },
+        {
+          'value': 'center',
+          'label': 'center'
+        },
+        {
+          'value': 'flex-start',
+          'label': 'flex-start'
+        },
+        {
+          'value': 'flex-end',
+          'label': 'flex-end'
+        },
+        {
+          'value': 'space-around',
+          'label': 'space-around'
+        },
+        {
+          'value': 'space-between',
+          'label': 'space-between'
+        },
+        {
+          'value': 'space-evenly',
+          'label': 'space-evenly'
+        },
+        {
+          'value': 'unset',
+          'label': 'unset'
+        },
+      ],
+      rules: {
+        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "align-content: {{VALUE}}",
+      },
+    }
+    );
+
     // this.addControl("layout_content_full_width", {
     //   type: CONTROLLER_SLIDER,
     //   label: "full fill width",
@@ -383,11 +427,170 @@ class Section extends BaseElement{
 
     this.addControl('background_image', {
       type: CONTROLLER_MEDIA,
-      label: 'Background image',
+      label: 'Background Image',
       default: {url: ""},
       rules: {
-        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background: repeat url({{URL}});"
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-image: url({{URL}});"
       }
+    });
+
+    this.addControl('background_position', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "top left",
+          label: "top left"
+        },
+        {
+          value: "top",
+          label: "top"
+        },
+        {
+          value: "top right",
+          label: "top right"
+        },
+        {
+          value: "right",
+          label: "right"
+        },
+        {
+          value: "bottom right",
+          label: "bottom right"
+        },
+        {
+          value: "bottom",
+          label: "bottom"
+        },
+        {
+          value: "bottom left",
+          label: "bottom left"
+        },
+        {
+          value: "left",
+          label: "left"
+        },
+        {
+          value: "center",
+          label: "center"
+        }
+      ],
+      label: 'Background Position',
+      default: 'top left',
+      rules: {
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-position: {{VALUE}};"
+      }
+    });
+
+    this.addControl('background_attachment', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "scroll",
+          label: "scroll"
+        },
+        {
+          value: "fixed",
+          label: "fixed"
+        },
+        {
+          value: "local",
+          label: "local"
+        }
+      ],
+      label: 'Background Attachment',
+      default: 'scroll',
+      rules: {
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-attachment: {{VALUE}};"
+      }
+    });
+
+    this.addControl('background_repeat', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "repeat",
+          label: "repeat"
+        },
+        {
+          value: "repeat-x",
+          label: "repeat-x"
+        },
+        {
+          value: "repeat-y",
+          label: "repeat-y"
+        },
+        {
+          value: "space",
+          label: "space"
+        },
+        {
+          value: "round",
+          label: "round"
+        },
+        {
+          value: "no-repeat",
+          label: "no-repeat"
+        }
+      ],
+      label: 'Background Repeat',
+      default: 'repeat',
+      rules: {
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-repeat: {{VALUE}};"
+      }
+    });
+
+    this.addControl("background_image_width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default: {
+        size: 100,
+        unit: 'px',
+      },
+      conditions: {
+        'background_size': [''],
+      },
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 1000,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
+      }
+    });
+
+    this.addControl('background_size', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "unset",
+          label: "unset"
+        },
+        {
+          value: "cover",
+          label: "cover"
+        },
+        {
+          value: "contain",
+          label: "contain"
+        },
+        {
+          value: "",
+          label: "set width"
+        },
+      ],
+      label: 'Background Size',
+      default: 'unset',
+      rules: {
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
+      }
+    });
+
+    this.addControl('isScrollEffect', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Scroll Effects',
     });
 
     this.endControlSection();
@@ -541,7 +744,7 @@ class Section extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}': [
+        '{{ELEMENT}}{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',

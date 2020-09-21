@@ -160,7 +160,7 @@ class ApiController extends Controller
 
       $_options[] = [
         'value' => $option->id,
-        'label' => $option->$label_name,
+        'label' => $option->$label_name ? $option->$label_name : $option->id,
       ];
     }
     return response()->json( $_options, 200, [], JSON_UNESCAPED_UNICODE );

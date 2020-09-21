@@ -20,10 +20,33 @@ class SectionComponent extends Component {
     }
   }
 
+  // _componentDidMount() {
+  //   const { isScrollEffect } = this.props.element.getSettings();
+  //   console.log(isScrollEffect)
+  //   if (isScrollEffect) {
+  //     document.addEventListener('click', this.handleScroll);
+  //   }
+  // }
+
+  // componentWillUnmount() {
+  //   window.removeEventListener('scroll', this.handleScroll);
+  // }
+
+  // handleScroll = event => {
+  //   // let scrollTop = event.srcElement.body.scrollTop;
+  //     // itemTranslate = Math.min(0, scrollTop / 3 - 60);
+
+  //   // console.log({ scrollTop });
+  //   console.log("!!!!!!!!!!")
+  //   // this.setState({
+  //   //   transform: itemTranslate
+  //   // });
+  // }
 
   render() {
     let styles = {};
     const  background_image  = this.props.element.getSettings('background_image', {});
+    const { isScrollEffect } = this.props.element.getSettings();
     const isContentBoxed = this.state.settings.layout_content_width_type === "boxed";
     const widthType = this.state.settings.layout_content_width_type;
     // if (this.state.settings.layout_content_width_type === "full") {
@@ -40,8 +63,8 @@ class SectionComponent extends Component {
       `altrp-section_columns-${this.props.element.getColumnsCount()}`
     ];
 
-    if (background_image.url) {
-      sectionClasses.push('altrp-background-image');      
+    if (background_image.url/*  && !isScrollEffect */) {
+      sectionClasses.push('altrp-background-image');
     }
 
     if (widthType === "boxed") {
@@ -71,6 +94,13 @@ class SectionComponent extends Component {
 
     return React.createElement(this.state.settings.layout_html_tag || "div",
       { style: styles, className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: "" },
+      // isScrollEffect ?
+      // <>
+      //   <div className="motion-effects-container" onScroll={this.handleScroll}>
+      //       <div className="altrp-background-image" style={{ width: '100%', height: '130%', transform: 'translateY(110px)' }} />
+      //   </div>
+      //   <div className={"get-column-count " + `altrp-element-column-count${this.props.element.id}`} id="columnCount" />
+      // </> :
       <div className={"get-column-count " + `altrp-element-column-count${this.props.element.id}`} id="columnCount" />,
       sectionWrapper
     );
