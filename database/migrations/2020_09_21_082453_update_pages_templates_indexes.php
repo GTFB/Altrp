@@ -1,11 +1,10 @@
 <?php
 
-use Faker\Provider\Uuid;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddGuids extends Migration
+class UpdatePagesTemplatesIndexes extends Migration
 {
   /**
    * Run the migrations.
@@ -15,12 +14,9 @@ class AddGuids extends Migration
   public function up()
   {
     //
-    Schema::table( 'templates', function ( Blueprint $table ){
-      $table->uuid('guid')->nullable();
-    });
-    Schema::table( 'pages', function ( Blueprint $table ){
-      $table->uuid('guid')->nullable();
-    });
+    Schema::table( 'media', function ( Blueprint $table ) {
+      $table->unique( ['url'], 'url' );
+    } );
   }
 
   /**
@@ -31,5 +27,8 @@ class AddGuids extends Migration
   public function down()
   {
     //
+    Schema::table( 'media', function ( Blueprint $table ) {
+      $table->uuid( 'guid' )->nullable();
+    } );
   }
 }

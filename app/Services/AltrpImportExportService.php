@@ -68,6 +68,10 @@ class AltrpImportExportService
     $data = [];
     $data['templates'] = Template::all()->toArray();
     $data['pages'] = Page::all()->toArray();
+    foreach ( $data['pages'] as $key => $page ) {
+      $_page = Page::find( $page['id'] );
+      $data['pages'][$key]['model_name'] = $_page->model->name;
+    }
     $data['media'] = Media::all()->toArray();
     $data['pages_templates'] = PagesTemplate::all()->toArray();
     $data['admin_logo'] = json_decode( env( 'ALTRP_SETTING_ADMIN_LOGO' ), true );
@@ -120,7 +124,7 @@ class AltrpImportExportService
 
     Template::import( $data['templates'] );
     Media::import( $data['media'] );
-    Page::import( $data['media'] );
+    Page::import( $data['pages'] );
     PagesTemplate::import( $data['media'] );
   }
 

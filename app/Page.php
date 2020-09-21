@@ -2,9 +2,11 @@
 
 namespace App;
 
+use App\Altrp\Model as AltrpModel;
 use App\Constructor\Template;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -14,12 +16,12 @@ use Mockery\Exception;
  * Class Page
  * @package App
  * @property User $user
- * @property \App\Altrp\Model $model
+ * @property AltrpModel $model
  */
 
 class Page extends Model
 {
-  //
+
   use SoftDeletes;
   protected $fillable = [
     'title',
@@ -28,7 +30,10 @@ class Page extends Model
     'path',
     'model_id',
     'redirect',
+    'guid',
   ];
+
+//  protected $table = 'altrp_pages';
 
   /**
    * @return array
@@ -228,7 +233,7 @@ class Page extends Model
   }
 
   /**
-   * @return \App\Altrp\Model[]|null
+   * @return AltrpModel[]|null
    */
   function get_models(){
     if( ! $this->model ){
@@ -358,5 +363,27 @@ class Page extends Model
       }
     }
     return $allowed;
+  }
+
+  /**
+   * Испортирует страницы
+   * @param array $imported_pages
+   */
+  static public function import( $imported_pages = []){
+    foreach ( $imported_pages as $imported_page ) {
+      if( self::where( 'guid', $imported_page['guid'] )->first() ){
+        continue;
+      }
+      $new_page = new self( $imported_page );
+      $new_page->author = Auth::user()->id;
+      if( $imported_page['model_name'] ){
+        $model = AltrpModel::where( 'name', $imported_page['model_name'] )->first();
+        $model_id = $model ? $model->id : null;
+      } else {
+        $model_id = null;
+      }
+      $new_page->model_id = $model_id;
+      $new_page->save();
+    }
   }
 }

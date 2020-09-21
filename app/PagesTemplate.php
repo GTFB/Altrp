@@ -16,6 +16,11 @@ class PagesTemplate extends Model
     'template_type',
     'condition_type',
   ];
+
+  public static function import( $media )
+  {
+  }
+
   public function template(){
     return $this->belongsTo( Template::class, 'template_guid', 'guid' );
   }
@@ -28,4 +33,6 @@ class PagesTemplate extends Model
   public function page_trough_id(){
     return $this->belongsTo( Page::class, 'page_id' );
   }
+
+
 }

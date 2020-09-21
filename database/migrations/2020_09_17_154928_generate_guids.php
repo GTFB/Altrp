@@ -33,11 +33,6 @@ class GenerateGuids extends Migration
       $page->save();
     });
 
-    $media = Media::all();
-    $media->each( function ( $m ) {
-      $m->guid = (string)Str::uuid();
-      $m->save();
-    });
     $templates->each( function ( $template ) {
       $template->pages_templates->each( function ( PagesTemplate $pages_template ) {
         $page = $pages_template->page_trough_id;
