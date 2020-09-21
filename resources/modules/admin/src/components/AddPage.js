@@ -3,6 +3,38 @@ import {Link} from "react-router-dom";
 import Resource from "../../../editor/src/js/classes/Resource";
 import {Redirect, withRouter} from 'react-router-dom';
 import AltrpSelect from "./altrp-select/AltrpSelect";
+import AdminTable from "./AdminTable";
+
+const columns = [
+  {
+    name: 'id',
+    title: 'ID',
+    // url: true,
+    // editUrl: true,
+    // tag: 'Link'
+  },
+  {
+    name: 'alias',
+    title: 'Alias'
+  },
+  {
+    name: 'priority',
+    title: 'Priority'
+  },
+  {
+    name: 'parameters',
+    title: 'Parameters'
+  }
+];
+
+const dataSources = [{
+  id: 1,
+  page_id: 1,
+  data_source_id: 1,
+  alias: "alias",
+  priority: 1,
+  parameters: "parameters"
+}]
 
 /**
  * @class
@@ -18,6 +50,7 @@ class AddPage extends Component {
       redirectAfterSave: false,
       templates: [],
       models: [],
+      dataSources: dataSources/*  [] */
     };
     this.resource = new Resource({route: '/admin/ajax/pages'});
     this.model_resource = new Resource({route: '/admin/ajax/models_options'});
@@ -102,6 +135,7 @@ class AddPage extends Component {
     })
   }
   render() {
+    const { dataSources } = this.state;
     if(this.state.redirectAfterSave){
       return<Redirect to="/admin/pages"/>
     }
@@ -114,7 +148,7 @@ class AddPage extends Component {
         </div>
       </div>
       <div className="admin-content">
-        <form className="admin-form" onSubmit={this.savePage}>
+        <form className="admin-form" onSubmit={this.savePage} className="mb-2">
           <div className="form-group">
             <label htmlFor="page-title">Title</label>
             <input type="text" id="page-title" required={1}
@@ -182,6 +216,26 @@ class AddPage extends Component {
           </div>
           <button className="btn btn_success">{this.state.id ? 'Save' : 'Add'}</button>
         </form>
+
+        {dataSources.length && <AdminTable
+          columns={columns}
+          // quickActions={[{
+          //   tag: 'Link', props: {
+          //     href: `/admin/tables/models/${id}/fields/edit/:id`,
+          //   },
+          //   title: 'Edit'
+          // }, {
+          //   tag: 'button',
+          //   route: `/admin/ajax/models/${id}/fields/:id`,
+          //   method: 'delete',
+          //   confirm: 'Are You Sure?',
+          //   after: () => this.updateFields(),
+          //   className: 'quick-action-menu__item_danger',
+          //   title: 'Trash'
+          // }]}
+          rows={dataSources.map(dataSource => ({ ...dataSource, /* editUrl: `/admin/tables/models/${model.id}/fields/edit/${field.id}` */ }))}
+        />}
+        <button className="btn btn_add">Add Data Source</button>
       </div>
     </div>;
   }
