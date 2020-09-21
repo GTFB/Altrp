@@ -37,6 +37,13 @@
               width: 100%;
             }
           }
+          .form-check {
+            display: flex;
+            align-items: center;
+            .form-check-input {
+              width: 30px;
+            }
+          }
         }
       }
     }

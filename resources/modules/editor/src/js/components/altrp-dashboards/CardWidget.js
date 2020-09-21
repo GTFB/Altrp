@@ -8,6 +8,7 @@ import WidgetDiagram from "../../../../../admin/src/components/dashboard/WidgetD
 
 function CardWidget({ widget, onDeleted, onEdited, sources }) {
   const [isEdit, setIsEdit] = useState(false);
+  console.log("widget :>> ", widget);
   return (
     <Card key={widget.id}>
       <Card.Header>

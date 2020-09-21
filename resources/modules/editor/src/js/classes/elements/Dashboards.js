@@ -45,6 +45,19 @@ class Dashboards extends BaseElement {
 
     this.startControlSection("style", {
       tab: TAB_STYLE,
+      label: "Visual type",
+    });
+
+    this.addControl("animated", {
+      type: CONTROLLER_SWITCHER,
+      label: "Animated",
+      default: false,
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("size", {
+      tab: TAB_STYLE,
       label: "Size",
     });
 

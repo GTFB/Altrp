@@ -11,6 +11,7 @@ import TypeField from "./fields/TypeField";
 import LegendField from "./fields/LegendField";
 import SourceField from "./fields/SourceField";
 import ColorSchemeField from "./fields/colorSchemeField";
+import VerticalTableField from "./fields/VerticalTableField";
 
 const AddWidget = ({ id, onAdd, setIsShow, sources }) => {
   const [widget, setWidget] = useState({
@@ -57,6 +58,8 @@ const AddWidget = ({ id, onAdd, setIsShow, sources }) => {
     return source?.types?.map((type) => type.value) || [];
   };
 
+  console.log("widget.type :>> ", widget.type);
+
   return (
     <Card>
       <Card.Header>
@@ -87,8 +90,12 @@ const AddWidget = ({ id, onAdd, setIsShow, sources }) => {
           <TypeField
             widget={widget}
             setWidget={setWidget}
-            allowedTypes={getTypesBySource(widget.source)}
+            allowedTypes={[...getTypesBySource(widget.source), TABLE]}
           />
+
+          {widget.source && widget.type === TABLE && (
+            <VerticalTableField widget={widget} setWidget={setWidget} />
+          )}
 
           <ColorSchemeField widget={widget} setWidget={setWidget} />
 

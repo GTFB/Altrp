@@ -65,7 +65,6 @@
     "react-slick": "^0.27.1",
     "react-table": "^7.2.1",
     "react-tabs": "^3.1.1",
-    "react-use-clipboard": "^1.0.0",
     "reaviz": "^8.1.8",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
