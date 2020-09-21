@@ -5,6 +5,7 @@ namespace App\Altrp;
 
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use App\Altrp\Model as AltrpModel;
+use Illuminate\Support\Arr;
 
 class Query extends EloquentModel
 {
@@ -35,7 +36,7 @@ class Query extends EloquentModel
   public static function import( $imported_queries = [] )
   {
     foreach ( $imported_queries as $imported_query ) {
-      $model = AltrpModel::where( 'name', $imported_query['model_name'] )->first();
+      $model = AltrpModel::where( 'name', Arr::get( $imported_query, 'model_name' ) )->first();
       if( ! $model ){
         continue;
       }

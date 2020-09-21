@@ -4,6 +4,7 @@ namespace App\Altrp;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Altrp\Model as AltrpModel;
+use Illuminate\Support\Arr;
 
 class Column extends Model
 {
@@ -45,11 +46,11 @@ class Column extends Model
   public static function import( $imported_columns = [])
   {
     foreach ( $imported_columns as $imported_column ) {
-      $model = AltrpModel::where( 'name', $imported_column['model_name'] )->first();
+      $model = AltrpModel::where( 'name', Arr::get( $imported_column, 'model_name' ) )->first();
       if( ! $model ){
         continue;
       }
-      $table = Table::where( 'name', $imported_column['table_name'] )->first();
+      $table = Table::where( 'name', Arr::get( $imported_column, 'table_name' ) )->first();
       if( ! $table ){
         continue;
       }

@@ -9,6 +9,7 @@
 namespace App\Altrp;
 
 use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Support\Arr;
 use Mockery\Exception;
 use App\Altrp\Model as AltrpModel;
 
@@ -48,11 +49,11 @@ class Relationship extends EloquentModel
   public static function import( $imported_relations = [] )
   {
     foreach ( $imported_relations as $imported_relation ) {
-      $model = AltrpModel::where( 'name', $imported_relation['model_name'] )->first();
+      $model = AltrpModel::where( 'name', Arr::get( $imported_relation, 'model_name' ) )->first();
       if( ! $model ){
         continue;
       }
-      $target_model = AltrpModel::where( 'name', $imported_relation['target_model_name'] )->first();
+      $target_model = AltrpModel::where( 'name', Arr::get( $imported_relation, 'target_model_name' ) )->first();
       if( ! $target_model ){
         continue;
       }
