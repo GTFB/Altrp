@@ -18,17 +18,19 @@ import {
 
 const AltrpDiagram = ({ settings }) => {
   const sql = settings.query?.dataSource?.value;
-  console.log("settings.query :>> ", settings.query);
 
   if (!sql) {
     return <div className="altrp-chart">Choose data for chart</div>;
   }
+
+  console.log("settings :>> ", settings);
 
   const widget = {
     source: sql,
     options: {
       colorScheme: settings.colorScheme,
       legend: "",
+      animated: settings.animated,
     },
     filter: {},
   };
@@ -37,37 +39,37 @@ const AltrpDiagram = ({ settings }) => {
     case BAR:
       return (
         <div className="altrp-chart">
-          <DynamicBarChart widget={widget} />
+          <DynamicBarChart widget={widget} width={settings.width.size} />
         </div>
       );
     case PIE:
       return (
         <div className="altrp-chart">
-          <DynamicPieChart widget={widget} />
+          <DynamicPieChart widget={widget} width={settings.width.size} />
         </div>
       );
     case DONUT:
       return (
         <div className="altrp-chart">
-          <DynamicDonutChart widget={widget} />
+          <DynamicDonutChart widget={widget} width={settings.width.size} />
         </div>
       );
     case LINE:
       return (
         <div className="altrp-chart">
-          <DynamicLineChart widget={widget} />
+          <DynamicLineChart widget={widget} width={settings.width.size} />
         </div>
       );
     case TABLE:
       return (
         <div className="altrp-chart">
-          <DynamicTableWidget widget={widget} />
+          <DynamicTableWidget widget={widget} width={settings.width.size} />
         </div>
       );
     case AREA:
       return (
         <div className="altrp-chart">
-          <DynamicAreaChart widget={widget} />
+          <DynamicAreaChart widget={widget} width={settings.width.size} />
         </div>
       );
     default:

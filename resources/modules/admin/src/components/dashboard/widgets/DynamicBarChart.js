@@ -13,6 +13,7 @@ import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
 import { getWidgetData } from "../services/getWidgetData";
+import { customStyle } from "../widgetTypes";
 
 const DynamicBarChart = ({ widget, width = 300, height = 300 }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +43,7 @@ const DynamicBarChart = ({ widget, width = 300, height = 300 }) => {
         key={i}
         className="discrete__legend-item"
         label={`${item.key} (${item.data})`}
-        //color={colorScheme(item, i)}
+        color={customStyle[i] || "#606060"}
       />
     );
   });
@@ -55,8 +56,11 @@ const DynamicBarChart = ({ widget, width = 300, height = 300 }) => {
         data={data}
         series={
           <BarSeries
-            colorScheme={widget.options.colorScheme}
+            colorScheme={
+              widget.options.colorScheme === "Custom" ? customStyle : widget.options.colorScheme
+            }
             bar={<Bar gradient={<Gradient stops={[<GradientStop stopOpacity={1} />]} />} />}
+            animated={widget.options.animated}
           />
         }
       />

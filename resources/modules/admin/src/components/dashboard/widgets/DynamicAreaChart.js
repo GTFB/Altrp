@@ -86,6 +86,7 @@ const DynamicAreaChart = ({ widget, width = 300, height = 300, color = "#FFD51F"
         }
         series={
           <AreaSeries
+            animated={widget.options.animated}
             type={widget.options.type || "standard"}
             markLine={<MarkLine strokeWidth={0} />}
             line={<Line strokeWidth={0} />}
