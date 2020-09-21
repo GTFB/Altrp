@@ -20,7 +20,7 @@ class ImportsController extends Controller{
       $altrpImportExportService->importAltrpSettings( $request );
     } catch ( \Exception $e ){
       return response()->json( ['success' => false, 'message' => $e->getMessage(), 'stack' => $e->getTrace()],
-        $e->getCode() ? $e->getCode() : 500,
+        500,
         [],
         JSON_UNESCAPED_UNICODE);
     }

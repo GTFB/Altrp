@@ -18,7 +18,7 @@ class DownloadsController extends Controller{
     } catch ( \Exception $e ){
       return response()->json(
         ['success' => false, 'error' => $e->getMessage()],
-        $e->getCode() ? $e->getCode() : 500,
+        500,
         [],
         JSON_UNESCAPED_UNICODE
       );
