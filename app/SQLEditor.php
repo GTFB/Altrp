@@ -30,15 +30,16 @@ class SQLEditor extends Model
       if( ! $model ){
         continue;
       }
-      echo '<pre style="padding-left: 200px;">';
-      var_dump( $model->altrp_sql_editors );
-      echo '</pre>';
 
       foreach ( $model->altrp_sql_editors as $sql_editor ) {
         if( $sql_editor['name'] === $sql_editor->name ){
           continue 2;
         }
       }
+
+      echo '<pre style="padding-left: 200px;">';
+      var_dump( $model->altrp_sql_editors->count() );
+      echo '</pre>';
       $new_editor = new self( $imported_editor );
       $new_editor->model_id = $model->id;
 
