@@ -10,8 +10,7 @@ namespace App\Altrp;
 
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Mockery\Exception;
-
-use App\Altrp\Model;
+use App\Altrp\Model as AltrpModel;
 
 /**
  * Class Relationship
@@ -42,7 +41,35 @@ class Relationship extends EloquentModel
         'editable'
     ];
 
-    /**
+  /**
+   * Импортируем связи
+   * @param array $imported_relations
+   */
+  public static function import( $imported_relations = [] )
+  {
+    foreach ( $imported_relations as $imported_relation ) {
+      $model = AltrpModel::where( 'name', $imported_relation['model_name'] )->first();
+      if( ! $model ){
+        continue;
+      }
+      $target_model = AltrpModel::where( 'name', $imported_relation['target_model_name'] )->first();
+      if( ! $target_model ){
+        continue;
+      }
+      foreach ( $model->altrp_relationships as $altrp_relation ) {
+        if( $imported_relation['name'] === $altrp_relation->name ){
+          continue 2;
+        }
+      }
+      $new_relation = new self( $imported_relation );
+      $new_relation->model_id = $model->id;
+      $new_relation->target_model_id = $target_model->id;
+
+      $new_relation->save();
+    }
+  }
+
+  /**
      * @return array | null
      */
     public function get_model_for_route()

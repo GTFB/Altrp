@@ -2,12 +2,19 @@
 
 namespace App\Services;
 
+use App\Altrp\Column;
+use App\Altrp\Model;
+use App\Altrp\Query;
+use App\Altrp\Relationship;
+use App\Altrp\Table;
+use App\Altrp\Model as AltrpModel;
 use App\Area;
 use App\Constructor\Template;
 use App\Helpers\Classes\AltrpZip;
 use App\Media;
 use App\Page;
 use App\PagesTemplate;
+use App\SQLEditor;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -87,6 +94,57 @@ class AltrpImportExportService
 
     $data['pages_templates'] = PagesTemplate::all()->toArray();
     $data['admin_logo'] = json_decode( env( 'ALTRP_SETTING_ADMIN_LOGO' ), true );
+
+    /**
+     * Давнные моделей
+     */
+    $data['tables'] = Table::all();
+
+    $data['models'] = Model::all();
+    foreach ( $data['models'] as $key => $model ) {
+      $table = Table::find( $model['tables_id'] );
+      if( ! $table ){
+        continue;
+      }
+      $data['models'][$key]['table_name'] = $table->name;
+    }
+
+    $data['columns'] = Column::all();
+    foreach ( $data['columns'] as $key => $column ) {
+      $model = Model::find( $column['model_id'] );
+      if( ! $model ){
+        continue;
+      }
+      $table = Table::find( $column['table_id'] );
+      if( ! $table ){
+        continue;
+      }
+      $data['columns'][$key]['table_name'] = $table->name;
+    }
+
+    $data['s_q_l_editors'] = SQLEditor::all();
+    foreach ( $data['s_q_l_editors'] as $key => $editor ) {
+      $model = Model::find( $editor['model_id'] );
+      if( ! $model ){
+        continue;
+      }
+      $data['s_q_l_editors'][$key]['model_name'] = $model->name;
+    }
+
+    $data['relations'] = Relationship::all();
+    foreach ( $data['relations'] as $key => $relation ) {
+      $model = Model::find( $relation['model_id'] );
+      if( ! $model ){
+        continue;
+      }
+      $data['relations'][$key]['model_name'] = $model->name;
+      $target_model = Model::find( $relation['target_model_id'] );
+      if( ! $target_model ){
+        continue;
+      }
+      $data['relations'][$key]['target_model_name'] = $target_model->name;
+    }
+
     $content = json_encode( $data );
     File::put( storage_path( 'tmp/altrp-settings/altrp-data.json' ), $content);
   }
@@ -133,16 +191,22 @@ class AltrpImportExportService
     File::ensureDirectoryExists( storage_path( 'app/public/media' ) );
     $zip->extractSubdirTo( storage_path( 'app/public/media' ), 'media' );
 
-//     ;echo '<pre style="padding-left: 200px;">';
-//     var_dump( $zip->error );
-//     echo '</pre>';
-
-
     File::ensureDirectoryExists( storage_path( 'tmp/imports' ) );
     $zip->extractTo( storage_path( 'tmp/imports'), 'altrp-settings/altrp-data.json' );
     $data = File::get( storage_path( 'tmp/imports/altrp-settings/altrp-data.json') );
     $data = json_decode( $data, true );
     $this->deleteFileTmp( 'imports' );
+    /**
+     * импортируем настройки моделей
+     */
+
+    Table::import( Arr::get( $data, 'tables', [] ) );
+    AltrpModel::import( Arr::get( $data, 'models', [] ) );
+    Column::import( Arr::get( $data, 'columns', [] ) );
+    Relationship::import( Arr::get( $data, 'relations', [] ) );
+    SQLEditor::import( Arr::get( $data, 's_q_l_editors', [] ) );
+    Query::import( Arr::get( $data, 'queries', [] ) );
+
     /**
      * импортируем настройки фронт приложения
      */
@@ -150,17 +214,12 @@ class AltrpImportExportService
     Media::import( Arr::get( $data, 'media', [] ) );
     Page::import( Arr::get( $data, 'pages', [] ) );
     PagesTemplate::import( Arr::get( $data, 'pages_templates', [] ) );
-    /**
-     * импортируем настройки моделей
-     */
 
     /**
      * Удаляем архив
      */
     $zip->close();
-    $filename = $this->deleteFileTmp( 'altrp-settings.zip' );
-
-
+    $this->deleteFileTmp( 'altrp-settings.zip' );
   }
 
   /**
