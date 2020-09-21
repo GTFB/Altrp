@@ -31,8 +31,8 @@ class PagesTemplate extends Model
       ])->first() ){
         continue;
       }
-      $new_data =  (new self( $imported_datum ));
-      $template = Template::where( 'guid', $imported_datum['template_guid'])->first();
+      $new_data =  new self( $imported_datum );
+      $template = Template::where( 'guid', $imported_datum['template_guid'] )->first();
 
       $new_data->template_type = $template->area;
       $new_data->save();

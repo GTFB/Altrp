@@ -35,6 +35,7 @@ class Template extends Model
     'data',
     'type',
     'area',
+    'guid',
     'user_id'
   ];
 
@@ -62,10 +63,10 @@ class Template extends Model
       if( self::where( 'guid', $imported_template['guid'] )->first() ){
         continue;
       }
-      $new_template = new self( $imported_templates );
+      $new_template = new self( $imported_template );
       $new_template->user_id = Auth::user()->id;
-      if( Arr::get( $imported_templates, 'area_name' ) ){
-        $area = Area::where( 'name', $imported_templates['area_name'] )->first();
+      if( Arr::get( $imported_template, 'area_name' ) ){
+        $area = Area::where( 'name', $imported_template['area_name'] )->first();
         $area_name = $area ? $area->name : 1;
       } else {
         $area_name = 1;
