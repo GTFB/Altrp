@@ -6,6 +6,7 @@ use App\Altrp\Model as AltrpModel;
 use App\Constructor\Template;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -376,7 +377,7 @@ class Page extends Model
       }
       $new_page = new self( $imported_page );
       $new_page->author = Auth::user()->id;
-      if( $imported_page['model_name'] ){
+      if( Arr::get( $imported_page, 'model_name' ) ){
         $model = AltrpModel::where( 'name', $imported_page['model_name'] )->first();
         $model_id = $model ? $model->id : null;
       } else {
