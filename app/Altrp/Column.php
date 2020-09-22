@@ -5,6 +5,7 @@ namespace App\Altrp;
 use Illuminate\Database\Eloquent\Model;
 use App\Altrp\Model as AltrpModel;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 
 class Column extends Model
 {
@@ -65,7 +66,7 @@ class Column extends Model
       try {
         $new_column->save();
       } catch (\Exception $e){
-        error_log( $e->getMessage() );
+        Log::error( $e->getMessage(), $e->getTrace() );
         continue;
       }
 //      if( $existed_column )

@@ -10,6 +10,7 @@ namespace App\Altrp;
 
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 use Mockery\Exception;
 use App\Altrp\Model as AltrpModel;
 
@@ -68,7 +69,7 @@ class Relationship extends EloquentModel
       try{
         $new_relation->save();
       } catch (\Exception $e){
-        error_log( $e->getMessage() );
+        Log::error( $e->getMessage(), $e->getTrace() );
         continue;
       }
     }
