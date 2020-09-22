@@ -14,6 +14,7 @@ class Reports extends Model
     'description',
     'html',
     'json',
+    'guid',
     'user_id',
   ];
 

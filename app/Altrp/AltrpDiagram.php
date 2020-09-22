@@ -14,6 +14,7 @@ class AltrpDiagram extends Model
     protected $fillable = [
         'settings',
         'author',
+        'guid',
         'title'
     ];
 
