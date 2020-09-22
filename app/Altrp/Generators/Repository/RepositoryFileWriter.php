@@ -98,13 +98,21 @@ class RepositoryFileWriter
         }
         $contentRepo = file($repoFile, 2);
         if ($line = $this->repoMethodExists($contentRepo, $name)) {
-            for ($i = $line; true; $i++) {
-                if (Str::contains($contentRepo[$i], '}')) {
-                    unset($contentRepo[$i]);
-                    break;
+            try {
+                if (!Str::contains($contentRepo[$line-1],'CUSTOM_METHODS_BEGIN')) {
+                    $line = $line - 1;
                 }
-                unset($contentRepo[$i]);
+                for ($i = $line; true; $i++) {
+                    if (preg_match('/^ {4}}( *)$|^ {2}}( *)$|^\t}( *)$/', $contentRepo[$i])) {
+                        unset($contentRepo[$i]);
+                        break;
+                    }
+                    unset($contentRepo[$i]);
+                }
+            } catch (\Exception $e) {
+                dd($e);
             }
+
         }
         return \File::put(
             $repoFile,

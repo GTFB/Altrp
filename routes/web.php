@@ -79,6 +79,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::resource( 'pages', 'Admin\PagesController' );
     Route::get( '/pages_options', 'Admin\PagesController@pages_options' )->name( 'admin.pages_options.all' );
     Route::get( '/pages_options/{page_id}', 'Admin\PagesController@show_pages_options' )->name( 'admin.pages_options.show' );
+
+    Route::get('/page_data_sources', 'Admin\PageDatasourceController@index');
+    Route::get('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@show");
+    Route::post('/page_data_sources', "Admin\PageDatasourceController@store");
+    Route::put('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@update");
+    Route::delete('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@destroy");
+
     Route::get('/permissions', "Users\Permissions@getPermissions");
     Route::get('/permissions_options', "Users\Permissions@getPermissionsOptions");
     Route::get('/permissions/{permission}', "Users\Permissions@getPermission");
@@ -222,6 +229,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     * Поля
     */
     Route::get( '/models/{model_id}/fields', 'Admin\ModelsController@getModelFields');
+    Route::get( '/models/{model_id}/fields_only', 'Admin\ModelsController@getOnlyModelFields');
     Route::get( '/models/{model_id}/field_options', 'Admin\ModelsController@getModelFieldOptions');
     Route::post( '/models/{model_id}/fields', 'Admin\ModelsController@storeModelField');
     Route::put( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@updateModelField');
@@ -253,9 +261,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::get( '/data_sources', 'Admin\ModelsController@getDataSources');
     Route::get( '/data_source_options', 'Admin\ModelsController@getDataSourceOptions');
     Route::post( '/data_sources', 'Admin\ModelsController@storeDataSource');
-    Route::put( '/data_sources/{field_id}', 'Admin\ModelsController@updateDataSource');
-    Route::get( '/data_sources/{field_id}', 'Admin\ModelsController@showDataSource');
-    Route::delete( '/data_sources/{field_id}', 'Admin\ModelsController@destroyDataSource');
+    Route::put( '/data_sources/{source_id}', 'Admin\ModelsController@updateDataSource');
+    Route::get( '/data_sources/{source_id}', 'Admin\ModelsController@showDataSource');
+    Route::delete( '/data_sources/{source_id}', 'Admin\ModelsController@destroyDataSource');
 
     Route::get('/tables', "Admin\TableController@getTables");
     Route::get('/tables/options', "Admin\TableController@getTablesForOptions");
@@ -288,7 +296,22 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 
     Route::get('/tables/{table}/controller', "Admin\TableController@getController");
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
+
+
   });
+
+  /**
+   * Роуты загрузок Админки
+   */
+  Route::group(['prefix' => 'downloads'], function () {
+    Route::get( 'settings', 'Admin\DownloadsController@exportAltrpSettings' )->name( 'admin.download.settings' );
+  } );
+  /**
+   * Роуты ипортов Админки
+   */
+  Route::group(['prefix' => 'import'], function () {
+    Route::post( 'settings', 'Admin\ImportsController@importAltrpSettings' )->name( 'admin.download.settings' );
+  } );
 
 });
 
@@ -386,6 +409,7 @@ Route::group( ['prefix' => 'ajax'], function(){
    * todo: для загрузчика шаблонов для виджетов
    */
   Route::get( 'templates/{template_id}', 'TemplateController@show_frontend' )->name( 'templates.show.frontend' );
+
 } );
 
 Route::get('reports/{id}', "ReportsController@show");

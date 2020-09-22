@@ -54,6 +54,11 @@ import SettingTable from "./components/tables/SettingTable";
 import AddMigrationPage from "./components/tables/AddMigrationPage";
 import AdminVersion from "./components/AdminVersion";
 import SQLEditors from "./components/SQLEditors";
+import ReactDOM from "react-dom";
+
+window.React = React;
+window.ReactDOM = ReactDOM;
+window.Component = React.Component;
 
 class Admin extends Component {
   constructor(props){

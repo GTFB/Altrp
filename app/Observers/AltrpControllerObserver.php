@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
+use App\Altrp\Generators\RouteGenerator;
 use App\Altrp\Source;
 use App\Exceptions\CommandFailedException;
 use App\Exceptions\ControllerNotWrittenException;
@@ -61,8 +62,11 @@ class AltrpControllerObserver
         if (! $generator->writeSourcePermissions($controller->model)) {
             throw new ModelNotWrittenException('Failed to write source permissions to the database', 500);
         }
-        if (! $generator->generateRoutes($controller->model)) {
+        if (! $generator->generateRoutes($controller->model, new RouteGenerator($controller))) {
             throw new RouteGenerateFailedException('Failed to generate routes', 500);
+        }
+        if (! $generator->generateRoutes($controller->model, new RouteGenerator($controller, 'AltrpApiRoutes'), true)) {
+            throw new RouteGenerateFailedException('Failed to generate api routes', 500);
         }
     }
 
@@ -100,7 +104,10 @@ class AltrpControllerObserver
             throw new ModelNotWrittenException('Failed to write source permissions to the database', 500);
         }
         // Сгенерировать маршруты для ресурса
-        if (! $generator->generateRoutes($controller->model)) {
+        if (! $generator->generateRoutes($controller->model, new RouteGenerator($controller))) {
+            throw new RouteGenerateFailedException('Failed to generate routes', 500);
+        }
+        if (! $generator->generateRoutes($controller->model, new RouteGenerator($controller, 'AltrpApiRoutes'), true)) {
             throw new RouteGenerateFailedException('Failed to generate routes', 500);
         }
     }

@@ -8,6 +8,7 @@ use App\Http\Requests\ApiRequest;
 
 use App\Constructor\Template;
 use App\Constructor\TemplateHistory;
+use Illuminate\Support\Str;
 
 class Templates extends ApiController
 {
@@ -58,7 +59,8 @@ class Templates extends ApiController
         $template->data = json_encode( $request->data );
         $template->type = 'template'; //1
         $template->user_id = auth()->user()->id;
-        
+        $template->guid = (string)Str::uuid();
+
         if($template->save()){
             return response()->json($template, 200, [],JSON_UNESCAPED_UNICODE);
         }

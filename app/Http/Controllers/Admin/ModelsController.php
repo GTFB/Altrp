@@ -30,8 +30,6 @@ class ModelsController extends HttpController
      */
     public function models_list()
     {
-
-
         return response()->json(Model::getModelsForEditor());
     }
 
@@ -478,8 +476,31 @@ class ModelsController extends HttpController
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $fields = $model->table->columns;
-//        $accessors = $model->altrp_accessors;
-//        $fields = array_merge($columns, $accessors);
+        return response()->json($fields, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function getOnlyModelFields($model_id)
+    {
+        /**
+         * @var $model Model
+         */
+        $model = Model::find($model_id);
+        if (! $model) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+        $fields = $model->table->onlyColumns();
+        $relFields = [];
+        $relations = $model->altrp_relationships;
+        foreach ($relations as $relation) {
+            $relFields = array_merge($relFields, $relation->altrp_target_model->table->columns->each(function ($column) use ($relation){
+                $column->name = $relation->altrp_target_model->table->name . '.' . $column->name;
+                $column->title = $relation->altrp_target_model->table->name . '.' . $column->title;
+            })->toArray());
+        }
+        $fields = array_merge($fields->toArray(), $relFields);
         return response()->json($fields, 200, [], JSON_UNESCAPED_UNICODE);
     }
 

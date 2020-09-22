@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Constructor\Template;
 use App\Constructor\TemplateSetting;
+use App\Page;
 use App\PagesTemplate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -154,6 +155,7 @@ class TemplateController extends Controller
         $template = new Template($template_data);
         $template->user_id = Auth::user()->id;
         $template->type = 'template';
+        $template->guid = (string)Str::uuid();
         if ($template->save()) {
 
             return \response()->json(
@@ -190,7 +192,7 @@ class TemplateController extends Controller
     {
         $template = Template::find($template_id);
 
-        return response()->json($template->toArray());
+        return response()->json( $template->toArray() );
     }
     /**
      * Show the form for editing the specified resource.
@@ -441,9 +443,12 @@ class TemplateController extends Controller
             break;
           case 'page';{
             foreach ( $datum['object_ids'] as $id ) {
+              $page = Page::find( $id );
               $pages_template = new PagesTemplate([
                 'page_id' => $id,
+                'page_guid' => $page->guid,
                 'template_id' => $template_id,
+                'template_guid' => $template->guid,
                 'condition_type' => $datum['condition_type'],
                 'template_type' => $template->template_type
               ]);

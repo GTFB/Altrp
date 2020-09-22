@@ -211,7 +211,7 @@ class ModelGenerator extends AppGenerator
                 '--updated-at' => $updatedAt,
                 '--relationships' => "{$relationships}",
                 '--user-columns' => "[{$userColumns}]",
-                '--accessors' => $this->getCustomCodeBlock($customCode,'accessors'),
+                '--accessors' => $this->getAccessors($this->getCustomCodeBlock($customCode,'accessors')),
                 '--custom-namespaces' => $this->getCustomCodeBlock($customCode,'custom_namespaces'),
                 '--custom-traits' => $this->getCustomCodeBlock($customCode,'custom_traits'),
                 '--custom-properties' => $this->getCustomCodeBlock($customCode,'custom_properties'),
@@ -662,6 +662,29 @@ class ModelGenerator extends AppGenerator
     {
         if (! isset($this->model->user_cols) || empty($this->model->user_cols)) return null;
         return '\'' . implode("','",explode(",", $this->model->user_cols)) . '\'';
+    }
+
+    protected function getAccessors($content)
+    {
+//        $content = explode(PHP_EOL, $content);
+//        $accessors = $this->model->altrp_accessors;
+//        if (! $accessors) return '';
+//        $newContent = '';
+//        for ($i = 0; $i < count($content); $i++) {
+//            foreach ($accessors as $accessor) {
+//                if (Str::contains($content[$i],  '* ' . ucfirst($accessor->name) . ' accessor')) {
+//                    for ($line = $i; true; $line++) {
+//                        if (preg_match('/^ {4}}$|^ {2}}$|^\t}$/', $content[$line])) {
+//                            unset($content[$line]);
+//                            break;
+//                        }
+//                        unset($content[$line]);
+//                    }
+//                }
+//            }
+//        }
+//        $content = implode(PHP_EOL, $content);
+        return $content;
     }
 
   /**

@@ -20,7 +20,7 @@ trait DynamicVariables
             function($matches) use ($outer) {
                 $param = $matches[0] ? explode(':',trim($matches[0], '\'')) : null;
                 if ($param && $param[0] == 'REQUEST') {
-                    return $this->getValue('request()->' . $param[1], $outer);
+                    return $this->getValue('request()->' . $param[1], false);
                 }
                 if ($param && $param[0] == 'CURRENT_USER') {
                     $relations = str_replace('.', '->', $param[1]);

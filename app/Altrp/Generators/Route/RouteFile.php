@@ -33,13 +33,27 @@ class RouteFile
     {
         return base_path('routes/AltrpRoutes.php');
     }
-    
+
+    public function getApiFile()
+    {
+        return base_path('routes/AltrpApiRoutes.php');
+    }
+
     public function createFile()
     {
         if(!file_exists($this->getFile())) {
-            return file_put_contents($this->getFile(), "<?php /*comment*/");
+            return file_put_contents($this->getFile(), "<?php\n/*Web routes*/");
         }
-        
+
+        return false;
+    }
+
+    public function createApiFile()
+    {
+        if(!file_exists($this->getApiFile())) {
+            return file_put_contents($this->getApiFile(), "<?php\n/*Api routes*/");
+        }
+
         return false;
     }
 }
