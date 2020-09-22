@@ -69,7 +69,7 @@ class Relationship extends EloquentModel
       try{
         $new_relation->save();
       } catch (\Exception $e){
-        Log::error( $e->getMessage(), $e->getFile() );
+        Log::error( $e->getMessage(), [$e->getFile()] );
         continue;
       }
     }
