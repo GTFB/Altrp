@@ -10,7 +10,7 @@ const columns = [
   {
     name: 'id',
     title: 'ID',
-    // url: true,
+    url: true,
     // editUrl: true,
     // tag: 'Link'
   },
@@ -240,20 +240,23 @@ class AddPage extends Component {
 
         {Boolean(dataSources.length) && <AdminTable
           columns={columns}
-          // quickActions={[{
-          //   tag: 'Link', props: {
-          //     href: `/admin/tables/models/${id}/fields/edit/:id`,
-          //   },
-          //   title: 'Edit'
-          // }, {
-          //   tag: 'button',
-          //   route: `/admin/ajax/models/${id}/fields/:id`,
-          //   method: 'delete',
-          //   confirm: 'Are You Sure?',
-          //   after: () => this.updateFields(),
-          //   className: 'quick-action-menu__item_danger',
-          //   title: 'Trash'
-          // }]}
+          quickActions={[
+            // {
+            //   tag: 'Link', props: {
+            //     href: `/admin/tables/models/${id}/fields/edit/:id`,
+            //   },
+            //   title: 'Edit'
+            // },
+            {
+              tag: 'button',
+              route: `/admin/ajax/page_data_sources/:id`,
+              method: 'delete',
+              confirm: 'Are You Sure?',
+              after: () => this.getDataSources(),
+              className: 'quick-action-menu__item_danger',
+              title: 'Trash'
+            }
+          ]}
           rows={dataSources.map(dataSource => ({ ...dataSource, /* editUrl: `/admin/tables/models/${model.id}/fields/edit/${field.id}` */ }))}
         />}
 
