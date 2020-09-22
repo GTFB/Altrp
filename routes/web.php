@@ -81,6 +81,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::get( '/pages_options/{page_id}', 'Admin\PagesController@show_pages_options' )->name( 'admin.pages_options.show' );
 
     Route::get('/page_data_sources', 'Admin\PageDatasourceController@index');
+    Route::get('/page_data_sources/pages/{page_id}', 'Admin\PageDatasourceController@getByPage');
     Route::get('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@show");
     Route::post('/page_data_sources', "Admin\PageDatasourceController@store");
     Route::put('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@update");
@@ -354,7 +355,7 @@ Route::group( ['prefix' => 'ajax'], function(){
    * Роут текущий пользователь
    */
   Route::get( 'current-user', "Users\Users@getCurrentUser" )->name( 'users.current-user' );
-  
+
   // Отдает данные для виджета карты
   Route::get('maps/{id}', 'MapsController@index');
 

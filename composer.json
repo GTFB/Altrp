@@ -9,8 +9,10 @@
     "license": "MIT",
     "require": {
         "php": "^7.2",
+        "ext-json": "*",
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
+        "ixudra/curl": "^6.20",
         "jackiedo/dotenv-editor": "1.*",
         "jenssegers/date": "^3.2",
         "kint-php/kint": "^3.3",
@@ -19,11 +21,10 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^1.2",
         "pulkitjalan/geoip": "^4.1",
-        "santigarcor/laratrust": "5.2.*",
-        "ext-json": "*"
+        "santigarcor/laratrust": "5.2.*"
     },
     "require-dev": {
-        "barryvdh/laravel-ide-helper": "^2.8",
+        "barryvdh/laravel-ide-helper": "^2.7",
         "facade/ignition": "^1.4",
         "fzaninotto/faker": "^1.4",
         "laracasts/generators": "^1.1",

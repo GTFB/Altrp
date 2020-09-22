@@ -49,6 +49,7 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::get('/tables/{table}/keys', "Admin\TableController@getKeys");
 
         Route::get('/page_data_sources', 'Admin\PageDatasourceController@index');
+        Route::get('/page_data_sources/pages/{page_id}', 'Admin\PageDatasourceController@getByPage');
         Route::get('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@show");
         Route::post('/page_data_sources', "Admin\PageDatasourceController@store");
         Route::put('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@update");
