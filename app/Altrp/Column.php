@@ -12,7 +12,6 @@ class Column extends Model
     public $timestamps = false;
 
     public $fillable = [
-      "id",
       "name",
       "title",
       "description",
