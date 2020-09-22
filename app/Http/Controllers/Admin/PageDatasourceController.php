@@ -16,7 +16,16 @@ class PageDatasourceController extends Controller
     public function index()
     {
         $pageDatasources = PageDatasource::with('source')->get();
-        return response()->json($pageDatasources, 200);
+        return response()->json($pageDatasources, 200, [],JSON_UNESCAPED_UNICODE);
+    }
+
+    public function getByPage($page_id)
+    {
+        $page_id = (int) $page_id;
+        $pageDatasources = PageDatasource::with('source')
+            ->where('page_id',$page_id)
+            ->get();
+        return response()->json($pageDatasources, 200, [],JSON_UNESCAPED_UNICODE);
     }
 
     /**
