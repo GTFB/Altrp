@@ -36,7 +36,8 @@ class Template extends Model
     'type',
     'area',
     'guid',
-    'user_id'
+    'user_id',
+    'all_site'
   ];
 
   /**
