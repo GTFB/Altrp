@@ -62,7 +62,12 @@ class Column extends Model
       $new_column->model_id = $model->id;
       $new_column->user_id = auth()->user()->id;
       $new_column->table_id = $table->id;
-      $new_column->save();
+      try {
+        $new_column->save();
+      } catch (\Exception $e){
+        error_log( $e->getMessage() );
+        continue;
+      }
 //      if( $existed_column )
     }
   }
