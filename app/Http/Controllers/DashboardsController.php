@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Dashboards;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class DashboardsController extends Controller
 {
@@ -36,6 +37,7 @@ class DashboardsController extends Controller
         $panel->options = $request->input('options');
         $panel->user_id = auth()->user()->id;
         $panel->widget_id = $id;
+        $panel->guid = data_get( $panel, 'guid' ) ? data_get( $panel, 'guid' ) : (string)Str::uuid();
         $panel->save();
         return response()->json($panel, 200, [], JSON_UNESCAPED_UNICODE);
     }
