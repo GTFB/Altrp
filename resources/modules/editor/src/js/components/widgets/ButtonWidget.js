@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import {Link, Redirect, withRouter } from 'react-router-dom';
 import {isEditor} from "../../../../../front-app/src/js/helpers";
-import {renderAssetIcon} from "../../helpers";
-import { NavItem } from "react-bootstrap";
+import {renderAssetIcon, placeElement} from "../../helpers";
 
 //dropbar
 class Dropbar extends Component {
@@ -12,82 +11,9 @@ class Dropbar extends Component {
     this.state = {
       show: false,
       activePosition: 0,
-      positionVariants: [
-        {
-          position: "bottomLeft",
-          class: "bottom-left"
-        },
-        {
-          position: "bottomCenter",
-          class: "bottom-center"
-        },
-        {
-          position: "bottomRight",
-          class: "bottom-right"
-        },
-        {
-          position: "bottomJustify",
-          class: "bottom-justify"
-        },
-        {
-          position: "bottomFullWidth",
-          class: "bottom-full-width"
-        },
-        {
-          position: "topLeft",
-          class: "top-left"
-        },
-        {
-          position: "topCenter",
-          class: "top-center"
-        },
-        {
-          position: "topRight",
-          class: "top-right"
-        },
-        {
-          position: "topJustify",
-          class: "top-justify"
-        },
-        {
-          position: "topFullWidth",
-          class: "top-full-width"
-        },
-        {
-          position: "leftTop",
-          class: "left-top"
-        },
-        {
-          position: "leftCenter",
-          class: "left-center"
-        },
-        {
-          position: "leftBottom",
-          class: "left-bottom"
-        },
-        {
-          position: "leftFullHeight",
-          class: "left-full-height"
-        },
-        {
-          position: "rightTop",
-          class: "right-top"
-        },
-        {
-          position: "rightCenter",
-          class: "right-center"
-        },
-        {
-          position: "rightBottom",
-          class: "right-bottom"
-        },
-        {
-          position: "rightFullHeight",
-          class: "right-full-height"
-        },
-      ],
+      positionVariants: placeElement(true).variants,
       contentPosition: {},
-      offset: this.props.offset
+      offset: this.props.offset,
     };
 
     this.show = this.show.bind(this);
@@ -96,41 +22,40 @@ class Dropbar extends Component {
     this.changePosition = this.changePosition.bind(this);
 
     this.children = React.createRef();
+    this.object = React.createRef();
   };
 
   show() {
-    //this.children.current.getBoundingClientRect()
-    // left: this.children.current.getBoundingClientRect().left - 10 + "px"
-    if(this.props.showDelay.size) {
+    if(this.props.showDelay.size || this.props.hideDelay.size) {
       if(!this.state.show) {
         setTimeout(() => {
           this.setState((state) => ({ show: !state.show }));
-        }, this.props.showDelay.size)
+        }, this.props.showDelay.size);
       } else {
         setTimeout(() => {
           this.setState((state) => ({ show: !state.show }));
-        }, this.props.hideDelay.size)
+        }, this.props.hideDelay.size);
       }
     } else {
       this.setState((state) => ({ show: !state.show }));
-    }
+    };
 
-    this.changePosition()
-  }
+    this.changePosition();
+  };
 
   leaveHide() {
+
     if(this.props.hideDelay.size) {
       setTimeout(() => {
         this.setState({ show: false });
       }, this.props.hideDelay.size)
     } else {
       this.setState({ show: false });
-    }
-  }
-  
+    };
+  };
+
   enterShow(e) {
     let current = e.currentTarget;
-
     if(this.props.showDelay.size && !this.state.show) {
       setTimeout(() => {
         if(this.children.current === current) {
@@ -138,110 +63,56 @@ class Dropbar extends Component {
         } else {
           this.setState({ show: false });
         }
-      }, this.props.showDelay.size)
+      }, this.props.showDelay.size);
     } else {
       this.setState((state) => ({ show: !state.show }));
-    }
-    this.changePosition()
-  }
+    };
+    this.changePosition();
+  };
 
   changePosition() {
-    let left = this.children.current.offsetLeft;
-    let height = this.children.current.offsetHeight - 1;
-    let width = this.children.current.offsetWidth - 1;
-    let top = this.children.current.offsetTop;
-    let right = left + width / height - 1;
-    let position = {};
-    let offsetY = height + Number(this.state.offset.size) + "px";
-    let offsetXLeft = width + Number(this.state.offset.size);
+    let offset = this.state.offset;
+    let position = placeElement(false,
+      {
+        target: this.children.current,
+        object: this.object.current,
+        place: this.state.activePosition.position
+      });
 
-    switch(this.state.activePosition) {
-      case 0:
-        position = { left: left + "px", top: offsetY }
-        break
-      case 1:
-        position = { top: offsetY }
-        break
-      case 2:
-        position = { right: right + "px", top: offsetY }
-        break
-      case 3:
-        position = { width: width + 2 + "px", top: offsetY }
-        break
-      case 4:
-        position = { width: "100vw", top: offsetY }
-        break
-      case 5:
-        position = { left: left + "px", bottom: offsetY}
-        break
-      case 6:
-        position = { bottom: offsetY }
-        break
-      case 7:
-        position = { right: right + "px", bottom: offsetY }
-        break
-      case 8:
-        position = { width: width + 2 + "px", bottom: offsetY }
-        break
-      case 9:
-        position = { width: "100vw", bottom: offsetY }
-        break
-      case 10:
-        position = { right: right + offsetXLeft, top: top + "px" }
-        break
-      case 11:
-        position = { right: right + offsetXLeft }
-        break
-      case 12:
-        position = { right: right + offsetXLeft, bottom: top + "px" }
-        break
-      case 13:
-        position = { right: right + offsetXLeft, height: "100vh" }
-        break
-      case 14:
-        position = { left: left + offsetXLeft, top: top + "px" }
-        break
-      case 15:
-        position = { left: left + offsetXLeft }
-        break
-      case 16:
-        position = { left: left + offsetXLeft, bottom: top + "px" }
-        break
-      case 17:
-        position = { left: left + offsetXLeft, height: "100vh" }
-        break
-    }
+    switch (position.vector) {
+      case "verBottom":
+        position.position.top += Number(offset.size);
+        break;
+      case "verTop":
+        position.position.top += -Number(offset.size);
+        break;
+      case "horLeft":
+        position.position.right += Number(offset.size);
+        break;
+      case "horRight":
+        position.position.left += Number(offset.size);
+        break;
+    };
 
-    this.setState({ contentPosition: position })
-    
+    this.setState({ contentPosition: position.position });
   }
 
   componentDidUpdate(prevProps) {
     if(this.props.mode !== prevProps.mode) {
       this.setState({ show: false });
     };
-    
+
     if(prevProps.offset !== this.props.offset) {
-      this.setState({ offset: this.props.offset, show: false })
+      this.setState({ offset: this.props.offset, show: false });
     };
 
     if(this.props.position !== prevProps.position) {
-      this.state.positionVariants.forEach((variant, item) => {
-        if(variant.position === this.props.position) {
-          this.setState({ activePosition: item, show: false });
-        };
-      });
+      this.setState({ activePosition: this.state.positionVariants.find(pos => pos.position === this.props.position), show: false });
     };
   }
 
   componentDidMount() {
-    this.changePosition();
-
-    this.state.positionVariants.forEach((variant, item) => {
-      if(variant.position === this.props.position) {
-        this.setState({ activePosition: item, show: false });
-      };
-    });
+    this.setState({ activePosition: this.state.positionVariants.find(pos => pos.position === this.props.position) });
   }
 
   render() {
@@ -249,7 +120,7 @@ class Dropbar extends Component {
 
     let mainClass = "altrp-dropbar-" + this.props.className;
 
-    let contentPosition = " altrp-dropbar-variant-" + this.state.positionVariants[this.state.activePosition].class || "";
+    let contentPosition = " altrp-dropbar-variant-" + this.state.activePosition.class || "";
 
     let contentStyles = {};
 
@@ -265,28 +136,27 @@ class Dropbar extends Component {
               {
                 ref: this.children,
                 onClick: this.props.mode === "click" ? this.show : null,
-                onMouseEnter: this.props.mode === "hover" ? this.enterShow : null, 
+                onMouseEnter: this.props.mode === "hover" ? this.enterShow : null,
                 onMouseLeave: this.props.mode === "hover" ? this.leaveHide : null
               }
             )
           }
-        </span>
-        {
-          this.state.show ? (
-            <div style={{...this.state.contentPosition, ...contentStyles}} className={"altrp-dropbar-container " + mainClass + "-containter"}>
+          <div
+            style={{...this.state.contentPosition, ...contentStyles}} ref={this.object}
+            className={"altrp-dropbar-container " + mainClass + "-containter" + (this.state.show ? " altrp-dropbar-container-show" : " altrp-dropbar-container-hide")}
+          >
+          {
+            React.createElement("div",
               {
-                React.createElement("div",
-                  {
-                    className: "altrp-dropbar-content " + mainClass + "-content",
-                    dangerouslySetInnerHTML: {
-                      __html: this.props.content
-                    },
-                  }
-                )
+                className: "altrp-dropbar-content " + mainClass + "-content",
+                dangerouslySetInnerHTML: {
+                  __html: this.props.content
+                },
               }
-            </div>
-          ): null
-        }
+            )
+          }
+        </div>
+        </span>
       </div>
     );
   };
@@ -369,12 +239,12 @@ class ButtonWidget extends Component {
           <span className={"altrp-btn-icon "}>{ renderAssetIcon( buttonMedia ) } </span>
         </button>
       ) : (
-        <Dropbar 
-          offset={this.state.settings.offset_dropbar_options} 
+        <Dropbar
+          offset={this.state.settings.offset_dropbar_options}
           className="btn"
           width={this.state.settings.width_dropbar_options.size}
-          position={this.state.settings.position_dropbar_options} 
-          mode={this.state.settings.mode_dropbar_options} 
+          position={this.state.settings.position_dropbar_options}
+          mode={this.state.settings.mode_dropbar_options}
           content={this.state.settings.content_dropbar_section}
           hideDelay={this.state.settings.hide_delay_dropbar_options}
           showDelay={this.state.settings.show_delay_dropbar_options}

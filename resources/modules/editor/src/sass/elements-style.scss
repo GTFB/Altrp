@@ -568,6 +568,7 @@
 
 .altrp-dropbar-children-wrapper {
   display: flex;
+  position: relative;
 }
 
 .altrp-btn-dropbar {
@@ -582,4 +583,26 @@
 
 .altrp-dropbar-content {
   user-select: text;
+}
+
+.altrp-dropbar-container-hide {
+    visibility: hidden;
+}
+
+.altrp-dropbar-variant-bottom-center .altrp-dropbar-children-wrapper {
+  position: static;
+  justify-content: center;
+}
+
+.altrp-dropbar-variant-top-center .altrp-dropbar-children-wrapper {
+  position: static;
+  justify-content: center;
+}
+
+.altrp-dropbar-variant-left-center .altrp-dropbar-children-wrapper {
+  align-items: center;
+}
+
+.altrp-dropbar-variant-right-center .altrp-dropbar-children-wrapper {
+  align-items: center;
 }

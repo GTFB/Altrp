@@ -41,12 +41,12 @@ class Button extends BaseElement{
     if (this.controllersRegistered) {
       return
     }
-    
+
     this.startControlSection('button_type_section', {
       tab: TAB_CONTENT,
       label: 'Button type',
     });
-    
+
     this.addControl('link_button_type', {
       type: CONTROLLER_SELECT,
       label: 'Link type',
@@ -219,7 +219,7 @@ class Button extends BaseElement{
       tab: TAB_CONTENT,
       label: 'Dropbar content',
     });
-    
+
     this.addControl("content_dropbar_section", {
       type: CONTROLLER_WYSIWYG,
       label: "Content",
@@ -251,14 +251,6 @@ class Button extends BaseElement{
           label: "bottom right"
         },
         {
-          value: "bottomJustify",
-          label: "bottom justify"
-        },
-        {
-          value: "bottomFullWidth",
-          label: "bottom full width"
-        },
-        {
           value: "topLeft",
           label: "top left"
         },
@@ -269,14 +261,6 @@ class Button extends BaseElement{
         {
           value: "topRight",
           label: "top right"
-        },
-        {
-          value: "topJustify",
-          label: "top justify"
-        },
-        {
-          value: "topFullWidth",
-          label: "top full width"
         },
         {
           value: "leftTop",
@@ -291,10 +275,6 @@ class Button extends BaseElement{
           label: "left bottom"
         },
         {
-          value: "leftFullHeight",
-          label: "left full height"
-        },
-        {
           value: "rightTop",
           label: "right top"
         },
@@ -306,10 +286,6 @@ class Button extends BaseElement{
           value: "rightBottom",
           label: "right bottom"
         },
-        {
-          value: "rightFullHeight",
-          label: "right full height"
-        }
       ],
     });
 
@@ -770,7 +746,7 @@ class Button extends BaseElement{
       },
     }
   );
-  
+
   this.addControl("padding_dropbar_content_style", {
     type: CONTROLLER_DIMENSIONS,
     label: "Padding",
