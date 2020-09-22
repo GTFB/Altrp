@@ -8,6 +8,7 @@ use App\SQLEditor;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 /**
@@ -57,7 +58,12 @@ class Model extends EloquentModel
 //      }
       $new_model = new self( $imported_model );
 //      $new_model->table_id = $table->id;
-      $new_model->save();
+      try {
+        $new_model->save();
+      } catch (\Exception $e){
+        Log::error( $e->getMessage(), $e->getTrace() );
+        continue;
+      }
     } 
   }
 

@@ -191,6 +191,9 @@ class AltrpImportExportService
     foreach ( $data['page_roles'] as $key => $page_role ) {
       $role = Role::find( $page_role->role_id );
       $page = Page::find( $page_role->page_id );
+      if( ! ( $page && $role ) ){
+        continue;
+      }
       $data['page_roles'][$key]->page_guid = $page->guid;
       $data['page_roles'][$key]->role_name = $role->name;
     }
