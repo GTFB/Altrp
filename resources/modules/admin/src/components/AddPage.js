@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import Resource from "../../../editor/src/js/classes/Resource";
-import { Redirect, withRouter } from 'react-router-dom';
+import { Link, Redirect, withRouter } from 'react-router-dom';
 import AltrpSelect from "./altrp-select/AltrpSelect";
 import AdminTable from "./AdminTable";
 import AdminModal2 from "./AdminModal2";
@@ -68,7 +67,7 @@ class AddPage extends Component {
     this.resource = new Resource({ route: '/admin/ajax/pages' });
     this.model_resource = new Resource({ route: '/admin/ajax/models_options' });
     this.templateResource = new Resource({ route: '/admin/ajax/templates' });
-    this.dataSourceResource = new Resource({ route: '/admin/ajax/page_data_sources' });
+    this.dataSourceResource = new Resource({ route: '/admin/ajax/page_data_sources/pages' });
     this.savePage = this.savePage.bind(this);
   }
 
@@ -90,13 +89,19 @@ class AddPage extends Component {
     let id = this.props.match.params.id;
     id = parseInt(id);
     if (id) {
+      this.getDataSources();
       let pageData = await this.resource.get(id);
       this.setState(state => {
         return { ...state, value: pageData, id }
       });
-      let dataSources = await this.dataSourceResource.getAll();
-      this.setState({ dataSources });
     }
+  }
+
+  getDataSources = async () => {
+    let id = this.props.match.params.id;
+    const dataSources = await this.dataSourceResource.get(id);
+    this.setState({ dataSources });
+    this.setState({ isModalOpened: false })
   }
 
   /**
@@ -251,12 +256,14 @@ class AddPage extends Component {
           // }]}
           rows={dataSources.map(dataSource => ({ ...dataSource, /* editUrl: `/admin/tables/models/${model.id}/fields/edit/${field.id}` */ }))}
         />}
-        <button onClick={() => this.setState({ isModalOpened: true })} className="btn btn_add">
-          Add Data Source
-        </button>
+
+        {this.props.match.params.id &&
+          <button onClick={() => this.setState({ isModalOpened: true })} className="btn btn_add">
+            Add Data Source
+          </button>}
 
         {isModalOpened && <AdminModal2 closeHandler={() => this.setState({ isModalOpened: false })}>
-          <PageDataSourceForm />
+          <PageDataSourceForm updateHandler={this.getDataSources} />
         </AdminModal2>}
       </div>
     </div>;

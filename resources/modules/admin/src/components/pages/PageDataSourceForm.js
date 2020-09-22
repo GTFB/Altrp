@@ -1,9 +1,10 @@
 import React, { Component } from "react";
+import { withRouter } from 'react-router-dom';
 import Resource from "../../../../editor/src/js/classes/Resource";
 
 class PageDataSourceForm extends Component {
   state = this.props.dataSource || {
-    data_source_id: '',
+    source_id: '',
     alias: '',
     priority: 0,
     parameters: '',
@@ -22,18 +23,21 @@ class PageDataSourceForm extends Component {
 
   submitHandler = e => {
     e.preventDefault();
-    // post: /admin/ajax/models (value)
-    console.log(this.state);
+    const { id } = this.props.match.params;
+    const { alias, source_id, priority, parameters } = this.state;
+    const resource = new Resource({ route: `http://altrp.nz/admin/ajax/page_data_sources` });
+    resource.post({ page_id: id, alias, source_id, priority, parameters });
+    this.props.updateHandler();
   }
 
   render() {
-    const { data_source_id, alias, priority, parameters, dataSourceOptions } = this.state;
+    const { source_id, alias, priority, parameters, dataSourceOptions } = this.state;
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="form-group">
-        <label htmlFor="data_source_id">Data Source</label>
-        <select id="data_source_id"
-          name="data_source_id"
-          value={data_source_id}
+        <label htmlFor="source_id">Data Source</label>
+        <select id="source_id"
+          name="source_id"
+          value={source_id}
           onChange={this.changeHandler}
           className="form-control"
         >
@@ -79,4 +83,4 @@ class PageDataSourceForm extends Component {
   }
 }
 
-export default PageDataSourceForm;
+export default withRouter(PageDataSourceForm);
