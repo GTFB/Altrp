@@ -17,8 +17,26 @@ class Reports extends Model
     'user_id',
   ];
 
-  function user()
+  /**
+   * Импортируем отчеты
+   * @param array $imported_reports
+   */
+  public static function import( $imported_reports = [] )
   {
-    return $this->belongsTo( User::class, 'user_id' );
+    foreach ( $imported_reports as $imported_report ) {
+      $old_report = self::where( 'guid', $imported_report['guid'] )->first();
+      if( $old_report ){
+        $old_report->name = $imported_report['name'];
+        $old_report->description = $imported_report['description'];
+        $old_report->html = $imported_report['html'];
+        $old_report->json = $imported_report['json'];
+        $old_report->user_id = auth()->user()->id;
+        $old_report->save();
+        continue;
+      }
+      $new_report = new self( $imported_report );
+      $new_report->user_id = auth()->user()->id;
+      $new_report->save();
+    }
   }
 }

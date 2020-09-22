@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Altrp\AltrpDiagram;
 use App\Altrp\Column;
 use App\Altrp\Model;
 use App\Altrp\Query;
@@ -11,11 +12,13 @@ use App\Altrp\Model as AltrpModel;
 use App\Area;
 use App\Constructor\Template;
 use App\Constructor\TemplateSetting;
+use App\Dashboards;
 use App\Helpers\Classes\AltrpZip;
 use App\Media;
 use App\Page;
 use App\PagesTemplate;
 use App\Permission;
+use App\Reports;
 use App\Role;
 use App\SQLEditor;
 use Exception;
@@ -107,6 +110,13 @@ class AltrpImportExportService
         $data['template_settings'][$key]['template_guid'] = $_template->guid;
       }
     }
+
+    /**
+     * Данные отчетов, диаграмм и пр.
+     */
+    $data['altrp_diagrams'] = AltrpDiagram::all()->toArray();
+    $data['dashboards'] = Dashboards::all()->toArray();
+    $data['reports'] = Reports::all()->toArray();
 
     /**
      * Данные моделей
@@ -271,6 +281,12 @@ class AltrpImportExportService
      */
     Page::importPageRoles( Arr::get( $data, 'page_roles', [] ) );
     Role::importPermissionRole( Arr::get( $data, 'permission_roles', [] ) );
+    /**
+     * импортируем диграммы и пр.
+     */
+    AltrpDiagram::import( Arr::get( $data, 'diagrams', [] ) );
+    Dashboards::import( Arr::get( $data, 'diagrams', [] ) );
+    Reports::import( Arr::get( $data, 'diagrams', [] ) );
     /**
      * Удаляем архив
      */
