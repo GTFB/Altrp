@@ -279,14 +279,19 @@ class Template extends Model
 
     $template_type = Arr::get( $param, 'template_type', 'content' );
     $page_id = Arr::get( $param, 'page_id' );
+    $page = Page::find( $page_id );
+
+    if( ! $page ){
+      return $template->toArray();
+    }
 
     /**
-     * Сначала проверим есть ли конкретный шаблон для стрницы
+     * Сначала проверим есть ли конкретный шаблон для страницы
      */
 
-    $_template = Template::join( 'pages_templates', 'templates.id', '=', 'pages_templates.template_id')
+    $_template = Template::join( 'pages_templates', 'templates.guid', '=', 'pages_templates.template_guid')
       ->where( 'pages_templates.condition_type', 'include' )
-      ->where( 'pages_templates.page_id', $page_id )
+      ->where( 'pages_templates.page_guid', $page->guid )
       ->where( 'pages_templates.template_type', $template_type )->get( 'templates.*' )->first();
 
     if( $_template ){
@@ -304,9 +309,9 @@ class Template extends Model
     /**
      * И проверяем, есть ли шаблон в исключениях
      */
-    if( $_template && ! Template::join( 'pages_templates', 'templates.id', '=', 'pages_templates.template_id')
+    if( $_template && ! Template::join( 'pages_templates', 'templates.guid', '=', 'pages_templates.template_guid')
       ->where( 'pages_templates.condition_type', 'exclude' )
-      ->where( 'pages_templates.page_id', $page_id )
+      ->where( 'pages_templates.page_guid', $page->guid )
       ->where( 'pages_templates.template_type', $template_type )->first() ){
       $_template->check_elements_conditions();
       return $_template->toArray();
