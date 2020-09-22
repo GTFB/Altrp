@@ -220,8 +220,8 @@ class Page extends Model
     $table = DB::table( 'page_role' );
     $table->delete();
     foreach ( $page_roles as $page_role ) {
-      $role = Role::where( 'name', $page_role['role_name'] )->first();
-      $page = self::where( 'guid', $page_role['page_guid'] )->first();
+      $role = Role::where( 'name', data_get( $page_role, 'role_name' ) )->first();
+      $page = self::where( 'guid', data_get( $page_role, 'page_guid' ) )->first();
       if( ! ( $page && $role ) ){
         continue;
       }
