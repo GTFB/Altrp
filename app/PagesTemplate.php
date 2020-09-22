@@ -34,8 +34,9 @@ class PagesTemplate extends Model
       $new_data =  new self( $imported_datum );
       $template = Template::where( 'guid', $imported_datum['template_guid'] )->first();
       $page = Page::where( 'guid', $imported_datum['page_guid'] )->first();
+      $area = Area::find( $template->area );
 
-      $new_data->template_type = $template->area;
+      $new_data->template_type = $area->name;
       $new_data->template_id = $template->id;
       $new_data->page_id = $page->id;
       $new_data->save();
