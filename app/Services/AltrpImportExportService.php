@@ -10,17 +10,22 @@ use App\Altrp\Table;
 use App\Altrp\Model as AltrpModel;
 use App\Area;
 use App\Constructor\Template;
+use App\Constructor\TemplateSetting;
 use App\Helpers\Classes\AltrpZip;
 use App\Media;
 use App\Page;
 use App\PagesTemplate;
+use App\Permission;
+use App\Role;
 use App\SQLEditor;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use TemplateSettings;
 use ZipArchive;
 
 class AltrpImportExportService
@@ -95,8 +100,16 @@ class AltrpImportExportService
     $data['pages_templates'] = PagesTemplate::all()->toArray();
     $data['admin_logo'] = json_decode( env( 'ALTRP_SETTING_ADMIN_LOGO' ), true );
 
+    $data['template_settings'] = TemplateSetting::all()->toArray();
+    foreach ( $data['template_settings'] as $key => $template_setting ) {
+      $_template = Template::find( $template_setting['template_id'] );
+      if( $_template ){
+        $data['template_settings'][$key]['template_guid'] = $_template->guid;
+      }
+    }
+
     /**
-     * Давнные моделей
+     * Данные моделей
      */
     $data['tables'] = Table::all();
 
@@ -159,6 +172,25 @@ class AltrpImportExportService
 
     }
 
+    /**
+     * Данные ролей и пр.
+     */
+
+    $data['roles'] = Role::all();
+    $data['page_roles'] = DB::table( 'page_role' )->get()->toArray();
+    foreach ( $data['page_roles'] as $key => $page_role ) {
+      $role = Role::find( $page_role->role_id );
+      $page = Page::find( $page_role->page_id );
+      $data['page_roles'][$key]->page_guid = $page->guid;
+      $data['page_roles'][$key]->role_name = $role->name;
+    }
+    $data['permission_roles'] = DB::table( 'permission_role' )->get()->toArray();
+    foreach ( $data['permission_roles'] as $key => $permission_role ) {
+      $role = Role::find( $permission_role->role_id );
+      $permission = Permission::find( $permission_role->permission_id );
+      $data['permission_roles'][$key]->permission_name = $permission->name;
+      $data['permission_roles'][$key]->role_name = $role->name;
+    }
     $content = json_encode( $data );
     File::put( storage_path( 'tmp/altrp-settings/altrp-data.json' ), $content);
   }
@@ -211,6 +243,11 @@ class AltrpImportExportService
     $data = json_decode( $data, true );
     $this->deleteFileTmp( 'imports' );
     /**
+     * импортируем настройки доступов
+     */
+    Role::import( Arr::get( $data, 'roles', [] ) );
+
+    /**
      * импортируем настройки моделей
      */
 
@@ -225,10 +262,15 @@ class AltrpImportExportService
      * импортируем настройки фронт приложения
      */
     Template::import( Arr::get( $data, 'templates', [] ) );
+    TemplateSetting::import( Arr::get( $data, 'template_settings', [] ) );
     Media::import( Arr::get( $data, 'media', [] ) );
     Page::import( Arr::get( $data, 'pages', [] ) );
     PagesTemplate::import( Arr::get( $data, 'pages_templates', [] ) );
-
+    /**
+     * импортируем настройки доступов
+     */
+    Page::importPageRoles( Arr::get( $data, 'page_roles', [] ) );
+    Role::importPermissionRole( Arr::get( $data, 'permission_roles', [] ) );
     /**
      * Удаляем архив
      */

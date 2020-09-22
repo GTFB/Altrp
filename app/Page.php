@@ -32,6 +32,7 @@ class Page extends Model
     'model_id',
     'redirect',
     'guid',
+    'for_guest',
   ];
 
 //  protected $table = 'altrp_pages';
@@ -210,6 +211,30 @@ class Page extends Model
     return $areas;
   }
 
+  /**
+   * Импортируем связи стрнаиц с ролями
+   * @param array $page_roles
+   */
+  public static function importPageRoles( $page_roles = [] )
+  {
+    $table = DB::table( 'page_role' );
+    $table->delete();
+    foreach ( $page_roles as $page_role ) {
+      $role = Role::where( 'name', $page_role['role_name'] )->first();
+      $page = self::where( 'guid', $page_role['page_guid'] )->first();
+      if( ! ( $page && $role ) ){
+        continue;
+      }
+      try{
+        $table->insert([
+          'page_id' => $page->id,
+          'role_id' => $role->id,
+        ]);
+      }catch(\Exception $e){}
+
+    }
+  }
+
   function user()
   {
     return $this->belongsTo( User::class, 'author' );
@@ -372,17 +397,24 @@ class Page extends Model
    */
   static public function import( $imported_pages = []){
     foreach ( $imported_pages as $imported_page ) {
-      if( self::where( 'guid', $imported_page['guid'] )->first() ){
-        continue;
-      }
-      $new_page = new self( $imported_page );
-      $new_page->author = Auth::user()->id;
+
       if( Arr::get( $imported_page, 'model_name' ) ){
         $model = AltrpModel::where( 'name', $imported_page['model_name'] )->first();
         $model_id = $model ? $model->id : null;
       } else {
         $model_id = null;
       }
+      $old_page = self::where( 'guid', $imported_page['guid'] )->first();
+      if( $old_page ){
+        $old_page->model_id = $model_id;
+        $old_page->redirect = $imported_page['redirect'];
+        $old_page->content = $imported_page['content'];
+        $old_page->path = $imported_page['path'];
+        $old_page->title = $imported_page['title'];
+        continue;
+      }
+      $new_page = new self( $imported_page );
+      $new_page->author = Auth::user()->id;
       $new_page->model_id = $model_id;
       $new_page->save();
     }

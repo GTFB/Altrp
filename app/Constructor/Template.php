@@ -61,7 +61,10 @@ class Template extends Model
   public static function import( $imported_templates = [] )
   {
     foreach ( $imported_templates as $imported_template ) {
-      if( self::where( 'guid', $imported_template['guid'] )->first() ){
+      $old_template = self::where( 'guid', $imported_template['guid'] )->first();
+      if( $old_template ){
+        $old_template->data = $imported_template['data'];
+        $old_template->save();
         continue;
       }
       $new_template = new self( $imported_template );
