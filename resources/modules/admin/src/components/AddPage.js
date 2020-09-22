@@ -63,11 +63,12 @@ class AddPage extends Component {
       templates: [],
       models: [],
       isModalOpened: false,
-      dataSources: dataSources/*  [] */
+      dataSources: []
     };
     this.resource = new Resource({ route: '/admin/ajax/pages' });
     this.model_resource = new Resource({ route: '/admin/ajax/models_options' });
     this.templateResource = new Resource({ route: '/admin/ajax/templates' });
+    this.dataSourceResource = new Resource({ route: '/admin/ajax/page_data_sources' });
     this.savePage = this.savePage.bind(this);
   }
 
@@ -93,6 +94,8 @@ class AddPage extends Component {
       this.setState(state => {
         return { ...state, value: pageData, id }
       });
+      let dataSources = await this.dataSourceResource.getAll();
+      this.setState({ dataSources });
     }
   }
 
@@ -230,7 +233,7 @@ class AddPage extends Component {
           <button className="btn btn_success">{this.state.id ? 'Save' : 'Add'}</button>
         </form>
 
-        {dataSources.length && <AdminTable
+        {Boolean(dataSources.length) && <AdminTable
           columns={columns}
           // quickActions={[{
           //   tag: 'Link', props: {
