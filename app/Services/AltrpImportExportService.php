@@ -284,9 +284,9 @@ class AltrpImportExportService
     /**
      * импортируем диграммы и пр.
      */
-    AltrpDiagram::import( Arr::get( $data, 'diagrams', [] ) );
-    Dashboards::import( Arr::get( $data, 'diagrams', [] ) );
-    Reports::import( Arr::get( $data, 'diagrams', [] ) );
+    AltrpDiagram::import( Arr::get( $data, 'altrp_diagrams', [] ) );
+    Dashboards::import( Arr::get( $data, 'dashboards', [] ) );
+    Reports::import( Arr::get( $data, 'reports', [] ) );
     /**
      * Удаляем архив
      */
