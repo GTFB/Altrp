@@ -66,7 +66,7 @@ class Column extends Model
       try {
         $new_column->save();
       } catch (\Exception $e){
-        Log::error( $e->getMessage(), $e->getTrace() );
+        Log::error( $e->getMessage(), $e->getFile() );
         continue;
       }
 //      if( $existed_column )
