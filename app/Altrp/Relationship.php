@@ -65,8 +65,12 @@ class Relationship extends EloquentModel
       $new_relation = new self( $imported_relation );
       $new_relation->model_id = $model->id;
       $new_relation->target_model_id = $target_model->id;
-
-      $new_relation->save();
+      try{
+        $new_relation->save();
+      } catch (\Exception $e){
+        error_log( $e->getMessage() );
+        continue;
+      }
     }
   }
 
