@@ -39,4 +39,8 @@ class Reports extends Model
       $new_report->save();
     }
   }
+
+  public function user(){
+    return $this->hasOne( User::class, 'id', 'user_id' );
+  }
 }
