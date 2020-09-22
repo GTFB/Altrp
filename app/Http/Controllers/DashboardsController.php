@@ -7,11 +7,13 @@ use Illuminate\Http\Request;
 
 class DashboardsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+  /**
+   * Display a listing of the resource.
+   *
+   * @param Request $request
+   * @param string $id
+   * @return \Illuminate\Http\Response
+   */
     public function index(Request $request, $id)
     {
         $panel = Dashboards::where('widget_id', '=', $id)->orderBy('id', 'desc')->get();

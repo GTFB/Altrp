@@ -411,6 +411,8 @@ class Page extends Model
         $old_page->content = $imported_page['content'];
         $old_page->path = $imported_page['path'];
         $old_page->title = $imported_page['title'];
+        $old_page->for_guest = $imported_page['for_guest'];
+        $old_page->author = Auth::user()->id;
         continue;
       }
       $new_page = new self( $imported_page );
