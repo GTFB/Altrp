@@ -3,12 +3,13 @@ import { withRouter } from 'react-router-dom';
 import Resource from "../../../../editor/src/js/classes/Resource";
 
 class PageDataSourceForm extends Component {
-  state = this.props.dataSource || {
+  state = {
     source_id: '',
     alias: '',
     priority: 0,
     parameters: '',
-    dataSourceOptions: []
+    dataSourceOptions: [],
+    ...this.props.dataSource
   }
 
   changeHandler = ({ target: { value, name } }) => {
@@ -24,9 +25,14 @@ class PageDataSourceForm extends Component {
   submitHandler = e => {
     e.preventDefault();
     const { id } = this.props.match.params;
-    const { alias, source_id, priority, parameters } = this.state;
     const resource = new Resource({ route: `http://altrp.nz/admin/ajax/page_data_sources` });
-    resource.post({ page_id: id, alias, source_id, priority, parameters });
+    const data = { ...this.state };
+    delete data.dataSourceOptions;
+    if (this.props.dataSource) {
+      resource.put(data.id, data);
+    } else {
+      resource.post({ page_id: id, ...data });
+    }
     this.props.updateHandler();
   }
 

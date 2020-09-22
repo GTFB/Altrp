@@ -62,7 +62,8 @@ class AddPage extends Component {
       templates: [],
       models: [],
       isModalOpened: false,
-      dataSources: []
+      dataSources: [],
+      editingDataSource: null
     };
     this.resource = new Resource({ route: '/admin/ajax/pages' });
     this.model_resource = new Resource({ route: '/admin/ajax/models_options' });
@@ -101,7 +102,11 @@ class AddPage extends Component {
     let id = this.props.match.params.id;
     const dataSources = await this.dataSourceResource.get(id);
     this.setState({ dataSources });
-    this.setState({ isModalOpened: false })
+    this.setState({ isModalOpened: false, editingDataSource: null })
+  }
+
+  editHandler = editingDataSource => {
+    this.setState({ editingDataSource, isModalOpened: true })
   }
 
   /**
@@ -156,7 +161,7 @@ class AddPage extends Component {
     })
   }
   render() {
-    const { dataSources, isModalOpened } = this.state;
+    const { dataSources, isModalOpened, editingDataSource } = this.state;
     if (this.state.redirectAfterSave) {
       return <Redirect to="/admin/pages" />
     }
@@ -241,12 +246,10 @@ class AddPage extends Component {
         {Boolean(dataSources.length) && <AdminTable
           columns={columns}
           quickActions={[
-            // {
-            //   tag: 'Link', props: {
-            //     href: `/admin/tables/models/${id}/fields/edit/:id`,
-            //   },
-            //   title: 'Edit'
-            // },
+            {
+              callBack: data => this.editHandler(data),
+              title: 'Edit'
+            },
             {
               tag: 'button',
               route: `/admin/ajax/page_data_sources/:id`,
@@ -265,8 +268,8 @@ class AddPage extends Component {
             Add Data Source
           </button>}
 
-        {isModalOpened && <AdminModal2 closeHandler={() => this.setState({ isModalOpened: false })}>
-          <PageDataSourceForm updateHandler={this.getDataSources} />
+        {isModalOpened && <AdminModal2 closeHandler={() => this.setState({ isModalOpened: false, editingDataSource: null })}>
+          <PageDataSourceForm updateHandler={this.getDataSources} dataSource={editingDataSource} />
         </AdminModal2>}
       </div>
     </div>;
