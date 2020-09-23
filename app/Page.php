@@ -75,7 +75,11 @@ class Page extends Model
           'id' => $page->id,
           'title' => $page->title,
           'allowed' => true,
-          /**
+          'data_sources' => $page->data_sources->map( function ( Source $source ){
+            $source->web_url = $source->web_url;
+            return $source;
+          } ),
+        /**
            * Если лениво загружаем области то возвращаем пустой массив
            */
           'areas' => $lazy ? [] : self::get_areas_for_page( $page->id ),
@@ -90,7 +94,6 @@ class Page extends Model
         ];
       }
       $_page['lazy'] = $lazy;
-      $_page['data_sources'] = $page->data_sources;
       if($page->model){
         $_page['model'] = $page->model->toArray();
         $_page['model']['modelName'] = Str::plural( $page->model->name );

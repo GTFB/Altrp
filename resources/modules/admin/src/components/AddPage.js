@@ -8,8 +8,8 @@ import PageDataSourceForm from "./pages/PageDataSourceForm";
 
 const columns = [
   {
-    name: 'id',
-    title: 'ID',
+    name: 'source.name',
+    title: 'Datasource',
     url: true,
     // editUrl: true,
     // tag: 'Link'
@@ -161,10 +161,13 @@ class AddPage extends Component {
     })
   }
   render() {
-    const { dataSources, isModalOpened, editingDataSource } = this.state;
+    const { isModalOpened, editingDataSource } = this.state;
     if (this.state.redirectAfterSave) {
       return <Redirect to="/admin/pages" />
     }
+    let { dataSources } = this.state;
+
+    dataSources = _.sortBy(dataSources, dataSource => dataSource.priority);
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
