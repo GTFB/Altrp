@@ -1,4 +1,5 @@
 import CONSTANTS from "../../../editor/src/js/consts";
+import appStore from "./store/store";
 
 export function getRoutes() {
   return import('./classes/Routes.js');
@@ -262,4 +263,24 @@ function _conditionChecker(c, model){
     }
   }
   return result;
+}
+
+/**
+ * Получить данные
+ * @param path
+ * @return {string}
+ */
+export function getDataByPath(path){
+  const {currentModel, currentDataStorage} = appStore.getState();
+  let value = '';
+  if(! _.isString(path)){
+    return value;
+  }
+  if(path.indexOf('altrpdata.') === 0){
+    path = path.replace('altrpdata.', '');
+    value = currentDataStorage.getProperty(path)
+  } else {
+    value = currentModel.getProperty(path);
+  }
+  return value;
 }

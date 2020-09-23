@@ -1,5 +1,5 @@
 import modelManager from "../../../../editor/src/js/classes/modules/ModelsManager";
-import {conditionsChecker} from "../helpers";
+import {conditionsChecker, getDataByPath} from "../helpers";
 
 /**
  * Срабатываает перед удалением компонента элемента
@@ -141,6 +141,13 @@ function getContent(settingName) {
     //     content = _.get(this.state.modelData, content.fieldName) || ' ';
     // }
     content = this.props.currentModel ? this.props.currentModel.getProperty(content.fieldName) : ' ';
+  }
+  let paths = content.match(/(?<={{)([\s\S]+?)(?=}})/g);
+  if(_.isArray(paths)){
+    paths.forEach(path => {
+      let value = getDataByPath(path);
+      content = content.replace(new RegExp(`{{${path}}}`, 'g'), value)
+    });
   }
   return content;
 }

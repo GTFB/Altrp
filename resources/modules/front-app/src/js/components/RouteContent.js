@@ -68,9 +68,6 @@ class RouteContent extends Component {
         let res = {};
         if(datasource.getType() === 'show') {
           let id = _.get(params, 'id', _.get(this.props, 'match.params.id'));
-          console.log(id);
-          console.log(params);
-          console.log(datasource.getWebUrl());
           if(id){
             res = await (new Resource({route: datasource.getWebUrl()})).get(id);
           }
