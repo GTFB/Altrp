@@ -84,10 +84,12 @@ class Source extends Model
    */
   public function getWebUrlAttribute(){
     switch ( $this->sourceable_type ){
-      case 'App\SQLEditor':{
-        return '/ajax/models/queries' . data_get( $this, 'url' );
-      }
+      case 'App\SQLEditor':
+      case 'App\Altrp\Query':
+        return '/queries' . data_get( $this, 'url' );
+        break;
+      default:
+        return data_get( $this, 'url' );
     }
-    return '/ajax/models' . data_get( $this, 'url' );
   }
 }
