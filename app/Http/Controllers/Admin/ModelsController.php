@@ -962,7 +962,6 @@ class ModelsController extends HttpController
         $dataSource = new Source($request->all());
         $result = $dataSource->save();
         if ($result) {
-            $this->writeSourceAccess($dataSource, $request->get('access'));
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
         return response()->json([
@@ -989,7 +988,6 @@ class ModelsController extends HttpController
         }
         $result = $dataSource->update($request->all());
         if ($result) {
-            $this->writeSourceAccess($dataSource, $request->get('access'));
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
         return response()->json([
@@ -1362,84 +1360,4 @@ class ModelsController extends HttpController
             'message' => 'Failed to delete accessor'
         ], 500, [], JSON_UNESCAPED_UNICODE);
     }
-
-
-    protected function writeSourceAccess($source, $access)
-    {
-        if (!isset($access)) return true;
-        foreach ($access as $type => $permissions) {
-            if ($type == 'permissions') {
-                foreach ($permissions as $permission) {
-                    $permObj = Permission::find($permission);
-                    if (! $permObj) continue;
-                    $action = explode('-',$permObj->name)[0] ?? null;
-                    $permissionData = [
-                        'source_id' => $source->id,
-                        'permission_id' => $permission,
-                        'type' => $action . '-' . $source->name
-                    ];
-                    $oldSourcePermission = SourcePermission::where([
-                        ['source_id', $source->id],
-                        ['permission_id',$permission]
-                    ]);
-                    if ($oldSourcePermission->first()) {
-                        $sourcePermission = $oldSourcePermission;
-                        $permissionData['updated_at'] = Carbon::now();
-                        $sourcePermission->update($permissionData);
-                    } else {
-                        $sourcePermission = new SourcePermission($permissionData);
-                        $sourcePermission->save();
-                    }
-                }
-                $oldSourcePermissions = SourcePermission::where([
-                    ['source_id', $source->id]
-                ])->get();
-                $deletePermissions = [];
-                foreach ($oldSourcePermissions as $oldSourcePermission) {
-                    if (!in_array($oldSourcePermission->permission_id, $permissions)) {
-                        $deletePermissions[] = $oldSourcePermission->id;
-                    }
-                }
-                SourcePermission::destroy($deletePermissions);
-            }
-        }
-
-        foreach ($access as $type => $roles) {
-            if ($type == 'roles') {
-                foreach ($roles as $role) {
-                    $roleObj = Role::find($role);
-                    if (! $roleObj) continue;
-                    $roleData = [
-                        'source_id' => $source->id,
-                        'role_id' => $role,
-                    ];
-                    $oldSourceRole = SourceRole::where([
-                        ['source_id', $source->id],
-                        ['role_id', $role]
-                    ]);
-                    if ($oldSourceRole->first()) {
-                        $sourceRole = $oldSourceRole;
-                        $roleData['updated_at'] = Carbon::now();
-                        $sourceRole->update($roleData);
-                    } else {
-                        $sourceRole = new SourceRole($roleData);
-                        $sourceRole->save();
-                    }
-                }
-                $oldSourceRoles = SourceRole::where([
-                    ['source_id', $source->id]
-                ])->get();
-                $deleteRoles = [];
-                foreach ($oldSourceRoles as $oldSourceRole) {
-                    if (!in_array($oldSourceRole->role_id, $roles)) {
-                        $deleteRoles[] = $oldSourceRole->id;
-                    }
-                }
-                SourceRole::destroy($deleteRoles);
-            }
-        }
-
-        return true;
-    }
-
 }

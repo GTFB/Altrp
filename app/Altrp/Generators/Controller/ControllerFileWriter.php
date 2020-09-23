@@ -637,4 +637,18 @@ class ControllerFileWriter
         return file($file,2);
     }
 
+    protected function getRequestParamsAssoc($url)
+    {
+        $parts = explode('?', $url);
+        $uri = $parts[1] ?? '';
+        if (!$uri) return [];
+        $requestParamsAssoc = [];
+        $params = explode('&', $uri);
+        foreach ($params as $param) {
+            $param = explode('=', $param);
+            $requestParamsAssoc[$param[0]] = $param[1];
+        }
+        return $requestParamsAssoc;
+    }
+
 }

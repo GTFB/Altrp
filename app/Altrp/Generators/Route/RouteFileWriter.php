@@ -181,7 +181,7 @@ class RouteFileWriter
      */
     public function updateSourceRoute($source)
     {
-        $this->removeRoute($source->getOriginal('name'), 'data_sources', $source->request_type);
+        $this->removeRoute($source->getOriginal('name'), 'data_sources', $source->getOriginal('request_type'));
         $this->addSourceRoute($source);
         return true;
     }

@@ -50,8 +50,8 @@ class AltrpSourceObserver
     public function created(Source $source)
     {
         $model = $source->model;
+        $controllerFile = new ControllerFile($model);
         if ($source->type == 'remote') {
-            $controllerFile = new ControllerFile($model);
             $repo = new RepositoryFile($model);
             $repoInterface = new RepositoryInterfaceFile($model);
             $controllerWriter = new ControllerFileWriter(
@@ -65,6 +65,11 @@ class AltrpSourceObserver
             $result = $controllerWriter->writeDataSourceMethod($source->name, $source->request_type, $source->url, []);
             if (! $result)
                 throw new ControllerFileException('Failed to write method to the controller file', 500);
+        }
+
+        $this->writeSourceAccess($source, request()->get('access'));
+
+        if ($source->type == 'remote') {
             $routeFile = new RouteFile($model);
             $routeWriter = new RouteFileWriter($routeFile, $controllerFile);
             $routeWriter->addSourceRoute($source);
@@ -104,8 +109,8 @@ class AltrpSourceObserver
     public function updated(Source $source)
     {
         $model = $source->model;
+        $controllerFile = new ControllerFile($model);
         if ($source->type == 'remote') {
-            $controllerFile = new ControllerFile($model);
             $repo = new RepositoryFile($model);
             $repoInterface = new RepositoryInterfaceFile($model);
             $controllerWriter = new ControllerFileWriter(
@@ -122,14 +127,19 @@ class AltrpSourceObserver
                 );
                 if (! $result)
                     throw new ControllerFileException('Failed to update method to the controller file', 500);
-                $routeFile = new RouteFile($model);
-                $routeWriter = new RouteFileWriter($routeFile, $controllerFile);
-                if ($routeWriter->routeSourceExist($source)) {
-                    $routeWriter->updateSourceRoute($source);
-                }
+
             }
         }
 
+        $this->writeSourceAccess($source, request()->get('access'));
+
+        if ($source->type == 'remote') {
+            $routeFile = new RouteFile($model);
+            $routeWriter = new RouteFileWriter($routeFile, $controllerFile);
+            if ($routeWriter->routeSourceExist($source)) {
+                $routeWriter->updateSourceRoute($source);
+            }
+        }
     }
 
     /**
@@ -154,8 +164,8 @@ class AltrpSourceObserver
     public function deleted(Source $source)
     {
         $model = $source->model;
+        $controllerFile = new ControllerFile($model);
         if ($source->type == 'remote') {
-            $controllerFile = new ControllerFile($model);
             $repo = new RepositoryFile($model);
             $repoInterface = new RepositoryInterfaceFile($model);
             $controllerWriter = new ControllerFileWriter(
@@ -170,6 +180,11 @@ class AltrpSourceObserver
                 if (! $result)
                     throw new ControllerFileException('Failed to delete method to the controller file', 500);
             }
+        }
+
+        $this->writeSourceAccess($source, request()->get('access'));
+
+        if ($source->type == 'remote') {
             $routeFile = new RouteFile($model);
             $routeWriter = new RouteFileWriter($routeFile, $controllerFile);
             if ($routeWriter->routeSourceExist($source)) {
@@ -200,5 +215,81 @@ class AltrpSourceObserver
         //
     }
 
+    protected function writeSourceAccess($source, $access)
+    {
+        if (!isset($access)) return true;
+        foreach ($access as $type => $permissions) {
+            if ($type == 'permissions') {
+                foreach ($permissions as $permission) {
+                    $permObj = Permission::find($permission);
+                    if (! $permObj) continue;
+                    $action = explode('-',$permObj->name)[0] ?? null;
+                    $permissionData = [
+                        'source_id' => $source->id,
+                        'permission_id' => $permission,
+                        'type' => $action . '-' . $source->name
+                    ];
+                    $oldSourcePermission = SourcePermission::where([
+                        ['source_id', $source->id],
+                        ['permission_id',$permission]
+                    ]);
+                    if ($oldSourcePermission->first()) {
+                        $sourcePermission = $oldSourcePermission;
+                        $permissionData['updated_at'] = Carbon::now();
+                        $sourcePermission->update($permissionData);
+                    } else {
+                        $sourcePermission = new SourcePermission($permissionData);
+                        $sourcePermission->save();
+                    }
+                }
+                $oldSourcePermissions = SourcePermission::where([
+                    ['source_id', $source->id]
+                ])->get();
+                $deletePermissions = [];
+                foreach ($oldSourcePermissions as $oldSourcePermission) {
+                    if (!in_array($oldSourcePermission->permission_id, $permissions)) {
+                        $deletePermissions[] = $oldSourcePermission->id;
+                    }
+                }
+                SourcePermission::destroy($deletePermissions);
+            }
+        }
 
+        foreach ($access as $type => $roles) {
+            if ($type == 'roles') {
+                foreach ($roles as $role) {
+                    $roleObj = Role::find($role);
+                    if (! $roleObj) continue;
+                    $roleData = [
+                        'source_id' => $source->id,
+                        'role_id' => $role,
+                    ];
+                    $oldSourceRole = SourceRole::where([
+                        ['source_id', $source->id],
+                        ['role_id', $role]
+                    ]);
+                    if ($oldSourceRole->first()) {
+                        $sourceRole = $oldSourceRole;
+                        $roleData['updated_at'] = Carbon::now();
+                        $sourceRole->update($roleData);
+                    } else {
+                        $sourceRole = new SourceRole($roleData);
+                        $sourceRole->save();
+                    }
+                }
+                $oldSourceRoles = SourceRole::where([
+                    ['source_id', $source->id]
+                ])->get();
+                $deleteRoles = [];
+                foreach ($oldSourceRoles as $oldSourceRole) {
+                    if (!in_array($oldSourceRole->role_id, $roles)) {
+                        $deleteRoles[] = $oldSourceRole->id;
+                    }
+                }
+                SourceRole::destroy($deleteRoles);
+            }
+        }
+
+        return true;
+    }
 }
