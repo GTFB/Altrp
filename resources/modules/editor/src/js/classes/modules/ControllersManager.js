@@ -23,6 +23,7 @@ import QueryController from "../../components/controllers/QueryController";
 import FiltersController from "../../components/controllers/FiltersController";
 import ColumnWidthController from "../../components/controllers/ColumnWidthController";
 import GradientController from  "../../components/controllers/GradientController";
+import CreativeLinkController from "../../components/controllers/CreativeLinkController";
 
 export const TAB_CONTENT = 'content';
 export const TAB_STYLE = 'style';
@@ -46,6 +47,7 @@ export const CONTROLLER_CSSEDITOR = 'css-editor';
 export const CONTROLLER_SHADOW = 'shadow';
 export const CONTROLLER_TRANSFORM = 'transform';
 export const CONTROLLER_TYPOGRAPHIC = 'typographic';
+export const CONTROLLER_CREATIVELINK = 'creative-link';
 export const CONTROLLER_REPEATER = 'repeater';
 export const CONTROLLER_QUERY = 'query';
 export const CONTROLLER_FILTERS = 'filters';
@@ -74,6 +76,7 @@ class ControllersManager {
     this.conttrollers[CONTROLLER_SHADOW] = ShadowController;
     this.conttrollers[CONTROLLER_TRANSFORM] = TransformController;
     this.conttrollers[CONTROLLER_TYPOGRAPHIC] = TypographicController;
+    this.conttrollers[CONTROLLER_CREATIVELINK] = CreativeLinkController;
     this.conttrollers[CONTROLLER_REPEATER] = RepetaerController;
     this.conttrollers[CONTROLLER_QUERY] = QueryController;
     this.conttrollers[CONTROLLER_FILTERS] = FiltersController;

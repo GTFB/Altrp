@@ -18,7 +18,7 @@ import {
   TAB_CONTENT,
   TAB_STYLE,
   TAB_ADVANCED,
-  CONTROLLER_MEDIA
+  CONTROLLER_MEDIA, CONTROLLER_CREATIVELINK
 } from "../modules/ControllersManager";
 
 class Button extends BaseElement{
@@ -517,6 +517,33 @@ class Button extends BaseElement{
         '{{ELEMENT}} .altrp-btn-icon svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
       },
     });
+
+    this.endControlSection();
+
+    this.startControlSection(
+      'creative_link', {
+        tab: TAB_STYLE,
+        label: 'Creative Link',
+      }
+    );
+
+    this.addControl('creative_link_controller', {
+        type: CONTROLLER_CREATIVELINK,
+        label: 'Creative Link',
+        rules: {
+          '{{ELEMENT}} .altrp-btn:after{{STATE}}': [
+            'transition-duration: {{SIZE}}s;',
+            'height: {{LINEHEIGHT}}px;',
+            'background: {{COLOR}};',
+          ],
+          '{{ELEMENT}} .altrp-btn:before{{STATE}}': [
+            'transition-duration: {{SIZE}}s;',
+            'height: {{LINEHEIGHT}}px;',
+            'background: {{COLOR}};',
+          ],
+        },
+      }
+    );
 
     this.endControlSection();
 
