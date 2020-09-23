@@ -10,6 +10,7 @@ import appStore from "../store/store"
 import {changeCurrentModel} from "../store/current-model/actions";
 import {queryCache} from  "react-query";
 import {changeCurrentDataStorage, clearCurrentDataStorage} from "../store/current-data-storage/actions";
+import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 
 
 class RouteContent extends Component {
@@ -27,6 +28,7 @@ class RouteContent extends Component {
    * @return {Promise<void>}
    */
   async componentDidMount(){
+    window.currentRouterMatch = new AltrpModel(this.props.match);
     setTitle(this.props.title);
     if(this.props.lazy && this.props.allowed){
       let page = await pageLoader.loadPage(this.props.id);
@@ -110,6 +112,9 @@ class RouteContent extends Component {
 
     if(! _.isEqual(_.get(this.props, 'match.params'),_.get(prevProps, 'match.params'))){
       this.updateDataStorage();
+    }
+    if(! _.isEqual(_.get(this.props, 'match'),_.get(prevProps, 'match'))) {
+      window.currentRouterMatch = new AltrpModel(this.props.match);
     }
   }
   render(){

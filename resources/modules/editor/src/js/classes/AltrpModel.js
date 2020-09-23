@@ -11,9 +11,13 @@ class AltrpModel {
 
   /**
    * Возваращает объект данных
+   * @params {boolean} clone - клонировать или ссылку на данные
    * @return {*}
    */
-  getData() {
+  getData(clone = true) {
+    if(clone){
+      return _.cloneDeep(this.data);
+    }
     return this.data;
   }
 

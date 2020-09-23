@@ -1,5 +1,6 @@
 import CONSTANTS from "../../../editor/src/js/consts";
 import appStore from "./store/store";
+import AltrpModel from "../../../editor/src/js/classes/AltrpModel";
 
 export function getRoutes() {
   return import('./classes/Routes.js');
@@ -173,6 +174,7 @@ export function renderAsset(asset, props = null) {
  */
 export function parseParamsFromString(string, context = {}){
   const params = {};
+  const urlParams = window.currentRouterMatch instanceof AltrpModel ? window.currentRouterMatch.getProperty('params') : {};
 
   if(! string){
     return params;
@@ -189,7 +191,7 @@ export function parseParamsFromString(string, context = {}){
       if(context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0])){
         params[left] = context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0]) || '';
       } else {
-        params[left] = '';
+        params[left] = urlParams[right] ? urlParams[right] : '';
       }
     } else {
       params[left] = right;
@@ -272,6 +274,7 @@ function _conditionChecker(c, model){
  */
 export function getDataByPath(path){
   const {currentModel, currentDataStorage} = appStore.getState();
+  const urlParams = window.currentRouterMatch instanceof AltrpModel ? window.currentRouterMatch.getProperty('params') : {};
   let value = '';
   if(! _.isString(path)){
     return value;
@@ -280,7 +283,7 @@ export function getDataByPath(path){
     path = path.replace('altrpdata.', '');
     value = currentDataStorage.getProperty(path)
   } else {
-    value = currentModel.getProperty(path);
+    value = urlParams[path] ? urlParams[path] : currentModel.getProperty(path);
   }
   return value;
 }
