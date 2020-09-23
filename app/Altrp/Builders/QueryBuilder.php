@@ -128,7 +128,7 @@ class QueryBuilder
         . "{$this->tabIndent}{$this->tabIndent}\$model = \$this->model();\n"
         . implode("{$this->twoTabs}",$queryBody) . $this->tabIndent . "}";
 
-        return $this->replaceDynamicVars($methodBody,1);
+        return $this->replaceDynamicVars($methodBody,0);
     }
 
     /**

@@ -15,7 +15,10 @@ class Source extends Model
         'url',
         'api_url',
         'type',
+        'request_type',
         'name',
+        'title',
+        'auth'
     ];
 
     public function sourceable()

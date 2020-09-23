@@ -35,7 +35,7 @@ class PageDatasourceController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -57,12 +57,15 @@ class PageDatasourceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\PageDatasource  $pageDatasource
+     * @param PageDatasource $page_data_source_id
      * @return \Illuminate\Http\Response
      */
-    public function show(PageDatasource $pageDatasource)
+    public function show(PageDatasource $page_data_source_id)
     {
-
+        return \Curl::to('http://altrp.nz/ajax/models/queries/test_posts/get_all_posts')
+            ->withData()
+            ->asJson()
+            ->get();
     }
 
     /**
@@ -79,8 +82,8 @@ class PageDatasourceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\PageDatasource  $pageDatasource
+     * @param \Illuminate\Http\Request $request
+     * @param $page_data_source_id
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $page_data_source_id)
