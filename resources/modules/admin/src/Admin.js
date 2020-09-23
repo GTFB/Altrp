@@ -290,6 +290,9 @@ class Admin extends Component {
             <Route path="/admin/tables/data-sources/add">
               <AddDataSource />
             </Route>
+            <Route path="/admin/tables/data-sources/edit/:id">
+              <AddDataSource />
+            </Route>
 
             <Route path="/admin/access/roles/add">
               <RolePage />
