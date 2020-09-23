@@ -32,8 +32,13 @@ class AltrpUser extends AltrpModel{
     }
     let ownPermissions = this.getProperty('permissions', []);
     return _.find(ownPermissions, ownPermission => {
-      return _.find(permissions, role => {
-        return parseInt(role) === parseInt(ownPermission.id);
+      return _.find(permissions, permission => {
+        if(parseInt(permission)){
+          return parseInt(permission) === parseInt(ownPermission.id);
+        }
+        if(_.isString(permission)){
+          return permission === ownPermission.name;
+        }
       });
     });
   }
@@ -49,7 +54,12 @@ class AltrpUser extends AltrpModel{
     let ownRoles = this.getProperty('roles', []);
     return _.find(ownRoles, ownRole => {
       return _.find(roles, role => {
-        return parseInt(role) === parseInt(ownRole.id);
+        if(parseInt(role)){
+          return parseInt(role) === parseInt(ownRole.id);
+        }
+        if(_.isString(role)){
+          return role === ownRole.name;
+        }
       });
     });
   }

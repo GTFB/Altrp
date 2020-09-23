@@ -175,16 +175,14 @@ class Template extends Model
       || isset( $settings['conditional_permissions'] ) && $settings['conditional_permissions'] ) ){
       return $result;
     }
-    $roles = Role::find( $settings['conditional_roles'] );
-    if( $roles->count() ){
-      $roles = $roles->toArray();
+    $roles = data_get( $settings, 'conditional_roles', [] );
+
+    if( $roles ){
       return Auth::user()->hasRole( $roles );
     }
+    $permissions = data_get( $settings, 'conditional_permissions', [] );
 
-    $permissions = Permission::find( $settings['conditional_permissions'] );
-    if( $permissions->count() ){
-      $permissions = $permissions->toArray();
-
+    if( $permissions ){
       return Auth::user()->hasPermission( $permissions );
     }
     return $result;

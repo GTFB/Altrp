@@ -129,20 +129,20 @@ class AddPage extends Component {
                    onChange={e => {this.changeValue(e.target.value, 'path')}}
                    className="form-control"/>
           </div>
-          <div className="form-group">
-            <label htmlFor="page-template">Content Template</label>
-            <select id="page-template"
-                   value={this.state.value.template_id || ''}
-                   onChange={e => {this.changeValue(e.target.value, 'template_id')}}
-                   className="form-control">
-              <option value=""/>
-              {
-                this.state.templates.map(template=>{
-                  return <option value={template.value} key={template.value}>{template.label}</option>
-                })
-              }
-            </select>
-          </div>
+          {/*<div className="form-group">*/}
+            {/*<label htmlFor="page-template">Content Template</label>*/}
+            {/*<select id="page-template"*/}
+                   {/*value={this.state.value.template_id || ''}*/}
+                   {/*onChange={e => {this.changeValue(e.target.value, 'template_id')}}*/}
+                   {/*className="form-control">*/}
+              {/*<option value=""/>*/}
+              {/*{*/}
+                {/*this.state.templates.map(template=>{*/}
+                  {/*return <option value={template.value} key={template.value}>{template.label}</option>*/}
+                {/*})*/}
+              {/*}*/}
+            {/*</select>*/}
+          {/*</div>*/}
           <div className="form-group">
             <label htmlFor="page-model">Model</label>
             <select id="page-model"
