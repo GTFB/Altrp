@@ -41,6 +41,7 @@ import Models from "./components/Models";
 import EditModel from "./components/models/EditModel";
 import EditField from "./components/models/EditField";
 import AddRelation from "./components/models/AddRelation";
+import AddAccessor from "./components/models/AddAccessor";
 import AddDataSource from "./components/models/AddDataSource";
 import SQLBuilder from "./components/SQLBuilder";
 import SqlEditor from "./components/models/SqlEditor";
@@ -160,7 +161,7 @@ class Admin extends Component {
                     <UserSvg className="icon"/>
                     <span>Users</span>
                   </Link>
-                </li>                
+                </li>
                 <li>
                   <Link to="/admin/tools" className="admin-nav-list__link">
                     <span>Tools</span>
@@ -212,7 +213,7 @@ class Admin extends Component {
             <Route path="/admin/users/user/:id">
               <EditUserPage/>
             </Route>
-            
+
             <Route path="/admin/tools">
               <UsersTools/>
             </Route>
@@ -232,7 +233,7 @@ class Admin extends Component {
               <Tables/>
             </Route>
             <Route path="/admin/tables/edit/:id"  component={EditTable} exact>
-              <EditTable/>   
+              <EditTable/>
             </Route>
             <Route path="/admin/tables/edit/:id/setting" component={SettingTable} exact/>
             <Route path="/admin/tables/edit/:id/setting/migrations/add" component={AddMigrationPage} />
@@ -281,6 +282,12 @@ class Admin extends Component {
             <Route path="/admin/tables/models/:modelId/relations/edit/:id">
               <AddRelation />
             </Route>
+            <Route path="/admin/tables/models/:modelId/accessors/add">
+              <AddAccessor />
+            </Route>
+            <Route path="/admin/tables/models/:modelId/accessors/edit/:id">
+              <AddAccessor />
+            </Route>
             <Route path="/admin/tables/models/:modelId/queries/add">
               <SQLBuilder/>
             </Route>
@@ -305,7 +312,7 @@ class Admin extends Component {
             </Route>
             <Route path="/admin/access">
               <AccessOptions />
-            </Route>            
+            </Route>
           </Switch>
         </Router>
         <AdminModal/>
