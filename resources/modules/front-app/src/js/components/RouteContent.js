@@ -9,6 +9,7 @@ import Resource from "../../../../editor/src/js/classes/Resource";
 import appStore from "../store/store"
 import {changeCurrentModel} from "../store/current-model/actions";
 import {queryCache} from  "react-query";
+import {changeCurrentDataStorage, clearCurrentDataStorage} from "../store/current-data-storage/actions";
 
 
 class RouteContent extends Component {
@@ -39,6 +40,41 @@ class RouteContent extends Component {
      * Меняем текущую модель
      */
     this.changeRouteCurrentModel();
+    /**
+     * Обнуляем текущее хранилище dataStorage
+     */
+    appStore.dispatch(clearCurrentDataStorage());
+    /**
+     * затем отправляем запросы на обновление
+     */
+    this.updateDataStorage();
+  }
+
+  /**
+   *  обновление currentDataStorage
+   */
+  async updateDataStorage () {
+    /**
+     * @member {[]} data_sources
+     */
+    let { data_sources } = this.props;
+    data_sources = _.sortBy(data_sources, data_source => data_source.priority);
+    /**
+     * @member {Datasource} data_source
+     */
+    for(let datasource of data_sources){
+      if(datasource.getWebUrl()){
+        let params = datasource.getParams(this.props.match.params);
+        let res;
+        if(params){
+          res = await (new Resource({route: datasource.getWebUrl()})).getQueried(params);
+        } else {
+          res = await (new Resource({route: datasource.getWebUrl()})).getAll();
+        }
+        res = _.get(res, 'data', res);
+        appStore.dispatch(changeCurrentDataStorage(datasource.getAlias(), res));
+      }
+    }
   }
   /**
    * Меняем текущую модель

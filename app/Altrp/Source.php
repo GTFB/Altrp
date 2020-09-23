@@ -80,6 +80,7 @@ class Source extends Model
 
   /**
    * URL для фронтенда
+   * @return string
    */
   public function getWebUrlAttribute(){
     switch ( $this->sourceable_type ){

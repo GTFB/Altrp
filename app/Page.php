@@ -75,9 +75,11 @@ class Page extends Model
           'id' => $page->id,
           'title' => $page->title,
           'allowed' => true,
-          'data_sources' => $page->data_sources->map( function ( Source $source ){
-            $source->web_url = $source->web_url;
-            return $source;
+          'data_sources' => $page->page_data_sources->map( function ( PageDatasource $page_data_source ){
+            if( $page_data_source->source ){
+              $page_data_source->source->web_url = $page_data_source->source->web_url;
+            }
+            return $page_data_source;
           } ),
         /**
            * Если лениво загружаем области то возвращаем пустой массив
@@ -229,6 +231,13 @@ class Page extends Model
    */
   public function data_sources(){
     return $this->belongsToMany( Source::class, 'page_data_sources', 'page_id', 'source_id' );
+  }
+  /**
+   * Список ресурсов связанных со страницей через
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function page_data_sources(){
+    return $this->hasMany( PageDatasource::class, 'page_id', 'id' );
   }
   /**
     * Импортируем связи стрнаиц с ролями

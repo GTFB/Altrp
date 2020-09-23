@@ -24,6 +24,10 @@ class PageDatasource extends Model
         return $this->belongsTo(Page::class);
     }
 
+  /**
+   * Ссылка на ресурс
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+   */
     public function source()
     {
         return $this->belongsTo(Source::class);
