@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Altrp\Source;
 use App\Constructor\Template;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -84,6 +85,7 @@ class Page extends Model
         ];
       }
       $_page['lazy'] = $lazy;
+      $_page['data_sources'] = $page->data_sources;
       if($page->model){
         $_page['model'] = $page->model->toArray();
         $_page['model']['modelName'] = Str::plural( $page->model->name );
@@ -204,9 +206,21 @@ class Page extends Model
     return $areas;
   }
 
-  function user()
+  /**
+   * Сылка на пользователя создавшего страницу
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+   */
+  public function user()
   {
     return $this->belongsTo( User::class, 'author' );
+  }
+
+  /**
+   * Список ресурсов связанных со страницей
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+   */
+  public function data_sources(){
+    return $this->belongsToMany( Source::class, 'page_data_sources', 'page_id', 'source_id' );
   }
 
   /**

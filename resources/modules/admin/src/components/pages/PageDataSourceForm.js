@@ -6,15 +6,15 @@ class PageDataSourceForm extends Component {
   state = {
     source_id: '',
     alias: '',
-    priority: 0,
+    priority: 100,
     parameters: '',
     dataSourceOptions: [],
     ...this.props.dataSource
-  }
+  };
 
   changeHandler = ({ target: { value, name } }) => {
     this.setState({ [name]: value });
-  }
+  };
 
   async componentDidMount() {
     const resource = new Resource({ route: 'http://altrp.nz/admin/ajax/data_sources' });
@@ -29,12 +29,12 @@ class PageDataSourceForm extends Component {
     const data = { ...this.state };
     delete data.dataSourceOptions;
     if (this.props.dataSource) {
-      resource.put(data.id, data);
+        resource.put(data.id, data);
     } else {
       resource.post({ page_id: id, ...data });
     }
     this.props.updateHandler();
-  }
+  };
 
   render() {
     const { source_id, alias, priority, parameters, dataSourceOptions } = this.state;
@@ -74,7 +74,7 @@ class PageDataSourceForm extends Component {
 
       <div className="form-group">
         <label>Parameters
-            <textarea required name="parameters"
+            <textarea  name="parameters"
             value={parameters}
             onChange={this.changeHandler}
             className="form-control"
