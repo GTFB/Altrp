@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Altrp\AltrpDiagram;
 use App\Altrp\Column;
 use App\Altrp\Model;
 use App\Altrp\Query;
@@ -10,17 +11,24 @@ use App\Altrp\Table;
 use App\Altrp\Model as AltrpModel;
 use App\Area;
 use App\Constructor\Template;
+use App\Constructor\TemplateSetting;
+use App\Dashboards;
 use App\Helpers\Classes\AltrpZip;
 use App\Media;
 use App\Page;
 use App\PagesTemplate;
+use App\Permission;
+use App\Reports;
+use App\Role;
 use App\SQLEditor;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use TemplateSettings;
 use ZipArchive;
 
 class AltrpImportExportService
@@ -95,15 +103,33 @@ class AltrpImportExportService
     $data['pages_templates'] = PagesTemplate::all()->toArray();
     $data['admin_logo'] = json_decode( env( 'ALTRP_SETTING_ADMIN_LOGO' ), true );
 
+    $data['template_settings'] = TemplateSetting::all()->toArray();
+    foreach ( $data['template_settings'] as $key => $template_setting ) {
+      $_template = Template::find( $template_setting['template_id'] );
+      if( $_template ){
+        $data['template_settings'][$key]['template_guid'] = $_template->guid;
+      }
+    }
+
     /**
-     * Давнные моделей
+     * Данные отчетов, диаграмм и пр.
+     */
+    $data['altrp_diagrams'] = AltrpDiagram::all()->toArray();
+    $data['dashboards'] = Dashboards::all()->toArray();
+    $data['reports'] = Reports::all()->toArray();
+
+    /**
+     * Данные моделей
      */
     $data['tables'] = Table::all();
 
     $data['models'] = Model::all();
     foreach ( $data['models'] as $key => $model ) {
-      $table = Table::find( $model['tables_id'] );
+      $table = Table::find( $model['table_id'] );
       if( ! $table ){
+        continue;
+      }
+      if( $model['name'] === 'user' ){
         continue;
       }
       $data['models'][$key]['table_name'] = $table->name;
@@ -120,6 +146,7 @@ class AltrpImportExportService
         continue;
       }
       $data['columns'][$key]['table_name'] = $table->name;
+      $data['columns'][$key]['model_name'] = $model->name;
     }
 
     $data['s_q_l_editors'] = SQLEditor::all();
@@ -155,6 +182,28 @@ class AltrpImportExportService
 
     }
 
+    /**
+     * Данные ролей и пр.
+     */
+
+    $data['roles'] = Role::all();
+    $data['page_roles'] = DB::table( 'page_role' )->get()->toArray();
+    foreach ( $data['page_roles'] as $key => $page_role ) {
+      $role = Role::find( $page_role->role_id );
+      $page = Page::find( $page_role->page_id );
+      if( ! ( $page && $role ) ){
+        continue;
+      }
+      $data['page_roles'][$key]->page_guid = $page->guid;
+      $data['page_roles'][$key]->role_name = $role->name;
+    }
+    $data['permission_roles'] = DB::table( 'permission_role' )->get()->toArray();
+    foreach ( $data['permission_roles'] as $key => $permission_role ) {
+      $role = Role::find( $permission_role->role_id );
+      $permission = Permission::find( $permission_role->permission_id );
+      $data['permission_roles'][$key]->permission_name = $permission->name;
+      $data['permission_roles'][$key]->role_name = $role->name;
+    }
     $content = json_encode( $data );
     File::put( storage_path( 'tmp/altrp-settings/altrp-data.json' ), $content);
   }
@@ -207,10 +256,15 @@ class AltrpImportExportService
     $data = json_decode( $data, true );
     $this->deleteFileTmp( 'imports' );
     /**
+     * импортируем настройки доступов
+     */
+    Role::import( Arr::get( $data, 'roles', [] ) );
+
+    /**
      * импортируем настройки моделей
      */
 
-    Table::import( Arr::get( $data, 'tables', [] ) );
+//    Table::import( Arr::get( $data, 'tables', [] ) );
     AltrpModel::import( Arr::get( $data, 'models', [] ) );
     Column::import( Arr::get( $data, 'columns', [] ) );
     Relationship::import( Arr::get( $data, 'relations', [] ) );
@@ -221,10 +275,21 @@ class AltrpImportExportService
      * импортируем настройки фронт приложения
      */
     Template::import( Arr::get( $data, 'templates', [] ) );
+    TemplateSetting::import( Arr::get( $data, 'template_settings', [] ) );
     Media::import( Arr::get( $data, 'media', [] ) );
     Page::import( Arr::get( $data, 'pages', [] ) );
     PagesTemplate::import( Arr::get( $data, 'pages_templates', [] ) );
-
+    /**
+     * импортируем настройки доступов
+     */
+    Page::importPageRoles( Arr::get( $data, 'page_roles', [] ) );
+    Role::importPermissionRole( Arr::get( $data, 'permission_roles', [] ) );
+    /**
+     * импортируем диграммы и пр.
+     */
+    AltrpDiagram::import( Arr::get( $data, 'altrp_diagrams', [] ) );
+    Dashboards::import( Arr::get( $data, 'dashboards', [] ) );
+    Reports::import( Arr::get( $data, 'reports', [] ) );
     /**
      * Удаляем архив
      */

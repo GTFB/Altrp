@@ -30,10 +30,18 @@ class Permissions extends ApiController
         if( $request->get( 's' ) ){
           $permissions = Permission::where('display_name', 'like', '%' . $request->get( 's' ) . '%')
             ->orWhere('name', 'like', '%' . $request->get( 's' ) . '%')
-            ->select(['id as value', 'display_name as label'])->get();
+            ->select(['*'])->get();
         } else {
-          $permissions = Permission::select(['id as value', 'display_name as label'])->get();
+          $permissions = Permission::select(['*'])->get();
         }
+        $permissions = $permissions->map( function ( $permission ) use ( $request ){
+          $value = data_get( $permission, $request->get( 'value', 'id' ) );
+
+          return [
+            'value' => $value,
+            'label' => $permission->display_name,
+          ];
+        } );
         return response()->json($permissions, 200, [],JSON_UNESCAPED_UNICODE);
     }
 

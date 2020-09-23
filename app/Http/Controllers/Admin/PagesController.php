@@ -66,7 +66,6 @@ class PagesController extends Controller
     $page->author = auth()->user()->id;
     $page->content = '';
     $page->guid = (string)Str::uuid();
-    $page->parseRoles( (array)$request->get( 'roles' ) );
     if ( $page->save() ) {
       if ( $request->template_id ) {
         $template = Template::find( $request->template_id );
@@ -82,6 +81,7 @@ class PagesController extends Controller
       }
       $res['success'] = true;
       $res['page'] = $page->toArray();
+      $page->parseRoles( (array)$request->get( 'roles' ) );
       return response()->json( $res );
     }
     $res['message'] = 'Page not saved';

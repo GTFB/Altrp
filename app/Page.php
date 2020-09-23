@@ -3,9 +3,12 @@
 namespace App;
 
 use App\Altrp\Source;
+use App\Altrp\Model as AltrpModel;
 use App\Constructor\Template;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -29,6 +32,8 @@ class Page extends Model
     'path',
     'model_id',
     'redirect',
+    'guid',
+    'for_guest',
   ];
 
   /**
@@ -222,6 +227,29 @@ class Page extends Model
   public function data_sources(){
     return $this->belongsToMany( Source::class, 'page_data_sources', 'page_id', 'source_id' );
   }
+  /**
+    * Импортируем связи стрнаиц с ролями
+    * @param array $page_roles
+  */
+  public static function importPageRoles( $page_roles = [] )
+{
+  $table = DB::table( 'page_role' );
+  $table->delete();
+  foreach ( $page_roles as $page_role ) {
+    $role = Role::where( 'name', data_get( $page_role, 'role_name' ) )->first();
+    $page = self::where( 'guid', data_get( $page_role, 'page_guid' ) )->first();
+    if( ! ( $page && $role ) ){
+      continue;
+    }
+    try{
+      $table->insert([
+        'page_id' => $page->id,
+        'role_id' => $role->id,
+      ]);
+    }catch(\Exception $e){}
+
+  }
+}
 
   /**
    * @return \Illuminate\Database\Eloquent\Builder|Model|null|Template
@@ -372,5 +400,36 @@ class Page extends Model
       }
     }
     return $allowed;
+  }
+
+  /**
+   * Испортирует страницы
+   * @param array $imported_pages
+   */
+  static public function import( $imported_pages = []){
+    foreach ( $imported_pages as $imported_page ) {
+
+      if( Arr::get( $imported_page, 'model_name' ) ){
+        $model = AltrpModel::where( 'name', $imported_page['model_name'] )->first();
+        $model_id = $model ? $model->id : null;
+      } else {
+        $model_id = null;
+      }
+      $old_page = self::where( 'guid', $imported_page['guid'] )->first();
+      if( $old_page ){
+        $old_page->model_id = $model_id;
+        $old_page->redirect = $imported_page['redirect'];
+        $old_page->content = $imported_page['content'];
+        $old_page->path = $imported_page['path'];
+        $old_page->title = $imported_page['title'];
+        $old_page->for_guest = $imported_page['for_guest'];
+        $old_page->author = Auth::user()->id;
+        continue;
+      }
+      $new_page = new self( $imported_page );
+      $new_page->author = Auth::user()->id;
+      $new_page->model_id = $model_id;
+      $new_page->save();
+    }
   }
 }
