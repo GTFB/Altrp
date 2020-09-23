@@ -10,7 +10,14 @@ class Datasource extends AltrpModel{
    * @return {string}
    */
   getWebUrl(){
-    return this.getProperty('source.web_url');
+    return this.getProperty('source.web_url').replace(/{([\s\S]+?)}/g, '');
+  }
+  /**
+   * получить тип ресурса
+   * @return {string}
+   */
+  getType(){
+    return this.getProperty('source.type');
   }
   /**
    * получить url для вэба
@@ -47,8 +54,8 @@ class Datasource extends AltrpModel{
     parsedTemplate.forEach(([left, right])=>{
       if(right.match(/(?<={{)([\s\S]+?)(?=}})/g)){
         right = right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0];
-        if(right.indexOf('datasource.') === 0){
-          right = right.replace('datasource.', '');
+        if(right.indexOf('altrpdata.') === 0){
+          right = right.replace('altrpdata.', '');
           right = currentDataStorage.getProperty(right)
         } else {
           right = urlParams[right] ? urlParams[right] : currentModel.getProperty(right);

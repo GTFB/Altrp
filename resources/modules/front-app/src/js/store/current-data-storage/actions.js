@@ -13,7 +13,7 @@ export const CLEAR_CURRENT_DATASOURCE = 'CLEAR_CURRENT_DATASOURCE';
  *   }
  * }
  */
-export function changeCurrentDataStorage(dataStorageName, data) {
+export function changeCurrentDataStorage(dataStorageName, data = {}) {
   return {
     type: CHANGE_CURRENT_DATASOURCE,
     data,

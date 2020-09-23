@@ -65,8 +65,16 @@ class RouteContent extends Component {
     for(let datasource of data_sources){
       if(datasource.getWebUrl()){
         let params = datasource.getParams(this.props.match.params);
-        let res;
-        if(params){
+        let res = {};
+        if(datasource.getType() === 'show') {
+          let id = _.get(params, 'id', _.get(this.props, 'match.params.id'));
+          console.log(id);
+          console.log(params);
+          console.log(datasource.getWebUrl());
+          if(id){
+            res = await (new Resource({route: datasource.getWebUrl()})).get(id);
+          }
+        } else if(params) {
           res = await (new Resource({route: datasource.getWebUrl()})).getQueried(params);
         } else {
           res = await (new Resource({route: datasource.getWebUrl()})).getAll();
@@ -101,6 +109,10 @@ class RouteContent extends Component {
         || (_.get(this.props, 'match.params.id') !== _.get(prevProps, 'match.params.id'))
     ){
       this.changeRouteCurrentModel();
+    }
+
+    if(! _.isEqual(_.get(this.props, 'match.params'),_.get(prevProps, 'match.params'))){
+      this.updateDataStorage();
     }
   }
   render(){
