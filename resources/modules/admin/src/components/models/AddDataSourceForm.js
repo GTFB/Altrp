@@ -16,8 +16,7 @@ class AddDataSourceForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // modelsOptions: [],   TODO: заменить замоканые данные
-      modelsOptions: mockedOptions,
+      modelsOptions: [],  
       value: {
         title: '',
         name: '',
