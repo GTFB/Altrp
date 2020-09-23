@@ -50,14 +50,14 @@ class Model extends EloquentModel
       if( self::where( 'name', $imported_model['name'] )->first() ){
         continue;
       }
-//      $table = Table::where( 'name',  Arr::get( $imported_model, 'table_name' ) )->first();
-//      if( ! $table ){
-//        error_log( 'Не удалось сохранить модель ' . $imported_model['name'] .
-//          ' таблица ' . $imported_model['table_name'] . ' не найдена!' );
-//        continue;
-//      }
+
       $new_model = new self( $imported_model );
-//      $new_model->table_id = $table->id;
+      $table = Table::where( 'name', data_get( $imported_model, 'table_name') )->first();
+      if( $table ){
+        $new_model->table_id = $table->id;
+      } else {
+        $new_model->table_id = null;
+      }
       try {
         $new_model->save();
       } catch (\Exception $e){
