@@ -17,17 +17,17 @@ class AnalyticsController extends Controller
         $templates_history = Template::where('type', 'review')->count();
         $areas = DB::table('areas')->count();
 
-        return response()->json([
+        return response()->json(['data' => [
           array('key' => 'Отчетов', 'data' => $reports),
           array('key' => 'Шаблонов', 'data' => $templates),
           array('key' => 'История Шаблонов', 'data' => $templates_history),
           array('key' => 'Областей', 'data' => $areas),
-        ], 200, [], JSON_UNESCAPED_UNICODE);
+        ]], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function none()
     {
-        return response()->json([], 200, [], JSON_UNESCAPED_UNICODE);
+        return response()->json(['data' => []], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     

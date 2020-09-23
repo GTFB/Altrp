@@ -42,7 +42,4 @@ import("ace-builds").then(ace=>{
   window.AceEditor = AceEditor;
   store.dispatch(setAceEditor(AceEditor));
 });
-window.React = React;
-window.ReactDOM = ReactDOM;
-window.Component = React.Component;
 window._ = lodash;

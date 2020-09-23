@@ -17,11 +17,25 @@ class RouteGenerator
     private $path;
 
     /**
+     * Путь к файлу маршрутов API
+     *
+     * @var string
+     */
+    private $apiPath;
+
+    /**
      * Содержимое файла маршрутов
      *
      * @var string
      */
     private $routeContents;
+
+    /**
+     * Содержимое файла маршрутов API
+     *
+     * @var string
+     */
+    private $apiRouteContents;
 
     /**
      * Содежимое stub файла
@@ -53,15 +67,13 @@ class RouteGenerator
     /**
      * RouteGenerator constructor.
      * @param Controller $controller
+     * @param string $routeFilename
      */
-    public function __construct(Controller $controller)
+    public function __construct(Controller $controller, $routeFilename = 'AltrpRoutes')
     {
         $this->controllerModel = $controller;
-
-        $this->path = base_path('routes/AltrpRoutes.php');
-
+        $this->path = base_path("routes/{$routeFilename}.php");
         $this->routeContents = file($this->path, 2);
-
         $this->routeStubContents = $this->getStubContents();
     }
 
@@ -158,10 +170,11 @@ class RouteGenerator
         $countRouteStub = count($this->routeStub);
         for ($i = 0; $i < count($itemIndexes); $i++) {
 
-            if ($i < $countRouteStub)
+            if ($i < $countRouteStub) {
                 $this->routeContents[$itemIndexes[$i]] = $this->routeStub[$i];
-            else
+            } else {
                 unset($this->routeContents[$itemIndexes[$i]]);
+            }
 
             $newIndexes = $itemIndexes[$i];
             unset($this->routeStub[$i]);

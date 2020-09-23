@@ -59,6 +59,7 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         // Models
         Route::get( '/models', 'Admin\ModelsController@getModels');
         Route::get( '/model_options', 'Admin\ModelsController@getModelOptions');
+        Route::get( '/models_without_parent', 'Admin\ModelsController@getModelsWithoutParent');
         Route::post( '/models', 'Admin\ModelsController@storeModel');
         Route::put( '/models/{model_id}', 'Admin\ModelsController@updateModel');
         Route::get( '/models/{model_id}', 'Admin\ModelsController@showModel');
@@ -73,6 +74,7 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
 
         // Fields
         Route::get( '/models/{model_id}/fields', 'Admin\ModelsController@getModelFields');
+        Route::get( '/models/{model_id}/fields_only', 'Admin\ModelsController@getOnlyModelFields');
         Route::get( '/models/{model_id}/field_options', 'Admin\ModelsController@getModelFieldOptions');
         Route::post( '/models/{model_id}/fields', 'Admin\ModelsController@storeModelField');
         Route::put( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@updateModelField');

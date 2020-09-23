@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import Select from "react-select";
 import AsyncSelect from "react-select/async";
@@ -15,32 +15,51 @@ class Select2Controller extends Component {
     if (value === null && this.props.default) {
       value = this.props.default;
     }
-    value = value || '';
+    value = value || "";
     this.state = {
       value,
       options: this.props.options || [],
-      show: true
+      show: true,
     };
     // if (this.props.options_resource) {
     //   this.resource = new Resource({ route: this.props.options_resource });
     // }
-  };
+  }
 
   getDefaultValue() {
-    return '';
+    return "";
   }
 
   /**
    * Загрузим опцию, если есть значение
    * @return {Promise<string>}
    */
-  async _componentDidMount(){
-    if(this.state.value && this.getRoute()){
-      let resource = new Resource({route: this.getRoute()});
-      let options = await resource.search(this.state.value);
-      this.setState(state => ({
+  async _componentDidMount() {
+    if (this.state.value && this.getRoute()) {
+      let resource = new Resource({ route: this.getRoute() });
+      let options = await resource.search(
+        this.props.currentElement.getSettings(this.props.controlId)
+      );
+      if (this.props.nullable) {
+        options = _.union([{ label: "None", value: "" }], options);
+      }
+
+      this.setState((state) => ({
         ...state,
-        options
+        options,
+      }));
+    } else if (this.props.nullable) {
+      this.setState((state) => ({
+        ...state,
+        options: [{ label: "None", value: "" }],
+      }));
+    }
+    if (this.props.prefetch_options) {
+      let resource = new Resource({ route: this.getRoute() });
+      let options = await resource.getAll();
+      this.setState((state) => ({
+        ...state,
+        options,
       }));
     }
   }
@@ -49,15 +68,15 @@ class Select2Controller extends Component {
    * если this.props.options_resource содержит строку с шаблоном,
    * то нужно вставить необходимое значение свзятое из текущего элемента
    */
-  getRoute(){
+  getRoute() {
     let route = this.props.options_resource;
-    if((! route) || (! route.match(/{{([^}]*)}}/))){
+    if (route === undefined || !route.match(/{{([^}]*)}}/)) {
       return route;
     }
     let settingName = route.match(/{{([^}]*)}}/)[1];
     let match = route.match(/{{([^}]*)}}/)[0];
     let value = this.props.currentElement.getSettings(settingName);
-    return route.replace(match, value)
+    return route.replace(match, value);
   }
   /**
    * Обновляет опции при помощи ajax
@@ -69,26 +88,50 @@ class Select2Controller extends Component {
     if (!searchString) {
       return callback([]);
     }
-    let resource = new Resource({route: this.getRoute()});
+    let resource = new Resource({ route: this.getRoute() });
     let options = await resource.search(searchString);
-    this.setState(state => ({
+    if (this.props.nullable) {
+      options = _.union([{ label: "None", value: "" }], options);
+    }
+    this.setState((state) => ({
       ...state,
-      options
+      options,
     }));
     return callback(options);
   }
 
   change(value, action) {
-    if (action.action === 'select-option') {
-      this._changeValue(
-        value.value
-      );
+    if (action.action === "select-option") {
+      if (this.props.isMulti) {
+        let _v = value.map((v) => {
+          return v.value;
+        });
+        console.log(value);
+        console.log(_v);
+        this._changeValue(_v);
+      } else {
+        this._changeValue(value.value);
+      }
     }
-  };
+    if (action.action === "clear") {
+      if (this.props.isMulti) {
+        this._changeValue(value);
+      }
+    }
+    if (action.action === "remove-value") {
+      if (this.props.isMulti) {
+        value = this.state.value.filter((v) => {
+          return v !== action.removedValue.value;
+        });
+
+        this._changeValue(value);
+      }
+    }
+  }
 
   render() {
     if (this.state.show === false) {
-      return '';
+      return "";
     }
 
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
@@ -100,19 +143,21 @@ class Select2Controller extends Component {
         backgroundColor: state.isSelected ? "#5897fb" : "#FFF",
         fontSize: 13,
         padding: 5,
-        height: 20
+        height: 20,
       }),
 
       menu: () => ({
         margin: 0,
         padding: 0,
         width: "100%",
+        maxHeight: "150px",
+        overflow: "auto",
         borderRadius: "0px 0px 3px 3px",
         borderWidth: "0px 1px 1px 1px",
         borderStyle: "solid",
         borderColor: "#E5E6EA",
-        position: 'absolute',
-        zIndex: '1000'
+        position: "absolute",
+        zIndex: "1000",
       }),
 
       menuList: () => ({
@@ -122,7 +167,7 @@ class Select2Controller extends Component {
 
       control: (state) => ({
         display: "flex",
-        height: 28,
+        // height: 28,
         borderRadius: 3,
         borderWidth: 1,
         borderStyle: "solid",
@@ -134,24 +179,52 @@ class Select2Controller extends Component {
       placeholder: () => ({
         color: "#8E94AA",
         fontSize: 13,
-        opacity: 1
+        opacity: 1,
       }),
 
       indicatorSeparator: () => ({
-        display: "none !important"
+        display: "none !important",
       }),
 
       singleValue: () => ({
         color: "#8E94AA",
-      })
+      }),
     };
 
     // let value = {};
-    this.state.options.forEach(option => {
-      if (option.value === value) {
-        value = { ...option };
+    if (this.props.isMulti) {
+      if (_.isArray(value)) {
+        let _value = _.cloneDeep(value);
+        value = [];
+        _value.forEach((v) => {
+          this.state.options.forEach((option) => {
+            if (option.value === v) {
+              value.push({ ...option });
+            }
+            if (_.isArray(option.options)) {
+              option.options.forEach((option) => {
+                if (option.value === v) {
+                  value.push({ ...option });
+                }
+              });
+            }
+          });
+        });
       }
-    });
+    } else {
+      this.state.options.forEach((option) => {
+        if (option.value === value) {
+          value = { ...option };
+        }
+        if (_.isArray(option.options)) {
+          option.options.forEach((option) => {
+            if (option.value === value) {
+              value = { ...option };
+            }
+          });
+        }
+      });
+    }
     let selectProps = {
       onChange: this.change,
       onInputChange: this.change,
@@ -161,22 +234,27 @@ class Select2Controller extends Component {
       loadOptions: this.loadOptions,
       noOptionsMessage: () => "no found",
       value,
+      isMulti: this.props.isMulti,
+      closeMenuOnSelect: !this.props.isMulti,
+      isClearable: this.props.isClearable,
+      // menuIsOpen: true,
     };
 
     let SelectComponent = Select;
-    if (this.props.options_resource) {
+    if (this.props.options_resource && !this.props.prefetch_options) {
       SelectComponent = AsyncSelect;
       selectProps.loadOptions = this.loadOptions;
     }
-    return <div className="controller-container controller-container_select2">
-      <div className="control-select2-header">
-        <div className="control-select2__label">{this.props.label}</div>
+    return (
+      <div className="controller-container controller-container_select2">
+        <div className="control-select2-header">
+          <div className="control-select2__label">{this.props.label}</div>
+        </div>
+        <div className="control-container_select2-wrapper">
+          <SelectComponent isClearable={true} {...selectProps} />
+        </div>
       </div>
-      <div className="control-container_select2-wrapper">
-        <SelectComponent {...selectProps} />
-      </div>
-    </div>
-
+    );
   }
 }
 

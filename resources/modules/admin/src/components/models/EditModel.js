@@ -40,8 +40,7 @@ class EditModel extends Component {
       relations: null,
       id,
       queries: [],
-      sql_editors: [],
-      // model: {},   TODO: заменить замоканые данные
+      // sql_editors: [],
       // fields: [],
       // relations: []
     };

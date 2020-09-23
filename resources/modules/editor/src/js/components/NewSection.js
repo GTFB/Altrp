@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import PlusIcon from '../../svgs/plus.svg'
 import FolderIcon from '../../svgs/folder.svg'
 import { getEditor} from "../helpers";
-import CONSTANTS from "../consts";
 
 class NewSection extends Component {
 
@@ -19,8 +18,6 @@ class NewSection extends Component {
   }
 
   onDrop(e) {
-    // console.log(e);
-    // console.log(e.target);
     /**
      * @member {HTMLElement} target
      * */

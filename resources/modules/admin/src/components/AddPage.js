@@ -131,7 +131,7 @@ class AddPage extends Component {
           </div>
           <div className="form-group">
             <label htmlFor="page-template">Content Template</label>
-            <select id="page-template" required={1}
+            <select id="page-template"
                    value={this.state.value.template_id || ''}
                    onChange={e => {this.changeValue(e.target.value, 'template_id')}}
                    className="form-control">

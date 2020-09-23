@@ -79,7 +79,12 @@ class Resource {
         'Content-Type': 'application/json'
       },
     };
-    let url = this.route + `?s=${searchString}`;
+    let url;
+    if(this.route.indexOf('?') === -1){
+      url = this.route + `?s=${searchString}`;
+    } else {
+      url = this.route + `&s=${searchString}`;
+    }
     return fetch(url, options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);
@@ -124,7 +129,6 @@ class Resource {
       // 'Content-Type': 'multipart/form-data; boundary=' + boundary
     };
     let formData = new FormData();
-    console.log(files);
     for (let i = 0; i < files.length; i++) {
       if(files[i].size > MAX_FILE_SIZE || files[i].type.indexOf(fileType) !== 0){
         console.log(files[i]);

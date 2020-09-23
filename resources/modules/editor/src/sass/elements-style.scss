@@ -58,14 +58,24 @@
 }
 
 .altrp-section {
-  position: relative;
-  z-index: 50;
+  //position: relative;
+  //z-index: 50;
+  &.altrp-section--boxed > .altrp-element {
+    // width: 1440px;
+    margin: 0 auto;
+  }
+  &.altrp-section--full-width, &.altrp-section--boxed {
+    width: 100vw;
+  }
 }
+
+
 
 .altrp-column {
   display: flex;
   flex-wrap: wrap;
   padding: 10px;
+  align-content: flex-start;
 }
 
 .altrp-tooltip {
@@ -161,6 +171,10 @@
   margin-left: 10px;
 }
 
+.altrp-table-th .sort-icon {
+  margin-left: 10px;
+}
+
 .altrp-field-required {
   color: red;
   font-size: 18px;
@@ -191,8 +205,13 @@
 
 .app-area_content {
   flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
 }
-
+.app-area_content > .sections-wrapper {
+  flex: 1 0 auto;
+  align-content: flex-start;
+}
 .app-area_header {
   flex: 0 0 auto;
 }
@@ -218,6 +237,7 @@
   margin-left: auto !important;
   margin-right: auto !important;
 }
+
 
 .altrp-table {
   border-collapse: collapse;
@@ -557,4 +577,35 @@
 }
 .aspect-ratio-off_false .altrp-image{
   position: absolute;
+}
+
+// background меню селекта
+.css-tl8qiy-Menu, .css-l1wtd9-Menu {
+  background-color: white;
+}
+
+// уменьшил минимальную высоту select2
+.altrp-field-select2__indicator.altrp-field-select2__dropdown-indicator {
+  padding: 0 8px;
+  max-height: 14px;
+  overflow: hidden;
+}
+
+.altrp-field-select2 {
+  .altrp-field-select2__value-container {
+    padding: 0px 8px;
+  }
+
+  .css-b8ldur-Input {
+    padding-bottom: 0px;
+    padding-top: 0px;
+    margin: 0 2px;
+  }
+
+  .altrp-field-select2__control {
+    min-height: 14px;
+  }
+}
+.state-disabled{
+  pointer-events: none;
 }

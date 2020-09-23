@@ -18,7 +18,10 @@ import {
   TAB_CONTENT,
   TAB_STYLE,
   TAB_ADVANCED,
-  CONTROLLER_MEDIA, CONTROLLER_CREATIVELINK
+  CONTROLLER_MEDIA,
+  CONTROLLER_CREATIVELINK,
+  CONTROLLER_MEDIA,
+  CONTROLLER_GRADIENT
 } from "../modules/ControllersManager";
 
 class Button extends BaseElement{
@@ -170,10 +173,21 @@ class Button extends BaseElement{
       ],
     });
 
+    this.addControl('form_confirm', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Confirm Submit Form Text',
+      conditions: {
+        'form_actions!': 'null',
+      },
+      default: '',
+    });
+
     this.addControl('choose_model', {
       conditions: {
         'form_actions': 'add_new',
       },
+      label: 'Choose Model',
+      responsive: false,
       type: CONTROLLER_SELECT,
       resource: '/admin/ajax/models_options?with_names=true',
     });
@@ -264,6 +278,17 @@ class Button extends BaseElement{
       type: CONTROLLER_TEXT,
       label: 'CSS Classes',
       default: ''
+    });
+
+    this.addControl('position_opacity', {
+      type: CONTROLLER_SLIDER,
+      label: 'Opacity',
+      step: 0.01,
+      min: 0,
+      max: 1,
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'opacity: {{SIZE}};'
+      },
     });
 
     this.endControlSection();
@@ -445,6 +470,23 @@ class Button extends BaseElement{
       rules: {
         '{{ELEMENT}} .altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
       },
+    });
+
+    this.addControl('gradient', {
+      type: CONTROLLER_GRADIENT,
+      label: 'Gradient',
+      default: {
+        isWithGradient: false,
+        firstColor: "rgba(97,206,112,1)",
+        firstPoint: '0',
+        secondColor: "rgba(242,41,91,1)",
+        secondPoint: "100",
+        angle: "0",
+        value: ""
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-btn{{STATE}}": "background-image: {{VALUE}}" 
+      }
     });
 
   this.endControlSection();

@@ -13,7 +13,8 @@ import {
   CONTROLLER_LINK,
   CONTROLLER_COLWIDTH,
   TAB_STYLE,
-  CONTROLLER_GRADIENT
+  CONTROLLER_GRADIENT,
+  CONTROLLER_MEDIA
 } from "../modules/ControllersManager";
 import {advancedTabControllers} from "../../decorators/register-controllers";
 
@@ -37,7 +38,7 @@ class Section extends BaseElement{
     this.addControl('layout_content_width_type', {
       type: CONTROLLER_SELECT,
       label: 'Content width',
-      default: 'boxed',
+      default: 'section_boxed',
       options: [
         {
           value: 'boxed',
@@ -46,6 +47,10 @@ class Section extends BaseElement{
         {
           value: 'full',
           label: 'full width'
+        },
+        {
+          value: 'section_boxed',
+          label: 'section-boxed'
         },
         // {
         //   value: 'full-fill',
@@ -78,6 +83,50 @@ class Section extends BaseElement{
       }
     );
 
+    this.addControl(
+      'layout_align_content', {
+      type: CONTROLLER_SELECT,
+      label: 'Align Content',
+      options: [
+        {
+          'value': 'baseline',
+          'label': 'baseline'
+        },
+        {
+          'value': 'center',
+          'label': 'center'
+        },
+        {
+          'value': 'flex-start',
+          'label': 'flex-start'
+        },
+        {
+          'value': 'flex-end',
+          'label': 'flex-end'
+        },
+        {
+          'value': 'space-around',
+          'label': 'space-around'
+        },
+        {
+          'value': 'space-between',
+          'label': 'space-between'
+        },
+        {
+          'value': 'space-evenly',
+          'label': 'space-evenly'
+        },
+        {
+          'value': 'unset',
+          'label': 'unset'
+        },
+      ],
+      rules: {
+        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "align-content: {{VALUE}}",
+      },
+    }
+    );
+
     // this.addControl("layout_content_full_width", {
     //   type: CONTROLLER_SLIDER,
     //   label: "full fill width",
@@ -97,14 +146,15 @@ class Section extends BaseElement{
       type: CONTROLLER_SLIDER,
       label: "width",
       default: {
-        size: 100,
-        unit: "%"
+        size: 1440,
+        unit: "px"
       },
       units: ["px", "%", "vh"],
-      max: 500,
+      max: 2000,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "width: {{SIZE}}{{UNIT}}"
+        // "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "width: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-section--boxed{{STATE}} > .altrp-element": "width: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -358,21 +408,31 @@ class Section extends BaseElement{
       }
     });
 
-    // this.addControl('gradient', {
-    //   type: CONTROLLER_GRADIENT,
-    //   label: 'Gradient',
-    //   default: {
-    //     firstColor: "#61CE70",
-    //     firstPoint: '0',
-    //     secondColor: "#F2295B",
-    //     secondPoint: "100",
-    //     angle: "0"
-    //   },
-    //   rules: {
-    //     "{{ELEMENT}} .altrp-section{{STATE}}": "background-image: linear-gradient({{ANGLE}}deg, {{FIRSTCOLOR}} {{FIRSTPOINT}}%, {{SECONDCOLOR}} {{SECONDPOINT}}%);" 
-    //   }
-    //   //background-image: linear-gradient(360deg, #61CE70 0%, #F2295B 100%);
-    // });
+    this.addControl('gradient', {
+      type: CONTROLLER_GRADIENT,
+      label: 'Gradient',
+      default: {
+        isWithGradient: false,
+        firstColor: "rgba(97,206,112,1)",
+        firstPoint: '0',
+        secondColor: "rgba(242,41,91,1)",
+        secondPoint: "100",
+        angle: "0",
+        value: ""
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-section{{STATE}}": "background-image: {{VALUE}}" 
+      }
+    });
+
+    this.addControl('background_image', {
+      type: CONTROLLER_MEDIA,
+      label: 'Background image',
+      default: {url: ""},
+      rules: {
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background: repeat url({{URL}});"
+      }
+    });
 
     this.endControlSection();
 
@@ -525,7 +585,7 @@ class Section extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}': [
+        '{{ELEMENT}}{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',

@@ -20,6 +20,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\ApiRequest;
+use Illuminate\Support\Collection;
 
 
 class ModelsController extends HttpController
@@ -29,8 +30,6 @@ class ModelsController extends HttpController
      */
     public function models_list()
     {
-
-
         return response()->json(Model::getModelsForEditor());
     }
 
@@ -42,18 +41,82 @@ class ModelsController extends HttpController
         return response()->json(Model::getModelsForEditor());
     }
 
+    /**
+     * Получить модели без родительской модели
+     *
+     * @return JsonResponse
+     */
+    public function getModelsWithoutParent()
+    {
+        $models = Model::select(['id as value', 'title as label'])
+            ->whereNull('parent_model_id')
+            ->get();
+        return response()->json($models, 200);
+    }
+
   /**
    * @param Request $request
    * @return JsonResponse
    */
     public function models_options( Request $request )
     {
+      if( ! $request->get( 'with_sql_queries' ) ){
         return response()->json(
-        Model::getModelsOptions(
+          Model::getModelsOptions(
             $request->get( 'with_names' ),
             $request->get( 'not_plural' ),
-            $request->get('s')
-        ));
+            $request->get( 's' )
+          ));
+      } else {
+        $data_sources = [];
+        $model_data_sources = [];
+        foreach ( Model::getModelsOptions(
+          $request->get( 'with_names' ),
+          $request->get( 'not_plural' ),
+          $request->get( 's' )
+        ) as $modelsOption ) {
+          if( $modelsOption['value'] === 'user' ){
+            continue;
+          }
+          $model_data_sources[] = [
+            'label' => $modelsOption['label'],
+            'value' => $modelsOption['value'],
+            'type' => 'model_query'
+          ];
+        }
+
+        if( count( $model_data_sources ) ){
+          $data_sources[] = [
+            'label' => 'Models',
+            'options' => $model_data_sources,
+            'type' => 'models query'
+          ];
+        }
+        /**
+         * Добавляем варианты с SQL-editors
+         */
+        $sql_editors_data_sources = [];
+
+        $_sqls = SQLEditor::all();
+
+        foreach ( $_sqls as $sql ) {
+          $sql_editors_data_sources[] = [
+            'label' => $sql->model->title . ': ' . $sql->title,
+            'value' => '/ajax/models/queries/' . $sql->model->altrp_table->name . '/' . $sql->name,
+            'sql_name' => $sql->name,
+            'type' => 'sql_datasource'
+          ];
+        }
+
+        if( count( $sql_editors_data_sources ) ){
+          $data_sources[] = [
+            'label' => 'Data from SQLEditors',
+            'options' => $sql_editors_data_sources,
+          ];
+        }
+
+        return response()->json( $data_sources, 200, [],JSON_UNESCAPED_UNICODE );
+      }
     }
 
     /**
@@ -413,8 +476,31 @@ class ModelsController extends HttpController
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $fields = $model->table->columns;
-//        $accessors = $model->altrp_accessors;
-//        $fields = array_merge($columns, $accessors);
+        return response()->json($fields, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function getOnlyModelFields($model_id)
+    {
+        /**
+         * @var $model Model
+         */
+        $model = Model::find($model_id);
+        if (! $model) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+        $fields = $model->table->onlyColumns();
+        $relFields = [];
+        $relations = $model->altrp_relationships;
+        foreach ($relations as $relation) {
+            $relFields = array_merge($relFields, $relation->altrp_target_model->table->columns->each(function ($column) use ($relation){
+                $column->name = $relation->altrp_target_model->table->name . '.' . $column->name;
+                $column->title = $relation->altrp_target_model->table->name . '.' . $column->title;
+            })->toArray());
+        }
+        $fields = array_merge($fields->toArray(), $relFields);
         return response()->json($fields, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -474,10 +560,24 @@ class ModelsController extends HttpController
             $result = $field->save();
         } else {
             $accessor = new Accessor($request->all());
-            $accessor->calculation_logic = json_encode($accessor->calculation_logic);
+            if ($request->has('calculation_logic'))
+                $accessor->calculation_logic = json_encode($accessor->calculation_logic);
             $accessor->user_id = auth()->user()->id;
             $accessor->model_id = $model->id;
             $result = $accessor->save();
+
+            $field = new Column([
+                'name' => $request->name,
+                'title' => $request->title,
+                'description' => $request->description,
+                'type' => $request->type,
+            ]);
+            $field->user_id = auth()->user()->id;
+            $field->table_id = $model->altrp_table->id;
+            $field->model_id = $model->id;
+            Column::withoutEvents(function () use ($field) {
+                $field->save();
+            });
         }
 
         if ($result) {
@@ -501,11 +601,24 @@ class ModelsController extends HttpController
     {
         $data = $request->all();
 
-        if ($request->get('type') !== 'calculated')
-            $field = Column::where([['model_id', $model_id], ['id', $field_id]])->first();
-        else {
-            $field = Accessor::where([['model_id', $model_id], ['id', $field_id]])->first();
-            $data['calculation_logic'] = json_encode($data['calculation_logic']);
+        /**
+         * @var $field Column
+         */
+        $field = Column::where([['model_id', $model_id], ['id', $field_id]])->first();
+
+        if ($field->getOriginal() == 'calculated' && $field->getOriginal() != $data['type']) {
+            $accessor = Accessor::where([['model_id', $model_id], ['name', $field->name]])->first();
+            $accessor->delete();
+        }
+
+        if ($data['type'] === 'calculated') {
+            $field = Accessor::where([['model_id', $model_id], ['name', $field->name]])->first();
+            if (isset($data['calculation_logic'])) {
+                $data['calculation_logic'] = json_encode($data['calculation_logic']);
+                $data['calculation'] = null;
+            } else {
+                $data['calculation_logic'] = null;
+            }
         }
 
         if (! $field) {
@@ -543,6 +656,15 @@ class ModelsController extends HttpController
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $field = Column::where([['id', $field_id]])->first();
+        $column = $field;
+
+        if ($field->type === 'calculated') {
+            $field = Accessor::where([['model_id',$model_id],['name',$field->name]])->first();
+            $field->type = $column->type;
+            if (!$field->calculation) $field->calculation = '';
+            if (!$field->calculation_logic) $field->calculation_logic = [];
+        }
+
         if ($field) {
             return response()->json($field, 200, [], JSON_UNESCAPED_UNICODE);
         }
@@ -575,7 +697,16 @@ class ModelsController extends HttpController
                 'message' => 'Field not found'
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
-        $result = $field->delete();
+        if ($field->type !== 'calculated') {
+            $result = $field->delete();
+        } else {
+            Column::withoutEvents(function () use ($field) {
+                $field->delete();
+            });
+            $accessor = Accessor::where([['model_id', $model_id], ['name', $field->name]])->first();
+            $result = $accessor->delete();
+        }
+
         if ($result) {
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }

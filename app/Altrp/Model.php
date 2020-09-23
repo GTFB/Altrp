@@ -4,8 +4,11 @@
 namespace App\Altrp;
 
 use App\Http\Requests\ApiRequest;
+use App\SQLEditor;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 /**
@@ -37,7 +40,34 @@ class Model extends EloquentModel
         'relationships'
     ];
 
-    public function parent()
+  /**
+   * Импортируем модели
+   * @param array $imported_models
+   */
+  public static function import( $imported_models = [] )
+  {
+    foreach ( $imported_models as $imported_model ) {
+      if( self::where( 'name', $imported_model['name'] )->first() ){
+        continue;
+      }
+//      $table = Table::where( 'name',  Arr::get( $imported_model, 'table_name' ) )->first();
+//      if( ! $table ){
+//        error_log( 'Не удалось сохранить модель ' . $imported_model['name'] .
+//          ' таблица ' . $imported_model['table_name'] . ' не найдена!' );
+//        continue;
+//      }
+      $new_model = new self( $imported_model );
+//      $new_model->table_id = $table->id;
+      try {
+        $new_model->save();
+      } catch (\Exception $e){
+        Log::error( $e->getMessage(), $e->getTrace() );
+        continue;
+      }
+    } 
+  }
+
+  public function parent()
     {
         return $this->belongsTo(self::class, 'parent_model_id');
     }
@@ -260,7 +290,7 @@ class Model extends EloquentModel
     public static function getBySearch($search)
     {
         return self::where('title','like', "%{$search}%")
-            ->orWhere('id', $search)
+            ->orWhere('id', 'like', "%{$search}%")
           ->orderByDesc('id')
           ->get();
     }
@@ -336,4 +366,22 @@ class Model extends EloquentModel
 //      ->join( 'altrp_columns', 'altrp_columns.table_id', '=', 'tables.id' )
 //      ->select( ['altrp_columns.id as value', 'altrp_columns.title as label'] )->get();
 //  }
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function altrp_columns(){
+      return $this->hasMany( Column::class, 'model_id', 'id' );
+  }
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function altrp_sql_editors(){
+      return $this->hasMany( SQLEditor::class, 'model_id', 'id' );
+  }
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function altrp_queries(){
+      return $this->hasMany( Query::class, 'model_id', 'id' );
+  }
 }

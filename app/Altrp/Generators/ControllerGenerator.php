@@ -150,8 +150,13 @@ class ControllerGenerator extends AppGenerator
         }
 
         // Сгенерировать маршруты для ресурса
-        if (!$this->generateRoutes($this->controllerModel->model)) {
+        if (!$this->generateRoutes($this->controllerModel->model, new RouteGenerator($this->controllerModel))) {
             throw new RouteGenerateFailedException('Failed to generate routes', 500);
+        }
+
+        // Сгенерировать API маршруты для ресурса
+        if (!$this->generateRoutes($this->controllerModel->model, new RouteGenerator($this->controllerModel, 'AltrpApiRoutes'), true)) {
+            throw new RouteGenerateFailedException('Failed to generate api routes', 500);
         }
 
         return true;
@@ -484,7 +489,6 @@ class ControllerGenerator extends AppGenerator
             $sql_editors = SQLEditor::where('model_id',$this->controllerModel->model->id)->get();
             $sql_builders = Query::where('model_id',$this->controllerModel->model->id)->get();
             foreach ($sql_editors as $sql_editor) {
-//                if (Str::contains($customCode['custom_methods'], $sql_editor->name)) {
                 $sqlEditorObj = SQLEditor::find($sql_editor->id);
                 $data = $sql_editor->toArray();
                 $data['updated_at'] = Carbon::now();
@@ -682,30 +686,42 @@ class ControllerGenerator extends AppGenerator
      * Сгенерировать маршруты
      *
      * @param Model $model
+     * @param RouteGenerator $generator
+     * @param bool $api
      * @return bool
      */
-    public function generateRoutes(Model $model)
+    public function generateRoutes(Model $model, RouteGenerator $generator, $api = false)
     {
-        $routeGenerator = new RouteGenerator($this->controllerModel);
+        $routeGenerator = $generator;
 //        $tableName = $this->getTableName();
         $modelName = strtolower(Str::plural(Str::snake($this->getModelName())));
         $oldModelName = strtolower(Str::plural(Str::snake($model->getOriginal('name'))));
         $resourceId = Str::singular($modelName);
-        $userColumns = trim($this->controllerModel->model->user_cols, ' ');
+//        $userColumns = trim($this->controllerModel->model->user_cols, ' ');
         $sources = $model->altrp_sources;
         if ($sources->isEmpty()) {
             $sources = Source::where('model_id',$model->id)->get();
         }
-//        $middleware = "'middleware' => [" . $this->getAuthMiddleware() . '], ';
         $controllerName = $this->getFormedControllerName($this->controllerModel);
         $controller = trim($controllerName, "\\");
         $prefix = $this->getRoutePrefix() ? '/' . trim($this->getRoutePrefix(), '/') : null;
         $actions = ['get', 'options', 'show', 'add', 'update', 'delete', 'update_column', 'filters'];
+        $apiAuthActions = ['add','update','delete','update_column'];
         foreach ($sources as $source) {
             if (in_array($source->type, $actions)) {
                 $routeMiddleware = $routeGenerator->getMiddleware($source);
-                $routeMiddleware = $routeMiddleware
-                    ? "'middleware' => ['" . implode("','",$routeMiddleware) . "'], " : '';
+                $isApiAuth = $api && in_array($source->type, $apiAuthActions) ? "'auth:api'," : '';
+                if ($routeMiddleware)
+                    $routeMiddleware = "'middleware' => [{$isApiAuth}'" . implode("','",$routeMiddleware) . "'], ";
+                else {
+                    $routeMiddleware = '';
+                    if ($api && $isApiAuth) {
+                        $isApiAuth = rtrim($isApiAuth, ',');
+                        $routeMiddleware = "'middleware' => [{$isApiAuth}], ";
+                    }
+                }
+//                $routeMiddleware = $routeMiddleware
+//                    ? "'middleware' => ['" . implode("','",$routeMiddleware) . "'], " : '';
                 $routeGenerator->addDynamicVariable(
                     $source->type . 'Middleware',
                     $routeMiddleware
@@ -714,7 +730,6 @@ class ControllerGenerator extends AppGenerator
         }
 
         $routeGenerator->addDynamicVariable('routePrefix', $prefix);
-//        $routeGenerator->addDynamicVariable('middleware', $middleware);
         $routeGenerator->addDynamicVariable('tableName', $modelName);
         $routeGenerator->addDynamicVariable('resourceId', $resourceId);
         $routeGenerator->addDynamicVariable('id', \Str::singular($modelName));

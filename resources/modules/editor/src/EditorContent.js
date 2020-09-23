@@ -13,10 +13,9 @@ import "slick-carousel/slick/slick.scss";
 import "slick-carousel/slick/slick-theme.scss";
 import './js/components/altrp-carousel/altrp-carousel.scss';
 import './js/components/altrp-lightbox/altrp-lightbox.scss';
+import './sass/editor-content.scss';
 import 'react-image-lightbox/style.css';
 import {changeCurrentModel} from "../../front-app/src/js/store/current-model/actions";
-
-// console.log('dsaf');
 
 
 class EditorContent extends Component {
@@ -26,6 +25,7 @@ class EditorContent extends Component {
     this.editorWindow = React.createRef();
     store.subscribe(this.currentElementListener.bind(this));
     window.altrpEditorContent = this;
+    this.editorContent = React.createRef();
   }
 
   currentElementListener(data){

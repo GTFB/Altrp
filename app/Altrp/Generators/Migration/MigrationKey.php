@@ -118,7 +118,11 @@ class MigrationKey{
         $source_column = $this->key->local_key;
         $target_column = $this->key->foreign_key;
 
-        $target_table = Model::find($this->key->model_id)->altrp_table->name;
+        $model = Model::find($this->key->model_id);
+        if ($model->parent_model_id)
+            $target_table = Model::find($model->parent_model_id)->altrp_table->name;
+        else
+            $target_table = $model->altrp_table->name;
 
         $text = '';
 

@@ -16,9 +16,9 @@ const WidgetParams = ({ show, setShow, onSave }) => {
     name: "",
     source: "",
     type: TABLE,
-    width: 400,
-    options: {},
-    colorScheme: "Set1",
+    options: {
+      colorScheme: "Set1",
+    },
   });
 
   const handleSave = () => {
@@ -65,8 +65,13 @@ const WidgetParams = ({ show, setShow, onSave }) => {
                 <Form.Control
                   as="select"
                   custom
-                  value={widget.colorScheme}
-                  onChange={(e) => setWidget({ ...widget, colorScheme: e.target.value })}
+                  value={widget.options.colorScheme}
+                  onChange={(e) =>
+                    setWidget({
+                      ...widget,
+                      options: { ...widget.options, colorScheme: e.target.value },
+                    })
+                  }
                 >
                   {Object.keys(schemes).map((name, key) => (
                     <option key={key}>{name}</option>
@@ -110,16 +115,7 @@ const WidgetParams = ({ show, setShow, onSave }) => {
           <Col>
             <Row>
               <div className="widget-placeholder">
-                {widget.source && (
-                  <WidgetDiagram
-                    type={widget.type}
-                    url={widget.source}
-                    filter={widget.filter}
-                    options={widget.options}
-                    colorScheme={schemes[widget.colorScheme]}
-                    width={400}
-                  />
-                )}
+                {widget.source && <WidgetDiagram widget={widget} width={400} />}
               </div>
             </Row>
           </Col>

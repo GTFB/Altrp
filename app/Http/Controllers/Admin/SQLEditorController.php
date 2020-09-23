@@ -43,12 +43,14 @@ class SQLEditorController extends Controller
    * @param string $id
    * @return \Illuminate\Http\Response
    */
-    public function listByName(Request $request, $name)
+    public function listByName(Request $request)
     {
       $res = DB::table('s_q_l_editors')
         ->join('altrp_models', 'altrp_models.id', 's_q_l_editors.model_id')
-        ->where('altrp_models.name', '=', $name)
-        ->select('s_q_l_editors.id', 's_q_l_editors.name', 's_q_l_editors.title')
+        ->join('tables', 'tables.id', 'altrp_models.table_id')
+        ->select(
+          's_q_l_editors.id', 's_q_l_editors.name', 's_q_l_editors.title', 
+          's_q_l_editors.description', 'tables.name as model')
         ->get();
       return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE );
     }
