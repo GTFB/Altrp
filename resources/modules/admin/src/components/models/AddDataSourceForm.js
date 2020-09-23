@@ -1,47 +1,40 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import AltrpSelect from "../altrp-select/AltrpSelect";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import { titleToName } from "../../js/helpers";
 
-
-// const typeOptions = ['resource', 'Get Queried', 'create', 'read', 'update', 'delete', 'options'];
-const mockedOptions = [
-  { value: 1, label: "Model title 1" },
-  { value: 2, label: "Model title 2" },
-  { value: 3, label: "Model title 3" },
-];
-
 class AddDataSourceForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      modelsOptions: [],  
-      value: {
-        title: '',
-        name: '',
-        description: '',
-        type: '',
-        request_type: '',
-        model_id: '',
-        url: '',
-        api_url: '',
-        auth: true,
-        access: {
-          roles: [],
-          permissions: []
-        }
-      },
-    };
-    this.submitHandler = this.submitHandler.bind(this);
+  state = {
+    modelsOptions: [],
+    value: {
+      title: '',
+      name: '',
+      description: '',
+      type: '',
+      request_type: '',
+      model_id: '',
+      url: '',
+      api_url: '',
+      auth: true,
+      access: {
+        roles: [],
+        permissions: []
+      }
+    }
   }
 
   componentDidMount() {
-    const resource = new Resource({ route: '/admin/ajax/model_options' });
-    resource.getAll().then(({ options }) => this.setState({ modelsOptions: options }));
+    const { id } = this.props.match.params;
+    const optionsResource = new Resource({ route: '/admin/ajax/model_options' });
+    optionsResource.getAll().then(({ options }) => this.setState({ modelsOptions: options }));
+    if (id) {
+      const resource = new Resource({ route: '/admin/ajax/data_sources' });
+      resource.get(id).then(value => this.setState({ value }));
+    }
   }
 
-  changeValue(value, field) {
+  changeValue = (value, field) => {
     this.setState(state => {
       state = { ...state };
       state.value[field] = value;
@@ -89,7 +82,7 @@ class AddDataSourceForm extends Component {
     });
   };
 
-  submitHandler(e) {
+  submitHandler = e => {
     e.preventDefault();
     const resource = new Resource({ route: '/admin/ajax/data_sources' });
     resource.post(this.state.value);
@@ -240,4 +233,4 @@ class AddDataSourceForm extends Component {
   }
 }
 
-export default AddDataSourceForm;
+export default withRouter(AddDataSourceForm);
