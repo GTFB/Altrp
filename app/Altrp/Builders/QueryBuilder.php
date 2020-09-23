@@ -22,6 +22,7 @@ use App\Exceptions\Controller\ControllerFileException;
 use App\Exceptions\Repository\RepositoryFileException;
 use App\Permission;
 use App\Role;
+use Carbon\Carbon;
 use Highlight\Mode;
 use Illuminate\Support\Str;
 
@@ -341,7 +342,8 @@ class QueryBuilder
         $source = Source::where([
             ['model_id', $modelId],
             ['controller_id', $controllerId],
-            ['type', $method]
+            ['type', $method],
+            ['sourceable_type', 'App\Altrp\Query']
         ])->first();
         if (! $source) {
             $source =  new Source();
@@ -350,10 +352,17 @@ class QueryBuilder
             $source->url = '/' . $this->model->table->name . '/' . $method;
             $source->api_url = '/' .$this->model->table->name . '/' . $method;
             $source->type = $method;
-            $source->name = ucwords(str_replace('_', ' ', $method));
+            $source->request_type = 'get';
+            $source->name = $method;
+            $source->title = ucwords(str_replace('_', ' ', $method));
+            $source->sourceable_type = 'App\Altrp\Query';
             if (! $source->save()) {
                 throw new RepositoryFileException('Failed to write source', 500);
             }
+            $query = $this->query;
+            Source::withoutEvents(function () use ($source, $query) {
+                $source->update(['sourceable_id' => $query->id]);
+            });
         }
 
         return $source;
@@ -378,23 +387,29 @@ class QueryBuilder
                             'source_id' => $source->id,
                             'role_id' => $role,
                         ];
-                        $oldSourceRoles = SourceRole::where([
-                            ['source_id', $source->id]
-                        ])->get();
-                        $deleteRoles = [];
-                        foreach ($oldSourceRoles as $oldSourceRole) {
-                            if (!in_array($oldSourceRole->role_id, $roles)) {
-                                $deleteRoles[] = $oldSourceRole->role_id;
-                            }
-                        }
-
-                        SourceRole::destroy($deleteRoles);
-
-                        if (!$oldSourceRoles->contains('role_id',$role)) {
+                        $oldSourceRole = SourceRole::where([
+                            ['source_id', $source->id],
+                            ['role_id', $role]
+                        ]);
+                        if ($oldSourceRole->first()) {
+                            $sourceRole = $oldSourceRole;
+                            $roleData['updated_at'] = Carbon::now();
+                            $sourceRole->update($roleData);
+                        } else {
                             $sourceRole = new SourceRole($roleData);
                             $sourceRole->save();
                         }
                     }
+                    $oldSourceRoles = SourceRole::where([
+                        ['source_id', $source->id]
+                    ])->get();
+                    $deleteRoles = [];
+                    foreach ($oldSourceRoles as $oldSourceRole) {
+                        if (!in_array($oldSourceRole->role_id, $roles)) {
+                            $deleteRoles[] = $oldSourceRole->id;
+                        }
+                    }
+                    SourceRole::destroy($deleteRoles);
                 }
             }
         } catch (\Exception $e) {
@@ -425,34 +440,29 @@ class QueryBuilder
                             'permission_id' => $permission,
                             'type' => $action . '-' . $source->type
                         ];
-//                        $oldSourcePermission = SourcePermission::where([
-//                            ['source_id', $source->id],
-//                            ['permission_id',$permission]
-//                        ]);
-//                        if ($oldSourcePermission->first()) {
-//                            $sourcePermission = $oldSourcePermission;
-//                            $sourcePermission->update($permissionData);
-//                        } else {
-//                            $sourcePermission = new SourcePermission($permissionData);
-//                            $sourcePermission->save();
-//                        }
-                        $oldSourcePermissions = SourcePermission::where([
-                            ['source_id', $source->id]
-                        ])->get();
-                        $deletePermissions = [];
-                        foreach ($oldSourcePermissions as $oldSourcePermission) {
-                            if (!in_array($oldSourcePermission->permission_id, $permissions)) {
-                                $deletePermissions[] = $oldSourcePermission->permission_id;
-                            }
-                        }
-
-                        SourcePermission::destroy($deletePermissions);
-
-                        if (!$oldSourcePermissions->contains('permission_id',$permission)) {
+                        $oldSourcePermission = SourcePermission::where([
+                            ['source_id', $source->id],
+                            ['permission_id',$permission]
+                        ]);
+                        if ($oldSourcePermission->first()) {
+                            $sourcePermission = $oldSourcePermission;
+                            $permissionData['updated_at'] = Carbon::now();
+                            $sourcePermission->update($permissionData);
+                        } else {
                             $sourcePermission = new SourcePermission($permissionData);
                             $sourcePermission->save();
                         }
                     }
+                    $oldSourcePermissions = SourcePermission::where([
+                        ['source_id', $source->id]
+                    ])->get();
+                    $deletePermissions = [];
+                    foreach ($oldSourcePermissions as $oldSourcePermission) {
+                        if (!in_array($oldSourcePermission->permission_id, $permissions)) {
+                            $deletePermissions[] = $oldSourcePermission->id;
+                        }
+                    }
+                    SourcePermission::destroy($deletePermissions);
                 }
             }
         } catch (\Exception $e) {
