@@ -20,7 +20,6 @@ import {
   TAB_ADVANCED,
   CONTROLLER_MEDIA,
   CONTROLLER_CREATIVELINK,
-  CONTROLLER_MEDIA,
   CONTROLLER_GRADIENT
 } from "../modules/ControllersManager";
 
