@@ -848,6 +848,8 @@ class QueryBuilder
         $ordersList = [];
         $columnsListArr = [];
         foreach ($orders as $order) {
+//            if (!isset($order['column'])) $order['column'] = 'id';
+//            $order['column'] = strtolower($order['column']);
             if (!Str::contains($order['column'], '.')) {
                 $order = $this->model->table->name . '.' . $order['column'];
             }

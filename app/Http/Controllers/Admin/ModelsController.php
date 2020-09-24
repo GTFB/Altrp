@@ -980,13 +980,15 @@ class ModelsController extends HttpController
     public function updateDataSource(ApiRequest $request, $source_id)
     {
         $dataSource = Source::find($source_id);
+        $data = $request->all();
+        $data['updated_at'] = Carbon::now();
         if (! $dataSource) {
             return response()->json([
                 'success' => false,
                 'message' => 'Data source not found'
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
-        $result = $dataSource->update($request->all());
+        $result = $dataSource->update($data);
         if ($result) {
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }

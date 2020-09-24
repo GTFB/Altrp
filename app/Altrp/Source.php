@@ -20,7 +20,9 @@ class Source extends Model
         'title',
         'auth',
         'sourceable_id',
-        'sourceable_type'
+        'sourceable_type',
+        'description',
+        'updated_at'
     ];
 
     public function sourceable()
