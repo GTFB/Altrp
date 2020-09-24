@@ -17,8 +17,11 @@ class DownloadsController extends Controller{
       $filename = $altrpImportExportService->exportAltrpSettings();
     } catch ( \Exception $e ){
       return response()->json(
-        ['success' => false, 'error' => $e->getMessage()],
-        $e->getCode() ? $e->getCode() : 500,
+        ['success' => false,
+          'error' => $e->getMessage(),
+          'stack' => $e->getTrace(),
+        ],
+        500,
         [],
         JSON_UNESCAPED_UNICODE
       );

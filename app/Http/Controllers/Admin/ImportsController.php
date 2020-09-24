@@ -19,8 +19,8 @@ class ImportsController extends Controller{
     try {
       $altrpImportExportService->importAltrpSettings( $request );
     } catch ( \Exception $e ){
-      return response()->json( ['success' => true, 'message' => $e->getMessage()],
-        $e->getCode() ? $e->getCode() : 500,
+      return response()->json( ['success' => false, 'message' => $e->getMessage(), 'stack' => $e->getTrace()],
+        500,
         [],
         JSON_UNESCAPED_UNICODE);
     }

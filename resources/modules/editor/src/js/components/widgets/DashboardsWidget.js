@@ -20,7 +20,7 @@ class DashboardsWidget extends Component {
   render() {
     return (
       <Suspense fallback={"Loading"}>
-        <AltrpDashboards settings={this.state.settings} id={this.props.element.id} />
+        <AltrpDashboards settings={this.state.settings} id={this.props.element.getId()} />
       </Suspense>
     );
   }

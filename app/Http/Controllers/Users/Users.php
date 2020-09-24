@@ -277,7 +277,12 @@ class Users extends Controller
         JSON_UNESCAPED_UNICODE);
     }
     $user = $user->toArray();
-    $user['roles'] = Auth::user()->roles;
+    $user['roles'] = Auth::user()->roles->map( function ( Role $role ) {
+      $_role = $role->toArray();
+      $_role['permissions'] = $role->permissions;
+      return $_role;
+    } );
+
     $user['permissions'] = Auth::user()->permissions;
     return response()->json(
       ['data' => $user]

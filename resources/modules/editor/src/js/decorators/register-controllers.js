@@ -305,7 +305,7 @@ export function advancedTabControllers(element) {
     conditions: {
       'conditional_display_choose' : 'auth',
     },
-    options_resource: '/admin/ajax/role_options',
+    options_resource: '/admin/ajax/role_options?value=name',
     isMulti: true,
     prefetch_options: true,
     isClearable: true,
@@ -317,7 +317,7 @@ export function advancedTabControllers(element) {
     conditions: {
       'conditional_display_choose' : 'auth',
     },
-    options_resource: '/admin/ajax/permissions_options',
+    options_resource: '/admin/ajax/permissions_options?value=name',
     isMulti: true,
     prefetch_options: true,
     isClearable: true,
@@ -455,7 +455,7 @@ export function advancedTabControllers(element) {
     conditions: {
       'conditional_disabled_choose' : 'auth',
     },
-    options_resource: '/admin/ajax/role_options',
+    options_resource: '/admin/ajax/role_options?value=name',
     isMulti: true,
     prefetch_options: true,
     isClearable: true,
@@ -467,7 +467,7 @@ export function advancedTabControllers(element) {
     conditions: {
       'conditional_disabled_choose' : 'auth',
     },
-    options_resource: '/admin/ajax/permissions_options',
+    options_resource: '/admin/ajax/permissions_options?value=name',
     isMulti: true,
     prefetch_options: true,
     isClearable: true,
