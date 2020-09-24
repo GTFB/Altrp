@@ -3,6 +3,7 @@
 namespace App\Altrp;
 
 use App\Page;
+use App\PageDatasource;
 use Illuminate\Database\Eloquent\Model;
 
 class Source extends Model
@@ -43,6 +44,11 @@ class Source extends Model
     public function source_permissions()
     {
         return $this->hasMany(SourcePermission::class,'source_id');
+    }
+
+    public function page_data_sources()
+    {
+        return $this->hasMany(PageDatasource::class,'source_id');
     }
 
     public static function getBySearch($search)
