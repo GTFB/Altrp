@@ -223,6 +223,7 @@ class TemplateController extends Controller
         $review = new Template($old_template->toArray());
         $review->parent_template = $old_template->id;
         $review->type = 'review';
+        $review->guid = null;
         if (!$review->save()) {
             return response()->json(trans("responses.dberror"), 400, [], JSON_UNESCAPED_UNICODE);
         }

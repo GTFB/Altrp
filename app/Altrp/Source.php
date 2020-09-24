@@ -9,6 +9,10 @@ class Source extends Model
 {
     protected $table = 'altrp_sources';
 
+  protected $casts = [
+    'web_url' => 'string',
+  ];
+
     protected $fillable = [
         'model_id',
         'controller_id',
@@ -78,4 +82,18 @@ class Source extends Model
             ->toBase()
             ->count();
     }
+
+  /**
+   * URL для фронтенда
+   * @return string
+   */
+  public function getWebUrlAttribute(){
+    switch ( $this->sourceable_type ){
+      case 'App\SQLEditor':
+      case 'App\Altrp\Query':
+        return '/ajax/models/queries' . data_get( $this, 'url' );
+      default:
+        return '/ajax/models' . data_get( $this, 'url' );
+    }
+  }
 }

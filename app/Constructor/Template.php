@@ -36,7 +36,8 @@ class Template extends Model
     'type',
     'area',
     'guid',
-    'user_id'
+    'user_id',
+    'all_site'
   ];
 
   /**
@@ -60,7 +61,10 @@ class Template extends Model
   public static function import( $imported_templates = [] )
   {
     foreach ( $imported_templates as $imported_template ) {
-      if( self::where( 'guid', $imported_template['guid'] )->first() ){
+      $old_template = self::where( 'guid', $imported_template['guid'] )->first();
+      if( $old_template ){
+        $old_template->data = $imported_template['data'];
+        $old_template->save();
         continue;
       }
       $new_template = new self( $imported_template );
@@ -171,16 +175,14 @@ class Template extends Model
       || isset( $settings['conditional_permissions'] ) && $settings['conditional_permissions'] ) ){
       return $result;
     }
-    $roles = Role::find( $settings['conditional_roles'] );
-    if( $roles->count() ){
-      $roles = $roles->toArray();
+    $roles = data_get( $settings, 'conditional_roles', [] );
+
+    if( $roles ){
       return Auth::user()->hasRole( $roles );
     }
+    $permissions = data_get( $settings, 'conditional_permissions', [] );
 
-    $permissions = Permission::find( $settings['conditional_permissions'] );
-    if( $permissions->count() ){
-      $permissions = $permissions->toArray();
-
+    if( $permissions ){
       return Auth::user()->hasPermission( $permissions );
     }
     return $result;
@@ -279,14 +281,19 @@ class Template extends Model
 
     $template_type = Arr::get( $param, 'template_type', 'content' );
     $page_id = Arr::get( $param, 'page_id' );
+    $page = Page::find( $page_id );
+
+    if( ! $page ){
+      return $template->toArray();
+    }
 
     /**
-     * Сначала проверим есть ли конкретный шаблон для стрницы
+     * Сначала проверим есть ли конкретный шаблон для страницы
      */
 
-    $_template = Template::join( 'pages_templates', 'templates.id', '=', 'pages_templates.template_id')
+    $_template = Template::join( 'pages_templates', 'templates.guid', '=', 'pages_templates.template_guid')
       ->where( 'pages_templates.condition_type', 'include' )
-      ->where( 'pages_templates.page_id', $page_id )
+      ->where( 'pages_templates.page_guid', $page->guid )
       ->where( 'pages_templates.template_type', $template_type )->get( 'templates.*' )->first();
 
     if( $_template ){
@@ -304,9 +311,9 @@ class Template extends Model
     /**
      * И проверяем, есть ли шаблон в исключениях
      */
-    if( $_template && ! Template::join( 'pages_templates', 'templates.id', '=', 'pages_templates.template_id')
+    if( $_template && ! Template::join( 'pages_templates', 'templates.guid', '=', 'pages_templates.template_guid')
       ->where( 'pages_templates.condition_type', 'exclude' )
-      ->where( 'pages_templates.page_id', $page_id )
+      ->where( 'pages_templates.page_guid', $page->guid )
       ->where( 'pages_templates.template_type', $template_type )->first() ){
       $_template->check_elements_conditions();
       return $_template->toArray();

@@ -36,8 +36,13 @@ class Resource {
         'Content-Type': 'application/json'
       },
     };
-
-    let url = this.route + '/' + id;
+    let route = this.route;
+    let url;
+    if(route[route.length - 1] === '/'){
+       url = route + id;
+    } else {
+       url = route + '/' + id;
+    }
     return fetch(url, options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);

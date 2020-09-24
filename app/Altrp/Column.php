@@ -4,6 +4,8 @@ namespace App\Altrp;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Altrp\Model as AltrpModel;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 
 class Column extends Model
 {
@@ -11,7 +13,6 @@ class Column extends Model
     public $timestamps = false;
 
     public $fillable = [
-      "id",
       "name",
       "title",
       "description",
@@ -45,11 +46,11 @@ class Column extends Model
   public static function import( $imported_columns = [])
   {
     foreach ( $imported_columns as $imported_column ) {
-      $model = AltrpModel::where( 'name', $imported_column['model_name'] )->first();
+      $model = AltrpModel::where( 'name', Arr::get( $imported_column, 'model_name' ) )->first();
       if( ! $model ){
         continue;
       }
-      $table = Table::where( 'name', $imported_column['table_name'] )->first();
+      $table = Table::where( 'name', Arr::get( $imported_column, 'table_name' ) )->first();
       if( ! $table ){
         continue;
       }
@@ -60,8 +61,14 @@ class Column extends Model
       }
       $new_column = new self( $imported_column );
       $new_column->model_id = $model->id;
+      $new_column->user_id = auth()->user()->id;
       $new_column->table_id = $table->id;
-      $new_column->save();
+      try {
+        $new_column->save();
+      } catch (\Exception $e){
+        Log::error( $e->getMessage(), [$e->getFile()] );
+        continue;
+      }
 //      if( $existed_column )
     }
   }
