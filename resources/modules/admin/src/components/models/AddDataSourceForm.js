@@ -94,6 +94,7 @@ class AddDataSourceForm extends Component {
     e.preventDefault();
     const resource = new Resource({ route: '/admin/ajax/data_sources' });
     const { id } = this.props.match.params;
+    
     (id ? resource.put(id, this.state.value) : resource.post(this.state.value))
       .then(() => this.props.history.goBack());
   }

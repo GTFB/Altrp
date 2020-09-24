@@ -150,6 +150,7 @@ class AltrpSourceObserver
      */
     public function deleting(Source $source)
     {
+        PageDatasource::where('source_id',$source->id)->delete();
         SourcePermission::where('source_id',$source->id)->delete();
         SourceRole::where('source_id',$source->id)->delete();
     }
