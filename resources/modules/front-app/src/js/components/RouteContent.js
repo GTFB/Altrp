@@ -11,6 +11,7 @@ import {changeCurrentModel} from "../store/current-model/actions";
 import {queryCache} from  "react-query";
 import {changeCurrentDataStorage, clearCurrentDataStorage} from "../store/current-data-storage/actions";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
+import {clearFormStorage} from "../store/forms-data-storage/actions";
 
 
 class RouteContent extends Component {
@@ -115,6 +116,7 @@ class RouteContent extends Component {
     }
     if(! _.isEqual(_.get(this.props, 'match'),_.get(prevProps, 'match'))) {
       window.currentRouterMatch = new AltrpModel(this.props.match);
+      appStore.dispatch(clearFormStorage())
     }
   }
   render(){

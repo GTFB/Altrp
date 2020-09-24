@@ -36,7 +36,21 @@ class AltrpForm {
    * @param {FrontElement} field
    */
   addField(field){
-    this.fields.push(field);
+    let exists = false;
+    this.fields = this.fields.map(_f=>{
+      if(_f.getId() === field.getId()){
+        exists = true;
+        if(! field.component){
+          return _f;
+        }
+        return field;
+      }
+      return _f;
+    });
+
+    if(! exists){
+      this.fields.push(field);
+    }
     return true;
   }
 

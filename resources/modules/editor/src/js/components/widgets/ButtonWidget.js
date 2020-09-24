@@ -28,7 +28,6 @@ class ButtonWidget extends Component {
          */ async form => {
           try {
             let res = await form.submit(this.getModelId(), this.props.element.getSettings('form_confirm'));
-            console.log(res);
             if (res.success) {
               let { redirect_to_prev_page, redirect_after } = this.state.settings;
               if (redirect_to_prev_page) {
