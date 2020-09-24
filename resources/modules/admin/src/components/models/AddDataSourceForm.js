@@ -7,6 +7,8 @@ import { titleToName } from "../../js/helpers";
 class AddDataSourceForm extends Component {
   state = {
     modelsOptions: [],
+    rolesOptions: [],
+    permissionsOptions: [],
     value: {
       title: '',
       name: '',
@@ -26,8 +28,14 @@ class AddDataSourceForm extends Component {
 
   componentDidMount() {
     const { id } = this.props.match.params;
-    const optionsResource = new Resource({ route: '/admin/ajax/model_options' });
-    optionsResource.getAll().then(({ options }) => this.setState({ modelsOptions: options }));
+
+    new Resource({ route: '/admin/ajax/model_options' }).getAll()
+      .then(({ options }) => this.setState({ modelsOptions: options }));
+    new Resource({ route: '/admin/ajax/role_options' }).getAll()
+      .then(rolesOptions => this.setState({ rolesOptions }));
+    new Resource({ route: '/admin/ajax/permissions_options' }).getAll()
+      .then(permissionsOptions => this.setState({ permissionsOptions }));
+
     if (id) {
       const resource = new Resource({ route: '/admin/ajax/data_sources' });
       resource.get(id).then(value => this.setState({ value }));
@@ -91,6 +99,8 @@ class AddDataSourceForm extends Component {
   }
 
   render() {
+    const { roles, permissions } = this.state.value.access;
+    const { rolesOptions, permissionsOptions } = this.state;
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
@@ -200,37 +210,25 @@ class AddDataSourceForm extends Component {
       <label className="checkbox-label" htmlFor="field-auth">Auth</label>
 
       {this.state.value.auth && <div className="form-group__inline-wrapper">
-        <div className="form-group col-6">
-          <label htmlFor="field-roles">Roles</label>
-          <AltrpSelect id="field-roles"
+        <div className="form-group form-group_width47">
+          <label htmlFor="roles">Roles</label>
+
+          <AltrpSelect id="roles"
+            closeMenuOnSelect={false}
+            value={_.filter(rolesOptions, r => roles.indexOf(r.value) >= 0)}
             isMulti={true}
-            optionsRoute="/admin/ajax/role_options"
-            placeholder="All"
-            defaultOptions={[
-              {
-                value: null,
-                label: 'All',
-              }
-            ]}
-            value={this.state.value.roles}
             onChange={this.changeRoles}
-          />
+            options={rolesOptions} />
         </div>
-        <div className="form-group col-6">
-          <label htmlFor="field-permissions">Permissions</label>
-          <AltrpSelect id="field-permissions"
+
+        <div className="form-group form-group_width47">
+          <label htmlFor="permissions">Permissions</label>
+          <AltrpSelect id="roles"
+            value={_.filter(permissionsOptions, p => permissions.indexOf(p.value) >= 0)}
+            closeMenuOnSelect={false}
             isMulti={true}
-            optionsRoute="/admin/ajax/permissions_options"
-            placeholder="All"
-            defaultOptions={[
-              {
-                value: null,
-                label: 'All',
-              }
-            ]}
-            value={this.state.value.permissions}
             onChange={this.changePermission}
-          />
+            options={permissionsOptions} />
         </div>
       </div>}
 
