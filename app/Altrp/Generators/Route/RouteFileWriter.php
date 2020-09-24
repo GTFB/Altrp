@@ -329,9 +329,10 @@ class RouteFileWriter
      *
      * @param $methodName
      * @param string $condField
+     * @param bool $isApi
      * @return array
      */
-    protected function getMiddleware($methodName, $condField = 'type')
+    protected function getMiddleware($methodName, $condField = 'type', $isApi = false)
     {
         $source = Source::where($condField, Str::snake($methodName))->first();
 
@@ -357,8 +358,7 @@ class RouteFileWriter
 
         $middleware = [];
         if ($source->auth) {
-//            $middleware[] = 'auth:api';
-            $middleware[] = 'auth';
+            $middleware[] = $isApi ? 'auth:api' : 'auth';
         }
         if ($accessRoles && $accessPermissions)
             $middleware[] = "ability:" . implode(',', $accessSource);
