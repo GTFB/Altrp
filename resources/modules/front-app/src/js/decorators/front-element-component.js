@@ -142,7 +142,7 @@ function getContent(settingName) {
     // }
     content = this.props.currentModel ? this.props.currentModel.getProperty(content.fieldName) : ' ';
   }
-  let paths = content ? content.match(/(?<={{)([\s\S]+?)(?=}})/g) : content;
+  let paths = _.isString(content) ? content.match(/(?<={{)([\s\S]+?)(?=}})/g) : null;
   if(_.isArray(paths)){
     paths.forEach(path => {
       let value = getDataByPath(path);

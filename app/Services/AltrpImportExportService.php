@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Altrp\Accessor;
 use App\Altrp\AltrpDiagram;
 use App\Altrp\Column;
 use App\Altrp\Model;
@@ -16,6 +17,7 @@ use App\Dashboards;
 use App\Helpers\Classes\AltrpZip;
 use App\Media;
 use App\Page;
+use App\PageDatasource;
 use App\PagesTemplate;
 use App\Permission;
 use App\Reports;
@@ -25,6 +27,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Env;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -101,7 +104,8 @@ class AltrpImportExportService
     $data['media'] = Media::all()->toArray();
 
     $data['pages_templates'] = PagesTemplate::all()->toArray();
-    $data['admin_logo'] = json_decode( env( 'ALTRP_SETTING_ADMIN_LOGO' ), true );
+    $data['admin_logo'] = env( 'ALTRP_SETTING_ADMIN_LOGO', null );
+    $data['container_width'] = env( 'ALTRP_SETTING_CONTAINER_WIDTH', null );
 
     $data['template_settings'] = TemplateSetting::all()->toArray();
     foreach ( $data['template_settings'] as $key => $template_setting ) {
@@ -147,6 +151,24 @@ class AltrpImportExportService
       }
       $data['columns'][$key]['table_name'] = $table->name;
       $data['columns'][$key]['model_name'] = $model->name;
+    }
+
+    $data['altrp_accessors'] = Accessor::all();
+    foreach ( $data['altrp_accessors'] as $key => $accessor ) {
+      $model = Model::find( $accessor['model_id'] );
+      if( ! $model ){
+        continue;
+      }
+      $data['altrp_accessors'][$key]['model_name'] = $model->name;
+    }
+
+    $data['page_data_sources'] = PageDatasource::all();
+    foreach ( $data['page_data_sources'] as $key => $page_data_source ) {
+      $model = Model::find( $accessor['model_id'] );
+      if( ! $model ){
+        continue;
+      }
+      $data['page_data_sources'][$key]['model_name'] = $model->name;
     }
 
     $data['s_q_l_editors'] = SQLEditor::all();
@@ -256,6 +278,16 @@ class AltrpImportExportService
     $data = json_decode( $data, true );
     $this->deleteFileTmp( 'imports' );
     /**
+     * @var AltrpSettingsService $altrp_settings
+     */
+    $altrp_settings = app()->make( AltrpSettingsService::class );
+    if( Arr::get( $data, 'container_width' ) ){
+      $altrp_settings->set_setting_value( 'container_width', Arr::get( $data, 'container_width' ) );
+    }
+    if( Arr::get( $data, 'admin_logo' ) ){
+      $altrp_settings->set_setting_value( 'admin_logo', Arr::get( $data, 'admin_logo' ) );
+    }
+    /**
      * импортируем настройки доступов
      */
     Role::import( Arr::get( $data, 'roles', [] ) );
@@ -267,6 +299,7 @@ class AltrpImportExportService
 //    Table::import( Arr::get( $data, 'tables', [] ) );
     AltrpModel::import( Arr::get( $data, 'models', [] ) );
     Column::import( Arr::get( $data, 'columns', [] ) );
+    Accessor::import( Arr::get( $data, 'accessors', [] ) );
     Relationship::import( Arr::get( $data, 'relations', [] ) );
     SQLEditor::import( Arr::get( $data, 's_q_l_editors', [] ) );
     Query::import( Arr::get( $data, 'queries', [] ) );
@@ -279,6 +312,7 @@ class AltrpImportExportService
     Media::import( Arr::get( $data, 'media', [] ) );
     Page::import( Arr::get( $data, 'pages', [] ) );
     PagesTemplate::import( Arr::get( $data, 'pages_templates', [] ) );
+    PageDatasource::import( Arr::get( $data, 'page_data_sources', [] ) );
     /**
      * импортируем настройки доступов
      */

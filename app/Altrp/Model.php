@@ -108,7 +108,7 @@ class Model extends EloquentModel
 
     public function altrp_accessors()
     {
-        return $this->hasMany(Accessor::class);
+        return $this->hasMany( Accessor::class, 'model_id', 'id' );
     }
 
     public function altrp_relationships()
