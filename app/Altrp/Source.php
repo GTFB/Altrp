@@ -87,7 +87,6 @@ class Source extends Model
       case 'App\SQLEditor':
       case 'App\Altrp\Query':
         return '/ajax/models/queries' . data_get( $this, 'url' );
-        break;
       default:
         return '/ajax/models' . data_get( $this, 'url' );
     }
