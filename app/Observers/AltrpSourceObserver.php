@@ -15,6 +15,7 @@ use App\Exceptions\Controller\ControllerFileException;
 use App\Permission;
 use App\Role;
 use Carbon\Carbon;
+use App\PageDatasource;
 
 class AltrpSourceObserver
 {
