@@ -11,7 +11,7 @@ class AddDataSourceForm extends Component {
       title: '',
       name: '',
       description: '',
-      type: '',
+      type: 'remote',
       request_type: '',
       model_id: '',
       url: '',
@@ -85,8 +85,9 @@ class AddDataSourceForm extends Component {
   submitHandler = e => {
     e.preventDefault();
     const resource = new Resource({ route: '/admin/ajax/data_sources' });
-    resource.post(this.state.value);
-    console.log(this.state.value);
+    const { id } = this.props.match.params;
+    (id ? resource.put(id, this.state.value) : resource.post(this.state.value))
+      .then(() => this.props.history.goBack());
   }
 
   render() {
@@ -125,8 +126,17 @@ class AddDataSourceForm extends Component {
             value={this.state.value.type}
             onChange={e => { this.changeValue(e.target.value, 'type') }}
             className="form-control"
+            disabled={!this.props.match.params.id}
           >
-            <option disabled value="" />
+            {/* <option disabled value="" /> */}
+            <option value="get">get</option>
+            <option value="show">show</option>
+            <option value="options">options</option>
+            <option value="filters">filters</option>
+            <option value="add">add</option>
+            <option value="update">update</option>
+            <option value="update_column">update_column</option>
+            <option value="delete">delete</option>
             <option value="remote">remote</option>
           </select>
         </div>
