@@ -1004,7 +1004,25 @@ class ModelsController extends HttpController
      */
     public function showDataSource($source_id)
     {
-        $dataSource = Source::find($source_id);
+        $dataSource = Source::where('id', $source_id)
+            ->with(['source_roles.role:id', 'source_permissions.permission:id'])
+            ->first()
+            ->toArray();
+        $dataSource['access'] = ['roles' => [], 'permissions' => []];
+        $sourceRoles = $dataSource['source_roles'];
+        $sourcePermissions = $dataSource['source_permissions'];
+        unset($dataSource['source_roles']);
+        unset($dataSource['source_permissions']);
+        if ($sourceRoles) {
+            foreach ($sourceRoles as $sourceRole) {
+                $dataSource['access']['roles'][] = $sourceRole['role']['id'];
+            }
+        }
+        if ($sourcePermissions) {
+            foreach ($sourcePermissions as $sourcePermission) {
+                $dataSource['access']['permissions'][] = $sourcePermission['permission']['id'];
+            }
+        }
         if ($dataSource) {
             return response()->json($dataSource, 200, [], JSON_UNESCAPED_UNICODE);
         }
