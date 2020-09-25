@@ -27,10 +27,18 @@ class AltrpUser extends AltrpModel{
    * $return {boolean}
    */
   hasPermissions(permissions = []){
+    if(! _.isArray(permissions)){
+      permissions = [permissions];
+    }
     let ownPermissions = this.getProperty('permissions', []);
     return _.find(ownPermissions, ownPermission => {
-      return _.find(permissions, role => {
-        return parseInt(role) === parseInt(ownPermission.id);
+      return _.find(permissions, permission => {
+        if(parseInt(permission)){
+          return parseInt(permission) === parseInt(ownPermission.id);
+        }
+        if(_.isString(permission)){
+          return permission === ownPermission.name;
+        }
       });
     });
   }
@@ -40,10 +48,18 @@ class AltrpUser extends AltrpModel{
    * $return {boolean}
    */
   hasRoles(roles = []){
+    if(! _.isArray(roles)){
+      roles = [roles];
+    }
     let ownRoles = this.getProperty('roles', []);
     return _.find(ownRoles, ownRole => {
       return _.find(roles, role => {
-        return parseInt(role) === parseInt(ownRole.id);
+        if(parseInt(role)){
+          return parseInt(role) === parseInt(ownRole.id);
+        }
+        if(_.isString(role)){
+          return role === ownRole.name;
+        }
       });
     });
   }
@@ -56,7 +72,7 @@ class AltrpUser extends AltrpModel{
    *
    */
   checkUserAllowed(permissions = [], roles = []){
-    if(! this.getProperty('created_at', false)){
+    if(! this.isAuth()){
       return false;
     }
     roles = _.isArray(roles) ? roles : [];

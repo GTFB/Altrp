@@ -10,6 +10,7 @@ trait DynamicVariables
      * Заменить пользовательские динамические переменные
      *
      * @param $str
+     * @param bool $outer
      * @return string|string[]
      */
     protected function replaceDynamicVars($str, $outer = false)

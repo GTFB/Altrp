@@ -9,6 +9,9 @@ import Resource from "../../../../editor/src/js/classes/Resource";
 import appStore from "../store/store"
 import {changeCurrentModel} from "../store/current-model/actions";
 import {queryCache} from  "react-query";
+import {changeCurrentDataStorage, clearCurrentDataStorage} from "../store/current-data-storage/actions";
+import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
+import {clearFormStorage} from "../store/forms-data-storage/actions";
 
 
 class RouteContent extends Component {
@@ -26,6 +29,7 @@ class RouteContent extends Component {
    * @return {Promise<void>}
    */
   async componentDidMount(){
+    window.currentRouterMatch = new AltrpModel(this.props.match);
     setTitle(this.props.title);
     if(this.props.lazy && this.props.allowed){
       let page = await pageLoader.loadPage(this.props.id);
@@ -39,6 +43,46 @@ class RouteContent extends Component {
      * Меняем текущую модель
      */
     this.changeRouteCurrentModel();
+    /**
+     * Обнуляем текущее хранилище dataStorage
+     */
+    appStore.dispatch(clearCurrentDataStorage());
+    /**
+     * затем отправляем запросы на обновление
+     */
+    this.updateDataStorage();
+  }
+
+  /**
+   *  обновление currentDataStorage
+   */
+  async updateDataStorage () {
+    /**
+     * @member {[]} data_sources
+     */
+    let { data_sources } = this.props;
+    data_sources = _.sortBy(data_sources, data_source => data_source.priority);
+    /**
+     * @member {Datasource} data_source
+     */
+    for(let datasource of data_sources){
+      if(datasource.getWebUrl()){
+        let params = datasource.getParams(this.props.match.params);
+        let res = {};
+        if(datasource.getType() === 'show') {
+          let id = _.get(params, 'id', _.get(this.props, 'match.params.id'));
+          if(id){
+            res = await (new Resource({route: datasource.getWebUrl()})).get(id);
+          }
+        } else if(params) {
+          res = await (new Resource({route: datasource.getWebUrl()})).getQueried(params);
+        } else {
+          res = await (new Resource({route: datasource.getWebUrl()})).getAll();
+        }
+        res = _.get(res, 'data', res);
+        appStore.dispatch(changeCurrentDataStorage(datasource.getAlias(), res));
+      }
+    }
   }
   /**
    * Меняем текущую модель
@@ -65,6 +109,14 @@ class RouteContent extends Component {
         || (_.get(this.props, 'match.params.id') !== _.get(prevProps, 'match.params.id'))
     ){
       this.changeRouteCurrentModel();
+    }
+
+    if(! _.isEqual(_.get(this.props, 'match.params'),_.get(prevProps, 'match.params'))){
+      this.updateDataStorage();
+    }
+    if(! _.isEqual(_.get(this.props, 'match'),_.get(prevProps, 'match'))) {
+      window.currentRouterMatch = new AltrpModel(this.props.match);
+      appStore.dispatch(clearFormStorage())
     }
   }
   render(){

@@ -1,4 +1,4 @@
-import {CHANGE_FORM_FIELD_VALUE} from './actions'
+import {CHANGE_FORM_FIELD_VALUE, CLEAR_FORM_FIELD_VALUE} from './actions'
 
 const defaultState = {
 
@@ -13,6 +13,14 @@ export function formsStoreReducer(state, {type, formId, fieldName, value}) {
         _.set(state, [formId, fieldName], value);
       }
 
+    }break;
+    case CLEAR_FORM_FIELD_VALUE:{
+      if(formId){
+        state = _.cloneDeep(state);
+        _.set(state, [formId], {});
+      } else {
+        state = {};
+      }
     }break;
   }
   return state;

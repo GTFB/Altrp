@@ -23,6 +23,17 @@ class ShadowController extends Component {
     this.inputSpreadUpdate = this.inputSpreadUpdate.bind(this);
     this.type = this.type.bind(this);
     this.inputVerUpdate = this.inputVerUpdate.bind(this);
+    this.defaultValues = { 
+      blur: 0, 
+      color: "rgb(0, 0, 0)", 
+      colorPickedHex: "#000000", 
+      colorRGB: "rgb(0, 0, 0)", 
+      horizontal: 0, 
+      opacity: 1, 
+      spread: 0,
+      type: "",
+      vertical: 0
+    }
     let value = this.getSettings(this.props.controlId);
     if (value === null && this.props.default) {
       value = this.props.default;
@@ -72,6 +83,7 @@ class ShadowController extends Component {
       // colorRGB: color.rgb
     });
     this._changeValue({
+      ...this.defaultValues,
       ...value,
       color: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
       colorRGB: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
@@ -90,6 +102,7 @@ class ShadowController extends Component {
   inputBlurUpdate(e) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
+      ...this.defaultValues,
       ...value,
       blur: e.target.value
     });
@@ -98,6 +111,7 @@ class ShadowController extends Component {
   blurChange(e) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
+      ...this.defaultValues,
       ...value,
       blur: e.target.value
     });
@@ -107,6 +121,7 @@ class ShadowController extends Component {
   inputHorUpdate(e) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
+      ...this.defaultValues,
       ...value,
       horizontal: e.target.value
     });
@@ -115,6 +130,7 @@ class ShadowController extends Component {
   horChange(e) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
+      ...this.defaultValues,
       ...value,
       horizontal: e.target.value
     });
@@ -124,6 +140,7 @@ class ShadowController extends Component {
   inputVerUpdate(e) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
+      ...this.defaultValues,
       ...value,
       vertical: e.target.value
     });
@@ -132,6 +149,7 @@ class ShadowController extends Component {
   verChange(e) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
+      ...this.defaultValues,
       ...value,
       vertical: e.target.value
     });
@@ -141,6 +159,7 @@ class ShadowController extends Component {
   inputSpreadUpdate(e) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
+      ...this.defaultValues,
       ...value,
       spread: e.target.value
     });
@@ -149,6 +168,7 @@ class ShadowController extends Component {
   spreadChange(e) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
+      ...this.defaultValues,
       ...value,
       spread: e.target.value
     });
@@ -158,6 +178,7 @@ class ShadowController extends Component {
   type(e) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
+      ...this.defaultValues,
       ...value,
       type: e.target.value,
     });

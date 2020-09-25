@@ -20,7 +20,12 @@ class Query {
       this.route = data.dataSource.value;
       this.dataSourceName = data.dataSource.sql_name || '';
     }
-    this.setDefaultParams(parseParamsFromString(data.defaultParams, component.props.currentModel));
+    /**
+     * @member {AltrpModel} context
+     */
+    let context = _.cloneDeep(component.props.currentModel);
+    context.setProperty('altrpdata', component.props.currentDataStorage.getData());
+    this.setDefaultParams(parseParamsFromString(data.defaultParams, context));
   }
   /**
    *

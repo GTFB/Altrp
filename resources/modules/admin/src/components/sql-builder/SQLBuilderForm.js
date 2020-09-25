@@ -43,7 +43,7 @@ class SQLBuilderForm extends Component {
     this.rolesOptions = new Resource({ route: '/admin/ajax/role_options' });
     this.permissionsOptions = new Resource({ route: '/admin/ajax/permissions_options' });
     this.tablesOptions = new Resource({ route: '/admin/ajax/tables_options' });
-    this.selfFieldsResource = new Resource({ route: `/admin/ajax/models/${modelId}/fields` });
+    this.selfFieldsResource = new Resource({ route: `/admin/ajax/models/${modelId}/fields_only` });
     this.relationsResource = new Resource({ route: `/admin/ajax/models/${modelId}/relations` });
     this.sqlResource = new Resource({ route: `/admin/ajax/models/${modelId}/queries` });
     this.submitHandler = this.submitHandler.bind(this);
