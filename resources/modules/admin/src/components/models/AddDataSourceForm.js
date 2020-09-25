@@ -9,6 +9,7 @@ class AddDataSourceForm extends Component {
     modelsOptions: [],
     rolesOptions: [],
     permissionsOptions: [],
+    typeIsDisabled: false,
     value: {
       title: '',
       name: '',
@@ -38,7 +39,7 @@ class AddDataSourceForm extends Component {
 
     if (id) {
       const resource = new Resource({ route: '/admin/ajax/data_sources' });
-      resource.get(id).then(value => this.setState({ value }));
+      resource.get(id).then(value => this.setState({ value, typeIsDisabled: value.type === 'remote' }));
     }
   }
 
@@ -94,7 +95,7 @@ class AddDataSourceForm extends Component {
     e.preventDefault();
     const resource = new Resource({ route: '/admin/ajax/data_sources' });
     const { id } = this.props.match.params;
-    
+
     (id ? resource.put(id, this.state.value) : resource.post(this.state.value))
       .then(() => this.props.history.goBack());
   }
@@ -137,7 +138,7 @@ class AddDataSourceForm extends Component {
             value={this.state.value.type}
             onChange={e => { this.changeValue(e.target.value, 'type') }}
             className="form-control"
-            disabled={!this.props.match.params.id}
+            disabled={!this.props.match.params.id || this.state.typeIsDisabled}
           >
             {/* <option disabled value="" /> */}
             <option value="get">get</option>
