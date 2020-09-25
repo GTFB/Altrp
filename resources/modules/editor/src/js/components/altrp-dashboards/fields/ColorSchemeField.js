@@ -3,9 +3,11 @@ import Form from "react-bootstrap/Form";
 import { schemes } from "reaviz";
 
 function ColorSchemeField({ widget, setWidget }) {
-  const colors = Object.keys(schemes).map((name) => {
+  let colors = Object.keys(schemes).map((name) => {
     return { label: name, value: name };
   });
+
+  colors = [...colors, { label: "Custom", value: "Custom" }];
 
   return (
     <Form.Group>

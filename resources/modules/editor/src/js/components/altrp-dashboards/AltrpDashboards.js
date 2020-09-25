@@ -7,7 +7,6 @@ import CardWidget from "./CardWidget";
 const AltrpDashboards = ({ id, settings }) => {
   const [widgets, setWidgets] = useState([]);
   const [isShow, setIsShow] = useState(false);
-  console.log("settings :>> ", settings);
 
   const getWidgets = useCallback(
     async (id) => {
@@ -18,7 +17,7 @@ const AltrpDashboards = ({ id, settings }) => {
             req.data.map((w) => {
               return {
                 ...w,
-                options: JSON.parse(w.options),
+                options: { ...JSON.parse(w.options), animated: settings.animated },
                 filter: JSON.parse(w.filter),
               };
             })
@@ -26,7 +25,7 @@ const AltrpDashboards = ({ id, settings }) => {
         }
       } catch (error) {}
     },
-    [id]
+    [id, settings.animated]
   );
 
   const handleAdd = (widget) => {
@@ -58,11 +57,11 @@ const AltrpDashboards = ({ id, settings }) => {
       </div>
       <div className="altrp-dashboard__widgets">
         {isShow && (
-          <AddWidget sources={settings.sql} id={id} setIsShow={setIsShow} onAdd={handleAdd} />
+          <AddWidget settings={settings} id={id} setIsShow={setIsShow} onAdd={handleAdd} />
         )}
         {widgets.map((widget) => (
           <CardWidget
-            sources={settings.sql}
+            settings={settings}
             key={widget.id}
             widget={widget}
             onDeleted={handleRemove}

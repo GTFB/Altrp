@@ -15,3 +15,14 @@ export const widgetTypes = [
 ];
 
 export const getTypeName = (value) => widgetTypes.find((w) => w.value === value).name;
+
+export const customStyle = [
+  "#ffd237",
+  "#606060",
+  "#FFC01F",
+  "#BEBEBE",
+  "#DC7700",
+  "#8F8F8F",
+  "#FFD51F",
+  "#FFC01F",
+];

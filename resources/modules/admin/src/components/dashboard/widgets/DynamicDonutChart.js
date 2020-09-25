@@ -4,6 +4,7 @@ import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
 import { getWidgetData } from "../services/getWidgetData";
+import { customStyle } from "../widgetTypes";
 
 const DynamicDonutChart = ({ widget, width = 300, height = 300 }) => {
   const [data, setData] = useState([]);
@@ -33,7 +34,7 @@ const DynamicDonutChart = ({ widget, width = 300, height = 300 }) => {
         key={i}
         className="discrete__legend-item"
         label={`${item.key} (${item.data})`}
-        //color={colorScheme(item, i)}
+        color={customStyle[i] || "#606060"}
       />
     );
   });
@@ -46,8 +47,11 @@ const DynamicDonutChart = ({ widget, width = 300, height = 300 }) => {
         data={data}
         series={
           <PieArcSeries
+            animated={widget.options.animated}
             doughnut={true}
-            colorScheme={widget.options.colorScheme}
+            colorScheme={
+              widget.options.colorScheme === "Custom" ? customStyle : widget.options.colorScheme
+            }
             label={<PieArcLabel fontSize={12} fontFill="#000000" />}
           />
         }

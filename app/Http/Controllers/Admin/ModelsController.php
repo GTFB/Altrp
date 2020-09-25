@@ -312,6 +312,10 @@ class ModelsController extends HttpController
                 ? Source::getBySearchWithPaginate($search,  $offset, $limit)
                 : Source::getWithPaginate($offset, $limit);
         }
+      $data_sources->map( function ( $data_source ){
+        $data_source->web_url = $data_source->web_url;
+        return $data_source;
+      } );
         return compact('pageCount', 'data_sources');
     }
 

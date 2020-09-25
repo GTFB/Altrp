@@ -11,7 +11,7 @@ function VerticalTableField({ widget, setWidget }) {
         onChange={(e) =>
           setWidget({
             ...widget,
-            options: { ...widget.options, isVertical: e.target.value },
+            options: { ...widget.options, isVertical: e.target.checked },
           })
         }
       />

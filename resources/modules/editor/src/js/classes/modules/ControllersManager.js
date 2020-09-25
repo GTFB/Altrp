@@ -24,6 +24,7 @@ import FiltersController from "../../components/controllers/FiltersController";
 import ColumnWidthController from "../../components/controllers/ColumnWidthController";
 import GradientController from "../../components/controllers/GradientController";
 import SqlSelectController from "../../components/controllers/SqlSelectController";
+import SqlAsParamsController from "../../components/controllers/SqlAsParamsController";
 
 export const TAB_CONTENT = "content";
 export const TAB_STYLE = "style";
@@ -53,6 +54,7 @@ export const CONTROLLER_FILTERS = "filters";
 export const CONTROLLER_COLWIDTH = "colwidth";
 export const CONTROLLER_GRADIENT = "gradient";
 export const CONTROLLER_SQL = "sql";
+export const CONTROLLER_SQL_PARAMS = "sql-params";
 
 class ControllersManager {
   constructor() {
@@ -82,6 +84,7 @@ class ControllersManager {
     this.conttrollers[CONTROLLER_COLWIDTH] = ColumnWidthController;
     this.conttrollers[CONTROLLER_GRADIENT] = GradientController;
     this.conttrollers[CONTROLLER_SQL] = SqlSelectController;
+    this.conttrollers[CONTROLLER_SQL_PARAMS] = SqlAsParamsController;
     this.elementsControls = null;
     this._cache = {
       controls: {},
