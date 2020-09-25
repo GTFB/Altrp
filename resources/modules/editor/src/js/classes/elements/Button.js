@@ -240,51 +240,51 @@ class Button extends BaseElement{
       options: [
         {
           value: "bottomLeft",
-          label: "bottom left"
+          label: "Bottom left"
         },
         {
           value: "bottomCenter",
-          label: "bottom center"
+          label: "Bottom center"
         },
         {
           value: "bottomRight",
-          label: "bottom right"
+          label: "Bottom right"
         },
         {
           value: "topLeft",
-          label: "top left"
+          label: "Top left"
         },
         {
           value: "topCenter",
-          label: "top center"
+          label: "Top center"
         },
         {
           value: "topRight",
-          label: "top right"
+          label: "Top right"
         },
         {
           value: "leftTop",
-          label: "left top"
+          label: "Left top"
         },
         {
           value: "leftCenter",
-          label: "left center"
+          label: "Left center"
         },
         {
           value: "leftBottom",
-          label: "left bottom"
+          label: "Left bottom"
         },
         {
           value: "rightTop",
-          label: "right top"
+          label: "Right top"
         },
         {
           value: "rightCenter",
-          label: "right center"
+          label: "Right center"
         },
         {
           value: "rightBottom",
-          label: "right bottom"
+          label: "Right bottom"
         },
       ],
     });

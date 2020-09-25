@@ -6,7 +6,9 @@ import {
   CONTROLLER_DIMENSIONS,
   CONTROLLER_NUMBER,
   CONTROLLER_SELECT2,
+  CONTROLLER_HEADING,
   CONTROLLER_SELECT,
+  CONTROLLER_REPEATER,
   CONTROLLER_CHOOSE,
   CONTROLLER_TEXT,
   CONTROLLER_TYPOGRAPHIC,
@@ -14,8 +16,9 @@ import {
   CONTROLLER_COLOR,
   TAB_CONTENT,
   TAB_STYLE,
-  TAB_ADVANCED
+  TAB_ADVANCED, CONTROLLER_LINK, CONTROLLER_SWITCHER
 } from "../modules/ControllersManager";
+import Repeater from "../Repeater";
 
 class Nav extends BaseElement{
 
@@ -44,7 +47,7 @@ class Nav extends BaseElement{
     this.addControl("type_type", {
       type: CONTROLLER_SELECT,
       label: "type",
-      default: "Bread crumbs",
+      default: "menu",
       options: [
         {
           value: "menu",
@@ -81,6 +84,277 @@ class Nav extends BaseElement{
       ],
     });
 
+    this.endControlSection();
+
+    this.startControlSection('layout_menu_section', {
+      tab: TAB_CONTENT,
+      label: 'Layout (menu)',
+    });
+
+    let repeaterMenu = new Repeater();
+
+    repeaterMenu.addControl('label_repeater_menu_layout', {
+      type: CONTROLLER_TEXT,
+      label: 'Label',
+    });
+
+    repeaterMenu.addControl('link_repeater_menu_layout', {
+      type: CONTROLLER_LINK,
+      default: {
+        url: "",
+        attributes: "",
+        openInNew: false,
+        noFollow: true
+      },
+      label: 'link',
+    });
+
+    this.addControl('repeater_menu_layout', {
+      label: 'Items',
+      type: CONTROLLER_REPEATER,
+      fields: repeaterMenu.getControls(),
+    });
+
+    this.addControl('header_menu_layout', {
+      type: CONTROLLER_HEADING,
+      label: 'Settings',
+    });
+
+    this.addControl("menu_layout", {
+      type: CONTROLLER_SELECT,
+      label: "Layout",
+      default: "horizontal",
+      options: [
+        {
+          value: "horizontal",
+          label: "Horizontal"
+        },
+        {
+          value: "vertical",
+          label: "Vertical"
+        },
+        {
+          value: "dropdown",
+          label: "Dropdown"
+        }
+      ],
+    });
+
+    this.addControl('hor_ver_align_menu_layout', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Align (hor, ver)',
+      default: 'center',
+      options:[
+        {
+          icon: 'left',
+          value: 'start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'end',
+        },
+        {
+          icon: 'in_width',
+          value: 'stretch',
+        }
+      ],
+    });
+
+    this.addControl("hor_ver_pointer_menu_layout", {
+      type: CONTROLLER_SELECT,
+      label: "Pointer (hor, ver)",
+      default: "none",
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "overLine",
+          label: "Overline"
+        },
+        {
+          value: "underLine",
+          label: "Underline"
+        },
+        {
+          value: "doubleLine",
+          label: "Double line"
+        },
+        {
+          value: "framed",
+          label: "Framed"
+        },
+        {
+          value: "background",
+          label: "Background"
+        },
+        {
+          value: "text",
+          label: "Text"
+        }
+      ],
+    });
+
+    this.addControl("hor_ver_line_animation_menu_layout", {
+      type: CONTROLLER_SELECT,
+      label: "Animation ((hor, ver), line)",
+      default: "fade",
+      options: [
+        {
+          value: "fade",
+          label: "Fade"
+        },
+        {
+          value: "slide",
+          label: "Slide"
+        },
+        {
+          value: "grow",
+          label: "Grow"
+        },
+        {
+          value: "dropIn",
+          label: "Drop in"
+        },
+        {
+          value: "dropOut",
+          label: "Drop out"
+        },
+        {
+          value: "none",
+          label: "None"
+        }
+      ],
+    });
+
+    this.addControl("hor_ver_framed_animation_menu_layout", {
+      type: CONTROLLER_SELECT,
+      label: "Animation ((hor, ver), framed)",
+      default: "fade",
+      options: [
+        {
+          value: "fade",
+          label: "Fade"
+        },
+        {
+          value: "grow",
+          label: "Grow"
+        },
+        {
+          value: "shrink",
+          label: "Shrink"
+        },
+        {
+          value: "draw",
+          label: "Draw"
+        },
+        {
+          value: "corners",
+          label: "Corners"
+        },
+        {
+          value: "none",
+          label: "None"
+        }
+      ],
+    });
+
+    this.addControl("hor_ver_background_animation_menu_layout", {
+      type: CONTROLLER_SELECT,
+      label: "Animation ((hor, ver), background)",
+      default: "fade",
+      options: [
+        {
+          value: "fade",
+          label: "Fade"
+        },
+        {
+          value: "grow",
+          label: "Grow"
+        },
+        {
+          value: "shrink",
+          label: "Shrink"
+        },
+        {
+          value: "sweepLeft",
+          label: "Sweep left"
+        },
+        {
+          value: "sweepRight",
+          label: "Sweep right"
+        },
+        {
+          value: "sweepUp",
+          label: "Sweep up"
+        },
+        {
+          value: "sweepDown",
+          label: "Sweep down"
+        },
+        {
+          value: "shutterInVertical",
+          label: "Shutter in vertical"
+        },
+        {
+          value: "shutterOutVertical",
+          label: "Shutter out vertical"
+        },
+        {
+          value: "shutterInHorizontal",
+          label: "Shutter in horizontal"
+        },
+        {
+          value: "shutterOutHorizontal",
+          label: "Shutter out horizontal"
+        },
+        {
+          value: "none",
+          label: "None"
+        },
+      ],
+    });
+
+    this.addControl("hor_ver_text_animation_menu_layout", {
+      type: CONTROLLER_SELECT,
+      label: "Animation ((hor, ver), text)",
+      default: "grow",
+      options: [
+        {
+          value: "grow",
+          label: "Grow"
+        },
+        {
+          value: "shrink",
+          label: "Shrink"
+        },
+        {
+          value: "sink",
+          label: "Sink"
+        },
+        {
+          value: "float",
+          label: "Float"
+        },
+        {
+          value: "skew",
+          label: "Skew"
+        },
+        {
+          value: "rotate",
+          label: "Rotate"
+        },
+        {
+          value: "none",
+          label: "None"
+        },
+      ],
+    });
     this.endControlSection();
 
     this.startControlSection('bread_crumbs_section', {

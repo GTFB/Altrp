@@ -1,0 +1,129 @@
+.altrp-nav-menu-ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.altrp-nav-menu-ul-vertical .altrp-nav-menu-li {
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.altrp-nav-menu-ul-horizontal {
+    flex-direction: row;
+}
+
+.altrp-nav-menu-li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.altrp-nav-menu-li-link {
+    text-decoration: none;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.altrp-nav-menu-li-link-label {
+    color: #343B4C;
+    transition: background 0.2s;
+}
+
+.altrp-nav-menu-li-link:hover .altrp-nav-menu-li-link-label {
+    color: #211717;
+}
+
+.altrp-nav-menu-li-after:after {
+    content: "";
+    z-index: -1;
+    position: absolute;
+    transition: opacity 0.5s,width .4s,height .4s;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    border-width: 0 0 0 0;
+}
+
+.altrp-nav-menu-li-underLine:hover:after {
+    height: 1px;
+    width: 100%;
+    opacity: 1;
+    background: #287DFF;
+}
+
+.altrp-nav-menu-li-before:before {
+    content: "";
+    z-index: -1;
+    position: absolute;
+    transition: opacity 0.5s,width .4s,height .4s;
+    top: 0;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    border-width: 0 0 0 0;
+}
+
+.altrp-nav-menu-li-overline:hover:before {
+    height: 1px;
+    width: 100%;
+    opacity: 1;
+    background: #287DFF;
+}
+
+.altrp-nav-menu-li-doubleLine:hover:after {
+    height: 1px;
+    width: 100%;
+    opacity: 1;
+    background: #287DFF;
+}
+
+.altrp-nav-menu-li-doubleLine:hover:before {
+    height: 1px;
+    width: 100%;
+    opacity: 1;
+    background: #287DFF;
+}
+
+.altrp-nav-menu-li-framed:hover:before {
+    border-color: #287DFF;
+    height: 100%;
+    width: 100%;
+    background: none;
+    border-style: solid;
+    opacity: 1;
+    border-width: 1px 0 0 1px;
+}
+
+.altrp-nav-menu-li-framed:hover:after {
+    border-color: #287DFF;
+    height: 100%;
+    width: 100%;
+    background: none;
+    border-style: solid;
+    opacity: 1;
+    border-width: 0 1px 1px 0;
+}
+
+.altrp-nav-menu-li-background {
+    transition: background 0.2s;
+}
+
+.altrp-nav-menu-li-background:hover {
+    background-color: #287DFF;
+    color: #FFFFFF;
+}
+
+.altrp-nav-menu-li-background:hover .altrp-nav-menu-li-link-label {
+    color: #FFFFFF;
+}

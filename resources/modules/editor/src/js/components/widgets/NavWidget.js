@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import AltrpMenu from "../altrp-menu/AltrpMenu";
 
 class NavWidget extends Component {
   constructor(props) {
@@ -13,9 +14,15 @@ class NavWidget extends Component {
   }
 
   render() {
-    return (
-        <div>Nav</div>
-    );
+    let content;
+
+    switch (this.state.settings.type_type) {
+      case "menu":
+        content = <AltrpMenu settings={this.state.settings}/>;
+        break
+    }
+
+    return content
   }
 }
 

@@ -1373,7 +1373,7 @@ display: none;
 .altrp-element_section{
   & > .overlay {
     & .overlay-settings__button {
-      z-index: 9998;
+      z-index: 49;
       &:first-child {
         border-radius: 5px 0 0 0;
         &::before {
@@ -1581,7 +1581,7 @@ display: none;
 .screens {
   &-container {
     position: relative;
-    
+
   }
   &-title {
     margin-left: 6px;

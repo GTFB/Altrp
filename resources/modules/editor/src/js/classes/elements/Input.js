@@ -118,8 +118,6 @@ class Input extends BaseElement{
             'label' : 'left',
           }
         ],
-        rules: {
-        },
       }
     );
 
@@ -262,7 +260,7 @@ class Input extends BaseElement{
         },
       }
     );
-    
+
     this.endControlSection();
 
     this.startControlSection('position_section', {
