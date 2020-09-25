@@ -609,3 +609,12 @@
 .state-disabled{
   pointer-events: none;
 }
+
+// background-image wrapper
+
+.motion-effects-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+}

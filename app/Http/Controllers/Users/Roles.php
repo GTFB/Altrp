@@ -195,8 +195,9 @@ class Roles extends ApiController
     }
     $roles = [];
     foreach ( $_roles as $role ) {
+      $value = data_get( $role, $request->get( 'value', 'id' ) );
       $roles[] = [
-        'value' => $role->id,
+        'value' => $value,
         'label' => $role->display_name,
       ];
     }

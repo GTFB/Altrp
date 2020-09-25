@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Dashboards;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class DashboardsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+  /**
+   * Display a listing of the resource.
+   *
+   * @param Request $request
+   * @param string $id
+   * @return \Illuminate\Http\Response
+   */
     public function index(Request $request, $id)
     {
         $panel = Dashboards::where('widget_id', '=', $id)->orderBy('id', 'desc')->get();
@@ -34,6 +37,7 @@ class DashboardsController extends Controller
         $panel->options = $request->input('options');
         $panel->user_id = auth()->user()->id;
         $panel->widget_id = $id;
+        $panel->guid = data_get( $panel, 'guid' ) ? data_get( $panel, 'guid' ) : (string)Str::uuid();
         $panel->save();
         return response()->json($panel, 200, [], JSON_UNESCAPED_UNICODE);
     }

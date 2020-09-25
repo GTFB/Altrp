@@ -189,23 +189,25 @@ export default class Models extends Component {
             <AdminTable
               columns={columnsModel}
               search={{
-                value: modelsSearch||'',
-                changeHandler:this.changeSearchHandler
+                value: modelsSearch || '',
+                changeHandler: this.changeSearchHandler
               }}
-              quickActions={[{
-                tag: 'Link', props: {
-                  href: '/admin/tables/models/edit/:id',
+              quickActions={[
+                {
+                  tag: 'Link',
+                  props: { href: '/admin/tables/models/edit/:id' },
+                  title: 'Edit'
                 },
-                title: 'Edit'
-              }, {
-                tag: 'button',
-                route: '/admin/ajax/models/:id',
-                method: 'delete',
-                confirm: 'Are You Sure?',
-                after: () => {this.getModels()},
-                className: 'quick-action-menu__item_danger',
-                title: 'Trash'
-              }]}
+                {
+                  tag: 'button',
+                  route: '/admin/ajax/models/:id',
+                  method: 'delete',
+                  confirm: 'Are You Sure?',
+                  after: () => { this.getModels() },
+                  className: 'quick-action-menu__item_danger',
+                  title: 'Trash'
+                }
+              ]}
               rows={models.map(model => ({
                 ...model,
                 editUrl: '/admin/tables/models/edit/' + model.id
@@ -225,18 +227,34 @@ export default class Models extends Component {
             <AdminTable
               columns={columnsDataSource}
               search={{
-                value: dataSourcesSearch||'',
-                changeHandler:this.changeDataSourcesSearchHandler
+                value: dataSourcesSearch || '',
+                changeHandler: this.changeDataSourcesSearchHandler
               }}
+              quickActions={[
+                {
+                  tag: 'Link',
+                  props: { href: '/admin/tables/data-sources/edit/:id' },
+                  title: 'Edit'
+                },
+                {
+                  tag: 'button',
+                  route: '/admin/ajax/data_sources/:id',
+                  method: 'delete',
+                  confirm: 'Are You Sure?',
+                  after: () => { this.getDataSources() },
+                  className: 'quick-action-menu__item_danger',
+                  title: 'Trash'
+                }
+              ]}
               rows={dataSources.map(dataSource => ({
                 ...dataSource,
                 editUrl: '/admin/tables/data-sources/edit/' + dataSource.id
               }))}
             />
-            <Pagination pageCount={Math.ceil(dataSources.length / this.itemsPerPage)}
+            <Pagination pageCount={dataSourcesPageCount}
               currentPage={dataSourcesCurrentPage}
-              changePage={dataSourcesCurrentPage => this.setState({ dataSourcesCurrentPage })}
-              itemsCount={dataSources.length}
+              changePage={dataSourcesCurrentPage => this.setState({ dataSourcesCurrentPage }, this.getDataSources)}
+              itemsCount={dataSourcesCount}
             />
           </TabPanel>
         </Tabs>

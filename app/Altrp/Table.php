@@ -21,7 +21,22 @@ class Table extends Model
         'user_id'
     ];
 
-    public function migrations()
+  /**
+   * @param array $imported_tables
+   */
+  public static function import( $imported_tables = [] )
+  {
+    foreach ( $imported_tables as $imported_table ) {
+      if( self::where( 'name', $imported_table['name'] )->first() ){
+        continue;
+      }
+      $new_table = new self( $imported_table );
+      $new_table->user_id = auth()->user()->id;
+      $new_table->save();
+    }
+  }
+
+  public function migrations()
     {
         return $this->hasMany('App\Altrp\Migration');
     }
@@ -29,6 +44,11 @@ class Table extends Model
     public function columns()
     {
         return $this->hasMany('App\Altrp\Column');
+    }
+
+    public function onlyColumns()
+    {
+        return $this->columns()->where('type','!=','calculated')->get('*');
     }
 
     public function models()

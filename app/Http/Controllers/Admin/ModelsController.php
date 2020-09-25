@@ -11,10 +11,14 @@ use App\Altrp\Generators\ModelGenerator;
 use App\Altrp\Column;
 use App\Altrp\Model;
 use App\Altrp\Query;
+use App\Altrp\SourcePermission;
+use App\Altrp\SourceRole;
 use App\Altrp\Table;
 use App\Altrp\Relationship;
 use App\Altrp\Source;
 use App\Http\Controllers\Controller as HttpController;
+use App\Permission;
+use App\Role;
 use App\SQLEditor;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -30,8 +34,6 @@ class ModelsController extends HttpController
      */
     public function models_list()
     {
-
-
         return response()->json(Model::getModelsForEditor());
     }
 
@@ -478,8 +480,31 @@ class ModelsController extends HttpController
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $fields = $model->table->columns;
-//        $accessors = $model->altrp_accessors;
-//        $fields = array_merge($columns, $accessors);
+        return response()->json($fields, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function getOnlyModelFields($model_id)
+    {
+        /**
+         * @var $model Model
+         */
+        $model = Model::find($model_id);
+        if (! $model) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+        $fields = $model->table->onlyColumns();
+        $relFields = [];
+        $relations = $model->altrp_relationships;
+        foreach ($relations as $relation) {
+            $relFields = array_merge($relFields, $relation->altrp_target_model->table->columns->each(function ($column) use ($relation){
+                $column->name = $relation->altrp_target_model->table->name . '.' . $column->name;
+                $column->title = $relation->altrp_target_model->table->name . '.' . $column->title;
+            })->toArray());
+        }
+        $fields = array_merge($fields->toArray(), $relFields);
         return response()->json($fields, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -949,20 +974,21 @@ class ModelsController extends HttpController
      * Обновить источник данных
      *
      * @param ApiRequest $request
-     * @param $model_id
-     * @param $field_id
+     * @param $source_id
      * @return JsonResponse
      */
-    public function updateDataSource(ApiRequest $request, $model_id)
+    public function updateDataSource(ApiRequest $request, $source_id)
     {
-        $dataSource = Source::where([['model_id', $model_id]])->first();
+        $dataSource = Source::find($source_id);
+        $data = $request->all();
+        $data['updated_at'] = Carbon::now();
         if (! $dataSource) {
             return response()->json([
                 'success' => false,
                 'message' => 'Data source not found'
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
-        $result = $dataSource->update($request->all());
+        $result = $dataSource->update($data);
         if ($result) {
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
@@ -975,13 +1001,30 @@ class ModelsController extends HttpController
     /**
      * Получить источник данных по ID
      *
-     * @param $model_id
-     * @param $field_id
+     * @param $source_id
      * @return JsonResponse
      */
-    public function showDataSource($model_id)
+    public function showDataSource($source_id)
     {
-        $dataSource = Source::where([['model_id', $model_id]])->first();
+        $dataSource = Source::where('id', $source_id)
+            ->with(['source_roles.role:id', 'source_permissions.permission:id'])
+            ->first()
+            ->toArray();
+        $dataSource['access'] = ['roles' => [], 'permissions' => []];
+        $sourceRoles = $dataSource['source_roles'];
+        $sourcePermissions = $dataSource['source_permissions'];
+        unset($dataSource['source_roles']);
+        unset($dataSource['source_permissions']);
+        if ($sourceRoles) {
+            foreach ($sourceRoles as $sourceRole) {
+                $dataSource['access']['roles'][] = $sourceRole['role']['id'];
+            }
+        }
+        if ($sourcePermissions) {
+            foreach ($sourcePermissions as $sourcePermission) {
+                $dataSource['access']['permissions'][] = $sourcePermission['permission']['id'];
+            }
+        }
         if ($dataSource) {
             return response()->json($dataSource, 200, [], JSON_UNESCAPED_UNICODE);
         }
@@ -994,13 +1037,12 @@ class ModelsController extends HttpController
     /**
      * Удалить источник данных
      *
-     * @param $model_id
-     * @param $field_id
+     * @param $source_id
      * @return JsonResponse
      */
-    public function destroyDataSource($model_id)
+    public function destroyDataSource($source_id)
     {
-        $dataSource = Source::where([['model_id', $model_id]])->first();
+        $dataSource = Source::find($source_id);
         if (! $dataSource) {
             return response()->json([
                 'success' => false,
@@ -1256,7 +1298,7 @@ class ModelsController extends HttpController
     public function getModelAccessors($model_id)
     {
         $accessors = Accessor::where('model_id',$model_id)->get();
-        return response()->json($accessors, 500, [], JSON_UNESCAPED_UNICODE);
+        return response()->json($accessors, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function showAccessor($model_id, $accessor_id)
@@ -1268,7 +1310,7 @@ class ModelsController extends HttpController
                 'message' => 'Accessor not found'
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json($accessor, 500, [], JSON_UNESCAPED_UNICODE);
+        return response()->json($accessor, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function storeAccessor(ApiRequest $request, $model_id)
@@ -1293,7 +1335,10 @@ class ModelsController extends HttpController
         $data = $request->all();
 
         $accessor = Accessor::where([['model_id', $model_id], ['id', $accessor_id]])->first();
-        $data['calculation_logic'] = json_encode($data['calculation_logic']);
+
+        if(isset($data['calculation_logic'])) {
+            $data['calculation_logic'] = json_encode($data['calculation_logic']);
+        }
 
         if (! $accessor) {
             return response()->json([
@@ -1338,5 +1383,4 @@ class ModelsController extends HttpController
             'message' => 'Failed to delete accessor'
         ], 500, [], JSON_UNESCAPED_UNICODE);
     }
-
 }

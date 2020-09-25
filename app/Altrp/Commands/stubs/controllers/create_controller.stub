@@ -4,6 +4,7 @@ namespace DummyNamespace;
 
 use App\Altrp\Model;
 use App\Altrp\Relationship;
+use App\Altrp\Builders\Traits\DynamicVariables;
 use DummyRootNamespaceHttp\Controllers\ApiController;
 
 use DummyRootNamespace{{modelNamespace}}{{modelName}};
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 
 class DummyClass extends ApiController
 {
+    use DynamicVariables;
     // CUSTOM_TRAITS_BEGIN - IMPORTANT: Don't remove this comment! Write your traits between these comments.
     {{customTraits}}
     // CUSTOM_TRAITS_END - IMPORTANT: Don't remove this comment! Write your traits between these comments.

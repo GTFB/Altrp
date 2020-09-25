@@ -18,6 +18,14 @@ class RouteFileWriter
      */
     protected $route;
 
+    protected $routeFile;
+
+    protected $apiRouteFile;
+
+    protected $routeFileContent;
+
+    protected $apiRouteFileContent;
+
     /**
      * @var ControllerFile
      */
@@ -31,6 +39,10 @@ class RouteFileWriter
     public function __construct(RouteFile $routeFile, ControllerFile $controllerFile)
     {
         $this->route = $routeFile;
+        $this->routeFile = $this->route->getFile();
+        $this->apiRouteFile = $this->route->getApiFile();
+        $this->routeFileContent = file($this->routeFile, 2);
+        $this->apiRouteFileContent = file($this->apiRouteFile, 2);
         $this->controller = $controllerFile;
     }
 
@@ -49,9 +61,61 @@ class RouteFileWriter
         }
         $routeContent = file($routeFile, 2);
         if (! $this->routeExists($routeContent,$methodName)) {
-            $result = $this->writeRoute($routeContent, $this->getRoute($methodName));
+            $result = $this->writeRoute($routeContent, $this->getRoute($methodName), $routeFile);
             if (! $result) throw new RouteFileException('Failed to write route to the routes file', 500);
         }
+
+        $apiRouteFile = $this->route->getApiFile();
+        if (! file_exists($apiRouteFile)) {
+            throw new RouteFileException('API Route file not found', 500);
+        }
+        $apiRouteContent = file($apiRouteFile, 2);
+        if (! $this->routeExists($apiRouteContent,$methodName)) {
+            $result = $this->writeRoute($apiRouteContent, $this->getRoute($methodName),$apiRouteFile);
+            if (! $result) throw new RouteFileException('Failed to write route to the api routes file', 500);
+        }
+
+        return true;
+    }
+
+    /**
+     * Добавить маршрут для источника данных
+     *
+     * @param $source
+     * @return bool
+     * @throws RouteFileException
+     */
+    public function addSourceRoute($source)
+    {
+        $routeFile = $this->route->getFile();
+
+        if (! file_exists($routeFile))
+            throw new RouteFileException('Route file not found', 404);
+        $routeContent = file($routeFile, 2);
+        if (! $this->routeExists($routeContent, $source->name, 'data_sources', $source->request_type)) {
+            $result = $this->writeRoute(
+                $routeContent,
+                $this->getSourceRoute($source->name, $source->request_type),
+                $this->route->getFile()
+            );
+            if (! $result)
+                throw new RouteFileException('Failed to write route to the routes file', 500);
+        }
+
+        $apiRouteFile = $this->route->getApiFile();
+        if (! file_exists($apiRouteFile))
+            throw new RouteFileException('API route file not found', 404);
+        $apiRouteContent = file($apiRouteFile, 2);
+        if (! $this->routeExists($apiRouteContent, $source->name, 'data_sources', $source->request_type)) {
+            $result = $this->writeRoute(
+                $apiRouteContent,
+                $this->getSourceRoute($source->name, $source->request_type),
+                $this->route->getApiFile()
+            );
+            if (! $result)
+                throw new RouteFileException('Failed to write api route to the routes file', 500);
+        }
+
         return true;
     }
 
@@ -59,20 +123,33 @@ class RouteFileWriter
      * Удалить маршрут
      *
      * @param $methodName
+     * @param string $type
+     * @param string $requestType
      * @return bool|int
      * @throws RouteFileException
      */
-    public function removeRoute($methodName)
+    public function removeRoute($methodName, $type = 'Route::', $requestType = 'get')
     {
         $routeFile = $this->route->getFile();
         if (! file_exists($routeFile)) {
-            throw new RouteFileException('Route file not found', 500);
+            throw new RouteFileException('Route file not found', 404);
         }
         $routeContent = file($routeFile, 2);
-        if ($line = $this->routeExists($routeContent,$methodName)) {
+        if ($line = $this->routeExists($routeContent, $methodName, $type, $requestType)) {
             unset($routeContent[$line]);
         }
-        return \File::put($routeFile, implode(PHP_EOL, $routeContent));
+
+        $apiRouteFile = $this->route->getApiFile();
+        if (! file_exists($apiRouteFile)) {
+            throw new RouteFileException('API route file not found!', 404);
+        }
+        $apiRouteContent = file($apiRouteFile, 2);
+        if ($line = $this->routeExists($apiRouteContent, $methodName, $type, $requestType)) {
+            unset($apiRouteContent[$line]);
+        }
+
+        return \File::put($routeFile, implode(PHP_EOL, $routeContent))
+            && \File::put($apiRouteFile, implode(PHP_EOL, $apiRouteContent));
     }
 
     /**
@@ -87,7 +164,25 @@ class RouteFileWriter
     {
         $routeContent = file($this->route->getFile(), 2);
         $this->removeSqlRoute($routeContent,$oldMethodName);
-        $this->writeRoute($routeContent, $this->getRoute($methodName));
+        $this->writeRoute($routeContent, $this->getRoute($methodName), $this->route->getFile());
+
+        $routeContent = file($this->route->getApiFile(), 2);
+        $this->removeSqlRoute($routeContent,$oldMethodName);
+        $this->writeRoute($routeContent, $this->getRoute($methodName),$this->route->getApiFile());
+        return true;
+    }
+
+    /**
+     * Обновить маршрут удаленного источника данных
+     *
+     * @param $source
+     * @return bool
+     * @throws RouteFileException
+     */
+    public function updateSourceRoute($source)
+    {
+        $this->removeRoute($source->getOriginal('name'), 'data_sources', $source->getOriginal('request_type'));
+        $this->addSourceRoute($source);
         return true;
     }
 
@@ -100,7 +195,10 @@ class RouteFileWriter
     public function deleteSqlRoute($methodName)
     {
         $routeContent = file($this->route->getFile(), 2);
-        return $this->removeSqlRoute($routeContent,$methodName);
+        $routeResult = $this->removeSqlRoute($routeContent,$methodName);
+        $routeContent = file($this->route->getApiFile(), 2);
+        $apiRouteResult = $this->removeSqlRoute($routeContent,$methodName);
+        return $routeResult && $apiRouteResult;
     }
 
     /**
@@ -112,7 +210,7 @@ class RouteFileWriter
      */
     protected function removeSqlRoute(&$routeContent,$methodName)
     {
-        if ($line = $this->routeExists($routeContent, $methodName)) {
+        if ($line = $this->routeExists($routeContent, $methodName, 'queries')) {
             unset($routeContent[$line]);
             if (\File::put($this->route->getFile(), implode(PHP_EOL,$routeContent)) === false) {
                 return false;
@@ -126,14 +224,17 @@ class RouteFileWriter
      *
      * @param $routeContent
      * @param $methodName
+     * @param string $type
+     * @param string $requestType
      * @return bool
      */
-    protected function routeExists($routeContent, $methodName)
+    protected function routeExists($routeContent, $methodName, $type = 'Route::', $requestType = 'get')
     {
         foreach ($routeContent as $line => $content) {
             if (Str::contains($content, $methodName . '\'')
                 && Str::contains($content, $this->route->getModelName())
-                && Str::contains($content, 'Route::get')
+                && Str::contains($content, $type)
+                && Str::contains($content, 'Route::'.$requestType)
             ) {
                 return $line;
             }
@@ -142,16 +243,31 @@ class RouteFileWriter
     }
 
     /**
+     * Проверить, существует ли маршрут удаленного источника данных
+     *
+     * @param $source
+     * @return bool|int|string
+     */
+    public function routeSourceExist($source)
+    {
+        $routeContent = file($this->route->getFile(), 2);
+        $routeResult = $this->routeExists($routeContent, $source->name, 'data_sources', $source->request_name);
+        $routeContent = file($this->route->getApiFile(), 2);
+        $apiRouteResult = $this->routeExists($routeContent, $source->name, 'data_sources', $source->request_name);
+        return $routeResult && $apiRouteResult;
+    }
+
+    /**
      * Записать новый маршрут в файл маршрутов
      *
      * @param $routeContent
      * @param $route
+     * @param $file
      * @return bool
      * @throws RouteFileException
      */
-    protected function writeRoute(&$routeContent, $route)
+    protected function writeRoute(&$routeContent, $route, $file)
     {
-        $file = $this->route->getFile();
         if (! file_exists($file)) {
             throw new RouteFileException('Route file not found', 500);
         }
@@ -176,9 +292,6 @@ class RouteFileWriter
      */
     protected function getRoute($methodName)
     {
-//        $middleware = $this->route->getModel()->user_cols ? ['auth:api','auth'] : [];
-//        $accessMiddleware = $this->getAccessMiddleware($methodName);
-//        if ($accessMiddleware) $middleware[] = $accessMiddleware;
         $middleware = $this->getMiddleware($methodName);
 
         $route = 'Route::get(\'/queries/' . strtolower(Str::plural($this->route->getModelName())) . '/'
@@ -192,14 +305,36 @@ class RouteFileWriter
     }
 
     /**
+     * Сформировать и получить маршрут удаленного источника данных
+     *
+     * @param $name
+     * @param $requestType
+     * @return string
+     */
+    protected function getSourceRoute($name, $requestType)
+    {
+        $middleware = $this->getMiddleware($name, 'name');
+        $route = 'Route::' . $requestType . '(\'/data_sources/' . strtolower(Str::plural($this->route->getModelName())) . '/'
+            . Str::snake($name) . '\', [';
+        if ($middleware)
+            $route .= "'middleware' => ['" . implode("','", $middleware) . "'], ";
+        $route .= "'uses' => '"
+            . str_replace('App\Http\Controllers\\', '',$this->controller->getNamespace())
+            . "Controller@" . $name ."']);";
+        return $route;
+    }
+
+    /**
      * Получить и сформировать посредников доступа к маршруту
      *
      * @param $methodName
+     * @param string $condField
+     * @param bool $isApi
      * @return array
      */
-    protected function getMiddleware($methodName)
+    protected function getMiddleware($methodName, $condField = 'type', $isApi = false)
     {
-        $source = Source::where('type', Str::snake($methodName))->first();
+        $source = Source::where($condField, Str::snake($methodName))->first();
 
         if(!$source) return null;
 
@@ -223,8 +358,7 @@ class RouteFileWriter
 
         $middleware = [];
         if ($source->auth) {
-//            $middleware[] = 'auth:api';
-            $middleware[] = 'auth';
+            $middleware[] = $isApi ? 'auth:api' : 'auth';
         }
         if ($accessRoles && $accessPermissions)
             $middleware[] = "ability:" . implode(',', $accessSource);
