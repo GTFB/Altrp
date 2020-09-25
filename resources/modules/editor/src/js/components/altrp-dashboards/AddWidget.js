@@ -85,7 +85,7 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
           <SourceField
             widget={widget}
             setWidget={setWidget}
-            sources={settings.sql?.map((item) => {
+            sources={settings && settings.sql?.map((item) => {
               return { name: item.label, url: `/ajax/models/queries/${item.model}/${item.value}` };
             })}
           />
