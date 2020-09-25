@@ -99,9 +99,11 @@ class Source extends Model
     switch ( $this->sourceable_type ){
       case 'App\SQLEditor':
       case 'App\Altrp\Query':
-        return '/ajax/models/queries' . data_get( $this, 'url' );
+        return config('app.url') . '/ajax/models/queries' . data_get( $this, 'url' );
       default:
-        return '/ajax/models' . data_get( $this, 'url' );
+        return $this->rype == 'remote'
+            ? config('app.url') . '/ajax/models' . data_get( $this, 'url' )
+            : data_get( $this, 'url' );
     }
   }
 }
