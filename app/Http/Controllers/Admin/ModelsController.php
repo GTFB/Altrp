@@ -1298,7 +1298,7 @@ class ModelsController extends HttpController
     public function getModelAccessors($model_id)
     {
         $accessors = Accessor::where('model_id',$model_id)->get();
-        return response()->json($accessors, 500, [], JSON_UNESCAPED_UNICODE);
+        return response()->json($accessors, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function showAccessor($model_id, $accessor_id)
@@ -1310,7 +1310,7 @@ class ModelsController extends HttpController
                 'message' => 'Accessor not found'
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
-        return response()->json($accessor, 500, [], JSON_UNESCAPED_UNICODE);
+        return response()->json($accessor, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function storeAccessor(ApiRequest $request, $model_id)
@@ -1335,7 +1335,10 @@ class ModelsController extends HttpController
         $data = $request->all();
 
         $accessor = Accessor::where([['model_id', $model_id], ['id', $accessor_id]])->first();
-        $data['calculation_logic'] = json_encode($data['calculation_logic']);
+
+        if(isset($data['calculation_logic'])) {
+            $data['calculation_logic'] = json_encode($data['calculation_logic']);
+        }
 
         if (! $accessor) {
             return response()->json([

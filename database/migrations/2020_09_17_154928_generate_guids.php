@@ -37,6 +37,12 @@ class GenerateGuids extends Migration
       $template->pages_templates->each( function ( PagesTemplate $pages_template ) {
         $page = $pages_template->page_trough_id;
         $template = $pages_template->template_trough_id;
+
+        if(!$page) {
+          $pages_template->delete();
+          return true;
+        }
+
         $pages_template->page_guid = $page->guid;
         $pages_template->template_guid = $template->guid;
 
