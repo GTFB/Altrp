@@ -26,7 +26,7 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
   };
 
   const getTypesBySource = (s) => {
-    const source = settings.sql.find(
+    const source = settings.sql?.find(
       (item) => s === `/ajax/models/queries/${item.model}/${item.value}`
     );
     return source?.types?.map((type) => type.value) || [];
