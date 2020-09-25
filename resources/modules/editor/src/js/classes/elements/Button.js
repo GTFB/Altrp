@@ -308,11 +308,11 @@ class Button extends BaseElement{
       options: [
         {
           value: "click",
-          label: "click"
+          label: "Click"
         },
         {
           value: "hover",
-          label: "hover"
+          label: "Hover"
         }
       ],
     });
