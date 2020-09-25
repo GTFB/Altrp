@@ -12,7 +12,7 @@ import SourceField from "./fields/SourceField";
 import ColorSchemeField from "./fields/colorSchemeField";
 import VerticalTableField from "./fields/VerticalTableField";
 
-const EditWidget = ({ data, onEdited, setIsEdit, sources }) => {
+const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
   const [widget, setWidget] = useState(data);
 
   const title = useRef(widget.title);
@@ -26,7 +26,9 @@ const EditWidget = ({ data, onEdited, setIsEdit, sources }) => {
   };
 
   const getTypesBySource = (s) => {
-    const source = sources.find((item) => s === `/ajax/models/queries/${item.model}/${item.value}`);
+    const source = settings.sql.find(
+      (item) => s === `/ajax/models/queries/${item.model}/${item.value}`
+    );
     return source?.types?.map((type) => type.value) || [];
   };
 
@@ -45,7 +47,7 @@ const EditWidget = ({ data, onEdited, setIsEdit, sources }) => {
           <SourceField
             widget={widget}
             setWidget={setWidget}
-            sources={sources.map((item) => {
+            sources={settings.sql.map((item) => {
               return { name: item.label, url: `/ajax/models/queries/${item.model}/${item.value}` };
             })}
           />

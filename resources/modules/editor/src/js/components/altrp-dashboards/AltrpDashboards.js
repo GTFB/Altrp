@@ -57,11 +57,11 @@ const AltrpDashboards = ({ id, settings }) => {
       </div>
       <div className="altrp-dashboard__widgets">
         {isShow && (
-          <AddWidget sources={settings.sql} id={id} setIsShow={setIsShow} onAdd={handleAdd} />
+          <AddWidget settings={settings} id={id} setIsShow={setIsShow} onAdd={handleAdd} />
         )}
         {widgets.map((widget) => (
           <CardWidget
-            sources={settings.sql}
+            settings={settings}
             key={widget.id}
             widget={widget}
             onDeleted={handleRemove}

@@ -11,6 +11,7 @@ import {
   TAB_CONTENT,
   TAB_STYLE,
   CONTROLLER_SQL,
+  CONTROLLER_SQL_PARAMS,
 } from "../modules/ControllersManager";
 
 class Dashboards extends BaseElement {
@@ -38,6 +39,11 @@ class Dashboards extends BaseElement {
 
     this.addControl("sql", {
       type: CONTROLLER_SQL,
+      default: [],
+    });
+
+    this.addControl("filter", {
+      type: CONTROLLER_SQL_PARAMS,
       default: [],
     });
 

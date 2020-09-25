@@ -40,37 +40,37 @@ const AltrpDiagram = ({ settings }) => {
     case BAR:
       return (
         <div className="altrp-chart">
-          <DynamicBarChart widget={widget} width={settings.width.size} />
+          <DynamicBarChart widget={widget} width={settings.width?.size} />
         </div>
       );
     case PIE:
       return (
         <div className="altrp-chart">
-          <DynamicPieChart widget={widget} width={settings.width.size} />
+          <DynamicPieChart widget={widget} width={settings.width?.size} />
         </div>
       );
     case DONUT:
       return (
         <div className="altrp-chart">
-          <DynamicDonutChart widget={widget} width={settings.width.size} />
+          <DynamicDonutChart widget={widget} width={settings.width?.size} />
         </div>
       );
     case LINE:
       return (
         <div className="altrp-chart">
-          <DynamicLineChart widget={widget} width={settings.width.size} />
+          <DynamicLineChart widget={widget} width={settings.width?.size} />
         </div>
       );
     case TABLE:
       return (
         <div className="altrp-chart">
-          <DynamicTableWidget widget={widget} width={settings.width.size} />
+          <DynamicTableWidget widget={widget} width={settings.width?.size} />
         </div>
       );
     case AREA:
       return (
         <div className="altrp-chart">
-          <DynamicAreaChart widget={widget} width={settings.width.size} />
+          <DynamicAreaChart widget={widget} width={settings.width?.size} />
         </div>
       );
     default:
