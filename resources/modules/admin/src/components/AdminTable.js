@@ -40,7 +40,8 @@ class AdminTable extends Component {
                     let tag = 'span';
                     let props = {
                       className: 'td__content',
-                      children: [row[column.name]]
+                      // children: [row[column.name]],
+                      children: _.get(row, column.name, ''),
                     };
                     if (column.url && row.url) {
                       tag = 'a';
@@ -71,7 +72,7 @@ class AdminTable extends Component {
                       };
                     }
                     if (column.is_boolean) {
-                      props.children = [row[column.name].toString()];
+                      props.children = [_.get(row, column.name, false).toString()];
                     }
 
                     return <td className="admin-table__td td" key={column.name + row.id} title={column.name + row.id}>

@@ -12,8 +12,13 @@ class Import extends Component {
    */
   onSubmit  = async e => {
     e.preventDefault();
-    let res = this.resource.postFiles(this.inputFile.current.files, 'application/x-zip-compressed');
-    console.log(res);
+    let res = await this.resource.postFiles(this.inputFile.current.files, 'application/x-zip-compressed');
+    if( res.success ){
+      await alert('Success');
+      window.location.href = '/admin/dashboard';
+    } else {
+      alert('Error ' + res.message)
+    }
   };
   /**
    * Отрисовываем вкладку импорта админки

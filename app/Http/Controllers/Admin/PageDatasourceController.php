@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Page;
 use App\PageDatasource;
 use Illuminate\Http\Request;
 
@@ -38,21 +39,26 @@ class PageDatasourceController extends Controller
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(Request $request)
-    {
-        $pageDatasource = new PageDatasource($request->all());
-        $result = $pageDatasource->save();
-        if ($result) {
-            return response()->json(['success' => true], 200);
-        }
-        return response()->json(['success' => false, 'message' => 'Failed to store page data source'], 500);
+  /**
+   * Store a newly created resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function store(Request $request)
+  {
+    $pageDatasource = new PageDatasource($request->all());
+    $page = Page::find( $request->get( 'page_id' ) );
+    if( ! $page ){
+      return response()->json(['success' => false, 'message' => 'Page not Found'], 404);
     }
+    $pageDatasource->page_guid = $page->guid;
+    $result = $pageDatasource->save();
+    if ($result) {
+        return response()->json(['success' => true], 200);
+    }
+    return response()->json(['success' => false, 'message' => 'Failed to store page data source'], 500);
+  }
 
     /**
      * Display the specified resource.

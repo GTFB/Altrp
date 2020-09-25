@@ -1,6 +1,7 @@
     public function {{methodName}}(ApiRequest $request)
     {
-        $response = \Curl::to('{{url}}')
+        $url = "{{url}}";
+        $response = \Curl::to($url)
                     ->withData($request->all())
                     ->asJson()
                     ->put();

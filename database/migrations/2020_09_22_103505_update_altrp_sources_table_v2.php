@@ -21,28 +21,30 @@ class UpdateAltrpSourcesTableV2 extends Migration
         $sources = \App\Altrp\Source::all();
 
         foreach ($sources as $source) {
-            $requestType = 'get';
-            switch ($source->type) {
-                case 'get':
-                case 'show':
-                case 'options':
-                case 'filters':
-                    $requestType = 'get';
-                    break;
-                case 'add':
-                    $requestType = 'post';
-                    break;
-                case 'update':
-                case 'update_column':
-                    $requestType = 'put';
-                    break;
-                case 'delete':
-                    $requestType = 'delete';
-                    break;
-                default:
-                    $requestType = 'get';
-            }
-            $source->update(['request_type' => $requestType, 'title' => $source->name]);
+          if( ! $source->model ){
+            continue;
+          }
+          switch ($source->type) {
+            case 'get':
+            case 'show':
+            case 'options':
+            case 'filters':
+                $requestType = 'get';
+                break;
+            case 'add':
+                $requestType = 'post';
+                break;
+            case 'update':
+            case 'update_column':
+                $requestType = 'put';
+                break;
+            case 'delete':
+                $requestType = 'delete';
+                break;
+            default:
+                $requestType = 'get';
+          }
+          $source->update(['request_type' => $requestType, 'title' => $source->name]);
         }
     }
 
@@ -54,5 +56,10 @@ class UpdateAltrpSourcesTableV2 extends Migration
     public function down()
     {
         //
+
+      Schema::table('altrp_sources', function (Blueprint $table) {
+        $table->dropColumn('title');
+        $table->dropColumn('request_type');
+      });
     }
 }

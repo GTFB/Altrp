@@ -7,6 +7,7 @@ use App\Http\Requests\ApiRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use App\Reports;
+use Illuminate\Support\Str;
 
 class ReportsController extends Controller
 {
@@ -38,6 +39,7 @@ class ReportsController extends Controller
     {
         $report = new Reports( $request->toArray() );
         $report->user_id  = auth()->user()->id;
+        $report->guid  = Str::uuid();
 
         if( $report->save() ){
           $report->url  = '/admin/editor-reports?id=' . $report->id;

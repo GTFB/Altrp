@@ -9,6 +9,7 @@ class ElementWrapper extends Component {
     this.state = {
       currentModel: appStore.getState().currentModel,
       currentUser: appStore.getState().currentUser,
+      currentDataStorage: appStore.getState().currentDataStorage,
       formsStore: appStore.getState().formsStore,
       elementDisplay: true,
     };
@@ -30,14 +31,23 @@ class ElementWrapper extends Component {
 
   /**
    * Подписываемся на обновление store редакса
-   * (обновляем, только если currentModel изменилась)
    */
   updateStore = () => {
     if(this.state.currentModel !== appStore.getState().currentModel){
       this.setState(state => ({...state, currentModel: appStore.getState().currentModel}));
     }
+    /**
+     * Обновляем пользователя
+     */
     if(this.state.currentUser !== appStore.getState().currentUser){
       this.setState(state => ({...state, currentModel: appStore.getState().currentUser}));
+    }
+
+    /**
+     * Обновляем currentDataStorage
+     */
+    if(this.state.currentDataStorage !== appStore.getState().currentDataStorage){
+      this.setState(state => ({...state, currentDataStorage: appStore.getState().currentDataStorage}));
     }
 
     if((this.props.element.getName() === 'input') && this.state.formsStore !== appStore.getState().formsStore){
@@ -145,6 +155,7 @@ class ElementWrapper extends Component {
           match: this.props.match,
           currentModel: this.state.currentModel,
           currentUser: this.state.currentUser,
+          currentDataStorage: this.state.currentDataStorage,
           formsStore: this.state.formsStore,
           appStore
         })

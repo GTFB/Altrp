@@ -5,6 +5,8 @@ namespace App\Observers;
 use App\Altrp\Accessor;
 use App\Altrp\Builders\AccessorBuilder;
 use App\Altrp\Model;
+use App\Altrp\Relationship;
+use App\Altrp\Column;
 use App\Exceptions\AccessorNotWrittenException;
 use App\Exceptions\ModelNotWrittenException;
 use App\Exceptions\ParseFormulaException;
@@ -35,6 +37,19 @@ class AltrpAccessorObserver
         if (! $formula = $accessorBuilder->parseFormula($calc)) {
             throw new ParseFormulaException('Ошибка в формуле', 500);
         }
+
+        $column = new Column();
+        $column->name = $accessor->name;
+        $column->title = $accessor->title;
+        $column->model_id = $accessor->model_id;
+        $column->type = "calculated";
+        $column->preset = 0;
+        $column->user_id = auth()->user()->id;
+        $column->table_id = $model->altrp_table->id;
+
+        Column::withoutEvents(function () use ($column) {
+            $column->save();
+        });
     }
 
     /**

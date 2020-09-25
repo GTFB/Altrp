@@ -8,8 +8,8 @@ import PageDataSourceForm from "./pages/PageDataSourceForm";
 
 const columns = [
   {
-    name: 'id',
-    title: 'ID',
+    name: 'source.name',
+    title: 'Datasource',
     url: true,
     // editUrl: true,
     // tag: 'Link'
@@ -161,10 +161,13 @@ class AddPage extends Component {
     })
   }
   render() {
-    const { dataSources, isModalOpened, editingDataSource } = this.state;
+    const { isModalOpened, editingDataSource } = this.state;
     if (this.state.redirectAfterSave) {
       return <Redirect to="/admin/pages" />
     }
+    let { dataSources } = this.state;
+
+    dataSources = _.sortBy(dataSources, dataSource => dataSource.priority);
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
@@ -189,20 +192,21 @@ class AddPage extends Component {
               onChange={e => { this.changeValue(e.target.value, 'path') }}
               className="form-control" />
           </div>
-          <div className="form-group">
-            <label htmlFor="page-template">Content Template</label>
-            <select id="page-template"
-              value={this.state.value.template_id || ''}
-              onChange={e => { this.changeValue(e.target.value, 'template_id') }}
-              className="form-control">
-              <option value="" />
-              {
-                this.state.templates.map(template => {
-                  return <option value={template.value} key={template.value}>{template.label}</option>
-                })
-              }
-            </select>
-          </div>
+
+          {/*<div className="form-group">*/}
+            {/*<label htmlFor="page-template">Content Template</label>*/}
+            {/*<select id="page-template"*/}
+                   {/*value={this.state.value.template_id || ''}*/}
+                   {/*onChange={e => {this.changeValue(e.target.value, 'template_id')}}*/}
+                   {/*className="form-control">*/}
+              {/*<option value=""/>*/}
+              {/*{*/}
+                {/*this.state.templates.map(template=>{*/}
+                  {/*return <option value={template.value} key={template.value}>{template.label}</option>*/}
+                {/*})*/}
+              {/*}*/}
+            {/*</select>*/}
+          {/*</div>*/}
           <div className="form-group">
             <label htmlFor="page-model">Model</label>
             <select id="page-model"
