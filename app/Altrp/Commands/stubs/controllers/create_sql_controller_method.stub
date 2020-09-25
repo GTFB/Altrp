@@ -5,5 +5,8 @@
            'sql_name' => '{{sqlEditorName}}',
            'table_name' => '{{tableName}}',
          ], $request );
+
+{{sqlEditorIsObject}}
+
         return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE );
     }

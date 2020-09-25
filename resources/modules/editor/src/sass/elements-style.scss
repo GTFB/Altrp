@@ -1,5 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&family=PT+Sans:ital,wght@0,400;0,700;1,400&family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@import url(https://fonts.googleapis.com/css?family=PT+Sans:400,700);
+@import url("http://fonts.googleapis.com/css?family=PT+Sans:400,700");
 .sections-wrapper {
   display: flex;
   width: 1440px;
@@ -46,6 +47,7 @@
   text-decoration: none;
   display: flex;
   align-items: center;
+  justify-content: center;
   &_gray {
     background-color: $grey;
     color: #fff;
@@ -60,14 +62,24 @@
 }
 
 .altrp-section {
-  position: relative;
-  z-index: 49;
+  //position: relative;
+  //z-index: 50;
+  &.altrp-section--boxed > .altrp-element {
+    // width: 1440px;
+    margin: 0 auto;
+  }
+  &.altrp-section--full-width, &.altrp-section--boxed {
+    width: 100vw;
+  }
 }
+
+
 
 .altrp-column {
   display: flex;
   flex-wrap: wrap;
   padding: 10px;
+  align-content: flex-start;
 }
 
 .altrp-tooltip {
@@ -139,7 +151,6 @@
 }
 
 .altrp-image-container img{
-  position:  absolute;
   top: 0;
   left: 0;
   bottom: 0;
@@ -161,6 +172,10 @@
 
 .altrp-table-th_sort {
   padding: 0;
+  margin-left: 10px;
+}
+
+.altrp-table-th .sort-icon {
   margin-left: 10px;
 }
 
@@ -194,8 +209,13 @@
 
 .app-area_content {
   flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
 }
-
+.app-area_content > .sections-wrapper {
+  flex: 1 0 auto;
+  align-content: flex-start;
+}
 .app-area_header {
   flex: 0 0 auto;
 }
@@ -222,6 +242,7 @@
   margin-right: auto !important;
 }
 
+
 .altrp-table {
   border-collapse: collapse;
   &-td {
@@ -232,13 +253,13 @@
     &__double-click-content {
       display: none;
     }
-    &_double-clicked{
-      & .altrp-table-td__double-click-content{
+    &_double-clicked {
+      & .altrp-table-td__double-click-content {
         display: block;
         width: 100%;
         border-width: 2px;
       }
-      & .altrp-table-td__default-content{
+      & .altrp-table-td__default-content {
         display: none;
       }
     }
@@ -448,6 +469,11 @@
   flex-direction: column;
 }
 
+.altrp-list-icon svg {
+  width: inherit;
+  height: inherit;
+}
+
 .altrp-list-icon-relative {
   position: relative;
 }
@@ -540,13 +566,6 @@
   justify-content: center;
 }
 
-.altrp-map,
-.rrbe-map {
-  position: relative;
-  height: 400px;
-  overflow: hidden;
-}
-
 .app-popup {
   position: absolute;
   display: none;
@@ -605,4 +624,50 @@
 
 .altrp-dropbar-variant-right-center .altrp-dropbar-children-wrapper {
   align-items: center;
+}
+.aspect-ratio-off_true .altrp-image{
+  position: relative;
+}
+.aspect-ratio-off_false .altrp-image{
+  position: absolute;
+}
+
+// background меню селекта
+.css-tl8qiy-Menu, .css-l1wtd9-Menu {
+  background-color: white;
+}
+
+// уменьшил минимальную высоту select2
+.altrp-field-select2__indicator.altrp-field-select2__dropdown-indicator {
+  padding: 0 8px;
+  max-height: 14px;
+  overflow: hidden;
+}
+
+.altrp-field-select2 {
+  .altrp-field-select2__value-container {
+    padding: 0px 8px;
+  }
+
+  .css-b8ldur-Input {
+    padding-bottom: 0px;
+    padding-top: 0px;
+    margin: 0 2px;
+  }
+
+  .altrp-field-select2__control {
+    min-height: 14px;
+  }
+}
+.state-disabled{
+  pointer-events: none;
+}
+
+// background-image wrapper
+
+.motion-effects-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
 }

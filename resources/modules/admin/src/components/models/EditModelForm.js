@@ -12,7 +12,7 @@ class EditModelForm extends Component {
     };
     this.submitHandler = this.submitHandler.bind(this);
     this.deleteHandler = this.deleteHandler.bind(this);
-    this.titleChangeHandler = this.titleChangeHandler.bind(this);    
+    this.titleChangeHandler = this.titleChangeHandler.bind(this);
   }
 
   /**
@@ -92,7 +92,14 @@ class EditModelForm extends Component {
           onChange={e => { this.changeValue(e.target.value, 'name') }}
           className="form-control" />
       </div>
-      <div className="form-group col-8">
+      <div className="form-group col-4">
+        <label htmlFor="page-description">Parent Model</label>
+        <input type="text" id="page-description"
+               value={model.parent_model_id || ''}
+               onChange={e => { this.changeValue(e.target.value, 'parent_model_id') }}
+               className="form-control" />
+      </div>
+      <div className="form-group col-4">
         <label htmlFor="page-description">Model Description</label>
         <input type="text" id="page-description"
           value={model.description || ''}

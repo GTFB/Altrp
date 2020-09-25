@@ -33,10 +33,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
         $route_file = new RouteFile(new Model());
         $route_file->createFile();
-
+        $route_file->createApiFile();
         parent::boot();
     }
 
@@ -104,6 +103,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/altrp_models')
             ->middleware('api')
             ->namespace($this->namespace)
-            ->group(base_path('routes/AltrpRoutes.php'));
+            ->group(base_path('routes/AltrpApiRoutes.php'));
     }
 }

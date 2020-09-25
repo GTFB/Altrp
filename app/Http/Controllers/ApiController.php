@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Altrp\Column;
 use App\Altrp\Model;
+use App\Altrp\Relationship;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiRequest;
 use Illuminate\Http\Request;
@@ -40,7 +41,7 @@ class ApiController extends Controller
         $parts = explode('\\', $this->modelClass);
         $modelName = array_pop($parts);
         $indexedColumns = $this->getIndexedColumns($modelName);
-        $resource = \Str::lower(\Str::plural($modelName));
+        $resource = Str::lower(Str::plural($modelName));
         $order_method = 'orderByDesc';
         $order_column = $request->get( 'order_by', 'id' );
         $filters = [];
@@ -80,8 +81,17 @@ class ApiController extends Controller
         }
         $hasMore = $pageCount > $page;
 
+        $model = Model::where('name', $modelName)->first();
+        $relations = Relationship::where([['model_id',$model->id],['always_with',1]])->get()->implode('name',',');
+        $relations = $relations ? explode(',',$relations) : false;
+        if ($relations) {
+            $$resource = $$resource->load($relations);
+        }
+
         $res = compact('pageCount' ,'hasMore');
         $res['data'] = $$resource;
+
+
         return $res;
     }
 
@@ -102,12 +112,52 @@ class ApiController extends Controller
         return $columnsList;
     }
 
+    /**
+     * Получить ассоциативный массив параметров запроса
+     *
+     * @param $url
+     * @return array
+     */
+    protected function getRequestParamsAssoc($url)
+    {
+        $parts = explode('?', $url);
+        $uri = $parts[1] ?? '';
+        if (!$uri) return [];
+        $requestParamsAssoc = [];
+        $params = explode('&', $uri);
+        foreach ($params as $param) {
+            $param = explode('=', $param);
+            $requestParamsAssoc[$param[0]] = $param[1];
+        }
+        return $requestParamsAssoc;
+    }
+
+    /**
+     * Получить URL без параметров
+     *
+     * @param $url
+     * @return mixed|string
+     */
+    protected function getOnlyUrl($url)
+    {
+        $parts = explode('?', $url);
+        return $parts[0];
+    }
+
   /**
    * Список опций для селекта
    * @param ApiRequest $request
    */
   public function options( ApiRequest $request )
   {
+
+    $filters = [];
+    if( $request->get( 'filters') ){
+      $_filters = json_decode( $request->get( 'filters' ), true );
+      foreach ( $_filters as $key => $value ) {
+        $filters[$key] = $value;
+      }
+    }
     /**
      * @var \App\AltrpModels\test $model
      */
@@ -115,7 +165,11 @@ class ApiController extends Controller
     $label_name = $model->getLabelColumnName();
     $title_name = $model->getTitleColumnName();
     if( ! $request->get( 's' ) ){
-      $options = $model->all();
+      if( ! count( $filters ) ){
+        $options = $model->all();
+      } else {
+        $options = $model->whereLikeMany( $filters );
+      }
     } else {
       $options = $model->where( 'id', 'like', '%' . $request->get( 's' ) . '%' );
 
@@ -125,6 +179,11 @@ class ApiController extends Controller
       if( $title_name !== $label_name ){
         $options->orWhere( $label_name, 'like', '%' . $request->get( 's' ) . '%' );
       }
+      $options = $options->whereLikeMany( $filters );
+//      echo '<pre style="padding-left: 200px;">';
+//      var_dump( $filters );
+//      echo '</pre>';
+
       $options = $options->get();
     }
     $_options = [];
@@ -133,7 +192,7 @@ class ApiController extends Controller
 
       $_options[] = [
         'value' => $option->id,
-        'label' => $option->$label_name,
+        'label' => $option->$label_name ? $option->$label_name : $option->id,
       ];
     }
     return response()->json( $_options, 200, [], JSON_UNESCAPED_UNICODE );

@@ -1,9 +1,9 @@
 .state-section {
     background: #fff;
     margin-bottom: 10px;
-    &__wrapper {
-        text-align: center;
-    }
+    padding: 0 13px;
+    display: flex;
+    justify-content: space-between;
     &__button {
         display: inline-block;
         margin: 10px 5px 10px 0;

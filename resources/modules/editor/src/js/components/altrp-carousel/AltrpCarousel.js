@@ -1,12 +1,12 @@
 import React, {Component} from "react";
 import Slider from "react-slick";
 import AltrpLightbox from "../altrp-lightbox/AltrpLightbox";
-import { renderAsset } from "../../helpers"
 
 import ArrowIcon from "../../../svgs/arrow.svg"
 import "slick-carousel/slick/slick.scss";
 import "slick-carousel/slick/slick-theme.scss";
 import './altrp-carousel.scss';
+import {renderAsset} from "../../../../../front-app/src/js/helpers";
 
 /**
  * Компонент Карусли

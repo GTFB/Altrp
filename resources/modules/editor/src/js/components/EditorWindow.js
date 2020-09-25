@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { getCurrentScreen } from "../store/store";
 import { connect } from "react-redux";
 
 class EditorWindow extends Component {

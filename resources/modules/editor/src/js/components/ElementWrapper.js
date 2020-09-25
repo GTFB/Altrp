@@ -101,6 +101,9 @@ class ElementWrapper extends Component {
     });
   }
 
+  /**
+   * событие дропа
+   */
   onDrop(e) {
     /**
      * @member {HTMLElement} target
@@ -164,6 +167,10 @@ class ElementWrapper extends Component {
     // getEditor().modules.templateDataStorage.addWidgetInSection(newWidgetName);
     return false;
   }
+
+  /**
+   * событие начало перетаскивания
+   */
   onDragStart(e) {
     store.dispatch(startDrag(this.props.element));
     e.dataTransfer.effectAllowed = "copy";
@@ -172,14 +179,27 @@ class ElementWrapper extends Component {
       return { ...state, isDrag: true };
     });
   }
+
+  /**
+   * событие остановки перетаскивания
+   */
   onDragEnd() {
     this.stopDrag();
   }
+
+  /**
+   * событие остановки перетаскивания
+   */
   stopDrag() {
     this.setState(state => {
       return { ...state, isDrag: false, dragOver: false, cursorPos: false };
     });
   }
+
+  /**
+   * Css классы
+   * @return {string}
+   */
   getClasses() {
     let classes = " ";
     classes += this.props.element.getPrefixClasses() + " ";
@@ -211,7 +231,31 @@ class ElementWrapper extends Component {
     return classes;
   }
 
+  /**
+   * Отлавливаем ошибки
+   * @param error
+   * @param errorInfo
+   */
+  componentDidCatch(error, errorInfo) {
+    this.setState(state=>({
+      ...state,
+      error: error,
+      errorInfo: errorInfo
+    }));
+  }
+
   render() {
+
+    if(this.state.errorInfo){
+      return  <div className="altrp-error">
+        <h2>Something went wrong.</h2>
+        <details style={{ whiteSpace: 'pre-wrap' }}>
+          {this.state.error && this.state.error.toString()}
+          <br />
+          {this.state.errorInfo.componentStack}
+        </details>
+      </div>
+    }
     let classes = `altrp-element ${this.props.element
       .getSelector()
       .replace(".", "")} altrp-element_${this.props.element.getType()}`;
@@ -301,6 +345,9 @@ class ElementWrapper extends Component {
         {React.createElement(this.props.component, {
           element: this.props.element,
           children: this.state.children,
+          currentModel: this.props.currentModel,
+          currentUser: this.props.currentUser,
+          currentDataStorage: this.props.currentDataStorage,
           wrapper: this,
         })}
         {emptyColumn}
@@ -334,6 +381,10 @@ function mapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
     dragState: state.elementDrag.dragState,
+    currentModel: state.currentModel,
+    currentUser: state.currentUser,
+    controllerValue: state.controllerValue,
+    currentDataStorage: state.currentDataStorage,
   };
 }
 

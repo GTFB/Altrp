@@ -2,11 +2,17 @@
 
 namespace App\Altrp;
 
+use App\Page;
+use App\PageDatasource;
 use Illuminate\Database\Eloquent\Model;
 
 class Source extends Model
 {
     protected $table = 'altrp_sources';
+
+  protected $casts = [
+    'web_url' => 'string',
+  ];
 
     protected $fillable = [
         'model_id',
@@ -14,8 +20,25 @@ class Source extends Model
         'url',
         'api_url',
         'type',
+        'request_type',
         'name',
+        'title',
+        'auth',
+        'sourceable_id',
+        'sourceable_type',
+        'description',
+        'updated_at'
     ];
+
+    public function sourceable()
+    {
+        return $this->morphTo();
+    }
+
+    public function model()
+    {
+        return $this->belongsTo(\App\Altrp\Model::class);
+    }
 
     public function source_roles()
     {
@@ -24,7 +47,12 @@ class Source extends Model
 
     public function source_permissions()
     {
-        return $this->hasOne(SourcePermission::class,'source_id');
+        return $this->hasMany(SourcePermission::class,'source_id');
+    }
+
+    public function page_data_sources()
+    {
+        return $this->hasMany(PageDatasource::class,'source_id');
     }
 
     public static function getBySearch($search)
@@ -62,4 +90,18 @@ class Source extends Model
             ->toBase()
             ->count();
     }
+
+  /**
+   * URL для фронтенда
+   * @return string
+   */
+  public function getWebUrlAttribute(){
+    switch ( $this->sourceable_type ){
+      case 'App\SQLEditor':
+      case 'App\Altrp\Query':
+        return '/ajax/models/queries' . data_get( $this, 'url' );
+      default:
+        return '/ajax/models' . data_get( $this, 'url' );
+    }
+  }
 }

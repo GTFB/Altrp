@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Altrp\AltrpDiagram;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class AltrpDiagramController extends Controller
 {
@@ -41,7 +42,10 @@ class AltrpDiagramController extends Controller
 
         $diagram = new AltrpDiagram(array_merge(
             $request->input(),
-            ['author' => auth()->user()->id]
+            [
+              'author' => auth()->user()->id,
+              'guid' => Str::uuid(),
+            ]
         ));
 
         if($diagram->save()){

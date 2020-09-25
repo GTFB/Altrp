@@ -44,6 +44,8 @@ function altrpZip() {
     '!./.gitignore',
     '!./.editorconfig',
     '!./.styleci.yml',
+    '!./.yarn.lock',
+    '!./.composer.lock',
     '!./_ide_helper.php',
     '!./.phpstorm.meta.php',
     '!./s.sql',

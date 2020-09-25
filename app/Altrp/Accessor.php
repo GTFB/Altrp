@@ -4,6 +4,8 @@
 namespace App\Altrp;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Altrp\Model as AltrpModel;
+use Illuminate\Support\Facades\Log;
 
 class Accessor extends Model
 {
@@ -11,9 +13,45 @@ class Accessor extends Model
 
     protected $fillable = [
         'name',
-        'formula',
+        'title',
+        'calculation',
+        'calculation_logic',
         'model_id',
+        'description',
         'user_id',
         'status'
     ];
+
+  /**
+   * Импортируем аксесоры
+   * @param array $imported_accessors
+   */
+  public static function import( $imported_accessors = [] )
+  {
+    foreach ( $imported_accessors as $imported_accessor ) {
+      $model = AltrpModel::where( 'name', data_get( $imported_accessor, 'model_name' ) )->first();
+      if( ! $model ){
+        continue;
+      }
+      foreach ( $model->altrp_accessors as $altrp_accessor ) {
+        if( $imported_accessor['name'] === $altrp_accessor->name ){
+          continue 2;
+        }
+      }
+      $new_accessor = new self( $imported_accessor );
+      $new_accessor->model_id = $model->id;
+      $new_accessor->user_id = auth()->user()->id;
+      try {
+        $new_accessor->save();
+      } catch (\Exception $e){
+        Log::error( $e->getMessage(), [$e->getFile()] );
+        continue;
+      }
+    }
+  }
+
+  public function model()
+  {
+    return $this->belongsTo( AltrpModel::class );
+  }
 }

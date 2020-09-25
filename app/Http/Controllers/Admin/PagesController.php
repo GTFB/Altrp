@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Constructor\Template;
 use App\Http\Controllers\Controller;
 use App\Media;
 use App\Page;
@@ -9,6 +10,7 @@ use App\PagesTemplate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PagesController extends Controller
 {
@@ -63,12 +65,15 @@ class PagesController extends Controller
     $page = new Page( $request->toArray() );
     $page->author = auth()->user()->id;
     $page->content = '';
-    $page->parseRoles( (array)$request->get( 'roles' ) );
+    $page->guid = (string)Str::uuid();
     if ( $page->save() ) {
       if ( $request->template_id ) {
+        $template = Template::find( $request->template_id );
         $pages_templates = new PagesTemplate( [
           'page_id' => $page->id,
+          'page_guid' => $page->guid,
           'template_id' => $request->template_id,
+          'template_guid' => $template->guid,
           'template_type' => 'content',
         ] );
         $pages_templates->save();
@@ -76,6 +81,7 @@ class PagesController extends Controller
       }
       $res['success'] = true;
       $res['page'] = $page->toArray();
+      $page->parseRoles( (array)$request->get( 'roles' ) );
       return response()->json( $res );
     }
     $res['message'] = 'Page not saved';
@@ -129,11 +135,14 @@ class PagesController extends Controller
     $page->path = $request->path;
     $page->title = $request->title;
     $page->model_id = $request->model_id;
+    $page->redirect = $request->redirect;
     $res['page'] = $page->toArray();
 
     $pages_template = PagesTemplate::where( 'page_id', $id )->where( 'template_type', 'content' )->first();
     if ( $request->template_id && $pages_template ) {
+      $template = Template::find( $request->template_id );
       $pages_template->template_id = $request->template_id;
+      $pages_template->template_guid = $template->guid;
       $pages_template->save();
       $res['pages_template'] = $pages_template->toArray();
     }
@@ -141,9 +150,12 @@ class PagesController extends Controller
       $pages_template->delete();
     }
     if ( $request->template_id && ! $pages_template ) {
+      $template = Template::find( $request->template_id );
       $pages_template = new PagesTemplate( [
         'page_id' => $id,
+        'page_guid' => $page->guid,
         'template_id' => $request->template_id,
+        'template_guid' => $template->guid,
         'template_type' => 'content',
       ] );
       $pages_template->save();

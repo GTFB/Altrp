@@ -1,22 +1,32 @@
-import React, { useState, useEffect } from "react";
-import MapDesigner from "../altrp-map/MapDesigner";
+import React, { Component, Suspense } from "react";
 
-function MapWidget({ element }) {
-  const [settings, setSettings] = useState({});
+const AltrpMap = React.lazy(() => import("../altrp-map/AltrpMap"));
 
-  useEffect(() => {
-    setSettings(element.getSettings());
-  }, [setSettings]);
+import "leaflet/dist/leaflet.css";
+import "leaflet-draw/dist/leaflet.draw.css";
+import "../../../sass/altrp-map.scss";
+class MapWidget extends Component {
+  constructor(props) {
+    super(props);
 
-  console.log("settings :>> ", settings);
-  return (
-    <MapDesigner
-      className="altrp-map"
-      data={[]}
-      zoom={settings.zoom}
-      center={[settings.lat, settings.lng]}
-    />
-  );
+    this.state = {
+      settings: props.element.getSettings(),
+    };
+
+    props.element.component = this;
+
+    if (window.elementDecorator) {
+      window.elementDecorator(this);
+    }
+  }
+
+  render() {
+    return (
+      <Suspense fallback={"Loading"}>
+        <AltrpMap settings={this.state.settings} id={this.props.element.id} />
+      </Suspense>
+    );
+  }
 }
 
 export default MapWidget;

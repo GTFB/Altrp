@@ -2,13 +2,18 @@
 
 namespace App\Providers;
 
+use App\Altrp\Accessor;
 use App\Altrp\Controller;
 use App\Altrp\Model;
 use App\Altrp\Query;
+use App\Altrp\Source;
+use App\Observers\AltrpAccessorObserver;
 use App\Observers\AltrpControllerObserver;
 use App\Observers\AltrpModelObserver;
 use App\Observers\AltrpQueryObserver;
+use App\Observers\AltrpSourceObserver;
 use App\Observers\AltrpSQLEditorObserver;
+use App\Services\AltrpImportExportService;
 use App\Services\AltrpSettingsService;
 use App\Services\AltrpUpdateService;
 use App\SQLEditor;
@@ -43,6 +48,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Services\AltrpSettingsService', function ($app) {
             return new AltrpSettingsService();
         });
+        $this->app->bind('App\Services\AltrpImportExportService', function ($app) {
+            return new AltrpImportExportService();
+        });
     }
 
     /**
@@ -62,6 +70,8 @@ class AppServiceProvider extends ServiceProvider
         Controller::observe(AltrpControllerObserver::class);
         Query::observe(AltrpQueryObserver::class);
         SQLEditor::observe(AltrpSQLEditorObserver::class);
+        Accessor::observe(AltrpAccessorObserver::class);
+        Source::observe(AltrpSourceObserver::class);
 
         Builder::macro('whereLike', function ($attributes, string $searchTerm) {
             $this->where(function (Builder $query) use ($attributes, $searchTerm) {

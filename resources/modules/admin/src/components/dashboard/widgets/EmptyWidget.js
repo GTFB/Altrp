@@ -1,9 +1,9 @@
 import React from "react";
 
-const EmptyWidget = () => {
+const EmptyWidget = ({ text }) => {
   return (
     <div className="spinner-container">
-      <div className="spinner-container__text">Нет данных</div>
+      <div className="spinner-container__text">{text ? text : "Нет данных"}</div>
     </div>
   );
 };

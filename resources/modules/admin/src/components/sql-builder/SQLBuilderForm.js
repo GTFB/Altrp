@@ -13,7 +13,7 @@ import { getMomentFormat } from "./helpers";
 class SQLBuilderForm extends Component {
   constructor(props) {
     super(props);
-    const { modelId } = this.props.match.params;
+    const { modelId, id } = this.props.match.params;
     this.state = {
       value: {
         title: "",
@@ -26,22 +26,26 @@ class SQLBuilderForm extends Component {
         order_by: [],
         access: { roles: [], permissions: [] },
         group_by: [],
-        offset: 10,
-        limit: 5
+        // offset: 'REQUEST:pageSize * (REQUEST:page - 1)',
+        // limit: 'REQUEST:pageSize'
       },
       relationsOptions: [],
       rolesOptions: [],
       permissionsOptions: [],
       tablesOptions: [],
       selfFields: [],
-      selfFieldsOptions: []
+      selfFieldsOptions: [],
+      isAggregateRaw: false
+      // isOffsetDisable: true,
+      // isLimitDisable: true
     };
     this.counter = 0;
     this.rolesOptions = new Resource({ route: '/admin/ajax/role_options' });
     this.permissionsOptions = new Resource({ route: '/admin/ajax/permissions_options' });
     this.tablesOptions = new Resource({ route: '/admin/ajax/tables_options' });
-    this.selfFieldsResource = new Resource({ route: `/admin/ajax/models/${modelId}/fields` });
+    this.selfFieldsResource = new Resource({ route: `/admin/ajax/models/${modelId}/fields_only` });
     this.relationsResource = new Resource({ route: `/admin/ajax/models/${modelId}/relations` });
+    this.sqlResource = new Resource({ route: `/admin/ajax/models/${modelId}/queries` });
     this.submitHandler = this.submitHandler.bind(this);
     this.multipleSelectChangeHandler = this.multipleSelectChangeHandler.bind(this);
     this.aggregateChangeHandler = this.aggregateChangeHandler.bind(this);
@@ -62,6 +66,11 @@ class SQLBuilderForm extends Component {
    *
    */
   async componentDidMount() {
+    const { id } = this.props.match.params
+    if (id) {
+      const value = await this.sqlResource.get(id);
+      this.setState(state => ({ ...state, value }));
+    }
     const rolesOptions = await this.rolesOptions.getAll();
     this.setState(state => ({ ...state, rolesOptions }));
     const permissionsOptions = await this.permissionsOptions.getAll();
@@ -113,7 +122,7 @@ class SQLBuilderForm extends Component {
    */
   changeColumns = (columns) => {
     let _columns = [];
-    columns.forEach(c => {
+    if (columns) columns.forEach(c => {
       _columns.push(c.value)
     });
     this.setState(state => ({ ...state, value: { ...state.value, columns: _columns } }));
@@ -123,10 +132,10 @@ class SQLBuilderForm extends Component {
    */
   changeRelations = (relations) => {
     let _relations = [];
-    relations.forEach(r => {
+    if (relations) relations.forEach(r => {
       _relations.push(r.value)
     });
-    this.setState(state => ({ ...state, relations: _relations }))
+    this.setState(state => ({ ...state, value: { ...state.value, relations: _relations } }));
   };
   /**
    * Смена ролей
@@ -208,6 +217,16 @@ class SQLBuilderForm extends Component {
     });
   }
 
+  aggregateToggle = () => {
+    this.setState(state => ({
+      isAggregateRaw: !state.isAggregateRaw,
+      value: {
+        ...state.value,
+        aggregates: state.isAggregateRaw ? [{ type: '', column: '', alias: '' }] : ''
+      }
+    }));
+  }
+
   // обработчики событий для массива joins
   joinChangeHandler({ target: { value, name } }, index) {
     this.setState(state => {
@@ -224,7 +243,7 @@ class SQLBuilderForm extends Component {
     this.setState(state => {
       const joins = [...state.value.joins];
       joins.push({
-        type: '', source_table: '', target_table: '', source_column: '', operator: '', target_column: ''
+        type: '', target_table: '', source_column: '', operator: '', target_column: ''
       });
       return {
         ...state,
@@ -366,7 +385,7 @@ class SQLBuilderForm extends Component {
 
     this.setState(state => {
       const order_by = [...state.value.order_by];
-      order_by.push({ type: '', column: ''/* , id: this.counter */ });
+      order_by.push({ type: 'asc', column: ''/* , id: this.counter */ });
       return {
         ...state,
         value: { ...state.value, order_by }
@@ -401,9 +420,31 @@ class SQLBuilderForm extends Component {
     })
   }
 
+  offsetDeleteHandler = () => {
+    this.setState(state => {
+      const newState = _.cloneDeep(state);
+      delete newState.value.offset;
+      return newState;
+    })
+  }
+
+  limitDeleteHandler = () => {
+    this.setState(state => {
+      const newState = _.cloneDeep(state);
+      delete newState.value.offset;
+      delete newState.value.limit;
+      return newState;
+    })
+  }
+
   submitHandler(e) {
+    const { modelId, id } = this.props.match.params;
     e.preventDefault();
-    console.log(this.state.value);
+
+    (id ?
+      this.sqlResource.put(id, this.state.value) :
+      this.sqlResource.post(this.state.value))
+      .then(() => this.props.history.push(`/admin/tables/models/edit/${modelId}`));
   }
 
   /**
@@ -428,9 +469,9 @@ class SQLBuilderForm extends Component {
   };
 
   render() {
-    const { title, name, relations, columns, aggregates, joins, conditions, order_by, group_by } = this.state.value;
+    const { title, name, relations, columns, aggregates, joins, conditions, order_by, group_by, offset, limit } = this.state.value;
     const { roles, permissions } = this.state.value.access;
-    const { selfFieldsOptions, permissionsOptions, relationsOptions, rolesOptions, tablesOptions } = this.state;
+    const { selfFieldsOptions, permissionsOptions, relationsOptions, rolesOptions, tablesOptions, isAggregateRaw /* isOffsetDisable, isLimitDisable  */ } = this.state;
     const { modelId } = this.props.match.params;
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="row">
@@ -497,25 +538,6 @@ class SQLBuilderForm extends Component {
         </div>
       </div>
 
-      <h2 className="admin-form__subheader centred">Aggregates</h2>
-      {aggregates.map((item, index) => <Fragment key={index}>
-        {index !== 0 && <hr />}
-        <div className="text-right">
-          <button className="btn btn_failure" type="button" onClick={() => this.aggregateDeleteHandler(index)}>
-            ✖
-          </button>
-        </div>
-        <AggregateComponent item={item}
-          columnsOptions={selfFieldsOptions}
-          changeHandler={e => this.aggregateChangeHandler(e, index)}
-        />
-      </Fragment>)}
-      <div className="centred">
-        <button className="btn btn_success" type="button" onClick={this.aggregateAddHandler}>
-          + New Aggregate
-        </button>
-      </div>
-
       <h2 className="admin-form__subheader centred">Joins</h2>
       {joins.map((item, index) => <Fragment key={index}>
         {index !== 0 && <hr />}
@@ -526,6 +548,7 @@ class SQLBuilderForm extends Component {
         </div>
         <JoinComponent item={item}
           tablesOptions={tablesOptions}
+          sourceColumnOptions={selfFieldsOptions}
           changeHandler={e => this.joinChangeHandler(e, index)}
         />
       </Fragment>)}
@@ -534,6 +557,41 @@ class SQLBuilderForm extends Component {
           + New Join
         </button>
       </div>
+
+      <h2 className="admin-form__subheader centred">Aggregates</h2>
+
+      {(!!aggregates.length || isAggregateRaw) &&
+        <div className="text-center">
+          <button className={`btn ${isAggregateRaw ? 'btn_success' : ''}`} type="button" onClick={this.aggregateToggle}>
+            Aggregate Raw
+          </button>
+        </div>}
+
+      {isAggregateRaw ?
+        <div className="form-group">
+          <input type="text" id="aggregates" required name="aggregates"
+            value={aggregates}
+            onChange={this.valueChangeHandler}
+            className="form-control" />
+        </div> :
+        aggregates.map((item, index) => <Fragment key={index}>
+          {index !== 0 && <hr />}
+          <div className="text-right">
+            <button className="btn btn_failure" type="button" onClick={() => this.aggregateDeleteHandler(index)}>
+              ✖
+            </button>
+          </div>
+          <AggregateComponent item={item}
+            columnsOptions={selfFieldsOptions}
+            changeHandler={e => this.aggregateChangeHandler(e, index)}
+          />
+        </Fragment>)}
+
+      {!isAggregateRaw && <div className="centred">
+        <button className="btn btn_success" type="button" onClick={this.aggregateAddHandler}>
+          + New Aggregate
+        </button>
+      </div>}
 
       <h2 className="admin-form__subheader centred">Conditions</h2>
 
@@ -592,6 +650,69 @@ class SQLBuilderForm extends Component {
           options={selfFieldsOptions}
           isMulti={true} />
       </div>
+
+      <h2 className="admin-form__subheader centred">Pagination Settings</h2>
+
+      <div className="centred">
+        <button className="btn btn_success" type="button"
+          onClick={() => this.setState({ value: { ...this.state.value, limit: 'REQUEST:pageSize' } })}
+        >
+          Add Limit
+        </button>
+      </div>
+
+      {limit && <div className="centred mt-3">
+        <button className="btn btn_success" type="button"
+          onClick={() => this.setState({ value: { ...this.state.value, offset: 'REQUEST:pageSize * (REQUEST:page - 1)' } })}
+        >
+          Add Offset
+        </button>
+      </div>}
+
+      <div className="row">
+        {offset && <div className="form-group  col-6">
+          <div className="text-right">
+            <button className="btn btn_failure" type="button" onClick={this.offsetDeleteHandler}>
+              ✖
+            </button>
+          </div>
+          <label htmlFor="offset">Offset</label>
+          {/* <label className="label_checkbox float-right">
+            <input type="checkbox"
+              className="form-check-input"
+              checked={isOffsetDisable}
+              onChange={() => this.setState({ isOffsetDisable: !isOffsetDisable })}
+            /> Blocked
+          </label> */}
+          <input type="text" id="offset" required name="offset"
+            value={offset}
+            // disabled={isOffsetDisable}
+            onChange={this.valueChangeHandler}
+            className="form-control" />
+        </div>}
+
+        {limit && <div className="form-group col-6 ">
+          <div className="text-right">
+            <button className="btn btn_failure" type="button" onClick={this.limitDeleteHandler}>
+              ✖
+            </button>
+          </div>
+          <label htmlFor="limit">Limit</label>
+          {/* <label className="label_checkbox float-right">
+            <input type="checkbox"
+              className="form-check-input"
+              checked={isLimitDisable}
+              onChange={() => this.setState({ isLimitDisable: !isLimitDisable })}
+            /> Blocked
+          </label> */}
+          <input type="text" id="limit" required name="limit"
+            value={limit}
+            // disabled={isLimitDisable}
+            onChange={this.valueChangeHandler}
+            className="form-control" />
+        </div>}
+      </div>
+
       <div className="btn__wrapper btn_add centred">
         <button className="btn btn_success" type="submit">Save</button>
         <Link className="btn" to="/admin/tables/models">Cancel</Link>

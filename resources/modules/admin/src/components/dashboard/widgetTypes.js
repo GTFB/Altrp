@@ -13,3 +13,5 @@ export const widgetTypes = [
   { name: "Графики", value: AREA },
   { name: "Таблица", value: TABLE },
 ];
+
+export const getTypeName = (value) => widgetTypes.find((w) => w.value === value).name;

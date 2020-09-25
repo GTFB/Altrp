@@ -55,7 +55,7 @@ class UserForm extends Component {
 
         this.setState(state => {
           return { ...state, usermeta: usermeta_data }
-        }, () => { console.log(this.state) });
+        });
 
       });
     }
@@ -66,11 +66,11 @@ class UserForm extends Component {
     let res, usermeta_resource, usermeta_res;
 
     if (this.state.id) {
-      res = await this.resource.put(this.state.id, this.state.value);
+      res = await this.resource.put(this.state.id, this.state.user);
     } else {
       res = await this.resource.post(this.state.user);
     }
-
+    console.log(res);
 
 
 
@@ -115,23 +115,31 @@ class UserForm extends Component {
     this.setState({
       usermeta: {
         ...this.state.usermeta,
-        roles: roles ? roles.map(role => role.value) : null
+        roles: roles ? roles.map(role => role.value) : []
+      },
+      user:{
+        ...this.state.user,
+        _roles: roles ? roles.map(role => role.value) : []
       }
     })
-  }
+  };
 
   changePermissionsHandler = permissions => {
     this.setState({
       usermeta: {
         ...this.state.usermeta,
-        permissions: permissions ? permissions.map(permission => permission.value) : null
+        permissions: permissions ? permissions.map(permission => permission.value) : []
+      },
+      user:{
+        ...this.state.user,
+        _permissions: permissions ? permissions.map(permission => permission.value) : []
       }
     })
-  }
+  };
 
   render() {
     const { rolesOptions, permissionsOptions } = this.state;
-    const { roles, permissions } = this.state.usermeta
+    const { _roles: roles = [], _permissions: permissions = [] } = this.state.user;
     if (this.state.redirectAfterSave) {
       return <Redirect to={this.props.redirect_url} />
     }
@@ -143,6 +151,7 @@ class UserForm extends Component {
         <label htmlFor="page-name">Name</label>
         <input type="text" id="name" name="name" required={1}
           value={this.state.user.name || ''}
+               disabled={this.props.id}
           onChange={(e) => { this.changeValue(e) }}
           className="form-control" />
       </div>
@@ -151,6 +160,7 @@ class UserForm extends Component {
         <input type="email" id="email" name="email" required={1}
           value={this.state.user.email || ''}
           onChange={(e) => { this.changeValue(e) }}
+               disabled={this.props.id}
           className="form-control" />
       </div>
 
@@ -174,7 +184,7 @@ class UserForm extends Component {
 
       <div className="form-group">
         <label htmlFor="page-description">First Name</label>
-        <input type="text" id="first_name" name="first_name" required={1}
+        <input type="text" id="first_name" name="first_name"
           value={this.state.usermeta.first_name || ''}
           onChange={(e) => { this.changeValue(e, "usermeta") }}
           className="form-control" />
@@ -182,7 +192,7 @@ class UserForm extends Component {
 
       <div className="form-group">
         <label htmlFor="page-description">Second Name</label>
-        <input type="text" id="second_name" name="second_name" required={1}
+        <input type="text" id="second_name" name="second_name"
           value={this.state.usermeta.second_name || ''}
           onChange={(e) => { this.changeValue(e, "usermeta") }}
           className="form-control" />
@@ -190,7 +200,7 @@ class UserForm extends Component {
 
       <div className="form-group">
         <label htmlFor="page-description">Patronymic</label>
-        <input type="text" id="patronymic" name="patronymic" required={1}
+        <input type="text" id="patronymic" name="patronymic"
           value={this.state.usermeta.patronymic || ''}
           onChange={(e) => { this.changeValue(e, "usermeta") }}
           className="form-control" />

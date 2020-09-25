@@ -1,8 +1,9 @@
-import React, {Component, Suspense} from "react";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import 'react-tabs/style/react-tabs.scss';
 import Updates from "./Updates";
 import StylesSettings from "./StylesSettings";
+import Import from "./settings/Import";
+import Export from "./settings/Export";
 const AdvancedSettings = React.lazy(()=>import('./AdvancedSettings'));
 
 
@@ -46,6 +47,12 @@ export default class AdminSettings extends Component {
             </Tab>
             <Tab >
               UPDATES
+            </Tab>
+            <Tab >
+              EXPORT
+            </Tab>
+            <Tab >
+              IMPORT
             </Tab>
           </TabList>
           <TabPanel>
@@ -97,12 +104,18 @@ export default class AdminSettings extends Component {
           <TabPanel>
           </TabPanel>
           <TabPanel>
-            <Suspense fallback={'Loading'}>
+            <React.Suspense fallback={'Loading'}>
               <AdvancedSettings/>
-            </Suspense>
+            </React.Suspense>
           </TabPanel>
           <TabPanel>
             <Updates attr={'attr'}/>
+          </TabPanel>
+          <TabPanel>
+            <Export />
+          </TabPanel>
+          <TabPanel>
+            <Import />
           </TabPanel>
         </Tabs>
       </div>

@@ -370,7 +370,7 @@ class Nav extends BaseElement{
           spacing: 0,
           size: 36,
           weight: "normal",
-          family: '"roboto"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {
@@ -457,7 +457,7 @@ class Nav extends BaseElement{
           spacing: 0,
           size: 36,
           weight: "normal",
-          family: '"roboto"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {
@@ -503,7 +503,7 @@ class Nav extends BaseElement{
           spacing: 0,
           size: 36,
           weight: "normal",
-          family: '"roboto"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {
@@ -549,7 +549,7 @@ class Nav extends BaseElement{
           spacing: 0,
           size: 36,
           weight: "normal",
-          family: '"roboto"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {

@@ -10,11 +10,12 @@ trait DynamicVariables
      * Заменить пользовательские динамические переменные
      *
      * @param $str
+     * @param bool $outer
      * @return string|string[]
      */
     protected function replaceDynamicVars($str, $outer = false)
     {
-        $pattern = "'?(CURRENT_[A-Z_]+|REQUEST)(:[a-z0-9_.]+)?'?";
+        $pattern = "'?(CURRENT_[A-Z_]+|REQUEST)(:[a-zA-Z0-9_.]+)?'?";
         $str = preg_replace_callback(
             "#$pattern#",
             function($matches) use ($outer) {
@@ -54,7 +55,7 @@ trait DynamicVariables
                     return $this->getValue('Carbon::now()->format(\'Y-m-d H:i:s\')', $outer);
                 }
                 if ($param && $param[0] == 'CURRENT_DAY_OF_WEEK') {
-                    return $this->getValue('\Carbon::now()->format(\'l\')', $outer);
+                    return $this->getValue('Carbon::now()->format(\'l\')', $outer);
                 }
                 return "''";
             },

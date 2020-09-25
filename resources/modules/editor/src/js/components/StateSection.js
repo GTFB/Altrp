@@ -10,17 +10,17 @@ class StateSection extends Component {
     super(props);
     this.state = {
       buttons: [
-        { title: "Normal", value: "" },
-        { title: "Hover", value: ":hover" },
-        { title: "Active", value: ".active" },
-        { title: "Disabled", value: ".disabled" },
-        { title: "Focus", value: ":focus" },
+        { title: "N", value: "" },
+        { title: "H", value: ":hover" },
+        { title: "A", value: ".active" },
+        { title: "F", value: ":focus" },
+        { title: "D", value: ".state-disabled" },
       ]
     }
   }
 
   componentWillUnmount() {
-    this.props.dispatch(setCurrentState("Normal", ""));
+    this.props.dispatch(setCurrentState("N", ""));
   }
 
   setCurrentState(button) {
@@ -30,17 +30,15 @@ class StateSection extends Component {
   render() {
     return (
       <div className="state-section">
-        <div className="state-section__wrapper">
-          {
-            this.state.buttons.map((button, index) => {
-              return <button
-                key={index}
-                className={"state-section__button " + (this.props.currentState.title === button.title ? "state-section__button_active" : "")}
-                onClick={() => this.setCurrentState(button)}
-              >{button.title}</button>
-            })
-          }
-        </div>
+        {
+          this.state.buttons.map((button, index) => {
+            return <button
+              key={index}
+              className={"state-section__button " + (this.props.currentState.title === button.title ? "state-section__button_active" : "")}
+              onClick={() => this.setCurrentState(button)}
+            >{button.title}</button>
+          })
+        }
       </div>
     )
   }

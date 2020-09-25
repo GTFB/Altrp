@@ -165,7 +165,6 @@ class ModelGenerator extends AppGenerator
      */
     public function updateModelFile()
     {
-
         return $this->createModelFile();
     }
 
@@ -180,6 +179,13 @@ class ModelGenerator extends AppGenerator
         $relationships = $this->screenBacklashes($this->relationshipsToString());
         $fullModelName = $this->modelFilename;
         $fillableColumns = $this->getFillableColumns();
+        $extendsModelNamespace = $this->getExtendModelNamespace();
+        $modelNamespaceParts = explode('\\',$extendsModelNamespace);
+        $modelName = array_pop($modelNamespaceParts);
+        $extendsModelName = ($modelName == 'Model')
+            ? $modelName
+            : $modelName . 'Model';
+        $extendsModelNamespace .= ' as ' . $extendsModelName;
         $alwaysWithRelations= $this->getAlwaysWithRelations();
         $softDeletes = $this->isSoftDeletes();
         $createdAt = $this->getCreatedAt();
@@ -193,7 +199,10 @@ class ModelGenerator extends AppGenerator
           \Artisan::call('crud:model', [
                 'name' => "{$fullModelName}",
                 '--table' => "{$this->model->table()->first()->name}",
+                '--model' => $this->model,
                 '--fillable' => "[{$fillableColumns}]",
+                '--model-namespace' => "use {$extendsModelNamespace};",
+                '--extends-model' => "{$extendsModelName}",
                 '--always-with' => "[{$alwaysWithRelations}]",
                 '--pk' => "$primaryKey",
                 '--soft-deletes' => "{$softDeletes}",
@@ -202,13 +211,14 @@ class ModelGenerator extends AppGenerator
                 '--updated-at' => $updatedAt,
                 '--relationships' => "{$relationships}",
                 '--user-columns' => "[{$userColumns}]",
-                '--accessors' => $this->getCustomCodeBlock($customCode,'accessors'),
+                '--accessors' => $this->getAccessors($this->getCustomCodeBlock($customCode,'accessors')),
                 '--custom-namespaces' => $this->getCustomCodeBlock($customCode,'custom_namespaces'),
                 '--custom-traits' => $this->getCustomCodeBlock($customCode,'custom_traits'),
                 '--custom-properties' => $this->getCustomCodeBlock($customCode,'custom_properties'),
                 '--custom-methods' => $this->getCustomCodeBlock($customCode,'custom_methods'),
             ]);
         } catch(\Exception $e) {
+            echo $e;
             if(file_exists($this->modelFile . '.bak'))
                 rename($this->modelFile . '.bak', $this->modelFile);
             return false;
@@ -408,8 +418,8 @@ class ModelGenerator extends AppGenerator
                 'name' => $rel->name,
                 'type' => $rel->type,
                 'model_class' => $this->screenBacklashes($rel->model_class),
-                'foreign_key' => $rel->foreign_key ?? '',
-                'local_key' => $rel->local_key ?? ''
+                'foreign_key' => $rel->foreign_key ?? 'id',
+                'local_key' => $rel->local_key ?? 'id'
             ];
         }
 
@@ -429,7 +439,7 @@ class ModelGenerator extends AppGenerator
 
         try {
             foreach ($permissions as $permission) {
-                if (! $oldPermissions->contains(
+                if ($oldPermissions->isEmpty() || !$oldPermissions->contains(
                     'name',
                     explode('-',$permission['name'])[0] . '-' . strtolower(Str::snake($this->model->getOriginal('name')))
                 )) {
@@ -504,7 +514,8 @@ class ModelGenerator extends AppGenerator
         }
         $columns = $this->getColumns($table);
         if (!$columns || $columns->isEmpty()) return null;
-        $relations = $this->getEditableColumnsFromRelations();
+//        $relations = $this->getEditableColumnsFromRelations();
+        $relations = [];
         $columnsList = $this->getColumnsList($columns);
 //        $relationsList = $this->getColumnsList($relations, 'foreign_key');
 //        $allColumns = array_merge($columnsList, $relationsList);
@@ -558,6 +569,15 @@ class ModelGenerator extends AppGenerator
     {
         $relations = Relationship::where([['model_id', $this->model->id], ['add_belong_to', 1]])->get();
         return $relations;
+    }
+
+    protected function getExtendModelNamespace()
+    {
+        $modelNamespace = 'Illuminate\Database\Eloquent\Model';
+        if ($this->model->parent_model_id) {
+            $modelNamespace = $this->model->parent->namespace;
+        }
+        return $modelNamespace;
     }
 
   /**
@@ -642,6 +662,29 @@ class ModelGenerator extends AppGenerator
     {
         if (! isset($this->model->user_cols) || empty($this->model->user_cols)) return null;
         return '\'' . implode("','",explode(",", $this->model->user_cols)) . '\'';
+    }
+
+    protected function getAccessors($content)
+    {
+//        $content = explode(PHP_EOL, $content);
+//        $accessors = $this->model->altrp_accessors;
+//        if (! $accessors) return '';
+//        $newContent = '';
+//        for ($i = 0; $i < count($content); $i++) {
+//            foreach ($accessors as $accessor) {
+//                if (Str::contains($content[$i],  '* ' . ucfirst($accessor->name) . ' accessor')) {
+//                    for ($line = $i; true; $line++) {
+//                        if (preg_match('/^ {4}}$|^ {2}}$|^\t}$/', $content[$line])) {
+//                            unset($content[$line]);
+//                            break;
+//                        }
+//                        unset($content[$line]);
+//                    }
+//                }
+//            }
+//        }
+//        $content = implode(PHP_EOL, $content);
+        return $content;
     }
 
   /**

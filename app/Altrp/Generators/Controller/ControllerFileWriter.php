@@ -17,6 +17,16 @@ class ControllerFileWriter
     protected $controller;
 
     /**
+     * @var string
+     */
+    protected $controllerFile;
+
+    /**
+     * @var array
+     */
+    protected $controllerContent;
+
+    /**
      * @var RepositoryFile
      */
     protected $repository;
@@ -39,6 +49,8 @@ class ControllerFileWriter
         $this->controller = $controller;
         $this->repository = $repositoryFile;
         $this->repoInterface = $repositoryInterfaceFile;
+        $this->controllerFile = $this->controller->getFile();
+        $this->controllerContent = file($this->controllerFile, 2);
     }
 
     /**
@@ -67,7 +79,7 @@ class ControllerFileWriter
             );
 
         $controllerContent = file($this->controller->getFile(), 2);
-        $methods = array_merge($this->getFileMethods($controllerContent), [''],$methodContent);
+//        $methods = array_merge($this->getFileMethods($controllerContent), [''],$methodContent);
         if ($this->methodExists($controllerContent, $methodName)) {
             throw new ControllerFileException('Method already exists!', 500);
         }
@@ -99,8 +111,11 @@ class ControllerFileWriter
         }
         $controllerContent = file($controllerFile, 2);
         if ($line = $this->methodExists($controllerContent, $methodName)) {
+            if (!Str::contains($controllerContent[$line-1],'CUSTOM_METHODS_BEGIN')) {
+                $line = $line - 1;
+            }
             for ($i = $line; true; $i++) {
-                if (Str::contains($controllerContent[$i], '}')) {
+                if (preg_match('/^ {4}}( *)$|^ {2}}( *)$|^\t}( *)$/', $controllerContent[$i])) {
                     unset($controllerContent[$i]);
                     break;
                 }
@@ -128,23 +143,60 @@ class ControllerFileWriter
         return true;
     }
 
+    /**
+     * Обновить метод удаленного источника данных
+     *
+     * @param $oldMethodName
+     * @param $newMethodName
+     * @param $type
+     * @param $url
+     * @return bool
+     * @throws ControllerFileException
+     */
+    public function updateSourceMethod($oldMethodName, $newMethodName, $type, $url)
+    {
+        $this->removeMethod($oldMethodName);
+        $this->writeDataSourceMethod($newMethodName, $type, $url);
+        return true;
+    }
+
+    /**
+     * Записать метод удаленного источника данных
+     *
+     * @param $name
+     * @param $type
+     * @param $url
+     * @param array $data
+     * @return bool
+     */
+    public function writeDataSourceMethod($name, $type, $url, $data = [])
+    {
+        $methodContent = $this->getDataSourceMethodContent($type);
+        $this->replaceMethodName($methodContent, $name)
+            ->replaceUrl($methodContent, $url);
+        $controllerContent = file($this->controller->getFile(), 2);
+        $result = $this->writeMethods($controllerContent, $methodContent);
+        return $result;
+    }
+
 
     /**
      * Добавить Sql метод
      *
      * @param $name
      * @param $sql
+     * @param $is_object
      * @return bool
      */
-    public function writeSqlMethod($name, $sql)
+    public function writeSqlMethod($name, $sql, $is_object)
     {
         $methodContent = file($this->getSqlControllerMethodStub(), 2);
-
-
         $this->replaceSqlEditorName($methodContent, $name)
             ->replaceModelName($methodContent, $this->controller->getModelName())
             ->replaceSqlEditorSql($methodContent, $sql)
-            ->replaceTableName( $methodContent, $this->controller->getTableName() );
+            ->replaceTableName( $methodContent, $this->controller->getTableName() )
+            ->replaceSqlEditorIsObject($methodContent, $is_object);
+
         $controllerContent = file($this->controller->getFile(), 2);
         $result = $this->writeMethods($controllerContent, $methodContent);
         return $result;
@@ -156,19 +208,26 @@ class ControllerFileWriter
      * @param $oldName
      * @param $name
      * @param $sql
+     * @param $is_object
      * @return bool
+     * @throws ControllerFileException
      */
-    public function updateSqlMethod($oldName, $name, $sql)
+    public function updateSqlMethod($oldName, $name, $sql, $is_object)
     {
-        $controllerContent = file($this->controller->getFile(), 2);
         $this->removeMethod( $oldName);
-        $this->writeSqlMethod($name, $sql);
+        $this->writeSqlMethod($name, $sql, $is_object);
         return true;
     }
 
+    /**
+     * Удалить sql метод
+     *
+     * @param $name
+     * @return bool|int
+     * @throws ControllerFileException
+     */
     public function deleteSqlMethod($name)
     {
-        $controllerContent = file($this->controller->getFile(), 2);
         return $this->removeMethod($name);
     }
 
@@ -182,6 +241,17 @@ class ControllerFileWriter
     {
         $controllerContent = file($this->controller->getFile(), 2);
         return $this->methodExists($controllerContent, $methodName);
+    }
+
+    /**
+     * Проверить, существует ли метод удаленного источника данных
+     *
+     * @param $methodName
+     * @return bool
+     */
+    public function methodSourceExists($methodName)
+    {
+        return $this->methodExists($this->controllerContent, $methodName);
     }
 
     /**
@@ -374,24 +444,95 @@ class ControllerFileWriter
         return $this;
     }
 
+    /**
+     * Заменить имя метода для sql editor
+     *
+     * @param $methodContent
+     * @param $sqlEditorName
+     * @return $this
+     */
     protected function replaceSqlEditorName(&$methodContent, $sqlEditorName)
     {
         $methodContent = str_replace('{{sqlEditorName}}', $sqlEditorName, $methodContent);
         return $this;
     }
 
+    /**
+     * Заменить sql в sql editor
+     *
+     * @param $methodContent
+     * @param $sqlEditorSql
+     * @return $this
+     */
     protected function replaceSqlEditorSql(&$methodContent, $sqlEditorSql)
     {
         $methodContent = str_replace('{{sqlEditorSql}}', $sqlEditorSql, $methodContent);
         return $this;
     }
 
+    /**
+     * Заменить данные, которые пришли запросом
+     *
+     * @param $methodContent
+     * @param $data
+     * @return $this
+     */
+    protected function replaceData(&$methodContent, $data)
+    {
+        $methodContent = str_replace('{{data}}', $data, $methodContent);
+        return $this;
+    }
+
+    /**
+     * Заменить ссылку
+     *
+     * @param $methodContent
+     * @param $url
+     * @return $this
+     */
+    protected function replaceUrl(&$methodContent, $url)
+    {
+        $methodContent = str_replace('{{url}}', $url, $methodContent);
+        return $this;
+    }
+
+    /**
+     * Заменить представление sql editor как объекта
+     *
+     * @param $methodContent
+     * @param $sqlEditorIsObject
+     * @return $this
+     */
+    protected function replaceSqlEditorIsObject(&$methodContent, $sqlEditorIsObject)
+    {
+        $code = "";
+        if($sqlEditorIsObject) {
+            $code =  implode(PHP_EOL,file($this->getIsObjectConditionStub(), 2));
+        }
+        $methodContent = str_replace('{{sqlEditorIsObject}}', $code, $methodContent);
+        return $this;
+    }
+
+    /**
+     * Заменить на имя таблицы
+     *
+     * @param $methodContent
+     * @param $tableName
+     * @return $this
+     */
     protected function replaceTableName(&$methodContent, $tableName)
     {
         $methodContent = str_replace('{{tableName}}', $tableName, $methodContent);
         return $this;
     }
 
+    /**
+     * Заменить на имя модели
+     *
+     * @param $methodContent
+     * @param $modelName
+     * @return $this
+     */
     protected function replaceModelName(&$methodContent, $modelName)
     {
         $methodContent = str_replace('{{modelName}}', $modelName, $methodContent);
@@ -417,4 +558,97 @@ class ControllerFileWriter
     {
         return app_path('Altrp/Commands/stubs/controllers/create_sql_controller_method.stub');
     }
+
+    /**
+     * Получить стаб файл для создания проверки и возвраении объекта
+     *
+     * @return string
+     */
+    protected function getIsObjectConditionStub()
+    {
+        return app_path('Altrp/Commands/stubs/controllers/create_is_object_condition.stub');
+    }
+
+    /**
+     * Получить шаблон содержащий тело метода источника данных для получения
+     *
+     * @return string
+     */
+    protected function getSourceGetMethodStub()
+    {
+        return app_path('Altrp/Commands/stubs/sources/get_data_source_method.stub');
+    }
+
+    /**
+     * Получить шаблон содержащий тело метода источника данных для создания
+     *
+     * @return string
+     */
+    protected function getSourcePostMethodStub()
+    {
+        return app_path('Altrp/Commands/stubs/sources/post_data_source_method.stub');
+    }
+
+    /**
+     * Получить шаблон содержащий тело метода источника данных для обновления
+     *
+     * @return string
+     */
+    protected function getSourcePutMethodStub()
+    {
+        return app_path('Altrp/Commands/stubs/sources/put_data_source_method.stub');
+    }
+
+    /**
+     * Получить шаблон содержащий тело метода источника данных для удаления
+     *
+     * @return string
+     */
+    protected function getSourceDeleteMethodStub()
+    {
+        return app_path('Altrp/Commands/stubs/sources/delete_data_source_method.stub');
+    }
+
+    /**
+     * Получить содержимое метода источника данных в зависимости от типа запроса
+     *
+     * @param $type
+     * @return array|false
+     */
+    protected function getDataSourceMethodContent($type)
+    {
+        $file = null;
+        switch ($type) {
+            case 'get':
+                $file = $this->getSourceGetMethodStub();
+                break;
+            case 'post':
+                $file = $this->getSourcePostMethodStub();
+                break;
+            case 'put':
+                $file = $this->getSourcePutMethodStub();
+                break;
+            case 'delete':
+                $file = $this->getSourceDeleteMethodStub();
+                break;
+            default:
+                $file = $this->getSourceGetMethodStub();
+        }
+        return file($file,2);
+    }
+
+    protected function getRequestParamsAssoc($url)
+    {
+        $parts = explode('?', $url);
+        $uri = $parts[1] ?? '';
+        if (!$uri) return [];
+        $requestParamsAssoc = [];
+        $params = explode('&', $uri);
+        foreach ($params as $param) {
+            $param = explode('=', $param);
+            $requestParamsAssoc[$param[0]] = $param[1];
+        }
+        return $requestParamsAssoc;
+    }
+
 }

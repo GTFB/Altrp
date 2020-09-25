@@ -2,9 +2,17 @@ import React, {Component} from "react";
 import AreaComponent from "./AreaComponent";
 import {setTitle} from "../helpers";
 import { Scrollbars } from "react-custom-scrollbars";
-import {Redirect} from "react-router-dom";
+import {Redirect, withRouter} from "react-router-dom";
 import pageLoader from './../classes/PageLoader'
 import Area from "../classes/Area";
+import Resource from "../../../../editor/src/js/classes/Resource";
+import appStore from "../store/store"
+import {changeCurrentModel} from "../store/current-model/actions";
+import {queryCache} from  "react-query";
+import {changeCurrentDataStorage, clearCurrentDataStorage} from "../store/current-data-storage/actions";
+import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
+import {clearFormStorage} from "../store/forms-data-storage/actions";
+
 
 class RouteContent extends Component {
   constructor(props){
@@ -21,6 +29,7 @@ class RouteContent extends Component {
    * @return {Promise<void>}
    */
   async componentDidMount(){
+    window.currentRouterMatch = new AltrpModel(this.props.match);
     setTitle(this.props.title);
     if(this.props.lazy && this.props.allowed){
       let page = await pageLoader.loadPage(this.props.id);
@@ -29,6 +38,85 @@ class RouteContent extends Component {
           ...state,
         areas,
       }));
+    }
+    /**
+     * Меняем текущую модель
+     */
+    this.changeRouteCurrentModel();
+    /**
+     * Обнуляем текущее хранилище dataStorage
+     */
+    appStore.dispatch(clearCurrentDataStorage());
+    /**
+     * затем отправляем запросы на обновление
+     */
+    this.updateDataStorage();
+  }
+
+  /**
+   *  обновление currentDataStorage
+   */
+  async updateDataStorage () {
+    /**
+     * @member {[]} data_sources
+     */
+    let { data_sources } = this.props;
+    data_sources = _.sortBy(data_sources, data_source => data_source.priority);
+    /**
+     * @member {Datasource} data_source
+     */
+    for(let datasource of data_sources){
+      if(datasource.getWebUrl()){
+        let params = datasource.getParams(this.props.match.params);
+        let res = {};
+        if(datasource.getType() === 'show') {
+          let id = _.get(params, 'id', _.get(this.props, 'match.params.id'));
+          if(id){
+            res = await (new Resource({route: datasource.getWebUrl()})).get(id);
+          }
+        } else if(params) {
+          res = await (new Resource({route: datasource.getWebUrl()})).getQueried(params);
+        } else {
+          res = await (new Resource({route: datasource.getWebUrl()})).getAll();
+        }
+        res = _.get(res, 'data', res);
+        appStore.dispatch(changeCurrentDataStorage(datasource.getAlias(), res));
+      }
+    }
+  }
+  /**
+   * Меняем текущую модель
+   */
+  async changeRouteCurrentModel(){
+    if(_.get(this.props, 'model.modelName') && _.get(this.props, 'match.params.id')){
+      appStore.dispatch(changeCurrentModel({altrpModelUpdated: false}));
+      let model = await (new Resource({route:`/ajax/models/${this.props.model.modelName}`})).get(this.props.match.params.id);
+      model.altrpModelUpdated = true;
+      appStore.dispatch(changeCurrentModel(model));
+    } else {
+      appStore.dispatch(changeCurrentModel({altrpModelUpdated: true}));
+    }
+  }
+
+  /**
+   * Если меняется роут
+   * @params {{}} prevProps
+   * @return {Promise<void>}
+   */
+  async componentDidUpdate(prevProps){
+    queryCache.clear();
+    if((_.get(this.props, 'model.modelName') !== _.get(prevProps, 'model.modelName'))
+        || (_.get(this.props, 'match.params.id') !== _.get(prevProps, 'match.params.id'))
+    ){
+      this.changeRouteCurrentModel();
+    }
+
+    if(! _.isEqual(_.get(this.props, 'match.params'),_.get(prevProps, 'match.params'))){
+      this.updateDataStorage();
+    }
+    if(! _.isEqual(_.get(this.props, 'match'),_.get(prevProps, 'match'))) {
+      window.currentRouterMatch = new AltrpModel(this.props.match);
+      appStore.dispatch(clearFormStorage())
     }
   }
   render(){
@@ -57,4 +145,4 @@ class RouteContent extends Component {
   }
 }
 
-export default RouteContent;
+export default withRouter(RouteContent);

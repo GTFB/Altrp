@@ -4,6 +4,7 @@ namespace App\Altrp\Generators;
 
 use App\Altrp\Controller;
 use App\Altrp\Source;
+use App\Role;
 use Illuminate\Support\Str;
 
 class RouteGenerator
@@ -15,8 +16,26 @@ class RouteGenerator
      */
     private $path;
 
-    /** @var string */
+    /**
+     * Путь к файлу маршрутов API
+     *
+     * @var string
+     */
+    private $apiPath;
+
+    /**
+     * Содержимое файла маршрутов
+     *
+     * @var string
+     */
     private $routeContents;
+
+    /**
+     * Содержимое файла маршрутов API
+     *
+     * @var string
+     */
+    private $apiRouteContents;
 
     /**
      * Содежимое stub файла
@@ -25,7 +44,11 @@ class RouteGenerator
      */
     private $routeStubContents;
 
-    /** @var string */
+    /**
+     * Содержимое файла шаблона для генерации маршрутов
+     *
+     * @var string|array
+     */
     private $routeStub;
 
     /**
@@ -35,21 +58,22 @@ class RouteGenerator
      */
     private $dynamicVariables = [];
 
+    /**
+     * @var Controller
+     */
     private $controllerModel;
 
 
     /**
      * RouteGenerator constructor.
      * @param Controller $controller
+     * @param string $routeFilename
      */
-    public function __construct(Controller $controller)
+    public function __construct(Controller $controller, $routeFilename = 'AltrpRoutes')
     {
         $this->controllerModel = $controller;
-
-        $this->path = base_path('routes/AltrpRoutes.php');
-
+        $this->path = base_path("routes/{$routeFilename}.php");
         $this->routeContents = file($this->path, 2);
-
         $this->routeStubContents = $this->getStubContents();
     }
 
@@ -63,8 +87,13 @@ class RouteGenerator
      */
     public function generate($oldModelName, $modelName, $controller)
     {
-        $routes = $this->getRoutesFromSources($modelName, $controller);
-        $this->routeStub = array_merge($this->fillStub(), $routes);
+        $sourceRoutes = $this->getRoutesFromSources($modelName, $controller);
+        $routes = $this->fillStub();
+        $comment = array_shift($routes);
+        $allRoutes = [];
+        $allRoutes[] = $comment;
+        $allRoutes = array_merge($allRoutes,$sourceRoutes,$routes);
+        $this->routeStub = $allRoutes;
 
         if ($items = $this->routeExists($oldModelName, $controller)) {
             $this->routeRewrite($items);
@@ -86,17 +115,24 @@ class RouteGenerator
     protected function getRoutesFromSources($tableName, $controller)
     {
         $routes = [];
-        $actions = ['get', 'options', 'show', 'add', 'update', 'delete', 'update_column'];
+        $actions = ['get', 'options', 'show', 'add', 'update', 'delete', 'update_column', 'filters'];
         $sources = Source::where([
             ['controller_id', $this->controllerModel->id],
             ['model_id', $this->controllerModel->model->id],
         ])->get();
         if (! $sources) return [];
         foreach ($sources as $source) {
-            if (! in_array($source->type, $actions)) {
+            $middleware = $this->getMiddleware($source);
+            if (!in_array($source->type, $actions) && $source->type != 'remote') {
+                $middleware = $middleware ? "'middleware' => ['" . implode("','", $middleware) . "'], " : '';
                 $routes[] = 'Route::get(\'/queries/' . $tableName .'/'
-                . $source->type . '\', [\'uses\' =>\'' . $controller . '@'
+                . $source->type . '\', [' . $middleware .'\'uses\' =>\'' . $controller . '@'
                 . lcfirst($source->type) . '\']);';
+            } elseif (!in_array($source->type, $actions) && $source->type == 'remote') {
+                $middleware = $middleware ? "'middleware' => ['" . implode("','", $middleware) . "'], " : '';
+                $routes[] = 'Route::' . $source->request_type . '(\'/data_sources/' . $tableName .'/'
+                    . \Str::snake($source->name) . '\', [' . $middleware .'\'uses\' =>\'' . $controller . '@'
+                    . \Str::snake($source->name) . '\']);';
             }
         }
         return $routes;
@@ -117,6 +153,8 @@ class RouteGenerator
             if (Str::contains($this->routeContents[$i], ' '.$tableName . ' resource')
                 || Str::contains($this->routeContents[$i], '/'.$tableName)
                 || Str::contains($this->routeContents[$i], '/queries/'.$tableName)
+                || Str::contains($this->routeContents[$i], '/filters/'.$tableName)
+                || Str::contains($this->routeContents[$i], '/data_sources/'.$tableName)
                 || Str::contains($this->routeContents[$i], '/'.Str::singular($tableName).'_options')
                 || Str::contains($this->routeContents[$i], $controller)) {
                 $indexes[] = $i;
@@ -130,6 +168,7 @@ class RouteGenerator
      * Перезаписать существующий маршрут
      *
      * @param $itemIndexes
+     * @return bool
      */
     protected function routeRewrite($itemIndexes)
     {
@@ -137,10 +176,11 @@ class RouteGenerator
         $countRouteStub = count($this->routeStub);
         for ($i = 0; $i < count($itemIndexes); $i++) {
 
-            if ($i < $countRouteStub)
+            if ($i < $countRouteStub) {
                 $this->routeContents[$itemIndexes[$i]] = $this->routeStub[$i];
-            else
+            } else {
                 unset($this->routeContents[$itemIndexes[$i]]);
+            }
 
             $newIndexes = $itemIndexes[$i];
             unset($this->routeStub[$i]);
@@ -152,16 +192,20 @@ class RouteGenerator
                 array_splice($this->routeContents, $newIndexes,0, $arr[$i]);
             }
         }
+        return true;
     }
 
     /**
      * Записать новый маршрут в файл
+     *
+     * @return bool
      */
     protected function routeWrite()
     {
         for ($i = 0; $i < count($this->routeStub); $i++) {
             $this->routeContents[] = $this->routeStub[$i];
         }
+        return true;
     }
 
     /**
@@ -175,8 +219,8 @@ class RouteGenerator
         $contents = $this->routeContents;
         if (! $contents) return true;
         foreach ($contents as $line => $content) {
-            if (Str::contains($content, ' '.$controller->model->table->name . ' resource')
-                || Str::contains($content, '/'.$controller->model->table->name)
+            if (Str::contains($content, ' ' . Str::plural($controller->model->name) . ' resource')
+                || Str::contains($content, '/'.Str::plural($controller->model->name))
                 || Str::contains($content, '\\'.$controller->model->name.'Controller')) {
                 unset($contents[$line]);
             }
@@ -224,5 +268,48 @@ class RouteGenerator
             : __DIR__ . '/../stubs/routes/create_route.stub';
 
         return file($stub, 2);
+    }
+
+    /**
+     * Получить миддлвары
+     *
+     * @param $source
+     * @return array|null
+     */
+    public function getMiddleware($source)
+    {
+        if(!$source) return null;
+
+        $sourceRoles = $source->source_roles;
+        $accessSource = [];
+        $accessRoles = [];
+        $accessPermissions = [];
+        $sourcePermissions = $source->source_permissions;
+        foreach ($sourcePermissions as $sourcePermission) {
+            $accessPermissions[] = $sourcePermission->permission->name;
+        }
+        foreach ($sourceRoles as $sourceRole) {
+            $accessRoles[] = $sourceRole->role->name;
+        }
+        if ($accessRoles)
+            $accessSource[] = implode('|', $accessRoles);
+
+        if ($accessPermissions)
+            $accessSource[] = implode('|', $accessPermissions);
+
+        $middleware = [];
+
+        if ($source->auth) {
+            $middleware[] = 'auth';
+        }
+
+        if ($accessRoles && $accessPermissions)
+            $middleware[] = "ability:" . implode(',', $accessSource);
+        elseif ($accessRoles)
+            $middleware[] = "role:" . implode(',', $accessRoles);
+        elseif ($accessPermissions)
+            $middleware[] = "permission:" . implode('|', $accessPermissions);
+
+        return $middleware;
     }
 }

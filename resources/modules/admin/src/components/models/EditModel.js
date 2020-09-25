@@ -38,10 +38,10 @@ class EditModel extends Component {
       },
       fields: null,
       relations: null,
+      accessors: [],
       id,
       queries: [],
-      sql_editors: [],
-      // model: {},   TODO: заменить замоканые данные
+      // sql_editors: [],
       // fields: [],
       // relations: []
     };
@@ -51,6 +51,7 @@ class EditModel extends Component {
       this.fieldsResource = new Resource({route: `/admin/ajax/models/${id}/fields`});
       this.relationsResource = new Resource({route: `/admin/ajax/models/${id}/relations`});
       this.queriesResource = new Resource({route: `/admin/ajax/models/${id}/queries`});
+      this.accessorsResource = new Resource({route: `/admin/ajax/models/${id}/accessors`});
     }
   }
 
@@ -65,22 +66,36 @@ class EditModel extends Component {
     this.setState(state => ({ ...state, relations }));
   }
 
+  updateQueries = async () => {
+    let queries = await this.queriesResource.getAll();
+    this.setState(state => ({ ...state, queries }));
+  }
+
+  updateAccessors = async () => {
+    let accessors = await this.accessorsResource.getAll();
+    this.setState(state => ({ ...state, accessors }));
+  }
+
   /**
    * Загрузим данные модели
    * @return {Promise<void>}
    */
   async componentDidMount() {
-
+    // TODO: делать запросы асинхронно
     if(this.state.id){
       let model = await this.modelsResource.get(this.state.id);
       let relations = await this.relationsResource.getAll();
       let fields = await this.fieldsResource.getAll();
+      let queries = await this.queriesResource.getAll();
+      let accessors = await this.accessorsResource.getAll();
       fields = fields.filter(({name}) => name !== 'id');
       this.setState(state=>({
           ...state,
         model,
         relations,
+        accessors,
         fields,
+        queries
       }))
     }
   }
@@ -98,7 +113,7 @@ class EditModel extends Component {
     this.props.history.push("/admin/tables/models");
   };
   render() {
-    const { model, fields, relations, queries, sql_editors } = this.state;
+    const { model, fields, relations, queries, sql_editors, accessors } = this.state;
 
     const { id } = this.props.match.params;
     return <div className="admin-pages admin-page">
@@ -157,11 +172,46 @@ class EditModel extends Component {
         />
         <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/relations/add`}>Add Relation</Link>
         </> : ''}
+        {accessors ?<>
+          <h2 className="sub-header">Accessors</h2>
+          <AdminTable
+            columns={columns}
+            quickActions={[{ tag: 'Link', props: {
+                href: `/admin/tables/models/${id}/accessors/edit/:id`,
+              },
+              title: 'Edit'
+            } , {
+              tag: 'button',
+              route: `/admin/ajax/models/${id}/accessors/:id`,
+              method: 'delete',
+              confirm: 'Are You Sure?',
+              after: () => this.updateAccessors(),
+              className: 'quick-action-menu__item_danger',
+              title: 'Trash'
+            }]}
+            rows={accessors.map(accessor => ({ ...accessor, editUrl: `/admin/tables/models/${model.id}/accessors/edit/${accessor.id}` }))}
+          />
+          <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/accessors/add`}>Add Accessor</Link>
+        </> : ''}
         {queries ? <>
         <h2 className="sub-header">Queries</h2>
         <AdminTable
           columns={columns}
           rows={queries.map(query => ({ ...query, editUrl: `/admin/tables/models/${model.id}/queries/edit/${query.id}` }))}
+          quickActions={[{
+            tag: 'Link', props: {
+              href: `/admin/tables/models/${model.id}/queries/edit/:id`,
+            },
+            title: 'Edit'
+          }, {
+            tag: 'button',
+            route: `/admin/ajax/models/${model.id}/queries/:id`,
+            method: 'delete',
+            confirm: 'Are You Sure?',
+            after: () => this.updateQueries(),
+            className: 'quick-action-menu__item_danger',
+            title: 'Trash'
+          }]}
         />
         <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/queries/add`}>Add Query</Link>
         </> : ''}

@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import {Link, Redirect, withRouter } from 'react-router-dom';
-import {isEditor} from "../../../../../front-app/src/js/helpers";
 import {renderAssetIcon, placeElement} from "../../helpers";
+import {isEditor, parseURLTemplate, renderAssetIcon} from "../../../../../front-app/src/js/helpers";
+import AltrpModel from "../../classes/AltrpModel";
 
 //dropbar
 class Dropbar extends Component {
@@ -169,7 +170,6 @@ class ButtonWidget extends Component {
     this.state = {
       settings: props.element.getSettings(),
       pending: false,
-      // redirect: false
     };
     props.element.component = this;
     if (window.elementDecorator) {
@@ -188,21 +188,18 @@ class ButtonWidget extends Component {
          * @param {AltrpForm} form
          */ async form => {
           try {
-            let res = await form.submit(this.getModelId());
+            let res = await form.submit(this.getModelId(), this.props.element.getSettings('form_confirm'));
             if (res.success) {
-              const { redirect_to_prev_page, redirect_after } = this.state.settings;
+              let { redirect_to_prev_page, redirect_after } = this.state.settings;
               if (redirect_to_prev_page) {
-                this.props.history.goBack();
+                return this.props.history.goBack();
               }
-
               if (redirect_after) {
-                this.props.history.push(redirect_after);
+
+                redirect_after = parseURLTemplate(redirect_after, res.data);
+                return this.props.history.push(redirect_after);
               }
-              // let redirect = this.state.settings.redirect_after
-              //   ? this.state.settings.redirect_after
-              //   : false;
-              // this.setState(state => ({ ...state, pending: false, redirect }));
-            } else if(res.message){
+            } else if (res.message) {
               alert(res.message);
             }
             this.setState(state => ({ ...state, pending: false }));
@@ -259,31 +256,38 @@ class ButtonWidget extends Component {
           </button>
         </Dropbar>
       )
+
     );
 
     let link = null;
-    if (this.state.settings.link_link.url) {
-      if(this.state.settings.link_link.tag === 'a' || isEditor()) {
+    
+    if (link_link?.url && !link_link.toPrevPage) {
+      if (this.state.settings.link_link.tag === 'a' || isEditor()) {
 
         link = (
-          <a href={this.state.settings.link_link.url} onClick={this.onClick} className={classes}>
+          <a href={url} onClick={this.onClick} className={classes}>
             {" "}
             {this.state.settings.button_text || ""}
-            <span className={"altrp-btn-icon "}>{ renderAssetIcon( buttonMedia ) } </span>
+            <span className={"altrp-btn-icon "}>{renderAssetIcon(buttonMedia)} </span>
           </a>
         );
       } else {
         link = (
-          <Link to={this.state.settings.link_link.url} onClick={this.onClick} className={classes}>
+          <Link to={url} onClick={this.onClick} className={classes}>
             {" "}
             {this.state.settings.button_text || ""}
+            <span className={"altrp-btn-icon "}>{renderAssetIcon(buttonMedia)} </span>
           </Link>
         );
       }
     }
 
+
+
     return link || button || buttonMedia;
+    // return React.createElement(tag, buttonProps, <>{this.state.settings.button_text}{icon}</>);
   }
+
 }
 
 export default withRouter(ButtonWidget);

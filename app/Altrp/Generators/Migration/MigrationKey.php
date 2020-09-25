@@ -117,14 +117,16 @@ class MigrationKey{
 
         $source_column = $this->key->local_key;
         $target_column = $this->key->foreign_key;
-        $parts = explode('\\', $this->key->model_class);
-        $model_name = array_pop($parts);
 
-        $target_table = Model::where('name', $model_name)->first()->altrp_table->name;
+        $model = Model::find($this->key->model_id);
+        if ($model->parent_model_id)
+            $target_table = Model::find($model->parent_model_id)->altrp_table->name;
+        else
+            $target_table = $model->altrp_table->name;
 
         $text = '';
 
-        if($this->key->type === 'belongsTo' || $this->key->type === 'hasMany') {
+        if($this->key->type === 'hasOne' || $this->key->type === 'hasMany') {
             $source_column = $this->key->foreign_key;
             $target_column = $this->key->local_key;
         }
@@ -134,8 +136,10 @@ class MigrationKey{
             $text .= "\$table->dropForeign(['".$key_field."']);\n\t\t\t";
         }
 
+        if (! $target_column) $target_column = 'id';
+
         $text .= "\$table->foreign('".$source_column."')->references('".$target_column."')->on('".$target_table."')".$modifiers;
-       
+
 
         return $text;
 
@@ -172,7 +176,7 @@ class MigrationKey{
 
         $column = $this->old_key->local_key;
 
-        if($this->old_key->type === 'belongsTo' || $this->old_key->type === 'hasMany' ) {
+        if($this->old_key->type === 'hasOne' || $this->old_key->type === 'hasMany' ) {
             $column = $this->old_key->foreign_key;
         }
 

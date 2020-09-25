@@ -19,7 +19,8 @@ import {
   TAB_CONTENT,
   TAB_STYLE,
   TAB_ADVANCED,
-  CONTROLLER_MEDIA
+  CONTROLLER_MEDIA,
+  CONTROLLER_GRADIENT
 } from "../modules/ControllersManager";
 
 class Button extends BaseElement{
@@ -196,10 +197,21 @@ class Button extends BaseElement{
       ],
     });
 
+    this.addControl('form_confirm', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Confirm Submit Form Text',
+      conditions: {
+        'form_actions!': 'null',
+      },
+      default: '',
+    });
+
     this.addControl('choose_model', {
       conditions: {
         'form_actions': 'add_new',
       },
+      label: 'Choose Model',
+      responsive: false,
       type: CONTROLLER_SELECT,
       resource: '/admin/ajax/models_options?with_names=true',
     });
@@ -439,6 +451,17 @@ class Button extends BaseElement{
       default: ''
     });
 
+    this.addControl('position_opacity', {
+      type: CONTROLLER_SLIDER,
+      label: 'Opacity',
+      step: 0.01,
+      min: 0,
+      max: 1,
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'opacity: {{SIZE}};'
+      },
+    });
+
     this.endControlSection();
 
     this.startControlSection('font_section', {
@@ -454,12 +477,13 @@ class Button extends BaseElement{
           spacing: 0,
           size: 16,
           weight: "normal",
-          family: '"lato"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {
           '{{ELEMENT}} .altrp-btn{{STATE}}': [
             'font-size: {{SIZE}}px;',
+            'font-family: {{FAMILY}}',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
             'font-weight: {{WEIGHT}}',
@@ -576,6 +600,30 @@ class Button extends BaseElement{
       },
     });
 
+    this.addControl('style_background_shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'Shadow',
+      default: {
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        opacity: 1,
+        spread: 0,
+        colorRGB: 'rgb(0, 0, 0)',
+        color: 'rgb(0, 0, 0)',
+        colorPickedHex: '#000000',
+        type: ""
+      },
+      presetColors: [
+        '#eaeaea',
+        '#9c18a8'
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    });
+
+
     this.endControlSection();
 
     this.startControlSection('background_section', {
@@ -595,29 +643,22 @@ class Button extends BaseElement{
       },
     });
 
-  this.addControl('style_background_shadow', {
-        type: CONTROLLER_SHADOW,
-        label: 'Shadow',
-        default:{
-          blur: 0,
-          horizontal: 0,
-          vertical: 0,
-          opacity: 1,
-          spread: 0,
-          colorRGB: 'rgb(0, 0, 0)',
-          color: 'rgb(0, 0, 0)',
-          colorPickedHex: '#000000',
-          type: ""
-        },
-        presetColors: [
-          '#eaeaea',
-          '#9c18a8'
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-        },
+    this.addControl('gradient', {
+      type: CONTROLLER_GRADIENT,
+      label: 'Gradient',
+      default: {
+        isWithGradient: false,
+        firstColor: "rgba(97,206,112,1)",
+        firstPoint: '0',
+        secondColor: "rgba(242,41,91,1)",
+        secondPoint: "100",
+        angle: "0",
+        value: ""
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-btn{{STATE}}": "background-image: {{VALUE}}" 
       }
-    );
+    });
 
   this.endControlSection();
 
@@ -662,8 +703,29 @@ class Button extends BaseElement{
       rules: {
         '{{ELEMENT}} .altrp-btn-icon path{{STATE}}': 'fill: {{COLOR}};',
       },
-    }
-  );
+    });
+
+    this.addControl('icon_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Icon Color',
+        default: {
+          color: "rgb(255,255,255)",
+          colorPickedHex: "#fff",
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon path': 'fill: {{COLOR}};',
+        },
+      }
+    );
+
+    this.addControl('icon_color_background', {
+        type: CONTROLLER_COLOR,
+        label: 'Icon Color',
+        rules: {
+          '{{ELEMENT}} .altrp-btn-icon svg{{STATE}}': 'background: {{COLOR}};',
+        },
+      }
+    );
 
   this.addControl('icon_color_background', {
       type: CONTROLLER_COLOR,

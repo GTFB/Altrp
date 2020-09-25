@@ -33,7 +33,7 @@ return [
     |
     */
 
-    'altrp_version' => '0.7.19',
+    'altrp_version' => '0.8.30',
 
 
     /*
@@ -173,6 +173,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Ixudra\Curl\CurlServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -188,7 +189,7 @@ return [
         App\Providers\CrudGeneratorServiceProvider::class,
 
         App\Providers\RepositoryServiceProvider::class,
-        App\Providers\AltrpRepositoryServiceProvider::class,
+        'App\Providers\AltrpRepositoryServiceProvider',
     ],
 
     /*
@@ -239,8 +240,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Laratrust'   => Laratrust\LaratrustFacade::class,
-
+        'Laratrust' => Laratrust\LaratrustFacade::class,
+        'Curl' => Ixudra\Curl\Facades\Curl::class,
     ],
 
 ];

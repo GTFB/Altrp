@@ -38,6 +38,15 @@ class BaseElement extends ControlStack {
   setSettings(settings) {
     this.settings = settings || this.settings;
   }
+
+  /**
+   * Задать Хранилище CSS классов для контроллеров с prefixClass
+   * @param {{}} cssClassStorage
+   * @return {*|null}
+   */
+  setCSSStorage(cssClassStorage){
+    this.cssClassStorage = _.cloneDeep(cssClassStorage);
+  }
   getId() {
     if (!this.id) {
       this.id = BaseElement.generateId();
@@ -285,9 +294,10 @@ class BaseElement extends ControlStack {
   /**
    * Возвращает значение настройки по id
    * @param {string} settingName
+   * @param {*}_default
    * @return {*}
    */
-  getSettings(settingName) {
+  getSettings(settingName, _default = '') {
     this._initDefaultSettings();
     if (!settingName) {
       return _.cloneDeep(this.settings);
@@ -300,7 +310,7 @@ class BaseElement extends ControlStack {
       }
       this.settings[settingName] = control.default;
     }
-    return this.settings[settingName];
+    return this.settings[settingName] || _default;
   }
 
   _initDefaultSettings() {
@@ -425,7 +435,10 @@ class BaseElement extends ControlStack {
     this.settings.styles[breakpoint][settingName] = {};
     rules.forEach(rule => {
       let finalSelector = rule.selector;
-      finalSelector = finalSelector.replace(/{{ELEMENT}}/g, this.getSelector()).replace(/{{STATE}}/g, getElementState().value);
+      finalSelector = finalSelector
+          .replace(/{{ELEMENT}}/g, this.getSelector())
+          .replace(/{{ID}}/g, this.getId())
+          .replace(/{{STATE}}/g, getElementState().value);
       /**
        * если this.settings.styles[breakpoint][settingName] массив, то преобразуем в объект
        */
