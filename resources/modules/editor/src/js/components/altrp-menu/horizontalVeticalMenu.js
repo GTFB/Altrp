@@ -58,7 +58,7 @@ class HorizontalVeticalMenu extends Component {
 
     }
 
-    console.log(this.props.settings.repeater_menu_layout);
+    // console.log(this.props.settings.repeater_menu_layout);
     return (
       <ul style={stylesUl} className={"altrp-nav-menu-ul altrp-nav-menu-ul-" + layout}>
         {

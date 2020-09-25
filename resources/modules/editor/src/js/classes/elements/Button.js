@@ -656,7 +656,7 @@ class Button extends BaseElement{
         value: ""
       },
       rules: {
-        "{{ELEMENT}} .altrp-btn{{STATE}}": "background-image: {{VALUE}}" 
+        "{{ELEMENT}} .altrp-btn{{STATE}}": "background-image: {{VALUE}}"
       }
     });
 
@@ -705,19 +705,6 @@ class Button extends BaseElement{
       },
     });
 
-    this.addControl('icon_color', {
-        type: CONTROLLER_COLOR,
-        label: 'Icon Color',
-        default: {
-          color: "rgb(255,255,255)",
-          colorPickedHex: "#fff",
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon path': 'fill: {{COLOR}};',
-        },
-      }
-    );
-
     this.addControl('icon_color_background', {
         type: CONTROLLER_COLOR,
         label: 'Icon Color',
@@ -726,15 +713,6 @@ class Button extends BaseElement{
         },
       }
     );
-
-  this.addControl('icon_color_background', {
-      type: CONTROLLER_COLOR,
-      label: 'Backgorun color',
-      rules: {
-        '{{ELEMENT}} .altrp-btn-icon svg{{STATE}}': 'background: {{COLOR}};',
-      },
-    }
-  );
 
   this.addControl('icon_size', {
     type: CONTROLLER_SLIDER,

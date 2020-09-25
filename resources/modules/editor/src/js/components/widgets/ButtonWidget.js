@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {Link, Redirect, withRouter } from 'react-router-dom';
-import {renderAssetIcon, placeElement} from "../../helpers";
+import {placeElement} from "../../helpers";
 import {isEditor, parseURLTemplate, renderAssetIcon} from "../../../../../front-app/src/js/helpers";
 import AltrpModel from "../../classes/AltrpModel";
 
@@ -14,7 +14,6 @@ class Dropbar extends Component {
       activePosition: 0,
       positionVariants: placeElement(true).variants,
       contentPosition: {},
-      offset: this.props.offset,
     };
 
     this.show = this.show.bind(this);
@@ -27,15 +26,15 @@ class Dropbar extends Component {
   };
 
   show() {
-    if(this.props.showDelay.size || this.props.hideDelay.size) {
+    if(this.props.settings.show_delay_dropbar_options.size || this.props.settings.hide_delay_dropbar_options.size) {
       if(!this.state.show) {
         setTimeout(() => {
           this.setState((state) => ({ show: !state.show }));
-        }, this.props.showDelay.size);
+        }, this.props.settings.show_delay_dropbar_options.size);
       } else {
         setTimeout(() => {
           this.setState((state) => ({ show: !state.show }));
-        }, this.props.hideDelay.size);
+        }, this.props.settings.hide_delay_dropbar_options.size);
       }
     } else {
       this.setState((state) => ({ show: !state.show }));
@@ -46,10 +45,10 @@ class Dropbar extends Component {
 
   leaveHide() {
 
-    if(this.props.hideDelay.size) {
+    if(this.props.settings.hide_delay_dropbar_options.size) {
       setTimeout(() => {
         this.setState({ show: false });
-      }, this.props.hideDelay.size)
+      }, this.props.settings.hide_delay_dropbar_options.size)
     } else {
       this.setState({ show: false });
     };
@@ -72,7 +71,7 @@ class Dropbar extends Component {
   };
 
   changePosition() {
-    let offset = this.state.offset;
+    let offset = this.props.settings.offset_dropbar_options;
     let position = placeElement(false,
       {
         target: this.children.current,
@@ -99,21 +98,21 @@ class Dropbar extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(this.props.mode !== prevProps.mode) {
+    if(this.props.settings.mode_dropbar_options !== prevProps.settings.mode_dropbar_options) {
       this.setState({ show: false });
     };
 
-    if(prevProps.offset !== this.props.offset) {
-      this.setState({ offset: this.props.offset, show: false });
+    if(prevProps.settings.offset_dropbar_options !== this.props.settings.offset_dropbar_options) {
+      this.setState({ offset: this.props.settings.offset_dropbar_options, show: false });
     };
 
-    if(this.props.position !== prevProps.position) {
-      this.setState({ activePosition: this.state.positionVariants.find(pos => pos.position === this.props.position), show: false });
+    if(this.props.settings.position_dropbar_options !== prevProps.settings.position_dropbar_options) {
+      this.setState({ activePosition: this.state.positionVariants.find(pos => pos.position === this.props.settings.position_dropbar_options), show: false });
     };
   }
 
   componentDidMount() {
-    this.setState({ activePosition: this.state.positionVariants.find(pos => pos.position === this.props.position) });
+    this.setState({ activePosition: this.state.positionVariants.find(pos => pos.position === this.props.settings.position_dropbar_options) });
   }
 
   render() {
@@ -125,8 +124,8 @@ class Dropbar extends Component {
 
     let contentStyles = {};
 
-    if(this.props.width) {
-      contentStyles = {width: this.props.width + "px"}
+    if(this.props.settings.width_dropbar_options) {
+      contentStyles = {width: this.props.settings.width_dropbar_options.size + "px"}
     }
 
     return (
@@ -136,9 +135,9 @@ class Dropbar extends Component {
             React.cloneElement(children,
               {
                 ref: this.children,
-                onClick: this.props.mode === "click" ? this.show : null,
-                onMouseEnter: this.props.mode === "hover" ? this.enterShow : null,
-                onMouseLeave: this.props.mode === "hover" ? this.leaveHide : null
+                onClick: this.props.settings.mode_dropbar_options === "click" ? this.show : null,
+                onMouseEnter: this.props.settings.mode_dropbar_options === "hover" ? this.enterShow : null,
+                onMouseLeave: this.props.settings.mode_dropbar_options === "hover" ? this.leaveHide : null
               }
             )
           }
@@ -151,7 +150,7 @@ class Dropbar extends Component {
               {
                 className: "altrp-dropbar-content " + mainClass + "-content",
                 dangerouslySetInnerHTML: {
-                  __html: this.props.content
+                  __html: this.props.settings.content_dropbar_section
                 },
               }
             )
@@ -237,13 +236,8 @@ class ButtonWidget extends Component {
         </button>
       ) : (
         <Dropbar
-          offset={this.state.settings.offset_dropbar_options}
+          settings={this.props.element.getSettings()}
           className="btn"
-          width={this.state.settings.width_dropbar_options.size}
-          position={this.state.settings.position_dropbar_options}
-          mode={this.state.settings.mode_dropbar_options}
-          content={this.state.settings.content_dropbar_section}
-          hideDelay={this.state.settings.hide_delay_dropbar_options}
           showDelay={this.state.settings.show_delay_dropbar_options}
         >
           <button
@@ -260,8 +254,8 @@ class ButtonWidget extends Component {
     );
 
     let link = null;
-    
-    if (link_link?.url && !link_link.toPrevPage) {
+
+    if (this.state.settings.link_link?.url && !this.state.settings.link_link.toPrevPage) {
       if (this.state.settings.link_link.tag === 'a' || isEditor()) {
 
         link = (
