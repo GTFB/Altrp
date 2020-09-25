@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 
-import { BAR, PIE, TABLE, DONUT } from "../../../../../admin/src/components/dashboard/widgetTypes";
+import { TABLE } from "../../../../../admin/src/components/dashboard/widgetTypes";
 
 import WidgetDiagram from "../../../../../admin/src/components/dashboard/WidgetDiagram";
 import TypeField from "./fields/TypeField";
@@ -22,6 +22,7 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
       isVertical: false,
       legend: "",
     },
+    filter: {},
   });
 
   const title = useRef("");
@@ -31,7 +32,7 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
       ...widget,
       title: title.current.value,
       options: JSON.stringify(widget.options),
-      filter: JSON.stringify({}),
+      filter: JSON.stringify(widget.filter),
     };
     const req = await axios.post(`/ajax/dashboards/${id}`, data);
     if (req.status === 200) {
@@ -61,6 +62,17 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
     return source?.types?.map((type) => type.value) || [];
   };
 
+  const composeSources = (sources = []) => {
+    if (sources.length === 0) return [];
+
+    return sources.map((source) => {
+      return {
+        name: source.label,
+        url: `/ajax/models/queries/${source.model}/${source.value}`,
+      };
+    });
+  };
+
   console.log("ADDWIDGET settings :>> ", settings.filter);
 
   return (
@@ -85,14 +97,14 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
           <SourceField
             widget={widget}
             setWidget={setWidget}
-            sources={settings.sql.map((item) => {
-              return { name: item.label, url: `/ajax/models/queries/${item.model}/${item.value}` };
-            })}
+            sources={composeSources(settings.sql)}
           />
 
-          {settings.filter.map((param) => (
-            <FilterField key={param.value} widget={widget} setWidget={setWidget} param={param} />
-          ))}
+          {widget.source &&
+            settings.filter.length > 0 &&
+            settings.filter?.map((param) => (
+              <FilterField key={param.value} widget={widget} setWidget={setWidget} param={param} />
+            ))}
 
           <TypeField
             widget={widget}
@@ -125,4 +137,4 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
   );
 };
 
-export default React.memo(AddWidget);
+export default AddWidget;

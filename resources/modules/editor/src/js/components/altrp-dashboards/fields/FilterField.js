@@ -12,7 +12,7 @@ function FilterField({ widget, setWidget, param }) {
       setIsLoading(true);
       const req = await axios(`/ajax/models/queries/${param.model}/${param.value}`);
       if (req.status === 200) {
-        console.log("req.body :>> ", req.body);
+        setOptions(req.data.data);
         setIsLoading(false);
       }
     },
@@ -23,7 +23,7 @@ function FilterField({ widget, setWidget, param }) {
     options.length === 0 && getOptions(param);
   }, [param]);
 
-  console.log("param :>> ", param);
+  console.log("param :>> ", widget);
 
   return (
     <Form.Group>
@@ -31,18 +31,18 @@ function FilterField({ widget, setWidget, param }) {
       <Form.Control
         as="select"
         custom
-        /* value={widget.filter[param.value] || ""}
+        value={widget.filter?.[param.value] || ""}
         onChange={(e) =>
-          setWidget({ ...widget, filter: { ...widget.filter, kindId: e.target.value } })
-        } */
+          setWidget({ ...widget, filter: { ...widget.filter, [param.value]: e.target.value } })
+        }
         required
       >
         <option value="">-</option>
-        {/* {options.map(({ id, name }) => (
-          <option key={id} value={id}>
-            {name}
+        {options.map(({ value, label }) => (
+          <option key={value} value={value}>
+            {label}
           </option>
-        ))} */}
+        ))}
       </Form.Control>
     </Form.Group>
   );
