@@ -32,8 +32,8 @@ class PageDatasource extends Model
       $source = Source::where( [
         'url' => data_get( $page_data_source,'source_url' ),
         'type' => data_get( $page_data_source, 'source_type') ,
-      ] );
-      $page = Page::where( 'guid', data_get( $page_data_source, 'page_guid' ) );
+      ] )->first();
+      $page = Page::where( 'guid', data_get( $page_data_source, 'page_guid' ) )->first();
       if( ! ( $page && $source ) ){
         continue;
       }
