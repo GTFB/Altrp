@@ -11,7 +11,8 @@ import {
   CONTROLLER_SLIDER,
   TAB_STYLE,
   TAB_ADVANCED,
-  TAB_CONTENT
+  TAB_CONTENT,
+  CONTROLLER_GRADIENT
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 
@@ -206,6 +207,23 @@ class Column  extends BaseElement {
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-column{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('gradient', {
+      type: CONTROLLER_GRADIENT,
+      label: 'Gradient',
+      default: {
+        isWithGradient: false,
+        firstColor: "rgba(97,206,112,1)",
+        firstPoint: '0',
+        secondColor: "rgba(242,41,91,1)",
+        secondPoint: "100",
+        angle: "0",
+        value: ""
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-column{{STATE}}": "background-image: {{VALUE}}" 
       }
     });
 

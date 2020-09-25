@@ -48,6 +48,13 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::get('/tables/{table}/columns', "Admin\TableController@getColumns");
         Route::get('/tables/{table}/keys', "Admin\TableController@getKeys");
 
+        Route::get('/page_data_sources', 'Admin\PageDatasourceController@index');
+        Route::get('/page_data_sources/pages/{page_id}', 'Admin\PageDatasourceController@getByPage');
+        Route::get('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@show");
+        Route::post('/page_data_sources', "Admin\PageDatasourceController@store");
+        Route::put('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@update");
+        Route::delete('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@destroy");
+
         /**
          * Маршруты для проверки на уникальность имени
          */
@@ -59,6 +66,7 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         // Models
         Route::get( '/models', 'Admin\ModelsController@getModels');
         Route::get( '/model_options', 'Admin\ModelsController@getModelOptions');
+        Route::get( '/models_without_parent', 'Admin\ModelsController@getModelsWithoutParent');
         Route::post( '/models', 'Admin\ModelsController@storeModel');
         Route::put( '/models/{model_id}', 'Admin\ModelsController@updateModel');
         Route::get( '/models/{model_id}', 'Admin\ModelsController@showModel');
@@ -73,11 +81,19 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
 
         // Fields
         Route::get( '/models/{model_id}/fields', 'Admin\ModelsController@getModelFields');
+        Route::get( '/models/{model_id}/fields_only', 'Admin\ModelsController@getOnlyModelFields');
         Route::get( '/models/{model_id}/field_options', 'Admin\ModelsController@getModelFieldOptions');
         Route::post( '/models/{model_id}/fields', 'Admin\ModelsController@storeModelField');
         Route::put( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@updateModelField');
         Route::get( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@showModelField');
         Route::delete( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@destroyModelField');
+
+        // Accessors
+        Route::get( '/models/{model_id}/accessors', 'Admin\ModelsController@getModelAccessors');
+        Route::post( '/models/{model_id}/accessors', 'Admin\ModelsController@storeAccessor');
+        Route::put( '/models/{model_id}/accessors/{accessor_id}', 'Admin\ModelsController@updateAccessor');
+        Route::get( '/models/{model_id}/accessors/{accessor_id}', 'Admin\ModelsController@showAccessor');
+        Route::delete( '/models/{model_id}/accessors/{accessor_id}', 'Admin\ModelsController@destroyAccessor');
 
         // Relations
         Route::get( '/models/{model_id}/relations', 'Admin\ModelsController@getModelRelations');
@@ -91,9 +107,9 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::get( '/data_sources', 'Admin\ModelsController@getDataSources');
         Route::get( '/data_source_options', 'Admin\ModelsController@getDataSourceOptions');
         Route::post( '/data_sources', 'Admin\ModelsController@storeDataSource');
-        Route::put( '/data_sources/{field_id}', 'Admin\ModelsController@updateDataSource');
-        Route::get( '/data_sources/{field_id}', 'Admin\ModelsController@showDataSource');
-        Route::delete( '/data_sources/{field_id}', 'Admin\ModelsController@destroyDataSource');
+        Route::put( '/data_sources/{source_id}', 'Admin\ModelsController@updateDataSource');
+        Route::get( '/data_sources/{source_id}', 'Admin\ModelsController@showDataSource');
+        Route::delete( '/data_sources/{source_id}', 'Admin\ModelsController@destroyDataSource');
 
         Route::post('/tables/{table}/models', 'Admin\TableController@saveModel');
         Route::get('/tables/{table}/models/{model}', 'Admin\TableController@getModel');

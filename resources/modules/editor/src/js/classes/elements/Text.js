@@ -222,7 +222,7 @@ class Text extends BaseElement {
           spacing: 0,
           size: 16,
           weight: "normal",
-          family: '"roboto"',
+          family: "Open Sans",
           decoration: ""
         },
         rules: {
@@ -481,11 +481,15 @@ class Text extends BaseElement {
       type: CONTROLLER_SELECT2,
       label: 'Font',
       placeholder: 'Lato',
-      default: '"Lato"',
+      default: '"Open Sans"',
       options: [
         {
           value: '"Roboto"',
           label: "Roboto"
+        },
+        {
+          value: '"Open Sans"',
+          label: "Open Sans"
         },
         {
           value: '"Lato"',

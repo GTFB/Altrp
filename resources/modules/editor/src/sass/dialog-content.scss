@@ -176,7 +176,8 @@
   &-field {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    align-content: flex-start;
     margin-top: 10px;
     width: 100%;
     color: #000;

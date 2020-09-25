@@ -42,7 +42,7 @@ class AltrpSQLEditorObserver
         if ($controllerWriter->methodSqlExists($sQLEditor->name)) {
             throw new ControllerFileException('Method already exists', 500);
         }
-        $controllerWriter->writeSqlMethod($sQLEditor->name, $this->replaceDynamicVars(addslashes($sQLEditor->sql), true));
+        $controllerWriter->writeSqlMethod($sQLEditor->name, $this->replaceDynamicVars(addslashes($sQLEditor->sql), true), $sQLEditor->is_object);
     }
 
     /**
@@ -71,24 +71,16 @@ class AltrpSQLEditorObserver
             $source = new Source([
                 'model_id' => $sQLEditor->model_id,
                 'controller_id' => $model->altrp_controller->id,
-                'url' => '/' . strtolower(Str::plural($model->name)) . '/{sql_builder}',
-                'api_url' => '/' . strtolower(Str::plural($model->name)) . '/{sql_builder}',
+                'url' => '/' . strtolower(Str::plural($model->name)) . '/' . $sQLEditor->name,
+                'api_url' => '/' . strtolower(Str::plural($model->name)) . '/' . $sQLEditor->name,
                 'type' => Str::snake($sQLEditor->name),
-                'name' => 'SQL Editor ' . Str::studly($sQLEditor->name)
+                'request_type' => 'get',
+                'title' => 'SQL Editor ' . Str::studly($sQLEditor->name),
+                'name' => 'SQL Editor ' . Str::studly($sQLEditor->name),
+                'sourceable_id' => $sQLEditor->id,
+                'sourceable_type' => SQLEditor::class
             ]);
             $source->save();
-        }
-        $sourcePermission = SourcePermission::where([
-            ['permission_id',$permission->id],
-            ['source_id',$source->id]
-        ])->first();
-        if (! $sourcePermission) {
-            $sourcePermission = new SourcePermission([
-                'type' => 'sql-editor-'.Str::kebab($sQLEditor->name),
-                'permission_id' => $permission->id,
-                'source_id' => $source->id
-            ]);
-            $sourcePermission->save();
         }
         $routeFile = new RouteFile($model);
         $routeWriter = new RouteFileWriter($routeFile, $controllerFile);
@@ -121,7 +113,8 @@ class AltrpSQLEditorObserver
         $controllerWriter->updateSqlMethod(
             $sQLEditor->getOriginal('name'),
             $sQLEditor->name,
-            $this->replaceDynamicVars(addslashes($sQLEditor->sql),true)
+            $this->replaceDynamicVars(addslashes($sQLEditor->sql),true),
+            $sQLEditor->is_object
         );
     }
 
@@ -147,22 +140,15 @@ class AltrpSQLEditorObserver
         $source->update([
             'model_id' => $sQLEditor->model_id,
             'controller_id' => $model->altrp_controller->id,
-            'url' => '/' . strtolower(Str::plural($model->name)) . '/{sql_builder}',
-            'api_url' => '/' . strtolower(Str::plural($model->name)) . '/{sql_builder}',
+            'url' => '/' . strtolower(Str::plural($model->name)) . '/' . $sQLEditor->name,
+            'api_url' => '/' . strtolower(Str::plural($model->name)) . '/' . $sQLEditor->name,
             'type' => Str::snake($sQLEditor->name),
-            'name' => 'SQL Editor ' . Str::studly($sQLEditor->name)
+            'request_type' => 'get',
+            'title' => 'SQL Editor ' . Str::studly($sQLEditor->name),
+            'name' => 'SQL Editor ' . Str::studly($sQLEditor->name),
+            'sourceable_id' => $sQLEditor->id,
+            'sourceable_type' => SQLEditor::class
         ]);
-        $permission = Permission::where('name', 'sql-editor-' . $sQLEditor->name)->first();
-        $source = Source::where('type',Str::snake($sQLEditor->name))->first();
-        if ($source && $permission) {
-            $sourcePermission = SourcePermission::where([
-                ['permission_id',$permission->id],
-                ['source_id',$source->id]
-            ]);
-            if ($sourcePermission->first()) {
-                $sourcePermission->update(['type' => 'sql-editor-'.Str::kebab($sQLEditor->name)]);
-            }
-        }
         $routeFile = new RouteFile($model);
         $routeWriter = new RouteFileWriter($routeFile, $controllerFile);
         $routeWriter->updateSqlRoute($sQLEditor->getOriginal('name'),$sQLEditor->name);

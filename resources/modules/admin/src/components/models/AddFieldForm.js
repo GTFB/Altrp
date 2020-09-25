@@ -89,6 +89,7 @@ class AddFieldForm extends Component {
         description: '',
         is_label: false,
         is_title: false,
+        is_auth: false,
         type: 'string',
         length_value: '',
         default: '',
@@ -144,13 +145,28 @@ class AddFieldForm extends Component {
         }
         switch (state.value.type) {
           case 'boolean':{
-            if(value != 0 && value != 1){
+            if(value === ''){
+              value = null;
+            } else if (value != '0' && value != '1'){
               value = 1;
             }
           }
-          case 'integer':{
-            if(!Number.isNaN(parseInt(value))){
+          break;
+          case 'bigInteger':{
+            if(!isNaN(value) && value !== '0'){
               value = parseInt(value);
+            } else if(value === ''){
+              value = null;
+            } else {
+              value = '0';
+            }
+          }
+          break;
+          case 'integer':{
+            if(!isNaN(value) && value !== '0'){
+              value = parseInt(value);
+            } else if(value === ''){
+              value = null;
             } else {
               value = '0';
             }
@@ -177,7 +193,7 @@ class AddFieldForm extends Component {
   submitHandler(e) {
     e.preventDefault();
     const { history, match } = this.props;
-    const { name, title, description, is_label, is_title, type, size, default: default_, attribute, input_type,
+    const { name, title, description, is_label, is_title, is_auth, type, size, default: default_, attribute, input_type,
       options, null: _null, indexed, editable, calculation, calculation_logic } = this.state.value;
 
     let data = {};
@@ -187,13 +203,13 @@ class AddFieldForm extends Component {
         data = { title, description, type, calculation, name, } :
         data = { title, description, type, calculation_logic, name, };
     } else {
-      data = { name, title, description, is_label, is_title, type, size, default: default_, attribute, input_type, null: _null, indexed, editable };
+      data = { name, title, description, is_label, is_title, is_auth, type, size, default: default_, attribute, input_type, null: _null, indexed, editable };
       if (['select', 'checkbox', 'radio button'].includes(input_type)) {
         data = { ...data, options };
       }
       console.log(default_);
       if (['integer', 'bigInteger'].includes(type)) {
-        data.default = Number(default_);
+        data.default = default_;
       }
     }
 
@@ -229,7 +245,11 @@ class AddFieldForm extends Component {
 
     if (this.props.match.params.id) {
       let value = await this.filedsResource.get(this.props.match.params.id);
-      this.setState(state => ({ ...state, value: { ...state.value, ...value } }));
+
+      if (typeof value.calculation_logic === 'string') {
+        value.calculation_logic = JSON.parse(value.calculation_logic);
+      }  
+      this.setState(state => ({ ...state, isAlways: value.calculation ? true : false ,  value: { ...state.value, ...value } }));
     }
     this.setState(state => ({ ...state, fieldsOptions: options }));
   }
@@ -331,6 +351,13 @@ class AddFieldForm extends Component {
                 onChange={e => { this.changeValue(e.target.checked, 'is_title') }}
               />
               <label className="checkbox-label" htmlFor="field-is_title">As Title</label>
+            </div>
+            <div className="form-group">
+              <input type="checkbox" id="field-is_auth"
+                     checked={this.state.value.is_auth}
+                     onChange={e => { this.changeValue(e.target.checked, 'is_auth') }}
+              />
+              <label className="checkbox-label" htmlFor="field-is_auth">Set Auth</label>
             </div>
           </div>
 

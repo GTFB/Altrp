@@ -27,13 +27,14 @@ class AltrpRelationshipObserver
     {
         $model = Model::find($relationship->model_id);
 
-        if ($model->altrp_relationships
+        //Не пропускает hasOne нужно переделать
+        /*if ($model->altrp_relationships
             && ($relationship->isDirty('name') || $relationship->isDirty('foreign_key'))
             && ($model->altrp_relationships->contains('name',$relationship->name)
                 || $relationship->type === 'hasOne' && $model->altrp_relationships->contains('foreign_key',$relationship->foreign_key))
         ) {
             return false;
-        }
+        }*/
 
         //Cвязь belongsTo создается на существующую связь hasOne или hasMany
         //Миграция не нужна, она уже выполнялась при добавлении связи hasOne или hasMany

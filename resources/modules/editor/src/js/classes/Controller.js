@@ -29,7 +29,7 @@ class Controller {
     }
 
     if(this.data.prefixClass) {
-      currentElement.setCssClass(this.getSettingName(), this.data.prefixClass + this.data.default);
+      currentElement.setCssClass(this.getSettingName(), this.data.prefixClass + currentElement.getSettings(this.getSettingName()));
     }
     if (this.rules.length) {
       currentElement.addStyles(this.getSettingName(), this.rules);
@@ -37,10 +37,16 @@ class Controller {
   }
 
   /**
-   * Изменение значения либо в текущем элементе либо в репитере
+   * Изменение значения либо в текущем элементе, либо в репитере
    * @param {*} value
    */
   changeValue(value) {
+    /**
+     * Если значение контроллера объект, то создаем его копию
+     */
+    if(_.isObject(value)){
+      value = _.cloneDeep(value);
+    }
     /**
      * @member {BaseElement} currentElement
      * */
@@ -56,6 +62,7 @@ class Controller {
           : currentElement.removeStyle(this.getSettingName());
       }
       /**
+       *
        * Вызываем currentElement setCssClass в случае если есть this.data.prefixClass
        */
       if(this.data.prefixClass) {
@@ -98,15 +105,11 @@ class Controller {
       let [controlId, value] = condition;
       let negative = (controlId.indexOf('!') >= 0);
       controlId = controlId.replace('!', '');
-      if(_.isString(value)){
-        if (getCurrentElement().getSettings(controlId) !== value) {
-          show = negative;
-        }
+      if(_.isString(value) || _.isBoolean(value)){
+        show = getCurrentElement().getSettings(controlId) !== value ? negative : ! negative;
       }
-      if(_.isArray(value)){
-        if (value.indexOf(getCurrentElement().getSettings(controlId)) >= 0) {
-          show = !negative;
-        }
+      if(_.isArray(value) ){
+        show = value.indexOf(getCurrentElement().getSettings(controlId)) === -1 ? negative : ! negative;
       }
 
     });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Altrp\Accessor;
 use App\Altrp\Builders\QueryBuilder;
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
@@ -10,15 +11,20 @@ use App\Altrp\Generators\ModelGenerator;
 use App\Altrp\Column;
 use App\Altrp\Model;
 use App\Altrp\Query;
+use App\Altrp\SourcePermission;
+use App\Altrp\SourceRole;
 use App\Altrp\Table;
 use App\Altrp\Relationship;
 use App\Altrp\Source;
 use App\Http\Controllers\Controller as HttpController;
+use App\Permission;
+use App\Role;
 use App\SQLEditor;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\ApiRequest;
+use Illuminate\Support\Collection;
 
 
 class ModelsController extends HttpController
@@ -28,8 +34,6 @@ class ModelsController extends HttpController
      */
     public function models_list()
     {
-
-
         return response()->json(Model::getModelsForEditor());
     }
 
@@ -41,13 +45,82 @@ class ModelsController extends HttpController
         return response()->json(Model::getModelsForEditor());
     }
 
+    /**
+     * Получить модели без родительской модели
+     *
+     * @return JsonResponse
+     */
+    public function getModelsWithoutParent()
+    {
+        $models = Model::select(['id as value', 'title as label'])
+            ->whereNull('parent_model_id')
+            ->get();
+        return response()->json($models, 200);
+    }
+
   /**
    * @param Request $request
    * @return JsonResponse
    */
     public function models_options( Request $request )
     {
-      return response()->json(Model::getModelsOptions( $request->get( 'with_names' ),  $request->get( 'not_plural' ) ));
+      if( ! $request->get( 'with_sql_queries' ) ){
+        return response()->json(
+          Model::getModelsOptions(
+            $request->get( 'with_names' ),
+            $request->get( 'not_plural' ),
+            $request->get( 's' )
+          ));
+      } else {
+        $data_sources = [];
+        $model_data_sources = [];
+        foreach ( Model::getModelsOptions(
+          $request->get( 'with_names' ),
+          $request->get( 'not_plural' ),
+          $request->get( 's' )
+        ) as $modelsOption ) {
+          if( $modelsOption['value'] === 'user' ){
+            continue;
+          }
+          $model_data_sources[] = [
+            'label' => $modelsOption['label'],
+            'value' => $modelsOption['value'],
+            'type' => 'model_query'
+          ];
+        }
+
+        if( count( $model_data_sources ) ){
+          $data_sources[] = [
+            'label' => 'Models',
+            'options' => $model_data_sources,
+            'type' => 'models query'
+          ];
+        }
+        /**
+         * Добавляем варианты с SQL-editors
+         */
+        $sql_editors_data_sources = [];
+
+        $_sqls = SQLEditor::all();
+
+        foreach ( $_sqls as $sql ) {
+          $sql_editors_data_sources[] = [
+            'label' => $sql->model->title . ': ' . $sql->title,
+            'value' => '/ajax/models/queries/' . $sql->model->altrp_table->name . '/' . $sql->name,
+            'sql_name' => $sql->name,
+            'type' => 'sql_datasource'
+          ];
+        }
+
+        if( count( $sql_editors_data_sources ) ){
+          $data_sources[] = [
+            'label' => 'Data from SQLEditors',
+            'options' => $sql_editors_data_sources,
+          ];
+        }
+
+        return response()->json( $data_sources, 200, [],JSON_UNESCAPED_UNICODE );
+      }
     }
 
     /**
@@ -410,6 +483,31 @@ class ModelsController extends HttpController
         return response()->json($fields, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
+    public function getOnlyModelFields($model_id)
+    {
+        /**
+         * @var $model Model
+         */
+        $model = Model::find($model_id);
+        if (! $model) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+        $fields = $model->table->onlyColumns();
+        $relFields = [];
+        $relations = $model->altrp_relationships;
+        foreach ($relations as $relation) {
+            $relFields = array_merge($relFields, $relation->altrp_target_model->table->columns->each(function ($column) use ($relation){
+                $column->name = $relation->altrp_target_model->table->name . '.' . $column->name;
+                $column->title = $relation->altrp_target_model->table->name . '.' . $column->title;
+            })->toArray());
+        }
+        $fields = array_merge($fields->toArray(), $relFields);
+        return response()->json($fields, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
     /**
      * Получить поля для списка опций
      *
@@ -458,11 +556,34 @@ class ModelsController extends HttpController
                 'message' => 'Model not found'
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
-        $field = new Column($request->all());
-        $field->user_id = auth()->user()->id;
-        $field->table_id = $model->altrp_table->id;
-        $field->model_id = $model->id;
-        $result = $field->save();
+        if ($request->get('type') !== 'calculated') {
+            $field = new Column($request->all());
+            $field->user_id = auth()->user()->id;
+            $field->table_id = $model->altrp_table->id;
+            $field->model_id = $model->id;
+            $result = $field->save();
+        } else {
+            $accessor = new Accessor($request->all());
+            if ($request->has('calculation_logic'))
+                $accessor->calculation_logic = json_encode($accessor->calculation_logic);
+            $accessor->user_id = auth()->user()->id;
+            $accessor->model_id = $model->id;
+            $result = $accessor->save();
+
+            $field = new Column([
+                'name' => $request->name,
+                'title' => $request->title,
+                'description' => $request->description,
+                'type' => $request->type,
+            ]);
+            $field->user_id = auth()->user()->id;
+            $field->table_id = $model->altrp_table->id;
+            $field->model_id = $model->id;
+            Column::withoutEvents(function () use ($field) {
+                $field->save();
+            });
+        }
+
         if ($result) {
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
@@ -482,20 +603,43 @@ class ModelsController extends HttpController
      */
     public function updateModelField(ApiRequest $request, $model_id, $field_id)
     {
+        $data = $request->all();
+
+        /**
+         * @var $field Column
+         */
         $field = Column::where([['model_id', $model_id], ['id', $field_id]])->first();
+
+        if ($field->getOriginal() == 'calculated' && $field->getOriginal() != $data['type']) {
+            $accessor = Accessor::where([['model_id', $model_id], ['name', $field->name]])->first();
+            $accessor->delete();
+        }
+
+        if ($data['type'] === 'calculated') {
+            $field = Accessor::where([['model_id', $model_id], ['name', $field->name]])->first();
+            if (isset($data['calculation_logic'])) {
+                $data['calculation_logic'] = json_encode($data['calculation_logic']);
+                $data['calculation'] = null;
+            } else {
+                $data['calculation_logic'] = null;
+            }
+        }
+
         if (! $field) {
             return response()->json([
                 'success' => false,
                 'message' => 'Field not found'
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
-        $result = $field->update($request->all());
+
+        $result = $field->update($data);
+
         if ($result) {
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
         return response()->json([
             'success' => false,
-            'message' => 'Failed to create model'
+            'message' => 'Failed to update model field'
         ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -516,6 +660,15 @@ class ModelsController extends HttpController
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $field = Column::where([['id', $field_id]])->first();
+        $column = $field;
+
+        if ($field->type === 'calculated') {
+            $field = Accessor::where([['model_id',$model_id],['name',$field->name]])->first();
+            $field->type = $column->type;
+            if (!$field->calculation) $field->calculation = '';
+            if (!$field->calculation_logic) $field->calculation_logic = [];
+        }
+
         if ($field) {
             return response()->json($field, 200, [], JSON_UNESCAPED_UNICODE);
         }
@@ -548,7 +701,16 @@ class ModelsController extends HttpController
                 'message' => 'Field not found'
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
-        $result = $field->delete();
+        if ($field->type !== 'calculated') {
+            $result = $field->delete();
+        } else {
+            Column::withoutEvents(function () use ($field) {
+                $field->delete();
+            });
+            $accessor = Accessor::where([['model_id', $model_id], ['name', $field->name]])->first();
+            $result = $accessor->delete();
+        }
+
         if ($result) {
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
@@ -812,20 +974,21 @@ class ModelsController extends HttpController
      * Обновить источник данных
      *
      * @param ApiRequest $request
-     * @param $model_id
-     * @param $field_id
+     * @param $source_id
      * @return JsonResponse
      */
-    public function updateDataSource(ApiRequest $request, $model_id)
+    public function updateDataSource(ApiRequest $request, $source_id)
     {
-        $dataSource = Source::where([['model_id', $model_id]])->first();
+        $dataSource = Source::find($source_id);
+        $data = $request->all();
+        $data['updated_at'] = Carbon::now();
         if (! $dataSource) {
             return response()->json([
                 'success' => false,
                 'message' => 'Data source not found'
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
-        $result = $dataSource->update($request->all());
+        $result = $dataSource->update($data);
         if ($result) {
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
@@ -838,13 +1001,30 @@ class ModelsController extends HttpController
     /**
      * Получить источник данных по ID
      *
-     * @param $model_id
-     * @param $field_id
+     * @param $source_id
      * @return JsonResponse
      */
-    public function showDataSource($model_id)
+    public function showDataSource($source_id)
     {
-        $dataSource = Source::where([['model_id', $model_id]])->first();
+        $dataSource = Source::where('id', $source_id)
+            ->with(['source_roles.role:id', 'source_permissions.permission:id'])
+            ->first()
+            ->toArray();
+        $dataSource['access'] = ['roles' => [], 'permissions' => []];
+        $sourceRoles = $dataSource['source_roles'];
+        $sourcePermissions = $dataSource['source_permissions'];
+        unset($dataSource['source_roles']);
+        unset($dataSource['source_permissions']);
+        if ($sourceRoles) {
+            foreach ($sourceRoles as $sourceRole) {
+                $dataSource['access']['roles'][] = $sourceRole['role']['id'];
+            }
+        }
+        if ($sourcePermissions) {
+            foreach ($sourcePermissions as $sourcePermission) {
+                $dataSource['access']['permissions'][] = $sourcePermission['permission']['id'];
+            }
+        }
         if ($dataSource) {
             return response()->json($dataSource, 200, [], JSON_UNESCAPED_UNICODE);
         }
@@ -857,13 +1037,12 @@ class ModelsController extends HttpController
     /**
      * Удалить источник данных
      *
-     * @param $model_id
-     * @param $field_id
+     * @param $source_id
      * @return JsonResponse
      */
-    public function destroyDataSource($model_id)
+    public function destroyDataSource($source_id)
     {
-        $dataSource = Source::where([['model_id', $model_id]])->first();
+        $dataSource = Source::find($source_id);
         if (! $dataSource) {
             return response()->json([
                 'success' => false,
@@ -1088,32 +1267,120 @@ class ModelsController extends HttpController
      * @param $query_id
      * @return \Illuminate\Http\JsonResponse
      */
-  public function destroyQuery($model_id, $query_id)
-  {
-    $model = Model::find($model_id);
-    if (! $model){
-      return response()->json([
-        'success' => false,
-        'message' => 'Model not found'
-      ], 404, [], JSON_UNESCAPED_UNICODE);
+    public function destroyQuery($model_id, $query_id)
+    {
+        $model = Model::find($model_id);
+        if (! $model){
+          return response()->json([
+            'success' => false,
+            'message' => 'Model not found'
+          ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        $query = Query::find($query_id);
+        if (! $query){
+          return response()->json([
+            'success' => false,
+            'message' => 'Query not found'
+          ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+        $result = $query->delete();
+
+        if ($result) {
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to delete query'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
-    $query = Query::find($query_id);
-    if (! $query){
-      return response()->json([
-        'success' => false,
-        'message' => 'Query not found'
-      ], 404, [], JSON_UNESCAPED_UNICODE);
+    public function getModelAccessors($model_id)
+    {
+        $accessors = Accessor::where('model_id',$model_id)->get();
+        return response()->json($accessors, 200, [], JSON_UNESCAPED_UNICODE);
     }
-    $result = $query->delete();
 
-    if ($result) {
-        return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+    public function showAccessor($model_id, $accessor_id)
+    {
+        $accessor = Accessor::find($accessor_id);
+        if (! $accessor){
+            return response()->json([
+                'success' => false,
+                'message' => 'Accessor not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+        return response()->json($accessor, 200, [], JSON_UNESCAPED_UNICODE);
     }
-    return response()->json([
-        'success' => false,
-        'message' => 'Failed to delete query'
-    ], 500, [], JSON_UNESCAPED_UNICODE);
-  }
 
+    public function storeAccessor(ApiRequest $request, $model_id)
+    {
+        $accessor = new Accessor($request->all());
+        $accessor->calculation_logic = json_encode($accessor->calculation_logic);
+        $accessor->user_id = auth()->user()->id;
+        $accessor->model_id = $model_id;
+        $result = $accessor->save();
+
+        if ($result) {
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to create field'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function updateAccessor(ApiRequest $request, $model_id, $accessor_id)
+    {
+        $data = $request->all();
+
+        $accessor = Accessor::where([['model_id', $model_id], ['id', $accessor_id]])->first();
+
+        if(isset($data['calculation_logic'])) {
+            $data['calculation_logic'] = json_encode($data['calculation_logic']);
+        }
+
+        if (! $accessor) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Accessor not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+
+        $result = $accessor->update($data);
+
+        if ($result) {
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update model accessor'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Удалить аксессор
+     *
+     * @param $model_id
+     * @param $accessor_id
+     * @return JsonResponse
+     */
+    public function destroyAccessor($model_id, $accessor_id)
+    {
+        $accessor = Accessor::where([['model_id', $model_id], ['id', $accessor_id]])->first();
+        if (! $accessor) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Accessor not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+        $result = $accessor->delete();
+        if ($result) {
+            return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to delete accessor'
+        ], 500, [], JSON_UNESCAPED_UNICODE);
+    }
 }

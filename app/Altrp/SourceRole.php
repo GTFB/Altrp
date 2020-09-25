@@ -13,6 +13,7 @@ class SourceRole extends Model
         'source_id',
         'role_id',
         'type',
+        'updated_at'
     ];
 
     public function role()

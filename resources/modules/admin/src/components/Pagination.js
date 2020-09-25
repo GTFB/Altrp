@@ -45,7 +45,14 @@ class Pagination extends Component {
   render(){
     return<div className="pagination">
       <div className="version">
-        <p className="pagination__version">App creating with <NavLink className="pagination__link" to="#">Altrp</NavLink> / Version 1.0.1 </p>
+        <p className="pagination__version">
+          {/*App creating*/}
+          {/*with*/}
+          {/*<a className="pagination__link"*/}
+             {/*target="_blank"*/}
+             {/*href="https://altrp.com/">Altrp</a>*/}
+          {/*/*/}
+          Version {altrp_version} </p>
       </div>
       <div className="pagination__buttons">
         <p className="pagination__text">{ this.props.itemsCount} Items</p>

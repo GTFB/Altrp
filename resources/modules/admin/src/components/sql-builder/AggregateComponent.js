@@ -1,21 +1,12 @@
 import React, { Component } from "react";
 
-const typeOptions = ['sum', 'min', 'max'];
+const typeOptions = ['sum', 'min', 'max', 'avg', 'count', 'distinct', 'count_distinct'];
 
 class AggregateComponent extends Component {
   render() {
     const { type, column, alias } = this.props.item;
     const { columnsOptions, changeHandler } = this.props;
     return <div className="form-segment form-group__inline-wrapper">
-      <div className="form-group form-group_width30">
-        <label>Alias
-          <input type="text" required name="alias"
-            value={alias}
-            onChange={changeHandler}
-            className="form-control" />
-        </label>
-      </div>
-
       <div className="form-group form-group_width30">
         <label>Type
           <select required name="type"
@@ -40,11 +31,21 @@ class AggregateComponent extends Component {
             className="form-control"
           >
             <option disabled value="" />
+            <option value="*">All</option>
             {columnsOptions.map(({ value, label }) =>
               <option key={value} value={value}>
                 {label}
               </option>)}
           </select>
+        </label>
+      </div>
+      
+      <div className="form-group form-group_width30">
+        <label>Alias
+          <input type="text" required name="alias"
+            value={alias}
+            onChange={changeHandler}
+            className="form-control" />
         </label>
       </div>
     </div>

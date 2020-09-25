@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import './media-input.scss';
-import {renderAsset} from "../../../../editor/src/js/helpers";
+import {renderAsset} from "../../../../front-app/src/js/helpers";
 import {assetsShow} from "../../../../editor/src/js/store/assets-browser/actions";
 import {connect} from "react-redux";
 

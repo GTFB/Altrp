@@ -53,6 +53,17 @@ import scrollingTo from '../../../svgs/scrolling_to.svg'
 import clickIcon from '../../../svgs/click.svg'
 import inactivityIcon from '../../../svgs/inactivity.svg'
 import exitIntent from '../../../svgs/exit_intent.svg'
+import exit from '../../../svgs/exit.svg'
+
+import s1 from '../../../svgs/1H34NbWILW0tD8tr4snZXkDpw5B8IM9jFr2GUWxP.svg'
+import s2 from '../../../svgs/arrow-left 1.svg'
+import s3 from '../../../svgs/Frame 2.svg'
+import s4 from '../../../svgs/Frame 3.svg'
+import s5 from '../../../svgs/Union.svg'
+import s6 from '../../../svgs/Vector (1).svg'
+import s7 from '../../../svgs/Vector (2).svg'
+import s8 from '../../../svgs/Vector1.svg'
+import s9 from '../../../svgs/zgIUZOgUUYp3ZSLdeFaAS8Fbt6oHuqDW22YXArRO.svg'
 
 class IconsManager {
   constructor() {
@@ -112,7 +123,18 @@ class IconsManager {
     this.icons.push(new Icon('scrolling_to', scrollingTo));
     this.icons.push(new Icon('click', clickIcon));
     this.icons.push(new Icon('inactivity', inactivityIcon));
-    this.icons.push(new Icon('exit_intent', exitIntent))
+    this.icons.push(new Icon('exit_intent', exitIntent));
+    this.icons.push(new Icon('exit', exit));    
+
+    this.icons.push(new Icon('s1', s1));
+    this.icons.push(new Icon('s2', s2));
+    this.icons.push(new Icon('s3', s3));
+    this.icons.push(new Icon('s4', s4));
+    this.icons.push(new Icon('s5', s5));
+    this.icons.push(new Icon('s6', s6));
+    this.icons.push(new Icon('s7', s7));
+    this.icons.push(new Icon('s8', s8));
+    this.icons.push(new Icon('s9', s9));
   }
   /**
    * @param {string} iconName

@@ -352,7 +352,7 @@ class TableController extends ApiController
             ], 404, [],JSON_UNESCAPED_UNICODE);
         }
 
-        return response()->json($table->actual_columns, 200, [],JSON_UNESCAPED_UNICODE);
+        return response()->json($table->columns, 200, [],JSON_UNESCAPED_UNICODE);
 
     }
 

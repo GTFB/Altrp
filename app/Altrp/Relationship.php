@@ -9,9 +9,10 @@
 namespace App\Altrp;
 
 use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 use Mockery\Exception;
-
-use App\Altrp\Model;
+use App\Altrp\Model as AltrpModel;
 
 /**
  * Class Relationship
@@ -42,7 +43,39 @@ class Relationship extends EloquentModel
         'editable'
     ];
 
-    /**
+  /**
+   * Импортируем связи
+   * @param array $imported_relations
+   */
+  public static function import( $imported_relations = [] )
+  {
+    foreach ( $imported_relations as $imported_relation ) {
+      $model = AltrpModel::where( 'name', Arr::get( $imported_relation, 'model_name' ) )->first();
+      if( ! $model ){
+        continue;
+      }
+      $target_model = AltrpModel::where( 'name', Arr::get( $imported_relation, 'target_model_name' ) )->first();
+      if( ! $target_model ){
+        continue;
+      }
+      foreach ( $model->altrp_relationships as $altrp_relation ) {
+        if( $imported_relation['name'] === $altrp_relation->name ){
+          continue 2;
+        }
+      }
+      $new_relation = new self( $imported_relation );
+      $new_relation->model_id = $model->id;
+      $new_relation->target_model_id = $target_model->id;
+      try{
+        $new_relation->save();
+      } catch (\Exception $e){
+        Log::error( $e->getMessage(), [$e->getFile()] );
+        continue;
+      }
+    }
+  }
+
+  /**
      * @return array | null
      */
     public function get_model_for_route()
@@ -91,12 +124,12 @@ class Relationship extends EloquentModel
 
     public function altrp_model()
     {
-        return $this->belongsTo(Model::class, 'model_id');
+        return $this->belongsTo(\App\Altrp\Model::class, 'model_id');
     }
 
     public function altrp_target_model()
     {
-        return $this->belongsTo(Model::class, 'target_model_id');
+        return $this->belongsTo(\App\Altrp\Model::class, 'target_model_id');
     }
 
     public static function getBySearch($search, $modelId)
@@ -191,34 +224,34 @@ class Relationship extends EloquentModel
 
         return true;
     }
-    
+
     /**
      * Получаем обратную связь
      */
     public function getInverseRelationship() {
-        
+
         $conditions = [
             ["target_model_id","=",$this->model_id],
             ["model_id","=",$this->target_model_id],
             ["foreign_key","=",$this->local_key],
             ["local_key","=",$this->foreign_key],
         ];
-        
+
         if($this->type === "hasOne") {
             $conditions[] = ["type","=","belongsTo"];
         }
-        
+
         if($this->type === "hasMany") {
             $conditions[] = ["type","=","belongsTo"];
-            
+
         }
-        
+
         $result = Relationship::where($conditions);
-        
+
         if($this->type === "belongsTo") {
             $result->whereIn('type', ["hasOne", "hasMany"]);
         }
-        
+
         return $result->first();
     }
 }
