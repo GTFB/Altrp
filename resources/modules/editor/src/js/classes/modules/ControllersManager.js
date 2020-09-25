@@ -24,6 +24,7 @@ import FiltersController from "../../components/controllers/FiltersController";
 import ColumnWidthController from "../../components/controllers/ColumnWidthController";
 import GradientController from  "../../components/controllers/GradientController";
 import CreativeLinkController from "../../components/controllers/CreativeLinkController";
+import CreativeHoverController from "../../components/controllers/CreativeHoverController";
 import SqlSelectController from "../../components/controllers/SqlSelectController";
 
 export const TAB_CONTENT = "content";

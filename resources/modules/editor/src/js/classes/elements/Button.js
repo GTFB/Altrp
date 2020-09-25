@@ -575,12 +575,14 @@ class Button extends BaseElement{
           '{{ELEMENT}} .altrp-btn:after{{STATE}}': [
             'transition-duration: {{SIZE}}s;',
             'height: {{LINEHEIGHT}}px;',
-            'background: {{COLOR}};',
+            'color: {{COLOR}};',
+            'background: {{BACKGROUND}};',
           ],
           '{{ELEMENT}} .altrp-btn:before{{STATE}}': [
             'transition-duration: {{SIZE}}s;',
             'height: {{LINEHEIGHT}}px;',
-            'background: {{COLOR}};',
+            'color: {{COLOR}};',
+            'background: {{BACKGROUND}};',
           ],
         },
       }
