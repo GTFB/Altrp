@@ -97,7 +97,6 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
           <SourceField
             widget={widget}
             setWidget={setWidget}
-<<<<<<< HEAD
             sources={composeSources(settings.sql)}
           />
 
@@ -106,16 +105,6 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
             settings.filter?.map((param) => (
               <FilterField key={param.value} widget={widget} setWidget={setWidget} param={param} />
             ))}
-=======
-            sources={settings.sql?.map((item) => {
-              return { name: item.label, url: `/ajax/models/queries/${item.model}/${item.value}` };
-            })}
-          />
-
-          {settings.filter?.map((param) => (
-            <FilterField key={param.value} widget={widget} setWidget={setWidget} param={param} />
-          ))}
->>>>>>> 34f044c6335c982af8d7e6a4abb1ea2f6d736afc
 
           <TypeField
             widget={widget}

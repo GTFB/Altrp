@@ -59,13 +59,7 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
           <SourceField
             widget={widget}
             setWidget={setWidget}
-<<<<<<< HEAD
             sources={composeSources(settings.sql)}
-=======
-            sources={settings.sql?.map((item) => {
-              return { name: item.label, url: `/ajax/models/queries/${item.model}/${item.value}` };
-            })}
->>>>>>> 34f044c6335c982af8d7e6a4abb1ea2f6d736afc
           />
 
           {widget.source &&
