@@ -47,7 +47,7 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
           <SourceField
             widget={widget}
             setWidget={setWidget}
-            sources={settings.sql.map((item) => {
+            sources={settings.sql?.map((item) => {
               return { name: item.label, url: `/ajax/models/queries/${item.model}/${item.value}` };
             })}
           />

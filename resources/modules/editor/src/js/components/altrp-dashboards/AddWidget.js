@@ -85,12 +85,12 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
           <SourceField
             widget={widget}
             setWidget={setWidget}
-            sources={settings.sql.map((item) => {
+            sources={settings.sql?.map((item) => {
               return { name: item.label, url: `/ajax/models/queries/${item.model}/${item.value}` };
             })}
           />
 
-          {settings.filter.map((param) => (
+          {settings.filter?.map((param) => (
             <FilterField key={param.value} widget={widget} setWidget={setWidget} param={param} />
           ))}
 

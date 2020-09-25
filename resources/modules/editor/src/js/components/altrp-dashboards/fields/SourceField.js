@@ -18,7 +18,7 @@ function SourceField({ widget, setWidget, sources }) {
         required
       >
         <option value="">-</option>
-        {sources.map(({ url, name }) => (
+        {sources?.map(({ url, name }) => (
           <option key={url} value={url}>
             {name}
           </option>
