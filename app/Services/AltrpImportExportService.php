@@ -164,11 +164,11 @@ class AltrpImportExportService
 
     $data['page_data_sources'] = PageDatasource::all();
     foreach ( $data['page_data_sources'] as $key => $page_data_source ) {
-      $model = Model::find( $accessor['model_id'] );
-      if( ! $model ){
+      if( ! $page_data_source->source ){
         continue;
       }
-      $data['page_data_sources'][$key]['model_name'] = $model->name;
+      $data['page_data_sources'][$key]['source_url'] = $page_data_source->source->url;
+      $data['page_data_sources'][$key]['source_type'] = $page_data_source->source->type;
     }
 
     $data['s_q_l_editors'] = SQLEditor::all();

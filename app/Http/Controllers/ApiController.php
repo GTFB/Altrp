@@ -41,7 +41,7 @@ class ApiController extends Controller
         $parts = explode('\\', $this->modelClass);
         $modelName = array_pop($parts);
         $indexedColumns = $this->getIndexedColumns($modelName);
-        $resource = \Str::lower(\Str::plural($modelName));
+        $resource = Str::lower(Str::plural($modelName));
         $order_method = 'orderByDesc';
         $order_column = $request->get( 'order_by', 'id' );
         $filters = [];
