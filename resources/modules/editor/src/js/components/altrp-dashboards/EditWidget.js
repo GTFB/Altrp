@@ -63,7 +63,7 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
           />
 
           {widget.source &&
-            settings.filter.length > 0 &&
+            settings.filter?.length > 0 &&
             settings.filter?.map((param) => (
               <FilterField key={param.value} widget={widget} setWidget={setWidget} param={param} />
             ))}
