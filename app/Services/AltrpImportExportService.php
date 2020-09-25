@@ -299,7 +299,7 @@ class AltrpImportExportService
 //    Table::import( Arr::get( $data, 'tables', [] ) );
     AltrpModel::import( Arr::get( $data, 'models', [] ) );
     Column::import( Arr::get( $data, 'columns', [] ) );
-    Accessor::import( Arr::get( $data, 'accessors', [] ) );
+    Accessor::import( Arr::get( $data, 'altrp_accessors', [] ) );
     Relationship::import( Arr::get( $data, 'relations', [] ) );
     SQLEditor::import( Arr::get( $data, 's_q_l_editors', [] ) );
     Query::import( Arr::get( $data, 'queries', [] ) );
