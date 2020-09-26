@@ -51,6 +51,11 @@ export function parseOptionsFromSettings(string) {
     return[];
   }
   let options = string.split('\n');
+  let path = extractPathFromString(string);
+  let _optionsFromData = getDataByPath(path);
+  if(_.isArray(_optionsFromData)){
+    return _optionsFromData;
+  }
   options = options.map(option=>{
     let value = option.split('|')[0];
     value = value.trim();
