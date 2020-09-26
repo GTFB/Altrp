@@ -37,6 +37,21 @@ class InputWidget extends Component {
       options = (_.isArray(options)) ? options : [];
       this.setState(state =>({...state, options}))
     }
+
+    let value = this.state.value;
+    /**
+     * Если динамическое значение загрузилось,
+     * то используем this.getContent для получение этого динамического значения
+     * */
+    if(value.dynamic && this.props.currentModel.getProperty('altrpModelUpdated')){
+      value = this.getContent('content_default_value');
+    }
+    console.log(value);
+    if(! _.isObject(value)){
+      value = this.getContent('content_default_value');
+      console.log(value);
+    }
+    this.setState(state =>({...state,value}));
   }
 
   /**
@@ -53,7 +68,7 @@ class InputWidget extends Component {
   /**
    * Обновление виджета
    */
-  async componentDidUpdate(prevProps, prevState){
+  async _componentDidUpdate(prevProps, prevState){
     if(this.props.element.getSettings('content_type') === 'select' && this.props.element.getSettings('model_for_options') ){
       if(! (this.state.settings.model_for_options === prevProps.element.getSettings('model_for_options'))) {
         let model_for_options = prevProps.element.getSettings('model_for_options');
@@ -159,13 +174,7 @@ class InputWidget extends Component {
     let required = null;
 
     let value = this.state.value;
-    /**
-     * Если динамическое значение загрузилось,
-     * то используем this.getContent для получение этого динамического значения
-     * */
-    if(value.dynamic && this.props.currentModel.getProperty('altrpModelUpdated')){
-      value = this.getContent('content_default_value');
-    }
+
     /**
      * Пока динамический контент загружается (Еесли это динамический контент),
      * нужно вывести пустую строку
@@ -173,6 +182,7 @@ class InputWidget extends Component {
     if(value && value.dynamic){
       value = '';
     }
+    console.log(value);
     let classLabel = "";
     let styleLabel = {};
     switch (this.state.settings.content_label_position_type) {

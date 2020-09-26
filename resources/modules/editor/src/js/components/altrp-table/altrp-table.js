@@ -61,12 +61,11 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
     return query.getQueried(queryData)
   });
 
-  /**
-   * Если данные берутся со страницы
-   */
   if(_.get(settings, 'choose_datasource', 'query') === 'datasource'){
+    /**
+     * Если данные берутся со страницы
+     */
     _data = getDataByPath(extractPathFromString(_.get(settings, 'table_datasource', '')), []);
-    console.log(_data);
   } else if(query.pageSize){
     /**
      * Если есть пагинация
