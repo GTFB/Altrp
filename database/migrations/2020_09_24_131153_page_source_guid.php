@@ -16,8 +16,8 @@ class PageSourceGuid extends Migration
   {
     //
     Schema::table( 'page_data_sources', function ( Blueprint $table ){
-      $table->uuid('page_guid' )->nullable();
-      $table->foreign('page_guid')->references('guid')->on('pages')->onDelete('cascade');
+      $table->uuid( 'page_guid' )->nullable();
+      $table->foreign( 'page_guid' )->references( 'guid' )->on( 'pages' )->onDelete( 'cascade' );
     } );
     $page_data_sources = PageDatasource::all();
     $page_data_sources->each( function( $page_data_source ){

@@ -4,6 +4,8 @@
 namespace App\Altrp\Builders\Traits;
 
 
+use Illuminate\Support\Facades\DB;
+
 trait DynamicVariables
 {
     /**
@@ -61,7 +63,11 @@ trait DynamicVariables
             },
             $str
         );
-        return $str;
+      /**
+       * Заменим префикс БД
+       */
+      $str = str_replace( '{{PREFIX}}', DB::getTablePrefix(), $str );
+      return $str;
     }
 
     /**

@@ -8,11 +8,13 @@ import { BAR, PIE, TABLE, DONUT } from "../../../../../admin/src/components/dash
 
 import WidgetDiagram from "../../../../../admin/src/components/dashboard/WidgetDiagram";
 import TypeField from "./fields/TypeField";
+import FilterField from "./fields/FilterField";
 import LegendField from "./fields/LegendField";
 import SourceField from "./fields/SourceField";
 import ColorSchemeField from "./fields/colorSchemeField";
+import VerticalTableField from "./fields/VerticalTableField";
 
-const AddWidget = ({ id, onAdd, setIsShow, sources }) => {
+const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
   const [widget, setWidget] = useState({
     type: TABLE,
     source: "",
@@ -53,9 +55,13 @@ const AddWidget = ({ id, onAdd, setIsShow, sources }) => {
   };
 
   const getTypesBySource = (s) => {
-    const source = sources.find((item) => s === `/ajax/models/queries/${item.model}/${item.value}`);
+    const source = settings.sql?.find(
+      (item) => s === `/ajax/models/queries/${item.model}/${item.value}`
+    );
     return source?.types?.map((type) => type.value) || [];
   };
+
+  console.log("ADDWIDGET settings :>> ", settings.filter);
 
   return (
     <Card>
@@ -79,16 +85,24 @@ const AddWidget = ({ id, onAdd, setIsShow, sources }) => {
           <SourceField
             widget={widget}
             setWidget={setWidget}
-            sources={sources.map((item) => {
+            sources={settings && settings.sql?.map((item) => {
               return { name: item.label, url: `/ajax/models/queries/${item.model}/${item.value}` };
             })}
           />
 
+          {settings.filter?.map((param) => (
+            <FilterField key={param.value} widget={widget} setWidget={setWidget} param={param} />
+          ))}
+
           <TypeField
             widget={widget}
             setWidget={setWidget}
-            allowedTypes={getTypesBySource(widget.source)}
+            allowedTypes={[...getTypesBySource(widget.source), TABLE]}
           />
+
+          {widget.source && widget.type === TABLE && (
+            <VerticalTableField widget={widget} setWidget={setWidget} />
+          )}
 
           <ColorSchemeField widget={widget} setWidget={setWidget} />
 
