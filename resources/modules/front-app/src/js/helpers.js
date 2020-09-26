@@ -51,6 +51,11 @@ export function parseOptionsFromSettings(string) {
     return[];
   }
   let options = string.split('\n');
+  let path = extractPathFromString(string);
+  let _optionsFromData = getDataByPath(path);
+  if(_.isArray(_optionsFromData)){
+    return _optionsFromData;
+  }
   options = options.map(option=>{
     let value = option.split('|')[0];
     value = value.trim();
@@ -269,21 +274,36 @@ function _conditionChecker(c, model){
 
 /**
  * Получить данные
- * @param path
+ * @param {string} path
+ * @param {*} _default
  * @return {string}
  */
-export function getDataByPath(path){
+export function getDataByPath(path, _default = null){
   const {currentModel, currentDataStorage} = appStore.getState();
   const urlParams = window.currentRouterMatch instanceof AltrpModel ? window.currentRouterMatch.getProperty('params') : {};
-  let value = '';
+  let value = _default;
   if(! _.isString(path)){
     return value;
   }
   if(path.indexOf('altrpdata.') === 0){
     path = path.replace('altrpdata.', '');
-    value = currentDataStorage.getProperty(path)
+    value = currentDataStorage.getProperty(path, _default)
   } else {
     value = urlParams[path] ? urlParams[path] : currentModel.getProperty(path);
   }
-  return value;
+  return value ;
+}
+
+/**
+ * Извелкает путь из строки
+ * @param {string} string
+ * @return {string}
+ */
+export function extractPathFromString(string = ''){
+  let path = '';
+  if(_.isString(string)){
+    // path = string.match(/(?<={{)([\s\S]+?)(?=}})/g)[0]
+    path = _.get(string.match(/(?<={{)([\s\S]+?)(?=}})/g), '0', '');
+  }
+  return path;
 }

@@ -3,7 +3,12 @@ import {useTable, useSortBy} from "react-table";
 import {useQuery, usePaginatedQuery, queryCache} from  "react-query";
 import '../../../sass/altrp-pagination.scss';
 import {Link} from "react-router-dom";
-import {isEditor, parseURLTemplate} from "../../../../../front-app/src/js/helpers";
+import {
+  extractPathFromString,
+  getDataByPath,
+  isEditor,
+  parseURLTemplate
+} from "../../../../../front-app/src/js/helpers";
 import {iconsManager} from "../../../../../admin/src/js/helpers";
 import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput";
 
@@ -55,7 +60,13 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
     }
     return query.getQueried(queryData)
   });
-  if(query.pageSize){
+
+  if(_.get(settings, 'choose_datasource', 'query') === 'datasource'){
+    /**
+     * Если данные берутся со страницы
+     */
+    _data = getDataByPath(extractPathFromString(_.get(settings, 'table_datasource', '')), []);
+  } else if(query.pageSize){
     /**
      * Если есть пагинация
      */
