@@ -145,7 +145,7 @@ function getContent(settingName) {
   let paths = _.isString(content) ? content.match(/(?<={{)([\s\S]+?)(?=}})/g) : null;
   if(_.isArray(paths)){
     paths.forEach(path => {
-      let value = getDataByPath(path);
+      let value = getDataByPath(path, '');
       content = content.replace(new RegExp(`{{${path}}}`, 'g'), value)
     });
   }

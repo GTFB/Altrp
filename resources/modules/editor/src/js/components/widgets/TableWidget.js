@@ -25,7 +25,9 @@ class TableWidget extends Component {
    * @return {boolean}
    */
   showTable(query = {}){
-
+    if( this.props.element.getSettings('choose_datasource') === 'datasource' ){
+      return true;
+    }
     if(! query.modelName && ! query.dataSource){
       return false;
     }
