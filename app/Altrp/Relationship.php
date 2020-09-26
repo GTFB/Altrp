@@ -10,7 +10,9 @@ namespace App\Altrp;
 
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Mockery\Exception;
 use App\Altrp\Model as AltrpModel;
 
@@ -223,6 +225,133 @@ class Relationship extends EloquentModel
         }
 
         return true;
+    }
+
+    /**
+     * Проверка на существование таблицы в БД
+     * @return bool
+     */
+    public function is_db_exist() {
+        $table = $this->altrp_model->altrp_table;
+        $target_table = $this->altrp_target_model->altrp_table;
+        $keys = $table->getDBForeignKeys();
+        $prefix = env('DB_TABLES_PREFIX', '');
+        $key = false;
+        foreach ($keys as $value) {
+            if(array_search($this->local_key,$value->getLocalColumns()) !== false
+                && $value->getForeignTableName() == $prefix.$target_table->name
+                && array_search($this->foreign_key, $value->getForeignColumns()) !== false
+                ) {
+                return $value;
+            }
+        }
+
+        return false;
+    }
+
+    public function getDBKey() {
+
+        $foreign_table = $this->getTableToDBAL();
+        $local_table = $this->getTableToDBAL(true);
+        $local_key = $this->getColumnNameToDBAL(true);
+        $foreign_key = $this->getColumnNameToDBAL();
+        $prefix = env('DB_TABLES_PREFIX', '');
+
+        if(!$foreign_table) {
+            return false;
+        }
+
+        $keys = $foreign_table->getDBForeignKeys();
+
+        foreach ($keys as $value) {
+            //dd($prefix.$local_table->name);
+            if(array_search($local_key,$value->getLocalColumns()) !== false
+                && $value->getForeignTableName() == $prefix.$local_table->name
+                && array_search($foreign_key, $value->getForeignColumns()) !== false
+            ) {
+                return $value;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Получаем имя таблицы для проверки через DBAL
+     * @param bool $is_local
+     * @return bool|string
+     */
+    public function getTableToDBAL($is_local = false) {
+        $table = $this->altrp_model->altrp_table;
+        $target_table = $this->altrp_target_model->altrp_table;
+        $prefix = env('DB_TABLES_PREFIX', '');
+        if($this->type == "hasOne" || $this->type == "hasMany") {
+            return $is_local ? $table : $target_table ;
+        }
+        else if($this->type == "belongsTo") {
+            return $is_local ?  $target_table : $table;
+        }
+        return false;
+    }
+
+    /**
+     * Получаем название колонки для проверки через DBAL
+     * @param bool $is_local
+     * @return bool|mixed
+     */
+    public function getColumnNameToDBAL($is_local = false) {
+        if($this->type == "hasOne" || $this->type == "hasMany") {
+            return $is_local ? $this->foreign_key : $this->local_key;
+        }
+        else if($this->type == "belongsTo") {
+            return $is_local ? $this->local_key : $this->foreign_key;
+        }
+        return false;
+    }
+
+    /**
+     * Сравнение аттрибутов колонок через DBAL
+     * @return array
+     */
+    public function compareColumnsAttributes() {
+        $table = $this->altrp_model->altrp_table;
+        $target_table = $this->altrp_target_model->altrp_table;
+
+        $target_column = $target_table->getDBColumnByName($this->foreign_key);
+        $local_column = $table->getDBColumnByName($this->local_key);
+
+        $errors = [];
+
+        if($target_column->getType() !== $local_column->getType()) {
+            $errors[] = "Columns has different type";
+        }
+
+        if($target_column->getUnsigned() !== $local_column->getUnsigned()) {
+            $errors[] = "Columns has different unsigned attribute";
+        }
+
+        return $errors;
+
+    }
+
+    /**
+     * Проверяем на ошибку в данных
+     * Cannot add or update a child row: a foreign key constraint fails
+     * @return bool
+     */
+    public function checkDBRowsConstraint() {
+        $foreign_table = $this->getTableToDBAL();
+        $local_table = $this->getTableToDBAL(true);
+        $local_key = $this->getColumnNameToDBAL(true);
+        $foreign_key = $this->getColumnNameToDBAL();
+        $prefix = env('DB_TABLES_PREFIX', '');
+
+        $result = DB::table($foreign_table->name)
+            ->leftJoin($local_table->name, $foreign_table->name.".".$local_key, '=', $local_table->name.".".$foreign_key)
+            ->havingRaw($prefix.$local_table->name.".".$foreign_key." IS NULL")
+            ->get();
+
+        return count($result) > 0 ? false : true;
     }
 
     /**

@@ -119,6 +119,24 @@ class Table extends Model
     }
 
     /**
+     * Получуем все ограничения внешнего ключа для таблицы
+     * @return mixed
+     */
+    public function getDBForeignKeys()
+    {
+        $prefix = env('DB_TABLES_PREFIX', '');
+        $conn = Schema::getConnection()->getDoctrineSchemaManager();
+        return $conn->listTableForeignKeys($prefix.$this->name);
+    }
+
+    public function getDBColumnByName($name)
+    {
+        $prefix = env('DB_TABLES_PREFIX', '');
+        $conn = Schema::getConnection();
+        return $conn->getDoctrineColumn($prefix.$this->name, $name);
+    }
+
+    /**
      * Получить все колонки таблицы
      *
      * @param boolean $with_relations
