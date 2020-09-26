@@ -23,8 +23,6 @@ function FilterField({ widget, setWidget, param }) {
     options.length === 0 && getOptions(param);
   }, [param]);
 
-  console.log("param :>> ", widget);
-
   return (
     <Form.Group>
       <Form.Label>{param.label}</Form.Label>
