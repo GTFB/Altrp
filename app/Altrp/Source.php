@@ -101,7 +101,7 @@ class Source extends Model
       case 'App\Altrp\Query':
         return config('app.url') . '/ajax/models/queries' . data_get( $this, 'url' );
       default:
-        return $this->rype == 'remote'
+        return $this->type != 'remote'
             ? config('app.url') . '/ajax/models' . data_get( $this, 'url' )
             : config('app.url') . '/ajax/models/data_sources/' . $this->model->table->name . '/' . data_get( $this, 'name' );
     }
