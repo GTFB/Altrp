@@ -320,17 +320,17 @@ class AddFieldForm extends Component {
               <p>E.g. [field_name]*[field_name] + 10</p>
             </> :
             <>
-              {this.state.value.calculation_logic.map((item, index) => <>
+              {this.state.value.calculation_logic.map((item, index) => <React.Fragment key={index}>
                 {index !== 0 && <hr />}
                 <FieldCalculationLogic
                   item={item}
                   index={index}
                   fieldsOptions={this.state.fieldsOptions}
-                  key={index}
+                  key={index + 'logic'}
                   changeHandler={item => this.itemChangeHandler(item, index)}
                   deleteItemHandler={() => this.deleteItemHandler(index)}
                 />
-              </>)}
+              </React.Fragment>)}
               <button className="btn" type="button" onClick={this.addItemHandler}>
                 + Calculated Logic
               </button>

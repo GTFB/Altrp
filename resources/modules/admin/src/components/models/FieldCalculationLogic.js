@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import AltrpCodeEditor from "../altrp-editor/AltrpCodeEditor";
 
 class FieldCalculationLogic extends Component {
   constructor(props) {
@@ -142,6 +143,7 @@ class FieldCalculationLogic extends Component {
               disabled={rightType !== "string"}
               onChange={this.rightChangeHandler}
             />
+
           </div>
 
           <p className="form-group__inline-wrapper__divider">or</p>
@@ -254,6 +256,21 @@ class FieldCalculationLogic extends Component {
           value={item.result}
           onChange={({ target: { value, name } }) => changeHandler({ value, name })}
         />
+        <AltrpCodeEditor value={item.result}
+                         onChange={value => {
+                           // if(value[0] !== "'" ){
+                           //   value = `'${value}`;
+                           // }
+                           // if(value[value.length - 1] !== "'" ){
+                           //   value = `${value}'`;
+                           // }
+                           // console.log(value);
+                           changeHandler({
+                               value,
+                               name: 'result'
+                           });
+                         }}
+                         mode="wrapped json"/>
       </div>
       <p>E.g. [field_name]*[field_name] + 10</p>
     </>
