@@ -1,0 +1,9 @@
+    public function {{methodName}}()
+    {
+        $url = "{{url}}";
+        $response = \Curl::to($url)
+                    ->withData(request()->all())
+                    ->asJson()
+                    ->get();
+        return response()->json($response, 200, [], JSON_UNESCAPED_UNICODE);
+    }

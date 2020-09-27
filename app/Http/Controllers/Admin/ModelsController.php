@@ -11,10 +11,14 @@ use App\Altrp\Generators\ModelGenerator;
 use App\Altrp\Column;
 use App\Altrp\Model;
 use App\Altrp\Query;
+use App\Altrp\SourcePermission;
+use App\Altrp\SourceRole;
 use App\Altrp\Table;
 use App\Altrp\Relationship;
 use App\Altrp\Source;
 use App\Http\Controllers\Controller as HttpController;
+use App\Permission;
+use App\Role;
 use App\SQLEditor;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -970,13 +974,12 @@ class ModelsController extends HttpController
      * Обновить источник данных
      *
      * @param ApiRequest $request
-     * @param $model_id
-     * @param $field_id
+     * @param $source_id
      * @return JsonResponse
      */
-    public function updateDataSource(ApiRequest $request, $model_id)
+    public function updateDataSource(ApiRequest $request, $source_id)
     {
-        $dataSource = Source::where([['model_id', $model_id]])->first();
+        $dataSource = Source::find($source_id);
         if (! $dataSource) {
             return response()->json([
                 'success' => false,
@@ -996,13 +999,30 @@ class ModelsController extends HttpController
     /**
      * Получить источник данных по ID
      *
-     * @param $model_id
-     * @param $field_id
+     * @param $source_id
      * @return JsonResponse
      */
-    public function showDataSource($model_id)
+    public function showDataSource($source_id)
     {
-        $dataSource = Source::where([['model_id', $model_id]])->first();
+        $dataSource = Source::where('id', $source_id)
+            ->with(['source_roles.role:id', 'source_permissions.permission:id'])
+            ->first()
+            ->toArray();
+        $dataSource['access'] = ['roles' => [], 'permissions' => []];
+        $sourceRoles = $dataSource['source_roles'];
+        $sourcePermissions = $dataSource['source_permissions'];
+        unset($dataSource['source_roles']);
+        unset($dataSource['source_permissions']);
+        if ($sourceRoles) {
+            foreach ($sourceRoles as $sourceRole) {
+                $dataSource['access']['roles'][] = $sourceRole['role']['id'];
+            }
+        }
+        if ($sourcePermissions) {
+            foreach ($sourcePermissions as $sourcePermission) {
+                $dataSource['access']['permissions'][] = $sourcePermission['permission']['id'];
+            }
+        }
         if ($dataSource) {
             return response()->json($dataSource, 200, [], JSON_UNESCAPED_UNICODE);
         }
@@ -1015,13 +1035,12 @@ class ModelsController extends HttpController
     /**
      * Удалить источник данных
      *
-     * @param $model_id
-     * @param $field_id
+     * @param $source_id
      * @return JsonResponse
      */
-    public function destroyDataSource($model_id)
+    public function destroyDataSource($source_id)
     {
-        $dataSource = Source::where([['model_id', $model_id]])->first();
+        $dataSource = Source::find($source_id);
         if (! $dataSource) {
             return response()->json([
                 'success' => false,
@@ -1359,5 +1378,4 @@ class ModelsController extends HttpController
             'message' => 'Failed to delete accessor'
         ], 500, [], JSON_UNESCAPED_UNICODE);
     }
-
 }

@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Altrp\Builders\QueryBuilder;
 use App\Altrp\Query;
+use App\Altrp\Source;
 use App\Altrp\SourcePermission;
 use App\Altrp\SourceRole;
 use App\Exceptions\Controller\ControllerFileException;
@@ -28,7 +29,12 @@ class AltrpQueryObserver
         $source = $builder->writeSource($query->name);
         $query->user_id = auth()->user()->id;
         $query->source_id = $source->id;
-        $oldQuery = Query::where('source_id', $source->id)->first();
+
+        $oldQuery = Query::where([
+            ['source_id',$source->id],
+            ['name', $query->name],
+            ['model_id', $query->model->id]
+        ])->first();
         if ($oldQuery) return false;
     }
 
@@ -44,6 +50,10 @@ class AltrpQueryObserver
      */
     public function created(Query $query)
     {
+        $source = $query->source;
+        Source::withoutEvents(function () use ($source, $query) {
+            $source->update(['sourceable_id' => $query->id]);
+        });
         $builder = new QueryBuilder($query);
         $methodBody = $builder->getMethodBody();
         if (! $builder->writeSourceRoles($query->source)) {
@@ -84,10 +94,16 @@ class AltrpQueryObserver
             throw new RepositoryFileException('Failed to update repository', 500);
         }
         if ($query->source) {
-            $query->source->update([
-                'type' => Str::snake($query->name),
-                'name' => ucwords(str_replace('_', ' ',Str::snake($query->name)))
-            ]);
+            Source::withoutEvents(function () use ($query){
+                $query->source->update([
+                    'type' => Str::snake($query->name),
+                    'name' => $query->name,
+                    'title' => ucwords(str_replace('_', ' ',Str::snake($query->name))),
+                    'request_type' => 'get',
+                    'sourceable_id' => $query->id,
+                    'sourceable_type' => 'App\Altrp\Query'
+                ]);
+            });
         }
         if (! $builder->updateSourceRoles($query->source)) {
             throw new ControllerFileException('Failed to update source roles', 500);

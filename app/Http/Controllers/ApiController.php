@@ -112,6 +112,38 @@ class ApiController extends Controller
         return $columnsList;
     }
 
+    /**
+     * Получить ассоциативный массив параметров запроса
+     *
+     * @param $url
+     * @return array
+     */
+    protected function getRequestParamsAssoc($url)
+    {
+        $parts = explode('?', $url);
+        $uri = $parts[1] ?? '';
+        if (!$uri) return [];
+        $requestParamsAssoc = [];
+        $params = explode('&', $uri);
+        foreach ($params as $param) {
+            $param = explode('=', $param);
+            $requestParamsAssoc[$param[0]] = $param[1];
+        }
+        return $requestParamsAssoc;
+    }
+
+    /**
+     * Получить URL без параметров
+     *
+     * @param $url
+     * @return mixed|string
+     */
+    protected function getOnlyUrl($url)
+    {
+        $parts = explode('?', $url);
+        return $parts[0];
+    }
+
   /**
    * Список опций для селекта
    * @param ApiRequest $request

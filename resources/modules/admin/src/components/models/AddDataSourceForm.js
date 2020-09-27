@@ -1,48 +1,49 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import AltrpSelect from "../altrp-select/AltrpSelect";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import { titleToName } from "../../js/helpers";
 
-
-// const typeOptions = ['resource', 'Get Queried', 'create', 'read', 'update', 'delete', 'options'];
-const mockedOptions = [
-  { value: 1, label: "Model title 1" },
-  { value: 2, label: "Model title 2" },
-  { value: 3, label: "Model title 3" },
-];
-
 class AddDataSourceForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      // modelsOptions: [],   TODO: заменить замоканые данные
-      modelsOptions: mockedOptions,
-      value: {
-        title: '',
-        name: '',
-        description: '',
-        type: '',
-        request_type: '',
-        model_id: '',
-        url: '',
-        api_url: '',
-        auth: true,
-        access: {
-          roles: [],
-          permissions: []
-        }
-      },
-    };
-    this.submitHandler = this.submitHandler.bind(this);
+  state = {
+    modelsOptions: [],
+    rolesOptions: [],
+    permissionsOptions: [],
+    typeIsDisabled: false,
+    value: {
+      title: '',
+      name: '',
+      description: '',
+      type: 'remote',
+      request_type: '',
+      model_id: '',
+      url: '',
+      api_url: '',
+      auth: true,
+      access: {
+        roles: [],
+        permissions: []
+      }
+    }
   }
 
   componentDidMount() {
-    const resource = new Resource({ route: '/admin/ajax/model_options' });
-    resource.getAll().then(({ options }) => this.setState({ modelsOptions: options }));
+    const { id } = this.props.match.params;
+
+    new Resource({ route: '/admin/ajax/model_options' }).getAll()
+      .then(({ options }) => this.setState({ modelsOptions: options }));
+    new Resource({ route: '/admin/ajax/role_options' }).getAll()
+      .then(rolesOptions => this.setState({ rolesOptions }));
+    new Resource({ route: '/admin/ajax/permissions_options' }).getAll()
+      .then(permissionsOptions => this.setState({ permissionsOptions }));
+
+    if (id) {
+      const resource = new Resource({ route: '/admin/ajax/data_sources' });
+      resource.get(id).then(value => this.setState({ value, typeIsDisabled: value.type === 'remote' }));
+    }
   }
 
-  changeValue(value, field) {
+  changeValue = (value, field) => {
     this.setState(state => {
       state = { ...state };
       state.value[field] = value;
@@ -90,14 +91,18 @@ class AddDataSourceForm extends Component {
     });
   };
 
-  submitHandler(e) {
+  submitHandler = e => {
     e.preventDefault();
     const resource = new Resource({ route: '/admin/ajax/data_sources' });
-    resource.post(this.state.value);
-    console.log(this.state.value);
+    const { id } = this.props.match.params;
+
+    (id ? resource.put(id, this.state.value) : resource.post(this.state.value))
+      .then(() => this.props.history.goBack());
   }
 
   render() {
+    const { roles, permissions } = this.state.value.access;
+    const { rolesOptions, permissionsOptions } = this.state;
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
@@ -133,8 +138,17 @@ class AddDataSourceForm extends Component {
             value={this.state.value.type}
             onChange={e => { this.changeValue(e.target.value, 'type') }}
             className="form-control"
+            disabled={!this.props.match.params.id || this.state.typeIsDisabled}
           >
-            <option disabled value="" />
+            {/* <option disabled value="" /> */}
+            <option value="get">get</option>
+            <option value="show">show</option>
+            <option value="options">options</option>
+            <option value="filters">filters</option>
+            <option value="add">add</option>
+            <option value="update">update</option>
+            <option value="update_column">update_column</option>
+            <option value="delete">delete</option>
             <option value="remote">remote</option>
           </select>
         </div>
@@ -162,6 +176,7 @@ class AddDataSourceForm extends Component {
           value={this.state.value.model_id}
           onChange={e => { this.changeValue(e.target.value, 'model_id') }}
           className="form-control"
+          disabled={this.props.match.params.id}
         >
           <option disabled value="" />
           {this.state.modelsOptions.map(({ value, label }) =>
@@ -198,37 +213,25 @@ class AddDataSourceForm extends Component {
       <label className="checkbox-label" htmlFor="field-auth">Auth</label>
 
       {this.state.value.auth && <div className="form-group__inline-wrapper">
-        <div className="form-group col-6">
-          <label htmlFor="field-roles">Roles</label>
-          <AltrpSelect id="field-roles"
+        <div className="form-group form-group_width47">
+          <label htmlFor="roles">Roles</label>
+
+          <AltrpSelect id="roles"
+            closeMenuOnSelect={false}
+            value={_.filter(rolesOptions, r => roles.indexOf(r.value) >= 0)}
             isMulti={true}
-            optionsRoute="/admin/ajax/role_options"
-            placeholder="All"
-            defaultOptions={[
-              {
-                value: null,
-                label: 'All',
-              }
-            ]}
-            value={this.state.value.roles}
             onChange={this.changeRoles}
-          />
+            options={rolesOptions} />
         </div>
-        <div className="form-group col-6">
-          <label htmlFor="field-permissions">Permissions</label>
-          <AltrpSelect id="field-permissions"
+
+        <div className="form-group form-group_width47">
+          <label htmlFor="permissions">Permissions</label>
+          <AltrpSelect id="roles"
+            value={_.filter(permissionsOptions, p => permissions.indexOf(p.value) >= 0)}
+            closeMenuOnSelect={false}
             isMulti={true}
-            optionsRoute="/admin/ajax/permissions_options"
-            placeholder="All"
-            defaultOptions={[
-              {
-                value: null,
-                label: 'All',
-              }
-            ]}
-            value={this.state.value.permissions}
             onChange={this.changePermission}
-          />
+            options={permissionsOptions} />
         </div>
       </div>}
 
@@ -241,4 +244,4 @@ class AddDataSourceForm extends Component {
   }
 }
 
-export default AddDataSourceForm;
+export default withRouter(AddDataSourceForm);
