@@ -54,11 +54,18 @@ class ButtonWidget extends Component {
   render() {
     const { link_link = {} } = this.state.settings;
     const { goBack } = this.props.history;
+    const background_image = this.props.element.getSettings('background_image', {});
+
+    let classes = "altrp-btn " + (this.state.settings.position_css_classes || "");
+    if (background_image.url) {
+      classes += ' altrp-background-image';
+    }
 
     let buttonText = this.getContent('button_text');
 
     let classes =
       "altrp-btn " + (this.state.settings.position_css_classes || "");
+
     let buttonMedia = { ...this.state.settings.button_icon };
     if (this.state.pending) {
       classes += " altrp-disabled";

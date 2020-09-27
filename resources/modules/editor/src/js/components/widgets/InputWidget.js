@@ -178,6 +178,7 @@ class InputWidget extends Component {
   render(){
     let label = null;
     let required = null;
+    const { options_sorting } = this.state.settings;
 
     let value = this.state.value;
 
@@ -251,7 +252,7 @@ class InputWidget extends Component {
       break;
       case 'select':{
         let options = this.state.options || [];
-        options = _.sortBy(options, (o => o.label ? o.label.toString() : o));
+        // options = _.sortBy(options, (o => o.label ? o.label.toString() : o));
         input = <select value={value || ''}
                         onChange={this.onChange}
                         id={this.state.settings.position_css_id}
@@ -259,9 +260,9 @@ class InputWidget extends Component {
           {this.state.settings.content_options_nullable ? <option value=""/> : ''}
 
           {
-            options.map(option=>{
-              return <option value={option.value} key={option.value}>{option.label}</option>
-            })
+            (options_sorting ? sortOptions(options, options_sorting) : options)
+              .map(option=><option value={option.value} key={option.value}>{option.label}</option>
+            )
           }
         </select>
       }
