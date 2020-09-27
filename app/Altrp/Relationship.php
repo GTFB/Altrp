@@ -264,7 +264,6 @@ class Relationship extends EloquentModel
         $keys = $foreign_table->getDBForeignKeys();
 
         foreach ($keys as $value) {
-            //dd($prefix.$local_table->name);
             if(array_search($local_key,$value->getLocalColumns()) !== false
                 && $value->getForeignTableName() == $prefix.$local_table->name
                 && array_search($foreign_key, $value->getForeignColumns()) !== false

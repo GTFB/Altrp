@@ -2,21 +2,19 @@
 
 namespace App\Observers;
 
-use App\Altrp\Column;
 use App\Altrp\Generators\ModelGenerator;
 use App\Altrp\Relationship;
 use App\Altrp\Model;
 use App\Altrp\Migration;
 use App\Altrp\Generators\KeyMigrationGenerator;
-use App\Altrp\Generators\NewMigrationGenerator;
 
 use App\Exceptions\AltrpMigrationCreateFileExceptions;
-use App\Exceptions\AltrpMigrationRunExceptions;
 use App\Exceptions\CommandFailedException;
 use App\Exceptions\AltrpRelationshipNotFoundInverseRelationshipExceptions;
 use App\Exceptions\Migration\AltrpForeignKeyExistException;
 use App\Exceptions\Migration\AltrpForeignKeyColumnsCompareException;
 use App\Exceptions\Migration\AltrpForeignKeyChildRowsException;
+use App\Exceptions\Migration\AltrpForeignKeyNotFoundException;
 
 class AltrpRelationshipObserver
 {
@@ -30,6 +28,17 @@ class AltrpRelationshipObserver
     {
         $model = Model::find($relationship->model_id);
         $dbal_key = $relationship->getDBKey();
+
+
+        //Cвязь belongsTo создается на существующую связь hasOne или hasMany
+        //Миграция не нужна, она уже выполнялась при добавлении связи hasOne или hasMany
+        if($relationship->type === "belongsTo") {
+            //Перед добавлением связи belongsTo проверяем есть ли уже обратная связь
+            if(!$relationship->getInverseRelationship()) {
+                throw new AltrpRelationshipNotFoundInverseRelationshipExceptions("Not Found Inverse Relationship");
+            }
+            return;
+        }
 
         //Проверка существует ли такой ключ в БД
         if($dbal_key) {
@@ -46,16 +55,6 @@ class AltrpRelationshipObserver
         //Проверка пододят ли строки в таблицах
         if(!$relationship->checkDBRowsConstraint()) {
             throw new AltrpForeignKeyChildRowsException("Cannot add or update a child row: a foreign key constraint fails", 500);
-        }
-
-        //Cвязь belongsTo создается на существующую связь hasOne или hasMany
-        //Миграция не нужна, она уже выполнялась при добавлении связи hasOne или hasMany
-        if($relationship->type === "belongsTo") {
-            //Перед добавлением связи belongsTo проверяем есть ли уже обратная связь
-            if(!$relationship->getInverseRelationship()) {
-                throw new AltrpRelationshipNotFoundInverseRelationshipExceptions("Not Found Inverse Relationship");
-            }
-            return;
         }
 
         //Проверяем есть ли уже такая связь или обратная связь
@@ -305,7 +304,6 @@ class AltrpRelationshipObserver
      */
     public function deleting(Relationship $relationship)
     {
-
         //Cвязь belongsTo создается на существующую связь hasOne или hasMany
         //Миграция не нужна, она уже выполнялась при добавлении связи hasOne или hasMany
         if($relationship->type === "belongsTo") {
@@ -313,6 +311,13 @@ class AltrpRelationshipObserver
         }
 
         $model = Model::find($relationship->model_id);
+        $dbal_key = $relationship->getDBKey();
+
+        //Проверка существует ли такой ключ в БД
+        if(!$dbal_key) {
+            throw new AltrpForeignKeyNotFoundException("Foreign Key not found. Check database.", 500);
+        }
+
         $generator = new KeyMigrationGenerator($relationship);
         $file = $generator->deleteKeyGenerate();
         $name = $generator->getMigrationName();
