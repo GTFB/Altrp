@@ -1,4 +1,6 @@
 import CONSTANTS from "../../../editor/src/js/consts";
+import appStore from "./store/store";
+import AltrpModel from "../../../editor/src/js/classes/AltrpModel";
 
 export function getRoutes() {
   return import('./classes/Routes.js');
@@ -49,6 +51,11 @@ export function parseOptionsFromSettings(string) {
     return[];
   }
   let options = string.split('\n');
+  let path = extractPathFromString(string);
+  let _optionsFromData = getDataByPath(path);
+  if(_.isArray(_optionsFromData)){
+    return _optionsFromData;
+  }
   options = options.map(option=>{
     let value = option.split('|')[0];
     value = value.trim();
@@ -172,6 +179,7 @@ export function renderAsset(asset, props = null) {
  */
 export function parseParamsFromString(string, context = {}){
   const params = {};
+  const urlParams = window.currentRouterMatch instanceof AltrpModel ? window.currentRouterMatch.getProperty('params') : {};
 
   if(! string){
     return params;
@@ -186,11 +194,149 @@ export function parseParamsFromString(string, context = {}){
     right = right.trim();
     if(right.match(/(?<={{)([\s\S]+?)(?=}})/g)){
       if(context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0])){
-        params[left] = context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0]);
+        params[left] = context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0]) || '';
+      } else {
+        params[left] = urlParams[right] ? urlParams[right] : '';
       }
     } else {
       params[left] = right;
     }
+    if(_.isObject(params[left])){
+      delete params[left];
+    }
   });
   return params;
+}
+
+/**
+ * Функция для проверки условий
+ * @param {[]} conditions
+ * @param {boolean} AND - логичекое И или ИЛИ
+ * @param {AltrpModel} model
+ * @return {boolean}
+ */
+export function conditionsChecker(conditions = [], AND = true, model){
+  if(! conditions.length){
+    return true;
+  }
+  let result = AND;
+  _.each(conditions, c =>{
+    if(AND){
+      result *= _conditionChecker(c, model);
+    } else {
+      result += _conditionChecker(c, model);
+    }
+  });
+  return result;
+}
+
+/**
+ * Функция для проверки одного условия
+ * @param c
+ * @param {AltrpModel} model
+ * @return {boolean}
+ */
+function _conditionChecker(c, model){
+  let result = 0;
+  const {
+     modelField,
+     operator,
+     value,
+  } = c;
+  switch(operator){
+    case 'empty':{
+      return ! model.getProperty(modelField, '');
+    }
+    case 'not_empty':{
+      return ! ! model.getProperty(modelField, '');
+    }
+    case '==':{
+      return _.isEqual(model.getProperty(modelField, ''), value );
+    }
+    case '<>':{
+      return ! _.isEqual(model.getProperty(modelField, ''), value );
+    }
+    case '>':{
+      return Number(model.getProperty(modelField, '')) > Number(value);
+    }
+    case '>=':{
+      return Number(model.getProperty(modelField, '')) >= Number(value);
+    }
+    case '<':{
+      return Number(model.getProperty(modelField, '')) < Number(value);
+    }
+    case '<=':{
+      return Number(model.getProperty(modelField, '')) <= Number(value);
+    }
+  }
+  return result;
+}
+
+/**
+ * Получить данные
+ * @param {string} path
+ * @param {*} _default
+ * @return {string}
+ */
+export function getDataByPath(path, _default = null){
+  const {currentModel, currentDataStorage} = appStore.getState();
+  const urlParams = window.currentRouterMatch instanceof AltrpModel ? window.currentRouterMatch.getProperty('params') : {};
+  let value = _default;
+  if(! _.isString(path)){
+    return value;
+  }
+  if(path.indexOf('altrpdata.') === 0){
+    path = path.replace('altrpdata.', '');
+    value = currentDataStorage.getProperty(path, _default)
+  } else {
+    value = urlParams[path] ? urlParams[path] : currentModel.getProperty(path);
+  }
+  return value ;
+}
+
+/**
+ * Извелкает путь из строки
+ * @param {string} string
+ * @return {string}
+ */
+export function extractPathFromString(string = ''){
+  let path = '';
+  if(_.isString(string)){
+    // path = string.match(/(?<={{)([\s\S]+?)(?=}})/g)[0]
+    path = _.get(string.match(/(?<={{)([\s\S]+?)(?=}})/g), '0', '');
+  }
+  return path;
+}
+
+/**
+ * Возвращает новый объект из свояств объекта, в именах которых присутствует префикс prefix
+ * @param {string} prefix - строка для поиска (например 'test')
+ * @param {{}} object - если в объекте есть свойство test__test то вернет {test: test__test_value}
+ * @return {{}}
+ */
+export function getObjectByPrefix(prefix = '', object = {}){
+  let result = {};
+  if(! prefix){
+    return result;
+  }
+  _.forEach(object, (value, key) =>{
+    if(key.indexOf(`${prefix}__`, '') === 0){
+      result[key.replace(`${prefix}__`, '')] = value;
+    }
+  });
+  return result;
+}
+
+/**
+ * Возвращает объект из json-строки если возможно
+ * @param {string} string
+ * @param {*} _default
+ * @return {*}
+ */
+export function mbParseJSON(string, _default = null){
+  try{
+    return JSON.parse(string);
+  } catch(e){
+    return _default;
+  }
 }

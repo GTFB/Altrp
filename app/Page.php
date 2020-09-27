@@ -2,9 +2,13 @@
 
 namespace App;
 
+use App\Altrp\Source;
+use App\Altrp\Model as AltrpModel;
 use App\Constructor\Template;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -28,6 +32,8 @@ class Page extends Model
     'path',
     'model_id',
     'redirect',
+    'guid',
+    'for_guest',
   ];
 
   /**
@@ -69,7 +75,13 @@ class Page extends Model
           'id' => $page->id,
           'title' => $page->title,
           'allowed' => true,
-          /**
+          'data_sources' => $page->page_data_sources->map( function ( PageDatasource $page_data_source ){
+            if( $page_data_source->source ){
+              $page_data_source->source->web_url = $page_data_source->source->web_url;
+            }
+            return $page_data_source;
+          } ),
+        /**
            * Если лениво загружаем области то возвращаем пустой массив
            */
           'areas' => $lazy ? [] : self::get_areas_for_page( $page->id ),
@@ -104,62 +116,152 @@ class Page extends Model
   public static function get_areas_for_page( $page_id ){
     $areas = [];
 
-    $header = Template::where( 'area', 2 )->where( 'type', 'template' )->first();
-    if( $header ){
-      $header->check_elements_conditions();
-      $areas[] = [
-        'area_name' => 'header',
-        'id' => 'header',
-        'settings' => [],
-        'template' => $header
-      ];
-    }
-    $content = PagesTemplate::where( 'page_id', $page_id )
-      ->where( 'template_type', 'content' )->first()->template;
-    $content->check_elements_conditions();
+//    $header = Template::where( 'area', 2 )->where( 'type', 'template' )->first();
+//    if( $header ){
+//      $header->check_elements_conditions();
+//      $areas[] = [
+//        'area_name' => 'header',
+//        'id' => 'header',
+//        'settings' => [],
+//        'template' => $header
+//      ];
+//    }
+    /**
+     * @var Template $content
+     */
+//    $content = PagesTemplate::where( 'page_id', $page_id )
+//      ->where( 'template_type', 'content' )
+//      ->where( 'condition_type', 'include' )
+//      ->first();
+//    if( $content ){
+//      $content = $content->template;
+//      $content->check_elements_conditions();
+//      $areas[] = [
+//        'area_name' => 'content',
+//        'id' => 'content',
+//        'settings' => [],
+//        'template' => $content,
+//      ];
+//    } else {
+//      /**
+//       * Пустой контент, если страницы нет
+//       */
+//      $areas[] = [
+//        'area_name' => 'content',
+//        'id' => 'content',
+//        'settings' => [],
+//        'template' => [
+//          'data' => json_encode([
+//            "name"=>"root-element",
+//            "type"=>"root-element",
+//            "children"=> [],
+//            'settings' => [],
+//          ])
+//        ],
+//      ];
+//    }
+
+    $areas[] = [
+      'area_name' => 'header',
+      'id' => 'header',
+      'settings' => [],
+      'template' => Template::getTemplate([
+        'page_id' => $page_id,
+        'template_type' => 'header',
+      ]),
+    ];
+
     $areas[] = [
       'area_name' => 'content',
       'id' => 'content',
       'settings' => [],
-      'template' => $content,
+      'template' => Template::getTemplate([
+        'page_id' => $page_id,
+        'template_type' => 'content',
+      ]),
     ];
 
-    $footer = Template::where( 'area', 3 )->where( 'type', 'template' )->first();
-    if( $footer ){
-      $footer->check_elements_conditions();
-      $areas[] = [
-        'area_name' => 'footer',
-        'id' => 'footer',
-        'settings' => [],
-        'template' => $footer
-      ];
-    }
-    $popups = Template::join( 'areas', 'areas.id', '=', 'templates.area' )
-      ->where( 'areas.name', '=', 'popup' )
-      ->where( 'type', 'template' )->get( 'templates.*' );
+    $areas[] = [
+      'area_name' => 'footer',
+      'id' => 'footer',
+      'settings' => [],
+      'template' => Template::getTemplate([
+      'page_id' => $page_id,
+      'template_type' => 'footer',
+      ]),
+    ];
 
-
-
-    if( $popups->count() ){
-      foreach ( $popups as $key => $popup ) {
-        $popups[$key]->template_settings = $popup->template_settings();
-
-      }
-      $areas[] = [
-        'area_name' => 'popups',
-        'id' => 'popups',
-        'settings' => [],
-        'templates' => $popups->toArray(),
-      ];
-    }
+//    $popups = Template::join( 'areas', 'areas.id', '=', 'templates.area' )
+//      ->where( 'areas.name', '=', 'popup' )
+//      ->where( 'type', 'template' )->get( 'templates.*' );
+//
+//
+//
+//    if( $popups->count() ){
+//      foreach ( $popups as $key => $popup ) {
+//        $popups[$key]->template_settings = $popup->template_settings();
+//
+//      }
+    $areas[] = [
+      'area_name' => 'popups',
+      'id' => 'popups',
+      'settings' => [],
+      'templates' => Template::getTemplates([
+        'page_id' => $page_id,
+        'template_type' => 'popup',
+      ]),
+    ];
+//    }
 
     return $areas;
   }
 
-  function user()
+  /**
+   * Сылка на пользователя создавшего страницу
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+   */
+  public function user()
   {
     return $this->belongsTo( User::class, 'author' );
   }
+
+  /**
+   * Список ресурсов связанных со страницей
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+   */
+  public function data_sources(){
+    return $this->belongsToMany( Source::class, 'page_data_sources', 'page_id', 'source_id' );
+  }
+  /**
+   * Список ресурсов связанных со страницей через
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function page_data_sources(){
+    return $this->hasMany( PageDatasource::class, 'page_id', 'id' );
+  }
+  /**
+    * Импортируем связи стрнаиц с ролями
+    * @param array $page_roles
+  */
+  public static function importPageRoles( $page_roles = [] )
+{
+  $table = DB::table( 'page_role' );
+  $table->delete();
+  foreach ( $page_roles as $page_role ) {
+    $role = Role::where( 'name', data_get( $page_role, 'role_name' ) )->first();
+    $page = self::where( 'guid', data_get( $page_role, 'page_guid' ) )->first();
+    if( ! ( $page && $role ) ){
+      continue;
+    }
+    try{
+      $table->insert([
+        'page_id' => $page->id,
+        'role_id' => $role->id,
+      ]);
+    }catch(\Exception $e){}
+
+  }
+}
 
   /**
    * @return \Illuminate\Database\Eloquent\Builder|Model|null|Template
@@ -310,5 +412,36 @@ class Page extends Model
       }
     }
     return $allowed;
+  }
+
+  /**
+   * Испортирует страницы
+   * @param array $imported_pages
+   */
+  static public function import( $imported_pages = []){
+    foreach ( $imported_pages as $imported_page ) {
+
+      if( Arr::get( $imported_page, 'model_name' ) ){
+        $model = AltrpModel::where( 'name', $imported_page['model_name'] )->first();
+        $model_id = $model ? $model->id : null;
+      } else {
+        $model_id = null;
+      }
+      $old_page = self::where( 'guid', $imported_page['guid'] )->first();
+      if( $old_page ){
+        $old_page->model_id = $model_id;
+        $old_page->redirect = $imported_page['redirect'];
+        $old_page->content = $imported_page['content'];
+        $old_page->path = $imported_page['path'];
+        $old_page->title = $imported_page['title'];
+        $old_page->for_guest = $imported_page['for_guest'];
+        $old_page->author = Auth::user()->id;
+        continue;
+      }
+      $new_page = new self( $imported_page );
+      $new_page->author = Auth::user()->id;
+      $new_page->model_id = $model_id;
+      $new_page->save();
+    }
   }
 }

@@ -4,23 +4,29 @@
 namespace App\Altrp\Builders\Traits;
 
 
+use Illuminate\Support\Facades\DB;
+
 trait DynamicVariables
 {
     /**
      * Заменить пользовательские динамические переменные
      *
      * @param $str
+     * @param bool $outer
      * @return string|string[]
      */
     protected function replaceDynamicVars($str, $outer = false)
     {
-        $pattern = "'?(CURRENT_[A-Z_]+|REQUEST)(:[a-z0-9_.]+)?'?";
+        $pattern = "'?(CURRENT_[A-Z_]+|([A-Z_]+)?REQUEST)(:[a-zA-Z0-9_.]+)?'?";
         $str = preg_replace_callback(
             "#$pattern#",
             function($matches) use ($outer) {
                 $param = $matches[0] ? explode(':',trim($matches[0], '\'')) : null;
                 if ($param && $param[0] == 'REQUEST') {
                     return $this->getValue('request()->' . $param[1], $outer);
+                }
+                if ($param && $param[0] == 'IF_REQUEST') {
+                    return $this->getValue( '(request()->' . $param[1] . " ? '{$param[1]} = ' . request()->{$param[1]} . ' AND' : '')", $outer);
                 }
                 if ($param && $param[0] == 'CURRENT_USER') {
                     $relations = str_replace('.', '->', $param[1]);
@@ -54,13 +60,17 @@ trait DynamicVariables
                     return $this->getValue('Carbon::now()->format(\'Y-m-d H:i:s\')', $outer);
                 }
                 if ($param && $param[0] == 'CURRENT_DAY_OF_WEEK') {
-                    return $this->getValue('\Carbon::now()->format(\'l\')', $outer);
+                    return $this->getValue('Carbon::now()->format(\'l\')', $outer);
                 }
                 return "''";
             },
             $str
         );
-        return $str;
+      /**
+       * Заменим префикс БД
+       */
+      $str = str_replace( '{{PREFIX}}', DB::getTablePrefix(), $str );
+      return $str;
     }
 
     /**

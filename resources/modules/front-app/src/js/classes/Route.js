@@ -2,6 +2,7 @@
  * @property {Area[]} areas
  * */
 import Area from "./Area";
+import Datasource from "./Datasource";
 
 class Route {
   constructor(data){
@@ -13,6 +14,8 @@ class Route {
       this.models = data.model ? [data.model] : [];
     }
     this.model = data.model;
+    this.data_sources = data.data_sources || [];
+    this.data_sources = this.data_sources.map(data_source => new Datasource(data_source));
     this.title = data.title || '';
     this.allowed = data.allowed;
     this.redirect = data.redirect;

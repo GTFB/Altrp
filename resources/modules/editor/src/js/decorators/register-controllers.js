@@ -8,8 +8,9 @@ import {
   CONTROLLER_CHOOSE,
   CONTROLLER_CSSEDITOR,
   TAB_ADVANCED,
-  CONTROLLER_SWITCHER
+  CONTROLLER_SWITCHER, CONTROLLER_SELECT2, CONTROLLER_HEADING, CONTROLLER_REPEATER
 } from "../classes/modules/ControllersManager";
+import Repeater from "../classes/Repeater";
 /**
  * Функция декорирует элемент неободимыми контроллерами
  * @param {BaseElement} element
@@ -74,7 +75,6 @@ export function advancedTabControllers(element) {
   // element.endControlSection();
   if(element.getType() !== 'section') {
 
-
     element.startControlSection(
         'element_positioning', {
           tab: TAB_ADVANCED,
@@ -110,50 +110,51 @@ export function advancedTabControllers(element) {
     });
 
     element.addControl('positioning_custom_width', {
-          type: CONTROLLER_SLIDER,
-          label: 'Custom width',
-          default: {
-            size: "100%",
-            unit: 'px'
-          },
-          units: [
-            'px',
-            '%',
-            'vh',
-          ],
-          max: 1000,
-          min: 0,
-          rules: {
-            'div{{ELEMENT}}.altrp-element': 'width: {{SIZE}}{{UNIT}};',
-          },
-          condition: {
-            'positioning_width_type': 'custom',
-          }
-        }
-    );
-
-    element.addControl('positioning_vertical_align', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Vertical Align',
-      default: 'flex-start',
-      options: [
-        {
-          icon: 'block_top',
-          value: 'flex-start',
-        },
-        {
-          icon: 'block_horiz',
-          value: 'center',
-        },
-        {
-          icon: 'block_bottom',
-          value: 'flex-end',
-        },
-      ],
-      rules: {
-        '{{ELEMENT}}': 'align-self: {{VALUE}};',
+      type: CONTROLLER_SLIDER,
+      label: 'Custom width',
+      default: {
+        size: "100%",
+        unit: 'px'
       },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 1000,
+      min: 0,
+      rules: {
+        'div{{ELEMENT}}.altrp-element': 'width: {{SIZE}}{{UNIT}};',
+      },
+      condition: {
+        'positioning_width_type': 'custom',
+      }
     });
+
+    if (element.getType() === 'widget') {
+      element.addControl('positioning_vertical_align', {
+        type: CONTROLLER_CHOOSE,
+        label: 'Vertical Align',
+        default: 'flex-start',
+        options: [
+          {
+            icon: 'block_top',
+            value: 'flex-start',
+          },
+          {
+            icon: 'block_horiz',
+            value: 'center',
+          },
+          {
+            icon: 'block_bottom',
+            value: 'flex-end',
+          },
+        ],
+        rules: {
+          '{{ELEMENT}}': 'align-self: {{VALUE}};',
+        },
+      });
+    }    
 
     element.addControl('positioning_position_type', {
       type: CONTROLLER_SELECT,
@@ -270,6 +271,7 @@ export function advancedTabControllers(element) {
 
     element.endControlSection();
   }
+
   element.startControlSection(
     'conditional_display', {
       tab: TAB_ADVANCED,
@@ -278,24 +280,290 @@ export function advancedTabControllers(element) {
   );
 
   element.addControl('conditional_display_choose', {
-      type: CONTROLLER_SELECT,
-      label: 'Authorize Condition',
-      options: [
-        {
-          label: 'all',
-          value: '',
-        },
-        {
-          value: 'guest',
-          label: 'Guest Only',
-        },
-        {
-          value: 'auth',
-          label: 'Authorized Only',
-        },
-      ],
+    type: CONTROLLER_SELECT,
+    label: 'Authorize Condition',
+    responsive:false,
+    options: [
+      {
+        label: 'all',
+        value: '',
+      },
+      {
+        value: 'guest',
+        label: 'Guest Only',
+      },
+      {
+        value: 'auth',
+        label: 'Authorized Only',
+      },
+    ],
+  });
+
+  element.addControl('conditional_roles', {
+    type: CONTROLLER_SELECT2,
+    label: 'Allowed for Roles',
+    conditions: {
+      'conditional_display_choose' : 'auth',
+    },
+    options_resource: '/admin/ajax/role_options?value=name',
+    isMulti: true,
+    prefetch_options: true,
+    isClearable: true,
+  });
+
+  element.addControl('conditional_permissions', {
+    type: CONTROLLER_SELECT2,
+    label: 'Allowed for Permissions',
+    conditions: {
+      'conditional_display_choose' : 'auth',
+    },
+    options_resource: '/admin/ajax/permissions_options?value=name',
+    isMulti: true,
+    prefetch_options: true,
+    isClearable: true,
+  });
+
+  element.addControl('conditional_other', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Other Conditions',
+    default: false,
+  });
+
+  element.addControl('conditional_other_display', {
+    type: CONTROLLER_SELECT,
+    label: 'Display on',
+    responsive: false,
+    options: [
+      {
+        label: 'All Conditions Met',
+        value: 'AND',
+      },
+      {
+        label: 'Any Condition Met',
+        value: 'OR',
+      },
+    ],
+    default: 'AND',
+    conditions: {
+      'conditional_other': true,
+    },
+  });
+
+  const modelRepeater = new Repeater();
+
+  modelRepeater.addControl('conditional_model_field', {
+    responsive: false,
+    label: 'Model Field',
+  });
+
+  modelRepeater.addControl('conditional_other_operator', {
+    type: CONTROLLER_SELECT,
+    responsive: false,
+    default: 'empty',
+    options: [
+      {
+        value: 'empty',
+        label: 'Empty',
+      },
+      {
+        value: 'not_empty',
+        label: 'Not Empty',
+      },
+      {
+        value: '==',
+        label: 'Equals',
+      },
+      {
+        value: '<>',
+        label: 'Not Equals',
+      },
+      {
+        value: 'between',
+        label: 'Between',
+      },
+      {
+        value: '>',
+        label: '>',
+      },
+      {
+        value: '>=',
+        label: '>=',
+      },
+      {
+        value: '<',
+        label: '<',
+      },
+      {
+        value: '<=',
+        label: '<=',
+      },
+    ]
+  });
+
+  modelRepeater.addControl('conditional_other_condition_value', {
+    responsive: false,
+  });
+
+  element.addControl('conditions', {
+    label: 'Conditions',
+    type: CONTROLLER_REPEATER,
+    fields: modelRepeater.getControls(),
+    default: [
+    ],
+    conditions: {
+      'conditional_other': true,
+    },
+  });
+
+  element.endControlSection();
+
+   element.startControlSection(
+    'conditional_disabled', {
+      tab: TAB_ADVANCED,
+      label: 'Conditional Disabled',
     }
   );
+
+  element.addControl('conditional_disabled_head', {
+    type: CONTROLLER_HEADING,
+    label: 'Disabled for ...',
+  });
+
+  element.addControl('conditional_disabled_choose', {
+    type: CONTROLLER_SELECT,
+    label: 'Authorize Condition',
+    responsive:false,
+    options: [
+      {
+        label: 'all',
+        value: '',
+      },
+      {
+        value: 'guest',
+        label: 'Guest Only',
+      },
+      {
+        value: 'auth',
+        label: 'Authorized Only',
+      },
+    ],
+  });
+
+  element.addControl('conditional_disabled_roles', {
+    type: CONTROLLER_SELECT2,
+    label: 'User has Roles',
+    conditions: {
+      'conditional_disabled_choose' : 'auth',
+    },
+    options_resource: '/admin/ajax/role_options?value=name',
+    isMulti: true,
+    prefetch_options: true,
+    isClearable: true,
+  });
+
+  element.addControl('conditional_disabled_permissions', {
+    type: CONTROLLER_SELECT2,
+    label: 'User has Permissions',
+    conditions: {
+      'conditional_disabled_choose' : 'auth',
+    },
+    options_resource: '/admin/ajax/permissions_options?value=name',
+    isMulti: true,
+    prefetch_options: true,
+    isClearable: true,
+  });
+
+  element.addControl('disabled_conditional_other', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Other Conditions',
+    default: false,
+  });
+
+  element.addControl('disabled_conditional_other_display', {
+    type: CONTROLLER_SELECT,
+    label: 'Display on',
+    responsive: false,
+    options: [
+      {
+        label: 'All Conditions Met',
+        value: 'AND',
+      },
+      {
+        label: 'Any Condition Met',
+        value: 'OR',
+      },
+    ],
+    default: 'AND',
+    conditions: {
+      'disabled_conditional_other': true,
+    },
+  });
+
+  const disabledModelRepeater = new Repeater();
+
+  disabledModelRepeater.addControl('conditional_model_field', {
+    responsive: false,
+    label: 'Model Field',
+  });
+
+  disabledModelRepeater.addControl('conditional_other_operator', {
+    type: CONTROLLER_SELECT,
+    responsive: false,
+    default: 'empty',
+    options: [
+      {
+        value: 'empty',
+        label: 'Empty',
+      },
+      {
+        value: 'not_empty',
+        label: 'Not Empty',
+      },
+      {
+        value: '==',
+        label: 'Equals',
+      },
+      {
+        value: '<>',
+        label: 'Not Equals',
+      },
+      {
+        value: 'between',
+        label: 'Between',
+      },
+      {
+        value: '>',
+        label: '>',
+      },
+      {
+        value: '>=',
+        label: '>=',
+      },
+      {
+        value: '<',
+        label: '<',
+      },
+      {
+        value: '<=',
+        label: '<=',
+      },
+    ]
+  });
+
+  disabledModelRepeater.addControl('disabled_conditional_other_condition_value', {
+    responsive: false,
+  });
+
+  element.addControl('disabled_conditions', {
+    label: 'Conditions',
+    type: CONTROLLER_REPEATER,
+    fields: disabledModelRepeater.getControls(),
+    default: [
+    ],
+    conditions: {
+      'disabled_conditional_other': true,
+    },
+  });
 
   element.endControlSection();
 

@@ -22,38 +22,42 @@ import RepetaerController from "../../components/controllers/RepeaterController"
 import QueryController from "../../components/controllers/QueryController";
 import FiltersController from "../../components/controllers/FiltersController";
 import ColumnWidthController from "../../components/controllers/ColumnWidthController";
-import GradientController from  "../../components/controllers/GradientController";
+import GradientController from "../../components/controllers/GradientController";
+import SqlSelectController from "../../components/controllers/SqlSelectController";
+import SqlAsParamsController from "../../components/controllers/SqlAsParamsController";
 
-export const TAB_CONTENT = 'content';
-export const TAB_STYLE = 'style';
-export const TAB_ADVANCED = 'advanced';
-export const CONTROLLER_TEXTAREA = 'textarea';
-export const CONTROLLER_WYSIWYG = 'wysiwyg';
-export const CONTROLLER_TEXT = 'text';
-export const CONTROLLER_NUMBER = 'number';
-export const CONTROLLER_SWITCHER = 'switcher';
-export const CONTROLLER_DIMENSIONS = 'dimensions';
-export const CONTROLLER_SELECT = 'select';
-export const CONTROLLER_CHOOSE = 'choose';
-export const CONTROLLER_SLIDER = 'slider';
-export const CONTROLLER_SELECT2 = 'select2';
-export const CONTROLLER_LINK = 'link';
-export const CONTROLLER_COLOR = 'color';
-export const CONTROLLER_MEDIA = 'media';
-export const CONTROLLER_BUTTON = 'button';
-export const CONTROLLER_HEADING = 'heading';
-export const CONTROLLER_CSSEDITOR = 'css-editor';
-export const CONTROLLER_SHADOW = 'shadow';
-export const CONTROLLER_TRANSFORM = 'transform';
-export const CONTROLLER_TYPOGRAPHIC = 'typographic';
-export const CONTROLLER_REPEATER = 'repeater';
-export const CONTROLLER_QUERY = 'query';
-export const CONTROLLER_FILTERS = 'filters';
-export const CONTROLLER_COLWIDTH = 'colwidth';
-export const CONTROLLER_GRADIENT = 'gradient';
+export const TAB_CONTENT = "content";
+export const TAB_STYLE = "style";
+export const TAB_ADVANCED = "advanced";
+export const CONTROLLER_TEXTAREA = "textarea";
+export const CONTROLLER_WYSIWYG = "wysiwyg";
+export const CONTROLLER_TEXT = "text";
+export const CONTROLLER_NUMBER = "number";
+export const CONTROLLER_SWITCHER = "switcher";
+export const CONTROLLER_DIMENSIONS = "dimensions";
+export const CONTROLLER_SELECT = "select";
+export const CONTROLLER_CHOOSE = "choose";
+export const CONTROLLER_SLIDER = "slider";
+export const CONTROLLER_SELECT2 = "select2";
+export const CONTROLLER_LINK = "link";
+export const CONTROLLER_COLOR = "color";
+export const CONTROLLER_MEDIA = "media";
+export const CONTROLLER_BUTTON = "button";
+export const CONTROLLER_HEADING = "heading";
+export const CONTROLLER_CSSEDITOR = "css-editor";
+export const CONTROLLER_SHADOW = "shadow";
+export const CONTROLLER_TRANSFORM = "transform";
+export const CONTROLLER_TYPOGRAPHIC = "typographic";
+export const CONTROLLER_REPEATER = "repeater";
+export const CONTROLLER_QUERY = "query";
+export const CONTROLLER_FILTERS = "filters";
+export const CONTROLLER_COLWIDTH = "colwidth";
+export const CONTROLLER_GRADIENT = "gradient";
+export const CONTROLLER_SQL = "sql";
+export const CONTROLLER_SQL_PARAMS = "sql-params";
 
 class ControllersManager {
-  constructor(){
+  constructor() {
     this.conttrollers = {};
     this.conttrollers[CONTROLLER_TEXTAREA] = TextareaController;
     this.conttrollers[CONTROLLER_WYSIWYG] = WysiwygController;
@@ -79,56 +83,59 @@ class ControllersManager {
     this.conttrollers[CONTROLLER_FILTERS] = FiltersController;
     this.conttrollers[CONTROLLER_COLWIDTH] = ColumnWidthController;
     this.conttrollers[CONTROLLER_GRADIENT] = GradientController;
+    this.conttrollers[CONTROLLER_SQL] = SqlSelectController;
+    this.conttrollers[CONTROLLER_SQL_PARAMS] = SqlAsParamsController;
     this.elementsControls = null;
     this._cache = {
       controls: {},
     };
   }
-  init(){
+  init() {
     this.registerControls();
   }
-  getController(controllerName){
-    if(! this.conttrollers[controllerName]){
+  getController(controllerName) {
+    if (!this.conttrollers[controllerName]) {
       throw `Controller with Name ${controllerName} not Found!`;
     }
-    return  this.conttrollers[controllerName];
+    return this.conttrollers[controllerName];
   }
 
-  registerControls(){
+  registerControls() {
     let elementClasses = window.elementsManager.getElements();
     this.elementsControls = {};
-    for(let elementClassName in elementClasses ){
-        if(elementClasses.hasOwnProperty(elementClassName)){
-          this.elementsControls[elementClassName] = (new  elementClasses[elementClassName]).getControls();
+    for (let elementClassName in elementClasses) {
+      if (elementClasses.hasOwnProperty(elementClassName)) {
+        this.elementsControls[elementClassName] = new elementClasses[
+          elementClassName
+        ]().getControls();
       }
     }
   }
-  getControls(elementName){
-    if(!this.elementsControls){
+  getControls(elementName) {
+    if (!this.elementsControls) {
       this.registerControls();
     }
     return this.elementsControls[elementName];
   }
 
-
-  getElementControl(elementName, controlId){
-    let controls = {...this.getControls(elementName)};
+  getElementControl(elementName, controlId) {
+    let controls = { ...this.getControls(elementName) };
     let control;
     control = this._cache.controls[elementName + controlId];
-    if(control){
+    if (control) {
       return control;
     }
-    for (let tabName in controls.data){
-      if(controls.data.hasOwnProperty(tabName)){
-        if(!controls.data[tabName].length){
+    for (let tabName in controls.data) {
+      if (controls.data.hasOwnProperty(tabName)) {
+        if (!controls.data[tabName].length) {
           continue;
         }
         for (let section of controls.data[tabName]) {
-          if(!section.controls.length){
+          if (!section.controls.length) {
             continue;
           }
-          for (let _control of section.controls){
-            if(_control.controlId === controlId){
+          for (let _control of section.controls) {
+            if (_control.controlId === controlId) {
               control = _control;
             }
           }
@@ -143,4 +150,4 @@ class ControllersManager {
   }
 }
 
-export default ControllersManager
+export default ControllersManager;

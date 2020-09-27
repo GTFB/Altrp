@@ -57,8 +57,13 @@ const EditWidget = ({ diagram, onSave, show, setShow }) => {
                 <Form.Control
                   as="select"
                   custom
-                  value={widget.colorScheme}
-                  onChange={(e) => setWidget({ ...widget, colorScheme: e.target.value })}
+                  value={widget.options.colorScheme}
+                  onChange={(e) =>
+                    setWidget({
+                      ...widget,
+                      options: { ...widget.options, colorScheme: e.target.value },
+                    })
+                  }
                 >
                   {Object.keys(schemes).map((name, key) => (
                     <option key={key}>{name}</option>
@@ -102,16 +107,7 @@ const EditWidget = ({ diagram, onSave, show, setShow }) => {
           <Col>
             <Row>
               <div className="widget-placeholder">
-                {widget && (
-                  <WidgetDiagram
-                    type={widget.type}
-                    url={widget.source}
-                    filter={widget.filter}
-                    options={widget.options}
-                    colorScheme={schemes[widget.colorScheme]}
-                    width={400}
-                  />
-                )}
+                {widget && <WidgetDiagram widget={widget} width={400} />}
               </div>
             </Row>
           </Col>

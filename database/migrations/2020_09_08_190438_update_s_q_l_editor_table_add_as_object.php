@@ -14,7 +14,7 @@ class UpdateSQLEditorTableAddAsObject extends Migration
     public function up()
     {
         Schema::table('s_q_l_editors', function (Blueprint $table) {
-            $table->boolean( 'is_object' )->default(1);
+            $table->boolean( 'is_object' )->default(0);
         });
     }
 

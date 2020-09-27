@@ -93,10 +93,19 @@ export function getElementSettingsSuffix(controller) {
  * @return {string}
  */
 export function rgb2hex(rgb) {
-  rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+  if (rgb) rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
   return (rgb && rgb.length === 4) ? "#" +
     ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) +
     ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) +
     ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
 }
 
+export function cutString(string, maxLength = 80) {
+  if (string.length <= maxLength) return string;
+  return string.slice(0, maxLength) + '...';
+}
+
+export function sortOptions(options, sortDirection) {
+  options.sort((a, b) => a.label.toLowerCase() > b.label.toLowerCase() ? 1 : b.label.toLowerCase() > a.label.toLowerCase() ? -1 : 0);
+  return sortDirection === "asc" ? options : options.reverse();
+}

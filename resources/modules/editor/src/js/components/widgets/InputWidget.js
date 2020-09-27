@@ -1,8 +1,11 @@
 import React, {Component} from "react";
-import { set } from "lodash";
-import {parseOptionsFromSettings} from "../../../../../front-app/src/js/helpers";
+import {parseOptionsFromSettings, parseParamsFromString} from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
-// import InputMask from "react-input-mask";
+import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
+import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
+import AltrpModel from "../../classes/AltrpModel";
+import { cutString, sortOptions } from "../../helpers";
+import {connect} from "react-redux";
 
 class InputWidget extends Component {
 
@@ -12,8 +15,12 @@ class InputWidget extends Component {
     this.state = {
       settings: {...props.element.getSettings()},
       value: props.element.getSettings().content_default_value || '',
-      options: parseOptionsFromSettings(props.element.getSettings('content_options'))
+      options: parseOptionsFromSettings(props.element.getSettings('content_options')),
+      paramsForUpdate: null,
     };
+    if(props.element.getSettings('content_default_value')){
+      this.dispatchFieldValueToStore(props.element.getSettings('content_default_value'));
+    }
     props.element.component = this;
     if(window.elementDecorator){
       window.elementDecorator(this);
@@ -24,49 +31,163 @@ class InputWidget extends Component {
    * Загрузка виджета
    */
   async _componentDidMount(){
-    if(this.state.settings.content_type === 'select' && this.state.settings.model_for_options){
-      let model_for_options = this.props.element.getSettings('model_for_options');
-      let options = await(new Resource({route: `/ajax/models/${model_for_options}_options`})).getAll();
-      this.setState(state =>({...state, options}))
+    if(this.props.element.getSettings('content_options')){
+      let options = parseOptionsFromSettings(this.props.element.getSettings('content_options'));
+      this.setState(state =>({...state, options}));
+    } else if((['select','select2'].indexOf(this.state.settings.content_type) >= 0) && this.state.settings.model_for_options){
+      let options = await(new Resource({route: this.getRoute()})).getAll();
+      options = (! _.isArray(options)) ? options.data : options;
+      options = (_.isArray(options)) ? options : [];
+      this.setState(state =>({...state, options}));
     }
+
+    let value = this.state.value;
+    /**
+     * Если динамическое значение загрузилось,
+     * то используем this.getContent для получение этого динамического значения
+     * */
+    if(value.dynamic && this.props.currentModel.getProperty('altrpModelUpdated')){
+      value = this.getContent('content_default_value');
+    }
+    if(! _.isObject(value)){
+      value = this.getContent('content_default_value');
+    }
+    this.setState(state =>({...state,value}));
+  }
+
+  /**
+   * Получить url для запросов
+   */
+  getRoute(){
+    let url = this.props.element.getSettings('model_for_options');
+
+    if(url.indexOf('/') === -1){
+      return `/ajax/models/${url}_options`
+    }
+    return url;
   }
   /**
    * Обновление виджета
    */
-  async componentDidUpdate(prevProps){
+  async _componentDidUpdate(prevProps, prevState){
     if(this.props.element.getSettings('content_type') === 'select' && this.props.element.getSettings('model_for_options') ){
-      if(this.state.settings.model_for_options === prevProps.element.getSettings('model_for_options')){
-        return;
+      if(! (this.state.settings.model_for_options === prevProps.element.getSettings('model_for_options'))) {
+        let model_for_options = prevProps.element.getSettings('model_for_options');
+        let options = await (new Resource({route: this.getRoute()})).getAll();
+        options = (!_.isArray(options)) ? options.data : options;
+        options = (_.isArray(options)) ? options : [];
+        this.setState(state => ({...state, options, model_for_options}))
       }
-      let model_for_options = prevProps.element.getSettings('model_for_options');
-      let options = await (new Resource({route: `/ajax/models/${model_for_options}_options`})).getAll();
-      this.setState(state =>({...state, options,model_for_options}))
+    }
+    /**
+     * Если обновилась модель, то пробрасываем в стор новое значение
+     */
+    if((! _.isEqual(this.props.currentModel, prevProps.currentModel)) && this.state.value && this.state.value.dynamic ){
+      this.dispatchFieldValueToStore(this.getContent('content_default_value'));
+    }
+
+    /**
+     * Если обновилось хранилище данных формы или модель, то получаем новые опции
+     */
+    if((this.props.formsStore !== prevProps.formsStore)
+        || (this.props.currentModel !== prevProps.currentModel)){
+      this.updateOptions();
+
     }
   }
 
+  /**
+   * Обновляет опции для селекта при обновлении данных, полей формы
+   */
+  async updateOptions(){
+    {
+      let formId = this.props.element.getSettings('form_id');
+      let paramsForUpdate = this.props.element.getSettings('params_for_update');
+      let formData = _.get(this.props.formsStore, [formId], {});
+      paramsForUpdate = parseParamsFromString(paramsForUpdate, new AltrpModel(formData));
+      /**
+       * Сохраняем параметры запроса, и если надо обновляем опции
+       */
+      let options = this.state.options;
+      if(! _.isEqual(paramsForUpdate, this.state.paramsForUpdate)){
+        if(! _.isEmpty(paramsForUpdate)){
+          if(this.props.element.getSettings('params_as_filters', false)){
+            paramsForUpdate = JSON.stringify(paramsForUpdate);
+            options = await (new Resource({route: this.getRoute()})).getQueried({filters:paramsForUpdate});
+          } else {
+            options = await (new Resource({route: this.getRoute()})).getQueried(paramsForUpdate);
+          }
+          options = (! _.isArray(options)) ? options.data : options;
+          options = (_.isArray(options)) ? options : [];
+
+        } else
+        if(this.state.paramsForUpdate){
+          options = await (new Resource({route: this.getRoute()})).getAll();
+          options = (! _.isArray(options)) ? options.data : options;
+          options = (_.isArray(options)) ? options : [];
+
+        }
+        this.setState(state=>({
+          ...state,
+          paramsForUpdate,
+          options,
+        }));
+      }
+    }
+  }
 
   /**
    * Изменение значения в виджете
    * @param e
    */
   onChange(e){
-    let value = e.target.value;
+    let value = '';
+    if(e && e.target){
+      value = e.target.value;
+    }
+
+    if(e && e.value){
+      value = e.value;
+    }
+    if(_.isArray(e)){
+      value = _.cloneDeep(e)
+    }
+    if(this.props.element.getSettings('select2_multiple', false) && ! e){
+      value = [];
+    }
     this.setState(state=>({
       ...state,
       value
-    }));
+    }), ()=>{this.dispatchFieldValueToStore(value);});
   }
+
+  /**
+   * Передадим значение в хранилище формы
+   */
+  dispatchFieldValueToStore = (value) => {
+    let formId = this.props.element.getSettings('form_id');
+    let fieldName = this.props.element.getSettings('field_id');
+    if(_.isObject(this.props.appStore) && fieldName && formId){
+      this.props.appStore.dispatch(changeFormFieldValue(fieldName,
+          value,
+          formId
+      ))
+    }
+  };
 
   render(){
     let label = null;
     let required = null;
-    /**
-     * Если значение загрузилось  динамическое,
-     * то используем this.getContent для получение этого динамического значения
-     * */
+    const { options_sorting } = this.state.settings;
+
     let value = this.state.value;
-    if(value.dynamic){
-      value = this.getContent('content_default_value');
+
+    /**
+     * Пока динамический контент загружается (Еесли это динамический контент),
+     * нужно вывести пустую строку
+     */
+    if(value && value.dynamic){
+      value = '';
     }
     let classLabel = "";
     let styleLabel = {};
@@ -111,7 +232,6 @@ class InputWidget extends Component {
     } else {
       autocomplete = "off";
     }
-
     let input = <input type={this.state.settings.content_type}
                        value={value || ''}
                        autoComplete={autocomplete}
@@ -131,17 +251,24 @@ class InputWidget extends Component {
       }
       break;
       case 'select':{
+        let options = this.state.options || [];
+        // options = _.sortBy(options, (o => o.label ? o.label.toString() : o));
         input = <select value={value || ''}
                         onChange={this.onChange}
                         id={this.state.settings.position_css_id}
                         className={"altrp-field " + this.state.settings.position_css_classes}>
           {this.state.settings.content_options_nullable ? <option value=""/> : ''}
+
           {
-            this.state.options.map(option=>{
-              return <option value={option.value} key={option.value}>{option.label}</option>
-            })
+            (options_sorting ? sortOptions(options, options_sorting) : options)
+              .map(option=><option value={option.value} key={option.value}>{option.label}</option>
+            )
           }
         </select>
+      }
+      break;
+      case 'select2':{
+        input = this.renderSelect2();
       }
       break;
     }
@@ -157,6 +284,58 @@ class InputWidget extends Component {
       {this.state.settings.content_label_position_type == "bottom" ? required : ""}
     </div>
   }
+
+  /**
+   * Выводит инпут-select2, используя компонент AltrpSelect
+   */
+  renderSelect2() {
+    const { 
+      content_options_nullable, 
+      nulled_option_title, 
+      content_placeholder,
+    } = this.props.element.getSettings();
+
+    let options = this.state.options;
+    if(content_options_nullable){
+      options = _.union([{ label: nulled_option_title, value: 'all', }], options);
+    }
+
+
+    let value = this.state.value;
+
+    /**
+     * Пока динамический контент загружается, нужно вывести пустую строку
+     */
+    if(value && value.dynamic){
+      value = '';
+    }
+
+    options.forEach(option => {
+      if (option.value === value) {
+        value = { ...option };
+      }
+      if(_.isArray(option.options)){
+        option.options.forEach(option => {
+          if (option.value === value) {
+            value = { ...option };
+          }
+        })
+      }
+    });
+    options = _.sortBy(options, (o => o.label ? o.label.toString() : o));
+    const select2Props = {
+      className: 'altrp-field-select2',
+      classNamePrefix: this.props.element.getId() +' altrp-field-select2',
+      options,
+      onChange: this.onChange,
+      value,
+      placeholder: content_placeholder,
+      isMulti: this.props.element.getSettings('select2_multiple', false),
+      // menuIsOpen: true,
+    };
+    return <AltrpSelect  {...select2Props} />;
+  }
 }
+
 
 export default InputWidget

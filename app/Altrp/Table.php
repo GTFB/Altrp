@@ -4,6 +4,7 @@ namespace App\Altrp;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Основные сущности программы
@@ -21,7 +22,22 @@ class Table extends Model
         'user_id'
     ];
 
-    public function migrations()
+  /**
+   * @param array $imported_tables
+   */
+  public static function import( $imported_tables = [] )
+  {
+    foreach ( $imported_tables as $imported_table ) {
+      if( self::where( 'name', $imported_table['name'] )->first() ){
+        continue;
+      }
+      $new_table = new self( $imported_table );
+      $new_table->user_id = auth()->user()->id;
+      $new_table->save();
+    }
+  }
+
+  public function migrations()
     {
         return $this->hasMany('App\Altrp\Migration');
     }
@@ -29,6 +45,11 @@ class Table extends Model
     public function columns()
     {
         return $this->hasMany('App\Altrp\Column');
+    }
+
+    public function onlyColumns()
+    {
+        return $this->columns()->where('type','!=','calculated')->get('*');
     }
 
     public function models()
@@ -87,6 +108,32 @@ class Table extends Model
     public function relationships()
     {
         return $this->hasMany('App\Altrp\Relationship');
+    }
+
+    /**
+     * Проверка на существование таблицы в БД
+     * @return bool
+     */
+    public function is_db_exist() {
+      return Schema::hasTable($this->name);
+    }
+
+    /**
+     * Получуем все ограничения внешнего ключа для таблицы
+     * @return mixed
+     */
+    public function getDBForeignKeys()
+    {
+        $prefix = env('DB_TABLES_PREFIX', '');
+        $conn = Schema::getConnection()->getDoctrineSchemaManager();
+        return $conn->listTableForeignKeys($prefix.$this->name);
+    }
+
+    public function getDBColumnByName($name)
+    {
+        $prefix = env('DB_TABLES_PREFIX', '');
+        $conn = Schema::getConnection();
+        return $conn->getDoctrineColumn($prefix.$this->name, $name);
     }
 
     /**

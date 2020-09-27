@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import AltrpCodeEditor from "../altrp-editor/AltrpCodeEditor";
 
 class FieldCalculationLogic extends Component {
   constructor(props) {
@@ -19,6 +20,15 @@ class FieldCalculationLogic extends Component {
     this.rightTypeHandler = this.rightTypeHandler.bind(this);
     this.rightChangeHandler = this.rightChangeHandler.bind(this);
     this.setRight = this.setRight.bind(this);
+  }
+
+  componentDidMount() {
+    const { right } = this.props.item;
+    if (right) {
+      typeof this.props.item.right === "string" ?
+        this.setState({ rightType: "string", right: { ...this.state.right, string: right } }) :
+        this.setState({ rightType: "object", right: { ...this.state.right, fieldId: right.id } })
+    }
   }
 
   rightTypeHandler(type) {
@@ -106,11 +116,11 @@ class FieldCalculationLogic extends Component {
           onChange={({ target: { value } }) => this.operatorChangeHandler(value)}
         >
           <option value="" disabled />
-          <option value="not-null">Not Null</option>
-          <option value="null">Null</option>
+          {/* <option value="not-null">Not Null</option>
+          <option value="null">Null</option> */}
           <option value="==">Equals</option>
           <option value="<>">Not Equals</option>
-          <option value="between">Between</option>
+          {/* <option value="between">Between</option> */}
           <option value=">">&gt;</option>
           <option value=">=">&gt;=</option>
           <option value="<">&lt;</option>
@@ -133,6 +143,7 @@ class FieldCalculationLogic extends Component {
               disabled={rightType !== "string"}
               onChange={this.rightChangeHandler}
             />
+
           </div>
 
           <p className="form-group__inline-wrapper__divider">or</p>
@@ -245,6 +256,21 @@ class FieldCalculationLogic extends Component {
           value={item.result}
           onChange={({ target: { value, name } }) => changeHandler({ value, name })}
         />
+        <AltrpCodeEditor value={item.result}
+                         onChange={value => {
+                           // if(value[0] !== "'" ){
+                           //   value = `'${value}`;
+                           // }
+                           // if(value[value.length - 1] !== "'" ){
+                           //   value = `${value}'`;
+                           // }
+                           // console.log(value);
+                           changeHandler({
+                               value,
+                               name: 'result'
+                           });
+                         }}
+                         mode="wrapped json"/>
       </div>
       <p>E.g. [field_name]*[field_name] + 10</p>
     </>

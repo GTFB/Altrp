@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
+import { Link } from 'react-router-dom'
 import { schemes } from "reaviz";
 import axios from "axios";
 
@@ -103,6 +104,7 @@ function Dashboard() {
         <button onClick={() => setShowAddForm(true)} className="btn">
           Add Widget
         </button>
+        <Link className="btn" to={`/admin/dashboard/colors`}>Color Schemes</Link>
       </div>
       <div className="admin-content">
         <div className="charts">
@@ -130,14 +132,7 @@ function Dashboard() {
                 </div>
               </div>
               <div className="card-body">
-                <WidgetDiagram
-                  type={widget.type}
-                  filter={widget.filter}
-                  url={widget.source}
-                  options={widget.options}
-                  width={widget.width}
-                  colorScheme={schemes[widget.colorScheme]}
-                />
+                <WidgetDiagram widget={widget} width={360} />
               </div>
             </div>
           ))}

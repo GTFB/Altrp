@@ -23,41 +23,54 @@ const AltrpDiagram = ({ settings }) => {
     return <div className="altrp-chart">Choose data for chart</div>;
   }
 
+  console.log("settings :>> ", settings);
+
+  const widget = {
+    source: sql,
+    options: {
+      colorScheme: settings.colorScheme,
+      legend: "",
+      animated: settings.animated,
+      isVertical: settings.isVertical,
+    },
+    filter: {},
+  };
+
   switch (settings.type) {
     case BAR:
       return (
         <div className="altrp-chart">
-          <DynamicBarChart dataUrl={sql} colorScheme={settings.colorScheme} />
+          <DynamicBarChart widget={widget} width={settings.width?.size} />
         </div>
       );
     case PIE:
       return (
         <div className="altrp-chart">
-          <DynamicPieChart dataUrl={sql} colorScheme={settings.colorScheme} />
+          <DynamicPieChart widget={widget} width={settings.width?.size} />
         </div>
       );
     case DONUT:
       return (
         <div className="altrp-chart">
-          <DynamicDonutChart dataUrl={sql} colorScheme={settings.colorScheme} />
+          <DynamicDonutChart widget={widget} width={settings.width?.size} />
         </div>
       );
     case LINE:
       return (
         <div className="altrp-chart">
-          <DynamicLineChart dataUrl={sql} colorScheme={settings.colorScheme} />
+          <DynamicLineChart widget={widget} width={settings.width?.size} />
         </div>
       );
     case TABLE:
       return (
         <div className="altrp-chart">
-          <DynamicTableWidget dataUrl={sql} />
+          <DynamicTableWidget widget={widget} width={settings.width?.size} />
         </div>
       );
     case AREA:
       return (
         <div className="altrp-chart">
-          <DynamicAreaChart dataUrl={sql} colorScheme={settings.colorScheme} />
+          <DynamicAreaChart widget={widget} width={settings.width?.size} />
         </div>
       );
     default:

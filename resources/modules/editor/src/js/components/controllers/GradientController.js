@@ -15,29 +15,47 @@ class GradientController extends Component {
   }
 
   colorChange = (color, name) => {
-    // const { gradient } = this.props.currentElement.settings;
-    const gradient = this.getSettings(this.props.controlId) || {};
+    let gradient = this.getSettings(this.props.controlId) || this.props.currentElement.settings.gradient;
+    gradient = { ...gradient, [name]: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})` };
+    const { isWithGradient, angle, firstColor, firstPoint, secondColor, secondPoint } = gradient;
+
     this._changeValue({
       ...gradient,
-      [name]: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
+      value: isWithGradient ? 
+        `linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%);` : ''
     });
   };
 
   setNumber = ({ target: { name, value } }) => {
-    const { gradient } = this.props.currentElement.settings;
+    let gradient = this.getSettings(this.props.controlId) || this.props.currentElement.settings.gradient;
+    gradient = { ...gradient, [name]: value };
+    const { isWithGradient, angle, firstColor, firstPoint, secondColor, secondPoint } = gradient;
+
     this._changeValue({
       ...gradient,
-      [name]: value
+      value: isWithGradient ?
+        `linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%);` : ''
     });
-  }
+  };
 
   toggle = () => {
-    const { gradient } = this.props.currentElement.settings;
-    this._changeValue({ ...gradient, isWithGradient: !gradient.isWithGradient });
-  }
+    let gradient = this.getSettings(this.props.controlId) || this.props.currentElement.settings.gradient;
+    gradient = { ...gradient, isWithGradient: !gradient.isWithGradient };
+    const { isWithGradient, angle, firstColor, firstPoint, secondColor, secondPoint } = gradient;
 
+    this._changeValue({ 
+      ...gradient, 
+      value: isWithGradient ? 
+        `linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%);` : ''
+    });
+  };
+
+  getDefaultValue(){
+    return {};
+  }
   render() {
-    const { isWithGradient, angle, firstColor, firstPoint, secondColor, secondPoint } = this.props.currentElement.settings.gradient;
+    const { isWithGradient, angle, firstColor, firstPoint, secondColor, secondPoint } =
+      this.getSettings(this.props.controlId) || this.props.currentElement.settings.gradient;
     const { opened1, opened2 } = this.state;
 
     return <>
@@ -62,7 +80,7 @@ class GradientController extends Component {
         <div className="control-color-wrapper">
           <div className="control-color-input" onClick={() => this.setState({ opened1: !opened1 })}>
             <div className="control-color-colorPicked-container">
-              <div className="control-color-colorPicked" style={{ backgroundColor: firstColor }}></div>
+              <div className="control-color-colorPicked" style={{ backgroundColor: firstColor }}/>
             </div>
             <label className="control-color-hex">{rgb2hex(firstColor)}</label>
           </div>
@@ -113,7 +131,7 @@ class GradientController extends Component {
         <div className="control-color-wrapper">
           <div className="control-color-input" onClick={() => this.setState({ opened2: !opened2 })}>
             <div className="control-color-colorPicked-container">
-              <div className="control-color-colorPicked" style={{ backgroundColor: secondColor }}></div>
+              <div className="control-color-colorPicked" style={{ backgroundColor: secondColor }}/>
             </div>
             <label className="control-color-hex">{rgb2hex(secondColor)}</label>
           </div>

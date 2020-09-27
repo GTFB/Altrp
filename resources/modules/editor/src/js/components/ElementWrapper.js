@@ -346,6 +346,8 @@ class ElementWrapper extends Component {
           element: this.props.element,
           children: this.state.children,
           currentModel: this.props.currentModel,
+          currentUser: this.props.currentUser,
+          currentDataStorage: this.props.currentDataStorage,
           wrapper: this,
         })}
         {emptyColumn}
@@ -380,7 +382,9 @@ function mapStateToProps(state) {
     currentElement: state.currentElement.currentElement,
     dragState: state.elementDrag.dragState,
     currentModel: state.currentModel,
+    currentUser: state.currentUser,
     controllerValue: state.controllerValue,
+    currentDataStorage: state.currentDataStorage,
   };
 }
 

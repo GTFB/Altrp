@@ -52,8 +52,11 @@ Route::get( '/admin/editor-reports', function (){
 
 Route::get('/reports/html/{id}', "ReportsController@page");
 
+/**
+ * Роуты Админки
+ */
 
-Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'admin'/* , 'middleware' => 'auth' */], function () {
 
   Route::group(['prefix' => 'ajax'], function () {
 
@@ -76,6 +79,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::resource( 'pages', 'Admin\PagesController' );
     Route::get( '/pages_options', 'Admin\PagesController@pages_options' )->name( 'admin.pages_options.all' );
     Route::get( '/pages_options/{page_id}', 'Admin\PagesController@show_pages_options' )->name( 'admin.pages_options.show' );
+
+    Route::get('/page_data_sources', 'Admin\PageDatasourceController@index');
+    Route::get('/page_data_sources/pages/{page_id}', 'Admin\PageDatasourceController@getByPage');
+    Route::get('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@show");
+    Route::post('/page_data_sources', "Admin\PageDatasourceController@store");
+    Route::put('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@update");
+    Route::delete('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@destroy");
+
     Route::get('/permissions', "Users\Permissions@getPermissions");
     Route::get('/permissions_options', "Users\Permissions@getPermissionsOptions");
     Route::get('/permissions/{permission}', "Users\Permissions@getPermission");
@@ -139,6 +150,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::put( 'templates/{template_id}/settings/{setting_name}', 'TemplateController@settingSet' )
       ->name( 'set-template-setting' );
     /**
+     * Templates Conditions
+     */
+    Route::get( 'templates/{template_id}/conditions', 'TemplateController@conditionsGet' )
+      ->name( 'get-template-setting' );
+    Route::put( 'templates/{template_id}/conditions', 'TemplateController@conditionsSet' )
+      ->name( 'set-template-setting' );
+    /**
      * Reports
      */
     //Route::get('reports/{id}', "TemplateController@show");
@@ -148,8 +166,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::resource( 'media', 'Admin\MediaController' );
     Route::resource( 'settings', 'Admin\SettingsController' );
     Route::resource( 'diagrams', 'Admin\AltrpDiagramController' );
+    Route::get( 'sql_editors/list', 'Admin\SQLEditorController@listByName');
     Route::resource( 'sql_editors', 'Admin\SQLEditorController' );
-    Route::get( 'sql_editors/list/{name}', 'Admin\SQLEditorController@listByName');
 
     /**
      * Updates Check
@@ -189,6 +207,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     */
     Route::get( '/models', 'Admin\ModelsController@getModels');
     Route::get( '/model_options', 'Admin\ModelsController@getModelOptions');
+    Route::get( '/models_without_parent', 'Admin\ModelsController@getModelsWithoutParent');
     Route::post( '/models', 'Admin\ModelsController@storeModel');
     Route::put( '/models/{model_id}', 'Admin\ModelsController@updateModel');
     Route::get( '/models/{model_id}', 'Admin\ModelsController@showModel');
@@ -211,11 +230,21 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     * Поля
     */
     Route::get( '/models/{model_id}/fields', 'Admin\ModelsController@getModelFields');
+    Route::get( '/models/{model_id}/fields_only', 'Admin\ModelsController@getOnlyModelFields');
     Route::get( '/models/{model_id}/field_options', 'Admin\ModelsController@getModelFieldOptions');
     Route::post( '/models/{model_id}/fields', 'Admin\ModelsController@storeModelField');
     Route::put( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@updateModelField');
     Route::get( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@showModelField');
     Route::delete( '/models/{model_id}/fields/{field_id}', 'Admin\ModelsController@destroyModelField');
+
+    /**
+    * Аксессоры
+    */
+    Route::get( '/models/{model_id}/accessors', 'Admin\ModelsController@getModelAccessors');
+    Route::post( '/models/{model_id}/accessors', 'Admin\ModelsController@storeAccessor');
+    Route::put( '/models/{model_id}/accessors/{accessor_id}', 'Admin\ModelsController@updateAccessor');
+    Route::get( '/models/{model_id}/accessors/{accessor_id}', 'Admin\ModelsController@showAccessor');
+    Route::delete( '/models/{model_id}/accessors/{accessor_id}', 'Admin\ModelsController@destroyAccessor');
 
     /**
     * Связи
@@ -233,9 +262,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::get( '/data_sources', 'Admin\ModelsController@getDataSources');
     Route::get( '/data_source_options', 'Admin\ModelsController@getDataSourceOptions');
     Route::post( '/data_sources', 'Admin\ModelsController@storeDataSource');
-    Route::put( '/data_sources/{field_id}', 'Admin\ModelsController@updateDataSource');
-    Route::get( '/data_sources/{field_id}', 'Admin\ModelsController@showDataSource');
-    Route::delete( '/data_sources/{field_id}', 'Admin\ModelsController@destroyDataSource');
+    Route::put( '/data_sources/{source_id}', 'Admin\ModelsController@updateDataSource');
+    Route::get( '/data_sources/{source_id}', 'Admin\ModelsController@showDataSource');
+    Route::delete( '/data_sources/{source_id}', 'Admin\ModelsController@destroyDataSource');
 
     Route::get('/tables', "Admin\TableController@getTables");
     Route::get('/tables/options', "Admin\TableController@getTablesForOptions");
@@ -254,6 +283,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 
     Route::post('/tables/{table}/models', 'Admin\TableController@saveModel');
     Route::get('/tables/{table}/models/{model}', 'Admin\TableController@getModel');
+    Route::get('/tables/{table_name}/items', 'Admin\TableController@getItems');
+    Route::get('/tables/{table_name}/items/{item_id}', 'Admin\TableController@getItemById');
     Route::post('/tables/{table}/models/{model}/accessors', 'Admin\TableController@saveAccessor');
     Route::get('/tables/{table}/models/{model}/accessors', 'Admin\TableController@getAccessors');
     Route::delete('/tables/{table}/models/{model}/accessors/{accessor}', 'Admin\TableController@deleteAccessor');
@@ -269,13 +300,30 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::get('/tables/{table}/controller', "Admin\TableController@getController");
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
 
+<<<<<<< HEAD
     /**
      * Плагины
      */
 
     Route::get('/plugins',"Admin\PluginController@index");
     Route::post('/plugins/switch',"Admin\PluginController@switch");
+=======
+
+>>>>>>> front-app-dev
   });
+
+  /**
+   * Роуты загрузок Админки
+   */
+  Route::group(['prefix' => 'downloads'], function () {
+    Route::get( 'settings', 'Admin\DownloadsController@exportAltrpSettings' )->name( 'admin.download.settings' );
+  } );
+  /**
+   * Роуты ипортов Админки
+   */
+  Route::group(['prefix' => 'import'], function () {
+    Route::post( 'settings', 'Admin\ImportsController@importAltrpSettings' )->name( 'admin.download.settings' );
+  } );
 
 });
 
@@ -314,11 +362,28 @@ foreach ( $frontend_routes as $frontend_route ) {
 
 Route::group( ['prefix' => 'ajax'], function(){
 
+  /**
+   * Роут текущий пользователь
+   */
+  Route::get( 'current-user', "Users\Users@getCurrentUser" )->name( 'users.current-user' );
+
   // Отдает данные для виджета карты
   Route::get('maps/{id}', 'MapsController@index');
 
   // Записывает данные карты с фронта
   Route::post('maps/{id}', 'MapsController@store');
+
+  // Отдает данные для виджета панели аналитики
+  Route::get('dashboards/{id}', 'DashboardsController@index');
+
+  // Записывает данные для виджета панели аналитики
+  Route::post('dashboards/{id}', 'DashboardsController@store');
+
+  // Обновляем виджет на панели аналитики
+  Route::put('dashboards/{id}', 'DashboardsController@update');
+
+  // Удаляем виджет из панели аналитики
+  Route::delete('dashboards/{id}', 'DashboardsController@destroy');
 
   /**
    * Отдает данные страницы как модели для динамического контента
@@ -356,6 +421,7 @@ Route::group( ['prefix' => 'ajax'], function(){
    * todo: для загрузчика шаблонов для виджетов
    */
   Route::get( 'templates/{template_id}', 'TemplateController@show_frontend' )->name( 'templates.show.frontend' );
+
 } );
 
 Route::get('reports/{id}', "ReportsController@show");
@@ -365,7 +431,13 @@ Route::get('/linkstorage', function () {
   return redirect('/admin');
 });
 
+/**
+ * Роуты для зарегистрированных пользователей
+ */
+Route::group( ['prefix' => 'ajax', 'middleware' => 'auth'], function() {
 
+
+} );
 /**
  * Обновление всех ресурсов бэкенда
  */

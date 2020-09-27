@@ -16,7 +16,14 @@ use App\Exceptions\AltrpMigrationCreateFileExceptions;
 use App\Exceptions\AltrpMigrationRunExceptions;
 
 use Artisan;
+use Illuminate\Support\Arr;
 
+/**
+ * Class Migration
+ * @package App\Altrp
+ * @property mixed $data
+ * @property mixed $full_data
+ */
 class Migration extends Model
 {
 
@@ -185,14 +192,14 @@ class Migration extends Model
         //dd($value);
         $data = json_decode($this->data);
 
-        foreach ($data->columns as &$value) {
+        foreach (data_get($data,'columns', []) as &$value) {
             $column = new Column();
             $column->fromObject($value);
 
             $value = $column;
         }
 
-        foreach ($data->keys as &$value) {
+        foreach (data_get($data,'keys', []) as &$value) {
             $key = new Key();
             $key->fromObject($value);
 

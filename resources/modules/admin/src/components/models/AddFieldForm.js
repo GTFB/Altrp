@@ -245,7 +245,11 @@ class AddFieldForm extends Component {
 
     if (this.props.match.params.id) {
       let value = await this.filedsResource.get(this.props.match.params.id);
-      this.setState(state => ({ ...state, value: { ...state.value, ...value } }));
+
+      if (typeof value.calculation_logic === 'string') {
+        value.calculation_logic = JSON.parse(value.calculation_logic);
+      }  
+      this.setState(state => ({ ...state, isAlways: value.calculation ? true : false ,  value: { ...state.value, ...value } }));
     }
     this.setState(state => ({ ...state, fieldsOptions: options }));
   }
@@ -316,17 +320,17 @@ class AddFieldForm extends Component {
               <p>E.g. [field_name]*[field_name] + 10</p>
             </> :
             <>
-              {this.state.value.calculation_logic.map((item, index) => <>
+              {this.state.value.calculation_logic.map((item, index) => <React.Fragment key={index}>
                 {index !== 0 && <hr />}
                 <FieldCalculationLogic
                   item={item}
                   index={index}
                   fieldsOptions={this.state.fieldsOptions}
-                  key={index}
+                  key={index + 'logic'}
                   changeHandler={item => this.itemChangeHandler(item, index)}
                   deleteItemHandler={() => this.deleteItemHandler(index)}
                 />
-              </>)}
+              </React.Fragment>)}
               <button className="btn" type="button" onClick={this.addItemHandler}>
                 + Calculated Logic
               </button>

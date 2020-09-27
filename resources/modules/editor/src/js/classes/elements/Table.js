@@ -15,7 +15,7 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_NUMBER,
-  CONTROLLER_WYSIWYG, CONTROLLER_QUERY, CONTROLLER_REPEATER, CONTROLLER_FILTERS
+  CONTROLLER_WYSIWYG, CONTROLLER_QUERY, CONTROLLER_REPEATER, CONTROLLER_FILTERS, CONTROLLER_HEADING
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import Repeater from "../Repeater";
@@ -127,13 +127,48 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("table_content_query", {
+    this.startControlSection("table_content_datasource", {
         tab: TAB_CONTENT,
-        label: "Query"
+        label: "Data Source"
+    });
+
+    this.addControl("choose_datasource", {
+      type: CONTROLLER_SELECT,
+      label: 'Choose Data Source',
+      options:[
+        {
+          label: 'Query',
+          value: 'query'
+        },
+        {
+          label: 'From Page Data Source',
+          value: 'datasource'
+        },
+      ],
+      default: 'query',
+    });
+
+    this.addControl("table_datasource", {
+      label: 'Path',
+      type: CONTROLLER_TEXTAREA,
+      conditions: {
+        'choose_datasource': 'datasource',
+      },
+    });
+
+    this.addControl("table_query_heading", {
+      type: CONTROLLER_HEADING,
+      label: 'Query',
+      conditions: {
+        'choose_datasource': 'query',
+      },
     });
 
     this.addControl("table_query", {
       type: CONTROLLER_QUERY,
+      conditions: {
+        'choose_datasource': 'query',
+      },
     });
 
     this.endControlSection();
@@ -141,6 +176,10 @@ class Table extends BaseElement {
     this.startControlSection("table_content_table_settings", {
       tab: TAB_CONTENT,
       label: "Table Settings",
+    });
+
+    this.addControl('field_name_for_row_styling', {
+      label: 'Field Name for Styling Rows',
     });
 
     this.addControl('not_found_text', {
@@ -257,6 +296,11 @@ class Table extends BaseElement {
     repeater.addControl('column_edit_url', {
       label: 'Edit URL',
       description: '/ajax/models/tests/:id/title',
+      default: ''
+    });
+
+    repeater.addControl('column_styles_field', {
+      label: 'Column Styles Field',
       default: ''
     });
 

@@ -1,14 +1,19 @@
 import React, {Component} from "react";
 import { withRouter } from "react-router-dom";
 import appStore from "../store/store"
+import {conditionsChecker} from "../helpers";
 
 class ElementWrapper extends Component {
   constructor(props){
     super(props);
     this.state = {
       currentModel: appStore.getState().currentModel,
+      currentUser: appStore.getState().currentUser,
+      currentDataStorage: appStore.getState().currentDataStorage,
+      formsStore: appStore.getState().formsStore,
+      elementDisplay: true,
     };
-    appStore.subscribe(this.updateCurrentModel)
+    appStore.subscribe(this.updateStore)
   }
 
   /**
@@ -25,14 +30,75 @@ class ElementWrapper extends Component {
   }
 
   /**
-   * Подписываемся на обновление текущей модели
-   * (обновляем, только если currentModel изменилась)
+   * Подписываемся на обновление store редакса
    */
-  updateCurrentModel = () => {
+  updateStore = () => {
     if(this.state.currentModel !== appStore.getState().currentModel){
       this.setState(state => ({...state, currentModel: appStore.getState().currentModel}));
     }
+    /**
+     * Обновляем пользователя
+     */
+    if(this.state.currentUser !== appStore.getState().currentUser){
+      this.setState(state => ({...state, currentModel: appStore.getState().currentUser}));
+    }
+
+    /**
+     * Обновляем currentDataStorage
+     */
+    if(this.state.currentDataStorage !== appStore.getState().currentDataStorage){
+      this.setState(state => ({...state, currentDataStorage: appStore.getState().currentDataStorage}));
+    }
+
+    if((this.props.element.getName() === 'input') && this.state.formsStore !== appStore.getState().formsStore){
+      // console.log(this.state.formsStore);
+      // console.log(appStore.getState().formsStore);
+      this.setState(state => ({...state, formsStore: appStore.getState().formsStore}));
+    }
   };
+
+  /**
+   * Нужно ли обновить отображение обертки элементов
+   */
+  componentDidUpdate(){
+    this.checkElementDisplay();
+  }
+
+  /**
+   * Проверка видимости элемента
+   */
+  checkElementDisplay(){
+    /**
+     * @member {FrontElement} element
+     */
+    const {element} = this.props;
+    if(! element.getSettings('conditional_other')){
+      return;
+    }
+    let conditions = element.getSettings('conditions',[]);
+    // console.log(this.state.currentModel);
+    conditions = conditions.map(c=>{
+      const {
+        conditional_model_field: modelField,
+        conditional_other_operator: operator,
+        conditional_other_condition_value: value,
+      } = c;
+      return {
+        modelField,
+        operator,
+        value,
+      };
+    });
+    let elementDisplay = conditionsChecker(conditions,
+        element.getSettings('conditional_other_display') === 'AND',
+        this.state.currentModel);
+    if(this.state.elementDisplay === elementDisplay){
+      return;
+    }
+    this.setState(({
+      elementDisplay
+    }));
+  }
 
   render() {
     const { 
@@ -77,14 +143,21 @@ class ElementWrapper extends Component {
         </details>
       </div>
     }
-    
-    return <div className={classes}>
+    const styles = {};
+    if(! this.state.elementDisplay){
+      styles.display = 'none';
+    }
+    return <div className={classes} style={styles}>
       {
         React.createElement(this.props.component, {
           element: this.props.element,
           children: this.props.element.getChildren(),
           match: this.props.match,
           currentModel: this.state.currentModel,
+          currentUser: this.state.currentUser,
+          currentDataStorage: this.state.currentDataStorage,
+          formsStore: this.state.formsStore,
+          appStore
         })
       }
     </div>

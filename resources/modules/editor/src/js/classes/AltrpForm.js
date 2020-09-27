@@ -36,17 +36,38 @@ class AltrpForm {
    * @param {FrontElement} field
    */
   addField(field){
-    this.fields.push(field);
+    let exists = false;
+    this.fields = this.fields.map(_f=>{
+      if(_f.getId() === field.getId()){
+        exists = true;
+        if(! field.component){
+          return _f;
+        }
+        return field;
+      }
+      return _f;
+    });
+
+    if(! exists){
+      this.fields.push(field);
+    }
     return true;
   }
 
   /**
    * Проверка полей перед отправкой
    * @param {int |  null} modelID
+   * @param {string} submitText
    * @return {boolean}
    */
-  async submit(modelID){
+  async submit(modelID, submitText = ''){
     let success = true;
+    if(submitText){
+      let confirmed =  await confirm(submitText);
+      if(! confirmed){
+        return{success: false};
+      }
+    }
     this.fields.forEach(field=>{
       if(! field.fieldValidate()){
         success = false;
@@ -58,11 +79,11 @@ class AltrpForm {
           let res =  await this.resource.post(this.getData());
           if((this.modelName === 'login') && this.options.afterLoginRedirect){
             document.location.replace(this.options.afterLoginRedirect);
-            return;
+            return res;
           }
           if((this.modelName === 'logout') && this.options.afterLogoutRedirect){
             document.location.replace(this.options.afterLogoutRedirect);
-            return;
+            return res;
           }
           if(res.reload){
             document.location.reload();

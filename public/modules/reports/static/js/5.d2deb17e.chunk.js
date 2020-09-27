@@ -1,0 +1,2 @@
+(this["webpackJsonprrbe-editor"]=this["webpackJsonprrbe-editor"]||[]).push([[5],{103:function(e,r,n){"use strict";n.r(r);var t=n(0),o=n.n(t);r.default=function(e){var r=e.text,n=e.model;console.log("model :>> ",n);return o.a.createElement("div",{dangerouslySetInnerHTML:{__html:function(e){var r,t=(null===n||void 0===n||null===(r=n.item)||void 0===r?void 0:r.value)||{};for(var o in t)e=e.replace("{{".concat(o,"}}"),t[o]);return e}(r)}})}}}]);
+//# sourceMappingURL=5.d2deb17e.chunk.js.map

@@ -74,23 +74,13 @@ class AltrpSQLEditorObserver
                 'url' => '/' . strtolower(Str::plural($model->name)) . '/' . $sQLEditor->name,
                 'api_url' => '/' . strtolower(Str::plural($model->name)) . '/' . $sQLEditor->name,
                 'type' => Str::snake($sQLEditor->name),
+                'request_type' => 'get',
+                'title' => 'SQL Editor ' . Str::studly($sQLEditor->name),
                 'name' => 'SQL Editor ' . Str::studly($sQLEditor->name),
                 'sourceable_id' => $sQLEditor->id,
                 'sourceable_type' => SQLEditor::class
             ]);
             $source->save();
-        }
-        $sourcePermission = SourcePermission::where([
-            ['permission_id',$permission->id],
-            ['source_id',$source->id]
-        ])->first();
-        if (! $sourcePermission) {
-            $sourcePermission = new SourcePermission([
-                'type' => 'sql-editor-'.Str::kebab($sQLEditor->name),
-                'permission_id' => $permission->id,
-                'source_id' => $source->id
-            ]);
-            $sourcePermission->save();
         }
         $routeFile = new RouteFile($model);
         $routeWriter = new RouteFileWriter($routeFile, $controllerFile);
@@ -107,7 +97,6 @@ class AltrpSQLEditorObserver
      */
     public function updating(SQLEditor $sQLEditor)
     {
-//        dump($sQLEditor->permissions);
         $model = Model::find($sQLEditor->model_id);
         $controllerFile = new ControllerFile($model);
         $repo = new RepositoryFile($model);
@@ -154,22 +143,12 @@ class AltrpSQLEditorObserver
             'url' => '/' . strtolower(Str::plural($model->name)) . '/' . $sQLEditor->name,
             'api_url' => '/' . strtolower(Str::plural($model->name)) . '/' . $sQLEditor->name,
             'type' => Str::snake($sQLEditor->name),
+            'request_type' => 'get',
+            'title' => 'SQL Editor ' . Str::studly($sQLEditor->name),
             'name' => 'SQL Editor ' . Str::studly($sQLEditor->name),
             'sourceable_id' => $sQLEditor->id,
             'sourceable_type' => SQLEditor::class
         ]);
-        $permission = Permission::where('name', 'sql-editor-' . $sQLEditor->name)->first();
-        $source = Source::where('type',Str::snake($sQLEditor->name))->first();
-        if ($source && $permission) {
-            $sourcePermission = SourcePermission::where([
-                ['permission_id',$permission->id],
-                ['source_id',$source->id]
-            ]);
-            if ($sourcePermission->first()) {
-                $sourcePermission->update(['type' => 'sql-editor-'.Str::kebab($sQLEditor->name)]);
-            }
-        }
-//        dump($sQLEditor->altrp_source->source_permissions->permission);
         $routeFile = new RouteFile($model);
         $routeWriter = new RouteFileWriter($routeFile, $controllerFile);
         $routeWriter->updateSqlRoute($sQLEditor->getOriginal('name'),$sQLEditor->name);

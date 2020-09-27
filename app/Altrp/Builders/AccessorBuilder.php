@@ -5,6 +5,7 @@ namespace App\Altrp\Builders;
 
 
 use App\Altrp\Accessor;
+use App\Altrp\Builders\Traits\DynamicVariables;
 use App\Altrp\Column;
 use App\Altrp\Model;
 use App\Exceptions\AccessorNotFoundException;
@@ -18,6 +19,7 @@ use Illuminate\Support\Str;
 
 class AccessorBuilder
 {
+    use DynamicVariables;
     /**
      * @var Model
      */
@@ -129,8 +131,8 @@ class AccessorBuilder
     public function getCalc($accessor)
     {
         if (isset($accessor->calculation))
-            return $accessor->calculation;
-        return $accessor->calculation_logic;
+            return $this->replaceDynamicVars($accessor->calculation);
+        return $this->replaceDynamicVars($accessor->calculation_logic);
     }
 
     /**
@@ -429,7 +431,10 @@ class AccessorBuilder
                 : $this->tabIndent . $this->tabIndent . $this->getCalcString($calc);
         }
 
-        $calcLogic[] = $this->tabIndent . $this->tabIndent . "return null;";
+        $calcLogic[] = $this->tabIndent . $this->tabIndent . "return "
+            . ($this->accessor->calculation
+                ? $this->parseCalculation($this->replaceDynamicVars($this->accessor->calculation))
+                : 'null') . ";";
 
         return $calcLogic;
     }

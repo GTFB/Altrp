@@ -30,7 +30,14 @@ _ide_helper.php
 /app/Http/Requests/AltrpRequests
 /app/Providers/AltrpRepositoryServiceProvider.php
 /routes/AltrpRoutes.php
+/routes/AltrpApiRoutes.php
 /out
 /app/Http/Requests/AltrpRequests
 /app/Plugins/*/
 /app/Plugins/plugins.json
+=======
+
+#bundles
+public/modules/admin
+public/modules/front-app
+public/modules/editor

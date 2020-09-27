@@ -118,7 +118,11 @@ class MigrationKey{
         $source_column = $this->key->local_key;
         $target_column = $this->key->foreign_key;
 
-        $target_table = Model::find($this->key->model_id)->altrp_table->name;
+        $model = Model::find($this->key->model_id);
+        if ($model->parent_model_id)
+            $target_table = Model::find($model->parent_model_id)->altrp_table->name;
+        else
+            $target_table = $model->altrp_table->name;
 
         $text = '';
 
@@ -127,10 +131,10 @@ class MigrationKey{
             $target_column = $this->key->local_key;
         }
 
-        if($this->old_key) {
+        /*if($this->old_key) {
             $key_field = $this->key->type === 'belongsTo' ? $this->old_key->foreign_key : $this->old_key->local_key;
             $text .= "\$table->dropForeign(['".$key_field."']);\n\t\t\t";
-        }
+        }*/
 
         if (! $target_column) $target_column = 'id';
 

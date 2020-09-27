@@ -171,10 +171,21 @@ class Button extends BaseElement{
       ],
     });
 
+    this.addControl('form_confirm', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Confirm Submit Form Text',
+      conditions: {
+        'form_actions!': 'null',
+      },
+      default: '',
+    });
+
     this.addControl('choose_model', {
       conditions: {
         'form_actions': 'add_new',
       },
+      label: 'Choose Model',
+      responsive: false,
       type: CONTROLLER_SELECT,
       resource: '/admin/ajax/models_options?with_names=true',
     });
@@ -265,6 +276,17 @@ class Button extends BaseElement{
       type: CONTROLLER_TEXT,
       label: 'CSS Classes',
       default: ''
+    });
+
+    this.addControl('position_opacity', {
+      type: CONTROLLER_SLIDER,
+      label: 'Opacity',
+      step: 0.01,
+      min: 0,
+      max: 1,
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'opacity: {{SIZE}};'
+      },
     });
 
     this.endControlSection();
@@ -457,10 +479,174 @@ class Button extends BaseElement{
         firstPoint: '0',
         secondColor: "rgba(242,41,91,1)",
         secondPoint: "100",
-        angle: "0"
+        angle: "0",
+        value: ""
       },
       rules: {
-        "{{ELEMENT}} > .altrp-gradient{{STATE}}": "background-image: linear-gradient({{ANGLE}}deg, {{FIRSTCOLOR}} {{FIRSTPOINT}}%, {{SECONDCOLOR}} {{SECONDPOINT}}%);"
+        "{{ELEMENT}} .altrp-btn{{STATE}}": "background-image: {{VALUE}}" 
+      }
+    });
+
+    this.addControl('background_image', {
+      type: CONTROLLER_MEDIA,
+      label: 'Background Image',
+      default: { url: "" },
+      rules: {
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-image: url({{URL}});"
+      }
+    });
+
+    this.addControl('background_position', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "top left",
+          label: "top left"
+        },
+        {
+          value: "top",
+          label: "top"
+        },
+        {
+          value: "top right",
+          label: "top right"
+        },
+        {
+          value: "right",
+          label: "right"
+        },
+        {
+          value: "bottom right",
+          label: "bottom right"
+        },
+        {
+          value: "bottom",
+          label: "bottom"
+        },
+        {
+          value: "bottom left",
+          label: "bottom left"
+        },
+        {
+          value: "left",
+          label: "left"
+        },
+        {
+          value: "center",
+          label: "center"
+        }
+      ],
+      label: 'Background Position',
+      default: 'top left',
+      rules: {
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-position: {{VALUE}};"
+      }
+    });
+
+    this.addControl('background_attachment', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "scroll",
+          label: "scroll"
+        },
+        {
+          value: "fixed",
+          label: "fixed"
+        },
+        {
+          value: "local",
+          label: "local"
+        }
+      ],
+      label: 'Background Attachment',
+      default: 'scroll',
+      rules: {
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-attachment: {{VALUE}};"
+      }
+    });
+
+    this.addControl('background_repeat', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "repeat",
+          label: "repeat"
+        },
+        {
+          value: "repeat-x",
+          label: "repeat-x"
+        },
+        {
+          value: "repeat-y",
+          label: "repeat-y"
+        },
+        {
+          value: "space",
+          label: "space"
+        },
+        {
+          value: "round",
+          label: "round"
+        },
+        {
+          value: "no-repeat",
+          label: "no-repeat"
+        }
+      ],
+      label: 'Background Repeat',
+      default: 'repeat',
+      rules: {
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-repeat: {{VALUE}};"
+      }
+    });
+
+    this.addControl("background_image_width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default: {
+        size: 100,
+        unit: 'px',
+      },
+      conditions: {
+        'background_size': [''],
+      },
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 1000,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
+      }
+    });
+
+    this.addControl('background_size', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "unset",
+          label: "unset"
+        },
+        {
+          value: "cover",
+          label: "cover"
+        },
+        {
+          value: "contain",
+          label: "contain"
+        },
+        {
+          value: "",
+          label: "set width"
+        },
+      ],
+      label: 'Background Size',
+      default: 'unset',
+      rules: {
+        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
       }
     });
 
