@@ -178,6 +178,10 @@ class Table extends BaseElement {
       label: "Table Settings",
     });
 
+    this.addControl('field_name_for_row_styling', {
+      label: 'Field Name for Styling Rows',
+    });
+
     this.addControl('not_found_text', {
       label: 'Not Found Text',
     });
@@ -292,6 +296,11 @@ class Table extends BaseElement {
     repeater.addControl('column_edit_url', {
       label: 'Edit URL',
       description: '/ajax/models/tests/:id/title',
+      default: ''
+    });
+
+    repeater.addControl('column_styles_field', {
+      label: 'Column Styles Field',
       default: ''
     });
 
