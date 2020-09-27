@@ -47,7 +47,19 @@ class Model extends EloquentModel
   public static function import( $imported_models = [] )
   {
     foreach ( $imported_models as $imported_model ) {
-      if( self::where( 'name', $imported_model['name'] )->first() ){
+      $old_model = self::where( 'name', $imported_model['name'] )->first();
+      if( $old_model ){
+        $table = Table::where( 'name', data_get( $imported_model, 'table_name') )->first();
+        if( ! $table ){
+          continue;
+        }
+        $old_model->table_id = $table->id;
+        try {
+          $old_model->save();
+        } catch (\Exception $e){
+          Log::error( $e->getMessage(), [$e->getFile()] ); //
+          continue;
+        }
         continue;
       }
 
@@ -108,7 +120,7 @@ class Model extends EloquentModel
 
     public function altrp_accessors()
     {
-        return $this->hasMany(Accessor::class);
+        return $this->hasMany( Accessor::class, 'model_id', 'id' );
     }
 
     public function altrp_relationships()

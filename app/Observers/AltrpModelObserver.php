@@ -14,6 +14,7 @@ use App\Altrp\Migration;
 use App\Altrp\Model;
 use App\Altrp\Source;
 use App\Altrp\SourcePermission;
+use App\Altrp\SourceRole;
 use App\Altrp\Table;
 use App\Exceptions\AltrpMigrationCreateFileExceptions;
 use App\Exceptions\CommandFailedException;
@@ -231,12 +232,22 @@ class AltrpModelObserver
 //        $migration = $table->actual_migration();
 //        Column::where('altrp_migration_id', $migration->id)->delete();
 //        $migration->delete();
+        \Schema::disableForeignKeyConstraints();
         $sources = $model->altrp_sources();
         $sourcePermissionsIds = [];
         $permissionsIds = [];
+        $sourceRolesIds = [];
         foreach ($sources->get() as $source) {
             foreach ($source->source_permissions as $sPerm) {
                 $sourcePermissionsIds[] = $sPerm->id;
+            }
+
+            foreach ($source->source_roles as $sRole) {
+                $sourceRolesIds[] = $sRole->id;
+            }
+
+            if ($source->page_data_sources) {
+                $source->page_data_sources()->delete();
             }
 
             foreach ($source->source_permissions as $sPerm) {
@@ -244,8 +255,14 @@ class AltrpModelObserver
             }
         }
         SourcePermission::destroy($sourcePermissionsIds);
+        SourceRole::destroy($sourceRolesIds);
         Permission::destroy($permissionsIds);
         $sources->delete();
+        Accessor::where('model_id',$model->id)->delete();
+        Column::where([['table_id', $model->table->id], ['type','calculated']])->delete();
+        $model->altrp_relationships()->delete();
+        $model->altrp_sql_editors()->delete();
+        $model->altrp_queries()->delete();
         $generator = new ModelGenerator($model);
         $result = $generator->deleteModelFile();
         if (! $result) {

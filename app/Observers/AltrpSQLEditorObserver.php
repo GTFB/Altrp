@@ -74,6 +74,8 @@ class AltrpSQLEditorObserver
                 'url' => '/' . strtolower(Str::plural($model->name)) . '/' . $sQLEditor->name,
                 'api_url' => '/' . strtolower(Str::plural($model->name)) . '/' . $sQLEditor->name,
                 'type' => Str::snake($sQLEditor->name),
+                'request_type' => 'get',
+                'title' => 'SQL Editor ' . Str::studly($sQLEditor->name),
                 'name' => 'SQL Editor ' . Str::studly($sQLEditor->name),
                 'sourceable_id' => $sQLEditor->id,
                 'sourceable_type' => SQLEditor::class
@@ -141,6 +143,8 @@ class AltrpSQLEditorObserver
             'url' => '/' . strtolower(Str::plural($model->name)) . '/' . $sQLEditor->name,
             'api_url' => '/' . strtolower(Str::plural($model->name)) . '/' . $sQLEditor->name,
             'type' => Str::snake($sQLEditor->name),
+            'request_type' => 'get',
+            'title' => 'SQL Editor ' . Str::studly($sQLEditor->name),
             'name' => 'SQL Editor ' . Str::studly($sQLEditor->name),
             'sourceable_id' => $sQLEditor->id,
             'sourceable_type' => SQLEditor::class

@@ -4,12 +4,15 @@
 namespace App\Altrp\Builders\Traits;
 
 
+use Illuminate\Support\Facades\DB;
+
 trait DynamicVariables
 {
     /**
      * Заменить пользовательские динамические переменные
      *
      * @param $str
+     * @param bool $outer
      * @return string|string[]
      */
     protected function replaceDynamicVars($str, $outer = false)
@@ -20,7 +23,7 @@ trait DynamicVariables
             function($matches) use ($outer) {
                 $param = $matches[0] ? explode(':',trim($matches[0], '\'')) : null;
                 if ($param && $param[0] == 'REQUEST') {
-                    return $this->getValue('request()->' . $param[1], false);
+                    return $this->getValue('request()->' . $param[1], $outer);
                 }
                 if ($param && $param[0] == 'CURRENT_USER') {
                     $relations = str_replace('.', '->', $param[1]);
@@ -60,7 +63,11 @@ trait DynamicVariables
             },
             $str
         );
-        return $str;
+      /**
+       * Заменим префикс БД
+       */
+      $str = str_replace( '{{PREFIX}}', DB::getTablePrefix(), $str );
+      return $str;
     }
 
     /**

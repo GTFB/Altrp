@@ -28,7 +28,6 @@ class ButtonWidget extends Component {
          */ async form => {
           try {
             let res = await form.submit(this.getModelId(), this.props.element.getSettings('form_confirm'));
-            console.log(res);
             if (res.success) {
               let { redirect_to_prev_page, redirect_after } = this.state.settings;
               if (redirect_to_prev_page) {
@@ -55,6 +54,8 @@ class ButtonWidget extends Component {
   render() {
     const { link_link = {} } = this.state.settings;
     const { goBack } = this.props.history;
+
+    let buttonText = this.getContent('button_text');
 
     let classes =
       "altrp-btn " + (this.state.settings.position_css_classes || "");
@@ -100,7 +101,7 @@ class ButtonWidget extends Component {
         className={classes}
         id={this.state.settings.position_css_id}
       >
-        {this.state.settings.button_text || ""}
+        {buttonText || ""}
         {buttonMedia && buttonMedia.assetType && <span className={"altrp-btn-icon "}>{renderAssetIcon(buttonMedia)} </span>}
       </button>
     );
@@ -112,7 +113,7 @@ class ButtonWidget extends Component {
         link = (
           <a href={url} onClick={this.onClick} className={classes}>
             {" "}
-            {this.state.settings.button_text || ""}
+            {buttonText || ""}
             <span className={"altrp-btn-icon "}>{renderAssetIcon(buttonMedia)} </span>
           </a>
         );
@@ -120,7 +121,7 @@ class ButtonWidget extends Component {
         link = (
           <Link to={url} onClick={this.onClick} className={classes}>
             {" "}
-            {this.state.settings.button_text || ""}
+            {buttonText || ""}
             <span className={"altrp-btn-icon "}>{renderAssetIcon(buttonMedia)} </span>
           </Link>
         );

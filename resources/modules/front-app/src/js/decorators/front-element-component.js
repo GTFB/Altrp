@@ -1,5 +1,6 @@
 import modelManager from "../../../../editor/src/js/classes/modules/ModelsManager";
-import {conditionsChecker} from "../helpers";
+import {conditionsChecker, getDataByPath, isEditor} from "../helpers";
+import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 
 /**
  * Срабатываает перед удалением компонента элемента
@@ -142,6 +143,15 @@ function getContent(settingName) {
     // }
     content = this.props.currentModel ? this.props.currentModel.getProperty(content.fieldName) : ' ';
   }
+  if(! isEditor()){//todo: сделать подгрузку данных и в редакторе
+    let paths = _.isString(content) ? content.match(/(?<={{)([\s\S]+?)(?=}})/g) : null;
+    if(_.isArray(paths)){
+      paths.forEach(path => {
+        let value = getDataByPath(path, '');
+        content = content.replace(new RegExp(`{{${path}}}`, 'g'), value)
+      });
+    }
+  }
   return content;
 }
 /**
@@ -154,7 +164,50 @@ function componentDidMount() {
   if(typeof this._componentDidMount === 'function'){
     this._componentDidMount();
   }
-  this.subscribeToModels(this.getModelId());
+  // this.subscribeToModels(this.getModelId());
+}
+/**
+ * Компоненте обновился
+ * @params {
+ *  {
+ *    match: {}
+ *  }
+ * } prevProps
+ * @params {{}} prevState
+ */
+function componentDidUpdate(prevProps, prevState) {
+  /**
+   * Если сменился url но сама страница та же надо обновить компоненты элементов
+   */
+  if(! _.isEqual(this.props.match, prevProps.match)){
+    if(_.isFunction(this._componentDidMount)){
+      this._componentDidMount();
+    }
+  }
+  /**
+   * После загрузки хранилища данных текущей страницы надо обновить некоторые виджеты
+   */
+  let currentDataStorage = _.get(this.props,'currentDataStorage', new AltrpModel({}));
+  let prevDataStorage = _.get(prevProps,'currentDataStorage', new AltrpModel({}));
+  if(currentDataStorage.getProperty('currentDataStorageLoaded')
+      && (currentDataStorage.getProperty('currentDataStorageLoaded') !== prevDataStorage.getProperty('currentDataStorageLoaded'))){
+    if(_.isFunction(this._componentDidMount)){
+
+      this._componentDidMount();
+    }
+  }
+  /**
+   * После загрузки модели надо обновить некоторые виджеты
+   */
+  let currentModel = _.get(this.props,'currentModel', new AltrpModel({}));
+  let prevModel = _.get(prevProps,'currentModel', new AltrpModel({}));
+  if(currentModel.getProperty('altrpModelUpdated')
+      && (currentModel.getProperty('altrpModelUpdated') !== prevModel.getProperty('altrpModelUpdated'))){
+    if(_.isFunction(this._componentDidMount)){
+      this._componentDidMount();
+    }
+  }
+  // this.subscribeToModels(this.getModelId());
 }
 
 /**
@@ -176,6 +229,7 @@ export default function frontDecorate(component) {
   component.componentWillUnmount = componentWillUnmount.bind(component);
   component.subscribeToModels = subscribeToModels.bind(component);
   component.componentDidMount = componentDidMount.bind(component);
+  component.componentDidUpdate = componentDidUpdate.bind(component);
   component.getContent = getContent.bind(component);
   component.getModelId = getModelId.bind(component);
   component.updateModelData = updateModelData.bind(component);

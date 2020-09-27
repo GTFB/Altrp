@@ -15,28 +15,7 @@ class DynamicContent extends Component {
     super(props);
     this.state = {
       models: [
-        //   {
-        // modelName: 'page',
-        // title: 'Page',
-        // fields: [
-        //       {
-        //         fieldName: 'id',
-        //         title: 'ID',
-        //       },
-        //       {
-        //         fieldName: 'title',
-        //         title: 'Title',
-        //       },
-        //       {
-        //         fieldName: 'authorName',
-        //         title: 'Author Name',
-        //       },
-        //       {
-        //         fieldName: 'authorId',
-        //         title: 'Author ID',
-        //       },
-        //     ]
-        //   },
+
         ],
       };
     this.select = this.select.bind(this);

@@ -1,2 +1,0 @@
-(this["webpackJsonprrbe-editor"]=this["webpackJsonprrbe-editor"]||[]).push([[7],{92:function(t,e,r){"use strict";r.r(e);var a=r(0),n=r.n(a);e.default=function(t){return n.a.createElement("a",{className:t.isButton?"btn btn-primary":"",href:t.url,target:t.target},t.text)}}}]);
-//# sourceMappingURL=7.22225f79.chunk.js.map

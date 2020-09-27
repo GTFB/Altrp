@@ -347,6 +347,7 @@ class ElementWrapper extends Component {
           children: this.state.children,
           currentModel: this.props.currentModel,
           currentUser: this.props.currentUser,
+          currentDataStorage: this.props.currentDataStorage,
           wrapper: this,
         })}
         {emptyColumn}
@@ -383,6 +384,7 @@ function mapStateToProps(state) {
     currentModel: state.currentModel,
     currentUser: state.currentUser,
     controllerValue: state.controllerValue,
+    currentDataStorage: state.currentDataStorage,
   };
 }
 
