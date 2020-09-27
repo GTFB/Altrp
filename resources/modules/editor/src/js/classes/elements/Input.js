@@ -238,6 +238,17 @@ class Input extends BaseElement{
       },
     });
 
+    this.addControl('select2_multiple', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Multiple',
+      default: false,
+      conditions: {
+        'content_type':[
+          'select2',
+        ],
+      },
+    });
+
     this.addControl('content_options', {
       type: CONTROLLER_TEXTAREA,
       label: 'Or Type Select Options',

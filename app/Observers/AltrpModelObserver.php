@@ -112,6 +112,22 @@ class AltrpModelObserver
      */
     public function updating(Model $model)
     {
+
+
+        if (!$model->parent_model_id) {
+            $table = Table::find($model->table_id);
+        } else {
+            $parentModel = Model::find($model->parent_model_id);
+            $table = Table::find($parentModel->table_id);
+        }
+        //При изменении имени модели, переименовываем таблицу
+        if ($table && $model->getOriginal('name') != $model->name) {
+            $table->name = strtolower(\Str::plural($model->name));
+            $table->title = ucfirst(\Str::plural($model->name));
+            $table->user_id = auth()->user()->id;
+            $table->save();
+        }
+
         if (!$model->getOriginal('preset'))
             $model->namespace = 'App\\AltrpModels\\' . $model->name;
         $generator = new ModelGenerator($model);

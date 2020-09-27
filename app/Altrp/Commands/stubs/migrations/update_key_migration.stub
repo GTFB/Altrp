@@ -12,7 +12,7 @@ class {{className}} extends Migration
      */
     public function up()
     {
-        Schema::table('{{table}}', function (Blueprint $table) {
+        Schema::table('{{drop_table}}', function (Blueprint $table) {
             {{dropForeign}}
         });
 

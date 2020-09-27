@@ -17,7 +17,7 @@ class PageDataSourceForm extends Component {
   };
 
   async componentDidMount() {
-    const resource = new Resource({ route: 'http://altrp.nz/admin/ajax/data_sources' });
+    const resource = new Resource({ route: '/admin/ajax/data_sources' });
     const { data_sources } = await resource.getAll();
     this.setState({ dataSourceOptions: data_sources })
   }
@@ -25,7 +25,7 @@ class PageDataSourceForm extends Component {
   submitHandler = e => {
     e.preventDefault();
     const { id } = this.props.match.params;
-    const resource = new Resource({ route: `http://altrp.nz/admin/ajax/page_data_sources` });
+    const resource = new Resource({ route: `/admin/ajax/page_data_sources` });
     const data = { ...this.state };
     delete data.dataSourceOptions;
     if (this.props.dataSource) {

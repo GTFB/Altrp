@@ -431,7 +431,10 @@ class AccessorBuilder
                 : $this->tabIndent . $this->tabIndent . $this->getCalcString($calc);
         }
 
-        $calcLogic[] = $this->tabIndent . $this->tabIndent . "return null;";
+        $calcLogic[] = $this->tabIndent . $this->tabIndent . "return "
+            . ($this->accessor->calculation
+                ? $this->parseCalculation($this->replaceDynamicVars($this->accessor->calculation))
+                : 'null') . ";";
 
         return $calcLogic;
     }

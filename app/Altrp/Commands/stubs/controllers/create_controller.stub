@@ -64,6 +64,10 @@ class DummyClass extends ApiController
     {
         ${{crudNameSingular}} = {{modelName}}::find($id){{relations}};
 
+        if(! ${{crudNameSingular}}) {
+            return response()->json(trans("responses.not_found.{{crudNameSingular}}"), 404, [], JSON_UNESCAPED_UNICODE);
+        }
+
         $model = Model::where('name', '{{modelName}}')->first();
         $relations = Relationship::where([['model_id',$model->id],['always_with',1]])->get()->implode('name',',');
         $relations = $relations ? explode(',',$relations) : false;
@@ -71,9 +75,6 @@ class DummyClass extends ApiController
             ${{crudNameSingular}} = ${{crudNameSingular}}->load($relations);
         }
 
-        if(! ${{crudNameSingular}}) {
-            return response()->json(trans("responses.not_found.{{crudNameSingular}}"), 404, [], JSON_UNESCAPED_UNICODE);
-        }
 
         return response()->json(${{crudNameSingular}}, 200, [], JSON_UNESCAPED_UNICODE);
     }

@@ -2,8 +2,11 @@
 namespace App\Altrp\Generators;
 
 use App\Altrp\Table;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use App\Altrp\Generators\NewMigrationGenerator;
+
+use App\Exceptions\Migration\AltrpTableExistException;
 
 class TableMigrationGenerator extends NewMigrationGenerator{
 
@@ -156,5 +159,9 @@ class TableMigrationGenerator extends NewMigrationGenerator{
         }
 
         return parent::getStub();
+    }
+
+    protected function is_exist() {
+        return Schema::hasTable($this->data->name);
     }
 }

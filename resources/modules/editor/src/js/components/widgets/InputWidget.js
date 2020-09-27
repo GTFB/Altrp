@@ -31,12 +31,28 @@ class InputWidget extends Component {
    * Загрузка виджета
    */
   async _componentDidMount(){
-    if((['select','select2'].indexOf(this.state.settings.content_type) >= 0) && this.state.settings.model_for_options){
+    if(this.props.element.getSettings('content_options')){
+      let options = parseOptionsFromSettings(this.props.element.getSettings('content_options'));
+      this.setState(state =>({...state, options}));
+    } else if((['select','select2'].indexOf(this.state.settings.content_type) >= 0) && this.state.settings.model_for_options){
       let options = await(new Resource({route: this.getRoute()})).getAll();
       options = (! _.isArray(options)) ? options.data : options;
       options = (_.isArray(options)) ? options : [];
-      this.setState(state =>({...state, options}))
+      this.setState(state =>({...state, options}));
     }
+
+    let value = this.state.value;
+    /**
+     * Если динамическое значение загрузилось,
+     * то используем this.getContent для получение этого динамического значения
+     * */
+    if(value.dynamic && this.props.currentModel.getProperty('altrpModelUpdated')){
+      value = this.getContent('content_default_value');
+    }
+    if(! _.isObject(value)){
+      value = this.getContent('content_default_value');
+    }
+    this.setState(state =>({...state,value}));
   }
 
   /**
@@ -53,7 +69,7 @@ class InputWidget extends Component {
   /**
    * Обновление виджета
    */
-  async componentDidUpdate(prevProps, prevState){
+  async _componentDidUpdate(prevProps, prevState){
     if(this.props.element.getSettings('content_type') === 'select' && this.props.element.getSettings('model_for_options') ){
       if(! (this.state.settings.model_for_options === prevProps.element.getSettings('model_for_options'))) {
         let model_for_options = prevProps.element.getSettings('model_for_options');
@@ -64,10 +80,9 @@ class InputWidget extends Component {
       }
     }
     /**
-     * Если обнолвилась модель, то пробрасываем в стор новое значение
+     * Если обновилась модель, то пробрасываем в стор новое значение
      */
     if((! _.isEqual(this.props.currentModel, prevProps.currentModel)) && this.state.value && this.state.value.dynamic ){
-
       this.dispatchFieldValueToStore(this.getContent('content_default_value'));
     }
 
@@ -127,12 +142,18 @@ class InputWidget extends Component {
    */
   onChange(e){
     let value = '';
-    if(e.target){
+    if(e && e.target){
       value = e.target.value;
     }
 
-    if(e.value){
+    if(e && e.value){
       value = e.value;
+    }
+    if(_.isArray(e)){
+      value = _.cloneDeep(e)
+    }
+    if(this.props.element.getSettings('select2_multiple', false) && ! e){
+      value = [];
     }
     this.setState(state=>({
       ...state,
@@ -159,13 +180,7 @@ class InputWidget extends Component {
     let required = null;
 
     let value = this.state.value;
-    /**
-     * Если динамическое значение загрузилось,
-     * то используем this.getContent для получение этого динамического значения
-     * */
-    if(value.dynamic && this.props.currentModel.getProperty('altrpModelUpdated')){
-      value = this.getContent('content_default_value');
-    }
+
     /**
      * Пока динамический контент загружается (Еесли это динамический контент),
      * нужно вывести пустую строку
@@ -286,13 +301,7 @@ class InputWidget extends Component {
 
 
     let value = this.state.value;
-    /**
-     * Если динамическое значение загрузилось,
-     * то используем this.getContent для получение этого динамического значения
-     * */
-    if(value.dynamic && this.props.currentModel.getProperty('altrpModelUpdated')){
-      value = this.getContent('content_default_value');
-    }
+
     /**
      * Пока динамический контент загружается, нужно вывести пустую строку
      */
@@ -320,6 +329,7 @@ class InputWidget extends Component {
       onChange: this.onChange,
       value,
       placeholder: content_placeholder,
+      isMulti: this.props.element.getSettings('select2_multiple', false),
       // menuIsOpen: true,
     };
     return <AltrpSelect  {...select2Props} />;
