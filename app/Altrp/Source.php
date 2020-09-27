@@ -103,7 +103,7 @@ class Source extends Model
       default:
         return $this->rype == 'remote'
             ? config('app.url') . '/ajax/models' . data_get( $this, 'url' )
-            : data_get( $this, 'url' );
+            : config('app.url') . '/ajax/models/data_sources/' . $this->model->table->name . '/' . data_get( $this, 'name' );
     }
   }
 }
