@@ -330,7 +330,6 @@ class Relationship extends EloquentModel
     public function compareColumnsAttributes() {
         $table = $this->altrp_model->altrp_table;
         $target_table = $this->altrp_target_model->altrp_table;
-
         $target_column = $target_table->getDBColumnByName($this->foreign_key);
         $local_column = $table->getDBColumnByName($this->local_key);
 
@@ -340,14 +339,31 @@ class Relationship extends EloquentModel
             $errors[] = "Columns has different type";
         }
 
-        if($target_column->getUnsigned() !== $local_column->getUnsigned()) {
-            $errors[] = "Columns has different unsigned attribute";
+        if(!$this->checkNullable($target_column, $local_column)) {
+            $errors[] = "Target column is not nullable";
         }
 
         return $errors;
 
     }
 
+    /**
+     * Проверка при указании SET NULL, что бы поле было nullable
+     * @param $target_column
+     * @param $local_column
+     * @return bool
+     */
+    public function checkNullable($target_column, $local_column) {
+        if($this->onUpdate != "set null" || $this->onDelete != "set null") {
+            return true;
+        }
+
+        if(($this->type == "hasOne" || $this->type == "hasMany") && $target_column->getNotNull()) {
+            return false;
+        }
+
+        return true;
+    }
     /**
      * Проверяем на ошибку в данных
      * Cannot add or update a child row: a foreign key constraint fails
