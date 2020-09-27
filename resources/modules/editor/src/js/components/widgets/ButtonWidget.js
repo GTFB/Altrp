@@ -63,8 +63,6 @@ class ButtonWidget extends Component {
 
     let buttonText = this.getContent('button_text');
 
-    let classes =
-      "altrp-btn " + (this.state.settings.position_css_classes || "");
 
     let buttonMedia = { ...this.state.settings.button_icon };
     if (this.state.pending) {
