@@ -1,6 +1,7 @@
 <?php
 namespace App\Altrp\Generators;
 
+use App\Altrp\Model;
 use App\Altrp\Table;
 use Illuminate\Support\Str;
 use App\Altrp\Generators\NewMigrationGenerator;
@@ -57,6 +58,7 @@ class KeyMigrationGenerator extends NewMigrationGenerator{
         $className = Str::studly($name);
 
         $table_name = $this->data->altrp_model->altrp_table->name;
+        $drop_table_name = Model::find($old_key->model_id)->altrp_table->name;
 
         /**
          * для 'belongsTo', 'hasMany ключи создаем в связанной модели
@@ -64,16 +66,21 @@ class KeyMigrationGenerator extends NewMigrationGenerator{
         if( !$this->checkRelation() ){
           $table_name = Table::join('altrp_models', 'altrp_models.table_id', '=', 'tables.id')
             ->where( 'altrp_models.id',$this->data->target_model_id )->get( 'tables.name' )->first()->name;
+          $drop_table_name = Table::join('altrp_models', 'altrp_models.table_id', '=', 'tables.id')
+              ->where( 'altrp_models.id',$old_key->target_model_id )->get( 'tables.name' )->first()->name;
         }
 
-        $key = new MigrationKey($this->data, $old_key);
-        $dropForeign = $key->dropForeign();
+        $key = new MigrationKey($this->data, false);
+        $drop_key = new MigrationKey(false, $old_key);
+
+        $dropForeign = $drop_key->dropForeign();
         $key = $key->up();
 
         $template = file_get_contents($this->getStub());
 
         $template = str_replace('{{className}}', $className, $template);
         $template = str_replace('{{table}}', $table_name, $template);
+        $template = str_replace('{{drop_table}}', $drop_table_name, $template);
         $template = str_replace('{{key}}', $key, $template);
         $template = str_replace('{{dropForeign}}', $dropForeign, $template);
 

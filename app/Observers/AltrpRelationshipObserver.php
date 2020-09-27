@@ -29,7 +29,6 @@ class AltrpRelationshipObserver
         $model = Model::find($relationship->model_id);
         $dbal_key = $relationship->getDBKey();
 
-
         //Cвязь belongsTo создается на существующую связь hasOne или hasMany
         //Миграция не нужна, она уже выполнялась при добавлении связи hasOne или hasMany
         if($relationship->type === "belongsTo") {
@@ -157,13 +156,72 @@ class AltrpRelationshipObserver
     public function updating(Relationship $relationship)
     {
         $model = Model::find($relationship->model_id);
+        $dbal_key = $relationship->getDBKey();
+        $old_dbal_key = $relationship->getDBKey(true);
 
-        if (($model->altrp_relationships->contains('name', $relationship->name)
+        //Cвязь belongsTo создается на существующую связь hasOne или hasMany
+        //Миграция не нужна, она уже выполнялась при добавлении связи hasOne или hasMany
+        if($relationship->type === "belongsTo") {
+            return;
+        }
+
+        //Проверка существует ли старый ключ в БД
+        if(!$old_dbal_key) {
+            throw new AltrpForeignKeyNotFoundException("Foreign Key not found. Check database.", 500);
+        }
+
+        //Проверка существует ли новый ключ в БД
+        if($dbal_key) {
+            throw new AltrpForeignKeyExistException("Foreign Key ".$dbal_key->getLocalColumns()[0]." -
+            ".$dbal_key->getForeignColumns()[0]." in table ".$dbal_key->getForeignTableName()." already exists", 500);
+        }
+
+        $compare = $relationship->compareColumnsAttributes();
+        //Проверка колонок по аттрибутам
+        if(count($compare) > 0) {
+            throw new AltrpForeignKeyColumnsCompareException(implode(", ",$compare), 500);
+        }
+
+        //Проверка пододят ли строки в таблицах
+        if(!$relationship->checkDBRowsConstraint()) {
+            throw new AltrpForeignKeyChildRowsException("Cannot add or update a child row: a foreign key constraint fails", 500);
+        }
+
+        //Проверяем есть ли уже такая связь или обратная связь
+        //Если есть, то внешний ключ уже был создан
+        if(!$relationship->checkForeignExist()) {
+            return;
+        }
+
+        $old_key = Relationship::find($relationship->id);
+        $generator = new KeyMigrationGenerator($relationship);
+        $file = $generator->updateKeyGenerate($old_key);
+        $name = $generator->getMigrationName();
+
+        //Возвращаем ошибку если не удалось создать файл миграции
+        if(!$file) {
+            throw new AltrpMigrationCreateFileExceptions("Failed to create migration file");
+        }
+
+        //Создаем и выполняем миграцию (выполнение в MigrationObserver)
+        $migration = new Migration();
+        $migration->name = $name;
+        $migration->file_path = $file;
+        $migration->user_id = auth()->user()->id;
+        $migration->table_id = $model->altrp_table->id;
+        $migration->status = "1";
+        $migration->data = "";
+        $migration->save();
+
+        //Указываем у связи идентификатор миграции
+        $relationship->altrp_migration_id = $migration->id;
+
+        /*if (($model->altrp_relationships->contains('name', $relationship->name)
             && $relationship->getOriginal('name') != $relationship->name)
             || ($model->altrp_relationships->contains('foreign_key', $relationship->foreign_key)
             && $relationship->getOriginal('foreign_key') != $relationship->foreign_key)) {
             return false;
-        }
+        }*/
 
         //Cвязь belongsTo создается на существующую связь hasOne или hasMany
         //Миграция не нужна, она уже выполнялась при добавлении связи hasOne или hasMany
@@ -172,10 +230,7 @@ class AltrpRelationshipObserver
         }
 
 
-        $old_key = Relationship::find($relationship->id);
-        $generator = new KeyMigrationGenerator($relationship);
-        $file = $generator->updateKeyGenerate($old_key);
-        $name = $generator->getMigrationName();
+
 
         //Возвращаем ошибку если не удалось создать файл миграции
         if(!$file) {

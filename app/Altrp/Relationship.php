@@ -249,12 +249,12 @@ class Relationship extends EloquentModel
         return false;
     }
 
-    public function getDBKey() {
+    public function getDBKey($is_original = false) {
 
-        $foreign_table = $this->getTableToDBAL();
-        $local_table = $this->getTableToDBAL(true);
-        $local_key = $this->getColumnNameToDBAL(true);
-        $foreign_key = $this->getColumnNameToDBAL();
+        $foreign_table = $this->getTableToDBAL(false, $is_original);
+        $local_table = $this->getTableToDBAL(true, $is_original);
+        $local_key = $this->getColumnNameToDBAL(true, $is_original);
+        $foreign_key = $this->getColumnNameToDBAL(false, $is_original);
         $prefix = env('DB_TABLES_PREFIX', '');
 
         if(!$foreign_table) {
@@ -278,16 +278,25 @@ class Relationship extends EloquentModel
     /**
      * Получаем имя таблицы для проверки через DBAL
      * @param bool $is_local
+     * @param bool $is_original
      * @return bool|string
      */
-    public function getTableToDBAL($is_local = false) {
+    public function getTableToDBAL($is_local = false, $is_original = false) {
         $table = $this->altrp_model->altrp_table;
         $target_table = $this->altrp_target_model->altrp_table;
+        $type = $this->type;
+
+        if($is_original) {
+            $table = Model::find($this->getOriginal("model_id"))->altrp_table;
+            $target_table = Model::find($this->getOriginal("target_model_id"))->altrp_table;
+            $type = $this->getOriginal("type");
+        }
+
         $prefix = env('DB_TABLES_PREFIX', '');
-        if($this->type == "hasOne" || $this->type == "hasMany") {
+        if($type == "hasOne" || $type == "hasMany") {
             return $is_local ? $table : $target_table ;
         }
-        else if($this->type == "belongsTo") {
+        else if($type == "belongsTo") {
             return $is_local ?  $target_table : $table;
         }
         return false;
@@ -296,14 +305,20 @@ class Relationship extends EloquentModel
     /**
      * Получаем название колонки для проверки через DBAL
      * @param bool $is_local
+     * @param bool $is_original
      * @return bool|mixed
      */
-    public function getColumnNameToDBAL($is_local = false) {
-        if($this->type == "hasOne" || $this->type == "hasMany") {
-            return $is_local ? $this->foreign_key : $this->local_key;
+    public function getColumnNameToDBAL($is_local = false, $is_original = false) {
+
+        $foreign_key = $is_original ? $this->getOriginal("foreign_key") : $this->foreign_key;
+        $local_key = $is_original ? $this->getOriginal("local_key") : $this->local_key;
+        $type = $is_original ? $this->getOriginal("type") : $this->type;
+
+        if($type == "hasOne" || $type == "hasMany") {
+            return $is_local ? $foreign_key : $local_key;
         }
-        else if($this->type == "belongsTo") {
-            return $is_local ? $this->local_key : $this->foreign_key;
+        else if($type == "belongsTo") {
+            return $is_local ? $local_key : $foreign_key;
         }
         return false;
     }
