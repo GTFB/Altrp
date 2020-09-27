@@ -3,7 +3,12 @@ import {useTable, useSortBy} from "react-table";
 import {useQuery, usePaginatedQuery, queryCache} from  "react-query";
 import '../../../sass/altrp-pagination.scss';
 import {Link} from "react-router-dom";
-import {isEditor, parseURLTemplate} from "../../../../../front-app/src/js/helpers";
+import {
+  extractPathFromString,
+  getDataByPath, getObjectByPrefix,
+  isEditor, mbParseJSON,
+  parseURLTemplate
+} from "../../../../../front-app/src/js/helpers";
 import {iconsManager} from "../../../../../admin/src/js/helpers";
 import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput";
 
@@ -55,7 +60,13 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
     }
     return query.getQueried(queryData)
   });
-  if(query.pageSize){
+
+  if(_.get(settings, 'choose_datasource', 'query') === 'datasource'){
+    /**
+     * Если данные берутся со страницы
+     */
+    _data = getDataByPath(extractPathFromString(_.get(settings, 'table_datasource', '')), []);
+  } else if(query.pageSize){
     /**
      * Если есть пагинация
      */
@@ -161,95 +172,123 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
     </thead>
     <tbody {...getTableBodyProps()} className={`altrp-table-tbody ${settings.table_style_table_striple_style ? ' altrp-table-tbody--striped' : ''}`}>
     {_status === "error" ? <tr>
-              <td>{_error.message}</td>
-            </tr> : _status === "loading" ? <tr>
-              <td>Loading</td>
+        <td>{_error.message}</td>
+      </tr> : _status === "loading" ? <tr>
+        <td>Loading</td>
+      </tr>
+      : rows.map((row, i) => {
+          prepareRow(row);
+          let rowStyles = _.get(settings, 'field_name_for_row_styling');
+          rowStyles = _.get(row.original, rowStyles, '');
+          rowStyles = mbParseJSON(rowStyles, {});
+          return (
+            <tr {...row.getRowProps()}
+                style={rowStyles}
+                className={`altrp-table-tr ${settings.table_hover_row ? 'altrp-table-background' : ''}`}>
+              {row.cells.map((cell, _i) => {
+                let cellContent = cell.render('Cell');
+                let linkTag = isEditor() ? 'a': Link;
+                let style = cell.column.column_body_alignment ? { textAlign: cell.column.column_body_alignment } : {};
+                const cellProps = {...cell.getCellProps()};
+                let _cellContent = cell.value;
+
+                /**
+                 * Если в настройках колонки установлено редактирование и есть url запроса на редактирование
+                 * то добавляем особое поведение
+                 */
+                let doubleClickContent = '';
+                if(columns[_i].column_is_editable && columns[_i].column_edit_url){
+                  let columnEditUrl = parseURLTemplate(columns[_i].column_edit_url, row.original);
+
+                  doubleClickContent =
+                      <AutoUpdateInput className="altrp-inherit altrp-table-td__double-click-content"
+                                       route={columnEditUrl}
+                                       resourceid={''}
+                                       changevalue={(value)=>{
+                                         setUpdatedData({
+                                           value,
+                                           rowId:row.original.id,
+                                           column:columns[_i]._accessor
+                                         });
+                                       }}
+                                       value={_cellContent}/>;
+                  cellProps.onDoubleClick = () => {
+                    if(doubleClicked.column === columns[_i]._accessor && doubleClicked.rowId === row.original.id){
+                      setDoubleClicked({});
+                    } else {
+                      setDoubleClicked({
+                        column: columns[_i]._accessor,
+                        rowId: row.original.id,
+                      });
+                    }
+                  };
+                }
+                let cellClassName = 'altrp-table-td';
+                if(doubleClicked.column === columns[_i]._accessor && row.original.id === doubleClicked.rowId){
+                  cellClassName += ' altrp-table-td_double-clicked';
+                }
+              /**
+               * Если в настройках table_hover_row: false, - background для отдельной ячейки
+               */
+                if (!settings.table_hover_row) {
+                  cellClassName += ' altrp-table-background';
+                }
+
+                /**
+                 * Если значение объект или массив, то отобразим пустую строку
+                 */
+                if(_.isObject(cell.value)){
+                  cellContent = '';
+                }
+                /**
+                 * Если в настройках колонки есть url, и в данных есть id, то делаем ссылку
+                 */
+                if(columns[_i].column_link && row.original.id){
+                  cellContent = React.createElement(linkTag, {
+                    to: parseURLTemplate(columns[_i].column_link,  row.original),
+                    className: 'altrp-inherit altrp-table-td__default-content',
+                    dangerouslySetInnerHTML: {
+                      __html: cell.value
+                    }
+                  })
+                } else {
+                  cellContent = React.createElement('span', {
+                    className: 'altrp-inherit altrp-table-td__default-content',
+                    dangerouslySetInnerHTML: {
+                       __html: cell.value
+                    }
+                  })
+                }
+                /**
+                 * Если нужно указать номер по порядку
+                 */
+                if(cell.column._accessor.trim() === '##'){
+                  cellContent = counter++;
+                }
+                let cellStyles = _.get(cell, 'column.column_styles_field');
+                cellStyles = _.get(row.original, cellStyles, '');
+                cellStyles = mbParseJSON(cellStyles, {});
+
+                style = _.assign(style, cellStyles);
+
+                if(_.isString(cellContent) && ! doubleClickContent){
+                  return <td {...cellProps}
+                             className={cellClassName}
+                             dangerouslySetInnerHTML={
+                               {__html:cellContent}
+                             }
+                             style={style}>
+                  </td>
+                }
+                return <td {...cellProps}
+                           className={cellClassName}
+                           style={style}>
+                    {cellContent}{doubleClickContent}
+                  </td>
+              })}
             </tr>
-            : rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                  <tr {...row.getRowProps()} className={`altrp-table-tr ${settings.table_hover_row ? 'altrp-table-background' : ''}`}>
-                    {row.cells.map((cell, _i) => {
-                      let cellContent = cell.render('Cell');
-                      let linkTag = isEditor() ? 'a': Link;
-                      const style = cell.column.column_body_alignment ? { textAlign: cell.column.column_body_alignment } : {};
-                      const cellProps = {...cell.getCellProps()};
-                      let _cellContent = cell.value;
-
-                      /**
-                       * Если в настройках колонки установлено редактирование и есть url запроса на редактирование
-                       * то добавляем особое поведение
-                       */
-                      let doubleClickContent = '';
-                      if(columns[_i].column_is_editable && columns[_i].column_edit_url){
-                        let columnEditUrl = parseURLTemplate(columns[_i].column_edit_url, row.original);
-
-                        doubleClickContent =
-                            <AutoUpdateInput className="altrp-inherit altrp-table-td__double-click-content"
-                                             route={columnEditUrl}
-                                             resourceid={''}
-                                             changevalue={(value)=>{
-                                               setUpdatedData({
-                                                 value,
-                                                 rowId:row.original.id,
-                                                 column:columns[_i]._accessor
-                                               });
-                                             }}
-                                             value={_cellContent}/>;
-                        cellProps.onDoubleClick = () => {
-                          if(doubleClicked.column === columns[_i]._accessor && doubleClicked.rowId === row.original.id){
-                            setDoubleClicked({});
-                          } else {
-                            setDoubleClicked({
-                              column: columns[_i]._accessor,
-                              rowId: row.original.id,
-                            });
-                          }
-                        };
-                      }
-                      let cellClassName = 'altrp-table-td';
-                      if(doubleClicked.column === columns[_i]._accessor && row.original.id === doubleClicked.rowId){
-                        cellClassName += ' altrp-table-td_double-clicked';
-                      }
-                    /**
-                     * Если в настройках table_hover_row: false, - background для отдельной ячейки
-                     */
-                      if (!settings.table_hover_row) {
-                        cellClassName += ' altrp-table-background';
-                      }
-
-                      /**
-                       * Если значение объект или массив, то отобразим пустую строку
-                       */
-                      if(_.isObject(cell.value)){
-                        cellContent = '';
-                      }
-                      /**
-                       * Если в настройках колонки есть url, и в данных есть id, то делаем ссылку
-                       */
-                      if(columns[_i].column_link && row.original.id){
-                        cellContent = React.createElement(linkTag, {
-                          to: parseURLTemplate(columns[_i].column_link,  row.original),
-                          className: 'altrp-inherit altrp-table-td__default-content',
-                        }, cellContent)
-                      } else {
-                        cellContent = React.createElement('span', {
-                          className: 'altrp-inherit altrp-table-td__default-content',
-                        }, cellContent)
-                      }
-                      /**
-                       * Если нужно указать номер по порядку
-                       */
-                      if(cell.column._accessor.trim() === '##'){
-                        cellContent = counter++;
-                      }
-                      return <td {...cellProps} className={cellClassName} style={style}>
-                          {cellContent}{doubleClickContent}
-                        </td>
-                    })}
-                  </tr>
-              )
-            })}
+          )
+      })}
     </tbody>
   </table>
     {((query.paginationType === 'prev-next') && query.pageSize) ?

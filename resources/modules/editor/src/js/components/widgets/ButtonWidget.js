@@ -121,7 +121,20 @@ class Dropbar extends Component {
     let mainClass = "altrp-dropbar-" + this.props.className;
 
     let contentPosition = " altrp-dropbar-variant-" + this.state.activePosition.class || "";
-
+    /*
+    todo: Исправить вот эту ошибку
+    *ButtonWidget.js:123 Uncaught TypeError: Cannot read property 'class' of undefined
+    at Dropbar.render (ButtonWidget.js:123)
+    at finishClassComponent (react-dom.development.js:17160)
+    at updateClassComponent (react-dom.development.js:17110)
+    at beginWork (react-dom.development.js:18620)
+    at HTMLUnknownElement.callCallback (react-dom.development.js:188)
+    at Object.invokeGuardedCallbackDev (react-dom.development.js:237)
+    at invokeGuardedCallback (react-dom.development.js:292)
+    at beginWork$1 (react-dom.development.js:23203)
+    at performUnitOfWork (react-dom.development.js:22154)
+    at workLoopSync (react-dom.development.js:22130)
+     */
     let contentStyles = {};
 
     if(this.props.settings.width_dropbar_options) {
@@ -215,9 +228,12 @@ class ButtonWidget extends Component {
     // if (this.state.redirect) {
     //   return <Redirect to={this.state.redirect} push={true} />;
     // }
-    let classes = "altrp-btn " + (this.state.settings.position_css_classes || "");
-    let buttonMedia = {...this.state.settings.button_icon};
 
+    let buttonText = this.getContent('button_text') || '';
+
+    let classes =
+      "altrp-btn " + (this.state.settings.position_css_classes || "");
+    let buttonMedia = { ...this.state.settings.button_icon };
     if (this.state.pending) {
       classes += " altrp-disabled";
     }
@@ -231,7 +247,7 @@ class ButtonWidget extends Component {
           className={classes}
           id={this.state.settings.position_css_id}
         >
-          {this.state.settings.button_text || ""}
+          {buttonText}
           <span className={"altrp-btn-icon "}>{ renderAssetIcon( buttonMedia ) } </span>
         </button>
       ) : (
@@ -245,11 +261,12 @@ class ButtonWidget extends Component {
             className={classes}
             id={this.state.settings.position_css_id}
           >
-            {this.state.settings.button_text || ""}
+            {buttonText}
             <span className={"altrp-btn-icon "}>{ renderAssetIcon( buttonMedia ) } </span>
           </button>
         </Dropbar>
       )
+
 
     );
 
@@ -261,7 +278,7 @@ class ButtonWidget extends Component {
         link = (
           <a href={url} onClick={this.onClick} className={classes}>
             {" "}
-            {this.state.settings.button_text || ""}
+            {buttonText || ""}
             <span className={"altrp-btn-icon "}>{renderAssetIcon(buttonMedia)} </span>
           </a>
         );
@@ -269,7 +286,7 @@ class ButtonWidget extends Component {
         link = (
           <Link to={url} onClick={this.onClick} className={classes}>
             {" "}
-            {this.state.settings.button_text || ""}
+            {buttonText || ""}
             <span className={"altrp-btn-icon "}>{renderAssetIcon(buttonMedia)} </span>
           </Link>
         );

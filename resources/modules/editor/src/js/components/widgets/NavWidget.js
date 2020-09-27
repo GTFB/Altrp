@@ -22,7 +22,7 @@ class NavWidget extends Component {
         break
     }
 
-    return content
+    return content || '';
   }
 }
 
