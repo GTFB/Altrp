@@ -314,6 +314,104 @@ class RootElement extends BaseElement {
     });
 
     this.endControlSection();
+
+    this.startControlSection('heading_defaults', {
+      tab: TAB_STYLE,
+      label: 'Heading Defaults',
+    });
+
+    this.addControl("heading_h1_color", {
+      type: CONTROLLER_COLOR,
+      label: "H1 Color",
+      default: {
+        color: "",
+        colorPickedHex: "#000",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "h1.altrp-heading{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("heading_h2_color", {
+      type: CONTROLLER_COLOR,
+      label: "H2 Color",
+      default: {
+        color: "",
+        colorPickedHex: "#000",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "h2.altrp-heading{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("heading_h3_color", {
+      type: CONTROLLER_COLOR,
+      label: "H3 Color",
+      default: {
+        color: "",
+        colorPickedHex: "#000",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "h3.altrp-heading{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("heading_h4_color", {
+      type: CONTROLLER_COLOR,
+      label: "H4 Color",
+      default: {
+        color: "",
+        colorPickedHex: "#000",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "h4.altrp-heading{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("heading_h5_color", {
+      type: CONTROLLER_COLOR,
+      label: "H5 Color",
+      default: {
+        color: "",
+        colorPickedHex: "#000",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "h5.altrp-heading{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("heading_h6_color", {
+      type: CONTROLLER_COLOR,
+      label: "H6 Color",
+      default: {
+        color: "",
+        colorPickedHex: "#000",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "h6.altrp-heading{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("heading_p_color", {
+      type: CONTROLLER_COLOR,
+      label: "P Color",
+      default: {
+        color: "",
+        colorPickedHex: "#000",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "p.altrp-heading{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.endControlSection();
   }
 
   appendNewSection(newSection) {
