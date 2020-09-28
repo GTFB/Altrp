@@ -56,7 +56,7 @@ Route::get('/reports/html/{id}', "ReportsController@page");
  * Роуты Админки
  */
 
-Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'admin'/* , 'middleware' => 'auth' */], function () {
 
   Route::group(['prefix' => 'ajax'], function () {
 
@@ -79,6 +79,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::resource( 'pages', 'Admin\PagesController' );
     Route::get( '/pages_options', 'Admin\PagesController@pages_options' )->name( 'admin.pages_options.all' );
     Route::get( '/pages_options/{page_id}', 'Admin\PagesController@show_pages_options' )->name( 'admin.pages_options.show' );
+
+    Route::get('/page_data_sources', 'Admin\PageDatasourceController@index');
+    Route::get('/page_data_sources/pages/{page_id}', 'Admin\PageDatasourceController@getByPage');
+    Route::get('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@show");
+    Route::post('/page_data_sources', "Admin\PageDatasourceController@store");
+    Route::put('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@update");
+    Route::delete('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@destroy");
+
     Route::get('/permissions', "Users\Permissions@getPermissions");
     Route::get('/permissions_options', "Users\Permissions@getPermissionsOptions");
     Route::get('/permissions/{permission}', "Users\Permissions@getPermission");
@@ -254,9 +262,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::get( '/data_sources', 'Admin\ModelsController@getDataSources');
     Route::get( '/data_source_options', 'Admin\ModelsController@getDataSourceOptions');
     Route::post( '/data_sources', 'Admin\ModelsController@storeDataSource');
-    Route::put( '/data_sources/{field_id}', 'Admin\ModelsController@updateDataSource');
-    Route::get( '/data_sources/{field_id}', 'Admin\ModelsController@showDataSource');
-    Route::delete( '/data_sources/{field_id}', 'Admin\ModelsController@destroyDataSource');
+    Route::put( '/data_sources/{source_id}', 'Admin\ModelsController@updateDataSource');
+    Route::get( '/data_sources/{source_id}', 'Admin\ModelsController@showDataSource');
+    Route::delete( '/data_sources/{source_id}', 'Admin\ModelsController@destroyDataSource');
 
     Route::get('/tables', "Admin\TableController@getTables");
     Route::get('/tables/options', "Admin\TableController@getTablesForOptions");
@@ -275,6 +283,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 
     Route::post('/tables/{table}/models', 'Admin\TableController@saveModel');
     Route::get('/tables/{table}/models/{model}', 'Admin\TableController@getModel');
+    Route::get('/tables/{table_name}/items', 'Admin\TableController@getItems');
+    Route::get('/tables/{table_name}/items/{item_id}', 'Admin\TableController@getItemById');
     Route::post('/tables/{table}/models/{model}/accessors', 'Admin\TableController@saveAccessor');
     Route::get('/tables/{table}/models/{model}/accessors', 'Admin\TableController@getAccessors');
     Route::delete('/tables/{table}/models/{model}/accessors/{accessor}', 'Admin\TableController@deleteAccessor');
@@ -347,7 +357,7 @@ Route::group( ['prefix' => 'ajax'], function(){
    * Роут текущий пользователь
    */
   Route::get( 'current-user', "Users\Users@getCurrentUser" )->name( 'users.current-user' );
-  
+
   // Отдает данные для виджета карты
   Route::get('maps/{id}', 'MapsController@index');
 

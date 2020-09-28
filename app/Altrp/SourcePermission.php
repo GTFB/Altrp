@@ -13,6 +13,7 @@ class SourcePermission extends Model
         'source_id',
         'permission_id',
         'type',
+        'updated_at'
     ];
 
     public function permission()

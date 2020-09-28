@@ -4,6 +4,7 @@ namespace DummyNamespace;
 
 use App\Altrp\Model;
 use App\Altrp\Relationship;
+use App\Altrp\Builders\Traits\DynamicVariables;
 use DummyRootNamespaceHttp\Controllers\ApiController;
 
 use DummyRootNamespace{{modelNamespace}}{{modelName}};
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 
 class DummyClass extends ApiController
 {
+    use DynamicVariables;
     // CUSTOM_TRAITS_BEGIN - IMPORTANT: Don't remove this comment! Write your traits between these comments.
     {{customTraits}}
     // CUSTOM_TRAITS_END - IMPORTANT: Don't remove this comment! Write your traits between these comments.
@@ -62,6 +64,10 @@ class DummyClass extends ApiController
     {
         ${{crudNameSingular}} = {{modelName}}::find($id){{relations}};
 
+        if(! ${{crudNameSingular}}) {
+            return response()->json(trans("responses.not_found.{{crudNameSingular}}"), 404, [], JSON_UNESCAPED_UNICODE);
+        }
+
         $model = Model::where('name', '{{modelName}}')->first();
         $relations = Relationship::where([['model_id',$model->id],['always_with',1]])->get()->implode('name',',');
         $relations = $relations ? explode(',',$relations) : false;
@@ -69,9 +75,6 @@ class DummyClass extends ApiController
             ${{crudNameSingular}} = ${{crudNameSingular}}->load($relations);
         }
 
-        if(! ${{crudNameSingular}}) {
-            return response()->json(trans("responses.not_found.{{crudNameSingular}}"), 404, [], JSON_UNESCAPED_UNICODE);
-        }
 
         return response()->json(${{crudNameSingular}}, 200, [], JSON_UNESCAPED_UNICODE);
     }

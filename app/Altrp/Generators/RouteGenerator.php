@@ -47,7 +47,7 @@ class RouteGenerator
     /**
      * Содержимое файла шаблона для генерации маршрутов
      *
-     * @var string
+     * @var string|array
      */
     private $routeStub;
 
@@ -122,12 +122,17 @@ class RouteGenerator
         ])->get();
         if (! $sources) return [];
         foreach ($sources as $source) {
-            if (! in_array($source->type, $actions)) {
-                $middleware = $this->getMiddleware($source);
+            $middleware = $this->getMiddleware($source);
+            if (!in_array($source->type, $actions) && $source->type != 'remote') {
                 $middleware = $middleware ? "'middleware' => ['" . implode("','", $middleware) . "'], " : '';
                 $routes[] = 'Route::get(\'/queries/' . $tableName .'/'
                 . $source->type . '\', [' . $middleware .'\'uses\' =>\'' . $controller . '@'
                 . lcfirst($source->type) . '\']);';
+            } elseif (!in_array($source->type, $actions) && $source->type == 'remote') {
+                $middleware = $middleware ? "'middleware' => ['" . implode("','", $middleware) . "'], " : '';
+                $routes[] = 'Route::' . $source->request_type . '(\'/data_sources/' . $tableName .'/'
+                    . \Str::snake($source->name) . '\', [' . $middleware .'\'uses\' =>\'' . $controller . '@'
+                    . \Str::snake($source->name) . '\']);';
             }
         }
         return $routes;
@@ -149,6 +154,7 @@ class RouteGenerator
                 || Str::contains($this->routeContents[$i], '/'.$tableName)
                 || Str::contains($this->routeContents[$i], '/queries/'.$tableName)
                 || Str::contains($this->routeContents[$i], '/filters/'.$tableName)
+                || Str::contains($this->routeContents[$i], '/data_sources/'.$tableName)
                 || Str::contains($this->routeContents[$i], '/'.Str::singular($tableName).'_options')
                 || Str::contains($this->routeContents[$i], $controller)) {
                 $indexes[] = $i;
@@ -264,6 +270,12 @@ class RouteGenerator
         return file($stub, 2);
     }
 
+    /**
+     * Получить миддлвары
+     *
+     * @param $source
+     * @return array|null
+     */
     public function getMiddleware($source)
     {
         if(!$source) return null;

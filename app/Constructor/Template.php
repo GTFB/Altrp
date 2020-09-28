@@ -171,20 +171,21 @@ class Template extends Model
    */
   public function check_auth_conditions( $settings = [] ){
     $result = true;
-    if(! ( isset( $settings['conditional_roles'] ) && $settings['conditional_roles']
+    if( ! ( isset( $settings['conditional_roles'] ) && $settings['conditional_roles']
       || isset( $settings['conditional_permissions'] ) && $settings['conditional_permissions'] ) ){
       return $result;
     }
-    $roles = Role::find( $settings['conditional_roles'] );
-    if( $roles->count() ){
-      $roles = $roles->toArray();
+    $roles = data_get( $settings, 'conditional_roles', [] );
+    $permissions = data_get( $settings, 'conditional_permissions', [] );
+
+    if( ( count( $roles) || count( $permissions ) ) && ! Auth::user() ){
+      return false;
+    }
+    if( $roles ){
       return Auth::user()->hasRole( $roles );
     }
 
-    $permissions = Permission::find( $settings['conditional_permissions'] );
-    if( $permissions->count() ){
-      $permissions = $permissions->toArray();
-
+    if( $permissions ){
       return Auth::user()->hasPermission( $permissions );
     }
     return $result;

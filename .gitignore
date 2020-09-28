@@ -30,3 +30,8 @@ _ide_helper.php
 /routes/AltrpRoutes.php
 /routes/AltrpApiRoutes.php
 /out
+
+#bundles
+public/modules/admin
+public/modules/front-app
+public/modules/editor

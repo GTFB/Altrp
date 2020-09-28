@@ -1,0 +1,9 @@
+    public function {{methodName}}(ApiRequest $request)
+    {
+        $url = "{{url}}";
+        $response = \Curl::to($url)
+                    ->withData($request->all())
+                    ->asJson()
+                    ->post();
+        return response()->json($response, 200, [], JSON_UNESCAPED_UNICODE);
+    }

@@ -16,9 +16,11 @@ class ColumnComponent extends Component {
   }
   
   render(){
+    const background_image = this.props.element.getSettings('background_image', {});
+    
     return React.createElement(this.state.settings.layout_html_tag || "div",
       {
-        className: "altrp-column " + (this.state.settings.position_style_css_classes || ""),
+        className: "altrp-column " + (this.state.settings.position_style_css_classes || "") + (background_image.url ? ' altrp-background-image' : ''),
         id:this.state.settings.position_style_css_id || ""
       },
       this.state.children.map(

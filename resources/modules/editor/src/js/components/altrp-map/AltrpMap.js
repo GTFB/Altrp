@@ -57,7 +57,7 @@ function AltrpMap({ settings, id }) {
 
   // При изменении модели подгружаем новые данные
   useEffect(() => {
-    console.log("query changed to :>> ", query);
+    //console.log("query changed to :>> ", query);
     if (query?.dataSource?.value) {
       // Получаем данные из модели
       (async () => {

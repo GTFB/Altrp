@@ -131,10 +131,10 @@ class MigrationKey{
             $target_column = $this->key->local_key;
         }
 
-        if($this->old_key) {
+        /*if($this->old_key) {
             $key_field = $this->key->type === 'belongsTo' ? $this->old_key->foreign_key : $this->old_key->local_key;
             $text .= "\$table->dropForeign(['".$key_field."']);\n\t\t\t";
-        }
+        }*/
 
         if (! $target_column) $target_column = 'id';
 

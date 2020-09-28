@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
+import { Link } from 'react-router-dom'
 import { schemes } from "reaviz";
 import axios from "axios";
 
@@ -103,6 +104,7 @@ function Dashboard() {
         <button onClick={() => setShowAddForm(true)} className="btn">
           Add Widget
         </button>
+        <Link className="btn" to={`/admin/dashboard/colors`}>Color Schemes</Link>
       </div>
       <div className="admin-content">
         <div className="charts">

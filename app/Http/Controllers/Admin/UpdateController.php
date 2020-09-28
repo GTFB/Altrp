@@ -28,7 +28,7 @@ class UpdateController extends Controller
     if( env( 'APP_ENV' ) === 'local'){
       return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE );
     }
-    if( version_compare( $new_version, getLatestVersion()) > 0){
+    if( version_compare( $new_version, env( 'APP_VERSION'  ) ) > 0){
       $res = [
         'result' => true,
         'version' => $new_version,

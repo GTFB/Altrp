@@ -4,6 +4,7 @@ namespace App\Altrp;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Основные сущности программы
@@ -107,6 +108,32 @@ class Table extends Model
     public function relationships()
     {
         return $this->hasMany('App\Altrp\Relationship');
+    }
+
+    /**
+     * Проверка на существование таблицы в БД
+     * @return bool
+     */
+    public function is_db_exist() {
+      return Schema::hasTable($this->name);
+    }
+
+    /**
+     * Получуем все ограничения внешнего ключа для таблицы
+     * @return mixed
+     */
+    public function getDBForeignKeys()
+    {
+        $prefix = env('DB_TABLES_PREFIX', '');
+        $conn = Schema::getConnection()->getDoctrineSchemaManager();
+        return $conn->listTableForeignKeys($prefix.$this->name);
+    }
+
+    public function getDBColumnByName($name)
+    {
+        $prefix = env('DB_TABLES_PREFIX', '');
+        $conn = Schema::getConnection();
+        return $conn->getDoctrineColumn($prefix.$this->name, $name);
     }
 
     /**

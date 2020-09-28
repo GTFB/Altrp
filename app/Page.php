@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Altrp\Source;
 use App\Altrp\Model as AltrpModel;
 use App\Constructor\Template;
 use Illuminate\Database\Eloquent\Model;
@@ -17,12 +18,12 @@ use Mockery\Exception;
  * Class Page
  * @package App
  * @property User $user
- * @property AltrpModel $model
+ * @property \App\Altrp\Model $model
  */
 
 class Page extends Model
 {
-
+  //
   use SoftDeletes;
   protected $fillable = [
     'title',
@@ -34,8 +35,6 @@ class Page extends Model
     'guid',
     'for_guest',
   ];
-
-//  protected $table = 'altrp_pages';
 
   /**
    * @return array
@@ -76,7 +75,13 @@ class Page extends Model
           'id' => $page->id,
           'title' => $page->title,
           'allowed' => true,
-          /**
+          'data_sources' => $page->page_data_sources->map( function ( PageDatasource $page_data_source ){
+            if( $page_data_source->source ){
+              $page_data_source->source->web_url = $page_data_source->source->web_url;
+            }
+            return $page_data_source;
+          } ),
+        /**
            * Если лениво загружаем области то возвращаем пустой массив
            */
           'areas' => $lazy ? [] : self::get_areas_for_page( $page->id ),
@@ -212,33 +217,51 @@ class Page extends Model
   }
 
   /**
-   * Импортируем связи стрнаиц с ролями
-   * @param array $page_roles
+   * Сылка на пользователя создавшего страницу
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
    */
-  public static function importPageRoles( $page_roles = [] )
-  {
-    $table = DB::table( 'page_role' );
-    $table->delete();
-    foreach ( $page_roles as $page_role ) {
-      $role = Role::where( 'name', data_get( $page_role, 'role_name' ) )->first();
-      $page = self::where( 'guid', data_get( $page_role, 'page_guid' ) )->first();
-      if( ! ( $page && $role ) ){
-        continue;
-      }
-      try{
-        $table->insert([
-          'page_id' => $page->id,
-          'role_id' => $role->id,
-        ]);
-      }catch(\Exception $e){}
-
-    }
-  }
-
-  function user()
+  public function user()
   {
     return $this->belongsTo( User::class, 'author' );
   }
+
+  /**
+   * Список ресурсов связанных со страницей
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+   */
+  public function data_sources(){
+    return $this->belongsToMany( Source::class, 'page_data_sources', 'page_id', 'source_id' );
+  }
+  /**
+   * Список ресурсов связанных со страницей через
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function page_data_sources(){
+    return $this->hasMany( PageDatasource::class, 'page_id', 'id' );
+  }
+  /**
+    * Импортируем связи стрнаиц с ролями
+    * @param array $page_roles
+  */
+  public static function importPageRoles( $page_roles = [] )
+{
+  $table = DB::table( 'page_role' );
+  $table->delete();
+  foreach ( $page_roles as $page_role ) {
+    $role = Role::where( 'name', data_get( $page_role, 'role_name' ) )->first();
+    $page = self::where( 'guid', data_get( $page_role, 'page_guid' ) )->first();
+    if( ! ( $page && $role ) ){
+      continue;
+    }
+    try{
+      $table->insert([
+        'page_id' => $page->id,
+        'role_id' => $role->id,
+      ]);
+    }catch(\Exception $e){}
+
+  }
+}
 
   /**
    * @return \Illuminate\Database\Eloquent\Builder|Model|null|Template
@@ -259,7 +282,7 @@ class Page extends Model
   }
 
   /**
-   * @return AltrpModel[]|null
+   * @return \App\Altrp\Model[]|null
    */
   function get_models(){
     if( ! $this->model ){

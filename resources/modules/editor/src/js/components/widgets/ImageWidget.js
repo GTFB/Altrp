@@ -17,6 +17,7 @@ class ImageWidget extends Component {
 
   render() {
     const link = this.state.settings.image_link || {};
+    const background_image = this.props.element.getSettings('background_image', {});
 
     let contentMedia = { ...this.state.settings.content_media };
     contentMedia.url = contentMedia.url || '/img/nullImage.png';
@@ -24,7 +25,7 @@ class ImageWidget extends Component {
     contentMedia.assetType = contentMedia.assetType || undefined;
 
     const image = renderAsset(contentMedia, {
-      className: this.state.settings.position_css_classes + " altrp-image",
+      className: this.state.settings.position_css_classes + " altrp-image" + (background_image ? ' altrp-background-image' : ''),
       id: this.state.settings.position_css_id || "",
     });
 
