@@ -96,6 +96,10 @@ class CreativeHoverController extends Component {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     const styleOptions = [
       {
+        value:'none',
+        label:'None'
+      },
+      {
         value:'grayscale',
         label:'Gray scale'
       },
