@@ -56,6 +56,7 @@ export const CONTROLLER_COLWIDTH = "colwidth";
 export const CONTROLLER_GRADIENT = "gradient";
 export const CONTROLLER_SQL = "sql";
 export const CONTROLLER_CREATIVELINK = 'creative-link';
+export const CONTROLLER_CREATIVEHOVER = 'creative-hover';
 
 class ControllersManager {
   constructor() {
@@ -80,6 +81,7 @@ class ControllersManager {
     this.conttrollers[CONTROLLER_TRANSFORM] = TransformController;
     this.conttrollers[CONTROLLER_TYPOGRAPHIC] = TypographicController;
     this.conttrollers[CONTROLLER_CREATIVELINK] = CreativeLinkController;
+    this.conttrollers[CONTROLLER_CREATIVEHOVER] = CreativeHoverController;
     this.conttrollers[CONTROLLER_REPEATER] = RepetaerController;
     this.conttrollers[CONTROLLER_QUERY] = QueryController;
     this.conttrollers[CONTROLLER_FILTERS] = FiltersController;

@@ -96,92 +96,208 @@ class CreativeHoverController extends Component {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     const styleOptions = [
       {
-        value: 'none',
-        label: 'None'
+        value:'grayscale',
+        label:'Gray scale'
       },
       {
-        value: 'cl-style-1',
-        label: 'Style 1'
+        value:'color',
+        label:'Color'
       },
       {
-        value: 'cl-style-2',
-        label: 'Style 2'
+        value:'dive',
+        label:'Dive'
       },
       {
-        value: 'cl-style-3',
-        label: 'Style 3'
+        value:'blur',
+        label:'Blur'
       },
       {
-        value: 'cl-style-4',
-        label: 'Style 4'
-      },
-      // {
-      //   value: 'cl-style-5',
-      //   label: 'Style 5'
-      // },
-      {
-        value: 'cl-style-6',
-        label: 'Style 6'
+        value:'rotate',
+        label:'Rotate'
       },
       {
-        value: 'cl-style-7',
-        label: 'Style 7'
+        value:'scale-rotate-right',
+        label:'Scale Rotate Right'
       },
       {
-        value: 'cl-style-8',
-        label: 'Style 8'
-      },
-      // {
-      //   value: 'cl-style-9',
-      //   label: 'Style 9'
-      // },
-      // {
-      //   value: 'cl-style-10',
-      //   label: 'Style 10'
-      // },
-      // {
-      //   value: 'cl-style-11',
-      //   label: 'Style 11'
-      // },
-      {
-        value: 'cl-style-12',
-        label: 'Style 12'
+        value:'scale-rotate-left',
+        label:'Scale Rotate Left'
       },
       {
-        value: 'cl-style-13',
-        label: 'Style 13'
+        value:'move-up',
+        label:'Move Up'
       },
       {
-        value: 'cl-style-14',
-        label: 'Style 14'
+        value:'move-down',
+        label:'Move Down'
       },
       {
-        value: 'cl-style-15',
-        label: 'Style 15'
+        value:'move-left',
+        label:'Move Left'
       },
       {
-        value: 'cl-style-16',
-        label: 'Style 16'
+        value:'move-right',
+        label:'Move Right'
       },
       {
-        value: 'cl-style-17',
-        label: 'Style 17'
+        value:'slide-up',
+        label:'Slide Up'
       },
       {
-        value: 'cl-style-18',
-        label: 'Style 18'
+        value:'slide-down',
+        label:'Slide Down'
       },
       {
-        value: 'cl-style-19',
-        label: 'Style 19'
+        value:'slide-left',
+        label:'Slide Left'
       },
       {
-        value: 'cl-style-20',
-        label: 'Style 20'
+        value:'slide-right',
+        label:'Slide Right'
       },
       {
-        value: 'cl-style-21',
-        label: 'Style 21'
+        value:'slide-top-left',
+        label:'Slide Top Left'
+      },
+      {
+        value:'slide-top-right',
+        label:'Slide Top Right'
+      },
+      {
+        value:'slide-bottom-left',
+        label:'Slide Bottom Left'
+      },
+      {
+        value:'slide-bottom-right',
+        label:'Slide Bottom Right'
+      },
+      {
+        value:'hinge-up',
+        label:'Hinge Up'
+      },
+      {
+        value:'hinge-down',
+        label:'Hinge Down'
+      },
+      {
+        value:'hinge-left',
+        label:'Hinge Left'
+      },
+      {
+        value:'hinge-right',
+        label:'Hinge Right'
+      },
+      {
+        value:'flip-hor',
+        label:'Flip Horizontal'
+      },
+      {
+        value:'flip-vert',
+        label:'Flip Vertical'
+      },
+      {
+        value:'flip-diag-left',
+        label:'Flip Diagonal Left'
+      },
+      {
+        value:'flip-diag-right',
+        label:'Flip Diagonal Right'
+      },
+      {
+        value:'fold-up',
+        label:'Fold Up'
+      },
+      {
+        value:'fold-down',
+        label:'Fold Down'
+      },
+      {
+        value:'fold-left',
+        label:'Fold Left'
+      },
+      {
+        value:'fold-right',
+        label:'Fold Right'
+      },
+      {
+        value:'zoom-in',
+        label:'Zoom In'
+      },
+      {
+        value:'zoom-out',
+        label:'Zoom Out'
+      },
+      {
+        value:'zoom-out-in',
+        label:'Zoom Out In'
+      },
+      {
+        value:'zoom-in-out',
+        label:'Zoom In Out'
+      },
+      {
+        value:'zoom-out-slide-up',
+        label:'Zoom Out Slide Up'
+      },
+      {
+        value:'zoom-out-slide-down',
+        label:'Zoom Out Slide Down'
+      },
+      {
+        value:'zoom-out-slide-left',
+        label:'Zoom Out Slide Left'
+      },
+      {
+        value:'zoom-out-slide-right',
+        label:'Zoom Out Slide Right'
+      },
+      {
+        value:'zoom-out-flip-hor',
+        label:'Zoom Out Flip Horizontal'
+      },
+      {
+        value:'zoom-out-flip-vert',
+        label:'Zoom Out Flip Vertical'
+      },
+      {
+        value:'zoom-in-flip-hor',
+        label:'Zoom In Flip Horizontal'
+      },
+      {
+        value:'zoom-in-flip-vert',
+        label:'Zoom In Flip Vertical'
+      },
+      {
+        value:'pivot-in-top-left',
+        label:'Pivot In Top Left'
+      },
+      {
+        value:'pivot-in-top-right',
+        label:'Pivot In Top Right'
+      },
+      {
+        value:'pivot-in-bottom-left',
+        label:'Pivot In Bottom Left'
+      },
+      {
+        value:'pivot-in-bottom-right',
+        label:'Pivot In Bottom Right'
+      },
+      {
+        value:'pivot-out-top-left',
+        label:'Pivot Out Top Left'
+      },
+      {
+        value:'pivot-out-top-right',
+        label:'Pivot Out Top Right'
+      },
+      {
+        value:'pivot-out-bottom-left',
+        label:'Pivot Out Bottom Left'
+      },
+      {
+        value:'pivot-out-bottom-right',
+        label:'Pivot Out Bottom Right'
       },
     ];
     // стили для select2
