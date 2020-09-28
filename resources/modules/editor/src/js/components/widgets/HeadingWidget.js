@@ -15,8 +15,12 @@ class HeadingWidget extends Component {
     }
   }
   render() {
+    const  background_image = this.props.element.getSettings('background_image', {});
     let text = this.getContent('text');
-    let link
+    let link;
+    const className = "altrp-heading altrp-heading--link " +
+      + this.state.settings.position_css_classes + (background_image.url ? ' altrp-background-image' : '');
+
     if (this.state.settings.link_link && this.state.settings.link_link.url) {
       let linkProps = {
         rel: this.state.settings.link_link.noFollow ? "nofollow" : null,
@@ -41,14 +45,14 @@ class HeadingWidget extends Component {
       React.createElement(
         this.state.settings.heading_settings_html_tag || 'h2',
         {
-          className: "altrp-heading altrp-heading--link " + this.state.settings.position_css_classes,
+          className,
           id: this.state.settings.position_css_id || "",
         },
         link):
       React.createElement(
         this.state.settings.heading_settings_html_tag || 'h2', 
         { 
-          className: "altrp-heading altrp-heading--link " + this.state.settings.position_css_classes, 
+          className, 
           id: this.state.settings.position_css_id || "", 
           dangerouslySetInnerHTML: { __html: text }
         });
