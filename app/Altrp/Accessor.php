@@ -35,6 +35,17 @@ class Accessor extends Model
       }
       foreach ( $model->altrp_accessors as $altrp_accessor ) {
         if( $imported_accessor['name'] === $altrp_accessor->name ){
+          /**
+           * @var self $altrp_accessor
+           */
+          $altrp_accessor->fill( $imported_accessor );
+          $altrp_accessor->user_id = auth()->user()->id;
+          try {
+            $altrp_accessor->save();
+          } catch (\Exception $e){
+            Log::error( $e->getMessage(), [$e->getFile()] );
+            continue;
+          }
           continue 2;
         }
       }

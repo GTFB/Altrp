@@ -11,6 +11,7 @@ import {
   TAB_CONTENT,
   TAB_STYLE,
   CONTROLLER_SQL,
+  CONTROLLER_SQL_PARAMS,
 } from "../modules/ControllersManager";
 
 class Dashboards extends BaseElement {
@@ -41,9 +42,27 @@ class Dashboards extends BaseElement {
       default: [],
     });
 
+    this.addControl("filter", {
+      type: CONTROLLER_SQL_PARAMS,
+      default: [],
+    });
+
     this.endControlSection();
 
     this.startControlSection("style", {
+      tab: TAB_STYLE,
+      label: "Visual type",
+    });
+
+    this.addControl("animated", {
+      type: CONTROLLER_SWITCHER,
+      label: "Animated",
+      default: false,
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("size", {
       tab: TAB_STYLE,
       label: "Size",
     });

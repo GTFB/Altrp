@@ -10,6 +10,7 @@ use App\Exceptions\TableNotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ApiRequest;
 
 use App\Altrp\Table;
@@ -34,6 +35,27 @@ class TableController extends ApiController
         $modules = Table::all();
         return response()->json($modules, 200, [],JSON_UNESCAPED_UNICODE);
     }
+
+    /**
+     * Получение записей таблицы
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    function getItems(Request $request, $table_name) {
+        $result = DB::table($table_name)->get();
+        return response()->json($result, 200, [],JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Получение записи таблицы по ID
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    function getItemById(Request $request, $table_name, $item_id) {
+        $result = DB::table($table_name)->where('id', '=', $item_id)->first();
+        return response()->json($result, 200, [],JSON_UNESCAPED_UNICODE);
+    }
+
     /**
      * Получение списка сущностей для селекта
      *

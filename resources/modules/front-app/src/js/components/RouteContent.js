@@ -9,7 +9,11 @@ import Resource from "../../../../editor/src/js/classes/Resource";
 import appStore from "../store/store"
 import {changeCurrentModel} from "../store/current-model/actions";
 import {queryCache} from  "react-query";
-import {changeCurrentDataStorage, clearCurrentDataStorage} from "../store/current-data-storage/actions";
+import {
+  changeCurrentDataStorage,
+  clearCurrentDataStorage,
+  currentDataStorageLoaded
+} from "../store/current-data-storage/actions";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {clearFormStorage} from "../store/forms-data-storage/actions";
 
@@ -83,6 +87,8 @@ class RouteContent extends Component {
         appStore.dispatch(changeCurrentDataStorage(datasource.getAlias(), res));
       }
     }
+    appStore.dispatch(currentDataStorageLoaded());
+
   }
   /**
    * Меняем текущую модель

@@ -4,15 +4,17 @@ import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 
-import { BAR, PIE, TABLE, DONUT } from "../../../../../admin/src/components/dashboard/widgetTypes";
+import { TABLE } from "../../../../../admin/src/components/dashboard/widgetTypes";
 
 import WidgetDiagram from "../../../../../admin/src/components/dashboard/WidgetDiagram";
 import TypeField from "./fields/TypeField";
+import FilterField from "./fields/FilterField";
 import LegendField from "./fields/LegendField";
 import SourceField from "./fields/SourceField";
 import ColorSchemeField from "./fields/colorSchemeField";
+import VerticalTableField from "./fields/VerticalTableField";
 
-const AddWidget = ({ id, onAdd, setIsShow, sources }) => {
+const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
   const [widget, setWidget] = useState({
     type: TABLE,
     source: "",
@@ -20,6 +22,7 @@ const AddWidget = ({ id, onAdd, setIsShow, sources }) => {
       isVertical: false,
       legend: "",
     },
+    filter: {},
   });
 
   const title = useRef("");
@@ -29,7 +32,7 @@ const AddWidget = ({ id, onAdd, setIsShow, sources }) => {
       ...widget,
       title: title.current.value,
       options: JSON.stringify(widget.options),
-      filter: JSON.stringify({}),
+      filter: JSON.stringify(widget.filter),
     };
     const req = await axios.post(`/ajax/dashboards/${id}`, data);
     if (req.status === 200) {
@@ -53,9 +56,24 @@ const AddWidget = ({ id, onAdd, setIsShow, sources }) => {
   };
 
   const getTypesBySource = (s) => {
-    const source = sources.find((item) => s === `/ajax/models/queries/${item.model}/${item.value}`);
+    const source = settings.sql?.find(
+      (item) => s === `/ajax/models/queries/${item.model}/${item.value}`
+    );
     return source?.types?.map((type) => type.value) || [];
   };
+
+  const composeSources = (sources = []) => {
+    if (sources.length === 0) return [];
+
+    return sources.map((source) => {
+      return {
+        name: source.label,
+        url: `/ajax/models/queries/${source.model}/${source.value}`,
+      };
+    });
+  };
+
+  console.log("ADDWIDGET settings :>> ", settings.filter);
 
   return (
     <Card>
@@ -79,16 +97,24 @@ const AddWidget = ({ id, onAdd, setIsShow, sources }) => {
           <SourceField
             widget={widget}
             setWidget={setWidget}
-            sources={sources.map((item) => {
-              return { name: item.label, url: `/ajax/models/queries/${item.model}/${item.value}` };
-            })}
+            sources={composeSources(settings.sql)}
           />
+
+          {widget.source &&
+            settings.filter?.length > 0 &&
+            settings.filter?.map((param) => (
+              <FilterField key={param.value} widget={widget} setWidget={setWidget} param={param} />
+            ))}
 
           <TypeField
             widget={widget}
             setWidget={setWidget}
-            allowedTypes={getTypesBySource(widget.source)}
+            allowedTypes={[...getTypesBySource(widget.source), TABLE]}
           />
+
+          {widget.source && widget.type === TABLE && (
+            <VerticalTableField widget={widget} setWidget={setWidget} />
+          )}
 
           <ColorSchemeField widget={widget} setWidget={setWidget} />
 
@@ -111,4 +137,4 @@ const AddWidget = ({ id, onAdd, setIsShow, sources }) => {
   );
 };
 
-export default React.memo(AddWidget);
+export default AddWidget;

@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Altrp\Generators\NewMigrationGenerator;
 use App\Altrp\Model;
 use App\Altrp\Table;
 use App\Altrp\Migration;
@@ -11,9 +12,21 @@ use App\Altrp\Generators\TableMigrationGenerator;
 
 use App\Exceptions\AltrpMigrationCreateFileExceptions;
 use App\Exceptions\AltrpMigrationRunExceptions;
+use App\Exceptions\Migration\AltrpTableExistException;
 
 class AltrpTableObserver
 {
+    /**
+     * @param Table $table
+     */
+    public function creating(Table $table) {
+
+        //проверяем имеется ли таблица с таким именем в БД
+        if($table->is_db_exist()) {
+            throw new AltrpTableExistException("Table ".$table->name." already exists", 500);
+        }
+    }
+
   /**
    * Вызываем после создания таблицы
    * @param Table $table
@@ -25,7 +38,11 @@ class AltrpTableObserver
         $file = $generator->createTableGenerate();
         $name = $generator->getMigrationName();
 
+        //Если не создался файл миграции, удаляем таблицу
         if(!$file) {
+            Table::withoutEvents(function () use ($table) {
+                $table->delete();
+            });
             throw new AltrpMigrationCreateFileExceptions("Failed to create migration file");
         }
 
@@ -36,8 +53,19 @@ class AltrpTableObserver
         $migration->table_id = $table->id;
         $migration->status = "1";
         $migration->data = "";
-        $migration->save();
 
+        Migration::withoutEvents(function() use ($migration) {
+            $migration->save();
+        });
+
+        //При ошибке в миграции удаляем миграцию и таблицу
+        if(!NewMigrationGenerator::runMigration()) {
+            $migration->delete();
+            Table::withoutEvents(function () use ($table) {
+                $table->forceDelete();
+            });
+            throw new AltrpMigrationRunExceptions("Failed to run migration file on creating migration");
+        }
 
         $column = new Column();
         $column->name = "id";
@@ -62,6 +90,11 @@ class AltrpTableObserver
     public function updating(Table $table)
     {
 
+        //проверяем имеется ли таблица с таким именем в БД
+        if($table->is_db_exist()) {
+            throw new AltrpTableExistException("Table ".$table->name." already exists", 500);
+        }
+
         $generator = new TableMigrationGenerator($table);
 
         $file = $generator->updateTableGenerate($table->getOriginal('name'));
@@ -78,7 +111,16 @@ class AltrpTableObserver
         $migration->table_id = $table->id;
         $migration->status = "1";
         $migration->data = "";
-        $migration->save();
+
+        Migration::withoutEvents(function() use ($migration) {
+            $migration->save();
+        });
+
+        //При ошибке в миграции удаляем миграцию
+        if(!NewMigrationGenerator::runMigration()) {
+            $migration->delete();
+            throw new AltrpMigrationRunExceptions("Failed to run migration file on creating migration");
+        }
 
     }
 

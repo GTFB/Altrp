@@ -24,7 +24,7 @@ const sortData = (key, order = "desc") => {
   };
 };
 
-const DynamicTableWidget = ({ widget }) => {
+const DynamicTableWidget = ({ widget, width }) => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -49,7 +49,7 @@ const DynamicTableWidget = ({ widget }) => {
 
   if (widget.options.isVertical) {
     return (
-      <div className="widget-table">
+      <div className="widget-table" style={{ width: width + "px" }}>
         <table className="vertical-table">
           <tbody>
             {data.map((item, key) => (
@@ -69,7 +69,7 @@ const DynamicTableWidget = ({ widget }) => {
   }
 
   return (
-    <div className="widget-table">
+    <div className="widget-table" style={{ width: width + "px" }}>
       <table>
         <thead>
           <tr>

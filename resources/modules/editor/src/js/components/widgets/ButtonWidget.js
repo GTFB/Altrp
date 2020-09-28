@@ -61,6 +61,9 @@ class ButtonWidget extends Component {
       classes += ' altrp-background-image';
     }
 
+    let buttonText = this.getContent('button_text');
+
+
     let buttonMedia = { ...this.state.settings.button_icon };
     if (this.state.pending) {
       classes += " altrp-disabled";
@@ -103,7 +106,7 @@ class ButtonWidget extends Component {
         className={classes}
         id={this.state.settings.position_css_id}
       >
-        {this.state.settings.button_text || ""}
+        {buttonText || ""}
         {buttonMedia && buttonMedia.assetType && <span className={"altrp-btn-icon "}>{renderAssetIcon(buttonMedia)} </span>}
       </button>
     );
@@ -115,7 +118,7 @@ class ButtonWidget extends Component {
         link = (
           <a href={url} onClick={this.onClick} className={classes}>
             {" "}
-            {this.state.settings.button_text || ""}
+            {buttonText || ""}
             <span className={"altrp-btn-icon "}>{renderAssetIcon(buttonMedia)} </span>
           </a>
         );
@@ -123,7 +126,7 @@ class ButtonWidget extends Component {
         link = (
           <Link to={url} onClick={this.onClick} className={classes}>
             {" "}
-            {this.state.settings.button_text || ""}
+            {buttonText || ""}
             <span className={"altrp-btn-icon "}>{renderAssetIcon(buttonMedia)} </span>
           </Link>
         );

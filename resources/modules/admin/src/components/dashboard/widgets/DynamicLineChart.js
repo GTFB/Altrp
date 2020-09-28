@@ -15,6 +15,7 @@ import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
 import { getWidgetData } from "../services/getWidgetData";
+import { customStyle } from "../widgetTypes";
 
 const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3 }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -88,7 +89,13 @@ const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3 }
           />
         }
         series={
-          <LineSeries line={<Line strokeWidth={strokeWidth} />} colorScheme={widget.colorScheme} />
+          <LineSeries
+            animated={widget.options.animated}
+            line={<Line strokeWidth={strokeWidth} />}
+            colorScheme={
+              widget.options.colorScheme === "Custom" ? customStyle : widget.options.colorScheme
+            }
+          />
         }
       />
     </>
