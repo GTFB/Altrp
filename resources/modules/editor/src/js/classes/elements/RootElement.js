@@ -16,6 +16,7 @@ import {
   CONTROLLER_CSSEDITOR,
   CONTROLLER_TYPOGRAPHIC,
   CONTROLLER_FILTERS,
+  CONTROLLER_GRADIENT,
   TAB_ADVANCED,
   TAB_CONTENT,
   TAB_STYLE,
@@ -88,6 +89,205 @@ class RootElement extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('content_section', {
+      tab: TAB_STYLE,
+      label: 'Page Styles',
+    });
+
+    this.addControl("section_style_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "body": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('background_image', {
+      type: CONTROLLER_MEDIA,
+      label: 'Background Image',
+      default: { url: "" },
+      rules: {
+        "body": "background-image: url({{URL}});"
+      }
+    });
+
+    this.addControl('background_position', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "top left",
+          label: "top left"
+        },
+        {
+          value: "top",
+          label: "top"
+        },
+        {
+          value: "top right",
+          label: "top right"
+        },
+        {
+          value: "right",
+          label: "right"
+        },
+        {
+          value: "bottom right",
+          label: "bottom right"
+        },
+        {
+          value: "bottom",
+          label: "bottom"
+        },
+        {
+          value: "bottom left",
+          label: "bottom left"
+        },
+        {
+          value: "left",
+          label: "left"
+        },
+        {
+          value: "center",
+          label: "center"
+        }
+      ],
+      label: 'Background Position',
+      default: 'top left',
+      rules: {
+        "body": "background-position: {{VALUE}};"
+      }
+    });
+
+    this.addControl('background_attachment', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "scroll",
+          label: "scroll"
+        },
+        {
+          value: "fixed",
+          label: "fixed"
+        },
+        {
+          value: "local",
+          label: "local"
+        }
+      ],
+      label: 'Background Attachment',
+      default: 'scroll',
+      rules: {
+        "body": "background-attachment: {{VALUE}};"
+      }
+    });
+
+    this.addControl('background_repeat', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "repeat",
+          label: "repeat"
+        },
+        {
+          value: "repeat-x",
+          label: "repeat-x"
+        },
+        {
+          value: "repeat-y",
+          label: "repeat-y"
+        },
+        {
+          value: "space",
+          label: "space"
+        },
+        {
+          value: "round",
+          label: "round"
+        },
+        {
+          value: "no-repeat",
+          label: "no-repeat"
+        }
+      ],
+      label: 'Background Repeat',
+      default: 'repeat',
+      rules: {
+        "body": "background-repeat: {{VALUE}};"
+      }
+    });
+
+    this.addControl("background_image_width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default: {
+        size: 100,
+        unit: 'px',
+      },
+      conditions: {
+        'background_size': [''],
+      },
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 1000,
+      min: 0,
+      rules: {
+        "body": "background-size: {{SIZE}}{{UNIT}};"
+      }
+    });
+
+    this.addControl('background_size', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "unset",
+          label: "unset"
+        },
+        {
+          value: "cover",
+          label: "cover"
+        },
+        {
+          value: "contain",
+          label: "contain"
+        },
+        {
+          value: "",
+          label: "set width"
+        },
+      ],
+      label: 'Background Size',
+      default: 'unset',
+      rules: {
+        "body": "background-size: {{VALUE}};"
+      }
+    });
+
+    this.addControl('gradient', {
+      type: CONTROLLER_GRADIENT,
+      label: 'Gradient',
+      default: {
+        isWithGradient: false,
+        firstColor: "rgba(97,206,112,1)",
+        firstPoint: '0',
+        secondColor: "rgba(242,41,91,1)",
+        secondPoint: "100",
+        angle: "0",
+        value: ""
+      },
+      rules: {
+        "body{{STATE}}": "background-image: {{VALUE}}"
+      }
+    });
+    
+    this.endControlSection();
   }
 
   appendNewSection(newSection) {
