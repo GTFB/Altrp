@@ -1,4 +1,41 @@
+@import "~react-datepicker/dist/react-datepicker.css";
+
 .altrp-dashboard {
+  &__controls {
+    .dropdown {
+      &.show {
+        .dropdown-menu {
+          background-color: #fff;
+          z-index: 999;
+          min-width: 10rem;
+          background-clip: padding-box;
+          border: 1px solid rgba(0, 0, 0, 0.15);
+          border-radius: 0.25rem;
+          display: flex;
+          flex-direction: column;
+          .dropdown-divider {
+            height: 0;
+            border-top: 1px solid #e9ecef;
+          }
+          .dropdown-item,
+          .dropdown-item-text {
+            padding: 0.75rem 1.5rem;
+            font-weight: 400;
+            color: #212529;
+            text-decoration: none;
+            font-size: 0.9rem;
+            &:hover {
+              background-color: #eeeeee;
+            }
+            .form-control {
+              background-color: transparent;
+              border: none;
+            }
+          }
+        }
+      }
+    }
+  }
   &__widgets {
     display: flex;
     flex-wrap: wrap;

@@ -1,15 +1,28 @@
 import React, { useEffect, useState, useCallback } from "react";
+import Dropdown from "react-bootstrap/Dropdown";
+import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
+import sub from "date-fns/sub";
 import axios from "axios";
+import ru from "date-fns/locale/ru";
+
+import ThreeDotsVertical from "react-bootstrap-icons/dist/icons/three-dots-vertical";
 
 import AddWidget from "./AddWidget";
 import CardWidget from "./CardWidget";
 
+import "react-datepicker/dist/react-datepicker.css";
+
+registerLocale("ru", ru);
+setDefaultLocale("ru");
+
 const AltrpDashboards = ({ id, settings }) => {
   const [widgets, setWidgets] = useState([]);
   const [isShow, setIsShow] = useState(false);
+  const [startDate, setStartDate] = useState(new Date().getTime());
+  const [endDate, setEndDate] = useState(new Date().getTime());
 
   const getWidgets = useCallback(
-    async (id) => {
+    async (id, startDate, endDate) => {
       try {
         const req = await axios(`/ajax/dashboards/${id}`);
         if (req.status === 200) {
@@ -18,14 +31,14 @@ const AltrpDashboards = ({ id, settings }) => {
               return {
                 ...w,
                 options: { ...JSON.parse(w.options), animated: settings.animated },
-                filter: JSON.parse(w.filter),
+                filter: { ...JSON.parse(w.filter), startDate, endDate },
               };
             })
           );
         }
       } catch (error) {}
     },
-    [id, settings.animated]
+    [id, settings.animated, startDate, endDate]
   );
 
   const handleAdd = (widget) => {
@@ -46,14 +59,70 @@ const AltrpDashboards = ({ id, settings }) => {
     });
   };
 
+  const handleChangeStartDate = (date) => {
+    setStartDate(date.getTime());
+  };
+
+  const handleChangeEndDate = (date) => {
+    setEndDate(date.getTime());
+  };
+
+  const handleWeek = () => {
+    const start = sub(endDate, { weeks: 1 }).getTime();
+    setStartDate(start);
+  };
+
+  const handleMonth = () => {
+    const start = sub(endDate, { months: 1 }).getTime();
+    setStartDate(start);
+  };
+
   useEffect(() => {
-    getWidgets(id);
-  }, [id]);
+    getWidgets(id, startDate, endDate);
+  }, [id, startDate, endDate]);
 
   return (
     <div className="altrp-dashboard">
       <div className="altrp-dashboard__controls">
-        <button onClick={() => setIsShow(true)}>Добавить виджет</button>
+        <Dropdown>
+          <Dropdown.Toggle variant="light">
+            <ThreeDotsVertical color="#7a7a7b" />
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={() => setIsShow(true)}>Добавить виджет</Dropdown.Item>
+            <Dropdown.Divider />
+            <Dropdown.Item onClick={handleWeek}>Неделя</Dropdown.Item>
+            <Dropdown.Item onClick={handleMonth}>Месяц</Dropdown.Item>
+            <Dropdown.Divider />
+            <Dropdown.ItemText as="div">
+              <DatePicker
+                closeOnScroll={true}
+                className="form-control first"
+                popperClassName="datepicker-popper-mobile"
+                popperPlacement="bottom-end"
+                selected={startDate}
+                selectsStart
+                onChange={handleChangeStartDate}
+                dateFormat="dd.MM.yyyy"
+                showYearDropdown
+              />
+            </Dropdown.ItemText>
+            <Dropdown.ItemText as="div">
+              <DatePicker
+                closeOnScroll={true}
+                className="form-control last"
+                popperClassName="datepicker-popper-mobile"
+                popperPlacement="bottom-end"
+                selected={endDate}
+                minDate={startDate}
+                selectsEnd
+                onChange={handleChangeEndDate}
+                dateFormat="dd.MM.yyyy"
+                showYearDropdown
+              />
+            </Dropdown.ItemText>
+          </Dropdown.Menu>
+        </Dropdown>
       </div>
       <div className="altrp-dashboard__widgets">
         {isShow && (
