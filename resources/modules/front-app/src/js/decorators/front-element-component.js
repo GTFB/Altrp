@@ -176,6 +176,9 @@ function componentDidMount() {
  * @params {{}} prevState
  */
 function componentDidUpdate(prevProps, prevState) {
+  if(_.isFunction(this._componentDidUpdate)){
+    this._componentDidUpdate(prevProps, prevState);
+  }
   /**
    * Если сменился url но сама страница та же надо обновить компоненты элементов
    */
