@@ -243,7 +243,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
                 /**
                  * Если в настройках колонки есть url, и в данных есть id, то делаем ссылку
                  */
-                if(columns[_i].column_link && row.original.id){
+                if(columns[_i].column_link){
                   cellContent = React.createElement(linkTag, {
                     to: parseURLTemplate(columns[_i].column_link,  row.original),
                     className: 'altrp-inherit altrp-table-td__default-content',
