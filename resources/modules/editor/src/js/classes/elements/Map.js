@@ -8,6 +8,7 @@ import {
   CONTROLLER_DIMENSIONS,
   CONTROLLER_SLIDER,
   CONTROLLER_QUERY,
+  CONTROLLER_EVENT_HANDLER,
   TAB_CONTENT,
   TAB_STYLE,
 } from "../modules/ControllersManager";
@@ -61,6 +62,15 @@ class Map extends BaseElement {
 
     this.addControl("query", {
       type: CONTROLLER_QUERY,
+    });
+
+    this.addControl("handler", {
+      type: CONTROLLER_EVENT_HANDLER,
+      label: "Event handler",
+      default: {
+        evt: "",
+        params: "",
+      },
     });
 
     this.endControlSection();

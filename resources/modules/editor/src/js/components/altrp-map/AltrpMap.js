@@ -12,55 +12,60 @@ const defaultOptions = {
 function AltrpMap({ settings }) {
   const [isLoading, setIsLoading] = useState(false);
   const [geoJson, setGeoJson] = useState({});
-  const { query, canvas, zoom, lat, lng, style_height = {}, style_margin = {} } = settings;
+  const { query, handler, canvas, zoom, lat, lng, style_height = {}, style_margin = {} } = settings;
+  console.log("settings :>> ", settings);
 
   const handleClickPolygon = (e) => {
-    console.log("handleClickPolygon :>> ", e);
+    // Получаем ID объекта на карте
+    const { id } = e.target.feature;
+    const url = handler.params.replace("{{id}}", id);
+    if (handler.evt === "goto") {
+      window.open(url, "_blank");
+    } else if (handler.evt === "load") {
+      composeDynamicData(url);
+    }
   };
 
-  const composeDynamicData = useCallback(async (query) => {
+  const composeDynamicData = useCallback(async (url) => {
     setIsLoading(true);
-    if (query?.dataSource?.value) {
-      // Получаем данные из модели
-      const url = query.dataSource?.value;
-      console.log("url :>> ", url);
-      const { data, status } = await axios(url);
-      if (status === 200 && data.data) {
-        const geojson = {
-          type: "FeatureCollection",
-          features: data.data.map((item) => {
-            return {
-              id: item.id,
-              type: "Feature",
-              properties: {
-                tooltip: item.name,
-                ...defaultOptions,
-                ...item.options,
-              },
-              geometry: {
-                type: "Polygon",
-                coordinates: JSON.parse(item.polygon),
-              },
-            };
-          }),
-        };
-        setGeoJson(geojson);
-        setIsLoading(false);
-      } else {
-        // Отключаем лоадер
-        setIsLoading(false);
-        // Сбрасываем полигоны
-        setGeoJson({
-          type: "FeatureCollection",
-          features: [],
-        });
-      }
+    const { data, status } = await axios(url);
+    if (status === 200 && data.data) {
+      const geojson = {
+        type: "FeatureCollection",
+        features: data.data.map((item) => {
+          return {
+            id: item.id,
+            type: "Feature",
+            properties: {
+              tooltip: item.name,
+              ...defaultOptions,
+              ...item.options,
+            },
+            geometry: {
+              type: "Polygon",
+              coordinates: JSON.parse(item.polygon),
+            },
+          };
+        }),
+      };
+      setGeoJson(geojson);
+      setIsLoading(false);
+    } else {
+      // Отключаем лоадер
+      setIsLoading(false);
+      // Сбрасываем полигоны
+      setGeoJson({
+        type: "FeatureCollection",
+        features: [],
+      });
     }
   }, []);
 
   // При изменении модели, подгружаем новые данные
   useEffect(() => {
-    composeDynamicData(query);
+    if (query?.dataSource?.value) {
+      composeDynamicData(query?.dataSource?.value);
+    }
   }, [query]);
 
   return (
