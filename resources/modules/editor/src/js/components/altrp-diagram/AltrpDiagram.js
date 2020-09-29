@@ -23,8 +23,6 @@ const AltrpDiagram = ({ settings }) => {
     return <div className="altrp-chart">Choose data for chart</div>;
   }
 
-  console.log("settings :>> ", settings);
-
   const widget = {
     source: sql,
     options: {

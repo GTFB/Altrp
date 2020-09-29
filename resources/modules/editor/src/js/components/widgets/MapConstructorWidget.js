@@ -1,9 +1,10 @@
 import React, { Component, Suspense } from "react";
 
-const AltrpMap = React.lazy(() => import("../altrp-map/AltrpMap"));
+const AltrpMap = React.lazy(() => import("../altrp-map/AltrpMapConstructor"));
 
 import "../../../sass/altrp-map.scss";
-class MapWidget extends Component {
+
+class MapConstructorWidget extends Component {
   constructor(props) {
     super(props);
 
@@ -27,4 +28,4 @@ class MapWidget extends Component {
   }
 }
 
-export default MapWidget;
+export default MapConstructorWidget;

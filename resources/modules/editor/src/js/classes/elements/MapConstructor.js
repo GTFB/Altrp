@@ -7,17 +7,16 @@ import {
   CONTROLLER_NUMBER,
   CONTROLLER_DIMENSIONS,
   CONTROLLER_SLIDER,
-  CONTROLLER_QUERY,
   TAB_CONTENT,
   TAB_STYLE,
 } from "../modules/ControllersManager";
 
-class Map extends BaseElement {
+class MapConstructor extends BaseElement {
   static getName() {
-    return "map";
+    return "map_builder";
   }
   static getTitle() {
-    return "Dynamic Map";
+    return "Map Builder";
   }
   static getIconComponent() {
     return MapIcon;
@@ -33,6 +32,12 @@ class Map extends BaseElement {
     this.startControlSection("content_section", {
       tab: TAB_CONTENT,
       label: "Content",
+    });
+
+    this.addControl("editable", {
+      type: CONTROLLER_SWITCHER,
+      label: "Editable",
+      default: false,
     });
 
     this.addControl("canvas", {
@@ -57,10 +62,6 @@ class Map extends BaseElement {
       type: CONTROLLER_NUMBER,
       label: "Zoom",
       default: 6,
-    });
-
-    this.addControl("query", {
-      type: CONTROLLER_QUERY,
     });
 
     this.endControlSection();
@@ -110,4 +111,4 @@ class Map extends BaseElement {
     advancedTabControllers(this);
   }
 }
-export default Map;
+export default MapConstructor;
