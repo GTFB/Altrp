@@ -131,19 +131,11 @@ function getContent(settingName) {
  // return this.props.element.getContent(settingName);
 
   let content = this.props.element.getSettings(settingName);
-  if(content && content.dynamic && this.props.currentModel.getProperty(content.fieldName)){
-    /**
-     * Если this.state.modelsData еще не ициинировано или текущее свойство не загруженно
-     */
-    // if((! this.state.modelData) || ! _.get(this.props.modelData, content.fieldName)){
-    // if((! this.props.currentModel) || ! this.props.currentModel.getProperty(content.fieldName)){
-    //     content = ' ';
-    // } else {
-    //     content = _.get(this.state.modelData, content.fieldName) || ' ';
-    // }
+  if(content && content.dynamic && this.props.currentModel.getProperty('altrpModelUpdated')){
+
     content = this.props.currentModel ? this.props.currentModel.getProperty(content.fieldName) : ' ';
   }
-  if(! isEditor()){//todo: сделать подгрузку данных и в редакторе
+  if((! isEditor())){//todo: сделать подгрузку данных и в редакторе
     let paths = _.isString(content) ? content.match(/(?<={{)([\s\S]+?)(?=}})/g) : null;
     if(_.isArray(paths)){
       paths.forEach(path => {
@@ -152,6 +144,7 @@ function getContent(settingName) {
       });
     }
   }
+
   return content;
 }
 /**
