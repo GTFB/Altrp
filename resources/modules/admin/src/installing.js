@@ -31,8 +31,10 @@ import("ace-builds").then(ace=>{
           meta: 'Altrp'
         }];
       }
+      // console.log(editor.getMode);
+      console.log(session.getMode().$id);
       console.log(prefix);
-      if (0 < prefix.length && ('prefix'.match(prefix) || '{{PREFIX}}'.match(prefix)) && 'constant' === token.type) {
+      if (0 < prefix.length && ('prefix'.match(prefix) || '{{PREFIX}}'.match(prefix)) && (session.getMode().$id.indexOf('sql') >= -1)) {
         list = [{
           name: '{{PREFIX}}',
           caption: '{{PREFIX}}',

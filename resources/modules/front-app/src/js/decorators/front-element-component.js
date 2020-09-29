@@ -131,7 +131,7 @@ function getContent(settingName) {
  // return this.props.element.getContent(settingName);
 
   let content = this.props.element.getSettings(settingName);
-  if(content && content.dynamic){
+  if(content && content.dynamic && this.props.currentModel.getProperty(content.fieldName)){
     /**
      * Если this.state.modelsData еще не ициинировано или текущее свойство не загруженно
      */
@@ -195,7 +195,6 @@ function componentDidUpdate(prevProps, prevState) {
   if(currentDataStorage.getProperty('currentDataStorageLoaded')
       && (currentDataStorage.getProperty('currentDataStorageLoaded') !== prevDataStorage.getProperty('currentDataStorageLoaded'))){
     if(_.isFunction(this._componentDidMount)){
-
       this._componentDidMount();
     }
   }
