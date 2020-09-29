@@ -206,7 +206,7 @@ class FrontElement {
     {
       return _.cloneDeep(this.settings);
     }
-    return this.settings[settingName] || _default;
+    return _.get(this.settings, settingName, _default);
   }
   updateStyles(){
     window.stylesModulePromise.then(stylesModule => {
@@ -349,7 +349,7 @@ class FrontElement {
      * Если значение динамическое и не менялось в виджете,
      * то используем метод this.getContent для получения значения, а не динмического объекта
      */
-    if(value.dynamic){
+    if(value && value.dynamic){
       value = this.getContent('content_default_value')
     }
     return value;

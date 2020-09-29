@@ -2,7 +2,7 @@
  * Имеет интерфейс для доступы к свойствам data (любой вложенности)
  * @class AltrpModel
  */
-import {cloneDeep, get, set} from "lodash";
+import {cloneDeep, get, set, has} from "lodash";
 
 class AltrpModel {
   constructor(data = {}) {
@@ -29,6 +29,15 @@ class AltrpModel {
    */
   getProperty(name, defaultValue = '') {
     return get(this.data, name, defaultValue);
+  }
+  /**
+   * Возврашает значение свойства name
+   * @params {string} name
+   * @params {*} defaultValue
+   * @return {*}
+   */
+  hasProperty(name, defaultValue = '') {
+    return has(this.data, name);
   }
   /**
    * Возврашает значение свойства name

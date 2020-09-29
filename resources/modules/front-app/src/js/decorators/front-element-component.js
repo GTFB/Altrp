@@ -67,6 +67,7 @@ function classStateDisabled(){
     if (conditionsChecker(conditions,
         element.getSettings('disabled_conditional_other_display') === 'AND',
         currentModel)) {
+
       return ' state-disabled ';
     }
   }
@@ -131,19 +132,11 @@ function getContent(settingName) {
  // return this.props.element.getContent(settingName);
 
   let content = this.props.element.getSettings(settingName);
-  if(content && content.dynamic){
-    /**
-     * Если this.state.modelsData еще не ициинировано или текущее свойство не загруженно
-     */
-    // if((! this.state.modelData) || ! _.get(this.props.modelData, content.fieldName)){
-    // if((! this.props.currentModel) || ! this.props.currentModel.getProperty(content.fieldName)){
-    //     content = ' ';
-    // } else {
-    //     content = _.get(this.state.modelData, content.fieldName) || ' ';
-    // }
+  if(content && content.dynamic && this.props.currentModel.getProperty('altrpModelUpdated')){
+
     content = this.props.currentModel ? this.props.currentModel.getProperty(content.fieldName) : ' ';
   }
-  if(! isEditor()){//todo: сделать подгрузку данных и в редакторе
+  if((! isEditor())){//todo: сделать подгрузку данных и в редакторе
     let paths = _.isString(content) ? content.match(/(?<={{)([\s\S]+?)(?=}})/g) : null;
     if(_.isArray(paths)){
       paths.forEach(path => {
@@ -152,6 +145,7 @@ function getContent(settingName) {
       });
     }
   }
+
   return content;
 }
 /**
@@ -176,6 +170,9 @@ function componentDidMount() {
  * @params {{}} prevState
  */
 function componentDidUpdate(prevProps, prevState) {
+  if(_.isFunction(this._componentDidUpdate)){
+    this._componentDidUpdate(prevProps, prevState);
+  }
   /**
    * Если сменился url но сама страница та же надо обновить компоненты элементов
    */
@@ -192,7 +189,6 @@ function componentDidUpdate(prevProps, prevState) {
   if(currentDataStorage.getProperty('currentDataStorageLoaded')
       && (currentDataStorage.getProperty('currentDataStorageLoaded') !== prevDataStorage.getProperty('currentDataStorageLoaded'))){
     if(_.isFunction(this._componentDidMount)){
-
       this._componentDidMount();
     }
   }

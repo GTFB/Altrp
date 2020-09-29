@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import { withRouter } from "react-router-dom";
 import appStore from "../store/store"
-import {conditionsChecker} from "../helpers";
+import {altrpCompare, conditionsChecker} from "../helpers";
 
 class ElementWrapper extends Component {
   constructor(props){
@@ -72,11 +72,10 @@ class ElementWrapper extends Component {
      * @member {FrontElement} element
      */
     const {element} = this.props;
-    if(! element.getSettings('conditional_other')){
+    if((! element.getSettings('conditional_other')) && (element.getName() !== 'input')){
       return;
     }
     let conditions = element.getSettings('conditions',[]);
-    // console.log(this.state.currentModel);
     conditions = conditions.map(c=>{
       const {
         conditional_model_field: modelField,
@@ -92,12 +91,44 @@ class ElementWrapper extends Component {
     let elementDisplay = conditionsChecker(conditions,
         element.getSettings('conditional_other_display') === 'AND',
         this.state.currentModel);
+    if(element.getName() === 'input'){
+      elementDisplay = this.inputIsDisplay();
+      // console.log(elementDisplay);
+    }
     if(this.state.elementDisplay === elementDisplay){
       return;
     }
     this.setState(({
       elementDisplay
     }));
+  }
+
+  /**
+   * Метод для проверки видимости поля формы
+   * @return {boolean}
+   */
+  inputIsDisplay(){
+    const {formsStore} = this.state;
+    const formId = this.props.element.getSettings('form_id', '');
+    const logic = this.props.element.getSettings('form_condition_display_on', 'AND');
+    const formConditions = this.props.element.getSettings('form_conditions', []);
+    let display = true;
+    formConditions.forEach(c=>{
+      if(logic === 'AND'){
+        display *= altrpCompare(
+          _.get(formsStore,`${formId}.${c.field_id}`),
+          c.value,
+          c.operator
+        );
+      } else {
+        display += altrpCompare(
+            _.get(formsStore,`${formId}.${c.field_id}`),
+            c.value,
+            c.operator
+        );
+      }
+    });
+    return display;
   }
 
   render() {
