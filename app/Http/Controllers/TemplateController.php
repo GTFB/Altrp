@@ -430,7 +430,7 @@ class TemplateController extends Controller
           JSON_UNESCAPED_UNICODE );
       }
       $template->pages()->detach();
-      foreach ( $request->get( 'data' ) as $datum ) {
+      foreach ( $request->get( 'data', [] ) as $datum ) {
 
         switch ($datum['object_type']) {
           case 'all_site';{
@@ -454,14 +454,14 @@ class TemplateController extends Controller
                 'condition_type' => $datum['condition_type'],
                 'template_type' => $template->template_type
               ]);
+              if( ! $pages_template->save() ){
+                return response()->json( ['message' => 'Conditions "page" not Saved'],
+                  500,
+                  [],
+                  JSON_UNESCAPED_UNICODE );
+              }
             }
-            if( ! $pages_template->save() ){
-              return response()->json( ['message' => 'Conditions "page" not Saved'],
-                500,
-                [],
-                JSON_UNESCAPED_UNICODE );
-            }          }
-            break;
+          }break;
 
         }
       }

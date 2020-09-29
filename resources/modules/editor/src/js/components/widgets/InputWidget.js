@@ -52,7 +52,7 @@ class InputWidget extends Component {
     if(! _.isObject(value)){
       value = this.getContent('content_default_value');
     }
-    this.setState(state =>({...state,value}));
+    this.setState(state =>({...state,value}), ()=>{this.dispatchFieldValueToStore(value);});
   }
 
   /**

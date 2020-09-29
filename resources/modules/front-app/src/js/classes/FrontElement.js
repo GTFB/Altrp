@@ -206,7 +206,7 @@ class FrontElement {
     {
       return _.cloneDeep(this.settings);
     }
-    return this.settings[settingName] || _default;
+    return _.get(this.settings, settingName, _default);
   }
   updateStyles(){
     window.stylesModulePromise.then(stylesModule => {

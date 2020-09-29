@@ -243,6 +243,7 @@ function _conditionChecker(c, model){
      operator,
      value,
   } = c;
+  return altrpCompare(model.getProperty(modelField), value, operator);
   switch(operator){
     case 'empty':{
       return ! model.getProperty(modelField, '');
@@ -340,3 +341,81 @@ export function mbParseJSON(string, _default = null){
     return _default;
   }
 }
+
+/**
+ * Функция для сравнения значений
+ * @param leftValue
+ * @param rightValue
+ * @param operator
+ * @return {boolean}
+ */
+export function altrpCompare( leftValue = '', rightValue = '', operator = 'not_empty' ) {
+  switch(operator){
+    case 'empty':{
+      return  _.isEmpty(leftValue,);
+    }
+    case 'not_empty':{
+      return !  _.isEmpty(leftValue,);
+    }
+    case '==':{
+      return _.isEqual(leftValue, rightValue);
+    }
+    case '===':{
+      return _.isEqual(leftValue, rightValue);
+    }
+    case '<>':{
+      return ! _.isEqual(leftValue, rightValue );
+    }
+    case '>':{
+      return Number(leftValue) > Number(rightValue);
+    }
+    case '>=':{
+      return Number(leftValue) >= Number(rightValue);
+    }
+    case '<':{
+      return Number(leftValue) < Number(rightValue);
+    }
+    case '<=':{
+      return Number(leftValue) <= Number(rightValue);
+    }
+  }
+}
+
+export const CONDITIONS_OPTIONS = [
+  {
+    value: 'empty',
+    label: 'Empty',
+  },
+  {
+    value: 'not_empty',
+    label: 'Not Empty',
+  },
+  {
+    value: '==',
+    label: 'Equals',
+  },
+  {
+    value: '<>',
+    label: 'Not Equals',
+  },
+  {
+    value: 'between',
+    label: 'Between',
+  },
+  {
+    value: '>',
+    label: '>',
+  },
+  {
+    value: '>=',
+    label: '>=',
+  },
+  {
+    value: '<',
+    label: '<',
+  },
+  {
+    value: '<=',
+    label: '<=',
+  },
+];

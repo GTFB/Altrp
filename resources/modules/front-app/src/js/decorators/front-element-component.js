@@ -67,6 +67,7 @@ function classStateDisabled(){
     if (conditionsChecker(conditions,
         element.getSettings('disabled_conditional_other_display') === 'AND',
         currentModel)) {
+
       return ' state-disabled ';
     }
   }
