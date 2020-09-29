@@ -411,6 +411,41 @@ class RootElement extends BaseElement {
       }
     });
 
+    this.addControl('heading_h1_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'H1 Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 36,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        'h1.altrp-heading{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
+    );
+
+    this.endControlSection();
+
+    this.startControlSection('button_defaults', {
+      tab: TAB_STYLE,
+      label: 'Button Defaults',
+    });
+
+    
+
     this.endControlSection();
   }
 
