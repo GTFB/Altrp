@@ -44,7 +44,7 @@ class SQLEditor extends Model
       try {
         $new_editor->save();
       } catch (\Exception $e){
-        Log::error( $e->getMessage(), [$e->getFile()] ); //
+        Log::error( $e->getMessage(), $imported_editor ); //
         continue;
       }
       $new_editor->save();
