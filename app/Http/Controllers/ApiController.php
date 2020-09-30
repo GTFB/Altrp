@@ -90,7 +90,9 @@ class ApiController extends Controller
 
         $res = compact('pageCount' ,'hasMore');
         $res['data'] = $$resource;
-
+        if( isset( $modelsCount ) ){
+          $res['modelsCount'] = $modelsCount;
+        }
 
         return $res;
     }

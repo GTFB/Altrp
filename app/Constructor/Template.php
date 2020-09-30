@@ -28,6 +28,7 @@ class Template extends Model
 
   protected $casts = [
     'template_type' => 'string',
+    'triggers' => 'array',
   ];
 
   protected $fillable =[
@@ -114,6 +115,18 @@ class Template extends Model
       return '';
     }
     return $this->area()->name;
+  }
+  /**
+   * условия для попапов
+   * @return array
+   */
+  public function getTriggersAttribute(){
+    $triggers = TemplateSetting::where( 'template_id', $this->id )
+      ->where( 'setting_name', 'triggers' )->first();
+    if( ! $triggers ){
+      return [];
+    }
+    return $triggers->toArray();
   }
 
   /**
@@ -380,14 +393,14 @@ class Template extends Model
       return ! $pages_template;
     } );
 
-
-
-
     $templates = $templates->merge( $_templates );
 
 
     $templates->each( function( Template $_template ){
       $_template->check_elements_conditions();
+      if( $_template->template_type === 'popup' ){
+        $_template->triggers = $_template->triggers;
+      }
     } );
     return $templates->toArray();
   }
