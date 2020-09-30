@@ -61,10 +61,18 @@ function AltrpMap({ settings }) {
     }
   }, []);
 
+  const parseQueryParams = (qs = "") => {
+    if (!qs) return "";
+    const keyValues = qs.split("\n");
+    const result = keyValues.map((item) => item.replace("|", "=")).join("&");
+    return `?${result}`;
+  };
+
   // При изменении модели, подгружаем новые данные
   useEffect(() => {
     if (query?.dataSource?.value) {
-      composeDynamicData(query?.dataSource?.value);
+      const queryString = parseQueryParams(query?.defaultParams);
+      composeDynamicData(query?.dataSource?.value + queryString);
     }
   }, [query]);
 
