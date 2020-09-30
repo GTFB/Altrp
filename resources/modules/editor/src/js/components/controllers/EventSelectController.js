@@ -35,15 +35,15 @@ const EventSelectController = ({ controller, controlId }) => {
           </select>
         </div>
       </div>
-      <div class="controller-container controller-container_text">
-        <div class="controller-container__label textcontroller-responsive">
+      <div className="controller-container controller-container_text">
+        <div className="controller-container__label textcontroller-responsive">
           Hanlder parameters
-          <div class="screens-container">
-            <span class="screens-title "></span>
+          <div className="screens-container">
+            <span className="screens-title "></span>
           </div>
         </div>
       </div>
-      <div class="control-group">
+      <div className="control-group">
         <input
           name="params"
           type="text"
