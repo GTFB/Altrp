@@ -17,7 +17,7 @@ trait DynamicVariables
      */
     protected function replaceDynamicVars($str, $outer = false)
     {
-        $pattern = "'?(CURRENT_[A-Z_]+|([A-Z_]+)?REQUEST)(:[a-zA-Z0-9_.]+)?'?";
+        $pattern = "'?(CURRENT_[A-Z_]+|([A-Z_]+)?REQUEST)(:[a-zA-Z0-9_.]+)?(:[a-zA-Z0-9_.]+)?'?";
         $str = preg_replace_callback(
             "#$pattern#",
             function($matches) use ($outer) {
@@ -26,7 +26,10 @@ trait DynamicVariables
                     return $this->getValue('request()->' . $param[1], $outer);
                 }
                 if ($param && $param[0] == 'IF_REQUEST') {
-                    return $this->getValue( '(request()->' . $param[1] . " ? '{$param[1]} = ' . request()->{$param[1]} . ' AND' : '')", $outer);
+                    return $this->getValue( '(request()->' . $param[2] . " ? '{$param[1]} = ' . request()->{$param[2]} : '')", $outer);
+                }
+                if ($param && $param[0] == 'IF_AND_REQUEST') {
+                    return $this->getValue( '(request()->' . $param[2] . " ? ' AND {$param[1]} = ' . request()->{$param[2]} : '')", $outer);
                 }
                 if ($param && $param[0] == 'CURRENT_USER') {
                     $relations = str_replace('.', '->', $param[1]);

@@ -588,13 +588,21 @@ class QueryBuilder
         $aggregatesList = [];
         if (is_array($aggregates)) {
             foreach ($aggregates as $aggregate) {
-                $aggregatesList[] = $aggregate['type'] . "({$aggregate['column']}) as {$aggregate['alias']}";
+                if (!Str::contains($aggregate['column'], '.')) {
+                    $aggregate['column'] = $this->model->table->name . '.' . $aggregate['column'];
+                    $aggregatesList[] = $aggregate['type'] . "(" . config('database.connections.mysql.prefix')
+                        . "{$aggregate['column']}) as {$aggregate['alias']}";
+                } elseif (Str::contains($aggregate['column'], '.') && $this->query->joins) {
+                    $aggregatesList[] = $aggregate['type'] . "(" . config('database.connections.mysql.prefix')
+                        . "{$aggregate['column']}) as {$aggregate['alias']}";
+                }
             }
         } else {
             $aggregatesList[] = $aggregates;
         }
 
-        $this->queryBody->aggregates = '$model = $model->selectRaw(\'' . implode(', ', $aggregatesList) . '\');' . "\n";
+        $this->queryBody->aggregates = '$model = $model->selectRaw(\''
+            . implode(', ', $aggregatesList) . '\');' . "\n";
         return $this;
     }
 
@@ -615,8 +623,10 @@ class QueryBuilder
         foreach ($columns as $column) {
             if (!Str::contains($column, '.')) {
                 $column = $this->model->table->name . '.' . $column;
+                $columnsList[] = $column;
+            } elseif (Str::contains($column, '.') && $this->query->joins) {
+                $columnsList[] = $column;
             }
-            $columnsList[] = $column;
         }
         $this->queryBody->columns = $columns
             ? "{$threeTabs}\$model = \$model->select(['" . implode("','", $columnsList) . "']);\n"
