@@ -367,6 +367,12 @@ Route::group( ['prefix' => 'ajax'], function(){
   // Отдает данные для виджета панели аналитики
   Route::get('dashboards/{id}', 'DashboardsController@index');
 
+  // Загружаем настройки для виджета панели аналитики
+  Route::get('dashboards/{id}/settings', 'DashboardsController@settings');
+
+  // Записываем новые настройки для виджета панели аналитики
+  Route::post('dashboards/{id}/settings', 'DashboardsController@settings');
+
   // Записывает данные для виджета панели аналитики
   Route::post('dashboards/{id}', 'DashboardsController@store');
 
