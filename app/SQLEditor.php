@@ -32,8 +32,20 @@ class SQLEditor extends Model
         continue;
       }
 
-      foreach ( $model->altrp_sql_editors as $sql_editor ) {
-        if( $imported_editor['name'] === $sql_editor->name ){
+      foreach ( $model->altrp_sql_editors as $old_editor ) {
+        /**
+         * @var self $old_editor
+         */
+        if( $imported_editor['name'] === $old_editor->name ){
+        if( date( $imported_editor['updated_at'] ) > date( $old_editor->updated_at ) ){
+          $old_editor->fill( $imported_editor );
+          try {
+            $old_editor->save();
+          } catch (\Exception $e){
+            Log::error( $e->getMessage(), $imported_editor ); //
+            continue;
+          }
+        }
           continue 2;
         }
       }

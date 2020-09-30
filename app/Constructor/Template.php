@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Page
@@ -64,7 +65,12 @@ class Template extends Model
       $old_template = self::where( 'guid', $imported_template['guid'] )->first();
       if( $old_template ){
         $old_template->data = $imported_template['data'];
-        $old_template->save();
+        try {
+          $old_template->save();
+        } catch (\Exception $e){
+          Log::error( $e->getMessage(), $imported_template ); //
+          continue;
+        }
         continue;
       }
       $new_template = new self( $imported_template );
@@ -76,7 +82,12 @@ class Template extends Model
         $area_name = 1;
       }
       $new_template->area = $area_name;
-      $new_template->save();
+      try {
+        $new_template->save();
+      } catch (\Exception $e){
+        Log::error( $e->getMessage(), $imported_template ); //
+        continue;
+      }
     }
   }
 
