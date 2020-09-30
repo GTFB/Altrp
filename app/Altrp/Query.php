@@ -6,6 +6,7 @@ namespace App\Altrp;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use App\Altrp\Model as AltrpModel;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 
 class Query extends EloquentModel
 {
@@ -42,13 +43,27 @@ class Query extends EloquentModel
       }
       foreach ( $model->altrp_queries as $altrp_query ) {
         if( $imported_query['name'] === $altrp_query->name ){
+          if( date( $imported_query['updated_at'] ) > date( $altrp_query->updated_at ) ) {
+            $altrp_query->fill( $imported_query );
+            try {
+              $altrp_query->save();
+            } catch (\Exception $e){
+              Log::error( $e->getMessage(), $imported_query ); //
+              continue;
+            }
+          }
           continue 2;
         }
       }
       $new_query = new self( $imported_query );
       $new_query->model_id = $model->id;
       $new_query->user_id = auth()->user()->id;
-      $new_query->save();
+      try {
+        $new_query->save();
+      } catch (\Exception $e){
+        Log::error( $e->getMessage(), $imported_query ); //
+        continue;
+      }
     }
   }
 
