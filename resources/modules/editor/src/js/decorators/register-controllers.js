@@ -550,7 +550,7 @@ export function advancedTabControllers(element) {
     ]
   });
 
-  disabledModelRepeater.addControl('disabled_conditional_other_condition_value', {
+  disabledModelRepeater.addControl('conditional_other_condition_value', {
     responsive: false,
   });
 

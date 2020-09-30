@@ -14,8 +14,10 @@ import {
   CONTROLLER_SELECT2,
   TAB_CONTENT,
   TAB_STYLE, CONTROLLER_CHOOSE,
-  CONTROLLER_SHADOW
+  CONTROLLER_SHADOW, CONTROLLER_REPEATER
 } from "../modules/ControllersManager";
+import Repeater from "../Repeater";
+import {CONDITIONS_OPTIONS} from "../../../../../front-app/src/js/helpers";
 
 class Input extends BaseElement{
   static getName(){
@@ -290,6 +292,59 @@ class Input extends BaseElement{
       ]
     });
 
+    this.endControlSection();
+
+    this.startControlSection('form_condition_display', {
+      tab: TAB_CONTENT,
+      label: 'Form Condition Display',
+    });
+
+    this.addControl('form_condition_display_on', {
+      type: CONTROLLER_SELECT,
+      label: 'Display on',
+      responsive: false,
+      options: [
+        {
+          label: 'All Conditions Met',
+          value: 'AND',
+        },
+        {
+          label: 'Any Condition Met',
+          value: 'OR',
+        },
+      ],
+      default: 'AND',
+    });
+
+    const formConditionsRepeater = new Repeater();
+
+    formConditionsRepeater.addControl('field_id', {
+      responsive: false,
+      dynamic: false,
+      label: 'Field ID',
+    });
+
+    formConditionsRepeater.addControl('operator', {
+      type: CONTROLLER_SELECT,
+      responsive: false,
+      default: 'empty',
+      options: CONDITIONS_OPTIONS
+    });
+
+    formConditionsRepeater.addControl('value', {
+      dynamic: false,
+      responsive: false,
+      label: 'Value',
+    });
+
+    this.addControl('form_conditions', {
+      label: 'Conditions',
+      type: CONTROLLER_REPEATER,
+      fields: formConditionsRepeater.getControls(),
+      default: [
+      ],
+    });
+    
     this.endControlSection();
 
     this.startControlSection('label_style_section', {

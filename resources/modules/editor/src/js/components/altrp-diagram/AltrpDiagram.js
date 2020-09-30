@@ -23,10 +23,17 @@ const AltrpDiagram = ({ settings }) => {
     return <div className="altrp-chart">Choose data for chart</div>;
   }
 
-  console.log("settings :>> ", settings);
+  const parseQueryParams = (qs = "") => {
+    if (!qs) return "";
+    const keyValues = qs.split("\n");
+    const result = keyValues.map((item) => item.replace("|", "=")).join("&");
+    return `?${result}`;
+  };
+
+  const queryString = parseQueryParams(settings.query?.defaultParams);
 
   const widget = {
-    source: sql,
+    source: sql + queryString,
     options: {
       colorScheme: settings.colorScheme,
       legend: "",

@@ -9,7 +9,7 @@ import {
   CONTROLLER_SWITCHER,
   CONTROLLER_QUERY,
   TAB_CONTENT,
-  TAB_STYLE,
+  TAB_STYLE, CONTROLLER_TEXTAREA,
 } from "../modules/ControllersManager";
 
 import { TABLE, widgetTypes } from "../../../../../admin/src/components/dashboard/widgetTypes";
@@ -39,6 +39,21 @@ class Diagram extends BaseElement {
 
     this.addControl("query", {
       type: CONTROLLER_QUERY,
+    });
+
+    this.addControl("datasource_path", {
+      dynamic: false,
+      label: 'Path to Data'
+    });
+
+    this.addControl("key_name", {
+      dynamic: false,
+      label: 'Key Field'
+    });
+
+    this.addControl("data_name", {
+      dynamic: false,
+      label: 'Data Field'
     });
 
     this.endControlSection();
