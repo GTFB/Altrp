@@ -106,8 +106,6 @@ class Select2Controller extends Component {
         let _v = value.map((v) => {
           return v.value;
         });
-        console.log(value);
-        console.log(_v);
         this._changeValue(_v);
       } else {
         this._changeValue(value.value);
@@ -116,6 +114,8 @@ class Select2Controller extends Component {
     if (action.action === "clear") {
       if (this.props.isMulti) {
         this._changeValue(value);
+      } else {
+        this._changeValue('');
       }
     }
     if (action.action === "remove-value") {

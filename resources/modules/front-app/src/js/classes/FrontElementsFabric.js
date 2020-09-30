@@ -48,4 +48,4 @@ class FrontElementsFabric {
   }
 }
 window.frontElementsFabric = new FrontElementsFabric();
-export default FrontElementsFabric;
+export default window.frontElementsFabric;

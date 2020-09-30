@@ -1,0 +1,12 @@
+.altrp-columns{
+  &_3 > .altrp-posts{
+    grid-template-columns: repeat(3, 1fr);
+    display: grid;
+  }
+}
+.altrp-post > .sections-wrapper{
+  width: auto;
+  & .altrp-section{
+    width: 100%;
+  }
+}

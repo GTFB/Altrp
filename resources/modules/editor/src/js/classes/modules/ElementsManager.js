@@ -34,10 +34,12 @@ import Tabs from "../elements/Tabs";
 import Divider from "../elements/Divider";
 import Nav from "../elements/Nav";
 import Table from "../elements/Table";
+import Posts from "../elements/Posts";
 import Map from "../elements/Map";
 import MapConstructor from "../elements/MapConstructor";
 import Diagram from "../elements/Diagram";
 import Dashboards from "../elements/Dashboards";
+import PostsWidget from "../../components/widgets/PostsWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -53,6 +55,7 @@ export default class ElementsManger {
     this.elements[Text.getName()] = Text;
     this.elements[Image.getName()] = Image;
     this.elements[Table.getName()] = Table;
+    this.elements[Posts.getName()] = Posts;
     this.elements[Nav.getName()] = Nav;
     this.elements[Divider.getName()] = Divider;
     this.elements[Tabs.getName()] = Tabs;
@@ -75,6 +78,7 @@ export default class ElementsManger {
     this.components[Text.getName()] = TextWidget;
     this.components[Image.getName()] = ImageWidget;
     this.components[Table.getName()] = TableWidget;
+    this.components[Posts.getName()] = PostsWidget;
     this.components[Nav.getName()] = NavWidget;
     this.components[Divider.getName()] = DividerWidget;
     this.components[Tabs.getName()] = TabsWidget;
