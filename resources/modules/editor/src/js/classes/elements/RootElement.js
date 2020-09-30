@@ -434,8 +434,152 @@ class RootElement extends BaseElement {
           'text-decoration: {{DECORATION}}'
         ],
       },
-    }
-    );
+    });
+
+    this.addControl('heading_h2_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'H2 Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 36,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        'h2.altrp-heading{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
+    this.addControl('heading_h3_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'H3 Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 36,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        'h3.altrp-heading{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
+    this.addControl('heading_h4_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'H4 Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 36,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        'h4.altrp-heading{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
+    this.addControl('heading_h5_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'H5 Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 36,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        'h5.altrp-heading{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
+    this.addControl('heading_h6_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'H6 Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 36,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        'h6.altrp-heading{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
+    this.addControl('heading_p_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'P Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 36,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        'p.altrp-heading{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
 
     this.endControlSection();
 
