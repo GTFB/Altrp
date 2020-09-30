@@ -8,6 +8,7 @@ import { TABLE } from "../../../../../admin/src/components/dashboard/widgetTypes
 import WidgetDiagram from "../../../../../admin/src/components/dashboard/WidgetDiagram";
 import TypeField from "./fields/TypeField";
 import LegendField from "./fields/LegendField";
+import LegendPositionField from "./fields/LegendPositionField";
 import FilterField from "./fields/FilterField";
 import SourceField from "./fields/SourceField";
 import ColorSchemeField from "./fields/colorSchemeField";
@@ -81,6 +82,7 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
           <ColorSchemeField widget={widget} setWidget={setWidget} />
 
           <LegendField widget={widget} setWidget={setWidget} />
+          {widget.options?.legend && <LegendPositionField widget={widget} setWidget={setWidget} />}
         </Form>
 
         <div className="widget-placeholder">
