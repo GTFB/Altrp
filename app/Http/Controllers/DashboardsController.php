@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Dashboards;
+use App\DashboardsSettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -69,4 +70,14 @@ class DashboardsController extends Controller
 
         return response()->json(null, 204);
     }
+
+    public function settings(Request $request, $id) {
+        $user_id = auth()->user()->id;
+        $settings = DashboardsSettings::firstOrNew(['dashboard_id' => $id, 'user_id' => $user_id]);
+        $settings->settings = $request->input('settings') ? json_encode($request->input('settings')) : data_get( $settings, 'settings' );
+        $settings->guid = data_get( $settings, 'guid' ) ? data_get( $settings, 'guid' ) : (string)Str::uuid();
+        $settings->save();
+        return response()->json($settings, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
 }
