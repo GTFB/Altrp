@@ -9,7 +9,6 @@ import AltrpModel from "../../classes/AltrpModel";
 class AltrpPosts extends React.Component {
   constructor(props) {
     super(props);
-    console.log(this.props.settings);
     this.state = {
       posts: _.isArray(props.data) ?  props.data : [],
       simpleTemplate: '',

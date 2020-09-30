@@ -1,4 +1,5 @@
 import FrontElement from "./FrontElement";
+import FrontElementsManager from "./FrontElementsManager";
 
 class FrontElementsFabric {
   /**
