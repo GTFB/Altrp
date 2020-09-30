@@ -354,6 +354,10 @@ class TemplateController extends Controller
    * @return \Illuminate\Http\JsonResponse
    */
   public function settingSet( $template_id, $setting_name, Request $request ){
+    $template = Template::find( $template_id );
+    if( ! $template ){
+      return response()->json( ['message' => 'Template not Found'], 404, [], JSON_UNESCAPED_UNICODE );
+    }
     $setting = TemplateSetting::where( [
       'template_id' => $template_id,
       'setting_name' => $setting_name,
@@ -362,6 +366,7 @@ class TemplateController extends Controller
       $setting = new TemplateSetting( [
         'template_id' => $template_id,
         'setting_name' => $setting_name,
+        'template_guid' => $template->guid,
         'data' => $request->get( 'data' ),
       ] );
     } else {
@@ -395,7 +400,10 @@ class TemplateController extends Controller
    * @return \Illuminate\Http\JsonResponse
    */
   public function conditionsSet( $template_id, Request $request ){
-
+    $template = Template::find( $template_id );
+    if( ! $template ){
+      return response()->json( ['message' => 'Template not Found'], 404, [], JSON_UNESCAPED_UNICODE );
+    }
     /**
      * Сначала сохраним сами настройки
      */
@@ -407,6 +415,7 @@ class TemplateController extends Controller
       $setting = new TemplateSetting( [
         'template_id' => $template_id,
         'setting_name' => 'conditions',
+        'template_guid' => $template->guid,
         'data' => $request->get( 'data' ),
       ] );
     } else {

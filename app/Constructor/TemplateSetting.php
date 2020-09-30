@@ -4,12 +4,14 @@ namespace App\Constructor;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class TemplateSetting extends Model
 {
   protected $fillable = [
     'data',
     'template_id',
+    'template_guid',
     'setting_name',
   ];
 
@@ -31,12 +33,22 @@ class TemplateSetting extends Model
       $old_setting = self::where( 'template_id', $template->id )->where( 'setting_name', $imported_setting['setting_name'] )->first();
       if( $old_setting ){
         $old_setting->data = $imported_setting['data'];
-        $old_setting->save();
+        try {
+          $old_setting->save();
+        } catch (\Exception $e){
+          Log::error( $e->getMessage(), $imported_setting ); //
+          continue;
+        }
         continue;
       }
       $new_setting = new self( $imported_setting );
       $new_setting->template_id = $template->id;
-      $new_setting->save();
+      try {
+        $new_setting->save();
+      } catch (\Exception $e){
+        Log::error( $e->getMessage(), $imported_setting ); //
+        continue;
+      }
     }
   }
 
