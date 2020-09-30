@@ -9,7 +9,8 @@ import {
   CONTROLLER_SWITCHER,
   CONTROLLER_QUERY,
   TAB_CONTENT,
-  TAB_STYLE, CONTROLLER_TEXTAREA,
+  TAB_STYLE,
+  CONTROLLER_TEXTAREA,
 } from "../modules/ControllersManager";
 
 import { TABLE, widgetTypes } from "../../../../../admin/src/components/dashboard/widgetTypes";
@@ -43,17 +44,17 @@ class Diagram extends BaseElement {
 
     this.addControl("datasource_path", {
       dynamic: false,
-      label: 'Path to Data'
+      label: "Path to Data",
     });
 
     this.addControl("key_name", {
       dynamic: false,
-      label: 'Key Field'
+      label: "Key Field",
     });
 
     this.addControl("data_name", {
       dynamic: false,
-      label: 'Data Field'
+      label: "Data Field",
     });
 
     this.endControlSection();
@@ -77,7 +78,30 @@ class Diagram extends BaseElement {
     this.addControl("isVertical", {
       type: CONTROLLER_SWITCHER,
       label: "Vertical table",
-      default: false,
+      default: true,
+    });
+
+    this.addControl("legend", {
+      type: CONTROLLER_SELECT,
+      label: "Legend Type",
+      default: "",
+      options: [
+        { label: "", value: "none" },
+        { label: "vertical", value: "vertical" },
+        { label: "horizontal", value: "horizontal" },
+      ],
+    });
+
+    this.addControl("legendPosition", {
+      type: CONTROLLER_SELECT,
+      label: "Legend Position",
+      default: "bottom",
+      options: [
+        { label: "bottom", value: "bottom" },
+        { label: "left", value: "left" },
+        { label: "right", value: "right" },
+        { label: "top", value: "top" },
+      ],
     });
 
     const colors = Object.keys(schemes).map((name) => {

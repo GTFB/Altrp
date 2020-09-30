@@ -77,3 +77,31 @@
     }
   }
 }
+.altrp-chart {
+  display: flex;
+  flex-direction: column;
+  &.left {
+    flex-direction: row-reverse;
+  }
+  &.top {
+    flex-direction: column-reverse;
+  }
+  &.bottom {
+    flex-direction: column;
+  }
+  &.right {
+    flex-direction: row;
+  }
+}
+.discrete__legend {
+  flex-wrap: wrap;
+  &-item {
+    span {
+      //font-size: 0.8rem !important;
+      font-weight: 500;
+    }
+    &:first-child {
+      padding-left: 8px !important;
+    }
+  }
+}
