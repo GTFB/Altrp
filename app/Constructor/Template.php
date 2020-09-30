@@ -64,12 +64,14 @@ class Template extends Model
     foreach ( $imported_templates as $imported_template ) {
       $old_template = self::where( 'guid', $imported_template['guid'] )->first();
       if( $old_template ){
-        $old_template->data = $imported_template['data'];
-        try {
-          $old_template->save();
-        } catch (\Exception $e){
-          Log::error( $e->getMessage(), $imported_template ); //
-          continue;
+        if( date( $imported_template['updated_at'] ) > date( $old_template->updated_at ) ) {
+          $old_template->data = $imported_template['data'];
+          try {
+            $old_template->save();
+          } catch ( \Exception $e ) {
+            Log::error( $e->getMessage(), $imported_template ); //
+            continue;
+          }
         }
         continue;
       }
