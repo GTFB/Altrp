@@ -122,7 +122,7 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
           {widget.options?.legend && <LegendPositionField widget={widget} setWidget={setWidget} />}
         </Form>
 
-        <div className="widget-placeholder">
+        <div className={`widget-placeholder altrp-chart ${widget.options?.legendPosition}`}>
           {widget.source && <WidgetDiagram widget={widget} width={360} height={360} />}
         </div>
       </Card.Body>
