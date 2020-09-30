@@ -15,9 +15,13 @@ import {
   TABLE,
   DONUT,
 } from "../../../../../admin/src/components/dashboard/widgetTypes";
+import { getDataByPath } from "../../../../../front-app/src/js/helpers";
 
 const AltrpDiagram = ({ settings }) => {
   const sql = settings.query?.dataSource?.value;
+
+  //const data = getDataByPath(settings.datasource_path);
+  //console.log("data :>> ", data);
 
   if (!sql) {
     return <div className={`altrp-chart ${settings.legendPosition}`}>Choose data for chart</div>;
