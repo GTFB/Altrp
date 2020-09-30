@@ -1,5 +1,4 @@
 import React, { Component, Suspense } from "react";
-import { getDataByPath } from "../../../../../front-app/src/js/helpers";
 
 const AltrpDiagram = React.lazy(() => import("../altrp-diagram/AltrpDiagram"));
 class DiagramWidget extends Component {
@@ -18,11 +17,6 @@ class DiagramWidget extends Component {
   }
 
   render() {
-    let pathToData = this.props.element.getSettings("datasource_path");
-    if (pathToData) {
-      let data = getDataByPath(pathToData, []);
-      console.log("data :>> ", pathToData, data);
-    }
     return (
       <Suspense fallback={"Loading"}>
         <AltrpDiagram settings={this.state.settings} />
