@@ -320,6 +320,7 @@ class Input extends BaseElement{
 
     formConditionsRepeater.addControl('field_id', {
       responsive: false,
+      dynamic: false,
       label: 'Field ID',
     });
 
@@ -331,7 +332,9 @@ class Input extends BaseElement{
     });
 
     formConditionsRepeater.addControl('value', {
+      dynamic: false,
       responsive: false,
+      label: 'Value',
     });
 
     this.addControl('form_conditions', {

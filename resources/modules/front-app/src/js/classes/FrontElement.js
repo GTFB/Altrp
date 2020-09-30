@@ -344,6 +344,9 @@ class FrontElement {
     if(this.getName() !== 'input'){
       return null;
     }
+    if(! this.component.props.elementDisplay){
+      return null;
+    }
     let value = this.component.state.value;
     /**
      * Если значение динамическое и не менялось в виджете,

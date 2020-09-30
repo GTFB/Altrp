@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import { withRouter } from "react-router-dom";
 import appStore from "../store/store"
 import {altrpCompare, conditionsChecker} from "../helpers";
+import {changeFormFieldValue} from "../store/forms-data-storage/actions";
 
 class ElementWrapper extends Component {
   constructor(props){
@@ -51,8 +52,6 @@ class ElementWrapper extends Component {
     }
 
     if((this.props.element.getName() === 'input') && this.state.formsStore !== appStore.getState().formsStore){
-      // console.log(this.state.formsStore);
-      // console.log(appStore.getState().formsStore);
       this.setState(state => ({...state, formsStore: appStore.getState().formsStore}));
     }
   };
@@ -93,13 +92,18 @@ class ElementWrapper extends Component {
         this.state.currentModel);
     if(element.getName() === 'input'){
       elementDisplay = this.inputIsDisplay();
-      // console.log(elementDisplay);
     }
     if(this.state.elementDisplay === elementDisplay){
       return;
     }
+    if((element.getName() === 'input') && ! elementDisplay){
+      const formId = this.props.element.getSettings('form_id', '');
+      const fieldName = this.props.element.getSettings('field_id', '');
+      // console.log(fieldName);
+      // console.log(formId);
+    }
     this.setState(({
-      elementDisplay
+      elementDisplay,
     }));
   }
 
@@ -188,6 +192,7 @@ class ElementWrapper extends Component {
           currentUser: this.state.currentUser,
           currentDataStorage: this.state.currentDataStorage,
           formsStore: this.state.formsStore,
+          elementDisplay: this.state.elementDisplay,
           appStore
         })
       }
