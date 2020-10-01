@@ -177,14 +177,15 @@ class PagesController extends Controller
    * @return \Illuminate\Http\Response
    * @throws \Exception
    */
-  public function destroy( Page $page, $id )
+  public function destroy( $id )
   {
     //
+    $page = new Page();
     $page = $page->find( $id );
     if( $page->delete() ){
       return response()->json( ['success' => true,], 200, [], JSON_UNESCAPED_UNICODE );
     }
-    return response()->json( ['success' => false, 'message' => 'Could not deleting'], 200, [], JSON_UNESCAPED_UNICODE );
+    return response()->json( ['success' => false, 'message' => 'Could not deleting'], 500, [], JSON_UNESCAPED_UNICODE );
   }
 
   /**

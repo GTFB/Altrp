@@ -16,6 +16,7 @@ class DataStorageUpdater extends AltrpModel{
   constructor(data){
     super(data);
     this.setProperty('dataSourcesFormsDependent', []);
+    this.setProperty('formsStore', appStore.getState().formsStore);
     appStore.subscribe(this.onStoreUpdate)
   }
 
@@ -27,11 +28,11 @@ class DataStorageUpdater extends AltrpModel{
     dataSources = _.sortBy(dataSources, data_source => data_source.priority);
     this.setProperty('currentDataSources', dataSources);
     /**
-     * @member {Datasource} datasource
+     * @member {Datasource} dataSource
      */
-    for(let datasource of dataSources){
-      if(datasource.getWebUrl()){
-        let params = datasource.getParams(window.currentRouterMatch.params, 'altrpforms.');
+    for(let dataSource of dataSources){
+      if(dataSource.getWebUrl()){
+        let params = dataSource.getParams(window.currentRouterMatch.params, 'altrpforms.');
         let needUpdateFromForms = false;
         _.each(params, (paramValue, paramName) => {
           if(paramValue.indexOf('altrpforms.') === 0){
@@ -44,21 +45,21 @@ class DataStorageUpdater extends AltrpModel{
          * и сохраняем параметры, с которыми уже получили данные
          */
         if(needUpdateFromForms){
-          this.subscribeToFormsUpdate(datasource, _.cloneDeep(params));
+          this.subscribeToFormsUpdate(dataSource, _.cloneDeep(params));
         }
         let res = {};
-        if(datasource.getType() === 'show') {
+        if(dataSource.getType() === 'show') {
           let id = _.get(params, 'id', _.get(this.props, 'match.params.id'));
           if(id){
-            res = await (new Resource({route: datasource.getWebUrl()})).get(id);
+            res = await (new Resource({route: dataSource.getWebUrl()})).get(id);
           }
         } else if(! _.isEmpty(params)) {
-          res = await (new Resource({route: datasource.getWebUrl()})).getQueried(params);
+          res = await (new Resource({route: dataSource.getWebUrl()})).getQueried(params);
         } else {
-          res = await (new Resource({route: datasource.getWebUrl()})).getAll();
+          res = await (new Resource({route: dataSource.getWebUrl()})).getAll();
         }
         res = _.get(res, 'data', res);
-        appStore.dispatch(changeCurrentDataStorage(datasource.getAlias(), res));
+        appStore.dispatch(changeCurrentDataStorage(dataSource.getAlias(), res));
       }
     }
     appStore.dispatch(currentDataStorageLoaded());
@@ -73,20 +74,20 @@ class DataStorageUpdater extends AltrpModel{
   }
   /**
     * подписывает какой либо источник данных на обновление от формы
-   * @param {Datasource} datasource
+   * @param {Datasource} dataSource
    * @param {{}} params
    */
-  subscribeToFormsUpdate(datasource, params) {
+  subscribeToFormsUpdate(dataSource, params) {
     let dataSources = this.getProperty('dataSourcesFormsDependent', []);
 
-    // if(dataSources.indexOf(datasource) === -1){
-    //   dataSources.push(datasource);
+    // if(dataSources.indexOf(dataSource) === -1){
+    //   dataSources.push(dataSource);
     // }
     if(_.findIndex(dataSources, ds =>{
-      return ds.datasource === datasource;
+      return ds.dataSource === dataSource;
     }) === -1){
       dataSources.push({
-        datasource,
+        dataSource,
         params
       });
     }
@@ -94,23 +95,45 @@ class DataStorageUpdater extends AltrpModel{
   /**
    * Вызывается, когда обновляется redux-хранилище
    */
-  onStoreUpdate(){
-
-  }
+  onStoreUpdate = async () => {
+    /**
+     * Проверяем обновились ли формы
+     * @type {formsStore}
+     */
+    let formsStore = appStore.getState().formsStore;
+    if(this.getProperty('formsStore') !== formsStore){
+      await this.onFormsUpdate();
+      this.setProperty('formsStore', formsStore);
+    }
+  };
   /**
    * Вызывается, когда обновляется поле формы для того,
-   * чтобы сделать новый запрос по тем datasource,
+   * чтобы сделать новый запрос по тем dataSource,
    * которые зависят от полей формы
    */
   async onFormsUpdate(){
     let dataSources = this.getProperty('dataSourcesFormsDependent', []);
-
-    for(let {dataSource, params: oldParams} of dataSources) {
+    let formsStore = appStore.getState().formsStore;
+    for(let ds of dataSources) {
+      let {dataSource, params: oldParams, updating} = ds;
       /**
-       * @member {Datasource} datasource
+       * @member {Datasource} dataSource
        */
-      console.log(dataSource);
-      console.log(oldParams);
+      let params = dataSource.getParams(window.currentRouterMatch.params, 'altrpforms.');
+      _.forEach(params, (paramValue, paramName)=>{
+        if(paramValue.indexOf('altrpforms.') === 0){
+          params[paramName] = _.get(formsStore, paramValue.replace('altrpforms.', ''))
+        }
+      });
+      if(! _.isEqual(params, oldParams) && ! updating){
+        ds.updating = true;
+        let res = {};
+        res = await (new Resource({route: dataSource.getWebUrl()})).getQueried(params);
+        res = _.get(res, 'data', res);
+        appStore.dispatch(changeCurrentDataStorage(dataSource.getAlias(), res));
+        ds.params = params;
+        ds.updating = false;
+      }
     }
   }
 }
