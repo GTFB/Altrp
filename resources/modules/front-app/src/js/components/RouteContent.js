@@ -16,6 +16,7 @@ import {
 } from "../store/current-data-storage/actions";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {clearFormStorage} from "../store/forms-data-storage/actions";
+import dataStorageUpdater from '../classes/modules/DatastorageUpdater';
 
 
 class RouteContent extends Component {
@@ -50,7 +51,7 @@ class RouteContent extends Component {
     /**
      * Обнуляем текущее хранилище dataStorage
      */
-    appStore.dispatch(clearCurrentDataStorage());
+    dataStorageUpdater.clearCurrent();
     /**
      * затем отправляем запросы на обновление
      */
@@ -65,30 +66,8 @@ class RouteContent extends Component {
      * @member {[]} data_sources
      */
     let { data_sources } = this.props;
-    data_sources = _.sortBy(data_sources, data_source => data_source.priority);
-    /**
-     * @member {Datasource} data_source
-     */
-    for(let datasource of data_sources){
-      if(datasource.getWebUrl()){
-        let params = datasource.getParams(this.props.match.params);
-        let res = {};
-        if(datasource.getType() === 'show') {
-          let id = _.get(params, 'id', _.get(this.props, 'match.params.id'));
-          if(id){
-            res = await (new Resource({route: datasource.getWebUrl()})).get(id);
-          }
-        } else if(params) {
-          res = await (new Resource({route: datasource.getWebUrl()})).getQueried(params);
-        } else {
-          res = await (new Resource({route: datasource.getWebUrl()})).getAll();
-        }
-        res = _.get(res, 'data', res);
-        appStore.dispatch(changeCurrentDataStorage(datasource.getAlias(), res));
-      }
-    }
-    appStore.dispatch(currentDataStorageLoaded());
 
+    dataStorageUpdater.updateCurrent(data_sources);
   }
   /**
    * Меняем текущую модель
@@ -122,7 +101,7 @@ class RouteContent extends Component {
     }
     if(! _.isEqual(_.get(this.props, 'match'),_.get(prevProps, 'match'))) {
       window.currentRouterMatch = new AltrpModel(this.props.match);
-      appStore.dispatch(clearFormStorage())
+      appStore.dispatch(clearFormStorage());
     }
   }
   render(){

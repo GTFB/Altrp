@@ -126,6 +126,7 @@ class Table extends BaseElement {
     this.addControl("posts_card_template", {
       type: CONTROLLER_SELECT2,
       prefetch_options: true,
+      label: "Template",
       isClearable: true,
       options_resource: '/admin/ajax/templates/options?template_type=card',
       nullable: true,
