@@ -5,6 +5,7 @@ namespace App\Altrp\Builders\Traits;
 
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 trait DynamicVariables
 {
@@ -17,7 +18,7 @@ trait DynamicVariables
      */
     protected function replaceDynamicVars($str, $outer = false)
     {
-        $pattern = "'?(CURRENT_[A-Z_]+|([A-Z_]+)?REQUEST)(:[a-zA-Z0-9_.]+)?(:[a-zA-Z0-9_.]+)?(:[A-Z<>!=]+)?'?";
+        $pattern = "'?(CURRENT_[A-Z_]+|([A-Z_]+)?REQUEST)(:[a-zA-Z0-9_.]+)?(:[a-zA-Z0-9_.()-+*/|]+)?(:[A-Z<>!=]+)?'?";
         $str = preg_replace_callback(
             "#$pattern#",
             function($matches) use ($outer) {
@@ -27,13 +28,29 @@ trait DynamicVariables
                 }
                 if ($param && $param[0] == 'IF_REQUEST') {
                     $param[2] = $param[2] ?? implode('_', explode('.', $param[1]));
+                    $wrapStart = '';
+                    $wrapEnd = '';
+                    if (Str::contains($param[2], 'FROM_UNIXTIME')) {
+                        $result = explode('|', $param[2]);
+                        $wrapStart = "'{$result[0]}' . ";
+                        $param[2] = $result[1];
+                        $wrapEnd = " . '{$result[2]}'";
+                    }
                     $param[3] = $param[3] ?? '=';
-                    return $this->getValue( '(request()->' . $param[2] . " ? '{$param[1]} {$param[3]} ' . request()->{$param[2]} : '')", $outer);
+                    return $this->getValue( '(request()->' . $param[2] . " ? '{$param[1]} {$param[3]} ' . {$wrapStart}request()->{$param[2]}{$wrapEnd} : '')", $outer);
                 }
                 if ($param && $param[0] == 'IF_AND_REQUEST') {
                     $param[2] = $param[2] ?? implode('_', explode('.', $param[1]));
+                    $wrapStart = '';
+                    $wrapEnd = '';
+                    if (Str::contains($param[2], 'FROM_UNIXTIME')) {
+                        $result = explode('|', $param[2]);
+                        $wrapStart = "'{$result[0]}' . ";
+                        $param[2] = $result[1];
+                        $wrapEnd = " . '{$result[2]}'";
+                    }
                     $param[3] = $param[3] ?? '=';
-                    return $this->getValue( '(request()->' . $param[2] . " ? ' AND {$param[1]} {$param[3]} ' . request()->{$param[2]} : '')", $outer);
+                    return $this->getValue( '(request()->' . $param[2] . " ? ' AND {$param[1]} {$param[3]} ' . {$wrapStart}request()->{$param[2]}{$wrapEnd} : '')", $outer);
                 }
                 if ($param && $param[0] == 'CURRENT_USER') {
                     $relations = str_replace('.', '->', $param[1]);
