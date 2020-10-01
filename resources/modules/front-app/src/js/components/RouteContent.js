@@ -9,6 +9,7 @@ import Resource from "../../../../editor/src/js/classes/Resource";
 import appStore from "../store/store"
 import {changeCurrentModel} from "../store/current-model/actions";
 import {queryCache} from  "react-query";
+import connect from "react-redux/es/connect/connect";
 import {
   changeCurrentDataStorage,
   clearCurrentDataStorage,
@@ -17,6 +18,7 @@ import {
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {clearFormStorage} from "../store/forms-data-storage/actions";
 import dataStorageUpdater from '../classes/modules/DatastorageUpdater';
+import { setScrollTop } from "../store/scroll-position/actions";
 
 
 class RouteContent extends Component {
@@ -104,12 +106,20 @@ class RouteContent extends Component {
       appStore.dispatch(clearFormStorage());
     }
   }
+
+  scrollHandler = ({top}) => {
+    if (this.state.areas[3] && this.state.areas[3].templates.find(({ triggers }) => triggers.data.on_scroll)) {
+      this.props.setScrollTop(top);
+    }
+  };
+
   render(){
     if(! this.props.allowed){
       return<Redirect to={this.props.redirect || '/'}/>
     }
     return (
     <Scrollbars
+      onUpdate={this.scrollHandler}
       style={{zIndex: 99999}}
       autoHide
       autoHideTimeout={500}
@@ -130,4 +140,10 @@ class RouteContent extends Component {
   }
 }
 
-export default withRouter(RouteContent);
+const mapDispatchToProps = dispatch => {
+  return {
+    setScrollTop: topPosition => dispatch(setScrollTop(topPosition))
+  }
+};
+
+export default connect(null, mapDispatchToProps)(withRouter(RouteContent));
