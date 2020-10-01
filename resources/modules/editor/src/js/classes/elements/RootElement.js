@@ -793,7 +793,7 @@ class RootElement extends BaseElement {
       label: 'Background Image',
       default: { url: "" },
       rules: {
-        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-image: url({{URL}});"
+        ".altrp-btn{{STATE}}": "background-image: url({{URL}});"
       }
     });
 
@@ -840,7 +840,7 @@ class RootElement extends BaseElement {
       label: 'Background Position',
       default: 'top left',
       rules: {
-        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-position: {{VALUE}};"
+        ".altrp-btn{{STATE}}": "background-position: {{VALUE}};"
       }
     });
 
@@ -863,7 +863,7 @@ class RootElement extends BaseElement {
       label: 'Background Attachment',
       default: 'scroll',
       rules: {
-        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-attachment: {{VALUE}};"
+        ".altrp-btn{{STATE}}": "background-attachment: {{VALUE}};"
       }
     });
 
@@ -898,7 +898,7 @@ class RootElement extends BaseElement {
       label: 'Background Repeat',
       default: 'repeat',
       rules: {
-        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-repeat: {{VALUE}};"
+        ".altrp-btn{{STATE}}": "background-repeat: {{VALUE}};"
       }
     });
 
