@@ -1,4 +1,5 @@
 import FrontElement from "./FrontElement";
+import FrontElementsManager from "./FrontElementsManager";
 
 class FrontElementsFabric {
   /**
@@ -48,4 +49,4 @@ class FrontElementsFabric {
   }
 }
 window.frontElementsFabric = new FrontElementsFabric();
-export default FrontElementsFabric;
+export default window.frontElementsFabric;

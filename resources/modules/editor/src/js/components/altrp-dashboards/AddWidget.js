@@ -10,6 +10,7 @@ import WidgetDiagram from "../../../../../admin/src/components/dashboard/WidgetD
 import TypeField from "./fields/TypeField";
 import FilterField from "./fields/FilterField";
 import LegendField from "./fields/LegendField";
+import LegendPositionField from "./fields/LegendPositionField";
 import SourceField from "./fields/SourceField";
 import ColorSchemeField from "./fields/colorSchemeField";
 import VerticalTableField from "./fields/VerticalTableField";
@@ -21,6 +22,7 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
     options: {
       isVertical: false,
       legend: "",
+      legendPosition: "bottom",
     },
     filter: {},
   });
@@ -73,8 +75,6 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
     });
   };
 
-  console.log("ADDWIDGET settings :>> ", settings.filter);
-
   return (
     <Card>
       <Card.Header>
@@ -119,9 +119,10 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
           <ColorSchemeField widget={widget} setWidget={setWidget} />
 
           <LegendField widget={widget} setWidget={setWidget} />
+          {widget.options?.legend && <LegendPositionField widget={widget} setWidget={setWidget} />}
         </Form>
 
-        <div className="widget-placeholder">
+        <div className={`widget-placeholder altrp-chart ${widget.options?.legendPosition}`}>
           {widget.source && <WidgetDiagram widget={widget} width={360} height={360} />}
         </div>
       </Card.Body>

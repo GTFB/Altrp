@@ -3,10 +3,10 @@ import Card from "react-bootstrap/Card";
 import domtoimage from "dom-to-image";
 import ReactToPrint from "react-to-print";
 
-import GearFill from "react-bootstrap-icons/dist/icons/gear-fill";
-import TrashFill from "react-bootstrap-icons/dist/icons/trash-fill";
-import PrinterFill from "react-bootstrap-icons/dist/icons/printer-fill";
-import FileEarMark from "react-bootstrap-icons/dist/icons/file-earmark-arrow-down";
+import GearFill from "react-bootstrap-icons/dist/icons/sliders";
+import TrashFill from "react-bootstrap-icons/dist/icons/trash";
+import PrinterFill from "react-bootstrap-icons/dist/icons/printer";
+import FileEarMark from "react-bootstrap-icons/dist/icons/cloud-download";
 
 import EditWidget from "./EditWidget";
 import WidgetDiagram from "../../../../../admin/src/components/dashboard/WidgetDiagram";
@@ -50,7 +50,7 @@ function CardWidget({ widget, onDeleted, onEdited, settings }) {
           </button>
         </Card.Title>
       </Card.Header>
-      <Card.Body>
+      <Card.Body className={`altrp-chart ${widget.options?.legendPosition}`}>
         {isEdit ? (
           <EditWidget settings={settings} data={widget} onEdited={onEdited} setIsEdit={setIsEdit} />
         ) : (

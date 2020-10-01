@@ -85,6 +85,12 @@ class TemplateController extends Controller
 
         $options = [];
 
+        if( $request->get( 'template_type' ) ){
+          $templates = $templates->filter( function( Template $template) use ( $request ){
+            return $template->template_type === $request->get( 'template_type' );
+          } );
+        }
+
         foreach ($templates as $template) {
             $options[] = [
                 'value' => $template->id,

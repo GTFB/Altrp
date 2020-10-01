@@ -18,6 +18,7 @@ import MapWidget from "../../../../editor/src/js/components/widgets/MapWidget";
 import MapConstructorWidget from "../../../../editor/src/js/components/widgets/MapConstructorWidget";
 import DiagramWidget from "../../../../editor/src/js/components/widgets/DiagramWidget";
 import DashboardsWidget from "../../../../editor/src/js/components/widgets/DashboardsWidget";
+import PostsWidget from "../../../../editor/src/js/components/widgets/PostsWidget";
 
 export default class FrontElementsManager {
   constructor() {
@@ -32,6 +33,7 @@ export default class FrontElementsManager {
     this.components["text"] = TextWidget;
     this.components["image"] = ImageWidget;
     this.components["table"] = TableWidget;
+    this.components["posts"] = PostsWidget;
     this.components["nav"] = NavWidget;
     this.components["divider"] = DividerWidget;
     this.components["tabs"] = TabsWidget;

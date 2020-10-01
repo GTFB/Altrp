@@ -1,31 +1,110 @@
 import React, { useEffect, useState, useCallback } from "react";
+import Dropdown from "react-bootstrap/Dropdown";
+import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
+import sub from "date-fns/sub";
 import axios from "axios";
+import ru from "date-fns/locale/ru";
+
+import ThreeDotsVertical from "react-bootstrap-icons/dist/icons/three-dots-vertical";
 
 import AddWidget from "./AddWidget";
 import CardWidget from "./CardWidget";
 
+import "react-datepicker/dist/react-datepicker.css";
+
+registerLocale("ru", ru);
+setDefaultLocale("ru");
+
 const AltrpDashboards = ({ id, settings }) => {
+  const start = new Date().setFullYear(new Date().getFullYear() - 1);
+  const end = new Date().getTime();
   const [widgets, setWidgets] = useState([]);
   const [isShow, setIsShow] = useState(false);
+  const [startDate, setStartDate] = useState(start);
+  const [endDate, setEndDate] = useState(end);
 
-  const getWidgets = useCallback(
-    async (id) => {
+  /*
+   * Получить настройки дашборда для текущего пользователя
+   */
+  const getSettings = async (id) => {
+    try {
+      // Отправляем запрос
+      const req = await axios(`/ajax/dashboards/${id}/settings`);
+      // Если успешно
+      if (req.status === 200) {
+        console.log("req.data :>> ", req.data);
+        // Получаем настройки
+        return JSON.parse(req.data.settings);
+      } else {
+        return {};
+      }
+    } catch (error) {
+      return {};
+    }
+  };
+
+  /*
+   * Получаем настройки и виджеты
+   */
+  const getWidgets = async (id) => {
+    try {
+      const req = await axios(`/ajax/dashboards/${id}`);
+      if (req.status === 200) {
+        return req.data;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      return [];
+    }
+  };
+
+  /*
+   * Получаем данные
+   */
+  const getData = useCallback(
+    async (id, startDate, endDate) => {
       try {
-        const req = await axios(`/ajax/dashboards/${id}`);
-        if (req.status === 200) {
+        // Получаем виджеты
+        const myWidgets = await getWidgets(id);
+        // Если виджетов нет ничего не делаем
+        //console.log("myWidgets :>> ", myWidgets);
+        //if (myWidgets.length === 0) return;
+        // Если есть, получаем настройки
+        const filters = await getSettings(id);
+        //console.log("filters :>> ", filters);
+        // Если настройки есть
+        if (filters.hasOwnProperty("startDate") && filters.hasOwnProperty("endDate")) {
+          // Записываем вижеты в состояние с настройками
           setWidgets(
-            req.data.map((w) => {
+            myWidgets.map((w) => {
               return {
                 ...w,
                 options: { ...JSON.parse(w.options), animated: settings.animated },
-                filter: JSON.parse(w.filter),
+                filter: { ...JSON.parse(w.filter), ...filters },
               };
             })
           );
+          // Записываем даты в состояние
+          setStartDate(filters.startDate);
+          setEndDate(filters.endDate);
+        } else {
+          // Возвращаем виджеты с дефолтными настройками
+          setWidgets(
+            myWidgets.map((w) => {
+              return {
+                ...w,
+                options: { ...JSON.parse(w.options), animated: settings.animated },
+                filter: { ...JSON.parse(w.filter), startDate, endDate },
+              };
+            })
+          );
+          // И записываем настройки
+          axios.post(`/ajax/dashboards/${id}/settings`, { settings: { startDate, endDate } });
         }
       } catch (error) {}
     },
-    [id, settings.animated]
+    [id, settings.animated, startDate, endDate]
   );
 
   const handleAdd = (widget) => {
@@ -46,14 +125,78 @@ const AltrpDashboards = ({ id, settings }) => {
     });
   };
 
+  const handleChangeStartDate = (date) => {
+    setStartDate(date.getTime());
+    axios.post(`/ajax/dashboards/${id}/settings`, {
+      settings: { startDate: date.getTime(), endDate },
+    });
+  };
+
+  const handleChangeEndDate = (date) => {
+    setEndDate(date.getTime());
+    axios.post(`/ajax/dashboards/${id}/settings`, {
+      settings: { startDate, endDate: date.getTime() },
+    });
+  };
+
+  const handleWeek = () => {
+    const start = sub(endDate, { weeks: 1 }).getTime();
+    setStartDate(start);
+    axios.post(`/ajax/dashboards/${id}/settings`, { settings: { startDate: start, endDate } });
+  };
+
+  const handleMonth = () => {
+    const start = sub(endDate, { months: 1 }).getTime();
+    setStartDate(start);
+    axios.post(`/ajax/dashboards/${id}/settings`, { settings: { startDate: start, endDate } });
+  };
+
   useEffect(() => {
-    getWidgets(id);
-  }, [id]);
+    getData(id, startDate, endDate);
+  }, [id, startDate, endDate]);
 
   return (
     <div className="altrp-dashboard">
       <div className="altrp-dashboard__controls">
-        <button onClick={() => setIsShow(true)}>Добавить виджет</button>
+        <Dropdown>
+          <Dropdown.Toggle variant="light">
+            <ThreeDotsVertical color="#7a7a7b" />
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={() => setIsShow(true)}>Добавить виджет</Dropdown.Item>
+            <Dropdown.Divider />
+            <Dropdown.Item onClick={handleWeek}>Неделя</Dropdown.Item>
+            <Dropdown.Item onClick={handleMonth}>Месяц</Dropdown.Item>
+            <Dropdown.Divider />
+            <Dropdown.ItemText as="div">
+              <DatePicker
+                closeOnScroll={true}
+                className="form-control first"
+                popperClassName="datepicker-popper-mobile"
+                popperPlacement="bottom-end"
+                selected={startDate}
+                selectsStart
+                onChange={handleChangeStartDate}
+                dateFormat="dd.MM.yyyy"
+                showYearDropdown
+              />
+            </Dropdown.ItemText>
+            <Dropdown.ItemText as="div">
+              <DatePicker
+                closeOnScroll={true}
+                className="form-control last"
+                popperClassName="datepicker-popper-mobile"
+                popperPlacement="bottom-end"
+                selected={endDate}
+                minDate={startDate}
+                selectsEnd
+                onChange={handleChangeEndDate}
+                dateFormat="dd.MM.yyyy"
+                showYearDropdown
+              />
+            </Dropdown.ItemText>
+          </Dropdown.Menu>
+        </Dropdown>
       </div>
       <div className="altrp-dashboard__widgets">
         {isShow && (
