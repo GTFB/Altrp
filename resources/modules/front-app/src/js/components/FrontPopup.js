@@ -1,16 +1,18 @@
 import React, { Component } from "react";
+import connect from "react-redux/es/connect/connect";
 
 class FrontPopup extends Component {
   state = {
-    isVisible: false
+    isVisible: false,
+    isShownOnScroll: false
   }
 
   componentDidMount() {
     const { on_page_load, on_click } = this.props.template.triggers.data;
 
-    // if (on_page_load) {
-    //   setTimeout(() => this.setState({ isVisible: true }), on_page_load * 1000)
-    // }
+    if (on_page_load) {
+      setTimeout(() => this.setState({ isVisible: true }), on_page_load * 1000)
+    }
 
     if (on_click) {
       this.clickCounter = 0;
@@ -21,6 +23,15 @@ class FrontPopup extends Component {
           this.setState({ isVisible: true });
         }
       })
+    }
+  }
+
+  componentDidUpdate() {
+    const { on_scroll } = this.props.template.triggers.data;
+    const { isShownOnScroll } = this.state;
+
+    if (on_scroll && !isShownOnScroll && on_scroll.size <= this.props.topPosition * 100) {
+      this.setState({ isVisible: true, isShownOnScroll: true });
     }
   }
 
@@ -39,4 +50,10 @@ class FrontPopup extends Component {
   }
 }
 
-export default FrontPopup
+const mapStateToProps = state => {
+  return {
+    topPosition: state.scrollPosition.topPosition
+  }
+};
+
+export default connect(mapStateToProps)(FrontPopup);
