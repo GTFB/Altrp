@@ -1,11 +1,11 @@
 import { SET_SCROLL_TOP } from "./actions";
 
-const initialState = { topPosition: undefined }
+const initialState = {}
 
-export const scrollReduser = (state = initialState, { type, topPosition }) => {
+export const scrollReduser = (state = initialState, { type, payload }) => {
   switch (type) {
     case SET_SCROLL_TOP:
-      return { ...state, topPosition };
+      return payload;
 
     default:
       return state;

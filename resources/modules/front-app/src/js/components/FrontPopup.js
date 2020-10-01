@@ -41,6 +41,7 @@ class FrontPopup extends Component {
 
     let rootElement = window.frontElementsFabric.parseData(this.props.template.data, null, this.props.page, this.props.models);
     return isVisible ? <div className={classes.join(' ')}>
+      <button className="popup-close-button" onClick={() => this.setState({ isVisible: false })}>✖</button>
       {React.createElement(rootElement.componentClass,
         {
           element: rootElement,
@@ -52,7 +53,7 @@ class FrontPopup extends Component {
 
 const mapStateToProps = state => {
   return {
-    topPosition: state.scrollPosition.topPosition
+    topPosition: state.scrollPosition.top
   }
 };
 
