@@ -108,7 +108,7 @@ class RouteContent extends Component {
   }
 
   scrollHandler = ({top}) => {
-    if (this.state.areas[3] && this.state.areas[3].templates.find(({ triggers }) => triggers.data.on_scroll)) {
+    if (this.state.areas[3] && this.state.areas[3].templates.find(({ triggers }) => triggers?.data?.on_scroll)) {
       this.props.setScrollTop(top);
     }
   };

@@ -8,7 +8,7 @@ class FrontPopup extends Component {
   }
 
   componentDidMount() {
-    const { on_page_load, on_click } = this.props.template.triggers.data;
+    const { on_page_load, on_click } = _.get(this.props, 'template.triggers.data', {});
 
     if (on_page_load) {
       setTimeout(() => this.setState({ isVisible: true }), on_page_load * 1000)
