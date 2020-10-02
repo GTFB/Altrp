@@ -181,6 +181,10 @@ button {
   background-color: #fff;
   cursor: move;
   border-radius: 2px;
+  font-size: 0.8rem;
+  &__title {
+    margin-top: 8px;
+  }
 }
 
 .right-panel {

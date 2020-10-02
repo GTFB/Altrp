@@ -23,6 +23,7 @@ import ListWidget from "../../components/widgets/ListWidget";
 import AccordionWidget from "../../components/widgets/AccordionWidget";
 import CarouselWidget from "../../components/widgets/CarouselWidget";
 import MapWidget from "../../components/widgets/MapWidget";
+import MapConstructorWidget from "../../components/widgets/MapConstructorWidget";
 import DiagramWidget from "../../components/widgets/DiagramWidget";
 import DashboardsWidget from "../../components/widgets/DashboardsWidget";
 import Carousel from "../elements/Carousel";
@@ -33,9 +34,12 @@ import Tabs from "../elements/Tabs";
 import Divider from "../elements/Divider";
 import Nav from "../elements/Nav";
 import Table from "../elements/Table";
+import Posts from "../elements/Posts";
 import Map from "../elements/Map";
+import MapConstructor from "../elements/MapConstructor";
 import Diagram from "../elements/Diagram";
 import Dashboards from "../elements/Dashboards";
+import PostsWidget from "../../components/widgets/PostsWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -51,6 +55,7 @@ export default class ElementsManger {
     this.elements[Text.getName()] = Text;
     this.elements[Image.getName()] = Image;
     this.elements[Table.getName()] = Table;
+    this.elements[Posts.getName()] = Posts;
     this.elements[Nav.getName()] = Nav;
     this.elements[Divider.getName()] = Divider;
     this.elements[Tabs.getName()] = Tabs;
@@ -59,6 +64,7 @@ export default class ElementsManger {
     this.elements[Accordion.getName()] = Accordion;
     this.elements[Carousel.getName()] = Carousel;
     this.elements[Map.getName()] = Map;
+    this.elements[MapConstructor.getName()] = MapConstructor;
     this.elements[Diagram.getName()] = Diagram;
     this.elements[Dashboards.getName()] = Dashboards;
     //список компонентов
@@ -72,6 +78,7 @@ export default class ElementsManger {
     this.components[Text.getName()] = TextWidget;
     this.components[Image.getName()] = ImageWidget;
     this.components[Table.getName()] = TableWidget;
+    this.components[Posts.getName()] = PostsWidget;
     this.components[Nav.getName()] = NavWidget;
     this.components[Divider.getName()] = DividerWidget;
     this.components[Tabs.getName()] = TabsWidget;
@@ -80,6 +87,7 @@ export default class ElementsManger {
     this.components[Accordion.getName()] = AccordionWidget;
     this.components[Carousel.getName()] = CarouselWidget;
     this.components[Map.getName()] = MapWidget;
+    this.components[MapConstructor.getName()] = MapConstructorWidget;
     this.components[Diagram.getName()] = DiagramWidget;
     this.components[Dashboards.getName()] = DashboardsWidget;
   }

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Page
@@ -27,6 +28,7 @@ class Template extends Model
 
   protected $casts = [
     'template_type' => 'string',
+    'triggers' => 'array',
   ];
 
   protected $fillable =[
@@ -63,8 +65,15 @@ class Template extends Model
     foreach ( $imported_templates as $imported_template ) {
       $old_template = self::where( 'guid', $imported_template['guid'] )->first();
       if( $old_template ){
-        $old_template->data = $imported_template['data'];
-        $old_template->save();
+        if( date( $imported_template['updated_at'] ) > date( $old_template->updated_at ) ) {
+          $old_template->data = $imported_template['data'];
+          try {
+            $old_template->save();
+          } catch ( \Exception $e ) {
+            Log::error( $e->getMessage(), $imported_template ); //
+            continue;
+          }
+        }
         continue;
       }
       $new_template = new self( $imported_template );
@@ -76,7 +85,12 @@ class Template extends Model
         $area_name = 1;
       }
       $new_template->area = $area_name;
-      $new_template->save();
+      try {
+        $new_template->save();
+      } catch (\Exception $e){
+        Log::error( $e->getMessage(), $imported_template ); //
+        continue;
+      }
     }
   }
 
@@ -101,6 +115,18 @@ class Template extends Model
       return '';
     }
     return $this->area()->name;
+  }
+  /**
+   * условия для попапов
+   * @return array
+   */
+  public function getTriggersAttribute(){
+    $triggers = TemplateSetting::where( 'template_id', $this->id )
+      ->where( 'setting_name', 'triggers' )->first();
+    if( ! $triggers ){
+      return [];
+    }
+    return $triggers->toArray();
   }
 
   /**
@@ -367,14 +393,14 @@ class Template extends Model
       return ! $pages_template;
     } );
 
-
-
-
     $templates = $templates->merge( $_templates );
 
 
     $templates->each( function( Template $_template ){
       $_template->check_elements_conditions();
+      if( $_template->template_type === 'popup' ){
+        $_template->triggers = $_template->triggers;
+      }
     } );
     return $templates->toArray();
   }

@@ -2,8 +2,6 @@ import React, { Component, Suspense } from "react";
 
 const AltrpMap = React.lazy(() => import("../altrp-map/AltrpMap"));
 
-import "leaflet/dist/leaflet.css";
-import "leaflet-draw/dist/leaflet.draw.css";
 import "../../../sass/altrp-map.scss";
 class MapWidget extends Component {
   constructor(props) {

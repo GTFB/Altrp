@@ -70,11 +70,11 @@ const AltrpDashboards = ({ id, settings }) => {
         // Получаем виджеты
         const myWidgets = await getWidgets(id);
         // Если виджетов нет ничего не делаем
-        console.log("myWidgets :>> ", myWidgets);
+        //console.log("myWidgets :>> ", myWidgets);
         //if (myWidgets.length === 0) return;
         // Если есть, получаем настройки
         const filters = await getSettings(id);
-        console.log("filters :>> ", filters);
+        //console.log("filters :>> ", filters);
         // Если настройки есть
         if (filters.hasOwnProperty("startDate") && filters.hasOwnProperty("endDate")) {
           // Записываем вижеты в состояние с настройками

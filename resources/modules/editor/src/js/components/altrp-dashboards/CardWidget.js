@@ -50,7 +50,7 @@ function CardWidget({ widget, onDeleted, onEdited, settings }) {
           </button>
         </Card.Title>
       </Card.Header>
-      <Card.Body>
+      <Card.Body className={`altrp-chart ${widget.options?.legendPosition}`}>
         {isEdit ? (
           <EditWidget settings={settings} data={widget} onEdited={onEdited} setIsEdit={setIsEdit} />
         ) : (
