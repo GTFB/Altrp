@@ -1,7 +1,74 @@
 @import "~react-datepicker/dist/react-datepicker.css";
+@import "../../../../sass/smart-grid.scss";
+
 
 .altrp-dashboard {
   &__controls {
+    .nav{
+      @include row-flex();
+      margin: 0;
+
+      .justify-content-center{
+        justify-content:center;
+      }
+      .justify-content-between{
+        justify-content:space-between;
+      }
+      .justify-content-around{
+        justify-content:space-around;
+      }
+      .justify-content-start{
+        justify-content:start;
+      }
+      .justify-content-end{
+        justify-content:end;
+      }
+
+      &>.nav-item{
+        @include col();
+        margin: 0 5px;
+        margin-bottom: 5px;
+        cursor: pointer;
+
+        &.nav-button{
+          color: rgba(255, 255, 255, 1);
+          font-family: "PT Sans", sans-sefir;
+          font-size: 13px;
+          line-height: 1.5;
+          letter-spacing: 0.8px;
+          font-weight: 700;
+          text-shadow: 0px 0px 0px rgb(39, 30, 30);
+          padding: 7px 14px;
+          background-color: rgba(109, 108, 108, 1);
+          border-color: rgb(50,168,82);
+
+          &:hover{
+            color: rgba(68, 68, 68, 1);
+            background-color: rgba(255, 237, 0, 1);
+          }
+        }
+        &.nav-datepickers{
+          @include row-flex();
+          margin: 0 10px;
+          justify-content:space-around;
+          align-items: center;
+
+          &>.nav-datepicker{
+            @include col();
+            margin: 0;
+            &>.react-datepicker-wrapper>.react-datepicker__input-container>.form-control{
+              max-width: 100px;
+              border: 1px solid  rgba(109, 108, 108, 1);
+              padding: 8px;
+            }
+            &:last-child>.react-datepicker-wrapper>.react-datepicker__input-container>.last{
+              border-left: 0;
+            }
+          }
+        }
+      }
+    }
+
     .dropdown {
       &.show {
         .dropdown-menu {
@@ -35,6 +102,7 @@
         }
       }
     }
+
   }
   &__widgets {
     display: flex;

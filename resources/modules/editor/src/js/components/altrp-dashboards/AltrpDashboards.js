@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
+import Nav from "react-bootstrap/Nav";
 import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
 import sub from "date-fns/sub";
 import axios from "axios";
@@ -22,7 +23,8 @@ const AltrpDashboards = ({ id, settings }) => {
   const [isShow, setIsShow] = useState(false);
   const [startDate, setStartDate] = useState(start);
   const [endDate, setEndDate] = useState(end);
-
+  // const isMobile = screen.width<=480;
+  let navPosition = 'jusitfy-content-end';
   /*
    * Получить настройки дашборда для текущего пользователя
    */
@@ -151,6 +153,10 @@ const AltrpDashboards = ({ id, settings }) => {
     axios.post(`/ajax/dashboards/${id}/settings`, { settings: { startDate: start, endDate } });
   };
 
+  // const dropdownMenu = () => (
+
+  // );
+  
   useEffect(() => {
     getData(id, startDate, endDate);
   }, [id, startDate, endDate]);
@@ -158,45 +164,46 @@ const AltrpDashboards = ({ id, settings }) => {
   return (
     <div className="altrp-dashboard">
       <div className="altrp-dashboard__controls">
-        <Dropdown>
-          <Dropdown.Toggle variant="light">
-            <ThreeDotsVertical color="#7a7a7b" />
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            <Dropdown.Item onClick={() => setIsShow(true)}>Добавить виджет</Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item onClick={handleWeek}>Неделя</Dropdown.Item>
-            <Dropdown.Item onClick={handleMonth}>Месяц</Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.ItemText as="div">
-              <DatePicker
-                closeOnScroll={true}
-                className="form-control first"
-                popperClassName="datepicker-popper-mobile"
-                popperPlacement="bottom-end"
-                selected={startDate}
-                selectsStart
-                onChange={handleChangeStartDate}
-                dateFormat="dd.MM.yyyy"
-                showYearDropdown
-              />
-            </Dropdown.ItemText>
-            <Dropdown.ItemText as="div">
-              <DatePicker
-                closeOnScroll={true}
-                className="form-control last"
-                popperClassName="datepicker-popper-mobile"
-                popperPlacement="bottom-end"
-                selected={endDate}
-                minDate={startDate}
-                selectsEnd
-                onChange={handleChangeEndDate}
-                dateFormat="dd.MM.yyyy"
-                showYearDropdown
-              />
-            </Dropdown.ItemText>
-          </Dropdown.Menu>
-        </Dropdown>
+      <Nav className={navPosition}>
+        <Nav.Item className="nav-button" onClick={() => setIsShow(true)}>  
+          Добавить виджет
+        </Nav.Item>
+        <Nav.Item className="nav-datepickers">
+          <div className="nav-datepicker">
+            <DatePicker
+                 closeOnScroll={true}
+                 className="form-control first"
+                 popperClassName="datepicker-popper-mobile"
+                 popperPlacement="bottom-end"
+                 selected={startDate}
+                 selectsStart
+                 onChange={handleChangeStartDate}
+                 dateFormat="dd.MM.yyyy"
+                 showYearDropdown
+               />
+          </div>
+           <div className="nav-datepicker">
+             <DatePicker
+               closeOnScroll={true}
+               className="form-control last"
+               popperClassName="datepicker-popper-mobile"
+               popperPlacement="bottom-end"
+               selected={endDate}
+               minDate={startDate}
+               selectsEnd
+               onChange={handleChangeEndDate}
+               dateFormat="dd.MM.yyyy"
+               showYearDropdown
+             />
+           </div>
+        </Nav.Item>
+        <Nav.Item  className="nav-button" onClick={handleWeek}>
+          Неделя
+        </Nav.Item>
+        <Nav.Item  className="nav-button" onClick={handleMonth}>
+          Месяц
+        </Nav.Item>
+    </Nav>  
       </div>
       <div className="altrp-dashboard__widgets">
         {isShow && (

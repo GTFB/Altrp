@@ -1,6 +1,8 @@
 import BaseElement from "./BaseElement";
 import DashIcon from "../../../svgs/dashboard.svg";
-import { advancedTabControllers } from "../../decorators/register-controllers";
+import {
+  advancedTabControllers
+} from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXT,
   CONTROLLER_SWITCHER,
