@@ -29,6 +29,7 @@ _ide_helper.php
 /app/Providers/AltrpRepositoryServiceProvider.php
 /routes/AltrpRoutes.php
 /routes/AltrpApiRoutes.php
+/routes/AltrpCUstomRoutes.php
 /out
 
 #bundles
