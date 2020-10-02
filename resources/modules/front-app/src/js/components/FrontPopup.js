@@ -40,13 +40,14 @@ class FrontPopup extends Component {
     }
 
     if (on_exit) {
-      window.addEventListener('beforeunload', (event) => {
-        // Отмените событие, как указано в стандарте.
-        event.preventDefault();
-        this.setState({ isVisible: true })
-        // Хром требует установки возвратного значения.
-        event.returnValue = '';
-      });
+      // window.addEventListener('beforeunload', (event) => {
+      //   // Отмените событие, как указано в стандарте.
+      //   event.preventDefault();
+      //   this.setState({ isVisible: true })
+      //   // Хром требует установки возвратного значения.
+      //   event.returnValue = '';
+      // });
+      document.addEventListener('mouseleave', () => this.setState({ isVisible: true }))
     }    
   }
 
