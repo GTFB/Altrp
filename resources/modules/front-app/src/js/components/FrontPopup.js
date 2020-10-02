@@ -8,7 +8,7 @@ class FrontPopup extends Component {
   }
 
   componentDidMount() {
-    const { on_page_load, on_click, inactivity } = _.get(this.props, 'template.triggers.data', {});
+    const { on_page_load, on_click, inactivity, on_exit } = _.get(this.props, 'template.triggers.data', {});
 
     if (on_page_load || on_page_load === 0) {
       setTimeout(() => this.setState({ isVisible: true }), on_page_load * 1000)
@@ -38,6 +38,16 @@ class FrontPopup extends Component {
         document.addEventListener(event, this.resetTimer, true);
       });
     }
+
+    if (on_exit) {
+      window.addEventListener('beforeunload', (event) => {
+        // Отмените событие, как указано в стандарте.
+        event.preventDefault();
+        this.setState({ isVisible: true })
+        // Хром требует установки возвратного значения.
+        event.returnValue = '';
+      });
+    }    
   }
 
   componentDidUpdate(prevProps) {
@@ -51,6 +61,7 @@ class FrontPopup extends Component {
     if (this.resetTimer && this.props.topPosition !== prevProps.topPosition) {
       this.resetTimer();
     }
+
   }
 
   render() {
