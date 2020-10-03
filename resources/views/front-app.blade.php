@@ -5,13 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <script>
+    /**
+     * Функция для вывода ошибок в HTML
+     * @param msg
+     * @param url
+     * @param lno
+     * @return {boolean}
+     */
     function myErrHandler(msg, url, lno)
     {
       document.getElementById('front-app').textContent = `${msg} ${url} ${lno}`;
       return true;
     }
 
-    window.onerror = myErrHandler;
+    // window.onerror = myErrHandler;
   </script>
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
