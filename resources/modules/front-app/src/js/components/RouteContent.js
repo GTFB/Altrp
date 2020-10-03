@@ -17,9 +17,8 @@ import {
 } from "../store/current-data-storage/actions";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {clearFormStorage} from "../store/forms-data-storage/actions";
+import { setScrollValue } from "../store/scroll-position/actions";
 import dataStorageUpdater from '../classes/modules/DatastorageUpdater';
-import { setScrollTop } from "../store/scroll-position/actions";
-
 
 class RouteContent extends Component {
   constructor(props){
@@ -107,19 +106,13 @@ class RouteContent extends Component {
     }
   }
 
-  scrollHandler = ({top}) => {
-    if (this.state.areas[3] && this.state.areas[3].templates.find(({ triggers }) => triggers?.data?.on_scroll)) {
-      this.props.setScrollTop(top);
-    }
-  };
-
   render(){
     if(! this.props.allowed){
       return<Redirect to={this.props.redirect || '/'}/>
     }
     return (
     <Scrollbars
-      onUpdate={this.scrollHandler}
+      onUpdate={this.props.setScrollValue}
       style={{zIndex: 99999}}
       autoHide
       autoHideTimeout={500}
@@ -142,7 +135,7 @@ class RouteContent extends Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setScrollTop: topPosition => dispatch(setScrollTop(topPosition))
+    setScrollValue: topPosition => dispatch(setScrollValue(topPosition))
   }
 };
 

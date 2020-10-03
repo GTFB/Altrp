@@ -126,6 +126,10 @@ function subscribeToModels(id){
  */
 function getContent(settingName) {
   /**
+   * @member {FrontElement} element
+   */
+  const element = this.props.element;
+  /**
    * @property this.props.element
    * @type {FrontElement}
    */
@@ -133,19 +137,24 @@ function getContent(settingName) {
 
   let content = this.props.element.getSettings(settingName);
   if(content && content.dynamic && this.props.currentModel.getProperty('altrpModelUpdated')){
-
-    content = this.props.currentModel ? this.props.currentModel.getProperty(content.fieldName) : ' ';
+    // console.log(element.getRoot());
+    let model = element.hasCardModel() ? element.getCardModel() : this.props.currentModel;
+    // console.log(model);
+    content = model ? model.getProperty(content.fieldName) : ' ';
   }
   if((! isEditor())){//todo: сделать подгрузку данных и в редакторе
+    let model = element.hasCardModel() ? element.getCardModel() : this.props.currentModel;
     let paths = _.isString(content) ? content.match(/(?<={{)([\s\S]+?)(?=}})/g) : null;
     if(_.isArray(paths)){
       paths.forEach(path => {
-        let value = getDataByPath(path, '');
+        let value = getDataByPath(path, '', model);
         content = content.replace(new RegExp(`{{${path}}}`, 'g'), value)
       });
     }
   }
-
+  if(content && content.dynamic){
+    content = '';
+  }
   return content;
 }
 /**

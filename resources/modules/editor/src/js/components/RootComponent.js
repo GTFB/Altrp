@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import FrontElement from "../../../../front-app/src/js/classes/FrontElement";
 
 class RootComponent extends Component {
   constructor(props) {

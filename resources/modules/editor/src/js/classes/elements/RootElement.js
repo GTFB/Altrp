@@ -415,14 +415,6 @@ class RootElement extends BaseElement {
     this.addControl('heading_h1_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'H1 Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 36,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
       rules: {
         'h1.altrp-heading{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-sefir;',
@@ -440,14 +432,7 @@ class RootElement extends BaseElement {
     this.addControl('heading_h2_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'H2 Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 36,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
+
       rules: {
         'h2.altrp-heading{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-sefir;',
@@ -464,14 +449,7 @@ class RootElement extends BaseElement {
     this.addControl('heading_h3_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'H3 Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 36,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
+
       rules: {
         'h3.altrp-heading{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-sefir;',
@@ -488,14 +466,7 @@ class RootElement extends BaseElement {
     this.addControl('heading_h4_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'H4 Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 36,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
+
       rules: {
         'h4.altrp-heading{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-sefir;',
@@ -512,14 +483,7 @@ class RootElement extends BaseElement {
     this.addControl('heading_h5_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'H5 Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 36,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
+
       rules: {
         'h5.altrp-heading{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-sefir;',
@@ -536,14 +500,7 @@ class RootElement extends BaseElement {
     this.addControl('heading_h6_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'H6 Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 36,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
+
       rules: {
         'h6.altrp-heading{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-sefir;',
@@ -560,14 +517,7 @@ class RootElement extends BaseElement {
     this.addControl('heading_p_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'P Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 36,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
+
       rules: {
         'p.altrp-heading{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-sefir;',
@@ -793,7 +743,7 @@ class RootElement extends BaseElement {
       label: 'Background Image',
       default: { url: "" },
       rules: {
-        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-image: url({{URL}});"
+        ".altrp-btn{{STATE}}": "background-image: url({{URL}});"
       }
     });
 
@@ -840,7 +790,7 @@ class RootElement extends BaseElement {
       label: 'Background Position',
       default: 'top left',
       rules: {
-        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-position: {{VALUE}};"
+        ".altrp-btn{{STATE}}": "background-position: {{VALUE}};"
       }
     });
 
@@ -863,7 +813,7 @@ class RootElement extends BaseElement {
       label: 'Background Attachment',
       default: 'scroll',
       rules: {
-        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-attachment: {{VALUE}};"
+        ".altrp-btn{{STATE}}": "background-attachment: {{VALUE}};"
       }
     });
 
@@ -898,7 +848,7 @@ class RootElement extends BaseElement {
       label: 'Background Repeat',
       default: 'repeat',
       rules: {
-        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-repeat: {{VALUE}};"
+        ".altrp-btn{{STATE}}": "background-repeat: {{VALUE}};"
       }
     });
 
