@@ -113,6 +113,7 @@ class DataStorageUpdater extends AltrpModel{
    */
   async onFormsUpdate(){
     let dataSources = this.getProperty('dataSourcesFormsDependent', []);
+    dataSources = _.sortBy(dataSources, data_source => data_source.priority);
     let formsStore = appStore.getState().formsStore;
     for(let ds of dataSources) {
       let {dataSource, params: oldParams, updating} = ds;

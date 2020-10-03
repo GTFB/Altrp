@@ -47,6 +47,32 @@ class FrontElementsFabric {
     element.update();
     return element;
   }
+
+  /**
+   * Правильное клонирование элемента
+   * @params {FrontElement} element
+   * @return {FrontElement}
+   */
+  cloneElement(element){
+    let clonedElement = _.cloneDeep(element);
+    this.updateParents(clonedElement);
+    return clonedElement
+  }
+
+  /**
+   * Обновляет ссылку на родителя у элементов
+   * @params {FrontElement} element
+   */
+
+  updateParents(element){
+    if(_.isArray(element.children)){
+      element.children.forEach(c=>{
+        c.setParent(element);
+        this.updateParents(c);
+        // console.log(c);
+      });
+    }
+  }
 }
 window.frontElementsFabric = new FrontElementsFabric();
 export default window.frontElementsFabric;

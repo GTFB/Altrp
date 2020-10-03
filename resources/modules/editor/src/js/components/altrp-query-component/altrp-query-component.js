@@ -18,7 +18,7 @@ const AltrpQueryComponent = (props)=>{
     children = [children];
   }
   if(! _.isEmpty(data)){
-    return children.map(child => React.cloneElement(child, {...props, key:child.key}));
+
   }
   return children.map(child => React.cloneElement(child, {...props, data, key:child.key}));
 

@@ -41,19 +41,18 @@ class AltrpPosts extends React.Component {
    * @param {integer} idx - индекс в массиве записей
    */
   renderPost(idx){
-    let post = this.state.posts[idx];
+    let post = _.cloneDeep(this.state.posts[idx]);
     let PostContentComponent = post.component || <h2>{post.title || post.id || ''}</h2>;
     if(this.state.simpleTemplate){
-      PostContentComponent = React.createElement(this.state.simpleTemplate.componentClass,
+      let template = frontElementsFabric.cloneElement(this.state.simpleTemplate);
+      template.setCardModel(new AltrpModel(post));
+      PostContentComponent = React.createElement(template.componentClass,
         {
-          element: this.state.simpleTemplate,
-          isCard: true,
-          cardModel: new AltrpModel(post),
-          children: this.state.simpleTemplate.children
+          element: template,
+          children: template.children
         });
-
     }
-    return <div className="altrp-post" key={post.id}>{PostContentComponent}</div>
+    return <div className="altrp-post" key={post.id + Math.random()}>{PostContentComponent}</div>
   }
 
   render() {

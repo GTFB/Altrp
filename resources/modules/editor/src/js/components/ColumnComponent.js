@@ -24,7 +24,7 @@ class ColumnComponent extends Component {
         id:this.state.settings.position_style_css_id || ""
       },
       this.state.children.map(
-        section => <ElementWrapper key={section.getId()} component={section.componentClass} element={section}/>
+        widget => <ElementWrapper key={widget.getId()} component={widget.componentClass} element={widget}/>
       )
     );
   }

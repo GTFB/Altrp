@@ -277,10 +277,14 @@ function _conditionChecker(c, model){
  * Получить данные
  * @param {string} path
  * @param {*} _default
+ * @param {AltrpModel} context
  * @return {string}
  */
-export function getDataByPath(path, _default = null){
-  const {currentModel, currentDataStorage} = appStore.getState();
+export function getDataByPath(path, _default = null, context = null){
+  let {currentModel, currentDataStorage} = appStore.getState();
+  if(context){
+    currentModel = context;
+  }
   const urlParams = window.currentRouterMatch instanceof AltrpModel ? window.currentRouterMatch.getProperty('params') : {};
   let value = _default;
   if(! _.isString(path)){

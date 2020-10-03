@@ -1,5 +1,6 @@
 import CONSTANTS from "../../../../editor/src/js/consts";
 import {getMediaQueryByName} from "../helpers";
+import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 
 class FrontElement {
 
@@ -468,6 +469,50 @@ class FrontElement {
       classStorage += `${element[1]} `;
     });
     return classStorage;
+  }
+
+  /**
+   * Модель для карточки внутри виджетов
+   * @param {AltrpModel} model
+   */
+  setCardModel(model) {
+    let rootElement = this.getRoot();
+    if(! model){
+      rootElement.cardModel = null;
+      rootElement.isCard = false;
+      return;
+    }
+    if(! model instanceof AltrpModel){
+      model = new AltrpModel(model);
+    }
+    rootElement.cardModel = model;
+    rootElement.isCard = true;
+    // console.log(rootElement);
+  }
+
+  /**
+   * Есть ли данные модели для карточки
+   * @return {boolean}
+   */
+  hasCardModel(){
+    let rootElement = this.getRoot();
+    return ! ! (rootElement.cardModel && rootElement.isCard)
+  }
+  /**
+   * Получить данные модели для карточки
+   * @return {AltrpModel}
+   */
+  getCardModel(){
+    let model;
+    if(this.getType() === 'root-element'){
+      model = this.cardModel;
+    } else {
+      model = this.getRoot().cardModel;
+    }
+    if(! model instanceof AltrpModel){
+      model = new AltrpModel(model);
+    }
+    return model;
   }
 }
 

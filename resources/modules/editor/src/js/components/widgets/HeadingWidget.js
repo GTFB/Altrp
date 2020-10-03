@@ -15,6 +15,9 @@ class HeadingWidget extends Component {
     }
   }
   render() {
+    let modelData = this.props.element.hasCardModel()
+        ? this.props.element.getCardModel().getData()
+        : this.props.currentModel.getData();
     const  background_image = this.props.element.getSettings('background_image', {});
     let text = this.getContent('text');
     let link;
@@ -31,8 +34,9 @@ class HeadingWidget extends Component {
       if ((this.state.settings.link_link.tag === 'Link') && ! isEditor()) {
         tag = Link;
         linkProps.to = this.state.settings.link_link.url.replace(':id', this.getModelId() || '');
-        if(_.isObject(this.state.modelData)){
-          linkProps.to = parseURLTemplate(this.state.settings.link_link.url, this.state.modelData);
+        console.log(modelData);
+        if(_.isObject(modelData)){
+          linkProps.to = parseURLTemplate(this.state.settings.link_link.url, modelData);
         }
       }
       if(isEditor()){

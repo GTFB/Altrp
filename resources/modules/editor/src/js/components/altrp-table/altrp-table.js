@@ -101,11 +101,11 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
   }
   let columns = [];
   columns = settingsToColumns(settings);
+  if(_.isObject(_data) && ! _.isArray(_data)){
+    _data = [_data];
+  }
   if(! _data.length){
     _data = data;
-  }
-  if(! _.isArray(_data)){
-    _data = [_data];
   }
   /**
    * обновление данных при изменении ячейки
