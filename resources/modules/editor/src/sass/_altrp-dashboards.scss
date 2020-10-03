@@ -51,7 +51,7 @@
           @include row-flex();
           margin: 0 10px;
           justify-content:space-around;
-          align-items: center;
+          // align-items: center;
 
           &>.nav-datepicker{
             @include col();
