@@ -14,4 +14,5 @@ class GlobalStyle extends Model
   protected $casts = [
     'data' => 'array',
   ];
+  protected $table = 'altrp_global_styles';
 }

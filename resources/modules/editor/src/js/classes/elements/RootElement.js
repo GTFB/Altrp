@@ -24,6 +24,7 @@ import {
   CONTROLLER_MEDIA, CONTROLLER_REPEATER,
 } from "../modules/ControllersManager";
   import Repeater from "../Repeater";
+  import SaveImportModule from "../modules/SaveImportModule";
 
 class RootElement extends BaseElement {
   constructor() {
@@ -921,6 +922,14 @@ class RootElement extends BaseElement {
     this.addControl('settings_choose_button', {
       type: CONTROLLER_BUTTON,
       buttonText: 'Import',
+      onClick: async () => {
+        if(saveImportModule){
+          let res = await saveImportModule.importGlobalSettings();
+          if(! res.success){
+            alert(res.message);
+          }
+        }
+      },
     });
 
     this.addControl('settings_heading', {
@@ -930,12 +939,22 @@ class RootElement extends BaseElement {
 
     this.addControl('settings_save_title', {
       type: CONTROLLER_TEXT,
+      dynamic: false,
+      responsive: false,
       label: 'Save as ... (Global Style Title)',
     });
 
     this.addControl('settings_save_button', {
       type: CONTROLLER_BUTTON,
-      label: 'Save',
+      buttonText: 'Save',
+      onClick: async () => {
+        if(saveImportModule){
+          let res = await saveImportModule.saveRootElementSettings();
+          if(! res.success){
+            alert(res.message);
+          }
+        }
+      },
     });
 
     this.endControlSection();

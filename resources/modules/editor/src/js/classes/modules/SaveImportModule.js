@@ -96,9 +96,15 @@ class SaveImportModule extends BaseModule{
         message: 'Global Style not Selected'
       };
     }
-    const data = this.globalStorageResource.get(globalSettingId);
-    _.set(data, 'choose_page', oldChoosePage);
-    rootElement.setSettings(data);
+    const globalStyle = (await this.globalStorageResource.get(globalSettingId)).data;
+
+    _.set(globalStyle.data, 'choose_page', oldChoosePage);
+    rootElement.setSettings(globalStyle.data);
+    console.log(globalStyle.data);
+    rootElement.updateStyles();
+    return {
+      success: true,
+    };
   }
 }
 

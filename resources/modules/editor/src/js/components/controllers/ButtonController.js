@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import DynamicIcon from '../../../svgs/dynamic.svg'
-import controllerDecorate from "../../decorators/controller";
 
 class ButtonController extends Component {
   constructor(props) {
@@ -11,7 +9,9 @@ class ButtonController extends Component {
   }
 
   onClick = () => {
-    console.log(this.props);
+    if(_.isFunction(this.props.onClick)) {
+      this.props.onClick();
+    }
   };
 
   render() {

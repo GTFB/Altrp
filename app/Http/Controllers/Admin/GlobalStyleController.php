@@ -17,15 +17,21 @@ class GlobalStyleController extends Controller
   {
     return response()->json( ['data' => GlobalStyle::all()->toArray()], 200, [], JSON_UNESCAPED_UNICODE);
   }
+
   /**
    * Display a listing of the resource.
    *
+   * @param Request $request
    * @return \Illuminate\Http\Response
    */
-  public function options()
+  public function options( Request $request )
   {
-    $globalStyles = GlobalStyle::all();
-    $globalStyles->map( function( GlobalStyle $globalStyle ){
+    if( $request->get( 's' ) ){
+      $globalStyles = GlobalStyle::where( 'title', 'LIKE', '%' . $request->get( 's' ) . '%' )->get();
+    } else{
+      $globalStyles = GlobalStyle::all();
+    }
+    $globalStyles = $globalStyles->map( function( GlobalStyle $globalStyle ){
       return [
         'label' => $globalStyle->title,
         'value' => $globalStyle->id,
@@ -53,12 +59,17 @@ class GlobalStyleController extends Controller
   public function store( Request $request )
   {
     //
-    $globalStyle = new GlobalStyle( $request->all() );
-    $globalStyle->user_id = auth()->user()->id;
-    if( ! $globalStyle->save() ){
-      return response()->json( ['message' => 'Global Style not Saved'], 500, [], JSON_UNESCAPED_UNICODE );
+    if( $globalStyle = GlobalStyle::where( 'title', $request->get( 'title' ) )->first() ){
+      $globalStyle->fill( $request->all() );
+      $globalStyle->user_id = auth()->user()->id;
+    } else {
+      $globalStyle = new GlobalStyle( $request->all() );
+      $globalStyle->user_id = auth()->user()->id;
     }
-    return response()->json( $globalStyle->toArray(), 200, [], JSON_UNESCAPED_UNICODE );
+    if( ! $globalStyle->save() ){
+      return response()->json( ['message' => 'Global Style not Saved', 'success' => false,], 500, [], JSON_UNESCAPED_UNICODE );
+    }
+    return response()->json( ['data'=>$globalStyle->toArray(), 'success' => true,], 200, [], JSON_UNESCAPED_UNICODE );
   }
 
   /**
