@@ -1,0 +1,94 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\GlobalStyle;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+class GlobalStyleController extends Controller
+{
+  /**
+   * Display a listing of the resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function index()
+  {
+    //
+  }
+
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function create()
+  {
+    //
+  }
+
+  /**
+   * Store a newly created resource in storage.
+   *
+   * @param  \Illuminate\Http\Request $request
+   * @return \Illuminate\Http\Response
+   */
+  public function store( Request $request )
+  {
+    //
+    $globalStyle = new GlobalStyle( $request->all() );
+    $globalStyle->user_id = auth()->user()->id;
+    if( ! $globalStyle->save() ){
+      return response()->json( ['message' => 'Global Style not Saved'], 500, [], JSON_UNESCAPED_UNICODE );
+    }
+    return response()->json( $globalStyle->toArray(), 200, [], JSON_UNESCAPED_UNICODE );
+  }
+
+  /**
+   * Display the specified resource.
+   *
+   * @param  \App\GlobalStyle $globalStyle
+   * @return \Illuminate\Http\Response
+   */
+  public function show( GlobalStyle $globalStyle )
+  {
+    //
+    return response()->json( ['data' => $globalStyle->toArray()], 200, [], JSON_UNESCAPED_UNICODE );
+
+  }
+
+  /**
+   * Show the form for editing the specified resource.
+   *
+   * @param  \App\GlobalStyle $globalStyle
+   * @return \Illuminate\Http\Response
+   */
+  public function edit( GlobalStyle $globalStyle )
+  {
+    //
+  }
+
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  \Illuminate\Http\Request $request
+   * @param  \App\GlobalStyle $globalStyle
+   * @return \Illuminate\Http\Response
+   */
+  public function update( Request $request, GlobalStyle $globalStyle )
+  {
+    //
+  }
+
+  /**
+   * Remove the specified resource from storage.
+   *
+   * @param  \App\GlobalStyle $globalStyle
+   * @return \Illuminate\Http\Response
+   */
+  public function destroy( GlobalStyle $globalStyle )
+  {
+    //
+  }
+}
