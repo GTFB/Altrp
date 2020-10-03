@@ -6,49 +6,28 @@ import controllerDecorate from "../../decorators/controller";
 class ButtonController extends Component {
   constructor(props) {
     super(props);
-    controllerDecorate(this);
-    this.changeValue = this.changeValue.bind(this);
-    let value = this.getSettings(this.props.controlId);
-    if (value === null && this.props.default) {
-      value = this.props.default;
-    }
-    value = value || false;
-    this.state = {
-      value,
-      show: true
-    };
+    this.state = {};
+    // controllerDecorate(this);
   }
 
-  changeValue(e) {
-    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
-    this._changeValue({
-      ...value,
-      button: e.currentTarget.dataset.value,
-    });
-    let noActive = [];
-    let buttonList = document.getElementById("buttonList");
-    for (let i = 0; i < buttonList.children.length; i++) {
-      if (i != e.currentTarget.dataset.key) {
-        buttonList.children[i].classList.remove(value.activeClass);
-      }
-    }
-    e.currentTarget.classList.add(value.activeClass);
-  }
+  onClick = () => {
+    console.log(this.props);
+  };
 
   render() {
 
     if (this.state.show === false) {
       return '';
     }
-    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
-
-    let buttons = this.props.buttons || [];
+    const {buttonText = ''} = this.props;
     return <div className="controller-container controller-container_button">
+      <div className="controller-container__label textcontroller-responsive">
+        {this.props.label || ''}
+      </div>
       <div className="control-group control-button-container" id="buttonList">
-        {buttons.map((buttons) => {
-          return <button key={buttons.key} data-value={buttons.value} id={"activeButton" + buttons.key} data-key={buttons.key} onClick={this.changeValue} className={value.button === buttons.value ? value.activeClass : ""} style={buttons.styles}>{buttons.label}</button>
-        })
-        }
+       <button onClick={this.onClick}
+               className='btn btn_success' >{buttonText}</button>
+
       </div>
     </div>
   }

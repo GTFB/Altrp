@@ -15,7 +15,23 @@ class GlobalStyleController extends Controller
    */
   public function index()
   {
-    //
+    return response()->json( ['data' => GlobalStyle::all()->toArray()], 200, [], JSON_UNESCAPED_UNICODE);
+  }
+  /**
+   * Display a listing of the resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function options()
+  {
+    $globalStyles = GlobalStyle::all();
+    $globalStyles->map( function( GlobalStyle $globalStyle ){
+      return [
+        'label' => $globalStyle->title,
+        'value' => $globalStyle->id,
+      ];
+    } );
+    return response()->json( ['data' => $globalStyles->toArray()], 200, [], JSON_UNESCAPED_UNICODE);
   }
 
   /**
@@ -86,9 +102,18 @@ class GlobalStyleController extends Controller
    *
    * @param  \App\GlobalStyle $globalStyle
    * @return \Illuminate\Http\Response
+   * @throws \Exception
    */
   public function destroy( GlobalStyle $globalStyle )
   {
     //
+    try {
+      if ( ! $globalStyle->delete() ) {
+        return response()->json( [ 'message' => 'Global Style not Saved' ], 500, [], JSON_UNESCAPED_UNICODE );
+      }
+    } catch (\Exception $e){
+      response()->json( [ 'message' => $e->getMessage() ], 500, [], JSON_UNESCAPED_UNICODE );
+    }
+    return response()->json( $globalStyle->toArray(), 200, [], JSON_UNESCAPED_UNICODE );
   }
 }

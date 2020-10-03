@@ -193,7 +193,7 @@ export function parseParamsFromString(string, context = {}){
     left = left.trim();
     right = right.trim();
     if(right.match(/(?<={{)([\s\S]+?)(?=}})/g)){
-      if(context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0])){
+      if(context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0])){//todo ошибка в сафари
         params[left] = context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0]) || '';
       } else {
         params[left] = urlParams[right] ? urlParams[right] : '';
