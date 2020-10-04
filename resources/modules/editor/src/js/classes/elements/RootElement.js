@@ -721,22 +721,22 @@ class RootElement extends BaseElement {
       },
     });
 
-    this.addControl('button_gradient', {
-      type: CONTROLLER_GRADIENT,
-      label: 'Gradient',
-      default: {
-        isWithGradient: false,
-        firstColor: "rgba(97,206,112,1)",
-        firstPoint: '0',
-        secondColor: "rgba(242,41,91,1)",
-        secondPoint: "100",
-        angle: "0",
-        value: ""
-      },
-      rules: {
-        ".altrp-btn{{STATE}}": "background-image: {{VALUE}}"
-      }
-    });
+    // this.addControl('button_gradient', {
+    //   type: CONTROLLER_GRADIENT,
+    //   label: 'Gradient',
+    //   default: {
+    //     isWithGradient: false,
+    //     firstColor: "rgba(97,206,112,1)",
+    //     firstPoint: '0',
+    //     secondColor: "rgba(242,41,91,1)",
+    //     secondPoint: "100",
+    //     angle: "0",
+    //     value: ""
+    //   },
+    //   rules: {
+    //     ".altrp-btn{{STATE}}": "background-image: {{VALUE}}"
+    //   }
+    // });
 
     this.addControl('button_background_image', {
       type: CONTROLLER_MEDIA,
@@ -870,7 +870,7 @@ class RootElement extends BaseElement {
       max: 1000,
       min: 0,
       rules: {
-        ".altrp-background-image{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
+        ".altrp-btn{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
       }
     });
 
@@ -897,7 +897,7 @@ class RootElement extends BaseElement {
       label: 'Background Size',
       default: 'unset',
       rules: {
-        ".altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
+        ".altrp-btn{{STATE}}": "background-size: {{VALUE}};"
       }
     });
     
