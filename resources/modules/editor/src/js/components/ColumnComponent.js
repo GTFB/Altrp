@@ -17,14 +17,18 @@ class ColumnComponent extends Component {
   
   render(){
     const background_image = this.props.element.getSettings('background_image', {});
-    
+    let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
+
     return React.createElement(this.state.settings.layout_html_tag || "div",
       {
         className: "altrp-column " + (this.state.settings.position_style_css_classes || "") + (background_image.url ? ' altrp-background-image' : ''),
         id:this.state.settings.position_style_css_id || ""
       },
       this.state.children.map(
-        widget => <ElementWrapper key={widget.getId()} component={widget.componentClass} element={widget}/>
+        widget => <ElementWrapper key={widget.getId()}
+                                  ElementWrapper={ElementWrapper}
+                                  component={widget.componentClass}
+                                  element={widget}/>
       )
     );
   }

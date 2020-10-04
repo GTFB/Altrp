@@ -185,6 +185,7 @@ class ElementWrapper extends Component {
     return <div className={classes} style={styles}>
       {
         React.createElement(this.props.component, {
+          ElementWrapper: this.props.ElementWrapper,
           element: this.props.element,
           children: this.props.element.getChildren(),
           match: this.props.match,
