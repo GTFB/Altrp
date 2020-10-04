@@ -1006,7 +1006,6 @@ class RootElement extends BaseElement {
       }
     });
 
-
     this.addControl('padding_list_text_default', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Text Padding',
@@ -1082,6 +1081,201 @@ class RootElement extends BaseElement {
       ],
       rules: {
         ".altrp-list-li-link{{STATE}}": "text-decoration: {{VALUE}};"
+      }
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('text_defaults', {
+      tab: TAB_STYLE,
+      label: 'Text Defaults',
+    });
+
+    this.addControl("text_style_position_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        ".altrp-text{{STATE}}": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+
+    this.addControl('text_style_position_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      default: {
+        top: 5,
+        right: 0,
+        bottom: 5,
+        left: 0,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-text{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl("text_style_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        ".altrp-text{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("text_style_background_opacity", {
+      type: CONTROLLER_SLIDER,
+      label: "Opacity",
+      default: {
+        size: 1
+      },
+      max: 1,
+      min: 0,
+      step: 0.01,
+      rules: {
+        ".altrp-text{{STATE}}": "opacity: {{SIZE}}"
+      }
+    });
+
+    this.addControl('text_style_font_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '.altrp-text{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
+    );
+
+    this.addControl("text_style_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "Color",
+      default: {
+        color: "rgb(0, 0, 1)",
+        colorPickedHex: "#000000"
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        ".altrp-text{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("text_style_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Border type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        ".altrp-text{{STATE}}": "border-style: {{VALUE}};"
+      }
+    });
+
+    this.addControl("text_style_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        ".altrp-text{{STATE}}":
+          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      }
+    });
+
+    this.addControl("text_style_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Border color",
+      default: {
+        color: "rgb(50,168,82)",
+        colorPickedHex: "#32a852"
+      },
+      rules: {
+        ".altrp-text{{STATE}}": "border-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("text_style_border_radius", {
+      type: CONTROLLER_SLIDER,
+      label: 'Border radius',
+      default: {
+        size: 0,
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        ".altrp-text{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
       }
     });
 
