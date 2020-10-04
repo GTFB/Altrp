@@ -900,9 +900,195 @@ class RootElement extends BaseElement {
         ".altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
       }
     });
+    
+    this.endControlSection();
+
+    this.startControlSection('list_defaults', {
+      tab: TAB_STYLE,
+      label: 'List Defaults',
+    });
+
+    this.addControl('list_default_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-list{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('list_default_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-list{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('alignment_list_default', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment',
+      default: 'left',
+      options: [
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        }
+      ],
+      rules: {
+        '.altrp-list-ul-inline{{STATE}}': 'justify-content: {{VALUE}};',
+        '.altrp-list-ul-default .altrp-list-li{{STATE}}': 'justify-content: {{VALUE}};'
+      },
+    });
+
+    this.addControl("indent_list_text_default", {
+      type: CONTROLLER_SLIDER,
+      label: 'Indent',
+      default: {
+        size: 0,
+        unit: 'px',
+      },
+      max: 50,
+      min: 0,
+      rules: {
+        ".altrp-list-label{{STATE}}": "margin-left: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("color_list_text_default", {
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        ".altrp-list-label{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("background_color_list_text_default", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        ".altrp-list-label{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+
+    this.addControl('padding_list_text_default', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Text Padding',
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-list-label{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('typographic_list_text_default', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '.altrp-list-label{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
+    );
+
+    this.addControl("link_decoration_text_default", {
+      type: CONTROLLER_SELECT,
+      label: "Text decoration",
+      default: "none",
+      options: [
+        {
+          value: "none",
+          label: "none"
+        },
+        {
+          value: "underline",
+          label: "underline"
+        },
+        {
+          value: "overline",
+          label: "overline"
+        },
+        {
+          value: "line-through",
+          label: "line-through"
+        },
+      ],
+      rules: {
+        ".altrp-list-li-link{{STATE}}": "text-decoration: {{VALUE}};"
+      }
+    });
 
     this.endControlSection();
   }
+
+  
 
   appendNewSection(newSection) {
     if (newSection.getType() !== 'section') {
