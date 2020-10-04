@@ -1280,6 +1280,199 @@ class RootElement extends BaseElement {
     });
 
     this.endControlSection();
+
+    this.startControlSection('image_defaults', {
+      tab: TAB_STYLE,
+      label: 'Image Defaults',
+    });
+
+    this.addControl('image_default_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-image{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('image_default_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-image-container{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('image_default_opacity', {
+      type: CONTROLLER_SLIDER,
+      label: 'Opacity',
+      default: {
+        size: 1,
+      },
+      max: 1,
+      min: 0,
+      step: 0.01,
+      rules: {
+        '.altrp-image{{STATE}}': 'opacity: {{SIZE}}',
+      },
+    });
+
+    this.addControl('image_default_fit_size', {
+      type: CONTROLLER_SELECT,
+      label: 'Image fit',
+      default: "cover",
+      options: [
+        {
+          'value': 'fill',
+          'label': 'Fill',
+        },
+        {
+          'value': 'contain',
+          'label': 'Contain',
+        },
+        {
+          'value': 'cover',
+          'label': 'Cover',
+        },
+        {
+          'value': 'none',
+          'label': 'None',
+        },
+        {
+          'value': 'scale-down',
+          'label': 'Scale down',
+        }
+      ],
+      rules: {
+        '.altrp-image{{STATE}}': 'object-fit: {{VALUE}};',
+      },
+    }
+    );
+
+    this.addControl('image_default_border_type', {
+      type: CONTROLLER_SELECT,
+      label: 'Border Type',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      options: [
+        {
+          'value': 'none',
+          'label': 'None',
+        },
+        {
+          'value': 'solid',
+          'label': 'Solid',
+        },
+        {
+          'value': 'double',
+          'label': 'Double',
+        },
+        {
+          'value': 'dotted',
+          'label': 'Dotted',
+        },
+        {
+          'value': 'dashed',
+          'label': 'Dashed',
+        },
+        {
+          'value': 'groove',
+          'label': 'Groove',
+        },
+      ],
+      rules: {
+        '.altrp-image{{STATE}}': 'border-style: {{VALUE}};',
+      },
+    }
+    );
+
+    this.addControl('image_default_border_width', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Width',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-image{{STATE}}': `border-top-width: {{TOP}}{{UNIT}};
+          border-right-width: {{RIGHT}}{{UNIT}};
+          border-bottom-width: {{BOTTOM}}{{UNIT}};
+          border-left-width: {{LEFT}}{{UNIT}};`,
+      },
+    }
+    );
+
+    this.addControl('image_default_border_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Border Color',
+      default: {
+        color: "rgb(50,168,82)",
+        colorPickedHex: "#32a852",
+      },
+      rules: {
+        '.altrp-image{{STATE}}': 'border-color: {{COLOR}};',
+      },
+    }
+    );
+
+    this.addControl('image_default_border_radius', {
+      type: CONTROLLER_SLIDER,
+      label: 'Border radius',
+      default: {
+        size: 0,
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '.altrp-image{{STATE}}': 'border-radius: {{SIZE}}{{UNIT}}',
+      },
+    });
+
+
+    this.endControlSection();
   }
 
   

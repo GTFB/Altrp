@@ -83,10 +83,10 @@ class Image extends BaseElement{
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit:'px'
       },
       units:[
@@ -108,10 +108,10 @@ class Image extends BaseElement{
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit:'px'
       },
       units:[
@@ -158,9 +158,9 @@ class Image extends BaseElement{
     this.addControl('opacity_overlay', {
       type: CONTROLLER_SLIDER,
       label: 'Opacity',
-      default:{
-        size: 1,
-      },
+      // default:{
+      //   size: 1,
+      // },
       max: 1,
       min: 0,
       step: 0.01,
@@ -179,7 +179,7 @@ class Image extends BaseElement{
     this.addControl('image_fit_size', {
         type: CONTROLLER_SELECT,
         label: 'Image fit',
-        default: "cover",
+        // default: "cover",
         options:[
           {
             'value' : 'fill',
@@ -595,7 +595,10 @@ class Image extends BaseElement{
           'vh',
         ],
         rules: {
-          '{{ELEMENT}} .altrp-image{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          '{{ELEMENT}} .altrp-image{{STATE}}': `border-top-width: {{TOP}}{{UNIT}};
+            border-right-width: {{RIGHT}}{{UNIT}};
+            border-bottom-width: {{BOTTOM}}{{UNIT}};
+            border-left-width: {{LEFT}}{{UNIT}};`,
         },
       }
     );
@@ -603,10 +606,10 @@ class Image extends BaseElement{
     this.addControl('border_color', {
         type: CONTROLLER_COLOR,
         label: 'Border Color',
-        default: {
-          color: "rgb(50,168,82)",
-          colorPickedHex: "#32a852",
-        },
+        // default: {
+        //   color: "rgb(50,168,82)",
+        //   colorPickedHex: "#32a852",
+        // },
         rules: {
           '{{ELEMENT}} .altrp-image{{STATE}}': 'border-color: {{COLOR}};',
         },
@@ -617,7 +620,7 @@ class Image extends BaseElement{
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
       default:{
-        size: 0,
+        // size: 0,
         unit: 'px',
       },
       units:[
