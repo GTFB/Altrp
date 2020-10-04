@@ -1,5 +1,5 @@
 import React, {useCallback, useState, useEffect} from "react";
-import {useTable, useSortBy} from "react-table";
+import {useTable, useGroupBy} from "react-table";
 import {useQuery, usePaginatedQuery, queryCache} from  "react-query";
 import '../../../sass/altrp-pagination.scss';
 import {Link} from "react-router-dom";
@@ -133,6 +133,9 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
         [settings.tables_columns]
     ),
     data: React.useMemo(() => (_data || []), [_data]),
+    initialState:{
+      groupBy: React.useMemo(()=>['id'])
+    }
   }, );
   /**
    * Обработка клика для сортировки
