@@ -37,6 +37,20 @@ class TemplateLoader extends Component {
     this.setState(state => ({...state, templateComponent}));
   }
 
+  /**
+   * Обновление компонента
+   * @param {{}} prevProps
+   * @param {{}} prevState
+   */
+  componentDidUpdate(prevProps, prevState) {
+
+    /**
+     * Проверим обновилось ли ИД шаблона
+     */
+    if(this.props.templateId !== prevProps.templateId){
+      this.loadTemplate();
+    }
+  }
   render() {
     return <div className="inner-template">{this.state.templateComponent}</div>;
   }
