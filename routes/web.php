@@ -433,3 +433,9 @@ Route::group( ['prefix' => 'ajax', 'middleware' => 'auth'], function() {
  * Обновление всех ресурсов бэкенда
  */
 Route::post( 'update-all-resources', 'Admin\UpdateController@upgradeAllResources' );
+
+/**
+ * Настройка и управление почтой
+ */
+Route::post('/feedback', 'MailController@sendMail');
+Route::post('/write_mail_settings', 'MailController@writeSettingsToEnv');
