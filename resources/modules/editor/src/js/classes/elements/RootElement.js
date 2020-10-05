@@ -579,6 +579,196 @@ class RootElement extends BaseElement {
       }
     });
 
+    this.addControl("heading_default_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        ".altrp-heading{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("heading_default_opacity", {
+      type: CONTROLLER_SLIDER,
+      label: "Opacity",
+      default: {
+        size: 1
+      },
+      max: 1,
+      min: 0,
+      step: 0.01,
+      rules: {
+        ".altrp-heading{{STATE}}": "opacity: {{SIZE}}"
+      }
+    });
+
+    this.addControl('heading_default_background_image', {
+      type: CONTROLLER_MEDIA,
+      label: 'Background Image',
+      default: { url: "" },
+      rules: {
+        ".altrp-heading{{STATE}}": "background-image: url({{URL}});"
+      }
+    });
+
+    this.addControl('heading_default_background_position', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "top left",
+          label: "top left"
+        },
+        {
+          value: "top",
+          label: "top"
+        },
+        {
+          value: "top right",
+          label: "top right"
+        },
+        {
+          value: "right",
+          label: "right"
+        },
+        {
+          value: "bottom right",
+          label: "bottom right"
+        },
+        {
+          value: "bottom",
+          label: "bottom"
+        },
+        {
+          value: "bottom left",
+          label: "bottom left"
+        },
+        {
+          value: "left",
+          label: "left"
+        },
+        {
+          value: "center",
+          label: "center"
+        }
+      ],
+      label: 'Background Position',
+      default: 'top left',
+      rules: {
+        ".altrp-heading{{STATE}}": "background-position: {{VALUE}};"
+      }
+    });
+
+    this.addControl('heading_default_background_attachment', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "scroll",
+          label: "scroll"
+        },
+        {
+          value: "fixed",
+          label: "fixed"
+        },
+        {
+          value: "local",
+          label: "local"
+        }
+      ],
+      label: 'Background Attachment',
+      default: 'scroll',
+      rules: {
+        ".altrp-heading{{STATE}}": "background-attachment: {{VALUE}};"
+      }
+    });
+
+    this.addControl('heading_default_background_repeat', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "repeat",
+          label: "repeat"
+        },
+        {
+          value: "repeat-x",
+          label: "repeat-x"
+        },
+        {
+          value: "repeat-y",
+          label: "repeat-y"
+        },
+        {
+          value: "space",
+          label: "space"
+        },
+        {
+          value: "round",
+          label: "round"
+        },
+        {
+          value: "no-repeat",
+          label: "no-repeat"
+        }
+      ],
+      label: 'Background Repeat',
+      default: 'repeat',
+      rules: {
+        ".altrp-heading{{STATE}}": "background-repeat: {{VALUE}};"
+      }
+    });
+
+    this.addControl("heading_default_background_image_width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default: {
+        size: 100,
+        unit: 'px',
+      },
+      conditions: {
+        'background_size': [''],
+      },
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 1000,
+      min: 0,
+      rules: {
+        ".altrp-heading{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
+      }
+    });
+
+    this.addControl('heading_default_background_size', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "unset",
+          label: "unset"
+        },
+        {
+          value: "cover",
+          label: "cover"
+        },
+        {
+          value: "contain",
+          label: "contain"
+        },
+        {
+          value: "",
+          label: "set width"
+        },
+      ],
+      label: 'Background Size',
+      default: 'unset',
+      rules: {
+        ".altrp-heading{{STATE}}": "background-size: {{VALUE}};"
+      }
+    });
+
     this.endControlSection();
 
     this.startControlSection('button_defaults', {
