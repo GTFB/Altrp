@@ -124,26 +124,17 @@ class Nav extends BaseElement{
       default: [
         {
           id: 0,
-          id_repeater_menu_layout: "1",
           label_repeater_menu_layout: "one",
-          parent_id_repeater_menu_layout: ""
         },
         {
           id: 1,
           label_repeater_menu_layout: "two",
-          parent_id_repeater_menu_layout: "1"
         },
         {
           id: 2,
-          id_repeater_menu_layout: "2",
           label_repeater_menu_layout: "three",
-          parent_id_repeater_menu_layout: "1"
-        },
-        {
-          id: 3,
-          label_repeater_menu_layout: "four",
-          parent_id_repeater_menu_layout: "2"
-        },
+        }
+
       ],
       type: CONTROLLER_REPEATER,
       fields: repeaterMenu.getControls(),
@@ -616,7 +607,6 @@ class Nav extends BaseElement{
         "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}} .altrp-nav-menu-li-dropdown-hor-ver-link-label": "color: {{COLOR}};",
         "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon path": [
           "stroke: {{COLOR}};",
-          "fill: {{COLOR}}",
         ]
       }
     });
@@ -663,7 +653,7 @@ class Nav extends BaseElement{
           },
         ],
         rules: {
-          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}}': 'border-style: {{VALUE}};',
+          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
         },
       }
     );
@@ -680,7 +670,7 @@ class Nav extends BaseElement{
           'vh',
         ],
         rules: {
-          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         },
       }
     );
@@ -693,10 +683,28 @@ class Nav extends BaseElement{
           colorPickedHex: "",
         },
         rules: {
-          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}}': 'border-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-color: {{COLOR}};',
         },
       }
     );
+
+    this.addControl("border_radius_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border radius",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li:first-child{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} 0 0",
+        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li:last-child{{STATE}}": "border-radius: 0 0 {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+      }
+    });
 
     this.endControlSection();
 

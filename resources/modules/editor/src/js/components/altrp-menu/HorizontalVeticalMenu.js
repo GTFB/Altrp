@@ -67,6 +67,7 @@ class Dropdown extends Component {
   }
 
   render() {
+    console.log(this.state.list);
     return (
       <div className="altrp-nav-menu-ul-dropdown-hor-ver">
         <ul className="altrp-nav-menu-ul-dropdown-hor-ver-ul">
@@ -175,48 +176,49 @@ class DropdownSub extends Component {
 
   render() {
     let list = (
-      this.props.show ? <div className="altrp-nav-menu-ul-dropdown-children-hor-ver">
-        <ul className="altrp-nav-menu-ul-dropdown-children-hor-ver-ul">
-          {
-            this.state.list.map((li, idx) => {
-              let url = "";
-              if(li.link_repeater_menu_layout) {
-                url = li.link_repeater_menu_layout.url
-              };
+      this.props.show ? (
+        <div className="altrp-nav-menu-ul-dropdown-children-hor-ver">
+          <ul className="altrp-nav-menu-ul-dropdown-children-hor-ver-ul">
+            {
+              this.state.list.map((li, idx) => {
+                let url = "";
+                if(li.link_repeater_menu_layout) {
+                  url = li.link_repeater_menu_layout.url
+                };
 
-              return (
-                <li
-                  className="altrp-nav-menu-ul-dropdown-children-hor-ver-li"
-                  onMouseEnter={() => this.showSub(idx)}
-                  onMouseLeave={() => this.hideSub(idx)}
-                  key={idx}
-                >
-                  <Link to={url} className="altrp-nav-menu-li-dropdown-children-hor-ver-li-link">
-                    <div className="altrp-nav-menu-li-dropdown-hor-ver-link-label">
-                      {li.label_repeater_menu_layout}
-                    </div>
+                return (
+                  <li
+                    className="altrp-nav-menu-ul-dropdown-children-hor-ver-li"
+                    onMouseEnter={() => this.showSub(idx)}
+                    onMouseLeave={() => this.hideSub(idx)}
+                    key={idx}
+                  >
+                    <Link to={url} className="altrp-nav-menu-li-dropdown-children-hor-ver-li-link">
+                      <div className="altrp-nav-menu-li-dropdown-hor-ver-link-label">
+                        {li.label_repeater_menu_layout}
+                      </div>
+                      {
+                        li.id_repeater_menu_layout ? (
+                          // altrp-nav-menu-li-link-icon-active
+                          <div className="altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon">
+                            {
+                              iconsManager().renderIcon('chevron')
+                            }
+                          </div>
+                        ) : ""
+                      }
+                    </Link>
                     {
-                      li.id_repeater_menu_layout ? (
-                        // altrp-nav-menu-li-link-icon-active
-                        <div className="altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon">
-                          {
-                            iconsManager().renderIcon('chevron')
-                          }
-                        </div>
-                      ) : ""
+                      li.id_repeater_menu_layout ? <DropdownSub show={li.show} children={li.children} list={this.props.list}/> : ""
                     }
-                  </Link>
-                  {
-                    li.id_repeater_menu_layout ? <DropdownSub show={li.show} children={li.children} list={this.props.list}/> : ""
-                  }
-                </li>
-              )
-            })
-          }
-        </ul>
-      </div> : ""
+                  </li>
+                )
+              })
+            }
+          </ul>
+        </div>
+        ) : ""
     );
-
     return list;
   }
 };
