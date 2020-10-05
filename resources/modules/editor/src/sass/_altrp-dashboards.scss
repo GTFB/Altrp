@@ -1,4 +1,109 @@
+@import "~react-datepicker/dist/react-datepicker.css";
+@import "../../../../sass/smart-grid.scss";
+
+
 .altrp-dashboard {
+  &__controls {
+    .nav{
+      @include row-flex();
+      margin: 0;
+
+      .justify-content-center{
+        justify-content:center;
+      }
+      .justify-content-between{
+        justify-content:space-between;
+      }
+      .justify-content-around{
+        justify-content:space-around;
+      }
+      .justify-content-start{
+        justify-content:start;
+      }
+      .justify-content-end{
+        justify-content:end;
+      }
+
+      &>.nav-item{
+        @include col();
+        margin: 0 5px;
+        margin-bottom: 5px;
+        cursor: pointer;
+
+        &.nav-button{
+          color: rgba(255, 255, 255, 1);
+          font-family: "PT Sans", sans-sefir;
+          font-size: 13px;
+          line-height: 1.5;
+          letter-spacing: 0.8px;
+          font-weight: 700;
+          text-shadow: 0px 0px 0px rgb(39, 30, 30);
+          padding: 7px 14px;
+          background-color: rgba(109, 108, 108, 1);
+          border-color: rgb(50,168,82);
+
+          &:hover{
+            color: rgba(68, 68, 68, 1);
+            background-color: rgba(255, 237, 0, 1);
+          }
+        }
+        &.nav-datepickers{
+          @include row-flex();
+          margin: 0 10px;
+          justify-content:space-around;
+          // align-items: center;
+
+          &>.nav-datepicker{
+            @include col();
+            margin: 0;
+            &>.react-datepicker-wrapper>.react-datepicker__input-container>.form-control{
+              max-width: 100px;
+              border: 1px solid  rgba(109, 108, 108, 1);
+              padding: 8px;
+            }
+            &:last-child>.react-datepicker-wrapper>.react-datepicker__input-container>.last{
+              border-left: 0;
+            }
+          }
+        }
+      }
+    }
+
+    .dropdown {
+      &.show {
+        .dropdown-menu {
+          background-color: #fff;
+          z-index: 999;
+          min-width: 10rem;
+          background-clip: padding-box;
+          border: 1px solid rgba(0, 0, 0, 0.15);
+          border-radius: 0.25rem;
+          display: flex;
+          flex-direction: column;
+          .dropdown-divider {
+            height: 0;
+            border-top: 1px solid #e9ecef;
+          }
+          .dropdown-item,
+          .dropdown-item-text {
+            padding: 0.75rem 1.5rem;
+            font-weight: 400;
+            color: #212529;
+            text-decoration: none;
+            font-size: 0.9rem;
+            &:hover {
+              background-color: #eeeeee;
+            }
+            .form-control {
+              background-color: transparent;
+              border: none;
+            }
+          }
+        }
+      }
+    }
+
+  }
   &__widgets {
     display: flex;
     flex-wrap: wrap;
@@ -76,4 +181,35 @@
       font-weight: 600;
     }
   }
+}
+.altrp-chart {
+  display: flex;
+  flex-direction: column;
+  &.left {
+    flex-direction: row-reverse;
+  }
+  &.top {
+    flex-direction: column-reverse;
+  }
+  &.bottom {
+    flex-direction: column;
+  }
+  &.right {
+    flex-direction: row;
+  }
+}
+.discrete__legend {
+  flex-wrap: wrap;
+  &-item {
+    span {
+      //font-size: 0.8rem !important;
+      font-weight: 500;
+    }
+    &:first-child {
+      padding-left: 8px !important;
+    }
+  }
+}
+.chart__tooltip {
+  z-index: 99999;
 }

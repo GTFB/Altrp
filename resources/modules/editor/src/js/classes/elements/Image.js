@@ -16,7 +16,7 @@ import {
   TAB_ADVANCED,
   CONTROLLER_LINK,
   CONTROLLER_SWITCHER,
-  CONTROLLER_CREATIVEHOVER,
+  CONTROLLER_CREATIVE_HOVER,
   CONTROLLER_GRADIENT
 } from "../modules/ControllersManager";
 
@@ -642,7 +642,7 @@ class Image extends BaseElement{
     });
 
     this.addControl('creative_hover_controller', {
-        type: CONTROLLER_CREATIVEHOVER,
+        type: CONTROLLER_CREATIVE_HOVER,
         label: 'Creative Hover',
         rules: {
           '{{ELEMENT}} .altrp-image{{STATE}}': [

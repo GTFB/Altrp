@@ -114,7 +114,7 @@ class AltrpForm {
         }
       }
     } else {
-      return await alert('Валидация не прошла');
+      return await alert('Пожалуйста, заполните все обязательные поля');
     }
   }
 

@@ -11,6 +11,7 @@ class Modules {
   constructor(editor){
     this.elementsFactory = new ElementsFactory(this);
     this.saveImportModule = new SaveImportModule(this);
+    window.saveImportModule = new SaveImportModule(this);
     this.settingsChangeModule = new SettingsChangeModule(this);
     this.templateSettingsChangeModule = new  TemplateSettingsChangeModule(this);
     this.templateDataStorage = new TemplateDataStorage(this);

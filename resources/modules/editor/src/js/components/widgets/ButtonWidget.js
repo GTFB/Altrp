@@ -56,6 +56,9 @@ class ButtonWidget extends Component {
     const { goBack } = this.props.history;
     const background_image = this.props.element.getSettings('background_image', {});
 
+    let modelData = this.props.element.hasCardModel()
+        ? this.props.element.getCardModel().getData()
+        : this.props.currentModel.getData();
     let classes = "altrp-btn " + (this.state.settings.position_css_classes || "");
     if (background_image.url) {
       classes += ' altrp-background-image';
@@ -97,7 +100,7 @@ class ButtonWidget extends Component {
     if(_.isObject(this.props.currentModel)){
       // console.log(this.props.currentModel);
       // console.log(link_link.url);
-      url = parseURLTemplate(link_link.url || '', this.props.currentModel.getData());
+      url = parseURLTemplate(link_link.url || '', modelData);
     }
     classes += this.classStateDisabled();
     let button = (

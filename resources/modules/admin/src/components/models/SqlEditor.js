@@ -98,7 +98,6 @@ class SqlEditor extends Component {
 
   render() {
     const {id} = this.props.match.params;
-    console.log(this.state.value.sql);
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">

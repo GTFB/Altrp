@@ -8,6 +8,7 @@ import {
   CONTROLLER_DIMENSIONS,
   CONTROLLER_SLIDER,
   CONTROLLER_QUERY,
+  CONTROLLER_EVENT_HANDLER,
   TAB_CONTENT,
   TAB_STYLE,
 } from "../modules/ControllersManager";
@@ -17,7 +18,7 @@ class Map extends BaseElement {
     return "map";
   }
   static getTitle() {
-    return "Map";
+    return "Dynamic Map";
   }
   static getIconComponent() {
     return MapIcon;
@@ -33,12 +34,6 @@ class Map extends BaseElement {
     this.startControlSection("content_section", {
       tab: TAB_CONTENT,
       label: "Content",
-    });
-
-    this.addControl("editable", {
-      type: CONTROLLER_SWITCHER,
-      label: "Editable",
-      default: false,
     });
 
     this.addControl("canvas", {
@@ -67,6 +62,15 @@ class Map extends BaseElement {
 
     this.addControl("query", {
       type: CONTROLLER_QUERY,
+    });
+
+    this.addControl("handler", {
+      type: CONTROLLER_EVENT_HANDLER,
+      label: "Event handler",
+      default: {
+        evt: "",
+        params: "",
+      },
     });
 
     this.endControlSection();

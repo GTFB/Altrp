@@ -5,11 +5,12 @@
 
 
 ### 0.9.0
-+ Add Map, Diagram Widgets
++ Add Map, Diagram, Dashboards Widgets
 + Add Conditions and Disabled Conditions for Elements by Current User Permissions, Roles 
 + Add Conditions for Templates by Current Page
 + Add SQL-Builder
 + Add Import/Export Feature
++ Add Bind Pages with Data Sources
 
 
 ### 0.8.0

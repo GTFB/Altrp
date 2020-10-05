@@ -19,7 +19,7 @@ import {
   TAB_STYLE,
   TAB_ADVANCED,
   CONTROLLER_MEDIA,
-  CONTROLLER_CREATIVELINK,
+  CONTROLLER_CREATIVE_LINK,
   CONTROLLER_GRADIENT
 } from "../modules/ControllersManager";
 
@@ -732,7 +732,7 @@ class Button extends BaseElement{
     );
 
     this.addControl('creative_link_controller', {
-        type: CONTROLLER_CREATIVELINK,
+        type: CONTROLLER_CREATIVE_LINK,
         label: 'Creative Link',
         rules: {
           '{{ELEMENT}} .altrp-btn:after{{STATE}}': [

@@ -46,13 +46,13 @@ class InputWidget extends Component {
      * Если динамическое значение загрузилось,
      * то используем this.getContent для получение этого динамического значения
      * */
-    if(value.dynamic && this.props.currentModel.getProperty('altrpModelUpdated')){
+    if(_.get(value, 'dynamic') && this.props.currentModel.getProperty('altrpModelUpdated')){
       value = this.getContent('content_default_value');
     }
     if(! _.isObject(value)){
       value = this.getContent('content_default_value');
     }
-    this.setState(state =>({...state,value}));
+    this.setState(state =>({...state,value}), ()=>{this.dispatchFieldValueToStore(value);});
   }
 
   /**
@@ -127,6 +127,8 @@ class InputWidget extends Component {
           options = (_.isArray(options)) ? options : [];
 
         }
+        // console.log(options);
+        // console.log(this.state.value);
         this.setState(state=>({
           ...state,
           paramsForUpdate,
@@ -182,6 +184,9 @@ class InputWidget extends Component {
 
     let value = this.state.value;
 
+    if(_.get(value, 'dynamic') && this.props.currentModel.getProperty('altrpModelUpdated')){
+      value = this.getContent('content_default_value');
+    }
     /**
      * Пока динамический контент загружается (Еесли это динамический контент),
      * нужно вывести пустую строку
@@ -303,6 +308,9 @@ class InputWidget extends Component {
 
     let value = this.state.value;
 
+    if(_.get(value, 'dynamic') && this.props.currentModel.getProperty('altrpModelUpdated')){
+      value = this.getContent('content_default_value');
+    }
     /**
      * Пока динамический контент загружается, нужно вывести пустую строку
      */

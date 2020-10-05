@@ -21,6 +21,7 @@ class Area {
         template.data = _t ? JSON.parse(_t.data) : null;
         template.id = _t ? JSON.parse(_t.id) : null;
         template.template_settings = _t ? _t.template_settings : [];
+        template.triggers = _t ? _t.triggers : {};
         area.templates.push(template);
       });
     }

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Mockery\Exception;
@@ -429,19 +430,32 @@ class Page extends Model
       }
       $old_page = self::where( 'guid', $imported_page['guid'] )->first();
       if( $old_page ){
-        $old_page->model_id = $model_id;
-        $old_page->redirect = $imported_page['redirect'];
-        $old_page->content = $imported_page['content'];
-        $old_page->path = $imported_page['path'];
-        $old_page->title = $imported_page['title'];
-        $old_page->for_guest = $imported_page['for_guest'];
-        $old_page->author = Auth::user()->id;
+        if( date( $imported_page['updated_at'] ) > date( $old_page->updated_at ) ) {
+          $old_page->model_id = $model_id;
+          $old_page->redirect = $imported_page['redirect'];
+          $old_page->content = $imported_page['content'];
+          $old_page->path = $imported_page['path'];
+          $old_page->title = $imported_page['title'];
+          $old_page->for_guest = $imported_page['for_guest'];
+          $old_page->author = Auth::user()->id;
+          try {
+            $old_page->save();
+          } catch ( \Exception $e ) {
+            Log::error( $e->getMessage(), $imported_page ); //
+            continue;
+          }
+        }
         continue;
       }
       $new_page = new self( $imported_page );
       $new_page->author = Auth::user()->id;
       $new_page->model_id = $model_id;
-      $new_page->save();
+      try {
+        $new_page->save();
+      } catch (\Exception $e){
+        Log::error( $e->getMessage(), $imported_page ); //
+        continue;
+      }
     }
   }
 }

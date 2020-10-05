@@ -27,6 +27,7 @@ import CreativeLinkController from "../../components/controllers/CreativeLinkCon
 import CreativeHoverController from "../../components/controllers/CreativeHoverController";
 import SqlSelectController from "../../components/controllers/SqlSelectController";
 import SqlAsParamsController from "../../components/controllers/SqlAsParamsController";
+import EventSelectController from "../../components/controllers/EventSelectController";
 
 export const TAB_CONTENT = "content";
 export const TAB_STYLE = "style";
@@ -57,8 +58,9 @@ export const CONTROLLER_COLWIDTH = "colwidth";
 export const CONTROLLER_GRADIENT = "gradient";
 export const CONTROLLER_SQL = "sql";
 export const CONTROLLER_SQL_PARAMS = "sql-params";
-export const CONTROLLER_CREATIVELINK = 'creative-link';
-export const CONTROLLER_CREATIVEHOVER = 'creative-hover';
+export const CONTROLLER_CREATIVE_LINK = 'creative-link';
+export const CONTROLLER_CREATIVE_HOVER = 'creative-hover';
+export const CONTROLLER_EVENT_HANDLER = "event-handler";
 
 class ControllersManager {
   constructor() {
@@ -82,8 +84,8 @@ class ControllersManager {
     this.conttrollers[CONTROLLER_SHADOW] = ShadowController;
     this.conttrollers[CONTROLLER_TRANSFORM] = TransformController;
     this.conttrollers[CONTROLLER_TYPOGRAPHIC] = TypographicController;
-    this.conttrollers[CONTROLLER_CREATIVELINK] = CreativeLinkController;
-    this.conttrollers[CONTROLLER_CREATIVEHOVER] = CreativeHoverController;
+    this.conttrollers[CONTROLLER_CREATIVE_LINK] = CreativeLinkController;
+    this.conttrollers[CONTROLLER_CREATIVE_HOVER] = CreativeHoverController;
     this.conttrollers[CONTROLLER_REPEATER] = RepetaerController;
     this.conttrollers[CONTROLLER_QUERY] = QueryController;
     this.conttrollers[CONTROLLER_FILTERS] = FiltersController;
@@ -91,6 +93,7 @@ class ControllersManager {
     this.conttrollers[CONTROLLER_GRADIENT] = GradientController;
     this.conttrollers[CONTROLLER_SQL] = SqlSelectController;
     this.conttrollers[CONTROLLER_SQL_PARAMS] = SqlAsParamsController;
+    this.conttrollers[CONTROLLER_EVENT_HANDLER] = EventSelectController;
     this.elementsControls = null;
     this._cache = {
       controls: {},

@@ -1,3 +1,6 @@
+@import "~leaflet/dist/leaflet.css";
+@import "~leaflet-draw/dist/leaflet.draw.css";
+
 .altrp-map {
   position: relative;
   width: 100%;
@@ -142,4 +145,8 @@
     background: transparent;
     border: none;
   }
+}
+
+.leaflet-bottom.leaflet-right {
+  display: none;
 }
