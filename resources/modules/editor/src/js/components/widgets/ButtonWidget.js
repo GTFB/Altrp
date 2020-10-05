@@ -11,7 +11,7 @@ class Dropbar extends Component {
 
     this.state = {
       show: false,
-      activePosition: 0,
+      activePosition: { class: "", position: "" },
       positionVariants: placeElement(true).variants,
       contentPosition: {},
     };
@@ -120,21 +120,11 @@ class Dropbar extends Component {
 
     let mainClass = "altrp-dropbar-" + this.props.className;
 
-    let contentPosition = " altrp-dropbar-variant-" + this.state.activePosition.class || "";
-    /*
-    todo: Исправить вот эту ошибку
-    *ButtonWidget.js:123 Uncaught TypeError: Cannot read property 'class' of undefined
-    at Dropbar.render (ButtonWidget.js:123)
-    at finishClassComponent (react-dom.development.js:17160)
-    at updateClassComponent (react-dom.development.js:17110)
-    at beginWork (react-dom.development.js:18620)
-    at HTMLUnknownElement.callCallback (react-dom.development.js:188)
-    at Object.invokeGuardedCallbackDev (react-dom.development.js:237)
-    at invokeGuardedCallback (react-dom.development.js:292)
-    at beginWork$1 (react-dom.development.js:23203)
-    at performUnitOfWork (react-dom.development.js:22154)
-    at workLoopSync (react-dom.development.js:22130)
-     */
+    let contentPosition = "";
+    if(this.state.activePosition) {
+      contentPosition = " altrp-dropbar-variant-" + this.state.activePosition.class || "";
+    }
+
     let contentStyles = {};
 
     if(this.props.settings.width_dropbar_options) {

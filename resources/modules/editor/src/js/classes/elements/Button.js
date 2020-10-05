@@ -200,9 +200,6 @@ class Button extends BaseElement{
     this.addControl('form_confirm', {
       type: CONTROLLER_TEXTAREA,
       label: 'Confirm Submit Form Text',
-      conditions: {
-        'form_actions!': 'null',
-      },
       default: '',
     });
 

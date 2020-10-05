@@ -98,6 +98,16 @@ class Nav extends BaseElement{
       label: 'Label',
     });
 
+    repeaterMenu.addControl('id_repeater_menu_layout', {
+      type: CONTROLLER_TEXT,
+      label: "ID"
+    });
+
+    repeaterMenu.addControl('parent_id_repeater_menu_layout', {
+      type: CONTROLLER_TEXT,
+      label: "Parent ID"
+    });
+
     repeaterMenu.addControl('link_repeater_menu_layout', {
       type: CONTROLLER_LINK,
       default: {
@@ -111,6 +121,30 @@ class Nav extends BaseElement{
 
     this.addControl('repeater_menu_layout', {
       label: 'Items',
+      default: [
+        {
+          id: 0,
+          id_repeater_menu_layout: "1",
+          label_repeater_menu_layout: "one",
+          parent_id_repeater_menu_layout: ""
+        },
+        {
+          id: 1,
+          label_repeater_menu_layout: "two",
+          parent_id_repeater_menu_layout: "1"
+        },
+        {
+          id: 2,
+          id_repeater_menu_layout: "2",
+          label_repeater_menu_layout: "three",
+          parent_id_repeater_menu_layout: "1"
+        },
+        {
+          id: 3,
+          label_repeater_menu_layout: "four",
+          parent_id_repeater_menu_layout: "2"
+        },
+      ],
       type: CONTROLLER_REPEATER,
       fields: repeaterMenu.getControls(),
     });
@@ -355,6 +389,315 @@ class Nav extends BaseElement{
         },
       ],
     });
+
+    this.addControl('label_dropdown_menu_layout', {
+      type: CONTROLLER_HEADING,
+      label: "Dropdown"
+    });
+
+    // this.addControl('full_width_dropdown_menu_layout', {
+    //   type: CONTROLLER_SWITCHER,
+    //   label: 'Full width',
+    // });
+
+    this.addControl('align_dropdown_menu_layout', {
+      type: CONTROLLER_CHOOSE,
+      label: "Align",
+      default: 'flex-start',
+      options:[
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-nav-menu-dropdown-content .altrp-nav-menu-li-link': "justify-content: {{VALUE}}",
+      },
+    });
+
+    this.addControl('toggle_align_dropdown_menu_layout', {
+      type: CONTROLLER_CHOOSE,
+      label: "Toggle align",
+      default: 'flex-start',
+      options:[
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-nav-menu-dropdown-wrapper': "justify-content: {{VALUE}}",
+      },
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('main_menu_style', {
+      tab: TAB_STYLE,
+      label: 'Main menu',
+    });
+
+    this.addControl('typographic_main_menu_style', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default:{
+          lineHeight: 1.5,
+          spacing: 0,
+          size: 16,
+          weight: "normal",
+          family: "Open Sans",
+          decoration: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-nav-menu-li-link-label{{STATE}}': [
+            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
+    this.addControl("text_color_main_menu_style", {
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link-label{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("horizontal_padding_main_menu_style", {
+      type: CONTROLLER_SLIDER,
+      label: 'Horizontal padding',
+      default:{
+        size: "15",
+        unit: 'px',
+      },
+      max: 50,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}}": [
+          "padding-left: {{SIZE}}{{UNIT}}",
+          "padding-right: {{SIZE}}{{UNIT}}"
+        ]
+      }
+    });
+
+    this.addControl("vertical_padding_main_menu_style", {
+      type: CONTROLLER_SLIDER,
+      label: 'Vertical padding',
+      default:{
+        size: "10",
+        unit: 'px',
+      },
+      max: 50,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}}": [
+          "padding-top: {{SIZE}}{{UNIT}}",
+          "padding-bottom: {{SIZE}}{{UNIT}}"
+        ]
+      }
+    });
+
+    this.addControl("space_between_main_menu_style", {
+      type: CONTROLLER_SLIDER,
+      label: 'Space between',
+      default:{
+        size: "0",
+        unit: 'px',
+      },
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li{{STATE}}": [
+          "margin-right: {{SIZE}}{{UNIT}}",
+        ]
+      }
+    });
+
+    this.addControl("pointer_heading_main_menu_style", {
+      type: CONTROLLER_HEADING,
+      label: "Pointer"
+    });
+
+    this.addControl("pointer_color_main_menu_style", {
+      type: CONTROLLER_COLOR,
+      label: "Pointer color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-pointer{{STATE}}::after": "background: {{COLOR}};"
+      }
+    });
+
+    this.addControl("pointer_height_main_menu_style", {
+      type: CONTROLLER_SLIDER,
+      label: 'Height',
+      default:{
+        size: "3",
+        unit: 'px',
+      },
+      max: 30,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-pointer:hover::after": "height: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('dropdown_hor_ver_menu_section', {
+      tab: TAB_STYLE,
+      label: 'Dropdown (Hor Ver)',
+    });
+
+    this.addControl('typographic_dropdown_hor_ver_menu_section', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default:{
+          lineHeight: 1.5,
+          spacing: 0,
+          size: 15,
+          weight: "normal",
+          family: "Open Sans",
+          decoration: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-nav-menu-li-dropdown-hor-ver-link-label{{STATE}}': [
+            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
+    this.addControl("text_color_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}} .altrp-nav-menu-li-dropdown-hor-ver-link-label": "color: {{COLOR}};",
+        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon path": [
+          "stroke: {{COLOR}};",
+          "fill: {{COLOR}}",
+        ]
+      }
+    });
+
+    this.addControl("background_color_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}}": "background: {{COLOR}};"
+      }
+    });
+
+    this.addControl('border_type_dropdown_hor_ver_menu_section', {
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options:[
+          {
+            'value' : 'none',
+            'label' : 'None',
+          },
+          {
+            'value' : 'solid',
+            'label' : 'Solid',
+          },
+          {
+            'value' : 'double',
+            'label' : 'Double',
+          },
+          {
+            'value' : 'dotted',
+            'label' : 'Dotted',
+          },
+          {
+            'value' : 'dashed',
+            'label' : 'Dashed',
+          },
+          {
+            'value' : 'groove',
+            'label' : 'Groove',
+          },
+        ],
+        rules: {
+          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}}': 'border-style: {{VALUE}};',
+        },
+      }
+    );
+
+    this.addControl('border_width_dropdown_hor_ver_menu_section', {
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        default: {
+          bind: true
+        },
+        units:[
+          'px',
+          '%',
+          'vh',
+        ],
+        rules: {
+          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        },
+      }
+    );
+
+    this.addControl('border_color_dropdown_hor_ver_menu_section', {
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+        default: {
+          color: "",
+          colorPickedHex: "",
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}}': 'border-color: {{COLOR}};',
+        },
+      }
+    );
+
     this.endControlSection();
 
     this.startControlSection('bread_crumbs_section', {
@@ -395,7 +738,6 @@ class Nav extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-text{{STATE}}": "color: {{COLOR}};"
       }
