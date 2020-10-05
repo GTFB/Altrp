@@ -533,6 +533,52 @@ class RootElement extends BaseElement {
       },
     });
 
+    this.addControl('heading_default_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      default: {
+        top: 5,
+        right: 0,
+        bottom: 5,
+        left: 0,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-heading{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl("heading_default_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        ".altrp-heading{{STATE}}": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+
     this.endControlSection();
 
     this.startControlSection('button_defaults', {
@@ -722,22 +768,22 @@ class RootElement extends BaseElement {
       },
     });
 
-    this.addControl('button_gradient', {
-      type: CONTROLLER_GRADIENT,
-      label: 'Gradient',
-      default: {
-        isWithGradient: false,
-        firstColor: "rgba(97,206,112,1)",
-        firstPoint: '0',
-        secondColor: "rgba(242,41,91,1)",
-        secondPoint: "100",
-        angle: "0",
-        value: ""
-      },
-      rules: {
-        ".altrp-btn{{STATE}}": "background-image: {{VALUE}}"
-      }
-    });
+    // this.addControl('button_gradient', {
+    //   type: CONTROLLER_GRADIENT,
+    //   label: 'Gradient',
+    //   default: {
+    //     isWithGradient: false,
+    //     firstColor: "rgba(97,206,112,1)",
+    //     firstPoint: '0',
+    //     secondColor: "rgba(242,41,91,1)",
+    //     secondPoint: "100",
+    //     angle: "0",
+    //     value: ""
+    //   },
+    //   rules: {
+    //     ".altrp-btn{{STATE}}": "background-image: {{VALUE}}"
+    //   }
+    // });
 
     this.addControl('button_background_image', {
       type: CONTROLLER_MEDIA,
@@ -871,7 +917,7 @@ class RootElement extends BaseElement {
       max: 1000,
       min: 0,
       rules: {
-        ".altrp-background-image{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
+        ".altrp-btn{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
       }
     });
 
@@ -898,12 +944,582 @@ class RootElement extends BaseElement {
       label: 'Background Size',
       default: 'unset',
       rules: {
-        ".altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
+        ".altrp-btn{{STATE}}": "background-size: {{VALUE}};"
+      }
+    });
+    
+    this.endControlSection();
+
+    this.startControlSection('list_defaults', {
+      tab: TAB_STYLE,
+      label: 'List Defaults',
+    });
+
+    this.addControl('list_default_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-list{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('list_default_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-list{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('alignment_list_default', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment',
+      default: 'left',
+      options: [
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        }
+      ],
+      rules: {
+        '.altrp-list-ul-inline{{STATE}}': 'justify-content: {{VALUE}};',
+        '.altrp-list-ul-default .altrp-list-li{{STATE}}': 'justify-content: {{VALUE}};'
+      },
+    });
+
+    this.addControl("indent_list_text_default", {
+      type: CONTROLLER_SLIDER,
+      label: 'Indent',
+      default: {
+        size: 0,
+        unit: 'px',
+      },
+      max: 50,
+      min: 0,
+      rules: {
+        ".altrp-list-label{{STATE}}": "margin-left: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("color_list_text_default", {
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        ".altrp-list-label{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("background_color_list_text_default", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        ".altrp-list-label{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('padding_list_text_default', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Text Padding',
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-list-label{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('typographic_list_text_default', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '.altrp-list-label{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
+    );
+
+    this.addControl("link_decoration_text_default", {
+      type: CONTROLLER_SELECT,
+      label: "Text decoration",
+      default: "none",
+      options: [
+        {
+          value: "none",
+          label: "none"
+        },
+        {
+          value: "underline",
+          label: "underline"
+        },
+        {
+          value: "overline",
+          label: "overline"
+        },
+        {
+          value: "line-through",
+          label: "line-through"
+        },
+      ],
+      rules: {
+        ".altrp-list-li-link{{STATE}}": "text-decoration: {{VALUE}};"
       }
     });
 
     this.endControlSection();
 
+    this.startControlSection('text_defaults', {
+      tab: TAB_STYLE,
+      label: 'Text Defaults',
+    });
+
+    this.addControl("text_style_position_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        ".altrp-text{{STATE}}": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+
+    this.addControl('text_style_position_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      default: {
+        top: 5,
+        right: 0,
+        bottom: 5,
+        left: 0,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-text{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl("text_style_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        ".altrp-text{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("text_style_background_opacity", {
+      type: CONTROLLER_SLIDER,
+      label: "Opacity",
+      default: {
+        size: 1
+      },
+      max: 1,
+      min: 0,
+      step: 0.01,
+      rules: {
+        ".altrp-text{{STATE}}": "opacity: {{SIZE}}"
+      }
+    });
+
+    this.addControl('text_style_font_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '.altrp-text{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
+    );
+
+    this.addControl("text_style_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "Color",
+      default: {
+        color: "rgb(0, 0, 1)",
+        colorPickedHex: "#000000"
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        ".altrp-text{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("text_style_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Border type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        ".altrp-text{{STATE}}": "border-style: {{VALUE}};"
+      }
+    });
+
+    this.addControl("text_style_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        ".altrp-text{{STATE}}":
+          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      }
+    });
+
+    this.addControl("text_style_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Border color",
+      default: {
+        color: "rgb(50,168,82)",
+        colorPickedHex: "#32a852"
+      },
+      rules: {
+        ".altrp-text{{STATE}}": "border-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("text_style_border_radius", {
+      type: CONTROLLER_SLIDER,
+      label: 'Border radius',
+      default: {
+        size: 0,
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        ".altrp-text{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('image_defaults', {
+      tab: TAB_STYLE,
+      label: 'Image Defaults',
+    });
+
+    this.addControl('image_default_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-image{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('image_default_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-image-container{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('image_default_opacity', {
+      type: CONTROLLER_SLIDER,
+      label: 'Opacity',
+      default: {
+        size: 1,
+      },
+      max: 1,
+      min: 0,
+      step: 0.01,
+      rules: {
+        '.altrp-image{{STATE}}': 'opacity: {{SIZE}}',
+      },
+    });
+
+    this.addControl('image_default_fit_size', {
+      type: CONTROLLER_SELECT,
+      label: 'Image fit',
+      default: "cover",
+      options: [
+        {
+          'value': 'fill',
+          'label': 'Fill',
+        },
+        {
+          'value': 'contain',
+          'label': 'Contain',
+        },
+        {
+          'value': 'cover',
+          'label': 'Cover',
+        },
+        {
+          'value': 'none',
+          'label': 'None',
+        },
+        {
+          'value': 'scale-down',
+          'label': 'Scale down',
+        }
+      ],
+      rules: {
+        '.altrp-image{{STATE}}': 'object-fit: {{VALUE}};',
+      },
+    }
+    );
+
+    this.addControl('image_default_border_type', {
+      type: CONTROLLER_SELECT,
+      label: 'Border Type',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      options: [
+        {
+          'value': 'none',
+          'label': 'None',
+        },
+        {
+          'value': 'solid',
+          'label': 'Solid',
+        },
+        {
+          'value': 'double',
+          'label': 'Double',
+        },
+        {
+          'value': 'dotted',
+          'label': 'Dotted',
+        },
+        {
+          'value': 'dashed',
+          'label': 'Dashed',
+        },
+        {
+          'value': 'groove',
+          'label': 'Groove',
+        },
+      ],
+      rules: {
+        '.altrp-image{{STATE}}': 'border-style: {{VALUE}};',
+      },
+    }
+    );
+
+    this.addControl('image_default_border_width', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Width',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-image{{STATE}}': `border-top-width: {{TOP}}{{UNIT}};
+          border-right-width: {{RIGHT}}{{UNIT}};
+          border-bottom-width: {{BOTTOM}}{{UNIT}};
+          border-left-width: {{LEFT}}{{UNIT}};`,
+      },
+    }
+    );
+
+    this.addControl('image_default_border_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Border Color',
+      default: {
+        color: "rgb(50,168,82)",
+        colorPickedHex: "#32a852",
+      },
+      rules: {
+        '.altrp-image{{STATE}}': 'border-color: {{COLOR}};',
+      },
+    }
+    );
+
+    this.addControl('image_default_border_radius', {
+      type: CONTROLLER_SLIDER,
+      label: 'Border radius',
+      default: {
+        size: 0,
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '.altrp-image{{STATE}}': 'border-radius: {{SIZE}}{{UNIT}}',
+      },
+    });
+
+
+    this.endControlSection();
     /**
      * импорт/сохранение глобальных настроек
      */
@@ -960,6 +1576,8 @@ class RootElement extends BaseElement {
     this.endControlSection();
 
   }
+
+  
 
   appendNewSection(newSection) {
     if (newSection.getType() !== 'section') {

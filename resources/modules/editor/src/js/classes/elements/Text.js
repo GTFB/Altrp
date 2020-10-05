@@ -112,10 +112,10 @@ class Text extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: "px"
       },
       units: ["px", "%", "vh"],
@@ -133,10 +133,10 @@ class Text extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default:{
-        top: 5,
-        right: 0,
-        bottom: 5,
-        left: 0,
+        // top: 5,
+        // right: 0,
+        // bottom: 5,
+        // left: 0,
         unit:'px'
       },
       units:[
@@ -196,9 +196,9 @@ class Text extends BaseElement {
     this.addControl("text_style_background_opacity", {
       type: CONTROLLER_SLIDER,
       label: "Opacity",
-      default: {
-        size: 1
-      },
+      // default: {
+      //   size: 1
+      // },
       max: 1,
       min: 0,
       step: 0.01,
@@ -217,14 +217,14 @@ class Text extends BaseElement {
     this.addControl('text_style_font_typographic', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
-        default:{
-          lineHeight: 1.5,
-          spacing: 0,
-          size: 16,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
+        // default:{
+        //   lineHeight: 1.5,
+        //   spacing: 0,
+        //   size: 16,
+        //   weight: "normal",
+        //   family: "Open Sans",
+        //   decoration: ""
+        // },
         rules: {
           '{{ELEMENT}} .altrp-text{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
@@ -243,10 +243,10 @@ class Text extends BaseElement {
     this.addControl("text_style_font_color", {
       type: CONTROLLER_COLOR,
       label: "Color",
-      default: {
-        color: "rgb(0, 0, 1)",
-        colorPickedHex: "#000000"
-      },
+      // default: {
+      //   color: "rgb(0, 0, 1)",
+      //   colorPickedHex: "#000000"
+      // },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-text{{STATE}}": "color: {{COLOR}};"
@@ -308,10 +308,10 @@ class Text extends BaseElement {
     this.addControl("text_style_border_color", {
       type: CONTROLLER_COLOR,
       label: "Border color",
-      default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852"
-      },
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852"
+      // },
       rules: {
         "{{ELEMENT}} .altrp-text{{STATE}}": "border-color: {{COLOR}};"
       }
@@ -321,7 +321,7 @@ class Text extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
       default:{
-        size: 0,
+        // size: 0,
         unit: 'px',
       },
       units:[
