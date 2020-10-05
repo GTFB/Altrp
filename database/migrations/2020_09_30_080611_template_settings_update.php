@@ -25,7 +25,7 @@ class TemplateSettingsUpdate extends Migration
       if( ! $template ){
         $setting->delete();
       }
-      $setting->template_guid = $template->guid;
+      $setting->template_guid = $template->guid ?? null;
       $setting->save();
     } );
   }

@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SendMailRequest;
 use App\Http\Requests\WriteMailSettingsRequest;
+use App\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -24,14 +25,16 @@ class MailController extends Controller
     {
         $data = $request->all();
         $adminEmail = config('mail.username');
+        $mail = new Mail($data);
         try {
+            $mail->save();
             \Mail::send('emails.feedback', $data, function($message) use ($data, $adminEmail) {
                 $message->from($data['email'], $data['name']);
                 $message->to($adminEmail)
-                    ->cc('akimovigor5417@gmail.com')
                     ->subject($data['subject']);
             });
         } catch (\Exception $e) {
+            $mail->delete();
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
 
