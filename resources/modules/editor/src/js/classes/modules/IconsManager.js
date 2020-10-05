@@ -1,6 +1,7 @@
 import Icon from "../Icon";
 import AddIcon from '../../../svgs/add.svg';
 import AdvancedIcon from '../../../svgs/advanced.svg';
+import ArrowIcon from '../../../svgs/arrow.svg';
 import UploadIcon from '../../../svgs/upload.svg';
 import TimesIcon from '../../../svgs/times.svg';
 import LeftIcon from '../../../svgs/left.svg';
@@ -70,6 +71,7 @@ class IconsManager {
     this.icons = [];
     this.icons.push(new Icon('add', AddIcon));
     this.icons.push(new Icon('advanced', AdvancedIcon));
+    this.icons.push(new Icon('arrow', ArrowIcon));
     this.icons.push(new Icon('default', AddIcon));
     this.icons.push(new Icon('upload', UploadIcon));
     this.icons.push(new Icon('times', TimesIcon));
@@ -124,7 +126,7 @@ class IconsManager {
     this.icons.push(new Icon('click', clickIcon));
     this.icons.push(new Icon('inactivity', inactivityIcon));
     this.icons.push(new Icon('exit_intent', exitIntent));
-    this.icons.push(new Icon('exit', exit));    
+    this.icons.push(new Icon('exit', exit));
 
     this.icons.push(new Icon('s1', s1));
     this.icons.push(new Icon('s2', s2));

@@ -8,13 +8,8 @@ class AltrpLightbox extends Component {
   }
 
   render() {
-
-    let lightboxStyles = {
-      backgroundColor: this.props.color.color
-    };
-    console.log(this.props.color.color);
     return (
-      <Lightbox {...this.props.settings} style={lightboxStyles} wrapperClassName="altrp-lightbox"/>
+      <Lightbox {...this.props.settings} wrapperClassName="altrp-lightbox"/>
     )
   }
 }
