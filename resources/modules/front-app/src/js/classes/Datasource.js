@@ -53,8 +53,8 @@ class Datasource extends AltrpModel{
       return line
     });
     parsedTemplate.forEach(([left, right])=>{
-      if(right.match(/(?<={{)([\s\S]+?)(?=}})/g)){
-        right = right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0];
+      if(right.match(/{{([\s\S]+?)(?=}})/g)){
+        right = right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '');
         if(right.indexOf('altrpdata.') === 0){
           right = right.replace('altrpdata.', '');
           right = currentDataStorage.getProperty(right)

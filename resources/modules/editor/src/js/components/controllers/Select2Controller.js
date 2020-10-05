@@ -90,6 +90,9 @@ class Select2Controller extends Component {
     }
     let resource = new Resource({ route: this.getRoute() });
     let options = await resource.search(searchString);
+    if(! _.isArray(options)){
+      options = _.get(options, 'data', []);
+    }
     if (this.props.nullable) {
       options = _.union([{ label: "None", value: "" }], options);
     }

@@ -157,6 +157,11 @@ Route::group(['prefix' => 'admin'/* , 'middleware' => 'auth' */], function () {
     Route::put( 'templates/{template_id}/conditions', 'TemplateController@conditionsSet' )
       ->name( 'set-template-setting' );
     /**
+     * Global Style
+     */
+    Route::resource( 'global_styles', 'Admin\GlobalStyleController' );
+    Route::get( 'global_styles_options', 'Admin\GlobalStyleController@options' );
+    /**
      * Reports
      */
     //Route::get('reports/{id}', "TemplateController@show");

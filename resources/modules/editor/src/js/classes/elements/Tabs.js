@@ -118,6 +118,15 @@ class Tabs extends BaseElement {
       default: "text"
     });
 
+    repeater.addControl("card_template", {
+      type: CONTROLLER_SELECT2,
+      prefetch_options: true,
+      label: "Template",
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options',
+      nullable: true,
+    });
+
     this.addControl('items_tabs', {
       label: 'Tab Items',
       type: CONTROLLER_REPEATER,

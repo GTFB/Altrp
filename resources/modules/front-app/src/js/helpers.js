@@ -192,9 +192,9 @@ export function parseParamsFromString(string, context = {}){
     }
     left = left.trim();
     right = right.trim();
-    if(right.match(/(?<={{)([\s\S]+?)(?=}})/g)){
-      if(context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0])){
-        params[left] = context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0]) || '';
+    if(right.match(/{{([\s\S]+?)(?=}})/g)){
+      if(context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', ''))){//todo ошибка в сафари
+        params[left] = context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')) || '';
       } else {
         params[left] = urlParams[right] ? urlParams[right] : '';
       }
@@ -308,7 +308,7 @@ export function extractPathFromString(string = ''){
   let path = '';
   if(_.isString(string)){
     // path = string.match(/(?<={{)([\s\S]+?)(?=}})/g)[0]
-    path = _.get(string.match(/(?<={{)([\s\S]+?)(?=}})/g), '0', '');
+    path = _.get(string.match(/{{([\s\S]+?)(?=}})/g), '0', '').replace('{{', '');
   }
   return path;
 }

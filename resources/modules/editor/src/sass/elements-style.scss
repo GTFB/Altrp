@@ -165,7 +165,10 @@
 .altrp-table-th {
   border-collapse: separate;
 }
-
+.altrp-table-td__grouping{
+  font-size: 18px;
+  font-weight: bold;
+}
 .altrp-table-th_sort {
   padding: 0;
   margin-left: 10px;
@@ -625,4 +628,8 @@
   height: 100%;
   overflow: hidden;
   position: absolute;
+}
+
+.inner-template > .sections-wrapper{
+  width: 100%;
 }

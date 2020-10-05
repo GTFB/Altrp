@@ -24,6 +24,7 @@ import {
   CONTROLLER_MEDIA, CONTROLLER_REPEATER,
 } from "../modules/ControllersManager";
   import Repeater from "../Repeater";
+  import SaveImportModule from "../modules/SaveImportModule";
 
 class RootElement extends BaseElement {
   constructor() {
@@ -1473,6 +1474,61 @@ class RootElement extends BaseElement {
 
 
     this.endControlSection();
+    /**
+     * импорт/сохранение глобальных настроек
+     */
+    this.startControlSection('import_settings', {
+      tab: TAB_ADVANCED,
+      label: 'Import Settings',
+    });
+
+
+    this.addControl('settings_choose', {
+      type: CONTROLLER_SELECT2,
+      label: 'Choose Settings',
+      options_resource: '/admin/ajax/global_styles_options',
+    });
+
+    this.addControl('settings_choose_button', {
+      type: CONTROLLER_BUTTON,
+      buttonText: 'Import',
+      onClick: async () => {
+        if(saveImportModule){
+          let res = await saveImportModule.importGlobalSettings();
+          if(! res.success){
+            alert(res.message);
+          }
+        }
+      },
+    });
+
+    this.addControl('settings_heading', {
+      type: CONTROLLER_HEADING,
+      label: 'Save Current Settings',
+    });
+
+    this.addControl('settings_save_title', {
+      type: CONTROLLER_TEXT,
+      dynamic: false,
+      responsive: false,
+      label: 'Save as ... (Global Style Title)',
+    });
+
+    this.addControl('settings_save_button', {
+      type: CONTROLLER_BUTTON,
+      buttonText: 'Save',
+      onClick: async () => {
+        if(saveImportModule){
+          let res = await saveImportModule.saveRootElementSettings();
+          if(! res.success){
+            alert(res.message);
+          }
+        }
+      },
+    });
+
+    this.endControlSection();
+
   }
 
   
@@ -1483,6 +1539,11 @@ class RootElement extends BaseElement {
     }
     this.appendChild(newSection);
   }
+
+  /**
+   * css селектор для корневого элемента
+   * @return {string}
+   */
   getSelector(){
     return `.altrp-template-root${this.getId()}`;
   }
