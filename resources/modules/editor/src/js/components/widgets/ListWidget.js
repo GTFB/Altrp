@@ -17,9 +17,13 @@ class ListWidget extends Component {
     let list = null;
     let ul_classes = null;
     let divider = "";
+    const { position_css_classes } = this.state.settings;
 
     ul_classes += this.state.settings.layout_meta_data == "inline" ? " altrp-list-ul-inline" : " altrp-list-ul-default";
 
+    if (position_css_classes) {
+      ul_classes += " " + position_css_classes;
+    }
     let li_styles = {};
 
     if(this.state.settings.layout_meta_data != "inline") {

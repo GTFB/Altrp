@@ -15,8 +15,15 @@ class HeadingWidget extends Component {
     }
   }
   render() {
+    let modelData = this.props.element.hasCardModel()
+        ? this.props.element.getCardModel().getData()
+        : this.props.currentModel.getData();
+    const  background_image = this.props.element.getSettings('background_image', {});
     let text = this.getContent('text');
-    let link
+    let link;
+    const className = "altrp-heading altrp-heading--link " +
+      + this.state.settings.position_css_classes + (background_image.url ? ' altrp-background-image' : '');
+
     if (this.state.settings.link_link && this.state.settings.link_link.url) {
       let linkProps = {
         rel: this.state.settings.link_link.noFollow ? "nofollow" : null,
@@ -27,8 +34,8 @@ class HeadingWidget extends Component {
       if ((this.state.settings.link_link.tag === 'Link') && ! isEditor()) {
         tag = Link;
         linkProps.to = this.state.settings.link_link.url.replace(':id', this.getModelId() || '');
-        if(_.isObject(this.state.modelData)){
-          linkProps.to = parseURLTemplate(this.state.settings.link_link.url, this.state.modelData);
+        if(_.isObject(modelData)){
+          linkProps.to = parseURLTemplate(this.state.settings.link_link.url, modelData);
         }
       }
       if(isEditor()){
@@ -41,14 +48,14 @@ class HeadingWidget extends Component {
       React.createElement(
         this.state.settings.heading_settings_html_tag || 'h2',
         {
-          className: "altrp-heading altrp-heading--link " + this.state.settings.position_css_classes,
+          className,
           id: this.state.settings.position_css_id || "",
         },
         link):
       React.createElement(
         this.state.settings.heading_settings_html_tag || 'h2', 
         { 
-          className: "altrp-heading altrp-heading--link " + this.state.settings.position_css_classes, 
+          className, 
           id: this.state.settings.position_css_id || "", 
           dangerouslySetInnerHTML: { __html: text }
         });

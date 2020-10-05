@@ -207,6 +207,11 @@ class Table extends BaseElement {
     repeater.addControl('column_name',{
       label: 'Column Heading',
     });
+    repeater.addControl('group_by',{
+      type: CONTROLLER_SWITCHER,
+      default: false,
+      label: 'Group by',
+    });
     repeater.addControl('column_link',{
       label: 'Link Template',
       description: '/path/:id',
@@ -1080,7 +1085,78 @@ class Table extends BaseElement {
     });
 
     this.endControlSection();
+    /**
+     * Стили для заголовка группы START
+     */
+    this.startControlSection("table_style_group", {
+      tab: TAB_STYLE,
+      label: "Group Heading"
+    });
 
+    this.addControl('table_style_group_cell_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Cell padding',
+      default:{
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    });
+
+    this.addControl("table_style_group_border_background", {
+      type: CONTROLLER_COLOR,
+      label: "Background",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-table-tbody .altrp-table-td__grouping{{STATE}}': 'background: {{COLOR}};',
+      }
+    });
+
+    this.addControl("table_style_group_border_text_color", {
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}}': 'color: {{COLOR}};',
+      }
+    });
+
+    this.addControl('table_style_group_font', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      rules: {
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
+    this.endControlSection();
+    /**
+     * Стили для заголовка группы END
+     */
     advancedTabControllers(this);
   }
 }

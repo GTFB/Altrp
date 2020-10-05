@@ -46,13 +46,13 @@ class InputWidget extends Component {
      * Если динамическое значение загрузилось,
      * то используем this.getContent для получение этого динамического значения
      * */
-    if(value.dynamic && this.props.currentModel.getProperty('altrpModelUpdated')){
+    if(_.get(value, 'dynamic') && this.props.currentModel.getProperty('altrpModelUpdated')){
       value = this.getContent('content_default_value');
     }
     if(! _.isObject(value)){
       value = this.getContent('content_default_value');
     }
-    this.setState(state =>({...state,value}));
+    this.setState(state =>({...state,value}), ()=>{this.dispatchFieldValueToStore(value);});
   }
 
   /**
@@ -127,6 +127,8 @@ class InputWidget extends Component {
           options = (_.isArray(options)) ? options : [];
 
         }
+        // console.log(options);
+        // console.log(this.state.value);
         this.setState(state=>({
           ...state,
           paramsForUpdate,
@@ -178,9 +180,13 @@ class InputWidget extends Component {
   render(){
     let label = null;
     let required = null;
+    const { options_sorting } = this.state.settings;
 
     let value = this.state.value;
 
+    if(_.get(value, 'dynamic') && this.props.currentModel.getProperty('altrpModelUpdated')){
+      value = this.getContent('content_default_value');
+    }
     /**
      * Пока динамический контент загружается (Еесли это динамический контент),
      * нужно вывести пустую строку
@@ -251,7 +257,7 @@ class InputWidget extends Component {
       break;
       case 'select':{
         let options = this.state.options || [];
-        options = _.sortBy(options, (o => o.label ? o.label.toString() : o));
+        // options = _.sortBy(options, (o => o.label ? o.label.toString() : o));
         input = <select value={value || ''}
                         onChange={this.onChange}
                         id={this.state.settings.position_css_id}
@@ -259,9 +265,9 @@ class InputWidget extends Component {
           {this.state.settings.content_options_nullable ? <option value=""/> : ''}
 
           {
-            options.map(option=>{
-              return <option value={option.value} key={option.value}>{option.label}</option>
-            })
+            (options_sorting ? sortOptions(options, options_sorting) : options)
+              .map(option=><option value={option.value} key={option.value}>{option.label}</option>
+            )
           }
         </select>
       }
@@ -302,6 +308,9 @@ class InputWidget extends Component {
 
     let value = this.state.value;
 
+    if(_.get(value, 'dynamic') && this.props.currentModel.getProperty('altrpModelUpdated')){
+      value = this.getContent('content_default_value');
+    }
     /**
      * Пока динамический контент загружается, нужно вывести пустую строку
      */

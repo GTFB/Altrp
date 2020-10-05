@@ -192,9 +192,9 @@ export function parseParamsFromString(string, context = {}){
     }
     left = left.trim();
     right = right.trim();
-    if(right.match(/(?<={{)([\s\S]+?)(?=}})/g)){
-      if(context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0])){
-        params[left] = context.getProperty(right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0]) || '';
+    if(right.match(/{{([\s\S]+?)(?=}})/g)){
+      if(context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', ''))){//todo ошибка в сафари
+        params[left] = context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')) || '';
       } else {
         params[left] = urlParams[right] ? urlParams[right] : '';
       }
@@ -243,6 +243,7 @@ function _conditionChecker(c, model){
      operator,
      value,
   } = c;
+  return altrpCompare(model.getProperty(modelField), value, operator);
   switch(operator){
     case 'empty':{
       return ! model.getProperty(modelField, '');
@@ -276,10 +277,14 @@ function _conditionChecker(c, model){
  * Получить данные
  * @param {string} path
  * @param {*} _default
+ * @param {AltrpModel} context
  * @return {string}
  */
-export function getDataByPath(path, _default = null){
-  const {currentModel, currentDataStorage} = appStore.getState();
+export function getDataByPath(path, _default = null, context = null){
+  let {currentModel, currentDataStorage} = appStore.getState();
+  if(context){
+    currentModel = context;
+  }
   const urlParams = window.currentRouterMatch instanceof AltrpModel ? window.currentRouterMatch.getProperty('params') : {};
   let value = _default;
   if(! _.isString(path)){
@@ -303,7 +308,7 @@ export function extractPathFromString(string = ''){
   let path = '';
   if(_.isString(string)){
     // path = string.match(/(?<={{)([\s\S]+?)(?=}})/g)[0]
-    path = _.get(string.match(/(?<={{)([\s\S]+?)(?=}})/g), '0', '');
+    path = _.get(string.match(/{{([\s\S]+?)(?=}})/g), '0', '').replace('{{', '');
   }
   return path;
 }
@@ -340,3 +345,81 @@ export function mbParseJSON(string, _default = null){
     return _default;
   }
 }
+
+/**
+ * Функция для сравнения значений
+ * @param leftValue
+ * @param rightValue
+ * @param operator
+ * @return {boolean}
+ */
+export function altrpCompare( leftValue = '', rightValue = '', operator = 'not_empty' ) {
+  switch(operator){
+    case 'empty':{
+      return  _.isEmpty(leftValue,);
+    }
+    case 'not_empty':{
+      return !  _.isEmpty(leftValue,);
+    }
+    case '==':{
+      return _.isEqual(leftValue, rightValue);
+    }
+    case '===':{
+      return _.isEqual(leftValue, rightValue);
+    }
+    case '<>':{
+      return ! _.isEqual(leftValue, rightValue );
+    }
+    case '>':{
+      return Number(leftValue) > Number(rightValue);
+    }
+    case '>=':{
+      return Number(leftValue) >= Number(rightValue);
+    }
+    case '<':{
+      return Number(leftValue) < Number(rightValue);
+    }
+    case '<=':{
+      return Number(leftValue) <= Number(rightValue);
+    }
+  }
+}
+
+export const CONDITIONS_OPTIONS = [
+  {
+    value: 'empty',
+    label: 'Empty',
+  },
+  {
+    value: 'not_empty',
+    label: 'Not Empty',
+  },
+  {
+    value: '==',
+    label: 'Equals',
+  },
+  {
+    value: '<>',
+    label: 'Not Equals',
+  },
+  {
+    value: 'between',
+    label: 'Between',
+  },
+  {
+    value: '>',
+    label: '>',
+  },
+  {
+    value: '>=',
+    label: '>=',
+  },
+  {
+    value: '<',
+    label: '<',
+  },
+  {
+    value: '<=',
+    label: '<=',
+  },
+];

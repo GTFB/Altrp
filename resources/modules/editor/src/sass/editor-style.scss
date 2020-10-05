@@ -152,6 +152,12 @@ button {
     }
   }
 }
+.control-button-container{
+  justify-content: flex-end;
+  & > .btn {
+    padding: 5px 10px;
+  }
+}
 
 .icon {
   display: inline-block;
@@ -181,6 +187,10 @@ button {
   background-color: #fff;
   cursor: move;
   border-radius: 2px;
+  font-size: 0.8rem;
+  &__title {
+    margin-top: 8px;
+  }
 }
 
 .right-panel {

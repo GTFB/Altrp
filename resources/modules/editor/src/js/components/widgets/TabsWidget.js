@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {renderAsset, renderAssetIcon} from "../../../../../front-app/src/js/helpers";
+import TemplateLoader from "../template-loader/TemplateLoader";
 
 class TabsWidget extends Component {
   constructor(props){
@@ -34,6 +35,7 @@ class TabsWidget extends Component {
     this.setState({switcher: !this.state.switcher});
   }
 
+
   render(){
     let tab = null;
 
@@ -59,9 +61,9 @@ class TabsWidget extends Component {
       if(this.state.settings.items_tabs) {;
         tabs = this.state.settings.items_tabs.map((tab, idx) => {
 
-          let iconStyles = {}
+          let iconStyles = {};
 
-          if(this.state.settings.alignment_icon_style == "left") {
+          if(this.state.settings.alignment_icon_style === "left") {
             iconStyles = {paddingRight: this.state.settings.spacing_icon_style.size + this.state.settings.spacing_icon_style.unit}
           } else {
             iconStyles = {paddingLeft: this.state.settings.spacing_icon_style.size + this.state.settings.spacing_icon_style.unit}
@@ -85,7 +87,11 @@ class TabsWidget extends Component {
             show = "altrp-tab-show";
           }
 
-          return<div data-key={idx} className={"altrp-tab " + show} key={idx}>{tab.wysiwyg_items}</div>
+          return<div data-key={idx} className={"altrp-tab " + show} key={idx}>{
+            tab.card_template ?
+                <TemplateLoader templateId={tab.card_template}/>
+                : tab.wysiwyg_items
+          }</div>
         });
       };
 

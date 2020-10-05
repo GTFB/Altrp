@@ -1,5 +1,6 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
+import { queryString } from "../helpers/queryString";
 
 function SourceField({ widget, setWidget, sources }) {
   return (
@@ -12,7 +13,7 @@ function SourceField({ widget, setWidget, sources }) {
         onChange={(e) =>
           setWidget({
             ...widget,
-            source: e.target.value,
+            source: e.target.value + queryString(widget.filter),
           })
         }
         required
