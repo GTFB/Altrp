@@ -382,14 +382,14 @@ class Input extends BaseElement{
     this.addControl('label_style_font_typographic', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
-        default:{
-          lineHeight: 1.5,
-          spacing: 0,
-          size: 16,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
+        // default:{
+        //   lineHeight: 1.5,
+        //   spacing: 0,
+        //   size: 16,
+        //   weight: "normal",
+        //   family: "Open Sans",
+        //   decoration: ""
+        // },
         rules: {
           '{{ELEMENT}} .altrp-field-label{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
@@ -414,14 +414,14 @@ class Input extends BaseElement{
     this.addControl('field_font_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 16,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
+      // default: {
+      //   lineHeight: 1.5,
+      //   spacing: 0,
+      //   size: 16,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
       rules: {
         '{{ELEMENT}} .altrp-field-select2__single-value{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-sefir;',
@@ -471,7 +471,7 @@ class Input extends BaseElement{
     this.addControl('placeholder_and_value_alignment_position_section', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment, value',
-      default: 'left',
+      // default: 'left',
       options:[
         {
           icon: 'left',
@@ -496,10 +496,10 @@ class Input extends BaseElement{
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit:'px'
       },
       units:[
@@ -521,10 +521,10 @@ class Input extends BaseElement{
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default:{
-        top: 2,
-        right: 2,
-        bottom: 2,
-        left: 2,
+        // top: 2,
+        // right: 2,
+        // bottom: 2,
+        // left: 2,
         unit:'px'
       },
       units:[
@@ -592,14 +592,14 @@ class Input extends BaseElement{
     this.addControl('placeholder_style_font_typographic', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
-        default:{
-          lineHeight: 1.5,
-          spacing: 0,
-          size: 13,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
+        // default:{
+        //   lineHeight: 1.5,
+        //   spacing: 0,
+        //   size: 13,
+        //   weight: "normal",
+        //   family: "Open Sans",
+        //   decoration: ""
+        // },
         rules: {
           '{{ELEMENT}} .altrp-field::placeholder{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
@@ -756,7 +756,7 @@ class Input extends BaseElement{
     this.addControl('border_type', {
         type: CONTROLLER_SELECT,
         label: 'Border Type',
-        default: 'solid',
+        // default: 'solid',
         options:[
           {
             'value' : 'none',
@@ -799,12 +799,12 @@ class Input extends BaseElement{
           '%',
           'vh',
         ],
-        default: {
-          top: 2,
-          right: 2,
-          bottom: 2,
-          left: 2
-        },
+        // default: {
+        //   top: 2,
+        //   right: 2,
+        //   bottom: 2,
+        //   left: 2
+        // },
         rules: {
           '{{ELEMENT}} .altrp-field{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
           '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
@@ -815,10 +815,10 @@ class Input extends BaseElement{
     this.addControl('border_color', {
         type: CONTROLLER_COLOR,
         label: 'Border Color',
-        default: {
-          color: "rgb(142,148,170)",
-          colorPickedHex: "#8E94AA",
-        },
+        // default: {
+        //   color: "rgb(142,148,170)",
+        //   colorPickedHex: "#8E94AA",
+        // },
         rules: {
           '{{ELEMENT}} .altrp-field{{STATE}}': 'border-color: {{COLOR}};',
           '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'border-color: {{COLOR}};'
@@ -854,10 +854,10 @@ class Input extends BaseElement{
       type: CONTROLLER_DIMENSIONS,
       label: 'Radius',
       default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit:'px'
       },
       units:[
