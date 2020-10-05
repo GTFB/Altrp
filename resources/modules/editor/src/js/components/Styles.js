@@ -37,8 +37,9 @@ class Styles extends Component {
     })
   }
   render(){
+    let elementStyles = _.uniqBy(this.state.elementStyles, 'elementId');
     return <div className="styles-container">
-      {this.state.elementStyles.map(elementStyle => {
+      {elementStyles.map(elementStyle => {
         return<style data-styles-id={elementStyle.elementId} key={elementStyle.elementId}>{elementStyle.styles}</style>
       })}
     </div>

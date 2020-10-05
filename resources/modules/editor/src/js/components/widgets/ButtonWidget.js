@@ -184,7 +184,6 @@ class ButtonWidget extends Component {
     if (isEditor()) {
       console.log(this.state.settings);
     } else if (this.props.element.getForms().length){
-
       this.setState(state => ({ ...state, pending: true }));
       this.props.element.getForms().forEach(
         /**
@@ -242,7 +241,6 @@ class ButtonWidget extends Component {
       className: classes,
       // to:
     };
-    console.log( this.props);
     buttonProps.to = link_link.url ? link_link.url.replace(':id', this.getModelId() || '') : '';
     buttonProps.href =  link_link.url ? link_link.url.replace(':id', this.getModelId() || '') : '';
     if(_.isObject(this.state.modelData) && link_link.url){
@@ -260,7 +258,7 @@ class ButtonWidget extends Component {
 
     classes += this.classStateDisabled();
     let button = (
-      this.state.settings.link_button_type === "none" ? (
+      this.props.element.getSettings('link_button_type', 'none') === "none" ? (
         <button
           onClick={this.onClick}
           className={classes}
