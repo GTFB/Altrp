@@ -1708,8 +1708,369 @@ class RootElement extends BaseElement {
       },
     });
 
+    this.endControlSection();
+
+    this.startControlSection('input_defaults', {
+      tab: TAB_STYLE,
+      label: 'Input Defaults',
+    });
+
+    this.addControl("label_default_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "Label Font Color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        ".altrp-field-label{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    // this.addControl('label_default_font_typographic', {
+    //   type: CONTROLLER_TYPOGRAPHIC,
+    //   label: 'Label Typographic',
+    //   default: {
+    //     lineHeight: 1.5,
+    //     spacing: 0,
+    //     size: 16,
+    //     weight: "normal",
+    //     family: "Open Sans",
+    //     decoration: ""
+    //   },
+    //   rules: {
+    //     '.altrp-field-label{{STATE}}': [
+    //       'font-family: "{{FAMILY}}", sans-sefir;',
+    //       'font-size: {{SIZE}}px;',
+    //       'line-height: {{LINEHEIGHT}};',
+    //       'letter-spacing: {{SPACING}}px',
+    //       'font-weight: {{WEIGHT}}',
+    //       'text-transform: {{TRANSFORM}}',
+    //       'font-style: {{STYLE}}',
+    //       'text-decoration: {{DECORATION}}'
+    //     ],
+    //   },
+    // }
+    // );
+
+    // this.addControl('field_default_typographic', {
+    //   type: CONTROLLER_TYPOGRAPHIC,
+    //   label: 'Field Typographic',
+    //   default: {
+    //     lineHeight: 1.5,
+    //     spacing: 0,
+    //     size: 16,
+    //     weight: "normal",
+    //     family: "Open Sans",
+    //     decoration: ""
+    //   },
+    //   rules: {
+    //     '.altrp-field-select2__single-value{{STATE}}': [
+    //       'font-family: "{{FAMILY}}", sans-sefir;',
+    //       'font-size: {{SIZE}}px;',
+    //       'line-height: {{LINEHEIGHT}};',
+    //       'letter-spacing: {{SPACING}}px;',
+    //       'font-weight: {{WEIGHT}};',
+    //       'text-transform: {{TRANSFORM}};',
+    //       'font-style: {{STYLE}};',
+    //       'text-decoration: {{DECORATION}};'
+    //     ],
+    //     '.altrp-field{{STATE}}': [
+    //       'font-family: "{{FAMILY}}", sans-sefir;',
+    //       'font-size: {{SIZE}}px;',
+    //       'line-height: {{LINEHEIGHT}};',
+    //       'letter-spacing: {{SPACING}}px;',
+    //       'font-weight: {{WEIGHT}};',
+    //       'text-transform: {{TRANSFORM}};',
+    //       'font-style: {{STYLE}};',
+    //       'text-decoration: {{DECORATION}};'
+    //     ]
+    //   },
+    // });
+
+    this.addControl("field_default_color", {
+      type: CONTROLLER_COLOR,
+      label: "Field Font Color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        '.altrp-field-select2__single-value{{STATE}}': 'color : {{COLOR}};',
+        '.altrp-field{{STATE}}': 'color : {{COLOR}};'
+      }
+    });
+
+    // this.addControl('placeholder_and_value_alignment_default', {
+    //   type: CONTROLLER_CHOOSE,
+    //   label: 'Alignment, value',
+    //   default: 'left',
+    //   options: [
+    //     {
+    //       icon: 'left',
+    //       value: 'left',
+    //     },
+    //     {
+    //       icon: 'center',
+    //       value: 'center',
+    //     },
+    //     {
+    //       icon: 'right',
+    //       value: 'right',
+    //     }
+    //   ],
+    //   rules: {
+    //     '.altrp-field{{STATE}}': 'text-align: {{VALUE}};',
+    //     '.altrp-field-select2__control{{STATE}}': 'text-align: {{VALUE}};'
+    //   },
+    // });
+
+    // this.addControl('field_default_margin', {
+    //   type: CONTROLLER_DIMENSIONS,
+    //   label: 'Margin',
+    //   default: {
+    //     top: 0,
+    //     right: 0,
+    //     bottom: 0,
+    //     left: 0,
+    //     unit: 'px'
+    //   },
+    //   units: [
+    //     'px',
+    //     '%',
+    //     'vh',
+    //   ],
+    //   rules: {
+    //     '.altrp-field-container{{STATE}}': [
+    //       'margin-top: {{TOP}}{{UNIT}};',
+    //       'margin-right: {{RIGHT}}{{UNIT}};',
+    //       'margin-bottom: {{BOTTOM}}{{UNIT}};',
+    //       'margin-left: {{LEFT}}{{UNIT}};'
+    //     ]
+    //   },
+    // });
+
+    // this.addControl('field_default_padding', {
+    //   type: CONTROLLER_DIMENSIONS,
+    //   label: 'Padding',
+    //   default: {
+    //     top: 2,
+    //     right: 2,
+    //     bottom: 2,
+    //     left: 2,
+    //     unit: 'px'
+    //   },
+    //   units: [
+    //     'px',
+    //     '%',
+    //     'vh',
+    //   ],
+    //   rules: {
+    //     '.altrp-field{{STATE}}': [
+    //       'padding-top: {{TOP}}{{UNIT}};',
+    //       'padding-right: {{RIGHT}}{{UNIT}};',
+    //       'padding-bottom: {{BOTTOM}}{{UNIT}};',
+    //       'padding-left: {{LEFT}}{{UNIT}};'
+    //     ],
+    //     '.altrp-field-select2__control{{STATE}}': [
+    //       'padding-top: {{TOP}}{{UNIT}};',
+    //       'padding-right: {{RIGHT}}{{UNIT}};',
+    //       'padding-bottom: {{BOTTOM}}{{UNIT}};',
+    //       'padding-left: {{LEFT}}{{UNIT}};'
+    //     ]
+    //   },
+    // });
+
+    this.addControl("placeholder_default_color", {
+      type: CONTROLLER_COLOR,
+      label: "PLaceholder Font Color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        ".altrp-field::placeholder{{STATE}}": "color: {{COLOR}};",
+        ".altrp-field-select2__placeholder{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    // this.addControl('placeholder_default_typographic', {
+    //   type: CONTROLLER_TYPOGRAPHIC,
+    //   label: 'Placeholder Typographic',
+    //   default: {
+    //     lineHeight: 1.5,
+    //     spacing: 0,
+    //     size: 13,
+    //     weight: "normal",
+    //     family: "Open Sans",
+    //     decoration: ""
+    //   },
+    //   rules: {
+    //     '.altrp-field::placeholder{{STATE}}': [
+    //       'font-family: "{{FAMILY}}", sans-sefir;',
+    //       'font-size: {{SIZE}}px;',
+    //       'line-height: {{LINEHEIGHT}};',
+    //       'letter-spacing: {{SPACING}}px',
+    //       'font-weight: {{WEIGHT}}',
+    //       'text-transform: {{TRANSFORM}}',
+    //       'font-style: {{STYLE}}',
+    //       'text-decoration: {{DECORATION}}'
+    //     ],
+    //     '.altrp-field-select2__placeholder{{STATE}}': [
+    //       'font-family: "{{FAMILY}}", sans-sefir;',
+    //       'font-size: {{SIZE}}px;',
+    //       'line-height: {{LINEHEIGHT}};',
+    //       'letter-spacing: {{SPACING}}px',
+    //       'font-weight: {{WEIGHT}}',
+    //       'text-transform: {{TRANSFORM}}',
+    //       'font-style: {{STYLE}}',
+    //       'text-decoration: {{DECORATION}}'
+    //     ],
+    //   },
+    // }
+    // );
+
+    this.addControl('input_default_background_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Background Color',
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        '.altrp-field{{STATE}}': 'background-color: {{COLOR}};',
+        '.altrp-field-select2__control{{STATE}}': 'background-color: {{COLOR}};',
+      },
+    }
+    );
+
+    // this.addControl('input_default_border_type', {
+    //   type: CONTROLLER_SELECT,
+    //   label: 'Border Type',
+    //   default: 'solid',
+    //   options: [
+    //     {
+    //       'value': 'none',
+    //       'label': 'None',
+    //     },
+    //     {
+    //       'value': 'solid',
+    //       'label': 'Solid',
+    //     },
+    //     {
+    //       'value': 'double',
+    //       'label': 'Double',
+    //     },
+    //     {
+    //       'value': 'dotted',
+    //       'label': 'Dotted',
+    //     },
+    //     {
+    //       'value': 'dashed',
+    //       'label': 'Dashed',
+    //     },
+    //     {
+    //       'value': 'groove',
+    //       'label': 'Groove',
+    //     },
+    //   ],
+    //   rules: {
+    //     '.altrp-field{{STATE}}': 'border-style: {{VALUE}};',
+    //     '.altrp-field-select2__control{{STATE}}': 'border-style: {{VALUE}};'
+
+    //   },
+    // }
+    // );
+
+    // this.addControl('input_default_border_width', {
+    //   type: CONTROLLER_DIMENSIONS,
+    //   label: 'Border Width',
+    //   units: [
+    //     'px',
+    //     '%',
+    //     'vh',
+    //   ],
+    //   default: {
+    //     top: 2,
+    //     right: 2,
+    //     bottom: 2,
+    //     left: 2
+    //   },
+    //   rules: {
+    //     '.altrp-field{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+    //     '.altrp-field-select2__control{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
+    //   },
+    // }
+    // );
+
+    // this.addControl('input_default_border_color', {
+    //   type: CONTROLLER_COLOR,
+    //   label: 'Border Color',
+    //   default: {
+    //     color: "rgb(142,148,170)",
+    //     colorPickedHex: "#8E94AA",
+    //   },
+    //   rules: {
+    //     '.altrp-field{{STATE}}': 'border-color: {{COLOR}};',
+    //     '.altrp-field-select2__control{{STATE}}': 'border-color: {{COLOR}};'
+    //   },
+    // }
+    // );
+
+    // this.addControl('input_default_box_shadow', {
+    //   type: CONTROLLER_SHADOW,
+    //   label: 'Box shadow',
+    //   default: {
+    //     blur: 0,
+    //     horizontal: 0,
+    //     vertical: 0,
+    //     opacity: 1,
+    //     spread: 0,
+    //     colorRGB: 'rgb(0, 0, 0)',
+    //     color: 'rgb(0, 0, 0)',
+    //     colorPickedHex: '#000000',
+    //     type: ""
+    //   },
+    //   presetColors: [
+    //     '#eaeaea',
+    //     '#9c18a8'
+    //   ],
+    //   rules: {
+    //     '.altrp-field{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+    //     '.altrp-field-select2__control{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};'
+    //   },
+    // });
+
+    // this.addControl('input_default_border_radius', {
+    //   type: CONTROLLER_DIMENSIONS,
+    //   label: 'Radius',
+    //   default: {
+    //     top: 0,
+    //     right: 0,
+    //     bottom: 0,
+    //     left: 0,
+    //     unit: 'px'
+    //   },
+    //   units: [
+    //     'px',
+    //     '%',
+    //     'vh',
+    //   ],
+    //   rules: {
+    //     '.altrp-field{{STATE}}': [
+    //       'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+    //     ],
+    //     '.altrp-field-select2__control{{STATE}}': [
+    //       'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+    //     ]
+    //   },
+    // });
 
     this.endControlSection();
+
     /**
      * импорт/сохранение глобальных настроек
      */
