@@ -12,6 +12,7 @@ class AltrpPosts extends React.Component {
     this.state = {
       posts: _.isArray(props.data) ?  props.data : [],
       simpleTemplate: '',
+      simpleTemplateId : null
     }
   }
 
@@ -22,8 +23,11 @@ class AltrpPosts extends React.Component {
     const{settings} = this.props;
     let simpleTemplateId = _.get(settings, 'posts_card_template');
     if(simpleTemplateId){
+      if(! simpleTemplateId){
+        return;
+      }
       let template = await templateLoader.loadParsedTemplate(simpleTemplateId);
-      this.setState(state=>({...state, simpleTemplate:template}))
+      this.setState(state=>({...state, simpleTemplate:template, simpleTemplateId}))
     }
   }
 
@@ -31,8 +35,18 @@ class AltrpPosts extends React.Component {
    * Компонент обновился
    */
   async componentDidUpdate(prevProps) {
+    const{settings} = this.props;
+    const{simpleTemplateId} = this.state;
+    const newSimpleTemplateId = _.get(settings, 'posts_card_template', simpleTemplateId);
     if(! _.isEqual(prevProps.data, this.props.data)){
       this.setState(state =>({...state, posts: this.props.data}));
+    }
+    if(newSimpleTemplateId !== simpleTemplateId){
+      if(! newSimpleTemplateId){
+        return;
+      }
+      let template = await templateLoader.loadParsedTemplate(newSimpleTemplateId);
+      this.setState(state=>({...state, simpleTemplate:template, simpleTemplateId: newSimpleTemplateId}))
     }
   }
 

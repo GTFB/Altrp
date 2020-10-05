@@ -74,12 +74,13 @@ class SectionComponent extends Component {
     if (widthType === "full") {
       sectionClasses.push('altrp-section--full-width');
     }
-
+    let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
     let sectionWrapper = this.state.children.map(column => (
       <ElementWrapper
-        key={column.getId()}
-        component={column.componentClass}
-        element={column}
+          ElementWrapper={ElementWrapper}
+          key={column.getId()}
+          component={column.componentClass}
+          element={column}
       // columnCount={this.props.element.getColumnsCount()}
       />
     ));

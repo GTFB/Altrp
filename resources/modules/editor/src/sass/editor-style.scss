@@ -152,6 +152,12 @@ button {
     }
   }
 }
+.control-button-container{
+  justify-content: flex-end;
+  & > .btn {
+    padding: 5px 10px;
+  }
+}
 
 .icon {
   display: inline-block;
