@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import FrontElement from "../../../../front-app/src/js/classes/FrontElement";
 
 class RootComponent extends Component {
   constructor(props) {
@@ -18,11 +19,12 @@ class RootComponent extends Component {
     let classes = `sections-wrapper ${this.props.element
         .getSelector()
         .replace(".", "")}`;
-
+    let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
     return (
         <div className={classes}>{this.props.element.getSettings('test-text-4')}
             {this.state.children.map(section => (
                 <ElementWrapper
+                    ElementWrapper={ElementWrapper}
                     key={section.getId()}
                     component={section.componentClass}
                     element={section}

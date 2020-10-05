@@ -176,6 +176,7 @@ class AddDataSourceForm extends Component {
           value={this.state.value.model_id}
           onChange={e => { this.changeValue(e.target.value, 'model_id') }}
           className="form-control"
+          disabled={this.props.match.params.id}
         >
           <option disabled value="" />
           {this.state.modelsOptions.map(({ value, label }) =>

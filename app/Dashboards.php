@@ -17,7 +17,8 @@ class Dashboards extends Model
       'filter',
       'widget_id',
       'guid',
-      'user_id'];
+      'user_id'
+    ];
     public $timestamps = false;
 
   /**

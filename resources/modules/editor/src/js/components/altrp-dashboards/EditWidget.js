@@ -8,6 +8,8 @@ import { TABLE } from "../../../../../admin/src/components/dashboard/widgetTypes
 import WidgetDiagram from "../../../../../admin/src/components/dashboard/WidgetDiagram";
 import TypeField from "./fields/TypeField";
 import LegendField from "./fields/LegendField";
+import LegendPositionField from "./fields/LegendPositionField";
+import FilterField from "./fields/FilterField";
 import SourceField from "./fields/SourceField";
 import ColorSchemeField from "./fields/colorSchemeField";
 import VerticalTableField from "./fields/VerticalTableField";
@@ -26,10 +28,21 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
   };
 
   const getTypesBySource = (s) => {
-    const source = settings && settings.sql?.find(
-      (item) => s === `/ajax/models/queries/${item.model}/${item.value}`
-    );
+    const source =
+      settings &&
+      settings.sql?.find((item) => s === `/ajax/models/queries/${item.model}/${item.value}`);
     return source?.types?.map((type) => type.value) || [];
+  };
+
+  const composeSources = (sources = []) => {
+    if (sources.length === 0) return [];
+
+    return sources.map((source) => {
+      return {
+        name: source.label,
+        url: `/ajax/models/queries/${source.model}/${source.value}`,
+      };
+    });
   };
 
   return (
@@ -47,10 +60,14 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
           <SourceField
             widget={widget}
             setWidget={setWidget}
-            sources={settings && settings.sql?.map((item) => {
-              return { name: item.label, url: `/ajax/models/queries/${item.model}/${item.value}` };
-            })}
+            sources={composeSources(settings.sql)}
           />
+
+          {widget.source &&
+            settings.filter?.length > 0 &&
+            settings.filter?.map((param) => (
+              <FilterField key={param.value} widget={widget} setWidget={setWidget} param={param} />
+            ))}
 
           <TypeField
             widget={widget}
@@ -65,9 +82,10 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
           <ColorSchemeField widget={widget} setWidget={setWidget} />
 
           <LegendField widget={widget} setWidget={setWidget} />
+          {widget.options?.legend && <LegendPositionField widget={widget} setWidget={setWidget} />}
         </Form>
 
-        <div className="widget-placeholder">
+        <div className={`widget-placeholder altrp-chart ${widget.options?.legendPosition}`}>
           {widget.source && <WidgetDiagram widget={widget} width={360} height={360} />}
         </div>
       </Card.Body>

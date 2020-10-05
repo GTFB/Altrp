@@ -163,11 +163,11 @@ class RouteFileWriter
     public function updateSqlRoute($oldMethodName, $methodName)
     {
         $routeContent = file($this->route->getFile(), 2);
-        $this->removeSqlRoute($routeContent,$oldMethodName);
+        $this->removeSqlRoute($routeContent,$oldMethodName, $this->routeFile);
         $this->writeRoute($routeContent, $this->getRoute($methodName), $this->route->getFile());
 
         $routeContent = file($this->route->getApiFile(), 2);
-        $this->removeSqlRoute($routeContent,$oldMethodName);
+        $this->removeSqlRoute($routeContent,$oldMethodName, $this->apiRouteFile);
         $this->writeRoute($routeContent, $this->getRoute($methodName),$this->route->getApiFile());
         return true;
     }
@@ -195,9 +195,9 @@ class RouteFileWriter
     public function deleteSqlRoute($methodName)
     {
         $routeContent = file($this->route->getFile(), 2);
-        $routeResult = $this->removeSqlRoute($routeContent,$methodName);
+        $routeResult = $this->removeSqlRoute($routeContent,$methodName,$this->routeFile);
         $routeContent = file($this->route->getApiFile(), 2);
-        $apiRouteResult = $this->removeSqlRoute($routeContent,$methodName);
+        $apiRouteResult = $this->removeSqlRoute($routeContent,$methodName,$this->apiRouteFile);
         return $routeResult && $apiRouteResult;
     }
 
@@ -206,13 +206,14 @@ class RouteFileWriter
      *
      * @param $routeContent
      * @param $methodName
+     * @param $file
      * @return bool
      */
-    protected function removeSqlRoute(&$routeContent,$methodName)
+    protected function removeSqlRoute(&$routeContent, $methodName, $file)
     {
         if ($line = $this->routeExists($routeContent, $methodName, 'queries')) {
             unset($routeContent[$line]);
-            if (\File::put($this->route->getFile(), implode(PHP_EOL,$routeContent)) === false) {
+            if (\File::put($file, implode(PHP_EOL, $routeContent)) === false) {
                 return false;
             }
         }
@@ -314,7 +315,7 @@ class RouteFileWriter
     protected function getSourceRoute($name, $requestType)
     {
         $middleware = $this->getMiddleware($name, 'name');
-        $route = 'Route::' . $requestType . '(\'/data_sources/' . strtolower(Str::plural($this->route->getModelName())) . '/'
+        $route = 'Route::get(\'/data_sources/' . strtolower(Str::plural($this->route->getModelName())) . '/'
             . Str::snake($name) . '\', [';
         if ($middleware)
             $route .= "'middleware' => ['" . implode("','", $middleware) . "'], ";

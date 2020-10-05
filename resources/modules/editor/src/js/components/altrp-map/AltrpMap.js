@@ -9,102 +9,78 @@ const defaultOptions = {
   color: "#3388ff",
 };
 
-function AltrpMap({ settings, id }) {
+function AltrpMap({ settings }) {
   const [isLoading, setIsLoading] = useState(false);
   const [geoJson, setGeoJson] = useState({});
-  const {
-    editable,
-    canvas,
-    zoom,
-    lat,
-    lng,
-    query,
-    style_height = {},
-    style_margin = {},
-  } = settings;
+  const { query, handler, canvas, zoom, lat, lng, style_height = {}, style_margin = {} } = settings;
+  console.log("settings :>> ", settings);
 
-  // Сохраняем данные карты
-  const handleSave = (data) => {
-    axios.post(`/ajax/maps/${id}`, {
-      data: JSON.stringify({
-        type: "FeatureCollection",
-        features: data.features,
-      }),
-    });
+  const handleClickPolygon = (e) => {
+    // Получаем ID объекта на карте
+    const { id } = e.target.feature;
+    const url = handler.params.replace("{{id}}", id);
+    if (handler.evt === "goto") {
+      window.open(url, "_blank");
+    } else if (handler.evt === "load") {
+      composeDynamicData(url);
+    }
   };
 
-  /* const getData = useCallback(
-    async (id) => {
-      console.log("id :>> ", id);
-      try {
-        setIsLoading(true);
-        const req = await axios(`/ajax/maps/${id}`);
-        if (req.status === 200) {
-          setGeoJson(req.data);
-          setIsLoading(false);
-        }
-      } catch (error) {
-        setIsLoading(false);
-      }
-    },
-    [id]
-  ); */
-
-  // При изменении карты подгружаем новые данные
-  /* useEffect(() => {
-    getData(id);
-  }, [id]); */
-
-  // При изменении модели подгружаем новые данные
-  useEffect(() => {
-    //console.log("query changed to :>> ", query);
-    if (query?.dataSource?.value) {
-      // Получаем данные из модели
-      (async () => {
-        const url = query.dataSource?.value;
-        const { data, status } = await axios(url);
-        if (status === 200 && data.data) {
-          const geojson = {
-            type: "FeatureCollection",
-            features: data.data.map((item) => {
-              return {
-                id: item.id,
-                type: "Feature",
-                properties: {
-                  tooltip: item.name,
-                  ...defaultOptions,
-                  ...item.options,
-                },
-                geometry: {
-                  type: "Polygon",
-                  coordinates: JSON.parse(item.polygon),
-                },
-              };
-            }),
+  const composeDynamicData = useCallback(async (url) => {
+    setIsLoading(true);
+    const { data, status } = await axios(url);
+    if (status === 200 && data.data) {
+      const geojson = {
+        type: "FeatureCollection",
+        features: data.data.map((item) => {
+          return {
+            id: item.id,
+            type: "Feature",
+            properties: {
+              tooltip: item.name,
+              ...defaultOptions,
+              ...item.options,
+            },
+            geometry: {
+              type: "Polygon",
+              coordinates: JSON.parse(item.polygon),
+            },
           };
-          setGeoJson(geojson);
-          setIsLoading(false);
-          //handleSave(geojson);
-        } else {
-          // Отключаем лоадер
-          setIsLoading(false);
-          // Сбрасываем полигоны
-          setGeoJson({
-            type: "FeatureCollection",
-            features: [],
-          });
-          // Сохраняем пустые полигоны
-          //handleSave([]);
-        }
-      })();
+        }),
+      };
+      setGeoJson(geojson);
+      setIsLoading(false);
+    } else {
+      // Отключаем лоадер
+      setIsLoading(false);
+      // Сбрасываем полигоны
+      setGeoJson({
+        type: "FeatureCollection",
+        features: [],
+      });
     }
-  }, [settings.query]);
+  }, []);
+
+  const parseQueryParams = (qs = "") => {
+    if (!qs) return "";
+    const keyValues = qs.split("\n");
+    const result = keyValues.map((item) => item.replace("|", "=")).join("&");
+    return `?${result}`;
+  };
+
+  // При изменении модели, подгружаем новые данные
+  useEffect(() => {
+    if (query?.dataSource?.value) {
+      const queryString = parseQueryParams(query?.defaultParams);
+      composeDynamicData(query?.dataSource?.value + queryString);
+    }
+  }, [query]);
 
   return (
     <MapDesigner
       isTransformLatLng={true}
       data={geoJson}
-      saveData={handleSave}
+      onTap={handleClickPolygon}
       isLoading={isLoading}
       style={{
         height: style_height.size + style_height.unit,
@@ -113,16 +89,10 @@ function AltrpMap({ settings, id }) {
         marginLeft: style_margin.left + style_margin.unit,
         marginRight: style_margin.right + style_margin.unit,
       }}
-      isEditable={editable}
+      isEditable={false}
       preferCanvas={canvas}
       zoom={+zoom}
       center={[lat, lng]}
-      interactionOptions={{
-        doubleClickZoom: editable,
-        scrollWheelZoom: editable,
-        touchZoom: editable,
-        keyboard: editable,
-      }}
     />
   );
 }

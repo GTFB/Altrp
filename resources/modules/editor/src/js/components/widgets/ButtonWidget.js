@@ -215,14 +215,21 @@ class ButtonWidget extends Component {
   }
 
   render() {
-    // if (this.state.redirect) {
-    //   return <Redirect to={this.state.redirect} push={true} />;
-    // }
+    const { link_link = {} } = this.state.settings;
+    const { goBack } = this.props.history;
+    const background_image = this.props.element.getSettings('background_image', {});
+
+    let modelData = this.props.element.hasCardModel()
+        ? this.props.element.getCardModel().getData()
+        : this.props.currentModel.getData();
+    let classes = "altrp-btn " + (this.state.settings.position_css_classes || "");
+    if (background_image.url) {
+      classes += ' altrp-background-image';
+    }
 
     let buttonText = this.getContent('button_text') || '';
 
-    let classes =
-      "altrp-btn " + (this.state.settings.position_css_classes || "");
+
     let buttonMedia = { ...this.state.settings.button_icon };
     if (this.state.pending) {
       classes += " altrp-disabled";
@@ -230,6 +237,27 @@ class ButtonWidget extends Component {
 
     classes += this.state.settings.link_button_type === "dropbar" ? "altrp-btn-dropbar" : ""
 
+    const buttonProps = {
+      className: classes,
+      // to:
+    };
+    console.log( this.props);
+    buttonProps.to = link_link.url ? link_link.url.replace(':id', this.getModelId() || '') : '';
+    buttonProps.href =  link_link.url ? link_link.url.replace(':id', this.getModelId() || '') : '';
+    if(_.isObject(this.state.modelData) && link_link.url){
+      buttonProps.to = parseURLTemplate(link_link.url, this.state.modelData);
+      buttonProps.href = parseURLTemplate(link_link.url, this.state.modelData);
+    }
+    let icon = (buttonMedia && buttonMedia.assetType) ? <span className={"altrp-btn-icon "}>{renderAssetIcon(buttonMedia)} </span> : '';
+
+    let url = link_link.url ? link_link.url.replace(':id', this.getModelId() || '') : '';
+    if(_.isObject(this.props.currentModel)){
+      // console.log(this.props.currentModel);
+      // console.log(link_link.url);
+      url = parseURLTemplate(link_link.url || '', modelData);
+    }
+
+    classes += this.classStateDisabled();
     let button = (
       this.state.settings.link_button_type === "none" ? (
         <button

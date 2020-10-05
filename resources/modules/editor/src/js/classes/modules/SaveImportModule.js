@@ -1,6 +1,6 @@
 import BaseModule from "./BaseModule";
 import Resource from "../Resource";
-import { getEditor, getTemplateId} from "../../helpers";
+import {getEditor, getTemplateDataStorage, getTemplateId} from "../../helpers";
 import CONSTANTS from "../../consts";
 import RootElement from "../elements/RootElement";
 import store from "../../store/store";
@@ -16,8 +16,14 @@ class SaveImportModule extends BaseModule{
     this.resource = new Resource({
       route: '/admin/ajax/templates',
     });
+    this.globalStorageResource = new Resource({
+      route: '/admin/ajax/global_styles',
+    });
   }
 
+  /**
+   * Загружаем шаблон
+   */
   load(){
     this.template_id = getTemplateId();
     // console.log(this.template_id);
@@ -43,6 +49,9 @@ class SaveImportModule extends BaseModule{
     }
   }
 
+  /**
+   * Сохраняем шаблон
+   */
   saveTemplate(){
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_SAVING));
     let templateData = getEditor().modules.templateDataStorage.getTemplateDataForSave();
@@ -54,6 +63,49 @@ class SaveImportModule extends BaseModule{
     });
   }
 
+  /**
+   * Сохраняем настройки корневого элемента в бд, таблица altrp_global_styles
+   */
+  async saveRootElementSettings(){
+    const rootElement = getTemplateDataStorage().getRootElement();
+    const title = rootElement.getSettings('settings_save_title');
+    if(! title){
+      return {
+        success: false,
+        message: 'Global Style Title'
+      };
+    }
+    const data = rootElement.getSettings();
+    return this.globalStorageResource.post({
+      data,
+      title,
+    });
+  }
+
+  /**
+   * Импортируем глобальные настройки в настройки текущего шаблона
+   * @return {Promise<{success: boolean, message: string}>}
+   */
+  async importGlobalSettings(){
+    const rootElement = getTemplateDataStorage().getRootElement();
+    const globalSettingId = rootElement.getSettings('settings_choose');
+    const oldChoosePage = rootElement.getSettings('choose_page');
+    if(! globalSettingId){
+      return {
+        success: false,
+        message: 'Global Style not Selected'
+      };
+    }
+    const globalStyle = (await this.globalStorageResource.get(globalSettingId)).data;
+
+    _.set(globalStyle.data, 'choose_page', oldChoosePage);
+    rootElement.setSettings(globalStyle.data);
+    console.log(globalStyle.data);
+    rootElement.updateStyles();
+    return {
+      success: true,
+    };
+  }
 }
 
 export default SaveImportModule;

@@ -1,5 +1,5 @@
 import React, {useCallback, useState, useEffect} from "react";
-import {useTable, useSortBy} from "react-table";
+import {useTable, useGroupBy} from "react-table";
 import {useQuery, usePaginatedQuery, queryCache} from  "react-query";
 import '../../../sass/altrp-pagination.scss';
 import {Link} from "react-router-dom";
@@ -39,6 +39,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
       defaultSortSettings.order = _.get(column, 'column_is_default_sorted_direction', 'ASC')
     }
   });
+  const groupBy = React.useMemo(()=>getGroupBy(settings.tables_columns), [settings.tables_columns]);
   const [page, setPage] = useState(1);
 
   let counter = query.getCounterStart(page);
@@ -48,12 +49,17 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
   const [sortSetting, setSortSettings] = useState(defaultSortSettings);
   const [filterSetting, setFilterSettings] = useState({});
   const [doubleClicked, setDoubleClicked] =  useState({});
+  const groupingStore = [];
   const filterSettingJSON = JSON.stringify(filterSetting);
-  const fetchModels = useCallback(async (key, page = 1, sortSetting, filterSetting) => {
+  const fetchModels = useCallback(async (key, page = 1, sortSetting, filterSetting, params,  groupBy) => {
     let queryData = {page};
     const filterSettingJSON = JSON.stringify(filterSetting);
     if(sortSetting){
       queryData = _.assign(sortSetting, queryData);
+    }
+    if(groupBy){
+      queryData.order = 'ASC';
+      queryData.order_by = groupBy;
     }
     if(filterSettingJSON.length > 2){
       queryData.filters = filterSettingJSON;
@@ -75,7 +81,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
       resolvedData,
       latestData,
       error,
-    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting, query.getParams()],
+    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting, query.getParams(), groupBy],
         fetchModels,
         useQuerySettings);
     _data = resolvedData ? resolvedData : _data;
@@ -93,7 +99,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
      */
     const {status, data, error,} = useQuery([query.dataSourceName,query.getParams()],
         () => {
-      return query.getResource().getQueried({...sortSetting,filters: filterSettingJSON})
+      return query.getResource().getQueried({...sortSetting,filters: filterSettingJSON, groupBy})
     }, useQuerySettings);
     _data = data;
     _status = status;
@@ -101,11 +107,11 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
   }
   let columns = [];
   columns = settingsToColumns(settings);
+  if(_.isObject(_data) && ! _.isArray(_data)){
+    _data = [_data];
+  }
   if(! _data.length){
     _data = data;
-  }
-  if(! _.isArray(_data)){
-    _data = [_data];
   }
   /**
    * обновление данных при изменении ячейки
@@ -181,7 +187,8 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
           let rowStyles = _.get(settings, 'field_name_for_row_styling');
           rowStyles = _.get(row.original, rowStyles, '');
           rowStyles = mbParseJSON(rowStyles, {});
-          return (
+          return (<React.Fragment key={row.id}>
+                {renderGroupingTr(row, groupBy, groupingStore)}
             <tr {...row.getRowProps()}
                 style={rowStyles}
                 className={`altrp-table-tr ${settings.table_hover_row ? 'altrp-table-background' : ''}`}>
@@ -243,7 +250,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
                 /**
                  * Если в настройках колонки есть url, и в данных есть id, то делаем ссылку
                  */
-                if(columns[_i].column_link && row.original.id){
+                if(columns[_i].column_link){
                   cellContent = React.createElement(linkTag, {
                     to: parseURLTemplate(columns[_i].column_link,  row.original),
                     className: 'altrp-inherit altrp-table-td__default-content',
@@ -286,7 +293,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
                     {cellContent}{doubleClickContent}
                   </td>
               })}
-            </tr>
+            </tr></React.Fragment>
           )
       })}
     </tbody>
@@ -414,4 +421,46 @@ function renderTh({column, sortSetting, sortingHandler, filterSetting, filterHan
     </label>}
 
   </th>
+}
+
+/**
+ * Получить поле для группировки строк
+ * @param {[{
+ *  group_by:{boolean},
+ *  accessor:{string},
+ * }]}columns
+ *
+ * @return {string|null}
+ */
+function getGroupBy(columns){
+  let groupBy = null;
+  columns.forEach(column=>{
+    if(column.group_by){
+      groupBy = column.accessor;
+    }
+  });
+  return groupBy;
+}
+
+/**
+ * Выводит группирующую строку в таблице
+ * @params {{}} row
+ * @params {null|string} row
+ * @params {[]} groupingStore
+ * @return {string|React.Component}
+ */
+function renderGroupingTr(row, groupBy, groupingStore){
+  if(! groupBy){
+    return null;
+  }
+  let text = _.get(row, 'original.' + groupBy, '');
+  if(groupingStore.indexOf(text) >= 0){
+    return null;
+  }
+  groupingStore.push(text);
+  return text ? <tr className="altrp-table-tr" >
+    <td colSpan={_.get(row, 'cells.length', 1)} className="altrp-table-td__grouping altrp-table-td altrp-table-background">
+      {text}
+    </td>
+  </tr> : null;
 }

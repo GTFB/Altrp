@@ -105,9 +105,9 @@ class TextController extends Component {
         </div> : <input className="control-field" onChange={this.changeValue} value={value} />
         }
 
-        <div className="control-group__append" ref={this.dynamicButton} onClick={this.openDynamicContent}>
+        {this.props.dynamic === false ? null : <div className="control-group__append" ref={this.dynamicButton} onClick={this.openDynamicContent}>
           <DynamicIcon />
-        </div>
+        </div>}
       </div>
       {this.props.description ? <div className="controller-container__description">
         {this.props.description}

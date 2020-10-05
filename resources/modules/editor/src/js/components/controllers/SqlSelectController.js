@@ -20,7 +20,7 @@ const SqlSelectController = ({ controller, controlId, label }) => {
             //console.log(item);
             return {
               value: item.name,
-              label: item.title,
+              label: item.description,
               model: item.model,
             };
           })
