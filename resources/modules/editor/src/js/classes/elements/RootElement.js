@@ -105,7 +105,7 @@ class RootElement extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "body": "background-color: {{COLOR}};"
+        "body{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
@@ -114,7 +114,7 @@ class RootElement extends BaseElement {
       label: 'Background Image',
       default: { url: "" },
       rules: {
-        "body": "background-image: url({{URL}});"
+        "body{{STATE}}": "background-image: url({{URL}});"
       }
     });
 
@@ -161,7 +161,7 @@ class RootElement extends BaseElement {
       label: 'Background Position',
       default: 'top left',
       rules: {
-        "body": "background-position: {{VALUE}};"
+        "body{{STATE}}": "background-position: {{VALUE}};"
       }
     });
 
@@ -184,7 +184,7 @@ class RootElement extends BaseElement {
       label: 'Background Attachment',
       default: 'scroll',
       rules: {
-        "body": "background-attachment: {{VALUE}};"
+        "body{{STATE}}": "background-attachment: {{VALUE}};"
       }
     });
 
@@ -219,7 +219,7 @@ class RootElement extends BaseElement {
       label: 'Background Repeat',
       default: 'repeat',
       rules: {
-        "body": "background-repeat: {{VALUE}};"
+        "body{{STATE}}": "background-repeat: {{VALUE}};"
       }
     });
 
@@ -241,7 +241,7 @@ class RootElement extends BaseElement {
       max: 1000,
       min: 0,
       rules: {
-        "body": "background-size: {{SIZE}}{{UNIT}};"
+        "body{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
       }
     });
 
@@ -268,7 +268,7 @@ class RootElement extends BaseElement {
       label: 'Background Size',
       default: 'unset',
       rules: {
-        "body": "background-size: {{VALUE}};"
+        "body{{STATE}}": "background-size: {{VALUE}};"
       }
     });
 
@@ -306,7 +306,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        'body': [
+        'body{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',

@@ -159,14 +159,14 @@ class Heading extends BaseElement {
     this.addControl('heading_style_typographic', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
-        default:{
-          lineHeight: 1.5,
-          spacing: 0,
-          size: 36,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
+        // default:{
+        //   lineHeight: 1.5,
+        //   spacing: 0,
+        //   size: 36,
+        //   weight: "normal",
+        //   family: "Open Sans",
+        //   decoration: ""
+        // },
         rules: {
           '{{ELEMENT}} .altrp-heading{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-serif;',
