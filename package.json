@@ -31,6 +31,7 @@
     "classnames": "^2.2.6",
     "dom-to-image": "^2.6.0",
     "dot-prop-immutable": "^2.1.0",
+    "express-session": "^1.17.1",
     "gsap": "^3.5.1",
     "highlight.js": "^10.1.1",
     "immutability-helper": "^3.1.1",
@@ -38,6 +39,7 @@
     "leaflet-draw": "^1.0.4",
     "lodash": "^4.17.19",
     "moment": "^2.27.0",
+    "passport": "^0.4.1",
     "query-string": "^6.13.1",
     "react": "^16.13.1",
     "react-ace": "^8.1.0",
@@ -73,6 +75,7 @@
     "redux-thunk": "^2.3.0",
     "redux-undo": "^1.0.1",
     "renamer": "^1.1.4",
+    "session-file-store": "^1.4.0",
     "slick-carousel": "^1.8.1",
     "style-object-to-css-string": "^1.0.1",
     "tinymce": "^5.4.1"

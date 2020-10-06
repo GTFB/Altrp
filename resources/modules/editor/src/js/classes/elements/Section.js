@@ -758,7 +758,7 @@ class Section extends BaseElement{
       label: "Z-index",
       default: 0,
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}}": "z-index: {{VALUE}}"
+        "{{ELEMENT}} .altrp-section": "z-index: {{VALUE}}"
       }
     });
 

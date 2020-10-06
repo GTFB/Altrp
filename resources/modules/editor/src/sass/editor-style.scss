@@ -20,8 +20,8 @@
     max-height: 100%;
   }
 }
-.editor-content-body {
-}
+// .editor-content-body {
+// }
 .left-panel {
   width: 270px;
   display: flex;
@@ -1403,7 +1403,7 @@ button {
 .altrp-element_section {
   & > .overlay {
     & .overlay-settings__button {
-      z-index: 9998;
+      z-index: 49;
       &:first-child {
         border-radius: 5px 0 0 0;
         &::before {

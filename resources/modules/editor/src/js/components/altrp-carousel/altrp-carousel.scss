@@ -1,7 +1,7 @@
 .altrp-carousel-slide-img {
     background: no-repeat 50%;
     -webkit-background-size: cover;
-    cursor: pointer;
+    cursor: grab;
     background-size: cover;
     height: 100%;
     width: 100%;
@@ -14,6 +14,7 @@
 .altrp-carousel-slide {
     overflow: hidden;
     height: 100%;
+    position: relative;
 }
 
 //.altrp-carousel-prev {
@@ -45,13 +46,12 @@
 
 .altrp-carousel-paging {
     border-radius: 10vh;
-    background-color: #c9c9c9;
+    background-color: #a4a4a4;
     padding-right: 1px;
 }
 
 .altrp-carousel-container {
     width: 100%;
-    //float: left;
 }
 
 .altrp-carousel-dots .slick-active .altrp-carousel-paging {
@@ -67,31 +67,25 @@
 }
 
 .altrp-carousel-dots-top-left {
-    top: 0 !important;
     text-align: left !important;
-    bottom: auto !important;
 }
 
 .altrp-carousel-dots-top {
-    top: 0 !important;
+    text-align: center !important;
     bottom: auto !important;
 }
 
 .altrp-carousel-dots-top-right {
-    top: 0 !important;
     text-align: right !important;
-    bottom: auto !important;
 }
 
 .altrp-carousel-dots {
-    position: absolute;
+    position: relative;
     list-style: none;
-    display: block;
-    text-align: center;
     padding: 0;
+    text-align: center;
     margin: 0;
     bottom: 0;
-    width: 100%;
 }
 
 .altrp-carousel-dots li {
@@ -125,9 +119,7 @@
 }
 
 .altrp-carousel-arrow-top {
-    position: absolute;
     top: 0;
-    margin-top: 10px;
 }
 
 .altrp-carousel-arrows-container .altrp-carousel-arrow-prev {
@@ -141,38 +133,67 @@
 }
 
 .altrp-carousel-arrow-top-right {
-    position: absolute;
     top: 0;
     right: 0;
     margin-right: 10px;
-    margin-top: 10px;
 }
 
 .altrp-carousel-arrow-bottom-left {
-    position: absolute;
     bottom: 0;
     left: 0;
     margin-left: 10px;
-    margin-bottom: 10px;
 }
 
 .altrp-carousel-arrow-bottom {
-    position: absolute;
     bottom: 0;
-    margin-bottom: 10px;
+
 }
 
 .altrp-carousel-arrow-bottom-right {
-    position: absolute;
     bottom: 0;
     right: 0;
-    margin-bottom: 10px;
     margin-right: 10px;
 }
 
-.slick-slider {
+.altrp-carousel-slides {
     width: 100%;
+    display: flex;
+}
+
+.altrp-carousel-slides-dots-top {
+    flex-direction: column-reverse;
+}
+
+.altrp-carousel-slides-dots-top .altrp-carousel-dots {
+    margin-bottom: 15px;
+}
+
+.altrp-carousel-slides-dots-bottom {
+    flex-direction: column;
+}
+
+.altrp-carousel-slides-dots-bottom .altrp-carousel-dots {
+    margin-bottom: -15px;
+}
+
+.altrp-carousel-slide-overlay {
+    width: calc(100% - 40px);
+    margin: 20px;
+    top: 0;
+    transition: 0.5s;
+    opacity: 0;
     display: flex;
     justify-content: center;
     align-items: center;
+    perspective: 20px; 
+    height: calc(100% - 40px);
+    padding: 10px;
+    cursor: grab;
+    background-color: #ffffff;
+    z-index: 4;
+    position: absolute;
+}
+
+.altrp-carousel-slide:hover .altrp-carousel-slide-overlay {
+    opacity: 1;
 }
