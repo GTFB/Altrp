@@ -169,7 +169,7 @@ class Heading extends BaseElement {
         },
         rules: {
           '{{ELEMENT}} .altrp-heading{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',

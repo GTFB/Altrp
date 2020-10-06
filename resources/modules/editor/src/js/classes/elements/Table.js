@@ -434,7 +434,7 @@ class Table extends BaseElement {
         },
         rules: {
           '{{ELEMENT}} .altrp-field{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -720,7 +720,7 @@ class Table extends BaseElement {
       },
       rules: {
         '{{ELEMENT}} .altrp-pagination__next{{STATE}}, .altrp-pagination__count{{STATE}}, .altrp-pagination__previous{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',
@@ -853,7 +853,7 @@ class Table extends BaseElement {
       // },
       rules: {
         '{{ELEMENT}} .altrp-table-th{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',
@@ -1061,7 +1061,7 @@ class Table extends BaseElement {
       // },
       rules: {
         '{{ELEMENT}} .altrp-table-td{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',
@@ -1142,7 +1142,7 @@ class Table extends BaseElement {
       label: 'Typographic',
       rules: {
         '{{ELEMENT}} .altrp-table-td__grouping{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',
