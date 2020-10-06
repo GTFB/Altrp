@@ -40,6 +40,9 @@ class Select2Controller extends Component {
       let options = await resource.search(
         this.props.currentElement.getSettings(this.props.controlId)
       );
+      if(! _.isArray(options)){
+        options = _.get(options, 'data', []);
+      }
       if (this.props.nullable) {
         options = _.union([{ label: "None", value: "" }], options);
       }
@@ -57,6 +60,9 @@ class Select2Controller extends Component {
     if (this.props.prefetch_options) {
       let resource = new Resource({ route: this.getRoute() });
       let options = await resource.getAll();
+      if(! _.isArray(options)){
+        options = _.get(options, 'data', []);
+      }
       this.setState((state) => ({
         ...state,
         options,
