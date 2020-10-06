@@ -55,6 +55,10 @@
   &__icon {
     transform: scale(0.6);
   }
+  &-icon {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 .altrp-section {
@@ -582,6 +586,55 @@
     padding: 5px;
     z-index: 10;
   }
+}
+
+.altrp-dropbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.altrp-dropbar-children-wrapper {
+  display: flex;
+  position: relative;
+}
+
+.altrp-btn-dropbar {
+  width: 100%;
+}
+
+.altrp-dropbar-container {
+  position: absolute;
+  color: #666;
+  background-color: #f1f3f5;
+}
+
+.altrp-dropbar-content {
+  user-select: text;
+}
+
+.altrp-dropbar-container-hide {
+    visibility: hidden;
+}
+
+.altrp-dropbar-variant-bottom-center .altrp-dropbar-children-wrapper {
+  position: static;
+  justify-content: center;
+}
+
+.altrp-dropbar-variant-top-center .altrp-dropbar-children-wrapper {
+  position: static;
+  justify-content: center;
+}
+
+.altrp-dropbar-variant-left-center .altrp-dropbar-children-wrapper {
+  align-items: center;
+}
+
+.altrp-dropbar-variant-right-center .altrp-dropbar-children-wrapper {
+  align-items: center;
 }
 .aspect-ratio-off_true .altrp-image{
   position: relative;
