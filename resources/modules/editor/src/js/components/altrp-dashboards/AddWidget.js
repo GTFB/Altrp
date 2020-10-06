@@ -14,6 +14,7 @@ import LegendPositionField from "./fields/LegendPositionField";
 import SourceField from "./fields/SourceField";
 import ColorSchemeField from "./fields/colorSchemeField";
 import VerticalTableField from "./fields/VerticalTableField";
+import { queryString } from "./helpers/queryString";
 
 const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
   const [widget, setWidget] = useState({
@@ -23,6 +24,7 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
       isVertical: false,
       legend: "",
       legendPosition: "bottom",
+      colorScheme: 'Custom'
     },
     filter: {},
   });
@@ -58,9 +60,14 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
   };
 
   const getTypesBySource = (s) => {
+    if (s.includes('?')) {
+      //Отсекаем параметры от строки запроса, т.к. при наличии параметра пропадают все типы диаграмм, кроме таблицы
+      s = s.split('?')[0];
+    }
     const source = settings.sql?.find(
       (item) => s === `/ajax/models/queries/${item.model}/${item.value}`
     );
+    console.log('SOURCES', s, source);
     return source?.types?.map((type) => type.value) || [];
   };
 
@@ -74,6 +81,17 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
       };
     });
   };
+
+  if (composeSources(settings.sql).length === 1) {
+    console.log(widget);
+    let currentSource = composeSources(settings.sql)[0];
+    let filter = '';
+    if (Object.keys(widget.filter).length !== 0) {
+      console.log(widget.filter);
+      filter = queryString(widget.filter);
+    }
+    widget.source = currentSource.url + filter;
+  }
 
   return (
     <Card>
@@ -126,7 +144,6 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
           {widget.source && <WidgetDiagram widget={widget} width={360} height={360} />}
         </div>
       </Card.Body>
-      {console.log(widget)}
       <Card.Footer>
         <Button variant="secondary" onClick={() => setIsShow(false)}>
           Закрыть
