@@ -20,7 +20,17 @@ export default class DialogTriggersTab extends Component {
   }
 
   async updateTriggers() {
-    let res = await this.resource.put('triggers', {data: this.state.value});
+    const { inactivity, on_click, on_exit, on_page_load, on_scroll, to_element } = this.state.value;
+    const { afterInactivity, onClick, onLoad, onScroll, scrollElement } = this.state;
+    const data = { 
+      inactivity: afterInactivity && inactivity,
+      on_click: onClick && on_click,
+      on_exit,
+      on_page_load: onLoad && on_page_load,
+      on_scroll: onScroll && on_scroll,
+      to_element: scrollElement && to_element
+    }
+    let res = await this.resource.put('triggers', { data });
     console.log(res);
   }
 
@@ -41,7 +51,7 @@ export default class DialogTriggersTab extends Component {
           ...this.state.value,
           on_scroll: {
             ...this.state.value.on_scroll,
-            direction: e.target.value, 
+            direction: e.target.value,
           }
         }
       })
@@ -70,7 +80,7 @@ export default class DialogTriggersTab extends Component {
     if (e.target.name === 'on_exit') {
       this.setState({
         [e.target.name]: e.target.checked,
-        value:{
+        value: {
           ...this.state.value,
           [e.target.name]: e.target.checked,
         }

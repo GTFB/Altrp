@@ -103,6 +103,8 @@ class AddDataSourceForm extends Component {
   render() {
     const { roles, permissions } = this.state.value.access;
     const { rolesOptions, permissionsOptions } = this.state;
+    const { id } = this.props.match.params;
+
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
@@ -236,7 +238,7 @@ class AddDataSourceForm extends Component {
       </div>}
 
       <div className="btn__wrapper">
-        <button className="btn btn_success" type="submit">Add</button>
+        <button className="btn btn_success" type="submit">{id ? 'Edit' : 'Add'}</button>
         <Link className="btn" to="/admin/tables/models">Cancel</Link>
         {/* <button className="btn btn_failure">Delete</button> */}
       </div>

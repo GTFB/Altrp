@@ -169,7 +169,7 @@ class Heading extends BaseElement {
         },
         rules: {
           '{{ELEMENT}} .altrp-heading{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -215,10 +215,10 @@ class Heading extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default:{
-        top: 5,
-        right: 0,
-        bottom: 5,
-        left: 0,
+        // top: 5,
+        // right: 0,
+        // bottom: 5,
+        // left: 0,
         unit:'px'
       },
       units:[
@@ -240,10 +240,10 @@ class Heading extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: "px"
       },
       units: ["px", "%", "vh"],
@@ -299,9 +299,9 @@ class Heading extends BaseElement {
     this.addControl("style_background_opacity", {
       type: CONTROLLER_SLIDER,
       label: "Opacity",
-      default: {
-        size: 1
-      },
+      // default: {
+      //   size: 1
+      // },
       max: 1,
       min: 0,
       step: 0.01,
@@ -332,7 +332,7 @@ class Heading extends BaseElement {
       label: 'Background Image',
       default: { url: "" },
       rules: {
-        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-image: url({{URL}});"
+        "{{ELEMENT}} .altrp-heading.altrp-background-image{{STATE}}": "background-image: url({{URL}});"
       }
     });
 
@@ -379,7 +379,7 @@ class Heading extends BaseElement {
       label: 'Background Position',
       default: 'top left',
       rules: {
-        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-position: {{VALUE}};"
+        "{{ELEMENT}} .altrp-heading.altrp-background-image{{STATE}}": "background-position: {{VALUE}};"
       }
     });
 
@@ -402,7 +402,7 @@ class Heading extends BaseElement {
       label: 'Background Attachment',
       default: 'scroll',
       rules: {
-        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-attachment: {{VALUE}};"
+        "{{ELEMENT}} .altrp-heading.altrp-background-image{{STATE}}": "background-attachment: {{VALUE}};"
       }
     });
 
@@ -437,7 +437,7 @@ class Heading extends BaseElement {
       label: 'Background Repeat',
       default: 'repeat',
       rules: {
-        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-repeat: {{VALUE}};"
+        "{{ELEMENT}} .altrp-heading.altrp-background-image{{STATE}}": "background-repeat: {{VALUE}};"
       }
     });
 
@@ -459,7 +459,7 @@ class Heading extends BaseElement {
       max: 1000,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
+        "{{ELEMENT}} .altrp-heading.altrp-background-image{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
       }
     });
 
@@ -486,7 +486,7 @@ class Heading extends BaseElement {
       label: 'Background Size',
       default: 'unset',
       rules: {
-        "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
+        "{{ELEMENT}} .altrp-heading.altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
       }
     });
 

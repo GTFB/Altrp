@@ -20,6 +20,10 @@ class ChooseController extends Component {
     };
   };
 
+  getDefaultValue() {
+    return '';
+  }
+
   change(e) {
     let changeRemove = document.getElementsByClassName("control-container-choose-block");
     let choose = e.currentTarget.dataset.change;

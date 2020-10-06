@@ -457,7 +457,7 @@ class Nav extends BaseElement{
         },
         rules: {
           '{{ELEMENT}} .altrp-nav-menu-li-link-label{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -583,7 +583,7 @@ class Nav extends BaseElement{
         },
         rules: {
           '{{ELEMENT}} .altrp-nav-menu-li-dropdown-hor-ver-link-label{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -726,7 +726,7 @@ class Nav extends BaseElement{
         },
         rules: {
           '{{ELEMENT}} .altrp-heading': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -812,7 +812,7 @@ class Nav extends BaseElement{
         },
         rules: {
           '{{ELEMENT}} .altrp-heading{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -858,7 +858,7 @@ class Nav extends BaseElement{
         },
         rules: {
           '{{ELEMENT}} .altrp-heading{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -904,7 +904,7 @@ class Nav extends BaseElement{
         },
         rules: {
           '{{ELEMENT}} .altrp-heading{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',

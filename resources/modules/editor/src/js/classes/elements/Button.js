@@ -406,10 +406,10 @@ class Button extends BaseElement{
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default:{
-        top: 20,
-        right: 25,
-        bottom: 20,
-        left: 25,
+        // top: 20,
+        // right: 25,
+        // bottom: 20,
+        // left: 25,
         unit:'px',
         bind: true
       },
@@ -469,14 +469,14 @@ class Button extends BaseElement{
     this.addControl('font_typographic', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
-        default:{
-          lineHeight: 1,
-          spacing: 0,
-          size: 16,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
+        // default:{
+        //   lineHeight: 1,
+        //   spacing: 0,
+        //   size: 16,
+        //   weight: "normal",
+        //   family: "Open Sans",
+        //   decoration: ""
+        // },
         rules: {
           '{{ELEMENT}} .altrp-btn{{STATE}}': [
             'font-size: {{SIZE}}px;',
@@ -495,10 +495,10 @@ class Button extends BaseElement{
     this.addControl('font_color', {
       type: CONTROLLER_COLOR,
       label: 'Color',
-      default: {
-        color: "rgb(255,255,255)",
-        colorPickedHex: "#FFF",
-      },
+      // default: {
+      //   color: "rgb(255,255,255)",
+      //   colorPickedHex: "#FFF",
+      // },
       rules: {
         '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
       },
@@ -568,10 +568,10 @@ class Button extends BaseElement{
     this.addControl('border_color', {
         type: CONTROLLER_COLOR,
         label: 'Border Color',
-        default: {
-          color: "rgb(50,168,82)",
-          colorPickedHex: "#32a852",
-        },
+        // default: {
+        //   color: "rgb(50,168,82)",
+        //   colorPickedHex: "#32a852",
+        // },
         rules: {
           '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
         },
@@ -582,7 +582,7 @@ class Button extends BaseElement{
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
       default:{
-        size: 6,
+        // size: 6,
         unit: 'px',
       },
       units:[
@@ -601,15 +601,15 @@ class Button extends BaseElement{
       type: CONTROLLER_SHADOW,
       label: 'Shadow',
       default: {
-        blur: 0,
-        horizontal: 0,
-        vertical: 0,
-        opacity: 1,
-        spread: 0,
-        colorRGB: 'rgb(0, 0, 0)',
-        color: 'rgb(0, 0, 0)',
-        colorPickedHex: '#000000',
-        type: ""
+        // blur: 0,
+        // horizontal: 0,
+        // vertical: 0,
+        // opacity: 1,
+        // spread: 0,
+        // colorRGB: 'rgb(0, 0, 0)',
+        // color: 'rgb(0, 0, 0)',
+        // colorPickedHex: '#000000',
+        // type: ""
       },
       presetColors: [
         '#eaeaea',
@@ -631,10 +631,10 @@ class Button extends BaseElement{
     this.addControl('background_color', {
       type: CONTROLLER_COLOR,
       label: 'Background color',
-      default: {
-        color: "rgb(52,59,76)",
-        colorPickedHex: "#343B4C",
-      },
+      // default: {
+      //   color: "rgb(52,59,76)",
+      //   colorPickedHex: "#343B4C",
+      // },
       rules: {
         '{{ELEMENT}} .altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
       },
@@ -934,7 +934,7 @@ class Button extends BaseElement{
     },
     rules: {
         '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',

@@ -470,7 +470,7 @@ class Tabs extends BaseElement {
         },
         rules: {
           '{{ELEMENT}} .altrp-tab-btn{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -626,7 +626,7 @@ class Tabs extends BaseElement {
         },
         rules: {
           '{{ELEMENT}} .altrp-tab-content div{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -850,7 +850,7 @@ class Tabs extends BaseElement {
         },
         rules: {
           '{{ELEMENT}} .altrp-tabs-switcher-label-section-one': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -893,7 +893,7 @@ class Tabs extends BaseElement {
         },
         rules: {
           '{{ELEMENT}} .altrp-tabs-switcher-section-one-text p': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -943,7 +943,7 @@ class Tabs extends BaseElement {
         },
         rules: {
           '{{ELEMENT}} .altrp-tabs-switcher-label-section-two': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -986,7 +986,7 @@ class Tabs extends BaseElement {
         },
         rules: {
           '{{ELEMENT}} .altrp-tabs-switcher-section-two-text p': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',

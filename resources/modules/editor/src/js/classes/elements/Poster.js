@@ -566,7 +566,7 @@ class Poster extends BaseElement{
         },
         rules: {
           '{{ELEMENT}} .altrp-tab-btn': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -837,7 +837,7 @@ class Poster extends BaseElement{
         },
         rules: {
           '{{ELEMENT}} .altrp-tab-content div': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -1131,7 +1131,7 @@ class Poster extends BaseElement{
         },
         rules: {
           '{{ELEMENT}} .altrp-tab-content div': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -1282,7 +1282,7 @@ class Poster extends BaseElement{
         },
         rules: {
           '{{ELEMENT}} .altrp-tab-btn': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
