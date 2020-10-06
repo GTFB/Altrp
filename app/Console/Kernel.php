@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Console;
-
+use App\Console\Commands\PluginMake;
+use App\Console\Commands\PluginMigrate;
 use Illuminate\Console\Scheduling\Schedule;
+use App\Console\Commands\PluginMakeMigration;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
@@ -13,7 +15,9 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        PluginMakeMigration::class,
+        PluginMigrate::class,
+        PluginMake::class
     ];
 
     /**

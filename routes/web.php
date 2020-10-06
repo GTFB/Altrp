@@ -305,7 +305,12 @@ Route::group(['prefix' => 'admin'/* , 'middleware' => 'auth' */], function () {
     Route::get('/tables/{table}/controller', "Admin\TableController@getController");
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
 
+    /**
+     * Плагины
+     */
 
+    Route::get('/plugins',"Admin\PluginController@index");
+    Route::post('/plugins/switch',"Admin\PluginController@switch");
   });
 
   /**
