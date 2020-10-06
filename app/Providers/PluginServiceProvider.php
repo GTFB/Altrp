@@ -45,8 +45,8 @@ class PluginServiceProvider extends ServiceProvider
       private function activateEnabledPlugins(): void
       {
             $plugins = json_decode(file_get_contents(app_path() . "/Plugins/plugins.json"), true);
-
-            foreach ($plugins['enabled'] as $plugin) {
+        $enabled = data_get($plugins, 'enabled', [] );
+            foreach ($enabled as $plugin) {
 
                   $pluginNamespace = "App\\Plugins\\$plugin";
 

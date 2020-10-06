@@ -35,7 +35,7 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
   };
 
   const composeSources = (sources = []) => {
-    if (sources.length === 0) return [];
+    if ((! sources) || sources.length === 0) return [];
 
     return sources.map((source) => {
       return {
