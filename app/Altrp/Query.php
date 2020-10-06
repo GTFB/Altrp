@@ -45,6 +45,7 @@ class Query extends EloquentModel
         if( $imported_query['name'] === $altrp_query->name ){
           if( date( $imported_query['updated_at'] ) > date( $altrp_query->updated_at ) ) {
             $altrp_query->fill( $imported_query );
+            $altrp_query->model_id = $model->id;
             try {
               $altrp_query->save();
             } catch (\Exception $e){
