@@ -128,8 +128,6 @@ class Input extends BaseElement{
             'label' : 'left',
           }
         ],
-        rules: {
-        },
       }
     );
 
@@ -392,7 +390,7 @@ class Input extends BaseElement{
         // },
         rules: {
           '{{ELEMENT}} .altrp-field-label{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -404,6 +402,7 @@ class Input extends BaseElement{
         },
       }
     );
+
     this.endControlSection();
 
     this.startControlSection('font_style_section', {
@@ -424,7 +423,7 @@ class Input extends BaseElement{
       // },
       rules: {
         '{{ELEMENT}} .altrp-field-select2__single-value{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px;',
@@ -434,7 +433,7 @@ class Input extends BaseElement{
           'text-decoration: {{DECORATION}};'
         ],
         '{{ELEMENT}} .altrp-field{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px;',
@@ -602,7 +601,7 @@ class Input extends BaseElement{
         // },
         rules: {
           '{{ELEMENT}} .altrp-field::placeholder{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -612,7 +611,7 @@ class Input extends BaseElement{
             'text-decoration: {{DECORATION}}'
           ],
           '{{ELEMENT}} .altrp-field-select2__placeholder{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -658,7 +657,7 @@ class Input extends BaseElement{
         },
         rules: {
           '{{ELEMENT}} .altrp-field-required{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',

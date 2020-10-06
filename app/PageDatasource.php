@@ -27,7 +27,14 @@ class PageDatasource extends Model
    */
   public static function import( $page_data_sources = [] )
   {
-
+    foreach ( self::all() as $item ) {
+      try {
+        $item->delete();
+      } catch (\Exception $e){
+        Log::error( $e->getMessage() );
+        continue;//
+      }
+    }
     foreach ( $page_data_sources as $page_data_source ) {
       $source = Source::where( [
         'url' => data_get( $page_data_source,'source_url' ),
