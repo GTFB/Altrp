@@ -67,6 +67,7 @@ class Template extends Model
       if( $old_template ){
         if( date( $imported_template['updated_at'] ) > date( $old_template->updated_at ) ) {
           $old_template->data = $imported_template['data'];
+          $old_template->all_site = $imported_template['all_site'];
           try {
             $old_template->save();
           } catch ( \Exception $e ) {
