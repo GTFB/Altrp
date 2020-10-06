@@ -8,9 +8,9 @@ function ColorSchemeField({ widget, setWidget }) {
   });
 
   colors = [...colors, { label: "Custom", value: "Custom" }];
-
+  
   return (
-    <Form.Group>
+    <Form.Group className="d-none" >
       <Form.Label>Цветовая схема</Form.Label>
       <Form.Control
         as="select"
@@ -19,6 +19,7 @@ function ColorSchemeField({ widget, setWidget }) {
         onChange={(e) =>
           setWidget({ ...widget, options: { ...widget.options, colorScheme: e.target.value } })
         }
+        value={colors.find(({label,value})=> label == 'Custom').value}
         required
       >
         {colors.map(({ label, value }) => (
