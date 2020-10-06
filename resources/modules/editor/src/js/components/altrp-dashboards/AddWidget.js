@@ -126,10 +126,12 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
           {widget.source && <WidgetDiagram widget={widget} width={360} height={360} />}
         </div>
       </Card.Body>
+      {console.log(widget)}
       <Card.Footer>
         <Button variant="secondary" onClick={() => setIsShow(false)}>
           Закрыть
         </Button>
+        {console.log('====>', widget.source)}
         <Button variant="warning" onClick={onSave} disabled={widget.source === ""}>
           Сохранить изменения
         </Button>

@@ -8,7 +8,9 @@ function ColorSchemeField({ widget, setWidget }) {
   });
 
   colors = [...colors, { label: "Custom", value: "Custom" }];
-  
+  if (widget.options.colorScheme === '') {
+    setWidget({ ...widget, options: { ...widget.options, colorScheme: colors.find(({ label, value }) => label == 'Custom').value } })
+  }
   return (
     <Form.Group className="d-none" >
       <Form.Label>Цветовая схема</Form.Label>
@@ -19,7 +21,7 @@ function ColorSchemeField({ widget, setWidget }) {
         onChange={(e) =>
           setWidget({ ...widget, options: { ...widget.options, colorScheme: e.target.value } })
         }
-        value={colors.find(({label,value})=> label == 'Custom').value}
+        value={colors.find(({ label, value }) => label == 'Custom').value}
         required
       >
         {colors.map(({ label, value }) => (
