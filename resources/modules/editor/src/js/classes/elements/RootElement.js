@@ -2076,7 +2076,387 @@ class RootElement extends BaseElement {
       label: 'Table Defaults',
     });
     
+    this.addControl('table_default_header_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Header alignment',
+      default: 'center',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ],
+      rules: {
+        '.altrp-table-th{{STATE}}': 'text-align: {{VALUE}}',
+      },
+    });
 
+    this.addControl('table_default_body_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Body alignment',
+      default: 'left',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ],
+      rules: {
+        '.altrp-table-td{{STATE}}': 'text-align: {{VALUE}}',
+      },
+    });
+
+    this.addControl("table_default_stripe_color", {
+      type: CONTROLLER_COLOR,
+      label: "Stripe Color",
+      default: {
+        color: "rgba(0, 0, 50, .05)",
+        colorPickedHex: "#32a852"
+      },
+      rules: {
+        '.altrp-table-tbody--striped tr:nth-child(2n)': 'background-color: {{COLOR}}'
+      }
+    });
+
+    this.addControl("table_default_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Table Border Type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        '.altrp-table{{STATE}}': 'border-style: {{VALUE}} !important'
+      }
+    });
+
+    this.addControl("table_default_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Table Border Width",
+      default: {
+        top: 1,
+        right: 1,
+        bottom: 1,
+        left: 1,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        '.altrp-table{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
+      }
+    });
+
+    this.addControl("table_default_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Table Border Color",
+      default: {
+        color: "rgb(186,186,186)",
+        colorPickedHex: "#32a852"
+      },
+      rules: {
+        '.altrp-table{{STATE}}': 'border-color: {{COLOR}} !important'
+      }
+    });
+
+    this.addControl("table_default_header_background", {
+      type: CONTROLLER_COLOR,
+      label: "Header Background",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '.altrp-table-head{{STATE}}': 'background: {{COLOR}}'
+      }
+    });
+
+    this.addControl("table_default_header_text_color", {
+      type: CONTROLLER_COLOR,
+      label: "Header Text color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '.altrp-table-th{{STATE}}': 'color: {{COLOR}}'
+      }
+    });
+
+    this.addControl('table_default_header_font', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Header Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 14,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '.altrp-table-th{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
+
+    this.addControl("table_default_header_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Header Border type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        '.altrp-table-th{{STATE}}': 'border-style: {{VALUE}};',
+      }
+    });
+
+    this.addControl("table_default_header_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Header Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        '.altrp-table-th{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      }
+    });
+
+    this.addControl("table_default_header_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Header Border color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '.altrp-table-th{{STATE}}': 'border-color: {{COLOR}};',
+      }
+    });
+
+    this.addControl('table_default_header_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Header Padding',
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-table-th{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    });
+
+    this.addControl("table_default_body_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Body Border type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        '.altrp-table-td{{STATE}}': 'border-style: {{VALUE}};',
+      }
+    });
+
+    this.addControl("table_default_body_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Body Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        '.altrp-table-td{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      }
+    });
+
+    this.addControl("table_default_body_border_color_", {
+      type: CONTROLLER_COLOR,
+      label: "Body Border color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '.altrp-table-td{{STATE}}': 'border-color: {{COLOR}};',
+      }
+    });
+
+    this.addControl('table_default_body_cell_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Cell padding',
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-table-td{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    });
+
+    this.addControl("table_default_body_border_background", {
+      type: CONTROLLER_COLOR,
+      label: "Body Background",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '.altrp-table-tbody .altrp-table-background{{STATE}}': 'background: {{COLOR}};',
+      }
+    });
+
+    this.addControl("table_default_body_border_text_color", {
+      type: CONTROLLER_COLOR,
+      label: "Body Text color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '.altrp-table-td{{STATE}}': 'color: {{COLOR}};',
+      }
+    });
+
+    this.addControl('table_default_body_font', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Body Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 14,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '.altrp-table-td{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
+
+    this.addControl("table_default_body_links_color", {
+      type: CONTROLLER_COLOR,
+      label: "links_color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+      }
+    });
 
     this.endControlSection();
 
