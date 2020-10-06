@@ -5,7 +5,7 @@ import { queryString } from "../helpers/queryString";
 function SourceField({ widget, setWidget, sources }) {
   return (
     <Form.Group>
-      <Form.Label>{sources.length > 1 ? "Источник данных" : `Источник данных: ${sources[0].name}`}</Form.Label>
+      <Form.Label>{sources.length > 1 || sources.length == 0 ? "Источник данных" : `Источник данных: ${sources[0].name}`}</Form.Label>
       <Form.Control
         as="select"
         custom
