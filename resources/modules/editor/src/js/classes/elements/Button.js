@@ -20,6 +20,7 @@ import {
   TAB_STYLE,
   TAB_ADVANCED,
   CONTROLLER_MEDIA,
+  CONTROLLER_CREATIVE_LINK,
   CONTROLLER_GRADIENT
 } from "../modules/ControllersManager";
 
@@ -867,7 +868,7 @@ class Button extends BaseElement{
 
     this.addControl('icon_color_background', {
         type: CONTROLLER_COLOR,
-        label: 'Icon Color',
+        label: 'Background Color',
         rules: {
           '{{ELEMENT}} .altrp-btn-icon svg{{STATE}}': 'background: {{COLOR}};',
         },
@@ -891,6 +892,35 @@ class Button extends BaseElement{
   });
 
   this.endControlSection();
+
+    this.startControlSection(
+      'creative_link', {
+        tab: TAB_STYLE,
+        label: 'Creative Link',
+      }
+    );
+
+    this.addControl('creative_link_controller', {
+        type: CONTROLLER_CREATIVE_LINK,
+        label: 'Creative Link',
+        rules: {
+          '{{ELEMENT}} .altrp-btn:after{{STATE}}': [
+            'transition-duration: {{SIZE}}s;',
+            'height: {{LINEHEIGHT}}px;',
+            'color: {{COLOR}};',
+            'background: {{BACKGROUND}};',
+          ],
+          '{{ELEMENT}} .altrp-btn:before{{STATE}}': [
+            'transition-duration: {{SIZE}}s;',
+            'height: {{LINEHEIGHT}}px;',
+            'color: {{COLOR}};',
+            'background: {{BACKGROUND}};',
+          ],
+        },
+      }
+    );
+
+    this.endControlSection();
 
   this.startControlSection("dropbar_content_style", {
     tab: TAB_STYLE,

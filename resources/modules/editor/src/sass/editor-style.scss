@@ -1,5 +1,7 @@
 @import "../../../../sass/common";
 @import "./elements-style";
+@import "./creative-link";
+@import "./creative-hover";
 @import "./editor-content";
 @import "../js/components/altrp-carousel/altrp-carousel";
 @import "../js/components/altrp-lightbox/altrp-lightbox";
@@ -1042,6 +1044,10 @@ button {
   flex-direction: row;
 }
 .control-color-colorPicked {
+  width: 16px;
+  height: 16px;
+}
+.control-color-backgroundPicked {
   width: 16px;
   height: 16px;
 }
