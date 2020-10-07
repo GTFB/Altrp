@@ -27,28 +27,14 @@ trait DynamicVariables
                     return $this->getValue('request()->' . $param[1], $outer);
                 }
                 if ($param && $param[0] == 'IF_REQUEST') {
-                    $param[2] = $param[2] ?? implode('_', explode('.', $param[1]));
-                    $wrapStart = '';
-                    $wrapEnd = '';
-                    if (Str::contains($param[2], 'FROM_UNIXTIME')) {
-                        $result = explode('|', $param[2]);
-                        $wrapStart = "'{$result[0]}' . ";
-                        $param[2] = $result[1];
-                        $wrapEnd = " . '{$result[2]}'";
-                    }
+                    list($wrapStart, $value, $wrapEnd) = $this->checkUnixTime($param[2]);
+                    $param[2] = $value;
                     $param[3] = $param[3] ?? '=';
                     return $this->getValue( '(request()->' . $param[2] . " ? '{$param[1]} {$param[3]} ' . {$wrapStart}request()->{$param[2]}{$wrapEnd} : '')", $outer);
                 }
                 if ($param && $param[0] == 'IF_AND_REQUEST') {
-                    $param[2] = $param[2] ?? implode('_', explode('.', $param[1]));
-                    $wrapStart = '';
-                    $wrapEnd = '';
-                    if (Str::contains($param[2], 'FROM_UNIXTIME')) {
-                        $result = explode('|', $param[2]);
-                        $wrapStart = "'{$result[0]}' . ";
-                        $param[2] = $result[1];
-                        $wrapEnd = " . '{$result[2]}'";
-                    }
+                    list($wrapStart, $value, $wrapEnd) = $this->checkUnixTime($param[2]);
+                    $param[2] = $value;
                     $param[3] = $param[3] ?? '=';
                     return $this->getValue( '(request()->' . $param[2] . " ? ' AND {$param[1]} {$param[3]} ' . {$wrapStart}request()->{$param[2]}{$wrapEnd} : '')", $outer);
                 }
@@ -108,5 +94,25 @@ trait DynamicVariables
     {
         if ($outer) return '" . ' . $value . ' . "';
         return $value;
+    }
+
+    /**
+     * Прооверить наличие временного UNIX выражения в запросе
+     * и обернуть request в это выражение
+     *
+     * @param $value
+     * @return array
+     */
+    protected function checkUnixTime($value)
+    {
+        $wrapStart = '';
+        $wrapEnd = '';
+        if (Str::contains($value, 'FROM_UNIXTIME')) {
+            $result = explode('|', $value);
+            $wrapStart = "'{$result[0]}' . ";
+            $value = $result[1];
+            $wrapEnd = " . '{$result[2]}'";
+        }
+        return [$wrapStart, $value, $wrapEnd];
     }
 }

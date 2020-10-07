@@ -310,6 +310,17 @@ class ButtonWidget extends Component {
       }
     }
 
+    if (_.get(this.state, 'settings.link_link.toPrevPage')) {
+      link = <button
+        onClick={goBack}
+        className={classes}
+        id={this.state.settings.position_css_id}
+      >
+        {buttonText}
+        <span className={"altrp-btn-icon "}>{renderAssetIcon(buttonMedia)} </span>
+      </button>
+    }
+
 
 
     return link || button || buttonMedia;

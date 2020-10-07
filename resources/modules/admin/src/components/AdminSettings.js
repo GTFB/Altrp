@@ -4,6 +4,7 @@ import Updates from "./Updates";
 import StylesSettings from "./StylesSettings";
 import Import from "./settings/Import";
 import Export from "./settings/Export";
+import MailForm from "./settings/MailForm";
 const AdvancedSettings = React.lazy(()=>import('./AdvancedSettings'));
 
 
@@ -53,6 +54,9 @@ export default class AdminSettings extends Component {
             </Tab>
             <Tab >
               IMPORT
+            </Tab>
+            <Tab >
+              MAIL
             </Tab>
           </TabList>
           <TabPanel>
@@ -116,6 +120,9 @@ export default class AdminSettings extends Component {
           </TabPanel>
           <TabPanel>
             <Import />
+          </TabPanel>
+          <TabPanel>
+            <MailForm />
           </TabPanel>
         </Tabs>
       </div>
