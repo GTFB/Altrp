@@ -64,7 +64,7 @@ class FrontPopup extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { on_scroll, to_element } = _.get(this.props, 'template.triggers.data');
+    const { on_scroll, to_element } = _.get(this.props, 'template.triggers.data', {});
     const { isShownOnScroll } = this.state;
 
     if (on_scroll && !isShownOnScroll && on_scroll.size <= this.props.scrollPosition.top * 100) {
