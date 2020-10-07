@@ -1,6 +1,7 @@
 import IconsManager from "../../../editor/src/js/classes/modules/IconsManager";
 import Resource from "../../../editor/src/js/classes/Resource";
 import { isEmpty } from "lodash";
+import FrontElement from "../../../front-app/src/js/classes/FrontElement";
 
 export function redirect(url) {
   url = url || '/';
@@ -94,4 +95,14 @@ export function deleteEmptyPropsDeep(collection) {
       if (isEmpty(collection[key])) delete collection[key];
     }
   }
+}
+
+/**
+ * Подготовить данные перед импортом
+ * @param templateData
+ * @param {FrontElement | null} parent
+ */
+function prepareTemplate(templateData, parent = null){
+  let template = new FrontElement(templateData);
+
 }

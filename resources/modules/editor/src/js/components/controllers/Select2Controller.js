@@ -163,6 +163,7 @@ class Select2Controller extends Component {
         overflow: "auto",
         borderRadius: "0px 0px 3px 3px",
         borderWidth: "0px 1px 1px 1px",
+        backgroundColor: "#FFF",
         borderStyle: "solid",
         borderColor: "#E5E6EA",
         position: "absolute",
@@ -170,6 +171,7 @@ class Select2Controller extends Component {
       }),
 
       menuList: () => ({
+        backgroundColor: "#FFF",
         margin: 0,
         padding: 0,
       }),

@@ -449,7 +449,7 @@ class TemplateController extends Controller
 
         switch ($datum['object_type']) {
           case 'all_site';{
-            $template->all_site = $datum['condition_type'] !== 'exclude';
+            $template->all_site = $datum['condition_type'] === 'include';
             if( ! $template->save() ){
               return response()->json( ['message' => 'Conditions "all_site" not Saved'],
                 500,
