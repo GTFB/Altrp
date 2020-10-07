@@ -31,12 +31,12 @@ function CardWidget({ widget, onDeleted, onEdited, settings }) {
       <Card.Header>
         <Card.Title>{widget.title}</Card.Title>
         <Card.Title>
-          <div>
+          <div className="dropdownTogglerContainer">
             <Dropdown drop="left">
-              <Dropdown.Toggle variant="light">
+              <Dropdown.Toggle variant="light" >
                 <ThreeDotsVertical color="#7a7a7b" />
               </Dropdown.Toggle>
-              <Dropdown.Menu>
+              <Dropdown.Menu className="dropdownMenuToggle">
                 <Dropdown.Item>
                   <ReactToPrint
                     trigger={() => {

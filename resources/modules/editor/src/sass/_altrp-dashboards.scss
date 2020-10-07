@@ -68,6 +68,7 @@
         }
       }
     }
+    
 
     .dropdown {
       &.show {
@@ -105,12 +106,17 @@
 
   }
   &__widgets {
-    display: flex;
-    flex-wrap: wrap;
+    @include row-flex();
+
     .card {
-      max-width: 500px;
+      flex-basis: 500px;
+      @include col();
+      @include size(6);
+      @include size-sm(12);
+      @include size-xs(12);
+      // max-width: 500px;
       box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.15);
-      margin: 5px 10px 5px;
+      margin: 5px auto 5px;
       padding: 10px;
       &:first-child {
         margin-top: 10px;
@@ -121,14 +127,24 @@
       &-header {
         display: flex;
         justify-content: space-between;
+        
+
         .card-title {
           button {
             background-color: transparent;
             padding: 5px;
           }
+
+          &>.dropdownTogglerContainer>.dropleft>.dropdownMenuToggle.show{
+                transition: opacity .2s linear;
+          }
         }
       }
       &-body {
+        .card{
+          @include col();
+          @include size(12);
+        }
         form {
           padding: 10px 0;
           .form-group {
@@ -192,13 +208,18 @@
     flex-direction: column-reverse;
   }
   &.bottom {
-    flex-direction: column;
+    @include col();
+    @include size(12);
+    &>.widget-table{
+      overflow: auto;
+    }
   }
   &.right {
     flex-direction: row;
   }
 }
 .discrete__legend {
+  overflow: unset !important;
   flex-wrap: wrap;
   &-item {
     span {

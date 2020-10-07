@@ -60,19 +60,15 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
   };
 
   const getTypesBySource = (s) => {
-    if (s.includes('?')) {
-      //Отсекаем параметры от строки запроса, т.к. при наличии параметра пропадают все типы диаграмм, кроме таблицы
-      s = s.split('?')[0];
-    }
+    s.includes('?') ? s.split('?')[0] : s;
     const source = settings.sql?.find(
       (item) => s === `/ajax/models/queries/${item.model}/${item.value}`
     );
-    console.log('SOURCES', s, source);
     return source?.types?.map((type) => type.value) || [];
   };
 
   const composeSources = (sources = []) => {
-    if ((! sources) || sources.length === 0) return [];
+    if ((!sources) || sources.length === 0) return [];
 
     return sources.map((source) => {
       return {
@@ -83,11 +79,9 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
   };
 
   if (composeSources(settings.sql).length === 1) {
-    console.log(widget);
     let currentSource = composeSources(settings.sql)[0];
     let filter = '';
     if (Object.keys(widget.filter).length !== 0) {
-      console.log(widget.filter);
       filter = queryString(widget.filter);
     }
     widget.source = currentSource.url + filter;
@@ -148,7 +142,6 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
         <Button variant="secondary" onClick={() => setIsShow(false)}>
           Закрыть
         </Button>
-        {console.log('====>', widget.source)}
         <Button variant="warning" onClick={onSave} disabled={widget.source === ""}>
           Сохранить изменения
         </Button>
