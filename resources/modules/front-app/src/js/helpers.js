@@ -294,7 +294,7 @@ export function getDataByPath(path, _default = null, context = null){
     path = path.replace('altrpdata.', '');
     value = currentDataStorage.getProperty(path, _default)
   } else {
-    value = urlParams[path] ? urlParams[path] : currentModel.getProperty(path);
+    value = urlParams[path] ? urlParams[path] : currentModel.getProperty(path, _default);
   }
   return value ;
 }
