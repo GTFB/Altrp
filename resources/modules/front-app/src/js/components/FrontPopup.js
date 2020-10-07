@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import connect from "react-redux/es/connect/connect";
+// import { isElementTopInViewport, getTopPosition } from "../helpers";
 
 class FrontPopup extends Component {
   state = {
@@ -8,7 +9,7 @@ class FrontPopup extends Component {
   }
 
   componentDidMount() {
-    const { on_page_load, on_click, inactivity, on_exit } = _.get(this.props, 'template.triggers.data', {});
+    const { on_page_load, on_click, inactivity, on_exit, to_element } = _.get(this.props, 'template.triggers.data', {});
 
     if (on_page_load || on_page_load === 0) {
       setTimeout(() => this.setState({ isVisible: true }), on_page_load * 1000)
@@ -48,20 +49,47 @@ class FrontPopup extends Component {
       //   event.returnValue = '';
       // });
       document.addEventListener('mouseleave', () => this.setState({ isVisible: true }))
-    }    
+    }
+
+    // if (to_element) {
+    //   const htmlCollection = document.getElementsByClassName(to_element);
+    //   console.log(htmlCollection);
+    //   this.elements = []
+    //   for (let index = 0; index < htmlCollection.length; index++) {
+    //     const element = htmlCollection[index];
+    //     this.elements[index] = getTopPosition(element);
+    //   }
+    //   console.log(this.elements);
+    // }
   }
 
   componentDidUpdate(prevProps) {
-    const on_scroll = _.get(this.props, 'template.triggers.data.on_scroll');
+    const { on_scroll, to_element } = _.get(this.props, 'template.triggers.data');
     const { isShownOnScroll } = this.state;
 
-    if (on_scroll && !isShownOnScroll && on_scroll.size <= this.props.topPosition * 100) {
+    if (on_scroll && !isShownOnScroll && on_scroll.size <= this.props.scrollPosition.top * 100) {
       this.setState({ isVisible: true, isShownOnScroll: true });
     }
 
-    if (this.resetTimer && this.props.topPosition !== prevProps.topPosition) {
+    if (this.resetTimer && this.props.scrollPosition.top !== prevProps.scrollPosition.top) {
       this.resetTimer();
     }
+
+    // if (to_element && this.props.scrollPosition.top !== prevProps.scrollPosition.top) {
+    //   // console.log(this.elements)
+    //   console.log(this.props.scrollPosition.scrollTop)
+    //   const { scrollTop, clientHeight } = this.props.scrollPosition;
+
+    //   for (let index = 0; index < this.elements.length; index++) {
+    //     const element = this.elements[index];
+
+    //     if (isElementTopInViewport(element, scrollTop, clientHeight)) {
+    //       this.setState({ isVisible: true });
+    //       // this.elements.splice(index, 1);
+    //     }
+    //   }
+
+    // }
 
   }
 
@@ -83,7 +111,7 @@ class FrontPopup extends Component {
 
 const mapStateToProps = state => {
   return {
-    topPosition: state.scrollPosition.top
+    scrollPosition: state.scrollPosition
   }
 };
 

@@ -423,3 +423,21 @@ export const CONDITIONS_OPTIONS = [
     label: '<=',
   },
 ];
+
+export function isElementTopInViewport(top, scrollTop, clientHeight) {
+
+  return top > scrollTop && top < (scrollTop + clientHeight)
+}
+
+export function getTopPosition(element) {
+  let top = element.offsetTop;
+
+  while (element.offsetParent) {
+    console.log(element.offsetParent);
+    console.log(element.offsetTop);
+    element = element.offsetParent;
+    top += element.offsetTop;
+  }
+
+  return top;
+}
