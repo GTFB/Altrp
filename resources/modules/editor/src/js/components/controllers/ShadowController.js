@@ -194,7 +194,7 @@ class ShadowController extends Component {
     };
     let typeOptions = [
       {
-        value: "",
+        value: " ",
         label: "outline",
         key: 0
       },

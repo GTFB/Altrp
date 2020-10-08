@@ -837,7 +837,7 @@ class Input extends BaseElement{
         colorRGB: 'rgb(0, 0, 0)',
         color: 'rgb(0, 0, 0)',
         colorPickedHex: '#000000',
-        type: ""
+        type: " "
       },
       presetColors: [
         '#eaeaea',
