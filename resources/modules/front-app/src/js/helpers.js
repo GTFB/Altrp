@@ -1,5 +1,4 @@
 import CONSTANTS from "../../../editor/src/js/consts";
-import appStore from "./store/store";
 import AltrpModel from "../../../editor/src/js/classes/AltrpModel";
 import moment from "moment";
 
@@ -446,7 +445,7 @@ export function getTopPosition(element) {
 }
 
 /**
- * Получить время по шаблону
+ * Получить какое-то время по шаблону `YYYY-MM-DD`
  * @param {string} path
  * @param {string} defaultValue
  */
@@ -476,4 +475,12 @@ export function startOfMonth(date){
 
 export function startOfYear(date){
   return new Date(date.getFullYear(), 0, 1);
+}
+
+/**
+ * Получить ссылку на состояние хранилища
+ * @return {*}
+ */
+export function getCurrentStoreState(){
+  return appStore.getState();
 }
