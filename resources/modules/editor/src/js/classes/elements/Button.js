@@ -65,6 +65,19 @@ class Button extends BaseElement{
       ],
     });
 
+    // this.addControl('popup_trigger_type', {
+    //   type: CONTROLLER_SWITCHER,
+    //   label: 'Popup trigger',
+    // });
+
+    // this.addControl('popup_id', {
+    //   type: CONTROLLER_TEXT,
+    //   label: 'Popup ID',
+    //   conditions: {
+    //     'popup_trigger_type': true,
+    //   },
+    // });
+
     this.endControlSection();
 
     this.startControlSection('content_section', {

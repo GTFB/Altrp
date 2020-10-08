@@ -211,7 +211,10 @@ class ButtonWidget extends Component {
           }
         }
       );
-    }
+    } /* else if (this.props.element.getSettings('popup_trigger_type') && this.props.element.getSettings('popup_id')){
+      
+      
+    } */
   }
 
   render() {
