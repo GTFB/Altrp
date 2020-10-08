@@ -195,12 +195,25 @@ class Button extends BaseElement{
           value: 'logout',
           label: 'Logout',
         },
+        {
+          value: 'email',
+          label: 'Email',
+        },
       ],
     });
 
     this.addControl('form_confirm', {
       type: CONTROLLER_TEXTAREA,
       label: 'Confirm Submit Form Text',
+      default: '',
+    });
+
+    this.addControl('email_subject', {
+      conditions: {
+        'form_actions': 'email',
+      },
+      type: CONTROLLER_TEXTAREA,
+      label: 'Subject',
       default: '',
     });
 

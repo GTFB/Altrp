@@ -311,20 +311,26 @@ Route::group(['prefix' => 'admin'/* , 'middleware' => 'auth' */], function () {
 
     Route::get('/plugins',"Admin\PluginController@index");
     Route::post('/plugins/switch',"Admin\PluginController@switch");
+
+    /**
+     * Настройка почты
+     */
+    Route::post('/write_mail_settings', 'MailController@writeSettingsToEnv');
+    Route::get('/get_mail_settings', 'MailController@getSettings');
+    /**
+     * Роуты ипортов Админки
+     */
+    Route::group(['prefix' => 'import'], function () {
+      Route::post( 'settings', 'Admin\ImportsController@importAltrpSettings' )->name( 'admin.download.settings' );
+    } );
+    /**
+     * Роуты загрузок Админки
+     */
+    Route::group(['prefix' => 'downloads'], function () {
+      Route::get( 'settings', 'Admin\DownloadsController@exportAltrpSettings' )->name( 'admin.download.settings' );
+    } );
   });
 
-  /**
-   * Роуты загрузок Админки
-   */
-  Route::group(['prefix' => 'downloads'], function () {
-    Route::get( 'settings', 'Admin\DownloadsController@exportAltrpSettings' )->name( 'admin.download.settings' );
-  } );
-  /**
-   * Роуты ипортов Админки
-   */
-  Route::group(['prefix' => 'import'], function () {
-    Route::post( 'settings', 'Admin\ImportsController@importAltrpSettings' )->name( 'admin.download.settings' );
-  } );
 
 });
 
@@ -407,27 +413,14 @@ Route::group( ['prefix' => 'ajax'], function(){
    */
   Route::get( 'pages/{page_id}', 'Frontend\PageController@pageForRoutes' )->name( 'front.page-for-routes' );
   /**
-   * todo: реализовать в контроллерах моделей
-   */
-//  Route::get( 'models/{model_name}', 'Frontend\ModelsController@models' )
-//    ->name( 'front.models.all' );
-//
-//  Route::get( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@show' )
-//    ->name( 'front.models.show' );
-//
-//  Route::delete( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@delete' )
-//    ->name( 'front.models.delete' );
-//
-//  Route::put( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@edit' )
-//    ->name( 'front.models.edit' );
-//
-//  Route::post( 'models/{model_name}', 'Frontend\ModelsController@create' )
-//    ->name( 'front.models.create' );
-
-  /**
-   * todo: для загрузчика шаблонов для виджетов
+   * для загрузки шаблонов внутри виджетов
    */
   Route::get( 'templates/{template_id}', 'TemplateController@show_frontend' )->name( 'templates.show.frontend' );
+
+  /**
+   * Настройка почты
+   */
+  Route::post('/feedback', 'MailController@sendMail');
 
 } );
 
@@ -449,9 +442,3 @@ Route::group( ['prefix' => 'ajax', 'middleware' => 'auth'], function() {
  * Обновление всех ресурсов бэкенда
  */
 Route::post( 'update-all-resources', 'Admin\UpdateController@upgradeAllResources' );
-
-/**
- * Настройка почты
- */
-Route::post('/feedback', 'MailController@sendMail');
-Route::post('/write_mail_settings', 'MailController@writeSettingsToEnv');

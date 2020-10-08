@@ -118,6 +118,9 @@ class Resource {
         return Promise.reject(res.text(), res.status);
       }
       return res.json()
+    }).catch((err)=>{
+      console.log(err);
+      return err.then();
     });
   }
   /**

@@ -38,7 +38,7 @@ class Dropbar extends Component {
       }
     } else {
       this.setState((state) => ({ show: !state.show }));
-    };
+    }
 
     this.changePosition();
   };
@@ -51,7 +51,7 @@ class Dropbar extends Component {
       }, this.props.settings.hide_delay_dropbar_options.size)
     } else {
       this.setState({ show: false });
-    };
+    }
   };
 
   enterShow(e) {
@@ -66,7 +66,7 @@ class Dropbar extends Component {
       }, this.props.showDelay.size);
     } else {
       this.setState((state) => ({ show: !state.show }));
-    };
+    }
     this.changePosition();
   };
 
