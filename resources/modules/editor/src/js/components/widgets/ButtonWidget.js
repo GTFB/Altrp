@@ -312,7 +312,7 @@ class ButtonWidget extends Component {
 
     if (_.get(this.state, 'settings.link_link.toPrevPage')) {
       link = <button
-        onClick={goBack}
+        onClick={() => isEditor() ? null : goBack()}
         className={classes}
         id={this.state.settings.position_css_id}
       >
