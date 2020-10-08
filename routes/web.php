@@ -56,7 +56,7 @@ Route::get('/reports/html/{id}', "ReportsController@page");
  * Роуты Админки
  */
 
-Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']  /* , 'middleware' => 'auth' */], function () {
+Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']  ], function () {
 
   Route::group(['prefix' => 'ajax'], function () {
 
