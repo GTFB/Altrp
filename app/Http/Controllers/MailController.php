@@ -7,11 +7,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SendMailRequest;
 use App\Http\Requests\WriteMailSettingsRequest;
 use App\Mail;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 
 class MailController extends Controller
 {
@@ -74,6 +70,6 @@ class MailController extends Controller
         if (! $result)
             return response()->json(['success' => false, 'message' => 'Failed to write mail settings.'], 500);
 
-        return response()->json(['success' => true, 'message' => 'Mail settings configure successfully.'], 500);
+        return response()->json(['success' => true, 'message' => 'Mail settings configure successfully.'], 200);
     }
 }

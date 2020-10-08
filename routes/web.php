@@ -56,7 +56,7 @@ Route::get('/reports/html/{id}', "ReportsController@page");
  * Роуты Админки
  */
 
-Route::group(['prefix' => 'admin'/* , 'middleware' => 'auth' */], function () {
+Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']  /* , 'middleware' => 'auth' */], function () {
 
   Route::group(['prefix' => 'ajax'], function () {
 
@@ -329,7 +329,7 @@ Route::group(['prefix' => 'admin'/* , 'middleware' => 'auth' */], function () {
 
 Route::view('/admin/{path?}', 'admin')
   ->where('path', '.*')
-  ->middleware( [ 'auth','web', 'installation.checker',]  )
+  ->middleware( [ 'auth','web', 'installation.checker', 'role:admin']  )
   ->name('admin');
 
 /**
