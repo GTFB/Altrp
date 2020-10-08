@@ -40,7 +40,7 @@ Route::group([
 
 Route::get( '/admin/editor', function (){
   return view( 'editor' );
-} )->middleware( 'auth' )->name('editor');
+} )->middleware( 'auth', 'role:admin' )->name('editor');
 
 Route::get( '/admin/editor-content', function (){
   return view( 'editor-content' );
