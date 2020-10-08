@@ -12,7 +12,7 @@ function LegendPositionField({ widget, setWidget }) {
         onChange={(e) =>
           setWidget({
             ...widget,
-            options: { ...widget.options, legendPosition: e.target.value },
+            options: { ...widget.options, legendPosition: e.target.value, legend: e.target.value == 'left' || e.target.value == 'right' ? 'vertical' : 'horizontal' },
           })
         }
         required

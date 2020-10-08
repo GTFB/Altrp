@@ -18,12 +18,12 @@ class DashboardsWidget extends Component {
   }
 
   render() {
-    console.log(this.props.currentDataStorage);
+    // console.log(this.props.currentDataStorage);
     return (
       <Suspense fallback={"Loading"}>
         <AltrpDashboards settings={this.props.element.getSettings()}
-                         currentDataStorage={this.props.currentDataStorage}
-                         id={this.props.element.getId()} />
+          //  currentDataStorage={this.props.currentDataStorage}
+          id={this.props.element.getId()} />
       </Suspense>
     );
 
