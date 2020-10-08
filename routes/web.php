@@ -40,7 +40,7 @@ Route::group([
 
 Route::get( '/admin/editor', function (){
   return view( 'editor' );
-} )->middleware( 'auth', 'role:admin' )->name('editor');
+} )->middleware( 'auth', 'admin' )->name('editor');
 
 Route::get( '/admin/editor-content', function (){
   return view( 'editor-content' );
@@ -56,7 +56,7 @@ Route::get('/reports/html/{id}', "ReportsController@page");
  * Роуты Админки
  */
 
-Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']  ], function () {
+Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
   Route::group(['prefix' => 'ajax'], function () {
 
@@ -340,7 +340,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']  ], function (
 
 Route::view('/admin/{path?}', 'admin')
   ->where('path', '.*')
-  ->middleware( [ 'auth','web', 'installation.checker', 'role:admin']  )
+  ->middleware( [ 'auth','web', 'installation.checker', 'admin']  )
   ->name('admin');
 
 /**
