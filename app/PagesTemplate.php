@@ -36,6 +36,9 @@ class PagesTemplate extends Model
       $new_data =  new self( $imported_datum );
       $template = Template::where( 'guid', $imported_datum['template_guid'] )->first();
       $page = Page::where( 'guid', $imported_datum['page_guid'] )->first();
+      if( ! ( $page && $template ) ){
+        continue;
+      }
       $area = Area::find( $template->area );
       if( ! ( $area && $page && $template ) ){
         continue;
