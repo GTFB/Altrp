@@ -130,7 +130,7 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
 
           <ColorSchemeField widget={widget} setWidget={setWidget} />
 
-          <LegendField widget={widget} setWidget={setWidget} />
+          {/* <LegendField widget={widget} setWidget={setWidget} /> */}
           {widget.options?.legend && <LegendPositionField widget={widget} setWidget={setWidget} />}
         </Form>
 
