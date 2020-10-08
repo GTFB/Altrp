@@ -3,12 +3,19 @@
 
 
 @media print {
-  .altrp-dashboard__widgets .card-header .card-title .dropdownTogglerContainer>button{
+  .card-header{
+    margin: 10px 15px;
+  }
+
+  .dropdownTogglerContainer{
       display: none;
       overflow: hidden;
       height: 0; 
     }
   
+  .card{
+    width: 100%;
+  }
 }
 
 .altrp-dashboard {
@@ -48,10 +55,10 @@
           font-size: 14px;
           line-height: 1.5;
           letter-spacing: 0.8px;
-          font-weight: 900;
+          font-weight: 400;
           text-transform: uppercase;
           text-shadow: 0px 0px 0px rgb(39, 30, 30);
-          padding: 7px 14px;
+          padding: 5px 14px;
           background-color: rgba(109, 108, 108, 1);
           border-color: rgb(50,168,82);
 
@@ -72,7 +79,7 @@
             &>.react-datepicker-wrapper>.react-datepicker__input-container>.form-control{
               max-width: 100px;
               border: 1px solid  rgba(109, 108, 108, 1);
-              padding: 9px;
+              padding: 8px;
             }
             &:last-child>.react-datepicker-wrapper>.react-datepicker__input-container>.last{
               border-left: 0;
@@ -137,7 +144,7 @@
       // max-width: 500px;
       box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.15);
       margin: 10px;
-      padding: 10px;
+      padding: 25px 10px;
       &:first-child {
         margin-top: 10px;
       }
@@ -147,7 +154,7 @@
       &-header {
         display: flex;
         justify-content: space-between;
-        margin: 15px;
+        margin: 0 15px 10px;
 
         .card-title {
           button {
