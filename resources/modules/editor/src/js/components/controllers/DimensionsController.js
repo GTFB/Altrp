@@ -36,6 +36,10 @@ class DimensionsController extends Component {
     });
   };
 
+  getDefaultValue() {
+    return '';
+  }
+
   changeValue(e) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     if (value.bind === true) {

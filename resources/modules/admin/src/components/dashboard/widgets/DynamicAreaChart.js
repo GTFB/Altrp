@@ -74,7 +74,7 @@ const DynamicAreaChart = ({ widget, width = 300, height = 300, color = "#FFD51F"
     <>
       <AreaChart
         height={height}
-        width={width}
+        // width={width}
         data={data}
         xAxis={
           <LinearXAxis

@@ -1,5 +1,7 @@
 @import "../../../../sass/common";
 @import "./elements-style";
+@import "./creative-link";
+@import "./creative-hover";
 @import "./editor-content";
 @import "../js/components/altrp-carousel/altrp-carousel";
 @import "../js/components/altrp-lightbox/altrp-lightbox";
@@ -20,8 +22,8 @@
     max-height: 100%;
   }
 }
-.editor-content-body {
-}
+// .editor-content-body {
+// }
 .left-panel {
   width: 270px;
   display: flex;
@@ -1045,6 +1047,10 @@ button {
   width: 16px;
   height: 16px;
 }
+.control-color-backgroundPicked {
+  width: 16px;
+  height: 16px;
+}
 .control-color-colorPicked-container {
   width: 16px;
   height: 16px;
@@ -1403,7 +1409,7 @@ button {
 .altrp-element_section {
   & > .overlay {
     & .overlay-settings__button {
-      z-index: 9998;
+      z-index: 49;
       &:first-child {
         border-radius: 5px 0 0 0;
         &::before {

@@ -139,7 +139,7 @@ class AltrpImportExportService
       $data['models'][$key]['table_name'] = $table->name;
     }
 
-    $data['columns'] = Column::all();
+    $data['columns'] = Column::where( 'type', '!=', 'calculated' )->get();
     foreach ( $data['columns'] as $key => $column ) {
       $model = Model::find( $column['model_id'] );
       if( ! $model ){

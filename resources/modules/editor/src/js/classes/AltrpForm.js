@@ -7,6 +7,7 @@ class AltrpForm {
   constructor(formId, modelName, method = 'POST', options = {}){
     this.formId = formId;
     this.fields = [];
+    this.submitButtons = [];
     this.method = method;
     this.options = options;
     this.modelName = modelName;
@@ -18,6 +19,9 @@ class AltrpForm {
       }break;
       case 'logout':{
         route = `/logout`
+      }break;
+      case 'email':{
+        route = `/ajax/feedback`
       }break;
     }
     this.resource = new Resource({route});
@@ -32,7 +36,13 @@ class AltrpForm {
   }
 
   /**
-   * Добавлйет поле
+   * Добавляет кнопку
+   */
+  addSubmitButton(buttonElement){
+    this.submitButtons.push(buttonElement);
+  }
+  /**
+   * Добавляет поле
    * @param {FrontElement} field
    */
   addField(field){
@@ -124,11 +134,34 @@ class AltrpForm {
    */
   getData(){
     let data = {altrp_ajax: true};
-    this.fields.forEach(field=>{
-      if(field.getValue() !== null){
-        data[field.getSettings('field_id')] = field.getValue();
-      }
-    });
+
+    if(this.modelName === 'email'){
+      console.log();
+      let userMessage = '';
+      let subject = 'Altrp Email';
+
+      this.submitButtons.forEach(b=>{
+        if(b.getSettings('email_subject')){
+          subject = b.getSettings('email_subject');
+        }
+      });
+      this.fields.forEach(field=>{
+        if(field.getValue() !== null){
+          let fieldLabel = field.getSettings('content_label')
+              || field.getSettings('content_placeholder') || '';
+          let fieldValue = field.getValue();
+          userMessage += `${fieldLabel} <br/> ${fieldValue}`
+        }
+      });
+      data.subject = subject;
+      data.user_message = userMessage;
+    } else {
+      this.fields.forEach(field=>{
+        if(field.getValue() !== null){
+          data[field.getSettings('field_id')] = field.getValue();
+        }
+      });
+    }
     return data;
   }
 }

@@ -22,7 +22,9 @@ import RepetaerController from "../../components/controllers/RepeaterController"
 import QueryController from "../../components/controllers/QueryController";
 import FiltersController from "../../components/controllers/FiltersController";
 import ColumnWidthController from "../../components/controllers/ColumnWidthController";
-import GradientController from "../../components/controllers/GradientController";
+import GradientController from  "../../components/controllers/GradientController";
+import CreativeLinkController from "../../components/controllers/CreativeLinkController";
+import CreativeHoverController from "../../components/controllers/CreativeHoverController";
 import SqlSelectController from "../../components/controllers/SqlSelectController";
 import SqlAsParamsController from "../../components/controllers/SqlAsParamsController";
 import EventSelectController from "../../components/controllers/EventSelectController";
@@ -56,6 +58,8 @@ export const CONTROLLER_COLWIDTH = "colwidth";
 export const CONTROLLER_GRADIENT = "gradient";
 export const CONTROLLER_SQL = "sql";
 export const CONTROLLER_SQL_PARAMS = "sql-params";
+export const CONTROLLER_CREATIVE_LINK = 'creative-link';
+export const CONTROLLER_CREATIVE_HOVER = 'creative-hover';
 export const CONTROLLER_EVENT_HANDLER = "event-handler";
 
 class ControllersManager {
@@ -80,6 +84,8 @@ class ControllersManager {
     this.conttrollers[CONTROLLER_SHADOW] = ShadowController;
     this.conttrollers[CONTROLLER_TRANSFORM] = TransformController;
     this.conttrollers[CONTROLLER_TYPOGRAPHIC] = TypographicController;
+    this.conttrollers[CONTROLLER_CREATIVE_LINK] = CreativeLinkController;
+    this.conttrollers[CONTROLLER_CREATIVE_HOVER] = CreativeHoverController;
     this.conttrollers[CONTROLLER_REPEATER] = RepetaerController;
     this.conttrollers[CONTROLLER_QUERY] = QueryController;
     this.conttrollers[CONTROLLER_FILTERS] = FiltersController;

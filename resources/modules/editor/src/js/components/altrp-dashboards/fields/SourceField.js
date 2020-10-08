@@ -5,10 +5,13 @@ import { queryString } from "../helpers/queryString";
 function SourceField({ widget, setWidget, sources }) {
   return (
     <Form.Group>
-      <Form.Label>Источник данных</Form.Label>
+      <Form.Label>{sources.length > 1 || sources.length == 0 ? "Источник данных" : `Источник данных: ${sources[0].name}`}</Form.Label>
       <Form.Control
         as="select"
         custom
+        className={{
+          'd-none': sources.length === 1
+        }}
         value={widget.source}
         onChange={(e) =>
           setWidget({
@@ -19,11 +22,10 @@ function SourceField({ widget, setWidget, sources }) {
         required
       >
         <option value="">-</option>
-        {sources?.map(({ url, name }) => (
+        {sources.map(({ url, name }) => (
           <option key={url} value={url}>
             {name}
-          </option>
-        ))}
+          </option>))}
       </Form.Control>
     </Form.Group>
   );

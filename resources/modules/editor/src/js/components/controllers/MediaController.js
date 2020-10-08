@@ -17,8 +17,10 @@ class MediaController extends Component {
     value = value || {};
     this.state = {
       value,
-      show: true
+      show: true,
+      dynamicValue: value.dynamic ? value : null,
     };
+    this.dynamicButton = React.createRef();
     this.openAssetsBrowser = this.openAssetsBrowser.bind(this);
     this.deleteAsset = this.deleteAsset.bind(this);
   }
@@ -83,16 +85,35 @@ class MediaController extends Component {
       <div className="controller-container__label">
         {this.props.label}
       </div>
-      <div className="controller-media-choose" onClick={this.openAssetsBrowser}>
+      {
+        this.state.dynamicValue ? '' : <div className="controller-container__dynamic" ref={this.dynamicButton} onClick={this.openDynamicContent}>
+          Dynamic
+          <DynamicIcon />
+        </div>
+      }
+      {this.state.dynamicValue ? <div className="dynamic-placeholder control-field">
+        <div className="dynamic-placeholder__text">
+          {
+            `${this.state.dynamicValue.modelTitle} ${this.state.dynamicValue.fieldTitle}`
+          }
+        </div>
+
+        <div className="dynamic-placeholder__remove" onClick={this.removeDynamicSettings}>
+          {
+            iconsManager().renderIcon('times')
+          }
+        </div>
+      </div> : <div className="controller-media-choose" onClick={this.openAssetsBrowser}>
         {Asset ? <Asset {...assetsProps} /> : ''}
         {
           value.name ?
             <button className="controller-media-choose__button controller-media-choose__button_delete"
-              onClick={this.deleteAsset}>Delete</button> :
+                    onClick={this.deleteAsset}>Delete</button> :
             <button className="controller-media-choose__button controller-media-choose__button_choose">Choose
-                Media</button>
+              Media</button>
         }
       </div>
+      }
     </div>
   }
 }

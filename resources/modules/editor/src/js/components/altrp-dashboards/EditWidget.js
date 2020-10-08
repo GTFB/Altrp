@@ -13,6 +13,7 @@ import FilterField from "./fields/FilterField";
 import SourceField from "./fields/SourceField";
 import ColorSchemeField from "./fields/colorSchemeField";
 import VerticalTableField from "./fields/VerticalTableField";
+import { queryString } from "./helpers/queryString";
 
 const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
   const [widget, setWidget] = useState(data);
@@ -28,14 +29,17 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
   };
 
   const getTypesBySource = (s) => {
+    s = s.includes('?') ? s.split('?')[0] : s;
+
     const source =
       settings &&
       settings.sql?.find((item) => s === `/ajax/models/queries/${item.model}/${item.value}`);
+    console.log(source);
     return source?.types?.map((type) => type.value) || [];
   };
 
   const composeSources = (sources = []) => {
-    if (sources.length === 0) return [];
+    if ((!sources) || sources.length === 0) return [];
 
     return sources.map((source) => {
       return {
@@ -44,6 +48,16 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
       };
     });
   };
+
+  if (composeSources(settings.sql).length === 1) {
+    let currentSource = composeSources(settings.sql)[0];
+    let filter = '';
+    if (Object.keys(widget.filter).length !== 0) {
+      console.log(widget.filter);
+      filter = queryString(widget.filter);
+    }
+    widget.source = currentSource.url + filter;
+  }
 
   return (
     <Card>

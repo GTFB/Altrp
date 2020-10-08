@@ -214,7 +214,7 @@ class AddDataSourceForm extends Component {
       />
       <label className="checkbox-label" htmlFor="field-auth">Auth</label>
 
-      {this.state.value.auth && <div className="form-group__inline-wrapper">
+      {this.state.value.auth ? <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
           <label htmlFor="roles">Roles</label>
 
@@ -235,7 +235,7 @@ class AddDataSourceForm extends Component {
             onChange={this.changePermission}
             options={permissionsOptions} />
         </div>
-      </div>}
+      </div> : null}
 
       <div className="btn__wrapper">
         <button className="btn btn_success" type="submit">{id ? 'Edit' : 'Add'}</button>

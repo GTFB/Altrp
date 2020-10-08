@@ -13,8 +13,9 @@ import {
   TAB_CONTENT,
   TAB_STYLE,
   CONTROLLER_SQL,
-  CONTROLLER_SQL_PARAMS,
+  CONTROLLER_SQL_PARAMS, CONTROLLER_REPEATER,
 } from "../modules/ControllersManager";
+import Repeater from "../Repeater";
 
 class Dashboards extends BaseElement {
   static getName() {
@@ -34,10 +35,47 @@ class Dashboards extends BaseElement {
       return;
     }
 
+    let repeater = new Repeater();
+
+    repeater.addControl(
+      'path',
+      {
+        label: 'Path',
+        dynamic: false,
+      }
+    );
+    repeater.addControl(
+      'title',
+      {
+        label: 'Title',
+        dynamic: false,
+      }
+    );
+    repeater.addControl(
+      'data',
+      {
+        label: 'Data',
+        dynamic: false,
+      }
+    );
+    repeater.addControl(
+      'key',
+      {
+        label: 'Key',
+        dynamic: false,
+      }
+    );
+
     this.startControlSection("content_section", {
       tab: TAB_CONTENT,
       label: "Content",
     });
+
+    // this.addControl("rep", {
+    //   type: CONTROLLER_REPEATER,
+    //   default: [],
+    //   fields: repeater.getControls(),
+    // });
 
     this.addControl("sql", {
       type: CONTROLLER_SQL,

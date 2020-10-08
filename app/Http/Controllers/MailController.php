@@ -8,9 +8,40 @@ use App\Http\Requests\SendMailRequest;
 use App\Http\Requests\WriteMailSettingsRequest;
 use App\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Jackiedo\DotenvEditor\Facades\DotenvEditor;
+//use PHPMailer\PHPMailer\PHPMailer;
+//use PHPMailer\PHPMailer\SMTP;
 
 class MailController extends Controller
 {
+  static $keys = [
+    'MAIL_DRIVER',
+    'MAIL_HOST',
+    'MAIL_PORT',
+    'MAIL_USERNAME',
+    'MAIL_PASSWORD',
+    'MAIL_ENCRYPTION',
+    'MAIL_FROM_ADDRESS',
+    'MAIL_FROM_NAME',
+  ];
+
+  /**
+   * @param Request $request
+   * @throws \Jackiedo\DotenvEditor\Exceptions\KeyNotFoundException
+   */
+  public function getSettings( Request $request){
+    $settings = [];
+
+    foreach ( self::$keys as $key ) {
+      if( DotenvEditor::keyExists( $key ) ){
+        $settings[Str::lower( $key )] = DotenvEditor::getValue( $key );
+      } else {
+        $settings[Str::lower( $key )] = '';
+      }
+    }
+    return response()->json(['success' => true, 'data'=>$settings], 200, [], JSON_UNESCAPED_UNICODE);
+  }
     /**
      * Отправить письмо
      *
@@ -19,22 +50,28 @@ class MailController extends Controller
      */
     public function sendMail(SendMailRequest $request)
     {
-        $data = $request->all();
-        $adminEmail = config('mail.username');
-        $mail = new Mail($data);
-        try {
-            $mail->save();
-            \Mail::send('emails.feedback', $data, function($message) use ($data, $adminEmail) {
-                $message->from($data['email'], $data['name']);
-                $message->to($adminEmail)
-                    ->subject($data['subject']);
-            });
-        } catch (\Exception $e) {
-            $mail->delete();
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
-        }
+      $data = $request->all();
+      $from_email = $request->get('email') ? $request->get('email') : config('mail.from.address');
+      $subject = $request->get('subject', '');
+      $from_name = $request->get('name') ? $request->get('name') : config('mail.from.name');
+      $data['email'] = $from_email;
+      $data['name'] = $from_name;
+      $adminEmail = config('mail.username');
+      $mail = new Mail($data);
+      try {
+          $mail->save();
+          \Mail::send('emails.feedback', $data,
+            function($message) use ($adminEmail, $from_email , $from_name, $subject) {
+              $message->from( $from_email , $from_name );
+              $message->to( $adminEmail )
+                  ->subject( $subject );
+          });
+      } catch (\Exception $e) {
+          $mail->delete();
+          return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+      }
 
-        return response()->json(['success' => true, 'message' => 'Message sent!'], 200);
+      return response()->json(['success' => true, 'message' => 'Message sent!'], 200);
     }
 
     /**
@@ -51,25 +88,17 @@ class MailController extends Controller
         if (!file_exists($file))
             throw new \Exception('File .env not found!', 500);
 
-        $fileContent = file($file, 2);
-        foreach ($fileContent as $line => $content) {
-            if (Str::contains($content,'MAIL')) {
-                for ($i = $line; true; $i++) {
-                    if (!Str::contains($fileContent[$i],'MAIL')) break;
-                    $var = explode('=', $fileContent[$i]);
-                    $key = strtolower($var[0]);
-                    if (isset($data[$key]))
-                        $fileContent[$i] = $var[0] . '=' . $data[$key];
-                }
-                break;
-            }
+
+
+      foreach ( $data as $key => $value ) {
+        try{
+          DotenvEditor::setKey( Str::upper( $key ), $value );
+          DotenvEditor::save();
+        } catch (\Exception $e){
+          return response()->json(['success' => false, 'message' => 'Failed to write mail setting ' . $key], 500);
         }
+      }
 
-        $result = file_put_contents($file, implode(PHP_EOL, $fileContent));
-
-        if (! $result)
-            return response()->json(['success' => false, 'message' => 'Failed to write mail settings.'], 500);
-
-        return response()->json(['success' => true, 'message' => 'Mail settings configure successfully.'], 200);
+      return response()->json(['success' => true, 'message' => 'Mail settings configure successfully.'], 200);
     }
 }
