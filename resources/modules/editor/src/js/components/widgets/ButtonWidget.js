@@ -284,7 +284,6 @@ class ButtonWidget extends Component {
     let link = null;
     if (this.state.settings.link_link?.url && !this.state.settings.link_link.toPrevPage) {
       if (this.state.settings.link_link.tag === 'a' || isEditor()) {
-        console.log(this.state.settings.link_link);
         let target = _.get(this.state.settings, 'link_link.openInNew') ? 'blank' : '';
         link = (
           <a href={url} onClick={this.onClick} className={classes} target={target}>
