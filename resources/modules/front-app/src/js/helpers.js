@@ -1,6 +1,6 @@
 import CONSTANTS from "../../../editor/src/js/consts";
-import appStore from "./store/store";
 import AltrpModel from "../../../editor/src/js/classes/AltrpModel";
+import moment from "moment";
 
 export function getRoutes() {
   return import('./classes/Routes.js');
@@ -293,6 +293,8 @@ export function getDataByPath(path, _default = null, context = null){
   if(path.indexOf('altrpdata.') === 0){
     path = path.replace('altrpdata.', '');
     value = currentDataStorage.getProperty(path, _default)
+  } else if(path.indexOf('altrptime.') === 0){
+    value = getTimeValue(path.replace('altrptime.',''));
   } else {
     value = urlParams[path] ? urlParams[path] : currentModel.getProperty(path, _default);
   }
@@ -440,4 +442,45 @@ export function getTopPosition(element) {
   }
 
   return top;
+}
+
+/**
+ * Получить какое-то время по шаблону `YYYY-MM-DD`
+ * @param {string} path
+ * @param {string} defaultValue
+ */
+export function getTimeValue(path, defaultValue){
+
+  let value = defaultValue;
+
+  switch(path){
+    case 'now':{
+      value = _.now();
+    }break;
+    case 'month_start':{
+      value = startOfMonth(new Date);
+    }break;
+    case 'year_start':{
+      value = startOfYear(new Date);
+    }break;
+  }
+  value = moment(value).format('YYYY-MM-DD');
+  return value;
+
+}
+
+export function startOfMonth(date){
+  return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+export function startOfYear(date){
+  return new Date(date.getFullYear(), 0, 1);
+}
+
+/**
+ * Получить ссылку на состояние хранилища
+ * @return {*}
+ */
+export function getCurrentStoreState(){
+  return appStore.getState();
 }

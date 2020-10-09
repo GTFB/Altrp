@@ -3,7 +3,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import rootReducer from "./reducers";
 
 let store = createStore(rootReducer, composeWithDevTools());
-
+window.appStore = store;
 export default store;
 
 /**
