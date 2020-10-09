@@ -71,6 +71,14 @@ class Dashboards extends BaseElement {
       label: "Content",
     });
 
+    this.addControl('global_parameter',{
+      type: CONTROLLER_SQL,
+      default: [],
+      multi: false,
+      label: 'Select global paramenters',
+      onlySQL: true
+    });
+
     // this.addControl("rep", {
     //   type: CONTROLLER_REPEATER,
     //   default: [],
