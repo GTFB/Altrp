@@ -45,6 +45,7 @@ class MailForm extends Component {
           onChange={this.changeHandler}
           className="form-control"
         >
+          <option value=""/>
           <option value="smtp">smtp</option>
         </select>
       </div>

@@ -150,7 +150,7 @@ class AltrpForm {
           let fieldLabel = field.getSettings('content_label')
               || field.getSettings('content_placeholder') || '';
           let fieldValue = field.getValue();
-          userMessage += `${fieldLabel} ${fieldValue} <br/> `
+          userMessage += `${fieldLabel}: ${fieldValue} <br/> `
         }
       });
       data.subject = subject;
