@@ -35,6 +35,19 @@ class Dashboards extends BaseElement {
       return;
     }
 
+    this.startControlSection('Data type',{
+      tab: TAB_CONTENT,
+      label: 'Data type'
+    });
+
+    this.addControl('dataSource',{
+      type: CONTROLLER_SWITCHER,
+      label: "Get data by data source?",
+      default: false,
+    });
+
+    this.endControlSection();
+
     let repeater = new Repeater();
 
     repeater.addControl(
@@ -71,11 +84,12 @@ class Dashboards extends BaseElement {
       label: "Content",
     });
 
-    // this.addControl("rep", {
-    //   type: CONTROLLER_REPEATER,
-    //   default: [],
-    //   fields: repeater.getControls(),
-    // });
+
+    this.addControl("rep", {
+      type: CONTROLLER_REPEATER,
+      default: [],
+      fields: repeater.getControls(),
+    });
 
     this.addControl("sql", {
       type: CONTROLLER_SQL,

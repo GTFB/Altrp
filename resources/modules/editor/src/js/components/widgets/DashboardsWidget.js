@@ -1,6 +1,7 @@
 import React, { Component, Suspense } from "react";
 
 const AltrpDashboards = React.lazy(() => import("../altrp-dashboards/AltrpDashboards"));
+const DataSourceDashboards = React.lazy(() => import("../altrp-dashboards/DataSourceDashboards"));
 
 class DashboardsWidget extends Component {
   constructor(props) {
@@ -18,16 +19,26 @@ class DashboardsWidget extends Component {
   }
 
   render() {
-    // console.log(this.props.currentDataStorage);
-    return (
-      <Suspense fallback={"Loading"}>
-        <AltrpDashboards settings={this.props.element.getSettings()}
-          //  currentDataStorage={this.props.currentDataStorage}
-          id={this.props.element.getId()} />
-      </Suspense>
-    );
+    //  currentDataStorage={this.props.currentDataStorage}
+    const dataByDataSource = this.props.element.getSettings().dataSource;
+    const settings = this.props.element.getSettings();
+      return (
+        <Suspense fallback={"Loading"}>
+          {
+          dataByDataSource ? 
+          (<AltrpDashboards settings={settings}
+            currentDataStorage={this.props.currentDataStorage}
+            id={this.props.element.getId()} />) :
+          (<DataSourceDashboards
+            settings={settings}
+            currentDataStorage={this.props.currentDataStorage}
+            id={this.props.element.getId()}/>)
+          }
+        </Suspense>
+      );
+  }
 
   }
-}
+
 
 export default DashboardsWidget;
