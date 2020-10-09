@@ -217,6 +217,12 @@ class Button extends BaseElement{
       default: '',
     });
 
+    this.addControl('text_after', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Text After Sending',
+      default: '',
+    });
+
     this.addControl('choose_model', {
       conditions: {
         'form_actions': 'add_new',

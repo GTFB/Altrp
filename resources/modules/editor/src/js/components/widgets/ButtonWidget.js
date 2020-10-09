@@ -201,6 +201,10 @@ class ButtonWidget extends Component {
                 redirect_after = parseURLTemplate(redirect_after, res.data);
                 return this.props.history.push(redirect_after);
               }
+
+              if(this.props.element.getSettings('text_after', '')){
+                alert(this.props.element.getSettings('text_after', ''));
+              }
             } else if (res.message) {
               alert(res.message);
             }

@@ -136,7 +136,6 @@ class AltrpForm {
     let data = {altrp_ajax: true};
 
     if(this.modelName === 'email'){
-      console.log();
       let userMessage = '';
       let subject = 'Altrp Email';
 
