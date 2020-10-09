@@ -181,7 +181,17 @@
 .altrp-table-th .sort-icon {
   margin-left: 10px;
 }
-
+.altrp-table{
+  &-td {
+    &__grouping {
+      -webkit-transition-duration: 0.2s;
+      -moz-transition-duration: 0.2s;
+      -ms-transition-duration: 0.2s;
+      -o-transition-duration: 0.2s;
+      transition-duration: 0.2s;
+    }
+  }
+}
 .altrp-field-required {
   color: red;
   font-size: 18px;
@@ -673,6 +683,9 @@
 .state-disabled{
   pointer-events: none;
 }
+.altrp-pointer{
+  cursor: pointer;
+}
 
 // background-image wrapper
 
@@ -685,4 +698,8 @@
 
 .inner-template > .sections-wrapper{
   width: 100%;
+}
+
+.altrp-d-none{
+  display: none!important;
 }

@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
 import store from "../js/store/store";
-import {setModalSettings, toggleModal} from "../js/store/modal-settings/actions";
+import {setModalSettings} from "../js/store/modal-settings/actions";
 import { generateId, redirect, objectDeepCleaning } from "../js/helpers";
 import Pagination from "./Pagination";
 
@@ -141,14 +141,20 @@ export default class Templates extends Component{
           let areaExists = false;
           this.state.templateAreas.forEach(ta=>{
             if(ta.name === importedTemplateData.area){
+              importedTemplateData.area = ta.id;
               areaExists = true;
             }
           });
           if(! areaExists){
-            importedTemplateData.area = 'content';
+            importedTemplateData.area = _.filter(this.state.templateAreas,ta=>{
+              return ta.name === 'content';
+            });
           }
-          let res = await this.templateImportModule.importTemplate(importedTemplateData)
-          // let res = this.resource.post();
+          // let res = await this.templateImportModule.importTemplate(importedTemplateData)
+          console.log(this.resource);
+          console.log(importedTemplateData);
+          let res = this.resource.post(importedTemplateData);
+          console.log(res);
         };
 
         fr.readAsText(f);
