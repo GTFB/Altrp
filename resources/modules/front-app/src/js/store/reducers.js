@@ -4,8 +4,8 @@ import {currentModelReducer} from "./current-model/reducers";
 import {formsStoreReducer} from "./forms-data-storage/reducers";
 import {currentUserReducer} from "./current-user/reducers";
 import {currentDataStorageReducer} from "./current-data-storage/reducers";
-import { scrollReduser } from "./scroll-position/reducers";
-
+import { scrollReducer } from "./scroll-position/reducers";
+import { popupReducer } from './popup-trigger/reducers'
 
 export default combineReducers({
   appRoutes: appRoutesReducer,
@@ -13,5 +13,6 @@ export default combineReducers({
   formsStore: formsStoreReducer,
   currentUser: currentUserReducer,
   currentDataStorage: currentDataStorageReducer,
-  scrollPosition: scrollReduser
+  scrollPosition: scrollReducer,
+  popupTrigger: popupReducer
 });

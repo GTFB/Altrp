@@ -3,6 +3,7 @@ import {Link, Redirect, withRouter } from 'react-router-dom';
 import {placeElement} from "../../helpers";
 import {isEditor, parseURLTemplate, renderAssetIcon} from "../../../../../front-app/src/js/helpers";
 import AltrpModel from "../../classes/AltrpModel";
+import { triggerPopup } from "../../../../../front-app/src/js/store/popup-trigger/actions";
 
 //dropbar
 class Dropbar extends Component {
@@ -211,10 +212,9 @@ class ButtonWidget extends Component {
           }
         }
       );
-    } /* else if (this.props.element.getSettings('popup_trigger_type') && this.props.element.getSettings('popup_id')){
-      
-      
-    } */
+    } else if (this.props.element.getSettings('popup_trigger_type') && this.props.element.getSettings('popup_id')){
+      this.props.appStore.dispatch(triggerPopup(+this.props.element.getSettings('popup_id')));
+    }
   }
 
   render() {

@@ -66,6 +66,7 @@ class FrontPopup extends Component {
   componentDidUpdate(prevProps) {
     const { on_scroll, to_element } = _.get(this.props, 'template.triggers.data', {});
     const { isShownOnScroll } = this.state;
+    const { popupTrigger } = this.props
 
     if (on_scroll && !isShownOnScroll && on_scroll.size <= this.props.scrollPosition.top * 100) {
       this.setState({ isVisible: true, isShownOnScroll: true });
@@ -91,6 +92,9 @@ class FrontPopup extends Component {
 
     // }
 
+    if (popupTrigger !== prevProps.popupTrigger && popupTrigger.popupID === _.get(this.props, 'template.id')) {
+      this.setState({ isVisible: true });
+    }
   }
 
   render() {
@@ -111,7 +115,8 @@ class FrontPopup extends Component {
 
 const mapStateToProps = state => {
   return {
-    scrollPosition: state.scrollPosition
+    scrollPosition: state.scrollPosition,
+    popupTrigger: state.popupTrigger
   }
 };
 
