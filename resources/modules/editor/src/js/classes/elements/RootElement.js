@@ -537,10 +537,10 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default: {
-        top: 5,
-        right: 0,
-        bottom: 5,
-        left: 0,
+        // top: 5,
+        // right: 0,
+        // bottom: 5,
+        // left: 0,
         unit: 'px'
       },
       units: [
@@ -549,7 +549,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        '.altrp-heading{{STATE}}': [
+        'div .altrp-heading{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -562,15 +562,15 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: "px"
       },
       units: ["px", "%", "vh"],
       rules: {
-        ".altrp-heading{{STATE}}": [
+        "div .altrp-heading{{STATE}}": [
           "padding-top: {{TOP}}{{UNIT}};",
           "padding-right: {{RIGHT}}{{UNIT}};",
           "padding-bottom: {{BOTTOM}}{{UNIT}};",
@@ -582,10 +582,10 @@ class RootElement extends BaseElement {
     this.addControl("heading_default_background_color", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
+      // default: {
+      //   color: "",
+      //   colorPickedHex: "",
+      // },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         ".altrp-heading{{STATE}}": "background-color: {{COLOR}};"
@@ -595,9 +595,9 @@ class RootElement extends BaseElement {
     this.addControl("heading_default_opacity", {
       type: CONTROLLER_SLIDER,
       label: "Opacity",
-      default: {
-        size: 1
-      },
+      // default: {
+      //   size: 1
+      // },
       max: 1,
       min: 0,
       step: 0.01,
@@ -656,9 +656,9 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Background Position',
-      default: 'top left',
+      // default: 'top left',
       rules: {
-        ".altrp-heading{{STATE}}": "background-position: {{VALUE}};"
+        "div .altrp-heading{{STATE}}": "background-position: {{VALUE}};"
       }
     });
 
@@ -679,9 +679,9 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Background Attachment',
-      default: 'scroll',
+      // default: 'scroll',
       rules: {
-        ".altrp-heading{{STATE}}": "background-attachment: {{VALUE}};"
+        "div .altrp-heading{{STATE}}": "background-attachment: {{VALUE}};"
       }
     });
 
@@ -714,9 +714,9 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Background Repeat',
-      default: 'repeat',
+      // default: 'repeat',
       rules: {
-        ".altrp-heading{{STATE}}": "background-repeat: {{VALUE}};"
+        "div .altrp-heading{{STATE}}": "background-repeat: {{VALUE}};"
       }
     });
 
@@ -763,7 +763,7 @@ class RootElement extends BaseElement {
         },
       ],
       label: 'Background Size',
-      default: 'unset',
+      // default: 'unset',
       rules: {
         ".altrp-heading{{STATE}}": "background-size: {{VALUE}};"
       }
@@ -780,10 +780,10 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default: {
-        top: 20,
-        right: 25,
-        bottom: 20,
-        left: 25,
+        // top: 20,
+        // right: 25,
+        // bottom: 20,
+        // left: 25,
         unit: 'px',
         bind: true
       },
@@ -793,7 +793,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        '.altrp-btn{{STATE}}': [
+        'div .altrp-btn{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -805,16 +805,16 @@ class RootElement extends BaseElement {
     this.addControl('button_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      default: {
-        lineHeight: 1,
-        spacing: 0,
-        size: 16,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
+      // default: {
+      //   lineHeight: 1,
+      //   spacing: 0,
+      //   size: 16,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
       rules: {
-        '.altrp-btn{{STATE}}': [
+        'div .altrp-btn{{STATE}}': [
           'font-size: {{SIZE}}px;',
           'font-family: {{FAMILY}}',
           'line-height: {{LINEHEIGHT}};',
@@ -830,12 +830,12 @@ class RootElement extends BaseElement {
     this.addControl('button_font_color', {
       type: CONTROLLER_COLOR,
       label: 'Color',
-      default: {
-        color: "rgb(255,255,255)",
-        colorPickedHex: "#FFF",
-      },
+      // default: {
+      //   color: "rgb(255,255,255)",
+      //   colorPickedHex: "#FFF",
+      // },
       rules: {
-        '.altrp-btn{{STATE}}': 'color: {{COLOR}};',
+        'div .altrp-btn{{STATE}}': 'color: {{COLOR}};',
       },
     });
 
@@ -894,12 +894,12 @@ class RootElement extends BaseElement {
     this.addControl('button_border_color', {
       type: CONTROLLER_COLOR,
       label: 'Border Color',
-      default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852",
-      },
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852",
+      // },
       rules: {
-        '.altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
+        'div .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
       },
     }
     );
@@ -907,10 +907,10 @@ class RootElement extends BaseElement {
     this.addControl('button_border_radius', {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
-      default: {
-        size: 6,
-        unit: 'px',
-      },
+      // default: {
+      //   size: 6,
+      //   unit: 'px',
+      // },
       units: [
         'px',
         '%',
@@ -919,7 +919,7 @@ class RootElement extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        '.altrp-btn{{STATE}}': 'border-radius: {{SIZE}}{{UNIT}}',
+        'div .altrp-btn{{STATE}}': 'border-radius: {{SIZE}}{{UNIT}}',
       },
     });
 
@@ -942,19 +942,19 @@ class RootElement extends BaseElement {
         '#9c18a8'
       ],
       rules: {
-        '.altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+        'div .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
       },
     });
 
     this.addControl('button_background_color', {
       type: CONTROLLER_COLOR,
       label: 'Background color',
-      default: {
-        color: "rgb(52,59,76)",
-        colorPickedHex: "#343B4C",
-      },
+      // default: {
+      //   color: "rgb(52,59,76)",
+      //   colorPickedHex: "#343B4C",
+      // },
       rules: {
-        '.altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
+        'div .altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
       },
     });
 
@@ -1025,9 +1025,9 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Background Position',
-      default: 'top left',
+      // default: 'top left',
       rules: {
-        ".altrp-btn{{STATE}}": "background-position: {{VALUE}};"
+        "div .altrp-btn{{STATE}}": "background-position: {{VALUE}};"
       }
     });
 
@@ -1048,9 +1048,9 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Background Attachment',
-      default: 'scroll',
+      // default: 'scroll',
       rules: {
-        ".altrp-btn{{STATE}}": "background-attachment: {{VALUE}};"
+        "div .altrp-btn{{STATE}}": "background-attachment: {{VALUE}};"
       }
     });
 
@@ -1083,9 +1083,9 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Background Repeat',
-      default: 'repeat',
+      // default: 'repeat',
       rules: {
-        ".altrp-btn{{STATE}}": "background-repeat: {{VALUE}};"
+        "div .altrp-btn{{STATE}}": "background-repeat: {{VALUE}};"
       }
     });
 
@@ -1132,7 +1132,7 @@ class RootElement extends BaseElement {
         },
       ],
       label: 'Background Size',
-      default: 'unset',
+      // default: 'unset',
       rules: {
         ".altrp-btn{{STATE}}": "background-size: {{VALUE}};"
       }
@@ -1184,7 +1184,7 @@ class RootElement extends BaseElement {
     this.addControl('alignment_list_default', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: 'left',
+      // default: 'left',
       options: [
         {
           icon: 'left',
@@ -1200,8 +1200,8 @@ class RootElement extends BaseElement {
         }
       ],
       rules: {
-        '.altrp-list-ul-inline{{STATE}}': 'justify-content: {{VALUE}};',
-        '.altrp-list-ul-default .altrp-list-li{{STATE}}': 'justify-content: {{VALUE}};'
+        'div .altrp-list-ul-inline{{STATE}}': 'justify-content: {{VALUE}};',
+        'div .altrp-list-ul-default .altrp-list-li{{STATE}}': 'justify-content: {{VALUE}};'
       },
     });
 
@@ -1209,7 +1209,7 @@ class RootElement extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Indent',
       default: {
-        size: 0,
+        // size: 0,
         unit: 'px',
       },
       max: 50,
@@ -1247,10 +1247,10 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Text Padding',
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: 'px'
       },
       units: [
@@ -1259,7 +1259,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        '.altrp-list-label{{STATE}}': [
+        'div .altrp-list-label{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -1271,14 +1271,14 @@ class RootElement extends BaseElement {
     this.addControl('typographic_list_text_default', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      default: {
-        lineHeight: 1,
-        spacing: 0,
-        size: 16,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
+      // default: {
+      //   lineHeight: 1,
+      //   spacing: 0,
+      //   size: 16,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
       rules: {
         '.altrp-list-label{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
@@ -1297,7 +1297,7 @@ class RootElement extends BaseElement {
     this.addControl("link_decoration_text_default", {
       type: CONTROLLER_SELECT,
       label: "Text decoration",
-      default: "none",
+      // default: "none",
       options: [
         {
           value: "none",
@@ -1317,7 +1317,7 @@ class RootElement extends BaseElement {
         },
       ],
       rules: {
-        ".altrp-list-li-link{{STATE}}": "text-decoration: {{VALUE}};"
+        "div .altrp-list-li-link{{STATE}}": "text-decoration: {{VALUE}};"
       }
     });
 
@@ -1332,15 +1332,15 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: "px"
       },
       units: ["px", "%", "vh"],
       rules: {
-        ".altrp-text{{STATE}}": [
+        "div .altrp-text{{STATE}}": [
           "padding-top: {{TOP}}{{UNIT}};",
           "padding-right: {{RIGHT}}{{UNIT}};",
           "padding-bottom: {{BOTTOM}}{{UNIT}};",
@@ -1353,10 +1353,10 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default: {
-        top: 5,
-        right: 0,
-        bottom: 5,
-        left: 0,
+        // top: 5,
+        // right: 0,
+        // bottom: 5,
+        // left: 0,
         unit: 'px'
       },
       units: [
@@ -1365,7 +1365,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        '.altrp-text{{STATE}}': [
+        'div .altrp-text{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -1390,30 +1390,30 @@ class RootElement extends BaseElement {
     this.addControl("text_style_background_opacity", {
       type: CONTROLLER_SLIDER,
       label: "Opacity",
-      default: {
-        size: 1
-      },
+      // default: {
+      //   size: 1
+      // },
       max: 1,
       min: 0,
       step: 0.01,
       rules: {
-        ".altrp-text{{STATE}}": "opacity: {{SIZE}}"
+        "div .altrp-text{{STATE}}": "opacity: {{SIZE}}"
       }
     });
 
     this.addControl('text_style_font_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 16,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
+      // default: {
+      //   lineHeight: 1.5,
+      //   spacing: 0,
+      //   size: 16,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
       rules: {
-        '.altrp-text{{STATE}}': [
+        'div .altrp-text{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -1430,13 +1430,13 @@ class RootElement extends BaseElement {
     this.addControl("text_style_font_color", {
       type: CONTROLLER_COLOR,
       label: "Color",
-      default: {
-        color: "rgb(0, 0, 1)",
-        colorPickedHex: "#000000"
-      },
+      // default: {
+      //   color: "rgb(0, 0, 1)",
+      //   colorPickedHex: "#000000"
+      // },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        ".altrp-text{{STATE}}": "color: {{COLOR}};"
+        "div.altrp-text{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -1488,12 +1488,12 @@ class RootElement extends BaseElement {
     this.addControl("text_style_border_color", {
       type: CONTROLLER_COLOR,
       label: "Border color",
-      default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852"
-      },
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852"
+      // },
       rules: {
-        ".altrp-text{{STATE}}": "border-color: {{COLOR}};"
+        "div .altrp-text{{STATE}}": "border-color: {{COLOR}};"
       }
     });
 
@@ -1501,7 +1501,7 @@ class RootElement extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
       default: {
-        size: 0,
+        // size: 0,
         unit: 'px',
       },
       units: [
@@ -1512,7 +1512,7 @@ class RootElement extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        ".altrp-text{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
+        "div .altrp-text{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -1527,10 +1527,10 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: 'px'
       },
       units: [
@@ -1539,7 +1539,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        '.altrp-image{{STATE}}': [
+        'div .altrp-image{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -1552,10 +1552,10 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: 'px'
       },
       units: [
@@ -1564,7 +1564,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        '.altrp-image-container{{STATE}}': [
+        'div .altrp-image-container{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -1576,9 +1576,9 @@ class RootElement extends BaseElement {
     this.addControl('image_default_opacity', {
       type: CONTROLLER_SLIDER,
       label: 'Opacity',
-      default: {
-        size: 1,
-      },
+      // default: {
+      //   size: 1,
+      // },
       max: 1,
       min: 0,
       step: 0.01,
@@ -1590,7 +1590,7 @@ class RootElement extends BaseElement {
     this.addControl('image_default_fit_size', {
       type: CONTROLLER_SELECT,
       label: 'Image fit',
-      default: "cover",
+      // default: "cover",
       options: [
         {
           'value': 'fill',
@@ -1614,7 +1614,7 @@ class RootElement extends BaseElement {
         }
       ],
       rules: {
-        '.altrp-image{{STATE}}': 'object-fit: {{VALUE}};',
+        'div .altrp-image{{STATE}}': 'object-fit: {{VALUE}};',
       },
     }
     );
@@ -1679,12 +1679,12 @@ class RootElement extends BaseElement {
     this.addControl('image_default_border_color', {
       type: CONTROLLER_COLOR,
       label: 'Border Color',
-      default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852",
-      },
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852",
+      // },
       rules: {
-        '.altrp-image{{STATE}}': 'border-color: {{COLOR}};',
+        'div .altrp-image{{STATE}}': 'border-color: {{COLOR}};',
       },
     }
     );
@@ -1693,7 +1693,7 @@ class RootElement extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
       default: {
-        size: 0,
+        // size: 0,
         unit: 'px',
       },
       units: [
@@ -1704,7 +1704,7 @@ class RootElement extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        '.altrp-image{{STATE}}': 'border-radius: {{SIZE}}{{UNIT}}',
+        'div .altrp-image{{STATE}}': 'border-radius: {{SIZE}}{{UNIT}}',
       },
     });
 
@@ -1731,16 +1731,16 @@ class RootElement extends BaseElement {
     this.addControl('label_default_font_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Label Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 16,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
+      // default: {
+      //   lineHeight: 1.5,
+      //   spacing: 0,
+      //   size: 16,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
       rules: {
-        '.altrp-field-label{{STATE}}': [
+        'div .altrp-field-label{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -1757,16 +1757,16 @@ class RootElement extends BaseElement {
     this.addControl('field_default_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Field Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 16,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
+      // default: {
+      //   lineHeight: 1.5,
+      //   spacing: 0,
+      //   size: 16,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
       rules: {
-        '.altrp-field-select2__single-value{{STATE}}': [
+        'div .altrp-field-select2__single-value{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -1776,7 +1776,7 @@ class RootElement extends BaseElement {
           'font-style: {{STYLE}};',
           'text-decoration: {{DECORATION}};'
         ],
-        '.altrp-field{{STATE}}': [
+        'div .altrp-field{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -1806,7 +1806,7 @@ class RootElement extends BaseElement {
     this.addControl('placeholder_and_value_alignment_default', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment, value',
-      default: 'left',
+      // default: 'left',
       options: [
         {
           icon: 'left',
@@ -1822,8 +1822,8 @@ class RootElement extends BaseElement {
         }
       ],
       rules: {
-        '.altrp-field{{STATE}}': 'text-align: {{VALUE}};',
-        '.altrp-field-select2__control{{STATE}}': 'text-align: {{VALUE}};'
+        'div .altrp-field{{STATE}}': 'text-align: {{VALUE}};',
+        'div .altrp-field-select2__control{{STATE}}': 'text-align: {{VALUE}};'
       },
     });
 
@@ -1831,10 +1831,10 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: 'px'
       },
       units: [
@@ -1843,7 +1843,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        '.altrp-field-container{{STATE}}': [
+        'div .altrp-field-container{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -1856,10 +1856,10 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default: {
-        top: 2,
-        right: 2,
-        bottom: 2,
-        left: 2,
+        // top: 2,
+        // right: 2,
+        // bottom: 2,
+        // left: 2,
         unit: 'px'
       },
       units: [
@@ -1868,13 +1868,13 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        '.altrp-field{{STATE}}': [
+        'div .altrp-field{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
           'padding-left: {{LEFT}}{{UNIT}};'
         ],
-        '.altrp-field-select2__control{{STATE}}': [
+        'div .altrp-field-select2__control{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -1909,7 +1909,7 @@ class RootElement extends BaseElement {
         decoration: ""
       },
       rules: {
-        '.altrp-field::placeholder{{STATE}}': [
+        'div .altrp-field::placeholder{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -1919,7 +1919,7 @@ class RootElement extends BaseElement {
           'font-style: {{STYLE}}',
           'text-decoration: {{DECORATION}}'
         ],
-        '.altrp-field-select2__placeholder{{STATE}}': [
+        'div .altrp-field-select2__placeholder{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -1950,7 +1950,7 @@ class RootElement extends BaseElement {
     this.addControl('input_default_border_type', {
       type: CONTROLLER_SELECT,
       label: 'Border Type',
-      default: 'solid',
+      // default: 'solid',
       options: [
         {
           'value': 'none',
@@ -1978,8 +1978,8 @@ class RootElement extends BaseElement {
         },
       ],
       rules: {
-        '.altrp-field{{STATE}}': 'border-style: {{VALUE}};',
-        '.altrp-field-select2__control{{STATE}}': 'border-style: {{VALUE}};'
+        'div .altrp-field{{STATE}}': 'border-style: {{VALUE}};',
+        'div .altrp-field-select2__control{{STATE}}': 'border-style: {{VALUE}};'
 
       },
     }
@@ -1993,12 +1993,12 @@ class RootElement extends BaseElement {
         '%',
         'vh',
       ],
-      default: {
-        top: 2,
-        right: 2,
-        bottom: 2,
-        left: 2
-      },
+      // default: {
+      //   top: 2,
+      //   right: 2,
+      //   bottom: 2,
+      //   left: 2
+      // },
       rules: {
         '.altrp-field{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         '.altrp-field-select2__control{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
@@ -2009,10 +2009,10 @@ class RootElement extends BaseElement {
     this.addControl('input_default_border_color', {
       type: CONTROLLER_COLOR,
       label: 'Border Color',
-      default: {
-        color: "rgb(142,148,170)",
-        colorPickedHex: "#8E94AA",
-      },
+      // default: {
+      //   color: "rgb(142,148,170)",
+      //   colorPickedHex: "#8E94AA",
+      // },
       rules: {
         '.altrp-field{{STATE}}': 'border-color: {{COLOR}};',
         '.altrp-field-select2__control{{STATE}}': 'border-color: {{COLOR}};'
@@ -2024,10 +2024,10 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Radius',
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: 'px'
       },
       units: [
@@ -2095,14 +2095,14 @@ class RootElement extends BaseElement {
         },
       ],
       rules: {
-        '.altrp-table-th{{STATE}}': 'text-align: {{VALUE}}',
+        'tr .altrp-table-th{{STATE}}': 'text-align: {{VALUE}}',
       },
     });
 
     this.addControl('table_default_body_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Body alignment',
-      default: 'left',
+      // default: 'left',
       options: [
         {
           icon: 'left',
@@ -2118,7 +2118,7 @@ class RootElement extends BaseElement {
         },
       ],
       rules: {
-        '.altrp-table-td{{STATE}}': 'text-align: {{VALUE}}',
+        'tr .altrp-table-td{{STATE}}': 'text-align: {{VALUE}}',
       },
     });
 
@@ -2130,7 +2130,7 @@ class RootElement extends BaseElement {
         colorPickedHex: "#32a852"
       },
       rules: {
-        '.altrp-table-tbody--striped tr:nth-child(2n)': 'background-color: {{COLOR}}'
+        'tbody .altrp-table-tbody--striped tr:nth-child(2n)': 'background-color: {{COLOR}}'
       }
     });
 
@@ -2173,27 +2173,27 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Table Border Width",
       default: {
-        top: 1,
-        right: 1,
-        bottom: 1,
-        left: 1,
+        // top: 1,
+        // right: 1,
+        // bottom: 1,
+        // left: 1,
         unit: "px"
       },
       units: ["px", "%", "vh"],
       rules: {
-        '.altrp-table{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
+        'div .altrp-table{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
       }
     });
 
     this.addControl("table_default_border_color", {
       type: CONTROLLER_COLOR,
       label: "Table Border Color",
-      default: {
-        color: "rgb(186,186,186)",
-        colorPickedHex: "#32a852"
-      },
+      // default: {
+      //   color: "rgb(186,186,186)",
+      //   colorPickedHex: "#32a852"
+      // },
       rules: {
-        '.altrp-table{{STATE}}': 'border-color: {{COLOR}} !important'
+        'div .altrp-table{{STATE}}': 'border-color: {{COLOR}} !important'
       }
     });
 
@@ -2224,16 +2224,16 @@ class RootElement extends BaseElement {
     this.addControl('table_default_header_font', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Header Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 14,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
+      // default: {
+      //   lineHeight: 1.5,
+      //   spacing: 0,
+      //   size: 14,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
       rules: {
-        '.altrp-table-th{{STATE}}': [
+        'tr .altrp-table-th{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -2306,10 +2306,10 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Header Padding',
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: 'px'
       },
       units: [
@@ -2318,7 +2318,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        '.altrp-table-th{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        'tr .altrp-table-th{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
       },
     });
 
@@ -2382,10 +2382,10 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Cell padding',
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: 'px'
       },
       units: [
@@ -2394,7 +2394,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        '.altrp-table-td{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        'tr .altrp-table-td{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
       },
     });
 
