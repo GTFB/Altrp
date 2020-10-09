@@ -99,8 +99,10 @@ class AltrpForm {
             document.location.reload();
             return;
           }
+          this.clearInputs();
           return res;
         }
+
         case 'PUT':{
           // return await alert(JSON.stringify(this.getData()));
           let res;
@@ -109,10 +111,10 @@ class AltrpForm {
             import('./modules/ModelsManager').then(modelsManager=>{
               modelsManager.default.updateModelWithData(this.modelName, modelID, this.getData());
             });
-
+            this.clearInputs();
             return res;
           }
-          console.error('Не удалось получить ИД модели для удаления!');
+          console.error('Не удалось получить ИД модели для обновления!');
         }
         break;
         case 'DELETE':{
@@ -122,10 +124,26 @@ class AltrpForm {
           }
           console.error('Не удалось получить ИД модели для удаления!');
         }
+        break;
       }
     } else {
       return await alert('Пожалуйста, заполните все обязательные поля');
     }
+  }
+
+  /**
+   * Очистим поля формы
+   */
+  clearInputs(){
+    this.fields.forEach(field=>{
+      try {
+        if (_.isFunction(_.get(field, 'component.setState'))) {
+          field.component.setState(state => ({...state, value: ''}));
+        }
+      }catch(error){
+        console.error(error);
+      }
+    });
   }
 
   /**
