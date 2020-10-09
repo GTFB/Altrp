@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
 import store from "../js/store/store";
-import {setModalSettings, toggleModal} from "../js/store/modal-settings/actions";
+import {setModalSettings} from "../js/store/modal-settings/actions";
 import { generateId, redirect, objectDeepCleaning } from "../js/helpers";
 import Pagination from "./Pagination";
 

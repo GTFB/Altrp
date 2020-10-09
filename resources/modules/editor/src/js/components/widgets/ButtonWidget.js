@@ -239,18 +239,8 @@ class ButtonWidget extends Component {
       classes += " altrp-disabled";
     }
 
-    classes += this.state.settings.link_button_type === "dropbar" ? "altrp-btn-dropbar" : ""
+    classes += this.state.settings.link_button_type === "dropbar" ? "altrp-btn-dropbar" : "";
 
-    const buttonProps = {
-      className: classes,
-      // to:
-    };
-    buttonProps.to = link_link.url ? link_link.url.replace(':id', this.getModelId() || '') : '';
-    buttonProps.href =  link_link.url ? link_link.url.replace(':id', this.getModelId() || '') : '';
-    if(_.isObject(this.state.modelData) && link_link.url){
-      buttonProps.to = parseURLTemplate(link_link.url, this.state.modelData);
-      buttonProps.href = parseURLTemplate(link_link.url, this.state.modelData);
-    }
     let icon = (buttonMedia && buttonMedia.assetType) ? <span className={"altrp-btn-icon "}>{renderAssetIcon(buttonMedia)} </span> : '';
 
     let url = link_link.url ? link_link.url.replace(':id', this.getModelId() || '') : '';
@@ -292,12 +282,12 @@ class ButtonWidget extends Component {
     );
 
     let link = null;
-
     if (this.state.settings.link_link?.url && !this.state.settings.link_link.toPrevPage) {
       if (this.state.settings.link_link.tag === 'a' || isEditor()) {
-
+        console.log(this.state.settings.link_link);
+        let target = _.get(this.state.settings, 'link_link.openInNew') ? 'blank' : '';
         link = (
-          <a href={url} onClick={this.onClick} className={classes}>
+          <a href={url} onClick={this.onClick} className={classes} target={target}>
             {" "}
             {buttonText || ""}
             <span className={"altrp-btn-icon "}>{renderAssetIcon(buttonMedia)} </span>
