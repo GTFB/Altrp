@@ -62,7 +62,7 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
   return (
     <Card>
       <Card.Header>
-        <Card.Title>Редактировать виджет</Card.Title>
+        {/* <Card.Title>Редактировать виджет</Card.Title> */}
       </Card.Header>
       <Card.Body>
         <Form>

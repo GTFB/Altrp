@@ -36,7 +36,10 @@ function CardWidget({ widget, onDeleted, onEdited, settings }) {
               <Dropdown.Toggle variant="light" >
                 <ThreeDotsVertical color="#7a7a7b" />
               </Dropdown.Toggle>
-              <Dropdown.Menu className="dropdownMenuToggle">
+              <Dropdown.Menu className="dropdownMenuToggle" style={{ 
+                zIndex:999999,
+                background: 'rgba(255,255,255,1)' 
+              }}>
                 <Dropdown.Item>
                   <ReactToPrint
                     trigger={() => {
