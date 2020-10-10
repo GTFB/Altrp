@@ -53,11 +53,12 @@ export function titleToName(str) {
 
 }
 /** @function objectDeepCleaning
-  * Удаляет все свойства id, и чистит settings
+  * Удаляет все свойства id, и чистит settings (пока нет) todo: нужна оптимизация
   * @param {object} collection
   * @return {object} Объект после удаления всех свойств id, и чистки settings
  */
 export function objectDeepCleaning(collection) {
+  return collection;
   if (typeof collection !== "object" || collection === null) return collection;
   if (collection.id) delete collection.id;
 

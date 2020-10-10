@@ -19,26 +19,24 @@ class DashboardsWidget extends Component {
   }
 
   render() {
-    //  currentDataStorage={this.props.currentDataStorage}
     const dataByDataSource = this.props.element.getSettings().dataSource;
     const settings = this.props.element.getSettings();
-      return (
-        <Suspense fallback={"Loading"}>
-          {
-          dataByDataSource ? 
-          (<AltrpDashboards settings={settings}
-            currentDataStorage={this.props.currentDataStorage}
-            id={this.props.element.getId()} />) :
-          (<DataSourceDashboards
-            settings={settings}
-            currentDataStorage={this.props.currentDataStorage}
-            id={this.props.element.getId()}/>)
-          }
-        </Suspense>
-      );
-  }
+    const global_parameter = this.state.settings.global_parameter;
+    return (
+      <Suspense fallback={"Loading"}>
+        {!dataByDataSource
+        ?
+          (<AltrpDashboards settings={this.props.element.getSettings()}
+            globalParameter={global_parameter}
+            //  currentDataStorage={this.props.currentDataStorage}
+            id={this.props.element.getId()} />)
+        :
+          (<DataSourceDashboards settings={this.props.element.getSettings()} />)
+        }
+       
+      </Suspense>
+    );
 
   }
-
-
+}
 export default DashboardsWidget;

@@ -15,7 +15,7 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_NUMBER,
-  CONTROLLER_WYSIWYG, CONTROLLER_QUERY, CONTROLLER_REPEATER, CONTROLLER_FILTERS, CONTROLLER_HEADING
+  CONTROLLER_WYSIWYG, CONTROLLER_QUERY, CONTROLLER_REPEATER, CONTROLLER_FILTERS, CONTROLLER_HEADING, CONTROLLER_MEDIA
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import Repeater from "../Repeater";
@@ -197,15 +197,15 @@ class Table extends BaseElement {
     this.addControl('current_page_text', {
       label: 'Current Page Text',
     });
-
-
     let repeater = new Repeater();
 
     repeater.addControl('accessor',{
       label: 'Column Name',
+      dynamic: false,
     });
     repeater.addControl('column_name',{
       label: 'Column Heading',
+      dynamic: false,
     });
     repeater.addControl('group_by',{
       type: CONTROLLER_SWITCHER,
@@ -214,10 +214,12 @@ class Table extends BaseElement {
     });
     repeater.addControl('column_link',{
       label: 'Link Template',
+      dynamic: false,
       description: '/path/:id',
     });
     repeater.addControl('column_width',{
       label: 'Column Width',
+      dynamic: false,
       type: CONTROLLER_NUMBER,
     });
     repeater.addControl('column_header_alignment', {
@@ -341,6 +343,57 @@ class Table extends BaseElement {
       fields: additionalTableHeadRowsRepeater.getControls(),
     });
     this.endControlSection();
+    /**
+     * Настройки для группировки START
+     */
+    this.startControlSection("group_settings", {
+      tab: TAB_CONTENT,
+      label: "Group Settings",
+    });
+
+    this.addControl('group_by_column_name',{
+      label: 'Group by Column Name',
+    });
+
+    this.addControl('group_default_text',{
+      label: 'Group Default Text',
+    });
+
+    this.addControl('group_collapsing',{
+      type: CONTROLLER_SWITCHER,
+      default: false,
+      label: 'Group Collapsing',
+    });
+
+    this.addControl('group_collapsed_default',{
+      type: CONTROLLER_SWITCHER,
+      conditions: {
+        'group_collapsing': true,
+      },
+      default: false,
+      label: 'Collapsed Default',
+    });
+
+    this.addControl('collapsed_icon',{
+      type: CONTROLLER_MEDIA,
+      conditions: {
+        'group_collapsing': true,
+      },
+      label: 'Collapsed Icon',
+    });
+    this.addControl('expanded_icon',{
+      type: CONTROLLER_MEDIA,
+      conditions: {
+        'group_collapsing': true,
+      },
+
+      label: 'Expanded Icon',
+    });
+
+    this.endControlSection();
+    /**
+     * Настройки для группировки END
+     */
 
     this.startControlSection("filter_style_table", {
       tab: TAB_STYLE,
@@ -1090,7 +1143,7 @@ class Table extends BaseElement {
      */
     this.startControlSection("table_style_group", {
       tab: TAB_STYLE,
-      label: "Group Heading"
+      label: "Group"
     });
 
     this.addControl('table_style_group_cell_padding', {
@@ -1111,6 +1164,28 @@ class Table extends BaseElement {
       rules: {
         '{{ELEMENT}} .altrp-table-td__grouping{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
       },
+    });
+
+    this.addControl('table_style_group_cell_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Header alignment',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-table-tbody .altrp-table-td__grouping{{STATE}}': 'text-align: {{VALUE}};',
+      }
     });
 
     this.addControl("table_style_group_border_background", {
@@ -1153,6 +1228,29 @@ class Table extends BaseElement {
         ],
       },
     });
+
+    this.addControl("table_style_group_icon_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Icon Padding",
+      rules: {
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ],
+      }
+    });
+
+    this.addControl("table_style_group_icon_color", {
+      type: CONTROLLER_COLOR,
+      label: "Icon Color",
+      rules: {
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': 'fill: {{COLOR}};',
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon path': 'fill: {{COLOR}};',
+      }
+    });
+
     this.endControlSection();
     /**
      * Стили для заголовка группы END

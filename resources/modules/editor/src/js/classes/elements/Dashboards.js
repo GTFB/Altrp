@@ -90,6 +90,20 @@ class Dashboards extends BaseElement {
       default: [],
       fields: repeater.getControls(),
     });
+    
+    this.addControl('global_parameter',{
+      type: CONTROLLER_SQL,
+      default: [],
+      multi: false,
+      label: 'Select global paramenters',
+      onlySQL: true
+    });
+
+    // this.addControl("rep", {
+    //   type: CONTROLLER_REPEATER,
+    //   default: [],
+    //   fields: repeater.getControls(),
+    // });
 
     this.addControl("sql", {
       type: CONTROLLER_SQL,

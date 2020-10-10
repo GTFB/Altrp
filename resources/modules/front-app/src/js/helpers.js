@@ -104,17 +104,27 @@ export function getMediaSettingsByName(screenSettingName) {
  */
 export function parseURLTemplate(URLTemplate = '', object = {}){
   let url = URLTemplate;
+  let protocol = '';
+  url = url.trim();
+   if(url.indexOf('https://') === 0){
+     protocol = 'https://';
+     url = url.replace('https://', '');
+   }
+   if(url.indexOf('http://') === 0){
+     protocol = 'http://';
+     url = url.replace('http://', '');
+   }
   // columnEditUrl = columnEditUrl.replace(':id', row.original.id);
   let idTemplates = url.match(/:([\s\S]+?)(\/|$)/g);
   if(! idTemplates){
-    return url;
+    return protocol + url;
   }
   idTemplates.forEach(idTemplate=>{
     let replace = object[idTemplate.replace(/:|\//g, '')] || '';
     idTemplate = idTemplate.replace('/', '');
     url = url.replace(new RegExp(idTemplate,'g'), replace);
   });
-  return url;
+  return protocol + url;
 }
 
 export function getWindowWidth() {
