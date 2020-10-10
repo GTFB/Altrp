@@ -191,6 +191,12 @@
       transition-duration: 0.2s;
     }
   }
+  &__collapse-icon{
+    display: inline-block;
+    & svg{
+      position: relative;
+    }
+  }
 }
 .altrp-field-required {
   color: red;

@@ -40,17 +40,20 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
       defaultSortSettings.order = _.get(column, 'column_is_default_sorted_direction', 'ASC')
     }
   });
-  let groupBy = _.get(settings, 'group_by_column_name');
-  if(! groupBy){
-    groupBy = React.useMemo(()=>getGroupBy(settings.tables_columns), [settings.tables_columns]);
-  }
+  let groupBy = React.useMemo(
+      ()=> {
+        return _.get(settings, 'group_by_column_name') ? _.get(settings, 'group_by_column_name') : getGroupBy(settings.tables_columns)
+      }, [settings]
+      );
+
   const [page, setPage] = useState(1);
 
   let counter = query.getCounterStart(page);
   let _data =[], _status, _error, _latestData;
 
   const collapsing = React.useMemo(()=>settings.group_collapsing);
-  const [collapsedGroups, setCollapsedGroups] = React.useState([]);
+  const collapsedInitiate = [];
+  const [collapsedGroups, setCollapsedGroups] = React.useState(collapsedInitiate);
   const [updatedData, setUpdatedData] = useState({});
   const [sortSetting, setSortSettings] = useState(defaultSortSettings);
   const [filterSetting, setFilterSettings] = useState({});
@@ -465,7 +468,7 @@ function getGroupBy(columns){
  * @params {[]} collapsedGroups
  * @return {string|React.Component}
  */
-function renderGroupingTr(row, groupBy, groupingStore, settings = {},collapsing, setCollapsedGroups, collapsedGroups){
+function renderGroupingTr(row, groupBy, groupingStore, settings = {}, collapsing, setCollapsedGroups, collapsedGroups){
   if(! groupBy){
     return null;
   }
@@ -478,7 +481,6 @@ function renderGroupingTr(row, groupBy, groupingStore, settings = {},collapsing,
   }
   groupingStore.push(text);
   let collapsed = (collapsedGroups.indexOf(text) !== -1);
-  console.log(settings.collapsed_icon);
   let {collapsed_icon, expanded_icon} = settings;
   /**
    * С сервера может приходить массив если иконка удалена
@@ -519,6 +521,7 @@ function renderGroupingTr(row, groupBy, groupingStore, settings = {},collapsing,
  * @param {[]} collapsedGroups - список заголовков, которые схлопнуты
  */
 function toggleGroup(currentRowHeading, setCollapsedGroups, collapsedGroups) {
+
   if(collapsedGroups.indexOf(currentRowHeading) === -1){
     collapsedGroups.push(currentRowHeading);
     setCollapsedGroups([...collapsedGroups]);
