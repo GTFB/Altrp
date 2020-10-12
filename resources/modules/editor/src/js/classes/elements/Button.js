@@ -593,22 +593,24 @@ class Button extends BaseElement{
     );
 
     this.addControl('border_radius', {
-      type: CONTROLLER_SLIDER,
-      label: 'Border radius',
-      default:{
-        // size: 6,
-        unit: 'px',
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+      default: {
+        unit: 'px'
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
       ],
-      max: 100,
-      min: 0,
       rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-radius: {{SIZE}}{{UNIT}}',
-      },
+        '{{ELEMENT}} .altrp-btn{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
     });
 
     this.addControl('style_background_shadow', {
@@ -1102,6 +1104,7 @@ class Button extends BaseElement{
       "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
     }
   });
+  
 
   this.endControlSection();
 
