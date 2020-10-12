@@ -23,15 +23,15 @@ class ShadowController extends Component {
     this.inputSpreadUpdate = this.inputSpreadUpdate.bind(this);
     this.type = this.type.bind(this);
     this.inputVerUpdate = this.inputVerUpdate.bind(this);
-    this.defaultValues = { 
-      blur: 0, 
-      color: "rgb(0, 0, 0)", 
-      colorPickedHex: "#000000", 
-      colorRGB: "rgb(0, 0, 0)", 
-      horizontal: 0, 
-      opacity: 1, 
+    this.defaultValues = {
+      blur: 0,
+      color: "rgb(0, 0, 0)",
+      colorPickedHex: "#000000",
+      colorRGB: "rgb(0, 0, 0)",
+      horizontal: 0,
+      opacity: 1,
       spread: 0,
-      type: "",
+      type: " ",
       vertical: 0
     }
     let value = this.getSettings(this.props.controlId);
@@ -40,8 +40,8 @@ class ShadowController extends Component {
     }
     value = value || false;
     this.state = {
+      isMenuOpened: false,
       value,
-      show: true,
       //color
       active: false,
       //blur
@@ -59,20 +59,6 @@ class ShadowController extends Component {
     };
   }
   //начало color
-  openShadow() {
-    let shadowContainer = document.getElementById("shadowContainer")
-    let shadowContentIcon = document.getElementById("shadowContentIcon");
-
-    shadowContainer.classList.toggle("control-shadow-active");
-
-    if (shadowContentIcon.getAttribute("fill") == "#8E94AA") {
-      shadowContentIcon.removeAttribute("fill");
-      shadowContentIcon.setAttribute("fill", "#5bc0de");
-    } else {
-      shadowContentIcon.removeAttribute("fill");
-      shadowContentIcon.setAttribute("fill", "#8E94AA");
-    }
-  }
 
   colorChange(color) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
@@ -185,9 +171,8 @@ class ShadowController extends Component {
   }
   //конец select
   render() {
-    if (this.state.show === false) {
-      return '';
-    }
+    const { isMenuOpened } = this.state;
+
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     let colorPickedStyle = {
       backgroundColor: value.color
@@ -212,11 +197,14 @@ class ShadowController extends Component {
         </div>
       </div>
       <div className="control-group control-group-shadow">
-        <div className="control-shadow-toggle control-shadow-toggle-active" onClick={this.openShadow} fill="#8E94AA">
+        <div className="control-shadow-toggle control-shadow-toggle-active" 
+          onClick={() => this.setState({ isMenuOpened: !isMenuOpened})} 
+          fill="#8E94AA"
+        >
           <ContentIcon id="shadowContentIcon" className="control-shadow-svg-content" fill="#8E94AA" width="16"
             height="16" />
         </div>
-        <div id="shadowContainer" className="control-shadow-wrapper control-shadow-wrapper-none">
+        {isMenuOpened && <div id="shadowContainer" className="control-shadow-wrapper control-shadow-wrapper-none control-shadow-active">
           {/* начало color */}
           <div className="control-color-header">
             <div className="controller-container__label">color</div>
@@ -332,7 +320,8 @@ class ShadowController extends Component {
               </select>
             </div>
           </div>
-        </div>
+        </div>}
+
       </div>
     </div>
   }
