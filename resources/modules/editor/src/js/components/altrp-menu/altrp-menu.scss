@@ -46,7 +46,6 @@
 
 .altrp-nav-menu-li-after:after {
     content: "";
-    z-index: -1;
     position: absolute;
     transition: opacity 0.5s,width .4s,height .4s;
     bottom: 0;
@@ -144,13 +143,12 @@
 
 .altrp-nav-menu-ul-dropdown-hor-ver-ul {
     padding: 0;
+    margin: 0;
     list-style-type: none;
 }
 
 .altrp-nav-menu-ul-dropdown-hor-ver {
-    display: none;
-    position: absolute;
-    left: 0;
+    display: flex;
     margin-left: 0;
     margin-top: 0;
     max-width: 1000px;
@@ -158,12 +156,7 @@
     z-index: 999;
 }
 
-.altrp-nav-menu-li:hover .altrp-nav-menu-ul-dropdown-hor-ver {
-    display: block;
-}
-
 .altrp-nav-menu-ul-dropdown-hor-ver-li {
-    border-collapse: separate;
     position: relative;
 }
 
@@ -183,6 +176,10 @@
 }
 
 .altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon {
+    transform: rotate(90deg);
+}
+
+.altrp-nav-menu-ul-dropdown-children-hor-ver-li-link-icon {
     transform: rotate(90deg);
 }
 
@@ -263,4 +260,8 @@
 
 .altrp-nav-menu-li-link-label {
     display: flex;
+}
+
+.altrp-nav-menu-li-pointer {
+    z-index: 200;
 }

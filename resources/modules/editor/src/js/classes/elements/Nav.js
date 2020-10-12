@@ -604,8 +604,8 @@ class Nav extends BaseElement{
         colorPickedHex: "",
       },
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}} .altrp-nav-menu-li-dropdown-hor-ver-link-label": "color: {{COLOR}};",
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon path": [
+        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}} .altrp-nav-menu-li-dropdown-hor-ver-link-label": "color: {{COLOR}};",
+        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon path": [
           "stroke: {{COLOR}};",
         ]
       }
@@ -703,6 +703,244 @@ class Nav extends BaseElement{
         "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
         "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li:first-child{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} 0 0",
         "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li:last-child{{STATE}}": "border-radius: 0 0 {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+      }
+    });
+
+    // this.addControl("horizontal_padding_dropdown_hor_ver_menu_section", {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Horizontal padding',
+    //   default:{
+    //     size: "15",
+    //     unit: 'px',
+    //   },
+    //   max: 50,
+    //   min: 0,
+    //   rules: {
+    //     "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
+    //       "padding-left: {{SIZE}}{{UNIT}}",
+    //       "padding-right: {{SIZE}}{{UNIT}}"
+    //     ]
+    //   }
+    // });
+    //
+    // this.addControl("vertical_padding_dropdown_hor_ver_menu_section", {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Vertical padding',
+    //   default:{
+    //     size: "10",
+    //     unit: 'px',
+    //   },
+    //   max: 50,
+    //   min: 0,
+    //   rules: {
+    //     "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
+    //       "padding-top: {{SIZE}}{{UNIT}}",
+    //       "padding-bottom: {{SIZE}}{{UNIT}}"
+    //     ]
+    //   }
+    // });
+
+    this.addControl("distance_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Distance',
+      default:{
+        size: "0",
+        unit: 'px',
+      },
+      max: 100,
+      min: -100,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}": "margin-top: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("heading_submenu_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_HEADING,
+      label: "Submenu"
+    });
+
+    this.addControl('typographic_submenu_dropdown_hor_ver_menu_section', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default:{
+          lineHeight: 1.5,
+          spacing: 0,
+          size: 15,
+          weight: "normal",
+          family: "Open Sans",
+          decoration: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-nav-menu-li-dropdown-children-hor-ver-link-label{{STATE}}': [
+            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
+    this.addControl("text_color_submenu_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}} .altrp-nav-menu-li-dropdown-children-hor-ver-link-label": "color: {{COLOR}};",
+        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li-link-icon path": [
+          "stroke: {{COLOR}};",
+        ]
+      }
+    });
+
+    this.addControl("background_color_submenu_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}}": "background: {{COLOR}};"
+      }
+    });
+
+    this.addControl('border_type_submenu_dropdown_hor_ver_menu_section', {
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options:[
+          {
+            'value' : 'none',
+            'label' : 'None',
+          },
+          {
+            'value' : 'solid',
+            'label' : 'Solid',
+          },
+          {
+            'value' : 'double',
+            'label' : 'Double',
+          },
+          {
+            'value' : 'dotted',
+            'label' : 'Dotted',
+          },
+          {
+            'value' : 'dashed',
+            'label' : 'Dashed',
+          },
+          {
+            'value' : 'groove',
+            'label' : 'Groove',
+          },
+        ],
+        rules: {
+          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
+        },
+      }
+    );
+
+    this.addControl('border_width_submenu_dropdown_hor_ver_menu_section', {
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        default: {
+          bind: true
+        },
+        units:[
+          'px',
+          '%',
+          'vh',
+        ],
+        rules: {
+          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        },
+      }
+    );
+
+    this.addControl('border_color_submenu_dropdown_hor_ver_menu_section', {
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+        default: {
+          color: "",
+          colorPickedHex: "",
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-color: {{COLOR}};',
+        },
+      }
+    );
+
+    this.addControl("border-radius_submenu_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border radius",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver-only{{STATE}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li:first-child": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} 0 0",
+        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li:last-child": "border-radius: 0 0 {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+      }
+    });
+
+    // this.addControl("horizontal_padding_submenu_dropdown_hor_ver_menu_section", {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Horizontal padding',
+    //   default:{
+    //     size: "15",
+    //     unit: 'px',
+    //   },
+    //   max: 50,
+    //   min: 0,
+    //   rules: {
+    //     "{{ELEMENT}} .altrp-nav-menu-li-dropdown-children-hor-ver-li-link{{STATE}}": [
+    //       "padding-left: {{SIZE}}{{UNIT}}",
+    //       "padding-right: {{SIZE}}{{UNIT}}"
+    //     ]
+    //   }
+    // });
+    //
+    // this.addControl("vertical_submenu_dropdown_hor_ver_menu_section", {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Vertical padding',
+    //   default:{
+    //     size: "10",
+    //     unit: 'px',
+    //   },
+    //   max: 50,
+    //   min: 0,
+    //   rules: {
+    //     "{{ELEMENT}} .altrp-nav-menu-li-dropdown-children-hor-ver-li-link{{STATE}}": [
+    //       "padding-top: {{SIZE}}{{UNIT}}",
+    //       "padding-bottom: {{SIZE}}{{UNIT}}"
+    //     ]
+    //   }
+    // });
+
+    this.addControl("distance_submenu_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Distance',
+      default:{
+        size: "0",
+        unit: 'px',
+      },
+      max: 100,
+      min: -100,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}": "margin-right: {{SIZE}}{{UNIT}}"
       }
     });
 

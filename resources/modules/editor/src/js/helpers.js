@@ -177,7 +177,7 @@ export function placeElement(getVariants, properties) {
       targetStyles = window.getComputedStyle(target),
       targetMarginLeft = parseInt(targetStyles.getPropertyValue('margin-left').replace(/\D+/g, "")) || 0,
       targetMarginRight = parseInt(targetStyles.getPropertyValue('margin-right').replace(/\D+/g, "")) || 0;
-
+  console.log(target.offsetLeft);
   let positioning = {
     place,
     vector: "verBottom",

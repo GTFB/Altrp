@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
 import { iconsManager } from "../../helpers";
 import {Link} from "react-router-dom";
+import AltrpPortal from "../altrp-portal/AltrpPortal";
 
 class Dropdown extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      list: []
+      list: [],
     };
 
     this.setList = this.setList.bind(this);
@@ -67,48 +68,49 @@ class Dropdown extends Component {
   }
 
   render() {
-    console.log(this.state.list);
     return (
-      <div className="altrp-nav-menu-ul-dropdown-hor-ver">
-        <ul className="altrp-nav-menu-ul-dropdown-hor-ver-ul">
-          {
-            this.state.list.map((li, idx) => {
-              let url = "";
-              if(li.link_repeater_menu_layout) {
-                url = li.link_repeater_menu_layout.url
-              }
+      <AltrpPortal childrenRef={this.props.childrenRef}>
+        <div className="altrp-nav-menu-ul-dropdown-hor-ver">
+          <ul className="altrp-nav-menu-ul-dropdown-hor-ver-ul">
+            {
+              this.state.list.map((li, idx) => {
+                let url = "";
+                if(li.link_repeater_menu_layout) {
+                  url = li.link_repeater_menu_layout.url
+                }
 
-              return (
-                <li
-                  className="altrp-nav-menu-ul-dropdown-hor-ver-li"
-                  onMouseEnter={() => this.showSub(idx)}
-                  onMouseLeave={() => this.hideSub(idx)}
-                  key={idx}
-                >
-                  <Link to={url} className="altrp-nav-menu-ul-dropdown-hor-ver-li-link">
-                    <div className="altrp-nav-menu-li-dropdown-hor-ver-link-label">
-                      {li.label_repeater_menu_layout}
-                    </div>
+                return (
+                  <li
+                    className="altrp-nav-menu-ul-dropdown-hor-ver-li"
+                    onMouseEnter={() => this.showSub(idx)}
+                    onMouseLeave={() => this.hideSub(idx)}
+                    key={idx}
+                  >
+                    <Link to={url} className="altrp-nav-menu-ul-dropdown-hor-ver-li-link">
+                      <div className="altrp-nav-menu-li-dropdown-hor-ver-link-label">
+                        {li.label_repeater_menu_layout}
+                      </div>
+                      {
+                        li.id_repeater_menu_layout ? (
+                          // altrp-nav-menu-li-link-icon-active
+                          <div className="altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon">
+                            {
+                              iconsManager().renderIcon('chevron')
+                            }
+                          </div>
+                        ) : ""
+                      }
+                    </Link>
                     {
-                      li.id_repeater_menu_layout ? (
-                        // altrp-nav-menu-li-link-icon-active
-                        <div className="altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon">
-                          {
-                            iconsManager().renderIcon('chevron')
-                          }
-                        </div>
-                      ) : ""
+                      li.id_repeater_menu_layout ? <DropdownSub show={li.show} children={li.children} list={this.props.list}/> : ""
                     }
-                  </Link>
-                  {
-                    li.id_repeater_menu_layout ? <DropdownSub show={li.show} children={li.children} list={this.props.list}/> : ""
-                  }
-                </li>
-              )
-            })
-          }
-        </ul>
-      </div>
+                  </li>
+                )
+              })
+            }
+          </ul>
+        </div>
+      </AltrpPortal>
     );
   }
 };
@@ -175,9 +177,15 @@ class DropdownSub extends Component {
   }
 
   render() {
+    let сlasses = "altrp-nav-menu-ul-dropdown-children-hor-ver";
+
+    if(this.state.list.length === 1) {
+      сlasses += " altrp-nav-menu-ul-dropdown-children-hor-ver-only"
+    }
+
     let list = (
       this.props.show ? (
-        <div className="altrp-nav-menu-ul-dropdown-children-hor-ver">
+        <div className={сlasses}>
           <ul className="altrp-nav-menu-ul-dropdown-children-hor-ver-ul">
             {
               this.state.list.map((li, idx) => {
@@ -194,13 +202,13 @@ class DropdownSub extends Component {
                     key={idx}
                   >
                     <Link to={url} className="altrp-nav-menu-li-dropdown-children-hor-ver-li-link">
-                      <div className="altrp-nav-menu-li-dropdown-hor-ver-link-label">
+                      <div className="altrp-nav-menu-li-dropdown-children-hor-ver-link-label">
                         {li.label_repeater_menu_layout}
                       </div>
                       {
                         li.id_repeater_menu_layout ? (
                           // altrp-nav-menu-li-link-icon-active
-                          <div className="altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon">
+                          <div className="altrp-nav-menu-ul-dropdown-children-hor-ver-li-link-icon">
                             {
                               iconsManager().renderIcon('chevron')
                             }
@@ -232,6 +240,8 @@ class HorizontalVeticalMenu extends Component {
       dropdowns: []
     };
 
+    this.children = React.createRef();
+
     this.setStateList = this.setStateList.bind(this)
   }
 
@@ -241,6 +251,7 @@ class HorizontalVeticalMenu extends Component {
       list.forEach(liParent => {
         if(liParent.id_repeater_menu_layout) {
           let children = [];
+
           list.forEach(li => {
             if(liParent.id !== li.id) {
               if(li.parent_id_repeater_menu_layout) {
@@ -250,7 +261,10 @@ class HorizontalVeticalMenu extends Component {
               }
             }
           });
-          liParent.children = children
+          list[liParent.id].children = children;
+          if(liParent.id_repeater_menu_layout) {
+            list[liParent.id].showDropdown = false;
+          }
         }
       });
       return {list}
@@ -336,7 +350,7 @@ class HorizontalVeticalMenu extends Component {
 
             return (
               !li.parent_id_repeater_menu_layout ? (
-                <li style={stylesLi} key={idx} className={classesLi}>
+                <li style={stylesLi} key={idx} className={classesLi} ref={this.children}>
                   <div className="altrp-nav-menu-li-link-wrapper">
                     <Link to={url} style={stylesLink} className="altrp-nav-menu-li-link">
                       <div className="altrp-nav-menu-li-link-label">
@@ -355,7 +369,7 @@ class HorizontalVeticalMenu extends Component {
                     </Link>
                   </div>
                   {
-                    li.id_repeater_menu_layout ? <Dropdown children={li.children} list={this.state.list}/> : ""
+                    li.id_repeater_menu_layout ? <Dropdown childrenRef={this.children} children={li.children} list={this.state.list}/> : ""
                   }
                 </li>
                 ) : ""
