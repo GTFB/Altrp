@@ -937,7 +937,7 @@ class RootElement extends BaseElement {
         colorRGB: 'rgb(0, 0, 0)',
         color: 'rgb(0, 0, 0)',
         colorPickedHex: '#000000',
-        type: ""
+        type: " "
       },
       presetColors: [
         '#eaeaea',
@@ -2053,29 +2053,29 @@ class RootElement extends BaseElement {
       }
     });
 
-    // this.addControl('input_default_box_shadow', {
-    //   type: CONTROLLER_SHADOW,
-    //   label: 'Box shadow',
-    //   default: {
-    //     blur: 0,
-    //     horizontal: 0,
-    //     vertical: 0,
-    //     opacity: 1,
-    //     spread: 0,
-    //     colorRGB: 'rgb(0, 0, 0)',
-    //     color: 'rgb(0, 0, 0)',
-    //     colorPickedHex: '#000000',
-    //     type: ""
-    //   },
-    //   presetColors: [
-    //     '#eaeaea',
-    //     '#9c18a8'
-    //   ],
-    //   rules: {
-    //     '.altrp-field{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-    //     '.altrp-field-select2__control{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};'
-    //   },
-    // });
+    this.addControl('input_default_box_shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'Box shadow',
+      default: {
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        opacity: 1,
+        spread: 0,
+        colorRGB: 'rgb(0, 0, 0)',
+        color: 'rgb(0, 0, 0)',
+        colorPickedHex: '#000000',
+        type: " "
+      },
+      presetColors: [
+        '#eaeaea',
+        '#9c18a8'
+      ],
+      rules: {
+        '.altrp-field{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+        '.altrp-field-select2__control{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};'
+      },
+    });
 
     this.endControlSection();
 
