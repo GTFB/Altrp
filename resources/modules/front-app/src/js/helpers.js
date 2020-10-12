@@ -1,6 +1,6 @@
 import CONSTANTS from "../../../editor/src/js/consts";
-import appStore from "./store/store";
 import AltrpModel from "../../../editor/src/js/classes/AltrpModel";
+import moment from "moment";
 
 export function getRoutes() {
   return import('./classes/Routes.js');
@@ -104,17 +104,27 @@ export function getMediaSettingsByName(screenSettingName) {
  */
 export function parseURLTemplate(URLTemplate = '', object = {}){
   let url = URLTemplate;
+  let protocol = '';
+  url = url.trim();
+   if(url.indexOf('https://') === 0){
+     protocol = 'https://';
+     url = url.replace('https://', '');
+   }
+   if(url.indexOf('http://') === 0){
+     protocol = 'http://';
+     url = url.replace('http://', '');
+   }
   // columnEditUrl = columnEditUrl.replace(':id', row.original.id);
   let idTemplates = url.match(/:([\s\S]+?)(\/|$)/g);
   if(! idTemplates){
-    return url;
+    return protocol + url;
   }
   idTemplates.forEach(idTemplate=>{
     let replace = object[idTemplate.replace(/:|\//g, '')] || '';
     idTemplate = idTemplate.replace('/', '');
     url = url.replace(new RegExp(idTemplate,'g'), replace);
   });
-  return url;
+  return protocol + url;
 }
 
 export function getWindowWidth() {
@@ -293,8 +303,10 @@ export function getDataByPath(path, _default = null, context = null){
   if(path.indexOf('altrpdata.') === 0){
     path = path.replace('altrpdata.', '');
     value = currentDataStorage.getProperty(path, _default)
+  } else if(path.indexOf('altrptime.') === 0){
+    value = getTimeValue(path.replace('altrptime.',''));
   } else {
-    value = urlParams[path] ? urlParams[path] : currentModel.getProperty(path);
+    value = urlParams[path] ? urlParams[path] : currentModel.getProperty(path, _default);
   }
   return value ;
 }
@@ -440,4 +452,85 @@ export function getTopPosition(element) {
   }
 
   return top;
+}
+
+/**
+ * Получить какое-то время по шаблону `YYYY-MM-DD`
+ * @param {string} path
+ * @param {string} defaultValue
+ */
+export function getTimeValue(path, defaultValue){
+
+  let value = defaultValue;
+
+  switch(path){
+    case 'now':{
+      value = _.now();
+    }break;
+    case 'month_start':{
+      value = startOfMonth(new Date);
+    }break;
+    case 'year_start':{
+      value = startOfYear(new Date);
+    }break;
+  }
+  value = moment(value).format('YYYY-MM-DD');
+  return value;
+
+}
+
+export function startOfMonth(date){
+  return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+export function startOfYear(date){
+  return new Date(date.getFullYear(), 0, 1);
+}
+
+/**
+ * Получить ссылку на состояние хранилища
+ * @return {*}
+ */
+export function getCurrentStoreState(){
+  return appStore.getState();
+}
+
+/**
+ * Скроллит к элементу
+ * @param {{}}scrollbars
+ * @param {{}}HTMLElement
+ */
+export function scrollToElement(scrollbars, HTMLElement){
+  const {container} = scrollbars;
+  /**
+   * @member {HTMLElement} container
+   */
+  if(! container){
+    return;
+  }
+  const containerTop = container.getBoundingClientRect().top;
+  const elementTop = HTMLElement.getBoundingClientRect().top;
+  if(! _.isFunction(scrollbars.scrollTop)){
+    return
+  }
+  scrollbars.scrollTop(elementTop - containerTop)
+}
+
+/**
+ * @param {string} elementId
+ */
+export function getHTMLElementById(elementId){
+  let HTMLElement = null;
+  appStore.getState().elements.forEach(el=>{
+    if(! el.elementWrapperRef.current){
+      return
+    }
+    if(! el.elementWrapperRef.current.id){
+      return
+    }
+    if(el.elementWrapperRef.current.id.toString() === elementId){
+      HTMLElement = el.elementWrapperRef.current;
+    }
+  });
+  return HTMLElement;
 }

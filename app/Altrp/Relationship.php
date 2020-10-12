@@ -62,6 +62,17 @@ class Relationship extends EloquentModel
       }
       foreach ( $model->altrp_relationships as $altrp_relation ) {
         if( $imported_relation['name'] === $altrp_relation->name ){
+          $altrp_relation->always_with = $imported_relation['always_with'];
+          $altrp_relation->onDelete = $imported_relation['onDelete'];
+          $altrp_relation->onUpdate = $imported_relation['onUpdate'];
+          $altrp_relation->title = $imported_relation['title'];
+          $altrp_relation->target_model_id = $target_model->id;
+          try{
+            $altrp_relation->save();
+          } catch (\Exception $e){
+            Log::error( $e->getMessage(), [$e->getFile()] );
+            continue;
+          }
           continue 2;
         }
       }

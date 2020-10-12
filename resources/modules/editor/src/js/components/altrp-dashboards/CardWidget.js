@@ -13,7 +13,9 @@ import FileEarMark from "react-bootstrap-icons/dist/icons/cloud-download";
 import EditWidget from "./EditWidget";
 import WidgetDiagram from "../../../../../admin/src/components/dashboard/WidgetDiagram";
 
-function CardWidget({ widget, onDeleted, onEdited, settings }) {
+import { exportComponentAsJPEG } from 'react-component-export-image';
+
+function CardWidget({ widget, onDeleted, onEdited, settings, isMobile }) {
   const [isEdit, setIsEdit] = useState(false);
   const ref = useRef(null);
 
@@ -31,12 +33,15 @@ function CardWidget({ widget, onDeleted, onEdited, settings }) {
       <Card.Header>
         <Card.Title>{widget.title}</Card.Title>
         <Card.Title>
-          <div>
+          <div className="dropdownTogglerContainer">
             <Dropdown drop="left">
-              <Dropdown.Toggle variant="light">
+              <Dropdown.Toggle variant="light" >
                 <ThreeDotsVertical color="#7a7a7b" />
               </Dropdown.Toggle>
-              <Dropdown.Menu>
+              <Dropdown.Menu className="dropdownMenuToggle" style={{ 
+                zIndex:999999,
+                background: 'rgba(255,255,255,1)' 
+              }}>
                 <Dropdown.Item>
                   <ReactToPrint
                     trigger={() => {

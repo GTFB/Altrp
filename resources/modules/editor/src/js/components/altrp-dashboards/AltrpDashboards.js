@@ -10,13 +10,14 @@ import ThreeDotsVertical from "react-bootstrap-icons/dist/icons/three-dots-verti
 
 import AddWidget from "./AddWidget";
 import CardWidget from "./CardWidget";
+import GlobalParameter from "./fields/GlobalParameter";
 
 import "react-datepicker/dist/react-datepicker.css";
 
 registerLocale("ru", ru);
 setDefaultLocale("ru");
 
-const AltrpDashboards = ({ id, settings }) => {
+const AltrpDashboards = ({ id, settings, globalParameter }) => {
   const start = new Date().setFullYear(new Date().getFullYear() - 1);
   const end = new Date().getTime();
   const [widgets, setWidgets] = useState([]);
@@ -28,6 +29,7 @@ const AltrpDashboards = ({ id, settings }) => {
   /*
    * Получить настройки дашборда для текущего пользователя
    */
+
   const getSettings = async (id) => {
     try {
       // Отправляем запрос
@@ -154,6 +156,12 @@ const AltrpDashboards = ({ id, settings }) => {
     axios.post(`/ajax/dashboards/${id}/settings`, { settings: { startDate: start, endDate } });
   };
 
+  const setGlobalOption = (key, value) =>{
+    setWidgets(widgets.map(widget => ({
+        ...widget,
+        filter: {...widget.filter, [key]:value}
+    })));
+  }
   /**
    * Навигационное меню, показывающееся на экаранах шириной более 480px
    * */
@@ -161,7 +169,7 @@ const AltrpDashboards = ({ id, settings }) => {
     <Nav className={navPosition}>
       <Nav.Item className="nav-button" onClick={() => setIsShow(true)}>
         Добавить виджет
-    </Nav.Item>
+      </Nav.Item>
       <Nav.Item className="nav-datepickers">
         <div className="nav-datepicker">
           <DatePicker
@@ -190,13 +198,18 @@ const AltrpDashboards = ({ id, settings }) => {
             showYearDropdown
           />
         </div>
-      </Nav.Item>
+      </Nav.Item> 
       <Nav.Item className="nav-button" onClick={handleWeek}>
         Неделя
-    </Nav.Item>
+      </Nav.Item>
       <Nav.Item className="nav-button" onClick={handleMonth}>
         Месяц
-    </Nav.Item>
+      </Nav.Item>
+      { globalParameter && 
+      globalParameter.map((param,index) =>(<Nav.Item key={index}>
+        <GlobalParameter settings={settings} setGlobalOption={setGlobalOption} parameter={param}/>
+      </Nav.Item>) )
+      }
     </Nav>
   );
 
@@ -242,6 +255,12 @@ const AltrpDashboards = ({ id, settings }) => {
             showYearDropdown
           />
         </Dropdown.ItemText>
+        <Dropdown.Divider />
+        { globalParameter && 
+          globalParameter.map((param,index) =>(<Dropdown.Item onClick={e=>{e.stopPropagation();e.preventDefault(); }} key={index}>
+        <GlobalParameter settings={settings} setGlobalOption={setGlobalOption} parameter={param}/>
+        </Dropdown.Item>) )
+      }
       </Dropdown.Menu>
     </Dropdown>
   );
@@ -266,6 +285,7 @@ const AltrpDashboards = ({ id, settings }) => {
             widget={widget}
             onDeleted={handleRemove}
             onEdited={handleEdit}
+            isMobile={isMobile}
           />
         ))}
       </div>

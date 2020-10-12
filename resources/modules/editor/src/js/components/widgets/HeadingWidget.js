@@ -31,6 +31,9 @@ class HeadingWidget extends Component {
         className: 'altrp-inherit',
       };
       let tag = 'a';
+      if(this.state.settings.link_link.openInNew){
+        linkProps.target = '_black';
+      }
       if ((this.state.settings.link_link.tag === 'Link') && ! isEditor()) {
         tag = Link;
         linkProps.to = this.state.settings.link_link.url.replace(':id', this.getModelId() || '');

@@ -49,7 +49,7 @@ const DynamicTableWidget = ({ widget, width }) => {
 
   if (widget.options.isVertical) {
     return (
-      <div className="widget-table" style={{ width: width + "px" }}>
+      <div className="widget-table">
         <table className="vertical-table">
           <tbody>
             {data.map((item, key) => (
@@ -69,7 +69,7 @@ const DynamicTableWidget = ({ widget, width }) => {
   }
 
   return (
-    <div className="widget-table" style={{ width: width + "px" }}>
+    <div className="widget-table">
       <table>
         <thead>
           <tr>

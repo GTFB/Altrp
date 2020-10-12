@@ -1,7 +1,13 @@
 import React, { Component } from "react";
 import {Link, Redirect, withRouter } from 'react-router-dom';
 import {placeElement} from "../../helpers";
-import {isEditor, parseURLTemplate, renderAssetIcon} from "../../../../../front-app/src/js/helpers";
+import {
+  getHTMLElementById,
+  isEditor,
+  parseURLTemplate,
+  renderAssetIcon,
+  scrollToElement
+} from "../../../../../front-app/src/js/helpers";
 import AltrpModel from "../../classes/AltrpModel";
 import { triggerPopup } from "../../../../../front-app/src/js/store/popup-trigger/actions";
 
@@ -39,7 +45,7 @@ class Dropbar extends Component {
       }
     } else {
       this.setState((state) => ({ show: !state.show }));
-    };
+    }
 
     this.changePosition();
   };
@@ -52,7 +58,7 @@ class Dropbar extends Component {
       }, this.props.settings.hide_delay_dropbar_options.size)
     } else {
       this.setState({ show: false });
-    };
+    }
   };
 
   enterShow(e) {
@@ -67,7 +73,7 @@ class Dropbar extends Component {
       }, this.props.showDelay.size);
     } else {
       this.setState((state) => ({ show: !state.show }));
-    };
+    }
     this.changePosition();
   };
 
@@ -202,6 +208,10 @@ class ButtonWidget extends Component {
                 redirect_after = parseURLTemplate(redirect_after, res.data);
                 return this.props.history.push(redirect_after);
               }
+
+              if(this.props.element.getSettings('text_after', '')){
+                alert(this.props.element.getSettings('text_after', ''));
+              }
             } else if (res.message) {
               alert(res.message);
             }
@@ -214,6 +224,16 @@ class ButtonWidget extends Component {
       );
     } else if (this.props.element.getSettings('popup_trigger_type') && this.props.element.getSettings('popup_id')){
       this.props.appStore.dispatch(triggerPopup(+this.props.element.getSettings('popup_id')));
+      /**
+       * Проверим надо ли по ID скроллить к элементу
+       */
+    } else if (e.target.href.replace(window.location.origin + window.location.pathname, '').indexOf('#') === 0){
+      let elementId = e.target.href.replace(window.location.origin + window.location.pathname, '').replace('#', '');
+      const element = getHTMLElementById(elementId);
+      if(element){
+        e.preventDefault();
+        scrollToElement(mainScrollbars, element)
+      }
     }
   }
 
@@ -238,18 +258,8 @@ class ButtonWidget extends Component {
       classes += " altrp-disabled";
     }
 
-    classes += this.state.settings.link_button_type === "dropbar" ? "altrp-btn-dropbar" : ""
+    classes += this.state.settings.link_button_type === "dropbar" ? "altrp-btn-dropbar" : "";
 
-    const buttonProps = {
-      className: classes,
-      // to:
-    };
-    buttonProps.to = link_link.url ? link_link.url.replace(':id', this.getModelId() || '') : '';
-    buttonProps.href =  link_link.url ? link_link.url.replace(':id', this.getModelId() || '') : '';
-    if(_.isObject(this.state.modelData) && link_link.url){
-      buttonProps.to = parseURLTemplate(link_link.url, this.state.modelData);
-      buttonProps.href = parseURLTemplate(link_link.url, this.state.modelData);
-    }
     let icon = (buttonMedia && buttonMedia.assetType) ? <span className={"altrp-btn-icon "}>{renderAssetIcon(buttonMedia)} </span> : '';
 
     let url = link_link.url ? link_link.url.replace(':id', this.getModelId() || '') : '';
@@ -291,12 +301,11 @@ class ButtonWidget extends Component {
     );
 
     let link = null;
-
     if (this.state.settings.link_link?.url && !this.state.settings.link_link.toPrevPage) {
       if (this.state.settings.link_link.tag === 'a' || isEditor()) {
-
+        let target = _.get(this.state.settings, 'link_link.openInNew') ? 'blank' : '';
         link = (
-          <a href={url} onClick={this.onClick} className={classes}>
+          <a href={url} onClick={this.onClick} className={classes} target={target}>
             {" "}
             {buttonText || ""}
             <span className={"altrp-btn-icon "}>{renderAssetIcon(buttonMedia)} </span>

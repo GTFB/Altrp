@@ -151,7 +151,19 @@ class FrontElement {
           ));
           }
           break;
+          case 'email':{
+            method = 'POST';
+            this.addForm(formsManager.registerForm(this.getSettings('form_id'),
+                'email',
+                method,
+                {afterLogoutRedirect:this.getSettings('redirect_after')}
+          ));
+          }
+          break;
         }
+        this.getForms().forEach(form=>{
+          form.addSubmitButton(this);
+        });
       }
       break;
       case 'input': {

@@ -323,6 +323,7 @@ class Template extends Model
 
     $_template = Template::join( 'pages_templates', 'templates.guid', '=', 'pages_templates.template_guid')
       ->where( 'pages_templates.condition_type', 'include' )
+      ->where( 'templates.type', 'template' )
       ->where( 'pages_templates.page_guid', $page->guid )
       ->where( 'pages_templates.template_type', $template_type )->get( 'templates.*' )->first();
 
@@ -336,6 +337,7 @@ class Template extends Model
      */
     $_template = Template::join( 'areas', 'templates.area', '=', 'areas.id' )
       ->where( 'areas.name', $template_type  )
+      ->where( 'templates.type', 'template' )
       ->where( 'templates.all_site', 1 )->get( 'templates.*' )->first();
 
     /**

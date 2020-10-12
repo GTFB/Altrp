@@ -2,10 +2,10 @@ import React from "react";
 import Form from "react-bootstrap/Form";
 import { queryString } from "../helpers/queryString";
 
-function SourceField({ widget, setWidget, sources }) {
+function SourceField({ widget, setWidget, sources, changeTitle }) {
   return (
     <Form.Group>
-      <Form.Label>{sources.length > 1 ? "Источник данных" : `Источник данных: ${sources[0].name}`}</Form.Label>
+      <Form.Label>{sources.length > 1 || sources.length == 0 ? "Источник данных" : `Источник данных: ${sources[0].name}`}</Form.Label>
       <Form.Control
         as="select"
         custom
@@ -13,11 +13,14 @@ function SourceField({ widget, setWidget, sources }) {
           'd-none': sources.length === 1
         }}
         value={widget.source}
-        onChange={(e) =>
+        onChange={(e) =>{
           setWidget({
             ...widget,
             source: e.target.value + queryString(widget.filter),
-          })
+          });
+          let sourceName = sources.find(source => source.url == e.target.value).label;
+          changeTitle(` / ${soruceName}`);
+        }
         }
         required
       >

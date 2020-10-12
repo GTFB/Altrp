@@ -70,7 +70,7 @@ class Updates extends Component {
       {
         this.state.needUpdate ?
           <button className="btn_success btn" onClick={this.updateAltrp}>Update</button>
-          :  <button className="btn">Re-install Now</button>}
+          :  <button className="btn"  onClick={this.updateAltrp}>Re-install Now</button>}
     </div>
 
   }

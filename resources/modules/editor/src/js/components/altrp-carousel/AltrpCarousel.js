@@ -82,28 +82,28 @@ class AltrpCarousel extends Component {
         case "topLeft":
           dotsClasses += " altrp-carousel-dots-top-left";
           sliderClasses += " altrp-carousel-slides-dots-top";
-          break
+          break;
         case "top":
           dotsClasses += " altrp-carousel-dots-top";
           sliderClasses += " altrp-carousel-slides-dots-top";
-          break
+          break;
         case "topRight":
           dotsClasses += " altrp-carousel-dots-top-right";
           sliderClasses += " altrp-carousel-slides-dots-top";
-          break
+          break;
         case "bottomLeft":
           dotsClasses += " altrp-carousel-dots-bottom-left";
           sliderClasses += " altrp-carousel-slides-dots-bottom";
-          break
+          break;
         case "bottom":
           sliderClasses += " altrp-carousel-slides-dots-bottom";
-          break
+          break;
         case "bottomRight":
           dotsClasses += " altrp-carousel-dots-bottom-right";
           sliderClasses += " altrp-carousel-slides-dots-bottom";
           break
-      };
-    };
+      }
+    }
 
     // настройки слайдера
     let settings = {
@@ -127,14 +127,14 @@ class AltrpCarousel extends Component {
     // слайды
     let slidesMap = slides.map((slide, idx) => {
 
-      let media = {...slide.image_slides_repeater} || {};
+      let media = slide.image_slides_repeater ? {...slide.image_slides_repeater} : {};
 
       media.url = media.url || '/img/nullImage.png';
       media.name = media.name || 'null';
       media.assetType = media.assetType || "mediaBackground";
       if(media.assetType === "media") {
         media.assetType = "mediaBackground";
-      };
+      }
 
       return (
         <div className="altrp-carousel-slide" key={idx}
@@ -172,19 +172,19 @@ class AltrpCarousel extends Component {
     switch (this.props.arrows_position_navigation_content) {
       case "topLeft":
         arrowsClasses += " altrp-carousel-arrow-top-left altrp-carousel-arrow-top-wrapper";
-        break
+        break;
       case "top":
         arrowsClasses += " altrp-carousel-arrow-top altrp-carousel-arrow-top-wrapper"
-        break
+        break;
       case "topRight":
         arrowsClasses += " altrp-carousel-arrow-top-right altrp-carousel-arrow-top-wrapper"
-        break
+        break;
       case "bottomLeft":
         arrowsClasses += " altrp-carousel-arrow-bottom-left altrp-carousel-arrow-bottom-wrapper"
-        break
+        break;
       case "bottom":
         arrowsClasses += " altrp-carousel-arrow-bottom altrp-carousel-arrow-bottom-wrapper"
-        break
+        break;
       case "bottomRight":
         arrowsClasses += " altrp-carousel-arrow-bottom-right altrp-carousel-arrow-bottom-wrapper"
         break

@@ -6,6 +6,9 @@ import {currentUserReducer} from "./current-user/reducers";
 import {currentDataStorageReducer} from "./current-data-storage/reducers";
 import { scrollReducer } from "./scroll-position/reducers";
 import { popupReducer } from './popup-trigger/reducers'
+import { scrollReduser } from "./scroll-position/reducers";
+import {elementsStorageReducer} from "./elements-storage/reducers";
+
 
 export default combineReducers({
   appRoutes: appRoutesReducer,
@@ -14,5 +17,7 @@ export default combineReducers({
   currentUser: currentUserReducer,
   currentDataStorage: currentDataStorageReducer,
   scrollPosition: scrollReducer,
-  popupTrigger: popupReducer
+  popupTrigger: popupReducer,
+  scrollPosition: scrollReduser,
+  elements: elementsStorageReducer,
 });

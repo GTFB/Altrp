@@ -2,11 +2,30 @@
 @import "../../../../sass/smart-grid.scss";
 
 
+@media print {
+  .card-header{
+    margin: 10px 15px;
+  }
+
+  .dropdownTogglerContainer{
+      display: none;
+      overflow: hidden;
+      height: 0; 
+    }
+  
+  .card{
+    width: 100%;
+  }
+}
+
 .altrp-dashboard {
   &__controls {
     .nav{
       @include row-flex();
-      margin: 0;
+      margin: 5px 9px;
+      @media print {
+        overflow: hidden; height: 0;
+      }
 
       .justify-content-center{
         justify-content:center;
@@ -30,15 +49,20 @@
         margin-bottom: 5px;
         cursor: pointer;
 
+        & .global-select{
+          padding: 5px 14px;
+        }
+
         &.nav-button{
           color: rgba(255, 255, 255, 1);
           font-family: "PT Sans", sans-serif;
-          font-size: 13px;
+          font-size: 14px;
           line-height: 1.5;
           letter-spacing: 0.8px;
-          font-weight: 700;
+          font-weight: 400;
+          text-transform: uppercase;
           text-shadow: 0px 0px 0px rgb(39, 30, 30);
-          padding: 7px 14px;
+          padding: 5px 14px;
           background-color: rgba(109, 108, 108, 1);
           border-color: rgb(50,168,82);
 
@@ -68,9 +92,16 @@
         }
       }
     }
+    
 
     .dropdown {
+      @media print {
+        overflow: hidden; height: 0;
+      }
       &.show {
+        @media print {
+          overflow: hidden; height: 0;
+        }
         .dropdown-menu {
           background-color: #fff;
           z-index: 999;
@@ -105,13 +136,19 @@
 
   }
   &__widgets {
-    display: flex;
-    flex-wrap: wrap;
+    @include row-flex();
+    margin: 0 !important;
+    justify-content: center;
     .card {
-      max-width: 500px;
+      flex-basis: 475px;
+      @include col();
+      @include size(6);
+      @include size-sm(12);
+      @include size-xs(12);
+      // max-width: 500px;
       box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.15);
-      margin: 5px 10px 5px;
-      padding: 10px;
+      margin: 10px;
+      padding: 25px 10px;
       &:first-child {
         margin-top: 10px;
       }
@@ -121,14 +158,35 @@
       &-header {
         display: flex;
         justify-content: space-between;
+        margin: 0 15px 10px;
+
         .card-title {
           button {
             background-color: transparent;
-            padding: 5px;
+            padding: 5px 0px;
+          }
+          &>.dropdownTogglerContainer>.dropleft>.dropdownMenuToggle{
+            background-color: white;
+            margin-right: 5px;
+            padding: 3px;
+            border-radius: 4px;
+            box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.15);
+          }
+          &>.dropdownTogglerContainer>.dropleft>.dropdownMenuToggle>.dropdown-item{
+            padding: 0 5px;
+          }
+          &>.dropdownTogglerContainer>.dropleft>.dropdownMenuToggle.show{
+                transition: opacity .2s linear;
           }
         }
       }
       &-body {
+        .card{
+          @include col();
+          @include size(12);
+          border: 0;
+          box-shadow: none;
+        }
         form {
           padding: 10px 0;
           .form-group {
@@ -150,6 +208,10 @@
             }
           }
         }
+      }
+      &-footer{
+        display: flex;
+        justify-content:space-between;
       }
     }
   }
@@ -192,14 +254,25 @@
     flex-direction: column-reverse;
   }
   &.bottom {
-    flex-direction: column;
+    @include col();
+    @include size(12);
+
+    margin: 0 auto !important;
+
+    &>.widget-table{
+      overflow: auto;
+    }
   }
   &.right {
     flex-direction: row;
   }
 }
 .discrete__legend {
+  overflow: unset !important;
   flex-wrap: wrap;
+  &>div{
+    padding: 4px 8px !important;
+  }
   &-item {
     span {
       //font-size: 0.8rem !important;
