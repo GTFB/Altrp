@@ -13,13 +13,14 @@ function SourceField({ widget, setWidget, sources, changeTitle }) {
           'd-none': sources.length === 1
         }}
         value={widget.source}
-        onChange={(e) =>{
+        onChange={(e) => {
           setWidget({
             ...widget,
             source: e.target.value + queryString(widget.filter),
           });
-          let sourceName = sources.find(source => source.url == e.target.value).label;
-          changeTitle(` / ${soruceName}`);
+
+          let sourceName = sources.find(source => source.url == e.target.value).label || '';
+          changeTitle(` / ${sourceName}`);
         }
         }
         required

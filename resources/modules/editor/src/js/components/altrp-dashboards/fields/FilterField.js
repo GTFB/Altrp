@@ -30,10 +30,10 @@ function FilterField({ widget, setWidget, param, changeTitle }) {
         as="select"
         custom
         value={widget.filter?.[param.value] || ""}
-        onChange={(e) =>{
+        onChange={(e) => {
           setWidget({ ...widget, filter: { ...widget.filter, [param.value]: e.target.value } })
-          
-          let paramName = options.find(option => option.value == e.target.value).label;
+
+          let paramName = options.find(option => option.value == e.target.value).label || '';
           changeTitle(` / ${paramName}`);
         }
         }
