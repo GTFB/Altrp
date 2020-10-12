@@ -904,23 +904,25 @@ class RootElement extends BaseElement {
     }
     );
 
-    this.addControl('button_border_radius', {
-      type: CONTROLLER_SLIDER,
-      label: 'Border radius',
-      // default: {
-      //   size: 6,
-      //   unit: 'px',
-      // },
+    this.addControl('button_default_border_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Radius',
+      default: {
+        unit: 'px'
+      },
       units: [
         'px',
         '%',
         'vh',
       ],
-      max: 100,
-      min: 0,
       rules: {
-        'div .altrp-btn{{STATE}}': 'border-radius: {{SIZE}}{{UNIT}}',
-      },
+        'div .altrp-btn{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}', 
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
     });
 
     this.addControl('button_box_shadow', {
@@ -1497,22 +1499,24 @@ class RootElement extends BaseElement {
       }
     });
 
-    this.addControl("text_style_border_radius", {
-      type: CONTROLLER_SLIDER,
-      label: 'Border radius',
+    this.addControl('text_default_border_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Radius',
       default: {
-        // size: 0,
-        unit: 'px',
+        unit: 'px'
       },
       units: [
         'px',
         '%',
         'vh',
       ],
-      max: 100,
-      min: 0,
       rules: {
-        "div .altrp-text{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
+        'div .altrp-text{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
       }
     });
 
@@ -1690,22 +1694,24 @@ class RootElement extends BaseElement {
     );
 
     this.addControl('image_default_border_radius', {
-      type: CONTROLLER_SLIDER,
-      label: 'Border radius',
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Radius',
       default: {
-        // size: 0,
-        unit: 'px',
+        unit: 'px'
       },
       units: [
         'px',
         '%',
         'vh',
       ],
-      max: 100,
-      min: 0,
       rules: {
-        'div .altrp-image{{STATE}}': 'border-radius: {{SIZE}}{{UNIT}}',
-      },
+        'div .altrp-image{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
     });
 
     this.endControlSection();
@@ -2024,10 +2030,6 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Radius',
       default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
         unit: 'px'
       },
       units: [
@@ -2037,12 +2039,18 @@ class RootElement extends BaseElement {
       ],
       rules: {
         '.altrp-field{{STATE}}': [
-          'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
         ],
         '.altrp-field-select2__control{{STATE}}': [
-          'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
         ]
-      },
+      }
     });
 
     // this.addControl('input_default_box_shadow', {
