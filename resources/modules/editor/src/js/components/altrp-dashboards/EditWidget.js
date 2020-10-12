@@ -29,12 +29,13 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
   };
 
   const getTypesBySource = (s) => {
-    s = s.includes('?') ? s.split('?')[0] : s;
+    let string = s;
+    string = string.includes('?') ? string.split('?')[0] : s;
 
     const source =
       settings &&
-      settings.sql?.find((item) => s === `/ajax/models/queries/${item.model}/${item.value}`);
-    console.log(source);
+      settings.sql?.find((item) => string === `/ajax/models/queries/${item.model}/${item.value}`);
+
     return source?.types?.map((type) => type.value) || [];
   };
 
@@ -48,9 +49,9 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
       };
     });
   };
-  
-  const titleHandle = (string) =>{
-    if(!title.current.value.includes(string)){
+
+  const titleHandle = (string) => {
+    if (!title.current.value.includes(string)) {
       title.current.value += string;
     }
   }
