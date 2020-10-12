@@ -10,15 +10,11 @@ import appStore from "../store/store"
 import {changeCurrentModel} from "../store/current-model/actions";
 import {queryCache} from  "react-query";
 import connect from "react-redux/es/connect/connect";
-import {
-  changeCurrentDataStorage,
-  clearCurrentDataStorage,
-  currentDataStorageLoaded
-} from "../store/current-data-storage/actions";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {clearFormStorage} from "../store/forms-data-storage/actions";
 import { setScrollValue } from "../store/scroll-position/actions";
 import dataStorageUpdater from '../classes/modules/DatastorageUpdater';
+import {clearElements} from "../store/elements-storage/actions";
 
 class RouteContent extends Component {
   constructor(props){
@@ -27,15 +23,19 @@ class RouteContent extends Component {
     this.state = {
       areas: this.props.areas || []
     };
+    this.scrollbar = React.createRef();
+    appStore.dispatch(clearElements());
   }
 
   /**
    * Меняем заголовок страницы
-   * лениво подгружаем области если необходимо и страница доступна к просмотру
+   * лениво подгружаем области, если необходимо и страница доступна к просмотру
+   * главный скролбар сохраняем в глобальной области видимости
    * @return {Promise<void>}
    */
   async componentDidMount(){
     window.currentRouterMatch = new AltrpModel(this.props.match);
+    window.mainScrollbars = this.scrollbar.current;
     setTitle(this.props.title);
     if(this.props.lazy && this.props.allowed){
       let page = await pageLoader.loadPage(this.props.id);
@@ -112,6 +112,7 @@ class RouteContent extends Component {
     }
     return (
     <Scrollbars
+        ref={this.scrollbar}
       onUpdate={this.props.setScrollValue}
       style={{zIndex: 99999}}
       autoHide

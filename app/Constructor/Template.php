@@ -323,6 +323,7 @@ class Template extends Model
 
     $_template = Template::join( 'pages_templates', 'templates.guid', '=', 'pages_templates.template_guid')
       ->where( 'pages_templates.condition_type', 'include' )
+      ->where( 'templates.type', 'template' )
       ->where( 'pages_templates.page_guid', $page->guid )
       ->where( 'pages_templates.template_type', $template_type )->get( 'templates.*' )->first();
 
@@ -336,6 +337,7 @@ class Template extends Model
      */
     $_template = Template::join( 'areas', 'templates.area', '=', 'areas.id' )
       ->where( 'areas.name', $template_type  )
+      ->where( 'templates.type', 'template' )
       ->where( 'templates.all_site', 1 )->get( 'templates.*' )->first();
 
     /**
@@ -370,6 +372,7 @@ class Template extends Model
     $templates = Template::join( 'pages_templates', 'templates.id', '=', 'pages_templates.template_id')
       ->where( 'pages_templates.condition_type', 'include' )
       ->where( 'pages_templates.page_id', $page_id )
+      ->where( 'templates.type', 'template' )
       ->where( 'pages_templates.template_type', $template_type )->get( 'templates.*' );
 
 
@@ -380,6 +383,7 @@ class Template extends Model
      */
     $_templates = Template::join( 'areas', 'templates.area', '=', 'areas.id' )
       ->where( 'areas.name', $template_type  )
+      ->where( 'templates.type', 'template' )
       ->where( 'templates.all_site', 1 )->get( 'templates.*' );
 
     /**
@@ -401,8 +405,10 @@ class Template extends Model
       $_template->check_elements_conditions();
       if( $_template->template_type === 'popup' ){
         $_template->triggers = $_template->triggers;
+
       }
     } );
+
     return $templates->toArray();
   }
 }

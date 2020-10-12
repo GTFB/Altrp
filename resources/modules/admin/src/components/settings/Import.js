@@ -4,7 +4,7 @@ class Import extends Component {
   constructor(props) {
     super(props);
     this.inputFile = React.createRef();
-    this.resource = new Resource({route:'/admin/import/settings'});
+    this.resource = new Resource({route:'/admin/ajax/import/settings'});
   }
 
   /**

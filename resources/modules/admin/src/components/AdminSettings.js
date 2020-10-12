@@ -5,6 +5,7 @@ import StylesSettings from "./StylesSettings";
 import Import from "./settings/Import";
 import Export from "./settings/Export";
 const AdvancedSettings = React.lazy(()=>import('./AdvancedSettings'));
+const MailForm = React.lazy(()=>import('./settings/MailForm'));
 
 
 export default class AdminSettings extends Component {
@@ -53,6 +54,9 @@ export default class AdminSettings extends Component {
             </Tab>
             <Tab >
               IMPORT
+            </Tab>
+            <Tab >
+              MAIL
             </Tab>
           </TabList>
           <TabPanel>
@@ -116,6 +120,11 @@ export default class AdminSettings extends Component {
           </TabPanel>
           <TabPanel>
             <Import />
+          </TabPanel>
+          <TabPanel>
+            <React.Suspense fallback={'Loading'}>
+              <MailForm />
+            </React.Suspense>
           </TabPanel>
         </Tabs>
       </div>

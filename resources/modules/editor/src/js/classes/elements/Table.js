@@ -15,7 +15,7 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_NUMBER,
-  CONTROLLER_WYSIWYG, CONTROLLER_QUERY, CONTROLLER_REPEATER, CONTROLLER_FILTERS, CONTROLLER_HEADING
+  CONTROLLER_WYSIWYG, CONTROLLER_QUERY, CONTROLLER_REPEATER, CONTROLLER_FILTERS, CONTROLLER_HEADING, CONTROLLER_MEDIA
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import Repeater from "../Repeater";
@@ -45,7 +45,7 @@ class Table extends BaseElement {
     this.addControl('table_table_header_alignment', {
         type: CONTROLLER_CHOOSE,
         label: 'Header alignment',
-        default: 'center',
+        // default: 'center',
         options:[
           {
             icon: 'left',
@@ -68,7 +68,7 @@ class Table extends BaseElement {
       this.addControl('table_table_body_alignment', {
         type: CONTROLLER_CHOOSE,
         label: 'Body alignment',
-        default: 'left',
+        // default: 'left',
         options:[
           {
             icon: 'left',
@@ -197,15 +197,15 @@ class Table extends BaseElement {
     this.addControl('current_page_text', {
       label: 'Current Page Text',
     });
-
-
     let repeater = new Repeater();
 
     repeater.addControl('accessor',{
       label: 'Column Name',
+      dynamic: false,
     });
     repeater.addControl('column_name',{
       label: 'Column Heading',
+      dynamic: false,
     });
     repeater.addControl('group_by',{
       type: CONTROLLER_SWITCHER,
@@ -214,10 +214,12 @@ class Table extends BaseElement {
     });
     repeater.addControl('column_link',{
       label: 'Link Template',
+      dynamic: false,
       description: '/path/:id',
     });
     repeater.addControl('column_width',{
       label: 'Column Width',
+      dynamic: false,
       type: CONTROLLER_NUMBER,
     });
     repeater.addControl('column_header_alignment', {
@@ -341,6 +343,57 @@ class Table extends BaseElement {
       fields: additionalTableHeadRowsRepeater.getControls(),
     });
     this.endControlSection();
+    /**
+     * Настройки для группировки START
+     */
+    this.startControlSection("group_settings", {
+      tab: TAB_CONTENT,
+      label: "Group Settings",
+    });
+
+    this.addControl('group_by_column_name',{
+      label: 'Group by Column Name',
+    });
+
+    this.addControl('group_default_text',{
+      label: 'Group Default Text',
+    });
+
+    this.addControl('group_collapsing',{
+      type: CONTROLLER_SWITCHER,
+      default: false,
+      label: 'Group Collapsing',
+    });
+
+    // this.addControl('group_collapsed_default',{
+    //   type: CONTROLLER_SWITCHER,
+    //   conditions: {
+    //     'group_collapsing': true,
+    //   },
+    //   default: false,
+    //   label: 'Collapsed Default',
+    // });
+
+    this.addControl('collapsed_icon',{
+      type: CONTROLLER_MEDIA,
+      conditions: {
+        'group_collapsing': true,
+      },
+      label: 'Collapsed Icon',
+    });
+    this.addControl('expanded_icon',{
+      type: CONTROLLER_MEDIA,
+      conditions: {
+        'group_collapsing': true,
+      },
+
+      label: 'Expanded Icon',
+    });
+
+    this.endControlSection();
+    /**
+     * Настройки для группировки END
+     */
 
     this.startControlSection("filter_style_table", {
       tab: TAB_STYLE,
@@ -434,7 +487,7 @@ class Table extends BaseElement {
         },
         rules: {
           '{{ELEMENT}} .altrp-field{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -539,10 +592,10 @@ class Table extends BaseElement {
     this.addControl("table_style_table_stripe_color", {
       type: CONTROLLER_COLOR,
       label: "Stripe Color",
-      default: {
-        color: "rgba(0, 0, 50, .05)",
-        colorPickedHex: "#32a852"
-      },
+      // default: {
+      //   color: "rgba(0, 0, 50, .05)",
+      //   colorPickedHex: "#32a852"
+      // },
       rules: {
         '{{ELEMENT}} .altrp-table-tbody--striped tr:nth-child(2n)': 'background-color: {{COLOR}}'
       }
@@ -587,10 +640,10 @@ class Table extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
       default: {
-        top: 1,
-        right: 1,
-        bottom: 1,
-        left: 1,
+        // top: 1,
+        // right: 1,
+        // bottom: 1,
+        // left: 1,
         unit: "px"
       },
       units: ["px", "%", "vh"],
@@ -602,10 +655,10 @@ class Table extends BaseElement {
     this.addControl("table_style_table_border_color", {
       type: CONTROLLER_COLOR,
       label: "Border Color",
-      default: {
-        color: "rgb(186,186,186)",
-        colorPickedHex: "#32a852"
-      },
+      // default: {
+      //   color: "rgb(186,186,186)",
+      //   colorPickedHex: "#32a852"
+      // },
       rules: {
         '{{ELEMENT}} .altrp-table{{STATE}}': 'border-color: {{COLOR}} !important'
       }
@@ -720,7 +773,7 @@ class Table extends BaseElement {
       },
       rules: {
         '{{ELEMENT}} .altrp-pagination__next{{STATE}}, .altrp-pagination__count{{STATE}}, .altrp-pagination__previous{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',
@@ -843,17 +896,17 @@ class Table extends BaseElement {
     this.addControl('table_style_header_font', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 14,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
+      // default: {
+      //   lineHeight: 1.5,
+      //   spacing: 0,
+      //   size: 14,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
       rules: {
         '{{ELEMENT}} .altrp-table-th{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',
@@ -925,10 +978,10 @@ class Table extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit:'px'
       },
       units:[
@@ -1008,10 +1061,10 @@ class Table extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Cell padding',
       default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit:'px'
       },
       units:[
@@ -1051,17 +1104,17 @@ class Table extends BaseElement {
     this.addControl('table_style_body_font', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 14,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
+      // default: {
+      //   lineHeight: 1.5,
+      //   spacing: 0,
+      //   size: 14,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
       rules: {
         '{{ELEMENT}} .altrp-table-td{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',
@@ -1090,7 +1143,7 @@ class Table extends BaseElement {
      */
     this.startControlSection("table_style_group", {
       tab: TAB_STYLE,
-      label: "Group Heading"
+      label: "Group"
     });
 
     this.addControl('table_style_group_cell_padding', {
@@ -1111,6 +1164,28 @@ class Table extends BaseElement {
       rules: {
         '{{ELEMENT}} .altrp-table-td__grouping{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
       },
+    });
+
+    this.addControl('table_style_group_cell_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Header alignment',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-table-tbody .altrp-table-td__grouping{{STATE}}': 'text-align: {{VALUE}};',
+      }
     });
 
     this.addControl("table_style_group_border_background", {
@@ -1142,7 +1217,7 @@ class Table extends BaseElement {
       label: 'Typographic',
       rules: {
         '{{ELEMENT}} .altrp-table-td__grouping{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',
@@ -1153,6 +1228,99 @@ class Table extends BaseElement {
         ],
       },
     });
+
+    this.addControl("table_style_group_icon_size", {
+      type: CONTROLLER_SLIDER,
+      label: "Icon Size",
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
+          'width: {{SIZE}}{{UNIT}};',
+          'height: {{SIZE}}{{UNIT}};',
+        ],
+      }
+    });
+    this.addControl("table_style_group_icon_left_space", {
+      type: CONTROLLER_SLIDER,
+      label: "Icon Left Spacing",
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
+          'margin-left: {{SIZE}}{{UNIT}};',
+        ],
+      }
+    });
+    this.addControl("table_style_group_icon_right_space", {
+      type: CONTROLLER_SLIDER,
+      label: "Icon Right Spacing",
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
+          'margin-right: {{SIZE}}{{UNIT}};',
+        ],
+      }
+    });
+    this.addControl("table_style_group_icon_top", {
+      type: CONTROLLER_SLIDER,
+      label: "Top Translate",
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 100,
+      min: -100,
+      rules: {
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
+          'top: {{SIZE}}{{UNIT}};',
+        ],
+      }
+    });
+    this.addControl("table_style_group_icon_left", {
+      type: CONTROLLER_SLIDER,
+      label: "left Translate",
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 100,
+      min: -100,
+      rules: {
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
+          'left: {{SIZE}}{{UNIT}};',
+        ],
+      }
+    });
+
+
+    this.addControl("table_style_group_icon_color", {
+      type: CONTROLLER_COLOR,
+      label: "Icon Color",
+      rules: {
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': 'fill: {{COLOR}};',
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon path': 'fill: {{COLOR}};',
+      }
+    });
+
     this.endControlSection();
     /**
      * Стили для заголовка группы END

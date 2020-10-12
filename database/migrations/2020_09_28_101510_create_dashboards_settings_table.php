@@ -17,7 +17,7 @@ class CreateDashboardsSettingsTable extends Migration
         Schema::create('dashboards_settings', function (Blueprint $table) {
             $table->uuid('guid')->nullable()->index( 'guid' )->unique();;
             $table->string('dashboard_id');
-            $table->json('settings')->default("{}");
+            $table->json('settings')->nullable();
             $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete( 'cascade' );
         });

@@ -7,6 +7,7 @@ class AltrpForm {
   constructor(formId, modelName, method = 'POST', options = {}){
     this.formId = formId;
     this.fields = [];
+    this.submitButtons = [];
     this.method = method;
     this.options = options;
     this.modelName = modelName;
@@ -18,6 +19,9 @@ class AltrpForm {
       }break;
       case 'logout':{
         route = `/logout`
+      }break;
+      case 'email':{
+        route = `/ajax/feedback`
       }break;
     }
     this.resource = new Resource({route});
@@ -32,7 +36,13 @@ class AltrpForm {
   }
 
   /**
-   * Добавлйет поле
+   * Добавляет кнопку
+   */
+  addSubmitButton(buttonElement){
+    this.submitButtons.push(buttonElement);
+  }
+  /**
+   * Добавляет поле
    * @param {FrontElement} field
    */
   addField(field){
@@ -89,8 +99,10 @@ class AltrpForm {
             document.location.reload();
             return;
           }
+          this.clearInputs();
           return res;
         }
+
         case 'PUT':{
           // return await alert(JSON.stringify(this.getData()));
           let res;
@@ -99,10 +111,10 @@ class AltrpForm {
             import('./modules/ModelsManager').then(modelsManager=>{
               modelsManager.default.updateModelWithData(this.modelName, modelID, this.getData());
             });
-
+            this.clearInputs();
             return res;
           }
-          console.error('Не удалось получить ИД модели для удаления!');
+          console.error('Не удалось получить ИД модели для обновления!');
         }
         break;
         case 'DELETE':{
@@ -112,10 +124,26 @@ class AltrpForm {
           }
           console.error('Не удалось получить ИД модели для удаления!');
         }
+        break;
       }
     } else {
       return await alert('Пожалуйста, заполните все обязательные поля');
     }
+  }
+
+  /**
+   * Очистим поля формы
+   */
+  clearInputs(){
+    this.fields.forEach(field=>{
+      try {
+        if (_.isFunction(_.get(field, 'component.setState'))) {
+          field.component.setState(state => ({...state, value: ''}));
+        }
+      }catch(error){
+        console.error(error);
+      }
+    });
   }
 
   /**
@@ -124,11 +152,33 @@ class AltrpForm {
    */
   getData(){
     let data = {altrp_ajax: true};
-    this.fields.forEach(field=>{
-      if(field.getValue() !== null){
-        data[field.getSettings('field_id')] = field.getValue();
-      }
-    });
+
+    if(this.modelName === 'email'){
+      let userMessage = '';
+      let subject = 'Altrp Email';
+
+      this.submitButtons.forEach(b=>{
+        if(b.getSettings('email_subject')){
+          subject = b.getSettings('email_subject');
+        }
+      });
+      this.fields.forEach(field=>{
+        if(field.getValue() !== null){
+          let fieldLabel = field.getSettings('content_label')
+              || field.getSettings('content_placeholder') || '';
+          let fieldValue = field.getValue();
+          userMessage += `${fieldLabel}: ${fieldValue} <br/> `
+        }
+      });
+      data.subject = subject;
+      data.user_message = userMessage;
+    } else {
+      this.fields.forEach(field=>{
+        if(field.getValue() !== null){
+          data[field.getSettings('field_id')] = field.getValue();
+        }
+      });
+    }
     return data;
   }
 }

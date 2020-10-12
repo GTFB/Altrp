@@ -8,9 +8,8 @@ function ColorSchemeField({ widget, setWidget }) {
   });
 
   colors = [...colors, { label: "Custom", value: "Custom" }];
-
   return (
-    <Form.Group>
+    <Form.Group className="d-none">
       <Form.Label>Цветовая схема</Form.Label>
       <Form.Control
         as="select"

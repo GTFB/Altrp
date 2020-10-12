@@ -52,7 +52,7 @@ const DynamicBarChart = ({ widget, width = 300, height = 300 }) => {
     <>
       <BarChart
         height={height}
-        width={width}
+        // width={width}
         data={data}
         series={
           <BarSeries

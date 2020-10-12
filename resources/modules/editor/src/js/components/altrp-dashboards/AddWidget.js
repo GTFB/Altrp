@@ -14,6 +14,7 @@ import LegendPositionField from "./fields/LegendPositionField";
 import SourceField from "./fields/SourceField";
 import ColorSchemeField from "./fields/colorSchemeField";
 import VerticalTableField from "./fields/VerticalTableField";
+import { queryString } from "./helpers/queryString";
 
 const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
   const [widget, setWidget] = useState({
@@ -23,6 +24,7 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
       isVertical: false,
       legend: "",
       legendPosition: "bottom",
+      colorScheme: 'Custom'
     },
     filter: {},
   });
@@ -58,14 +60,21 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
   };
 
   const getTypesBySource = (s) => {
+    s.includes('?') ? s.split('?')[0] : s;
     const source = settings.sql?.find(
       (item) => s === `/ajax/models/queries/${item.model}/${item.value}`
     );
     return source?.types?.map((type) => type.value) || [];
   };
+  
+  const titleHandle = (string) =>{
+    if(!title.current.value.includes(string)){
+      title.current.value += string;
+    }
+  }
 
   const composeSources = (sources = []) => {
-    if (sources.length === 0) return [];
+    if ((!sources) || sources.length === 0) return [];
 
     return sources.map((source) => {
       return {
@@ -74,6 +83,16 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
       };
     });
   };
+
+  if (composeSources(settings.sql).length === 1) {
+    let currentSource = composeSources(settings.sql)[0];
+    let filter = '';
+    if (Object.keys(widget.filter).length !== 0) {
+      filter = queryString(widget.filter);
+    }
+    widget.source = currentSource.url + filter;
+    setTimeout(() =>titleHandle(` / ${currentSource.name}`),0);
+  }
 
   return (
     <Card>
@@ -97,13 +116,15 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
           <SourceField
             widget={widget}
             setWidget={setWidget}
-            sources={composeSources(settings.sql)}
+            sources={composeSources(settings.sql)} 
+            changeTitle={titleHandle}
           />
 
           {widget.source &&
             settings.filter?.length > 0 &&
             settings.filter?.map((param) => (
-              <FilterField key={param.value} widget={widget} setWidget={setWidget} param={param} />
+              <FilterField key={param.value} widget={widget} setWidget={setWidget} param={param} 
+              changeTitle={titleHandle} />
             ))}
 
           <TypeField
@@ -118,7 +139,7 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
 
           <ColorSchemeField widget={widget} setWidget={setWidget} />
 
-          <LegendField widget={widget} setWidget={setWidget} />
+          {/* <LegendField widget={widget} setWidget={setWidget} /> */}
           {widget.options?.legend && <LegendPositionField widget={widget} setWidget={setWidget} />}
         </Form>
 
@@ -131,7 +152,7 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
           Закрыть
         </Button>
         <Button variant="warning" onClick={onSave} disabled={widget.source === ""}>
-          Сохранить изменения
+          Сохранить
         </Button>
       </Card.Footer>
     </Card>

@@ -70,7 +70,7 @@ const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3 }
     <>
       <LineChart
         height={height}
-        width={width}
+        // width={width}
         data={data}
         xAxis={
           <LinearXAxis

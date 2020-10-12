@@ -36,6 +36,7 @@ class RouteServiceProvider extends ServiceProvider
         $route_file = new RouteFile(new Model());
         $route_file->createFile();
         $route_file->createApiFile();
+        $route_file->createCustomRouteFile();
         parent::boot();
     }
 
@@ -47,12 +48,10 @@ class RouteServiceProvider extends ServiceProvider
     public function map()
     {
         $this->mapApiRoutes();
-
         $this->mapWebRoutes();
-
         $this->mapApiAltrpRoutes();
-
         $this->mapAltrpRoutes();
+        $this->mapCustomAltrpRoutes();
     }
 
     /**
@@ -85,7 +84,7 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Custom routes for Altrp Routes
+     * Routes for Altrp Routes
      */
     protected function mapAltrpRoutes()
     {
@@ -96,7 +95,7 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Custom api routes for Altrp Routes
+     * API routes for Altrp Routes
      */
     protected function mapApiAltrpRoutes()
     {
@@ -104,5 +103,15 @@ class RouteServiceProvider extends ServiceProvider
             ->middleware('api')
             ->namespace($this->namespace)
             ->group(base_path('routes/AltrpApiRoutes.php'));
+    }
+
+    /**
+     * Custom routes for Altrp Routes
+     */
+    protected function mapCustomAltrpRoutes()
+    {
+        Route::middleware('web')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/AltrpCustomRoutes.php'));
     }
 }

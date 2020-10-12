@@ -4,7 +4,8 @@ import Select from "react-select";
 import axios from "axios";
 import { widgetTypes } from "../../../../../admin/src/components/dashboard/widgetTypes";
 
-const SqlSelectController = ({ controller, controlId, label }) => {
+const SqlSelectController = ({ controller, controlId, label, multi, onlySQL }) => {
+  const isMultiBool = multi || true;
   const currentElement = useSelector((state) => state.currentElement.currentElement);
   const [options, setOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -69,10 +70,10 @@ const SqlSelectController = ({ controller, controlId, label }) => {
   return (
     <div className="controller-container controller-container_query">
       <div className="controller-field-group flex-wrap">
-        <div className="controller-container__label">Select SQL queries</div>
+        <div className="controller-container__label">{label || 'Select SQL queries'}</div>
         <div className="control-container_select-wrapper w-100">
           <Select
-            isMulti
+            isMulti={isMultiBool}
             isClearable
             isSearchable
             defaultValue={settings}
@@ -82,7 +83,8 @@ const SqlSelectController = ({ controller, controlId, label }) => {
           />
         </div>
       </div>
-      <div className="controller-field-group flex-wrap">
+      { !onlySQL &&
+      (<div className="controller-field-group flex-wrap">
         <div className="controller-container__label">Assign types to queries</div>
         <div className="control-container_select-wrapper assigning-types">
           {settings &&
@@ -102,7 +104,8 @@ const SqlSelectController = ({ controller, controlId, label }) => {
               </div>
             ))}
         </div>
-      </div>
+      </div>)
+      }
     </div>
   );
 };

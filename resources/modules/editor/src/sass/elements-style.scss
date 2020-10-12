@@ -181,7 +181,23 @@
 .altrp-table-th .sort-icon {
   margin-left: 10px;
 }
-
+.altrp-table{
+  &-td {
+    &__grouping {
+      -webkit-transition-duration: 0.2s;
+      -moz-transition-duration: 0.2s;
+      -ms-transition-duration: 0.2s;
+      -o-transition-duration: 0.2s;
+      transition-duration: 0.2s;
+    }
+  }
+  &__collapse-icon{
+    display: inline-block;
+    & svg{
+      position: relative;
+    }
+  }
+}
 .altrp-field-required {
   color: red;
   font-size: 18px;
@@ -571,7 +587,7 @@
 
 .app-popup {
   position: fixed;
-  // display: none;
+  //display: none;
   left: 0;
   bottom: 0;
   width: 100%;
@@ -584,7 +600,7 @@
     right: 10px;
     background-color: red;
     padding: 5px;
-    z-index: 10;
+    z-index: 1000;
   }
 }
 
@@ -673,6 +689,9 @@
 .state-disabled{
   pointer-events: none;
 }
+.altrp-pointer{
+  cursor: pointer;
+}
 
 // background-image wrapper
 
@@ -685,4 +704,8 @@
 
 .inner-template > .sections-wrapper{
   width: 100%;
+}
+
+.altrp-d-none{
+  display: none!important;
 }

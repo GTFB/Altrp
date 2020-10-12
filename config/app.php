@@ -33,7 +33,7 @@ return [
     |
     */
 
-    'altrp_version' => '0.9.14',
+    'altrp_version' => '0.9.21',
 
 
     /*
@@ -47,7 +47,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', false),
+    'debug' => env('APP_DEBUG', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -189,7 +189,9 @@ return [
         App\Providers\CrudGeneratorServiceProvider::class,
 
         App\Providers\RepositoryServiceProvider::class,
-        'App\Providers\AltrpRepositoryServiceProvider',
+        App\Providers\AltrpRepositoryServiceProvider::class,
+        App\Providers\PluginServiceProvider::class,
+        // App\Providers\AltrpRepositoryServiceProvider::class,
     ],
 
     /*

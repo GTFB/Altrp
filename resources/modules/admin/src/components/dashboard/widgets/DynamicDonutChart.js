@@ -43,7 +43,7 @@ const DynamicDonutChart = ({ widget, width = 300, height = 300 }) => {
     <>
       <PieChart
         height={height}
-        width={width}
+        // width={width}
         data={data}
         series={
           <PieArcSeries
