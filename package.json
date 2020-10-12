@@ -29,6 +29,7 @@
     "ace-builds": "^1.4.11",
     "bootstrap-switch-button-react": "^1.2.0",
     "classnames": "^2.2.6",
+    "d3": "^6.2.0",
     "dom-to-image": "^2.6.0",
     "dot-prop-immutable": "^2.1.0",
     "express-session": "^1.17.1",

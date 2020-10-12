@@ -46,8 +46,9 @@ class Dashboards extends BaseElement {
       default: false,
     });
 
-    this.endControlSection();
+    console.log('Settings',this);
 
+    
     let repeater = new Repeater();
 
     repeater.addControl(
@@ -79,18 +80,21 @@ class Dashboards extends BaseElement {
       }
     );
 
+    this.addControl("rep", {
+      type: CONTROLLER_REPEATER,
+      default: [],
+      fields: repeater.getControls(),
+    });
+
+    this.endControlSection();
+
     this.startControlSection("content_section", {
       tab: TAB_CONTENT,
       label: "Content",
     });
 
 
-    this.addControl("rep", {
-      type: CONTROLLER_REPEATER,
-      default: [],
-      fields: repeater.getControls(),
-    });
-    
+
     this.addControl('global_parameter',{
       type: CONTROLLER_SQL,
       default: [],
