@@ -228,6 +228,7 @@ class ButtonWidget extends Component {
       let elementId = e.target.href.replace(window.location.origin + window.location.pathname, '').replace('#', '');
       const element = getHTMLElementById(elementId);
       if(element){
+        e.preventDefault();
         scrollToElement(mainScrollbars, element)
       }
     }

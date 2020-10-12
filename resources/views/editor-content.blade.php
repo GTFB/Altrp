@@ -12,6 +12,8 @@
   <!-- Scripts -->
 
   <!-- Fonts -->
+  <link rel="stylesheet" href="/addons/slick/slick.css">
+  <link rel="stylesheet" href="/addons/slick/slick-theme.css">
   <style>
     .editor-content > .sections-wrapper{
       width: {{ get_altrp_setting( 'container_width', '1440' ) }}px;
