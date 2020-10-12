@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 
-function FilterField({ widget, setWidget, param }) {
+function FilterField({ widget, setWidget, param, changeTitle }) {
   const [options, setOptions] = useState([]);
   //const [selected, setSelected] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -30,8 +30,12 @@ function FilterField({ widget, setWidget, param }) {
         as="select"
         custom
         value={widget.filter?.[param.value] || ""}
-        onChange={(e) =>
+        onChange={(e) =>{
           setWidget({ ...widget, filter: { ...widget.filter, [param.value]: e.target.value } })
+          
+          let paramName = options.find(option => option.value == e.target.value).label;
+          changeTitle(` / ${paramName}`);
+        }
         }
         required
       >

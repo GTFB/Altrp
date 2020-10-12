@@ -48,6 +48,7 @@
     "react-bootstrap-table-next": "^4.0.3",
     "react-bootstrap-table2-paginator": "^2.1.2",
     "react-color": "^2.18.1",
+    "react-component-export-image": "^0.1.7",
     "react-contexify": "^4.1.1",
     "react-custom-scrollbars": "^4.2.1",
     "react-datepicker": "^3.1.3",

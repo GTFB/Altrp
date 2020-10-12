@@ -285,6 +285,7 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
             widget={widget}
             onDeleted={handleRemove}
             onEdited={handleEdit}
+            isMobile={isMobile}
           />
         ))}
       </div>
