@@ -22,23 +22,24 @@ class DashboardsWidget extends Component {
     const containerWidth = this.props.element.getSettings().positioning_custom_width.size;
     const dataByDataSource = this.props.element.getSettings().dataSource;
     const settings = this.props.element.getSettings();
-    
+    console.log('DATASOURCE => ', this.props.currentDataStorage);
     const global_parameter = this.state.settings.global_parameter;
     return (
       <Suspense fallback={"Loading"}>
-        {!dataByDataSource
-        ?
-          (<AltrpDashboards settings={this.props.element.getSettings()}
-            globalParameter={global_parameter}
-            //  currentDataStorage={this.props.currentDataStorage}
-            id={this.props.element.getId()} />)
-        :
-          (<DataSourceDashboards
-            id={this.props.element.getId()}
-            containerWidth={containerWidth}
-            rep={_.cloneDeep(this.props.element.getSettings('rep',[]))} />)
+        {
+          !dataByDataSource
+            ?
+            (<AltrpDashboards settings={this.props.element.getSettings()}
+              globalParameter={global_parameter}
+              //  currentDataStorage={this.props.currentDataStorage}
+              id={this.props.element.getId()} />)
+            :
+            (<DataSourceDashboards
+              id={this.props.element.getId()}
+              containerWidth={containerWidth}
+              rep={this.props.element.getSettings('rep', [])} />)
         }
-       
+
       </Suspense>
     );
 

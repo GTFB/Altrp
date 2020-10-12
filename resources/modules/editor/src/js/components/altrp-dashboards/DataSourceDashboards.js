@@ -1,4 +1,4 @@
-import {getDataByPath} from "../../../../../front-app/src/js/helpers";
+import { getDataByPath } from "../../../../../front-app/src/js/helpers";
 import GridLayout from 'react-grid-layout';
 
 import AddWidgetDataSource from './AddWidgetDataSource';
@@ -8,20 +8,17 @@ import PlusCircle from "react-bootstrap-icons/dist/icons/plus-circle";
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
-class DataSourceDashboards extends Component{
+class DataSourceDashboards extends Component {
 
   constructor(props) {
     super(props);
-    console.log('DASHBOARD PROPS ==>',props);
     this.state = {
       id: props.id,
-      repeater: props.rep,
+      repeater: _.cloneDeep(props.rep, []),
       containerWidth: Number(props.containerWidth),
       widgets: [],
-      // editMode: false,
       addMode: false,
     };
-    console.log('DASHBOARD STATE ==>',this.state);
   }
 
   /**
@@ -30,21 +27,21 @@ class DataSourceDashboards extends Component{
    * @param {{}} prevState
    */
   componentDidUpdate(prevProps, prevState) {
-    if(! _.isEqual(prevProps.rep, this.props.rep)){
-      this.setState(state => ({...  state, repeater: this.props.rep}));
+    if (!_.isEqual(prevProps.rep, this.props.rep)) {
+      this.setState(state => ({ ...state, repeater: this.props.rep }));
     }
   }
 
-  addWidgetHandle(id,settings){
-    let widgets  = _.cloneDeep(this.state.widgets);
+  addWidgetHandle(id, settings) {
+    let widgets = _.cloneDeep(this.state.widgets);
     console.log(widgets);
   }
 
-  render(){
+  render() {
     let repeater = this.props.rep;
-    let dataSources = repeater.map(r=>{
+    let dataSources = repeater.map(r => {
       let data = getDataByPath(r.path, []);
-      data = data.map(d=>{
+      data = data.map(d => {
         return {
           data: _.get(d, r.data),
           key: _.get(d, r.key),
@@ -52,40 +49,40 @@ class DataSourceDashboards extends Component{
       });
       return {
         ...r,
-        data ,
+        data,
       };
     });
-    const baseLayout = {x: 0, y: 0, w: 3, h: 8, maxW: 12, minW: 3, maxH: 30, minH: 8};
-    console.log(dataSources);
+    const baseLayout = { x: 0, y: 0, w: 3, h: 8, maxW: 12, minW: 3, maxH: 30, minH: 8 };
+    console.log('DATASOURCES =>', dataSources);
     return (
       <GridLayout className="layout" cols={12} rowHeight={30} width={this.state.containerWidth}>
         <div key="0" data-grid={baseLayout} >
           <div className="altrp-dashboard__card">
             {
               this.state.addMode ?
-              (
-                <AddWidgetDataSource dataSourceList={dataSources} addWidget={this.addWidgetHandle} />
-              ) :
-              (
-                <button onClick={e=>{this.setState({ addMode: true })}} className="altrp-dashboard__card__add">
-                  <div className="title">Добавить виджет</div>
-                  <div>
-                    <PlusCircle/> 
-                  </div>
-                </button>
-              )
+                (
+                  <AddWidgetDataSource layout={baseLayout} dataSourceList={dataSources} addWidget={this.addWidgetHandle} />
+                ) :
+                (
+                  <button onClick={e => { this.setState({ addMode: true }) }} className="altrp-dashboard__card__add">
+                    <div className="title">Добавить виджет</div>
+                    <div>
+                      <PlusCircle />
+                    </div>
+                  </button>
+                )
             }
           </div>
         </div>
 
-        {this.state.widgets.map((widget) =>(
+        {this.state.widgets.map((widget) => (
           <div key={widget.id} data-grid={widget.settings.layout || baseLayout}>
             <div className="altrp-dashboard__card">
               Виджет {widget.id}
             </div>
-        </div>
+          </div>
         ))}
-      </GridLayout>  
+      </GridLayout>
     );
   }
 
