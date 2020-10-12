@@ -494,3 +494,43 @@ export function startOfYear(date){
 export function getCurrentStoreState(){
   return appStore.getState();
 }
+
+/**
+ * Скроллит к элементу
+ * @param {{}}scrollbars
+ * @param {{}}HTMLElement
+ */
+export function scrollToElement(scrollbars, HTMLElement){
+  const {container} = scrollbars;
+  /**
+   * @member {HTMLElement} container
+   */
+  if(! container){
+    return;
+  }
+  const containerTop = container.getBoundingClientRect().top;
+  const elementTop = HTMLElement.getBoundingClientRect().top;
+  if(! _.isFunction(scrollbars.scrollTop)){
+    return
+  }
+  scrollbars.scrollTop(elementTop - containerTop)
+}
+
+/**
+ * @param {string} elementId
+ */
+export function getHTMLElementById(elementId){
+  let HTMLElement = null;
+  appStore.getState().elements.forEach(el=>{
+    if(! el.elementWrapperRef.current){
+      return
+    }
+    if(! el.elementWrapperRef.current.id){
+      return
+    }
+    if(el.elementWrapperRef.current.id.toString() === elementId){
+      HTMLElement = el.elementWrapperRef.current;
+    }
+  });
+  return HTMLElement;
+}

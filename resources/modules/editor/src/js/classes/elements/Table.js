@@ -1242,6 +1242,7 @@ class Table extends BaseElement {
       rules: {
         '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
           'width: {{SIZE}}{{UNIT}};',
+          'height: {{SIZE}}{{UNIT}};',
         ],
       }
     });

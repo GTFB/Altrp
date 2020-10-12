@@ -1,7 +1,13 @@
 import React, { Component } from "react";
 import {Link, Redirect, withRouter } from 'react-router-dom';
 import {placeElement} from "../../helpers";
-import {isEditor, parseURLTemplate, renderAssetIcon} from "../../../../../front-app/src/js/helpers";
+import {
+  getHTMLElementById,
+  isEditor,
+  parseURLTemplate,
+  renderAssetIcon,
+  scrollToElement
+} from "../../../../../front-app/src/js/helpers";
 import AltrpModel from "../../classes/AltrpModel";
 
 //dropbar
@@ -215,6 +221,15 @@ class ButtonWidget extends Component {
           }
         }
       );
+      /**
+       * Проверим надо ли по ID скроллить к элементу
+       */
+    } else if (e.target.href.replace(window.location.origin + window.location.pathname, '').indexOf('#') === 0){
+      let elementId = e.target.href.replace(window.location.origin + window.location.pathname, '').replace('#', '');
+      const element = getHTMLElementById(elementId);
+      if(element){
+        scrollToElement(mainScrollbars, element)
+      }
     }
   }
 

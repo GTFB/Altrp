@@ -29,6 +29,7 @@ import imageIcon from '../../../svgs/image.svg';
 import logoIcon from '../../../svgs/logo.svg';
 import navigationIcon from '../../../svgs/navigation.svg';
 import plusIcon from '../../../svgs/plus.svg';
+import minusIcon from '../../../svgs/minus.svg';
 import previewIcon from '../../../svgs/preview.svg';
 import settingsIcon from '../../../svgs/settings.svg';
 import styleIcon from '../../../svgs/style.svg';
@@ -101,6 +102,7 @@ class IconsManager {
     this.icons.push(new Icon('logo', logoIcon));
     this.icons.push(new Icon('navigation', navigationIcon));
     this.icons.push(new Icon('plus', plusIcon));
+    this.icons.push(new Icon('minus', minusIcon));
     this.icons.push(new Icon('preview', previewIcon));
     this.icons.push(new Icon('settings', settingsIcon));
     this.icons.push(new Icon('style', styleIcon));

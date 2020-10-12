@@ -73,6 +73,21 @@ export function advancedTabControllers(element) {
   // );
 
   // element.endControlSection();
+
+  element.startControlSection(
+      'advanced', {
+        tab: TAB_ADVANCED,
+        label: 'Advanced',
+      }
+  );
+
+  element.addControl('advanced_element_id',{
+    label: 'CSS ID',
+
+  });
+
+  element.endControlSection();
+
   if(element.getType() !== 'section') {
 
     element.startControlSection(

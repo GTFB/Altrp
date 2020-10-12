@@ -505,7 +505,7 @@ function renderGroupingTr(row, groupBy, groupingStore, settings = {}, collapsing
                 })
                 : renderAsset(expanded_icon || {
                   assetType: "icon",
-                  name: "add",
+                  name: "minus",
                 })
         }</span>
       ) : null}
