@@ -48,6 +48,12 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
       };
     });
   };
+  
+  const titleHandle = (string) =>{
+    if(!title.current.value.includes(string)){
+      title.current.value += string;
+    }
+  }
 
   if (composeSources(settings.sql).length === 1) {
     let currentSource = composeSources(settings.sql)[0];
@@ -75,12 +81,13 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
             widget={widget}
             setWidget={setWidget}
             sources={composeSources(settings.sql)}
+            changeTitle={titleHandle}
           />
 
           {widget.source &&
             settings.filter?.length > 0 &&
             settings.filter?.map((param) => (
-              <FilterField key={param.value} widget={widget} setWidget={setWidget} param={param} />
+              <FilterField key={param.value} widget={widget} setWidget={setWidget} param={param} changeTitle={titleHandle} />
             ))}
 
           <TypeField
@@ -108,7 +115,7 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
           Закрыть
         </Button>
         <Button variant="warning" onClick={onSave} disabled={widget.source === ""}>
-          Сохранить изменения
+          Сохранить
         </Button>
       </Card.Footer>
     </Card>

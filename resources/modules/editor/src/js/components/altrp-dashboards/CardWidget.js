@@ -13,7 +13,9 @@ import FileEarMark from "react-bootstrap-icons/dist/icons/cloud-download";
 import EditWidget from "./EditWidget";
 import WidgetDiagram from "../../../../../admin/src/components/dashboard/WidgetDiagram";
 
-function CardWidget({ widget, onDeleted, onEdited, settings }) {
+import { exportComponentAsJPEG } from 'react-component-export-image';
+
+function CardWidget({ widget, onDeleted, onEdited, settings, isMobile }) {
   const [isEdit, setIsEdit] = useState(false);
   const ref = useRef(null);
 
