@@ -11,7 +11,6 @@ class ShadowController extends Component {
   constructor(props) {
     super(props);
     controllerDecorate(this);
-    this.openShadow = this.openShadow.bind(this);
     this.openColorPicker = this.openColorPicker.bind(this);
     this.colorChange = this.colorChange.bind(this);
     this.inputBlurUpdate = this.inputBlurUpdate.bind(this);
