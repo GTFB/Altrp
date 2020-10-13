@@ -532,6 +532,22 @@ class Nav extends BaseElement{
       }
     });
 
+    this.addControl("dropdown_indicator_space_main_menu_style", {
+      type: CONTROLLER_SLIDER,
+      label: 'dropdown indicator space',
+      default:{
+        size: "1",
+        unit: 'px',
+      },
+      max: 50,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link-icon{{STATE}}": [
+          "margin-left: {{SIZE}}{{UNIT}}",
+        ]
+      }
+    });
+
     this.addControl("pointer_heading_main_menu_style", {
       type: CONTROLLER_HEADING,
       label: "Pointer"
@@ -582,7 +598,7 @@ class Nav extends BaseElement{
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-nav-menu-li-dropdown-hor-ver-link-label{{STATE}}': [
+          '.{{ID}}-altrp-portal .altrp-nav-menu-li-dropdown-hor-ver-link-label{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -604,8 +620,8 @@ class Nav extends BaseElement{
         colorPickedHex: "",
       },
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}} .altrp-nav-menu-li-dropdown-hor-ver-link-label": "color: {{COLOR}};",
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon path": [
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}} .altrp-nav-menu-li-dropdown-hor-ver-link-label": "color: {{COLOR}};",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon path": [
           "stroke: {{COLOR}};",
         ]
       }
@@ -619,7 +635,7 @@ class Nav extends BaseElement{
         colorPickedHex: "",
       },
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}}": "background: {{COLOR}};"
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}}": "background: {{COLOR}};"
       }
     });
 
@@ -653,7 +669,7 @@ class Nav extends BaseElement{
           },
         ],
         rules: {
-          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
+          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
         },
       }
     );
@@ -670,7 +686,7 @@ class Nav extends BaseElement{
           'vh',
         ],
         rules: {
-          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         },
       }
     );
@@ -683,7 +699,7 @@ class Nav extends BaseElement{
           colorPickedHex: "",
         },
         rules: {
-          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-color: {{COLOR}};',
+          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-color: {{COLOR}};',
         },
       }
     );
@@ -700,9 +716,9 @@ class Nav extends BaseElement{
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li:first-child{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} 0 0",
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li:last-child{{STATE}}": "border-radius: 0 0 {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li:first-child{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} 0 0",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li:last-child{{STATE}}": "border-radius: 0 0 {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
       }
     });
 
@@ -740,6 +756,20 @@ class Nav extends BaseElement{
     //   }
     // });
 
+    this.addControl("submenu_indicator_space_main_menu_style", {
+      type: CONTROLLER_SLIDER,
+      label: 'submenu indicator space',
+      default:{
+        size: "1",
+        unit: 'px',
+      },
+      max: 50,
+      min: 0,
+      rules: {
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon{{STATE}}": "margin-left: {{SIZE}}{{UNIT}}",
+      }
+    });
+
     this.addControl("distance_dropdown_hor_ver_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Distance',
@@ -750,7 +780,7 @@ class Nav extends BaseElement{
       max: 100,
       min: -100,
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}": "margin-top: {{SIZE}}{{UNIT}}"
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}": "margin-top: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -771,7 +801,7 @@ class Nav extends BaseElement{
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-nav-menu-li-dropdown-children-hor-ver-link-label{{STATE}}': [
+          '.{{ID}}-altrp-portal .altrp-nav-menu-li-dropdown-children-hor-ver-link-label{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-sefir;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -793,8 +823,8 @@ class Nav extends BaseElement{
         colorPickedHex: "",
       },
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}} .altrp-nav-menu-li-dropdown-children-hor-ver-link-label": "color: {{COLOR}};",
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li-link-icon path": [
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}} .altrp-nav-menu-li-dropdown-children-hor-ver-link-label": "color: {{COLOR}};",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li-link-icon path": [
           "stroke: {{COLOR}};",
         ]
       }
@@ -808,7 +838,7 @@ class Nav extends BaseElement{
         colorPickedHex: "",
       },
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}}": "background: {{COLOR}};"
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}}": "background: {{COLOR}};"
       }
     });
 
@@ -842,7 +872,7 @@ class Nav extends BaseElement{
           },
         ],
         rules: {
-          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
+          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
         },
       }
     );
@@ -859,7 +889,7 @@ class Nav extends BaseElement{
           'vh',
         ],
         rules: {
-          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         },
       }
     );
@@ -872,7 +902,7 @@ class Nav extends BaseElement{
           colorPickedHex: "",
         },
         rules: {
-          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-color: {{COLOR}};',
+          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-color: {{COLOR}};',
         },
       }
     );
@@ -889,10 +919,10 @@ class Nav extends BaseElement{
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver-only{{STATE}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li:first-child": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} 0 0",
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li:last-child": "border-radius: 0 0 {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-only{{STATE}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li:first-child": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} 0 0",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li:last-child": "border-radius: 0 0 {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
       }
     });
 
@@ -940,7 +970,7 @@ class Nav extends BaseElement{
       max: 100,
       min: -100,
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}": "margin-right: {{SIZE}}{{UNIT}}"
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}": "margin-right: {{SIZE}}{{UNIT}}"
       }
     });
 

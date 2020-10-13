@@ -1,56 +1,53 @@
 import React, {Component} from "react";
 import ReactDOM from "react-dom";
-import { placeElement } from "../../helpers";
-
 import "./altrp-portal.scss";
+import {isEditor} from "../../../../../front-app/src/js/helpers";
 
 class AltrpPortal extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      positions: placeElement(true)
+      // position: {}
+      renderComponent: false
     };
 
     this.object = React.createRef();
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log(this.props.childrenRef.current.offsetLeft)
+  componentDidUpdate(prevProps, prevState) {
+    if(prevProps.childrenRefs !== this.props.childrenRef && !prevState.renderComponent) {
+      this.setState({ renderComponent: true })
+    }
   }
 
   render() {
+    let frame = document.body;
+
+    if(isEditor()) {
+      frame = document.getElementById("editorContent").contentWindow.document.body
+    }
     let position = {};
 
-    if(this.props.childrenRef.current) {
-      let boundingRect = this.props.childrenRef.current.getBoundingClientRect();
-      console.log(boundingRect)
-      if(this.object.current && this.props.childrenRef.current) {
-        position = {
-          left: boundingRect.x,
-          top: boundingRect.height + boundingRect.top,
-        };
-        // position = placeElement(false, {
-        //     target: this.props.childrenRef.current,
-        //     object: this.object.current,
-        //     place: "bottomLeft"
-        // });
-      }
+    if(this.props.childrenRef) {
+      let boundingRect = this.props.childrenRef.getBoundingClientRect();
+      position = {
+        left: boundingRect.x,
+        top: boundingRect.height + boundingRect.top,
+      };
     }
 
-    console.log(position);
-    let body = document.body;
-    let iframe = document.getElementById("editorContent").contentWindow.document.body;
+    let show = this.props.show || false;
 
     let children = (
-      <div className="altrp-portal" style={position} ref={this.object}>
+      <div className={ this.props.id + "-altrp-portal altrp-portal"} style={{...position, display: show ? "block" : "none"}} ref={this.object}>
         {
           this.props.children
         }
       </div>
     );
 
-    return ReactDOM.createPortal(children, iframe || body)
+    return this.state.renderComponent ? ReactDOM.createPortal(children, frame) : ""
   }
 }
 
