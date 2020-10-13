@@ -112,7 +112,6 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
   );
 
   const handleAdd = (widget) => {
-    console.log("AFTER SAVE ==>", widget);
     setWidgets([widget, ...widgets]);
   };
 
@@ -156,10 +155,10 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
     axios.post(`/ajax/dashboards/${id}/settings`, { settings: { startDate: start, endDate } });
   };
 
-  const setGlobalOption = (key, value) =>{
+  const setGlobalOption = (key, value) => {
     setWidgets(widgets.map(widget => ({
-        ...widget,
-        filter: {...widget.filter, [key]:value}
+      ...widget,
+      filter: { ...widget.filter, [key]: value }
     })));
   }
   /**
@@ -198,17 +197,17 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
             showYearDropdown
           />
         </div>
-      </Nav.Item> 
+      </Nav.Item>
       <Nav.Item className="nav-button" onClick={handleWeek}>
         Неделя
       </Nav.Item>
       <Nav.Item className="nav-button" onClick={handleMonth}>
         Месяц
       </Nav.Item>
-      { globalParameter && 
-      globalParameter.map((param,index) =>(<Nav.Item key={index}>
-        <GlobalParameter settings={settings} setGlobalOption={setGlobalOption} parameter={param}/>
-      </Nav.Item>) )
+      { globalParameter &&
+        globalParameter.map((param, index) => (<Nav.Item key={index}>
+          <GlobalParameter settings={settings} setGlobalOption={setGlobalOption} parameter={param} />
+        </Nav.Item>))
       }
     </Nav>
   );
@@ -256,11 +255,11 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
           />
         </Dropdown.ItemText>
         <Dropdown.Divider />
-        { globalParameter && 
-          globalParameter.map((param,index) =>(<Dropdown.Item onClick={e=>{e.stopPropagation();e.preventDefault(); }} key={index}>
-        <GlobalParameter settings={settings} setGlobalOption={setGlobalOption} parameter={param}/>
-        </Dropdown.Item>) )
-      }
+        {globalParameter &&
+          globalParameter.map((param, index) => (<Dropdown.Item onClick={e => { e.stopPropagation(); e.preventDefault(); }} key={index}>
+            <GlobalParameter settings={settings} setGlobalOption={setGlobalOption} parameter={param} />
+          </Dropdown.Item>))
+        }
       </Dropdown.Menu>
     </Dropdown>
   );
@@ -285,6 +284,7 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
             widget={widget}
             onDeleted={handleRemove}
             onEdited={handleEdit}
+            isMobile={isMobile}
           />
         ))}
       </div>

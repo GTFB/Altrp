@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import Query from "../../classes/Query";
+import {Scrollbars} from "react-custom-scrollbars";
 
 class TableWidget extends Component {
   constructor(props){
@@ -12,6 +13,7 @@ class TableWidget extends Component {
     if(window.elementDecorator){
       window.elementDecorator(this);
     }
+    this.scrollbar = React.createRef();
   }
   _componentDidMount(){
     import('../altrp-table/altrp-table').then(res=>{
@@ -41,11 +43,36 @@ class TableWidget extends Component {
     if(! this.showTable(query)){
       return <div children="Please Choose Source"/>
     }
+    const scrollbarsProps = {
+      ref:this.scrollbar,
+      style:{zIndex: 99999},
+      autoHeight:true,
+      autoHideTimeout:500,
+      autoHideDuration:200,
+      renderTrackVertical: ({style, ...props})=>{
+        return<div className="altrp-scroll__vertical-track" style={style} {...props} />
+      },
+    };
+    if(this.props.element.getSettings('table_transpose', false)){
+      scrollbarsProps.autoHeight = true;
+      scrollbarsProps.autoHeightMax = 10000;
 
-    return <this.state.TableComponent query={query}
+    }
+    return <Scrollbars
+        ref={this.scrollbar}
+        style={{zIndex: 99999}}
+        autoHide
+        autoHeightMax={10000}
+        autoHeight={true}
+        autoHideTimeout={500}
+        autoHideDuration={200}
+        renderTrackVertical={({style, ...props})=>{
+          return<div className="altrp-scroll__vertical-track" style={style} {...props} />}}
+    ><this.state.TableComponent query={query}
                                       currentModel={this.props.currentModel}
                                       data={query.getFromModel(this.state.modelData)}
-                                      settings={this.props.element.getSettings()}/>;
+                                settings={this.props.element.getSettings()}/>
+    </Scrollbars>;
   }
 }
 

@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import appStore from "../store/store"
 import {altrpCompare, conditionsChecker} from "../helpers";
 import {changeFormFieldValue} from "../store/forms-data-storage/actions";
+import {addElement} from "../store/elements-storage/actions";
 
 class ElementWrapper extends Component {
   constructor(props){
@@ -14,7 +15,9 @@ class ElementWrapper extends Component {
       formsStore: appStore.getState().formsStore,
       elementDisplay: true,
     };
-    appStore.subscribe(this.updateStore)
+    this.elementWrapperRef = React.createRef();
+    appStore.dispatch(addElement(this));
+    appStore.subscribe(this.updateStore);
   }
 
   /**
@@ -182,7 +185,11 @@ class ElementWrapper extends Component {
     if(! this.state.elementDisplay){
       styles.display = 'none';
     }
-    return <div className={classes} style={styles}>
+    const CSSId = this.props.element.getSettings('advanced_element_id', '');
+    return <div className={classes}
+                ref={this.elementWrapperRef}
+                style={styles}
+                id={CSSId}>
       {
         React.createElement(this.props.component, {
           ElementWrapper: this.props.ElementWrapper,

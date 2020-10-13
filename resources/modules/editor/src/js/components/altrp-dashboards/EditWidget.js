@@ -29,12 +29,13 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
   };
 
   const getTypesBySource = (s) => {
-    s = s.includes('?') ? s.split('?')[0] : s;
+    let string = s;
+    string = string.includes('?') ? string.split('?')[0] : s;
 
     const source =
       settings &&
-      settings.sql?.find((item) => s === `/ajax/models/queries/${item.model}/${item.value}`);
-    console.log(source);
+      settings.sql?.find((item) => string === `/ajax/models/queries/${item.model}/${item.value}`);
+
     return source?.types?.map((type) => type.value) || [];
   };
 
@@ -48,6 +49,12 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
       };
     });
   };
+
+  const titleHandle = (string) => {
+    if (!title.current.value.includes(string)) {
+      title.current.value += string;
+    }
+  }
 
   if (composeSources(settings.sql).length === 1) {
     let currentSource = composeSources(settings.sql)[0];
@@ -75,12 +82,13 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
             widget={widget}
             setWidget={setWidget}
             sources={composeSources(settings.sql)}
+            changeTitle={titleHandle}
           />
 
           {widget.source &&
             settings.filter?.length > 0 &&
             settings.filter?.map((param) => (
-              <FilterField key={param.value} widget={widget} setWidget={setWidget} param={param} />
+              <FilterField key={param.value} widget={widget} setWidget={setWidget} param={param} changeTitle={titleHandle} />
             ))}
 
           <TypeField
@@ -108,7 +116,7 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
           Закрыть
         </Button>
         <Button variant="warning" onClick={onSave} disabled={widget.source === ""}>
-          Сохранить изменения
+          Сохранить
         </Button>
       </Card.Footer>
     </Card>

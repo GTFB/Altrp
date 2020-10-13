@@ -365,14 +365,14 @@ class Table extends BaseElement {
       label: 'Group Collapsing',
     });
 
-    this.addControl('group_collapsed_default',{
-      type: CONTROLLER_SWITCHER,
-      conditions: {
-        'group_collapsing': true,
-      },
-      default: false,
-      label: 'Collapsed Default',
-    });
+    // this.addControl('group_collapsed_default',{
+    //   type: CONTROLLER_SWITCHER,
+    //   conditions: {
+    //     'group_collapsing': true,
+    //   },
+    //   default: false,
+    //   label: 'Collapsed Default',
+    // });
 
     this.addControl('collapsed_icon',{
       type: CONTROLLER_MEDIA,
@@ -587,6 +587,12 @@ class Table extends BaseElement {
     this.addControl('table_style_table_striple_style', {
         type: CONTROLLER_SWITCHER,
         label: 'Striple style'
+    });
+    this.addControl('table_transpose', {
+      type: CONTROLLER_SWITCHER,
+      default: false,
+      prefixClass: 'altrp-transpose_',
+      label: 'Transpose',
     });
 
     this.addControl("table_style_table_stripe_color", {
@@ -959,6 +965,8 @@ class Table extends BaseElement {
       units: ["px", "%", "vh"],
       rules: {
         '{{ELEMENT}} .altrp-table-th{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}}.altrp-transpose_true .altrp-table-th:not(:first-child){{STATE}}': 'margin-top: -{{TOP}}{{UNIT}};',
+        '{{ELEMENT}}.altrp-transpose_true .altrp-table-tr:not(:first-child) .altrp-table-th{{STATE}}': 'margin-left: -{{LEFT}}{{UNIT}};',
       }
     });
 
@@ -1042,6 +1050,8 @@ class Table extends BaseElement {
       units: ["px", "%", "vh"],
       rules: {
         '{{ELEMENT}} .altrp-table-td{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}}.altrp-transpose_true .altrp-table-td:not(:first-child){{STATE}}': 'margin-top: -{{TOP}}{{UNIT}};',
+        '{{ELEMENT}}.altrp-transpose_true .altrp-table-tr:not(:first-child) .altrp-table-td{{STATE}}': 'margin-left: -{{LEFT}}{{UNIT}};',
       }
     });
 
@@ -1229,18 +1239,88 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("table_style_group_icon_padding", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Icon Padding",
+    this.addControl("table_style_group_icon_size", {
+      type: CONTROLLER_SLIDER,
+      label: "Icon Size",
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 100,
+      min: 0,
       rules: {
-        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
+          'width: {{SIZE}}{{UNIT}};',
+          'height: {{SIZE}}{{UNIT}};',
         ],
       }
     });
+    this.addControl("table_style_group_icon_left_space", {
+      type: CONTROLLER_SLIDER,
+      label: "Icon Left Spacing",
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
+          'margin-left: {{SIZE}}{{UNIT}};',
+        ],
+      }
+    });
+    this.addControl("table_style_group_icon_right_space", {
+      type: CONTROLLER_SLIDER,
+      label: "Icon Right Spacing",
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
+          'margin-right: {{SIZE}}{{UNIT}};',
+        ],
+      }
+    });
+    this.addControl("table_style_group_icon_top", {
+      type: CONTROLLER_SLIDER,
+      label: "Top Translate",
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 100,
+      min: -100,
+      rules: {
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
+          'top: {{SIZE}}{{UNIT}};',
+        ],
+      }
+    });
+    this.addControl("table_style_group_icon_left", {
+      type: CONTROLLER_SLIDER,
+      label: "left Translate",
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 100,
+      min: -100,
+      rules: {
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
+          'left: {{SIZE}}{{UNIT}};',
+        ],
+      }
+    });
+
 
     this.addControl("table_style_group_icon_color", {
       type: CONTROLLER_COLOR,
