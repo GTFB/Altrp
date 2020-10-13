@@ -50,7 +50,11 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
     });
   };
 
-  const titleHandle = (string) => {
+  const titleHandle = (string, oldString = false) => {
+    if (title.current.value.includes(oldString)) {
+      title.current.value = title.current.value.replace(oldString, string);
+    }
+
     if (!title.current.value.includes(string)) {
       title.current.value += string;
     }
