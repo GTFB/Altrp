@@ -48,6 +48,7 @@ class SectionComponent extends Component {
     const { isScrollEffect } = this.props.element.getSettings();
     const isContentBoxed = this.state.settings.layout_content_width_type === "boxed";
     const widthType = this.state.settings.layout_content_width_type;
+    const sectionID = this.props.element.id;
     // if (this.state.settings.layout_content_width_type === "full") {
     //   width = {
     //     width: getWindowWidth() + "px"
@@ -92,7 +93,7 @@ class SectionComponent extends Component {
       styles.height = "100vh"
     }
 
-    return React.createElement(this.state.settings.layout_html_tag || "div",
+    return this.props.hiddenSections.includes(sectionID) ? null : React.createElement(this.state.settings.layout_html_tag || "div",
       { style: styles, className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: "" },
       // isScrollEffect ?
       // <>
@@ -117,6 +118,7 @@ class SectionComponent extends Component {
 function mapStateToProps(state) {
   return {
     changeWidthColumns: state.columnWidth,
+    hiddenSections: state.hiddenSections
   };
 }
 

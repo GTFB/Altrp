@@ -78,6 +78,19 @@ class Button extends BaseElement{
       },
     });
 
+    this.addControl('section_toggle_type', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Section Toggle',
+    });
+
+    this.addControl('section_id', {
+      type: CONTROLLER_TEXT,
+      label: 'Section ID',
+      conditions: {
+        'section_toggle_type': true,
+      },
+    });
+
     this.endControlSection();
 
     this.startControlSection('content_section', {

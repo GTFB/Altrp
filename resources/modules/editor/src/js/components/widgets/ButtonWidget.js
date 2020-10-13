@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {Link, Redirect, withRouter } from 'react-router-dom';
+import { connect } from "react-redux";
 import {placeElement} from "../../helpers";
 import {
   getHTMLElementById,
@@ -10,6 +11,7 @@ import {
 } from "../../../../../front-app/src/js/helpers";
 import AltrpModel from "../../classes/AltrpModel";
 import { triggerPopup } from "../../../../../front-app/src/js/store/popup-trigger/actions";
+import { toggleSection } from "../../../../../front-app/src/js/store/toggle-section/actions";
 
 //dropbar
 class Dropbar extends Component {
@@ -227,13 +229,17 @@ class ButtonWidget extends Component {
       /**
        * Проверим надо ли по ID скроллить к элементу
        */
-    } else if (e.target.href.replace(window.location.origin + window.location.pathname, '').indexOf('#') === 0){
+    } else if (e.target.href && e.target.href.replace(window.location.origin + window.location.pathname, '').indexOf('#') === 0){
       let elementId = e.target.href.replace(window.location.origin + window.location.pathname, '').replace('#', '');
       const element = getHTMLElementById(elementId);
       if(element){
         e.preventDefault();
         scrollToElement(mainScrollbars, element)
       }
+    }
+
+    if (this.props.element.getSettings('section_toggle_type') && this.props.element.getSettings('section_id')) {
+      this.props.toggleSection(this.props.element.getSettings('section_id'));
     }
   }
 
@@ -341,4 +347,10 @@ class ButtonWidget extends Component {
 
 }
 
-export default withRouter(ButtonWidget);
+const mapDispatchToProps = dispatch => {
+  return {
+    toggleSection: sectionId => dispatch(toggleSection(sectionId))
+  }
+};
+
+export default connect(null, mapDispatchToProps)(withRouter(ButtonWidget));

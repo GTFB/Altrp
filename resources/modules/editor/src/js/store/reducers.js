@@ -15,6 +15,7 @@ import {templateDataReducer} from "./template-data/reducers";
 import {currentUserReducer} from "../../../../front-app/src/js/store/current-user/reducers";
 import {currentDataStorageReducer} from "../../../../front-app/src/js/store/current-data-storage/reducers";
 import {elementsStorageReducer} from "../../../../front-app/src/js/store/elements-storage/reducers";
+import { toggleSectionReducer } from "../../../../front-app/src/js/store/toggle-section/reducers";
 
 export default combineReducers({
   currentElement: currentElementReducer,
@@ -33,4 +34,5 @@ export default combineReducers({
   currentUser: currentUserReducer,
   currentDataStorage: currentDataStorageReducer,
   elements: elementsStorageReducer,
+  hiddenSections: toggleSectionReducer
 });
