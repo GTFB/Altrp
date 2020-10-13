@@ -78,17 +78,9 @@ class Button extends BaseElement{
       },
     });
 
-    this.addControl('section_toggle_type', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Section Toggle',
-    });
-
-    this.addControl('section_id', {
+    this.addControl('hide_elements_trigger', {
       type: CONTROLLER_TEXT,
-      label: 'Section ID',
-      conditions: {
-        'section_toggle_type': true,
-      },
+      label: 'Hide Elements Trigger'
     });
 
     this.endControlSection();

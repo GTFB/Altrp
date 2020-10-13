@@ -11,7 +11,7 @@ import {
 } from "../../../../../front-app/src/js/helpers";
 import AltrpModel from "../../classes/AltrpModel";
 import { triggerPopup } from "../../../../../front-app/src/js/store/popup-trigger/actions";
-import { toggleSection } from "../../../../../front-app/src/js/store/toggle-section/actions";
+import { toggleTrigger } from "../../../../../front-app/src/js/store/hide-triggers/actions";
 
 //dropbar
 class Dropbar extends Component {
@@ -238,8 +238,8 @@ class ButtonWidget extends Component {
       }
     }
 
-    if (this.props.element.getSettings('section_toggle_type') && this.props.element.getSettings('section_id')) {
-      this.props.toggleSection(this.props.element.getSettings('section_id'));
+    if (this.props.element.getSettings('hide_elements_trigger')) {
+      this.props.toggleTrigger(this.props.element.getSettings('hide_elements_trigger'));
     }
   }
 
@@ -349,7 +349,7 @@ class ButtonWidget extends Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggleSection: sectionId => dispatch(toggleSection(sectionId))
+    toggleTrigger: string => dispatch(toggleTrigger(string))
   }
 };
 

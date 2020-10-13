@@ -7,7 +7,7 @@ import {currentDataStorageReducer} from "./current-data-storage/reducers";
 import { scrollReducer } from "./scroll-position/reducers";
 import { popupReducer } from './popup-trigger/reducers'
 import {elementsStorageReducer} from "./elements-storage/reducers";
-import { toggleSectionReducer } from "./toggle-section/reducers";
+import { hideTriggersReducer } from "./hide-triggers/reducers";
 
 export default combineReducers({
   appRoutes: appRoutesReducer,
@@ -18,5 +18,5 @@ export default combineReducers({
   scrollPosition: scrollReducer,
   popupTrigger: popupReducer,
   elements: elementsStorageReducer,
-  hiddenSections: toggleSectionReducer
+  hideTriggers: hideTriggersReducer
 });

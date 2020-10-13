@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 import appStore from "../store/store"
 import {altrpCompare, conditionsChecker} from "../helpers";
 import {changeFormFieldValue} from "../store/forms-data-storage/actions";
@@ -145,7 +146,8 @@ class ElementWrapper extends Component {
       hide_on_laptop,
       hide_on_tablet,
       hide_on_big_phone,
-      hide_on_small_phone 
+      hide_on_small_phone,
+      hide_on_trigger
     } = this.props.element.settings;
 
     let classes = `altrp-element altrp-element${this.props.element.getId()} altrp-element_${this.props.element.getType()}`;
@@ -186,7 +188,7 @@ class ElementWrapper extends Component {
       styles.display = 'none';
     }
     const CSSId = this.props.element.getSettings('advanced_element_id', '');
-    return <div className={classes}
+    return hide_on_trigger && this.props.hideTriggers.includes(hide_on_trigger) ? null : <div className={classes}
                 ref={this.elementWrapperRef}
                 style={styles}
                 id={CSSId}>
@@ -208,4 +210,10 @@ class ElementWrapper extends Component {
   }
 }
 
-export default withRouter(ElementWrapper);
+function mapStateToProps(state) {
+  return {
+    hideTriggers: state.hideTriggers
+  };
+}
+
+export default connect(mapStateToProps)(withRouter(ElementWrapper));
