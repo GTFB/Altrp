@@ -4,7 +4,6 @@ const MaskedInput = React.lazy(()=>import('react-text-mask'));
 class AltrpInput extends Component {
   render() {
     const inputProps = {...this.props};
-    inputProps.mask = this.props.content_mask || [/([\s\S]+?)/g];
     if(this.props.settings.content_mask){
       let mask = this.props.settings.content_mask.split('');
       mask = mask.map(m=>{
