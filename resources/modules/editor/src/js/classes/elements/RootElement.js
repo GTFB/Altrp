@@ -91,6 +91,18 @@ class RootElement extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('default_displaying', {
+      label: 'Default Displaying',
+    });
+
+    this.addControl('hidden_elemants_triggers', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Hidden Elements Triggers',
+      description: 'Input triggers, commas separated'
+    });
+
+    this.endControlSection();
+
     this.startControlSection('content_section', {
       tab: TAB_STYLE,
       label: 'Page Styles',

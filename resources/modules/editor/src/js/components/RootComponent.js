@@ -1,5 +1,8 @@
 import React, {Component} from "react";
+import { connect } from "react-redux";
 import FrontElement from "../../../../front-app/src/js/classes/FrontElement";
+import { setDefaultTriggers } from "../../../../front-app/src/js/store/hide-triggers/actions";
+
 
 class RootComponent extends Component {
   constructor(props) {
@@ -14,6 +17,14 @@ class RootComponent extends Component {
     }
   }
 
+  _componentDidMount() {
+    let hiddenElemtsTriggers = this.state.settings.hidden_elemants_triggers;
+    
+    if (hiddenElemtsTriggers) {
+      hiddenElemtsTriggers = hiddenElemtsTriggers.split(",").map(item => item.trim());
+      this.props.setDefaultTriggers(hiddenElemtsTriggers);
+    }
+  }
 
   render() {
     let classes = `sections-wrapper ${this.props.element
@@ -35,4 +46,11 @@ class RootComponent extends Component {
   }
 }
 
-export default RootComponent;
+const mapDispatchToProps = dispatch => {
+  return {
+    setDefaultTriggers: triggers => dispatch(setDefaultTriggers(triggers))
+  }
+};
+
+export default connect(null, mapDispatchToProps)(RootComponent);
+
