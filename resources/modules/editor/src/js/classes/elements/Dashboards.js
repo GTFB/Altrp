@@ -35,20 +35,20 @@ class Dashboards extends BaseElement {
       return;
     }
 
-    this.startControlSection('Data type',{
+    this.startControlSection('Data type', {
       tab: TAB_CONTENT,
       label: 'Data type'
     });
 
-    this.addControl('dataSource',{
+    this.addControl('dataSource', {
       type: CONTROLLER_SWITCHER,
       label: "Get data by data source?",
       default: false,
     });
 
-    console.log('Settings',this);
+    console.log('Settings', this);
 
-    
+
     let repeater = new Repeater();
 
     repeater.addControl(
@@ -95,7 +95,7 @@ class Dashboards extends BaseElement {
 
 
 
-    this.addControl('global_parameter',{
+    this.addControl('global_parameter', {
       type: CONTROLLER_SQL,
       default: [],
       multi: false,

@@ -21,10 +21,9 @@ class BarChartV1 extends React.Component {
         const { data, width, height, animDuration } = this.props;
         const bars = d3.select(this.viz)
             .selectAll(".bar")
-            .data(data, function key(d) { return d.item });
+            .data(data, function key(d) { return d.key });
 
         bars.exit()
-            .transition().duration(animDuration)
             .attr("y", height)
             .attr("height", 0)
             .style("fill-opacity", 0)
@@ -37,21 +36,21 @@ class BarChartV1 extends React.Component {
             .attr("rx", 5).attr("ry", 5)
             .merge(bars)
             .transition().duration(animDuration)
-            .attr("y", (d) => (this.scaleHeight(d.count)))
-            .attr("height", (d) => (height - this.scaleHeight(d.count)))
-            .attr("x", (d) => (this.scaleWidth(d.item)))
+            .attr("y", (d) => (this.scaleHeight(d.key)))
+            .attr("height", (d) => (height - this.scaleHeight(d.key)))
+            .attr("x", (d) => (this.scaleWidth(d.key)))
             .attr("width", this.scaleWidth.bandwidth())
-            .style("fill", (d) => (this.scaleColor(d.item)));
+            .style("fill", (d) => (this.scaleColor(d.key)));
     }
 
     updateScales() {
         const { data, width, height } = this.props;
         this.scaleColor.domain([0, data.length]);
         this.scaleWidth
-            .domain(data.map((d) => (d.item)))
+            .domain(data.map((d) => (d.key)))
             .range([0, width]);
         this.scaleHeight
-            .domain(d3.extent(data, (d) => (d.count)))
+            .domain(d3.extent(data, (d) => (d.key)))
             .range([height - 20, 0]);
     }
 
@@ -60,7 +59,7 @@ class BarChartV1 extends React.Component {
 
         return (
             <svg ref={viz => (this.viz = viz)}
-                width={300} height={300} >
+            >
             </svg>
         );
     }

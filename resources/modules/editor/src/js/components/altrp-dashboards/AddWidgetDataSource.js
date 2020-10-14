@@ -2,6 +2,7 @@ import { widgetTypes } from "../../../../../admin/src/components/dashboard/widge
 import Form from 'react-bootstrap/Form';
 import WidgetDiagram from "../../../../../admin/src/components/dashboard/WidgetDiagram";
 import BarChartV1 from '../../../../../admin/src/components/dashboard/widgets/d3/BarChartV1';
+import BarDataSource from '../../../../../admin/src/components/dashboard/widgets/d3/BarDataSource';
 class AddWidgetDataSource extends Component {
 
       constructor(props) {
@@ -20,8 +21,9 @@ class AddWidgetDataSource extends Component {
       }
 
       renderChart() {
-            if (this.state.settings.source && this.state.settings.type) {
-                  return <BarChartV1 data={this.state.settings.data} width={300} height={300} />;
+            if (this.state.settings.data.length > 0 && this.state.settings.type) {
+                  console.log('-->', this.state.settings.data);
+                  return <BarDataSource data={this.state.settings.data} />;
             }
             return <div style={{
                   marginTop: '5px'
@@ -33,15 +35,15 @@ class AddWidgetDataSource extends Component {
             let currentDataSouce = datasources.find(source => {
                   return source.path === path;
             });
+            let currentData = typeof currentDataSouce !== 'undefined' ? currentDataSouce.data : [];
             this.setState(state => ({
                   ...state,
                   settings: {
                         ...state.settings,
                         source: path,
-                        data: currentDataSouce.data
+                        data: currentData
                   }
             }));
-            console.log('DATA =>', this.state.settings.data);
       }
 
       setDiagramType(type) {
@@ -84,7 +86,7 @@ class AddWidgetDataSource extends Component {
                                     </Form.Control>
                               </Form.Group>
 
-                              <div className={`widget-placeholder altrp-chart`}>
+                              <div className="chart-container">
                                     {this.renderChart()}
                               </div>
                         </form>
