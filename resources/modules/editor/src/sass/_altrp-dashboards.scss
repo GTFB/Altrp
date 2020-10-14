@@ -22,7 +22,10 @@
   &__controls {
     .nav{
       @include row-flex();
-      margin: 5px 9px;
+      margin: 5px 23px;
+      @include xs-block(){
+        margin: 5px 8px;
+      }
       @media print {
         overflow: hidden; height: 0;
       }
