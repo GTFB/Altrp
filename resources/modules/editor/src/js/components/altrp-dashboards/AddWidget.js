@@ -64,12 +64,15 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
     string = string.includes('?') ? string.split('?')[0] : s;
 
     const source = settings.sql?.find(
-      (item) => s === `/ajax/models/queries/${item.model}/${item.value}`
+      (item) => string === `/ajax/models/queries/${item.model}/${item.value}`
     );
     return source?.types?.map((type) => type.value) || [];
   };
 
-  const titleHandle = (string) => {
+  const titleHandle = (string, oldString = false) => {
+    if (title.current.value.includes(oldString)) {
+      title.current.value = title.current.value.replace(oldString, string);
+    }
     if (!title.current.value.includes(string)) {
       title.current.value += string;
     }
@@ -94,7 +97,7 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
     }
     widget.source = currentSource.url + filter;
 
-    setTimeout(() => titleHandle(` / ${currentSource.name}`), 0);
+    setTimeout(() => titleHandle(`${currentSource.name}`), 0);
   }
 
   return (
@@ -111,7 +114,7 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
               ref={title}
               onFocus={handleFocus}
               onBlur={handleBlur}
-              defaultValue="Новый виджет"
+              defaultValue=""
               required
             />
           </Form.Group>

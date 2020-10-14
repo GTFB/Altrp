@@ -50,7 +50,11 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
     });
   };
 
-  const titleHandle = (string) => {
+  const titleHandle = (string, oldString = false) => {
+    if (title.current.value.includes(oldString)) {
+      title.current.value = title.current.value.replace(oldString, string);
+    }
+
     if (!title.current.value.includes(string)) {
       title.current.value += string;
     }
@@ -103,7 +107,7 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
 
           <ColorSchemeField widget={widget} setWidget={setWidget} />
 
-          {/* <LegendField widget={widget} setWidget={setWidget} /> */}
+          <LegendField widget={widget} setWidget={setWidget} />
           {widget.options?.legend && <LegendPositionField widget={widget} setWidget={setWidget} />}
         </Form>
 
