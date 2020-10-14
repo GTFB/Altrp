@@ -4,7 +4,7 @@ import VectorSvg from '../../svgs/vector.svg';
 import UserSvg from '../../svgs/user.svg';
 import {Link} from "react-router-dom";
 import Resource from "../../../../editor/src/js/classes/Resource";
-
+import Pagination from "../Pagination";
 export default class Users extends Component{
     constructor(props){
         super(props);
@@ -12,10 +12,11 @@ export default class Users extends Component{
             data: [],
             role_filter: "all",
             search: "",
+            currentPage: 1
         };
         
         this.resource = new Resource({route: '/admin/ajax/users'});
-        
+        this.itemsPerPage = 10;
         /*
         
         
@@ -44,6 +45,7 @@ export default class Users extends Component{
     
         
   render(){
+    const { currentPage, data } = this.state;
     return <div className="admin-users">
         <div className="wrapper">
             <div className="admin-heading-users">
@@ -100,7 +102,7 @@ export default class Users extends Component{
                     <tbody className="admin-table-body">
                     {
                     
-                        this.state.data.map((row, idx) => 
+                        data.slice(currentPage * this.itemsPerPage - this.itemsPerPage, currentPage * this.itemsPerPage).map((row, idx) => 
                             
                             <tr className="admin-table-row" key={row.id}>
                                 <td className="admin-table__td admin-table__td_check ">
@@ -121,6 +123,16 @@ export default class Users extends Component{
                     }   
                     </tbody>
                 </table>
+                <Pagination pageCount={Math.ceil(data.length / this.itemsPerPage) || 1}
+                  currentPage={currentPage}
+                  changePage={page => {
+                    if (currentPage !== page) {
+                      this.setState({ currentPage: page })
+                    }
+                  }
+                  }
+                  itemsCount={data.length}
+                />
             </div>
         </div>
     </div>
