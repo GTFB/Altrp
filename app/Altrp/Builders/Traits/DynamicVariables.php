@@ -19,7 +19,7 @@ trait DynamicVariables
      */
     protected function replaceDynamicVars($str, $outer = false)
     {
-        $pattern = "'?(CURRENT_[A-Z_]+|([A-Z_]+)?REQUEST)(:[a-zA-Z0-9_.]+)?(:[a-zA-Z0-9_.()-+*/|]+)?(:[A-Z_<>!=]+)?'?";
+        $pattern = '\'?(CURRENT_[A-Z_]+|([A-Z_]+)?REQUEST)(:[a-zA-Z0-9_.]+)?(:[a-zA-Z0-9\s,;"%-_.()+*/|]+)?(:[A-Z_<>!=]+)?\'?';
         $str = preg_replace_callback(
             "#$pattern#",
             function($matches) use ($outer) {
@@ -120,6 +120,7 @@ trait DynamicVariables
      */
     protected function checkUnixTime($value)
     {
+        $value = str_replace(';', ':', str_replace('\"', '"', $value));
         $wrapStart = '';
         $wrapEnd = '';
         if (Str::contains($value, 'FROM_UNIXTIME')) {
