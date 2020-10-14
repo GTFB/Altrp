@@ -598,10 +598,30 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    background-color: red;
+    // background-color: red;
     padding: 5px;
     z-index: 1000;
   }
+  .popup-window {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50vw;
+    height: 50vh;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid;
+    border-radius: 5px;
+  }
+}
+
+.centred {
+  text-align: center;
+  text-align: -webkit-center;
 }
 
 .altrp-dropbar {

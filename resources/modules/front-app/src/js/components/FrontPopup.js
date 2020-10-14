@@ -103,12 +103,17 @@ class FrontPopup extends Component {
 
     let rootElement = window.frontElementsFabric.parseData(this.props.template.data, null, this.props.page, this.props.models);
     return isVisible ? <div className={classes.join(' ')}>
-      <button className="popup-close-button" onClick={() => this.setState({ isVisible: false })}>✖</button>
-      {React.createElement(rootElement.componentClass,
-        {
-          element: rootElement,
-          children: rootElement.children
-        })}
+      <div className="popup-window">
+        <button className="popup-close-button" onClick={() => this.setState({ isVisible: false })}>✖</button>
+        {React.createElement(rootElement.componentClass,
+          {
+            element: rootElement,
+            children: rootElement.children
+          })}
+        <div className="centred">
+          <button className="altrp-btn" onClick={() => this.setState({ isVisible: false })}>Close</button>
+        </div>
+      </div>
     </div> : null
   }
 }
