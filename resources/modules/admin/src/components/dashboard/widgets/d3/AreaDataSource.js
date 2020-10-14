@@ -1,18 +1,17 @@
 import {
-      BarChart,
-      BarSeries,
-      Bar,
+      AreaChart,
+      AreaSeries,
+      MarkLine,
+      Line,
+      LinearXAxis,
+      LinearXAxisTickSeries,
+      LinearXAxisTickLabel,
+      Area,
       Gradient,
       GradientStop,
-      DiscreteLegend,
-      DiscreteLegendEntry,
-      LinearXAxis,
-      LinearYAxis,
-      LinearYAxisTickSeries
-
 } from "reaviz";
 
-class BarDataSource extends Component {
+class AreaDataSource extends Component {
 
       constructor(props) {
             super(props);
@@ -24,11 +23,11 @@ class BarDataSource extends Component {
 
       render() {
             return (
-                  <BarChart
+                  <AreaChart
                         data={this.state.data}
                   />
             );
       }
 }
 
-export default BarDataSource;
+export default AreaDataSource;

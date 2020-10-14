@@ -1,8 +1,10 @@
 import { widgetTypes } from "../../../../../admin/src/components/dashboard/widgetTypes";
+
 import Form from 'react-bootstrap/Form';
-import WidgetDiagram from "../../../../../admin/src/components/dashboard/WidgetDiagram";
-import BarChartV1 from '../../../../../admin/src/components/dashboard/widgets/d3/BarChartV1';
-import BarDataSource from '../../../../../admin/src/components/dashboard/widgets/d3/BarDataSource';
+import Button from "react-bootstrap/Button";
+
+import ChooseWidget from './ChooseWidget';
+
 class AddWidgetDataSource extends Component {
 
       constructor(props) {
@@ -10,20 +12,18 @@ class AddWidgetDataSource extends Component {
             this.state = {
                   settings: {
                         source: '',
-                        type: 'CHART/TABLE',
+                        type: '',
                         layout: props.layout,
                         data: []
                   },
                   dataSourcesList: props.dataSourceList,
                   types: widgetTypes
             };
-            console.log('DATASOURCESLIST=>', this.state.settings.layout);
       }
 
       renderChart() {
-            if (this.state.settings.data.length > 0 && this.state.settings.type) {
-                  console.log('-->', this.state.settings.data);
-                  return <BarDataSource data={this.state.settings.data} />;
+            if (this.state.settings.data.length > 0 && this.state.settings.type !== '') {
+                  return <ChooseWidget type={this.state.settings.type} data={this.state.settings.data} />;
             }
             return <div style={{
                   marginTop: '5px'
@@ -60,7 +60,7 @@ class AddWidgetDataSource extends Component {
       render() {
             return (
                   <div className="altrp-dashboard__card__add-settings">
-                        <form onClick={e => e.preventDefault()} onSubmit={e => { e.preventDefault(); this.props.addWidget(e.target) }}>
+                        <form onClick={e => e.preventDefault()}>
                               <Form.Group className="mb-2">
                                     <Form.Label className="label">Название виджета</Form.Label>
                                     <Form.Control name="title" className="title" type="text" placeholder="Новый виджет" />
@@ -79,16 +79,18 @@ class AddWidgetDataSource extends Component {
                               <Form.Group>
                                     <Form.Label className="label">Тип диаграммы</Form.Label>
                                     <Form.Control onChange={e => this.setDiagramType(e.target.value)} className="select-type" name="type" as="select">
-                                          <option value="0">Выберите тип диаграммы</option>
+                                          <option value="">Выберите тип диаграммы</option>
                                           {this.state.types && this.state.types.map((type, index) => (
                                                 <option key={index} value={type.value}>{type.name}</option>
                                           ))}
                                     </Form.Control>
                               </Form.Group>
-
                               <div className="chart-container">
                                     {this.renderChart()}
                               </div>
+                              <Form.Group>
+                                    <Button className="w-100" onClick={() => { this.props.addWidget(1, this.state.settings) }}>Сохранить</Button>
+                              </Form.Group>
                         </form>
                   </div>
             )

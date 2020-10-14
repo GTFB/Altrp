@@ -9,7 +9,6 @@ import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
 class DataSourceDashboards extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -18,7 +17,9 @@ class DataSourceDashboards extends Component {
       containerWidth: Number(props.containerWidth),
       widgets: [],
       addMode: false,
+      settings: props.settings
     };
+    console.log("SETTINGS !!! =>", this.state.settings);
   }
 
   /**
@@ -32,9 +33,21 @@ class DataSourceDashboards extends Component {
     }
   }
 
-  addWidgetHandle(id, settings) {
-    let widgets = _.cloneDeep(this.state.widgets);
+  async addWidgetHandle(id, settings) {
+    let widgets = _.cloneDeep(this.state.widgets, []);
     console.log(widgets);
+    console.log(settings);
+    // const data = {
+    //   ...widget,
+    //   title: title.current.value,
+    //   options: JSON.stringify(widget.options),
+    //   filter: JSON.stringify(widget.filter),
+    // };
+    // const req = await axios.post(`/ajax/dashboards/${id}`, data);
+    // if (req.status === 200) {
+    //   onAdd(req.data);
+    //   setIsShow(false);
+    // }
   }
 
   render() {
@@ -53,9 +66,12 @@ class DataSourceDashboards extends Component {
       };
     });
     const baseLayout = { x: 0, y: 0, w: 3, h: 8, maxW: 12, minW: 3, maxH: 30, minH: 8 };
-    console.log('DATASOURCES =>', dataSources);
+
     return (
-      <GridLayout className="layout" cols={12} rowHeight={30} width={this.state.containerWidth}>
+      <GridLayout className="layout"
+        cols={12}
+        rowHeight={30}
+        width={1010}>
         <div key="0" data-grid={baseLayout} >
           <div className="altrp-dashboard__card">
             {
@@ -82,7 +98,7 @@ class DataSourceDashboards extends Component {
             </div>
           </div>
         ))}
-      </GridLayout>
+      </GridLayout >
     );
   }
 

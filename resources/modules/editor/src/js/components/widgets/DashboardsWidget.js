@@ -35,6 +35,7 @@ class DashboardsWidget extends Component {
               id={this.props.element.getId()} />)
             :
             (<DataSourceDashboards
+              settings={this.props.element.getSettings()}
               id={this.props.element.getId()}
               containerWidth={containerWidth}
               rep={this.props.element.getSettings('rep', [])} />)
