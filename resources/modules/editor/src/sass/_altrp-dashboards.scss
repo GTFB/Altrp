@@ -68,13 +68,15 @@
           &>.nav-datepicker{
             width: 100%;
             &>.react-datepicker-wrapper>.react-datepicker__input-container>.form-control{
-              max-width: 100%;
+              max-width: unset;
+              width: 100%;
               border: 1px solid  rgba(109, 108, 108, 1);
               padding: 8px;
             }
             &:last-child>.react-datepicker-wrapper>.react-datepicker__input-container>.last{
               border-left: 0;
-              max-width: 100%;
+              max-width: unset;
+              width: 100%;
             }
           }
         }
