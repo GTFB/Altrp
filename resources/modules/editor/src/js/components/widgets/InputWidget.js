@@ -6,6 +6,7 @@ import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-
 import AltrpModel from "../../classes/AltrpModel";
 import { cutString, sortOptions } from "../../helpers";
 import {connect} from "react-redux";
+const AltrpInput = React.lazy(()=> import("../altrp-input/AltrpInput"));
 
 class InputWidget extends Component {
 
@@ -237,14 +238,16 @@ class InputWidget extends Component {
     } else {
       autocomplete = "off";
     }
-    let input = <input type={this.state.settings.content_type}
-                       value={value || ''}
-                       autoComplete={autocomplete}
-                       placeholder={this.state.settings.content_placeholder}
-                       className={"altrp-field " + this.state.settings.position_css_classes}
-                       onChange={this.onChange}
-                       id={this.state.settings.position_css_id}
-    />;
+    let input = <React.Suspense fallback={<input />}>
+      <AltrpInput type={this.state.settings.content_type}
+                  value={value || ''}
+                  autoComplete={autocomplete}
+                  placeholder={this.state.settings.content_placeholder}
+                  className={"altrp-field " + this.state.settings.position_css_classes}
+                  settings={this.props.element.getSettings()}
+                  onChange={this.onChange}
+                  id={this.state.settings.position_css_id}
+    /></React.Suspense>;
     switch (this.state.settings.content_type) {
       case 'text':
       case 'number':

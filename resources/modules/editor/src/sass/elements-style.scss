@@ -1,5 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&family=PT+Sans:ital,wght@0,400;0,700;1,400&family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
-@import url("http://fonts.googleapis.com/css?family=PT+Sans:400,700");
+@import url("/fonts/Roboto/stylesheet.css");
+@import url("/fonts/OpenSans/stylesheet.css");
+@import url("/fonts/PTSans/stylesheet.css");
+@import url("/fonts/Montserrat/stylesheet.css");
 .sections-wrapper {
   display: flex;
   width: 1440px;
@@ -222,6 +224,9 @@
 .altrp-image-container {
   display: flex;
 }
+.app-area{
+  //overflow: hidden;
+}
 .app-area_footer {
   flex: 0 0 auto;
 }
@@ -245,9 +250,10 @@
 }
 
 .route-content {
-  height: 100%;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .altrp-section-full-fill {
@@ -263,12 +269,9 @@
 
 
 .altrp-table {
+  width: 100%;
   border-collapse: collapse;
   &-td {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
     &__double-click-content {
       display: none;
     }
@@ -729,3 +732,71 @@
 .altrp-d-none{
   display: none!important;
 }
+
+/**
+ * Перевернуть таблицу
+ */
+.altrp-transpose_true{
+  overflow: auto;
+  & > .altrp-table{
+    width: auto;
+  }
+  & .altrp-table_columns-1{
+    grid-template-rows: 1fr;
+  }
+  & .altrp-table_columns-2{
+    grid-template-rows: 1fr 1fr;
+  }
+  & .altrp-table_columns-3{
+    grid-template-rows: 1fr 1fr 1fr;
+  }
+  & .altrp-table_columns-4{
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+  }
+  & .altrp-table_columns-5{
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  }
+  & .altrp-table_columns-6{
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
+  & .altrp-table_columns-7{
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
+  & .altrp-table_columns-8{
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
+  & .altrp-table_columns-9{
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
+  & .altrp-table_columns-10{
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
+  & .altrp-table_columns-11{
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
+  & .altrp-table_columns-12{
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
+  & .altrp-table_columns-13{
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
+  & .altrp-table{
+    display: grid;
+    grid-auto-flow: column;
+    & .altrp-table-head{
+      display: contents;
+      & .altrp-table-tr{
+        display: contents;
+      }
+    }
+    & .altrp-table-tbody{
+      display: contents;
+      & .altrp-table-tr{
+        display: contents;
+      }
+    }
+  }
+}
+/**
+ * Перевернуть таблицу END
+ */

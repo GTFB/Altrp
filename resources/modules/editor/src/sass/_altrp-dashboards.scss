@@ -22,7 +22,10 @@
   &__controls {
     .nav{
       @include row-flex();
-      margin: 5px 9px;
+      margin: 5px 23px;
+      @include xs-block(){
+        margin: 5px 8px;
+      }
       @media print {
         overflow: hidden; height: 0;
       }
@@ -62,13 +65,14 @@
           font-weight: 400;
           text-transform: uppercase;
           text-shadow: 0px 0px 0px rgb(39, 30, 30);
-          padding: 5px 14px;
-          background-color: rgba(109, 108, 108, 1);
+          padding: 5px 14px;background-image: linear-gradient(90deg, #7F7F7F 7.3016700000000005%, #706F6F 100%);
           border-color: rgb(50,168,82);
 
           &:hover{
             color: rgba(68, 68, 68, 1);
-            background-color: rgba(255, 237, 0, 1);
+            background-image: linear-gradient(90deg, #FFEC00 7.3016700000000005%, #FCDD03 100%);
+
+
           }
         }
         &.nav-datepickers{
@@ -210,6 +214,7 @@
         }
       }
       &-footer{
+        margin-top: 15px;
         display: flex;
         justify-content:space-between;
       }
