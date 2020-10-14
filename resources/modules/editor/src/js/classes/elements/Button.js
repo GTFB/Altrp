@@ -70,9 +70,13 @@ class Button extends BaseElement{
       label: 'Popup trigger',
     });
 
-    this.addControl('popup_id', {
-      type: CONTROLLER_TEXT,
-      label: 'Popup ID',
+    this.addControl("popup_id", {
+      type: CONTROLLER_SELECT2,
+      prefetch_options: true,
+      label: "Popup ID",
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options?template_type=popup',
+      nullable: true,
       conditions: {
         'popup_trigger_type': true,
       },
