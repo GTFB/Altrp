@@ -91,11 +91,11 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
 
   if (composeSources(settings.sql).length === 1) {
     let currentSource = composeSources(settings.sql)[0];
-    let filter = '';
-    if (Object.keys(widget.filter).length !== 0) {
-      filter = queryString(widget.filter);
-    }
-    widget.source = currentSource.url + filter;
+    // let filter = '';
+    // if (Object.keys(widget.filter).length !== 0) {
+    //   filter = queryString(widget.filter);
+    // }
+    widget.source = currentSource.url;
 
     setTimeout(() => titleHandle(`${currentSource.name}`), 0);
   }

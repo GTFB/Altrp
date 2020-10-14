@@ -127,9 +127,11 @@
   }
   &__widgets {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
-    grid-column-gap: 10px;
-    grid-row-gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(360px,1fr));
+    grid-gap: 10px;
+    @include xs-block(){
+      grid-template-columns: repeat(1, [col-start] 1fr);
+    }
     .card {
       width: 100%;
       // max-width: 500px;
