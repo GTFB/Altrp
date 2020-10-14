@@ -63,19 +63,18 @@
           }
         }
         &.nav-datepickers{
-          display: inline-flex;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(50%,1fr));
           &>.nav-datepicker{
-            width: fit-content;
+            width: 100%;
             &>.react-datepicker-wrapper>.react-datepicker__input-container>.form-control{
-              width: 100%;
-              height: 100%;
+              max-width: 100%;
               border: 1px solid  rgba(109, 108, 108, 1);
               padding: 8px;
             }
             &:last-child>.react-datepicker-wrapper>.react-datepicker__input-container>.last{
               border-left: 0;
-              width: 100%;
-              height: 100%;
+              max-width: 100%;
             }
           }
         }
