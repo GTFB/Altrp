@@ -102,6 +102,14 @@ class Input extends BaseElement{
           value: 'hidden',
           label: 'Hidden'
         },
+        {
+          value: 'radio',
+          label: 'Radio'
+        },
+        {
+          value: 'checkbox',
+          label: 'Checkbox'
+        },
       ]
     });
 
@@ -174,6 +182,8 @@ class Input extends BaseElement{
           [
             'select',
             'select2',
+            'radio',
+            'checkbox',
           ]
       },
     });
@@ -187,6 +197,8 @@ class Input extends BaseElement{
           [
             'select',
             'select2',
+            'radio',
+            'checkbox',
           ]
       },
       options: [
@@ -214,6 +226,8 @@ class Input extends BaseElement{
           [
             'select',
             'select2',
+            'radio',
+            'checkbox',
           ]
       },
       nullable: true,
@@ -256,6 +270,8 @@ class Input extends BaseElement{
         'content_type':[
           'select',
           'select2',
+          'radio',
+          'checkbox',
         ],
       },
       description: 'Enter each option in a separate line. To differentiate between label and value, separate them with a pipe char ("|"). For example: First Name|f_name',
@@ -719,6 +735,9 @@ class Input extends BaseElement{
         colorPickedHex: "#DEEBFF",
       },
       conditions: { 'content_type': ['select2'] },
+      rules: {
+        '.{{ID}}.altrp-field-select2__option.altrp-field-select2__option--is-focused{{STATE}}': 'background-color: {{COLOR}};',
+      },
     });
 
     this.addControl('option_selected_background_color', {
@@ -729,6 +748,9 @@ class Input extends BaseElement{
         colorPickedHex: "#2684FF",
       },
       conditions: { 'content_type': ['select2'] },
+      rules: {
+        '.{{ID}}.altrp-field-select2__option.altrp-field-select2__option--is-selected{{STATE}}': 'background-color: {{COLOR}};',
+      },
     });    
 
     this.addControl('background_section_opacity', {

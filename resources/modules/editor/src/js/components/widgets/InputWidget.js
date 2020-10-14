@@ -158,6 +158,9 @@ class InputWidget extends Component {
     if(this.props.element.getSettings('select2_multiple', false) && ! e){
       value = [];
     }
+    if(this.props.element.getSettings('select2_multiple', false)){
+      value = value.map(item => item.value);
+    }
     this.setState(state=>({
       ...state,
       value
