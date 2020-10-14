@@ -588,6 +588,12 @@ class Table extends BaseElement {
         type: CONTROLLER_SWITCHER,
         label: 'Striple style'
     });
+    this.addControl('table_transpose', {
+      type: CONTROLLER_SWITCHER,
+      default: false,
+      prefixClass: 'altrp-transpose_',
+      label: 'Transpose',
+    });
 
     this.addControl("table_style_table_stripe_color", {
       type: CONTROLLER_COLOR,
@@ -959,6 +965,8 @@ class Table extends BaseElement {
       units: ["px", "%", "vh"],
       rules: {
         '{{ELEMENT}} .altrp-table-th{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}}.altrp-transpose_true .altrp-table-th:not(:first-child){{STATE}}': 'margin-top: -{{TOP}}{{UNIT}};',
+        '{{ELEMENT}}.altrp-transpose_true .altrp-table-tr:not(:first-child) .altrp-table-th{{STATE}}': 'margin-left: -{{LEFT}}{{UNIT}};',
       }
     });
 
@@ -1042,6 +1050,8 @@ class Table extends BaseElement {
       units: ["px", "%", "vh"],
       rules: {
         '{{ELEMENT}} .altrp-table-td{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}}.altrp-transpose_true .altrp-table-td:not(:first-child){{STATE}}': 'margin-top: -{{TOP}}{{UNIT}};',
+        '{{ELEMENT}}.altrp-transpose_true .altrp-table-tr:not(:first-child) .altrp-table-td{{STATE}}': 'margin-left: -{{LEFT}}{{UNIT}};',
       }
     });
 

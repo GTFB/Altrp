@@ -30,11 +30,14 @@ function FilterField({ widget, setWidget, param, changeTitle }) {
         as="select"
         custom
         value={widget.filter?.[param.value] || ""}
-        onChange={(e) =>{
+        onChange={(e) => {
+          let oldParam = widget.filter[param.value] || {};
+          let findLabel = options.find(option => option.value == oldParam);
+          let oldLabel = typeof findLabel !== 'undefined' ? findLabel.label : false;
+          console.log(oldLabel, '<---');
           setWidget({ ...widget, filter: { ...widget.filter, [param.value]: e.target.value } })
-          
-          let paramName = options.find(option => option.value == e.target.value).label;
-          changeTitle(` / ${paramName}`);
+          let paramName = options.find(option => option.value == e.target.value).label || '';
+          changeTitle(` / ${paramName}`, ` / ${oldLabel}`);
         }
         }
         required

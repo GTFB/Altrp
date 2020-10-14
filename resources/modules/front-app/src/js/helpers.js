@@ -508,12 +508,31 @@ export function scrollToElement(scrollbars, HTMLElement){
   if(! container){
     return;
   }
-  const containerTop = container.getBoundingClientRect().top;
-  const elementTop = HTMLElement.getBoundingClientRect().top;
   if(! _.isFunction(scrollbars.scrollTop)){
     return
   }
-  scrollbars.scrollTop(elementTop - containerTop)
+
+  let parent = HTMLElement.offsetParent;
+  let top = HTMLElement.offsetTop;
+
+  while (parent !== container){
+    if(! parent){
+      /**
+       * ушли в самый корень ДОМ и контейнер не встретился
+       */
+      return;
+    }
+    top += parent.offsetTop;
+    parent = parent.offsetParent;
+  }
+
+  /**
+   * не получили каеое-либо значение
+   */
+  if(! top){
+    return;
+  }
+  scrollbars.scrollTop(top)
 }
 
 /**
