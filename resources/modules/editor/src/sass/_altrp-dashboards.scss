@@ -20,43 +20,29 @@
 
 .altrp-dashboard {
   &__controls {
+    margin-bottom: 10px;
     .nav{
-      @include row-flex();
-      margin: 5px 23px;
-      @include xs-block(){
-        margin: 5px 8px;
-      }
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px,1fr));
+      grid-column-gap: 5px;
+      grid-row-gap: 10px;
+
       @media print {
         overflow: hidden; height: 0;
       }
 
-      .justify-content-center{
-        justify-content:center;
-      }
-      .justify-content-between{
-        justify-content:space-between;
-      }
-      .justify-content-around{
-        justify-content:space-around;
-      }
-      .justify-content-start{
-        justify-content:start;
-      }
-      .justify-content-end{
-        justify-content:end;
-      }
-
       &>.nav-item{
-        @include col();
-        margin: 0 5px;
-        margin-bottom: 5px;
         cursor: pointer;
 
         & .global-select{
+          width: 100%;
+          height: 100%;
           padding: 5px 14px;
         }
 
         &.nav-button{
+          width: 100%;
+          height: 100%;
           color: rgba(255, 255, 255, 1);
           font-family: "PT Sans", sans-serif;
           font-size: 14px;
@@ -65,7 +51,8 @@
           font-weight: 400;
           text-transform: uppercase;
           text-shadow: 0px 0px 0px rgb(39, 30, 30);
-          padding: 5px 14px;background-image: linear-gradient(90deg, #7F7F7F 7.3016700000000005%, #706F6F 100%);
+          padding: 5px 14px;
+          background-image: linear-gradient(90deg, #7F7F7F 7.3016700000000005%, #706F6F 100%);
           border-color: rgb(50,168,82);
 
           &:hover{
@@ -76,21 +63,19 @@
           }
         }
         &.nav-datepickers{
-          @include row-flex();
-          margin: 0 10px;
-          justify-content:space-around;
-          // align-items: center;
-
+          display: inline-flex;
           &>.nav-datepicker{
-            @include col();
-            margin: 0;
+            width: fit-content;
             &>.react-datepicker-wrapper>.react-datepicker__input-container>.form-control{
-              max-width: 100px;
+              width: 100%;
+              height: 100%;
               border: 1px solid  rgba(109, 108, 108, 1);
               padding: 8px;
             }
             &:last-child>.react-datepicker-wrapper>.react-datepicker__input-container>.last{
               border-left: 0;
+              width: 100%;
+              height: 100%;
             }
           }
         }
@@ -140,25 +125,17 @@
 
   }
   &__widgets {
-    @include row-flex();
-    margin: 0 !important;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
     .card {
-      flex-basis: 475px;
-      @include col();
-      @include size(6);
-      @include size-sm(12);
-      @include size-xs(12);
+      width: 100%;
       // max-width: 500px;
       box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.15);
-      margin: 10px;
+      
       padding: 25px 10px;
-      &:first-child {
-        margin-top: 10px;
-      }
-      &:last-child {
-        margin-bottom: 10px;
-      }
+
       &-header {
         display: flex;
         justify-content: space-between;
