@@ -6,15 +6,21 @@ import EmptyWidget from "./EmptyWidget";
 import { getWidgetData } from "../services/getWidgetData";
 import { customStyle } from "../widgetTypes";
 
-const DynamicDonutChart = ({ widget, width = 300, height = 300 }) => {
+const DynamicDonutChart = ({ widget, width = 300, height = 300, dataSource = [] }) => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const getData = useCallback(async () => {
     setIsLoading(true);
-    const charts = await getWidgetData(widget.source, widget.filter);
-    if (charts.status === 200) {
-      setData(charts.data.data);
+    if (dataSource.length == 0) {
+      const charts = await getWidgetData(widget.source, widget.filter);
+      if (charts.status === 200) {
+        setData(charts.data.data || []);
+        setIsLoading(false);
+      }
+    }
+    else {
+      setData(dataSource || []);
       setIsLoading(false);
     }
   }, [widget]);
