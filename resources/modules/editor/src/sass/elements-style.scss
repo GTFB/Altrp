@@ -165,6 +165,17 @@
 
 .altrp-field {
   width: 100%;
+  &-subgroup{
+    display: flex;
+    flex-wrap: wrap;
+  }
+  &-option{
+    display: flex;
+    padding: 10px;
+    &__label{
+      cursor: pointer;
+    }
+  }
 }
 
 .altrp-table-tbody,

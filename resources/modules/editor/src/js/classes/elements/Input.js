@@ -148,8 +148,10 @@ class Input extends BaseElement{
     this.addControl('content_mask', {
       type: CONTROLLER_TEXT,
       label: 'Mask',
+      conditions: {
+        'content_type' : 'text'
+      }
     });
-
 
     this.addControl('content_required', {
       type: CONTROLLER_SWITCHER,
@@ -281,6 +283,11 @@ class Input extends BaseElement{
       type: CONTROLLER_TEXTAREA,
       label: 'Default Value',
     });
+    this.addControl('content_calculation', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'calculation',
+      description: 'E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10',
+    });
 
     this.endControlSection();
 
@@ -310,7 +317,7 @@ class Input extends BaseElement{
 
     this.startControlSection('form_condition_display', {
       tab: TAB_CONTENT,
-      label: 'Form Condition Display',
+      label: 'Field Condition',
     });
 
     this.addControl('form_condition_display_on', {
@@ -331,6 +338,7 @@ class Input extends BaseElement{
     });
 
     const formConditionsRepeater = new Repeater();
+
 
     formConditionsRepeater.addControl('field_id', {
       responsive: false,
@@ -904,6 +912,42 @@ class Input extends BaseElement{
     });
 
     this.endControlSection();
+
+    this.startControlSection('radio-_checkbox_styles', {
+      tab: TAB_STYLE,
+      label: 'Radio Checkbox Styles'
+    });
+
+    this.addControl('input_position',{
+      label: 'Position',
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          label: 'Left',
+          value: 'row',
+        },
+        {
+          label: 'Top',
+          value: 'column',
+        },
+        {
+          label: 'Right',
+          value: 'row-reverse',
+        },
+        {
+          label: 'Bottom',
+          value: 'column-reverse',
+        },
+      ],
+      default: 'left',
+      rules: {
+        '{{ELEMENT}} .altrp-field-option{{STATE}}': 'flex-direction:{{VALUE}};'
+      },
+    });
+
+    this.endControlSection();
+
+
 
     advancedTabControllers(this);
   }

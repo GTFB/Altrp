@@ -232,9 +232,9 @@ export function conditionsChecker(conditions = [], AND = true, model){
   let result = AND;
   _.each(conditions, c =>{
     if(AND){
-      result *= _conditionChecker(c, model);
+      result *= conditionChecker(c, model);
     } else {
-      result += _conditionChecker(c, model);
+      result += conditionChecker(c, model);
     }
   });
   return result;
@@ -246,7 +246,7 @@ export function conditionsChecker(conditions = [], AND = true, model){
  * @param {AltrpModel} model
  * @return {boolean}
  */
-function _conditionChecker(c, model){
+function conditionChecker(c, model){
   let result = 0;
   const {
      modelField,
@@ -374,7 +374,11 @@ export function altrpCompare( leftValue = '', rightValue = '', operator = 'not_e
       return !  _.isEmpty(leftValue,);
     }
     case '==':{
-      return _.isEqual(leftValue, rightValue);
+      if(_.isNumber(leftValue) || _.isNumber(rightValue)){
+        return Number(leftValue) === Number(rightValue);
+      } else {
+        return rightValue === leftValue;
+      }
     }
     case '===':{
       return _.isEqual(leftValue, rightValue);
@@ -393,6 +397,21 @@ export function altrpCompare( leftValue = '', rightValue = '', operator = 'not_e
     }
     case '<=':{
       return Number(leftValue) <= Number(rightValue);
+    }
+    case 'in':{
+      if(! _.isArray(rightValue)){
+        return false;
+      }
+      let result = false;
+      rightValue.forEach(item => {
+        if(! result){
+          result = altrpCompare(leftValue, item, '==')
+        }
+      });
+      return result;
+    }
+    case 'not_in':{
+      return ! altrpCompare(leftValue, rightValue, 'in');
     }
   }
 }
@@ -433,6 +452,14 @@ export const CONDITIONS_OPTIONS = [
   {
     value: '<=',
     label: '<=',
+  },
+  {
+    value: 'in',
+    label: 'In',
+  },
+  {
+    value: 'not_in',
+    label: 'Not In',
   },
 ];
 

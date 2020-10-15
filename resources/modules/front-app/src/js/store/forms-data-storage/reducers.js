@@ -4,12 +4,13 @@ const defaultState = {
 
 };
 
-export function formsStoreReducer(state, {type, formId, fieldName, value}) {
+export function formsStoreReducer(state, {type, formId, fieldName, value, changedField}) {
   state = state || defaultState;
   switch (type) {
     case CHANGE_FORM_FIELD_VALUE:{
       if(_.get(state, [formId, fieldName]) !== value){
         state = _.cloneDeep(state);
+        state.changedField = changedField;
         _.set(state, [formId, fieldName], value);
       }
 
