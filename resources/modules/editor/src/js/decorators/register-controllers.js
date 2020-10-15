@@ -87,6 +87,11 @@ export function advancedTabControllers(element) {
 
   });
 
+  element.addControl('hide_on_trigger', {
+    type: CONTROLLER_TEXT,
+    label: 'Hide on Trigger'
+  });
+
   element.endControlSection();
 
   if(element.getType() !== 'section') {
@@ -313,11 +318,6 @@ export function advancedTabControllers(element) {
         label: 'Authorized Only',
       },
     ],
-  });
-
-  element.addControl('hide_on_trigger', {
-    type: CONTROLLER_TEXT,
-    label: 'Hide on Trigger'
   });
 
   element.addControl('conditional_roles', {
