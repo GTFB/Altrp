@@ -110,9 +110,6 @@ class FrontPopup extends Component {
             element: rootElement,
             children: rootElement.children
           })}
-        <div className="centred">
-          <button className="altrp-btn" onClick={() => this.setState({ isVisible: false })}>Close</button>
-        </div>
       </div>
     </div> : null
   }

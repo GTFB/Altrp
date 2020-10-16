@@ -232,7 +232,7 @@ class Resource {
     const _params = {};
     _.forEach(params, (paramValue, paramName)=>{
       if(_.isArray(paramValue)){
-        paramValue = params.join(',');
+        paramValue = paramValue.join(',');
       }
       _params[paramName] = paramValue;
     });
