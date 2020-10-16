@@ -10,7 +10,7 @@ import {
   scrollToElement
 } from "../../../../../front-app/src/js/helpers";
 import AltrpModel from "../../classes/AltrpModel";
-import { triggerPopup } from "../../../../../front-app/src/js/store/popup-trigger/actions";
+import { togglePopup } from "../../../../../front-app/src/js/store/popup-trigger/actions";
 import { toggleTrigger } from "../../../../../front-app/src/js/store/hide-triggers/actions";
 
 //dropbar
@@ -225,7 +225,7 @@ class ButtonWidget extends Component {
         }
       );
     } else if (this.props.element.getSettings('popup_trigger_type') && this.props.element.getSettings('popup_id')){
-      this.props.appStore.dispatch(triggerPopup(+this.props.element.getSettings('popup_id')));
+      this.props.appStore.dispatch(togglePopup(+this.props.element.getSettings('popup_id')));
       /**
        * Проверим надо ли по ID скроллить к элементу
        */
