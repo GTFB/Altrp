@@ -37,6 +37,9 @@ const a = { "Ё": "Yo", "Й": "I", "Ц": "Ts", "У": "U", "К": "K", "Е": "E", 
  * @return {string}
  */
 export function transliterate(str) {
+  if (!str) {
+    return "";
+  }
   return str.split('').map(function (char) {
     return _.isUndefined(a[char]) ? char : a[char];
   }).join("");
@@ -50,6 +53,12 @@ export function transliterate(str) {
 export function titleToName(str) {
   str = transliterate(str);
   return str.toLowerCase().replace(/^\d+/, '').replace(/[^\d\w]/g, '_');
+
+}
+
+export function titleToPath(str) {
+  str = transliterate(str);
+  return str.toLowerCase().replace(/^\d+/, '').replace(/[^\d\w]/g, '-');
 
 }
 /** @function objectDeepCleaning
