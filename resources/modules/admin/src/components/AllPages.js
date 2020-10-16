@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
-
+import { buildPagesTree } from "../helpers";
 
 export default class AllPages extends Component{
   constructor(props){
@@ -67,7 +67,7 @@ export default class AllPages extends Component{
             title: 'Trash'
            }
           ]}
-          rows={this.state.pages}/>
+          rows={buildPagesTree(this.state.pages)}/>
       </div>
     </div>;
   }
