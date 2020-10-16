@@ -65,27 +65,39 @@ class ChooseWidget extends Component {
       }
 
       renderBar() {
-            return <BarDataSource data={this.state.data} />;
+            return <div className="chart-container">
+                  <BarDataSource data={this.state.data} />
+            </div>;
       }
 
       renderPie() {
-            return <PieDataSource data={this.state.data} />
+            return <div className="chart-container">
+                  <PieDataSource data={this.state.data} />
+            </div>;
       }
 
       renderDonut() {
-            return <DonutDataSource data={this.state.data} />
+            return <div className="chart-container">
+                  <DonutDataSource data={this.state.data} />
+            </div>;
       }
 
       renderArea() {
-            return <AreaDataSource data={this.state.data} />;
+            return <div className="chart-container">
+                  <AreaDataSource data={this.state.data} />
+            </div>;
       }
 
       renderLine() {
-            return <LineDataSource data={this.state.data} />
+            return <div className="chart-container">
+                  <LineDataSource data={this.state.data} />
+            </div>;
       }
 
       renderTable() {
-            return <TableDataSource data={this.state.data} />
+            return <div className="chart-container">
+                  <TableDataSource data={this.state.data} />
+            </div>;
       }
 
       render() {

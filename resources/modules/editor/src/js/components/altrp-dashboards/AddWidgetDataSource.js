@@ -10,20 +10,21 @@ class AddWidgetDataSource extends Component {
       constructor(props) {
             super(props);
             this.state = {
-                  settings: {
-                        source: '',
-                        type: '',
-                        layout: props.layout,
-                        data: []
-                  },
+                  widget: props.widget,
                   dataSourcesList: props.dataSourceList,
                   types: widgetTypes
             };
       }
 
+      componentDidUpdate(prevProps, prevState) {
+            if (!_.isEqual(prevProps, this.props)) {
+                  this.setState(state => (state));
+            }
+      }
+
       renderChart() {
-            if (this.state.settings.data.length > 0 && this.state.settings.type !== '') {
-                  return <ChooseWidget type={this.state.settings.type} data={this.state.settings.data} />;
+            if (this.state.widget.settings.data.length > 0 && this.state.widget.settings.type !== '') {
+                  return <ChooseWidget type={this.state.widget.settings.type} data={this.state.widget.settings.data} />;
             }
             return <div style={{
                   marginTop: '5px'
@@ -38,10 +39,13 @@ class AddWidgetDataSource extends Component {
             let currentData = typeof currentDataSouce !== 'undefined' ? currentDataSouce.data : [];
             this.setState(state => ({
                   ...state,
-                  settings: {
-                        ...state.settings,
-                        source: path,
-                        data: currentData
+                  widget: {
+                        ...state.widget,
+                        settings: {
+                              ...state.widget.settings,
+                              source: path,
+                              data: currentData
+                        },
                   }
             }));
       }
@@ -50,9 +54,26 @@ class AddWidgetDataSource extends Component {
             console.log('MY DIAGRAM IS', type);
             this.setState(state => ({
                   ...state,
-                  settings: {
-                        ...state.settings,
-                        type: type
+                  widget: {
+                        ...state.widget,
+                        settings: {
+                              ...state.widget.settings,
+                              type: type
+                        }
+                  }
+            }));
+      }
+
+      setCardName(name) {
+            console.log(name);
+            this.setState(state => ({
+                  ...state,
+                  widget: {
+                        ...state.widget,
+                        settings: {
+                              ...state.widget.settings,
+                              name: name
+                        }
                   }
             }));
       }
@@ -63,7 +84,7 @@ class AddWidgetDataSource extends Component {
                         <form onClick={e => e.preventDefault()}>
                               <Form.Group className="mb-2">
                                     <Form.Label className="label">Название виджета</Form.Label>
-                                    <Form.Control name="title" className="title" type="text" placeholder="Новый виджет" />
+                                    <Form.Control onChange={e => this.setCardName(e.target.value)} name="title" className="title" type="text" placeholder="Новый виджет" />
                               </Form.Group>
                               {this.state.dataSourcesList.length > 0 && (
                                     <Form.Group className="mb-2">
@@ -85,11 +106,9 @@ class AddWidgetDataSource extends Component {
                                           ))}
                                     </Form.Control>
                               </Form.Group>
-                              <div className="chart-container">
-                                    {this.renderChart()}
-                              </div>
+                              {this.renderChart()}
                               <Form.Group>
-                                    <Button className="w-100" onClick={() => { this.props.addWidget(1, this.state.settings) }}>Сохранить</Button>
+                                    <Button className="w-100" onClick={() => { this.props.editHandler(this.state.widget.i, this.state.widget.settings) }}>Сохранить</Button>
                               </Form.Group>
                         </form>
                   </div>

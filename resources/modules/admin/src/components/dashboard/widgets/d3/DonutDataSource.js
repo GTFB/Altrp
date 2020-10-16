@@ -1,5 +1,6 @@
 
 import { PieChart, PieArcSeries, PieArcLabel, DiscreteLegend, DiscreteLegendEntry } from "reaviz";
+import { customStyle } from "../../widgetTypes";
 
 class DonutDataSource extends Component {
 
@@ -18,6 +19,7 @@ class DonutDataSource extends Component {
                         series={
                               <PieArcSeries
                                     doughnut={true}
+                                    colorScheme={customStyle}
                                     label={<PieArcLabel fontSize={12} fontFill="#000000" />}
                               />
                         }

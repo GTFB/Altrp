@@ -1,5 +1,7 @@
 import React, { Component, Suspense } from "react";
 
+import axios from "axios";
+
 const AltrpDashboards = React.lazy(() => import("../altrp-dashboards/AltrpDashboards"));
 const DataSourceDashboards = React.lazy(() => import("../altrp-dashboards/DataSourceDashboards"));
 
@@ -9,6 +11,7 @@ class DashboardsWidget extends Component {
 
     this.state = {
       settings: props.element.getSettings(),
+      settingsData: []
     };
 
     props.element.component = this;
@@ -18,12 +21,28 @@ class DashboardsWidget extends Component {
     }
   }
 
+  async componentWillMount() {
+    try {
+      const id = this.props.element.getId();
+      const req = await axios.get(`/ajax/dashboards/datasource/${id}/data`);
+      this.setState(state => ({
+        ...state,
+        settingsData: JSON.parse(req.data.settings)
+      }));
+    }
+    catch (e) {
+      console.log('ERROR ==>', e);
+    }
+  }
+
   render() {
     const containerWidth = this.props.element.getSettings().positioning_custom_width.size;
     const dataByDataSource = this.props.element.getSettings().dataSource;
     const settings = this.props.element.getSettings();
-    console.log('DATASOURCE => ', this.props.currentDataStorage);
     const global_parameter = this.state.settings.global_parameter;
+
+    const settingsData = this.state.settingsData;
+    console.log(settingsData);
     return (
       <Suspense fallback={"Loading"}>
         {
@@ -38,6 +57,8 @@ class DashboardsWidget extends Component {
               settings={this.props.element.getSettings()}
               id={this.props.element.getId()}
               containerWidth={containerWidth}
+              items={settingsData.items}
+              counter={settingsData.newCounter}
               rep={this.props.element.getSettings('rep', [])} />)
         }
 

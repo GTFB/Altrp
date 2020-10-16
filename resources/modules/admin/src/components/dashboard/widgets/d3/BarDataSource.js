@@ -11,6 +11,7 @@ import {
       LinearYAxisTickSeries
 
 } from "reaviz";
+import { customStyle } from "../../widgetTypes";
 
 class BarDataSource extends Component {
 
@@ -26,6 +27,12 @@ class BarDataSource extends Component {
             return (
                   <BarChart
                         data={this.state.data}
+                        series={
+                              <BarSeries
+                                    colorScheme={customStyle}
+                                    bar={<Bar gradient={<Gradient stops={[<GradientStop stopOpacity={1} />]} />} />}
+                              />
+                        }
                   />
             );
       }
