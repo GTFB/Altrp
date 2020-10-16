@@ -17,7 +17,7 @@ class PagesController extends Controller
   /**
    * Display a listing of the resource.
    *
-   * @return \Illuminate\Http\Response
+   * @return \Illuminate\Http\JsonResponse
    */
   public function index()
   {
@@ -32,6 +32,7 @@ class PagesController extends Controller
         'user' => $page->user,
         'title' => $page->title,
         'id' => $page->id,
+        'parent_page_id' => $page->parent_page_id,
         'author' => $page->user->name,
         'template_content' => $content_template,
         'template_content_title' => $content_template ? $content_template->title : '',
@@ -136,6 +137,7 @@ class PagesController extends Controller
     $page->title = $request->title;
     $page->model_id = $request->model_id;
     $page->redirect = $request->redirect;
+    $page->parent_page_id = $request->parent_page_id;
     $res['page'] = $page->toArray();
 
     $pages_template = PagesTemplate::where( 'page_id', $id )->where( 'template_type', 'content' )->first();

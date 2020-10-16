@@ -28,25 +28,6 @@ const columns = [
   }
 ];
 
-const dataSources = [
-  {
-    id: 1,
-    page_id: 1,
-    data_source_id: 1,
-    alias: "alias",
-    priority: 1,
-    parameters: "parameters"
-  },
-  {
-    id: 2,
-    page_id: 1,
-    data_source_id: 2,
-    alias: "alias_2",
-    priority: 2,
-    parameters: "parameters_2"
-  },
-]
-
 /**
  * @class
  * @property {Resource} resource
@@ -63,12 +44,15 @@ class AddPage extends Component {
       models: [],
       isModalOpened: false,
       dataSources: [],
-      editingDataSource: null
+      editingDataSource: null,
+      pagesOptions: []
     };
     this.resource = new Resource({ route: '/admin/ajax/pages' });
+    this.pagesOptionsResource = new Resource({ route: '/admin/ajax/pages_options' });
     this.model_resource = new Resource({ route: '/admin/ajax/models_options' });
     this.templateResource = new Resource({ route: '/admin/ajax/templates' });
     this.dataSourceResource = new Resource({ route: '/admin/ajax/page_data_sources/pages' });
+
     this.savePage = this.savePage.bind(this);
   }
 
@@ -78,6 +62,9 @@ class AddPage extends Component {
    * @return {Promise<void>}
    */
   async componentDidMount() {
+    this.pagesOptionsResource.getAll()
+      .then(pagesOptions => this.setState({ pagesOptions }));
+
     let res = await this.templateResource.getOptions();
     this.setState(state => {
       return { ...state, templates: res }
@@ -217,6 +204,23 @@ class AddPage extends Component {
               {
                 this.state.models.map(model => {
                   return <option value={model.value} key={model.value}>{model.label}</option>
+                })
+              }
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="parent_page_id">Prent Page</label>
+            <select id="parent_page_id" required
+              value={this.state.value.parent_page_id || ''}
+              onChange={e => { this.changeValue(e.target.value, 'parent_page_id') }}
+              className="form-control"
+            >
+              <option value="" disabled/>
+              <option value={"root"}>Root</option>
+              {
+                this.state.pagesOptions.map(page => {
+                  return <option value={page.value} key={page.value}>{page.label}</option>
                 })
               }
             </select>
