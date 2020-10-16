@@ -6,7 +6,7 @@ class FrontPopup extends Component {
   state = {
     isVisible: false,
     isShownOnScroll: false
-  }
+  };
 
   componentDidMount() {
     const { on_page_load, on_click, inactivity, on_exit, to_element } = _.get(this.props, 'template.triggers.data', {});
@@ -92,7 +92,7 @@ class FrontPopup extends Component {
 
     // }
 
-    if (popupTrigger !== prevProps.popupTrigger && popupTrigger.popupID === _.get(this.props, 'template.id')) {
+    if (popupTrigger !== prevProps.popupTrigger && popupTrigger.popupID === _.get(this.props, 'template.guid')) {
       this.setState({ isVisible: true });
     }
   }
