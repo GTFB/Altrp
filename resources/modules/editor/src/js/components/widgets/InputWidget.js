@@ -1,5 +1,9 @@
 import React, {Component} from "react";
-import {parseOptionsFromSettings, parseParamsFromString} from "../../../../../front-app/src/js/helpers";
+import {
+  altrpCompare, isEditor,
+  parseOptionsFromSettings,
+  parseParamsFromString
+} from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
@@ -13,9 +17,10 @@ class InputWidget extends Component {
   constructor(props){
     super(props);
     this.onChange = this.onChange.bind(this);
+    let value = props.element.getSettings().content_default_value || '';
     this.state = {
       settings: {...props.element.getSettings()},
-      value: props.element.getSettings().content_default_value || '',
+      value: value,
       options: parseOptionsFromSettings(props.element.getSettings('content_options')),
       paramsForUpdate: null,
     };
@@ -93,7 +98,81 @@ class InputWidget extends Component {
     if((this.props.formsStore !== prevProps.formsStore)
         || (this.props.currentModel !== prevProps.currentModel)){
       this.updateOptions();
+    }
+    this.updateValue(prevProps);
+  }
 
+  /**
+   * Обновить значение если нужно
+   * @param {{}} prevProps
+   */
+  updateValue(prevProps){
+    if(isEditor()){
+      return;
+    }
+    let content_calculation = this.props.element.getSettings('content_calculation');
+    if(! content_calculation){
+      return
+    }
+    const fieldName = this.props.element.getSettings('field_id');
+    const formId = this.props.element.getSettings('form_id');
+
+    const prevContext = {};
+
+    const altrpdata = this.props.currentDataStorage.getData();
+    const altrpforms = this.props.formsStore;
+    const altrpmodel = this.props.currentModel.getData();
+    const altrpuser = this.props.currentUser.getData();
+    const context = {};
+    if(content_calculation.indexOf('altrpdata') !== -1){
+      context.altrpdata = altrpdata;
+      if(! altrpdata.currentDataStorageLoaded){
+        prevContext.altrpdata = altrpdata;
+      } else {
+        prevContext.altrpdata = prevProps.currentDataStorage.getData();
+      }
+    }
+    if(content_calculation.indexOf('altrpforms') !== -1){
+      context.altrpforms = altrpforms;
+      /**
+       * Не производим вычисления, если изменилось текущее поле
+       */
+      if(`${formId}.${fieldName}` === altrpforms.changedField){
+        prevContext.altrpforms = altrpforms;
+      } else {
+        prevContext.altrpforms = prevProps.formsStore;
+      }
+    }
+    if(content_calculation.indexOf('altrpmodel') !== -1){
+      context.altrpmodel = altrpmodel;
+      prevContext.altrpmodel = prevProps.currentModel.getData();
+    }
+    if(content_calculation.indexOf('altrpuser') !== -1){
+      context.altrpuser = altrpuser;
+      prevContext.altrpuser = prevProps.currentUser.getData();
+    }
+
+    // if(_.isEqual(prevContext, context)){
+    //   return;
+    // }
+    if(_.isEqual(prevProps.altrpdata, this.props.altrpdata)
+        &&_.isEqual(prevProps.currentUser, this.props.currentUser)
+        &&_.isEqual(prevProps.formsStore, this.props.formsStore)
+        &&_.isEqual(prevProps.currentModel, this.props.currentModel)
+    ){
+      return;
+    }
+    if(! _.isEqual(prevProps.formsStore, this.props.formsStore) && `${formId}.${fieldName}` === altrpforms.changedField){
+      return
+    }
+    let value = '';
+    try {
+      content_calculation = content_calculation.replace(/}}/g,'\')').replace(/{{/g,'_.get(context, \'');
+      value = eval(content_calculation);
+
+      this.setState(state =>({...state,value}), ()=>{this.dispatchFieldValueToStore(value);});
+    } catch (e) {
+      console.error(e);
     }
   }
 
@@ -146,7 +225,17 @@ class InputWidget extends Component {
   onChange(e){
     let value = '';
     if(e && e.target){
-      value = e.target.value;
+      if(this.props.element.getSettings('content_type') === 'checkbox'){
+        let inputs = document.getElementsByName(e.target.name);
+        value = [];
+        inputs.forEach(input=>{
+          if(input.checked){
+            value.push(input.value);
+          }
+        })
+      } else {
+        value = e.target.value;
+      }
     }
 
     if(e && e.value){
@@ -155,25 +244,33 @@ class InputWidget extends Component {
     if(_.isArray(e)){
       value = _.cloneDeep(e)
     }
-    if(this.props.element.getSettings('select2_multiple', false) && ! e){
-      value = [];
+    if(this.props.element.getSettings('content_type') === 'select2'){
+      if(this.props.element.getSettings('select2_multiple', false) && ! e){
+        value = [];
+      }
+      if(this.props.element.getSettings('select2_multiple', false) ){
+        value = value.map(item => item.value);
+      }
     }
     this.setState(state=>({
       ...state,
       value
-    }), ()=>{this.dispatchFieldValueToStore(value);});
+    }), ()=>{this.dispatchFieldValueToStore(value, true);});
   }
 
   /**
    * Передадим значение в хранилище формы
+   * @param {*} value
+   * @param {boolean} userInput true - имзенилось пользователем
    */
-  dispatchFieldValueToStore = (value) => {
+  dispatchFieldValueToStore = (value, userInput = false) => {
     let formId = this.props.element.getSettings('form_id');
     let fieldName = this.props.element.getSettings('field_id');
     if(_.isObject(this.props.appStore) && fieldName && formId){
       this.props.appStore.dispatch(changeFormFieldValue(fieldName,
           value,
-          formId
+          formId,
+          userInput
       ))
     }
   };
@@ -279,6 +376,11 @@ class InputWidget extends Component {
         input = this.renderSelect2();
       }
       break;
+      case 'radio':
+      case 'checkbox':{
+        input = this.renderRepeatedInput();
+      }
+
     }
     return <div className={"altrp-field-container " + classLabel}>
         {this.state.settings.content_label_position_type == "top" ? label : ""}
@@ -291,6 +393,46 @@ class InputWidget extends Component {
       {this.state.settings.content_label_position_type == "bottom" ? label : ""}
       {this.state.settings.content_label_position_type == "bottom" ? required : ""}
     </div>
+  }
+
+  /**
+   * Выводит input type=checkbox|radio
+   */
+  renderRepeatedInput(){
+
+    const {options = [],} = this.state;
+    let { value = ''} = this.state;
+    const fieldName = this.props.element.getSettings('field_id') || Math.random().toString(36).substr(2, 9);
+    const formID = this.props.element.getSettings('form_id') || Math.random().toString(36).substr(2, 9);
+    const inputType = this.props.element.getSettings('content_type', 'radio');
+    return <div className="altrp-field-subgroup">
+      {
+        options.map((option, idx)=>{
+          let checked = false;
+          /**
+           * Если значение или опция число, то приведем к числу перед сравнением
+           */
+          if(inputType === 'radio'){
+            checked = altrpCompare(value, option.value, '==')
+          } else {
+            value = _.isArray(value) ? value : (value ? [value] : []);
+            checked = altrpCompare(option.value, value, 'in');
+          }
+          return <div className={`altrp-field-option ${checked ? 'active' : ''}`} key={`${fieldName}-${idx}`}>
+            <span className="altrp-field-option-span">
+              <input type={inputType}
+                     value={option.value}
+                     name={`${formID}-${fieldName}`}
+                     className={`altrp-field-option__input ${checked ? 'active' : ''}`}
+                     onChange={this.onChange}
+                     checked={checked}
+                     id={`${formID}-${fieldName}-${idx}`}/>
+            </span>
+            <label htmlFor={`${formID}-${fieldName}-${idx}`} className="altrp-field-option__label">{option.label}</label>
+          </div>
+        })
+      }
+    </div>;
   }
 
   /**
@@ -310,7 +452,6 @@ class InputWidget extends Component {
 
 
     let value = this.state.value;
-
     if(_.get(value, 'dynamic') && this.props.currentModel.getProperty('altrpModelUpdated')){
       value = this.getContent('content_default_value');
     }

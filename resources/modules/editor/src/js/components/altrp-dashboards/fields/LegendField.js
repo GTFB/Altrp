@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 
 function LegendField({ widget, setWidget }) {
   return (
-    <Form.Group>
+    <Form.Group className="d-none">
       <Form.Label>Легенда</Form.Label>
       <Form.Control
         as="select"

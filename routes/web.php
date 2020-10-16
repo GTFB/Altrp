@@ -385,9 +385,12 @@ Route::group( ['prefix' => 'ajax'], function(){
 
   // Загружаем настройки для виджета панели аналитики
   Route::get('dashboards/{id}/settings', 'DashboardsController@settings');
+  Route::get('dashboards/datasource/{id}/data', 'DatasourceDashboardController@index');
 
   // Записываем новые настройки для виджета панели аналитики
   Route::post('dashboards/{id}/settings', 'DashboardsController@settings');
+  // Записываем новые настройки для виджета панели аналитики с датасурсами
+  Route::post('dashboards/datasource/{id}/settings', 'DatasourceDashboardController@settings');
 
   // Записывает данные для виджета панели аналитики
   Route::post('dashboards/{id}', 'DashboardsController@store');

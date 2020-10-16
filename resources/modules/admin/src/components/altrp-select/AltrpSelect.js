@@ -83,6 +83,29 @@ class AltrpSelect extends Component {
     };
     
     _.assign(selectProps, this.props);
+
+    if(_.isArray(selectProps.value)){
+      selectProps.value = selectProps.value.map(item => {
+        let _i = {
+          label: '',
+          value: '',
+        };
+        if(_.isString(item)){
+          _i.value = item;
+          _i.label = item;
+        } else if(_.isObject(item)) {
+          return item;
+        }
+        if(_.isArray(selectProps.options)){
+          selectProps.options.forEach(option=>{
+            if(option.value === _i.value){
+              _i = {...option,};
+            }
+          });
+        }
+        return _i;
+      });
+    }
     if( this.optionsResource){
       return <AsyncSelect {...selectProps} />
     } else {

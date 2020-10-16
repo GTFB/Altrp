@@ -18,6 +18,11 @@
     .editor-content > .sections-wrapper{
       width: {{ get_altrp_setting( 'container_width', '1440' ) }}px;
     }
+
+    .altrp-section--boxed {
+      padding-left: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
+      padding-right: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
+    }
   </style>
 </head>
 

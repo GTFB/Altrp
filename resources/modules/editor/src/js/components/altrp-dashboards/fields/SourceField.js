@@ -18,7 +18,7 @@ function SourceField({ widget, setWidget, sources, changeTitle }) {
         onChange={(e) => {
           setWidget({
             ...widget,
-            source: e.target.value + queryString(widget.filter),
+            source: e.target.value //+ queryString(widget.filter),
           });
 
           let sourceName = sources.find(source => source.url == e.target.value).label || '';

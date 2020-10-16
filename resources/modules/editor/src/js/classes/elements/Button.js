@@ -264,6 +264,11 @@ class Button extends BaseElement{
       label: 'Redirect To Prev Page',
     });
 
+    this.addControl('close_popups', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Close all Popups',
+    });
+
     this.endControlSection();
 
     this.startControlSection('dropbar_section', {

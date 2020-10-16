@@ -62,12 +62,13 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
 
   if (composeSources(settings.sql).length === 1) {
     let currentSource = composeSources(settings.sql)[0];
-    let filter = '';
-    if (Object.keys(widget.filter).length !== 0) {
-      console.log(widget.filter);
-      filter = queryString(widget.filter);
-    }
-    widget.source = currentSource.url + filter;
+    // let filter = '';
+    // if (Object.keys(widget.filter).length !== 0) {
+    // console.log(widget.filter);
+    // filter = queryString(widget.filter);
+    // }
+    widget.source = currentSource.url;
+    // widget.source = currentSource.url + filter;
   }
 
   return (
@@ -108,7 +109,7 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
           <ColorSchemeField widget={widget} setWidget={setWidget} />
 
           <LegendField widget={widget} setWidget={setWidget} />
-          {widget.options?.legend && <LegendPositionField widget={widget} setWidget={setWidget} />}
+          <LegendPositionField widget={widget} setWidget={setWidget} />
         </Form>
 
         <div className={`widget-placeholder altrp-chart ${widget.options?.legendPosition}`}>

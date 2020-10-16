@@ -17,15 +17,30 @@ import EmptyWidget from "./EmptyWidget";
 import { getWidgetData } from "../services/getWidgetData";
 import { customStyle } from "../widgetTypes";
 
-const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3 }) => {
+const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3, dataSource = [] }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
 
   const getData = useCallback(async () => {
     setIsLoading(true);
-    const charts = await getWidgetData(widget.source, widget.filter);
-    if (charts.status === 200) {
-      const newData = charts.data.data.map((item) => {
+    if (dataSource.length == 0) {
+      const charts = await getWidgetData(widget.source, widget.filter);
+      if (charts.status === 200) {
+        const newData = charts.data.data.map((item) => {
+          const key = new Date(item.key);
+          if (key) {
+            return {
+              key,
+              data: item.data,
+            };
+          }
+        });
+        setData(newData);
+        setIsLoading(false);
+      }
+    }
+    else {
+      const newData = dataSource.map((item) => {
         const key = new Date(item.key);
         if (key) {
           return {
@@ -34,7 +49,7 @@ const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3 }
           };
         }
       });
-      setData(newData);
+      setData(newData || []);
       setIsLoading(false);
     }
   }, [widget]);
