@@ -1,7 +1,6 @@
 @import "~react-datepicker/dist/react-datepicker.css";
 @import "../../../../sass/smart-grid.scss";
 
-
 @media print {
   .card-header{
     margin: 10px 15px;
@@ -19,6 +18,143 @@
 }
 
 .altrp-dashboard {
+  &__card{
+    @include col();
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    height: 100%;
+    width: 100%;
+    margin:0;
+    padding: 10px;
+
+    &>.title{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      font-size: 15px;
+      font-weight: 600;
+      margin: 0 10px;
+      &>.dropdownTogglerContainer{
+        width: fit-content;
+      }
+      &>.dropdownTogglerContainer>.dropleft>.dropdown-toggle{
+        background-color: white;
+        padding: 2px;
+      }
+      &>.dropdownTogglerContainer>.dropleft>.dropdownMenuToggle{
+        background-color: white;
+        margin-right: 5px;
+        padding: 2px;
+        border-radius: 4px;
+        box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.15);
+      }
+      &>.dropdownTogglerContainer>.dropleft>.dropdownMenuToggle>.dropdown-item{
+        background-color: white;
+        padding: 0 5px;
+      }
+      &>.dropdownTogglerContainer>.dropleft>.dropdownMenuToggle>.dropdown-item>button{
+        background-color: white;
+        padding: 0 5px;
+      }
+      &>.dropdownTogglerContainer>.dropleft>.dropdownMenuToggle.show{
+            transition: opacity .2s linear;
+      }
+    }
+
+    & .chart-container{
+      height: 100%;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    &__add-settings{
+      width: 100%;
+
+      & form{
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      & .label{
+        width: 100%;
+        border: 0;
+        color: rgba(0, 0, 0, 1);
+        font-size: 12px;
+        margin-bottom: 5px;
+      }
+
+      & .form-group>.title{
+        width: 100%;
+        border: 0;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 14px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+        margin-bottom: 5px;
+      }
+
+      & .select-type{
+        display: block;
+        width: 100%;
+        height: calc(1.5em + .75rem + 2px);
+        padding: .375rem .75rem;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+      }
+
+      & form>.chart-container{
+        margin-top: 15px;
+        height: 100px;
+        flex-grow: 1;
+      }
+    }
+
+    &>&__add{
+      margin: auto;
+      background-color: transparent;
+      &:hover{
+        cursor: pointer;
+        &>.title{
+          color:black;
+          transition: color 0.5s;
+        }
+        & svg{
+          color:black;
+        }
+      }
+      
+      &>.title{
+        text-align: center;
+        margin-bottom: 10px;
+        color: hsl(0,0%,50%);
+        font-size: 12px;
+      }
+
+      & div{
+        margin:auto;
+        width: fit-content;
+        &>svg{
+          margin: auto;
+          width:36px;
+          height:36px;
+          color: hsl(0,0%,50%);
+        }
+      }
+      
+    }
+
+  }
+
   &__controls {
     margin-bottom: 10px;
     .nav{
