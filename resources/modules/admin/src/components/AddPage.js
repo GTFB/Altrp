@@ -104,6 +104,7 @@ class AddPage extends Component {
   async savePage(e) {
     e.preventDefault();
     let res;
+    const { parent_page_id } = this.state.value;
     let path = this.state.value.path;
     path = path.split('\\').join('/');
     path = (path[0] !== '/') ? `/${path}` : path;
@@ -116,9 +117,9 @@ class AddPage extends Component {
     this.state.value.redirect = redirect;
     this.state.value.path = path;
     if (this.state.id) {
-      res = await this.resource.put(this.state.id, this.state.value);
+      res = await this.resource.put(this.state.id, { ...this.state.value, parent_page_id: parent_page_id === "root" ? null : parent_page_id });
     } else {
-      res = await this.resource.post(this.state.value);
+      res = await this.resource.post({ ...this.state.value, parent_page_id: parent_page_id === "root" ? null : parent_page_id });
     }
     if (res.success) {
       this.setState(state => {
@@ -216,8 +217,8 @@ class AddPage extends Component {
               onChange={e => { this.changeValue(e.target.value, 'parent_page_id') }}
               className="form-control"
             >
-              <option value="" disabled/>
-              <option value={"root"}>Root</option>
+              <option value="" disabled />
+              <option value="root">Root</option>
               {
                 this.state.pagesOptions.map(page => {
                   return <option value={page.value} key={page.value}>{page.label}</option>
