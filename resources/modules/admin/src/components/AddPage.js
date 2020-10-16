@@ -153,7 +153,7 @@ class AddPage extends Component {
     })
   }
 
-  setPath = parentId => {
+  parentChangeHandler = parentId => {
     if (parentId === 'root') {
       this.setState({ value: { ...this.state.value, parent_page_id: parentId, path: "/" + titleToPath(this.state.value.title) } });
     } else {
@@ -194,7 +194,7 @@ class AddPage extends Component {
               value={this.state.value.parent_page_id || ''}
               onChange={e => {
                 // this.changeValue(e.target.value, 'parent_page_id');
-                this.setPath(e.target.value);
+                this.parentChangeHandler(e.target.value);
               }}
               className="form-control"
             >
@@ -206,6 +206,19 @@ class AddPage extends Component {
                 })
               }
             </select>
+            {/* <AltrpSelect id="parent_page_id"
+              // isMulti={true}
+              optionsRoute="/admin/ajax/pages_options"
+              placeholder=""
+              defaultOptions={[
+                {
+                  value: '',
+                  label: '',
+                }
+              ]}
+              value={this.state.value.parent_page_id || ''}
+              onChange={({ value }) => { this.parentChangeHandler(value) }}
+            /> */}
           </div>
 
           <div className="form-group">
