@@ -136,6 +136,7 @@ class PagesController extends Controller
     $page->title = $request->title;
     $page->model_id = $request->model_id;
     $page->redirect = $request->redirect;
+    $page->parent_page_id = $request->parent_page_id;
     $res['page'] = $page->toArray();
 
     $pages_template = PagesTemplate::where( 'page_id', $id )->where( 'template_type', 'content' )->first();
