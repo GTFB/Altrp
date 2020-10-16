@@ -155,10 +155,12 @@ class AddPage extends Component {
 
   parentChangeHandler = parentId => {
     if (parentId === 'root') {
-      this.setState({ value: { ...this.state.value, parent_page_id: parentId, path: "/" + titleToPath(this.state.value.title) } });
+      this.setState({ value: { ...this.state.value, parent_page_id: parentId, path: "/" } });
     } else {
       this.resource.get(parentId)
-        .then(({ path }) => this.setState({ value: { ...this.state.value, parent_page_id: parentId, path: path + "/" + titleToPath(this.state.value.title) } }));
+        .then(({ path }) => this.setState({ value: { 
+          ...this.state.value, parent_page_id: parentId, path: path + (path.endsWith("/") ? "" : "/") + titleToPath(this.state.value.title) } 
+        }));
     }
   }
 
