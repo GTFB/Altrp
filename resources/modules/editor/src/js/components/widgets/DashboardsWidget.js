@@ -25,9 +25,10 @@ class DashboardsWidget extends Component {
     try {
       const id = this.props.element.getId();
       const req = await axios.get(`/ajax/dashboards/datasource/${id}/data`);
+      let data = req.data.settings || '{}'
       this.setState(state => ({
         ...state,
-        settingsData: JSON.parse(req.data.settings)
+        settingsData: JSON.parse(data)
       }));
     }
     catch (e) {
