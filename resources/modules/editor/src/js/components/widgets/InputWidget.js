@@ -126,7 +126,11 @@ class InputWidget extends Component {
     const context = {};
     if(content_calculation.indexOf('altrpdata') !== -1){
       context.altrpdata = altrpdata;
-      prevContext.altrpdata = prevProps.currentDataStorage.getData();
+      if(! altrpdata.currentDataStorageLoaded){
+        prevContext.altrpdata = altrpdata;
+      } else {
+        prevContext.altrpdata = prevProps.currentDataStorage.getData();
+      }
     }
     if(content_calculation.indexOf('altrpforms') !== -1){
       context.altrpforms = altrpforms;
@@ -148,15 +152,25 @@ class InputWidget extends Component {
       prevContext.altrpuser = prevProps.currentUser.getData();
     }
 
-      if(_.isEqual(prevContext, context)){
+    // if(_.isEqual(prevContext, context)){
+    //   return;
+    // }
+    if(_.isEqual(prevProps.altrpdata, this.props.altrpdata)
+        &&_.isEqual(prevProps.currentUser, this.props.currentUser)
+        &&_.isEqual(prevProps.formsStore, this.props.formsStore)
+        &&_.isEqual(prevProps.currentModel, this.props.currentModel)
+    ){
       return;
+    }
+    if(! _.isEqual(prevProps.formsStore, this.props.formsStore) && `${formId}.${fieldName}` === altrpforms.changedField){
+      return
     }
     let value = '';
     try {
       content_calculation = content_calculation.replace(/}}/g,'\')').replace(/{{/g,'_.get(context, \'');
       value = eval(content_calculation);
 
-      value && this.setState(state =>({...state,value}), ()=>{this.dispatchFieldValueToStore(value);});
+      this.setState(state =>({...state,value}), ()=>{this.dispatchFieldValueToStore(value);});
     } catch (e) {
       console.error(e);
     }
@@ -438,7 +452,6 @@ class InputWidget extends Component {
 
 
     let value = this.state.value;
-
     if(_.get(value, 'dynamic') && this.props.currentModel.getProperty('altrpModelUpdated')){
       value = this.getContent('content_default_value');
     }

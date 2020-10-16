@@ -57,6 +57,7 @@ class DataStorageUpdater extends AltrpModel{
             }
           } else if (!_.isEmpty(params)) {
             res = await (new Resource({route: dataSource.getWebUrl()})).getQueried(params);
+            dataSource.params = _.cloneDeep(params);
           } else {
             res = await (new Resource({route: dataSource.getWebUrl()})).getAll();
           }
@@ -83,7 +84,7 @@ class DataStorageUpdater extends AltrpModel{
    * @param {{}} params
    */
   subscribeToFormsUpdate(dataSource, params) {
-    let dataSources = this.getProperty('dataSourcesFormsDependent', []);
+    let dataSources = this.getProperty('dataSourcesFormsDependent');
 
     // if(dataSources.indexOf(dataSource) === -1){
     //   dataSources.push(dataSource);
@@ -121,7 +122,8 @@ class DataStorageUpdater extends AltrpModel{
     dataSources = _.sortBy(dataSources, data_source => data_source.priority);
     let formsStore = appStore.getState().formsStore;
     for(let ds of dataSources) {
-      let {dataSource, params: oldParams, updating} = ds;
+      let {dataSource, updating} = ds;
+      let oldParams = _.cloneDeep(dataSource.params);
       /**
        * @member {Datasource} dataSource
        */
@@ -129,9 +131,12 @@ class DataStorageUpdater extends AltrpModel{
       _.forEach(params, (paramValue, paramName)=>{
         if(paramValue.toString().indexOf('altrpforms.') === 0){
           params[paramName] = _.get(formsStore, paramValue.replace('altrpforms.', ''));
-          if(_.isArray(params[paramName])){
-            params[paramName] = JSON.stringify(params[paramName]);
-          }
+          // console.log(formsStore);
+          // console.log(paramValue);
+          // console.log(params[paramName]);
+          // if(_.isArray(params[paramName])){
+          //   params[paramName] = JSON.stringify(params[paramName]);
+          // }
         }
       });
       if(! _.isEqual(params, oldParams) && ! updating){
@@ -140,7 +145,7 @@ class DataStorageUpdater extends AltrpModel{
         res = await (new Resource({route: dataSource.getWebUrl()})).getQueried(params);
         res = _.get(res, 'data', res);
         appStore.dispatch(changeCurrentDataStorage(dataSource.getAlias(), res));
-        ds.params = params;
+        dataSource.params = _.cloneDeep(params);
         ds.updating = false;
       }
     }

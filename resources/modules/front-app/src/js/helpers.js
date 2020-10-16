@@ -38,7 +38,7 @@ export function isEditor() {
 
 /**
  * Переменная, в которой храниться измначальный заголовок
- * @var {string}
+ * @let {string}
  */
 let defaultTitle;
 
@@ -59,8 +59,16 @@ export function parseOptionsFromSettings(string) {
   options = options.map(option=>{
     let value = option.split('|')[0];
     value = value.trim();
+    let valuePath = extractPathFromString(value);
+    if(valuePath){
+      value = getDataByPath(valuePath);
+    }
     let label = option.split('|')[1] || value;
     label = label.trim();
+    let labelPath = extractPathFromString(label);
+    if(labelPath){
+      label = getDataByPath(labelPath);
+    }
     return{
       value,
       label,
@@ -497,8 +505,23 @@ export function getTimeValue(path, defaultValue){
     case 'month_start':{
       value = startOfMonth(new Date);
     }break;
+    case 'prev_month_start':{
+      value = startOfMonth(new Date, -1);
+    }break;
     case 'year_start':{
       value = startOfYear(new Date);
+    }break;
+    case 'prev_year_start':{
+      value = startOfYear(new Date, -1);
+    }break;
+    case 'prev_week_start':{
+      value = getPrevWeekStart();
+    }break;
+    case 'next_week_start':{
+      value = getNextWeekStart();
+    }break;
+    case 'week_start':{
+      value = getWeekStart();
     }break;
   }
   value = moment(value).format('YYYY-MM-DD');
@@ -506,12 +529,32 @@ export function getTimeValue(path, defaultValue){
 
 }
 
-export function startOfMonth(date){
-  return new Date(date.getFullYear(), date.getMonth(), 1);
+/**
+ * Получить начало месяца
+ * @param {Date} date
+ * @param {int} monthShift
+ * @return {Date}
+ */
+export function startOfMonth(date, monthShift = 0){
+  return new Date(date.getFullYear(), date.getMonth() + monthShift, 1);
 }
-
-export function startOfYear(date){
-  return new Date(date.getFullYear(), 0, 1);
+/**
+ * Получить начало месяца
+ * @param {Date} date
+ * @param {int} yearShift
+ * @return {Date}
+ */
+export function startOfYear(date, yearShift = 0){
+  return new Date(date.getFullYear() + yearShift, 0, 1);
+}
+/**
+ * Получить начало месяца
+ * @param {Date} date
+ * @param {int} weekShift
+ * @return {Date}
+ */
+export function startOfWeek(date, weekShift = 0){
+  return moment(new Date(date.getFullYear(),date.getMonth(), date.getDate() + (weekShift * 7))).firstDayOfWeek();
 }
 
 /**
@@ -579,4 +622,60 @@ export function getHTMLElementById(elementId){
     }
   });
   return HTMLElement;
+}
+
+/**
+ * Начало следующей недели
+ * @return {moment.Moment}
+ */
+function getNextWeekStart() {
+  let today = moment();
+  let daystoMonday = 7 - (today.isoWeekday() - 1) ;
+  return today.add(daystoMonday,'days');
+}
+
+/**
+ * Начало текущей недели
+ * @return {moment.Moment}
+ */
+function getWeekStart() {
+  let today = moment();
+  let daystoMonday = (today.isoWeekday() - 1);
+  return today.subtract(daystoMonday, 'days');
+}
+
+/**
+ * Конец Следующей недели
+ * @return {moment.Moment}
+ */
+function getNextWeekEnd() {
+  let nextMonday = getNextWeekStart();
+  return nextMonday.add('days', 6);
+}
+
+/**
+ * Начало предыдущей недели
+ * @return {moment.Moment}
+ */
+function getPrevWeekStart() {
+  let today = moment();
+  let daystoLastMonday = (today.isoWeekday() - 1) + 7;
+  return today.subtract(daystoLastMonday, 'days');
+}
+
+/**
+ * Конец предыдущей недели
+ * @return {moment.Moment}
+ */
+function getPrevWeekEnd() {
+  let lastMonday = getPrevWeekStart();
+  return lastMonday.add('days', 6);
+
+}
+
+/**
+ * Elfkztn gecnst cdjqcndf d j,]trnf[
+ */
+export function clearEmptyProps(){
+
 }
