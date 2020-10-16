@@ -144,11 +144,9 @@ class AddPage extends Component {
         value = (value[0] !== '/') ? `/${value}` : value;
       }
     }
-    // debugger
     this.setState(state => {
       const newState = _.cloneDeep(state);
       newState.value[field] = value;
-      console.log(newState)
       return newState;
     })
   }
