@@ -10,6 +10,10 @@ import {
   Area,
   Gradient,
   GradientStop,
+  Tooltip,
+  TooltipArea,
+  TooltipTemplate,
+  ChartTooltip
 } from "reaviz";
 
 import format from "date-fns/format";
@@ -45,15 +49,16 @@ const DynamicAreaChart = ({ widget, width = 300, height = 300, color = "#FFD51F"
     }
     else {
       const newData = dataSource.map((item) => {
-        const key = new Date(item.key);
-        if (key) {
+        let key = new Date(item.key);
+        if (key instanceof Date && !isNaN(key)) {
           return {
-            key,
-            data: item.data,
+            key: key,
+            data: Number(item.data),
           };
         }
-      });
-      setData(newData);
+      }).filter(item => typeof item != 'undefined');
+
+      setData(newData || []);
       setIsLoading(false);
     }
   }, [widget]);
