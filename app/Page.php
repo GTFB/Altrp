@@ -35,6 +35,7 @@ class Page extends Model
     'redirect',
     'guid',
     'for_guest',
+    'parent_page_id'
   ];
 
   /**

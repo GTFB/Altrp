@@ -123,7 +123,7 @@ class Tabs extends BaseElement {
       prefetch_options: true,
       label: "Template",
       isClearable: true,
-      options_resource: '/admin/ajax/templates/options',
+      options_resource: '/admin/ajax/templates/options?value=guid',
       nullable: true,
     });
 
