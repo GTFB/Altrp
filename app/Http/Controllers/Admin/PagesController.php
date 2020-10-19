@@ -19,11 +19,12 @@ class PagesController extends Controller
    *
    * @return \Illuminate\Http\JsonResponse
    */
-  public function index()
+  public function index(Request $request)
   {
-    //
-
-    $_pages = Page::all();
+    $search = $request->get('s');
+    $_pages = $search
+        ? Page::getBySearch($search)
+        : Page::all()->sortByDesc( 'id' )->values();
     $pages = [];
     foreach ( $_pages as $page ) {
 
