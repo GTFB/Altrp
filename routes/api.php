@@ -55,6 +55,7 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::put('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@update");
         Route::delete('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@destroy");
 
+        Route::resource( 'pages', 'Admin\PagesController' );
         /**
          * Маршруты для проверки на уникальность имени
          */
