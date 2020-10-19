@@ -75,7 +75,7 @@ class Button extends BaseElement{
       prefetch_options: true,
       label: "Popup ID",
       isClearable: true,
-      options_resource: '/admin/ajax/templates/options?template_type=popup',
+      options_resource: '/admin/ajax/templates/options?template_type=popup&value=guid',
       nullable: true,
       conditions: {
         'popup_trigger_type': true,
