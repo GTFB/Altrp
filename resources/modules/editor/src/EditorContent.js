@@ -18,7 +18,6 @@ import './sass/editor-content.scss';
 import 'react-image-lightbox/style.css';
 import {changeCurrentModel} from "../../front-app/src/js/store/current-model/actions";
 
-
 class EditorContent extends Component {
   constructor(props) {
     super(props);

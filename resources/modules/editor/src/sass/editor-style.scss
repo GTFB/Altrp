@@ -8,6 +8,7 @@
 @import "./altrp-pagination";
 @import "./altrp-dashboards";
 @import "altrp-list";
+@import "default-styles";
 
 //google fonts
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&display=swap");
@@ -1309,7 +1310,7 @@ button {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 9999;
+  z-index: 999999;
   outline: 2px solid transparent;
   display: none;
   pointer-events: none;

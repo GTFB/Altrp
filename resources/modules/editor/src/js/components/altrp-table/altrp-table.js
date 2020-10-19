@@ -173,7 +173,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
     setFilterSettings(filterParams);
   };
   
-  return <><table className="altrp-table" {...getTableProps()}>
+  return <><table className={"altrp-table altrp-table_columns-" + columns.length} {...getTableProps()}>
     <thead className="altrp-table-head">
     {renderAdditionalRows(settings)}
     {headerGroups.map(headerGroup => (

@@ -368,6 +368,12 @@ class FrontElement {
     if(value && value.dynamic){
       value = this.getContent('content_default_value')
     }
+    /**
+     * Если нужен массив
+     */
+    if(this.getSettings('content_type') === 'checkbox'){
+      value = _.isArray(value) ? value : (value ? [value] : []);
+    }
     return value;
   }
 

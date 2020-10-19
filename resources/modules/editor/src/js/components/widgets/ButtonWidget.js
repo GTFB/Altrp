@@ -1,6 +1,7 @@
 import React, { Component, Suspense } from "react";
 import {Link, Redirect, withRouter } from 'react-router-dom';
 let Dropbar = React.lazy(() => import('../altrp-dropbar/AltrpDropbar'));
+import { connect } from "react-redux";
 import {
   getHTMLElementById,
   isEditor,
@@ -9,6 +10,8 @@ import {
   scrollToElement
 } from "../../../../../front-app/src/js/helpers";
 import AltrpModel from "../../classes/AltrpModel";
+import { togglePopup } from "../../../../../front-app/src/js/store/popup-trigger/actions";
+import { toggleTrigger } from "../../../../../front-app/src/js/store/hide-triggers/actions";
 
 class ButtonWidget extends Component {
   constructor(props) {
@@ -59,16 +62,22 @@ class ButtonWidget extends Component {
           }
         }
       );
+    } else if (this.props.element.getSettings('popup_trigger_type') && this.props.element.getSettings('popup_id')){
+      this.props.appStore.dispatch(togglePopup(+this.props.element.getSettings('popup_id')));
       /**
        * Проверим надо ли по ID скроллить к элементу
        */
-    } else if (e.target.href.replace(window.location.origin + window.location.pathname, '').indexOf('#') === 0){
+    } else if (e.target.href && e.target.href.replace(window.location.origin + window.location.pathname, '').indexOf('#') === 0){
       let elementId = e.target.href.replace(window.location.origin + window.location.pathname, '').replace('#', '');
       const element = getHTMLElementById(elementId);
       if(element){
         e.preventDefault();
         scrollToElement(mainScrollbars, element)
       }
+    }
+
+    if (this.props.element.getSettings('hide_elements_trigger')) {
+      this.props.toggleTrigger(this.props.element.getSettings('hide_elements_trigger'));
     }
   }
 
@@ -161,7 +170,7 @@ class ButtonWidget extends Component {
 
     if (_.get(this.state, 'settings.link_link.toPrevPage')) {
       link = <button
-        onClick={goBack}
+        onClick={() => isEditor() ? null : goBack()}
         className={classes}
         id={this.state.settings.position_css_id}
       >
@@ -178,4 +187,10 @@ class ButtonWidget extends Component {
 
 }
 
-export default withRouter(ButtonWidget);
+const mapDispatchToProps = dispatch => {
+  return {
+    toggleTrigger: string => dispatch(toggleTrigger(string))
+  }
+};
+
+export default connect(null, mapDispatchToProps)(withRouter(ButtonWidget));

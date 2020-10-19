@@ -8,7 +8,8 @@ import {
   CONTROLLER_CHOOSE,
   CONTROLLER_CSSEDITOR,
   TAB_ADVANCED,
-  CONTROLLER_SWITCHER, CONTROLLER_SELECT2, CONTROLLER_HEADING, CONTROLLER_REPEATER
+  CONTROLLER_SWITCHER, CONTROLLER_SELECT2, CONTROLLER_HEADING, CONTROLLER_REPEATER,
+  CONTROLLER_TEXT
 } from "../classes/modules/ControllersManager";
 import Repeater from "../classes/Repeater";
 /**
@@ -84,6 +85,11 @@ export function advancedTabControllers(element) {
   element.addControl('advanced_element_id',{
     label: 'CSS ID',
 
+  });
+
+  element.addControl('hide_on_trigger', {
+    type: CONTROLLER_TEXT,
+    label: 'Hide on Trigger'
   });
 
   element.endControlSection();

@@ -66,6 +66,7 @@ class FrontPopup extends Component {
   componentDidUpdate(prevProps) {
     const { on_scroll, to_element } = _.get(this.props, 'template.triggers.data', {});
     const { isShownOnScroll } = this.state;
+    const { popupTrigger } = this.props
 
     if (on_scroll && !isShownOnScroll && on_scroll.size <= this.props.scrollPosition.top * 100) {
       this.setState({ isVisible: true, isShownOnScroll: true });
@@ -91,6 +92,9 @@ class FrontPopup extends Component {
 
     // }
 
+    if (popupTrigger !== prevProps.popupTrigger && popupTrigger.popupID === _.get(this.props, 'template.id')) {
+      this.setState({ isVisible: true });
+    }
   }
 
   render() {
@@ -99,19 +103,22 @@ class FrontPopup extends Component {
 
     let rootElement = window.frontElementsFabric.parseData(this.props.template.data, null, this.props.page, this.props.models);
     return isVisible ? <div className={classes.join(' ')}>
-      <button className="popup-close-button" onClick={() => this.setState({ isVisible: false })}>✖</button>
-      {React.createElement(rootElement.componentClass,
-        {
-          element: rootElement,
-          children: rootElement.children
-        })}
+      <div className="popup-window">
+        <button className="popup-close-button" onClick={() => this.setState({ isVisible: false })}>✖</button>
+        {React.createElement(rootElement.componentClass,
+          {
+            element: rootElement,
+            children: rootElement.children
+          })}
+      </div>
     </div> : null
   }
 }
 
 const mapStateToProps = state => {
   return {
-    scrollPosition: state.scrollPosition
+    scrollPosition: state.scrollPosition,
+    popupTrigger: state.popupTrigger
   }
 };
 

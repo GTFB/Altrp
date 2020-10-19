@@ -37,6 +37,9 @@ const a = { "Ё": "Yo", "Й": "I", "Ц": "Ts", "У": "U", "К": "K", "Е": "E", 
  * @return {string}
  */
 export function transliterate(str) {
+  if (!str) {
+    return "";
+  }
   return str.split('').map(function (char) {
     return _.isUndefined(a[char]) ? char : a[char];
   }).join("");
@@ -50,6 +53,12 @@ export function transliterate(str) {
 export function titleToName(str) {
   str = transliterate(str);
   return str.toLowerCase().replace(/^\d+/, '').replace(/[^\d\w]/g, '_');
+
+}
+
+export function titleToPath(str) {
+  str = transliterate(str);
+  return str.toLowerCase().replace(/^\d+/, '').replace(/[^\d\w]/g, '-');
 
 }
 /** @function objectDeepCleaning
@@ -106,4 +115,30 @@ export function deleteEmptyPropsDeep(collection) {
 function prepareTemplate(templateData, parent = null){
   let template = new FrontElement(templateData);
 
+}
+
+export function buildPagesTree(pages) {
+  // return pages;
+  const level = 0;
+  let _result;
+  const roots = pages.filter(({ parent_page_id }) => parent_page_id === null);
+
+  if (!roots) return pages;
+
+  _result = _.cloneDeep(roots);
+
+  roots.forEach(treeItem => {
+    treeRecursion(treeItem.id, level + 1);
+  });
+
+  function treeRecursion(parentId, level) {
+    const children = pages.filter(({ parent_page_id }) => parent_page_id === parentId);
+    children.forEach(page => {
+      page.title = "—".repeat(level) + page.title;
+      _result.push(page);
+      treeRecursion(page.id, level + 1);
+    });
+  }
+
+  return _result;
 }

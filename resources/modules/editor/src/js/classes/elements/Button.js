@@ -65,6 +65,28 @@ class Button extends BaseElement{
       ],
     });
 
+    this.addControl('popup_trigger_type', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Popup trigger',
+    });
+
+    this.addControl("popup_id", {
+      type: CONTROLLER_SELECT2,
+      prefetch_options: true,
+      label: "Popup ID",
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options?template_type=popup&value=guid',
+      nullable: true,
+      conditions: {
+        'popup_trigger_type': true,
+      },
+    });
+
+    this.addControl('hide_elements_trigger', {
+      type: CONTROLLER_TEXT,
+      label: 'Hide Elements Trigger'
+    });
+
     this.endControlSection();
 
     this.startControlSection('content_section', {
@@ -242,6 +264,11 @@ class Button extends BaseElement{
       label: 'Redirect To Prev Page',
     });
 
+    this.addControl('close_popups', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Close all Popups',
+    });
+
     this.endControlSection();
 
     this.startControlSection('dropbar_section', {
@@ -400,10 +427,10 @@ class Button extends BaseElement{
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default:{
-        top: 10,
-        right: 10,
-        bottom: 10,
-        left: 10,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
         unit:'px',
         bind: true
       },
@@ -599,22 +626,24 @@ class Button extends BaseElement{
     );
 
     this.addControl('border_radius', {
-      type: CONTROLLER_SLIDER,
-      label: 'Border radius',
-      default:{
-        // size: 6,
-        unit: 'px',
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+      default: {
+        unit: 'px'
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
       ],
-      max: 100,
-      min: 0,
       rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-radius: {{SIZE}}{{UNIT}}',
-      },
+        '{{ELEMENT}} .altrp-btn{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
     });
 
     this.addControl('style_background_shadow', {
@@ -1108,6 +1137,7 @@ class Button extends BaseElement{
       "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
     }
   });
+  
 
   this.endControlSection();
 

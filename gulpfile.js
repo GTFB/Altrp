@@ -20,6 +20,8 @@ function altrpZip() {
     '!./.idea/**',
     '!./node_modules/**',
     '!./routes/AltrpRoutes.php',
+    '!./routes/AltrpApiRoutes.php',
+    '!./routes/AltrpCustomRoutes.php',
     '!./storage/app/public/**',
     '!./storage/installed',
     '!./storage/logs/**',
