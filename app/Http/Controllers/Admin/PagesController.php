@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Media;
 use App\Page;
 use App\PagesTemplate;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -14,11 +15,12 @@ use Illuminate\Support\Str;
 
 class PagesController extends Controller
 {
-  /**
-   * Display a listing of the resource.
-   *
-   * @return \Illuminate\Http\JsonResponse
-   */
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
   public function index(Request $request)
   {
     $search = $request->get('s');

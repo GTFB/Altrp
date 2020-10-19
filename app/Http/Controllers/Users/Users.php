@@ -17,10 +17,14 @@ class Users extends Controller
 
     /**
      * Получение списка пользователей
-     * @return type
+     * @param ApiRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    function getUsers() {
-        $users = User::with(["roles", "usermeta"])->get();
+    function getUsers(ApiRequest $request) {
+        $search = $request->get('s');
+        $users = $search
+            ? User::getBySearch($search, 'name', ["roles", "usermeta"])
+            : User::with(["roles", "usermeta"])->get();
         return response()->json($users, 200, [],JSON_UNESCAPED_UNICODE);
     }
 

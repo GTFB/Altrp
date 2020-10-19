@@ -4,10 +4,13 @@ namespace App\Altrp;
 
 use App\Page;
 use App\PageDatasource;
+use App\Traits\Searchable;
 use Illuminate\Database\Eloquent\Model;
 
 class Source extends Model
 {
+    use Searchable;
+
     protected $table = 'altrp_sources';
 
   protected $casts = [
@@ -53,13 +56,6 @@ class Source extends Model
     public function page_data_sources()
     {
         return $this->hasMany(PageDatasource::class,'source_id');
-    }
-
-    public static function getBySearch($search)
-    {
-        return self::where('name','like', "%{$search}%")
-            ->orWhere('id', $search)
-            ->get();
     }
 
     public static function getBySearchWithPaginate($search, $offset, $limit)

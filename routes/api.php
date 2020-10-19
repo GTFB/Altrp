@@ -56,6 +56,8 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::delete('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@destroy");
 
         Route::resource( 'pages', 'Admin\PagesController' );
+        Route::resource( 'templates', 'TemplateController' );
+        Route::resource( 'sql_editors', 'Admin\SQLEditorController' );
         /**
          * Маршруты для проверки на уникальность имени
          */

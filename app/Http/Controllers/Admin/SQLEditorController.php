@@ -13,14 +13,17 @@ class SQLEditorController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function index( Request $request )
     {
-        //
+      $search = $request->get('s');
       $page_count = 1;
       if ( ! $request->get( 'page' ) ) {
-        $sQLEditors = SQLEditor::all()->sortByDesc( 'id' )->values();
+        $sQLEditors = $search
+            ? SQLEditor::getBySearch($search)
+            : SQLEditor::all()->sortByDesc( 'id' )->values();
       } else {
         $page_size = $request->get( 'pageSize', 10 );
         $sQLEditors = SQLEditor::offset( $page_size * ( $request->get( 'page' ) - 1 ) )
@@ -49,7 +52,7 @@ class SQLEditorController extends Controller
         ->join('altrp_models', 'altrp_models.id', 's_q_l_editors.model_id')
         ->join('tables', 'tables.id', 'altrp_models.table_id')
         ->select(
-          's_q_l_editors.id', 's_q_l_editors.name', 's_q_l_editors.title', 
+          's_q_l_editors.id', 's_q_l_editors.name', 's_q_l_editors.title',
           's_q_l_editors.description', 'tables.name as model')
         ->get();
       return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE );
