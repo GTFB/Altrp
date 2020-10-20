@@ -285,6 +285,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::put( '/data_sources/{source_id}', 'Admin\ModelsController@updateDataSource');
     Route::get( '/data_sources/{source_id}', 'Admin\ModelsController@showDataSource');
     Route::delete( '/data_sources/{source_id}', 'Admin\ModelsController@destroyDataSource');
+    Route::get( '/models/{model_id}/data_source_options', 'Admin\ModelsController@getDataSourcesByModel');
 
     Route::get('/tables', "Admin\TableController@getTables");
     Route::get('/tables/options', "Admin\TableController@getTablesForOptions");

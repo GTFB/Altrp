@@ -126,6 +126,7 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::put( '/data_sources/{source_id}', 'Admin\ModelsController@updateDataSource');
         Route::get( '/data_sources/{source_id}', 'Admin\ModelsController@showDataSource');
         Route::delete( '/data_sources/{source_id}', 'Admin\ModelsController@destroyDataSource');
+        Route::get( '/models/{model_id}/data_source_options', 'Admin\ModelsController@getDataSourcesByModel');
 
         Route::post('/tables/{table}/models', 'Admin\TableController@saveModel');
         Route::get('/tables/{table}/models/{model}', 'Admin\TableController@getModel');
