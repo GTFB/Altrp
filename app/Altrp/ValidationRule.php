@@ -13,7 +13,7 @@ class ValidationRule extends Model
         'validation_field_id'
     ];
 
-    public function validationField()
+    public function validation_field()
     {
         return $this->belongsTo(ValidationField::class, 'validation_field_id');
     }

@@ -18,7 +18,12 @@ class ValidationField extends Model
         'is_updated'
     ];
 
-    public function validationRules()
+    public function column()
+    {
+        return $this->belongsTo(Column::class);
+    }
+
+    public function rules()
     {
         return $this->hasMany(ValidationRule::class);
     }

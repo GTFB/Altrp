@@ -85,9 +85,9 @@ class RouteGenerator
      * @param $controller
      * @return boolean
      */
-    public function generate($oldModelName, $modelName, $controller)
+    public function generate($oldModelName, $modelName, $controller, $isApi = false)
     {
-        $sourceRoutes = $this->getRoutesFromSources($modelName, $controller);
+        $sourceRoutes = $this->getRoutesFromSources($modelName, $controller, $isApi);
         $routes = $this->fillStub();
         $comment = array_shift($routes);
         $allRoutes = [];
@@ -112,7 +112,7 @@ class RouteGenerator
      * @param $controller
      * @return array
      */
-    protected function getRoutesFromSources($tableName, $controller)
+    protected function getRoutesFromSources($tableName, $controller, $isApi)
     {
         $routes = [];
         $actions = ['get', 'options', 'show', 'add', 'update', 'delete', 'update_column', 'filters'];
@@ -122,7 +122,7 @@ class RouteGenerator
         ])->get();
         if (! $sources) return [];
         foreach ($sources as $source) {
-            $middleware = $this->getMiddleware($source);
+            $middleware = $this->getMiddleware($source, $isApi);
             if (!in_array($source->type, $actions) && $source->type != 'remote') {
                 $middleware = $middleware ? "'middleware' => ['" . implode("','", $middleware) . "'], " : '';
                 $routes[] = 'Route::get(\'/queries/' . $tableName .'/'
@@ -274,9 +274,10 @@ class RouteGenerator
      * Получить миддлвары
      *
      * @param $source
+     * @param bool $isApi
      * @return array|null
      */
-    public function getMiddleware($source)
+    public function getMiddleware($source, $isApi = false)
     {
         if(!$source) return null;
 
@@ -300,7 +301,7 @@ class RouteGenerator
         $middleware = [];
 
         if ($source->auth) {
-            $middleware[] = 'auth';
+            $middleware[] = $isApi ? 'auth:api' : 'auth';
         }
 
         if ($accessRoles && $accessPermissions)

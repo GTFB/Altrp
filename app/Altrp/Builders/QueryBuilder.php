@@ -192,7 +192,10 @@ class QueryBuilder
         $routeFile = new RouteFile($this->model);
         $controllerFile = new ControllerFile($this->model);
         $fileWriter = new RouteFileWriter($routeFile, $controllerFile);
-        if ($fileWriter->addRoute($this->getMethodName())) {
+        $apiRouteFile = new RouteFile($this->model, 'routes/AltrpApiRoutes.php', true);
+        $apiFileWriter = new RouteFileWriter($apiRouteFile, $controllerFile);
+        $methodName = $this->getMethodName();
+        if ($fileWriter->addRoute($methodName) && $apiFileWriter->addRoute($methodName)) {
             return true;
         }
         return false;
@@ -298,7 +301,10 @@ class QueryBuilder
         $routeFile = new RouteFile($this->model);
         $controllerFile = new ControllerFile($this->model);
         $fileWriter = new RouteFileWriter($routeFile, $controllerFile);
-        if ($fileWriter->removeRoute($this->getOldMethodName())) {
+        $apiRouteFile = new RouteFile($this->model, 'routes/AltrpApiRoutes.php', true);
+        $apiFileWriter = new RouteFileWriter($apiRouteFile, $controllerFile);
+        $oldMethodName = $this->getOldMethodName();
+        if ($fileWriter->removeRoute($oldMethodName) && $apiFileWriter->removeRoute($oldMethodName)) {
             return true;
         }
         return false;
