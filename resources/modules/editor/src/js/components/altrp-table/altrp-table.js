@@ -7,7 +7,7 @@ import {
   extractPathFromString,
   getDataByPath, getObjectByPrefix,
   isEditor, mbParseJSON,
-  parseURLTemplate, renderAsset
+  parseURLTemplate, renderAsset, replaceContentWithData
 } from "../../../../../front-app/src/js/helpers";
 import {iconsManager} from "../../../../../admin/src/js/helpers";
 import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput";
@@ -312,7 +312,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
           )
       })}
     </tbody>
-    {renderFooter(settings)}
+    {renderFooter(settings, _data)}
   </table>
     {((query.paginationType === 'prev-next') && query.pageSize) ?
       <div className="altrp-pagination">
@@ -537,9 +537,10 @@ function toggleGroup(currentRowHeading, setCollapsedGroups, collapsedGroups) {
 /**
  * Отрисовка футера таблицы
  * @param {{}}settings
+ * @param {[]}data
  */
 
-function renderFooter(settings){
+function renderFooter(settings, data){
   let footerColumns = settings.footer_columns || [];
   if(footerColumns.length === 0){
     return null;
@@ -550,11 +551,24 @@ function renderFooter(settings){
       const style = {
         textAlign: footerColumn.column_footer_alignment || 'left'
       };
-
+      let content = footerColumn.content;
+      if(content.indexOf('{{altrphelpers.') !== -1){
+        window.altrphelpers.context = data;
+        content = content.replace(/{{/g, '').replace(/}}/g, '');
+        try{
+          content = eval(content);
+        } catch(e){
+          console.log(content);
+          console.error(e);
+          content = '';
+        }
+      } else {
+        content = replaceContentWithData(content);
+      }
       return <td className="altrp-table-td"
                  key={footerColumn.id}
                  style={style}
-                 colSpan={footerColumn.colspan || 1}>{footerColumn.content}</td>
+                 colSpan={footerColumn.colspan || 1}>{content}</td>
     })}
   </tr>
   </tfoot>

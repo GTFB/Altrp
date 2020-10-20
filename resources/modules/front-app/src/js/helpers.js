@@ -680,6 +680,44 @@ export function clearEmptyProps(){
 
 }
 
-export function isValidUUID( string ='' ){
+/**
+ * Заменяет в тексте конструкции типа {{altrpdata...}} на данные
+ * @param content
+ * @param {null | {}}modelContext
+ */
 
+export function replaceContentWithData(content = '', modelContext = null){
+  let paths = _.isString(content) ? content.match(/{{([\s\S]+?)(?=}})/g) : null;
+  if(_.isArray(paths)){
+    paths.forEach(path => {
+      path = path.replace('{{', '');
+      let value = getDataByPath(path, '', modelContext);
+      content = content.replace(new RegExp(`{{${path}}}`, 'g'), value)
+    });
+  }
+  return content;
 }
+
+/**
+ * Вспомогательные функции для работы с данными виджетов
+ */
+window.altrphelpers = {
+  /**
+   * Возвращает сумму полей в массиве объектов
+   * @param {string}fieldName
+   * @return {number}
+   */
+  sumFields: function sumFields(fieldName){
+    let sum = 0;
+    if(! _.isObject(this.context)){
+      return sum;
+    }
+    if(! _.isArray(this.context)){
+      this.context = [this.context];
+    }
+    this.context.forEach(c=>{
+      sum += Number(_.get(c,fieldName)) || 0;
+    });
+    return sum;
+  },
+};
