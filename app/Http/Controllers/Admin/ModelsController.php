@@ -1531,4 +1531,10 @@ class ModelsController extends HttpController
 
         return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
     }
+
+    public function getDataSourcesByModel($model_id)
+    {
+        $data_sources = Source::select(['title as label', 'id as value'])->where('model_id',$model_id)->get();
+        return response()->json($data_sources, 200, [], JSON_UNESCAPED_UNICODE);
+    }
 }
