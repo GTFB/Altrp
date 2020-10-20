@@ -461,19 +461,56 @@ class InputWidget extends Component {
     if(value && value.dynamic){
       value = '';
     }
-
-    options.forEach(option => {
-      if (option.value === value) {
-        value = { ...option };
-      }
-      if(_.isArray(option.options)){
-        option.options.forEach(option => {
-          if (option.value === value) {
-            value = { ...option };
+    if(! this.props.element.getSettings('select2_multiple', false)){
+      options.forEach(option => {
+        if (option.value === value) {
+          value = { ...option };
+        }
+        if(_.isArray(option.options)){
+          option.options.forEach(option => {
+            if (option.value === value) {
+              value = { ...option };
+            }
+          })
+        }
+      });
+    } else {
+      /**
+       * Если включен мультиселект
+       */
+      value = value ? (_.isArray(value) ? value : [value]) : [];
+      value = value.map(v=>{
+        let _v = v;
+        options.forEach(option => {
+          if (option.value && (option.value.toString() === _v.toString())) {
+            _v = { ...option };
           }
-        })
-      }
-    });
+          if(_.isArray(option.options)){
+            option.options.forEach(option => {
+              if (option.value && (option.value.toString() === _v.toString())) {
+                _v = { ...option };
+              }
+            })
+          }
+        });
+        return _v;
+      });
+      /**
+       * Добавим опцию, если для какого-то значения ее нет
+       */
+      value.forEach(valueItem=>{
+        if(! _.isObject(valueItem)){
+          options.push({
+            value: valueItem,
+            label: valueItem,
+          });
+        }
+      })
+    }
+    /**
+     * Сортируем опции
+     * @type {Array|*}
+     */
     options = _.sortBy(options, (o => o.label ? o.label.toString() : o));
     const select2Props = {
       className: 'altrp-field-select2',

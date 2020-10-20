@@ -63,7 +63,7 @@ export function parseOptionsFromSettings(string) {
     if(valuePath){
       value = getDataByPath(valuePath);
     }
-    let label = option.split('|')[1] || value;
+    let label = option.split('|')[1] || value || '';
     label = label.trim();
     let labelPath = extractPathFromString(label);
     if(labelPath){
@@ -677,5 +677,9 @@ function getPrevWeekEnd() {
  * Elfkztn gecnst cdjqcndf d j,]trnf[
  */
 export function clearEmptyProps(){
+
+}
+
+export function isValidUUID( string ='' ){
 
 }

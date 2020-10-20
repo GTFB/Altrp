@@ -312,6 +312,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
           )
       })}
     </tbody>
+    {renderFooter(settings)}
   </table>
     {((query.paginationType === 'prev-next') && query.pageSize) ?
       <div className="altrp-pagination">
@@ -531,4 +532,30 @@ function toggleGroup(currentRowHeading, setCollapsedGroups, collapsedGroups) {
     });
     setCollapsedGroups(collapsedGroups);
   }
+}
+
+/**
+ * Отрисовка футера таблицы
+ * @param {{}}settings
+ */
+
+function renderFooter(settings){
+  let footerColumns = settings.footer_columns || [];
+  if(footerColumns.length === 0){
+    return null;
+  }
+  return <tfoot className="altrp-table-foot">
+  <tr className="altrp-table-tr">
+    {footerColumns.map(footerColumn=>{
+      const style = {
+        textAlign: footerColumn.column_footer_alignment || 'left'
+      };
+
+      return <td className="altrp-table-td"
+                 key={footerColumn.id}
+                 style={style}
+                 colSpan={footerColumn.colspan || 1}>{footerColumn.content}</td>
+    })}
+  </tr>
+  </tfoot>
 }

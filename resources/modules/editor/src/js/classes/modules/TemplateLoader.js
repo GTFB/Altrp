@@ -18,7 +18,7 @@ class TemplateLoader {
    */
   async loadTemplate(templateId, force = false){
     let update = force;
-    templateId = parseInt(templateId) ? parseInt(templateId) : templateId;
+    templateId = Number(templateId) ? Number(templateId) : templateId;
     if(! update){
       update = ! this.templatesCache.hasProperty(templateId);
     }
@@ -37,7 +37,7 @@ class TemplateLoader {
    */
   async loadParsedTemplate(templateId, force = false){
     let update = force;
-    templateId = parseInt(templateId) ? parseInt(templateId) : templateId;
+    templateId = Number(templateId) ? Number(templateId) : templateId;
     if(! update){
       update = ! this.templatesCache.hasProperty(templateId);
     }

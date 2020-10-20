@@ -27,7 +27,6 @@ class TabsWidget extends Component {
       collectionTabs.children[i].classList.remove("altrp-tab-show");
       e.currentTarget.parentNode.children[i].classList.remove("active");
     }
-    console.log(button.dataset.key);
     currentTab.classList.add("altrp-tab-show");
     // e.currentTarget.classList.add("active");
     this.setState(state=>({...state, activeTab: Number(button.dataset.key) || 0}))
