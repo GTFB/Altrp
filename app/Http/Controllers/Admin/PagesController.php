@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Media;
 use App\Page;
 use App\PagesTemplate;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -14,16 +15,18 @@ use Illuminate\Support\Str;
 
 class PagesController extends Controller
 {
-  /**
-   * Display a listing of the resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
-  public function index()
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+  public function index(Request $request)
   {
-    //
-
-    $_pages = Page::all();
+    $search = $request->get('s');
+    $_pages = $search
+        ? Page::getBySearch($search)
+        : Page::all()->sortByDesc( 'id' )->values();
     $pages = [];
     foreach ( $_pages as $page ) {
 
@@ -32,6 +35,7 @@ class PagesController extends Controller
         'user' => $page->user,
         'title' => $page->title,
         'id' => $page->id,
+        'parent_page_id' => $page->parent_page_id,
         'author' => $page->user->name,
         'template_content' => $content_template,
         'template_content_title' => $content_template ? $content_template->title : '',
@@ -136,6 +140,7 @@ class PagesController extends Controller
     $page->title = $request->title;
     $page->model_id = $request->model_id;
     $page->redirect = $request->redirect;
+    $page->parent_page_id = $request->parent_page_id;
     $res['page'] = $page->toArray();
 
     $pages_template = PagesTemplate::where( 'page_id', $id )->where( 'template_type', 'content' )->first();

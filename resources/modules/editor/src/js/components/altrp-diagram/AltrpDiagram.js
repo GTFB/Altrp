@@ -20,10 +20,14 @@ import { getDataByPath } from "../../../../../front-app/src/js/helpers";
 const AltrpDiagram = ({ settings }) => {
   const sql = settings.query?.dataSource?.value;
 
-  //const data = getDataByPath(settings.datasource_path);
-  //console.log("data :>> ", data);
+  const data = getDataByPath(settings.datasource_path)?.map(d => {
+    return {
+      data: _.get(d, settings.data_name),
+      key: _.get(d, settings.key_name),
+    };
+  }) || [];
 
-  if (!sql) {
+  if (!sql && data.length === 0) {
     return <div className={`altrp-chart ${settings.legendPosition}`}>Choose data for chart</div>;
   }
 
@@ -51,37 +55,37 @@ const AltrpDiagram = ({ settings }) => {
     case BAR:
       return (
         <div className={`altrp-chart ${settings.legendPosition}`}>
-          <DynamicBarChart widget={widget} width={settings.width?.size} />
+          <DynamicBarChart dataSource={data} widget={widget} width={settings.width?.size} />
         </div>
       );
     case PIE:
       return (
         <div className={`altrp-chart ${settings.legendPosition}`}>
-          <DynamicPieChart widget={widget} width={settings.width?.size} />
+          <DynamicPieChart dataSource={data} widget={widget} width={settings.width?.size} />
         </div>
       );
     case DONUT:
       return (
         <div className={`altrp-chart ${settings.legendPosition}`}>
-          <DynamicDonutChart widget={widget} width={settings.width?.size} />
+          <DynamicDonutChart dataSource={data} widget={widget} width={settings.width?.size} />
         </div>
       );
     case LINE:
       return (
         <div className={`altrp-chart ${settings.legendPosition}`}>
-          <DynamicLineChart widget={widget} width={settings.width?.size} />
+          <DynamicLineChart dataSource={data} widget={widget} width={settings.width?.size} />
         </div>
       );
     case TABLE:
       return (
         <div className={`altrp-chart ${settings.legendPosition}`}>
-          <DynamicTableWidget widget={widget} width={settings.width?.size} />
+          <DynamicTableWidget dataSource={data} widget={widget} width={settings.width?.size} />
         </div>
       );
     case AREA:
       return (
         <div className={`altrp-chart ${settings.legendPosition}`}>
-          <DynamicAreaChart widget={widget} width={settings.width?.size} />
+          <DynamicAreaChart dataSource={data} widget={widget} width={settings.width?.size} />
         </div>
       );
     default:

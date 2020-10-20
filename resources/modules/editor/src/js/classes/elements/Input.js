@@ -102,6 +102,14 @@ class Input extends BaseElement{
           value: 'hidden',
           label: 'Hidden'
         },
+        {
+          value: 'radio',
+          label: 'Radio'
+        },
+        {
+          value: 'checkbox',
+          label: 'Checkbox'
+        },
       ]
     });
 
@@ -128,8 +136,6 @@ class Input extends BaseElement{
             'label' : 'left',
           }
         ],
-        rules: {
-        },
       }
     );
 
@@ -142,8 +148,10 @@ class Input extends BaseElement{
     this.addControl('content_mask', {
       type: CONTROLLER_TEXT,
       label: 'Mask',
+      conditions: {
+        'content_type' : 'text'
+      }
     });
-
 
     this.addControl('content_required', {
       type: CONTROLLER_SWITCHER,
@@ -176,6 +184,8 @@ class Input extends BaseElement{
           [
             'select',
             'select2',
+            'radio',
+            'checkbox',
           ]
       },
     });
@@ -189,6 +199,8 @@ class Input extends BaseElement{
           [
             'select',
             'select2',
+            'radio',
+            'checkbox',
           ]
       },
       options: [
@@ -216,6 +228,8 @@ class Input extends BaseElement{
           [
             'select',
             'select2',
+            'radio',
+            'checkbox',
           ]
       },
       nullable: true,
@@ -258,6 +272,8 @@ class Input extends BaseElement{
         'content_type':[
           'select',
           'select2',
+          'radio',
+          'checkbox',
         ],
       },
       description: 'Enter each option in a separate line. To differentiate between label and value, separate them with a pipe char ("|"). For example: First Name|f_name',
@@ -266,6 +282,11 @@ class Input extends BaseElement{
     this.addControl('content_default_value', {
       type: CONTROLLER_TEXTAREA,
       label: 'Default Value',
+    });
+    this.addControl('content_calculation', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Calculation',
+      description: 'E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10',
     });
 
     this.endControlSection();
@@ -296,7 +317,7 @@ class Input extends BaseElement{
 
     this.startControlSection('form_condition_display', {
       tab: TAB_CONTENT,
-      label: 'Form Condition Display',
+      label: 'Field Condition',
     });
 
     this.addControl('form_condition_display_on', {
@@ -317,6 +338,7 @@ class Input extends BaseElement{
     });
 
     const formConditionsRepeater = new Repeater();
+
 
     formConditionsRepeater.addControl('field_id', {
       responsive: false,
@@ -382,17 +404,17 @@ class Input extends BaseElement{
     this.addControl('label_style_font_typographic', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
-        default:{
-          lineHeight: 1.5,
-          spacing: 0,
-          size: 16,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
+        // default:{
+        //   lineHeight: 1.5,
+        //   spacing: 0,
+        //   size: 16,
+        //   weight: "normal",
+        //   family: "Open Sans",
+        //   decoration: ""
+        // },
         rules: {
           '{{ELEMENT}} .altrp-field-label{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -404,6 +426,7 @@ class Input extends BaseElement{
         },
       }
     );
+
     this.endControlSection();
 
     this.startControlSection('font_style_section', {
@@ -414,17 +437,17 @@ class Input extends BaseElement{
     this.addControl('field_font_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 16,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
+      // default: {
+      //   lineHeight: 1.5,
+      //   spacing: 0,
+      //   size: 16,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
       rules: {
         '{{ELEMENT}} .altrp-field-select2__single-value{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px;',
@@ -434,7 +457,7 @@ class Input extends BaseElement{
           'text-decoration: {{DECORATION}};'
         ],
         '{{ELEMENT}} .altrp-field{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px;',
@@ -471,7 +494,7 @@ class Input extends BaseElement{
     this.addControl('placeholder_and_value_alignment_position_section', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment, value',
-      default: 'left',
+      // default: 'left',
       options:[
         {
           icon: 'left',
@@ -496,10 +519,10 @@ class Input extends BaseElement{
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit:'px'
       },
       units:[
@@ -521,10 +544,10 @@ class Input extends BaseElement{
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default:{
-        top: 2,
-        right: 2,
-        bottom: 2,
-        left: 2,
+        // top: 2,
+        // right: 2,
+        // bottom: 2,
+        // left: 2,
         unit:'px'
       },
       units:[
@@ -592,17 +615,17 @@ class Input extends BaseElement{
     this.addControl('placeholder_style_font_typographic', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
-        default:{
-          lineHeight: 1.5,
-          spacing: 0,
-          size: 13,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
+        // default:{
+        //   lineHeight: 1.5,
+        //   spacing: 0,
+        //   size: 13,
+        //   weight: "normal",
+        //   family: "Open Sans",
+        //   decoration: ""
+        // },
         rules: {
           '{{ELEMENT}} .altrp-field::placeholder{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -612,7 +635,7 @@ class Input extends BaseElement{
             'text-decoration: {{DECORATION}}'
           ],
           '{{ELEMENT}} .altrp-field-select2__placeholder{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -658,7 +681,7 @@ class Input extends BaseElement{
         },
         rules: {
           '{{ELEMENT}} .altrp-field-required{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -720,6 +743,9 @@ class Input extends BaseElement{
         colorPickedHex: "#DEEBFF",
       },
       conditions: { 'content_type': ['select2'] },
+      rules: {
+        '.{{ID}}.altrp-field-select2__option.altrp-field-select2__option--is-focused{{STATE}}': 'background-color: {{COLOR}};',
+      },
     });
 
     this.addControl('option_selected_background_color', {
@@ -730,6 +756,9 @@ class Input extends BaseElement{
         colorPickedHex: "#2684FF",
       },
       conditions: { 'content_type': ['select2'] },
+      rules: {
+        '.{{ID}}.altrp-field-select2__option.altrp-field-select2__option--is-selected{{STATE}}': 'background-color: {{COLOR}};',
+      },
     });    
 
     this.addControl('background_section_opacity', {
@@ -756,7 +785,7 @@ class Input extends BaseElement{
     this.addControl('border_type', {
         type: CONTROLLER_SELECT,
         label: 'Border Type',
-        default: 'solid',
+        // default: 'solid',
         options:[
           {
             'value' : 'none',
@@ -799,12 +828,12 @@ class Input extends BaseElement{
           '%',
           'vh',
         ],
-        default: {
-          top: 2,
-          right: 2,
-          bottom: 2,
-          left: 2
-        },
+        // default: {
+        //   top: 2,
+        //   right: 2,
+        //   bottom: 2,
+        //   left: 2
+        // },
         rules: {
           '{{ELEMENT}} .altrp-field{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
           '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
@@ -815,10 +844,10 @@ class Input extends BaseElement{
     this.addControl('border_color', {
         type: CONTROLLER_COLOR,
         label: 'Border Color',
-        default: {
-          color: "rgb(142,148,170)",
-          colorPickedHex: "#8E94AA",
-        },
+        // default: {
+        //   color: "rgb(142,148,170)",
+        //   colorPickedHex: "#8E94AA",
+        // },
         rules: {
           '{{ELEMENT}} .altrp-field{{STATE}}': 'border-color: {{COLOR}};',
           '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'border-color: {{COLOR}};'
@@ -838,7 +867,7 @@ class Input extends BaseElement{
         colorRGB: 'rgb(0, 0, 0)',
         color: 'rgb(0, 0, 0)',
         colorPickedHex: '#000000',
-        type: ""
+        type: " "
       },
       presetColors: [
         '#eaeaea',
@@ -854,10 +883,10 @@ class Input extends BaseElement{
       type: CONTROLLER_DIMENSIONS,
       label: 'Radius',
       default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit:'px'
       },
       units:[
@@ -883,6 +912,42 @@ class Input extends BaseElement{
     });
 
     this.endControlSection();
+
+    this.startControlSection('radio-_checkbox_styles', {
+      tab: TAB_STYLE,
+      label: 'Radio Checkbox Styles'
+    });
+
+    this.addControl('input_position',{
+      label: 'Position',
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          label: 'Left',
+          value: 'row',
+        },
+        {
+          label: 'Top',
+          value: 'column',
+        },
+        {
+          label: 'Right',
+          value: 'row-reverse',
+        },
+        {
+          label: 'Bottom',
+          value: 'column-reverse',
+        },
+      ],
+      default: 'left',
+      rules: {
+        '{{ELEMENT}} .altrp-field-option{{STATE}}': 'flex-direction:{{VALUE}};'
+      },
+    });
+
+    this.endControlSection();
+
+
 
     advancedTabControllers(this);
   }

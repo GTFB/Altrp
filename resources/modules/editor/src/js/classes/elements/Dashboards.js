@@ -13,8 +13,9 @@ import {
   TAB_CONTENT,
   TAB_STYLE,
   CONTROLLER_SQL,
-  CONTROLLER_SQL_PARAMS,
+  CONTROLLER_SQL_PARAMS, CONTROLLER_REPEATER,
 } from "../modules/ControllersManager";
+import Repeater from "../Repeater";
 
 class Dashboards extends BaseElement {
   static getName() {
@@ -34,10 +35,79 @@ class Dashboards extends BaseElement {
       return;
     }
 
+    this.startControlSection('Data type', {
+      tab: TAB_CONTENT,
+      label: 'Data type'
+    });
+
+    this.addControl('dataSource', {
+      type: CONTROLLER_SWITCHER,
+      label: "Get data by data source?",
+      default: false,
+    });
+
+    console.log('Settings', this);
+
+
+    let repeater = new Repeater();
+
+    repeater.addControl(
+      'path',
+      {
+        label: 'Path',
+        dynamic: false,
+      }
+    );
+    repeater.addControl(
+      'title',
+      {
+        label: 'Title',
+        dynamic: false,
+      }
+    );
+    repeater.addControl(
+      'data',
+      {
+        label: 'Data',
+        dynamic: false,
+      }
+    );
+    repeater.addControl(
+      'key',
+      {
+        label: 'Key',
+        dynamic: false,
+      }
+    );
+
+    this.addControl("rep", {
+      type: CONTROLLER_REPEATER,
+      default: [],
+      fields: repeater.getControls(),
+    });
+
+    this.endControlSection();
+
     this.startControlSection("content_section", {
       tab: TAB_CONTENT,
       label: "Content",
     });
+
+
+
+    this.addControl('global_parameter', {
+      type: CONTROLLER_SQL,
+      default: [],
+      multi: false,
+      label: 'Select global paramenters',
+      onlySQL: true
+    });
+
+    // this.addControl("rep", {
+    //   type: CONTROLLER_REPEATER,
+    //   default: [],
+    //   fields: repeater.getControls(),
+    // });
 
     this.addControl("sql", {
       type: CONTROLLER_SQL,

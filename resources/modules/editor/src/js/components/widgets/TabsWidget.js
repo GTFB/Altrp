@@ -9,7 +9,8 @@ class TabsWidget extends Component {
     this.switcher = this.switcher.bind(this)
     this.state = {
       settings: props.element.getSettings(),
-      switcher: false
+      switcher: false,
+      activeTab: 0
     };
     props.element.component = this;
     if(window.elementDecorator){
@@ -26,9 +27,10 @@ class TabsWidget extends Component {
       collectionTabs.children[i].classList.remove("altrp-tab-show");
       e.currentTarget.parentNode.children[i].classList.remove("active");
     }
-
+    console.log(button.dataset.key);
     currentTab.classList.add("altrp-tab-show");
-    e.currentTarget.classList.add("active");
+    // e.currentTarget.classList.add("active");
+    this.setState(state=>({...state, activeTab: Number(button.dataset.key) || 0}))
   }
 
   switcher() {
@@ -75,7 +77,12 @@ class TabsWidget extends Component {
             })}</div>
           }
 
-          return<button data-key={idx} className={"altrp-tab-btn" + buttonClasses} onClick={this.show} key={idx}>{this.state.settings.alignment_icon_style == "left" ? icon : null}<p>{tab.title_and_content_items}</p>{this.state.settings.alignment_icon_style == "right" ? icon : null}</button>
+          return<button data-key={idx}
+                        className={"altrp-tab-btn"
+                          + buttonClasses
+                          + (this.state.activeTab === idx ? ' active' : '') }
+                        onClick={this.show}
+                        key={idx}>{this.state.settings.alignment_icon_style == "left" ? icon : null}<p>{tab.title_and_content_items}</p>{this.state.settings.alignment_icon_style == "right" ? icon : null}</button>
         });
       };
 

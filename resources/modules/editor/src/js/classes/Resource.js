@@ -118,6 +118,9 @@ class Resource {
         return Promise.reject(res.text(), res.status);
       }
       return res.json()
+    }).catch((err)=>{
+      console.log(err);
+      return err.then();
     });
   }
   /**
@@ -226,7 +229,14 @@ class Resource {
         'Content-Type': 'application/json'
       },
     };
-    let url = `${this.route}?${queryString.stringify(params)}`;
+    const _params = {};
+    _.forEach(params, (paramValue, paramName)=>{
+      if(_.isArray(paramValue)){
+        paramValue = paramValue.join(',');
+      }
+      _params[paramName] = paramValue;
+    });
+    let url = `${this.route}?${queryString.stringify(_params)}`;
     let res =  await fetch(url, options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);

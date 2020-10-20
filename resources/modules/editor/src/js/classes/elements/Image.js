@@ -14,7 +14,9 @@ import {
   TAB_CONTENT,
   TAB_STYLE,
   TAB_ADVANCED,
-  CONTROLLER_LINK, CONTROLLER_SWITCHER,
+  CONTROLLER_LINK,
+  CONTROLLER_SWITCHER,
+  CONTROLLER_CREATIVE_HOVER,
   CONTROLLER_GRADIENT
 } from "../modules/ControllersManager";
 
@@ -634,6 +636,25 @@ class Image extends BaseElement{
         '{{ELEMENT}} .altrp-image{{STATE}}': 'border-radius: {{SIZE}}{{UNIT}}',
       },
     });
+
+    this.endControlSection();
+
+    this.startControlSection('creative_hover_section', {
+      tab: TAB_STYLE,
+      label: 'Creative Hover'
+    });
+
+    this.addControl('creative_hover_controller', {
+        type: CONTROLLER_CREATIVE_HOVER,
+        label: 'Creative Hover',
+        rules: {
+          '{{ELEMENT}} .altrp-image{{STATE}}': [
+            'transition-duration: {{SIZE}}s;',
+            'animation-duration: {{SIZE}}s'
+          ],
+        },
+      }
+    );
 
     this.endControlSection();
 

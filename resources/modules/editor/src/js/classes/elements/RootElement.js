@@ -91,6 +91,18 @@ class RootElement extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('default_displaying', {
+      label: 'Default Displaying',
+    });
+
+    this.addControl('hidden_elemants_triggers', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Hidden Elements Triggers',
+      description: 'Input triggers, commas separated'
+    });
+
+    this.endControlSection();
+
     this.startControlSection('content_section', {
       tab: TAB_STYLE,
       label: 'Page Styles',
@@ -105,7 +117,7 @@ class RootElement extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "body": "background-color: {{COLOR}};"
+        "body{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
@@ -114,7 +126,7 @@ class RootElement extends BaseElement {
       label: 'Background Image',
       default: { url: "" },
       rules: {
-        "body": "background-image: url({{URL}});"
+        "body{{STATE}}": "background-image: url({{URL}});"
       }
     });
 
@@ -161,7 +173,7 @@ class RootElement extends BaseElement {
       label: 'Background Position',
       default: 'top left',
       rules: {
-        "body": "background-position: {{VALUE}};"
+        "body{{STATE}}": "background-position: {{VALUE}};"
       }
     });
 
@@ -184,7 +196,7 @@ class RootElement extends BaseElement {
       label: 'Background Attachment',
       default: 'scroll',
       rules: {
-        "body": "background-attachment: {{VALUE}};"
+        "body{{STATE}}": "background-attachment: {{VALUE}};"
       }
     });
 
@@ -219,7 +231,7 @@ class RootElement extends BaseElement {
       label: 'Background Repeat',
       default: 'repeat',
       rules: {
-        "body": "background-repeat: {{VALUE}};"
+        "body{{STATE}}": "background-repeat: {{VALUE}};"
       }
     });
 
@@ -241,7 +253,7 @@ class RootElement extends BaseElement {
       max: 1000,
       min: 0,
       rules: {
-        "body": "background-size: {{SIZE}}{{UNIT}};"
+        "body{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
       }
     });
 
@@ -268,7 +280,7 @@ class RootElement extends BaseElement {
       label: 'Background Size',
       default: 'unset',
       rules: {
-        "body": "background-size: {{VALUE}};"
+        "body{{STATE}}": "background-size: {{VALUE}};"
       }
     });
 
@@ -306,7 +318,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        'body': [
+        'body{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -418,7 +430,7 @@ class RootElement extends BaseElement {
       label: 'H1 Typographic',
       rules: {
         'h1.altrp-heading{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',
@@ -436,7 +448,7 @@ class RootElement extends BaseElement {
 
       rules: {
         'h2.altrp-heading{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',
@@ -453,7 +465,7 @@ class RootElement extends BaseElement {
 
       rules: {
         'h3.altrp-heading{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',
@@ -470,7 +482,7 @@ class RootElement extends BaseElement {
 
       rules: {
         'h4.altrp-heading{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',
@@ -487,7 +499,7 @@ class RootElement extends BaseElement {
 
       rules: {
         'h5.altrp-heading{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',
@@ -504,7 +516,7 @@ class RootElement extends BaseElement {
 
       rules: {
         'h6.altrp-heading{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',
@@ -521,7 +533,7 @@ class RootElement extends BaseElement {
 
       rules: {
         'p.altrp-heading{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',
@@ -537,10 +549,10 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default: {
-        top: 5,
-        right: 0,
-        bottom: 5,
-        left: 0,
+        // top: 5,
+        // right: 0,
+        // bottom: 5,
+        // left: 0,
         unit: 'px'
       },
       units: [
@@ -549,7 +561,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        '.altrp-heading{{STATE}}': [
+        'div .altrp-heading{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -562,20 +574,210 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: "px"
       },
       units: ["px", "%", "vh"],
       rules: {
-        ".altrp-heading{{STATE}}": [
+        "div .altrp-heading{{STATE}}": [
           "padding-top: {{TOP}}{{UNIT}};",
           "padding-right: {{RIGHT}}{{UNIT}};",
           "padding-bottom: {{BOTTOM}}{{UNIT}};",
           "padding-left: {{LEFT}}{{UNIT}};"
         ]
+      }
+    });
+
+    this.addControl("heading_default_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      // default: {
+      //   color: "",
+      //   colorPickedHex: "",
+      // },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        ".altrp-heading{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("heading_default_opacity", {
+      type: CONTROLLER_SLIDER,
+      label: "Opacity",
+      // default: {
+      //   size: 1
+      // },
+      max: 1,
+      min: 0,
+      step: 0.01,
+      rules: {
+        ".altrp-heading{{STATE}}": "opacity: {{SIZE}}"
+      }
+    });
+
+    this.addControl('heading_default_background_image', {
+      type: CONTROLLER_MEDIA,
+      label: 'Background Image',
+      default: { url: "" },
+      rules: {
+        ".altrp-heading{{STATE}}": "background-image: url({{URL}});"
+      }
+    });
+
+    this.addControl('heading_default_background_position', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "top left",
+          label: "top left"
+        },
+        {
+          value: "top",
+          label: "top"
+        },
+        {
+          value: "top right",
+          label: "top right"
+        },
+        {
+          value: "right",
+          label: "right"
+        },
+        {
+          value: "bottom right",
+          label: "bottom right"
+        },
+        {
+          value: "bottom",
+          label: "bottom"
+        },
+        {
+          value: "bottom left",
+          label: "bottom left"
+        },
+        {
+          value: "left",
+          label: "left"
+        },
+        {
+          value: "center",
+          label: "center"
+        }
+      ],
+      label: 'Background Position',
+      // default: 'top left',
+      rules: {
+        "div .altrp-heading{{STATE}}": "background-position: {{VALUE}};"
+      }
+    });
+
+    this.addControl('heading_default_background_attachment', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "scroll",
+          label: "scroll"
+        },
+        {
+          value: "fixed",
+          label: "fixed"
+        },
+        {
+          value: "local",
+          label: "local"
+        }
+      ],
+      label: 'Background Attachment',
+      // default: 'scroll',
+      rules: {
+        "div .altrp-heading{{STATE}}": "background-attachment: {{VALUE}};"
+      }
+    });
+
+    this.addControl('heading_default_background_repeat', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "repeat",
+          label: "repeat"
+        },
+        {
+          value: "repeat-x",
+          label: "repeat-x"
+        },
+        {
+          value: "repeat-y",
+          label: "repeat-y"
+        },
+        {
+          value: "space",
+          label: "space"
+        },
+        {
+          value: "round",
+          label: "round"
+        },
+        {
+          value: "no-repeat",
+          label: "no-repeat"
+        }
+      ],
+      label: 'Background Repeat',
+      // default: 'repeat',
+      rules: {
+        "div .altrp-heading{{STATE}}": "background-repeat: {{VALUE}};"
+      }
+    });
+
+    this.addControl("heading_default_background_image_width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default: {
+        size: 100,
+        unit: 'px',
+      },
+      conditions: {
+        'background_size': [''],
+      },
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 1000,
+      min: 0,
+      rules: {
+        ".altrp-heading{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
+      }
+    });
+
+    this.addControl('heading_default_background_size', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "unset",
+          label: "unset"
+        },
+        {
+          value: "cover",
+          label: "cover"
+        },
+        {
+          value: "contain",
+          label: "contain"
+        },
+        {
+          value: "",
+          label: "set width"
+        },
+      ],
+      label: 'Background Size',
+      // default: 'unset',
+      rules: {
+        ".altrp-heading{{STATE}}": "background-size: {{VALUE}};"
       }
     });
 
@@ -590,10 +792,10 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default: {
-        top: 20,
-        right: 25,
-        bottom: 20,
-        left: 25,
+        // top: 20,
+        // right: 25,
+        // bottom: 20,
+        // left: 25,
         unit: 'px',
         bind: true
       },
@@ -603,7 +805,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        '.altrp-btn{{STATE}}': [
+        'div .altrp-btn{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -615,16 +817,16 @@ class RootElement extends BaseElement {
     this.addControl('button_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      default: {
-        lineHeight: 1,
-        spacing: 0,
-        size: 16,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
+      // default: {
+      //   lineHeight: 1,
+      //   spacing: 0,
+      //   size: 16,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
       rules: {
-        '.altrp-btn{{STATE}}': [
+        'div .altrp-btn{{STATE}}': [
           'font-size: {{SIZE}}px;',
           'font-family: {{FAMILY}}',
           'line-height: {{LINEHEIGHT}};',
@@ -640,12 +842,12 @@ class RootElement extends BaseElement {
     this.addControl('button_font_color', {
       type: CONTROLLER_COLOR,
       label: 'Color',
-      default: {
-        color: "rgb(255,255,255)",
-        colorPickedHex: "#FFF",
-      },
+      // default: {
+      //   color: "rgb(255,255,255)",
+      //   colorPickedHex: "#FFF",
+      // },
       rules: {
-        '.altrp-btn{{STATE}}': 'color: {{COLOR}};',
+        'div .altrp-btn{{STATE}}': 'color: {{COLOR}};',
       },
     });
 
@@ -704,33 +906,35 @@ class RootElement extends BaseElement {
     this.addControl('button_border_color', {
       type: CONTROLLER_COLOR,
       label: 'Border Color',
-      default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852",
-      },
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852",
+      // },
       rules: {
-        '.altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
+        'div .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
       },
     }
     );
 
-    this.addControl('button_border_radius', {
-      type: CONTROLLER_SLIDER,
-      label: 'Border radius',
+    this.addControl('button_default_border_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Radius',
       default: {
-        size: 6,
-        unit: 'px',
+        unit: 'px'
       },
       units: [
         'px',
         '%',
         'vh',
       ],
-      max: 100,
-      min: 0,
       rules: {
-        '.altrp-btn{{STATE}}': 'border-radius: {{SIZE}}{{UNIT}}',
-      },
+        'div .altrp-btn{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}', 
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
     });
 
     this.addControl('button_box_shadow', {
@@ -745,26 +949,26 @@ class RootElement extends BaseElement {
         colorRGB: 'rgb(0, 0, 0)',
         color: 'rgb(0, 0, 0)',
         colorPickedHex: '#000000',
-        type: ""
+        type: " "
       },
       presetColors: [
         '#eaeaea',
         '#9c18a8'
       ],
       rules: {
-        '.altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+        'div .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
       },
     });
 
     this.addControl('button_background_color', {
       type: CONTROLLER_COLOR,
       label: 'Background color',
-      default: {
-        color: "rgb(52,59,76)",
-        colorPickedHex: "#343B4C",
-      },
+      // default: {
+      //   color: "rgb(52,59,76)",
+      //   colorPickedHex: "#343B4C",
+      // },
       rules: {
-        '.altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
+        'div .altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
       },
     });
 
@@ -835,9 +1039,9 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Background Position',
-      default: 'top left',
+      // default: 'top left',
       rules: {
-        ".altrp-btn{{STATE}}": "background-position: {{VALUE}};"
+        "div .altrp-btn{{STATE}}": "background-position: {{VALUE}};"
       }
     });
 
@@ -858,9 +1062,9 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Background Attachment',
-      default: 'scroll',
+      // default: 'scroll',
       rules: {
-        ".altrp-btn{{STATE}}": "background-attachment: {{VALUE}};"
+        "div .altrp-btn{{STATE}}": "background-attachment: {{VALUE}};"
       }
     });
 
@@ -893,9 +1097,9 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Background Repeat',
-      default: 'repeat',
+      // default: 'repeat',
       rules: {
-        ".altrp-btn{{STATE}}": "background-repeat: {{VALUE}};"
+        "div .altrp-btn{{STATE}}": "background-repeat: {{VALUE}};"
       }
     });
 
@@ -942,7 +1146,7 @@ class RootElement extends BaseElement {
         },
       ],
       label: 'Background Size',
-      default: 'unset',
+      // default: 'unset',
       rules: {
         ".altrp-btn{{STATE}}": "background-size: {{VALUE}};"
       }
@@ -994,7 +1198,7 @@ class RootElement extends BaseElement {
     this.addControl('alignment_list_default', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: 'left',
+      // default: 'left',
       options: [
         {
           icon: 'left',
@@ -1010,8 +1214,8 @@ class RootElement extends BaseElement {
         }
       ],
       rules: {
-        '.altrp-list-ul-inline{{STATE}}': 'justify-content: {{VALUE}};',
-        '.altrp-list-ul-default .altrp-list-li{{STATE}}': 'justify-content: {{VALUE}};'
+        'div .altrp-list-ul-inline{{STATE}}': 'justify-content: {{VALUE}};',
+        'div .altrp-list-ul-default .altrp-list-li{{STATE}}': 'justify-content: {{VALUE}};'
       },
     });
 
@@ -1019,7 +1223,7 @@ class RootElement extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Indent',
       default: {
-        size: 0,
+        // size: 0,
         unit: 'px',
       },
       max: 50,
@@ -1057,10 +1261,10 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Text Padding',
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: 'px'
       },
       units: [
@@ -1069,7 +1273,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        '.altrp-list-label{{STATE}}': [
+        'div .altrp-list-label{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -1081,17 +1285,17 @@ class RootElement extends BaseElement {
     this.addControl('typographic_list_text_default', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      default: {
-        lineHeight: 1,
-        spacing: 0,
-        size: 16,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
+      // default: {
+      //   lineHeight: 1,
+      //   spacing: 0,
+      //   size: 16,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
       rules: {
         '.altrp-list-label{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',
@@ -1107,7 +1311,7 @@ class RootElement extends BaseElement {
     this.addControl("link_decoration_text_default", {
       type: CONTROLLER_SELECT,
       label: "Text decoration",
-      default: "none",
+      // default: "none",
       options: [
         {
           value: "none",
@@ -1127,7 +1331,7 @@ class RootElement extends BaseElement {
         },
       ],
       rules: {
-        ".altrp-list-li-link{{STATE}}": "text-decoration: {{VALUE}};"
+        "div .altrp-list-li-link{{STATE}}": "text-decoration: {{VALUE}};"
       }
     });
 
@@ -1142,15 +1346,15 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: "px"
       },
       units: ["px", "%", "vh"],
       rules: {
-        ".altrp-text{{STATE}}": [
+        "div .altrp-text{{STATE}}": [
           "padding-top: {{TOP}}{{UNIT}};",
           "padding-right: {{RIGHT}}{{UNIT}};",
           "padding-bottom: {{BOTTOM}}{{UNIT}};",
@@ -1163,10 +1367,10 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default: {
-        top: 5,
-        right: 0,
-        bottom: 5,
-        left: 0,
+        // top: 5,
+        // right: 0,
+        // bottom: 5,
+        // left: 0,
         unit: 'px'
       },
       units: [
@@ -1175,7 +1379,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        '.altrp-text{{STATE}}': [
+        'div .altrp-text{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -1200,31 +1404,31 @@ class RootElement extends BaseElement {
     this.addControl("text_style_background_opacity", {
       type: CONTROLLER_SLIDER,
       label: "Opacity",
-      default: {
-        size: 1
-      },
+      // default: {
+      //   size: 1
+      // },
       max: 1,
       min: 0,
       step: 0.01,
       rules: {
-        ".altrp-text{{STATE}}": "opacity: {{SIZE}}"
+        "div .altrp-text{{STATE}}": "opacity: {{SIZE}}"
       }
     });
 
     this.addControl('text_style_font_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 16,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
+      // default: {
+      //   lineHeight: 1.5,
+      //   spacing: 0,
+      //   size: 16,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
       rules: {
-        '.altrp-text{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-sefir;',
+        'div .altrp-text{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',
@@ -1240,13 +1444,13 @@ class RootElement extends BaseElement {
     this.addControl("text_style_font_color", {
       type: CONTROLLER_COLOR,
       label: "Color",
-      default: {
-        color: "rgb(0, 0, 1)",
-        colorPickedHex: "#000000"
-      },
+      // default: {
+      //   color: "rgb(0, 0, 1)",
+      //   colorPickedHex: "#000000"
+      // },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        ".altrp-text{{STATE}}": "color: {{COLOR}};"
+        "div.altrp-text{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -1298,31 +1502,33 @@ class RootElement extends BaseElement {
     this.addControl("text_style_border_color", {
       type: CONTROLLER_COLOR,
       label: "Border color",
-      default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852"
-      },
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852"
+      // },
       rules: {
-        ".altrp-text{{STATE}}": "border-color: {{COLOR}};"
+        "div .altrp-text{{STATE}}": "border-color: {{COLOR}};"
       }
     });
 
-    this.addControl("text_style_border_radius", {
-      type: CONTROLLER_SLIDER,
-      label: 'Border radius',
+    this.addControl('text_default_border_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Radius',
       default: {
-        size: 0,
-        unit: 'px',
+        unit: 'px'
       },
       units: [
         'px',
         '%',
         'vh',
       ],
-      max: 100,
-      min: 0,
       rules: {
-        ".altrp-text{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
+        'div .altrp-text{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
       }
     });
 
@@ -1337,10 +1543,10 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: 'px'
       },
       units: [
@@ -1349,7 +1555,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        '.altrp-image{{STATE}}': [
+        'div .altrp-image{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -1362,10 +1568,10 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: 'px'
       },
       units: [
@@ -1374,7 +1580,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        '.altrp-image-container{{STATE}}': [
+        'div .altrp-image-container{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -1386,9 +1592,9 @@ class RootElement extends BaseElement {
     this.addControl('image_default_opacity', {
       type: CONTROLLER_SLIDER,
       label: 'Opacity',
-      default: {
-        size: 1,
-      },
+      // default: {
+      //   size: 1,
+      // },
       max: 1,
       min: 0,
       step: 0.01,
@@ -1400,7 +1606,7 @@ class RootElement extends BaseElement {
     this.addControl('image_default_fit_size', {
       type: CONTROLLER_SELECT,
       label: 'Image fit',
-      default: "cover",
+      // default: "cover",
       options: [
         {
           'value': 'fill',
@@ -1424,7 +1630,7 @@ class RootElement extends BaseElement {
         }
       ],
       rules: {
-        '.altrp-image{{STATE}}': 'object-fit: {{VALUE}};',
+        'div .altrp-image{{STATE}}': 'object-fit: {{VALUE}};',
       },
     }
     );
@@ -1489,37 +1695,792 @@ class RootElement extends BaseElement {
     this.addControl('image_default_border_color', {
       type: CONTROLLER_COLOR,
       label: 'Border Color',
-      default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852",
-      },
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852",
+      // },
       rules: {
-        '.altrp-image{{STATE}}': 'border-color: {{COLOR}};',
+        'div .altrp-image{{STATE}}': 'border-color: {{COLOR}};',
       },
     }
     );
 
     this.addControl('image_default_border_radius', {
-      type: CONTROLLER_SLIDER,
-      label: 'Border radius',
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Radius',
       default: {
-        size: 0,
-        unit: 'px',
+        unit: 'px'
       },
       units: [
         'px',
         '%',
         'vh',
       ],
-      max: 100,
-      min: 0,
       rules: {
-        '.altrp-image{{STATE}}': 'border-radius: {{SIZE}}{{UNIT}}',
+        'div .altrp-image{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('input_defaults', {
+      tab: TAB_STYLE,
+      label: 'Input Defaults',
+    });
+
+    this.addControl("label_default_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "Label Font Color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        ".altrp-field-label{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('label_default_font_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Label Typographic',
+      // default: {
+      //   lineHeight: 1.5,
+      //   spacing: 0,
+      //   size: 16,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
+      rules: {
+        'div .altrp-field-label{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
+    );
+
+    this.addControl('field_default_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Field Typographic',
+      // default: {
+      //   lineHeight: 1.5,
+      //   spacing: 0,
+      //   size: 16,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
+      rules: {
+        'div .altrp-field-select2__single-value{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px;',
+          'font-weight: {{WEIGHT}};',
+          'text-transform: {{TRANSFORM}};',
+          'font-style: {{STYLE}};',
+          'text-decoration: {{DECORATION}};'
+        ],
+        'div .altrp-field{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px;',
+          'font-weight: {{WEIGHT}};',
+          'text-transform: {{TRANSFORM}};',
+          'font-style: {{STYLE}};',
+          'text-decoration: {{DECORATION}};'
+        ]
       },
     });
 
+    this.addControl("field_default_color", {
+      type: CONTROLLER_COLOR,
+      label: "Field Font Color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        '.altrp-field-select2__single-value{{STATE}}': 'color : {{COLOR}};',
+        '.altrp-field{{STATE}}': 'color : {{COLOR}};'
+      }
+    });
+
+    this.addControl('placeholder_and_value_alignment_default', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment, value',
+      // default: 'left',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        }
+      ],
+      rules: {
+        'div .altrp-field{{STATE}}': 'text-align: {{VALUE}};',
+        'div .altrp-field-select2__control{{STATE}}': 'text-align: {{VALUE}};'
+      },
+    });
+
+    this.addControl('field_default_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      default: {
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        'div .altrp-field-container{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('field_default_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        // top: 2,
+        // right: 2,
+        // bottom: 2,
+        // left: 2,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        'div .altrp-field{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ],
+        'div .altrp-field-select2__control{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl("placeholder_default_color", {
+      type: CONTROLLER_COLOR,
+      label: "PLaceholder Font Color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        ".altrp-field::placeholder{{STATE}}": "color: {{COLOR}};",
+        ".altrp-field-select2__placeholder{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('placeholder_default_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Placeholder Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 13,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        'div .altrp-field::placeholder{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+        'div .altrp-field-select2__placeholder{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
+    );
+
+    this.addControl('input_default_background_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Background Color',
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        '.altrp-field{{STATE}}': 'background-color: {{COLOR}};',
+        '.altrp-field-select2__control{{STATE}}': 'background-color: {{COLOR}};',
+      },
+    }
+    );
+
+    this.addControl('input_default_border_type', {
+      type: CONTROLLER_SELECT,
+      label: 'Border Type',
+      // default: 'solid',
+      options: [
+        {
+          'value': 'none',
+          'label': 'None',
+        },
+        {
+          'value': 'solid',
+          'label': 'Solid',
+        },
+        {
+          'value': 'double',
+          'label': 'Double',
+        },
+        {
+          'value': 'dotted',
+          'label': 'Dotted',
+        },
+        {
+          'value': 'dashed',
+          'label': 'Dashed',
+        },
+        {
+          'value': 'groove',
+          'label': 'Groove',
+        },
+      ],
+      rules: {
+        'div .altrp-field{{STATE}}': 'border-style: {{VALUE}};',
+        'div .altrp-field-select2__control{{STATE}}': 'border-style: {{VALUE}};'
+
+      },
+    }
+    );
+
+    this.addControl('input_default_border_width', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Width',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      // default: {
+      //   top: 2,
+      //   right: 2,
+      //   bottom: 2,
+      //   left: 2
+      // },
+      rules: {
+        '.altrp-field{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '.altrp-field-select2__control{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
+      },
+    }
+    );
+
+    this.addControl('input_default_border_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Border Color',
+      // default: {
+      //   color: "rgb(142,148,170)",
+      //   colorPickedHex: "#8E94AA",
+      // },
+      rules: {
+        '.altrp-field{{STATE}}': 'border-color: {{COLOR}};',
+        '.altrp-field-select2__control{{STATE}}': 'border-color: {{COLOR}};'
+      },
+    }
+    );
+
+    this.addControl('input_default_border_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Radius',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-field{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ],
+        '.altrp-field-select2__control{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
+    });
+
+    this.addControl('input_default_box_shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'Box shadow',
+      default: {
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        opacity: 1,
+        spread: 0,
+        colorRGB: 'rgb(0, 0, 0)',
+        color: 'rgb(0, 0, 0)',
+        colorPickedHex: '#000000',
+        type: " "
+      },
+      presetColors: [
+        '#eaeaea',
+        '#9c18a8'
+      ],
+      rules: {
+        '.altrp-field{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+        '.altrp-field-select2__control{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};'
+      },
+    });
 
     this.endControlSection();
+
+    this.startControlSection('table_defaults', {
+      tab: TAB_STYLE,
+      label: 'Table Defaults',
+    });
+    
+    this.addControl('table_default_header_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Header alignment',
+      default: 'center',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ],
+      rules: {
+        'tr .altrp-table-th{{STATE}}': 'text-align: {{VALUE}}',
+      },
+    });
+
+    this.addControl('table_default_body_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Body alignment',
+      // default: 'left',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ],
+      rules: {
+        'tr .altrp-table-td{{STATE}}': 'text-align: {{VALUE}}',
+      },
+    });
+
+    this.addControl("table_default_stripe_color", {
+      type: CONTROLLER_COLOR,
+      label: "Stripe Color",
+      default: {
+        color: "rgba(0, 0, 50, .05)",
+        colorPickedHex: "#32a852"
+      },
+      rules: {
+        'tbody .altrp-table-tbody--striped tr:nth-child(2n)': 'background-color: {{COLOR}}'
+      }
+    });
+
+    this.addControl("table_default_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Table Border Type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        '.altrp-table{{STATE}}': 'border-style: {{VALUE}} !important'
+      }
+    });
+
+    this.addControl("table_default_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Table Border Width",
+      default: {
+        // top: 1,
+        // right: 1,
+        // bottom: 1,
+        // left: 1,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        'div .altrp-table{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
+      }
+    });
+
+    this.addControl("table_default_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Table Border Color",
+      // default: {
+      //   color: "rgb(186,186,186)",
+      //   colorPickedHex: "#32a852"
+      // },
+      rules: {
+        'div .altrp-table{{STATE}}': 'border-color: {{COLOR}} !important'
+      }
+    });
+
+    this.addControl("table_default_header_background", {
+      type: CONTROLLER_COLOR,
+      label: "Header Background",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '.altrp-table-head{{STATE}}': 'background: {{COLOR}}'
+      }
+    });
+
+    this.addControl("table_default_header_text_color", {
+      type: CONTROLLER_COLOR,
+      label: "Header Text color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '.altrp-table-th{{STATE}}': 'color: {{COLOR}}'
+      }
+    });
+
+    this.addControl('table_default_header_font', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Header Typographic',
+      // default: {
+      //   lineHeight: 1.5,
+      //   spacing: 0,
+      //   size: 14,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
+      rules: {
+        'tr .altrp-table-th{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
+
+    this.addControl("table_default_header_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Header Border type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        '.altrp-table-th{{STATE}}': 'border-style: {{VALUE}};',
+      }
+    });
+
+    this.addControl("table_default_header_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Header Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        '.altrp-table-th{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      }
+    });
+
+    this.addControl("table_default_header_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Header Border color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '.altrp-table-th{{STATE}}': 'border-color: {{COLOR}};',
+      }
+    });
+
+    this.addControl('table_default_header_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Header Padding',
+      default: {
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        'tr .altrp-table-th{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    });
+
+    this.addControl("table_default_body_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Body Border type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        '.altrp-table-td{{STATE}}': 'border-style: {{VALUE}};',
+      }
+    });
+
+    this.addControl("table_default_body_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Body Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        '.altrp-table-td{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      }
+    });
+
+    this.addControl("table_default_body_border_color_", {
+      type: CONTROLLER_COLOR,
+      label: "Body Border color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '.altrp-table-td{{STATE}}': 'border-color: {{COLOR}};',
+      }
+    });
+
+    this.addControl('table_default_body_cell_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Cell padding',
+      default: {
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        'tr .altrp-table-td{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    });
+
+    this.addControl("table_default_body_border_background", {
+      type: CONTROLLER_COLOR,
+      label: "Body Background",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '.altrp-table-tbody .altrp-table-background{{STATE}}': 'background: {{COLOR}};',
+      }
+    });
+
+    this.addControl("table_default_body_border_text_color", {
+      type: CONTROLLER_COLOR,
+      label: "Body Text color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '.altrp-table-td{{STATE}}': 'color: {{COLOR}};',
+      }
+    });
+
+    this.addControl('table_default_body_font', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Body Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 14,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '.altrp-table-td{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
+
+    this.addControl("table_default_body_links_color", {
+      type: CONTROLLER_COLOR,
+      label: "links_color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+      }
+    });
+
+    this.endControlSection();
+
+
     /**
      * импорт/сохранение глобальных настроек
      */

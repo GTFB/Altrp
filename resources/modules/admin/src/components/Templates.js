@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
 import store from "../js/store/store";
-import {setModalSettings, toggleModal} from "../js/store/modal-settings/actions";
+import {setModalSettings} from "../js/store/modal-settings/actions";
 import { generateId, redirect, objectDeepCleaning } from "../js/helpers";
 import Pagination from "./Pagination";
 
@@ -17,6 +17,7 @@ export default class Templates extends Component{
       activeTemplateArea: {},
       pageCount: 1,
       currentPage: 1,
+      templateSearch: ''
     };
     this.resource = new Resource({
       route: '/admin/ajax/templates'
@@ -79,19 +80,39 @@ export default class Templates extends Component{
       });
     });
   }
+
+  updateTemplatesSearch = e => {
+    const s = e.target.value;
+    this.resource.getQueried({
+      area: this.state.activeTemplateArea.name,
+      page: this.state.currentPage,
+      pageSize: 10,
+      s
+    }).then(res => {
+      this.setState(state => {
+        console.log(res.s)
+        return {
+          ...state,
+          pageCount: res.pageCount,
+          templates: res.templates,
+          templateSearch: s
+        }
+      });
+    });
+  }
   /** @function generateTemplateJSON
   * Генерируем контент файла template в формате JSON
   * @param {object} template Данные, получаемые с сервера
-  * @return {strig} Строка в формате JSON
+  * @return {string} Строка в формате JSON
   */
   generateTemplateJSON(template) {
-    const data = objectDeepCleaning(JSON.parse(template.data))
-    const json = JSON.stringify({ 
-      template_area: this.state.activeTemplateArea.name, 
-      data
+    const data = objectDeepCleaning(JSON.parse(template.data));
+    return JSON.stringify({
+      area: this.state.activeTemplateArea.name,
+      data,
+      title: template.title,
+      name: template.name,
     });
-    console.log(JSON.parse(json))
-    return json;
   }
   /** @function downloadJSONFile
   * Скачиваем файл
@@ -105,6 +126,10 @@ export default class Templates extends Component{
     document.body.appendChild(element); // Required for this to work in FireFox
     element.click();
   }
+
+  /**
+   * Компонент загрузился
+   */
   async componentDidMount(){
     let templateAreas = await this.templateTypesResource.getAll();
     this.setActiveArea(templateAreas[0]);
@@ -113,6 +138,51 @@ export default class Templates extends Component{
     });
     this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea)
   }
+
+  /**
+   * Показываем/скрываем форму импорта
+   */
+  toggleImportForm = ()=>{
+    this.setState(state=>({...state,showImportForm: ! this.state.showImportForm}))
+  };
+  /**
+   * Импортируем шаблон из файла
+   */
+  importTemplate = (e)=>{
+    e.preventDefault();
+    let files = _.get(e, 'target.files.files', []);
+    let uploadedFilesCount = 0;
+    if(files.length){
+      _.forEach(files, f =>{
+        let fr = new FileReader();
+        fr.onload = async (e) =>{
+          let importedTemplateData = _.get(e, 'target.result', '{}');
+          importedTemplateData = JSON.parse(importedTemplateData);
+          console.log(importedTemplateData);
+          let areaExists = false;
+          this.state.templateAreas.forEach(ta=>{
+            if(ta.name === importedTemplateData.area){
+              importedTemplateData.area = ta.id;
+              areaExists = true;
+            }
+          });
+          if(! areaExists){
+            importedTemplateData.area = _.filter(this.state.templateAreas,ta=>{
+              return ta.name === 'content';
+            });
+          }
+          // let res = await this.templateImportModule.importTemplate(importedTemplateData)
+          console.log(this.resource);
+          console.log(importedTemplateData);
+          let res = this.resource.post(importedTemplateData);
+          console.log(res);
+        };
+
+        fr.readAsText(f);
+      })
+    }
+  };
+
   onClick(){
     let modalSettings = {
       title: 'Add New Template',
@@ -168,7 +238,9 @@ export default class Templates extends Component{
       return{...state, templates, allTemplates};
     });
   }
+
   render(){
+    const { templateSearch } = this.state
     return <div className="admin-templates admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
@@ -177,11 +249,22 @@ export default class Templates extends Component{
           <span className="admin-breadcrumbs__current">All Templates</span>
         </div>
         <button onClick={this.onClick} className="btn">Add New</button>
+        <button onClick={this.toggleImportForm} className="btn ml-3">Import Template</button>
         <div className="admin-filters">
           <span className="admin-filters__current">All ({this.state.allTemplates.length || ''})</span>
         </div>
       </div>
       <div className="admin-content">
+        {this.state.showImportForm &&<form className={"admin-form justify-content-center" + (this.state.showImportForm ? ' d-flex' : ' d-none')}
+              onSubmit={this.importTemplate}>
+          <input type="file"
+                 name="files"
+                 multiple={true}
+                 required={true}
+                 accept="application/json"
+                 className="form__input"/>
+          <button  className="btn">Import</button>
+        </form>}
         <ul className="nav nav-pills admin-pills">
           {this.state.templateAreas.map(area=>{
             let tabClasses = ['nav-link',];
@@ -235,6 +318,10 @@ export default class Templates extends Component{
             className: 'quick-action-menu__item_danger',
             title: 'Trash'
           }]}
+          search={{
+            value: templateSearch || '',
+            changeHandler: this.updateTemplatesSearch
+          }}
         />
         <Pagination pageCount={this.state.pageCount || 1}
                     currentPage={this.state.currentPage}

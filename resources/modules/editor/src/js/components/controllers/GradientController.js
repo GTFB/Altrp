@@ -89,7 +89,7 @@ class GradientController extends Component {
           </div>}
           <div className="control-color-opacity-container">
             {/* TODO: порефакторить */}
-            <label className="control-color-opacity" >{(parseFloat(firstColor.split(',')[3]) * 100).toFixed() + "%"}</label>
+            <label className="control-color-opacity" >{firstColor && ((parseFloat(firstColor.split(',')[3]) * 100).toFixed() + "%")}</label>
           </div>
         </div>
       </div>
@@ -140,7 +140,7 @@ class GradientController extends Component {
           </div>}
           <div className="control-color-opacity-container">
             {/* TODO: порефакторить */}
-            <label className="control-color-opacity" >{(parseFloat(secondColor.split(',')[3]) * 100).toFixed() + "%"}</label>
+            <label className="control-color-opacity" >{secondColor && ((parseFloat(secondColor.split(',')[3]) * 100).toFixed() + "%")}</label>
           </div>
         </div>
       </div>

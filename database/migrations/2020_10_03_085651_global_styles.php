@@ -18,7 +18,7 @@ class GlobalStyles extends Migration
       $table->timestamps();
       $table->bigIncrements( 'id' );
       $table->string( 'title' );
-      $table->longText( 'data' )->default( '{}' );
+      $table->longText( 'data' )->nullable();
       $table->bigInteger( 'user_id' )->unsigned();
       $table->unique( 'title', 'title_index' );
       $table->foreign( 'user_id', 'user' )->references( 'id' )->on( 'users' );

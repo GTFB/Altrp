@@ -11,12 +11,15 @@
 @import "components/admin-users";
 @import "components/users-tools";
 @import "components/admin-logo";
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap");
 @import "components/admin-users";
 @import "components/admin-models";
 @import "components/admin-charts";
 @import "~react-datepicker/dist/react-datepicker.css";
 @import "components/admin-sql-builder";
+@import url("/fonts/Roboto/stylesheet.css");
+@import url("/fonts/OpenSans/stylesheet.css");
+@import url("/fonts/PTSans/stylesheet.css");
+@import url("/fonts/Montserrat/stylesheet.css");
 
 .admin {
   display: flex;

@@ -25,7 +25,7 @@ class DataStorageUpdater extends AltrpModel{
    *  @param {Datasource[]} dataSources
    */
   async updateCurrent(dataSources = []){
-    dataSources = _.sortBy(dataSources, data_source => data_source.priority);
+    dataSources = _.sortBy(dataSources, ['data.priority']);
     this.setProperty('currentDataSources', dataSources);
     /**
      * @member {Datasource} dataSource
@@ -33,10 +33,11 @@ class DataStorageUpdater extends AltrpModel{
     for(let dataSource of dataSources){
       if(dataSource.getWebUrl()){
         let params = dataSource.getParams(window.currentRouterMatch.params, 'altrpforms.');
+        let defaultParams = _.cloneDeep(params);
         let needUpdateFromForms = false;
         _.each(params, (paramValue, paramName) => {
-          if(paramValue.indexOf('altrpforms.') === 0){
-            params[paramName] = '';
+          if(paramValue.toString().indexOf('altrpforms.') === 0){
+            params[paramName] = _.get(appStore.getState().formsStore, paramValue.toString().replace('altrpforms.', ''),'');
             needUpdateFromForms = true;
           }
         });
@@ -45,18 +46,23 @@ class DataStorageUpdater extends AltrpModel{
          * и сохраняем параметры, с которыми уже получили данные
          */
         if(needUpdateFromForms){
-          this.subscribeToFormsUpdate(dataSource, _.cloneDeep(params));
+          this.subscribeToFormsUpdate(dataSource, _.cloneDeep(defaultParams));
         }
         let res = {};
-        if(dataSource.getType() === 'show') {
-          let id = _.get(params, 'id', _.get(this.props, 'match.params.id'));
-          if(id){
-            res = await (new Resource({route: dataSource.getWebUrl()})).get(id);
+        try {
+          if (dataSource.getType() === 'show') {
+            let id = _.get(params, 'id', _.get(this.props, 'match.params.id'));
+            if (id) {
+              res = await (new Resource({route: dataSource.getWebUrl()})).get(id);
+            }
+          } else if (!_.isEmpty(params)) {
+            res = await (new Resource({route: dataSource.getWebUrl()})).getQueried(params);
+            dataSource.params = _.cloneDeep(params);
+          } else {
+            res = await (new Resource({route: dataSource.getWebUrl()})).getAll();
           }
-        } else if(! _.isEmpty(params)) {
-          res = await (new Resource({route: dataSource.getWebUrl()})).getQueried(params);
-        } else {
-          res = await (new Resource({route: dataSource.getWebUrl()})).getAll();
+        } catch (err) {
+          console.log(err);
         }
         res = _.get(res, 'data', res);
         appStore.dispatch(changeCurrentDataStorage(dataSource.getAlias(), res));
@@ -78,7 +84,7 @@ class DataStorageUpdater extends AltrpModel{
    * @param {{}} params
    */
   subscribeToFormsUpdate(dataSource, params) {
-    let dataSources = this.getProperty('dataSourcesFormsDependent', []);
+    let dataSources = this.getProperty('dataSourcesFormsDependent');
 
     // if(dataSources.indexOf(dataSource) === -1){
     //   dataSources.push(dataSource);
@@ -116,14 +122,21 @@ class DataStorageUpdater extends AltrpModel{
     dataSources = _.sortBy(dataSources, data_source => data_source.priority);
     let formsStore = appStore.getState().formsStore;
     for(let ds of dataSources) {
-      let {dataSource, params: oldParams, updating} = ds;
+      let {dataSource, updating} = ds;
+      let oldParams = _.cloneDeep(dataSource.params);
       /**
        * @member {Datasource} dataSource
        */
       let params = dataSource.getParams(window.currentRouterMatch.params, 'altrpforms.');
       _.forEach(params, (paramValue, paramName)=>{
-        if(paramValue.indexOf('altrpforms.') === 0){
-          params[paramName] = _.get(formsStore, paramValue.replace('altrpforms.', ''))
+        if(paramValue.toString().indexOf('altrpforms.') === 0){
+          params[paramName] = _.get(formsStore, paramValue.replace('altrpforms.', ''));
+          // console.log(formsStore);
+          // console.log(paramValue);
+          // console.log(params[paramName]);
+          // if(_.isArray(params[paramName])){
+          //   params[paramName] = JSON.stringify(params[paramName]);
+          // }
         }
       });
       if(! _.isEqual(params, oldParams) && ! updating){
@@ -132,7 +145,7 @@ class DataStorageUpdater extends AltrpModel{
         res = await (new Resource({route: dataSource.getWebUrl()})).getQueried(params);
         res = _.get(res, 'data', res);
         appStore.dispatch(changeCurrentDataStorage(dataSource.getAlias(), res));
-        ds.params = params;
+        dataSource.params = _.cloneDeep(params);
         ds.updating = false;
       }
     }

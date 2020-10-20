@@ -1,11 +1,14 @@
 @import "../../../../sass/common";
 @import "./elements-style";
+@import "./creative-link";
+@import "./creative-hover";
 @import "./editor-content";
 @import "../js/components/altrp-carousel/altrp-carousel";
 @import "../js/components/altrp-lightbox/altrp-lightbox";
 @import "./altrp-pagination";
 @import "./altrp-dashboards";
 @import "altrp-list";
+@import "default-styles";
 
 //google fonts
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&display=swap");
@@ -20,8 +23,8 @@
     max-height: 100%;
   }
 }
-.editor-content-body {
-}
+// .editor-content-body {
+// }
 .left-panel {
   width: 270px;
   display: flex;
@@ -1045,6 +1048,10 @@ button {
   width: 16px;
   height: 16px;
 }
+.control-color-backgroundPicked {
+  width: 16px;
+  height: 16px;
+}
 .control-color-colorPicked-container {
   width: 16px;
   height: 16px;
@@ -1303,7 +1310,7 @@ button {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 9999;
+  z-index: 999999;
   outline: 2px solid transparent;
   display: none;
   pointer-events: none;
@@ -1403,7 +1410,7 @@ button {
 .altrp-element_section {
   & > .overlay {
     & .overlay-settings__button {
-      z-index: 9998;
+      z-index: 49;
       &:first-child {
         border-radius: 5px 0 0 0;
         &::before {

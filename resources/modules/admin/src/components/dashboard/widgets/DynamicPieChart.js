@@ -7,15 +7,21 @@ import EmptyWidget from "./EmptyWidget";
 import { getWidgetData } from "../services/getWidgetData";
 import { customStyle } from "../widgetTypes";
 
-const DynamicPieChart = ({ widget, width = 300, height = 300 }) => {
+const DynamicPieChart = ({ widget, width = 300, height = 300, dataSource = [] }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
 
   const getData = useCallback(async () => {
     setIsLoading(true);
-    const charts = await getWidgetData(widget.source, widget.filter);
-    if (charts.status === 200) {
-      setData(charts.data.data || []);
+    if (dataSource.length == 0) {
+      const charts = await getWidgetData(widget.source, widget.filter);
+      if (charts.status === 200) {
+        setData(charts.data.data || []);
+        setIsLoading(false);
+      }
+    }
+    else {
+      setData(dataSource || []);
       setIsLoading(false);
     }
   }, [widget]);
@@ -44,7 +50,7 @@ const DynamicPieChart = ({ widget, width = 300, height = 300 }) => {
     <>
       <PieChart
         height={height}
-        width={width}
+        // width={width}
         data={data || []}
         series={
           <PieArcSeries

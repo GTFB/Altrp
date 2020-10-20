@@ -1,6 +1,6 @@
 import CONSTANTS from "../../../editor/src/js/consts";
-import appStore from "./store/store";
 import AltrpModel from "../../../editor/src/js/classes/AltrpModel";
+import moment from "moment";
 
 export function getRoutes() {
   return import('./classes/Routes.js');
@@ -38,7 +38,7 @@ export function isEditor() {
 
 /**
  * Переменная, в которой храниться измначальный заголовок
- * @var {string}
+ * @let {string}
  */
 let defaultTitle;
 
@@ -59,8 +59,16 @@ export function parseOptionsFromSettings(string) {
   options = options.map(option=>{
     let value = option.split('|')[0];
     value = value.trim();
+    let valuePath = extractPathFromString(value);
+    if(valuePath){
+      value = getDataByPath(valuePath);
+    }
     let label = option.split('|')[1] || value;
     label = label.trim();
+    let labelPath = extractPathFromString(label);
+    if(labelPath){
+      label = getDataByPath(labelPath);
+    }
     return{
       value,
       label,
@@ -104,17 +112,27 @@ export function getMediaSettingsByName(screenSettingName) {
  */
 export function parseURLTemplate(URLTemplate = '', object = {}){
   let url = URLTemplate;
+  let protocol = '';
+  url = url.trim();
+   if(url.indexOf('https://') === 0){
+     protocol = 'https://';
+     url = url.replace('https://', '');
+   }
+   if(url.indexOf('http://') === 0){
+     protocol = 'http://';
+     url = url.replace('http://', '');
+   }
   // columnEditUrl = columnEditUrl.replace(':id', row.original.id);
   let idTemplates = url.match(/:([\s\S]+?)(\/|$)/g);
   if(! idTemplates){
-    return url;
+    return protocol + url;
   }
   idTemplates.forEach(idTemplate=>{
     let replace = object[idTemplate.replace(/:|\//g, '')] || '';
     idTemplate = idTemplate.replace('/', '');
     url = url.replace(new RegExp(idTemplate,'g'), replace);
   });
-  return url;
+  return protocol + url;
 }
 
 export function getWindowWidth() {
@@ -222,9 +240,9 @@ export function conditionsChecker(conditions = [], AND = true, model){
   let result = AND;
   _.each(conditions, c =>{
     if(AND){
-      result *= _conditionChecker(c, model);
+      result *= conditionChecker(c, model);
     } else {
-      result += _conditionChecker(c, model);
+      result += conditionChecker(c, model);
     }
   });
   return result;
@@ -236,7 +254,7 @@ export function conditionsChecker(conditions = [], AND = true, model){
  * @param {AltrpModel} model
  * @return {boolean}
  */
-function _conditionChecker(c, model){
+function conditionChecker(c, model){
   let result = 0;
   const {
      modelField,
@@ -293,8 +311,10 @@ export function getDataByPath(path, _default = null, context = null){
   if(path.indexOf('altrpdata.') === 0){
     path = path.replace('altrpdata.', '');
     value = currentDataStorage.getProperty(path, _default)
+  } else if(path.indexOf('altrptime.') === 0){
+    value = getTimeValue(path.replace('altrptime.',''));
   } else {
-    value = urlParams[path] ? urlParams[path] : currentModel.getProperty(path);
+    value = urlParams[path] ? urlParams[path] : currentModel.getProperty(path, _default);
   }
   return value ;
 }
@@ -362,7 +382,11 @@ export function altrpCompare( leftValue = '', rightValue = '', operator = 'not_e
       return !  _.isEmpty(leftValue,);
     }
     case '==':{
-      return _.isEqual(leftValue, rightValue);
+      if(_.isNumber(leftValue) || _.isNumber(rightValue)){
+        return Number(leftValue) === Number(rightValue);
+      } else {
+        return rightValue === leftValue;
+      }
     }
     case '===':{
       return _.isEqual(leftValue, rightValue);
@@ -381,6 +405,21 @@ export function altrpCompare( leftValue = '', rightValue = '', operator = 'not_e
     }
     case '<=':{
       return Number(leftValue) <= Number(rightValue);
+    }
+    case 'in':{
+      if(! _.isArray(rightValue)){
+        return false;
+      }
+      let result = false;
+      rightValue.forEach(item => {
+        if(! result){
+          result = altrpCompare(leftValue, item, '==')
+        }
+      });
+      return result;
+    }
+    case 'not_in':{
+      return ! altrpCompare(leftValue, rightValue, 'in');
     }
   }
 }
@@ -422,4 +461,221 @@ export const CONDITIONS_OPTIONS = [
     value: '<=',
     label: '<=',
   },
+  {
+    value: 'in',
+    label: 'In',
+  },
+  {
+    value: 'not_in',
+    label: 'Not In',
+  },
 ];
+
+export function isElementTopInViewport(top, scrollTop, clientHeight) {
+
+  return top > scrollTop && top < (scrollTop + clientHeight)
+}
+
+export function getTopPosition(element) {
+  let top = element.offsetTop;
+
+  while (element.offsetParent) {
+    console.log(element.offsetParent);
+    console.log(element.offsetTop);
+    element = element.offsetParent;
+    top += element.offsetTop;
+  }
+
+  return top;
+}
+
+/**
+ * Получить какое-то время по шаблону `YYYY-MM-DD`
+ * @param {string} path
+ * @param {string} defaultValue
+ */
+export function getTimeValue(path, defaultValue){
+
+  let value = defaultValue;
+
+  switch(path){
+    case 'now':{
+      value = _.now();
+    }break;
+    case 'month_start':{
+      value = startOfMonth(new Date);
+    }break;
+    case 'prev_month_start':{
+      value = startOfMonth(new Date, -1);
+    }break;
+    case 'year_start':{
+      value = startOfYear(new Date);
+    }break;
+    case 'prev_year_start':{
+      value = startOfYear(new Date, -1);
+    }break;
+    case 'prev_week_start':{
+      value = getPrevWeekStart();
+    }break;
+    case 'next_week_start':{
+      value = getNextWeekStart();
+    }break;
+    case 'week_start':{
+      value = getWeekStart();
+    }break;
+  }
+  value = moment(value).format('YYYY-MM-DD');
+  return value;
+
+}
+
+/**
+ * Получить начало месяца
+ * @param {Date} date
+ * @param {int} monthShift
+ * @return {Date}
+ */
+export function startOfMonth(date, monthShift = 0){
+  return new Date(date.getFullYear(), date.getMonth() + monthShift, 1);
+}
+/**
+ * Получить начало месяца
+ * @param {Date} date
+ * @param {int} yearShift
+ * @return {Date}
+ */
+export function startOfYear(date, yearShift = 0){
+  return new Date(date.getFullYear() + yearShift, 0, 1);
+}
+/**
+ * Получить начало месяца
+ * @param {Date} date
+ * @param {int} weekShift
+ * @return {Date}
+ */
+export function startOfWeek(date, weekShift = 0){
+  return moment(new Date(date.getFullYear(),date.getMonth(), date.getDate() + (weekShift * 7))).firstDayOfWeek();
+}
+
+/**
+ * Получить ссылку на состояние хранилища
+ * @return {*}
+ */
+export function getCurrentStoreState(){
+  return appStore.getState();
+}
+
+/**
+ * Скроллит к элементу
+ * @param {{}}scrollbars
+ * @param {{}}HTMLElement
+ */
+export function scrollToElement(scrollbars, HTMLElement){
+  const {container} = scrollbars;
+  /**
+   * @member {HTMLElement} container
+   */
+  if(! container){
+    return;
+  }
+  if(! _.isFunction(scrollbars.scrollTop)){
+    return
+  }
+
+  let parent = HTMLElement.offsetParent;
+  let top = HTMLElement.offsetTop;
+
+  while (parent !== container){
+    if(! parent){
+      /**
+       * ушли в самый корень ДОМ и контейнер не встретился
+       */
+      return;
+    }
+    top += parent.offsetTop;
+    parent = parent.offsetParent;
+  }
+
+  /**
+   * не получили каеое-либо значение
+   */
+  if(! top){
+    return;
+  }
+  scrollbars.scrollTop(top)
+}
+
+/**
+ * @param {string} elementId
+ */
+export function getHTMLElementById(elementId){
+  let HTMLElement = null;
+  appStore.getState().elements.forEach(el=>{
+    if(! el.elementWrapperRef.current){
+      return
+    }
+    if(! el.elementWrapperRef.current.id){
+      return
+    }
+    if(el.elementWrapperRef.current.id.toString() === elementId){
+      HTMLElement = el.elementWrapperRef.current;
+    }
+  });
+  return HTMLElement;
+}
+
+/**
+ * Начало следующей недели
+ * @return {moment.Moment}
+ */
+function getNextWeekStart() {
+  let today = moment();
+  let daystoMonday = 7 - (today.isoWeekday() - 1) ;
+  return today.add(daystoMonday,'days');
+}
+
+/**
+ * Начало текущей недели
+ * @return {moment.Moment}
+ */
+function getWeekStart() {
+  let today = moment();
+  let daystoMonday = (today.isoWeekday() - 1);
+  return today.subtract(daystoMonday, 'days');
+}
+
+/**
+ * Конец Следующей недели
+ * @return {moment.Moment}
+ */
+function getNextWeekEnd() {
+  let nextMonday = getNextWeekStart();
+  return nextMonday.add('days', 6);
+}
+
+/**
+ * Начало предыдущей недели
+ * @return {moment.Moment}
+ */
+function getPrevWeekStart() {
+  let today = moment();
+  let daystoLastMonday = (today.isoWeekday() - 1) + 7;
+  return today.subtract(daystoLastMonday, 'days');
+}
+
+/**
+ * Конец предыдущей недели
+ * @return {moment.Moment}
+ */
+function getPrevWeekEnd() {
+  let lastMonday = getPrevWeekStart();
+  return lastMonday.add('days', 6);
+
+}
+
+/**
+ * Elfkztn gecnst cdjqcndf d j,]trnf[
+ */
+export function clearEmptyProps(){
+
+}

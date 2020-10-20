@@ -24,15 +24,22 @@ const sortData = (key, order = "desc") => {
   };
 };
 
-const DynamicTableWidget = ({ widget, width }) => {
+const DynamicTableWidget = ({ widget, width, dataSource = [] }) => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const getData = useCallback(async () => {
     setIsLoading(true);
-    const charts = await getWidgetData(widget.source, widget.filter);
-    if (charts.status === 200) {
-      setData(charts.data.data.sort(sortData("data")));
+    if (dataSource.length == 0) {
+      const charts = await getWidgetData(widget.source, widget.filter);
+      if (charts.status === 200) {
+        setData(charts.data.data.sort(sortData("data")));
+        setIsLoading(false);
+      }
+    }
+    else {
+      console.log('SOURCE ==>', dataSource);
+      setData(dataSource.sort(sortData("data")));
       setIsLoading(false);
     }
   }, [widget]);
@@ -49,7 +56,7 @@ const DynamicTableWidget = ({ widget, width }) => {
 
   if (widget.options.isVertical) {
     return (
-      <div className="widget-table" style={{ width: width + "px" }}>
+      <div className="widget-table">
         <table className="vertical-table">
           <tbody>
             {data.map((item, key) => (
@@ -69,7 +76,7 @@ const DynamicTableWidget = ({ widget, width }) => {
   }
 
   return (
-    <div className="widget-table" style={{ width: width + "px" }}>
+    <div className="widget-table">
       <table>
         <thead>
           <tr>

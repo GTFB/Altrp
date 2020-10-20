@@ -14,6 +14,8 @@ import {currentModelReducer} from "../../../../front-app/src/js/store/current-mo
 import {templateDataReducer} from "./template-data/reducers";
 import {currentUserReducer} from "../../../../front-app/src/js/store/current-user/reducers";
 import {currentDataStorageReducer} from "../../../../front-app/src/js/store/current-data-storage/reducers";
+import {elementsStorageReducer} from "../../../../front-app/src/js/store/elements-storage/reducers";
+import { hideTriggersReducer } from "../../../../front-app/src/js/store/hide-triggers/reducers";
 
 export default combineReducers({
   currentElement: currentElementReducer,
@@ -31,4 +33,6 @@ export default combineReducers({
   templateData: templateDataReducer,
   currentUser: currentUserReducer,
   currentDataStorage: currentDataStorageReducer,
+  elements: elementsStorageReducer,
+  hideTriggers: hideTriggersReducer
 });

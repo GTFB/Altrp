@@ -40,7 +40,7 @@ Route::group([
 
 Route::get( '/admin/editor', function (){
   return view( 'editor' );
-} )->middleware( 'auth' )->name('editor');
+} )->middleware( 'auth', 'admin' )->name('editor');
 
 Route::get( '/admin/editor-content', function (){
   return view( 'editor-content' );
@@ -305,21 +305,32 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/tables/{table}/controller', "Admin\TableController@getController");
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
 
+    /**
+     * Плагины
+     */
 
+    Route::get('/plugins',"Admin\PluginController@index");
+    Route::post('/plugins/switch',"Admin\PluginController@switch");
+
+    /**
+     * Настройка почты
+     */
+    Route::post('/write_mail_settings', 'MailController@writeSettingsToEnv');
+    Route::get('/get_mail_settings', 'MailController@getSettings');
+    /**
+     * Роуты ипортов Админки
+     */
+    Route::group(['prefix' => 'import'], function () {
+      Route::post( 'settings', 'Admin\ImportsController@importAltrpSettings' )->name( 'admin.download.settings' );
+    } );
+    /**
+     * Роуты загрузок Админки
+     */
+    Route::group(['prefix' => 'downloads'], function () {
+      Route::get( 'settings', 'Admin\DownloadsController@exportAltrpSettings' )->name( 'admin.download.settings' );
+    } );
   });
 
-  /**
-   * Роуты загрузок Админки
-   */
-  Route::group(['prefix' => 'downloads'], function () {
-    Route::get( 'settings', 'Admin\DownloadsController@exportAltrpSettings' )->name( 'admin.download.settings' );
-  } );
-  /**
-   * Роуты ипортов Админки
-   */
-  Route::group(['prefix' => 'import'], function () {
-    Route::post( 'settings', 'Admin\ImportsController@importAltrpSettings' )->name( 'admin.download.settings' );
-  } );
 
 });
 
@@ -374,9 +385,12 @@ Route::group( ['prefix' => 'ajax'], function(){
 
   // Загружаем настройки для виджета панели аналитики
   Route::get('dashboards/{id}/settings', 'DashboardsController@settings');
+  Route::get('dashboards/datasource/{id}/data', 'DatasourceDashboardController@index');
 
   // Записываем новые настройки для виджета панели аналитики
   Route::post('dashboards/{id}/settings', 'DashboardsController@settings');
+  // Записываем новые настройки для виджета панели аналитики с датасурсами
+  Route::post('dashboards/datasource/{id}/settings', 'DatasourceDashboardController@settings');
 
   // Записывает данные для виджета панели аналитики
   Route::post('dashboards/{id}', 'DashboardsController@store');
@@ -402,27 +416,14 @@ Route::group( ['prefix' => 'ajax'], function(){
    */
   Route::get( 'pages/{page_id}', 'Frontend\PageController@pageForRoutes' )->name( 'front.page-for-routes' );
   /**
-   * todo: реализовать в контроллерах моделей
-   */
-//  Route::get( 'models/{model_name}', 'Frontend\ModelsController@models' )
-//    ->name( 'front.models.all' );
-//
-//  Route::get( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@show' )
-//    ->name( 'front.models.show' );
-//
-//  Route::delete( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@delete' )
-//    ->name( 'front.models.delete' );
-//
-//  Route::put( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@edit' )
-//    ->name( 'front.models.edit' );
-//
-//  Route::post( 'models/{model_name}', 'Frontend\ModelsController@create' )
-//    ->name( 'front.models.create' );
-
-  /**
-   * todo: для загрузчика шаблонов для виджетов
+   * для загрузки шаблонов внутри виджетов
    */
   Route::get( 'templates/{template_id}', 'TemplateController@show_frontend' )->name( 'templates.show.frontend' );
+
+  /**
+   * Настройка почты
+   */
+  Route::post('/feedback', 'MailController@sendMail');
 
 } );
 
@@ -444,9 +445,3 @@ Route::group( ['prefix' => 'ajax', 'middleware' => 'auth'], function() {
  * Обновление всех ресурсов бэкенда
  */
 Route::post( 'update-all-resources', 'Admin\UpdateController@upgradeAllResources' );
-
-/**
- * Настройка почты
- */
-Route::post('/feedback', 'MailController@sendMail');
-Route::post('/write_mail_settings', 'MailController@writeSettingsToEnv');

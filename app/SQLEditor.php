@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Altrp\Source;
+use App\Traits\Searchable;
 use Illuminate\Database\Eloquent\Model;
 use App\Altrp\Model as AltrpModel;
 use Illuminate\Support\Arr;
@@ -10,7 +11,8 @@ use Illuminate\Support\Facades\Log;
 
 class SQLEditor extends Model
 {
-    //
+    use Searchable;
+
   protected $fillable = [
     'name',
     'sql',
@@ -39,6 +41,7 @@ class SQLEditor extends Model
         if( $imported_editor['name'] === $old_editor->name ){
         if( date( $imported_editor['updated_at'] ) > date( $old_editor->updated_at ) ){
           $old_editor->fill( $imported_editor );
+          $old_editor->model_id = $model->id;
           try {
             $old_editor->save();
           } catch (\Exception $e){

@@ -300,7 +300,7 @@ class ModelsController extends HttpController
             $pageCount = 0;
             $data_sources = $search
                 ? Source::getBySearch($search)
-                : Source::all();
+                : Source::all()->sortByDesc('id')->values();
         } else {
             $dataSourcesCount = $search
                 ? Source::getCountWithSearch($search)

@@ -15,7 +15,10 @@ import {
   CONTROLLER_REPEATER,
   TAB_CONTENT,
   TAB_STYLE,
-  TAB_ADVANCED, CONTROLLER_MEDIA, CONTROLLER_SWITCHER, CONTROLLER_LINK
+  TAB_ADVANCED,
+  CONTROLLER_MEDIA,
+  CONTROLLER_SWITCHER,
+  CONTROLLER_LINK
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 
@@ -683,7 +686,7 @@ class List extends BaseElement{
         // },
         rules: {
           '{{ELEMENT}} .altrp-list-label{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',

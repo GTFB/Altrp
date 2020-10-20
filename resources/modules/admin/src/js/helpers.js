@@ -1,6 +1,7 @@
 import IconsManager from "../../../editor/src/js/classes/modules/IconsManager";
 import Resource from "../../../editor/src/js/classes/Resource";
 import { isEmpty } from "lodash";
+import FrontElement from "../../../front-app/src/js/classes/FrontElement";
 
 export function redirect(url) {
   url = url || '/';
@@ -36,6 +37,9 @@ const a = { "Ё": "Yo", "Й": "I", "Ц": "Ts", "У": "U", "К": "K", "Е": "E", 
  * @return {string}
  */
 export function transliterate(str) {
+  if (!str) {
+    return "";
+  }
   return str.split('').map(function (char) {
     return _.isUndefined(a[char]) ? char : a[char];
   }).join("");
@@ -51,12 +55,19 @@ export function titleToName(str) {
   return str.toLowerCase().replace(/^\d+/, '').replace(/[^\d\w]/g, '_');
 
 }
+
+export function titleToPath(str) {
+  str = transliterate(str);
+  return str.toLowerCase().replace(/^\d+/, '').replace(/[^\d\w]/g, '-');
+
+}
 /** @function objectDeepCleaning
-  * Удаляет все свойства id, и чистит settings
+  * Удаляет все свойства id, и чистит settings (пока нет) todo: нужна оптимизация
   * @param {object} collection
   * @return {object} Объект после удаления всех свойств id, и чистки settings
  */
 export function objectDeepCleaning(collection) {
+  return collection;
   if (typeof collection !== "object" || collection === null) return collection;
   if (collection.id) delete collection.id;
 
@@ -94,4 +105,38 @@ export function deleteEmptyPropsDeep(collection) {
       if (isEmpty(collection[key])) delete collection[key];
     }
   }
+}
+
+/**
+ * Подготовить данные перед импортом
+ * @param templateData
+ * @param {FrontElement | null} parent
+ */
+function prepareTemplate(templateData, parent = null){
+  let template = new FrontElement(templateData);
+
+}
+
+export function buildPagesTree(pages) {
+  const level = 0;
+  const tree = [];
+  const roots = pages.filter(({ parent_page_id }) => parent_page_id === null);
+
+  if (!roots.length) return pages;
+
+  roots.forEach(root => {
+    tree.push(root);
+    treeRecursion(root.id, level + 1);
+  });  
+
+  function treeRecursion(parentId, level) {
+    const children = pages.filter(({ parent_page_id }) => parent_page_id === parentId);
+    children.forEach(page => {
+      page.title = "—".repeat(level) + page.title;
+      tree.push(page);
+      treeRecursion(page.id, level + 1);
+    });
+  }
+
+  return tree;
 }

@@ -21,7 +21,8 @@ class UserForm extends Component {
       redirectAfterError: false,
       redirect_error_url: "/admin/users",
       rolesOptions: [],
-      permissionsOptions: []
+      permissionsOptions: [],
+      isPasswordChange: false
     };
 
     if (!this.state.id) {
@@ -64,6 +65,10 @@ class UserForm extends Component {
   async saveUser(e) {
     e.preventDefault();
     let res, usermeta_resource, usermeta_res;
+    const { isPasswordChange, user: { newPassword, confirmNewPassword}} = this.state;
+    if (isPasswordChange && newPassword !== confirmNewPassword) {
+      return alert("Password doesn't match confirmation");
+    }
 
     if (this.state.id) {
       res = await this.resource.put(this.state.id, this.state.user);
@@ -101,7 +106,7 @@ class UserForm extends Component {
     }
   }
 
-  changeValue(e, source = "user") {
+  changeValue = (e, source = "user") => {
     let field = e.target.name;
     let value = e.target.value;
     this.setState(state => {
@@ -117,7 +122,7 @@ class UserForm extends Component {
         ...this.state.usermeta,
         roles: roles ? roles.map(role => role.value) : []
       },
-      user:{
+      user: {
         ...this.state.user,
         _roles: roles ? roles.map(role => role.value) : []
       }
@@ -130,7 +135,7 @@ class UserForm extends Component {
         ...this.state.usermeta,
         permissions: permissions ? permissions.map(permission => permission.value) : []
       },
-      user:{
+      user: {
         ...this.state.user,
         _permissions: permissions ? permissions.map(permission => permission.value) : []
       }
@@ -138,7 +143,7 @@ class UserForm extends Component {
   };
 
   render() {
-    const { rolesOptions, permissionsOptions } = this.state;
+    const { rolesOptions, permissionsOptions, isPasswordChange } = this.state;
     const { _roles: roles = [], _permissions: permissions = [] } = this.state.user;
     if (this.state.redirectAfterSave) {
       return <Redirect to={this.props.redirect_url} />
@@ -151,7 +156,7 @@ class UserForm extends Component {
         <label htmlFor="page-name">Name</label>
         <input type="text" id="name" name="name" required={1}
           value={this.state.user.name || ''}
-               disabled={this.props.id}
+          disabled={this.props.id}
           onChange={(e) => { this.changeValue(e) }}
           className="form-control" />
       </div>
@@ -160,7 +165,7 @@ class UserForm extends Component {
         <input type="email" id="email" name="email" required={1}
           value={this.state.user.email || ''}
           onChange={(e) => { this.changeValue(e) }}
-               disabled={this.props.id}
+          disabled={this.props.id}
           className="form-control" />
       </div>
 
@@ -225,6 +230,32 @@ class UserForm extends Component {
           onChange={this.changePermissionsHandler}
           options={permissionsOptions} />
       </div>
+
+      {this.state.id && <div className="form-group">
+        <input type="checkbox" id="changePassword"
+          checked={isPasswordChange}
+          onChange={e => { this.setState({ isPasswordChange: e.target.checked }) }}
+        />
+        <label className="checkbox-label" htmlFor="changePassword">Change Password</label>
+      </div>}
+
+      {isPasswordChange && <>
+        <div className="form-group">
+          <label htmlFor="newPassword">New Password</label>
+          <input type="password" id="newPassword" name="newPassword" required
+            value={this.state.user.newPassword || ''}
+            onChange={this.changeValue}
+            className="form-control" />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="page-description">Confirm Password</label>
+          <input type="password" id="confirmNewPassword" name="confirmNewPassword" required
+            value={this.state.user.confirmNewPassword || ''}
+            onChange={this.changeValue}
+            className="form-control" />
+        </div>
+      </>}
 
       <button className="btn btn_success">{this.state.id ? 'Save' : 'Add'}</button>
     </form>;

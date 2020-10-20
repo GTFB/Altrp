@@ -151,7 +151,19 @@ class FrontElement {
           ));
           }
           break;
+          case 'email':{
+            method = 'POST';
+            this.addForm(formsManager.registerForm(this.getSettings('form_id'),
+                'email',
+                method,
+                {afterLogoutRedirect:this.getSettings('redirect_after')}
+          ));
+          }
+          break;
         }
+        this.getForms().forEach(form=>{
+          form.addSubmitButton(this);
+        });
       }
       break;
       case 'input': {
@@ -355,6 +367,12 @@ class FrontElement {
      */
     if(value && value.dynamic){
       value = this.getContent('content_default_value')
+    }
+    /**
+     * Если нужен массив
+     */
+    if(this.getSettings('content_type') === 'checkbox'){
+      value = _.isArray(value) ? value : (value ? [value] : []);
     }
     return value;
   }

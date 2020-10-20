@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import '../../sass/section.scss';
 import { connect } from "react-redux";
 import '../../sass/section.scss'
-import { isEditor, getWindowWidth } from "../../../../front-app/src/js/helpers"
 
 class SectionComponent extends Component {
   constructor(props) {

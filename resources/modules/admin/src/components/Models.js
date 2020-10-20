@@ -96,7 +96,7 @@ export default class Models extends Component {
         ...state,
         dataSources: res.data_sources,
         dataSourcesSearch,
-        dataSourcesPageCount: res.pageCount
+        dataSourcesPageCount: res.pageCount || 1
       }
     });
   };

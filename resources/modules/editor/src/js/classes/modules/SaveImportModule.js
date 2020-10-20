@@ -2,11 +2,11 @@ import BaseModule from "./BaseModule";
 import Resource from "../Resource";
 import {getEditor, getTemplateDataStorage, getTemplateId} from "../../helpers";
 import CONSTANTS from "../../consts";
-import RootElement from "../elements/RootElement";
 import store from "../../store/store";
 import {changeTemplateStatus} from "../../store/template-status/actions";
 import {setTitle} from "../../../../../front-app/src/js/helpers";
 import {setTemplateData} from "../../store/template-data/actions";
+import ElementsFactory from "./ElementsFactory";
 
 class SaveImportModule extends BaseModule{
 

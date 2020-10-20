@@ -10,24 +10,26 @@ import ThreeDotsVertical from "react-bootstrap-icons/dist/icons/three-dots-verti
 
 import AddWidget from "./AddWidget";
 import CardWidget from "./CardWidget";
+import GlobalParameter from "./fields/GlobalParameter";
 
 import "react-datepicker/dist/react-datepicker.css";
 
 registerLocale("ru", ru);
 setDefaultLocale("ru");
 
-const AltrpDashboards = ({ id, settings }) => {
+const AltrpDashboards = ({ id, settings, globalParameter }) => {
   const start = new Date().setFullYear(new Date().getFullYear() - 1);
   const end = new Date().getTime();
   const [widgets, setWidgets] = useState([]);
   const [isShow, setIsShow] = useState(false);
   const [startDate, setStartDate] = useState(start);
   const [endDate, setEndDate] = useState(end);
-  const isMobile = screen.width<=480; //Проверка на ширину экрана
+  const isMobile = screen.width <= 480; //Проверка на ширину экрана
   let navPosition = 'jusitfy-content-end';
   /*
    * Получить настройки дашборда для текущего пользователя
    */
+
   const getSettings = async (id) => {
     try {
       // Отправляем запрос
@@ -104,7 +106,7 @@ const AltrpDashboards = ({ id, settings }) => {
           // И записываем настройки
           axios.post(`/ajax/dashboards/${id}/settings`, { settings: { startDate, endDate } });
         }
-      } catch (error) {}
+      } catch (error) { }
     },
     [id, settings.animated, startDate, endDate]
   );
@@ -153,98 +155,115 @@ const AltrpDashboards = ({ id, settings }) => {
     axios.post(`/ajax/dashboards/${id}/settings`, { settings: { startDate: start, endDate } });
   };
 
+  const setGlobalOption = (key, value) => {
+    setWidgets(widgets.map(widget => ({
+      ...widget,
+      filter: { ...widget.filter, [key]: value }
+    })));
+  }
   /**
    * Навигационное меню, показывающееся на экаранах шириной более 480px
    * */
   const navigationMenu = () => (
     <Nav className={navPosition}>
-    <Nav.Item className="nav-button" onClick={() => setIsShow(true)}>  
-      Добавить виджет
-    </Nav.Item>
-    <Nav.Item className="nav-datepickers">
-      <div className="nav-datepicker">
-        <DatePicker
-             closeOnScroll={true}
-             className="form-control first"
-             popperClassName="datepicker-popper-mobile"
-             popperPlacement="bottom-end"
-             selected={startDate}
-             selectsStart
-             onChange={handleChangeStartDate}
-             dateFormat="dd.MM.yyyy"
-             showYearDropdown
-           />
-      </div>
-       <div className="nav-datepicker">
-         <DatePicker
-           closeOnScroll={true}
-           className="form-control last"
-           popperClassName="datepicker-popper-mobile"
-           popperPlacement="bottom-end"
-           selected={endDate}
-           minDate={startDate}
-           selectsEnd
-           onChange={handleChangeEndDate}
-           dateFormat="dd.MM.yyyy"
-           showYearDropdown
-         />
-       </div>
-    </Nav.Item>
-    <Nav.Item  className="nav-button" onClick={handleWeek}>
-      Неделя
-    </Nav.Item>
-    <Nav.Item  className="nav-button" onClick={handleMonth}>
-      Месяц
-    </Nav.Item>
-</Nav>  
+      <Nav.Item className="nav-button" onClick={() => setIsShow(true)}>
+        Добавить виджет
+      </Nav.Item>
+      <Nav.Item className="nav-datepickers">
+        <div className="nav-datepicker">
+          <DatePicker
+            closeOnScroll={true}
+            className="form-control first"
+            popperClassName="datepicker-popper-mobile"
+            popperPlacement="bottom-end"
+            selected={startDate}
+            selectsStart
+            onChange={handleChangeStartDate}
+            dateFormat="dd.MM.yyyy"
+            showYearDropdown
+          />
+        </div>
+        <div className="nav-datepicker">
+          <DatePicker
+            closeOnScroll={true}
+            className="form-control last"
+            popperClassName="datepicker-popper-mobile"
+            popperPlacement="bottom-end"
+            selected={endDate}
+            minDate={startDate}
+            selectsEnd
+            onChange={handleChangeEndDate}
+            dateFormat="dd.MM.yyyy"
+            showYearDropdown
+          />
+        </div>
+      </Nav.Item>
+      <Nav.Item className="nav-button" onClick={handleWeek}>
+        Неделя
+      </Nav.Item>
+      <Nav.Item className="nav-button" onClick={handleMonth}>
+        Месяц
+      </Nav.Item>
+      { globalParameter &&
+        globalParameter.map((param, index) => (<Nav.Item key={index}>
+          <GlobalParameter settings={settings} setGlobalOption={setGlobalOption} parameter={param} />
+        </Nav.Item>))
+      }
+    </Nav>
   );
 
-  
+
   /**
    * Выпадающее меню, показывающееся на экаранах шириной менее 480px
    * */
   const dropdownMenu = () => (
     <Dropdown>
-    <Dropdown.Toggle variant="light">
-      <ThreeDotsVertical color="#7a7a7b" />
-    </Dropdown.Toggle>
-    <Dropdown.Menu>
-      <Dropdown.Item onClick={() => setIsShow(true)}>Добавить виджет</Dropdown.Item>
-      <Dropdown.Divider />
-      <Dropdown.Item onClick={handleWeek}>Неделя</Dropdown.Item>
-      <Dropdown.Item onClick={handleMonth}>Месяц</Dropdown.Item>
-      <Dropdown.Divider />
-      <Dropdown.ItemText as="div">
-        <DatePicker
-          closeOnScroll={true}
-          className="form-control first"
-          popperClassName="datepicker-popper-mobile"
-          popperPlacement="bottom-end"
-          selected={startDate}
-          selectsStart
-          onChange={handleChangeStartDate}
-          dateFormat="dd.MM.yyyy"
-          showYearDropdown
-        />
-      </Dropdown.ItemText>
-      <Dropdown.ItemText as="div">
-        <DatePicker
-          closeOnScroll={true}
-          className="form-control last"
-          popperClassName="datepicker-popper-mobile"
-          popperPlacement="bottom-end"
-          selected={endDate}
-          minDate={startDate}
-          selectsEnd
-          onChange={handleChangeEndDate}
-          dateFormat="dd.MM.yyyy"
-          showYearDropdown
-        />
-      </Dropdown.ItemText>
-    </Dropdown.Menu>
-  </Dropdown>
+      <Dropdown.Toggle variant="light">
+        <ThreeDotsVertical color="#7a7a7b" />
+      </Dropdown.Toggle>
+      <Dropdown.Menu>
+        <Dropdown.Item onClick={() => setIsShow(true)}>Добавить виджет</Dropdown.Item>
+        <Dropdown.Divider />
+        <Dropdown.Item onClick={handleWeek}>Неделя</Dropdown.Item>
+        <Dropdown.Item onClick={handleMonth}>Месяц</Dropdown.Item>
+        <Dropdown.Divider />
+        <Dropdown.ItemText as="div">
+          <DatePicker
+            closeOnScroll={true}
+            className="form-control first"
+            popperClassName="datepicker-popper-mobile"
+            popperPlacement="bottom-end"
+            selected={startDate}
+            selectsStart
+            onChange={handleChangeStartDate}
+            dateFormat="dd.MM.yyyy"
+            showYearDropdown
+          />
+        </Dropdown.ItemText>
+        <Dropdown.ItemText as="div">
+          <DatePicker
+            closeOnScroll={true}
+            className="form-control last"
+            popperClassName="datepicker-popper-mobile"
+            popperPlacement="bottom-end"
+            selected={endDate}
+            minDate={startDate}
+            selectsEnd
+            onChange={handleChangeEndDate}
+            dateFormat="dd.MM.yyyy"
+            showYearDropdown
+          />
+        </Dropdown.ItemText>
+        <Dropdown.Divider />
+        {globalParameter &&
+          globalParameter.map((param, index) => (<Dropdown.Item onClick={e => { e.stopPropagation(); e.preventDefault(); }} key={index}>
+            <GlobalParameter settings={settings} setGlobalOption={setGlobalOption} parameter={param} />
+          </Dropdown.Item>))
+        }
+      </Dropdown.Menu>
+    </Dropdown>
   );
-  
+
   useEffect(() => {
     getData(id, startDate, endDate);
   }, [id, startDate, endDate]);
@@ -265,6 +284,7 @@ const AltrpDashboards = ({ id, settings }) => {
             widget={widget}
             onDeleted={handleRemove}
             onEdited={handleEdit}
+            isMobile={isMobile}
           />
         ))}
       </div>
