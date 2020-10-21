@@ -23,7 +23,8 @@
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>altrp || FRONT APP</title>
+  <meta property="og:title" content="{{$title}}">
+  <title>{{ $title ?? 'altrp || FRONT APP'}}</title>
 
   <!-- Scripts -->
 
@@ -36,10 +37,6 @@
   <style>
     .app-area > .sections-wrapper{
       width: {{ get_altrp_setting( 'container_width', '1440' ) }}px;
-    }
-    .altrp-section--boxed {
-      padding-left: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
-      padding-right: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
     }
   </style>
   <link rel="stylesheet" href="{{ asset( '/modules/front-app/front-app.css' ) . '?' . getCurrentVersion() }}" />
