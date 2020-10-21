@@ -244,7 +244,13 @@ class EditModel extends Component {
         </> : ''}
         <h2 className="sub-header">Validation</h2>
         {id && <>
-          <ValidationTable validations={validations} updateValidations={this.updateValidations} />
+          <ValidationTable 
+            validations={validations} 
+            updateValidations={this.updateValidations}
+            fieldsOptions={fields}
+            validationsResource={this.validationsResource}
+            data_source_options={data_source_options}
+          />
           <button onClick={() => this.setState({ isModalOpened: true })} className="btn btn_add">
             Add Field
           </button>
@@ -254,7 +260,8 @@ class EditModel extends Component {
             fieldsOptions={fields}
             validationsResource={this.validationsResource}
             data_source_options={data_source_options}
-            updateValidations={this.updateValidations} />
+            updateValidations={this.updateValidations} 
+          />
         </AdminModal2>}
       </div>
     </div>;

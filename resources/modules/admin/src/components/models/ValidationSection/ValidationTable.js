@@ -5,7 +5,7 @@ import ValidationTableRow from "./ValidationTableRow";
 class ValidationTable extends Component {
 
   render() {
-    const { validations, updateValidations } = this.props;
+    const { validations, updateValidations, fieldsOptions, validationsResource, data_source_options } = this.props;
     return <table className="admin-table">
       <thead className="admin-table-head">
         <tr className="admin-table-row">
@@ -15,7 +15,13 @@ class ValidationTable extends Component {
         </tr>
       </thead>
       <tbody className="admin-table-body">
-        {validations.map(field => <ValidationTableRow key={field.id} field={field} updateValidations={updateValidations} />)}
+        {validations.map(field => <ValidationTableRow key={field.id}
+          field={field}
+          fieldsOptions={fieldsOptions}
+          validationsResource={validationsResource}
+          data_source_options={data_source_options}
+          updateValidations={updateValidations}
+        />)}
       </tbody>
     </table>
   }

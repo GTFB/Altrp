@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 
 class RuleForm extends Component {
   state = {
-    rule: ''
+    rule: this.props.editingRule ? this.props.editingRule.rule : ''
   };
 
   changeHandler = ({ target: { value, name } }) => {
@@ -14,14 +14,15 @@ class RuleForm extends Component {
   submitHandler = async (e) => {
     e.preventDefault();
     const { validation_field_id } = this.props
-    await new Resource({ route: `/admin/ajax/models/${this.props.match.params.id}/validations/${validation_field_id}/validation_rules` })
-      .post({ ...this.state, validation_field_id });
+    const resource = new Resource({ route: `/admin/ajax/models/${this.props.match.params.id}/validations/${validation_field_id}/validation_rules` });
+    this.props.editingRule ?
+      await resource.put(this.props.editingRule.id, { ...this.state, validation_field_id }) :
+      await resource.post({ ...this.state, validation_field_id });
     this.props.submitHandler();
   };
 
   render() {
     const { rule } = this.state;
-    const { fieldsOptions, data_source_options } = this.props;
 
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="form-group">

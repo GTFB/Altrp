@@ -16,11 +16,13 @@ class ValidatedFieldForm extends Component {
   changeHandler = ({ target: { value, name } }) => {
     this.setState({ [name]: value });
   };
-  
+
   submitHandler = e => {
     e.preventDefault();
     const model_id = this.props.match.params.id
-    this.props.validationsResource.post({ ...this.state, model_id });
+    this.props.field ?
+      this.props.validationsResource.put(this.props.field.id, { ...this.state, model_id }) :
+      this.props.validationsResource.post({ ...this.state, model_id });
     this.props.updateValidations();
   };
 
@@ -77,7 +79,7 @@ class ValidatedFieldForm extends Component {
       <div className="form-group">
         <input type="checkbox" id="is_created"
           checked={is_created}
-          onChange={e => this.setState({ is_created: e.target.checked})}
+          onChange={e => this.setState({ is_created: e.target.checked })}
         />
         <label className="checkbox-label" htmlFor="is_created">is Created</label>
       </div>
