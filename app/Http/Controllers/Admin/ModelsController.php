@@ -1445,7 +1445,7 @@ class ModelsController extends HttpController
 
     public function destroyValidationField($model_id, $validation_field_id)
     {
-        $validationRules = ValidationRule::where([['model_id', $model_id],['validation_field_id' => $validation_field_id]])->delete();
+        $validationRules = ValidationRule::where([['validation_field_id',$validation_field_id]])->delete();
         $validationField = ValidationField::find($validation_field_id);
         if (!$validationField)
             return response()->json([

@@ -23,6 +23,11 @@ class ValidationField extends Model
         return $this->belongsTo(Column::class);
     }
 
+    public function model()
+    {
+        return $this->belongsTo(\App\Altrp\Model::class);
+    }
+
     public function rules()
     {
         return $this->hasMany(ValidationRule::class);
