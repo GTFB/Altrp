@@ -3,9 +3,10 @@ import {Link, Redirect, withRouter } from 'react-router-dom';
 import { connect } from "react-redux";
 import {placeElement} from "../../helpers";
 import {
+  getComponentByElementId,
   getHTMLElementById,
   isEditor,
-  parseURLTemplate,
+  parseURLTemplate, printElements,
   renderAssetIcon,
   scrollToElement
 } from "../../../../../front-app/src/js/helpers";
@@ -109,15 +110,15 @@ class Dropbar extends Component {
   componentDidUpdate(prevProps) {
     if(this.props.settings.mode_dropbar_options !== prevProps.settings.mode_dropbar_options) {
       this.setState({ show: false });
-    };
+    }
 
     if(prevProps.settings.offset_dropbar_options !== this.props.settings.offset_dropbar_options) {
       this.setState({ offset: this.props.settings.offset_dropbar_options, show: false });
-    };
+    }
 
     if(this.props.settings.position_dropbar_options !== prevProps.settings.position_dropbar_options) {
       this.setState({ activePosition: this.state.positionVariants.find(pos => pos.position === this.props.settings.position_dropbar_options), show: false });
-    };
+    }
   }
 
   componentDidMount() {
@@ -172,7 +173,7 @@ class Dropbar extends Component {
       </div>
     );
   };
-};
+}
 
 //button
 class ButtonWidget extends Component {
@@ -237,9 +238,32 @@ class ButtonWidget extends Component {
         scrollToElement(mainScrollbars, element)
       }
     }
-
+    else
     if (this.props.element.getSettings('hide_elements_trigger')) {
       this.props.toggleTrigger(this.props.element.getSettings('hide_elements_trigger'));
+    } else if( this.props.element.getSettings('other_action_type', []).includes('print_elements')){
+      let IDs = this.props.element.getSettings('print_elements_ids', '');
+      IDs = IDs.split(',');
+      console.log(IDs);
+      let elementsToPrint = [];
+      IDs.forEach(elementId=>{
+        if((! elementId) || ! elementId.trim()){
+          return;
+        }
+        getHTMLElementById(elementId.trim()) && elementsToPrint.push(getHTMLElementById(elementId));
+        if(getComponentByElementId(elementId.trim())?.getStylesHTMLElement){
+          let stylesElement = getComponentByElementId(elementId.trim()).getStylesHTMLElement();
+          if(stylesElement){
+            elementsToPrint.push(stylesElement);
+          }
+        }
+      });
+      if(_.get(window, 'stylesModule.stylesContainer.current')){
+        elementsToPrint.push(_.get(window, 'stylesModule.stylesContainer.current'));
+      }
+      elementsToPrint.push(document.head);
+      console.log(elementsToPrint);
+      printElements(elementsToPrint);
     }
   }
 

@@ -600,6 +600,7 @@ function renderCellActions(cell, row = {}) {
       const actionProps = {
         className: 'altrp-actions-item altrp-link ' + (action.classes || ''),
         style: {},
+        key: (action.id || '') + (row.id || ''),
         title: action.text || '',
       };
       actionProps.style.marginLeft = _.get(action, 'spacing.left')
@@ -637,8 +638,6 @@ function renderCellActions(cell, row = {}) {
         }
         actionContent = renderAsset(action.icon, iconProps)
       }
-      console.log(actionProps);
-
       return React.createElement(tag, actionProps, actionContent);
     })}
   </div>

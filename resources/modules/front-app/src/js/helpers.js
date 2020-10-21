@@ -612,9 +612,10 @@ export function scrollToElement(scrollbars, HTMLElement){
  */
 export function getHTMLElementById(elementId = ''){
   let HTMLElement = null;
-  if(! elementId){
+  if((! elementId) || ! elementId.trim()){
     return HTMLElement;
   }
+  elementId = elementId.trim();
   appStore.getState().elements.forEach(el=>{
     if(! el.elementWrapperRef.current){
       return
@@ -627,6 +628,30 @@ export function getHTMLElementById(elementId = ''){
     }
   });
   return HTMLElement;
+}
+/**
+ * Вернет HTML  React компонент, у которого elementWrapperRef.current.id = elementId
+ * @param {string} elementId
+ * @return {null | HTMLElement}
+ */
+export function getComponentByElementId(elementId = ''){
+  let component = null;
+  if((! elementId) || ! elementId.trim()){
+    return component;
+  }
+  elementId = elementId.trim();
+  appStore.getState().elements.forEach(el=>{
+    if(! el.elementWrapperRef.current){
+      return
+    }
+    if(! el.elementWrapperRef.current.id){
+      return
+    }
+    if(el.elementWrapperRef.current.id.toString().split(' ').indexOf(elementId) !== -1){
+      component = el;
+    }
+  });
+  return component;
 }
 
 /**
@@ -729,19 +754,21 @@ window.altrphelpers = {
 
 /**
  * Функция выводит определенный элемент на печать
- * @params {HTMLElement} element
+ * @params {HTMLElement[]} elements
  * @params {null || HTMLElement} stylesTag
  */
-export function printElement(element, stylesTag = null, title = ''){
-  let myWindow = window.open('', 'my div', 'height=400,width=600');
-  myWindow.document.write('<html><head><titletitle</title>');
+export function printElements(elements, title = ''){
+  let myWindow = window.open('', 'my div', 'height=400,width=1200');
+  myWindow.document.write(`<html><head><title>${title}</title></head>`);
   myWindow.document.write('</head><body >');
-  myWindow.document.write(element.innerHTML);
+  elements = _.isArray(elements) ? elements : [elements];
+  elements.forEach(element => {
+    myWindow.document.write(element.outerHTML);
+  });
   myWindow.document.write('</body></html>');
   myWindow.document.close(); // necessary for IE >= 10
   myWindow.focus(); // necessary for IE >= 10
-  myWindow.print();
-  myWindow.close();
+  // myWindow.print();
+  // myWindow.close();
   return true;
 }
-window.printElement = printElement;

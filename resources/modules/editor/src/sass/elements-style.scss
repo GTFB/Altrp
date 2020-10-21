@@ -827,6 +827,7 @@
 .altrp-actions{
   display: flex;
   align-items: center;
+  flex-wrap: nowrap;
   &-item{
     display: flex;
     &__icon{

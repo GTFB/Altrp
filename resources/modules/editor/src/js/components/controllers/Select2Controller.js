@@ -54,7 +54,7 @@ class Select2Controller extends Component {
     } else if (this.props.nullable) {
       this.setState((state) => ({
         ...state,
-        options: [{ label: "None", value: "" }],
+        options: _.union([{ label: "None", value: "" }], this.state.options),
       }));
     }
     if (this.props.prefetch_options) {
