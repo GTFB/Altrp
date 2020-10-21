@@ -50,8 +50,6 @@ const columnsDataSource = [
   }
 ];
 
-// order_by - название поля для сортировки
-// order - направление сортировки(два значения ASC, DESC)
 export default class Models extends Component {
   constructor(props) {
     super(props);
@@ -68,6 +66,7 @@ export default class Models extends Component {
       dataSourcesSearch: '',
       dataSourcesPageCount: 1,
       dataSourcesCount: 0,
+      dataSourcesSorting: {}
     };
     this.switchTab = this.switchTab.bind(this);
     this.changePage = this.changePage.bind(this);
@@ -92,7 +91,8 @@ export default class Models extends Component {
       page: this.state.dataSourcesCurrentPage,
       pageSize: this.itemsPerPage,
       preset: false,
-      s: dataSourcesSearch
+      s: dataSourcesSearch,
+      ...this.state.dataSourcesSorting
     });
     this.setState(state => {
       return {
@@ -168,6 +168,10 @@ export default class Models extends Component {
 
   modelsSortingHandler = (order_by, order) => {
     this.setState({ modelsSorting: { order_by, order } }, this.getModels);
+  }
+
+  dataSourcesSortingHandler = (order_by, order) => {
+    this.setState({ dataSourcesSorting: { order_by, order } }, this.getDataSources);
   }
 
   render() {
@@ -260,6 +264,7 @@ export default class Models extends Component {
                 ...dataSource,
                 editUrl: '/admin/tables/data-sources/edit/' + dataSource.id
               }))}
+              sortingHandler={this.dataSourcesSortingHandler}
             />
             <Pagination pageCount={dataSourcesPageCount}
               currentPage={dataSourcesCurrentPage}
