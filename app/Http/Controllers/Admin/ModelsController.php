@@ -211,19 +211,22 @@ class ModelsController extends HttpController
     {
         $search = $request->get('s');
         $page = $request->get('page');
+        $orderColumn = $request->get('order_by') ?? 'id';
+        $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
         if (! $page) {
             $pageCount = 0;
+            $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
             $models = $search
-                ? Model::getBySearch($search)
-                : Model::all()->sortByDesc( 'id' )->values();
+                ? Model::getBySearch($search, $orderColumn, $orderType)
+                : Model::all()->$sortType( $orderColumn )->values();
         } else {
             $modelsCount = $search ? Model::getCountWithSearch($search) : Model::getCount();
             $limit = $request->get('pageSize', 10);
             $pageCount = ceil($modelsCount / $limit);
             $offset = $limit * ($page - 1);
             $models = $search
-                ? Model::getBySearchWithPaginate($search, $offset, $limit, $request)
-                : Model::getWithPaginate($offset, $limit, $request);
+                ? Model::getBySearchWithPaginate($search, $offset, $limit, $request, $orderColumn, $orderType)
+                : Model::getWithPaginate($offset, $limit, $request, $orderColumn, $orderType);
 
           $models = $models->get();
         }

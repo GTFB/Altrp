@@ -76,7 +76,7 @@ class Model extends EloquentModel
         Log::error( $e->getMessage(), [$e->getFile()] ); //
         continue;
       }
-    } 
+    }
   }
 
   public function parent()
@@ -299,11 +299,12 @@ class Model extends EloquentModel
         return $relations;
     }
 
-    public static function getBySearch($search)
+    public static function getBySearch($search, $orderColumn = 'id', $orderType = 'Desc')
     {
+        $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
         return self::where('title','like', "%{$search}%")
             ->orWhere('id', 'like', "%{$search}%")
-          ->orderByDesc('id')
+          ->$sortType($orderColumn)
           ->get();
     }
 
@@ -314,42 +315,46 @@ class Model extends EloquentModel
    * @param ApiRequest $request
    * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
    */
-  public static function getBySearchWithPaginate( $search, $offset, $limit, ApiRequest $request)
+  public static function getBySearchWithPaginate( $search, $offset, $limit, ApiRequest $request, $orderColumn = 'id', $orderType = 'Desc')
     {
+      $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
       if( $request->has( 'preset' ) ) {
         return self::where('title','like', "%{$search}%")
           ->where( 'preset', $request->get( 'preset' ) )
           ->orWhere('id', "%$search%")
           ->skip($offset)
-          ->orderByDesc('id')
+          ->$sortType($orderColumn)
           ->take($limit);
       } else {
         return self::where('title','like', "%{$search}%")
           ->orWhere('id', "%$search%")
           ->skip($offset)
-          ->orderByDesc('id')
+          ->$sortType($orderColumn)
           ->take($limit);
       }
     }
 
-  /**
-   * @param $offset
-   * @param $limit
-   * @param ApiRequest $request
-   * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
-   */
-  public static function getWithPaginate( $offset, $limit , ApiRequest $request)
+    /**
+     * @param $offset
+     * @param $limit
+     * @param ApiRequest $request
+     * @param string $orderColumn
+     * @param string $orderType
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
+     */
+  public static function getWithPaginate( $offset, $limit , ApiRequest $request, $orderColumn = 'id', $orderType = 'Desc')
     {
+        $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
       if( $request->has( 'preset' ) ) {
         return self::where('preset', $request->get( 'preset' ) )
           ->skip($offset)
           ->take($limit)
-          ->orderByDesc('id');
+          ->$sortType($orderColumn);
       } else {
 
         return self::skip($offset)
           ->take($limit)
-          ->orderByDesc('id');
+          ->$sortType($orderColumn);
       }
     }
 
