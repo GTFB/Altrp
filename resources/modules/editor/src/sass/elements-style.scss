@@ -203,6 +203,18 @@
       -o-transition-duration: 0.2s;
       transition-duration: 0.2s;
     }
+    &_alignment{
+      &-center{
+        .altrp-actions{
+          justify-content: center;
+        }
+      }
+      &-right{
+        .altrp-actions{
+          justify-content: flex-end;
+        }
+      }
+    }
   }
   &__collapse-icon{
     display: inline-block;
@@ -811,3 +823,16 @@
 /**
  * Перевернуть таблицу END
  */
+
+.altrp-actions{
+  display: flex;
+  align-items: center;
+  &-item{
+    display: flex;
+    &__icon{
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+    }
+  }
+}

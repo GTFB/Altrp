@@ -311,6 +311,82 @@ class Table extends BaseElement {
       default: ''
     });
 
+    const actionsRepeater = new Repeater();
+
+    actionsRepeater.addControl('icon',{
+      type: CONTROLLER_MEDIA,
+      label: 'Icon',
+    });
+
+    actionsRepeater.addControl('text',{
+      type: CONTROLLER_TEXTAREA,
+      dynamic: false,
+      label: 'Content',
+    });
+
+    actionsRepeater.addControl('link',{
+      type: CONTROLLER_TEXT,
+      dynamic: false,
+      label: 'Link',
+    });
+
+    actionsRepeater.addControl('type',{
+      type: CONTROLLER_SELECT,
+      label: 'Type',
+      dynamic: false,
+      options:[
+        {
+          label: 'Inner Link',
+          value: 'Link',
+        },
+        {
+          label: 'External Link',
+          value: 'a',
+        },
+        {
+          label: 'Button',
+          value: 'button',
+        },
+      ],
+    });
+
+    actionsRepeater.addControl('classes', {
+      type: CONTROLLER_TEXT,
+      dynamic: false,
+      label: 'CSS class',
+    });
+
+    actionsRepeater.addControl('target_blank', {
+      type: CONTROLLER_SWITCHER,
+      label: 'In New Window',
+    });
+
+    actionsRepeater.addControl('size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Size',
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    actionsRepeater.addControl('spacing', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Spacing',
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    repeater.addControl('actions', {
+      label: 'Actions',
+      type: CONTROLLER_REPEATER,
+      fields: actionsRepeater.getControls(),
+    });
+
     this.addControl('tables_columns', {
       label: 'Columns',
       type: CONTROLLER_REPEATER,

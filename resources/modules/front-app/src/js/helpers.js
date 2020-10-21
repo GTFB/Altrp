@@ -606,10 +606,15 @@ export function scrollToElement(scrollbars, HTMLElement){
 }
 
 /**
+ * Вернет HTML элемент React компонента, у которого id = elementId
  * @param {string} elementId
+ * @return {null | HTMLElement}
  */
-export function getHTMLElementById(elementId){
+export function getHTMLElementById(elementId = ''){
   let HTMLElement = null;
+  if(! elementId){
+    return HTMLElement;
+  }
   appStore.getState().elements.forEach(el=>{
     if(! el.elementWrapperRef.current){
       return
@@ -617,7 +622,7 @@ export function getHTMLElementById(elementId){
     if(! el.elementWrapperRef.current.id){
       return
     }
-    if(el.elementWrapperRef.current.id.toString() === elementId){
+    if(el.elementWrapperRef.current.id.toString().split(' ').indexOf(elementId) !== -1){
       HTMLElement = el.elementWrapperRef.current;
     }
   });
@@ -721,3 +726,22 @@ window.altrphelpers = {
     return sum;
   },
 };
+
+/**
+ * Функция выводит определенный элемент на печать
+ * @params {HTMLElement} element
+ * @params {null || HTMLElement} stylesTag
+ */
+export function printElement(element, stylesTag = null, title = ''){
+  let myWindow = window.open('', 'my div', 'height=400,width=600');
+  myWindow.document.write('<html><head><titletitle</title>');
+  myWindow.document.write('</head><body >');
+  myWindow.document.write(element.innerHTML);
+  myWindow.document.write('</body></html>');
+  myWindow.document.close(); // necessary for IE >= 10
+  myWindow.focus(); // necessary for IE >= 10
+  myWindow.print();
+  myWindow.close();
+  return true;
+}
+window.printElement = printElement;

@@ -358,7 +358,8 @@ foreach ( $frontend_routes as $frontend_route ) {
   $path = $frontend_route['path'];
   $title = $frontend_route['title'];
   $frontend_route = str_replace( ':id', '{id}', $path );
-  Route::get($path, function () use ($title) {
+
+  Route::get($frontend_route, function () use ($title) {
     return view('front-app',['title'=> $title]);
   })->middleware( ['web', 'installation.checker'] );
 

@@ -38,6 +38,10 @@
     .app-area > .sections-wrapper{
       width: {{ get_altrp_setting( 'container_width', '1440' ) }}px;
     }
+    .altrp-section--boxed {
+      padding-left: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
+      padding-right: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
+    }
   </style>
   <link rel="stylesheet" href="{{ asset( '/modules/front-app/front-app.css' ) . '?' . getCurrentVersion() }}" />
 

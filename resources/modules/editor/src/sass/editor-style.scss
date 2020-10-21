@@ -436,10 +436,27 @@ button {
       border-bottom: 1px solid $border-gray;
       border-left: 1px solid $border-gray;
       border-right: 1px solid $border-gray;
+      & .repeater-item-content .controller-media-choose svg,
+      & .repeater-item-content .controller-media-choose img{
+        width: 200px;
+      }
     }
     &_open {
       & .repeater-item-content {
         display: block;
+        & .repeater-item-content {
+          & .controller-container{
+            max-width: 200px;
+          }
+          & .control-dimensions-container{
+            width: 40px;
+          }
+          & .control-field-bind{
+            width: 43px;
+            padding-left: 14px;
+            padding-right: 14px;
+          }
+        }
       }
     }
   }

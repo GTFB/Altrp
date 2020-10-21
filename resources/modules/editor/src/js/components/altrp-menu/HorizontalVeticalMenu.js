@@ -67,7 +67,6 @@ class Dropdown extends Component {
   }
 
   render() {
-    console.log(this.state.list);
     return (
       <div className="altrp-nav-menu-ul-dropdown-hor-ver">
         <ul className="altrp-nav-menu-ul-dropdown-hor-ver-ul">

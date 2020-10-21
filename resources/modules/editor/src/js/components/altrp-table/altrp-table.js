@@ -245,7 +245,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
                     }
                   };
                 }
-                let cellClassName = 'altrp-table-td';
+                let cellClassName = `altrp-table-td ${cell.column.column_body_alignment ? `altrp-table-td_alignment-${cell.column.column_body_alignment}` : '' } `;
                 if(doubleClicked.column === columns[_i]._accessor && row.original.id === doubleClicked.rowId){
                   cellClassName += ' altrp-table-td_double-clicked';
                 }
@@ -267,7 +267,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
                  */
                 if(columns[_i].column_link){
                   cellContent = React.createElement(linkTag, {
-                    to: parseURLTemplate(columns[_i].column_link,  row.original),
+                    to: parseURLTemplate(columns[_i].column_link, row.original),
                     className: 'altrp-inherit altrp-table-td__default-content',
                     dangerouslySetInnerHTML: {
                       __html: cell.value
@@ -284,7 +284,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
                 /**
                  * Если нужно указать номер по порядку
                  */
-                if(cell.column._accessor.trim() === '##'){
+                if(cell.column._accessor && cell.column._accessor.trim() === '##'){
                   cellContent = counter++;
                 }
                 let cellStyles = _.get(cell, 'column.column_styles_field');
@@ -292,7 +292,14 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
                 cellStyles = mbParseJSON(cellStyles, {});
 
                 style = _.assign(style, cellStyles);
-
+                /**
+                 * Если есть actions, то надо их вывести
+                 */
+                if(_.isArray(_.get(cell,'column.actions'))){
+                  return <td {...cellProps}
+                             className={cellClassName}
+                             style={style}>{renderCellActions(cell, row)}</td>
+                }
                 if(_.isString(cellContent) && ! doubleClickContent){
                   return <td {...cellProps}
                              className={cellClassName}
@@ -359,7 +366,10 @@ function settingsToColumns(settings) {
    * Если в колонке пустые поля, то мы их игнорируем, чтобы не было ошибки
    */
   tables_columns.forEach(_column => {
-    if (_column.column_name && _column.accessor) {
+    /**
+     * Колонку проказываем, если есть accessor или список actions
+     */
+    if (_column.column_name && ((_column.actions && _column.actions.length) || _column.accessor)) {
       _column._accessor = _column.accessor;
       columns.push(_column);
     }
@@ -572,4 +582,64 @@ function renderFooter(settings, data){
     })}
   </tr>
   </tfoot>
+}
+
+
+/**
+ * Выводит список элементов соответствующих настройкам Actions для колнки
+ * @param cell
+ * @param row
+ */
+function renderCellActions(cell, row = {}) {
+  let actions = _.get(cell,'column.actions', []);
+  return <div className="altrp-actions">
+    {actions.map(action =>{
+      let tag = action.type || 'Link';
+      let actionContent = replaceContentWithData(action.text || '');
+      let link = parseURLTemplate(action.link, row.original);
+      const actionProps = {
+        className: 'altrp-actions-item altrp-link ' + (action.classes || ''),
+        style: {},
+        title: action.text || '',
+      };
+      actionProps.style.marginLeft = _.get(action, 'spacing.left')
+          ? _.get(action, 'spacing.left') + _.get(action, 'spacing.unit')
+          : null;
+      actionProps.style.marginRight = _.get(action, 'spacing.right')
+          ? _.get(action, 'spacing.right') + _.get(action, 'spacing.unit')
+          : null;
+      actionProps.style.marginTop = _.get(action, 'spacing.top')
+          ? _.get(action, 'spacing.top') + _.get(action, 'spacing.unit')
+          : null;
+      actionProps.style.marginBottom = _.get(action, 'spacing.bottom')
+          ? _.get(action, 'spacing.bottom') + _.get(action, 'spacing.unit')
+          : null;
+      if(tag === 'Link'){
+        tag = Link;
+        actionProps.to = link;
+      }
+
+      if(tag === 'a' && action.target_blank){
+        actionProps.target = '_blank';
+      }
+      if(tag === 'a') {
+        actionProps.href = parseURLTemplate(action.link, row.original);
+      }
+      if(_.get(action, 'icon.assetType')){
+        let iconSize = _.get(action, 'size.size') ? _.get(action, 'size.size') + _.get(action, 'size.unit', 'px') : null;
+        const iconProps = {className: 'altrp-actions-item__icon',
+          style:{
+          }};
+
+        if(iconSize){
+          iconProps.style.width = iconSize;
+          iconProps.style.height = iconSize;
+        }
+        actionContent = renderAsset(action.icon, iconProps)
+      }
+      console.log(actionProps);
+
+      return React.createElement(tag, actionProps, actionContent);
+    })}
+  </div>
 }
