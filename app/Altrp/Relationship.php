@@ -389,6 +389,7 @@ class Relationship extends EloquentModel
 
         $result = DB::table($foreign_table->name)
             ->leftJoin($local_table->name, $foreign_table->name.".".$local_key, '=', $local_table->name.".".$foreign_key)
+            ->whereNotNull($foreign_table->name.".".$local_key)
             ->havingRaw($prefix.$local_table->name.".".$foreign_key." IS NULL")
             ->get();
 
