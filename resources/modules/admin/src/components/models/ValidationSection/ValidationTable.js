@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Resource from "../../../../../editor/src/js/classes/Resource";
 import ValidationTableRow from "./ValidationTableRow";
 
 class ValidationTable extends Component {

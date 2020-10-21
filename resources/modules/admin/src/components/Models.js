@@ -50,6 +50,8 @@ const columnsDataSource = [
   }
 ];
 
+// order_by - название поля для сортировки
+// order - направление сортировки(два значения ASC, DESC)
 export default class Models extends Component {
   constructor(props) {
     super(props);
@@ -61,6 +63,7 @@ export default class Models extends Component {
       modelsSearch: '',
       modelsPageCount: 1,
       modelsCount: 0,
+      modelsSorting: {},
       dataSources: [],
       dataSourcesSearch: '',
       dataSourcesPageCount: 1,
@@ -109,7 +112,8 @@ export default class Models extends Component {
       page: this.state.modelsCurrentPage,
       pageSize: this.itemsPerPage,
       preset: false,
-      s: modelsSearch
+      s: modelsSearch,
+      ...this.state.modelsSorting
     });
     this.setState(state => {
       return {
@@ -129,17 +133,17 @@ export default class Models extends Component {
     // get: /admin/ajax/models .then(models => {
     //   this.setState({models});
     // });
-    let models = await this.modelsResource.getAll();
-    this.setState(state => ({
-      ...state,
-      modelsCount: models.models.length
-    }));
+    // let models = await this.modelsResource.getAll();
+    // this.setState(state => ({
+    //   ...state,
+    //   modelsCount: models.models.length
+    // }));
 
-    let data_sources = await this.dataSourcesResource.getAll();
-    this.setState(state => ({
-      ...state,
-      dataSourcesCount: data_sources.data_sources.length
-    }));
+    // let data_sources = await this.dataSourcesResource.getAll();
+    // this.setState(state => ({
+    //   ...state,
+    //   dataSourcesCount: data_sources.data_sources.length
+    // }));
 
     this.getModels();
     this.getDataSources();
@@ -161,6 +165,10 @@ export default class Models extends Component {
     let dataSourcesSearch = e.target.value;
     this.getDataSources(dataSourcesSearch);
   };
+
+  modelsSortingHandler = (order_by, order) => {
+    this.setState({ modelsSorting: { order_by, order } }, this.getModels);
+  }
 
   render() {
     const { activeTab, models, dataSources, modelsCurrentPage, dataSourcesCurrentPage, modelsSearch, dataSourcesSearch,
@@ -212,13 +220,15 @@ export default class Models extends Component {
                 ...model,
                 editUrl: '/admin/tables/models/edit/' + model.id
               }))}
+              sortingHandler={this.modelsSortingHandler}
             />
             <Pagination pageCount={modelsPageCount || 1}
               currentPage={modelsCurrentPage || 1}
               changePage={modelsCurrentPage => {
-                if(this.state.modelsCurrentPage !== modelsCurrentPage){
-                  this.setState({modelsCurrentPage}, this.getModels)}
+                if (this.state.modelsCurrentPage !== modelsCurrentPage) {
+                  this.setState({ modelsCurrentPage }, this.getModels)
                 }
+              }
               }
               itemsCount={modelsCount}
             />
