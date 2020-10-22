@@ -16,7 +16,7 @@ class AdminTable extends Component {
   };
 
   render() {
-    const { search, sortingHandler } = this.props;
+    const { search, sortingHandler, sortingField } = this.props;
     return <div className="admin-table">
       {search && <div className="admin-table">
         <input value={search.value} onChange={search.changeHandler} type="text" className="form-group" />
@@ -26,7 +26,7 @@ class AdminTable extends Component {
           <tr className="admin-table-row">
             <td className="admin-table__td admin-table__td_check"><input type="checkbox" /></td>
             {this.props.columns.map(column => sortingHandler ?
-              <SortableHeader key={column.name} column={column} sortingHandler={sortingHandler} /> :
+              <SortableHeader key={column.name} column={column} sortingHandler={sortingHandler} sortingField={sortingField} /> :
               <td className="admin-table__td " key={column.name} title={column.name}>{column.title}</td>)}
           </tr>
         </thead>

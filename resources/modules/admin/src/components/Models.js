@@ -176,7 +176,7 @@ export default class Models extends Component {
 
   render() {
     const { activeTab, models, dataSources, modelsCurrentPage, dataSourcesCurrentPage, modelsSearch, dataSourcesSearch,
-      modelsPageCount, dataSourcesPageCount, modelsCount, dataSourcesCount } = this.state;
+      modelsPageCount, dataSourcesPageCount, modelsCount, dataSourcesCount, modelsSorting, dataSourcesSorting } = this.state;
 
     return <div className="admin-settings admin-page">
       <div className="admin-heading">
@@ -225,6 +225,7 @@ export default class Models extends Component {
                 editUrl: '/admin/tables/models/edit/' + model.id
               }))}
               sortingHandler={this.modelsSortingHandler}
+              sortingField={modelsSorting.order_by}
             />
             <Pagination pageCount={modelsPageCount || 1}
               currentPage={modelsCurrentPage || 1}
@@ -265,6 +266,7 @@ export default class Models extends Component {
                 editUrl: '/admin/tables/data-sources/edit/' + dataSource.id
               }))}
               sortingHandler={this.dataSourcesSortingHandler}
+              sortingField={dataSourcesSorting.order_by}
             />
             <Pagination pageCount={dataSourcesPageCount}
               currentPage={dataSourcesCurrentPage}
