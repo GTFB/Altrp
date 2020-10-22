@@ -82,7 +82,7 @@ class AltrpValidationRuleObserver
         if (!$validationFields) return null;
         foreach ($validationFields as $field) {
             if (! $field->$type) continue;
-            $rules = $field->rules->implode('rule', ';');
+            $rules = $field->rules->implode('rule', '|');
             $fieldName = $field->column->name;
             if ($field->column_name) $fieldName = $field->column_name;
             $validations[] = "'{$fieldName}' => '" . $rules . "',";

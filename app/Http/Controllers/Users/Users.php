@@ -53,8 +53,8 @@ class Users extends Controller
 
     /**
      * Добавление пользователя
-     * @param Request $request
-     * @return type
+     * @param ApiRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
     function insert( ApiRequest $request)  {
         //dd(123);
@@ -78,7 +78,7 @@ class Users extends Controller
           }
           $roles = $request->get( '_roles' );
           if( $roles ){
-            $roles = Permission::find( $roles );
+            $roles = Role::find( $roles );
             $user->attachRoles( $roles );
           }
           return response()->json($user, 200, [],JSON_UNESCAPED_UNICODE);
@@ -115,7 +115,7 @@ class Users extends Controller
           $roles = $request->get( '_roles' );
           $user->detachRoles();
           if( $roles ){
-            $roles = Permission::find( $roles );
+            $roles = Role::find( $roles );
             $user->attachRoles( $roles );
           }
           return response()->json($user, 200, [],JSON_UNESCAPED_UNICODE);
