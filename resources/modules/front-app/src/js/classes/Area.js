@@ -20,6 +20,7 @@ class Area {
         let template = new Template();
         template.data = _t ? JSON.parse(_t.data) : null;
         template.id = _t ? JSON.parse(_t.id) : null;
+        template.guid = _t ? _t.guid : null;
         template.template_settings = _t ? _t.template_settings : [];
         template.triggers = _t ? _t.triggers : {};
         area.templates.push(template);

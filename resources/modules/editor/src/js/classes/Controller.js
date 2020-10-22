@@ -102,15 +102,26 @@ class Controller {
     let conditionPairs = _.toPairs(this.data.conditions);
     let show = true;
     conditionPairs.forEach(condition => {
-      let [controlId, value] = condition;
+      let [controlId, comparedValue] = condition;
       let negative = (controlId.indexOf('!') >= 0);
       controlId = controlId.replace('!', '');
-      if(_.isString(value) || _.isBoolean(value)){
-        show = getCurrentElement().getSettings(controlId) !== value ? negative : ! negative;
+      let _value = getCurrentElement().getSettings(controlId);
+      if(! _.isArray(_value)){
+        _value = [_value];
+      } else if(_value.length === 0){
+        show = false;
       }
-      if(_.isArray(value) ){
-        show = value.indexOf(getCurrentElement().getSettings(controlId)) === -1 ? negative : ! negative;
-      }
+      _value.forEach(value => {
+        if(! show){
+          return;
+        }
+        if(_.isString(comparedValue) || _.isBoolean(comparedValue)){
+          show = value !== comparedValue ? negative : ! negative;
+        }
+        if(_.isArray(comparedValue) ){
+          show = comparedValue.indexOf(value) === -1 ? negative : ! negative;
+        }
+      });
 
     });
     return show;

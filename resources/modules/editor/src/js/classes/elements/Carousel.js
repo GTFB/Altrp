@@ -217,7 +217,7 @@ class Carousel extends BaseElement{
 
     this.addControl('per_row_slides_content', {
       type: CONTROLLER_SELECT,
-      label: 'Slides per row',
+      label: 'Rows',
       default: 1,
       options: [
         {

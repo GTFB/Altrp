@@ -13,4 +13,4 @@ export const hideTriggersReducer = (state = initialState, { type, payload }) => 
     default:
       return state;
   }
-}
+};

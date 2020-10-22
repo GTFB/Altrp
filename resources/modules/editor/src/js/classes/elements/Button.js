@@ -417,6 +417,35 @@ class Button extends BaseElement{
     });
 
     this.endControlSection();
+    //<editor-fold desc="other_actions_on">
+    this.startControlSection('other_actions', {
+      tab: TAB_CONTENT,
+      label: 'Other Actions',
+    });
+
+    this.addControl('other_action_type',{
+      type: CONTROLLER_SELECT2,
+      label: 'Actions',
+      isMulti: true,
+      options: [
+        {
+          label: 'Print Elements',
+          value: 'print_elements',
+        },
+      ],
+
+    });
+
+    this.addControl('print_elements_ids', {
+      label: 'IDs',
+      dynamic: false,
+      conditions: {
+        'other_action_type' : 'print_elements'
+      },
+    });
+
+    this.endControlSection();
+    //</editor-fold>
 
     this.startControlSection('position_section', {
       tab: TAB_STYLE,

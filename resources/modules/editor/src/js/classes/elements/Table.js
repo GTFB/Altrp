@@ -311,6 +311,82 @@ class Table extends BaseElement {
       default: ''
     });
 
+    const actionsRepeater = new Repeater();
+
+    actionsRepeater.addControl('icon',{
+      type: CONTROLLER_MEDIA,
+      label: 'Icon',
+    });
+
+    actionsRepeater.addControl('text',{
+      type: CONTROLLER_TEXTAREA,
+      dynamic: false,
+      label: 'Content',
+    });
+
+    actionsRepeater.addControl('link',{
+      type: CONTROLLER_TEXT,
+      dynamic: false,
+      label: 'Link',
+    });
+
+    actionsRepeater.addControl('type',{
+      type: CONTROLLER_SELECT,
+      label: 'Type',
+      dynamic: false,
+      options:[
+        {
+          label: 'Inner Link',
+          value: 'Link',
+        },
+        {
+          label: 'External Link',
+          value: 'a',
+        },
+        {
+          label: 'Button',
+          value: 'button',
+        },
+      ],
+    });
+
+    actionsRepeater.addControl('classes', {
+      type: CONTROLLER_TEXT,
+      dynamic: false,
+      label: 'CSS class',
+    });
+
+    actionsRepeater.addControl('target_blank', {
+      type: CONTROLLER_SWITCHER,
+      label: 'In New Window',
+    });
+
+    actionsRepeater.addControl('size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Size',
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    actionsRepeater.addControl('spacing', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Spacing',
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    repeater.addControl('actions', {
+      label: 'Actions',
+      type: CONTROLLER_REPEATER,
+      fields: actionsRepeater.getControls(),
+    });
+
     this.addControl('tables_columns', {
       label: 'Columns',
       type: CONTROLLER_REPEATER,
@@ -393,6 +469,59 @@ class Table extends BaseElement {
     this.endControlSection();
     /**
      * Настройки для группировки END
+     */
+
+    /**
+     * Настройки для футера таблицы
+     */
+
+    this.startControlSection("table_footer", {
+      label: "Footer"
+    });
+
+    const footerRepeater = new Repeater();
+
+    footerRepeater.addControl('content', {
+      label: 'Content',
+      dynamic: false,
+    });
+
+    footerRepeater.addControl('colspan', {
+      label: 'Colspan',
+      type: CONTROLLER_NUMBER,
+      dynamic: false,
+    });
+
+    footerRepeater.addControl('column_footer_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Header alignment',
+      default: 'center',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ]
+    });
+
+    this.addControl('footer_columns', {
+      label: 'Columns',
+      type: CONTROLLER_REPEATER,
+      fields: footerRepeater.getControls(),
+    });
+
+    this.endControlSection();
+
+    /**
+     * Настройки для футера таблицы END
      */
 
     this.startControlSection("filter_style_table", {
@@ -1148,9 +1277,11 @@ class Table extends BaseElement {
     });
 
     this.endControlSection();
+    // <editor-fold desc="table_style_group"
     /**
      * Стили для заголовка группы START
      */
+
     this.startControlSection("table_style_group", {
       tab: TAB_STYLE,
       label: "Group"
@@ -1334,7 +1465,108 @@ class Table extends BaseElement {
     this.endControlSection();
     /**
      * Стили для заголовка группы END
+     *
      */
+    //</editor-fold>
+    // <editor-fold desc="table_style_footer"
+    /**
+     * Стили для футера группы START
+     */
+
+    this.startControlSection("table_style_footer", {
+      tab: TAB_STYLE,
+      label: "Footer"
+    });
+
+    this.addControl('table_style_footer_cell_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Cell padding',
+      default:{
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-table-foot .altrp-table-td{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    });
+
+    this.addControl('table_style_footer_cell_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Header alignment',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-table-foot .altrp-table-td{{STATE}}': 'text-align: {{VALUE}};',
+      }
+    });
+
+    this.addControl("table_style_footer_border_background", {
+      type: CONTROLLER_COLOR,
+      label: "Background",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-table-foot .altrp-table-td{{STATE}}': 'background: {{COLOR}};',
+      }
+    });
+
+    this.addControl("table_style_footer_border_text_color", {
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-table-foot .altrp-table-td{{STATE}}': 'color: {{COLOR}};',
+      }
+    });
+
+    this.addControl('table_style_footer_font', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      rules: {
+        '{{ELEMENT}}  .altrp-table-foot .altrp-table-td{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
+
+    this.endControlSection();
+    /**
+     * Стили для футера группы END
+     *
+     */
+    //</editor-fold>
     advancedTabControllers(this);
   }
 }
