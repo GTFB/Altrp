@@ -28,7 +28,7 @@ const AltrpDiagram = ({ settings }) => {
   }) || [];
 
   if (!sql && data.length === 0) {
-    return <div className={`altrp-chart ${settings.legendPosition}`}>Choose data for chart</div>;
+    return <div className={`altrp-chart ${settings.legendPosition}`}>Идет загрузка данных...</div>;
   }
 
   const parseQueryParams = (qs = "") => {

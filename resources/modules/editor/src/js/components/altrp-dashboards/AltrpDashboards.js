@@ -33,7 +33,11 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
   const getSettings = async (id) => {
     try {
       // Отправляем запрос
-      const req = await axios(`/ajax/dashboards/${id}/settings`);
+      const req = await axios(`/ajax/dashboards/${id}/settings`, {
+        headers: [
+          { key: 'Cache-Control', value: 'no-store' }
+        ]
+      });
       // Если успешно
       if (req.status === 200) {
         console.log("req.data :>> ", req.data);
@@ -52,7 +56,11 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
    */
   const getWidgets = async (id) => {
     try {
-      const req = await axios(`/ajax/dashboards/${id}`);
+      const req = await axios(`/ajax/dashboards/${id}`, {
+        headers: [
+          { key: 'Cache-Control', value: 'no-store' }
+        ]
+      });
       if (req.status === 200) {
         return req.data;
       } else {
@@ -104,7 +112,11 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
             })
           );
           // И записываем настройки
-          axios.post(`/ajax/dashboards/${id}/settings`, { settings: { startDate, endDate } });
+          axios.post(`/ajax/dashboards/${id}/settings`, { settings: { startDate, endDate } }, {
+            headers: [
+              { key: 'Cache-Control', value: 'no-store' }
+            ]
+          });
         }
       } catch (error) { }
     },
@@ -117,7 +129,11 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
 
   const handleRemove = (widget) => {
     setWidgets(widgets.filter((w) => w.id !== widget.id));
-    axios.delete(`/ajax/dashboards/${widget.id}`);
+    axios.delete(`/ajax/dashboards/${widget.id}`, {
+      headers: [
+        { key: 'Cache-Control', value: 'no-store' }
+      ]
+    });
   };
 
   const handleEdit = (widget) => {
@@ -126,6 +142,10 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
       ...widget,
       options: JSON.stringify(widget.options),
       filter: JSON.stringify(widget.filter),
+    }, {
+      headers: [
+        { key: 'Cache-Control', value: 'no-store' }
+      ]
     });
   };
 
@@ -133,6 +153,10 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
     setStartDate(date.getTime());
     axios.post(`/ajax/dashboards/${id}/settings`, {
       settings: { startDate: date.getTime(), endDate },
+    }, {
+      headers: [
+        { key: 'Cache-Control', value: 'no-store' }
+      ]
     });
   };
 
@@ -140,19 +164,31 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
     setEndDate(date.getTime());
     axios.post(`/ajax/dashboards/${id}/settings`, {
       settings: { startDate, endDate: date.getTime() },
+    }, {
+      headers: [
+        { key: 'Cache-Control', value: 'no-store' }
+      ]
     });
   };
 
   const handleWeek = () => {
     const start = sub(endDate, { weeks: 1 }).getTime();
     setStartDate(start);
-    axios.post(`/ajax/dashboards/${id}/settings`, { settings: { startDate: start, endDate } });
+    axios.post(`/ajax/dashboards/${id}/settings`, { settings: { startDate: start, endDate } }, {
+      headers: [
+        { key: 'Cache-Control', value: 'no-store' }
+      ]
+    });
   };
 
   const handleMonth = () => {
     const start = sub(endDate, { months: 1 }).getTime();
     setStartDate(start);
-    axios.post(`/ajax/dashboards/${id}/settings`, { settings: { startDate: start, endDate } });
+    axios.post(`/ajax/dashboards/${id}/settings`, { settings: { startDate: start, endDate } }, {
+      headers: [
+        { key: 'Cache-Control', value: 'no-store' }
+      ]
+    });
   };
 
   const setGlobalOption = (key, value) => {
