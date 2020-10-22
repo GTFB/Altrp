@@ -84,7 +84,10 @@ class AltrpSQLEditorObserver
         }
         $routeFile = new RouteFile($model);
         $routeWriter = new RouteFileWriter($routeFile, $controllerFile);
+        $apiRouteFile = new RouteFile($model, 'routes/AltrpApiRoutes.php', true);
+        $apiRouteWriter = new RouteFileWriter($apiRouteFile, $controllerFile);
         $routeWriter->addRoute($sQLEditor->name);
+        $apiRouteWriter->addRoute($sQLEditor->name);
     }
 
     /**
@@ -151,7 +154,10 @@ class AltrpSQLEditorObserver
         ]);
         $routeFile = new RouteFile($model);
         $routeWriter = new RouteFileWriter($routeFile, $controllerFile);
-        $routeWriter->updateSqlRoute($sQLEditor->getOriginal('name'),$sQLEditor->name);
+        $apiRouteFile = new RouteFile($model, 'routes/AltrpApiRoutes.php', true);
+        $apiRouteWriter = new RouteFileWriter($apiRouteFile, $controllerFile);
+        $routeWriter->updateSqlRoute($sQLEditor->getOriginal('name'), $sQLEditor->name);
+        $apiRouteWriter->updateSqlRoute($sQLEditor->getOriginal('name'), $sQLEditor->name);
     }
 
     /**
@@ -203,7 +209,10 @@ class AltrpSQLEditorObserver
         $source->delete();
         $routeFile = new RouteFile($model);
         $routeWriter = new RouteFileWriter($routeFile, $controllerFile);
+        $apiRouteFile = new RouteFile($model, 'routes/AltrpApiRoutes.php', true);
+        $apiRouteWriter = new RouteFileWriter($apiRouteFile, $controllerFile);
         $routeWriter->deleteSqlRoute($sQLEditor->getOriginal('name'));
+        $apiRouteWriter->deleteSqlRoute($sQLEditor->getOriginal('name'));
     }
 
     /**

@@ -16,6 +16,8 @@ use App\Altrp\SourceRole;
 use App\Altrp\Table;
 use App\Altrp\Relationship;
 use App\Altrp\Source;
+use App\Altrp\ValidationField;
+use App\Altrp\ValidationRule;
 use App\Http\Controllers\Controller as HttpController;
 use App\Permission;
 use App\Role;
@@ -209,19 +211,22 @@ class ModelsController extends HttpController
     {
         $search = $request->get('s');
         $page = $request->get('page');
+        $orderColumn = $request->get('order_by') ?? 'id';
+        $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
         if (! $page) {
             $pageCount = 0;
+            $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
             $models = $search
-                ? Model::getBySearch($search)
-                : Model::all()->sortByDesc( 'id' )->values();
+                ? Model::getBySearch($search, $orderColumn, $orderType)
+                : Model::all()->$sortType( $orderColumn )->values();
         } else {
             $modelsCount = $search ? Model::getCountWithSearch($search) : Model::getCount();
             $limit = $request->get('pageSize', 10);
             $pageCount = ceil($modelsCount / $limit);
             $offset = $limit * ($page - 1);
             $models = $search
-                ? Model::getBySearchWithPaginate($search, $offset, $limit, $request)
-                : Model::getWithPaginate($offset, $limit, $request);
+                ? Model::getBySearchWithPaginate($search, $offset, $limit, $request, $orderColumn, $orderType)
+                : Model::getWithPaginate($offset, $limit, $request, $orderColumn, $orderType);
 
           $models = $models->get();
         }
@@ -296,11 +301,14 @@ class ModelsController extends HttpController
     {
         $search = $request->get('s');
         $page = $request->get('page');
+        $orderColumn = $request->get('order_by') ?? 'id';
+        $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
+        $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
         if (! $page) {
             $pageCount = 0;
             $data_sources = $search
-                ? Source::getBySearch($search)
-                : Source::all();
+                ? Source::getBySearch($search, 'title', [], $orderColumn, $orderType)
+                : Source::all()->$sortType($orderColumn)->values();
         } else {
             $dataSourcesCount = $search
                 ? Source::getCountWithSearch($search)
@@ -309,8 +317,8 @@ class ModelsController extends HttpController
             $pageCount = ceil($dataSourcesCount / $limit);
             $offset = $limit * ($page - 1);
             $data_sources = $search
-                ? Source::getBySearchWithPaginate($search,  $offset, $limit)
-                : Source::getWithPaginate($offset, $limit);
+                ? Source::getBySearchWithPaginate($search,  $offset, $limit, 'name', $orderColumn, $orderType)
+                : Source::getWithPaginate($offset, $limit, $orderColumn, $orderType);
         }
       $data_sources->map( function ( $data_source ){
         $data_source->web_url = $data_source->web_url;
@@ -1386,5 +1394,153 @@ class ModelsController extends HttpController
             'success' => false,
             'message' => 'Failed to delete accessor'
         ], 500, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function getValidationFields()
+    {
+        $validations = ValidationField::with('column','rules')->get();
+        return response()->json($validations, 200);
+    }
+
+    public function showValidationField($model_id, $validation_field_id)
+    {
+        $validationField = ValidationField::where('id',$validation_field_id)->with('column','rules')->first();
+        if (! $validationField){
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation field not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+        return response()->json($validationField, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function storeValidationField(Request $request, $model_id)
+    {
+        $data = $request->all();
+        $data['model_id'] = $model_id;
+        $validationField = new ValidationField($data);
+        $result = $validationField->save();
+        if (!$result)
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to store validation field'
+            ], 500, [], JSON_UNESCAPED_UNICODE);
+
+        return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function updateValidationField(Request $request, $model_id, $validation_field_id)
+    {
+        $data = $request->all();
+        $data['model_id'] = $model_id;
+        $validationField = ValidationField::find($validation_field_id);
+        if (!$validationField)
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation field not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        $result = $validationField->update($data);
+        if (!$result)
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update validation field'
+            ], 500, [], JSON_UNESCAPED_UNICODE);
+
+        return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function destroyValidationField($model_id, $validation_field_id)
+    {
+        $validationRules = ValidationRule::where([['validation_field_id',$validation_field_id]])->delete();
+        $validationField = ValidationField::find($validation_field_id);
+        if (!$validationField)
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation field not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        $result = $validationField->delete();
+        if (!$result)
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to destroy validation field'
+            ], 500, [], JSON_UNESCAPED_UNICODE);
+
+        return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function getValidationRules()
+    {
+        $validations = ValidationRule::all();
+        return response()->json($validations, 200);
+    }
+
+    public function showValidationRule($model_id, $validation_field_id, $rule_id)
+    {
+        $validationField = ValidationRule::where('id',$rule_id)->first();
+        if (! $validationField){
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation rule not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+        return response()->json($validationField, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function storeValidationRule(Request $request, $model_id, $validation_field_id)
+    {
+        $data = $request->all();
+        $data['validation_field_id'] = $validation_field_id;
+        $validationRule = new ValidationRule($data);
+        $result = $validationRule->save();
+        if (!$result)
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to store validation rule'
+            ], 500, [], JSON_UNESCAPED_UNICODE);
+
+        return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function updateValidationRule(Request $request, $model_id, $validation_field_id, $rule_id)
+    {
+        $data = $request->all();
+        $validationRule = ValidationRule::find($rule_id);
+        if (!$validationRule)
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation rule not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        $result = $validationRule->update($data);
+        if (!$result)
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update validation rule'
+            ], 500, [], JSON_UNESCAPED_UNICODE);
+
+        return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function destroyValidationRule($model_id, $validation_field_id, $rule_id)
+    {
+        $validationRule = ValidationRule::find($rule_id);
+        if (!$validationRule)
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation rule not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        $result = $validationRule->delete();
+        if (!$result)
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to destroy validation rule'
+            ], 500, [], JSON_UNESCAPED_UNICODE);
+
+        return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function getDataSourcesByModel($model_id)
+    {
+        $data_sources = Source::select(['title as label', 'id as value'])->where('model_id',$model_id)->get();
+        return response()->json($data_sources, 200, [], JSON_UNESCAPED_UNICODE);
     }
 }

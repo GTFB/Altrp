@@ -5,6 +5,7 @@ namespace App;
 use App\Altrp\Source;
 use App\Altrp\Model as AltrpModel;
 use App\Constructor\Template;
+use App\Traits\Searchable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
@@ -25,7 +26,7 @@ use Mockery\Exception;
 class Page extends Model
 {
   //
-  use SoftDeletes;
+  use SoftDeletes, Searchable;
   protected $fillable = [
     'title',
     'author',

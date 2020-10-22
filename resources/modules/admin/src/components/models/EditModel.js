@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import { Link, withRouter, Redirect } from "react-router-dom";
 import EditModelForm from "./EditModelForm";
 import AdminTable from "../AdminTable";
+import AdminModal2 from "../AdminModal2";
 import Resource from "../../../../editor/src/js/classes/Resource";
+import ValidatedFieldForm from "./ValidationSection/ValidatedFieldForm";
+import ValidationTable from "./ValidationSection/ValidationTable";
 
 const columns = [
   {
@@ -41,27 +44,32 @@ class EditModel extends Component {
       accessors: [],
       id,
       queries: [],
+      validations: [],
+      data_source_options: [],
+      isModalOpened: false
       // sql_editors: [],
       // fields: [],
       // relations: []
     };
 
-    this.modelsResource = new Resource({route: '/admin/ajax/models'});
-    if(id){
-      this.fieldsResource = new Resource({route: `/admin/ajax/models/${id}/fields`});
-      this.relationsResource = new Resource({route: `/admin/ajax/models/${id}/relations`});
-      this.queriesResource = new Resource({route: `/admin/ajax/models/${id}/queries`});
-      this.accessorsResource = new Resource({route: `/admin/ajax/models/${id}/accessors`});
+    this.modelsResource = new Resource({ route: '/admin/ajax/models' });
+    if (id) {
+      this.fieldsResource = new Resource({ route: `/admin/ajax/models/${id}/fields` });
+      this.relationsResource = new Resource({ route: `/admin/ajax/models/${id}/relations` });
+      this.queriesResource = new Resource({ route: `/admin/ajax/models/${id}/queries` });
+      this.accessorsResource = new Resource({ route: `/admin/ajax/models/${id}/accessors` });
+      this.validationsResource = new Resource({ route: `/admin/ajax/models/${id}/validations` });
+      this.data_source_optionsResource = new Resource({ route: `/admin/ajax/models/${id}/data_source_options` });
     }
   }
 
-  updateFields = async() => {
+  updateFields = async () => {
     let fields = await this.fieldsResource.getAll();
     fields = fields.filter(({ name }) => name !== 'id');
     this.setState(state => ({ ...state, fields }));
   }
 
-  updateRelations = async() => {
+  updateRelations = async () => {
     let relations = await this.relationsResource.getAll();
     this.setState(state => ({ ...state, relations }));
   }
@@ -76,26 +84,36 @@ class EditModel extends Component {
     this.setState(state => ({ ...state, accessors }));
   }
 
+  updateValidations = async () => {
+    let validations = await this.validationsResource.getAll();
+    this.setState(state => ({ ...state, validations, isModalOpened: false }));
+  }
+
   /**
    * Загрузим данные модели
    * @return {Promise<void>}
    */
   async componentDidMount() {
     // TODO: делать запросы асинхронно
-    if(this.state.id){
+    if (this.state.id) {
       let model = await this.modelsResource.get(this.state.id);
       let relations = await this.relationsResource.getAll();
       let fields = await this.fieldsResource.getAll();
       let queries = await this.queriesResource.getAll();
       let accessors = await this.accessorsResource.getAll();
-      fields = fields.filter(({name}) => name !== 'id');
-      this.setState(state=>({
-          ...state,
+      let validations = await this.validationsResource.getAll();
+      let data_source_options = await this.data_source_optionsResource.getAll();
+
+      fields = fields.filter(({ name }) => name !== 'id');
+      this.setState(state => ({
+        ...state,
         model,
         relations,
         accessors,
         fields,
-        queries
+        queries,
+        validations,
+        data_source_options
       }))
     }
   }
@@ -105,15 +123,15 @@ class EditModel extends Component {
    */
   onSubmit = async (model) => {
     let res;
-    if(this.state.id){
-      res = await this.modelsResource.put(this.state.id ,model);
+    if (this.state.id) {
+      res = await this.modelsResource.put(this.state.id, model);
     } else {
       res = await this.modelsResource.post(model);
     }
     this.props.history.push("/admin/tables/models");
   };
   render() {
-    const { model, fields, relations, queries, sql_editors, accessors } = this.state;
+    const { model, fields, relations, queries, sql_editors, accessors, isModalOpened, data_source_options, validations } = this.state;
 
     const { id } = this.props.match.params;
     return <div className="admin-pages admin-page">
@@ -151,10 +169,10 @@ class EditModel extends Component {
         />
         <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/fields/add`}>Add Field</Link>
         </> : ''}
-        {relations ?<>
-        <h2 className="sub-header">Relations</h2>
-        <AdminTable
-          columns={columns}
+        {relations ? <>
+          <h2 className="sub-header">Relations</h2>
+          <AdminTable
+            columns={columns}
           quickActions={[{ tag: 'Link', props: {
               href: `/admin/tables/models/${id}/relations/edit/:id`,
             },
@@ -172,15 +190,16 @@ class EditModel extends Component {
         />
         <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/relations/add`}>Add Relation</Link>
         </> : ''}
-        {accessors ?<>
+        {accessors ? <>
           <h2 className="sub-header">Accessors</h2>
           <AdminTable
             columns={columns}
-            quickActions={[{ tag: 'Link', props: {
+            quickActions={[{
+              tag: 'Link', props: {
                 href: `/admin/tables/models/${id}/accessors/edit/:id`,
               },
               title: 'Edit'
-            } , {
+            }, {
               tag: 'button',
               route: `/admin/ajax/models/${id}/accessors/:id`,
               method: 'delete',
@@ -223,6 +242,27 @@ class EditModel extends Component {
         />
         <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/sql_editors/add`}>Add Editor</Link>
         </> : ''}
+        <h2 className="sub-header">Validation</h2>
+        {id && <>
+          <ValidationTable 
+            validations={validations} 
+            updateValidations={this.updateValidations}
+            fieldsOptions={fields}
+            validationsResource={this.validationsResource}
+            data_source_options={data_source_options}
+          />
+          <button onClick={() => this.setState({ isModalOpened: true })} className="btn btn_add">
+            Add Field
+          </button>
+        </>}
+        {isModalOpened && <AdminModal2 closeHandler={() => this.setState({ isModalOpened: false })}>
+          <ValidatedFieldForm
+            fieldsOptions={fields}
+            validationsResource={this.validationsResource}
+            data_source_options={data_source_options}
+            updateValidations={this.updateValidations} 
+          />
+        </AdminModal2>}
       </div>
     </div>;
   }

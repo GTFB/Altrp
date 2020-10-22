@@ -73,7 +73,10 @@ class AltrpSourceObserver
         if ($source->type == 'remote') {
             $routeFile = new RouteFile($model);
             $routeWriter = new RouteFileWriter($routeFile, $controllerFile);
+            $apiRouteFile = new RouteFile($model, 'routes/AltrpApiRoutes.php', true);
+            $apiRouteWriter = new RouteFileWriter($apiRouteFile, $controllerFile);
             $routeWriter->addSourceRoute($source);
+            $apiRouteWriter->addSourceRoute($source);
         }
     }
 
@@ -88,6 +91,11 @@ class AltrpSourceObserver
     {
         $model = $source->model;
         $source->controller_id = $model->altrp_controller->id;
+
+        if (!in_array($source->type, ['get', 'options', 'show', 'add', 'update', 'delete', 'update_column', 'filters'])
+            && $source->type != $source->getOriginal('type')) {
+            $source->type = $source->getOriginal('type');
+        }
 
         $oldSource = Source::where([
             ['model_id', $model->id],
@@ -134,11 +142,23 @@ class AltrpSourceObserver
 
         $this->writeSourceAccess($source, request()->get('access'));
 
+        $routeFile = new RouteFile($model);
+        $routeWriter = new RouteFileWriter($routeFile, $controllerFile);
+        $apiRouteFile = new RouteFile($model, 'routes/AltrpApiRoutes.php', true);
+        $apiRouteWriter = new RouteFileWriter($apiRouteFile, $controllerFile);
         if ($source->type == 'remote') {
-            $routeFile = new RouteFile($model);
-            $routeWriter = new RouteFileWriter($routeFile, $controllerFile);
             if ($routeWriter->routeSourceExist($source)) {
                 $routeWriter->updateSourceRoute($source);
+            }
+            if ($apiRouteWriter->routeSourceExist($source)) {
+                $apiRouteWriter->updateSourceRoute($source);
+            }
+        }  else {
+            if ($routeWriter->routeExists(file($routeFile->getFile(), 2), ltrim($source->url, '/'), 'Route::', $source->getOriginal('request_type'))) {
+                $routeWriter->updateSourceRoute($source, ltrim($source->url, '/'));
+            }
+            if ($apiRouteWriter->routeExists(file($apiRouteFile->getFile(), 2), ltrim($source->url, '/'), 'Route::', $source->getOriginal('request_type'))) {
+                $apiRouteWriter->updateSourceRoute($source, ltrim($source->url, '/'));
             }
         }
     }
@@ -186,11 +206,24 @@ class AltrpSourceObserver
 
         $this->writeSourceAccess($source, request()->get('access'));
 
+        $routeFile = new RouteFile($model);
+        $routeWriter = new RouteFileWriter($routeFile, $controllerFile);
+        $apiRouteFile = new RouteFile($model, 'routes/AltrpApiRoutes.php', true);
+        $apiRouteWriter = new RouteFileWriter($apiRouteFile, $controllerFile);
+
         if ($source->type == 'remote') {
-            $routeFile = new RouteFile($model);
-            $routeWriter = new RouteFileWriter($routeFile, $controllerFile);
             if ($routeWriter->routeSourceExist($source)) {
                 $routeWriter->removeRoute($source->name, 'data_sources', $source->request_type);
+            }
+            if ($apiRouteWriter->routeSourceExist($source)) {
+                $apiRouteWriter->removeRoute($source->name, 'data_sources', $source->request_type);
+            }
+        } else {
+            if ($routeWriter->routeExists(file($routeFile->getFile(), 2), ltrim($source->url, '/'), 'Route::', $source->getOriginal('request_type'))) {
+                $routeWriter->removeRoute($source->url, 'Route::', $source->request_type);
+            }
+            if ($apiRouteWriter->routeExists(file($apiRouteFile->getFile(), 2), ltrim($source->url, '/'), 'Route::', $source->getOriginal('request_type'))) {
+                $apiRouteWriter->removeRoute($source->url, 'Route::', $source->request_type);
             }
         }
     }

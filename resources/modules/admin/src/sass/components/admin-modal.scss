@@ -19,7 +19,9 @@
     }
   }
   &-content{
-    width:320px;
+    width: 470px;
+    max-height: 70vh;
+    overflow: auto;
     position: relative;
     padding: 25px;
     background-color: #fff;

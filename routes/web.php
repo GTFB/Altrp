@@ -262,6 +262,21 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::delete( '/models/{model_id}/relations/{field_id}', 'Admin\ModelsController@destroyModelRelation');
 
     /**
+    * Валидационные правила
+    */
+    Route::get( '/models/{model_id}/validations', 'Admin\ModelsController@getValidationFields');
+    Route::get( '/models/{model_id}/validations/{validation_field_id}', 'Admin\ModelsController@showValidationField');
+    Route::post( '/models/{model_id}/validations', 'Admin\ModelsController@storeValidationField');
+    Route::put( '/models/{model_id}/validations/{validation_field_id}', 'Admin\ModelsController@updateValidationField');
+    Route::delete( '/models/{model_id}/validations/{validation_field_id}', 'Admin\ModelsController@destroyValidationField');
+
+    Route::get( '/models/{model_id}/validations/{validation_field_id}/validation_rules', 'Admin\ModelsController@getValidationRules');
+    Route::get( '/models/{model_id}/validations/{validation_field_id}/validation_rules/{rule_id}', 'Admin\ModelsController@showValidationRule');
+    Route::post( '/models/{model_id}/validations/{validation_field_id}/validation_rules', 'Admin\ModelsController@storeValidationRule');
+    Route::put( '/models/{model_id}/validations/{validation_field_id}/validation_rules/{rule_id}', 'Admin\ModelsController@updateValidationRule');
+    Route::delete( '/models/{model_id}/validations/{validation_field_id}/validation_rules/{rule_id}', 'Admin\ModelsController@destroyValidationRule');
+
+    /**
     * Источники данных
     */
     Route::get( '/data_sources', 'Admin\ModelsController@getDataSources');
@@ -270,6 +285,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::put( '/data_sources/{source_id}', 'Admin\ModelsController@updateDataSource');
     Route::get( '/data_sources/{source_id}', 'Admin\ModelsController@showDataSource');
     Route::delete( '/data_sources/{source_id}', 'Admin\ModelsController@destroyDataSource');
+    Route::get( '/models/{model_id}/data_source_options', 'Admin\ModelsController@getDataSourcesByModel');
 
     Route::get('/tables', "Admin\TableController@getTables");
     Route::get('/tables/options', "Admin\TableController@getTablesForOptions");

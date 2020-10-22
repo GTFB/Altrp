@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Media;
 use App\Page;
 use App\PagesTemplate;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -14,16 +15,21 @@ use Illuminate\Support\Str;
 
 class PagesController extends Controller
 {
-  /**
-   * Display a listing of the resource.
-   *
-   * @return \Illuminate\Http\JsonResponse
-   */
-  public function index()
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+  public function index(Request $request)
   {
-    //
-
-    $_pages = Page::all();
+    $search = $request->get('s');
+    $orderColumn = $request->get('order_by') ?? 'id';
+    $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
+    $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
+    $_pages = $search
+        ? Page::getBySearch($search, 'title', [], $orderColumn, $orderType)
+        : Page::all()->$sortType( $orderColumn )->values();
     $pages = [];
     foreach ( $_pages as $page ) {
 

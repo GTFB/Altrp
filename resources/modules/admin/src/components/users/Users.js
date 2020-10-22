@@ -37,15 +37,22 @@ export default class Users extends Component{
     }
     
     async componentDidMount(){
-        let users_result = await this.resource.getAll();
-        this.setState(state=>{
-            return{...state, data: users_result};
-        });
+        // let users_result = await this.resource.getAll();
+        // this.setState(state=>{
+        //     return{...state, data: users_result};
+        // });
+      this.getUsers();
     }
     
+    getUsers = async() => {
+      let users_result = await this.resource.getQueried({ s: this.state.search });
+      this.setState(state => {
+        return { ...state, data: users_result };
+      });
+    }
         
   render(){
-    const { currentPage, data } = this.state;
+    const { currentPage, data, search } = this.state;
     return <div className="admin-users">
         <div className="wrapper">
             <div className="admin-heading-users">
@@ -78,8 +85,8 @@ export default class Users extends Component{
                         <button className="btn btn_bare admin-users-button">Change</button>
                     </form>
                     <form className="admin-users-form form-bulk-search" >
-                        <input type="search" className="form-control input-sm" placeholder="" aria-controls="example1"/>
-                        <button type="search" className="btn btn_bare admin-users-button">Search Users</button>
+                        <input className="form-control input-sm" value={search} onChange={e => this.setState({search: e.target.value})} />
+                        <button type="button" onClick={this.getUsers} className="btn btn_bare admin-users-button">Search Users</button>
                     </form>
                 </div>
             <div className="admin-users-table">
