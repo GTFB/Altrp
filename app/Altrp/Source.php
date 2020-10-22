@@ -58,18 +58,22 @@ class Source extends Model
         return $this->hasMany(PageDatasource::class,'source_id');
     }
 
-    public static function getBySearchWithPaginate($search, $offset, $limit)
+    public static function getBySearchWithPaginate($search, $offset, $limit, $fieldName = 'name', $orderColumn = 'id', $orderType = 'Desc')
     {
+        $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
         return self::where('name','like', "%{$search}%")
             ->orWhere('id', $search)
+            ->$sortType($orderColumn)
             ->skip($offset)
             ->take($limit)
             ->get();
     }
 
-    public static function getWithPaginate($offset, $limit)
+    public static function getWithPaginate($offset, $limit, $orderColumn = 'id', $orderType = 'Desc')
     {
-        return self::skip($offset)
+        $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
+        return self::$sortType($orderColumn)
+            ->skip($offset)
             ->take($limit)
             ->get();
     }

@@ -24,9 +24,12 @@ class PagesController extends Controller
   public function index(Request $request)
   {
     $search = $request->get('s');
+    $orderColumn = $request->get('order_by') ?? 'id';
+    $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
+    $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
     $_pages = $search
-        ? Page::getBySearch($search)
-        : Page::all()->sortByDesc( 'id' )->values();
+        ? Page::getBySearch($search, 'title', [], $orderColumn, $orderType)
+        : Page::all()->$sortType( $orderColumn )->values();
     $pages = [];
     foreach ( $_pages as $page ) {
 

@@ -22,16 +22,19 @@ class Users extends Controller
      */
     function getUsers(ApiRequest $request) {
         $search = $request->get('s');
+        $orderColumn = $request->get('order_by') ?? 'id';
+        $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
+        $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
         $users = $search
-            ? User::getBySearch($search, 'name', ["roles", "usermeta"])
-            : User::with(["roles", "usermeta"])->get();
+            ? User::getBySearch($search, 'name', ["roles", "usermeta"], $orderColumn, $orderType)
+            : User::with(["roles", "usermeta"])->$sortType($orderColumn)->get();
         return response()->json($users, 200, [],JSON_UNESCAPED_UNICODE);
     }
 
     /**
      * Получение пользователя по идентификатору
      * @param Request $request
-     * @return type
+     * @return \Illuminate\Http\JsonResponse
      */
     function getUser(ApiRequest $request) {
 

@@ -301,11 +301,14 @@ class ModelsController extends HttpController
     {
         $search = $request->get('s');
         $page = $request->get('page');
+        $orderColumn = $request->get('order_by') ?? 'id';
+        $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
+        $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
         if (! $page) {
             $pageCount = 0;
             $data_sources = $search
-                ? Source::getBySearch($search)
-                : Source::all()->sortByDesc('id')->values();
+                ? Source::getBySearch($search, 'title', [], $orderColumn, $orderType)
+                : Source::all()->$sortType($orderColumn)->values();
         } else {
             $dataSourcesCount = $search
                 ? Source::getCountWithSearch($search)
@@ -314,8 +317,8 @@ class ModelsController extends HttpController
             $pageCount = ceil($dataSourcesCount / $limit);
             $offset = $limit * ($page - 1);
             $data_sources = $search
-                ? Source::getBySearchWithPaginate($search,  $offset, $limit)
-                : Source::getWithPaginate($offset, $limit);
+                ? Source::getBySearchWithPaginate($search,  $offset, $limit, 'name', $orderColumn, $orderType)
+                : Source::getWithPaginate($offset, $limit, $orderColumn, $orderType);
         }
       $data_sources->map( function ( $data_source ){
         $data_source->web_url = $data_source->web_url;

@@ -19,17 +19,20 @@ class SQLEditorController extends Controller
     public function index( Request $request )
     {
       $search = $request->get('s');
+      $orderColumn = $request->get('order_by') ?? 'id';
+      $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
+      $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
       $page_count = 1;
       if ( ! $request->get( 'page' ) ) {
         $sQLEditors = $search
-            ? SQLEditor::getBySearch($search)
-            : SQLEditor::all()->sortByDesc( 'id' )->values();
+            ? SQLEditor::getBySearch($search, 'title', [], $orderColumn, $orderType)
+            : SQLEditor::all()->$sortType( $orderColumn )->values();
       } else {
         $page_size = $request->get( 'pageSize', 10 );
         $sQLEditors = SQLEditor::offset( $page_size * ( $request->get( 'page' ) - 1 ) )
           ->limit( $page_size );
         $page_count = $sQLEditors->toBase()->getCountForPagination();
-        $sQLEditors = $sQLEditors->get(  )->sortByDesc( 'id' )->values();
+        $sQLEditors = $sQLEditors->get()->$sortType( $orderColumn )->values();
 
         $page_count = ceil( $page_count / $page_size );
       }
