@@ -375,24 +375,9 @@ foreach ( $frontend_routes as $frontend_route ) {
   $title = $frontend_route['title'];
   $frontend_route = str_replace( ':id', '{id}', $path );
 
-  Route::get($frontend_route, function () use ($title) {
-
-    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator( base_path('public') ), RecursiveIteratorIterator::SELF_FIRST);
-    $i =0;
-
-    foreach($iterator as $item) {
-//      echo '<pre style="padding-left: 200px;">';
-//      var_dump(  $item);
-//      echo '</pre>';
-      $i++;
-    }
-    echo '<pre style="padding-left: 200px;">';
-    var_dump( $i );
-    echo '</pre>';
-
+  Route::get( $frontend_route, function () use ( $title ) {
     return view('front-app',['title'=> $title]);
-  })->middleware( ['web', 'installation.checker'] );
-
+  } )->middleware( ['web', 'installation.checker'] );
 }
 
 /**

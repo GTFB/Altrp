@@ -15,6 +15,7 @@ import { clearFormStorage } from "../store/forms-data-storage/actions";
 import { setScrollValue } from "../store/scroll-position/actions";
 import dataStorageUpdater from '../classes/modules/DatastorageUpdater';
 import { clearElements } from "../store/elements-storage/actions";
+import {clearAllResponseData} from "../store/responses-storage/actions";
 
 class RouteContent extends Component {
   constructor(props) {
@@ -53,6 +54,10 @@ class RouteContent extends Component {
      * Обнуляем текущее хранилище dataStorage
      */
     dataStorageUpdater.clearCurrent();
+    /**
+     * Обнуляем хранилище ответов на отправленные формы
+     */
+    appStore.dispatch(clearAllResponseData());
     /**
      * затем отправляем запросы на обновление
      */
