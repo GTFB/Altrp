@@ -21,8 +21,9 @@ import {
   TAB_ADVANCED,
   CONTROLLER_MEDIA,
   CONTROLLER_CREATIVE_LINK,
-  CONTROLLER_GRADIENT
+  CONTROLLER_GRADIENT, CONTROLLER_REPEATER
 } from "../modules/ControllersManager";
+import Repeater from "../Repeater";
 
 class Button extends BaseElement{
 
@@ -179,6 +180,116 @@ class Button extends BaseElement{
     });
 
     this.endControlSection();
+    /**
+     * Список произвольных действия для кнопки START
+     */
+    this.startControlSection("actions_section", {
+      tab: TAB_CONTENT,
+      label: "Actions"
+    });
+
+    let actionsRepeater = new Repeater();
+
+    actionsRepeater.addControl('type', {
+      label: 'Type',
+      type: CONTROLLER_SELECT,
+      nullable: true,
+      responsive: false,
+      options: [
+        {
+          value: 'form',
+          label: 'Form',
+        },
+        {
+          value: 'toggle_element',
+          label: 'Toggle Element',
+        },
+        {
+          value: 'toggle_popup',
+          label: 'Toggle Popup',
+        },
+        {
+          value: 'print_page',
+          label: 'Print Page',
+        },
+        {
+          value: 'print_elements',
+          label: 'Print Elements',
+        },
+        {
+          value: 'scroll_to_element',
+          label: 'Scroll to Element',
+        },
+      ],
+    });
+
+    actionsRepeater.addControl('form_method', {
+      label: 'Method',
+      type: CONTROLLER_SELECT,
+      responsive: false,
+      nullable: true,
+      options: [
+        {
+          value: 'GET',
+          label: 'Get',
+        },
+        {
+          value: 'PUT',
+          label: 'Put',
+        },
+        {
+          value: 'POST',
+          label: 'Post',
+        },
+        {
+          value: 'DELETE',
+          label: 'Delete',
+        },
+      ],
+      conditions: {
+        type: 'form',
+      },
+    });
+
+    actionsRepeater.addControl('form_id', {
+      label: 'Form ID',
+      conditions: {
+        type: 'form',
+      },
+    });
+
+    actionsRepeater.addControl('form_url', {
+      label: 'URL',
+      responsive: false,
+      dynamic: false,
+      description: '{{altrpdata.alias.path_to_data}} - Templates Allowed',
+      conditions: {
+        type: 'form',
+      },
+    });
+
+    actionsRepeater.addControl('confirm', {
+      type: CONTROLLER_TEXTAREA,
+      dynamic: false,
+      label: 'Confirm Text',
+    });
+
+    actionsRepeater.addControl('alert', {
+      type: CONTROLLER_TEXTAREA,
+      dynamic: false,
+      label: 'After Text',
+    });
+
+    this.addControl('actions', {
+      label: 'Actions',
+      type: CONTROLLER_REPEATER,
+      fields: actionsRepeater.getControls(),
+    });
+
+    this.endControlSection();
+    /**
+     * Список произвольных действия для кнопки END
+     */
     this.startControlSection("form_section", {
       tab: TAB_CONTENT,
       label: "Form Settings"

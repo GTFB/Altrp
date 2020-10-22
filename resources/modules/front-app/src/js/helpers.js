@@ -299,7 +299,8 @@ function conditionChecker(c, model){
  * @return {string}
  */
 export function getDataByPath(path, _default = null, context = null){
-  let {currentModel, currentDataStorage} = appStore.getState();
+  path = path.trim();
+  let {currentModel, currentDataStorage, altrpresponses, formsStore} = appStore.getState();
   if(context){
     currentModel = context;
   }
@@ -311,8 +312,12 @@ export function getDataByPath(path, _default = null, context = null){
   if(path.indexOf('altrpdata.') === 0){
     path = path.replace('altrpdata.', '');
     value = currentDataStorage.getProperty(path, _default)
-  } else if(path.indexOf('altrptime.') === 0){
+  } else if(path.indexOf('altrpresponses.') === 0){
+    value = altrpresponses.getProperty(path, _default)
+  }else if(path.indexOf('altrptime.') === 0){
     value = getTimeValue(path.replace('altrptime.',''));
+  }else if(path.indexOf('altrpforms.') === 0){
+    value = _.get(formsStore, path, _default);
   } else {
     value = urlParams[path] ? urlParams[path] : currentModel.getProperty(path, _default);
   }
@@ -768,7 +773,7 @@ export function printElements(elements, title = ''){
   myWindow.document.write('</body></html>');
   myWindow.document.close(); // necessary for IE >= 10
   myWindow.focus(); // necessary for IE >= 10
-  // myWindow.print();
-  // myWindow.close();
+  myWindow.print();
+  myWindow.close();
   return true;
 }
