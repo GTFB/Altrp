@@ -37,10 +37,13 @@ const initPaginationProps = {
 class AccessOptions extends Component {
   state = {
     roles: [],
-    permissions: [],
     rolesPagination: initPaginationProps,
     rolesFilter: '',
     rolesSorting: {},
+    permissions: [],
+    permissionsPagination: initPaginationProps,
+    permissionsFilter: '',
+    permissionsSorting: {},
   };
   /**
    * Список ролей
@@ -68,16 +71,24 @@ class AccessOptions extends Component {
    * Список permissions
    */
   getPermissions = async () => {
-    const permissions = await permissionsResource.getAll();
-    // this.setState({ permissions });
+    const { permissionsPagination, permissionsFilter, permissionsSorting } = this.state;
+    const { permissions, count, pageCount } = await permissionsResource.getQueried({
+      page: permissionsPagination.currentPage,
+      pageSize: itemsPerPage,
+      preset: false,
+      s: permissionsFilter,
+      ...permissionsSorting
+    });
+    this.setState({ permissions, permissionsPagination: { ...permissionsPagination, count, pageCount } });
   }
-  // let res = await this.modelsResource.getQueried({
-  //   page: this.state.modelsCurrentPage,
-  //   pageSize: this.itemsPerPage,
-  //   preset: false,
-  //   s: modelsSearch,
-  //   ...this.state.modelsSorting
-  // });
+
+  permissionsFilterHandler = e => {
+    this.setState({ permissionsFilter: e.target.value }, this.getPermissions);
+  }
+
+  permissionsSortingHandler = (order_by, order) => {
+    this.setState({ permissionsSorting: { order_by, order } }, this.getPermissions);
+  }
 
   componentDidMount() {
     this.getRoles();
@@ -85,7 +96,7 @@ class AccessOptions extends Component {
   }
 
   render() {
-    const { roles, permissions, rolesPagination, rolesFilter, rolesSorting } = this.state;
+    const { roles, rolesPagination, rolesFilter, rolesSorting, permissions, permissionsPagination, permissionsFilter, permissionsSorting} = this.state;
     const activeTab = this.props.location.pathname === "/admin/access/roles" ? 0 : 1;
 
     return <div className="admin-settings admin-page">
@@ -166,6 +177,17 @@ class AccessOptions extends Component {
                 ...permission,
                 editUrl: '/admin/access/permissions/edit/' + permission.id
               }))}
+              search={{
+                value: permissionsFilter,
+                changeHandler: this.permissionsFilterHandler
+              }}
+              sortingHandler={this.permissionsSortingHandler}
+              sortingField={permissionsSorting.order_by}
+            />
+            <Pagination pageCount={permissionsPagination.pageCount}
+              currentPage={permissionsPagination.currentPage}
+              changePage={currentPage => this.setState({ permissionsPagination: { ...permissionsPagination, currentPage } }, this.getPermissions)}
+              itemsCount={permissionsPagination.count}
             />
           </TabPanel>
         </Tabs>
