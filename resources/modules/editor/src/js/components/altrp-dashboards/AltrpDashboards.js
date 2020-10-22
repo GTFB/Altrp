@@ -112,7 +112,7 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
             })
           );
           // И записываем настройки
-          axios.post(`/ajax/dashboards/${id}/settings`, { settings: { startDate, endDate } },, {
+          axios.post(`/ajax/dashboards/${id}/settings`, { settings: { startDate, endDate } }, {
             headers: [
               { key: 'Cache-Control', value: 'no-store' }
             ]
