@@ -57,15 +57,19 @@ class AccessOptions extends Component {
     this.setState({ roles, rolesPagination: { ...rolesPagination, count, pageCount } });
   }
 
-  changeFilterHandler = e => {
+  rolesFilterHandler = e => {
     this.setState({ rolesFilter: e.target.value }, this.getRoles);
+  }
+
+  rolesSortingHandler = (order_by, order) => {
+    this.setState({ rolesSorting: { order_by, order } }, this.getRoles);
   }
   /**
    * Список permissions
    */
   getPermissions = async () => {
     const permissions = await permissionsResource.getAll();
-    this.setState({ permissions });
+    // this.setState({ permissions });
   }
   // let res = await this.modelsResource.getQueried({
   //   page: this.state.modelsCurrentPage,
@@ -128,8 +132,10 @@ class AccessOptions extends Component {
               }))}
               search={{
                 value: rolesFilter,
-                changeHandler: this.changeFilterHandler
+                changeHandler: this.rolesFilterHandler
               }}
+              sortingHandler={this.rolesSortingHandler}
+              sortingField={rolesSorting.order_by}
             />
             <Pagination pageCount={rolesPagination.pageCount}
               currentPage={rolesPagination.currentPage}
