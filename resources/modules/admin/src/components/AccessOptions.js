@@ -6,6 +6,7 @@ import { Link, withRouter } from 'react-router-dom'
 
 import AdminTable from "./AdminTable";
 import Resource from "../../../editor/src/js/classes/Resource";
+import Pagination from "./Pagination";
 
 const columns = [
   {
@@ -27,18 +28,32 @@ const columns = [
 
 const rolesResource = new Resource({ route: '/admin/ajax/roles' });
 const permissionsResource = new Resource({ route: '/admin/ajax/permissions' });
-
+const itemsPerPage = 2;
+const initPaginationProps = {
+  pageCount: 1,
+  currentPage: 1,
+  count: 0
+};
 class AccessOptions extends Component {
   state = {
     roles: [],
     permissions: [],
+    rolesPagination: initPaginationProps,
+    rolesFilter: '',
+    rolesSorting: {},
   };
   /**
    * Список ролей
    */
   getRoles = async () => {
-    const roles = await rolesResource.getAll();
-    this.setState({ roles });
+    const { roles, count, pageCount } = await rolesResource.getQueried({
+      page: this.state.rolesPagination.currentPage,
+      pageSize: itemsPerPage,
+      preset: false,
+      s: this.state.rolesFilter,
+      ...this.state.rolesSorting
+    });
+    this.setState({ roles, rolesPagination: { ...this.state.rolesPagination, count, pageCount } });
   }
   /**
    * Список permissions
@@ -47,10 +62,13 @@ class AccessOptions extends Component {
     const permissions = await permissionsResource.getAll();
     this.setState({ permissions });
   }
-
-  // slicePage = (array, page, itemsPerPage) => {
-  //   return array.slice(page * itemsPerPage - itemsPerPage, page * itemsPerPage);
-  // }
+  // let res = await this.modelsResource.getQueried({
+  //   page: this.state.modelsCurrentPage,
+  //   pageSize: this.itemsPerPage,
+  //   preset: false,
+  //   s: modelsSearch,
+  //   ...this.state.modelsSorting
+  // });
 
   componentDidMount() {
     this.getRoles();
@@ -58,7 +76,7 @@ class AccessOptions extends Component {
   }
 
   render() {
-    const { roles, permissions } = this.state;
+    const { roles, permissions, rolesPagination, rolesFilter, rolesSorting } = this.state;
     const activeTab = this.props.location.pathname === "/admin/access/roles" ? 0 : 1;
 
     return <div className="admin-settings admin-page">
@@ -75,7 +93,7 @@ class AccessOptions extends Component {
         </Link>
       </div>
       <div className="admin-content">
-        <Tabs selectedIndex={activeTab} onSelect={() => {}}>
+        <Tabs selectedIndex={activeTab} onSelect={() => { }}>
           <TabList className="nav nav-pills admin-pills">
             <Link to="/admin/access/roles"><Tab>Roles</Tab></Link>
             <Link to="/admin/access/permissions"><Tab>Permissions</Tab></Link>
@@ -103,6 +121,11 @@ class AccessOptions extends Component {
                 ...role,
                 editUrl: '/admin/access/roles/edit/' + role.id
               }))}
+            />
+            <Pagination pageCount={rolesPagination.pageCount}
+              currentPage={rolesPagination.currentPage}
+              changePage={currentPage => this.setState({ rolesPagination: { ...rolesPagination, currentPage } }, this.getRoles)}
+              itemsCount={rolesPagination.count}
             />
           </TabPanel>
           <TabPanel>
