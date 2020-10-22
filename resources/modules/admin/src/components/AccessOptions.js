@@ -28,7 +28,7 @@ const columns = [
 
 const rolesResource = new Resource({ route: '/admin/ajax/roles' });
 const permissionsResource = new Resource({ route: '/admin/ajax/permissions' });
-const itemsPerPage = 2;
+const itemsPerPage = 20;
 const initPaginationProps = {
   pageCount: 1,
   currentPage: 1,
@@ -46,14 +46,19 @@ class AccessOptions extends Component {
    * Список ролей
    */
   getRoles = async () => {
+    const { rolesPagination, rolesFilter, rolesSorting } = this.state;
     const { roles, count, pageCount } = await rolesResource.getQueried({
-      page: this.state.rolesPagination.currentPage,
+      page: rolesPagination.currentPage,
       pageSize: itemsPerPage,
       preset: false,
-      s: this.state.rolesFilter,
-      ...this.state.rolesSorting
+      s: rolesFilter,
+      ...rolesSorting
     });
-    this.setState({ roles, rolesPagination: { ...this.state.rolesPagination, count, pageCount } });
+    this.setState({ roles, rolesPagination: { ...rolesPagination, count, pageCount } });
+  }
+
+  changeFilterHandler = e => {
+    this.setState({ rolesFilter: e.target.value }, this.getRoles);
   }
   /**
    * Список permissions
@@ -121,6 +126,10 @@ class AccessOptions extends Component {
                 ...role,
                 editUrl: '/admin/access/roles/edit/' + role.id
               }))}
+              search={{
+                value: rolesFilter,
+                changeHandler: this.changeFilterHandler
+              }}
             />
             <Pagination pageCount={rolesPagination.pageCount}
               currentPage={rolesPagination.currentPage}
