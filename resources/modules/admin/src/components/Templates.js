@@ -17,7 +17,8 @@ export default class Templates extends Component{
       activeTemplateArea: {},
       pageCount: 1,
       currentPage: 1,
-      templateSearch: ''
+      templateSearch: '',
+      sorting: {}
     };
     this.resource = new Resource({
       route: '/admin/ajax/templates'
@@ -65,11 +66,12 @@ export default class Templates extends Component{
    * @param currentPage
    * @param activeTemplateArea
    */
-  updateTemplates(currentPage, activeTemplateArea){
+  updateTemplates(currentPage = this.state.currentPage, activeTemplateArea = this.state.activeTemplateArea){
     this.resource.getQueried({
       area: activeTemplateArea.name,
       page: currentPage,
       pageSize: 10,
+      ...this.state.sorting
     }).then(res=>{
       this.setState(state=> {
         return {
@@ -87,7 +89,8 @@ export default class Templates extends Component{
       area: this.state.activeTemplateArea.name,
       page: this.state.currentPage,
       pageSize: 10,
-      s
+      s,
+      ...this.state.sorting
     }).then(res => {
       this.setState(state => {
         console.log(res.s)
@@ -239,8 +242,12 @@ export default class Templates extends Component{
     });
   }
 
+  sortingHandler = (order_by, order) => {
+    this.setState({ sorting: { order_by, order } }, this.updateTemplates);
+  }
+
   render(){
-    const { templateSearch } = this.state
+    const { templateSearch, sorting } = this.state
     return <div className="admin-templates admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
@@ -322,6 +329,8 @@ export default class Templates extends Component{
             value: templateSearch || '',
             changeHandler: this.updateTemplatesSearch
           }}
+          sortingHandler={this.sortingHandler}
+          sortingField={sorting.order_by}
         />
         <Pagination pageCount={this.state.pageCount || 1}
                     currentPage={this.state.currentPage}
