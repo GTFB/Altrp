@@ -61,7 +61,8 @@ export default class SQLEditors extends Component {
     this.state = {
       sql_editorsPagination: initPaginationProps,
       sql_editors: [],
-      sqlEditorSearch: ''
+      sqlEditorSearch: '',
+      sorting: {}
     };
     this.changePage = this.changePage.bind(this);
     this.sql_editorsResource = new Resource({ route: '/admin/ajax/sql_editors' });
@@ -88,7 +89,7 @@ export default class SQLEditors extends Component {
   }
 
   getSqlEditors = async (s) => {
-    let sql_editors = await this.sql_editorsResource.getQueried({ s });
+    let sql_editors = await this.sql_editorsResource.getQueried({ s, ...this.state.sorting});
     sql_editors = sql_editors.sql_editors;
     this.setState(state => ({
       ...state,
@@ -101,8 +102,12 @@ export default class SQLEditors extends Component {
     this.getSqlEditors(e.target.value);
   };
 
+  sortingHandler = (order_by, order) => {
+    this.setState({ sorting: { order_by, order } }, this.getSqlEditors);
+  }
+
   render() {
-    const { sql_editors, sql_editorsPagination, sqlEditorSearch } = this.state;
+    const { sql_editors, sql_editorsPagination, sqlEditorSearch, sorting } = this.state;
     return <div className="admin-settings admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
@@ -114,7 +119,6 @@ export default class SQLEditors extends Component {
       </div>
       <div className="admin-content">
 
-        {/* TODO: что делать с колoнкой с чекбоксами? */}
         <AdminTable
           columns={columns}
           quickActions={[{
@@ -139,6 +143,8 @@ export default class SQLEditors extends Component {
             value: sqlEditorSearch || '',
             changeHandler: this.changeSearchHandler
           }}
+          sortingHandler={this.sortingHandler}
+          sortingField={sorting.order_by}
         />
         <Pagination pageCount={sql_editorsPagination.pageCount}
           currentPage={sql_editorsPagination.currentPage}
