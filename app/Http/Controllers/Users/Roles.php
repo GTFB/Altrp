@@ -37,6 +37,7 @@ class Roles extends ApiController
         }
         return compact('pageCount', 'count', 'roles');
     }
+
     /**
      * Получение списка ролей
      * @param ApiRequest $request

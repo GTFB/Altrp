@@ -11,13 +11,39 @@ use App\Error;
 
 class Permissions extends ApiController
 {
+    protected function getPermissionsAndPageCount(ApiRequest $request)
+    {
+        $search = $request->get('s');
+        $page = $request->get('page');
+        $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
+        $orderColumn = $request->order_by ? $request->order_by : 'id';
+        $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
+        $count = $search
+            ? Permission::getCountWithSearch($search)
+            : Permission::getCount();
+        if (! $page) {
+            $pageCount = 0;
+            $permissions = $search
+                ? Permission::getBySearch($search, 'name', [], $orderColumn, $orderType)
+                : Permission::with([])->get()->$sortType($orderColumn)->values();
+        } else {
+            $limit = $request->get('pageSize', 10);
+            $pageCount = ceil($count / $limit);
+            $offset = $limit * ($page - 1);
+            $permissions = $search
+                ? Permission::getBySearchWithPaginate($search,  $offset, $limit, 'name', $orderColumn, $orderType)
+                : Permission::getWithPaginate($offset, $limit, $orderColumn, $orderType);
+        }
+        return compact('pageCount', 'count', 'permissions');
+    }
 
     /**
      * Получение списка прав действия
-     * @return type
+     * @param ApiRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    function getPermissions() {
-        $permissions = Permission::all();
+    function getPermissions(ApiRequest $request) {
+        $permissions = $this->getPermissionsAndPageCount($request);
         return response()->json($permissions, 200, [],JSON_UNESCAPED_UNICODE);
     }
 
