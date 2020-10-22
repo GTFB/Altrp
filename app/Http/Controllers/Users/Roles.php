@@ -20,7 +20,7 @@ class Roles extends ApiController
         $orderColumn = $request->order_by ? $request->order_by : 'id';
         $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
         $count = $search
-            ? Role::getCountWithSearch($search)
+            ? Role::getCountWithSearch($search, 'name')
             : Role::getCount();
         if (! $page) {
             $pageCount = 0;
@@ -37,6 +37,7 @@ class Roles extends ApiController
         }
         return compact('pageCount', 'count', 'roles');
     }
+
     /**
      * Получение списка ролей
      * @param ApiRequest $request
