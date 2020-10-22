@@ -19,7 +19,7 @@ class Permissions extends ApiController
         $orderColumn = $request->order_by ? $request->order_by : 'id';
         $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
         $count = $search
-            ? Permission::getCountWithSearch($search)
+            ? Permission::getCountWithSearch($search, 'name')
             : Permission::getCount();
         if (! $page) {
             $pageCount = 0;
