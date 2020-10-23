@@ -173,14 +173,17 @@ class MigrationKey{
      */
     protected function setDeleteText() {
         $text = '';
-
+/*
         $column = $this->old_key->local_key;
 
         if($this->old_key->type === 'hasOne' || $this->old_key->type === 'hasMany' ) {
             $column = $this->old_key->foreign_key;
         }
-
-        $text .= "\$table->dropForeign(['".$column."']);";
+*/
+        $column = $this->old_key->getDBKey()->getName();
+        //dd($column);
+        $text .= "\$table->dropForeign('".$column."');";
+        //$text .= "\$table->dropForeign(['".$column."']);";
 
         /*if ($this->key && $this->old_key->foreign_key != $this->key->foreign_key) {
             $text .= "\$table->dropForeign(['".$this->old_key->foreign_key."']);\n\t\t\t";

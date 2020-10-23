@@ -43,3 +43,4 @@ _ide_helper.php
 public/modules/admin
 public/modules/front-app
 public/modules/editor
+/routes/AltrpCustomRoutes.php

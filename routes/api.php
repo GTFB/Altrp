@@ -55,6 +55,9 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::put('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@update");
         Route::delete('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@destroy");
 
+        Route::resource( 'pages', 'Admin\PagesController' );
+        Route::resource( 'templates', 'TemplateController' );
+        Route::resource( 'sql_editors', 'Admin\SQLEditorController' );
         /**
          * Маршруты для проверки на уникальность имени
          */
@@ -103,6 +106,19 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::get( '/models/{model_id}/relations/{field_id}', 'Admin\ModelsController@showModelRelation');
         Route::delete( '/models/{model_id}/relations/{field_id}', 'Admin\ModelsController@destroyModelRelation');
 
+        // Validations
+        Route::get( '/models/{model_id}/validations', 'Admin\ModelsController@getValidationFields');
+        Route::get( '/models/{model_id}/validations/{validation_field_id}', 'Admin\ModelsController@showValidationField');
+        Route::post( '/models/{model_id}/validations', 'Admin\ModelsController@storeValidationField');
+        Route::put( '/models/{model_id}/validations/{validation_field_id}', 'Admin\ModelsController@updateValidationField');
+        Route::delete( '/models/{model_id}/validations/{validation_field_id}', 'Admin\ModelsController@destroyValidationField');
+
+        Route::get( '/models/{model_id}/validations/{validation_field_id}/validation_rules', 'Admin\ModelsController@getValidationRules');
+        Route::get( '/models/{model_id}/validations/{validation_field_id}/validation_rules/{rule_id}', 'Admin\ModelsController@showValidationRule');
+        Route::post( '/models/{model_id}/validations/{validation_field_id}/validation_rules', 'Admin\ModelsController@storeValidationRule');
+        Route::put( '/models/{model_id}/validations/{validation_field_id}/validation_rules/{rule_id}', 'Admin\ModelsController@updateValidationRule');
+        Route::delete( '/models/{model_id}/validations/{validation_field_id}/validation_rules/{rule_id}', 'Admin\ModelsController@destroyValidationRule');
+
         // Data Sources
         Route::get( '/data_sources', 'Admin\ModelsController@getDataSources');
         Route::get( '/data_source_options', 'Admin\ModelsController@getDataSourceOptions');
@@ -110,6 +126,7 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::put( '/data_sources/{source_id}', 'Admin\ModelsController@updateDataSource');
         Route::get( '/data_sources/{source_id}', 'Admin\ModelsController@showDataSource');
         Route::delete( '/data_sources/{source_id}', 'Admin\ModelsController@destroyDataSource');
+        Route::get( '/models/{model_id}/data_source_options', 'Admin\ModelsController@getDataSourcesByModel');
 
         Route::post('/tables/{table}/models', 'Admin\TableController@saveModel');
         Route::get('/tables/{table}/models/{model}', 'Admin\TableController@getModel');

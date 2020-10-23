@@ -61,6 +61,17 @@ class ElementWrapper extends Component {
   };
 
   /**
+   * Вернет HTMLElement, в котором записаны css стили текущего компонента
+   * @return {null | HTMLElement}
+   */
+  getStylesHTMLElement(){
+    if(! _.get(window, 'stylesModule.stylesContainer.current')){
+      return null;
+    }
+
+    return window.stylesModule.stylesContainer.current.getElementsByClassName(`altrp-styles${this.props.element.getId()}`)[0] || null;
+  }
+  /**
    * Нужно ли обновить отображение обертки элементов
    */
   componentDidUpdate(){

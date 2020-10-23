@@ -32,7 +32,7 @@ class PluginServiceProvider extends ServiceProvider
                   $path = explode('/', $plugin);
                   $pluginName = $path[sizeof($path) - 1];
                   if (is_file("$plugin/$pluginName.php")) {
-                        if (!in_array($pluginName, $pluginsJsonDecode['installed'])) {
+                        if (isset($pluginsJsonDecode['installed']) && !in_array($pluginName, $pluginsJsonDecode['installed'])) {
                               $pluginsJsonDecode['installed'][] = $pluginName;
                         }
                   }

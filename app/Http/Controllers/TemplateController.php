@@ -23,18 +23,26 @@ class TemplateController extends Controller
     public function index( Request $request )
     {
       $page_count = 1;
+      $search = $request->get('s');
+      $orderColumn = $request->get('order_by') ?? 'id';
+      $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
+      $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
       if ( ! $request->get( 'page' ) ) {
-        $_templates = Template::where( 'type', '!=', 'review' )->get()->sortByDesc( 'id' )->values();
+        $_templates = $search
+           ? Template::getBySearchWhere([['type', '!=', 'review']], $search, $orderColumn, $orderType)
+            : Template::where( 'type', '!=', 'review' )->get()->$sortType( $orderColumn )->values();
       } else {
         $page_size = $request->get( 'pageSize', 10 );
         $area_name = $request->get( 'area', 'content' );
-        $_templates = Template::where( 'type', '!=', 'review' )
-          ->join( 'areas', 'areas.id', '=', 'templates.area' )
+        $_templates = $search
+            ? Template::getBySearchAsObject($search, 'templates')->where( 'type', '!=', 'review' )
+            : Template::where( 'type', '!=', 'review' );
+        $_templates = $_templates->join( 'areas', 'areas.id', '=', 'templates.area' )
           ->where( 'areas.name', $area_name )
           ->offset( $page_size * ( $request->get( 'page' ) - 1 ) )
           ->limit( $page_size );
         $page_count = $_templates->toBase()->getCountForPagination();
-        $_templates = $_templates->get( 'templates.*' )->sortByDesc( 'id' )->values();
+        $_templates = $_templates->get( 'templates.*' )->$sortType( $orderColumn )->values();
 
         $page_count = ceil( $page_count / $page_size );
       }

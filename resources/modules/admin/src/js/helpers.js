@@ -118,27 +118,25 @@ function prepareTemplate(templateData, parent = null){
 }
 
 export function buildPagesTree(pages) {
-  // return pages;
   const level = 0;
-  let _result;
+  const tree = [];
   const roots = pages.filter(({ parent_page_id }) => parent_page_id === null);
 
-  if (!roots) return pages;
+  if (!roots.length) return pages;
 
-  _result = _.cloneDeep(roots);
-
-  roots.forEach(treeItem => {
-    treeRecursion(treeItem.id, level + 1);
-  });
+  roots.forEach(root => {
+    tree.push(root);
+    treeRecursion(root.id, level + 1);
+  });  
 
   function treeRecursion(parentId, level) {
     const children = pages.filter(({ parent_page_id }) => parent_page_id === parentId);
     children.forEach(page => {
       page.title = "—".repeat(level) + page.title;
-      _result.push(page);
+      tree.push(page);
       treeRecursion(page.id, level + 1);
     });
   }
 
-  return _result;
+  return tree;
 }

@@ -17,17 +17,24 @@ class Users extends Controller
 
     /**
      * Получение списка пользователей
-     * @return type
+     * @param ApiRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    function getUsers() {
-        $users = User::with(["roles", "usermeta"])->get();
+    function getUsers(ApiRequest $request) {
+        $search = $request->get('s');
+        $orderColumn = $request->get('order_by') ?? 'id';
+        $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
+        $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
+        $users = $search
+            ? User::getBySearch($search, 'name', ["roles", "usermeta"], $orderColumn, $orderType)
+            : User::with(["roles", "usermeta"])->$sortType($orderColumn)->get();
         return response()->json($users, 200, [],JSON_UNESCAPED_UNICODE);
     }
 
     /**
      * Получение пользователя по идентификатору
      * @param Request $request
-     * @return type
+     * @return \Illuminate\Http\JsonResponse
      */
     function getUser(ApiRequest $request) {
 
@@ -46,8 +53,8 @@ class Users extends Controller
 
     /**
      * Добавление пользователя
-     * @param Request $request
-     * @return type
+     * @param ApiRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
     function insert( ApiRequest $request)  {
         //dd(123);
@@ -71,7 +78,7 @@ class Users extends Controller
           }
           $roles = $request->get( '_roles' );
           if( $roles ){
-            $roles = Permission::find( $roles );
+            $roles = Role::find( $roles );
             $user->attachRoles( $roles );
           }
           return response()->json($user, 200, [],JSON_UNESCAPED_UNICODE);
@@ -108,7 +115,7 @@ class Users extends Controller
           $roles = $request->get( '_roles' );
           $user->detachRoles();
           if( $roles ){
-            $roles = Permission::find( $roles );
+            $roles = Role::find( $roles );
             $user->attachRoles( $roles );
           }
           return response()->json($user, 200, [],JSON_UNESCAPED_UNICODE);

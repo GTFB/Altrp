@@ -10,4 +10,4 @@ export const popupReducer = (state = initialState, { type, payload }) => {
     default:
       return state;
   }
-}
+};

@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Altrp\Source;
+use App\Traits\Searchable;
 use Illuminate\Database\Eloquent\Model;
 use App\Altrp\Model as AltrpModel;
 use Illuminate\Support\Arr;
@@ -10,7 +11,8 @@ use Illuminate\Support\Facades\Log;
 
 class SQLEditor extends Model
 {
-    //
+    use Searchable;
+
   protected $fillable = [
     'name',
     'sql',

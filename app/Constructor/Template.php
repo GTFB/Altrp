@@ -7,6 +7,7 @@ use App\Page;
 use App\PagesTemplate;
 use App\Permission;
 use App\Role;
+use App\Traits\Searchable;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,7 +23,7 @@ use Illuminate\Support\Facades\Log;
  */
 class Template extends Model
 {
-  use SoftDeletes;
+  use SoftDeletes, Searchable;
 
 //  protected $table = 'altrp_templates'; todo: переименовать все altrp таблицы
 

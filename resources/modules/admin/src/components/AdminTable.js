@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom'
 import Resource from "../../../editor/src/js/classes/Resource";
-
+import SortableHeader from "./AdminTableComponents/SortableHeader";
 class AdminTable extends Component {
 
   /**
@@ -16,7 +16,7 @@ class AdminTable extends Component {
   };
 
   render() {
-    const { search } = this.props;
+    const { search, sortingHandler } = this.props;
     return <div className="admin-table">
       {search && <div className="admin-table">
         <input value={search.value} onChange={search.changeHandler} type="text" className="form-group" />
@@ -25,7 +25,8 @@ class AdminTable extends Component {
         <thead className="admin-table-head">
           <tr className="admin-table-row">
             <td className="admin-table__td admin-table__td_check"><input type="checkbox" /></td>
-            {this.props.columns.map(column =>
+            {this.props.columns.map(column => sortingHandler ?
+              <SortableHeader key={column.name} column={column} sortingHandler={sortingHandler} /> :
               <td className="admin-table__td " key={column.name} title={column.name}>{column.title}</td>)}
           </tr>
         </thead>

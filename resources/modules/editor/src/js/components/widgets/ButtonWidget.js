@@ -3,9 +3,10 @@ import {Link, Redirect, withRouter } from 'react-router-dom';
 let Dropbar = React.lazy(() => import('../altrp-dropbar/AltrpDropbar'));
 import { connect } from "react-redux";
 import {
+  getComponentByElementId,
   getHTMLElementById,
   isEditor,
-  parseURLTemplate,
+  parseURLTemplate, printElements,
   renderAssetIcon,
   scrollToElement
 } from "../../../../../front-app/src/js/helpers";
@@ -63,7 +64,7 @@ class ButtonWidget extends Component {
         }
       );
     } else if (this.props.element.getSettings('popup_trigger_type') && this.props.element.getSettings('popup_id')){
-      this.props.appStore.dispatch(togglePopup(+this.props.element.getSettings('popup_id')));
+      this.props.appStore.dispatch(togglePopup(this.props.element.getSettings('popup_id')));
       /**
        * Проверим надо ли по ID скроллить к элементу
        */
@@ -75,9 +76,32 @@ class ButtonWidget extends Component {
         scrollToElement(mainScrollbars, element)
       }
     }
-
+    else
     if (this.props.element.getSettings('hide_elements_trigger')) {
       this.props.toggleTrigger(this.props.element.getSettings('hide_elements_trigger'));
+    } else if( this.props.element.getSettings('other_action_type', []).includes('print_elements')){
+      let IDs = this.props.element.getSettings('print_elements_ids', '');
+      IDs = IDs.split(',');
+      console.log(IDs);
+      let elementsToPrint = [];
+      IDs.forEach(elementId=>{
+        if((! elementId) || ! elementId.trim()){
+          return;
+        }
+        getHTMLElementById(elementId.trim()) && elementsToPrint.push(getHTMLElementById(elementId));
+        if(getComponentByElementId(elementId.trim())?.getStylesHTMLElement){
+          let stylesElement = getComponentByElementId(elementId.trim()).getStylesHTMLElement();
+          if(stylesElement){
+            elementsToPrint.push(stylesElement);
+          }
+        }
+      });
+      if(_.get(window, 'stylesModule.stylesContainer.current')){
+        elementsToPrint.push(_.get(window, 'stylesModule.stylesContainer.current'));
+      }
+      elementsToPrint.push(document.head);
+      console.log(elementsToPrint);
+      printElements(elementsToPrint);
     }
   }
 

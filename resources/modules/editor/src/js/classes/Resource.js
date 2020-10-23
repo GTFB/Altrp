@@ -1,4 +1,5 @@
 import queryString from 'query-string';
+window.queryString = queryString;
 /**
  * @class Resource
  * */
@@ -229,14 +230,16 @@ class Resource {
         'Content-Type': 'application/json'
       },
     };
-    const _params = {};
+    let _params = {};
     _.forEach(params, (paramValue, paramName)=>{
       if(_.isArray(paramValue)){
         paramValue = paramValue.join(',');
       }
       _params[paramName] = paramValue;
     });
-    let url = `${this.route}?${queryString.stringify(_params)}`;
+    let url = queryString.parseUrl(this.route).url;
+    _params = _.assign( queryString.parseUrl(this.route).query, _params);
+    url = `${url}?${queryString.stringify(_params)}`;
     let res =  await fetch(url, options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);

@@ -135,16 +135,18 @@ class DataSourceDashboards extends Component {
           </div>
         ) : (
             <div className="altrp-dashboard__card">
-              {el.settings.name && (<div className="title">{el.settings.name} <div className="dropdownTogglerContainer">
-                <Dropdown drop="left">
-                  <Dropdown.Toggle variant="light" >
-                    <ThreeDotsVertical color="#7a7a7b" />
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu className="dropdownMenuToggle" style={{
-                    zIndex: 999999,
-                    background: 'rgba(255,255,255,1)'
-                  }}>
-                    {/* <Dropdown.Item>
+              <div className="title">
+                <div>{el.settings.name}</div>
+                <div className="dropdownTogglerContainer">
+                  <Dropdown drop="left">
+                    <Dropdown.Toggle variant="light" >
+                      <ThreeDotsVertical color="#7a7a7b" />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu className="dropdownMenuToggle" style={{
+                      zIndex: 999999,
+                      background: 'rgba(255,255,255,1)'
+                    }}>
+                      {/* <Dropdown.Item>
                       <ReactToPrint
                         trigger={() => {
                           return (
@@ -158,25 +160,25 @@ class DataSourceDashboards extends Component {
                           // this.refData[key].current
                         }}
                       /></Dropdown.Item> */}
-                    <Dropdown.Item>
-                      <button type="button" title="Скачать файл" onClick={this.saveWidget}>
-                        <FileEarMark />
-                      </button>
-                    </Dropdown.Item>
-                    <Dropdown.Item>
-                      <button type="button" title="Настроить виджет" onClick={() => this.setEditItem(el)}>
-                        <GearFill />
-                      </button>
-                    </Dropdown.Item>
-                    <Dropdown.Item>
-                      <button type="button" title="Удалить виджет" onClick={() => this.onRemoveItem(el.i)}>
-                        <TrashFill />
-                      </button>
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
+                      <Dropdown.Item>
+                        <button type="button" title="Скачать файл" onClick={this.saveWidget}>
+                          <FileEarMark />
+                        </button>
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <button type="button" title="Настроить виджет" onClick={() => this.setEditItem(el)}>
+                          <GearFill />
+                        </button>
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <button type="button" title="Удалить виджет" onClick={() => this.onRemoveItem(el.i)}>
+                          <TrashFill />
+                        </button>
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </div>
               </div>
-              </div>)}
               <ChooseWidget type={el.settings.type} data={el.settings.data} />
             </div>
           )

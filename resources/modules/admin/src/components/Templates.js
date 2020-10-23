@@ -17,6 +17,7 @@ export default class Templates extends Component{
       activeTemplateArea: {},
       pageCount: 1,
       currentPage: 1,
+      templateSearch: ''
     };
     this.resource = new Resource({
       route: '/admin/ajax/templates'
@@ -75,6 +76,26 @@ export default class Templates extends Component{
           ...state,
           pageCount: res.pageCount,
           templates: res.templates
+        }
+      });
+    });
+  }
+
+  updateTemplatesSearch = e => {
+    const s = e.target.value;
+    this.resource.getQueried({
+      area: this.state.activeTemplateArea.name,
+      page: this.state.currentPage,
+      pageSize: 10,
+      s
+    }).then(res => {
+      this.setState(state => {
+        console.log(res.s)
+        return {
+          ...state,
+          pageCount: res.pageCount,
+          templates: res.templates,
+          templateSearch: s
         }
       });
     });
@@ -219,6 +240,7 @@ export default class Templates extends Component{
   }
 
   render(){
+    const { templateSearch } = this.state
     return <div className="admin-templates admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
@@ -296,6 +318,10 @@ export default class Templates extends Component{
             className: 'quick-action-menu__item_danger',
             title: 'Trash'
           }]}
+          search={{
+            value: templateSearch || '',
+            changeHandler: this.updateTemplatesSearch
+          }}
         />
         <Pagination pageCount={this.state.pageCount || 1}
                     currentPage={this.state.currentPage}

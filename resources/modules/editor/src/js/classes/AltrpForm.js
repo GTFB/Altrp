@@ -1,10 +1,19 @@
 import Resource from "./Resource";
+import {clearAllResponseData} from "../../../../front-app/src/js/store/responses-storage/actions";
 
 /**
  * Класс имитирующий поведение формы (собирает данные с виджетов полей и отправляет их на сервер)
  */
 class AltrpForm {
-  constructor(formId, modelName, method = 'POST', options = {}){
+  /**
+   *
+   * @param {string} formId
+   * @param {string} modelName
+   * @param {string} method
+   * @param {{}} options
+   * @param {string} customRoute
+   */
+  constructor(formId, modelName = '', method = 'POST', options = {}, customRoute){
     this.formId = formId;
     this.fields = [];
     this.submitButtons = [];
@@ -100,6 +109,7 @@ class AltrpForm {
             return;
           }
           this.clearInputs();
+          this.updateResponseStorage(res);
           return res;
         }
 
@@ -112,6 +122,18 @@ class AltrpForm {
               modelsManager.default.updateModelWithData(this.modelName, modelID, this.getData());
             });
             this.clearInputs();
+            this.updateResponseStorage(res);
+            return res;
+          }
+          console.error('Не удалось получить ИД модели для обновления!');
+        }
+        break;
+        case 'GET':{
+          // return await alert(JSON.stringify(this.getData()));
+          let res;
+          if(modelID){
+            res =  await this.resource.getQueried(this.getData());
+            this.updateResponseStorage(res);
             return res;
           }
           console.error('Не удалось получить ИД модели для обновления!');
@@ -148,7 +170,7 @@ class AltrpForm {
 
   /**
    * Собирает данные с полей для отправки
-   * @return {object}
+   * @return {{}}
    */
   getData(){
     let data = {altrp_ajax: true};
@@ -181,6 +203,15 @@ class AltrpForm {
     }
     return data;
   }
+
+  /**
+   * Обновить responses-storage данными
+   * @param {{}} res
+   */
+  updateResponseStorage(res = {}){
+    appStore.dispatch(clearAllResponseData(this.formId, res));
+  }
+
 }
 
 export default AltrpForm

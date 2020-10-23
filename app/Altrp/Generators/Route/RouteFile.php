@@ -14,9 +14,15 @@ class RouteFile
 
     protected $model;
 
-    public function __construct(Model $model)
+    protected $api;
+
+    protected $file;
+
+    public function __construct(Model $model, $file = 'routes/AltrpRoutes.php', $isApi = false)
     {
         $this->model = $model;
+        $this->file = $file;
+        $this->api = $isApi;
     }
 
     public function getModel()
@@ -31,7 +37,7 @@ class RouteFile
 
     public function getFile()
     {
-        return base_path('routes/AltrpRoutes.php');
+        return base_path($this->file);
     }
 
     public function getApiFile()
@@ -69,5 +75,10 @@ class RouteFile
         }
 
         return false;
+    }
+
+    public function isApi()
+    {
+        return $this->api;
     }
 }

@@ -39,6 +39,11 @@ class Column extends Model
       "model_id"
     ];
 
+    public function validations()
+    {
+
+    }
+
   /**
    * Импотритруем колонки
    * @param array $imported_columns
