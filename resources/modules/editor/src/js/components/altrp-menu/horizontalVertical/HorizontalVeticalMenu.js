@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { iconsManager } from "../../../helpers";
 import {Link} from "react-router-dom";
 import Dropdown from "./Dropdown";
-import {isEditor, renderAssetIcon} from "../../../../../../front-app/src/js/helpers";
+// import {isEditor, renderAssetIcon} from "../../../../../../front-app/src/js/helpers";
 
 class HorizontalVeticalMenu extends Component {
   constructor(props) {
