@@ -3,6 +3,7 @@ import AltrpPortal from "../../altrp-portal/AltrpPortal";
 import {iconsManager} from "../../../helpers";
 import DropdownSub from "./DropdownSub";
 import {Link} from "react-router-dom";
+import Divider from "./Divider";
 
 class Dropdown extends Component {
   constructor(props) {
@@ -104,15 +105,23 @@ class Dropdown extends Component {
                           // altrp-nav-menu-li-link-icon-active
                           <div className="altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon">
                             {
-                              iconsManager().renderIcon('chevron')
+                              this.props.chevron
                             }
                           </div>
                         ) : ""
                       }
                     </Link>
                     {
-                      li.id_repeater_menu_layout ? <DropdownSub show={li.show} children={li.children} list={this.props.list}/> : ""
+                      li.id_repeater_menu_layout ?
+                        <DropdownSub
+                          chevron={this.props.chevron}
+                          settings={this.props.settings}
+                          show={li.show}
+                          children={li.children}
+                          list={this.props.list}
+                        /> : ""
                     }
+                    <Divider settings={this.props.settings} />
                   </li>
                 )
               })

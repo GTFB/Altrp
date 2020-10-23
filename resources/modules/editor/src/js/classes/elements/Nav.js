@@ -16,7 +16,7 @@ import {
   CONTROLLER_COLOR,
   TAB_CONTENT,
   TAB_STYLE,
-  TAB_ADVANCED, CONTROLLER_LINK, CONTROLLER_SWITCHER
+  TAB_ADVANCED, CONTROLLER_LINK, CONTROLLER_SWITCHER, CONTROLLER_MEDIA
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 
@@ -579,6 +579,46 @@ class Nav extends BaseElement{
       }
     });
 
+    this.addControl("chevron_heading_main_menu_style", {
+      type: CONTROLLER_HEADING,
+      label: "Chevron"
+    });
+
+    this.addControl('chevron_media_main_menu_style', {
+      type: CONTROLLER_MEDIA,
+      label: 'Choose chevron',
+    });
+
+    this.addControl("chevron_rotate_main_menu_style", {
+      type: CONTROLLER_SLIDER,
+      label: "Rotate",
+      default: {
+        size: -180,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      max: 360,
+      min: -360,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}} .altrp-nav-menu-li-link-icon": "transform: rotate({{SIZE}}deg)"
+      }
+    });
+
+    this.addControl("chevron_rotate_dropdown_main_menu_style", {
+      type: CONTROLLER_SLIDER,
+      label: "Dropdown Rotate",
+      default: {
+        size: 90,
+        unit: "deg"
+      },
+      max: 360,
+      min: -360,
+      rules: {
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon": "transform: rotate({{SIZE}}deg)",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon": "transform: rotate({{SIZE}}deg)"
+      }
+    });
+
     this.endControlSection();
 
     this.startControlSection('dropdown_hor_ver_menu_section', {
@@ -636,6 +676,19 @@ class Nav extends BaseElement{
       },
       rules: {
         ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}}": "background: {{COLOR}};"
+      }
+    });
+
+    this.addControl("width_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default:{
+        unit: 'px',
+      },
+      max: 300,
+      min: 0,
+      rules: {
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}}": "width: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -842,6 +895,19 @@ class Nav extends BaseElement{
       }
     });
 
+    this.addControl("width_submenu_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default:{
+        unit: 'px',
+      },
+      max: 300,
+      min: 0,
+      rules: {
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}}": "width: {{SIZE}}{{UNIT}}"
+      }
+    });
+
     this.addControl('border_type_submenu_dropdown_hor_ver_menu_section', {
         type: CONTROLLER_SELECT,
         label: 'Border Type',
@@ -971,6 +1037,59 @@ class Nav extends BaseElement{
       min: -100,
       rules: {
         ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}": "margin-right: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("heading_divider_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_HEADING,
+      label: "Divider"
+    });
+
+    this.addControl('switch_divider_dropdown_hor_ver_menu_section', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Switch divider',
+    });
+
+    this.addControl('type_divider_dropdown_hor_ver_menu_section', {
+      type: CONTROLLER_SELECT,
+      label: 'Divider type',
+      default: 'solid',
+      options: [
+        {
+          value: 'solid',
+          label: 'solid'
+        },
+        {
+          value: 'dotted',
+          label: 'dotted'
+        },
+        {
+          value: 'double',
+          label: 'double'
+        },
+        {
+          value: 'dashed',
+          label: 'dashed'
+        }
+      ],
+      rules: {
+        '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li-divider': 'border-top-style: {{VALUE}}'
+      },
+    });
+
+    this.addControl("height_divider_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Height',
+      default:{
+        size: "1",
+        unit: 'px',
+      },
+      max: 100,
+      min: 0,
+      rules: {
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li-divider{{STATE}}": "border-top-width: {{SIZE}}{{UNIT}}",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li:last-child .altrp-nav-menu-ul-dropdown-hor-ver-li-divider": "border-top: none",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-ul .altrp-nav-menu-ul-dropdown-children-hor-ver-li:last-child .altrp-nav-menu-ul-dropdown-hor-ver-li-divider": "border-top: none"
       }
     });
 

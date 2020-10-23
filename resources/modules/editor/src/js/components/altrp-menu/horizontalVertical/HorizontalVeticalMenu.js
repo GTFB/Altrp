@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import { iconsManager } from "../../../helpers";
+import {iconsManager} from "../../../helpers";
 import {Link} from "react-router-dom";
 import Dropdown from "./Dropdown";
-// import {isEditor, renderAssetIcon} from "../../../../../../front-app/src/js/helpers";
+import {renderAsset} from "../../../../../../front-app/src/js/helpers";
 
 class HorizontalVeticalMenu extends Component {
   constructor(props) {
@@ -15,8 +15,8 @@ class HorizontalVeticalMenu extends Component {
     this.children = React.createRef();
 
     this.setStateList = this.setStateList.bind(this);
-    this.showDropdown = this.showDropdown.bind(this)
-    this.hideDropdown = this.hideDropdown.bind(this)
+    this.showDropdown = this.showDropdown.bind(this);
+    this.hideDropdown = this.hideDropdown.bind(this);
   }
 
   setStateList() {
@@ -73,9 +73,7 @@ class HorizontalVeticalMenu extends Component {
   hideDropdown(id) {
     this.setState(state => {
       let list = state.list;
-
       list[id].showDropdown = false;
-
       return {
         ...this.state,
         list
@@ -139,6 +137,15 @@ class HorizontalVeticalMenu extends Component {
 
     }
 
+    let Chevron = () => (iconsManager().renderIcon('chevron'));
+
+    let chevronMedia = this.props.settings.chevron_media_main_menu_style;
+
+    if(chevronMedia && Object.keys(chevronMedia).length !== 0) {
+      Chevron = () => (renderAsset(chevronMedia));
+      console.log(Chevron)
+    }
+
     return (
       <ul style={stylesUl} className={"altrp-nav-menu-ul altrp-nav-menu-ul-" + layout} ref={this.children}>
         {
@@ -154,9 +161,7 @@ class HorizontalVeticalMenu extends Component {
                   li.id_repeater_menu_layout ? (
                     // altrp-nav-menu-li-link-icon-active
                     <div className="altrp-nav-menu-li-link-icon">
-                      {
-                        iconsManager().renderIcon('chevron')
-                      }
+                      <Chevron />
                     </div>
                   ) : ""
                 }
@@ -210,9 +215,7 @@ class HorizontalVeticalMenu extends Component {
                         li.id_repeater_menu_layout ? (
                           // altrp-nav-menu-li-link-icon-active
                           <div className="altrp-nav-menu-li-link-icon">
-                            {
-                              iconsManager().renderIcon('chevron')
-                            }
+                            <Chevron />
                           </div>
                         ) : ""
                       }
@@ -223,6 +226,8 @@ class HorizontalVeticalMenu extends Component {
                   </div>
                   {
                     li.id_repeater_menu_layout ? <Dropdown
+                      settings={this.props.settings}
+                      chevron={<Chevron />}
                       idElement={this.props.idElement}
                       show={li.showDropdown}
                       id={li.id_repeater_menu_layout}

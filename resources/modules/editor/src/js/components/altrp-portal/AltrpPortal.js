@@ -40,7 +40,7 @@ class AltrpPortal extends Component {
     let show = this.props.show || false;
 
     let children = (
-      <div className={ this.props.id + "-altrp-portal altrp-portal"} style={{...position, display: show ? "block" : "none"}} ref={this.object}>
+      <div className={ this.props.id + "-altrp-portal altrp-portal " + (!show ? "altrp-portal-display-block" : "altrp-portal-display-none")} style={position} ref={this.object}>
         {
           this.props.children
         }

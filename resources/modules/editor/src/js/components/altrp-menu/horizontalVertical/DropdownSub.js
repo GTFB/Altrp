@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {iconsManager} from "../../../helpers";
 import {Link} from "react-router-dom";
+import Divider from "./Divider";
 
 class DropdownSub extends Component {
   constructor(props) {
@@ -97,15 +98,21 @@ class DropdownSub extends Component {
                           // altrp-nav-menu-li-link-icon-active
                           <div className="altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon">
                             {
-                              iconsManager().renderIcon('chevron')
+                              this.props.chevron
                             }
                           </div>
                         ) : ""
                       }
                     </Link>
                     {
-                      li.id_repeater_menu_layout ? <DropdownSub show={li.show} children={li.children} list={this.props.list}/> : ""
+                      li.id_repeater_menu_layout ? <DropdownSub
+                        chevron={this.props.chevron}
+                        settings={this.props.settings}
+                        show={li.show} children={li.children}
+                        list={this.props.list}
+                      /> : ""
                     }
+                    <Divider settings={this.props.settings} />
                   </li>
                 )
               })
