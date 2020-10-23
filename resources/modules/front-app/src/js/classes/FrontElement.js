@@ -83,7 +83,7 @@ class FrontElement {
   }
 
   /**
-   * Вызывается для обновление элемента
+   * Вызывается для обновления элемента
    */
   update(){
     this.updateStyles();
@@ -91,6 +91,16 @@ class FrontElement {
         'button',
         'input',
     ];
+    let widgetsWithActions = [
+        'button',
+    ];
+    /**
+     * Инициация событий в первую очередь
+     */
+    if(widgetsWithActions.indexOf(this.getName()) >= 0 && this.getSettings('actions', []).length){
+      this.registerActions();
+      return;
+    }
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_id')){
       this.formInit();
       return;
@@ -100,7 +110,13 @@ class FrontElement {
       return;
     }
   }
-
+  async registerActions(){
+    /**
+     * @member {ActionsManager|*} actionsManager
+     */
+    const actionsManager = (await import('./modules/ActionsManager.js')).default;
+    actionsManager.registerWidgetActions(this.getId(), this.getSettings('actions', []));
+  }
   /**
    * Если элемент поле или кнопка нужно инициализирваоть форму в FormsManager
    */
@@ -211,7 +227,7 @@ class FrontElement {
   /**
    * Получить настройку или все настройки
    * @param settingName
-   * @param {string} _default
+   * @param {[]} _default
    * @return {*}
    */
   getSettings(settingName, _default = ''){

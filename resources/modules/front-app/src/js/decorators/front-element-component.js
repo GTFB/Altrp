@@ -22,6 +22,9 @@ function componentWillUnmount(){
       // console.log(this.state.modelData);
     }
   });
+  if(_.isFunction(this._componentWillUnmount)){
+    this._componentWillUnmount();
+  }
 }
 
 /**

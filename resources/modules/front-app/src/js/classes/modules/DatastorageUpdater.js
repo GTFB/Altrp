@@ -131,9 +131,6 @@ class DataStorageUpdater extends AltrpModel{
       _.forEach(params, (paramValue, paramName)=>{
         if(paramValue.toString().indexOf('altrpforms.') === 0){
           params[paramName] = _.get(formsStore, paramValue.replace('altrpforms.', ''));
-          // console.log(formsStore);
-          // console.log(paramValue);
-          // console.log(params[paramName]);
           // if(_.isArray(params[paramName])){
           //   params[paramName] = JSON.stringify(params[paramName]);
           // }

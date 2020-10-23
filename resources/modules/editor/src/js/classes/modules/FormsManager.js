@@ -90,5 +90,6 @@ class FormsManager {
   }
 }
 const formsManager = new FormsManager();
+console.log(formsManager);
 
 export default formsManager;
