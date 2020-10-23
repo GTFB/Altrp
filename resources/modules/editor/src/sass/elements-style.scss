@@ -623,6 +623,7 @@
     transform: translate(-50%, -50%);
     width: 50vw;
     height: 50vh;
+    overflow: auto;
     background-color: white;
     display: flex;
     flex-direction: column;
