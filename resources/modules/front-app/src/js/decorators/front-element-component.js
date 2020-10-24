@@ -31,7 +31,7 @@ function componentWillUnmount(){
  * Вернуть класс активного/неактивного состояния
  */
 function classStateDisabled(){
-  const { element, currentModel, currentUser } = this.props;
+  const { element, currentUser } = this.props;
   let conditional_disabled_choose = element.getSettings('conditional_disabled_choose');
   if(conditional_disabled_choose){
     switch(conditional_disabled_choose){
@@ -66,16 +66,20 @@ function classStateDisabled(){
     };
   });
   if(element.getSettings('disabled_conditional_other', false)) {
+    let model = element.getCurrentModel();
 
     if (conditionsChecker(conditions,
         element.getSettings('disabled_conditional_other_display') === 'AND',
-        currentModel)) {
+        model, true)) {
 
       return ' state-disabled ';
     }
   }
   return ' '
 }
+
+
+
 /**
  * обновить данные модели
  */

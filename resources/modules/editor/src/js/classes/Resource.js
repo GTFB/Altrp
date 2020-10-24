@@ -35,7 +35,6 @@ class Resource {
    * @return {string}
    */
   getRoute(){
-    console.log(this);
     return this.dynamicURL ? replaceContentWithData(this.route) : this.route;
   }
   /**

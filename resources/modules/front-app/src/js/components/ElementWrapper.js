@@ -13,6 +13,7 @@ class ElementWrapper extends Component {
       currentModel: appStore.getState().currentModel,
       currentUser: appStore.getState().currentUser,
       currentDataStorage: appStore.getState().currentDataStorage,
+      altrpresponses: appStore.getState().altrpresponses,
       formsStore: appStore.getState().formsStore,
       elementDisplay: true,
     };
@@ -53,6 +54,12 @@ class ElementWrapper extends Component {
      */
     if(this.state.currentDataStorage !== appStore.getState().currentDataStorage){
       this.setState(state => ({...state, currentDataStorage: appStore.getState().currentDataStorage}));
+    }
+    /**
+     * Обновляем altrpresponses
+     */
+    if(this.state.altrpresponses !== appStore.getState().altrpresponses){
+      this.setState(state => ({...state, altrpresponses: appStore.getState().altrpresponses}));
     }
 
     if((this.props.element.getName() === 'input') && this.state.formsStore !== appStore.getState().formsStore){
@@ -104,7 +111,7 @@ class ElementWrapper extends Component {
     });
     let elementDisplay = conditionsChecker(conditions,
         element.getSettings('conditional_other_display') === 'AND',
-        this.state.currentModel);
+        this.props.element.getCurrentModel(), true);
     if(element.getName() === 'input'){
       elementDisplay = this.inputIsDisplay();
     }
@@ -212,6 +219,7 @@ class ElementWrapper extends Component {
           currentModel: this.state.currentModel,
           currentUser: this.state.currentUser,
           currentDataStorage: this.state.currentDataStorage,
+          altrpresponses: this.state.altrpresponses,
           formsStore: this.state.formsStore,
           elementDisplay: this.state.elementDisplay,
           appStore

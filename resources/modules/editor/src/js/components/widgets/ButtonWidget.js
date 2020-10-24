@@ -205,9 +205,9 @@ class ButtonWidget extends Component {
   async onClick(e) {
     if (isEditor()) {
       console.log(this.state.settings);
-    } else if (this.props.element.getSettings('actions').length){
+    } else if (this.props.element.getSettings('actions', []).length){
       const actionsManager = (await import('../../../../../front-app/src/js/classes/modules/ActionsManager.js')).default;
-      actionsManager.callAllWidgetActions(this.props.element.getId());
+      await actionsManager.callAllWidgetActions(this.props.element.getId());
     } else if (this.props.element.getForms().length){
       this.setState(state => ({ ...state, pending: true }));
       this.props.element.getForms().forEach(

@@ -1,5 +1,5 @@
 import Resource from "./Resource";
-import {clearAllResponseData} from "../../../../front-app/src/js/store/responses-storage/actions";
+import {addResponseData, clearAllResponseData} from "../../../../front-app/src/js/store/responses-storage/actions";
 
 /**
  * Класс имитирующий поведение формы (собирает данные с виджетов полей и отправляет их на сервер)
@@ -207,7 +207,7 @@ class AltrpForm {
    * @param {{}} res
    */
   updateResponseStorage(res = {}){
-    appStore.dispatch(clearAllResponseData(this.formId, res));
+    appStore.dispatch(addResponseData(this.formId, res));
   }
 
 }

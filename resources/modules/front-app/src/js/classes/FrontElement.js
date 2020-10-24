@@ -366,6 +366,20 @@ class FrontElement {
   }
 
   /**
+   * Проверяет рекурсивно (проверяет всех предков) виден ли элмент свойство elementDisplay пропсов компонента
+   * @return {boolean}
+   */
+  elementIsDisplay(){
+    let display = true;
+    if(this.component.props.elementDisplay){
+      display = this.parent ? this.parent.elementIsDisplay() : true;
+    } else {
+      return false;
+    }
+    return display;
+  }
+
+  /**
    * Возвращает значение если виджет input, если другое, то null
    */
   getValue(){
@@ -373,7 +387,7 @@ class FrontElement {
     if(this.getName() !== 'input'){
       return null;
     }
-    if(! this.component.props.elementDisplay){
+    if(! this.elementIsDisplay()){
       return null;
     }
     let value = this.component.state.value;
@@ -547,6 +561,16 @@ class FrontElement {
       model = new AltrpModel(model);
     }
     return model;
+  }
+
+
+  /**
+   * Возвращает текущую модель для элемента
+   * (для карточки на странице будут свои модели)
+   * @return {AltrpModel}
+   */
+  getCurrentModel(){
+    return this.hasCardModel() ? this.getCardModel() : (appStore.getState().currentModel || new AltrpModel);
   }
 }
 
