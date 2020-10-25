@@ -226,8 +226,8 @@ class FrontElement {
 
   /**
    * Получить настройку или все настройки
-   * @param settingName
-   * @param {[]} _default
+   * @param {string} settingName
+   * @param {*} _default
    * @return {*}
    */
   getSettings(settingName, _default = ''){
@@ -235,7 +235,7 @@ class FrontElement {
     {
       return _.cloneDeep(this.settings);
     }
-    return _.get(this.settings, settingName, _default);
+    return _.get(this.settings, settingName) || _default;
   }
   updateStyles(){
     window.stylesModulePromise.then(stylesModule => {
@@ -371,6 +371,9 @@ class FrontElement {
    */
   elementIsDisplay(){
     let display = true;
+    if(this.getName() === 'root-element'){
+      return true;
+    }
     if(this.component.props.elementDisplay){
       display = this.parent ? this.parent.elementIsDisplay() : true;
     } else {

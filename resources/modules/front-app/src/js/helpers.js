@@ -268,8 +268,6 @@ function conditionChecker(c, model, dataByPath = true){
   if(dataByPath){
     value = getDataByPath(value, '', model);
     left = getDataByPath(left, '', model);
-    console.log(left);
-    console.log(operator);
     return altrpCompare(left, value, operator);
   }
   return altrpCompare(model.getProperty(left), value, operator);

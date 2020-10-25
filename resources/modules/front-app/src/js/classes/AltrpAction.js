@@ -53,11 +53,26 @@ class AltrpAction extends AltrpModel{
    * @return {Promise<void>}
    */
   async doAction(){
-    switch(this.getType()) {
-      case 'form':{
-        return await this.doActionForm();
+    let result = {
+      success: false,
+    };
+    let confirmText = this.getProperty('confirm');
+    if(confirmText && ! confirm(confirmText)){
+      return {
+        success: false,
+        message: 'User not Confirm'
       }
     }
+    switch(this.getType()) {
+      case 'form':{
+        result =  await this.doActionForm();
+      }
+    }
+    let alertText =   this.getProperty('alert');
+    if(alertText){
+      alert(alertText);
+    }
+    return result;
   }
   /**
    * Оссинхронно выполняет действие-формы

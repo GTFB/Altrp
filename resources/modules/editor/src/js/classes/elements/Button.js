@@ -262,7 +262,7 @@ class Button extends BaseElement{
       label: 'URL',
       responsive: false,
       dynamic: false,
-      description: '{{altrpdata.alias.path_to_data}} - Templates Allowed',
+      description: '/ajax/models/test/{{id}}',
       conditions: {
         type: 'form',
       },
