@@ -101,12 +101,15 @@ class FrontPopup extends Component {
   render() {
     const { isVisible } = this.state;
     let classes = [`app-popup`];
-
+    const { positioning_custom_top } = this.props.template.data.settings;
     let rootElement = window.frontElementsFabric.parseData(this.props.template.data, null, this.props.page, this.props.models);
     return isVisible ? 
       <div className={classes.join(' ')} onClick={() => this.setState({ isVisible: false })}>
         <Scrollbars style={{ height: '100vh' }}>
-          <div className="popup-window" onClick={e => e.stopPropagation()}>
+          <div className="popup-window" 
+            style={{ top: positioning_custom_top.size + positioning_custom_top.unit}} 
+            onClick={e => e.stopPropagation()}
+          >
 
             {React.createElement(rootElement.componentClass,
               {
@@ -115,7 +118,10 @@ class FrontPopup extends Component {
               })}
           </div>
         </Scrollbars>
-        <button className="popup-close-button" onClick={() => this.setState({ isVisible: false })}>✖</button>
+        <button className="popup-close-button" 
+          style={{ top: positioning_custom_top.size + positioning_custom_top.unit }} 
+          onClick={() => this.setState({ isVisible: false })}
+        >✖</button>
       </div>
      : null
   }

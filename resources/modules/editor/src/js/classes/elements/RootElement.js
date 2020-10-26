@@ -2536,6 +2536,28 @@ class RootElement extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('positioning', {
+      tab: TAB_ADVANCED,
+      label: 'Positioning',
+    });
+
+    this.addControl('positioning_custom_top', {
+      type: CONTROLLER_SLIDER,
+      label: 'Custom top',
+      default: {
+        size: "20",
+        unit: '%'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 1000,
+      min: 0,
+    });
+
+    this.endControlSection();
   }
 
   
