@@ -57,7 +57,7 @@ class AccessOptions extends Component {
       s: rolesFilter,
       ...rolesSorting
     });
-    this.setState({ roles, rolesPagination: { ...rolesPagination, count, pageCount } });
+    this.setState({ roles, rolesPagination: { ...rolesPagination, count, pageCount: pageCount || 1 } });
   }
 
   rolesSortingHandler = (order_by, order) => {
@@ -75,7 +75,7 @@ class AccessOptions extends Component {
       s: permissionsFilter,
       ...permissionsSorting
     });
-    this.setState({ permissions, permissionsPagination: { ...permissionsPagination, count, pageCount } });
+    this.setState({ permissions, permissionsPagination: { ...permissionsPagination, count, pageCount: pageCount || 1 } });
   }
 
   permissionsSortingHandler = (order_by, order) => {
