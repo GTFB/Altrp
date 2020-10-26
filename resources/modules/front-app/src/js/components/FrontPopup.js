@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import connect from "react-redux/es/connect/connect";
 // import { isElementTopInViewport, getTopPosition } from "../helpers";
+import { Scrollbars } from "react-custom-scrollbars";
 
 class FrontPopup extends Component {
   state = {
@@ -102,16 +103,21 @@ class FrontPopup extends Component {
     let classes = [`app-popup`];
 
     let rootElement = window.frontElementsFabric.parseData(this.props.template.data, null, this.props.page, this.props.models);
-    return isVisible ? <div className={classes.join(' ')}>
-      <div className="popup-window">
+    return isVisible ? 
+      <div className={classes.join(' ')} onClick={() => this.setState({ isVisible: false })}>
+        <Scrollbars style={{ height: '100vh' }}>
+          <div className="popup-window" onClick={e => e.stopPropagation()}>
+
+            {React.createElement(rootElement.componentClass,
+              {
+                element: rootElement,
+                children: rootElement.children
+              })}
+          </div>
+        </Scrollbars>
         <button className="popup-close-button" onClick={() => this.setState({ isVisible: false })}>✖</button>
-        {React.createElement(rootElement.componentClass,
-          {
-            element: rootElement,
-            children: rootElement.children
-          })}
       </div>
-    </div> : null
+     : null
   }
 }
 

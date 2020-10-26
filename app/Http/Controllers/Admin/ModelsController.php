@@ -27,6 +27,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\ApiRequest;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 
 class ModelsController extends HttpController
@@ -301,14 +302,18 @@ class ModelsController extends HttpController
     {
         $search = $request->get('s');
         $page = $request->get('page');
-        $orderColumn = $request->get('order_by') ?? 'id';
+        if (Str::contains($request->order_by, '.')) {
+            $parts = explode('.', $request->order_by);
+            $request->order_by = 'altrp_' . Str::plural($parts[0]) . '.' . $parts[1];
+        }
         $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
+        $orderColumn = $request->order_by ? $request->order_by : 'id';
         $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
         if (! $page) {
             $pageCount = 0;
             $data_sources = $search
-                ? Source::getBySearch($search, 'title', [], $orderColumn, $orderType)
-                : Source::all()->$sortType($orderColumn)->values();
+                ? Source::getBySearch($search, 'name', ['model'], $orderColumn, $orderType)
+                : Source::with('model')->get()->$sortType($orderColumn);
         } else {
             $dataSourcesCount = $search
                 ? Source::getCountWithSearch($search)
@@ -317,11 +322,11 @@ class ModelsController extends HttpController
             $pageCount = ceil($dataSourcesCount / $limit);
             $offset = $limit * ($page - 1);
             $data_sources = $search
-                ? Source::getBySearchWithPaginate($search,  $offset, $limit, 'name', $orderColumn, $orderType)
-                : Source::getWithPaginate($offset, $limit, $orderColumn, $orderType);
+                ? Source::getBySearchWithPaginate($search,  $offset, $limit, 'name', $orderColumn, $orderType, ['model'])
+                : Source::getWithPaginate($offset, $limit, $orderColumn, $orderType, ['model']);
         }
       $data_sources->map( function ( $data_source ){
-        $data_source->web_url = $data_source->web_url;
+//        $data_source->web_url = $data_source->web_url;
         return $data_source;
       } );
         return compact('pageCount', 'data_sources');

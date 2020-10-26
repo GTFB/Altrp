@@ -84,6 +84,10 @@
     display: inline-block;
     align-items: center;
     fill: red;
+    &.vector-svg--active {
+      border: 1px solid red;
+      border-radius: 100%;
+    }
 }
 .role-svg{
     transform: rotate(180deg);
