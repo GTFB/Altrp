@@ -65,8 +65,8 @@ class UserForm extends Component {
   async saveUser(e) {
     e.preventDefault();
     let res, usermeta_resource, usermeta_res;
-    const { isPasswordChange, user: { newPassword, confirmNewPassword}} = this.state;
-    if (isPasswordChange && newPassword !== confirmNewPassword) {
+    const { isPasswordChange, user: { password, password_confirmation}} = this.state;
+    if (isPasswordChange && password !== password_confirmation) {
       return alert("Password doesn't match confirmation");
     }
 
@@ -239,19 +239,19 @@ class UserForm extends Component {
         <label className="checkbox-label" htmlFor="changePassword">Change Password</label>
       </div>}
 
-      {isPasswordChange && <>
+      {isPasswordChange && this.state.id && <>
         <div className="form-group">
           <label htmlFor="newPassword">New Password</label>
-          <input type="password" id="newPassword" name="newPassword" required
-            value={this.state.user.newPassword || ''}
+          <input type="password" id="newPassword" name="password" required
+            value={this.state.user.password || ''}
             onChange={this.changeValue}
             className="form-control" />
         </div>
 
         <div className="form-group">
           <label htmlFor="page-description">Confirm Password</label>
-          <input type="password" id="confirmNewPassword" name="confirmNewPassword" required
-            value={this.state.user.confirmNewPassword || ''}
+          <input type="password" id="confirmNewPassword" name="password_confirmation" required
+            value={this.state.user.password_confirmation || ''}
             onChange={this.changeValue}
             className="form-control" />
         </div>
