@@ -3,7 +3,6 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import appStore from "../store/store"
 import {altrpCompare, conditionsChecker} from "../helpers";
-import {changeFormFieldValue} from "../store/forms-data-storage/actions";
 import {addElement} from "../store/elements-storage/actions";
 
 class ElementWrapper extends Component {
@@ -17,6 +16,7 @@ class ElementWrapper extends Component {
       formsStore: appStore.getState().formsStore,
       elementDisplay: true,
     };
+    console.log(props);
     this.elementWrapperRef = React.createRef();
     appStore.dispatch(addElement(this));
     appStore.subscribe(this.updateStore);

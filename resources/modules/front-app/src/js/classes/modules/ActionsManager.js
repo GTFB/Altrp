@@ -25,7 +25,6 @@ class ActionsManager extends AltrpModel{
     actions = actions.filter(a=>a.type).map(a=>{
       return new AltrpAction(a, widgetId);
     });
-    console.log(actions);
     return this.setProperty(`actions.${widgetId}.${eventName}`, actions);
   }
 

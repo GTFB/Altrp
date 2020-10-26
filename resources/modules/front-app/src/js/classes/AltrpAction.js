@@ -1,4 +1,8 @@
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
+
+// let  history = require('history');
+// // import {history} from 'history';
+// console.log(history.history);
 /**
  * Класс представляющий действия на странице
  * @link https://docs.google.com/document/d/1v8Hm1DLkqqwzBeISd8-UvgTqscVxQPtBUtKqBrH1HaU/edit#
@@ -67,6 +71,11 @@ class AltrpAction extends AltrpModel{
       case 'form':{
         result =  await this.doActionForm();
       }
+      break;
+      case 'redirect':{
+        result =  await this.doActionRedirect();
+      }
+      break;
     }
     let alertText =   this.getProperty('alert');
     if(alertText){
@@ -75,7 +84,7 @@ class AltrpAction extends AltrpModel{
     return result;
   }
   /**
-   * Оссинхронно выполняет действие-формы
+   * Ассинхронно выполняет действие-формы
    * @return {Promise<void>}
    */
   async doActionForm(){
@@ -86,6 +95,18 @@ class AltrpAction extends AltrpModel{
       };
     }
     return this.getProperty('_form').submit()
+  }
+  /**
+   * Делает редирект на страницу form_url
+   * @return {Promise<void>}
+   */
+  async doActionRedirect(){
+
+    let URL = this.getProperty('form_url');
+    frontAppRouter.history.push(URL);
+    return {
+      success: true,
+    }
   }
 }
 

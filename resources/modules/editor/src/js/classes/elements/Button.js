@@ -220,6 +220,10 @@ class Button extends BaseElement{
           value: 'scroll_to_element',
           label: 'Scroll to Element',
         },
+        {
+          value: 'redirect',
+          label: 'Redirect',
+        },
       ],
     });
 
@@ -254,7 +258,9 @@ class Button extends BaseElement{
     actionsRepeater.addControl('form_id', {
       label: 'Form ID',
       conditions: {
-        type: 'form',
+        type: [
+          'form',
+        ],
       },
     });
 
@@ -264,7 +270,10 @@ class Button extends BaseElement{
       dynamic: false,
       description: '/ajax/models/test/{{id}}',
       conditions: {
-        type: 'form',
+        type: [
+          'form',
+          'redirect',
+        ],
       },
     });
 

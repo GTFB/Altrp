@@ -73,7 +73,6 @@ class Permissions extends ApiController
         $request->validate([
             "name" => ["string", "required", "unique:permissions,name"],
             "display_name" => ["string", "required"],
-            "description" => ["string", "required"],
         ]);
 
         $permission = new Permission();

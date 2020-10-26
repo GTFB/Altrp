@@ -12,12 +12,15 @@ import Styles from "../../../../editor/src/js/components/Styles";
 class AppContent extends Component {
   constructor(props){
     super(props);
+    this.router = React.createRef()
   }
   componentDidMount(){
-
+    if(this.router.current){
+      window.frontAppRouter = this.router.current;
+    }
   }
   render(){
-    return <Router >
+    return <Router ref={this.router}>
       <div className="front-app-content">
         <Switch>
           {this.props.routes.map(route=><Route key={route.id}
