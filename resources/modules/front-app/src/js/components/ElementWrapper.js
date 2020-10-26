@@ -123,6 +123,12 @@ class ElementWrapper extends Component {
   }
 
   /**
+   * Переключает видимость элемента
+   */
+  toggleElementDisplay(){
+    this.setState(state=>({...state, elementDisplay: !state.elementDisplay}))
+  }
+  /**
    * Метод для проверки видимости поля формы
    * @return {boolean}
    */

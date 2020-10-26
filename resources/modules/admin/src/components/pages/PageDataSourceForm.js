@@ -19,6 +19,7 @@ class PageDataSourceForm extends Component {
   async componentDidMount() {
     const resource = new Resource({ route: '/admin/ajax/data_sources' });
     const { data_sources } = await resource.getAll();
+    console.log(data_sources);
     this.setState({ dataSourceOptions: data_sources })
   }
 

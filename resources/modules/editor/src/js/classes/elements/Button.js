@@ -276,14 +276,42 @@ class Button extends BaseElement{
         ],
       },
     });
+
     actionsRepeater.addControl('elements_ids', {
-      label: 'URL',
+      label: 'Elements',
       responsive: false,
       dynamic: false,
       description: 'element_id1, element_id12',
       conditions: {
         type: [
           'toggle_element',
+          'print_elements',
+        ],
+      },
+    });
+
+    actionsRepeater.addControl('element_id', {
+      label: 'Element',
+      responsive: false,
+      dynamic: false,
+      description: 'element_id1',
+      conditions: {
+        type: [
+          'scroll_to_element',
+        ],
+      },
+    });
+
+    actionsRepeater.addControl("popup_id", {
+      type: CONTROLLER_SELECT2,
+      prefetch_options: true,
+      label: "Popup ID",
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options?template_type=popup&value=guid',
+      nullable: true,
+      conditions: {
+        type: [
+          'toggle_popup',
         ],
       },
     });

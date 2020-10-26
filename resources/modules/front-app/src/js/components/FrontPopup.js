@@ -93,8 +93,8 @@ class FrontPopup extends Component {
 
     // }
 
-    if (popupTrigger !== prevProps.popupTrigger && popupTrigger.popupID === _.get(this.props, 'template.guid')) {
-      this.setState({ isVisible: true });
+    if (popupTrigger !== prevProps.popupTrigger) {
+      this.setState({ isVisible: popupTrigger.popupID === _.get(this.props, 'template.guid') });
     }
   }
 
