@@ -4,12 +4,10 @@ export const CLEAR_ELEMENTS = 'CLEAR_ELEMENTS';
 /**
  *
  * @param {React.Component}elementComponent
- * @return {
- *   {
+ * @return {{}} - {
  *     type: {string},
  *     sectionComponent: {React.Component},
  *   }
- * }
  */
 export function addElement(elementComponent) {
   return {

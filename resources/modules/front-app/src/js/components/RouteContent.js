@@ -69,7 +69,7 @@ class RouteContent extends Component {
    */
   async updateDataStorage() {
     /**
-     * @member {[]} data_sources
+     * @member {array} data_sources
      */
     let { data_sources } = this.props;
 

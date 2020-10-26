@@ -451,10 +451,10 @@ function renderTh({column, sortSetting, sortingHandler, filterSetting, filterHan
 
 /**
  * Получить поле для группировки строк
- * @param {[{
+ * @param {array} columns - array({
  *  group_by:{boolean},
  *  accessor:{string},
- * }]}columns
+ * })
  *
  * @return {string|null}
  */
@@ -472,11 +472,11 @@ function getGroupBy(columns){
  * Выводит группирующую строку в таблице
  * @params {{}} row
  * @params {null|string} row
- * @params {[]} groupingStore
+ * @params {array} groupingStore
  * @params {{}} settings
  * @params {boolean} collapsing
  * @params {function} setCollapsedGroups
- * @params {[]} collapsedGroups
+ * @params {array} collapsedGroups
  * @return {string|React.Component}
  */
 function renderGroupingTr(row, groupBy, groupingStore, settings = {}, collapsing, setCollapsedGroups, collapsedGroups){
@@ -529,7 +529,7 @@ function renderGroupingTr(row, groupBy, groupingStore, settings = {}, collapsing
  * Сохраняет/удаляет текущаю группу по заголовку из с списка схлопнутых групп в таблице
  * @param {string} currentRowHeading
  * @param {function} setCollapsedGroups - функция задает новый список collapsedGroups
- * @param {[]} collapsedGroups - список заголовков, которые схлопнуты
+ * @param {array} collapsedGroups - список заголовков, которые схлопнуты
  */
 function toggleGroup(currentRowHeading, setCollapsedGroups, collapsedGroups) {
 
@@ -547,7 +547,7 @@ function toggleGroup(currentRowHeading, setCollapsedGroups, collapsedGroups) {
 /**
  * Отрисовка футера таблицы
  * @param {{}}settings
- * @param {[]}data
+ * @param {array}data
  */
 
 function renderFooter(settings, data){

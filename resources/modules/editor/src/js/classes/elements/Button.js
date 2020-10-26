@@ -202,7 +202,7 @@ class Button extends BaseElement{
         },
         {
           value: 'toggle_element',
-          label: 'Toggle Element',
+          label: 'Toggle Elements',
         },
         {
           value: 'toggle_popup',

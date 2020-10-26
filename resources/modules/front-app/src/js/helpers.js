@@ -228,7 +228,7 @@ export function parseParamsFromString(string, context = {}){
 
 /**
  * Функция для проверки условий
- * @param {[]} conditions
+ * @param {array} conditions
  * @param {boolean} AND - логичекое И или ИЛИ
  * @param {AltrpModel} model
  * @param {boolean} dataByPath - брать ли данный из getDataByPath
