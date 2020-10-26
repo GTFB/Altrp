@@ -18,10 +18,7 @@ class TemplateLoader {
    */
   async loadTemplate(templateId, force = false){
     let update = force;
-    templateId = parseInt(templateId);
-    if(! templateId){
-      return Promise.reject(new Error('Template loading only by ID'))
-    }
+    templateId = Number(templateId) ? Number(templateId) : templateId;
     if(! update){
       update = ! this.templatesCache.hasProperty(templateId);
     }
@@ -40,10 +37,7 @@ class TemplateLoader {
    */
   async loadParsedTemplate(templateId, force = false){
     let update = force;
-    templateId = parseInt(templateId);
-    if(! templateId){
-      return Promise.reject(new Error('Template loading only by ID'))
-    }
+    templateId = Number(templateId) ? Number(templateId) : templateId;
     if(! update){
       update = ! this.templatesCache.hasProperty(templateId);
     }

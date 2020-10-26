@@ -306,7 +306,7 @@ class BaseElement extends ControlStack {
       let control = window.controllersManager.getElementControl(this.getName(), settingName);
 
       if (!control || !control.default) {
-        return null;
+        return _default || null;
       }
       this.settings[settingName] = control.default;
     }

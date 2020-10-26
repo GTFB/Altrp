@@ -5,8 +5,8 @@ import {useQuery, usePaginatedQuery, queryCache} from  "react-query";
 /**
  * Компонент для получения данных при помощи  Rect Query
  * @param {{
- *  children: [],
- *  data: [],
+ *  children: array,
+ *  data: array,
  *  query: {Query}
  * }} props
  * @return {React.Component}

@@ -94,6 +94,9 @@ class Users extends Controller
      * @return type
      */
     function update(ApiRequest $request) {
+      $request->validate([
+        'password' => ['string', 'min:8', 'confirmed'],
+      ]);
 
         $user = User::find($request->user);
 

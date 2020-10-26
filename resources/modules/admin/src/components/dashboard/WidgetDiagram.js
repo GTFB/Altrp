@@ -10,7 +10,6 @@ import DynamicTableWidget from "./widgets/DynamicTableWidget";
 import DynamicDonutChart from "./widgets/DynamicDonutChart";
 
 const WidgetDiagram = ({ widget, width = 360, height = 300 }) => {
-  console.log(widget);
   switch (widget.type) {
     case BAR:
       return <DynamicBarChart width={width} height={height} widget={widget} />;

@@ -1,5 +1,5 @@
 import modelManager from "../../../../editor/src/js/classes/modules/ModelsManager";
-import {conditionsChecker, getDataByPath, isEditor} from "../helpers";
+import {conditionsChecker, getDataByPath, isEditor, replaceContentWithData} from "../helpers";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 
 /**
@@ -22,13 +22,16 @@ function componentWillUnmount(){
       // console.log(this.state.modelData);
     }
   });
+  if(_.isFunction(this._componentWillUnmount)){
+    this._componentWillUnmount();
+  }
 }
 
 /**
  * Вернуть класс активного/неактивного состояния
  */
 function classStateDisabled(){
-  const { element, currentModel, currentUser } = this.props;
+  const { element, currentUser } = this.props;
   let conditional_disabled_choose = element.getSettings('conditional_disabled_choose');
   if(conditional_disabled_choose){
     switch(conditional_disabled_choose){
@@ -63,16 +66,20 @@ function classStateDisabled(){
     };
   });
   if(element.getSettings('disabled_conditional_other', false)) {
+    let model = element.getCurrentModel();
 
     if (conditionsChecker(conditions,
         element.getSettings('disabled_conditional_other_display') === 'AND',
-        currentModel)) {
+        model, true)) {
 
       return ' state-disabled ';
     }
   }
   return ' '
 }
+
+
+
 /**
  * обновить данные модели
  */
@@ -144,14 +151,15 @@ function getContent(settingName) {
   }
   if((! isEditor())){//todo: сделать подгрузку данных и в редакторе
     let model = element.hasCardModel() ? element.getCardModel() : this.props.currentModel;
-    let paths = _.isString(content) ? content.match(/{{([\s\S]+?)(?=}})/g) : null;
-    if(_.isArray(paths)){
-      paths.forEach(path => {
-        path = path.replace('{{', '');
-        let value = getDataByPath(path, '', model);
-        content = content.replace(new RegExp(`{{${path}}}`, 'g'), value)
-      });
-    }
+    content = replaceContentWithData(content, model);
+    // let paths = _.isString(content) ? content.match(/{{([\s\S]+?)(?=}})/g) : null;
+    // if(_.isArray(paths)){
+    //   paths.forEach(path => {
+    //     path = path.replace('{{', '');
+    //     let value = getDataByPath(path, '', model);
+    //     content = content.replace(new RegExp(`{{${path}}}`, 'g'), value)
+    //   });
+    // }
   }
   if(content && content.dynamic){
     content = '';

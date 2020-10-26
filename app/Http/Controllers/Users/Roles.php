@@ -76,7 +76,6 @@ class Roles extends ApiController
         $request->validate([
             "name" => ["string", "required", "unique:roles,name"],
             "display_name" => ["string", "required"],
-            "description" => ["string", "required"],
         ]);
 
         $role = new Role();

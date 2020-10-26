@@ -34,6 +34,13 @@ class RepeaterController extends Component {
   }
 
   /**
+   * Получить итем по ИД
+   * @param {int} id
+   */
+  getItem(id) {
+    return this.state.items[Number(id)] || null;
+  }
+  /**
    * Значение по умолчанию для @see {../../decorators/controller.js}
    * @return {array}
    */
@@ -41,7 +48,7 @@ class RepeaterController extends Component {
     return [];
   }
   /**
-   * Изменяем знавение в итеме и передаем в текущий элемент
+   * Изменяем значение в итеме и передаем в текущий элемент
    */
   changeValue(itemIndex, controlId, value) {
     let newValue = [...this.state.items];

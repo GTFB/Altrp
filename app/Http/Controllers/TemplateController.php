@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 
 class TemplateController extends Controller
 {
@@ -98,10 +99,10 @@ class TemplateController extends Controller
             return $template->template_type === $request->get( 'template_type' );
           } );
         }
-
+        $value_field = $request->get( 'value', 'id' );
         foreach ($templates as $template) {
             $options[] = [
-                'value' => $template->id,
+                'value' => data_get( $template, $value_field, $template->id ),
                 'label' => $template->title,
             ];
         }
@@ -205,9 +206,16 @@ class TemplateController extends Controller
      */
     public function show_frontend(string $template_id)
     {
+      if( Uuid::isValid( $template_id ) ){
+        $template = Template::where( 'guid', $template_id )->first();
+      } else {
         $template = Template::find($template_id);
-
-        return response()->json( $template->toArray() );
+      }
+      if( ! $template ){
+        return response()->json( ['success' => false, 'message' => 'Template not found'], 404, JSON_UNESCAPED_UNICODE );
+      }
+      $template->check_elements_conditions();
+      return response()->json( $template->toArray() );
     }
     /**
      * Show the form for editing the specified resource.

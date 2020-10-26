@@ -115,7 +115,7 @@ export default class DialogConditionsTab extends Component {
   };
   /**
    * изменение спика ид объектов
-   * @param {[]} ids
+   * @param {array} ids
    * @param {integer} conditionId
    */
   handleIdsSelect = (ids, conditionId)=>{
@@ -131,7 +131,7 @@ export default class DialogConditionsTab extends Component {
   };
   /**
    * изменение типа  условия
-   * @param {[]} e
+   * @param {array} e
    * @param {integer} conditionId
    */
   handleChangeConditionType = (e, conditionId)=>{

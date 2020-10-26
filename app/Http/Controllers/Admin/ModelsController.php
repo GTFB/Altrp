@@ -313,7 +313,7 @@ class ModelsController extends HttpController
             $pageCount = 0;
             $data_sources = $search
                 ? Source::getBySearch($search, 'name', ['model'], $orderColumn, $orderType)
-                : Source::with('model')->get()->$sortType($orderColumn);
+                : Source::with('model')->get()->$sortType($orderColumn)->values();
         } else {
             $dataSourcesCount = $search
                 ? Source::getCountWithSearch($search)
@@ -326,7 +326,7 @@ class ModelsController extends HttpController
                 : Source::getWithPaginate($offset, $limit, $orderColumn, $orderType, ['model']);
         }
       $data_sources->map( function ( $data_source ){
-//        $data_source->web_url = $data_source->web_url;
+        $data_source->web_url = $data_source->web_url;
         return $data_source;
       } );
         return compact('pageCount', 'data_sources');

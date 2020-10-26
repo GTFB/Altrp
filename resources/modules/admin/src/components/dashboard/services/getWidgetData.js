@@ -15,7 +15,11 @@ export const queryString = (obj = {}) => {
 export const getWidgetData = async (url, filter) => {
   const params = queryString(filter);
   try {
-    return await axios(url + params);
+    return await axios(url + params, {
+      headers: [
+        { key: 'Cache-Control', value: 'no-store' }
+      ]
+    });
   } catch (error) {
     return { status: 500 };
   }

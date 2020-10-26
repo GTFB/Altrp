@@ -52,8 +52,11 @@ class Page extends Model
       return $pages;
     }
     try{
-      $pages = Page::all()->map->only( [ 'path' ] )->map( function ( $path ) {
-        return $path['path'];
+      $pages = Page::all()->map->only( [ 'path','title' ] )->map( function ( $path ) {
+        return [
+          'path'=>$path['path'],
+          'title'=>$path['title']
+        ];
       } )->toArray();
     } catch (Exception $e){
     }

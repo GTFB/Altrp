@@ -125,9 +125,9 @@ function conditionSubscriber() {
         return key.replace('!', '');
       }
     });
-    if(keys.indexOf(controllerValue.controlId)>=0){
+    // if(keys.indexOf(controllerValue.controlId)>=0){
       this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController() ;
-    }
+    // }
   }
 }
 

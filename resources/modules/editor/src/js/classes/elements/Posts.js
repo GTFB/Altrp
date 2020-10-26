@@ -128,7 +128,7 @@ class Table extends BaseElement {
       prefetch_options: true,
       label: "Template",
       isClearable: true,
-      options_resource: '/admin/ajax/templates/options?template_type=card',
+      options_resource: '/admin/ajax/templates/options?template_type=card&value=guid',
       nullable: true,
     });
 

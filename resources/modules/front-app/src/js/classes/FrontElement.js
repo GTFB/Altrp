@@ -83,7 +83,7 @@ class FrontElement {
   }
 
   /**
-   * Вызывается для обновление элемента
+   * Вызывается для обновления элемента
    */
   update(){
     this.updateStyles();
@@ -91,6 +91,16 @@ class FrontElement {
         'button',
         'input',
     ];
+    let widgetsWithActions = [
+        'button',
+    ];
+    /**
+     * Инициация событий в первую очередь
+     */
+    if(widgetsWithActions.indexOf(this.getName()) >= 0 && this.getSettings('actions', []).length){
+      this.registerActions();
+      return;
+    }
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_id')){
       this.formInit();
       return;
@@ -100,7 +110,13 @@ class FrontElement {
       return;
     }
   }
-
+  async registerActions(){
+    /**
+     * @member {ActionsManager|*} actionsManager
+     */
+    const actionsManager = (await import('./modules/ActionsManager.js')).default;
+    actionsManager.registerWidgetActions(this.getId(), this.getSettings('actions', []));
+  }
   /**
    * Если элемент поле или кнопка нужно инициализирваоть форму в FormsManager
    */
@@ -210,8 +226,8 @@ class FrontElement {
 
   /**
    * Получить настройку или все настройки
-   * @param settingName
-   * @param {string} _default
+   * @param {string} settingName
+   * @param {*} _default
    * @return {*}
    */
   getSettings(settingName, _default = ''){
@@ -219,7 +235,7 @@ class FrontElement {
     {
       return _.cloneDeep(this.settings);
     }
-    return _.get(this.settings, settingName, _default);
+    return _.get(this.settings, settingName) || _default;
   }
   updateStyles(){
     window.stylesModulePromise.then(stylesModule => {
@@ -350,6 +366,23 @@ class FrontElement {
   }
 
   /**
+   * Проверяет рекурсивно (проверяет всех предков) виден ли элмент свойство elementDisplay пропсов компонента
+   * @return {boolean}
+   */
+  elementIsDisplay(){
+    let display = true;
+    if(this.getName() === 'root-element'){
+      return true;
+    }
+    if(this.component.props.elementDisplay){
+      display = this.parent ? this.parent.elementIsDisplay() : true;
+    } else {
+      return false;
+    }
+    return display;
+  }
+
+  /**
    * Возвращает значение если виджет input, если другое, то null
    */
   getValue(){
@@ -357,7 +390,7 @@ class FrontElement {
     if(this.getName() !== 'input'){
       return null;
     }
-    if(! this.component.props.elementDisplay){
+    if(! this.elementIsDisplay()){
       return null;
     }
     let value = this.component.state.value;
@@ -531,6 +564,16 @@ class FrontElement {
       model = new AltrpModel(model);
     }
     return model;
+  }
+
+
+  /**
+   * Возвращает текущую модель для элемента
+   * (для карточки на странице будут свои модели)
+   * @return {AltrpModel}
+   */
+  getCurrentModel(){
+    return this.hasCardModel() ? this.getCardModel() : (appStore.getState().currentModel || new AltrpModel);
   }
 }
 

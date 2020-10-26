@@ -21,8 +21,9 @@ import {
   TAB_ADVANCED,
   CONTROLLER_MEDIA,
   CONTROLLER_CREATIVE_LINK,
-  CONTROLLER_GRADIENT
+  CONTROLLER_GRADIENT, CONTROLLER_REPEATER
 } from "../modules/ControllersManager";
+import Repeater from "../Repeater";
 
 class Button extends BaseElement{
 
@@ -75,7 +76,7 @@ class Button extends BaseElement{
       prefetch_options: true,
       label: "Popup ID",
       isClearable: true,
-      options_resource: '/admin/ajax/templates/options?template_type=popup',
+      options_resource: '/admin/ajax/templates/options?template_type=popup&value=guid',
       nullable: true,
       conditions: {
         'popup_trigger_type': true,
@@ -179,6 +180,164 @@ class Button extends BaseElement{
     });
 
     this.endControlSection();
+    /**
+     * Список произвольных действия для кнопки START
+     */
+    this.startControlSection("actions_section", {
+      tab: TAB_CONTENT,
+      label: "Actions"
+    });
+
+    let actionsRepeater = new Repeater();
+
+    actionsRepeater.addControl('type', {
+      label: 'Type',
+      type: CONTROLLER_SELECT,
+      nullable: true,
+      responsive: false,
+      options: [
+        {
+          value: 'form',
+          label: 'Form',
+        },
+        {
+          value: 'toggle_element',
+          label: 'Toggle Elements',
+        },
+        {
+          value: 'toggle_popup',
+          label: 'Toggle Popup',
+        },
+        {
+          value: 'print_page',
+          label: 'Print Page',
+        },
+        {
+          value: 'print_elements',
+          label: 'Print Elements',
+        },
+        {
+          value: 'scroll_to_element',
+          label: 'Scroll to Element',
+        },
+        {
+          value: 'redirect',
+          label: 'Redirect',
+        },
+      ],
+    });
+
+    actionsRepeater.addControl('form_method', {
+      label: 'Method',
+      type: CONTROLLER_SELECT,
+      responsive: false,
+      nullable: true,
+      options: [
+        {
+          value: 'GET',
+          label: 'Get',
+        },
+        {
+          value: 'PUT',
+          label: 'Put',
+        },
+        {
+          value: 'POST',
+          label: 'Post',
+        },
+        {
+          value: 'DELETE',
+          label: 'Delete',
+        },
+      ],
+      conditions: {
+        type: 'form',
+      },
+    });
+
+    actionsRepeater.addControl('form_id', {
+      label: 'Form ID',
+      conditions: {
+        type: [
+          'form',
+        ],
+      },
+    });
+
+    actionsRepeater.addControl('form_url', {
+      label: 'URL',
+      responsive: false,
+      dynamic: false,
+      description: '/ajax/models/test/{{id}}',
+      conditions: {
+        type: [
+          'form',
+          'redirect',
+        ],
+      },
+    });
+
+    actionsRepeater.addControl('elements_ids', {
+      label: 'Elements',
+      responsive: false,
+      dynamic: false,
+      description: 'element_id1, element_id12',
+      conditions: {
+        type: [
+          'toggle_element',
+          'print_elements',
+        ],
+      },
+    });
+
+    actionsRepeater.addControl('element_id', {
+      label: 'Element',
+      responsive: false,
+      dynamic: false,
+      description: 'element_id1',
+      conditions: {
+        type: [
+          'scroll_to_element',
+        ],
+      },
+    });
+
+    actionsRepeater.addControl("popup_id", {
+      type: CONTROLLER_SELECT2,
+      prefetch_options: true,
+      label: "Popup ID",
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options?template_type=popup&value=guid',
+      nullable: true,
+      conditions: {
+        type: [
+          'toggle_popup',
+        ],
+      },
+    });
+
+    actionsRepeater.addControl('confirm', {
+      type: CONTROLLER_TEXTAREA,
+      dynamic: false,
+      label: 'Confirm Text',
+    });
+
+    actionsRepeater.addControl('alert', {
+      type: CONTROLLER_TEXTAREA,
+      dynamic: false,
+      label: 'After Text',
+    });
+
+    this.addControl('actions', {
+      label: 'Actions',
+      type: CONTROLLER_REPEATER,
+      fields: actionsRepeater.getControls(),
+    });
+
+    this.endControlSection();
+    /**
+     * Список произвольных действия для кнопки END
+     */
     this.startControlSection("form_section", {
       tab: TAB_CONTENT,
       label: "Form Settings"
@@ -417,6 +576,35 @@ class Button extends BaseElement{
     });
 
     this.endControlSection();
+    //<editor-fold desc="other_actions_on">
+    this.startControlSection('other_actions', {
+      tab: TAB_CONTENT,
+      label: 'Other Actions',
+    });
+
+    this.addControl('other_action_type',{
+      type: CONTROLLER_SELECT2,
+      label: 'Actions',
+      isMulti: true,
+      options: [
+        {
+          label: 'Print Elements',
+          value: 'print_elements',
+        },
+      ],
+
+    });
+
+    this.addControl('print_elements_ids', {
+      label: 'IDs',
+      dynamic: false,
+      conditions: {
+        'other_action_type' : 'print_elements'
+      },
+    });
+
+    this.endControlSection();
+    //</editor-fold>
 
     this.startControlSection('position_section', {
       tab: TAB_STYLE,

@@ -41,14 +41,15 @@ const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3, 
     }
     else {
       const newData = dataSource.map((item) => {
-        const key = new Date(item.key);
-        if (key) {
+        let key = new Date(item.key);
+        if (key instanceof Date && !isNaN(key)) {
           return {
-            key,
-            data: item.data,
+            key: key,
+            data: Number(item.data),
           };
         }
-      });
+      }).filter(item => typeof item != 'undefined');
+
       setData(newData || []);
       setIsLoading(false);
     }
@@ -94,8 +95,6 @@ const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3, 
               <LinearXAxisTickSeries
                 label={
                   <LinearXAxisTickLabel
-                    //fontSize={12}
-                    //fill="#000000"
                     format={formattingDate}
                   />
                 }

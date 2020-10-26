@@ -190,7 +190,7 @@ class AddPage extends Component {
 
           <div className="form-group">
             <label htmlFor="parent_page_id">Parent Page</label>
-            <select id="parent_page_id" required
+            <select id="parent_page_id"
               value={this.state.value.parent_page_id || ''}
               onChange={e => {
                 // this.changeValue(e.target.value, 'parent_page_id');

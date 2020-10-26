@@ -3,9 +3,10 @@ import {Link, Redirect, withRouter } from 'react-router-dom';
 import { connect } from "react-redux";
 import {placeElement} from "../../helpers";
 import {
+  getComponentByElementId,
   getHTMLElementById,
   isEditor,
-  parseURLTemplate,
+  parseURLTemplate, printElements,
   renderAssetIcon,
   scrollToElement
 } from "../../../../../front-app/src/js/helpers";
@@ -109,15 +110,15 @@ class Dropbar extends Component {
   componentDidUpdate(prevProps) {
     if(this.props.settings.mode_dropbar_options !== prevProps.settings.mode_dropbar_options) {
       this.setState({ show: false });
-    };
+    }
 
     if(prevProps.settings.offset_dropbar_options !== this.props.settings.offset_dropbar_options) {
       this.setState({ offset: this.props.settings.offset_dropbar_options, show: false });
-    };
+    }
 
     if(this.props.settings.position_dropbar_options !== prevProps.settings.position_dropbar_options) {
       this.setState({ activePosition: this.state.positionVariants.find(pos => pos.position === this.props.settings.position_dropbar_options), show: false });
-    };
+    }
   }
 
   componentDidMount() {
@@ -172,7 +173,7 @@ class Dropbar extends Component {
       </div>
     );
   };
-};
+}
 
 //button
 class ButtonWidget extends Component {
@@ -188,10 +189,25 @@ class ButtonWidget extends Component {
     }
     this.onClick = this.onClick.bind(this);
   }
+  /**
+   * Компонент удаляется со страницы
+   */
+  async _componentWillUnmount() {
+    const actionsManager = (await import('../../../../../front-app/src/js/classes/modules/ActionsManager.js')).default;
+    actionsManager.unregisterWidgetActions(this.props.element.getId());
+  }
 
+  /**
+   * Клик по кнопке
+   * @param e
+   * @return {Promise<void>}
+   */
   async onClick(e) {
     if (isEditor()) {
       console.log(this.state.settings);
+    } else if (this.props.element.getSettings('actions', []).length){
+      const actionsManager = (await import('../../../../../front-app/src/js/classes/modules/ActionsManager.js')).default;
+      await actionsManager.callAllWidgetActions(this.props.element.getId());
     } else if (this.props.element.getForms().length){
       this.setState(state => ({ ...state, pending: true }));
       this.props.element.getForms().forEach(
@@ -225,7 +241,7 @@ class ButtonWidget extends Component {
         }
       );
     } else if (this.props.element.getSettings('popup_trigger_type') && this.props.element.getSettings('popup_id')){
-      this.props.appStore.dispatch(togglePopup(+this.props.element.getSettings('popup_id')));
+      this.props.appStore.dispatch(togglePopup(this.props.element.getSettings('popup_id')));
       /**
        * Проверим надо ли по ID скроллить к элементу
        */
@@ -237,9 +253,31 @@ class ButtonWidget extends Component {
         scrollToElement(mainScrollbars, element)
       }
     }
-
+    else
     if (this.props.element.getSettings('hide_elements_trigger')) {
       this.props.toggleTrigger(this.props.element.getSettings('hide_elements_trigger'));
+    } else if( this.props.element.getSettings('other_action_type', []).includes('print_elements')){
+      let IDs = this.props.element.getSettings('print_elements_ids', '');
+      IDs = IDs.split(',');
+      console.log(IDs);
+      let elementsToPrint = [];
+      IDs.forEach(elementId=>{
+        if((! elementId) || ! elementId.trim()){
+          return;
+        }
+        getHTMLElementById(elementId.trim()) && elementsToPrint.push(getHTMLElementById(elementId));
+        if(getComponentByElementId(elementId.trim())?.getStylesHTMLElement){
+          let stylesElement = getComponentByElementId(elementId.trim()).getStylesHTMLElement();
+          if(stylesElement){
+            elementsToPrint.push(stylesElement);
+          }
+        }
+      });
+      if(_.get(window, 'stylesModule.stylesContainer.current')){
+        elementsToPrint.push(_.get(window, 'stylesModule.stylesContainer.current'));
+      }
+      elementsToPrint.push(document.head);
+      printElements(elementsToPrint);
     }
   }
 
