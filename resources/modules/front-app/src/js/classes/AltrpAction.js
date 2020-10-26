@@ -1,4 +1,6 @@
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
+import {isString} from "lodash";
+import {replaceContentWithData} from "../helpers";
 
 // let  history = require('history');
 // // import {history} from 'history';
@@ -15,6 +17,19 @@ class AltrpAction extends AltrpModel{
     this.init();
   }
 
+  /**
+   * Возврашает значение свойства name, если свойство строка, то производит подстановку значений из данных
+   * @params {string} name
+   * @params {*} defaultValue
+   * @return {*}
+   */
+  getReplacedProperty(name, defaultValue = '') {
+    let value = this.getProperty(name, defaultValue);
+    if(_.isString(value)){
+      value = replaceContentWithData(value);
+    }
+    return value;
+  }
   /**
    * Инициируем действие
    */
@@ -102,7 +117,7 @@ class AltrpAction extends AltrpModel{
    */
   async doActionRedirect(){
 
-    let URL = this.getProperty('form_url');
+    let URL = this.getReplacedProperty('form_url');
     frontAppRouter.history.push(URL);
     return {
       success: true,

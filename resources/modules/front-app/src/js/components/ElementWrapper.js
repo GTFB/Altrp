@@ -16,7 +16,6 @@ class ElementWrapper extends Component {
       formsStore: appStore.getState().formsStore,
       elementDisplay: true,
     };
-    console.log(props);
     this.elementWrapperRef = React.createRef();
     appStore.dispatch(addElement(this));
     appStore.subscribe(this.updateStore);
@@ -54,12 +53,6 @@ class ElementWrapper extends Component {
      */
     if(this.state.currentDataStorage !== appStore.getState().currentDataStorage){
       this.setState(state => ({...state, currentDataStorage: appStore.getState().currentDataStorage}));
-    }
-    /**
-     * Обновляем altrpresponses
-     */
-    if(this.state.altrpresponses !== appStore.getState().altrpresponses){
-      this.setState(state => ({...state, altrpresponses: appStore.getState().altrpresponses}));
     }
 
     if((this.props.element.getName() === 'input') && this.state.formsStore !== appStore.getState().formsStore){
@@ -219,7 +212,7 @@ class ElementWrapper extends Component {
           currentModel: this.state.currentModel,
           currentUser: this.state.currentUser,
           currentDataStorage: this.state.currentDataStorage,
-          altrpresponses: this.state.altrpresponses,
+          altrpresponses: this.props.altrpresponses,
           formsStore: this.state.formsStore,
           elementDisplay: this.state.elementDisplay,
           appStore
@@ -231,7 +224,8 @@ class ElementWrapper extends Component {
 
 function mapStateToProps(state) {
   return {
-    hideTriggers: state.hideTriggers
+    hideTriggers: state.hideTriggers,
+    altrpresponses: state.altrpresponses,
   };
 }
 

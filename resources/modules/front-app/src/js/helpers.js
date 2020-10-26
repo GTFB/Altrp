@@ -322,6 +322,7 @@ export function getDataByPath(path = '', _default = null, context = null){
     path = path.replace('altrpdata.', '');
     value = currentDataStorage.getProperty(path, _default)
   } else if(path.indexOf('altrpresponses.') === 0){
+    path = path.replace('altrpresponses.', '');
     value = altrpresponses.getProperty(path, _default)
   }else if(path.indexOf('altrptime.') === 0){
     value = getTimeValue(path.replace('altrptime.',''));
