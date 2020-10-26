@@ -60,10 +60,6 @@ class AccessOptions extends Component {
     this.setState({ roles, rolesPagination: { ...rolesPagination, count, pageCount } });
   }
 
-  rolesFilterHandler = e => {
-    this.setState({ rolesFilter: e.target.value }, this.getRoles);
-  }
-
   rolesSortingHandler = (order_by, order) => {
     this.setState({ rolesSorting: { order_by, order } }, this.getRoles);
   }
@@ -80,10 +76,6 @@ class AccessOptions extends Component {
       ...permissionsSorting
     });
     this.setState({ permissions, permissionsPagination: { ...permissionsPagination, count, pageCount } });
-  }
-
-  permissionsFilterHandler = e => {
-    this.setState({ permissionsFilter: e.target.value }, this.getPermissions);
   }
 
   permissionsSortingHandler = (order_by, order) => {
@@ -119,6 +111,10 @@ class AccessOptions extends Component {
             <Link to="/admin/access/permissions"><Tab>Permissions</Tab></Link>
           </TabList>
           <TabPanel>
+            <div className="admin-panel py-2">
+              <input className="input-sm mr-2" value={rolesFilter} onChange={e => this.setState({ rolesFilter: e.target.value })} />
+              <button type="button" onClick={this.getRoles} className="btn btn_bare admin-users-button">Search</button>
+            </div>
             <AdminTable
               columns={columns}
               quickActions={[
@@ -141,10 +137,6 @@ class AccessOptions extends Component {
                 ...role,
                 editUrl: '/admin/access/roles/edit/' + role.id
               }))}
-              search={{
-                value: rolesFilter,
-                changeHandler: this.rolesFilterHandler
-              }}
               sortingHandler={this.rolesSortingHandler}
               sortingField={rolesSorting.order_by}
             />
@@ -155,6 +147,10 @@ class AccessOptions extends Component {
             />
           </TabPanel>
           <TabPanel>
+            <div className="admin-panel py-2">
+              <input className="input-sm mr-2" value={permissionsFilter} onChange={e => this.setState({ permissionsFilter: e.target.value })} />
+              <button type="button" onClick={this.getPermissions} className="btn btn_bare admin-users-button">Search</button>
+            </div>
             <AdminTable
               columns={columns}
               quickActions={[
@@ -177,10 +173,6 @@ class AccessOptions extends Component {
                 ...permission,
                 editUrl: '/admin/access/permissions/edit/' + permission.id
               }))}
-              search={{
-                value: permissionsFilter,
-                changeHandler: this.permissionsFilterHandler
-              }}
               sortingHandler={this.permissionsSortingHandler}
               sortingField={permissionsSorting.order_by}
             />
