@@ -42,7 +42,7 @@ class TextWidget extends Component {
       tooltipActive = this.tooltipActive
     }
     let textContent = this.getContent('text');
-    let textCap = <><span className="altrp-text-drop-cap">{this.state.settings.text.slice(0,1)}</span><span>{this.state.settings.text.slice(2)}</span> {tooltip}</>;
+    let textCap = <><span className="altrp-text-drop-cap">{this.state.settings.text?.slice(0,1)}</span><span>{this.state.settings.text?.slice(2)}</span> {tooltip}</>;
     let text = <>{this.state.settings.text} {tooltip}</>;
 
     let activeText = "";

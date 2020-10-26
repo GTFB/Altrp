@@ -1,5 +1,5 @@
 import Resource from "./Resource";
-import {clearAllResponseData} from "../../../../front-app/src/js/store/responses-storage/actions";
+import {addResponseData, clearAllResponseData} from "../../../../front-app/src/js/store/responses-storage/actions";
 
 /**
  * Класс имитирующий поведение формы (собирает данные с виджетов полей и отправляет их на сервер)
@@ -11,9 +11,8 @@ class AltrpForm {
    * @param {string} modelName
    * @param {string} method
    * @param {{}} options
-   * @param {string} customRoute
    */
-  constructor(formId, modelName = '', method = 'POST', options = {}, customRoute){
+  constructor(formId, modelName = '', method = 'POST', options = {}){
     this.formId = formId;
     this.fields = [];
     this.submitButtons = [];
@@ -21,6 +20,7 @@ class AltrpForm {
     this.options = options;
     this.modelName = modelName;
     let route = `/ajax/models/${modelName}`;
+    const {dynamicURL, customRoute} = this.options;
 
     switch (modelName){
       case 'login':{
@@ -33,7 +33,10 @@ class AltrpForm {
         route = `/ajax/feedback`
       }break;
     }
-    this.resource = new Resource({route});
+    if(customRoute){
+      route = customRoute;
+    }
+    this.resource = new Resource({route, dynamicURL});
   }
 
   /**
@@ -79,7 +82,7 @@ class AltrpForm {
    * @param {string} submitText
    * @return {boolean}
    */
-  async submit(modelID, submitText = ''){
+  async submit(modelID = null, submitText = ''){
     let success = true;
     if(submitText){
       let confirmed =  await confirm(submitText);
@@ -114,9 +117,8 @@ class AltrpForm {
         }
 
         case 'PUT':{
-          // return await alert(JSON.stringify(this.getData()));
           let res;
-          if(modelID){
+          if(modelID || this.options.customRoute){
             res =  await this.resource.put(modelID, this.getData());
             import('./modules/ModelsManager').then(modelsManager=>{
               modelsManager.default.updateModelWithData(this.modelName, modelID, this.getData());
@@ -125,26 +127,22 @@ class AltrpForm {
             this.updateResponseStorage(res);
             return res;
           }
-          console.error('Не удалось получить ИД модели для обновления!');
+          console.error('Не удалось получить ИД модели для обновления или customRoute!');
         }
         break;
         case 'GET':{
           // return await alert(JSON.stringify(this.getData()));
           let res;
-          if(modelID){
-            res =  await this.resource.getQueried(this.getData());
-            this.updateResponseStorage(res);
-            return res;
-          }
-          console.error('Не удалось получить ИД модели для обновления!');
+          res =  await this.resource.getQueried(this.getData());
+          this.updateResponseStorage(res);
+          return res;
         }
-        break;
         case 'DELETE':{
-          if(modelID){
+          if(modelID || this.options.customRoute){
             // return await await alert('Удаление!');
             return await this.resource.delete(modelID);
           }
-          console.error('Не удалось получить ИД модели для удаления!');
+          console.error('Не удалось получить ИД модели для удаления или customRoute!');
         }
         break;
       }
@@ -209,7 +207,7 @@ class AltrpForm {
    * @param {{}} res
    */
   updateResponseStorage(res = {}){
-    appStore.dispatch(clearAllResponseData(this.formId, res));
+    appStore.dispatch(addResponseData(this.formId, res));
   }
 
 }

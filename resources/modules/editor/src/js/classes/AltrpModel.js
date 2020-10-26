@@ -43,7 +43,7 @@ class AltrpModel {
    * Возврашает значение свойства name
    * @params {string} name
    * @params {*} defaultValue
-   * @return {*}
+   * @return {{}}
    */
   setProperty(name, value = '') {
     return set(this.data, name, value);
