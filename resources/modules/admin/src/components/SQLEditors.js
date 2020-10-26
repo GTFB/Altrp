@@ -88,19 +88,14 @@ export default class SQLEditors extends Component {
     }))
   }
 
-  getSqlEditors = async (s) => {
-    let sql_editors = await this.sql_editorsResource.getQueried({ s, ...this.state.sorting});
+  getSqlEditors = async () => {
+    let sql_editors = await this.sql_editorsResource.getQueried({ s: this.state.sqlEditorSearch, ...this.state.sorting});
     sql_editors = sql_editors.sql_editors;
     this.setState(state => ({
       ...state,
       sql_editors,
-      sqlEditorSearch: s || this.state.sqlEditorSearch
     }))
   }
-
-  changeSearchHandler = e => {
-    this.getSqlEditors(e.target.value);
-  };
 
   sortingHandler = (order_by, order) => {
     this.setState({ sorting: { order_by, order } }, this.getSqlEditors);
@@ -118,7 +113,10 @@ export default class SQLEditors extends Component {
         <Link className="btn" to={`/admin/tables/sql_editors/add`}>Add New</Link>
       </div>
       <div className="admin-content">
-
+        <div className="admin-panel py-2">
+          <input className="input-sm mr-2" value={sqlEditorSearch} onChange={e => this.setState({ sqlEditorSearch: e.target.value })} />
+          <button type="button" onClick={this.getSqlEditors} className="btn btn_bare admin-users-button">Search</button>
+        </div>
         <AdminTable
           columns={columns}
           quickActions={[{
@@ -139,10 +137,6 @@ export default class SQLEditors extends Component {
             ...sql_editor,
             editUrl: '/admin/tables/sql_editors/edit/' + sql_editor.id
           }))}
-          search={{
-            value: sqlEditorSearch || '',
-            changeHandler: this.changeSearchHandler
-          }}
           sortingHandler={this.sortingHandler}
           sortingField={sorting.order_by}
         />
