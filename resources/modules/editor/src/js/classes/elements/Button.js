@@ -276,6 +276,17 @@ class Button extends BaseElement{
         ],
       },
     });
+    actionsRepeater.addControl('elements_ids', {
+      label: 'URL',
+      responsive: false,
+      dynamic: false,
+      description: 'element_id1, element_id12',
+      conditions: {
+        type: [
+          'toggle_element',
+        ],
+      },
+    });
 
     actionsRepeater.addControl('confirm', {
       type: CONTROLLER_TEXTAREA,

@@ -91,6 +91,10 @@ class AltrpAction extends AltrpModel{
         result =  await this.doActionRedirect();
       }
       break;
+      case 'toggle_element':{
+        result =  await this.doActionToggleElements();
+      }
+      break;
     }
     let alertText =   this.getProperty('alert');
     if(alertText){
@@ -116,6 +120,18 @@ class AltrpAction extends AltrpModel{
    * @return {Promise<void>}
    */
   async doActionRedirect(){
+
+    let URL = this.getReplacedProperty('form_url');
+    frontAppRouter.history.push(URL);
+    return {
+      success: true,
+    }
+  }
+  /**
+   * Показывает/скрывает элементы по пользовательским ИД
+   * @return {Promise<void>}
+   */
+  async doActionToggleElements(){
 
     let URL = this.getReplacedProperty('form_url');
     frontAppRouter.history.push(URL);
