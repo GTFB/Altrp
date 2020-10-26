@@ -66,11 +66,12 @@ export default class Templates extends Component{
    * @param currentPage
    * @param activeTemplateArea
    */
-  updateTemplates(currentPage = this.state.currentPage, activeTemplateArea = this.state.activeTemplateArea){
+  updateTemplates = (currentPage = this.state.currentPage, activeTemplateArea = this.state.activeTemplateArea) => {
     this.resource.getQueried({
       area: activeTemplateArea.name,
       page: currentPage,
       pageSize: 10,
+      s: this.state.templateSearch,
       ...this.state.sorting
     }).then(res=>{
       this.setState(state=> {
@@ -83,26 +84,6 @@ export default class Templates extends Component{
     });
   }
 
-  updateTemplatesSearch = e => {
-    const s = e.target.value;
-    this.resource.getQueried({
-      area: this.state.activeTemplateArea.name,
-      page: this.state.currentPage,
-      pageSize: 10,
-      s,
-      ...this.state.sorting
-    }).then(res => {
-      this.setState(state => {
-        console.log(res.s)
-        return {
-          ...state,
-          pageCount: res.pageCount,
-          templates: res.templates,
-          templateSearch: s
-        }
-      });
-    });
-  }
   /** @function generateTemplateJSON
   * Генерируем контент файла template в формате JSON
   * @param {object} template Данные, получаемые с сервера
@@ -285,6 +266,10 @@ export default class Templates extends Component{
             </li>
           })}
         </ul>
+        <div className="admin-panel py-2">
+          <input className="input-sm mr-2" value={templateSearch} onChange={e => this.setState({ templateSearch: e.target.value })} />
+          <button type="button" onClick={() => this.updateTemplates()} className="btn btn_bare admin-users-button">Search</button>
+        </div>
         <AdminTable columns={[
           {
             name: 'title',
@@ -325,10 +310,6 @@ export default class Templates extends Component{
             className: 'quick-action-menu__item_danger',
             title: 'Trash'
           }]}
-          search={{
-            value: templateSearch || '',
-            changeHandler: this.updateTemplatesSearch
-          }}
           sortingHandler={this.sortingHandler}
           sortingField={sorting.order_by}
         />
