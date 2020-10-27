@@ -160,15 +160,12 @@ class HorizontalVeticalMenu extends Component {
                   data-key={li.id_repeater_menu_layout ? li.id_repeater_menu_layout : ""}
                 >
                   <div className="altrp-nav-menu-li-link-wrapper">
-                    {/*<Link to={url} style={stylesLink} className="altrp-nav-menu-li-link">*/}
-                    {/*</Link>*/}
                     <AltrpLink className="altrp-nav-menu-li-link" link={li.link_repeater_menu_layout}>
                       <div className="altrp-nav-menu-li-link-label">
                         {li.label_repeater_menu_layout}
                       </div>
                       {
                         li.id_repeater_menu_layout ? (
-                          // altrp-nav-menu-li-link-icon-active
                           <div className="altrp-nav-menu-li-link-icon">
                             {
                               chevron
@@ -177,9 +174,6 @@ class HorizontalVeticalMenu extends Component {
                         ) : ""
                       }
                     </AltrpLink>
-                    {/*{*/}
-                    {/*  link*/}
-                    {/*}*/}
                   </div>
                   {
                     li.id_repeater_menu_layout ? <Dropdown
@@ -193,7 +187,7 @@ class HorizontalVeticalMenu extends Component {
                       list={this.state.list}/> : ""
                   }
                 </li>
-                ) : ""
+              ) : ""
             )
           })
         }

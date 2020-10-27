@@ -248,6 +248,11 @@
     max-height: 100vh;
 }
 
+.altrp-nav-menu-dropdown-content-hide {
+    border-style: none !important;
+    border-width: 0 !important;
+}
+
 .altrp-nav-menu-li-link {
     text-decoration: none;
 }
@@ -272,4 +277,17 @@
     border-left: none;
     border-bottom: none;
     border-right: none;
+}
+
+.altrp-nav-menu-dropdown-sub-label {
+    cursor: pointer;
+}
+
+.altrp-nav-menu-dropdown-sub-content {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.altrp-nav-menu-dropdown-content-divider {
+    width: 100%;
 }
