@@ -221,6 +221,14 @@ class Button extends BaseElement{
           label: 'Scroll to Element',
         },
         {
+          value: 'scroll_to_top',
+          label: 'Scroll to Top',
+        },
+        {
+          value: 'scroll_to_bottom',
+          label: 'Scroll to Bottom',
+        },
+        {
           value: 'redirect',
           label: 'Redirect',
         },

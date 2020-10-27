@@ -118,6 +118,14 @@ class AltrpAction extends AltrpModel{
         result =  await this.doActionScrollToElement();
       }
       break;
+      case 'scroll_to_top':{
+        result =  await this.doActionScrollToTop();
+      }
+      break;
+      case 'scroll_to_bottom':{
+        result =  await this.doActionScrollToBottom();
+      }
+      break;
     }
     let alertText =   this.getProperty('alert');
     if(alertText){
@@ -250,6 +258,32 @@ class AltrpAction extends AltrpModel{
     if(element){
       scrollToElement(mainScrollbars, element)
     }
+    return {
+      success: true,
+    }
+  }
+  /**
+   * Скролл на верх страницы
+   * @return {Promise<{}>}
+   */
+  async doActionScrollToTop(){
+    mainScrollbars.scrollTop(0);
+    return {
+      success: true,
+    }
+  }
+  /**
+   * Скролл на верх страницы
+   * @return {Promise<{}>}
+   */
+  async doActionScrollToBottom(){
+    const routeContent = document.getElementById('route-content');
+    if(! routeContent){
+      return {
+        success: true,
+      }
+    }
+    mainScrollbars.scrollTop(routeContent.offsetHeight);
     return {
       success: true,
     }
