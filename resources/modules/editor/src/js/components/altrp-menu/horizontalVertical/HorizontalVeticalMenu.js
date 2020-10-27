@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {iconsManager} from "../../../helpers";
-import {Link} from "react-router-dom";
 import Dropdown from "./Dropdown";
 import {renderAsset} from "../../../../../../front-app/src/js/helpers";
+import AltrpLink from "../../altrp-link/AltrpLink";
 
 class HorizontalVeticalMenu extends Component {
   constructor(props) {
@@ -137,65 +137,18 @@ class HorizontalVeticalMenu extends Component {
 
     }
 
-    let Chevron = () => (iconsManager().renderIcon('chevron'));
+    let chevron = iconsManager().renderIcon('chevron');
 
     let chevronMedia = this.props.settings.chevron_media_main_menu_style;
 
     if(chevronMedia && Object.keys(chevronMedia).length !== 0) {
-      Chevron = () => (renderAsset(chevronMedia));
-      console.log(Chevron)
+      chevron = renderAsset(chevronMedia);
     }
 
     return (
       <ul style={stylesUl} className={"altrp-nav-menu-ul altrp-nav-menu-ul-" + layout} ref={this.children}>
         {
           this.state.list.map((li, idx) => {
-            let url = li.link_repeater_menu_layout ? li.link_repeater_menu_layout.url : "";
-
-            let content = (
-              <React.Fragment>
-                <div className="altrp-nav-menu-li-link-label">
-                  {li.label_repeater_menu_layout}
-                </div>
-                {
-                  li.id_repeater_menu_layout ? (
-                    // altrp-nav-menu-li-link-icon-active
-                    <div className="altrp-nav-menu-li-link-icon">
-                      <Chevron />
-                    </div>
-                  ) : ""
-                }
-              </React.Fragment>
-            );
-
-            // let link = (
-            //   <a className="altrp-nav-menu-li-link">
-            //     {
-            //       content
-            //     }
-            //   </a>
-            // );
-            // if (li.link_repeater_menu_layout?.url && !li.link_repeater_menu_layout.toPrevPage) {
-            //   if (li.link_repeater_menu_layout.tag === 'a' || isEditor()) {
-            //     let target = _.get(li, 'link_repeater_menu_layout.openInNew') ? 'blank' : '';
-            //     link = (
-            //       <a href={url} style={stylesLink} className="altrp-nav-menu-li-link" target={target}>
-            //         {
-            //           content
-            //         }
-            //       </a>
-            //     );
-            //   } else {
-            //     link = (
-            //       <Link to={url} style={stylesLink} className="altrp-nav-menu-li-link">
-            //         {
-            //           content
-            //         }
-            //       </Link>
-            //     );
-            //   }
-            // }
-
             return (
               !li.parent_id_repeater_menu_layout ? (
                 <li
@@ -207,7 +160,9 @@ class HorizontalVeticalMenu extends Component {
                   data-key={li.id_repeater_menu_layout ? li.id_repeater_menu_layout : ""}
                 >
                   <div className="altrp-nav-menu-li-link-wrapper">
-                    <Link to={url} style={stylesLink} className="altrp-nav-menu-li-link">
+                    {/*<Link to={url} style={stylesLink} className="altrp-nav-menu-li-link">*/}
+                    {/*</Link>*/}
+                    <AltrpLink className="altrp-nav-menu-li-link" link={li.link_repeater_menu_layout}>
                       <div className="altrp-nav-menu-li-link-label">
                         {li.label_repeater_menu_layout}
                       </div>
@@ -215,11 +170,13 @@ class HorizontalVeticalMenu extends Component {
                         li.id_repeater_menu_layout ? (
                           // altrp-nav-menu-li-link-icon-active
                           <div className="altrp-nav-menu-li-link-icon">
-                            <Chevron />
+                            {
+                              chevron
+                            }
                           </div>
                         ) : ""
                       }
-                    </Link>
+                    </AltrpLink>
                     {/*{*/}
                     {/*  link*/}
                     {/*}*/}
@@ -227,7 +184,7 @@ class HorizontalVeticalMenu extends Component {
                   {
                     li.id_repeater_menu_layout ? <Dropdown
                       settings={this.props.settings}
-                      chevron={<Chevron />}
+                      chevron={chevron}
                       idElement={this.props.idElement}
                       show={li.showDropdown}
                       id={li.id_repeater_menu_layout}

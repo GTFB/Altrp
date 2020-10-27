@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import HorizontalVeticalMenu from "./horizontalVertical/HorizontalVeticalMenu";
-import DropdownMenu from "./DropdownMenu";
+import DropdownMenu from "./dropdown/DropdownMenu";
 
 import "./altrp-menu.scss";
 

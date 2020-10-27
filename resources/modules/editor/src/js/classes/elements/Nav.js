@@ -391,6 +391,16 @@ class Nav extends BaseElement{
     //   label: 'Full width',
     // });
 
+    this.addControl('icon_dropdown_menu_layout', {
+      type: CONTROLLER_MEDIA,
+      label: 'Icon',
+    });
+
+    this.addControl('active_icon_dropdown_menu_layout', {
+      type: CONTROLLER_MEDIA,
+      label: 'Active icon',
+    });
+
     this.addControl('align_dropdown_menu_layout', {
       type: CONTROLLER_CHOOSE,
       label: "Align",

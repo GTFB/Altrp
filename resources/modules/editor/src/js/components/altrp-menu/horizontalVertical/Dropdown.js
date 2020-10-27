@@ -1,9 +1,8 @@
 import React, {Component} from "react";
 import AltrpPortal from "../../altrp-portal/AltrpPortal";
-import {iconsManager} from "../../../helpers";
 import DropdownSub from "./DropdownSub";
-import {Link} from "react-router-dom";
-import Divider from "./Divider";
+import AltrpLink from "../../altrp-link/AltrpLink";
+import Divider from "../Divider";
 
 class Dropdown extends Component {
   constructor(props) {
@@ -85,10 +84,6 @@ class Dropdown extends Component {
           <ul className="altrp-nav-menu-ul-dropdown-hor-ver-ul">
             {
               this.state.list.map((li, idx) => {
-                let url = "";
-                if(li.link_repeater_menu_layout) {
-                  url = li.link_repeater_menu_layout.url
-                }
                 return (
                   <li
                     className="altrp-nav-menu-ul-dropdown-hor-ver-li"
@@ -96,7 +91,7 @@ class Dropdown extends Component {
                     onMouseLeave={() => this.hideSub(idx)}
                     key={idx}
                   >
-                    <Link to={url} className="altrp-nav-menu-ul-dropdown-hor-ver-li-link">
+                    <AltrpLink link={li.link_repeater_menu_layout} className="altrp-nav-menu-ul-dropdown-hor-ver-li-link">
                       <div className="altrp-nav-menu-li-dropdown-hor-ver-link-label">
                         {li.label_repeater_menu_layout}
                       </div>
@@ -110,7 +105,7 @@ class Dropdown extends Component {
                           </div>
                         ) : ""
                       }
-                    </Link>
+                    </AltrpLink>
                     {
                       li.id_repeater_menu_layout ?
                         <DropdownSub

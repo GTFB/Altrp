@@ -1,7 +1,6 @@
 import React, {Component} from "react";
-import {iconsManager} from "../../../helpers";
-import {Link} from "react-router-dom";
-import Divider from "./Divider";
+import AltrpLink from "../../altrp-link/AltrpLink";
+import Divider from "../Divider";
 
 class DropdownSub extends Component {
   constructor(props) {
@@ -77,10 +76,6 @@ class DropdownSub extends Component {
           <ul className="altrp-nav-menu-ul-dropdown-children-hor-ver-ul">
             {
               this.state.list.map((li, idx) => {
-                let url = "";
-                if(li.link_repeater_menu_layout) {
-                  url = li.link_repeater_menu_layout.url
-                };
 
                 return (
                   <li
@@ -89,7 +84,7 @@ class DropdownSub extends Component {
                     onMouseLeave={() => this.hideSub(idx)}
                     key={idx}
                   >
-                    <Link to={url} className="altrp-nav-menu-li-dropdown-children-hor-ver-li-link">
+                    <AltrpLink link={li.link_repeater_menu_layout} className="altrp-nav-menu-li-dropdown-children-hor-ver-li-link">
                       <div className="altrp-nav-menu-li-dropdown-children-hor-ver-link-label">
                         {li.label_repeater_menu_layout}
                       </div>
@@ -103,7 +98,7 @@ class DropdownSub extends Component {
                           </div>
                         ) : ""
                       }
-                    </Link>
+                    </AltrpLink>
                     {
                       li.id_repeater_menu_layout ? <DropdownSub
                         chevron={this.props.chevron}

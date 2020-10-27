@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-import {iconsManager} from "../../helpers";
+import {iconsManager} from "../../../helpers";
 import {Link} from "react-router-dom";
+import AltrpImage from "../../altrp-image/AltrpImage";
+import AltrpLink from "../../altrp-link/AltrpLink";
 
 class DropdownMenu extends Component {
   constructor(props) {
@@ -20,14 +22,28 @@ class DropdownMenu extends Component {
   render() {
     let list = this.props.settings.repeater_menu_layout;
 
+    let iconButton = (
+      <AltrpImage
+        image={this.props.settings.icon_dropdown_menu_layout}
+        className="altrp-nav-menu-dropdown-button-icon"
+      />
+    );
+
+    if(this.state.show && this.props.settings.active_icon_dropdown_menu_layout) {
+      iconButton = (
+        <AltrpImage
+          image={this.props.settings.active_icon_dropdown_menu_layout}
+          className="altrp-nav-menu-dropdown-button-icon altrp-nav-menu-dropdown-button-icon-close"
+        />
+      )
+    }
+
     return (
       <div className="altrp-nav-menu-dropdown">
         <div className="altrp-nav-menu-dropdown-wrapper">
           <div className="altrp-nav-menu-dropdown-button" onClick={this.changeShow}>
             {
-              iconsManager().renderIcon(!this.state.show ? "in_width" : "add", {
-                className: "altrp-nav-menu-dropdown-button-icon" + (!this.state.show ? "" : " altrp-nav-menu-dropdown-button-icon-close")
-              })
+              iconButton
             }
           </div>
         </div>
@@ -35,21 +51,14 @@ class DropdownMenu extends Component {
           <ul className="altrp-nav-menu-ul">
             {
               list.map((li, idx) => {
-                console.log(li);
-
-                let url = "";
-                if(li.link_repeater_menu_layout) {
-                  url = li.link_repeater_menu_layout.url || ""
-                };
-
                 return <li className="altrp-nav-menu-li" key={idx}>
-                  <Link to={url} className="altrp-nav-menu-li-link">
+                  <AltrpLink link={li.link_repeater_menu_layout}  className="altrp-nav-menu-li-link">
                     <span className="altrp-nav-menu-li-link-label">
                       {
                         li.label_repeater_menu_layout
                       }
                     </span>
-                  </Link>
+                  </AltrpLink>
                 </li>
               })
             }
