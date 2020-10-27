@@ -421,7 +421,7 @@ class Section extends BaseElement{
         value: ""
       },
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}}": "background-image: {{VALUE}}" 
+        "{{ELEMENT}} .altrp-section{{STATE}}": "background-image: {{VALUE}}"
       }
     });
 
@@ -603,7 +603,6 @@ class Section extends BaseElement{
     this.addControl("section_style_border_type", {
       type: CONTROLLER_SELECT,
       label: "Border type",
-      units: ["px", "%", "vh"],
       options: [
         {
           value: "none",
