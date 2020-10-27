@@ -151,6 +151,11 @@ input[type="checkbox"] {
 .altrp-label{
   display: block;
 }
+#editor-content .fixed-section, .fixed-section, .fixed-section .altrp-section {
+  position: fixed;
+  z-index: 55;
+  width: auto;
+}
 //.altrp-table-th svg{
 //
 //}

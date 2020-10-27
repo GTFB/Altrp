@@ -323,7 +323,8 @@ class RootElement extends BaseElement {
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
           'padding-left: {{LEFT}}{{UNIT}};'
-        ]
+        ],
+        '.altrp-section.altrp-section--full-width, .altrp-section.altrp-section--boxed': 'width: calc(100vw - {{RIGHT}}{{UNIT}} - {{LEFT}}{{UNIT}})'
       },
     });
 
