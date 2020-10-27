@@ -13,7 +13,6 @@ class ElementWrapper extends Component {
       currentUser: appStore.getState().currentUser,
       currentDataStorage: appStore.getState().currentDataStorage,
       altrpresponses: appStore.getState().altrpresponses,
-      formsStore: appStore.getState().formsStore,
       elementDisplay: true,
     };
     this.elementWrapperRef = React.createRef();
@@ -55,9 +54,6 @@ class ElementWrapper extends Component {
       this.setState(state => ({...state, currentDataStorage: appStore.getState().currentDataStorage}));
     }
 
-    if((this.props.element.getName() === 'input') && this.state.formsStore !== appStore.getState().formsStore){
-      this.setState(state => ({...state, formsStore: appStore.getState().formsStore}));
-    }
   };
 
   /**
@@ -86,7 +82,7 @@ class ElementWrapper extends Component {
      * @member {FrontElement} element
      */
     const {element} = this.props;
-    if((! element.getSettings('conditional_other')) && (element.getName() !== 'input')){
+    if((! element.getSettings('conditional_other'))){
       return;
     }
     let conditions = element.getSettings('conditions',[]);
@@ -105,18 +101,13 @@ class ElementWrapper extends Component {
     let elementDisplay = conditionsChecker(conditions,
         element.getSettings('conditional_other_display') === 'AND',
         this.props.element.getCurrentModel(), true);
-    if(element.getName() === 'input'){
-      elementDisplay = this.inputIsDisplay();
-    }
+
+    console.log(elementDisplay);
+    console.log(this.props.element.getName());
     if(this.state.elementDisplay === elementDisplay){
       return;
     }
-    if((element.getName() === 'input') && ! elementDisplay){
-      const formId = this.props.element.getSettings('form_id', '');
-      const fieldName = this.props.element.getSettings('field_id', '');
-      // console.log(fieldName);
-      // console.log(formId);
-    }
+
     this.setState(({
       elementDisplay,
     }));
@@ -202,6 +193,7 @@ class ElementWrapper extends Component {
     }
     const styles = {};
     if(! this.state.elementDisplay){
+
       styles.display = 'none';
     }
     const CSSId = this.props.element.getSettings('advanced_element_id', '');
@@ -219,7 +211,7 @@ class ElementWrapper extends Component {
           currentUser: this.state.currentUser,
           currentDataStorage: this.state.currentDataStorage,
           altrpresponses: this.props.altrpresponses,
-          formsStore: this.state.formsStore,
+          formsStore: this.props.formsStore,
           elementDisplay: this.state.elementDisplay,
           appStore
         })
@@ -232,6 +224,7 @@ function mapStateToProps(state) {
   return {
     hideTriggers: state.hideTriggers,
     altrpresponses: state.altrpresponses,
+    formsStore: state.formsStore,
   };
 }
 

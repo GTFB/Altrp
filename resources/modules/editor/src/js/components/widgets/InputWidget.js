@@ -155,7 +155,9 @@ class InputWidget extends Component {
     // if(_.isEqual(prevContext, context)){
     //   return;
     // }
-    if(_.isEqual(prevProps.altrpdata, this.props.altrpdata)
+
+
+    if(_.isEqual(prevProps.currentDataStorage, this.props.currentDataStorage)
         &&_.isEqual(prevProps.currentUser, this.props.currentUser)
         &&_.isEqual(prevProps.formsStore, this.props.formsStore)
         &&_.isEqual(prevProps.currentModel, this.props.currentModel)
