@@ -43,7 +43,6 @@ class DashboardsWidget extends Component {
     const global_parameter = this.state.settings.global_parameter;
 
     const currentUser = this.props.currentUser.data;
-    console.log('currentUser', currentUser);
 
     const settingsData = this.state.settingsData;
     return (

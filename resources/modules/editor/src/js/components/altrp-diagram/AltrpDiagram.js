@@ -20,12 +20,15 @@ import { getDataByPath } from "../../../../../front-app/src/js/helpers";
 const AltrpDiagram = ({ settings }) => {
   const sql = settings.query?.dataSource?.value;
 
-  const data = getDataByPath(settings.datasource_path)?.map(d => {
-    return {
-      data: _.get(d, settings.data_name),
-      key: _.get(d, settings.key_name),
-    };
-  }) || [];
+  let data = [];
+  if (settings.datasource_path != null) {
+    data = getDataByPath(settings.datasource_path, [])?.map(d => {
+      return {
+        data: _.get(d, settings.data_name),
+        key: _.get(d, settings.key_name),
+      };
+    });
+  }
 
   if (!sql && data.length === 0) {
     return <div className={`altrp-chart ${settings.legendPosition}`}>Идет загрузка данных...</div>;
