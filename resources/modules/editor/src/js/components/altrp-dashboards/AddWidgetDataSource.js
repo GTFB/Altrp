@@ -17,14 +17,14 @@ class AddWidgetDataSource extends Component {
       }
 
       componentDidUpdate(prevProps, prevState) {
-            if (!_.isEqual(prevProps, this.props)) {
-                  this.setState(state => (state));
+            if (!_.isEqual(prevProps.dataSourceList, this.props.dataSourceList)) {
+                  this.setState(state => ({ ...state, dataSourcesList: this.props.dataSourceList }));
             }
       }
 
       renderChart() {
-            if (this.state.widget.settings.data.length > 0 && this.state.widget.settings.type !== '') {
-                  return <ChooseWidget type={this.state.widget.settings.type} data={this.state.widget.settings.data} />;
+            if (this.state.widget.settings.source && this.state.widget.settings.type !== '') {
+                  return <ChooseWidget type={this.state.widget.settings.type} source={this.state.widget.settings.source} />;
             }
             return <div style={{
                   marginTop: '5px'
@@ -36,22 +36,23 @@ class AddWidgetDataSource extends Component {
             let currentDataSouce = datasources.find(source => {
                   return source.path === path;
             });
-            let currentData = typeof currentDataSouce !== 'undefined' ? currentDataSouce.data : [];
             this.setState(state => ({
                   ...state,
                   widget: {
                         ...state.widget,
                         settings: {
                               ...state.widget.settings,
-                              source: path,
-                              data: currentData
+                              source: {
+                                    path: currentDataSouce.path,
+                                    key: currentDataSouce.key,
+                                    data: currentDataSouce.data
+                              },
                         },
                   }
             }));
       }
 
       setDiagramType(type) {
-            console.log('MY DIAGRAM IS', type);
             this.setState(state => ({
                   ...state,
                   widget: {
@@ -65,7 +66,6 @@ class AddWidgetDataSource extends Component {
       }
 
       setCardName(name) {
-            console.log(name);
             this.setState(state => ({
                   ...state,
                   widget: {
