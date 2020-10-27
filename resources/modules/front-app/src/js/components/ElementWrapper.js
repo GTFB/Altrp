@@ -3,7 +3,6 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import appStore from "../store/store"
 import {altrpCompare, conditionsChecker} from "../helpers";
-import {changeFormFieldValue} from "../store/forms-data-storage/actions";
 import {addElement} from "../store/elements-storage/actions";
 
 class ElementWrapper extends Component {
@@ -13,6 +12,7 @@ class ElementWrapper extends Component {
       currentModel: appStore.getState().currentModel,
       currentUser: appStore.getState().currentUser,
       currentDataStorage: appStore.getState().currentDataStorage,
+      altrpresponses: appStore.getState().altrpresponses,
       formsStore: appStore.getState().formsStore,
       elementDisplay: true,
     };
@@ -104,7 +104,7 @@ class ElementWrapper extends Component {
     });
     let elementDisplay = conditionsChecker(conditions,
         element.getSettings('conditional_other_display') === 'AND',
-        this.state.currentModel);
+        this.props.element.getCurrentModel(), true);
     if(element.getName() === 'input'){
       elementDisplay = this.inputIsDisplay();
     }
@@ -122,6 +122,12 @@ class ElementWrapper extends Component {
     }));
   }
 
+  /**
+   * Переключает видимость элемента
+   */
+  toggleElementDisplay(){
+    this.setState(state=>({...state, elementDisplay: !state.elementDisplay}))
+  }
   /**
    * Метод для проверки видимости поля формы
    * @return {boolean}
@@ -212,6 +218,7 @@ class ElementWrapper extends Component {
           currentModel: this.state.currentModel,
           currentUser: this.state.currentUser,
           currentDataStorage: this.state.currentDataStorage,
+          altrpresponses: this.props.altrpresponses,
           formsStore: this.state.formsStore,
           elementDisplay: this.state.elementDisplay,
           appStore
@@ -223,7 +230,8 @@ class ElementWrapper extends Component {
 
 function mapStateToProps(state) {
   return {
-    hideTriggers: state.hideTriggers
+    hideTriggers: state.hideTriggers,
+    altrpresponses: state.altrpresponses,
   };
 }
 

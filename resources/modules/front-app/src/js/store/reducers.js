@@ -8,6 +8,7 @@ import { scrollReducer } from "./scroll-position/reducers";
 import { popupReducer } from './popup-trigger/reducers'
 import {elementsStorageReducer} from "./elements-storage/reducers";
 import { hideTriggersReducer } from "./hide-triggers/reducers";
+import {responsesStorageReducer} from "./responses-storage/reducers";
 
 export default combineReducers({
   appRoutes: appRoutesReducer,
@@ -18,5 +19,6 @@ export default combineReducers({
   scrollPosition: scrollReducer,
   popupTrigger: popupReducer,
   elements: elementsStorageReducer,
-  hideTriggers: hideTriggersReducer
+  hideTriggers: hideTriggersReducer,
+  altrpresponses: responsesStorageReducer,
 });

@@ -1,4 +1,6 @@
 import queryString from 'query-string';
+import {replaceContentWithData} from "../../../../front-app/src/js/helpers";
+window.queryString = queryString;
 /**
  * @class Resource
  * */
@@ -17,10 +19,23 @@ class Resource {
   constructor(data){
 
     this.route = data.route;
+    /**
+     * Нужно ли при каждом запросе подставлять в URL данные
+     * @type {*|boolean}
+     */
+    this.dynamicURL = data.dynamicURL || false;
     if(! this.route){
       throw 'Нужен route';
     }
 
+  }
+
+  /**
+   * Получить роут
+   * @return {string}
+   */
+  getRoute(){
+    return this.dynamicURL ? replaceContentWithData(this.route) : this.route;
   }
   /**
    * @return {Promise}
@@ -36,7 +51,8 @@ class Resource {
         'Content-Type': 'application/json'
       },
     };
-    let route = this.route;
+    let route = this.getRoute();
+
     let url;
     if(route[route.length - 1] === '/'){
        url = route + id;
@@ -63,7 +79,7 @@ class Resource {
       },
     };
 
-    let url = this.route;
+    let url = this.getRoute();
     return fetch(url, options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);
@@ -85,10 +101,10 @@ class Resource {
       },
     };
     let url;
-    if(this.route.indexOf('?') === -1){
-      url = this.route + `?s=${searchString}`;
+    if(this.getRoute().indexOf('?') === -1){
+      url = this.getRoute() + `?s=${searchString}`;
     } else {
-      url = this.route + `&s=${searchString}`;
+      url = this.getRoute() + `&s=${searchString}`;
     }
     return fetch(url, options).then(res => {
       if(res.ok === false){
@@ -113,7 +129,7 @@ class Resource {
       body: JSON.stringify(data),
       headers,
     };
-    return fetch(this.route, options).then(res => {
+    return fetch(this.getRoute(), options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);
       }
@@ -149,7 +165,7 @@ class Resource {
       body: formData,
       headers,
     };
-    return fetch(this.route, options).then(res => {
+    return fetch(this.getRoute(), options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);
       }
@@ -169,7 +185,7 @@ class Resource {
         'Content-Type': 'application/json'
       },
     };
-    let url = this.route + (id ? '/' + id : '');
+    let url = this.getRoute() + (id ? '/' + id : '');
     return fetch(url, options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);
@@ -189,7 +205,7 @@ class Resource {
         'Content-Type': 'application/json'
       },
     };
-    let url = this.route + (id ? '/' + id : '');
+    let url = this.getRoute() + (id ? '/' + id : '');
     return fetch(url, options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);
@@ -208,7 +224,7 @@ class Resource {
         'Content-Type': 'application/json'
       },
     };
-    let url = this.route + '/options';
+    let url = this.getRoute() + '/options';
     return fetch(url, options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);
@@ -229,14 +245,16 @@ class Resource {
         'Content-Type': 'application/json'
       },
     };
-    const _params = {};
+    let _params = {};
     _.forEach(params, (paramValue, paramName)=>{
       if(_.isArray(paramValue)){
         paramValue = paramValue.join(',');
       }
       _params[paramName] = paramValue;
     });
-    let url = `${this.route}?${queryString.stringify(_params)}`;
+    let url = queryString.parseUrl(this.getRoute()).url;
+    _params = _.assign( queryString.parseUrl(this.route).query, _params);
+    url = `${url}?${queryString.stringify(_params)}`;
     let res =  await fetch(url, options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);

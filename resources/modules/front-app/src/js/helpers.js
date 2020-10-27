@@ -228,21 +228,22 @@ export function parseParamsFromString(string, context = {}){
 
 /**
  * Функция для проверки условий
- * @param {[]} conditions
+ * @param {array} conditions
  * @param {boolean} AND - логичекое И или ИЛИ
  * @param {AltrpModel} model
+ * @param {boolean} dataByPath - брать ли данный из getDataByPath
  * @return {boolean}
  */
-export function conditionsChecker(conditions = [], AND = true, model){
+export function conditionsChecker(conditions = [], AND = true, model, dataByPath = true){
   if(! conditions.length){
     return true;
   }
   let result = AND;
   _.each(conditions, c =>{
     if(AND){
-      result *= conditionChecker(c, model);
+      result *= conditionChecker(c, model, dataByPath);
     } else {
-      result += conditionChecker(c, model);
+      result += conditionChecker(c, model, dataByPath);
     }
   });
   return result;
@@ -252,16 +253,24 @@ export function conditionsChecker(conditions = [], AND = true, model){
  * Функция для проверки одного условия
  * @param c
  * @param {AltrpModel} model
+ * @param {boolean} dataByPath - брать ли данный из getDataByPath
  * @return {boolean}
  */
-function conditionChecker(c, model){
+function conditionChecker(c, model, dataByPath = true){
   let result = 0;
   const {
-     modelField,
      operator,
-     value,
   } = c;
-  return altrpCompare(model.getProperty(modelField), value, operator);
+  let {
+    modelField: left,
+    value
+  } = c;
+  if(dataByPath){
+    value = getDataByPath(value, '', model);
+    left = getDataByPath(left, '', model);
+    return altrpCompare(left, value, operator);
+  }
+  return altrpCompare(model.getProperty(left), value, operator);
   switch(operator){
     case 'empty':{
       return ! model.getProperty(modelField, '');
@@ -298,8 +307,9 @@ function conditionChecker(c, model){
  * @param {AltrpModel} context
  * @return {string}
  */
-export function getDataByPath(path, _default = null, context = null){
-  let {currentModel, currentDataStorage} = appStore.getState();
+export function getDataByPath(path = '', _default = null, context = null){
+  path = path.trim();
+  let {currentModel, currentDataStorage, altrpresponses, formsStore} = appStore.getState();
   if(context){
     currentModel = context;
   }
@@ -311,8 +321,13 @@ export function getDataByPath(path, _default = null, context = null){
   if(path.indexOf('altrpdata.') === 0){
     path = path.replace('altrpdata.', '');
     value = currentDataStorage.getProperty(path, _default)
-  } else if(path.indexOf('altrptime.') === 0){
+  } else if(path.indexOf('altrpresponses.') === 0){
+    path = path.replace('altrpresponses.', '');
+    value = altrpresponses.getProperty(path, _default)
+  }else if(path.indexOf('altrptime.') === 0){
     value = getTimeValue(path.replace('altrptime.',''));
+  }else if(path.indexOf('altrpforms.') === 0){
+    value = _.get(formsStore, path, _default);
   } else {
     value = urlParams[path] ? urlParams[path] : currentModel.getProperty(path, _default);
   }
@@ -373,7 +388,7 @@ export function mbParseJSON(string, _default = null){
  * @param operator
  * @return {boolean}
  */
-export function altrpCompare( leftValue = '', rightValue = '', operator = 'not_empty' ) {
+export function altrpCompare( leftValue = '', rightValue = '', operator = 'empty' ) {
   switch(operator){
     case 'empty':{
       return  _.isEmpty(leftValue,);
@@ -768,7 +783,7 @@ export function printElements(elements, title = ''){
   myWindow.document.write('</body></html>');
   myWindow.document.close(); // necessary for IE >= 10
   myWindow.focus(); // necessary for IE >= 10
-  // myWindow.print();
-  // myWindow.close();
+  myWindow.print();
+  myWindow.close();
   return true;
 }

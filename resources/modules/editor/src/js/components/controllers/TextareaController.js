@@ -38,10 +38,10 @@ class TextareaController extends Component {
       </div>
 
       {
-        this.state.dynamicValue ? '' : <div className="controller-container__dynamic" ref={this.dynamicButton} onClick={this.openDynamicContent}>
+        (this.props.dynamic !== false) && (this.state.dynamicValue ? '' : <div className="controller-container__dynamic" ref={this.dynamicButton} onClick={this.openDynamicContent}>
           Dynamic
             <DynamicIcon />
-        </div>
+        </div>)
       }
       {this.state.dynamicValue ? <div className="dynamic-placeholder control-field">
         <div className="dynamic-placeholder__text">

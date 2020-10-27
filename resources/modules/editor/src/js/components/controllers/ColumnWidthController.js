@@ -412,7 +412,8 @@ class ColumnsWidthController extends Component {
     }
     return <div className="altrp-control-structure" style={MainWrapper}>
       {
-        this.state.variants[this.props.currentElement.children.length - 1] && this.state.variants[this.props.currentElement.children.length - 1].map((variant, keyindex) => {
+        this.state.variants[this.props.currentElement.children.length - 1]
+        && this.state.variants[this.props.currentElement.children.length - 1].map((variant, keyindex) => {
           return <div className={this.state.currentActive === keyindex ? "altrp-control-structure-wrapper active" : "altrp-control-structure-wrapper"} style={StructureWrapper} key={keyindex} onClick={() => {this.handleClick(variant.value, keyindex)}}>
             <div className="altrp-control-structure-sizefield" style={Sizefield}>
               {

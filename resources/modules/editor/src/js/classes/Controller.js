@@ -4,6 +4,7 @@ import CONSTANTS from "../consts";
 import CSSRule from "../classes/CSSRule";
 import { changeTemplateStatus } from "../store/template-status/actions";
 import { controllerValue } from "../store/controller-value/actions";
+import RepeaterController from "../components/controllers/RepeaterController";
 
 /**
  * Класс-контроллер
@@ -106,6 +107,10 @@ class Controller {
       let negative = (controlId.indexOf('!') >= 0);
       controlId = controlId.replace('!', '');
       let _value = getCurrentElement().getSettings(controlId);
+      if((this.data.repeater) && (this.data.itemIndex !== undefined)){
+        let item = this.data.repeater.getItem(this.data.itemIndex);
+        _value = _.get(item, controlId);
+      }
       if(! _.isArray(_value)){
         _value = [_value];
       } else if(_value.length === 0){
