@@ -38,6 +38,9 @@ class StylesSettings extends Component {
     e.preventDefault();
     const data = new FormData();
     data.append("favicon", this.state.iconFile);
+    debugger
+    console.log(data.getAll("favicon"))
+
     new Resource({ route: '/admin/ajax/favicon' }).post(data)
       .then(res => {
         console.log(res)
