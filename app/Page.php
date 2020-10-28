@@ -435,7 +435,7 @@ class Page extends Model
       }
       $old_page = self::where( 'guid', $imported_page['guid'] )->first();
       if( $old_page ){
-        if( date( $imported_page['updated_at'] ) > date( $old_page->updated_at ) ) {
+        if( strtotime( $imported_page['updated_at'] ) > strtotime( $old_page->updated_at ) ) {
           $old_page->model_id = $model_id;
           $old_page->redirect = $imported_page['redirect'];
           $old_page->content = $imported_page['content'];

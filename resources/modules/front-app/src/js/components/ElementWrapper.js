@@ -17,7 +17,7 @@ class ElementWrapper extends Component {
     };
     this.elementWrapperRef = React.createRef();
     appStore.dispatch(addElement(this));
-    appStore.subscribe(this.updateStore);
+    // appStore.subscribe(this.updateStore);
   }
 
   /**
@@ -207,9 +207,9 @@ class ElementWrapper extends Component {
           element: this.props.element,
           children: this.props.element.getChildren(),
           match: this.props.match,
-          currentModel: this.state.currentModel,
-          currentUser: this.state.currentUser,
-          currentDataStorage: this.state.currentDataStorage,
+          currentModel: this.props.currentModel,
+          currentUser: this.props.currentUser,
+          currentDataStorage: this.props.currentDataStorage,
           altrpresponses: this.props.altrpresponses,
           formsStore: this.props.formsStore,
           elementDisplay: this.state.elementDisplay,
@@ -225,6 +225,9 @@ function mapStateToProps(state) {
     hideTriggers: state.hideTriggers,
     altrpresponses: state.altrpresponses,
     formsStore: state.formsStore,
+    currentDataStorage: state.currentDataStorage,
+    currentModel: state.currentModel,
+    currentUser: state.currentUser,
   };
 }
 

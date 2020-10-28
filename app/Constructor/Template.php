@@ -66,7 +66,7 @@ class Template extends Model
     foreach ( $imported_templates as $imported_template ) {
       $old_template = self::where( 'guid', $imported_template['guid'] )->first();
       if( $old_template ){
-        if( date( $imported_template['updated_at'] ) > date( $old_template->updated_at ) ) {
+        if( strtotime( $imported_template['updated_at'] ) > strtotime( $old_template->updated_at ) ) {
           $old_template->data = $imported_template['data'];
           $old_template->all_site = $imported_template['all_site'];
           try {

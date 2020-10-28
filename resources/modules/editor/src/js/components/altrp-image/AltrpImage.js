@@ -9,7 +9,6 @@ class AltrpImage extends Component {
     media.name = media.name || 'null';
     media.assetType = media.assetType || undefined;
 
-    console.log(this.props);
 
     let image = (
       renderAsset(media, {
