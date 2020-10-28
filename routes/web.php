@@ -347,6 +347,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     } );
   });
 
+    /**
+     * Роут для загрузки favicon
+     */
+    Route::post( '/favicon', 'Admin\FileUploadController@loadFavicon' );
 
 });
 
