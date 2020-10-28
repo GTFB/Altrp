@@ -171,8 +171,8 @@ class InputWidget extends Component {
     try {
       content_calculation = content_calculation.replace(/}}/g,'\')').replace(/{{/g,'_.get(context, \'');
       value = eval(content_calculation);
-      console.log(value);
-      console.log(this.state.value);
+      // console.log(value);
+      // console.log(this.state.value);
       if(value === this.state.value){
         return;
       }

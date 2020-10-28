@@ -10,7 +10,6 @@ class AltrpPosts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      posts: _.isArray(props.data) ?  props.data : [],
       simpleTemplate: '',
       simpleTemplateId : null
     }
@@ -26,18 +25,39 @@ class AltrpPosts extends React.Component {
       if(! simpleTemplateId){
         return;
       }
-      let template = await templateLoader.loadParsedTemplate(simpleTemplateId);
-      this.setState(state=>({...state, simpleTemplate:template, simpleTemplateId}))
+      this.setState(state=>({...state, simpleTemplateId}), async()=>{
+        let template = await templateLoader.loadParsedTemplate(simpleTemplateId);
+        this.setState(state=>({...state, simpleTemplate:template}))
+      });
     }
   }
 
   /**
+   * Когда нужно робновлять компонент
+   * @param {{}} nextProps
+   * @param {{}} nextState
+   */
+  shouldComponentUpdate(nextProps, nextState){
+    if(! _.isEqual(this.state.simpleTemplate, nextState.simpleTemplate)){
+      return true;
+    }
+    if(! _.isEqual(this.state.simpleTemplateId, nextState.simpleTemplateId)){
+      return true;
+    }
+    if(! _.isEqual(this.props.posts, nextProps.posts)){
+      return true;
+    }
+    return false;
+  }
+  /**
    * Компонент обновился
+   * @param {{}} prevProps
    */
   async componentDidUpdate(prevProps) {
     const{settings} = this.props;
     const{simpleTemplateId} = this.state;
     const newSimpleTemplateId = _.get(settings, 'posts_card_template', simpleTemplateId);
+    if(prevProps.posts !== this.state.posts)
     if(! _.isEqual(prevProps.data, this.props.data)){
       this.setState(state =>({...state, posts: this.props.data}));
     }
@@ -45,8 +65,10 @@ class AltrpPosts extends React.Component {
       if(! newSimpleTemplateId){
         return;
       }
-      let template = await templateLoader.loadParsedTemplate(newSimpleTemplateId);
-      this.setState(state=>({...state, simpleTemplate:template, simpleTemplateId: newSimpleTemplateId}))
+      this.setState(state=>({...state, simpleTemplateId: newSimpleTemplateId}),async ()=>{
+        let template = await templateLoader.loadParsedTemplate(newSimpleTemplateId);
+        this.setState(state=>({...state, simpleTemplate:template}));
+      });
     }
   }
 
@@ -55,7 +77,7 @@ class AltrpPosts extends React.Component {
    * @param {integer} idx - индекс в массиве записей
    */
   renderPost(idx){
-    let post = _.cloneDeep(this.state.posts[idx]);
+    let post = _.cloneDeep(this.props.data[idx] || this.props.data);
     let PostContentComponent = post.component || <h2>{post.title || post.id || ''}</h2>;
     if(this.state.simpleTemplate){
       let template = frontElementsFabric.cloneElement(this.state.simpleTemplate);
@@ -70,12 +92,18 @@ class AltrpPosts extends React.Component {
   }
 
   render() {
-
-  return<div className="altrp-posts">
-    {this.state.posts.map((p, idx)=>{
-      return this.renderPost(idx);
-    })}
-  </div>
+    let {data: posts} = this.props;
+    if((! _.isArray(posts)) && _.isObject(posts)){
+      posts = [posts];
+    }
+    if(! _.isArray(posts)){
+      posts = [];
+    }
+    return<div className="altrp-posts">
+      {posts.map((p, idx)=>{
+        return this.renderPost(idx);
+      })}
+    </div>
   }
 }
 

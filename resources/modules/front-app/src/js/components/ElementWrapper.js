@@ -9,13 +9,16 @@ class ElementWrapper extends Component {
   constructor(props){
     super(props);
     this.state = {
-      currentModel: appStore.getState().currentModel,
-      currentUser: appStore.getState().currentUser,
-      currentDataStorage: appStore.getState().currentDataStorage,
-      altrpresponses: appStore.getState().altrpresponses,
+      // currentModel: appStore.getState().currentModel,
+      // currentUser: appStore.getState().currentUser,
+      // currentDataStorage: appStore.getState().currentDataStorage,
+      // altrpresponses: appStore.getState().altrpresponses,
       elementDisplay: true,
     };
     this.elementWrapperRef = React.createRef();
+    // console.log(props.element.getName());
+    // console.error(window._i = window._i ? ++window._i  : 1);
+
     appStore.dispatch(addElement(this));
     // appStore.subscribe(this.updateStore);
   }
@@ -102,8 +105,6 @@ class ElementWrapper extends Component {
         element.getSettings('conditional_other_display') === 'AND',
         this.props.element.getCurrentModel(), true);
 
-    console.log(elementDisplay);
-    console.log(this.props.element.getName());
     if(this.state.elementDisplay === elementDisplay){
       return;
     }
