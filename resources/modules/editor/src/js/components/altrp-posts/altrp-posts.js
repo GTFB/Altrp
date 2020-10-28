@@ -44,13 +44,13 @@ class AltrpPosts extends React.Component {
     if(! _.isEqual(this.state.simpleTemplateId, nextState.simpleTemplateId)){
       return true;
     }
-    if(! _.isEqual(this.props.posts, nextProps.posts)){
+    if(! _.isEqual(this.props.data, nextProps.data)){
       return true;
     }
     return false;
   }
   /**
-   * Компонент обновился
+   * Компонент обновилсяdata
    * @param {{}} prevProps
    */
   async componentDidUpdate(prevProps) {
