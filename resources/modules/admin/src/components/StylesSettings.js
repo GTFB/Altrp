@@ -38,9 +38,11 @@ class StylesSettings extends Component {
     e.preventDefault();
     const data = new FormData();
     data.append("favicon", this.state.iconFile);
-
     new Resource({ route: '/admin/ajax/favicon' }).post(data)
-      .then(() => alert("Icon successfully  uploaded."));
+      .then(res => {
+        console.log(res)
+        alert("Icon successfully  uploaded.");
+      });
   }
 
   render() {
@@ -65,7 +67,7 @@ class StylesSettings extends Component {
           </tr>
         </tbody>
       </table>
-      <form>
+      <form onSubmit={this.submitHandler}>
         <legend>Add Favicon</legend>
         <div className={this.state.uploaderClasses}
           onDragLeave={this.onDragLeave}
