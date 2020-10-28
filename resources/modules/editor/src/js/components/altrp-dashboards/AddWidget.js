@@ -38,6 +38,8 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
       options: JSON.stringify(widget.options),
       filter: JSON.stringify(widget.filter),
     };
+    console.log('ON SAVE =>', JSON.stringify(widget.options),
+      JSON.stringify(widget.filter));
     const req = await axios.post(`/ajax/dashboards/${id}`, data);
     if (req.status === 200) {
       onAdd(req.data);

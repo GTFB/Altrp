@@ -41,8 +41,10 @@ class LinkController extends Component {
    */
   changeTag(e) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
-    value.tag = e.target.value;
-    this._changeValue(value);
+    this._changeValue({
+      ...value,
+      tag: e.target.value
+    });
   }
   settings() {
     let settings = document.getElementById("settings");
@@ -52,7 +54,7 @@ class LinkController extends Component {
   toggleSettingsNewPage() {
     let toggleSettingsNewPageCheckbox = document.getElementById("toggleSettingsNewPageCheckbox");
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
-    let changeCheckBox = togglesettingsNoFollowCheckbox.hasAttribute("checked")
+    let changeCheckBox = toggleSettingsNewPageCheckbox.hasAttribute("checked");
     if (toggleSettingsNewPageCheckbox.hasAttribute("checked") == false) {
       this._changeValue({
 
@@ -71,20 +73,20 @@ class LinkController extends Component {
 
   toggleSettingsNoFollow() {    //TODO: надо порефакторить
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
-    let togglesettingsNoFollowCheckbox = document.getElementById("togglesettingsNoFollowCheckbox")
-    let changeCheckBox = togglesettingsNoFollowCheckbox.hasAttribute("checked")
+    let togglesettingsNoFollowCheckbox = document.getElementById("togglesettingsNoFollowCheckbox");
+    let changeCheckBox = togglesettingsNoFollowCheckbox.hasAttribute("checked");
     if (changeCheckBox == false) {
-      
+
       this._changeValue({
         ...value,
-        noFollow: changeCheckBox
+        noFollow: true
       });
       togglesettingsNoFollowCheckbox.setAttribute("checked", "checked");
     } else {
       togglesettingsNoFollowCheckbox.removeAttribute("checked");
       this._changeValue({
         ...value,
-        noFollow: changeCheckBox
+        noFollow: false
       })
     }
 
@@ -117,7 +119,7 @@ class LinkController extends Component {
   }
 
   getDefaultValue() {
-    return '';
+    return "";
   }
 
   render() {
@@ -130,12 +132,12 @@ class LinkController extends Component {
         <div className="controller-container__label">{this.props.label}</div>
       </div>
       <div className="control-link-input-wrapper">
-        <input 
-          onChange={this.changeInput} 
-          value={value.toPrevPage ? 'На предыдущую страницу' : value.url || ''} 
-          type="text" 
-          className="control-link" 
-          placeholder="введите ссылку" 
+        <input
+          onChange={this.changeInput}
+          value={value.toPrevPage ? 'На предыдущую страницу' : value.url || ''}
+          type="text"
+          className="control-link"
+          placeholder="введите ссылку"
         />
         <div className="control-link-settings control-link-button" onClick={this.settings}>
           {/* тут есть проблема с размерами, просто нужно убрать width и height в самой svg но есть одна проблема*/}
@@ -165,10 +167,10 @@ class LinkController extends Component {
           <label className="settings-checkbox__label">Добавить nofollow</label>
         </div>
         <div className="settings-checkbox-option">
-          <input 
-            checked={value.toPrevPage} 
-            id="toPrevPage" type="checkbox" 
-            className="settings-checkbox" 
+          <input
+            checked={value.toPrevPage}
+            id="toPrevPage" type="checkbox"
+            className="settings-checkbox"
             onChange={this.toggleSettingsToPrevPage}
           />
           <span className="settings-checkbox-container" />

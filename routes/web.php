@@ -367,7 +367,7 @@ $frontend_routes = \App\Page::get_frontend_routes();
 
 Route::get('/', function () {
 
-  return view('front-app');
+  return view('front-app', ['title'=> 'Main']);
 })->middleware( ['web', 'installation.checker'] );
 
 foreach ( $frontend_routes as $frontend_route ) {

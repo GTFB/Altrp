@@ -1,21 +1,21 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 
 class Tooltip extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
 
     }
   }
 
-  render(){
+  render() {
     let styles = "altrp-tooltip ";
-    if(this.props.active == false) {
-        styles += "altrp-tooltip-none"
+    if (this.props.active == false) {
+      styles += "altrp-tooltip-none"
     }
     let tooltip = null;
-    if(this.props.switch) {
-        tooltip = <span className={styles}>{this.props.label}</span>;
+    if (this.props.switch) {
+      tooltip = <span className={styles}>{this.props.label}</span>;
     }
     return tooltip;
   }

@@ -43,6 +43,7 @@
     "moment": "^2.27.0",
     "passport": "^0.4.1",
     "query-string": "^6.13.1",
+    "rc-drawer": "^4.1.0",
     "react": "^16.13.1",
     "react-ace": "^8.1.0",
     "react-bootstrap": "^1.1.1",
@@ -75,6 +76,7 @@
     "react-tabs": "^3.1.1",
     "react-text-mask": "^5.4.3",
     "react-to-print": "^2.10.0",
+    "reactour": "^1.18.0",
     "reaviz": "^8.1.8",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
@@ -83,6 +85,7 @@
     "session-file-store": "^1.4.0",
     "slick-carousel": "^1.8.1",
     "style-object-to-css-string": "^1.0.1",
+    "styled-components": "^4.0.0",
     "text-mask-addons": "^3.8.0",
     "tinymce": "^5.4.1"
   },

@@ -1,26 +1,20 @@
 import React, {Component} from "react";
-import HorizontalVeticalMenu from "./HorizontalVeticalMenu";
-import DropdownMenu from "./DropdownMenu";
+import HorizontalVeticalMenu from "./horizontalVertical/HorizontalVeticalMenu";
+import DropdownMenu from "./dropdown/DropdownMenu";
 
 import "./altrp-menu.scss";
 
 class AltrpMenu extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-
-    }
-  }
 
   render() {
     let content = <div>create menu</div>;
+    let settings = this.props.element.getSettings();
 
-    if(this.props.settings.repeater_menu_layout) {
-      content = this.props.settings.menu_layout !== "dropdown" ?
-        <HorizontalVeticalMenu settings={this.props.settings}/>
+    if(settings.repeater_menu_layout) {
+      content = settings.menu_layout !== "dropdown" ?
+        <HorizontalVeticalMenu settings={settings} idElement={this.props.element.getId()}/>
         :
-        <DropdownMenu settings={this.props.settings}/>
+        <DropdownMenu settings={settings} idElement={this.props.element.getId()}/>
     }
     return (
       <div className="altrp-nav-menu">

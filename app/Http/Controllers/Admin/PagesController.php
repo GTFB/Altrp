@@ -33,15 +33,15 @@ class PagesController extends Controller
     $pages = [];
     foreach ( $_pages as $page ) {
 
-      $content_template = $page->get_content_template();
+//      $content_template = $page->get_content_template();
       $pages[] = [
         'user' => $page->user,
         'title' => $page->title,
         'id' => $page->id,
         'parent_page_id' => $page->parent_page_id,
         'author' => $page->user->name,
-        'template_content' => $content_template,
-        'template_content_title' => $content_template ? $content_template->title : '',
+//        'template_content' => $content_template,
+//        'template_content_title' => $content_template ? $content_template->title : '',
         'url' => \url( $page->path ),
         'editUrl' => '/admin/pages/edit/' . $page->id,
         'path' => $page->path,

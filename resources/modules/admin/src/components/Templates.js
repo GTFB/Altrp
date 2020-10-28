@@ -156,10 +156,7 @@ export default class Templates extends Component{
             });
           }
           // let res = await this.templateImportModule.importTemplate(importedTemplateData)
-          console.log(this.resource);
-          console.log(importedTemplateData);
-          let res = this.resource.post(importedTemplateData);
-          console.log(res);
+          let res = await this.resource.post(importedTemplateData);
         };
 
         fr.readAsText(f);

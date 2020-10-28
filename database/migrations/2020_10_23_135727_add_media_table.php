@@ -16,7 +16,7 @@ class AddMediaTable extends Migration
         $table = new \App\Altrp\Table([
             'name' => 'media',
             'title' => 'Media',
-            'preset' => true
+            'preset' => 1
         ]);
         \App\Altrp\Table::withoutEvents(function () use ($table) {
             $table->save();
@@ -31,7 +31,7 @@ class AddMediaTable extends Migration
             'soft_deletes' => 0,
             'time_stamps' => 0,
             'pk' => 'id',
-            'preset' => true,
+            'preset' => 1,
         ]);
         \App\Altrp\Model::withoutEvents(function () use ($model) {
             $model->save();
@@ -41,7 +41,7 @@ class AddMediaTable extends Migration
             'name' => 'id',
             'title' => 'ID',
             'type' => 'bigInteger',
-            'preset' => true,
+            'preset' => 1,
             'table_id' => $table->id,
             'indexed' => true,
         ]);

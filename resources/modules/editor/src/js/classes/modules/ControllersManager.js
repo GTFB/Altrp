@@ -22,12 +22,13 @@ import RepetaerController from "../../components/controllers/RepeaterController"
 import QueryController from "../../components/controllers/QueryController";
 import FiltersController from "../../components/controllers/FiltersController";
 import ColumnWidthController from "../../components/controllers/ColumnWidthController";
-import GradientController from  "../../components/controllers/GradientController";
+import GradientController from "../../components/controllers/GradientController";
 import CreativeLinkController from "../../components/controllers/CreativeLinkController";
 import CreativeHoverController from "../../components/controllers/CreativeHoverController";
 import SqlSelectController from "../../components/controllers/SqlSelectController";
 import SqlAsParamsController from "../../components/controllers/SqlAsParamsController";
 import EventSelectController from "../../components/controllers/EventSelectController";
+import ElementChooseController from "../../components/controllers/ElementChooseController";
 
 export const TAB_CONTENT = "content";
 export const TAB_STYLE = "style";
@@ -61,6 +62,7 @@ export const CONTROLLER_SQL_PARAMS = "sql-params";
 export const CONTROLLER_CREATIVE_LINK = 'creative-link';
 export const CONTROLLER_CREATIVE_HOVER = 'creative-hover';
 export const CONTROLLER_EVENT_HANDLER = "event-handler";
+export const CONTROLLER_ELEMENTS = 'elements';
 
 class ControllersManager {
   constructor() {
@@ -94,6 +96,7 @@ class ControllersManager {
     this.conttrollers[CONTROLLER_SQL] = SqlSelectController;
     this.conttrollers[CONTROLLER_SQL_PARAMS] = SqlAsParamsController;
     this.conttrollers[CONTROLLER_EVENT_HANDLER] = EventSelectController;
+    this.conttrollers[CONTROLLER_ELEMENTS] = ElementChooseController;
     this.elementsControls = null;
     this._cache = {
       controls: {},

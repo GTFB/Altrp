@@ -19,6 +19,7 @@ import MapConstructorWidget from "../../../../editor/src/js/components/widgets/M
 import DiagramWidget from "../../../../editor/src/js/components/widgets/DiagramWidget";
 import DashboardsWidget from "../../../../editor/src/js/components/widgets/DashboardsWidget";
 import PostsWidget from "../../../../editor/src/js/components/widgets/PostsWidget";
+import TourGuide from "../../../../editor/src/js/components/widgets/TourGuide";
 
 export default class FrontElementsManager {
   constructor() {
@@ -45,6 +46,7 @@ export default class FrontElementsManager {
     this.components["map_builder"] = MapConstructorWidget;
     this.components["diagram"] = DiagramWidget;
     this.components["dashboards"] = DashboardsWidget;
+    this.components["tour"] = TourGuide;
   }
 
   getComponentClass(name) {

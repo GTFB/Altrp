@@ -18,7 +18,7 @@ class NavWidget extends Component {
 
     switch (this.state.settings.type_type) {
       case "menu":
-        content = <AltrpMenu settings={this.state.settings}/>;
+        content = <AltrpMenu element={this.props.element}/>;
         break
     }
 

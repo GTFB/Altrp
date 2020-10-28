@@ -66,27 +66,27 @@ class Button extends BaseElement{
       ],
     });
 
-    this.addControl('popup_trigger_type', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Popup trigger',
-    });
-
-    this.addControl("popup_id", {
-      type: CONTROLLER_SELECT2,
-      prefetch_options: true,
-      label: "Popup ID",
-      isClearable: true,
-      options_resource: '/admin/ajax/templates/options?template_type=popup&value=guid',
-      nullable: true,
-      conditions: {
-        'popup_trigger_type': true,
-      },
-    });
-
-    this.addControl('hide_elements_trigger', {
-      type: CONTROLLER_TEXT,
-      label: 'Hide Elements Trigger'
-    });
+    // this.addControl('popup_trigger_type', {
+    //   type: CONTROLLER_SWITCHER,
+    //   label: 'Popup trigger',
+    // });
+    //
+    // this.addControl("popup_id", {
+    //   type: CONTROLLER_SELECT2,
+    //   prefetch_options: true,
+    //   label: "Popup ID",
+    //   isClearable: true,
+    //   options_resource: '/admin/ajax/templates/options?template_type=popup&value=guid',
+    //   nullable: true,
+    //   conditions: {
+    //     'popup_trigger_type': true,
+    //   },
+    // });
+    //
+    // this.addControl('hide_elements_trigger', {
+    //   type: CONTROLLER_TEXT,
+    //   label: 'Hide Elements Trigger'
+    // });
 
     this.endControlSection();
 
@@ -219,6 +219,14 @@ class Button extends BaseElement{
         {
           value: 'scroll_to_element',
           label: 'Scroll to Element',
+        },
+        {
+          value: 'scroll_to_top',
+          label: 'Scroll to Top',
+        },
+        {
+          value: 'scroll_to_bottom',
+          label: 'Scroll to Bottom',
         },
         {
           value: 'redirect',

@@ -16,7 +16,7 @@ import {
   CONTROLLER_COLOR,
   TAB_CONTENT,
   TAB_STYLE,
-  TAB_ADVANCED, CONTROLLER_LINK, CONTROLLER_SWITCHER
+  TAB_ADVANCED, CONTROLLER_LINK, CONTROLLER_SWITCHER, CONTROLLER_MEDIA
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 
@@ -391,6 +391,16 @@ class Nav extends BaseElement{
     //   label: 'Full width',
     // });
 
+    this.addControl('icon_dropdown_menu_layout', {
+      type: CONTROLLER_MEDIA,
+      label: 'Icon',
+    });
+
+    this.addControl('active_icon_dropdown_menu_layout', {
+      type: CONTROLLER_MEDIA,
+      label: 'Active icon',
+    });
+
     this.addControl('align_dropdown_menu_layout', {
       type: CONTROLLER_CHOOSE,
       label: "Align",
@@ -532,6 +542,22 @@ class Nav extends BaseElement{
       }
     });
 
+    this.addControl("dropdown_indicator_space_main_menu_style", {
+      type: CONTROLLER_SLIDER,
+      label: 'dropdown indicator space',
+      default:{
+        size: "1",
+        unit: 'px',
+      },
+      max: 50,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link-icon{{STATE}}": [
+          "margin-left: {{SIZE}}{{UNIT}}",
+        ]
+      }
+    });
+
     this.addControl("pointer_heading_main_menu_style", {
       type: CONTROLLER_HEADING,
       label: "Pointer"
@@ -563,6 +589,46 @@ class Nav extends BaseElement{
       }
     });
 
+    this.addControl("chevron_heading_main_menu_style", {
+      type: CONTROLLER_HEADING,
+      label: "Chevron"
+    });
+
+    this.addControl('chevron_media_main_menu_style', {
+      type: CONTROLLER_MEDIA,
+      label: 'Choose chevron',
+    });
+
+    this.addControl("chevron_rotate_main_menu_style", {
+      type: CONTROLLER_SLIDER,
+      label: "Rotate",
+      default: {
+        size: -180,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      max: 360,
+      min: -360,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}} .altrp-nav-menu-li-link-icon": "transform: rotate({{SIZE}}deg)"
+      }
+    });
+
+    this.addControl("chevron_rotate_dropdown_main_menu_style", {
+      type: CONTROLLER_SLIDER,
+      label: "Dropdown Rotate",
+      default: {
+        size: 90,
+        unit: "deg"
+      },
+      max: 360,
+      min: -360,
+      rules: {
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon": "transform: rotate({{SIZE}}deg)",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon": "transform: rotate({{SIZE}}deg)"
+      }
+    });
+
     this.endControlSection();
 
     this.startControlSection('dropdown_hor_ver_menu_section', {
@@ -582,7 +648,7 @@ class Nav extends BaseElement{
           decoration: ""
         },
         rules: {
-          '{{ELEMENT}} .altrp-nav-menu-li-dropdown-hor-ver-link-label{{STATE}}': [
+          '.{{ID}}-altrp-portal .altrp-nav-menu-li-dropdown-hor-ver-link-label{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -604,8 +670,8 @@ class Nav extends BaseElement{
         colorPickedHex: "",
       },
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}} .altrp-nav-menu-li-dropdown-hor-ver-link-label": "color: {{COLOR}};",
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon path": [
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}} .altrp-nav-menu-li-dropdown-hor-ver-link-label": "color: {{COLOR}};",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon path": [
           "stroke: {{COLOR}};",
         ]
       }
@@ -619,7 +685,20 @@ class Nav extends BaseElement{
         colorPickedHex: "",
       },
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}}": "background: {{COLOR}};"
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}}": "background: {{COLOR}};"
+      }
+    });
+
+    this.addControl("width_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default:{
+        unit: 'px',
+      },
+      max: 300,
+      min: 0,
+      rules: {
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}}": "width: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -653,7 +732,7 @@ class Nav extends BaseElement{
           },
         ],
         rules: {
-          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
+          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
         },
       }
     );
@@ -670,7 +749,7 @@ class Nav extends BaseElement{
           'vh',
         ],
         rules: {
-          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         },
       }
     );
@@ -683,7 +762,7 @@ class Nav extends BaseElement{
           colorPickedHex: "",
         },
         rules: {
-          '{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-color: {{COLOR}};',
+          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-color: {{COLOR}};',
         },
       }
     );
@@ -700,9 +779,487 @@ class Nav extends BaseElement{
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li:first-child{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} 0 0",
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li:last-child{{STATE}}": "border-radius: 0 0 {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li:first-child{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} 0 0",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li:last-child{{STATE}}": "border-radius: 0 0 {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+      }
+    });
+
+    // this.addControl("horizontal_padding_dropdown_hor_ver_menu_section", {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Horizontal padding',
+    //   default:{
+    //     size: "15",
+    //     unit: 'px',
+    //   },
+    //   max: 50,
+    //   min: 0,
+    //   rules: {
+    //     "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
+    //       "padding-left: {{SIZE}}{{UNIT}}",
+    //       "padding-right: {{SIZE}}{{UNIT}}"
+    //     ]
+    //   }
+    // });
+    //
+    // this.addControl("vertical_padding_dropdown_hor_ver_menu_section", {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Vertical padding',
+    //   default:{
+    //     size: "10",
+    //     unit: 'px',
+    //   },
+    //   max: 50,
+    //   min: 0,
+    //   rules: {
+    //     "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
+    //       "padding-top: {{SIZE}}{{UNIT}}",
+    //       "padding-bottom: {{SIZE}}{{UNIT}}"
+    //     ]
+    //   }
+    // });
+
+    this.addControl("submenu_indicator_space_main_menu_style", {
+      type: CONTROLLER_SLIDER,
+      label: 'submenu indicator space',
+      default:{
+        size: "1",
+        unit: 'px',
+      },
+      max: 50,
+      min: 0,
+      rules: {
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon{{STATE}}": "margin-left: {{SIZE}}{{UNIT}}",
+      }
+    });
+
+    this.addControl("distance_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Distance',
+      default:{
+        size: "0",
+        unit: 'px',
+      },
+      max: 100,
+      min: -100,
+      rules: {
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}": "margin-top: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("heading_submenu_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_HEADING,
+      label: "Submenu"
+    });
+
+    this.addControl('typographic_submenu_dropdown_hor_ver_menu_section', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default:{
+          lineHeight: 1.5,
+          spacing: 0,
+          size: 15,
+          weight: "normal",
+          family: "Open Sans",
+          decoration: ""
+        },
+        rules: {
+          '.{{ID}}-altrp-portal .altrp-nav-menu-li-dropdown-children-hor-ver-link-label{{STATE}}': [
+            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
+    this.addControl("text_color_submenu_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}} .altrp-nav-menu-li-dropdown-children-hor-ver-link-label": "color: {{COLOR}};",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li-link-icon path": [
+          "stroke: {{COLOR}};",
+        ]
+      }
+    });
+
+    this.addControl("background_color_submenu_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}}": "background: {{COLOR}};"
+      }
+    });
+
+    this.addControl("width_submenu_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default:{
+        unit: 'px',
+      },
+      max: 300,
+      min: 0,
+      rules: {
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}}": "width: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl('border_type_submenu_dropdown_hor_ver_menu_section', {
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options:[
+          {
+            'value' : 'none',
+            'label' : 'None',
+          },
+          {
+            'value' : 'solid',
+            'label' : 'Solid',
+          },
+          {
+            'value' : 'double',
+            'label' : 'Double',
+          },
+          {
+            'value' : 'dotted',
+            'label' : 'Dotted',
+          },
+          {
+            'value' : 'dashed',
+            'label' : 'Dashed',
+          },
+          {
+            'value' : 'groove',
+            'label' : 'Groove',
+          },
+        ],
+        rules: {
+          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
+        },
+      }
+    );
+
+    this.addControl('border_width_submenu_dropdown_hor_ver_menu_section', {
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        default: {
+          bind: true
+        },
+        units:[
+          'px',
+          '%',
+          'vh',
+        ],
+        rules: {
+          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        },
+      }
+    );
+
+    this.addControl('border_color_submenu_dropdown_hor_ver_menu_section', {
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+        default: {
+          color: "",
+          colorPickedHex: "",
+        },
+        rules: {
+          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-color: {{COLOR}};',
+        },
+      }
+    );
+
+    this.addControl("border-radius_submenu_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border radius",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-only{{STATE}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li:first-child": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} 0 0",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li:last-child": "border-radius: 0 0 {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+      }
+    });
+
+    // this.addControl("horizontal_padding_submenu_dropdown_hor_ver_menu_section", {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Horizontal padding',
+    //   default:{
+    //     size: "15",
+    //     unit: 'px',
+    //   },
+    //   max: 50,
+    //   min: 0,
+    //   rules: {
+    //     "{{ELEMENT}} .altrp-nav-menu-li-dropdown-children-hor-ver-li-link{{STATE}}": [
+    //       "padding-left: {{SIZE}}{{UNIT}}",
+    //       "padding-right: {{SIZE}}{{UNIT}}"
+    //     ]
+    //   }
+    // });
+    //
+    // this.addControl("vertical_submenu_dropdown_hor_ver_menu_section", {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Vertical padding',
+    //   default:{
+    //     size: "10",
+    //     unit: 'px',
+    //   },
+    //   max: 50,
+    //   min: 0,
+    //   rules: {
+    //     "{{ELEMENT}} .altrp-nav-menu-li-dropdown-children-hor-ver-li-link{{STATE}}": [
+    //       "padding-top: {{SIZE}}{{UNIT}}",
+    //       "padding-bottom: {{SIZE}}{{UNIT}}"
+    //     ]
+    //   }
+    // });
+
+    this.addControl("distance_submenu_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Distance',
+      default:{
+        size: "0",
+        unit: 'px',
+      },
+      max: 100,
+      min: -100,
+      rules: {
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}": "margin-right: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("heading_divider_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_HEADING,
+      label: "Divider"
+    });
+
+    this.addControl('switch_divider_dropdown_hor_ver_menu_section', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Switch divider',
+    });
+
+    this.addControl('type_divider_dropdown_hor_ver_menu_section', {
+      type: CONTROLLER_SELECT,
+      label: 'Divider type',
+      default: 'solid',
+      options: [
+        {
+          value: 'solid',
+          label: 'solid'
+        },
+        {
+          value: 'dotted',
+          label: 'dotted'
+        },
+        {
+          value: 'double',
+          label: 'double'
+        },
+        {
+          value: 'dashed',
+          label: 'dashed'
+        }
+      ],
+      rules: {
+        '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li-divider': 'border-top-style: {{VALUE}}'
+      },
+    });
+
+    this.addControl("height_divider_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Height',
+      default:{
+        size: "1",
+        unit: 'px',
+      },
+      max: 100,
+      min: 0,
+      rules: {
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li-divider{{STATE}}": "border-top-width: {{SIZE}}{{UNIT}}",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li:last-child .altrp-nav-menu-ul-dropdown-hor-ver-li-divider": "border-top: none",
+        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-ul .altrp-nav-menu-ul-dropdown-children-hor-ver-li:last-child .altrp-nav-menu-ul-dropdown-hor-ver-li-divider": "border-top: none"
+      }
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('dropdown_menu_section', {
+      tab: TAB_STYLE,
+      label: 'Dropdown',
+    });
+
+    this.addControl("text_color_dropdown_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "rgb(54,54,54)",
+        colorPickedHex: "#363636",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link-label{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("background_color_dropdown_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('typographic_dropdown_menu_section', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default:{
+          lineHeight: 1.2,
+          spacing: 0,
+          size: 16,
+          weight: "normal",
+          family: "Open Sans",
+          decoration: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-nav-menu-li-link-label': [
+            'font-family: "{{FAMILY}}", sans-serif;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
+    this.addControl("horizontal_padding_dropdown_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Horizontal padding',
+      default:{
+        size: 0,
+        unit: 'px',
+      },
+      units:[
+        'px',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}}": ["padding-left: {{SIZE}}{{UNIT}}", "padding-right: {{SIZE}}{{UNIT}}"]
+      }
+    });
+
+    this.addControl("vertical_padding_dropdown_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Vertical padding',
+      default:{
+        size: 0,
+        unit: 'px',
+      },
+      units:[
+        'px',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}}": ["padding-top: {{SIZE}}{{UNIT}}", "padding-bottom: {{SIZE}}{{UNIT}}"]
+      }
+    });
+
+    this.addControl("divider_heading_dropdown_menu_section", {
+      type: CONTROLLER_HEADING,
+      label: "Divider"
+    });
+
+    this.addControl('divider_switch_dropdown_menu_section', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Switch Divider',
+    });
+
+    this.addControl("divider_type_dropdown_menu_section", {
+      type: CONTROLLER_SELECT,
+      label: "Type",
+      options: [
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-content-divider{{STATE}}": "border-top-style: {{VALUE}};"
+      }
+    });
+
+    this.addControl("divider_color_dropdown_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-content-divider{{STATE}}": "border-top-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("divider_width_dropdown_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default:{
+        size: 0,
+        unit: 'px',
+      },
+      units:[
+        'px',
+      ],
+      max: 50,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-content-divider{{STATE}}": "border-top-width: {{SIZE}}{{UNIT}}"
       }
     });
 
