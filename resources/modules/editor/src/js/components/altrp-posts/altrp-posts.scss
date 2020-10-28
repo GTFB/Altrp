@@ -6,12 +6,19 @@
     }
   }
 }
+.altrp-post{
+  width: 100%;
+}
 .altrp-post > .sections-wrapper{
   width: auto;
   & .altrp-section{
     width: 100%;
   }
 }
-.altrp-posts .altrp-post .altrp-section--boxed > .altrp-element.altrp-element_column{
-  width: 100%;
+.altrp-posts .altrp-post .altrp-section--boxed {
+  padding-left: 0;
+  padding-right: 0;
+  & > .altrp-element.altrp-element_column {
+    width: 100%;
+  }
 }

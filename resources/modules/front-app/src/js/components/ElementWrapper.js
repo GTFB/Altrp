@@ -9,15 +9,18 @@ class ElementWrapper extends Component {
   constructor(props){
     super(props);
     this.state = {
-      currentModel: appStore.getState().currentModel,
-      currentUser: appStore.getState().currentUser,
-      currentDataStorage: appStore.getState().currentDataStorage,
-      altrpresponses: appStore.getState().altrpresponses,
+      // currentModel: appStore.getState().currentModel,
+      // currentUser: appStore.getState().currentUser,
+      // currentDataStorage: appStore.getState().currentDataStorage,
+      // altrpresponses: appStore.getState().altrpresponses,
       elementDisplay: true,
     };
     this.elementWrapperRef = React.createRef();
+    // console.log(props.element.getName());
+    // console.error(window._i = window._i ? ++window._i  : 1);
+
     appStore.dispatch(addElement(this));
-    appStore.subscribe(this.updateStore);
+    // appStore.subscribe(this.updateStore);
   }
 
   /**
@@ -102,8 +105,6 @@ class ElementWrapper extends Component {
         element.getSettings('conditional_other_display') === 'AND',
         this.props.element.getCurrentModel(), true);
 
-    console.log(elementDisplay);
-    console.log(this.props.element.getName());
     if(this.state.elementDisplay === elementDisplay){
       return;
     }
@@ -211,9 +212,9 @@ class ElementWrapper extends Component {
           element: this.props.element,
           children: this.props.element.getChildren(),
           match: this.props.match,
-          currentModel: this.state.currentModel,
-          currentUser: this.state.currentUser,
-          currentDataStorage: this.state.currentDataStorage,
+          currentModel: this.props.currentModel,
+          currentUser: this.props.currentUser,
+          currentDataStorage: this.props.currentDataStorage,
           altrpresponses: this.props.altrpresponses,
           formsStore: this.props.formsStore,
           elementDisplay: this.state.elementDisplay,
@@ -229,6 +230,9 @@ function mapStateToProps(state) {
     hideTriggers: state.hideTriggers,
     altrpresponses: state.altrpresponses,
     formsStore: state.formsStore,
+    currentDataStorage: state.currentDataStorage,
+    currentModel: state.currentModel,
+    currentUser: state.currentUser,
   };
 }
 
