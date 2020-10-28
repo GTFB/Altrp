@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {cloneElement, Component} from 'react';
 import {renderAsset} from "../../../../../front-app/src/js/helpers";
 
 class AltrpImage extends Component {
@@ -9,16 +9,12 @@ class AltrpImage extends Component {
     media.name = media.name || 'null';
     media.assetType = media.assetType || undefined;
 
-    console.log(this.props);
+    let image = renderAsset(media);
 
-    let image = (
-      renderAsset(media, {
-        className: this.props.className,
-        id: this.props.id,
-      })
-    );
-
-    return image
+    return cloneElement(image, {
+      className: this.props.className,
+      id: this.props.id || null,
+    })
   }
 }
 

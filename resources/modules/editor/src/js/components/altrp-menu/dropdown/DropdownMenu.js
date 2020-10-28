@@ -63,6 +63,21 @@ class DropdownMenu extends Component {
   render() {
     let list = this.state.list;
 
+    let classes = "altrp-nav-menu-dropdown";
+
+    switch (this.props.settings.align_dropdown_menu_layout) {
+      case "left":
+        classes += " altrp-nav-menu-dropdown-left";
+        break;
+      case "center":
+        classes += " altrp-nav-menu-dropdown-center";
+        break;
+      case "right":
+        classes += " altrp-nav-menu-dropdown-right";
+        break;
+      default:
+    }
+
     let iconButton = (
       <AltrpImage
         image={this.props.settings.icon_dropdown_menu_layout}
@@ -80,7 +95,7 @@ class DropdownMenu extends Component {
     }
 
     return (
-      <div className="altrp-nav-menu-dropdown">
+      <div className={classes}>
         <div className="altrp-nav-menu-dropdown-wrapper">
           <div className="altrp-nav-menu-dropdown-button" onClick={this.changeShow}>
             {

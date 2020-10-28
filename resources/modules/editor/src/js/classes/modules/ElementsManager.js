@@ -40,6 +40,8 @@ import MapConstructor from "../elements/MapConstructor";
 import Diagram from "../elements/Diagram";
 import Dashboards from "../elements/Dashboards";
 import PostsWidget from "../../components/widgets/PostsWidget";
+import IconWidget from "../../components/widgets/IconWidget";
+import Icon from "../elements/Icon";
 
 export default class ElementsManger {
   constructor() {
@@ -67,6 +69,7 @@ export default class ElementsManger {
     this.elements[MapConstructor.getName()] = MapConstructor;
     this.elements[Diagram.getName()] = Diagram;
     this.elements[Dashboards.getName()] = Dashboards;
+    this.elements[Icon.getName()] = Icon;
     //список компонентов
     this.components = {};
     this.components[RootElement.getName()] = RootComponent;
@@ -90,6 +93,7 @@ export default class ElementsManger {
     this.components[MapConstructor.getName()] = MapConstructorWidget;
     this.components[Diagram.getName()] = DiagramWidget;
     this.components[Dashboards.getName()] = DashboardsWidget;
+    this.components[Icon.getName()] = IconWidget;
   }
 
   getElements() {

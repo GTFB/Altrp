@@ -404,11 +404,11 @@ class Nav extends BaseElement{
     this.addControl('align_dropdown_menu_layout', {
       type: CONTROLLER_CHOOSE,
       label: "Align",
-      default: 'flex-start',
+      default: 'left',
       options:[
         {
           icon: 'left',
-          value: 'flex-start',
+          value: 'left',
         },
         {
           icon: 'center',
@@ -416,12 +416,9 @@ class Nav extends BaseElement{
         },
         {
           icon: 'right',
-          value: 'flex-end',
+          value: 'right',
         },
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-nav-menu-dropdown-content .altrp-nav-menu-li-link': "justify-content: {{VALUE}}",
-      },
     });
 
     this.addControl('toggle_align_dropdown_menu_layout', {
@@ -1260,6 +1257,65 @@ class Nav extends BaseElement{
       min: 0,
       rules: {
         "{{ELEMENT}} .altrp-nav-menu-dropdown-content-divider{{STATE}}": "border-top-width: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("chevron_heading_dropdown_menu_section", {
+      type: CONTROLLER_HEADING,
+      label: "Chevron"
+    });
+
+    this.addControl('chevron_dropdown_menu_section', {
+      type: CONTROLLER_MEDIA,
+      label: 'Choose chevron',
+    });
+
+    this.addControl("chevron_width_dropdown_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Size',
+      default:{
+        size: 25,
+        unit: 'px',
+      },
+      units:[
+        'px',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link-chevron-dropdown{{STATE}}": [
+          "width: {{SIZE}}{{UNIT}}",
+          "height: {{SIZE}}{{UNIT}}"
+        ]
+      }
+    });
+
+    this.addControl("chevron_color_dropdown_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link-chevron-dropdown{{STATE}} path, svg": "fill: {{COLOR}};"
+      }
+    });
+
+    this.addControl("chevron_rotate_dropdown_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Rotate',
+      default:{
+        size: 0,
+        unit: 'deg',
+      },
+      units:[
+        'deg',
+      ],
+      max: 360,
+      min: -360,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link-chevron-dropdown{{STATE}}": "transform: rotate({{SIZE}}deg)",
       }
     });
 
