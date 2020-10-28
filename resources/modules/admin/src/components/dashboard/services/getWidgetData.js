@@ -13,7 +13,13 @@ export const queryString = (obj = {}) => {
 };
 
 export const getWidgetData = async (url, filter) => {
-  const params = queryString(filter);
+  let params = null;
+  if (typeof filter === 'object') {
+    params = queryString(filter);
+  }
+  else {
+    params = queryString(JSON.parse(filter));
+  }
   try {
     return await axios(url + params, {
       headers: [

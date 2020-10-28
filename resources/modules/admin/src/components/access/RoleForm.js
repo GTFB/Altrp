@@ -9,7 +9,7 @@ class RoleForm extends Component {
     name: '',
     display_name: '',
     description: ''
-  }
+  };
 
   async componentDidMount() {
     const { id } = this.props.match.params;
@@ -21,13 +21,13 @@ class RoleForm extends Component {
 
   changeHandler = ({ target: { value, name } }) => {
     this.setState({ [name]: value });
-  }
+  };
 
   deleteHandler = () => {
     const { id } = this.props.match.params;
     rolesResource.delete(id)
       .then(() => this.props.history.push('/admin/access/roles'));
-  }
+  };
 
   submitHandler = e => {
     const { id } = this.props.match.params;
@@ -61,7 +61,7 @@ class RoleForm extends Component {
 
       <div className="form-group">
         <label htmlFor="description">Description</label>
-        <input type="text" id="description" required name="description"
+        <input type="text" id="description"  name="description"
           value={description}
           onChange={this.changeHandler}
           className="form-control"

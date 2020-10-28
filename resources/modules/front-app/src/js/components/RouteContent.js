@@ -69,7 +69,7 @@ class RouteContent extends Component {
    */
   async updateDataStorage() {
     /**
-     * @member {[]} data_sources
+     * @member {array} data_sources
      */
     let { data_sources } = this.props;
 
@@ -127,7 +127,7 @@ class RouteContent extends Component {
           return <div className="altrp-scroll__vertical-track" style={style} {...props} />
         }}
       >
-        <div className="route-content">{
+        <div className="route-content" id="route-content">{
           this.state.areas.map(area => <AreaComponent
             {...area}
             area={area}

@@ -42,8 +42,9 @@ class DashboardsWidget extends Component {
     const settings = this.props.element.getSettings();
     const global_parameter = this.state.settings.global_parameter;
 
+    const currentUser = this.props.currentUser.data;
+
     const settingsData = this.state.settingsData;
-    console.log(settingsData);
     return (
       <Suspense fallback={"Loading"}>
         {
@@ -51,6 +52,7 @@ class DashboardsWidget extends Component {
             ?
             (<AltrpDashboards settings={this.props.element.getSettings()}
               globalParameter={global_parameter}
+              currentUser={currentUser}
               //  currentDataStorage={this.props.currentDataStorage}
               id={this.props.element.getId()} />)
             :

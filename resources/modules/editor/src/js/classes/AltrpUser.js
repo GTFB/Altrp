@@ -23,7 +23,7 @@ class AltrpUser extends AltrpModel{
 
   /**
    * Проверяет наличие permission у пользователя
-   * @param {[]} permissions
+   * @param {array} permissions
    * $return {boolean}
    */
   hasPermissions(permissions = []){
@@ -44,7 +44,7 @@ class AltrpUser extends AltrpModel{
   }
   /**
    * Проверяет наличие роли у пользователя
-   * @param {[]} roles
+   * @param {array} roles
    * $return {boolean}
    */
   hasRoles(roles = []){
@@ -66,8 +66,8 @@ class AltrpUser extends AltrpModel{
 
   /**
    * Проверяет доступ пользователя по необходимым роля и разрешениям
-   * @param {[]} permissions
-   * @param {[]} roles
+   * @param {array} permissions
+   * @param {array} roles
    * $return {boolean}
    *
    */

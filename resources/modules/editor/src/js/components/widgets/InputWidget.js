@@ -155,7 +155,9 @@ class InputWidget extends Component {
     // if(_.isEqual(prevContext, context)){
     //   return;
     // }
-    if(_.isEqual(prevProps.altrpdata, this.props.altrpdata)
+
+
+    if(_.isEqual(prevProps.currentDataStorage, this.props.currentDataStorage)
         &&_.isEqual(prevProps.currentUser, this.props.currentUser)
         &&_.isEqual(prevProps.formsStore, this.props.formsStore)
         &&_.isEqual(prevProps.currentModel, this.props.currentModel)
@@ -169,7 +171,11 @@ class InputWidget extends Component {
     try {
       content_calculation = content_calculation.replace(/}}/g,'\')').replace(/{{/g,'_.get(context, \'');
       value = eval(content_calculation);
-
+      console.log(value);
+      console.log(this.state.value);
+      if(value === this.state.value){
+        return;
+      }
       this.setState(state =>({...state,value}), ()=>{this.dispatchFieldValueToStore(value);});
     } catch (e) {
       console.error(e);

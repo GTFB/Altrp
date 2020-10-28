@@ -6,13 +6,12 @@ export const SET_CURRENT_DATASOURCE_LOADED = 'SET_CURRENT_DATASOURCE_LOADED';
  *
  * @param {string}dataStorageName
  * @param {{}} data
- * @return {
+ * @return {{}} -
  *   {
  *     type: {string},
  *     dataStorage: {},
  *     dataStorageName: {string},
  *   }
- * }
  */
 export function changeCurrentDataStorage(dataStorageName, data = {}) {
   return {
@@ -24,7 +23,7 @@ export function changeCurrentDataStorage(dataStorageName, data = {}) {
 
 /**
  * Перед загрузкой новых данных, старые удаляем
- * @return {{type: string}}
+ * @return {{}} - type: string
  */
 export function clearCurrentDataStorage() {
   return {

@@ -19,8 +19,8 @@ class SelectController extends Component {
     const responsive = _.get(props, 'responsive', true);
     value = value || '';
     const options = _.cloneDeep(this.props.options) || [];
-    if(props.nullable){
-      options.unshift({label: '', value: '',})
+    if (props.nullable) {
+      options.unshift({ label: '', value: '', })
     }
     this.state = {
       value,

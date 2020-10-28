@@ -3,7 +3,6 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import appStore from "../store/store"
 import {altrpCompare, conditionsChecker} from "../helpers";
-import {changeFormFieldValue} from "../store/forms-data-storage/actions";
 import {addElement} from "../store/elements-storage/actions";
 
 class ElementWrapper extends Component {
@@ -14,12 +13,11 @@ class ElementWrapper extends Component {
       currentUser: appStore.getState().currentUser,
       currentDataStorage: appStore.getState().currentDataStorage,
       altrpresponses: appStore.getState().altrpresponses,
-      formsStore: appStore.getState().formsStore,
       elementDisplay: true,
     };
     this.elementWrapperRef = React.createRef();
     appStore.dispatch(addElement(this));
-    appStore.subscribe(this.updateStore);
+    // appStore.subscribe(this.updateStore);
   }
 
   /**
@@ -55,16 +53,7 @@ class ElementWrapper extends Component {
     if(this.state.currentDataStorage !== appStore.getState().currentDataStorage){
       this.setState(state => ({...state, currentDataStorage: appStore.getState().currentDataStorage}));
     }
-    /**
-     * Обновляем altrpresponses
-     */
-    if(this.state.altrpresponses !== appStore.getState().altrpresponses){
-      this.setState(state => ({...state, altrpresponses: appStore.getState().altrpresponses}));
-    }
 
-    if((this.props.element.getName() === 'input') && this.state.formsStore !== appStore.getState().formsStore){
-      this.setState(state => ({...state, formsStore: appStore.getState().formsStore}));
-    }
   };
 
   /**
@@ -93,7 +82,7 @@ class ElementWrapper extends Component {
      * @member {FrontElement} element
      */
     const {element} = this.props;
-    if((! element.getSettings('conditional_other')) && (element.getName() !== 'input')){
+    if((! element.getSettings('conditional_other'))){
       return;
     }
     let conditions = element.getSettings('conditions',[]);
@@ -112,23 +101,24 @@ class ElementWrapper extends Component {
     let elementDisplay = conditionsChecker(conditions,
         element.getSettings('conditional_other_display') === 'AND',
         this.props.element.getCurrentModel(), true);
-    if(element.getName() === 'input'){
-      elementDisplay = this.inputIsDisplay();
-    }
+
+    console.log(elementDisplay);
+    console.log(this.props.element.getName());
     if(this.state.elementDisplay === elementDisplay){
       return;
     }
-    if((element.getName() === 'input') && ! elementDisplay){
-      const formId = this.props.element.getSettings('form_id', '');
-      const fieldName = this.props.element.getSettings('field_id', '');
-      // console.log(fieldName);
-      // console.log(formId);
-    }
+
     this.setState(({
       elementDisplay,
     }));
   }
 
+  /**
+   * Переключает видимость элемента
+   */
+  toggleElementDisplay(){
+    this.setState(state=>({...state, elementDisplay: !state.elementDisplay}))
+  }
   /**
    * Метод для проверки видимости поля формы
    * @return {boolean}
@@ -203,6 +193,7 @@ class ElementWrapper extends Component {
     }
     const styles = {};
     if(! this.state.elementDisplay){
+
       styles.display = 'none';
     }
     const CSSId = this.props.element.getSettings('advanced_element_id', '');
@@ -216,11 +207,11 @@ class ElementWrapper extends Component {
           element: this.props.element,
           children: this.props.element.getChildren(),
           match: this.props.match,
-          currentModel: this.state.currentModel,
-          currentUser: this.state.currentUser,
-          currentDataStorage: this.state.currentDataStorage,
-          altrpresponses: this.state.altrpresponses,
-          formsStore: this.state.formsStore,
+          currentModel: this.props.currentModel,
+          currentUser: this.props.currentUser,
+          currentDataStorage: this.props.currentDataStorage,
+          altrpresponses: this.props.altrpresponses,
+          formsStore: this.props.formsStore,
           elementDisplay: this.state.elementDisplay,
           appStore
         })
@@ -231,7 +222,12 @@ class ElementWrapper extends Component {
 
 function mapStateToProps(state) {
   return {
-    hideTriggers: state.hideTriggers
+    hideTriggers: state.hideTriggers,
+    altrpresponses: state.altrpresponses,
+    formsStore: state.formsStore,
+    currentDataStorage: state.currentDataStorage,
+    currentModel: state.currentModel,
+    currentUser: state.currentUser,
   };
 }
 

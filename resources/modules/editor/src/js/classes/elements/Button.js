@@ -66,27 +66,27 @@ class Button extends BaseElement{
       ],
     });
 
-    this.addControl('popup_trigger_type', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Popup trigger',
-    });
-
-    this.addControl("popup_id", {
-      type: CONTROLLER_SELECT2,
-      prefetch_options: true,
-      label: "Popup ID",
-      isClearable: true,
-      options_resource: '/admin/ajax/templates/options?template_type=popup&value=guid',
-      nullable: true,
-      conditions: {
-        'popup_trigger_type': true,
-      },
-    });
-
-    this.addControl('hide_elements_trigger', {
-      type: CONTROLLER_TEXT,
-      label: 'Hide Elements Trigger'
-    });
+    // this.addControl('popup_trigger_type', {
+    //   type: CONTROLLER_SWITCHER,
+    //   label: 'Popup trigger',
+    // });
+    //
+    // this.addControl("popup_id", {
+    //   type: CONTROLLER_SELECT2,
+    //   prefetch_options: true,
+    //   label: "Popup ID",
+    //   isClearable: true,
+    //   options_resource: '/admin/ajax/templates/options?template_type=popup&value=guid',
+    //   nullable: true,
+    //   conditions: {
+    //     'popup_trigger_type': true,
+    //   },
+    // });
+    //
+    // this.addControl('hide_elements_trigger', {
+    //   type: CONTROLLER_TEXT,
+    //   label: 'Hide Elements Trigger'
+    // });
 
     this.endControlSection();
 
@@ -202,7 +202,7 @@ class Button extends BaseElement{
         },
         {
           value: 'toggle_element',
-          label: 'Toggle Element',
+          label: 'Toggle Elements',
         },
         {
           value: 'toggle_popup',
@@ -219,6 +219,18 @@ class Button extends BaseElement{
         {
           value: 'scroll_to_element',
           label: 'Scroll to Element',
+        },
+        {
+          value: 'scroll_to_top',
+          label: 'Scroll to Top',
+        },
+        {
+          value: 'scroll_to_bottom',
+          label: 'Scroll to Bottom',
+        },
+        {
+          value: 'redirect',
+          label: 'Redirect',
         },
       ],
     });
@@ -254,7 +266,9 @@ class Button extends BaseElement{
     actionsRepeater.addControl('form_id', {
       label: 'Form ID',
       conditions: {
-        type: 'form',
+        type: [
+          'form',
+        ],
       },
     });
 
@@ -262,9 +276,51 @@ class Button extends BaseElement{
       label: 'URL',
       responsive: false,
       dynamic: false,
-      description: '{{altrpdata.alias.path_to_data}} - Templates Allowed',
+      description: '/ajax/models/test/{{id}}',
       conditions: {
-        type: 'form',
+        type: [
+          'form',
+          'redirect',
+        ],
+      },
+    });
+
+    actionsRepeater.addControl('elements_ids', {
+      label: 'Elements',
+      responsive: false,
+      dynamic: false,
+      description: 'element_id1, element_id12',
+      conditions: {
+        type: [
+          'toggle_element',
+          'print_elements',
+        ],
+      },
+    });
+
+    actionsRepeater.addControl('element_id', {
+      label: 'Element',
+      responsive: false,
+      dynamic: false,
+      description: 'element_id1',
+      conditions: {
+        type: [
+          'scroll_to_element',
+        ],
+      },
+    });
+
+    actionsRepeater.addControl("popup_id", {
+      type: CONTROLLER_SELECT2,
+      prefetch_options: true,
+      label: "Popup ID",
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options?template_type=popup&value=guid',
+      nullable: true,
+      conditions: {
+        type: [
+          'toggle_popup',
+        ],
       },
     });
 

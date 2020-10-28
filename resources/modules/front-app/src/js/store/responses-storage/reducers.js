@@ -11,7 +11,11 @@ export function responsesStorageReducer(responsesStorage, action) {
     case ADD_RESPONSE_DATA:{
       let data = action.data;
       responsesStorage = _.cloneDeep(responsesStorage);
+      console.log(data);
+      console.log(action.formId);
+      console.log(responsesStorage.getData());
       responsesStorage.setProperty(action.formId, data);
+      console.log(responsesStorage.getData());
     }break;
     case CLEAR_ALL_RESPONSE_DATA:{
       responsesStorage = new AltrpModel({});

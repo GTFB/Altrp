@@ -86,19 +86,18 @@ export default class Models extends Component {
   /**
    * Обновить список источников данных
    */
-  getDataSources = async (dataSourcesSearch) => {
+  getDataSources = async () => {
     let res = await this.dataSourcesResource.getQueried({
       page: this.state.dataSourcesCurrentPage,
       pageSize: this.itemsPerPage,
       preset: false,
-      s: dataSourcesSearch,
+      s: this.state.dataSourcesSearch,
       ...this.state.dataSourcesSorting
     });
     this.setState(state => {
       return {
         ...state,
         dataSources: res.data_sources,
-        dataSourcesSearch,
         dataSourcesPageCount: res.pageCount || 1
       }
     });
@@ -107,19 +106,18 @@ export default class Models extends Component {
   /**
    * Обновить список моделей
    */
-  getModels = async (modelsSearch) => {
+  getModels = async () => {
     let res = await this.modelsResource.getQueried({
       page: this.state.modelsCurrentPage,
       pageSize: this.itemsPerPage,
       preset: false,
-      s: modelsSearch,
+      s: this.state.modelsSearch,
       ...this.state.modelsSorting
     });
     this.setState(state => {
       return {
         ...state,
         models: res.models,
-        modelsSearch,
         modelsPageCount: res.pageCount
       }
     });
@@ -149,23 +147,6 @@ export default class Models extends Component {
     this.getDataSources();
   }
 
-  /**
-   * фильтрация по строке
-   */
-  changeSearchHandler = e => {
-    let modelsSearch = e.target.value;
-    this.getModels(modelsSearch);
-
-  };
-
-  /**
-   * фильтрация по строке
-   */
-  changeDataSourcesSearchHandler = e => {
-    let dataSourcesSearch = e.target.value;
-    this.getDataSources(dataSourcesSearch);
-  };
-
   modelsSortingHandler = (order_by, order) => {
     this.setState({ modelsSorting: { order_by, order } }, this.getModels);
   }
@@ -176,7 +157,7 @@ export default class Models extends Component {
 
   render() {
     const { activeTab, models, dataSources, modelsCurrentPage, dataSourcesCurrentPage, modelsSearch, dataSourcesSearch,
-      modelsPageCount, dataSourcesPageCount, modelsCount, dataSourcesCount } = this.state;
+      modelsPageCount, dataSourcesPageCount, modelsCount, dataSourcesCount, modelsSorting, dataSourcesSorting } = this.state;
 
     return <div className="admin-settings admin-page">
       <div className="admin-heading">
@@ -198,12 +179,12 @@ export default class Models extends Component {
             </Tab>
           </TabList>
           <TabPanel>
+            <div className="admin-panel py-2">
+              <input className="input-sm mr-2" value={modelsSearch} onChange={e => this.setState({ modelsSearch: e.target.value })} />
+              <button type="button" onClick={this.getModels} className="btn btn_bare admin-users-button">Search</button>
+            </div>
             <AdminTable
               columns={columnsModel}
-              search={{
-                value: modelsSearch || '',
-                changeHandler: this.changeSearchHandler
-              }}
               quickActions={[
                 {
                   tag: 'Link',
@@ -225,6 +206,7 @@ export default class Models extends Component {
                 editUrl: '/admin/tables/models/edit/' + model.id
               }))}
               sortingHandler={this.modelsSortingHandler}
+              sortingField={modelsSorting.order_by}
             />
             <Pagination pageCount={modelsPageCount || 1}
               currentPage={modelsCurrentPage || 1}
@@ -238,12 +220,12 @@ export default class Models extends Component {
             />
           </TabPanel>
           <TabPanel>
+            <div className="admin-panel py-2">
+              <input className="input-sm mr-2" value={dataSourcesSearch} onChange={e => this.setState({ dataSourcesSearch: e.target.value })} />
+              <button type="button" onClick={this.getDataSources} className="btn btn_bare admin-users-button">Search</button>
+            </div>
             <AdminTable
               columns={columnsDataSource}
-              search={{
-                value: dataSourcesSearch || '',
-                changeHandler: this.changeDataSourcesSearchHandler
-              }}
               quickActions={[
                 {
                   tag: 'Link',
@@ -265,6 +247,7 @@ export default class Models extends Component {
                 editUrl: '/admin/tables/data-sources/edit/' + dataSource.id
               }))}
               sortingHandler={this.dataSourcesSortingHandler}
+              sortingField={dataSourcesSorting.order_by}
             />
             <Pagination pageCount={dataSourcesPageCount}
               currentPage={dataSourcesCurrentPage}

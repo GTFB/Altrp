@@ -5,13 +5,12 @@ export const CLEAR_ALL_RESPONSE_DATA = 'CLEAR_ALL_RESPONSE_DATA';
  * Сохраняет ответ сервера при отправке формы в хранилище
  * @param {string}formId
  * @param {{}} data
- * @return {
+ * @return {{}} -
  *   {
  *     type: {string},
- *     dataStorage: {},
+ *     dataStorage: {object},
  *     dataStorageName: {string},
  *   }
- * }
  */
 export function addResponseData(formId, data = {}) {
   if(data.data) {

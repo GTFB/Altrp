@@ -1,12 +1,4 @@
-import {
-      BAR,
-      PIE,
-      DONUT,
-      AREA,
-      LINE,
-      TABLE
-} from "../../../../../admin/src/components/dashboard/widgetTypes";
-
+import { BAR, PIE, DONUT, AREA, LINE, TABLE } from "../../../../../admin/src/components/dashboard/widgetTypes";
 
 import BarDataSource from '../../../../../admin/src/components/dashboard/widgets/d3/BarDataSource';
 import PieDataSource from '../../../../../admin/src/components/dashboard/widgets/d3/PieDataSource';
@@ -20,19 +12,23 @@ class ChooseWidget extends Component {
       constructor(props) {
             super(props);
             this.state = {
+                  source: props.source,
                   type: props.type,
-                  data: props.data
+                  element: props.element,
+                  legend: props.element.settings.legend
             };
       }
 
-      /**
-   * Компонент обновился
-   * @param {{}} prevProps
-   * @param {{}} prevState
-   */
       componentDidUpdate(prevProps, prevState) {
+            console.log('CHANGE ');
+            if (!_.isEqual(prevProps.element, this.props.element)) {
+                  this.setState(state => ({ ...state, element: this.props.element }));
+            }
             if (!_.isEqual(prevProps.type, this.props.type)) {
                   this.setState(state => ({ ...state, type: this.props.type }));
+            }
+            if (!_.isEqual(prevProps.source, this.props.source)) {
+                  this.setState(state => ({ ...state, source: this.props.source }));
             }
       }
 
@@ -58,46 +54,46 @@ class ChooseWidget extends Component {
                         widget = this.renderTable();
                         break;
                   default:
-                        widget = 'Выберите тип диаграммы';
+                        widget = <div>Выберите тип диаграммы</div>;
                         break;
             }
-            return widget;
+            return <div className={`chart-container ${this.state.element.settings.legend.position}`}>{widget}</div>;
       }
 
       renderBar() {
-            return <div className="chart-container">
-                  <BarDataSource data={this.state.data} />
-            </div>;
+            return (
+                  <BarDataSource element={this.state.element} source={this.state.source} />
+            );
       }
 
       renderPie() {
-            return <div className="chart-container">
-                  <PieDataSource data={this.state.data} />
-            </div>;
+            return (
+                  <PieDataSource element={this.state.element} source={this.state.source} />
+            );
       }
 
       renderDonut() {
-            return <div className="chart-container">
-                  <DonutDataSource data={this.state.data} />
-            </div>;
+            return (
+                  <DonutDataSource element={this.state.element} source={this.state.source} />
+            );
       }
 
       renderArea() {
-            return <div className="chart-container">
-                  <AreaDataSource data={this.state.data} />
-            </div>;
+            return (
+                  <AreaDataSource element={this.state.element} source={this.state.source} />
+            );
       }
 
       renderLine() {
-            return <div className="chart-container">
-                  <LineDataSource data={this.state.data} />
-            </div>;
+            return (
+                  <LineDataSource element={this.state.element} source={this.state.source} />
+            );
       }
 
       renderTable() {
-            return <div className="chart-container">
-                  <TableDataSource data={this.state.data} />
-            </div>;
+            return (
+                  <TableDataSource element={this.state.element} source={this.state.source} />
+            );
       }
 
       render() {

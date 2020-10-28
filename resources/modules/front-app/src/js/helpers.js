@@ -228,7 +228,7 @@ export function parseParamsFromString(string, context = {}){
 
 /**
  * Функция для проверки условий
- * @param {[]} conditions
+ * @param {array} conditions
  * @param {boolean} AND - логичекое И или ИЛИ
  * @param {AltrpModel} model
  * @param {boolean} dataByPath - брать ли данный из getDataByPath
@@ -266,10 +266,8 @@ function conditionChecker(c, model, dataByPath = true){
     value
   } = c;
   if(dataByPath){
-    value = getDataByPath(value, '', model);
+    value = getDataByPath(value, '', model, true);
     left = getDataByPath(left, '', model);
-    console.log(left);
-    console.log(operator);
     return altrpCompare(left, value, operator);
   }
   return altrpCompare(model.getProperty(left), value, operator);
@@ -307,10 +305,18 @@ function conditionChecker(c, model, dataByPath = true){
  * @param {string} path
  * @param {*} _default
  * @param {AltrpModel} context
+ * @param {boolean} altrpCheck - проверять ли altrp
  * @return {string}
  */
-export function getDataByPath(path = '', _default = null, context = null){
+export function getDataByPath(path = '', _default = null, context = null, altrpCheck = false){
+  /**
+   * проверим путь
+   */
+  if(altrpCheck && (path.trim().indexOf('altrp') !== 0)){
+    return path;
+  }
   path = path.trim();
+
   let {currentModel, currentDataStorage, altrpresponses, formsStore} = appStore.getState();
   if(context){
     currentModel = context;
@@ -324,11 +330,12 @@ export function getDataByPath(path = '', _default = null, context = null){
     path = path.replace('altrpdata.', '');
     value = currentDataStorage.getProperty(path, _default)
   } else if(path.indexOf('altrpresponses.') === 0){
+    path = path.replace('altrpresponses.', '');
     value = altrpresponses.getProperty(path, _default)
   }else if(path.indexOf('altrptime.') === 0){
     value = getTimeValue(path.replace('altrptime.',''));
   }else if(path.indexOf('altrpforms.') === 0){
-    value = _.get(formsStore, path, _default);
+    value = _.get(formsStore, path.replace('altrpforms.', ''), _default);
   } else {
     value = urlParams[path] ? urlParams[path] : currentModel.getProperty(path, _default);
   }
@@ -390,6 +397,7 @@ export function mbParseJSON(string, _default = null){
  * @return {boolean}
  */
 export function altrpCompare( leftValue = '', rightValue = '', operator = 'empty' ) {
+
   switch(operator){
     case 'empty':{
       return  _.isEmpty(leftValue,);
@@ -398,10 +406,10 @@ export function altrpCompare( leftValue = '', rightValue = '', operator = 'empty
       return !  _.isEmpty(leftValue,);
     }
     case '==':{
-      if(_.isNumber(leftValue) || _.isNumber(rightValue)){
-        return Number(leftValue) === Number(rightValue);
+      if(!(_.isObject(leftValue) || _.isObject(rightValue))){
+        return leftValue == rightValue;
       } else {
-        return rightValue === leftValue;
+        return _.isEqual(leftValue, rightValue);
       }
     }
     case '===':{

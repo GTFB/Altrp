@@ -115,7 +115,6 @@ class ButtonWidget extends Component {
         elementsToPrint.push(_.get(window, 'stylesModule.stylesContainer.current'));
       }
       elementsToPrint.push(document.head);
-      console.log(elementsToPrint);
       printElements(elementsToPrint);
     }
   }

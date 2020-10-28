@@ -50,11 +50,13 @@ class SettingsController extends Controller
    *
    * @param string $setting_name
    * @param AltrpSettingsService $settings_service
+   * @param Request $request
    * @return \Illuminate\Http\Response
+   * @throws \Jackiedo\DotenvEditor\Exceptions\KeyNotFoundException
    */
-  public function show( $setting_name, AltrpSettingsService $settings_service )
+  public function show( $setting_name, AltrpSettingsService $settings_service, Request $request)
   {
-    $res[$setting_name] = $settings_service->get_setting_value( $setting_name );
+    $res[$setting_name] = $settings_service->get_setting_value( $setting_name, '', $request->get( 'decrypt', false ) );
     return response()->json( $res );
   }
 
@@ -78,7 +80,7 @@ class SettingsController extends Controller
   public function update( $setting_name, Request $request, AltrpSettingsService $settings_service )
   {
 
-    if( ! $settings_service->set_setting_value( $setting_name, $request->value ) ){
+    if( ! $settings_service->set_setting_value( $setting_name, $request->value, $request->get( 'encrypt', false ) ) ){
       return response()->json( ['result' => false, 'message' => 'Неудалось записать настройку ' . $setting_name], 500 );
     }
     return response()->json( ['result' => true] );
