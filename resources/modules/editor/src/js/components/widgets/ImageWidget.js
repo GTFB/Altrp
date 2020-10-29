@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
-import {isEditor} from "../../../../../front-app/src/js/helpers";
+import {getDataByPath, isEditor} from "../../../../../front-app/src/js/helpers";
 import AltrpImage from "../altrp-image/AltrpImage";
 
 
@@ -19,9 +19,14 @@ class ImageWidget extends Component {
   render() {
     const link = this.state.settings.image_link || {};
     const background_image = this.props.element.getSettings('background_image', {});
-
+    let media = this.state.settings.content_media;
+    if(this.state.settings.content_path && _.isObject(getDataByPath(this.state.settings.content_path))){
+      media = getDataByPath(this.state.settings.content_path);
+      media.assetType = 'media';
+    }
+    console.log(media);
     let altrpImage = <AltrpImage
-      image={this.state.settings.content_media}
+      image={media}
       id={this.state.settings.position_css_id}
       className={this.state.settings.position_css_classes + " altrp-image" + (background_image ? ' altrp-background-image' : '')}
     />;
