@@ -125,24 +125,29 @@ class Resource {
       // 'Accept': 'application/json',
     };
     let formData = new FormData();
-
+    let hasObject = false;
     _.each(data, (value, key) => {
       if(_.isArray(value)){
         for (let i = 0; i < value.length; i++) {
           if(value[i].size > MAX_FILE_SIZE){
-            console.log(value[i]);
             continue;
           }
           formData.append(`${key}[${i}]`, value[i]);
         }
       } else {
+        if(_.isObject(value)){
+          hasObject = true;
+        }
         formData.append(key, value);
       }
     });
+    if(hasObject){
+      headers['Content-Type']= 'application/json';
+      headers['Accept']= 'application/json';
+    }
     let options = {
       method: 'POST',
-      // body: JSON.stringify(data),
-      body: formData,
+      body: hasObject ? JSON.stringify(data) : formData,
       headers,
     };
     return fetch(this.getRoute(), options).then(res => {
@@ -192,8 +197,14 @@ class Resource {
   /**
    * @return {Promise}
    * */
-  put(id, data){
+  put(id, data, headers = null){
+    headers = headers || {
+      'X-CSRF-TOKEN': _token,
+      // 'Content-Type': 'application/json',
+      // 'Accept': 'application/json',
+    };
     let formData = new FormData();
+    let hasObject = false;
 
     _.each(data, (value, key) => {
       if(_.isArray(value)){
@@ -205,17 +216,23 @@ class Resource {
           formData.append(`${key}[${i}]`, value[i]);
         }
       } else {
+
+        if(_.isObject(value)){
+          hasObject = true;
+        }
         formData.append(key, value);
       }
     });
+
+    if(hasObject){
+      headers['Content-Type']= 'application/json';
+      headers['Accept']= 'application/json';
+    }
     let options = {
       method: 'put',
       // body: JSON.stringify(data),
-      body: JSON.stringify(formData),
-      headers: {
-        'X-CSRF-TOKEN': _token,
-        // 'Content-Type': 'application/json'
-      },
+      body: hasObject ? JSON.stringify(data) : formData,
+      headers: headers,
     };
     let url = this.getRoute() + (id ? '/' + id : '');
     return fetch(url, options).then(res => {

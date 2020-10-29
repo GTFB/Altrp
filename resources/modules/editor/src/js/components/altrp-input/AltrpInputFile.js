@@ -1,4 +1,5 @@
 import {iconsManager} from "../../../../../admin/src/js/helpers";
+import {isEditor} from "../../../../../front-app/src/js/helpers";
 
 class AltrpInputFile extends Component {
   constructor(props) {
@@ -9,6 +10,15 @@ class AltrpInputFile extends Component {
     }
   }
 
+  /**
+   * Клик по леблу
+   * @param {{}} e
+   */
+  labelClick = (e)=>{
+    if(isEditor()){
+      e.preventDefault();
+    }
+  };
   /**
    * Удалить элемент
    * @param e
@@ -88,7 +98,9 @@ class AltrpInputFile extends Component {
     if(! filesForDisplay.length){
       classes.push('altrp-field-file_empty');
     }
-    return<label className={classes.join(' ')}>
+    return<label className={classes.join(' ')}
+                 onClick={this.labelClick}
+    >
       <span className="altrp-field-file__placeholder">{placeholder}</span>
       <input type="file"
              className="altrp-field-file__field"
