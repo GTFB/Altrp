@@ -121,12 +121,28 @@ class Resource {
   post(data = {}, headers){
     headers = headers || {
       'X-CSRF-TOKEN': _token,
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      // 'Content-Type': 'application/json',
+      // 'Accept': 'application/json',
     };
+    let formData = new FormData();
+
+    _.each(data, (value, key) => {
+      if(value instanceof FileList){
+        for (let i = 0; i < value.length; i++) {
+          if(value[i].size > MAX_FILE_SIZE){
+            console.log(value[i]);
+            continue;
+          }
+          formData.append(`${key}[${i}]`, value[i]);
+        }
+      } else {
+        formData.append(key, value);
+      }
+    });
     let options = {
       method: 'POST',
-      body: JSON.stringify(data),
+      // body: JSON.stringify(data),
+      body: formData,
       headers,
     };
     return fetch(this.getRoute(), options).then(res => {
@@ -177,12 +193,28 @@ class Resource {
    * @return {Promise}
    * */
   put(id, data){
+    let formData = new FormData();
+
+    _.each(data, (value, key) => {
+      if(value instanceof FileList){
+        for (let i = 0; i < value.length; i++) {
+          if(value[i].size > MAX_FILE_SIZE){
+            console.log(value[i]);
+            continue;
+          }
+          formData.append(`${key}[${i}]`, value[i]);
+        }
+      } else {
+        formData.append(key, value);
+      }
+    });
     let options = {
       method: 'put',
-      body: JSON.stringify(data),
+      // body: JSON.stringify(data),
+      body: JSON.stringify(formData),
       headers: {
         'X-CSRF-TOKEN': _token,
-        'Content-Type': 'application/json'
+        // 'Content-Type': 'application/json'
       },
     };
     let url = this.getRoute() + (id ? '/' + id : '');

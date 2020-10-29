@@ -171,8 +171,6 @@ class InputWidget extends Component {
     try {
       content_calculation = content_calculation.replace(/}}/g,'\')').replace(/{{/g,'_.get(context, \'');
       value = eval(content_calculation);
-      // console.log(value);
-      // console.log(this.state.value);
       if(value === this.state.value){
         return;
       }
@@ -230,6 +228,7 @@ class InputWidget extends Component {
    */
   onChange(e){
     let value = '';
+    console.log(e);
     if(e && e.target){
       if(this.props.element.getSettings('content_type') === 'checkbox'){
         let inputs = document.getElementsByName(e.target.name);
@@ -250,6 +249,9 @@ class InputWidget extends Component {
     if(_.isArray(e)){
       value = _.cloneDeep(e)
     }
+    if(e instanceof FileList){
+      value = e;
+    }
     if(this.props.element.getSettings('content_type') === 'select2'){
       if(this.props.element.getSettings('select2_multiple', false) && ! e){
         value = [];
@@ -261,9 +263,24 @@ class InputWidget extends Component {
     this.setState(state=>({
       ...state,
       value
-    }), ()=>{this.dispatchFieldValueToStore(value, true);});
+    }), ()=>{
+      /**
+       * Обновляем хранилище только если не текстовое поле
+       */
+      if(['text', 'email', 'phone', 'number', 'password'].indexOf(this.state.settings.content_type) === -1){
+        this.dispatchFieldValueToStore(value, true);
+      }
+    });
   }
 
+  /**
+   * Потеря фокуса для оптимизации
+   */
+  onBlur = (e)=>{
+    if(['text', 'email', 'phone', 'number', 'password'].indexOf(this.state.settings.content_type) !== -1) {
+      this.dispatchFieldValueToStore(e.target.value, true);
+    }
+  };
   /**
    * Передадим значение в хранилище формы
    * @param {*} value
@@ -341,26 +358,8 @@ class InputWidget extends Component {
     } else {
       autocomplete = "off";
     }
-    let input = <React.Suspense fallback={<input />}>
-      <AltrpInput type={this.state.settings.content_type}
-                  value={value || ''}
-                  autoComplete={autocomplete}
-                  placeholder={this.state.settings.content_placeholder}
-                  className={"altrp-field " + this.state.settings.position_css_classes}
-                  settings={this.props.element.getSettings()}
-                  onChange={this.onChange}
-                  id={this.state.settings.position_css_id}
-    /></React.Suspense>;
+    let input = null;
     switch (this.state.settings.content_type) {
-      case 'text':
-      case 'number':
-      case 'date':
-      case 'email':
-      case 'tel':
-      case 'file':{
-
-      }
-      break;
       case 'select':{
         let options = this.state.options || [];
         // options = _.sortBy(options, (o => o.label ? o.label.toString() : o));
@@ -386,7 +385,20 @@ class InputWidget extends Component {
       case 'checkbox':{
         input = this.renderRepeatedInput();
       }
-
+      break;
+      default:{
+        input = <React.Suspense fallback={<input />}>
+          <AltrpInput type={this.state.settings.content_type}
+                      value={value || ''}
+                      autoComplete={autocomplete}
+                      placeholder={this.state.settings.content_placeholder}
+                      className={"altrp-field " + this.state.settings.position_css_classes}
+                      settings={this.props.element.getSettings()}
+                      onChange={this.onChange}
+                      onBlur={this.onBlur}
+                      id={this.state.settings.position_css_id}
+          /></React.Suspense>;
+      }
     }
     return <div className={"altrp-field-container " + classLabel}>
         {this.state.settings.content_label_position_type == "top" ? label : ""}

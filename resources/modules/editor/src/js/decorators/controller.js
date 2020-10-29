@@ -66,6 +66,12 @@ function getSettings(settingName){
      */
     return _.isFunction(this.getDefaultValue) ? this.getDefaultValue() : '';
   }
+  /**
+   * Repeater не может менять своё значение при смене разрешения
+   */
+  if(this.props.type === 'repeater'){
+    return this.props.currentElement.getSettings(settingName);
+  }
   return this.props.currentElement.getSettings(settingName +
       getElementSettingsSuffix(this.props.controller))
 }
