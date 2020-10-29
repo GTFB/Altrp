@@ -228,7 +228,6 @@ class InputWidget extends Component {
    */
   onChange(e){
     let value = '';
-    console.log(e);
     if(e && e.target){
       if(this.props.element.getSettings('content_type') === 'checkbox'){
         let inputs = document.getElementsByName(e.target.name);
@@ -249,9 +248,12 @@ class InputWidget extends Component {
     if(_.isArray(e)){
       value = _.cloneDeep(e)
     }
-    if(e instanceof FileList){
-      value = e;
-    }
+    // if(e instanceof FileList){
+    //   value = e;
+    // }
+    // if(this.props.element.getSettings('content_type') === 'file') {
+    //
+    // }
     if(this.props.element.getSettings('content_type') === 'select2'){
       if(this.props.element.getSettings('select2_multiple', false) && ! e){
         value = [];
