@@ -1401,9 +1401,9 @@ class ModelsController extends HttpController
         ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
-    public function getValidationFields()
+    public function getValidationFields($model_id)
     {
-        $validations = ValidationField::with('column','rules')->get();
+        $validations = ValidationField::where('model_id',$model_id)->with('column','rules')->get();
         return response()->json($validations, 200);
     }
 
