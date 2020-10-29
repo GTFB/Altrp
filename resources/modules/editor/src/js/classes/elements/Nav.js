@@ -1142,12 +1142,24 @@ class Nav extends BaseElement{
     this.addControl("background_color_dropdown_menu_section", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       rules: {
         "{{ELEMENT}} .altrp-nav-menu-li{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("background_color_sub_dropdown_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Background color sub",
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-sub{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("color_sub_dropdown_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Text color sub",
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-sub{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -1180,10 +1192,6 @@ class Nav extends BaseElement{
     this.addControl("horizontal_padding_dropdown_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Horizontal padding',
-      default:{
-        size: 0,
-        unit: 'px',
-      },
       units:[
         'px',
       ],
@@ -1197,10 +1205,6 @@ class Nav extends BaseElement{
     this.addControl("vertical_padding_dropdown_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Vertical padding',
-      default:{
-        size: 0,
-        unit: 'px',
-      },
       units:[
         'px',
       ],
@@ -1254,10 +1258,6 @@ class Nav extends BaseElement{
     this.addControl("divider_color_dropdown_menu_section", {
       type: CONTROLLER_COLOR,
       label: "Color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       rules: {
         "{{ELEMENT}} .altrp-nav-menu-dropdown-content-divider{{STATE}}": "border-top-color: {{COLOR}};"
       }
@@ -1266,10 +1266,6 @@ class Nav extends BaseElement{
     this.addControl("divider_width_dropdown_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default:{
-        size: 0,
-        unit: 'px',
-      },
       units:[
         'px',
       ],
@@ -1313,10 +1309,6 @@ class Nav extends BaseElement{
     this.addControl("chevron_color_dropdown_menu_section", {
       type: CONTROLLER_COLOR,
       label: "Color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       rules: {
         "{{ELEMENT}} .altrp-nav-menu-li-link-chevron-dropdown{{STATE}} path": [
           "fill: {{COLOR}};",
@@ -1356,6 +1348,146 @@ class Nav extends BaseElement{
       min: -360,
       rules: {
         "{{ELEMENT}} .altrp-nav-menu-li-link-active-chevron-dropdown{{STATE}}": "transform: rotate({{SIZE}}deg)",
+      }
+    });
+
+    this.addControl("toggle_button_heading_dropdown_menu_section", {
+      type: CONTROLLER_HEADING,
+      label: "Toggle button"
+    });
+
+    this.addControl("color_toggle_button_fill_dropdown_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Color fill",
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}} .altrp-nav-menu-dropdown-button-icon path": "fill: {{COLOR}};"
+      }
+    });
+
+    this.addControl("color_toggle_button_stroke_dropdown_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Color stroke",
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}} .altrp-nav-menu-dropdown-button-icon path": "stroke: {{COLOR}}"
+      }
+    });
+
+    this.addControl("background_color_toggle_button_dropdown_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("size_toggle_button_dropdown_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Size',
+      default:{
+        unit: 'px',
+      },
+      units:[
+        'px',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}} .altrp-nav-menu-dropdown-button-icon": [
+          "height: {{SIZE}}{{UNIT}}",
+          "width: {{SIZE}}{{UNIT}}"
+        ]
+      }
+    });
+
+    this.addControl('padding_toggle_button_dropdown_menu_section', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default:{
+        unit:'px',
+        bind: true
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl("border_type_toggle_button_dropdown_menu_section", {
+      type: CONTROLLER_SELECT,
+      label: "Border type",
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}}": "border-style: {{VALUE}};"
+      }
+    });
+
+    this.addControl("border_width_toggle_button_dropdown_menu_section", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}}":
+          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      }
+    });
+
+    this.addControl("border_color_toggle_button_dropdown_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Border color",
+      default: {
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}}": "border-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("border_radius_toggle_button_dropdown_menu_section", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border radius",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
       }
     });
 

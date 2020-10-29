@@ -116,26 +116,28 @@ class DropdownMenu extends Component {
           <ul className="altrp-nav-menu-ul">
             {
               list.map((li, idx) => {
-                return <li className="altrp-nav-menu-li" key={idx}>
-                  {!li.id_repeater_menu_layout ? (
-                    !li.childrenParent ? (
-                      <React.Fragment>
-                        <AltrpLink link={li.link_repeater_menu_layout} className="altrp-nav-menu-li-link altrp-nav-menu-li-link-label">
-                          {
-                            li.label_repeater_menu_layout
-                          }
-                        </AltrpLink>
-                        {
-                          this.props.settings.divider_switch_dropdown_menu_section ? <div className="altrp-nav-menu-dropdown-content-divider"/> : ""
-                        }
-                      </React.Fragment>
-                    ) : ""
-                  ) : (
-                    !li.childrenParent ? <DropdownSub settings={this.props.settings} list={this.state.list} li={li}/> : ""
-                  )
-                  }
-                </li>
-              })
+                return (
+                  !li.id_repeater_menu_layout ? (
+                      !li.childrenParent ? (
+                        <React.Fragment>
+                          <li className="altrp-nav-menu-li" key={idx}>
+                            <AltrpLink link={li.link_repeater_menu_layout} className="altrp-nav-menu-li-link altrp-nav-menu-li-link-label">
+                              {
+                                li.label_repeater_menu_layout
+                              }
+                            </AltrpLink>
+                            {
+                              this.props.settings.divider_switch_dropdown_menu_section ? <div className="altrp-nav-menu-dropdown-content-divider"/> : ""
+                            }
+                          </li>
+                        </React.Fragment>
+                      ) : ""
+                    ) :
+                    !li.childrenParent ? <li className="altrp-nav-menu-li altrp-nav-menu-li-sub" key={idx}>
+                        <DropdownSub settings={this.props.settings} list={this.state.list} li={li}/>
+                      </li>
+                      : ""
+                )})
             }
           </ul>
         </div>
