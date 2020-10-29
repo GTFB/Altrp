@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {iconsManager} from "../../../helpers";
-import {Link} from "react-router-dom";
 import AltrpImage from "../../altrp-image/AltrpImage";
 import AltrpLink from "../../altrp-link/AltrpLink";
 import DropdownSub from "./DropdownSub";
@@ -81,6 +80,11 @@ class DropdownMenu extends Component {
     let iconButton = (
       <AltrpImage
         image={this.props.settings.icon_dropdown_menu_layout}
+        default={{
+          name: "in_width",
+          assetType: "icon",
+          iconComponent: iconsManager().renderIcon("in_width")
+        }}
         className="altrp-nav-menu-dropdown-button-icon"
       />
     );
@@ -89,6 +93,11 @@ class DropdownMenu extends Component {
       iconButton = (
         <AltrpImage
           image={this.props.settings.active_icon_dropdown_menu_layout}
+          default={{
+            name: "add",
+            assetType: "icon",
+            iconComponent: iconsManager().renderIcon("add")
+          }}
           className="altrp-nav-menu-dropdown-button-icon altrp-nav-menu-dropdown-button-icon-close"
         />
       )

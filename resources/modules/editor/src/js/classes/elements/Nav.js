@@ -381,6 +381,26 @@ class Nav extends BaseElement{
       ],
     });
 
+    this.addControl("breakpoint_dropdown_menu_layout", {
+      type: CONTROLLER_SELECT,
+      label: "Breakpoint",
+      default: "never",
+      options: [
+        {
+          value: "never",
+          label: "Never"
+        },
+        {
+          value: "mobile",
+          label: "Mobile (< 768px)"
+        },
+        {
+          value: "tablet",
+          label: "Tablet (< 1025px)"
+        },
+      ],
+    });
+
     this.addControl('label_dropdown_menu_layout', {
       type: CONTROLLER_HEADING,
       label: "Dropdown"
@@ -1298,13 +1318,33 @@ class Nav extends BaseElement{
         colorPickedHex: "",
       },
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link-chevron-dropdown{{STATE}} path, svg": "fill: {{COLOR}};"
+        "{{ELEMENT}} .altrp-nav-menu-li-link-chevron-dropdown{{STATE}} path": [
+          "fill: {{COLOR}};",
+          "stroke: {{COLOR}}"
+        ]
       }
     });
 
     this.addControl("chevron_rotate_dropdown_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Rotate',
+      default:{
+        size: 180,
+        unit: 'deg',
+      },
+      units:[
+        'deg',
+      ],
+      max: 360,
+      min: -360,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link-chevron-dropdown{{STATE}}": "transform: rotate({{SIZE}}deg)",
+      }
+    });
+
+    this.addControl("chevron_active_rotate_dropdown_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Active rotate',
       default:{
         size: 0,
         unit: 'deg',
@@ -1315,7 +1355,7 @@ class Nav extends BaseElement{
       max: 360,
       min: -360,
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link-chevron-dropdown{{STATE}}": "transform: rotate({{SIZE}}deg)",
+        "{{ELEMENT}} .altrp-nav-menu-li-link-active-chevron-dropdown{{STATE}}": "transform: rotate({{SIZE}}deg)",
       }
     });
 

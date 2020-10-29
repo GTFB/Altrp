@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import AltrpLink from "../../altrp-link/AltrpLink";
 import AltrpImage from "../../altrp-image/AltrpImage";
+import {iconsManager} from "../../../helpers";
 
 class DropdownSub extends Component {
   constructor(props) {
@@ -56,7 +57,12 @@ class DropdownSub extends Component {
           </span>
           <AltrpImage
             image={this.props.settings.chevron_dropdown_menu_section}
-            className="altrp-nav-menu-li-link-chevron-dropdown"
+            default={{
+              assetType: "icon",
+              name: 'chevron',
+              iconComponent: iconsManager().renderIcon('chevron')
+            }}
+            className={"altrp-nav-menu-li-link-chevron-dropdown" + (this.state.show ? " altrp-nav-menu-li-link-active-chevron-dropdown" : "")}
           />
         </div>
         <div className={"altrp-nav-menu-dropdown-sub-content altrp-nav-menu-ul-wrapper altrp-nav-menu-dropdown-content" + (!this.state.show ? " altrp-nav-menu-dropdown-content-hide" : " altrp-nav-menu-dropdown-content-show")}>
