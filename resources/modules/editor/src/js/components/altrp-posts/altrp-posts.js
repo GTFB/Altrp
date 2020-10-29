@@ -44,7 +44,10 @@ class AltrpPosts extends React.Component {
     if(! _.isEqual(this.state.simpleTemplateId, nextState.simpleTemplateId)){
       return true;
     }
+    // if(this.props.data !== nextProps.data){
     if(! _.isEqual(this.props.data, nextProps.data)){
+      console.log(this.props.data);
+      console.log(nextProps.data);
       return true;
     }
     return false;

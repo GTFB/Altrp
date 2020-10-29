@@ -171,8 +171,6 @@ class InputWidget extends Component {
     try {
       content_calculation = content_calculation.replace(/}}/g,'\')').replace(/{{/g,'_.get(context, \'');
       value = eval(content_calculation);
-      // console.log(value);
-      // console.log(this.state.value);
       if(value === this.state.value){
         return;
       }
@@ -261,9 +259,24 @@ class InputWidget extends Component {
     this.setState(state=>({
       ...state,
       value
-    }), ()=>{this.dispatchFieldValueToStore(value, true);});
+    }), ()=>{
+      /**
+       * Обновляем хранилище только если не текстовое поле
+       */
+      if(['text', 'email', 'phone', 'number', 'password'].indexOf(this.state.settings.content_type) === -1){
+        this.dispatchFieldValueToStore(value, true);
+      }
+    });
   }
 
+  /**
+   * Потеря фокуса для оптимизации
+   */
+  onBlur = (e)=>{
+    if(['text', 'email', 'phone', 'number', 'password'].indexOf(this.state.settings.content_type) !== -1) {
+      this.dispatchFieldValueToStore(e.target.value, true);
+    }
+  };
   /**
    * Передадим значение в хранилище формы
    * @param {*} value
@@ -349,6 +362,7 @@ class InputWidget extends Component {
                   className={"altrp-field " + this.state.settings.position_css_classes}
                   settings={this.props.element.getSettings()}
                   onChange={this.onChange}
+                  onBlur={this.onBlur}
                   id={this.state.settings.position_css_id}
     /></React.Suspense>;
     switch (this.state.settings.content_type) {
