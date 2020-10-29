@@ -171,7 +171,7 @@ export function renderAssetIcon(asset, props = null) {
 export function renderAsset(asset, props = null) {
   switch (asset.assetType) {
     case 'icon': {
-      return iconsManager().renderIcon(asset.name)
+      return iconsManager().renderIcon(asset.name, props)
     }
     case 'image': {
       return React.createElement('img', {...props, src: asset.url})

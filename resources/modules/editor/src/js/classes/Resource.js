@@ -127,7 +127,7 @@ class Resource {
     let formData = new FormData();
 
     _.each(data, (value, key) => {
-      if(value instanceof FileList){
+      if(_.isArray(value)){
         for (let i = 0; i < value.length; i++) {
           if(value[i].size > MAX_FILE_SIZE){
             console.log(value[i]);
@@ -196,7 +196,7 @@ class Resource {
     let formData = new FormData();
 
     _.each(data, (value, key) => {
-      if(value instanceof FileList){
+      if(_.isArray(value)){
         for (let i = 0; i < value.length; i++) {
           if(value[i].size > MAX_FILE_SIZE){
             console.log(value[i]);
