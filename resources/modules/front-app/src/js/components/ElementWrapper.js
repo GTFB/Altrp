@@ -18,6 +18,7 @@ class ElementWrapper extends Component {
     this.elementWrapperRef = React.createRef();
     // console.log(props.element.getName());
     // console.error(window._i = window._i ? ++window._i  : 1);
+    // console.log('constructor');
 
     appStore.dispatch(addElement(this));
     // appStore.subscribe(this.updateStore);
@@ -158,7 +159,7 @@ class ElementWrapper extends Component {
       hide_on_small_phone,
       hide_on_trigger
     } = this.props.element.settings;
-
+    console.log('render');
     let classes = `altrp-element altrp-element${this.props.element.getId()} altrp-element_${this.props.element.getType()}`;
     classes += this.props.element.getPrefixClasses() + " ";
     if(this.props.element.getType() === 'widget'){
