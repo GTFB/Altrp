@@ -123,7 +123,7 @@ class AltrpForm {
             import('./modules/ModelsManager').then(modelsManager=>{
               modelsManager.default.updateModelWithData(this.modelName, modelID, this.getData());
             });
-            this.clearInputs();
+            // this.clearInputs();
             this.updateResponseStorage(res);
             return res;
           }

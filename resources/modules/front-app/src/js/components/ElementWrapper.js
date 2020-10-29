@@ -159,7 +159,6 @@ class ElementWrapper extends Component {
       hide_on_small_phone,
       hide_on_trigger
     } = this.props.element.settings;
-    console.log('render');
     let classes = `altrp-element altrp-element${this.props.element.getId()} altrp-element_${this.props.element.getType()}`;
     classes += this.props.element.getPrefixClasses() + " ";
     if(this.props.element.getType() === 'widget'){
