@@ -36,6 +36,7 @@
     "express-session": "^1.17.1",
     "gsap": "^3.5.1",
     "highlight.js": "^10.1.1",
+    "html2pdf.js": "^0.9.2",
     "immutability-helper": "^3.1.1",
     "leaflet": "^1.6.0",
     "leaflet-draw": "^1.0.4",

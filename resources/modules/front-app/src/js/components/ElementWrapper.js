@@ -9,13 +9,17 @@ class ElementWrapper extends Component {
   constructor(props){
     super(props);
     this.state = {
-      currentModel: appStore.getState().currentModel,
-      currentUser: appStore.getState().currentUser,
-      currentDataStorage: appStore.getState().currentDataStorage,
-      altrpresponses: appStore.getState().altrpresponses,
+      // currentModel: appStore.getState().currentModel,
+      // currentUser: appStore.getState().currentUser,
+      // currentDataStorage: appStore.getState().currentDataStorage,
+      // altrpresponses: appStore.getState().altrpresponses,
       elementDisplay: true,
     };
     this.elementWrapperRef = React.createRef();
+    // console.log(props.element.getName());
+    // console.error(window._i = window._i ? ++window._i  : 1);
+    // console.log('constructor');
+
     appStore.dispatch(addElement(this));
     // appStore.subscribe(this.updateStore);
   }
@@ -102,8 +106,6 @@ class ElementWrapper extends Component {
         element.getSettings('conditional_other_display') === 'AND',
         this.props.element.getCurrentModel(), true);
 
-    console.log(elementDisplay);
-    console.log(this.props.element.getName());
     if(this.state.elementDisplay === elementDisplay){
       return;
     }
@@ -157,7 +159,6 @@ class ElementWrapper extends Component {
       hide_on_small_phone,
       hide_on_trigger
     } = this.props.element.settings;
-
     let classes = `altrp-element altrp-element${this.props.element.getId()} altrp-element_${this.props.element.getType()}`;
     classes += this.props.element.getPrefixClasses() + " ";
     if(this.props.element.getType() === 'widget'){
