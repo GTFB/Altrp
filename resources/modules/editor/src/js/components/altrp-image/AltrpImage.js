@@ -10,7 +10,6 @@ class AltrpImage extends Component {
         media = this.props.default;
       }
     } else {
-      if(pro)
         media.url = media.url || '/img/nullImage.png';
         media.name = media.name || 'null';
         media.assetType = media.assetType || undefined;
