@@ -13,11 +13,11 @@ export const queryString = (obj = {}) => {
 };
 
 export const getWidgetData = async (url, filter) => {
-  let params = null;
+  let params = '';
   if (typeof filter === 'object') {
     params = queryString(filter);
   }
-  else {
+  else if (typeof filter !== 'undefined') {
     params = queryString(JSON.parse(filter));
   }
   try {
