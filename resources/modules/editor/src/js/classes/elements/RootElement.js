@@ -95,8 +95,9 @@ class RootElement extends BaseElement {
       label: 'Default Displaying',
     });
 
-    this.addControl('hidden_elemants_triggers', {
+    this.addControl('hidden_elements_triggers', {
       type: CONTROLLER_TEXTAREA,
+      dynamic: false,
       label: 'Hidden Elements Triggers',
       description: 'Input triggers, commas separated'
     });
