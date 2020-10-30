@@ -41,6 +41,7 @@ _ide_helper.php
 
 #bundles
 public/modules/admin
+public/favicon.ico
 public/modules/front-app
 public/modules/editor
 /routes/AltrpCustomRoutes.php
