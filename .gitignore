@@ -32,7 +32,7 @@ _ide_helper.php
 /app/Providers/AltrpRepositoryServiceProvider.php
 /routes/AltrpRoutes.php
 /routes/AltrpApiRoutes.php
-/routes/AltrpCUstomRoutes.php
+/routes/AltrpCustomRoutes.php
 /out
 /app/Http/Requests/AltrpRequests
 /app/Plugins/*/
