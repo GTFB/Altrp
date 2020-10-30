@@ -653,6 +653,59 @@ class Nav extends BaseElement{
       label: 'Dropdown (Hor Ver)',
     });
 
+    this.addControl('alignment_dropdown_hor_ver_menu_section', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment',
+      default: 'left',
+      options:[
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        }
+      ],
+    });
+
+    this.addControl('content_alignment_dropdown_hor_ver_menu_section', {
+        type: CONTROLLER_SELECT,
+        label: 'Content alignment',
+        options:[
+          {
+            'value' : 'left',
+            'label' : 'Left',
+          },
+          {
+            'value' : 'center',
+            'label' : 'Center',
+          },
+          {
+            'value' : 'right',
+            'label' : 'Right',
+          },
+          {
+            'value' : 'spaceBetween',
+            'label' : 'Space-between',
+          },
+          {
+            'value' : 'spaceBetweenReverse',
+            'label' : 'Space-between reverse',
+          },
+        ],
+      }
+    );
+
+    this.addControl("heading_dropdown_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_HEADING,
+      label: "Dropdown"
+    });
+
     this.addControl('typographic_dropdown_hor_ver_menu_section', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',

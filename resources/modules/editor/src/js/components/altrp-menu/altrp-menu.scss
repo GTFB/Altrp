@@ -190,16 +190,35 @@
 .altrp-nav-menu-ul-dropdown-children-hor-ver {
     display: block;
     position: absolute;
-    right: 0;
-    top: 0;
-    -ms-transform: translate(100%, 0%);
-    -webkit-transform: translate(100%, 0%);
-    transform:translate(100%, 0%);
     margin-left: 0;
     margin-top: 0;
     max-width: 1000px;
     background-color: #d5d5d5;
     z-index: 999;
+}
+
+.altrp-nav-menu-ul-dropdown-children-hor-ver-left {
+    -ms-transform: translate(100%, 0%);
+    -webkit-transform: translate(100%, 0%);
+    transform:translate(100%, 0%);
+    right: 0;
+    top: 0;
+}
+
+.altrp-nav-menu-ul-dropdown-children-hor-ver-center {
+    -ms-transform: translate(100%, 0%);
+    -webkit-transform: translate(100%, 0%);
+    transform:translate(100%, 0%);
+    right: 0;
+    top: 0;
+}
+
+.altrp-nav-menu-ul-dropdown-children-hor-ver-right {
+    -ms-transform: translate(-100%, 0%);
+    -webkit-transform: translate(-100%, 0%);
+    transform:translate(-100%, 0%);
+    left: 0;
+    top: 0;
 }
 
 .altrp-nav-menu-li-dropdown-children-hor-ver-li-link {
@@ -332,3 +351,39 @@
 .altrp-nav-menu-dropdown-left .altrp-nav-menu-li-sub {
     padding-left: 0;
 }
+
+.altrp-nav-menu-ul-dropdown-hor-ver-center .altrp-nav-menu-ul-dropdown-hor-ver-li-link {
+    justify-content: center;
+}
+
+.altrp-nav-menu-ul-dropdown-hor-ver-right .altrp-nav-menu-ul-dropdown-hor-ver-li-link {
+    justify-content: flex-end;
+}
+
+.altrp-nav-menu-ul-dropdown-hor-ver-space-between .altrp-nav-menu-ul-dropdown-hor-ver-li-link {
+    justify-content: space-between;
+}
+
+.altrp-nav-menu-ul-dropdown-hor-ver-space-between-reverse .altrp-nav-menu-ul-dropdown-hor-ver-li-link {
+    justify-content: space-between;
+    flex-direction: row-reverse;
+}
+
+
+.altrp-nav-menu-ul-dropdown-sub-hor-ver-center .altrp-nav-menu-li-dropdown-children-hor-ver-li-link {
+    justify-content: center;
+}
+
+.altrp-nav-menu-ul-dropdown-sub-hor-ver-right .altrp-nav-menu-li-dropdown-children-hor-ver-li-link {
+    justify-content: flex-end;
+}
+
+.altrp-nav-menu-ul-dropdown-sub-hor-ver-space-between .altrp-nav-menu-li-dropdown-children-hor-ver-li-link {
+    justify-content: space-between;
+}
+
+.altrp-nav-menu-ul-dropdown-sub-hor-ver-space-between-reverse .altrp-nav-menu-li-dropdown-children-hor-ver-li-link {
+    justify-content: space-between;
+    flex-direction: row-reverse;
+}
+

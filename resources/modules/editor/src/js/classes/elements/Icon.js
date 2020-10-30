@@ -57,6 +57,7 @@ class Icon extends BaseElement{
     this.addControl('label_icon_box_content', {
       type: CONTROLLER_TEXT,
       label: 'Title',
+      default: "Title"
     });
 
     this.addControl('switch_link_icon_box_content', {
@@ -70,7 +71,7 @@ class Icon extends BaseElement{
       },
       type: CONTROLLER_LINK,
       default: {
-        url: "",
+        url: "/",
         attributes: "",
         openInNew: false,
         noFollow: true
@@ -81,6 +82,7 @@ class Icon extends BaseElement{
     this.addControl('description_icon_box_content', {
       type: CONTROLLER_TEXTAREA,
       label: 'Description',
+      default: 'I am this description'
     });
 
     this.endControlSection();
@@ -203,13 +205,14 @@ class Icon extends BaseElement{
 
     this.addControl('text_read_more_content', {
       type: CONTROLLER_TEXT,
+      default: "Read more",
       label: 'Text',
     });
 
     this.addControl('link_read_more_content', {
       type: CONTROLLER_LINK,
       default: {
-        url: "",
+        url: "/",
         attributes: "",
         openInNew: false,
         noFollow: true
@@ -224,7 +227,7 @@ class Icon extends BaseElement{
 
     this.addControl('icon_position_additional_options_content', {
         type: CONTROLLER_SELECT,
-        label: 'Title HTML tag',
+        label: 'Icon position',
         default: "right",
         options:[
           {
@@ -233,7 +236,7 @@ class Icon extends BaseElement{
           },
           {
             'value' : 'left',
-            'label' : 'left',
+            'label' : 'Left',
           },
         ],
       }
@@ -500,14 +503,9 @@ class Icon extends BaseElement{
       label: 'Position',
     });
 
-    this.addControl('desktop_heading_position_style', {
-      type: CONTROLLER_HEADING,
-      label: 'Desktop',
-    });
-
     this.addControl('icon_position_desktop_position_style', {
       type: CONTROLLER_CHOOSE,
-      label: 'Icon position desktop',
+      label: 'Icon position',
       default: 'center',
       options:[
         {
@@ -528,97 +526,6 @@ class Icon extends BaseElement{
     this.addControl('icon_position_desktop_alignment_position_style', {
       type: CONTROLLER_CHOOSE,
       label: 'Horizontal alignment',
-      default: 'center',
-      options:[
-        {
-          icon: 'left',
-          value: 'left',
-        },
-        {
-          icon: 'center',
-          value: 'center',
-        },
-        {
-          icon: 'right',
-          value: 'right',
-        }
-      ],
-    });
-
-    this.addControl('tablet_heading_position_style', {
-      type: CONTROLLER_HEADING,
-      label: 'Tablet',
-    });
-
-    this.addControl('icon_position_tablet_position_style', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Icon position tablet',
-      default: 'center',
-      options:[
-        {
-          icon: 'left',
-          value: 'left',
-        },
-        {
-          icon: 'center',
-          value: 'center',
-        },
-        {
-          icon: 'right',
-          value: 'right',
-        }
-      ],
-    });
-
-    this.addControl('icon_position_tablet_alignment_position_style', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Horizontal alignment',
-      default: 'center',
-      options:[
-        {
-          icon: 'left',
-          value: 'left',
-        },
-        {
-          icon: 'center',
-          value: 'center',
-        },
-        {
-          icon: 'right',
-          value: 'right',
-        }
-      ],
-    });
-
-    this.addControl('mobile_heading_position_style', {
-      type: CONTROLLER_HEADING,
-      label: 'Mobile',
-    });
-
-    this.addControl('icon_position_mobile_position_style', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Icon position mobile',
-      default: 'center',
-      options:[
-        {
-          icon: 'left',
-          value: 'left',
-        },
-        {
-          icon: 'center',
-          value: 'center',
-        },
-        {
-          icon: 'right',
-          value: 'right',
-        }
-      ],
-    });
-
-    this.addControl('icon_position_mobile_alignment_position_style', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Horizontal alignment',
-      default: 'center',
       options:[
         {
           icon: 'left',
@@ -672,9 +579,6 @@ class Icon extends BaseElement{
     this.addControl('padding_icon_or_image_style', {
         type: CONTROLLER_DIMENSIONS,
         label: 'Padding',
-        default: {
-          bind: true
-        },
         units:[
           'px',
           '%',
@@ -729,9 +633,6 @@ class Icon extends BaseElement{
     this.addControl('border_width_icon_or_image_style', {
         type: CONTROLLER_DIMENSIONS,
         label: 'Border width',
-        default: {
-          bind: true
-        },
         units:[
           'px',
           '%',
@@ -755,13 +656,6 @@ class Icon extends BaseElement{
     this.addControl("border_radius_icon_or_image_style", {
       type: CONTROLLER_DIMENSIONS,
       label: "Radius",
-      default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       rules: {
         ".{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
@@ -787,10 +681,6 @@ class Icon extends BaseElement{
         colorPickedHex: '#000000',
         type: ""
       },
-      presetColors: [
-        '#eaeaea',
-        '#9c18a8'
-      ],
       rules: {
         '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
       },
@@ -799,14 +689,14 @@ class Icon extends BaseElement{
     this.addControl('typographic_other_icon_or_image_style', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
-        default:{
-          lineHeight: 1,
-          spacing: 0,
-          size: 16,
-          weight: "normal",
-          family: 'roboto',
-          decoration: ""
-        },
+        // default:{
+        //   lineHeight: 1,
+        //   spacing: 0,
+        //   size: 16,
+        //   weight: "normal",
+        //   family: 'roboto',
+        //   decoration: ""
+        // },
         rules: {
           '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-serif;',
@@ -825,10 +715,6 @@ class Icon extends BaseElement{
     this.addControl("spacing_other_icon_or_image_style", {
       type: CONTROLLER_SLIDER,
       label: 'Spacing',
-      default:{
-        size: 15,
-        unit: 'px',
-      },
       max: 100,
       min: 0,
       rules: {
@@ -842,10 +728,6 @@ class Icon extends BaseElement{
     this.addControl("size_other_icon_or_image_style", {
       type: CONTROLLER_SLIDER,
       label: 'Size',
-      default:{
-        size: 25,
-        unit: 'px',
-      },
       max: 300,
       min: 0,
       rules: {
@@ -859,10 +741,6 @@ class Icon extends BaseElement{
     this.addControl("rotate_other_icon_or_image_style", {
       type: CONTROLLER_SLIDER,
       label: 'Rotate',
-      default:{
-        size: 0,
-        unit: 'px',
-      },
       max: 360,
       min: -360,
       rules: {
@@ -876,10 +754,6 @@ class Icon extends BaseElement{
     this.addControl("background_rotate_other_icon_or_image_style", {
       type: CONTROLLER_SLIDER,
       label: 'Background rotate',
-      default:{
-        size: 0,
-        unit: 'px',
-      },
       max: 360,
       min: -360,
       rules: {
@@ -898,10 +772,6 @@ class Icon extends BaseElement{
     this.addControl("border_width_svg_icon_or_image_style", {
       type: CONTROLLER_SLIDER,
       label: 'Border width',
-      default:{
-        size: 0,
-        unit: 'px',
-      },
       max: 100,
       min: 0,
       rules: {
@@ -915,10 +785,6 @@ class Icon extends BaseElement{
     this.addControl("border_dash_svg_icon_or_image_style", {
       type: CONTROLLER_SLIDER,
       label: 'Border dash',
-      default:{
-        size: 0,
-        unit: 'px',
-      },
       max: 100,
       min: 0,
       rules: {
@@ -932,10 +798,7 @@ class Icon extends BaseElement{
     this.addControl("border_offset_svg_icon_or_image_style", {
       type: CONTROLLER_SLIDER,
       label: 'Border offset',
-      default:{
-        size: 0,
-        unit: 'px',
-      },
+
       max: 100,
       min: 0,
       rules: {
@@ -1052,10 +915,6 @@ class Icon extends BaseElement{
       },
       type: CONTROLLER_SLIDER,
       label: 'Duration time',
-      default:{
-        size: 0,
-        unit: 'px',
-      },
       step: 0.5,
       max: 50,
       min: 0,
@@ -1077,7 +936,6 @@ class Icon extends BaseElement{
     this.addControl('alignment_content_style', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: 'center',
       options:[
         {
           icon: 'left',
@@ -1105,14 +963,6 @@ class Icon extends BaseElement{
     this.addControl('padding_content_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default:{
-        // top: 20,
-        // right: 25,
-        // bottom: 20,
-        // left: 25,
-        unit:'px',
-        bind: true
-      },
       units:[
         'px',
         '%',
@@ -1136,10 +986,6 @@ class Icon extends BaseElement{
     this.addControl("title_spacing_content_style", {
       type: CONTROLLER_SLIDER,
       label: 'Spacing',
-      default:{
-        size: 10,
-        unit: 'px',
-      },
       max: 100,
       min: 0,
       rules: {
@@ -1179,14 +1025,6 @@ class Icon extends BaseElement{
     this.addControl('title_typographic_content_style', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typography',
-        default:{
-          lineHeight: 1,
-          spacing: 0,
-          size: 24,
-          weight: "normal",
-          family: 'roboto',
-          decoration: ""
-        },
         rules: {
           '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-serif;',
@@ -1210,10 +1048,6 @@ class Icon extends BaseElement{
     this.addControl("description_spacing_content_style", {
       type: CONTROLLER_SLIDER,
       label: 'Spacing',
-      default:{
-        size: 10,
-        unit: 'px',
-      },
       max: 100,
       min: 0,
       rules: {
@@ -1253,14 +1087,6 @@ class Icon extends BaseElement{
     this.addControl('description_typographic_content_style', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typography',
-        default:{
-          lineHeight: 1,
-          spacing: 0,
-          size: 24,
-          weight: "normal",
-          family: 'roboto',
-          decoration: ""
-        },
         rules: {
           '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-serif;',
@@ -1382,9 +1208,6 @@ class Icon extends BaseElement{
     this.addControl('border_radius_read_more_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Radius',
-      default: {
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -1422,14 +1245,6 @@ class Icon extends BaseElement{
     this.addControl('padding_read_more_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit:'px',
-        bind: true
-      },
       units:[
         'px',
         '%',
@@ -1448,14 +1263,6 @@ class Icon extends BaseElement{
     this.addControl('typography_read_more_style', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typography',
-        default:{
-          lineHeight: 1,
-          spacing: 0,
-          size: 24,
-          weight: "normal",
-          family: 'roboto',
-          decoration: ""
-        },
         rules: {
           '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-serif;',
@@ -1486,10 +1293,6 @@ class Icon extends BaseElement{
     this.addControl("stroke_width_indicator_style", {
       type: CONTROLLER_SLIDER,
       label: 'Stroke width',
-      default:{
-        size: 0,
-        unit: 'px',
-      },
       units:[
         'px',
         'em',
@@ -1508,10 +1311,6 @@ class Icon extends BaseElement{
     this.addControl("stroke_dash_array_indicator_style", {
       type: CONTROLLER_SLIDER,
       label: 'Stroke dash array',
-      default:{
-        size: 0,
-        unit: 'px',
-      },
       units:[
         'px',
         'em',
@@ -1530,10 +1329,6 @@ class Icon extends BaseElement{
     this.addControl("stroke_dash_offset_indicator_style", {
       type: CONTROLLER_SLIDER,
       label: 'Stroke dash offset',
-      default:{
-        size: 0,
-        unit: 'px',
-      },
       units:[
         'px',
         'em',
@@ -1668,10 +1463,6 @@ class Icon extends BaseElement{
     this.addControl("border_color_badge_style", {
       type: CONTROLLER_COLOR,
       label: "Border color",
-      default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852"
-      },
       rules: {
         "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": "border-color: {{COLOR}};"
       }
@@ -1680,13 +1471,6 @@ class Icon extends BaseElement{
     this.addControl("border_radius_badge_style", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border radius",
-      default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       rules: {
         "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
@@ -1694,18 +1478,18 @@ class Icon extends BaseElement{
     });
 
     this.addControl('box_shadow_badge_style', {
-      type: CONTROLLER_SHADOW,
-      label: 'Box shadow',
-      default:{
-        blur: 0,
-        horizontal: 0,
-        vertical: 0,
-        opacity: 1,
-        spread: 0,
-        colorRGB: 'rgb(0, 0, 0)',
-        color: 'rgb(0, 0, 0)',
-        colorPickedHex: '#000000',
-        type: ""
+        type: CONTROLLER_SHADOW,
+        label: 'Box shadow',
+        default:{
+          blur: 0,
+          horizontal: 0,
+          vertical: 0,
+          opacity: 1,
+          spread: 0,
+          colorRGB: 'rgb(0, 0, 0)',
+          color: 'rgb(0, 0, 0)',
+          colorPickedHex: '#000000',
+          type: ""
         },
         rules: {
           '{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
@@ -1716,14 +1500,6 @@ class Icon extends BaseElement{
     this.addControl('padding_badge_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default:{
-        // top: 20,
-        // right: 25,
-        // bottom: 20,
-        // left: 25,
-        unit:'px',
-        bind: true
-      },
       units:[
         'px',
         '%',
@@ -1742,14 +1518,6 @@ class Icon extends BaseElement{
     this.addControl('typography_badge_style', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typography',
-        default:{
-          lineHeight: 1,
-          spacing: 0,
-          size: 24,
-          weight: "normal",
-          family: 'roboto',
-          decoration: ""
-        },
         rules: {
           '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-serif;',
