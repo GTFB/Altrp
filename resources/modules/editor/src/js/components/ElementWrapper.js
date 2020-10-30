@@ -246,6 +246,7 @@ class ElementWrapper extends Component {
 
   render() {
     const elementHideTrigger = this.props.element.settings.hide_on_trigger;
+    const { isFixed } = this.props.element.getSettings();
 
     if(this.state.errorInfo){
       return  <div className="altrp-error">
@@ -296,6 +297,10 @@ class ElementWrapper extends Component {
         </div>
       );
     }
+    if (isFixed) {
+      classes += " fixed-section";
+    }
+
     return elementHideTrigger && this.props.hideTriggers.includes(elementHideTrigger) ? null : <div
         className={classes}
         style={this.props.width}

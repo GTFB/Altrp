@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Http\Request;
 
 
 class PluginController extends Controller
@@ -19,7 +19,7 @@ class PluginController extends Controller
 
             foreach ($pluginsInstalled as $plugin) {
                   $pluginFile = app_path() . "/Plugins/$plugin/$plugin.php";
-                  $pluginClass = "App\\Plugins\\$plugin";
+                  $pluginClass = "App\\Plugins\\$plugin\\$plugin";
                   //Проверяем, есть ли основной класс
                   if (is_file($pluginFile)) {
                         $pluginInstance = new $pluginClass();
@@ -39,7 +39,7 @@ class PluginController extends Controller
             $pluginName = $request->name;
             $value = $request->value;
 
-            $pluginClass = "App\\Plugins\\$pluginName";
+            $pluginClass = "App\\Plugins\\$pluginName\\$pluginName";
             $pluginInstance = new $pluginClass();
 
             if ($value) {

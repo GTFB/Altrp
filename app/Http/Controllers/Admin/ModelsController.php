@@ -632,7 +632,7 @@ class ModelsController extends HttpController
             $accessor->delete();
         }
 
-        if ($data['type'] === 'calculated') {
+        if (isset($data['type']) && $data['type'] === 'calculated') {
             $field = Accessor::where([['model_id', $model_id], ['name', $field->name]])->first();
             if (isset($data['calculation_logic'])) {
                 $data['calculation_logic'] = json_encode($data['calculation_logic']);
@@ -1401,9 +1401,9 @@ class ModelsController extends HttpController
         ], 500, [], JSON_UNESCAPED_UNICODE);
     }
 
-    public function getValidationFields()
+    public function getValidationFields($model_id)
     {
-        $validations = ValidationField::with('column','rules')->get();
+        $validations = ValidationField::where('model_id',$model_id)->with('column','rules')->get();
         return response()->json($validations, 200);
     }
 

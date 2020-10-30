@@ -324,7 +324,8 @@ class RootElement extends BaseElement {
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
           'padding-left: {{LEFT}}{{UNIT}};'
-        ]
+        ],
+        '.altrp-section.altrp-section--full-width, .altrp-section.altrp-section--boxed': 'width: calc(100vw - {{RIGHT}}{{UNIT}} - {{LEFT}}{{UNIT}})'
       },
     });
 
@@ -2537,6 +2538,28 @@ class RootElement extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('positioning', {
+      tab: TAB_ADVANCED,
+      label: 'Positioning',
+    });
+
+    this.addControl('positioning_custom_top', {
+      type: CONTROLLER_SLIDER,
+      label: 'Custom top',
+      default: {
+        size: "20",
+        unit: '%'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 1000,
+      min: 0,
+    });
+
+    this.endControlSection();
   }
 
   

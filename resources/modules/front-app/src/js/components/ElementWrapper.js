@@ -157,7 +157,8 @@ class ElementWrapper extends Component {
       hide_on_tablet,
       hide_on_big_phone,
       hide_on_small_phone,
-      hide_on_trigger
+      hide_on_trigger,
+      isFixed
     } = this.props.element.settings;
     let classes = `altrp-element altrp-element${this.props.element.getId()} altrp-element_${this.props.element.getType()}`;
     classes += this.props.element.getPrefixClasses() + " ";
@@ -181,6 +182,9 @@ class ElementWrapper extends Component {
     }
     if (hide_on_small_phone) {
       classes += ' hide_on_small_phone';
+    }
+    if (isFixed) {
+      classes += " fixed-section";
     }
     if(this.state.errorInfo){
       return  <div className="altrp-error">
