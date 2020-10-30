@@ -9,6 +9,7 @@ function altrpZip() {
     '!./app/Http/Controllers/AltrpControllers/**',
     '!./app/Http/Requests/AltrpRequests/**',
     '!./public/storage',
+    '!./public/favicon.ico',
     '!./out/**',
     '!./app/AltrpModels/**',
     '!./public/storage/**',

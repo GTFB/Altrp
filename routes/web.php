@@ -322,6 +322,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
 
     /**
+    * Роут для загрузки favicon
+    */
+    Route::post( '/favicon', 'Admin\FileUploadController@loadFavicon' );
+
+    /**
      * Плагины
      */
 
@@ -346,7 +351,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
       Route::get( 'settings', 'Admin\DownloadsController@exportAltrpSettings' )->name( 'admin.download.settings' );
     } );
   });
-
 
 });
 

@@ -4,6 +4,7 @@ namespace DummyNamespace;
 
 {{useModelNamespace}}
 use App\Altrp\Generators\Traits\UserColumnsTrait;
+use App\Traits\RelationshipsTrait;
 {{useSoftDeletes}}
 // CUSTOM_NAMESPACES_BEGIN - IMPORTANT: Don't remove this comment! Write your namespaces between these comments.
 {{customNamespaces}}
@@ -14,7 +15,7 @@ class DummyClass extends {{extendsModel}}
     // CUSTOM_TRAITS_BEGIN - IMPORTANT: Don't remove this comment! Write your traits between these comments.
     {{customTraits}}
     // CUSTOM_TRAITS_END - IMPORTANT: Don't remove this comment! Write your traits between these comments.
-    use UserColumnsTrait;
+    use UserColumnsTrait, RelationshipsTrait;
     {{softDeletes}}{{timestamps}}{{createdAt}}{{updatedAt}}
     {{table}}
 

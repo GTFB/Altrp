@@ -173,6 +173,7 @@ class UserForm extends Component {
         <div className="form-group">
           <label htmlFor="page-description">Password</label>
           <input type="password" id="password" name="password" required={1}
+            minlength={8}
             value={this.state.user.password || ''}
             onChange={(e) => { this.changeValue(e) }}
             className="form-control" />
@@ -181,6 +182,7 @@ class UserForm extends Component {
         <div className="form-group">
           <label htmlFor="page-description">Confirm Password</label>
           <input type="password" id="password_confirmation" name="password_confirmation" required={1}
+            minlength={8}
             value={this.state.user.password_confirmation || ''}
             onChange={(e) => { this.changeValue(e) }}
             className="form-control" />
@@ -243,6 +245,7 @@ class UserForm extends Component {
         <div className="form-group">
           <label htmlFor="newPassword">New Password</label>
           <input type="password" id="newPassword" name="password" required
+            minlength={8}
             value={this.state.user.password || ''}
             onChange={this.changeValue}
             className="form-control" />
@@ -251,6 +254,7 @@ class UserForm extends Component {
         <div className="form-group">
           <label htmlFor="page-description">Confirm Password</label>
           <input type="password" id="confirmNewPassword" name="password_confirmation" required
+            minlength={8}
             value={this.state.user.password_confirmation || ''}
             onChange={this.changeValue}
             className="form-control" />
