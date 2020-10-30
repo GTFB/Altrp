@@ -5,20 +5,12 @@ import {isEditor} from "../../../../../front-app/src/js/helpers";
 class AltrpLink extends Component {
   render() {
     let classes = this.props.className;
-    let styles = {};
-
-    if(isEditor()) {
-      styles = {
-        ...styles,
-        pointerEvents: "none"
-      }
-    }
 
     let settings = {
       attributes: "",
       openInNew: false,
       noFollow: false,
-      url: "",
+      url: "/",
       tag: "a",
       toPrevPage: false
     };
@@ -31,17 +23,17 @@ class AltrpLink extends Component {
 
     let rel = "";
     if(settings.noFollow) {
-      rel += "noFollow"
+      rel = "noFollow"
     }
 
     let link = settings.tag === "a" ? (
-      <a href={settings.url} style={styles} rel={rel} className={classes}>
+      <a href={settings.url} rel={rel} onClick={isEditor() ? (e) => e.preventDefault() : ""} className={classes}>
         {
           this.props.children
         }
       </a>
     ) : (
-      <Link className={classes} style={styles} to={settings.url}>
+      <Link className={classes} onClick={isEditor() ? (e) => e.preventDefault() : ""} to={settings.url}>
         {
           this.props.children
         }
