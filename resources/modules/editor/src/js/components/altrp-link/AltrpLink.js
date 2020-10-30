@@ -27,13 +27,13 @@ class AltrpLink extends Component {
     }
 
     let link = settings.tag === "a" ? (
-      <a href={settings.url} rel={rel} onClick={isEditor() ? (e) => e.preventDefault() : ""} className={classes}>
+      <a href={settings.url} rel={rel} onClick={isEditor() ? (e) => e.preventDefault() : () => {}} className={classes}>
         {
           this.props.children
         }
       </a>
     ) : (
-      <Link className={classes} onClick={isEditor() ? (e) => e.preventDefault() : ""} to={settings.url}>
+      <Link className={classes} onClick={isEditor() ? (e) => e.preventDefault() : () => {}} to={settings.url}>
         {
           this.props.children
         }
