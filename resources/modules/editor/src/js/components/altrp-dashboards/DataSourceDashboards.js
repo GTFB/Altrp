@@ -1,3 +1,4 @@
+import React, { Component, Suspense } from "react";
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { connect } from "react-redux";
 import { editElement } from '../../store/altrp-dashboard/actions';
@@ -13,6 +14,7 @@ import WidgetData from './WidgetData';
 import AddWidgetDataSource from './AddWidgetDataSource';
 import WidgetPreview from "./WidgetPreview";
 import WidgetSettings from './WidgetSettings';
+import AddItemButton from './settings/AddItemButton';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -43,6 +45,7 @@ class DataSourceDashboards extends Component {
       newCounter: props.counter || 1,
       repeater: _.cloneDeep(props.rep, []),
       settingsOpen: false,
+      settings: props.settings,
       drawer: null,
       datasources: null
     };
@@ -59,6 +62,15 @@ class DataSourceDashboards extends Component {
     this.setCardName = this.setCardName.bind(this);
   }
 
+  // componentDidMount() {
+  //   console.log(this.props.onRef);
+  //   this.props.onRef(this);
+  // }
+
+  // componentWillUnmount() {
+  //   this.props.onRef(undefined);
+  // }
+
   componentDidUpdate(prevProps, prevState) {
     if (!_.isEqual(prevProps.items, this.props.items)) {
       this.setState(state => {
@@ -71,13 +83,9 @@ class DataSourceDashboards extends Component {
       });
     }
     if (!_.isEqual(prevState.items, this.state.items)) {
+      console.log('CHANGE ITEMS');
       this.setState(state => {
         return { ...state, items: this.state.items }
-      });
-    }
-    if (!_.isEqual(prevState.currentElementEdit, this.state.currentElementEdit)) {
-      this.setState(state => {
-        return { ...state, currentElementEdit: this.state.currentElementEdit }
       });
     }
     const drawer = document.querySelector('.drawer');
@@ -98,6 +106,10 @@ class DataSourceDashboards extends Component {
     try {
       const req = axios.post(`/ajax/dashboards/datasource/${id}/settings`, {
         settings: settings,
+      }, {
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
       }).then(res => {
         // console.log(res.data);
       });
@@ -150,7 +162,7 @@ class DataSourceDashboards extends Component {
     let widget = _.find(items, { i: key })
     widget.settings = settings;
     widget.edit = false;
-    console.log('MAIN HANDLER', settings);
+    // console.log('MAIN HANDLER', settings);
     this.props.editElement(widget);
 
     _.replace(items, { i: key }, widget);
@@ -177,7 +189,8 @@ class DataSourceDashboards extends Component {
           legend: {
             enabled: false
           },
-          colors: {}
+          colors: {},
+          params: []
         },
         edit: true,
       }),
@@ -235,7 +248,7 @@ class DataSourceDashboards extends Component {
           </div>
         ) : (
             <WidgetData
-              el={el}
+              editElement={_.cloneDeep(el, {})}
               settings={el.settings}
               openSettingsHandler={this.openSettings}
               setEditItem={this.setEditItem}
@@ -250,7 +263,7 @@ class DataSourceDashboards extends Component {
   render() {
     return (
       <div>
-        <button onClick={this.onAddItem}>Добавить виджет</button>
+        {this.props.showButton && (<AddItemButton onAddItem={this.onAddItem} />)}
         <ResponsiveReactGridLayout
           onLayoutChange={this.onLayoutChange}
           onResizeStart={this.onResizeHandler}
@@ -274,6 +287,7 @@ class DataSourceDashboards extends Component {
         >
           {this.state.settingsOpen && (
             <WidgetSettings
+              filter_datasource={this.state.settings.filter_datasource}
               datasources={this.props.rep}
               editHandler={this.onEditItem}
               onCloseHandler={this.openSettings} />
@@ -293,4 +307,10 @@ class DataSourceDashboards extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DataSourceDashboards);
+const DataSourceDashboardsForwardRef = React.forwardRef((props, ref) => {
+  return (
+    <DataSourceDashboards {...props} />
+  )
+});
+// DataSourceDashboardsForwardRef
+export default connect(mapStateToProps, mapDispatchToProps, null, { forwardRef: true })(DataSourceDashboards);

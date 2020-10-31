@@ -1,3 +1,4 @@
+import React, { Component, Suspense } from "react";
 import { widgetTypes } from "../../../../../admin/src/components/dashboard/widgetTypes";
 
 import Form from 'react-bootstrap/Form';
@@ -24,7 +25,7 @@ class AddWidgetDataSource extends Component {
 
       renderChart() {
             if (this.state.widget.settings.source && this.state.widget.settings.type !== '') {
-                  return <ChooseWidget type={this.state.widget.settings.type} source={this.state.widget.settings.source} />;
+                  return <ChooseWidget editElement={this.state.widget} type={this.state.widget.settings.type} source={this.state.widget.settings.source} />;
             }
             return <div style={{
                   marginTop: '5px'

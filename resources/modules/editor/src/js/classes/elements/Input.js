@@ -162,6 +162,11 @@ class Input extends BaseElement{
       type: CONTROLLER_SWITCHER,
       label: 'Autocomplete',
     });
+    this.addControl('content_timestamp', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Timestamp',
+      default: false
+    });
 
     this.addControl('content_options_nullable', {
       type: CONTROLLER_SWITCHER,
