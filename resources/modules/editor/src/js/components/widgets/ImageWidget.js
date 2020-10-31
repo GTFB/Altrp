@@ -31,7 +31,6 @@ class ImageWidget extends Component {
         media.assetType = 'media';
       }
     }
-    console.log(media);
     let altrpImage = <AltrpImage
       image={media}
       id={this.state.settings.position_css_id}

@@ -1,6 +1,6 @@
 import BaseElement from "./BaseElement";
 import ButtonIcon from '../../../svgs/button.svg';
-import {advancedTabControllers} from "../../decorators/register-controllers";
+import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_DIMENSIONS,
@@ -25,19 +25,19 @@ import {
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 
-class Button extends BaseElement{
+class Button extends BaseElement {
 
-  static getName(){
-    return'button';
+  static getName() {
+    return 'button';
   }
-  static getTitle(){
-    return'Button';
+  static getTitle() {
+    return 'Button';
   }
 
-  static getIconComponent(){
+  static getIconComponent() {
     return ButtonIcon;
   }
-  static getType(){
+  static getType() {
     return 'widget';
   }
   _registerControls() {
@@ -105,7 +105,7 @@ class Button extends BaseElement{
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
       default: 'center',
-      options:[
+      options: [
         {
           icon: 'left',
           value: 'flex-start',
@@ -124,8 +124,8 @@ class Button extends BaseElement{
         }
       ],
       rules: {
-            '{{ELEMENT}}': 'align-items: {{VALUE}};',
-            '{{ELEMENT}} .altrp-dropbar': 'align-items: {{VALUE}};',
+        '{{ELEMENT}}': 'align-items: {{VALUE}};',
+        '{{ELEMENT}} .altrp-dropbar': 'align-items: {{VALUE}};',
       },
     });
 
@@ -232,7 +232,22 @@ class Button extends BaseElement{
           value: 'redirect',
           label: 'Redirect',
         },
+        {
+          value: 'trigger',
+          label: 'Trigger Action',
+        },
       ],
+    });
+
+    actionsRepeater.addControl('action', {
+      type: CONTROLLER_TEXT,
+      dynamic: false,
+      label: 'Add action name',
+      conditions: {
+        type: [
+          'trigger'
+        ],
+      },
     });
 
     actionsRepeater.addControl('form_method', {
@@ -306,6 +321,7 @@ class Button extends BaseElement{
       conditions: {
         type: [
           'scroll_to_element',
+          'trigger'
         ],
       },
     });
@@ -531,7 +547,7 @@ class Button extends BaseElement{
     this.addControl("width_dropbar_options", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default:{
+      default: {
         unit: 'px',
       },
       max: 1000,
@@ -544,7 +560,7 @@ class Button extends BaseElement{
     this.addControl("show_delay_dropbar_options", {
       type: CONTROLLER_SLIDER,
       label: 'Dropbar show delay',
-      default:{
+      default: {
         size: 0,
         unit: 's',
       },
@@ -558,7 +574,7 @@ class Button extends BaseElement{
     this.addControl("hide_delay_dropbar_options", {
       type: CONTROLLER_SLIDER,
       label: 'Dropbar hide delay',
-      default:{
+      default: {
         size: 0,
         unit: 's',
       },
@@ -572,7 +588,7 @@ class Button extends BaseElement{
     this.addControl("offset_dropbar_options", {
       type: CONTROLLER_SLIDER,
       label: 'Dropbar offset',
-      default:{
+      default: {
         size: 15,
         unit: 'px',
       },
@@ -590,7 +606,7 @@ class Button extends BaseElement{
       label: 'Other Actions',
     });
 
-    this.addControl('other_action_type',{
+    this.addControl('other_action_type', {
       type: CONTROLLER_SELECT2,
       label: 'Actions',
       isMulti: true,
@@ -607,7 +623,7 @@ class Button extends BaseElement{
       label: 'IDs',
       dynamic: false,
       conditions: {
-        'other_action_type' : 'print_elements'
+        'other_action_type': 'print_elements'
       },
     });
 
@@ -622,15 +638,15 @@ class Button extends BaseElement{
     this.addControl('position_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
-      default:{
+      default: {
         top: 0,
         right: 0,
         bottom: 0,
         left: 0,
-        unit:'px',
+        unit: 'px',
         bind: true
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -648,15 +664,15 @@ class Button extends BaseElement{
     this.addControl('position_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default:{
+      default: {
         // top: 20,
         // right: 25,
         // bottom: 20,
         // left: 25,
-        unit:'px',
+        unit: 'px',
         bind: true
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -710,29 +726,29 @@ class Button extends BaseElement{
     });
 
     this.addControl('font_typographic', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        // default:{
-        //   lineHeight: 1,
-        //   spacing: 0,
-        //   size: 16,
-        //   weight: "normal",
-        //   family: "Open Sans",
-        //   decoration: ""
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': [
-            'font-size: {{SIZE}}px;',
-            'font-family: {{FAMILY}}',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      // default:{
+      //   lineHeight: 1,
+      //   spacing: 0,
+      //   size: 16,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': [
+          'font-size: {{SIZE}}px;',
+          'font-family: {{FAMILY}}',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.addControl('font_color', {
@@ -746,9 +762,9 @@ class Button extends BaseElement{
         '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
       },
     }
-  );
+    );
 
-  this.endControlSection();
+    this.endControlSection();
 
     this.startControlSection('border_section', {
       tab: TAB_STYLE,
@@ -756,69 +772,69 @@ class Button extends BaseElement{
     });
 
     this.addControl('border_type', {
-        type: CONTROLLER_SELECT,
-        label: 'Border Type',
-        options:[
-          {
-            'value' : 'none',
-            'label' : 'None',
-          },
-          {
-            'value' : 'solid',
-            'label' : 'Solid',
-          },
-          {
-            'value' : 'double',
-            'label' : 'Double',
-          },
-          {
-            'value' : 'dotted',
-            'label' : 'Dotted',
-          },
-          {
-            'value' : 'dashed',
-            'label' : 'Dashed',
-          },
-          {
-            'value' : 'groove',
-            'label' : 'Groove',
-          },
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-style: {{VALUE}};',
+      type: CONTROLLER_SELECT,
+      label: 'Border Type',
+      options: [
+        {
+          'value': 'none',
+          'label': 'None',
         },
-      }
+        {
+          'value': 'solid',
+          'label': 'Solid',
+        },
+        {
+          'value': 'double',
+          'label': 'Double',
+        },
+        {
+          'value': 'dotted',
+          'label': 'Dotted',
+        },
+        {
+          'value': 'dashed',
+          'label': 'Dashed',
+        },
+        {
+          'value': 'groove',
+          'label': 'Groove',
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-style: {{VALUE}};',
+      },
+    }
     );
 
     this.addControl(
       'border_width', {
-        type: CONTROLLER_DIMENSIONS,
-        label: 'Border Width',
-        default: {
-          bind: true
-        },
-        units:[
-          'px',
-          '%',
-          'vh',
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-        },
-      }
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Width',
+      default: {
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    }
     );
 
     this.addControl('border_color', {
-        type: CONTROLLER_COLOR,
-        label: 'Border Color',
-        // default: {
-        //   color: "rgb(50,168,82)",
-        //   colorPickedHex: "#32a852",
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Border Color',
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852",
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('border_radius', {
@@ -1065,40 +1081,40 @@ class Button extends BaseElement{
       }
     });
 
-  this.endControlSection();
+    this.endControlSection();
 
-  this.startControlSection("icon_style", {
-    tab: TAB_STYLE,
-    label: "Icon"
-  });
+    this.startControlSection("icon_style", {
+      tab: TAB_STYLE,
+      label: "Icon"
+    });
 
-  this.addControl('icon_padding', {
-    type: CONTROLLER_DIMENSIONS,
-    label: 'Padding',
-    default:{
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-      unit:'px',
-      bind: true
-    },
-    units:[
-      'px',
-      '%',
-      'vh',
-    ],
-    rules: {
-      '{{ELEMENT}} .altrp-btn-icon{{STATE}}': [
-        'padding-top: {{TOP}}{{UNIT}};',
-        'padding-right: {{RIGHT}}{{UNIT}};',
-        'padding-bottom: {{BOTTOM}}{{UNIT}};',
-        'padding-left: {{LEFT}}{{UNIT}};'
-      ]
-    },
-  });
+    this.addControl('icon_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-btn-icon{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
 
-  this.addControl('icon_color', {
+    this.addControl('icon_color', {
       type: CONTROLLER_COLOR,
       label: 'Icon color',
       default: {
@@ -1111,102 +1127,102 @@ class Button extends BaseElement{
     });
 
     this.addControl('icon_color_background', {
-        type: CONTROLLER_COLOR,
-        label: 'Background Color',
-        rules: {
-          '{{ELEMENT}} .altrp-btn-icon svg{{STATE}}': 'background: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Background Color',
+      rules: {
+        '{{ELEMENT}} .altrp-btn-icon svg{{STATE}}': 'background: {{COLOR}};',
+      },
+    }
     );
 
-  this.addControl('icon_size', {
-    type: CONTROLLER_SLIDER,
-    label: 'Icon Size',
-    units:[
-      'px',
-      '%',
-      'vh',
-    ],
-    max: 100,
-    min: 0,
-    rules: {
-      '{{ELEMENT}} .altrp-btn-icon{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-      '{{ELEMENT}} .altrp-btn-icon svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-    },
-  });
+    this.addControl('icon_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Icon Size',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-btn-icon{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-btn-icon svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      },
+    });
 
-  this.endControlSection();
+    this.endControlSection();
 
     this.startControlSection(
       'creative_link', {
-        tab: TAB_STYLE,
-        label: 'Creative Link',
-      }
+      tab: TAB_STYLE,
+      label: 'Creative Link',
+    }
     );
 
     this.addControl('creative_link_controller', {
-        type: CONTROLLER_CREATIVE_LINK,
-        label: 'Creative Link',
-        rules: {
-          '{{ELEMENT}} .altrp-btn:after{{STATE}}': [
-            'transition-duration: {{SIZE}}s;',
-            'height: {{LINEHEIGHT}}px;',
-            'color: {{COLOR}};',
-            'background: {{BACKGROUND}};',
-          ],
-          '{{ELEMENT}} .altrp-btn:before{{STATE}}': [
-            'transition-duration: {{SIZE}}s;',
-            'height: {{LINEHEIGHT}}px;',
-            'color: {{COLOR}};',
-            'background: {{BACKGROUND}};',
-          ],
-        },
-      }
+      type: CONTROLLER_CREATIVE_LINK,
+      label: 'Creative Link',
+      rules: {
+        '{{ELEMENT}} .altrp-btn:after{{STATE}}': [
+          'transition-duration: {{SIZE}}s;',
+          'height: {{LINEHEIGHT}}px;',
+          'color: {{COLOR}};',
+          'background: {{BACKGROUND}};',
+        ],
+        '{{ELEMENT}} .altrp-btn:before{{STATE}}': [
+          'transition-duration: {{SIZE}}s;',
+          'height: {{LINEHEIGHT}}px;',
+          'color: {{COLOR}};',
+          'background: {{BACKGROUND}};',
+        ],
+      },
+    }
     );
 
     this.endControlSection();
 
-  this.startControlSection("dropbar_content_style", {
-    tab: TAB_STYLE,
-    label: "Dropbar"
-  });
+    this.startControlSection("dropbar_content_style", {
+      tab: TAB_STYLE,
+      label: "Dropbar"
+    });
 
-  this.addControl("background_dropbar_content_style", {
-    type: CONTROLLER_COLOR,
-    label: "Background color",
-    default: {
-      color: "rgb(52,59,76)",
-      colorPickedHex: "#343B4C",
-    },
-    rules: {
-      "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": "background-color: {{COLOR}};"
-    }
-  });
+    this.addControl("background_dropbar_content_style", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "rgb(52,59,76)",
+        colorPickedHex: "#343B4C",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
 
-  this.addControl("text_color_dropbar_content_style", {
-    type: CONTROLLER_COLOR,
-    label: "Text color",
-    default: {
-      color: "rgb(255,255,255)",
-      colorPickedHex: "#FFFFFF",
-    },
-    rules: {
-      "{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}": "color: {{COLOR}};"
-    }
-  });
+    this.addControl("text_color_dropbar_content_style", {
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "rgb(255,255,255)",
+        colorPickedHex: "#FFFFFF",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}": "color: {{COLOR}};"
+      }
+    });
 
-  this.addControl('typographic_text_dropbar_content_style', {
-    type: CONTROLLER_TYPOGRAPHIC,
-    label: 'Typographic',
-    default:{
-      lineHeight: 1,
-      spacing: 0,
-      size: 16,
-      weight: "normal",
-      family: 'roboto',
-      decoration: ""
-    },
-    rules: {
+    this.addControl('typographic_text_dropbar_content_style', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: 'roboto',
+        decoration: ""
+      },
+      rules: {
         '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
@@ -1219,152 +1235,152 @@ class Button extends BaseElement{
         ],
       },
     }
-  );
+    );
 
-  this.addControl("padding_dropbar_content_style", {
-    type: CONTROLLER_DIMENSIONS,
-    label: "Padding",
-    default: {
-      top: 30,
-      right: 30,
-      bottom: 30,
-      left: 30,
-      unit: "px"
-    },
-    units: ["px", "%", "vh"],
-    rules: {
-      "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": [
-        "padding-top: {{TOP}}{{UNIT}};",
-        "padding-right: {{RIGHT}}{{UNIT}};",
-        "padding-bottom: {{BOTTOM}}{{UNIT}};",
-        "padding-left: {{LEFT}}{{UNIT}};"
-      ]
-    }
-  });
-
-  this.addControl("border_style_dropbar_content_style", {
-    type: CONTROLLER_SELECT,
-    label: "Border type",
-    options: [
-      {
-        value: "none",
-        label: "None"
+    this.addControl("padding_dropbar_content_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 30,
+        right: 30,
+        bottom: 30,
+        left: 30,
+        unit: "px"
       },
-      {
-        value: "solid",
-        label: "Solid"
-      },
-      {
-        value: "double",
-        label: "Double"
-      },
-      {
-        value: "dotted",
-        label: "Dotted"
-      },
-      {
-        value: "dashed",
-        label: "Dashed"
-      },
-      {
-        value: "groove",
-        label: "Groove"
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
       }
-    ],
-    rules: {
-      "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": "border-style: {{VALUE}};"
-    }
-  });
+    });
 
-  this.addControl("border_width_dropbar_content_style", {
-    type: CONTROLLER_DIMENSIONS,
-    label: "Border width",
-    units: ["px", "%", "vh"],
-    rules: {
-      "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}":
-        "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-    }
-  });
+    this.addControl("border_style_dropbar_content_style", {
+      type: CONTROLLER_SELECT,
+      label: "Border type",
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": "border-style: {{VALUE}};"
+      }
+    });
 
-  this.addControl("border_color_dropbar_content_style", {
-    type: CONTROLLER_COLOR,
-    label: "Border color",
-    default: {
-      color: "rgb(50,168,82)",
-      colorPickedHex: "#32a852"
-    },
-    rules: {
-      "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": "border-color: {{COLOR}};"
-    }
-  });
+    this.addControl("border_width_dropbar_content_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}":
+          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      }
+    });
 
-  // this.addControl('box_shadow_dropbar_content_style', {
-  //   type: CONTROLLER_SHADOW,
-  //   label: 'Box shadow',
-  //   default:{
-  //     blur: 0,
-  //     horizontal: 0,
-  //     vertical: 0,
-  //     opacity: 1,
-  //     spread: 0,
-  //     colorRGB: 'rgb(0, 0, 0)',
-  //     color: 'rgb(0, 0, 0)',
-  //     colorPickedHex: '#000000',
-  //     type: ""
-  //     },
-  //     rules: {
-  //       '{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-  //     },
-  //   }
-  // );
-
-  this.addControl("border_radius_dropbar_content_style", {
-    type: CONTROLLER_DIMENSIONS,
-    label: "Border radius",
-    default: {
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-      unit: "px"
-    },
-    units: ["px", "%", "vh"],
-    rules: {
-      "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
-    }
-  });
-  
-
-  this.endControlSection();
-
-  this.startControlSection('button_advanced_tooltip', {
-    tab: TAB_ADVANCED,
-    label: 'Tooltip'
-  });
-
-  this.addControl('button_advanced_tooltip_font', {
-    type: CONTROLLER_SELECT2,
-    label: 'Font',
-    placeholder: 'Lato',
-    default: '"Lato"',
-    options: [
-      {
-        value: '"Roboto"',
-        label:'Roboto'
+    this.addControl("border_color_dropbar_content_style", {
+      type: CONTROLLER_COLOR,
+      label: "Border color",
+      default: {
+        color: "rgb(50,168,82)",
+        colorPickedHex: "#32a852"
       },
-      {
-        value: '"Lato"',
-        label:'Lato'
+      rules: {
+        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": "border-color: {{COLOR}};"
+      }
+    });
+
+    // this.addControl('box_shadow_dropbar_content_style', {
+    //   type: CONTROLLER_SHADOW,
+    //   label: 'Box shadow',
+    //   default:{
+    //     blur: 0,
+    //     horizontal: 0,
+    //     vertical: 0,
+    //     opacity: 1,
+    //     spread: 0,
+    //     colorRGB: 'rgb(0, 0, 0)',
+    //     color: 'rgb(0, 0, 0)',
+    //     colorPickedHex: '#000000',
+    //     type: ""
+    //     },
+    //     rules: {
+    //       '{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+    //     },
+    //   }
+    // );
+
+    this.addControl("border_radius_dropbar_content_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border radius",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
       },
-    ],
-    rules: {
-      '{{ELEMENT}}': 'font-family: {{VALUE}}'
-    }
-  });
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+      }
+    });
 
-  this.endControlSection();
 
-  advancedTabControllers(this);
+    this.endControlSection();
+
+    this.startControlSection('button_advanced_tooltip', {
+      tab: TAB_ADVANCED,
+      label: 'Tooltip'
+    });
+
+    this.addControl('button_advanced_tooltip_font', {
+      type: CONTROLLER_SELECT2,
+      label: 'Font',
+      placeholder: 'Lato',
+      default: '"Lato"',
+      options: [
+        {
+          value: '"Roboto"',
+          label: 'Roboto'
+        },
+        {
+          value: '"Lato"',
+          label: 'Lato'
+        },
+      ],
+      rules: {
+        '{{ELEMENT}}': 'font-family: {{VALUE}}'
+      }
+    });
+
+    this.endControlSection();
+
+    advancedTabControllers(this);
   }
 }
 

@@ -174,7 +174,6 @@ export function renderAsset(asset, props = null) {
     let fr = new FileReader();
     fr.readAsDataURL(asset);
     fr.onload = () => {
-      console.log(refImg);
       if(refImg.current){
         refImg.current.src =fr.result;
         refImg.current.alt =asset.name;

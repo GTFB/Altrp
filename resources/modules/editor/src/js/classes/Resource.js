@@ -207,7 +207,6 @@ class Resource {
     let hasFile = false;
 
     _.each(data, (value, key) => {
-      console.log(value);
       if(_.isArray(value)){
         for (let i = 0; i < value.length; i++) {
           if(value[i] instanceof File){

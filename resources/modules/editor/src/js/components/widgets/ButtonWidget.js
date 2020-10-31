@@ -97,7 +97,6 @@ class ButtonWidget extends Component {
     } else if( this.props.element.getSettings('other_action_type', []).includes('print_elements')){
       let IDs = this.props.element.getSettings('print_elements_ids', '');
       IDs = IDs.split(',');
-      console.log(IDs);
       let elementsToPrint = [];
       IDs.forEach(elementId=>{
         if((! elementId) || ! elementId.trim()){

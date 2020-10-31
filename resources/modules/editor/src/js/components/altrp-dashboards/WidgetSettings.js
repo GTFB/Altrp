@@ -1,3 +1,5 @@
+import React, { Component, Suspense } from "react";
+
 import Form from 'react-bootstrap/Form';
 import { connect } from "react-redux";
 import { editElement } from '../../store/altrp-dashboard/actions';
@@ -5,6 +7,7 @@ import { BAR, PIE, DONUT, AREA, LINE, TABLE } from "../../../../../admin/src/com
 import { Button, Collapse } from 'react-bootstrap';
 import { ArrowUp, ArrowDown } from 'react-bootstrap-icons';
 import DatasourceSettings from './settings/DatasourceSettings';
+import FilterParameters from './settings/FilterParameters';
 import DiagramTypeSettings from './settings/DiagramTypeSettings';
 import LegendSettings from './settings/LegendSettings';
 import ColorSettings from './settings/ColorSettings';
@@ -28,21 +31,27 @@ class WidgetSettings extends Component {
                   datasources: props.datasources,
                   openDataSettings: false,
                   openDiagramSettings: false,
+                  openTooltipSettings: false,
+                  filter_datasource: props.filter_datasource,
                   editElement: props.editElement
             };
-
+            console.log(this.state.filter_datasource);
             this.setDatasource = this.setDatasource.bind(this);
             this.setType = this.setType.bind(this);
             this.setLegendEnabled = this.setLegendEnabled.bind(this);
             this.setLegendPosition = this.setLegendPosition.bind(this);
             this.setDatakeyColor = this.setDatakeyColor.bind(this);
+            this.setParam = this.setParam.bind(this);
       }
 
       componentDidUpdate(prevProps, prevState) {
             if (!_.isEqual(prevProps.datasources, this.props.datasources)) {
                   this.setState(state => ({ ...state, datasources: this.props.datasources }));
             }
-            if (!_.isEqual(prevState.editElement, this.props.editElement)) {
+            if (!_.isEqual(prevProps.filter_datasource, this.props.filter_datasource)) {
+                  this.setState(state => ({ ...state, filter_datasource: this.props.filter_datasource }));
+            }
+            if (!_.isEqual(prevProps.editElement, this.props.editElement)) {
                   this.setState(state => ({ ...state, editElement: this.props.editElement }));
             }
       }
@@ -53,13 +62,17 @@ class WidgetSettings extends Component {
       setOpenDiagramSettings(data) {
             this.setState(state => ({ ...state, openDiagramSettings: data }));
       }
+      setOpenTooltipSettings(data) {
+            this.setState(state => ({ ...state, openTooltipSettings: data }));
+      }
 
       setDatasource(datasourcePath) {
             if (datasourcePath === '') {
                   let settings = this.state.settings;
                   settings = {
                         ...settings,
-                        source: {}
+                        source: {},
+                        params: []
                   };
                   this.setState(state => ({
                         ...state,
@@ -85,7 +98,8 @@ class WidgetSettings extends Component {
             };
             settings = {
                   ...settings,
-                  source: source
+                  source: source,
+                  params: []
             };
 
             this.setState(state => ({
@@ -162,7 +176,38 @@ class WidgetSettings extends Component {
                         ...settings.color,
                         [key]: color,
                   }
-            }; this.setState(state => ({
+            };
+            this.setState(state => ({
+                  ...state,
+                  settings: settings
+            }));
+            let element = this.props.editElement;
+            element.settings = settings;
+            this.props.editElementDispatch(element);
+            this.props.editHandler(element.i, settings);
+      }
+
+      setParam(left, right) {
+            let settings = this.state.settings;
+            let param = { [left]: right };
+            let currentParamKey = _.findKey(settings.params, left);
+            if (typeof currentParamKey !== 'undefined') {
+                  settings.params[currentParamKey] = param;
+            }
+            else {
+                  settings = {
+                        ...settings,
+                        params: [
+                              ...settings.params,
+                              param
+                        ]
+                  };
+            }
+            settings.params = settings.params.filter(item => {
+                  let key = _.keys(item)[0]
+                  return settings.params[key] !== null
+            });
+            this.setState(state => ({
                   ...state,
                   settings: settings
             }));
@@ -193,6 +238,18 @@ class WidgetSettings extends Component {
                               <Collapse in={this.state.openDataSettings}>
                                     <div>
                                           <DatasourceSettings datasources={this.state.datasources} setDatasource={this.setDatasource} />
+                                          {this.state.filter_datasource.length > 0 && (
+                                                <>
+                                                      <div className="col mb-3">
+                                                            <div className="label">Параметры</div>
+                                                      </div>
+                                                      {this.state.filter_datasource.map((param, index) => {
+                                                            return (
+                                                                  <FilterParameters setParam={this.setParam} key={index} param={param} />
+                                                            )
+                                                      })}
+                                                </>
+                                          )}
                                     </div>
                               </Collapse>
                         </div>
@@ -211,21 +268,43 @@ class WidgetSettings extends Component {
                               <Collapse in={this.state.openDiagramSettings}>
                                     <div>
                                           <DiagramTypeSettings setType={this.setType} />
-                                          <div className="col-12 mb-3">
-                                                <Form.Group>
-                                                      <Form.Check
-                                                            checked={
-                                                                  typeof this.state.settings?.legend?.enabled !== 'undefined'
-                                                                        ? this.state.settings.legend.enabled
-                                                                        : false
-                                                            }
-                                                            onChange={e => this.setLegendEnabled(e.target.checked)} type="checkbox" label="Отобразить легенду" />
-                                                </Form.Group>
-                                          </div>
-                                          {this.state.settings.legend.enabled && (
-                                                <LegendSettings setLegendPosition={this.setLegendPosition} />
+                                          {this.state.editElement.settings.type !== TABLE && (
+                                                <>
+                                                      <div className="col-12 mb-3">
+                                                            <Form.Group>
+                                                                  <Form.Check
+                                                                        checked={
+                                                                              typeof this.state.settings?.legend?.enabled !== 'undefined'
+                                                                                    ? this.state.settings.legend.enabled
+                                                                                    : false
+                                                                        }
+                                                                        onChange={e => this.setLegendEnabled(e.target.checked)} type="checkbox" label="Отобразить легенду" />
+                                                            </Form.Group>
+                                                      </div>
+                                                      {this.state.settings.legend.enabled && (
+                                                            <LegendSettings setLegendPosition={this.setLegendPosition} />
+                                                      )}
+                                                </>
                                           )}
-                                          <ColorSettings setDatakeyColor={this.setDatakeyColor} />
+                                          {/* <ColorSettings setDatakeyColor={this.setDatakeyColor} /> */}
+                                    </div>
+                              </Collapse>
+                        </div>
+                        <div className="row">
+                              <Button
+                                    className='collapse-button'
+                                    onClick={() => this.setOpenTooltipSettings(!this.state.openTooltipSettings)}
+                                    aria-controls="Datasource settings"
+                                    aria-expanded={this.state.openTooltipSettings}
+                              >
+                                    <div className="collapse-button-content">
+                                          <div>Tooltip settings</div>
+                                          <div>{!this.state.openTooltipSettings ? (<ArrowDown />) : (<ArrowUp />)}</div>
+                                    </div>
+                              </Button>
+                              <Collapse in={this.state.openTooltipSettings}>
+                                    <div>
+
                                     </div>
                               </Collapse>
                         </div>
