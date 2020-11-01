@@ -31,27 +31,12 @@ class AltrpPortal extends Component {
 
     if(this.props.childrenRef) {
       let boundingRect = this.props.childrenRef.getBoundingClientRect();
-      let positionType = this.props.position;
+      // let positionType = this.props.position;
 
-      switch (positionType) {
-        case "left":
-          position = {
-            left: boundingRect.x,
-            top: boundingRect.height + boundingRect.top,
-          };
-          break;
-        case "right":
-          position = {
-            right: boundingRect.right - boundingRect.width,
-            top: boundingRect.height + boundingRect.top,
-          };
-          break;
-        case "center":
-          position = {
-            left: boundingRect.left - (boundingRect.width / 2 + boundingRect.height / 2),
-            top: boundingRect.height + boundingRect.top,
-          }
-      }
+      position = {
+        left: boundingRect.x,
+        top: boundingRect.height + boundingRect.top,
+      };
     }
 
     let show = this.props.show || false;

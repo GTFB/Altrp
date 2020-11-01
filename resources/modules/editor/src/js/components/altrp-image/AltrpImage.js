@@ -5,22 +5,22 @@ class AltrpImage extends Component {
   render() {
     let media = { ...this.props.image };
 
-    if(this.props.default) {
-      if(Object.keys(media).length === 0) {
+    if(this.props.image) {
+      if(this.props.default && Object.keys(this.props.image).length === 0) {
         media = this.props.default;
-      }
-    } else {
+      } else {
         media.url = media.url || '/img/nullImage.png';
         media.name = media.name || 'null';
         media.assetType = media.assetType || undefined;
+      }
     }
 
-    console.log(this.props);
     let image = renderAsset(media);
 
     return cloneElement(image, {
       className: this.props.className,
       id: this.props.id || null,
+      style: this.props.style
     })
   }
 }

@@ -119,18 +119,16 @@ class DropdownMenu extends Component {
                 return (
                   !li.id_repeater_menu_layout ? (
                       !li.childrenParent ? (
-                        <React.Fragment>
-                          <li className="altrp-nav-menu-li" key={idx}>
-                            <AltrpLink link={li.link_repeater_menu_layout} className="altrp-nav-menu-li-link altrp-nav-menu-li-link-label">
-                              {
-                                li.label_repeater_menu_layout
-                              }
-                            </AltrpLink>
+                        <li className="altrp-nav-menu-li" key={idx}>
+                          <AltrpLink link={li.link_repeater_menu_layout} className="altrp-nav-menu-li-link altrp-nav-menu-li-link-label">
                             {
-                              this.props.settings.divider_switch_dropdown_menu_section ? <div className="altrp-nav-menu-dropdown-content-divider"/> : ""
+                              li.label_repeater_menu_layout
                             }
-                          </li>
-                        </React.Fragment>
+                          </AltrpLink>
+                          {
+                            this.props.settings.divider_switch_dropdown_menu_section ? <div className="altrp-nav-menu-dropdown-content-divider"/> : ""
+                          }
+                        </li>
                       ) : ""
                     ) :
                     !li.childrenParent ? <li className="altrp-nav-menu-li altrp-nav-menu-li-sub" key={idx}>

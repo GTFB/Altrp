@@ -93,52 +93,52 @@ class Icon extends BaseElement{
     });
 
     this.addControl('html_tag_additional_options_content', {
-        type: CONTROLLER_SELECT,
-        label: 'Title HTML tag',
-        options:[
-          {
-            'value' : 'h1',
-            'label' : 'H1',
-          },
-          {
-            'value' : 'h2',
-            'label' : 'H2',
-          },
-          {
-            'value' : 'h3',
-            'label' : 'H3',
-          },
-          {
-            'value' : 'h4',
-            'label' : 'H4',
-          },
-          {
-            'value' : 'h5',
-            'label' : 'H5',
-          },
-          {
-            'value' : 'h6',
-            'label' : 'H6',
-          },
-          {
-            'value' : 'div',
-            'label' : 'div',
-          },
-          {
-            'value' : 'span',
-            'label' : 'span',
-          },
-          {
-            'value' : 'p',
-            'label' : 'p',
-          },
-        ],
-      }
-    );
+      type: CONTROLLER_SELECT,
+      label: 'Title HTML tag',
+      default: "h3",
+      options:[
+        {
+          'value' : 'h1',
+          'label' : 'H1',
+        },
+        {
+          'value' : 'h2',
+          'label' : 'H2',
+        },
+        {
+          'value' : 'h3',
+          'label' : 'H3',
+        },
+        {
+          'value' : 'h4',
+          'label' : 'H4',
+        },
+        {
+          'value' : 'h5',
+          'label' : 'H5',
+        },
+        {
+          'value' : 'h6',
+          'label' : 'H6',
+        },
+        {
+          'value' : 'div',
+          'label' : 'div',
+        },
+        {
+          'value' : 'span',
+          'label' : 'span',
+        },
+        {
+          'value' : 'p',
+          'label' : 'p',
+        },
+      ],
+      });
 
     this.addControl('read_more_button_additional_options_content', {
       type: CONTROLLER_SWITCHER,
-      label: 'Read more button',
+      label: 'Read more',
     });
 
     this.addControl('indicator_additional_options_content', {
@@ -146,7 +146,7 @@ class Icon extends BaseElement{
       label: 'Indicator',
     });
 
-    this.addControl('Badge_additional_options_content', {
+    this.addControl('badge_additional_options_content', {
       type: CONTROLLER_SWITCHER,
       label: 'Badge',
     });
@@ -226,19 +226,19 @@ class Icon extends BaseElement{
     });
 
     this.addControl('icon_position_additional_options_content', {
-        type: CONTROLLER_SELECT,
-        label: 'Icon position',
-        default: "right",
-        options:[
-          {
-            'value' : 'right',
-            'label' : 'Right',
-          },
-          {
-            'value' : 'left',
-            'label' : 'Left',
-          },
-        ],
+      type: CONTROLLER_SELECT,
+      label: 'Icon position',
+      default: "right",
+      options:[
+        {
+          'value' : 'right',
+          'label' : 'Right',
+        },
+        {
+          'value' : 'left',
+          'label' : 'Left',
+        },
+      ],
       }
     );
 
@@ -252,10 +252,8 @@ class Icon extends BaseElement{
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
-          "padding-left: {{SIZE}}{{UNIT}}",
-          "padding-right: {{SIZE}}{{UNIT}}"
-        ]
+        "{{ELEMENT}} .altrp-icon-read-more-link .altrp-icon-read-more-icon-right": "margin-left: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-icon-read-more-link .altrp-icon-read-more-icon-left": "margin-right: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -274,14 +272,12 @@ class Icon extends BaseElement{
         size: -50,
         unit: 'px',
       },
+      units: [
+        "px",
+        "%"
+      ],
       max: 200,
       min: -200,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
-          "padding-left: {{SIZE}}{{UNIT}}",
-          "padding-right: {{SIZE}}{{UNIT}}"
-        ]
-      }
     });
 
     this.addControl("vertical_offset_additional_options_content", {
@@ -294,14 +290,12 @@ class Icon extends BaseElement{
         size: 0,
         unit: 'px',
       },
+      units: [
+        "px",
+        "%"
+      ],
       max: 200,
       min: -200,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
-          "padding-left: {{SIZE}}{{UNIT}}",
-          "padding-right: {{SIZE}}{{UNIT}}"
-        ]
-      }
     });
 
     this.endControlSection();
@@ -320,15 +314,15 @@ class Icon extends BaseElement{
       type: CONTROLLER_SLIDER,
       label: 'Width',
       default:{
-        size: 25,
+        size: 100,
         unit: 'px',
       },
       max: 300,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
-          "padding-left: {{SIZE}}{{UNIT}}",
-          "padding-right: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-icon-indicator{{STATE}}": [
+          "width: {{SIZE}}{{UNIT}}",
+          "height: {{SIZE}}{{UNIT}}"
         ]
       }
     });
@@ -340,48 +334,38 @@ class Icon extends BaseElement{
         size: 0,
         unit: 'px',
       },
+      units: [
+        "px",
+        "%"
+      ],
       max: 300,
       min: -300,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
-          "padding-left: {{SIZE}}{{UNIT}}",
-          "padding-right: {{SIZE}}{{UNIT}}"
-        ]
-      }
     });
 
     this.addControl("vertical_offset_indicator_content", {
       type: CONTROLLER_SLIDER,
       label: 'Vertical offset',
       default:{
-        size: 0,
-        unit: 'px',
+        size: -50,
+        unit: '%',
       },
+      units: [
+        "px",
+        "%"
+      ],
       max: 300,
       min: -300,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
-          "padding-left: {{SIZE}}{{UNIT}}",
-          "padding-right: {{SIZE}}{{UNIT}}"
-        ]
-      }
     });
 
     this.addControl("rotate_indicator_content", {
       type: CONTROLLER_SLIDER,
-      label: 'Horizontal offset',
+      label: 'rotate',
       default:{
         size: 0,
         unit: 'px',
       },
       max: 360,
       min: -360,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
-          "padding-left: {{SIZE}}{{UNIT}}",
-          "padding-right: {{SIZE}}{{UNIT}}"
-        ]
-      }
     });
 
     this.endControlSection();
@@ -394,6 +378,7 @@ class Icon extends BaseElement{
     this.addControl('text_badge_content', {
       type: CONTROLLER_TEXT,
       label: 'Text',
+      default: "Badge"
     });
 
     this.addControl('position_badge_content', {
@@ -401,10 +386,6 @@ class Icon extends BaseElement{
         label: 'Position',
         default: "topRight",
         options:[
-          {
-            'value' : 'default',
-            'label' : 'Default',
-          },
           {
             'value' : 'topLeft',
             'label' : 'Top left',
@@ -418,16 +399,16 @@ class Icon extends BaseElement{
             'label' : 'Top right',
           },
           {
-            'value' : 'center',
-            'label' : 'Center',
-          },
-          {
             'value' : 'centerLeft',
             'label' : 'Center left',
           },
           {
+            'value' : 'center',
+            'label' : 'Center',
+          },
+          {
             'value' : 'centerRight',
-            'label' : 'Center Right',
+            'label' : 'Center right',
           },
           {
             'value' : 'bottomLeft',
@@ -452,6 +433,10 @@ class Icon extends BaseElement{
         size: 0,
         unit: 'px',
       },
+      units: [
+        "px",
+        "%"
+      ],
       max: 300,
       min: -300,
       rules: {
@@ -469,6 +454,10 @@ class Icon extends BaseElement{
         size: 0,
         unit: 'px',
       },
+      units: [
+        "px",
+        "%"
+      ],
       max: 300,
       min: -300,
       rules: {
@@ -486,6 +475,10 @@ class Icon extends BaseElement{
         size: 0,
         unit: 'px',
       },
+      units: [
+        "px",
+        "%"
+      ],
       max: 360,
       min: -360,
       rules: {

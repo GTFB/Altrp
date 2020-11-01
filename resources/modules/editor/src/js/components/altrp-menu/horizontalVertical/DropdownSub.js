@@ -57,8 +57,8 @@ class DropdownSub extends Component {
     this.setList();
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if(prevProps.list !== this.props.list) {
+  componentDidUpdate(prevProps) {
+    if(prevProps.list !== this.props.list || prevProps.children.length !==  this.props.children.length) {
       this.setList()
     }
   }
@@ -88,10 +88,10 @@ class DropdownSub extends Component {
         break;
       case "right":
         classes += " altrp-nav-menu-ul-dropdown-sub-hor-ver-right";
-        break
+        break;
       case "spaceBetween":
         classes += " altrp-nav-menu-ul-dropdown-sub-hor-ver-space-between";
-        break
+        break;
       case "spaceBetweenReverse":
         classes += " altrp-nav-menu-ul-dropdown-sub-hor-ver-space-between-reverse";
         break
