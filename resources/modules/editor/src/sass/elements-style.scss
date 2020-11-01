@@ -871,14 +871,19 @@
   }
 }
 
+.altrp-icon {
+    display: flex;
+    flex-direction: column;
+}
+
 .altrp-icon-header {
     display: flex;
     justify-content: center;
 }
 
 .altrp-icon-i {
-    height: 100px;
-    width: 100px;
+    height: 50px;
+    width: 50px;
 }
 
 .altrp-icon-body {
@@ -886,12 +891,17 @@
     justify-content: center;
     flex-wrap: wrap;
     color: #1c202b;
+    margin-bottom: 20px;
+}
+
+.altrp-icon-body-label {
+    margin: 0;
 }
 
 .altrp-icon-footer {
     display: flex;
     justify-content: center;
-    text-align: center;
+    margin-bottom: 10px;
 }
 
 .altrp-icon-body-link {
@@ -1005,4 +1015,15 @@
 
 .altrp-icon-footer-text {
     color: #1c1c1c;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+}
+
+.altrp-icon-i-wrapper {
+    display: flex;
+}
+
+.altrp-icon-content {
+    width: 100%;
 }

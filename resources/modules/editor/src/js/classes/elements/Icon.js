@@ -190,8 +190,8 @@ class Icon extends BaseElement{
       min: 0,
       rules: {
         "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
-          "padding-left: {{SIZE}}{{UNIT}}",
-          "padding-right: {{SIZE}}{{UNIT}}"
+          "padding-left: {{SIZE}}{{UNIT}};",
+          "padding-right: {{SIZE}}{{UNIT}};"
         ]
       }
     });
@@ -252,8 +252,8 @@ class Icon extends BaseElement{
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-icon-read-more-link .altrp-icon-read-more-icon-right": "margin-left: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-icon-read-more-link .altrp-icon-read-more-icon-left": "margin-right: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-icon-read-more-link .altrp-icon-read-more-icon-right": "margin-left: {{SIZE}}{{UNIT}};",
+        "{{ELEMENT}} .altrp-icon-read-more-link .altrp-icon-read-more-icon-left": "margin-right: {{SIZE}}{{UNIT}};"
       }
     });
 
@@ -321,8 +321,8 @@ class Icon extends BaseElement{
       min: 0,
       rules: {
         "{{ELEMENT}} .altrp-icon-indicator{{STATE}}": [
-          "width: {{SIZE}}{{UNIT}}",
-          "height: {{SIZE}}{{UNIT}}"
+          "width: {{SIZE}}{{UNIT}};",
+          "height: {{SIZE}}{{UNIT}};"
         ]
       }
     });
@@ -384,7 +384,7 @@ class Icon extends BaseElement{
     this.addControl('position_badge_content', {
         type: CONTROLLER_SELECT,
         label: 'Position',
-        default: "topRight",
+        default: "topLeft",
         options:[
           {
             'value' : 'topLeft',
@@ -441,8 +441,8 @@ class Icon extends BaseElement{
       min: -300,
       rules: {
         "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
-          "padding-left: {{SIZE}}{{UNIT}}",
-          "padding-right: {{SIZE}}{{UNIT}}"
+          "padding-left: {{SIZE}}{{UNIT}};",
+          "padding-right: {{SIZE}}{{UNIT}};"
         ]
       }
     });
@@ -462,8 +462,8 @@ class Icon extends BaseElement{
       min: -300,
       rules: {
         "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
-          "padding-left: {{SIZE}}{{UNIT}}",
-          "padding-right: {{SIZE}}{{UNIT}}"
+          "padding-left: {{SIZE}}{{UNIT}};",
+          "padding-right: {{SIZE}}{{UNIT}};"
         ]
       }
     });
@@ -483,8 +483,8 @@ class Icon extends BaseElement{
       min: -360,
       rules: {
         "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
-          "padding-left: {{SIZE}}{{UNIT}}",
-          "padding-right: {{SIZE}}{{UNIT}}"
+          "padding-left: {{SIZE}}{{UNIT}};",
+          "padding-right: {{SIZE}}{{UNIT};}"
         ]
       }
     });
@@ -499,30 +499,36 @@ class Icon extends BaseElement{
     this.addControl('icon_position_desktop_position_style', {
       type: CONTROLLER_CHOOSE,
       label: 'Icon position',
-      default: 'center',
+      default: 'column',
       options:[
         {
           icon: 'left',
-          value: 'left',
+          value: 'row',
         },
         {
           icon: 'center',
-          value: 'center',
+          value: 'column',
         },
         {
           icon: 'right',
-          value: 'right',
+          value: 'row-reverse',
         }
       ],
+      rules: {
+        '{{ELEMENT}} .altrp-icon': "flex-direction: {{VALUE}};",
+      },
     });
 
-    this.addControl('icon_position_desktop_alignment_position_style', {
+    this.addControl('icon_position_desktop__horizontal_alignment_position_style', {
+      conditions: {
+        'icon_position_desktop_position_style': "column",
+      },
       type: CONTROLLER_CHOOSE,
       label: 'Horizontal alignment',
       options:[
         {
           icon: 'left',
-          value: 'left',
+          value: 'flex-start',
         },
         {
           icon: 'center',
@@ -530,9 +536,34 @@ class Icon extends BaseElement{
         },
         {
           icon: 'right',
-          value: 'right',
+          value: 'flex-end',
         }
       ],
+      rules: {
+        '{{ELEMENT}} .altrp-icon-header': "justify-content: {{VALUE}};",
+      },
+    });
+
+    this.addControl('icon_position_desktop_vertical_alignment_position_style', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Vertical alignment',
+      options:[
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        }
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-icon-header': "align-items: {{VALUE}};",
+      },
     });
 
     this.endControlSection();
@@ -544,19 +575,19 @@ class Icon extends BaseElement{
 
     this.addControl('color_icon_or_image_style', {
         type: CONTROLLER_COLOR,
-        label: 'Icon color',
+        label: 'Icon fill color',
         rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'fill: {{COLOR}};',
+          '{{ELEMENT}} .altrp-icon-i{{STATE}} path': 'fill: {{COLOR}};',
         },
       }
     );
 
     this.addControl('svg_border_color_icon_or_image_style', {
         type: CONTROLLER_COLOR,
-        label: 'Svg border color',
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'fill {{COLOR}};',
-        },
+        label: 'stroke color',
+      rules: {
+        '{{ELEMENT}} .altrp-icon-i{{STATE}} path': 'stroke: {{COLOR}};',
+      },
       }
     );
 
@@ -564,7 +595,7 @@ class Icon extends BaseElement{
         type: CONTROLLER_COLOR,
         label: 'Background color',
         rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-icon-i-wrapper{{STATE}}': 'background-color: {{COLOR}};',
         },
       }
     );
@@ -578,7 +609,7 @@ class Icon extends BaseElement{
           'vh',
         ],
         rules: {
-          '.{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          '{{ELEMENT}} .altrp-icon-i-wrapper{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         },
       }
     );
@@ -618,7 +649,7 @@ class Icon extends BaseElement{
           },
         ],
         rules: {
-          '.{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
+          '{{ELEMENT}} .altrp-icon-i-wrapper{{STATE}}': 'border-style: {{VALUE}};',
         },
       }
     );
@@ -632,7 +663,7 @@ class Icon extends BaseElement{
           'vh',
         ],
         rules: {
-          '.{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          '{{ELEMENT}} .altrp-icon-i-wrapper{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         },
       }
     );
@@ -641,7 +672,7 @@ class Icon extends BaseElement{
         type: CONTROLLER_COLOR,
         label: 'Color',
         rules: {
-          '.{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-icon-i-wrapper{{STATE}}': 'border-color: {{COLOR}};',
         },
       }
     );
@@ -651,7 +682,7 @@ class Icon extends BaseElement{
       label: "Radius",
       units: ["px", "%", "vh"],
       rules: {
-        ".{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-icon-i-wrapper{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
       }
     });
 
@@ -668,52 +699,59 @@ class Icon extends BaseElement{
         horizontal: 0,
         vertical: 0,
         opacity: 1,
-        spread: 0,
+        spread: 1,
         colorRGB: 'rgb(0, 0, 0)',
         color: 'rgb(0, 0, 0)',
         colorPickedHex: '#000000',
-        type: ""
+        type: "outline"
       },
       rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+        '{{ELEMENT}} .altrp-icon-i-wrapper{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
       },
     });
 
-    this.addControl('typographic_other_icon_or_image_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        // default:{
-        //   lineHeight: 1,
-        //   spacing: 0,
-        //   size: 16,
-        //   weight: "normal",
-        //   family: 'roboto',
-        //   decoration: ""
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
-    );
-
-    this.addControl("spacing_other_icon_or_image_style", {
+    //тут небольшой костыль
+    this.addControl("spacing_other_one_icon_or_image_style", {
+      conditions: {
+        'icon_position_desktop_position_style': "row",
+      },
       type: CONTROLLER_SLIDER,
       label: 'Spacing',
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
-          "padding-left: {{SIZE}}{{UNIT}}",
-          "padding-right: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-icon-header{{STATE}};": [
+          "margin-right: {{SIZE}}{{UNIT}};",
+        ]
+      }
+    });
+
+    this.addControl("spacing_other_two_icon_or_image_style", {
+      conditions: {
+        'icon_position_desktop_position_style': "column",
+      },
+      type: CONTROLLER_SLIDER,
+      label: 'Spacing',
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-icon-header{{STATE}};": [
+          "margin-bottom: {{SIZE}}{{UNIT}};",
+        ]
+      }
+    });
+
+    this.addControl("spacing_other_three_icon_or_image_style", {
+      conditions: {
+        'icon_position_desktop_position_style': "row-reverse",
+      },
+      type: CONTROLLER_SLIDER,
+      label: 'Spacing',
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-icon-header{{STATE}}": [
+          "margin-left: {{SIZE}}{{UNIT}};",
         ]
       }
     });
@@ -724,9 +762,9 @@ class Icon extends BaseElement{
       max: 300,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
-          "padding-left: {{SIZE}}{{UNIT}}",
-          "padding-right: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-icon-i{{STATE}}": [
+          "width: {{SIZE}}{{UNIT}};",
+          "height: {{SIZE}}{{UNIT}};"
         ]
       }
     });
@@ -737,10 +775,7 @@ class Icon extends BaseElement{
       max: 360,
       min: -360,
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
-          "padding-left: {{SIZE}}{{UNIT}}",
-          "padding-right: {{SIZE}}{{UNIT}}"
-        ]
+        "{{ELEMENT}} .altrp-icon-i{{STATE}}": "transform: rotate({{SIZE}}deg);"
       }
     });
 
@@ -750,10 +785,7 @@ class Icon extends BaseElement{
       max: 360,
       min: -360,
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
-          "padding-left: {{SIZE}}{{UNIT}}",
-          "padding-right: {{SIZE}}{{UNIT}}"
-        ]
+        "{{ELEMENT}} .altrp-icon-i-wrapper{{STATE}}": "transform: rotate({{SIZE}}deg);"
       }
     });
 
@@ -926,9 +958,9 @@ class Icon extends BaseElement{
       label: 'Content',
     });
 
-    this.addControl('alignment_content_style', {
+    this.addControl('header_alignment_content_style', {
       type: CONTROLLER_CHOOSE,
-      label: 'Alignment',
+      label: 'Header alignment',
       options:[
         {
           icon: 'left',
@@ -948,8 +980,33 @@ class Icon extends BaseElement{
         }
       ],
       rules: {
-        '{{ELEMENT}}': 'align-items: {{VALUE}};',
-        '{{ELEMENT}} .altrp-dropbar': 'align-items: {{VALUE}};',
+        '{{ELEMENT}} .altrp-icon-body{{STATE}}': 'justify-content: {{VALUE}};',
+      },
+    });
+
+    this.addControl('description_alignment_content_style', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Description alignment',
+      options:[
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+        {
+          icon: 'in_width',
+          value: 'stretch',
+        }
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-icon-footer{{STATE}}': 'justify-content: {{VALUE}};'
       },
     });
 
@@ -962,7 +1019,7 @@ class Icon extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}}': [
+        '{{ELEMENT}} .altrp-icon-content{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -982,10 +1039,7 @@ class Icon extends BaseElement{
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
-          "padding-left: {{SIZE}}{{UNIT}}",
-          "padding-right: {{SIZE}}{{UNIT}}"
-        ]
+        "{{ELEMENT}} .altrp-icon-body{{STATE}}": "margin-bottom: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -997,20 +1051,20 @@ class Icon extends BaseElement{
         //   colorPickedHex: "#FFF",
         // },
         rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-icon-body-link{{STATE}}': 'color: {{COLOR}};',
         },
       }
     );
 
     this.addControl('title_background_color_content_style', {
         type: CONTROLLER_COLOR,
-        label: 'Color',
+        label: 'Background color',
         // default: {
         //   color: "rgb(255,255,255)",
         //   colorPickedHex: "#FFF",
         // },
         rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-icon-body{{STATE}}': 'background-color: {{COLOR}};',
         },
       }
     );
@@ -1019,15 +1073,15 @@ class Icon extends BaseElement{
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typography',
         rules: {
-          '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
+          '{{ELEMENT}} .altrp-icon-body-link{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
+            'letter-spacing: {{SPACING}}px;',
+            'font-weight: {{WEIGHT}};',
+            'text-transform: {{TRANSFORM}};',
+            'font-style: {{STYLE}};',
+            'text-decoration: {{DECORATION}};'
           ],
         },
       }
@@ -1044,10 +1098,7 @@ class Icon extends BaseElement{
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
-          "padding-left: {{SIZE}}{{UNIT}}",
-          "padding-right: {{SIZE}}{{UNIT}}"
-        ]
+        "{{ELEMENT}} .altrp-icon-footer{{STATE}}": "margin-bottom: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -1059,20 +1110,20 @@ class Icon extends BaseElement{
         //   colorPickedHex: "#FFF",
         // },
         rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-icon-footer-text{{STATE}}': 'color: {{COLOR}};',
         },
       }
     );
 
     this.addControl('description_background_color_content_style', {
         type: CONTROLLER_COLOR,
-        label: 'Color',
+        label: 'Background color',
         // default: {
         //   color: "rgb(255,255,255)",
         //   colorPickedHex: "#FFF",
         // },
         rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-icon-footer{{STATE}}': 'background-color: {{COLOR}};',
         },
       }
     );
@@ -1081,7 +1132,7 @@ class Icon extends BaseElement{
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typography',
         rules: {
-          '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
+          '{{ELEMENT}} .altrp-icon-footer-text{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -1115,7 +1166,7 @@ class Icon extends BaseElement{
         //   colorPickedHex: "#FFF",
         // },
         rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-icon-read-more-link{{STATE}}': 'color: {{COLOR}};',
         },
       }
     );
@@ -1128,7 +1179,7 @@ class Icon extends BaseElement{
         //   colorPickedHex: "#FFF",
         // },
         rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-icon-read-more-link{{STATE}}': 'background-color: {{COLOR}};',
         },
       }
     );
@@ -1163,7 +1214,7 @@ class Icon extends BaseElement{
           },
         ],
         rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-style: {{VALUE}};',
+          '{{ELEMENT}} .altrp-icon-read-more-link{{STATE}}': 'border-style: {{VALUE}};',
         },
       }
     );
@@ -1180,7 +1231,7 @@ class Icon extends BaseElement{
           'vh',
         ],
         rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          '{{ELEMENT}} .altrp-icon-read-more-link{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         },
       }
     );
@@ -1193,7 +1244,7 @@ class Icon extends BaseElement{
         //   colorPickedHex: "#32a852",
         // },
         rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-icon-read-more-link{{STATE}}': 'border-color: {{COLOR}};',
         },
       }
     );
@@ -1207,7 +1258,7 @@ class Icon extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}}': [
+        '{{ELEMENT}} .altrp-icon-read-more-link{{STATE}}': [
           'border-top-left-radius: {{TOP}}{{UNIT}}',
           'border-top-right-radius: {{RIGHT}}{{UNIT}}',
           'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
@@ -1224,14 +1275,14 @@ class Icon extends BaseElement{
         horizontal: 0,
         vertical: 0,
         opacity: 1,
-        spread: 0,
+        spread: 1,
         colorRGB: 'rgb(0, 0, 0)',
         color: 'rgb(0, 0, 0)',
         colorPickedHex: '#000000',
         type: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+        '{{ELEMENT}} .altrp-icon-read-more-link{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
       },
     });
 
@@ -1244,7 +1295,7 @@ class Icon extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-btn-icon{{STATE}}': [
+        '{{ELEMENT}} .altrp-icon-read-more-link{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -1257,7 +1308,7 @@ class Icon extends BaseElement{
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typography',
         rules: {
-          '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
+          '{{ELEMENT}} .altrp-icon-read-more-link{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
@@ -1275,11 +1326,6 @@ class Icon extends BaseElement{
 
     this.startControlSection('indicator_style', {
       tab: TAB_STYLE,
-      label: 'Indicator',
-    });
-
-    this.addControl('media_indicator_style', {
-      type: CONTROLLER_MEDIA,
       label: 'Indicator',
     });
 
@@ -1345,7 +1391,7 @@ class Icon extends BaseElement{
         //   colorPickedHex: "#32a852",
         // },
         rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-icon-indicator{{STATE}} path': 'fill: {{COLOR}};',
         },
       }
     );
@@ -1358,20 +1404,20 @@ class Icon extends BaseElement{
         //   colorPickedHex: "#32a852",
         // },
         rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-icon-indicator{{STATE}}': 'background-color: {{COLOR}};',
         },
       }
     );
 
-    this.addControl('color_indicator_style', {
+    this.addControl('stroke_color_indicator_style', {
         type: CONTROLLER_COLOR,
-        label: 'Color',
+        label: 'Stroke color',
         // default: {
         //   color: "rgb(50,168,82)",
         //   colorPickedHex: "#32a852",
         // },
         rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-icon-indicator{{STATE}} path': 'stroke: {{COLOR}};',
         },
       }
     );
@@ -1391,7 +1437,7 @@ class Icon extends BaseElement{
         //   colorPickedHex: "#32a852",
         // },
         rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-icon-badge{{STATE}}': 'color: {{COLOR}};',
         },
       }
     );
@@ -1404,7 +1450,7 @@ class Icon extends BaseElement{
         //   colorPickedHex: "#32a852",
         // },
         rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-icon-badge{{STATE}}': 'background-color: {{COLOR}};',
         },
       }
     );
@@ -1439,7 +1485,7 @@ class Icon extends BaseElement{
         }
       ],
       rules: {
-        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": "border-style: {{VALUE}};"
+        "{{ELEMENT}} .altrp-icon-badge{{STATE}}": "border-style: {{VALUE}};"
       }
     });
 
@@ -1448,8 +1494,7 @@ class Icon extends BaseElement{
       label: "Border width",
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+        "{{ELEMENT}} .altrp-icon-badge{{STATE}}": "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
       }
     });
 
@@ -1457,7 +1502,7 @@ class Icon extends BaseElement{
       type: CONTROLLER_COLOR,
       label: "Border color",
       rules: {
-        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": "border-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-icon-badge{{STATE}}": "border-color: {{COLOR}};"
       }
     });
 
@@ -1466,7 +1511,7 @@ class Icon extends BaseElement{
       label: "Border radius",
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-icon-badge{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
       }
     });
 
@@ -1478,14 +1523,14 @@ class Icon extends BaseElement{
           horizontal: 0,
           vertical: 0,
           opacity: 1,
-          spread: 0,
+          spread: 1,
           colorRGB: 'rgb(0, 0, 0)',
           color: 'rgb(0, 0, 0)',
           colorPickedHex: '#000000',
-          type: ""
+          type: "outline"
         },
         rules: {
-          '{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+          '{{ELEMENT}} .altrp-icon-badge{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
         },
       }
     );
@@ -1499,7 +1544,7 @@ class Icon extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}}': [
+        '{{ELEMENT}} .altrp-icon-badge{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -1512,7 +1557,7 @@ class Icon extends BaseElement{
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typography',
         rules: {
-          '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
+          '{{ELEMENT}} .altrp-icon-badge{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',

@@ -42,73 +42,6 @@ class IconWidget extends Component {
       )
     }
 
-    //read more
-    let readMore = "";
-    if(this.state.settings.read_more_button_additional_options_content) {
-
-      let ReadMoreIcon = (props) => Object.keys(this.state.settings.icon_read_more_content).length !== 0 ? (
-        <AltrpImage
-          image={this.state.settings.icon_read_more_content}
-          className={"altrp-icon-read-more-icon" + " altrp-icon-read-more-icon-" + props.pos}
-        />
-      ) : "";
-
-      let readMorePosOnHover = {};
-
-      if(this.state.settings.show_on_hover_additional_options_content) {
-        let x = this.state.settings.horizontal_offset_additional_options_content;
-        let y = this.state.settings.vertical_offset_additional_options_content;
-
-        if(x.size === "") {
-          x.size = "0";
-        }
-        if(y.size === "") {
-          y.size = "0";
-        }
-        readMorePosOnHover = {
-          transform: `translate(${x.size+x.unit}, ${y.size+y.unit})`
-        }
-      }
-
-      let readMoreContent = (
-        <React.Fragment>
-          {
-            this.state.settings.icon_position_additional_options_content === "left" ? <ReadMoreIcon pos="left" /> : ""
-          }
-          {
-            this.state.settings.text_read_more_content
-          }
-          {
-            this.state.settings.icon_position_additional_options_content === "right" ? <ReadMoreIcon pos="right" /> : ""
-          }
-        </React.Fragment>
-      );
-
-      let readMoreLink = (
-        <AltrpLink className="altrp-icon-read-more-link" link={this.state.settings.link_read_more_content}>
-          {
-            readMoreContent
-          }
-        </AltrpLink>
-      );
-
-      let readMoreNoLink = (
-        <div className="altrp-icon-read-more-link">
-          {
-            readMoreContent
-          }
-        </div>
-      );
-
-      readMore = (
-        <div style={readMorePosOnHover} className={"altrp-icon-read-more" + (this.state.settings.show_on_hover_additional_options_content ? " altrp-icon-read-more-on-hover" : "")}>
-          {
-            this.state.settings.global_link_additional_options_content ? readMoreNoLink : readMoreLink
-          }
-        </div>
-      )
-    }
-
     //indicator
     let indicator = "";
 
@@ -209,34 +142,165 @@ class IconWidget extends Component {
         </div>
       )
     }
-    let iconContent = (
-      <div className="altrp-icon">
-        <div className="altrp-icon-header">
-          <AltrpImage
-            image={this.state.settings.media_icon_box_content}
-            default={{
-              assetType: "icon",
-              name: 'star',
-              iconComponent: iconsManager().renderIcon('star')
-            }}
-            className={"altrp-icon-i"}
-          />
-        </div>
-        <div className="altrp-icon-body">
+
+    //style for altrp-icon-body, altrp-icon-footer
+    let bodyStyles = {};
+    let footerStyles = {};
+    let headerStyles = {};
+    let bodyAlignment = this.state.settings.header_alignment_content_style;
+    let footerAligment = this.state.settings.description_alignment_content_style;
+
+    switch (this.state.settings.icon_position_desktop_position_style) {
+      case "row":
+        if(!bodyAlignment) {
+          bodyStyles = {
+            justifyContent: "flex-start"
+          };
+        }
+        if(!footerAligment) {
+          footerStyles = {
+            justifyContent: "flex-start"
+          };
+        }
+        headerStyles = {
+          marginLeft: 0,
+          marginBottom: 0
+        };
+        break;
+      case "column":
+        if(!bodyAlignment) {
+          bodyStyles = {
+            justifyContent: "center"
+          };
+        }
+        if(!footerAligment) {
+          footerStyles = {
+            justifyContent: "center"
+          };
+        }
+        headerStyles = {
+          marginLeft: 0,
+          marginRight: 0
+        };
+        break;
+      case "row-reverse":
+        if(!bodyAlignment) {
+          bodyStyles = {
+            justifyContent: "flex-end"
+          };
+        }
+        if(!footerAligment) {
+          footerStyles = {
+            justifyContent: "flex-end"
+          };
+        }
+        headerStyles = {
+          marginRight: 0,
+          marginBottom: 0
+        };
+        break
+    }
+
+    //read more
+    let readMore = "";
+    if(this.state.settings.read_more_button_additional_options_content) {
+
+      let ReadMoreIcon = (props) => Object.keys(this.state.settings.icon_read_more_content).length !== 0 ? (
+        <AltrpImage
+          image={this.state.settings.icon_read_more_content}
+          className={"altrp-icon-read-more-icon" + " altrp-icon-read-more-icon-" + props.pos}
+        />
+      ) : "";
+
+      let readMorePosOnHover = {};
+
+      if(this.state.settings.show_on_hover_additional_options_content) {
+        let x = this.state.settings.horizontal_offset_additional_options_content;
+        let y = this.state.settings.vertical_offset_additional_options_content;
+
+        if(x.size === "") {
+          x.size = "0";
+        }
+        if(y.size === "") {
+          y.size = "0";
+        }
+        readMorePosOnHover = {
+          transform: `translate(${x.size+x.unit}, ${y.size+y.unit})`
+        }
+      }
+
+      let readMoreContent = (
+        <React.Fragment>
           {
-            bodyContent
+            this.state.settings.icon_position_additional_options_content === "left" ? <ReadMoreIcon pos="left" /> : ""
+          }
+          {
+            this.state.settings.text_read_more_content
+          }
+          {
+            this.state.settings.icon_position_additional_options_content === "right" ? <ReadMoreIcon pos="right" /> : ""
+          }
+        </React.Fragment>
+      );
+
+      let readMoreLink = (
+        <AltrpLink className="altrp-icon-read-more-link" link={this.state.settings.link_read_more_content}>
+          {
+            readMoreContent
+          }
+        </AltrpLink>
+      );
+
+      let readMoreNoLink = (
+        <div className="altrp-icon-read-more-link">
+          {
+            readMoreContent
           }
         </div>
-        <div className="altrp-icon-footer">
-          <p className="altrp-icon-footer-text">
-            {
-              this.state.settings.description_icon_box_content
-            }
-          </p>
+      );
+
+      readMore = (
+        <div style={{...readMorePosOnHover, ...bodyStyles}} className={"altrp-icon-read-more" + (this.state.settings.show_on_hover_additional_options_content ? " altrp-icon-read-more-on-hover" : "")}>
+          {
+            this.state.settings.global_link_additional_options_content ? readMoreNoLink : readMoreLink
+          }
         </div>
-        {
-          readMore
-        }
+      )
+    }
+
+    let iconContent = (
+      <div className="altrp-icon">
+        <div className="altrp-icon-header" style={headerStyles}>
+          <div className="altrp-icon-i-wrapper">
+            <AltrpImage
+              image={this.state.settings.media_icon_box_content}
+              default={{
+                assetType: "icon",
+                name: 'star',
+                iconComponent: iconsManager().renderIcon('star')
+              }}
+              className={"altrp-icon-i"}
+            />
+          </div>
+        </div>
+        <div className="altrp-icon-content">
+          <div className="altrp-icon-body" style={bodyStyles}>
+            {
+              bodyContent
+            }
+          </div>
+          <div className="altrp-icon-footer" style={footerStyles}>
+            <p className="altrp-icon-footer-text">
+              {
+                this.state.settings.description_icon_box_content
+              }
+            </p>
+          </div>
+          {
+            readMore
+          }
+        </div>
+
         {
           indicator
         }
