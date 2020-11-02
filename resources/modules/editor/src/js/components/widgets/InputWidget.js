@@ -467,7 +467,7 @@ class InputWidget extends Component {
 
     let options = this.state.options;
     if(content_options_nullable){
-      options = _.union([{ label: nulled_option_title, value: 'all', }], options);
+      options = _.union([{ label: nulled_option_title, value: '', }], options);
     }
 
 
