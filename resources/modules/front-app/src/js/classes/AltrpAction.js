@@ -1,6 +1,7 @@
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import { isString } from "lodash";
 import {
+  elementsToPdf,
   getComponentByElementId,
   getHTMLElementById,
   printElements,
@@ -129,6 +130,10 @@ class AltrpAction extends AltrpModel {
         break;
       case 'trigger': {
         result = await this.doActionTrigger();
+      }
+        break;
+      case 'page_to_pdf': {
+        result = await this.doActionPageToPDF();
       }
         break;
     }
@@ -293,11 +298,30 @@ class AltrpAction extends AltrpModel {
       success: true,
     }
   }
+  /**
+   * Скролл на верх страницы
+   * @return {Promise<{}>}
+   */
+  async doActionPageToPDF() {
+    let filename = replaceContentWithData(this.getProperty('name','file'));
+    const elements = [];
+    const styles = document.getElementsByTagName('style');
+    const links = document.getElementsByTagName('link');
+    // _.each(styles, style=>{
+    //   elements.push(style);
+    // });
+    // _.each(links, link=>{
+    //   elements.push(link);
+    // });
+    elements.push(document.getElementById('route-content'));
+    // elements.push(document.getElementById('styles-container'));
+    return await elementsToPdf(elements, filename)
+  }
 
   async doActionTrigger() {
     let element = getComponentByElementId('dashboardsWidget');
     let action = this.getProperty('action');
-    element.props.element.component.fireAction(action)
+    element.props.element.component.fireAction(action);
     return {
       success: true,
     }

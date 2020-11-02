@@ -236,6 +236,10 @@ class Button extends BaseElement {
           value: 'trigger',
           label: 'Trigger Action',
         },
+        {
+          value: 'page_to_pdf',
+          label: 'Page to PDF',
+        },
       ],
     });
 
@@ -280,9 +284,20 @@ class Button extends BaseElement {
 
     actionsRepeater.addControl('form_id', {
       label: 'Form ID',
+      dynamic: false,
       conditions: {
         type: [
           'form',
+        ],
+      },
+    });
+
+    actionsRepeater.addControl('name', {
+      label: 'Name',
+      dynamic: false,
+      conditions: {
+        type: [
+          'page_to_pdf',
         ],
       },
     });

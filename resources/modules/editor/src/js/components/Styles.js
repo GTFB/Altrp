@@ -39,7 +39,7 @@ class Styles extends Component {
   }
   render(){
     let elementStyles = _.uniqBy(this.state.elementStyles, 'elementId');
-    return <div className="styles-container" ref={this.stylesContainer}>
+    return <div className="styles-container" id="styles-container" ref={this.stylesContainer}>
       {elementStyles.map(elementStyle => {
         return<style data-styles-id={elementStyle.elementId}
                      id={`altrp-styles${elementStyle.elementId}`}
