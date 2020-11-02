@@ -299,9 +299,16 @@ class AltrpAction extends AltrpModel {
     let element = getComponentByElementId(elementId);
     let action = this.getProperty('action');
 
-    element.props.element.component.fireAction(action)
-    return {
-      success: true,
+    try {
+      element.props.element.component.fireAction(action)
+      return {
+        success: true,
+      }
+    }
+    catch (error) {
+      return {
+        success: false,
+      }
     }
   }
 }
