@@ -295,8 +295,10 @@ class AltrpAction extends AltrpModel {
   }
 
   async doActionTrigger() {
-    let element = getComponentByElementId('dashboardsWidget');
+    let elementId = this.getProperty('element_id');
+    let element = getComponentByElementId(elementId);
     let action = this.getProperty('action');
+
     element.props.element.component.fireAction(action)
     return {
       success: true,
