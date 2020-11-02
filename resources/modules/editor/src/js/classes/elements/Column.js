@@ -224,7 +224,7 @@ class Column  extends BaseElement {
         value: ""
       },
       rules: {
-        "{{ELEMENT}} .altrp-column{{STATE}}": "background-image: {{VALUE}}" 
+        "{{ELEMENT}} .altrp-column{{STATE}}": "background-image: {{VALUE}}"
       }
     });
 

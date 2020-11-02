@@ -83,10 +83,9 @@ class Section extends BaseElement{
       }
     );
 
-    this.addControl(
-      'layout_align_content', {
+    this.addControl('layout_align_content', {
       type: CONTROLLER_SELECT,
-      label: 'Align Content',
+      label: 'Align content',
       options: [
         {
           'value': 'baseline',
@@ -125,6 +124,49 @@ class Section extends BaseElement{
         "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "align-content: {{VALUE}}",
       },
     }
+    );
+
+    this.addControl('layout_justify_content', {
+        type: CONTROLLER_SELECT,
+        label: 'Justify content',
+        options: [
+          {
+            'value': 'baseline',
+            'label': 'baseline'
+          },
+          {
+            'value': 'center',
+            'label': 'center'
+          },
+          {
+            'value': 'flex-start',
+            'label': 'flex-start'
+          },
+          {
+            'value': 'flex-end',
+            'label': 'flex-end'
+          },
+          {
+            'value': 'space-around',
+            'label': 'space-around'
+          },
+          {
+            'value': 'space-between',
+            'label': 'space-between'
+          },
+          {
+            'value': 'space-evenly',
+            'label': 'space-evenly'
+          },
+          {
+            'value': 'unset',
+            'label': 'unset'
+          },
+        ],
+        rules: {
+          "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "justify-content: {{VALUE}}",
+        },
+      }
     );
 
     // this.addControl("layout_content_full_width", {
