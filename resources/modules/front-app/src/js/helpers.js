@@ -169,6 +169,18 @@ export function renderAssetIcon(asset, props = null) {
  * @throws Исключение если иконка не найдена
  * */
 export function renderAsset(asset, props = null) {
+  if(asset instanceof File){
+    let refImg = React.createRef();
+    let fr = new FileReader();
+    fr.readAsDataURL(asset);
+    fr.onload = () => {
+      if(refImg.current){
+        refImg.current.src =fr.result;
+        refImg.current.alt =asset.name;
+      }
+    };
+    return React.createElement('img', {...props, src: asset.url, ref: refImg})
+  }
   switch (asset.assetType) {
     case 'icon': {
       return iconsManager().renderIcon(asset.name, props)
@@ -306,7 +318,7 @@ function conditionChecker(c, model, dataByPath = true){
  * @param {*} _default
  * @param {AltrpModel} context
  * @param {boolean} altrpCheck - проверять ли altrp
- * @return {string}
+ * @return {*}
  */
 export function getDataByPath(path = '', _default = null, context = null, altrpCheck = false){
   /**
@@ -784,7 +796,7 @@ window.altrphelpers = {
 export function printElements(elements, title = ''){
   let myWindow = window.open('', 'my div', 'height=400,width=1200');
   myWindow.document.write(`<html><head><title>${title}</title></head>`);
-  myWindow.document.write('</head><body >');
+  myWindow.document.write('<body >');
   elements = _.isArray(elements) ? elements : [elements];
   elements.forEach(element => {
     myWindow.document.write(element.outerHTML);
@@ -795,4 +807,34 @@ export function printElements(elements, title = ''){
   myWindow.print();
   myWindow.close();
   return true;
+}
+
+/**
+ * Функция конвертирует HTML в PDF
+ * @params {HTMLElement[]} element
+ * @params {string} filename
+ */
+export async function elementsToPdf(elements, filename = ''){
+  let html2pdf = (await import('html2pdf.js')).default;
+  elements = elements.body ? elements.body : elements;
+  if(! elements){
+    return{
+      success: true,
+    };
+  }
+  let myWindow = window.open('', 'my div', 'height=400,width=1440');
+  myWindow.document.write(`<html><head><title></title></head>`);
+  myWindow.document.write('</head><body >');
+  elements = _.isArray(elements) ? elements : [elements];
+  elements.forEach(element => {
+    myWindow.document.write(element.outerHTML);
+  });
+  myWindow.document.write('</body></html>');
+  return new Promise((resolve, reject) =>{
+    console.log(filename);
+    // html2pdf().from(document.body).save(filename);
+    html2pdf().from(myWindow.document.body).save(filename);
+    // myWindow.close();
+    resolve({success: true})
+  });
 }

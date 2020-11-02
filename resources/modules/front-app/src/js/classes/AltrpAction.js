@@ -1,13 +1,15 @@
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
-import {isString} from "lodash";
+import { isString } from "lodash";
 import {
+  elementsToPdf,
   getComponentByElementId,
   getHTMLElementById,
   printElements,
   replaceContentWithData,
   scrollToElement
 } from "../helpers";
-import {togglePopup} from "../store/popup-trigger/actions";
+import { togglePopup } from "../store/popup-trigger/actions";
+import reactDom from 'react-dom';
 
 // let  history = require('history');
 // // import {history} from 'history';
@@ -17,8 +19,8 @@ import {togglePopup} from "../store/popup-trigger/actions";
  * @link https://docs.google.com/document/d/1v8Hm1DLkqqwzBeISd8-UvgTqscVxQPtBUtKqBrH1HaU/edit#
  * @class AltrpAction
  */
-class AltrpAction extends AltrpModel{
-  constructor(data, widgetId){
+class AltrpAction extends AltrpModel {
+  constructor(data, widgetId) {
     super(data);
     this.setProperty('_widgetId', widgetId);
     this.init();
@@ -32,7 +34,7 @@ class AltrpAction extends AltrpModel{
    */
   getReplacedProperty(name, defaultValue = '') {
     let value = this.getProperty(name, defaultValue);
-    if(_.isString(value)){
+    if (_.isString(value)) {
       value = replaceContentWithData(value);
     }
     return value;
@@ -40,10 +42,10 @@ class AltrpAction extends AltrpModel{
   /**
    * Инициируем действие
    */
-  async init(){
-    switch(this.getType()) {
-      case 'form':{
-        if(! this.getProperty('form_url')){
+  async init() {
+    switch (this.getType()) {
+      case 'form': {
+        if (!this.getProperty('form_url')) {
           this.setProperty('_form', null);
           return;
         }
@@ -63,14 +65,14 @@ class AltrpAction extends AltrpModel{
    * Получить тип действия
    * @return {string}
    */
-  getType(){
+  getType() {
     return this.getProperty('type');
   }
   /**
    * Получить тип действия
    * @return {*}
    */
-  setType(type){
+  setType(type) {
     return this.setProperty('type', type);
   }
 
@@ -78,57 +80,65 @@ class AltrpAction extends AltrpModel{
    * Оссинхронно выполняет действие
    * @return {Promise<void>}
    */
-  async doAction(){
+  async doAction() {
     let result = {
       success: false,
     };
     let confirmText = this.getProperty('confirm');
-    if(confirmText && ! confirm(confirmText)){
+    if (confirmText && !confirm(confirmText)) {
       return {
         success: false,
         message: 'User not Confirm'
       }
     }
-    switch(this.getType()) {
-      case 'form':{
-        result =  await this.doActionForm();
+    switch (this.getType()) {
+      case 'form': {
+        result = await this.doActionForm();
       }
-      break;
-      case 'redirect':{
-        result =  await this.doActionRedirect();
+        break;
+      case 'redirect': {
+        result = await this.doActionRedirect();
       }
-      break;
-      case 'toggle_element':{
-        result =  await this.doActionToggleElements();
+        break;
+      case 'toggle_element': {
+        result = await this.doActionToggleElements();
       }
-      break;
-      case 'toggle_popup':{
-        result =  await this.doActionTogglePopup();
+        break;
+      case 'toggle_popup': {
+        result = await this.doActionTogglePopup();
       }
-      break;
-      case 'print_page':{
-        result =  await this.doActionPrintPage();
+        break;
+      case 'print_page': {
+        result = await this.doActionPrintPage();
       }
-      break;
-      case 'print_elements':{
-        result =  await this.doActionPrintElements();
+        break;
+      case 'print_elements': {
+        result = await this.doActionPrintElements();
       }
-      break;
-      case 'scroll_to_element':{
-        result =  await this.doActionScrollToElement();
+        break;
+      case 'scroll_to_element': {
+        result = await this.doActionScrollToElement();
       }
-      break;
-      case 'scroll_to_top':{
-        result =  await this.doActionScrollToTop();
+        break;
+      case 'scroll_to_top': {
+        result = await this.doActionScrollToTop();
       }
-      break;
-      case 'scroll_to_bottom':{
-        result =  await this.doActionScrollToBottom();
+        break;
+      case 'scroll_to_bottom': {
+        result = await this.doActionScrollToBottom();
       }
-      break;
+        break;
+      case 'trigger': {
+        result = await this.doActionTrigger();
+      }
+        break;
+      case 'page_to_pdf': {
+        result = await this.doActionPageToPDF();
+      }
+        break;
     }
-    let alertText =   this.getProperty('alert');
-    if(alertText){
+    let alertText = this.getProperty('alert');
+    if (alertText) {
       alert(alertText);
     }
     return result;
@@ -137,8 +147,8 @@ class AltrpAction extends AltrpModel{
    * Ассинхронно выполняет действие-формы
    * @return {Promise<{}>}
    */
-  async doActionForm(){
-    if(! this.getProperty('_form')){
+  async doActionForm() {
+    if (!this.getProperty('_form')) {
       return {
         success: false,
         message: 'Нет Формы',
@@ -150,7 +160,7 @@ class AltrpAction extends AltrpModel{
    * Делает редирект на страницу form_url
    * @return {Promise<{}>}
    */
-  async doActionRedirect(){
+  async doActionRedirect() {
 
     let URL = this.getReplacedProperty('form_url');
     frontAppRouter.history.push(URL);
@@ -162,16 +172,16 @@ class AltrpAction extends AltrpModel{
    * Показывает/скрывает элементы по пользовательским ИД
    * @return {Promise<{}>}
    */
-  async doActionToggleElements(){
+  async doActionToggleElements() {
     let IDs = this.getProperty('elements_ids');
-    if(! IDs){
-      return {success: true}
+    if (!IDs) {
+      return { success: true }
     }
     IDs = IDs.split(',');
 
-    IDs.forEach(id=>{
+    IDs.forEach(id => {
       let component = getComponentByElementId(id);
-      if((! component) && ! component.toggleElementDisplay){
+      if ((!component) && !component.toggleElementDisplay) {
         return
       }
       component.toggleElementDisplay();
@@ -184,10 +194,10 @@ class AltrpAction extends AltrpModel{
    * Показывает/скрывает попап
    * @return {Promise<{}>}
    */
-  async doActionTogglePopup(){
+  async doActionTogglePopup() {
     let id = this.getProperty('popup_id');
 
-    if(! id){
+    if (!id) {
       return {
         success: true,
       }
@@ -203,7 +213,7 @@ class AltrpAction extends AltrpModel{
    * Печать страницы
    * @return {Promise<{}>}
    */
-  async doActionPrintPage(){
+  async doActionPrintPage() {
 
     window.print();
     return {
@@ -214,27 +224,27 @@ class AltrpAction extends AltrpModel{
    * Печать элементов
    * @return {Promise<{}>}
    */
-  async doActionPrintElements(){
+  async doActionPrintElements() {
 
     let IDs = this.getProperty('elements_ids');
-    if(! IDs){
-      return {success: true}
+    if (!IDs) {
+      return { success: true }
     }
     IDs = IDs.split(',');
     let elementsToPrint = [];
-    IDs.forEach(elementId=>{
-      if((! elementId) || ! elementId.trim()){
+    IDs.forEach(elementId => {
+      if ((!elementId) || !elementId.trim()) {
         return;
       }
       getHTMLElementById(elementId.trim()) && elementsToPrint.push(getHTMLElementById(elementId));
-      if(getComponentByElementId(elementId.trim())?.getStylesHTMLElement){
+      if (getComponentByElementId(elementId.trim())?.getStylesHTMLElement) {
         let stylesElement = getComponentByElementId(elementId.trim()).getStylesHTMLElement();
-        if(stylesElement){
+        if (stylesElement) {
           elementsToPrint.push(stylesElement);
         }
       }
     });
-    if(_.get(window, 'stylesModule.stylesContainer.current')){
+    if (_.get(window, 'stylesModule.stylesContainer.current')) {
       elementsToPrint.push(_.get(window, 'stylesModule.stylesContainer.current'));
     }
     elementsToPrint.push(document.head);
@@ -247,15 +257,15 @@ class AltrpAction extends AltrpModel{
    * Скролл к элементу
    * @return {Promise<{}>}
    */
-  async doActionScrollToElement(){
+  async doActionScrollToElement() {
 
     let elementId = this.getProperty('element_id');
-    if(! elementId){
-      return {success: true}
+    if (!elementId) {
+      return { success: true }
     }
     elementId = elementId.trim();
     const element = getHTMLElementById(elementId);
-    if(element){
+    if (element) {
       scrollToElement(mainScrollbars, element)
     }
     return {
@@ -266,7 +276,7 @@ class AltrpAction extends AltrpModel{
    * Скролл на верх страницы
    * @return {Promise<{}>}
    */
-  async doActionScrollToTop(){
+  async doActionScrollToTop() {
     mainScrollbars.scrollTop(0);
     return {
       success: true,
@@ -276,9 +286,9 @@ class AltrpAction extends AltrpModel{
    * Скролл на верх страницы
    * @return {Promise<{}>}
    */
-  async doActionScrollToBottom(){
+  async doActionScrollToBottom() {
     const routeContent = document.getElementById('route-content');
-    if(! routeContent){
+    if (!routeContent) {
       return {
         success: true,
       }
@@ -286,6 +296,44 @@ class AltrpAction extends AltrpModel{
     mainScrollbars.scrollTop(routeContent.offsetHeight);
     return {
       success: true,
+    }
+  }
+  /**
+   * Скролл на верх страницы
+   * @return {Promise<{}>}
+   */
+  async doActionPageToPDF() {
+    let filename = replaceContentWithData(this.getProperty('name','file'));
+    const elements = [];
+    const styles = document.getElementsByTagName('style');
+    const links = document.getElementsByTagName('link');
+    // _.each(styles, style=>{
+    //   elements.push(style);
+    // });
+    // _.each(links, link=>{
+    //   elements.push(link);
+    // });
+    elements.push(document.getElementById('route-content'));
+    // elements.push(document.getElementById('styles-container'));
+    return await elementsToPdf(elements, filename)
+  }
+
+  async doActionTrigger() {
+    let elementId = this.getProperty('element_id');
+    let element = getComponentByElementId(elementId);
+    let action = this.getProperty('action');
+
+
+    try {
+      element.props.element.component.fireAction(action)
+      return {
+        success: true,
+      }
+    }
+    catch (error) {
+      return {
+        success: false,
+      }
     }
   }
 }

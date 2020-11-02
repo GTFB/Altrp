@@ -22,7 +22,14 @@ class ImageWidget extends Component {
     let media = this.state.settings.content_media;
     if(this.state.settings.content_path && _.isObject(getDataByPath(this.state.settings.content_path))){
       media = getDataByPath(this.state.settings.content_path);
-      media.assetType = 'media';
+      /**
+       * Проверим массив ли с файлами content_path
+       */
+      if(_.get(media, '0') instanceof File){
+        media = _.get(media, '0')
+      } else {
+        media.assetType = 'media';
+      }
     }
     let altrpImage = <AltrpImage
       image={media}
