@@ -259,11 +259,11 @@ class InputWidget extends Component {
     this.setState(state => ({
       ...state,
       value
-    }), ()=>{
+    }), () => {
       /**
        * Обновляем хранилище только если не текстовое поле
        */
-      if(['text', 'email', 'phone', 'number', 'password'].indexOf(this.state.settings.content_type) === -1){
+      if (['text', 'email', 'phone', 'number', 'password'].indexOf(this.state.settings.content_type) === -1) {
         this.dispatchFieldValueToStore(value, true);
       }
     });
@@ -272,8 +272,8 @@ class InputWidget extends Component {
   /**
    * Потеря фокуса для оптимизации
    */
-  onBlur = (e)=>{
-    if(['text', 'email', 'phone', 'number', 'password'].indexOf(this.state.settings.content_type) !== -1) {
+  onBlur = (e) => {
+    if (['text', 'email', 'phone', 'number', 'password'].indexOf(this.state.settings.content_type) !== -1) {
       this.dispatchFieldValueToStore(e.target.value, true);
     }
   };
@@ -386,18 +386,18 @@ class InputWidget extends Component {
       case 'checkbox': {
         input = this.renderRepeatedInput();
       }
-      break;
-      default:{
+        break;
+      default: {
         input = <React.Suspense fallback={<input />}>
           <AltrpInput type={this.state.settings.content_type}
-                      value={value || ''}
-                      autoComplete={autocomplete}
-                      placeholder={this.state.settings.content_placeholder}
-                      className={"altrp-field " + this.state.settings.position_css_classes}
-                      settings={this.props.element.getSettings()}
-                      onChange={this.onChange}
-                      onBlur={this.onBlur}
-                      id={this.state.settings.position_css_id}
+            value={value || ''}
+            autoComplete={autocomplete}
+            placeholder={this.state.settings.content_placeholder}
+            className={"altrp-field " + this.state.settings.position_css_classes}
+            settings={this.props.element.getSettings()}
+            onChange={this.onChange}
+            onBlur={this.onBlur}
+            id={this.state.settings.position_css_id}
           /></React.Suspense>;
       }
     }
