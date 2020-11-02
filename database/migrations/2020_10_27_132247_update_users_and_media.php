@@ -23,18 +23,18 @@ class UpdateUsersAndMedia extends Migration
         $columnMedia = $tableMedia->columns()->where('name','id')->first();
 
         \App\Altrp\Table::withoutEvents(function () use ($tableUser, $tableMedia) {
-            $tableUser->update(['preset' => 1]);
-            $tableMedia->update(['preset' => 1]);
+            if ($tableUser) $tableUser->update(['preset' => 1]);
+            if ($tableMedia) $tableMedia->update(['preset' => 1]);
         });
 
         \App\Altrp\Column::withoutEvents(function () use ($columnUser, $columnMedia) {
-            $columnUser->update(['preset' => 1]);
-            $columnMedia->update(['preset' => 1]);
+            if ($columnUser) $columnUser->update(['preset' => 1]);
+            if ($columnMedia) $columnMedia->update(['preset' => 1]);
         });
 
         \App\Altrp\Model::withoutEvents(function () use ($modelUser, $modelMedia) {
-            $modelUser->update(['preset' => 1]);
-            $modelMedia->update(['preset' => 1]);
+            if ($modelUser) $modelUser->update(['preset' => 1]);
+            if ($modelMedia) $modelMedia->update(['preset' => 1]);
         });
 
         $models = \App\Altrp\Model::all();

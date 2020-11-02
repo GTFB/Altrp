@@ -125,7 +125,9 @@ class AltrpUpdateService
     if ( ! $archive->open( $file_path ) ) {
       return false;
     }
-
+    if( File::exists( public_path( 'modules' ) ) ){
+      File::cleanDirectory( public_path( 'modules' ) );
+    }
     return $archive->extractTo( base_path() );
   }
   /**

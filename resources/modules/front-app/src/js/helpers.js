@@ -169,9 +169,22 @@ export function renderAssetIcon(asset, props = null) {
  * @throws Исключение если иконка не найдена
  * */
 export function renderAsset(asset, props = null) {
+  if(asset instanceof File){
+    let refImg = React.createRef();
+    let fr = new FileReader();
+    fr.readAsDataURL(asset);
+    fr.onload = () => {
+      console.log(refImg);
+      if(refImg.current){
+        refImg.current.src =fr.result;
+        refImg.current.alt =asset.name;
+      }
+    };
+    return React.createElement('img', {...props, src: asset.url, ref: refImg})
+  }
   switch (asset.assetType) {
     case 'icon': {
-      return iconsManager().renderIcon(asset.name)
+      return iconsManager().renderIcon(asset.name, props)
     }
     case 'image': {
       return React.createElement('img', {...props, src: asset.url})
@@ -306,7 +319,7 @@ function conditionChecker(c, model, dataByPath = true){
  * @param {*} _default
  * @param {AltrpModel} context
  * @param {boolean} altrpCheck - проверять ли altrp
- * @return {string}
+ * @return {*}
  */
 export function getDataByPath(path = '', _default = null, context = null, altrpCheck = false){
   /**

@@ -291,7 +291,7 @@ class Button extends BaseElement {
       label: 'URL',
       responsive: false,
       dynamic: false,
-      description: '/ajax/models/test/{{id}}',
+      description: '/ajax/models/tests/{{id}}',
       conditions: {
         type: [
           'form',

@@ -771,6 +771,80 @@ class Section extends BaseElement{
       label: "CSS Classes"
     });
 
+    this.endControlSection();
+
+    this.startControlSection("position_fixed", {
+      tab: TAB_STYLE,
+      label: "Fixed Positioning"
+    });
+
+    this.addControl('isFixed', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Enable Fixed',
+    });
+
+    this.addControl("position_top", {
+      type: CONTROLLER_TEXT,
+      label: "Top",
+      default: 'auto',
+      conditions: {
+        'isFixed': [true],
+      },
+      rules: {
+          '{{ELEMENT}} .altrp-section{{STATE}}': 'top: {{VALUE}}',
+        },
+    });
+
+    this.addControl("position_right", {
+      type: CONTROLLER_TEXT,
+      label: "Right",
+      default: 'auto',
+      conditions: {
+        'isFixed': [true],
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-section{{STATE}}': 'right: {{VALUE}}',
+      },
+    });
+
+    this.addControl("position_left", {
+      type: CONTROLLER_TEXT,
+      label: "Left",
+      default: 'auto',
+      conditions: {
+        'isFixed': [true],
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-section{{STATE}}': 'left: {{VALUE}}',
+      },
+    });
+
+    this.addControl("position_bottom", {
+      type: CONTROLLER_TEXT,
+      label: "Bottom",
+      default: 'auto',
+      conditions: {
+        'isFixed': [true],
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-section{{STATE}}': 'bottom: {{VALUE}}',
+      },
+    });
+
+    this.addControl("custom_width", {
+      type: CONTROLLER_TEXT,
+      label: "Width",
+      default: 'auto',
+      conditions: {
+        'isFixed': [true],
+      },
+      rules: {
+        '{{ELEMENT}}.fixed-section .altrp-section{{STATE}}': 'width: {{VALUE}}',
+      },
+    });
+
+    this.endControlSection();
+
     advancedTabControllers(this);
   }
 
