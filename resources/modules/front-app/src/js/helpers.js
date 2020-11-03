@@ -840,7 +840,42 @@ export async function elementsToPdf(elements, filename = ''){
 }
 
 /**
- * Создать csv-файл из данных
+ * Забирает данные из HTML таблицы
+ * @param {{}}HTMLElement
+ */
+export function dataFromTable(HTMLElement){
+  const data = [];
+  const headers = [];
+  if(! (HTMLElement &&  HTMLElement.querySelectorAll)){
+    return data;
+  }
+  let table = HTMLElement.querySelector('table');
+  if((! table) && HTMLElement.querySelector('tr')){
+    table = HTMLElement;
+  }
+  if(! table){
+    return data;
+  }
+  const ths = table.querySelectorAll('th');
+  _.each(ths, (th) => {
+    if(th.innerText){
+      headers.push(th.innerText || '');
+    }
+  });
+  const rows = table.querySelectorAll('tbody tr');
+  _.each(rows, (row) => {
+    const cells = row.querySelectorAll('td');
+    const part = {};
+    headers.forEach((header, idx)=>{
+      part[header] = cells[idx].innerText || '';
+    });
+    data.push(part);
+  });
+  return data;
+}
+
+/**
+ * Создать csv-файл из данных и скачать
  * @param {{}} data
  * @param {string} filename
  */
@@ -879,7 +914,7 @@ export async function  dataToCSV (data = {}, filename){
   let link = document.createElement('a');
   link.setAttribute('href', window.URL.createObjectURL(blob));
   link.setAttribute('download', filename + '.csv');
-  document.body.appendChild(link); // Required for FF
+  document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
   return {success: true}
