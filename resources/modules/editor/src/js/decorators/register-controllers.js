@@ -116,10 +116,10 @@ export function advancedTabControllers(element) {
       units: ["px", "%", "vh"],
       rules: {
         "{{ELEMENT}}": [
-          "padding-top: {{TOP}}{{UNIT}} !important;",
-          "padding-right: {{RIGHT}}{{UNIT}} !important;",
-          "padding-bottom: {{BOTTOM}}{{UNIT}} !important;",
-          "padding-left: {{LEFT}}{{UNIT}} !important;"
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}}",
+          "padding-bottom: {{BOTTOM}}{{UNIT}}",
+          "padding-left: {{LEFT}}{{UNIT}}"
         ]
       }
     });
@@ -141,10 +141,10 @@ export function advancedTabControllers(element) {
       ],
       rules: {
         '{{ELEMENT}}': [
-          'margin-top: {{TOP}}{{UNIT}} !important;',
-          'margin-right: {{RIGHT}}{{UNIT}} !important;',
-          'margin-bottom: {{BOTTOM}}{{UNIT}} !important;',
-          'margin-left: {{LEFT}}{{UNIT}} !important;'
+          'margin-top: {{TOP}}{{UNIT}}',
+          'margin-right: {{RIGHT}}{{UNIT}}',
+          'margin-bottom: {{BOTTOM}}{{UNIT}}',
+          'margin-left: {{LEFT}}{{UNIT}}'
         ]
       },
     });
