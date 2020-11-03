@@ -7,7 +7,7 @@ function AltrpMapConstructor({ settings, id }) {
   const [isLoading, setIsLoading] = useState(false);
   const [geoJson, setGeoJson] = useState({});
   const { editable, canvas, zoom, lat, lng, style_height = {}, style_margin = {} } = settings;
-
+  console.log('HEY MAN');
   // Сохраняем данные карты
   const handleSave = (data) => {
     axios.post(`/ajax/maps/${id}`, {
