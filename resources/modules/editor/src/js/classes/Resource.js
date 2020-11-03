@@ -121,12 +121,33 @@ class Resource {
   post(data = {}, headers){
     headers = headers || {
       'X-CSRF-TOKEN': _token,
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      // 'Content-Type': 'application/json',
+      // 'Accept': 'application/json',
     };
+    let formData = new FormData();
+    let hasFile = false;
+    _.each(data, (value, key) => {
+      if(_.isArray(value)){
+        for (let i = 0; i < value.length; i++) {
+          if(value[i] instanceof File){
+            hasFile = true;
+          }
+          if(value[i].size > MAX_FILE_SIZE){
+            continue;
+          }
+          formData.append(`${key}[${i}]`, value[i]);
+        }
+      } else {
+        formData.append(key, value);
+      }
+    });
+    if(! hasFile){
+      headers['Content-Type']= 'application/json';
+      headers['Accept']= 'application/json';
+    }
     let options = {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: hasFile ?  formData : JSON.stringify(data),
       headers,
     };
     return fetch(this.getRoute(), options).then(res => {
@@ -176,14 +197,41 @@ class Resource {
   /**
    * @return {Promise}
    * */
-  put(id, data){
+  put(id, data, headers = null){
+    headers = headers || {
+      'X-CSRF-TOKEN': _token,
+      // 'Content-Type': 'application/json',
+      // 'Accept': 'application/json',
+    };
+    let formData = new FormData();
+    let hasFile = false;
+
+    _.each(data, (value, key) => {
+      if(_.isArray(value)){
+        for (let i = 0; i < value.length; i++) {
+          if(value[i] instanceof File){
+            hasFile = true;
+          }
+          if(value[i].size > MAX_FILE_SIZE){
+            console.log(value[i]);
+            continue;
+          }
+          formData.append(`${key}[${i}]`, value[i]);
+        }
+      } else {
+        formData.append(key, value);
+      }
+    });
+
+    if(! hasFile){
+      headers['Content-Type']= 'application/json';
+      headers['Accept']= 'application/json';
+    }
     let options = {
       method: 'put',
-      body: JSON.stringify(data),
-      headers: {
-        'X-CSRF-TOKEN': _token,
-        'Content-Type': 'application/json'
-      },
+      // body: JSON.stringify(data),
+      body: hasFile ? formData : JSON.stringify(data),
+      headers: headers,
     };
     let url = this.getRoute() + (id ? '/' + id : '');
     return fetch(url, options).then(res => {

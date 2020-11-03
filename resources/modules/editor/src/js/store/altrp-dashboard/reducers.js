@@ -6,9 +6,7 @@ export function elementReducer(state, action) {
       state = state || defaultState;
       switch (action.type) {
             case EDIT_ELEMENT: {
-                  state = {
-                        ...action.payload,
-                  };
+                  state = _.cloneDeep(action.payload, []);
             } break;
       }
       return state;

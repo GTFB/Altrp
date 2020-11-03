@@ -113,6 +113,11 @@ class Input extends BaseElement{
       ]
     });
 
+    this.addControl('content_accept', {
+      type: CONTROLLER_TEXT,
+      label: 'Accept',
+    });
+
     this.addControl('content_label', {
       type: CONTROLLER_TEXT,
       label: 'Label',
@@ -161,6 +166,11 @@ class Input extends BaseElement{
     this.addControl('content_autocomplete', {
       type: CONTROLLER_SWITCHER,
       label: 'Autocomplete',
+    });
+    this.addControl('content_timestamp', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Timestamp',
+      default: false
     });
 
     this.addControl('content_options_nullable', {
@@ -261,6 +271,7 @@ class Input extends BaseElement{
       conditions: {
         'content_type':[
           'select2',
+          'file',
         ],
       },
     });
@@ -286,6 +297,11 @@ class Input extends BaseElement{
     this.addControl('content_calculation', {
       type: CONTROLLER_TEXTAREA,
       label: 'Calculation',
+      conditions: {
+        'content_type!':[
+          'file',
+        ],
+      },
       description: 'E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10',
     });
 

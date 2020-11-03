@@ -63,13 +63,16 @@ class DynamicContent extends Component {
     if(this.props.show){
       classes.push('altrp-dynamic-content_show')
     }
+    /**
+     * todo: скрыть динамический контент, если не пригодится
+     */
     return <div className={classes.join(' ')}  style={this.getPositionProps()}>
       <div className="altrp-menu">
         {
-          this.state.models.map(model=>{
+          null && this.state.models.map(model=>{
             return<div className="altrp-menu-group" key={model.modelName}>
               <div className="altrp-menu__title" key={model.modelName}>{model.title}</div>
-              { model.fields.map(field=>(<div className="altrp-menu__item"
+              { null && model.fields.map(field=>(<div className="altrp-menu__item"
                                        data-fieldname={field.fieldName}
                                        data-fieldtitle={field.title}
                                        data-modelname={model.modelName}

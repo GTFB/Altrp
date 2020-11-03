@@ -1,5 +1,5 @@
-import {getCurrentScreen, getElementState} from "./store/store";
-import {isEditor} from "../../../front-app/src/js/helpers";
+import { getCurrentScreen, getElementState } from "./store/store";
+import { isEditor } from "../../../front-app/src/js/helpers";
 import CONSTANTS from "./consts";
 
 export function getTemplateId() {
@@ -162,21 +162,21 @@ export function placeElement(getVariants, properties) {
   ];
 
   if (getVariants) {
-    return {variants}
+    return { variants }
   }
   ;
 
-  let {target, object, place} = properties;
+  let { target, object, place } = properties;
 
   let
-      targetSizes = {width: target.offsetWidth, height: target.offsetHeight},
-      targetPosition = {x: target.offsetLeft, y: target.offsetTop},
-      objectSizes = {width: object.offsetWidth, height: object.offsetHeight},
-      targetBottom = targetPosition.y + targetSizes.height,
-      targetTop = targetPosition.y - objectSizes.height,
-      targetStyles = window.getComputedStyle(target),
-      targetMarginLeft = parseInt(targetStyles.getPropertyValue('margin-left').replace(/\D+/g, "")) || 0,
-      targetMarginRight = parseInt(targetStyles.getPropertyValue('margin-right').replace(/\D+/g, "")) || 0;
+    targetSizes = { width: target.offsetWidth, height: target.offsetHeight },
+    targetPosition = { x: target.offsetLeft, y: target.offsetTop },
+    objectSizes = { width: object.offsetWidth, height: object.offsetHeight },
+    targetBottom = targetPosition.y + targetSizes.height,
+    targetTop = targetPosition.y - objectSizes.height,
+    targetStyles = window.getComputedStyle(target),
+    targetMarginLeft = parseInt(targetStyles.getPropertyValue('margin-left').replace(/\D+/g, "")) || 0,
+    targetMarginRight = parseInt(targetStyles.getPropertyValue('margin-right').replace(/\D+/g, "")) || 0;
   console.log(target.offsetLeft);
   let positioning = {
     place,
@@ -186,51 +186,51 @@ export function placeElement(getVariants, properties) {
 
   switch (place) {
     case "bottomLeft":
-      positioning.position = {left: targetPosition.x, top: targetBottom};
+      positioning.position = { left: targetPosition.x, top: targetBottom };
       positioning.vector = "verBottom";
       break;
     case "bottomCenter":
-      positioning.position = {top: targetBottom};
+      positioning.position = { top: targetBottom };
       positioning.vector = "verBottom";
       break;
     case "bottomRight":
-      positioning.position = {right: targetMarginRight, top: targetBottom};
+      positioning.position = { right: targetMarginRight, top: targetBottom };
       positioning.vector = "verBottom";
       break;
     case "topLeft":
-      positioning.position = {left: targetPosition.x, top: targetTop};
+      positioning.position = { left: targetPosition.x, top: targetTop };
       positioning.vector = "verTop";
       break;
     case "topCenter":
-      positioning.position = {top: targetTop};
+      positioning.position = { top: targetTop };
       positioning.vector = "verTop";
       break;
     case "topRight":
-      positioning.position = {right: targetMarginRight, top: targetTop};
+      positioning.position = { right: targetMarginRight, top: targetTop };
       positioning.vector = "verTop";
       break;
     case "leftTop":
-      positioning.position = {right: targetSizes.width + targetMarginLeft, top: targetPosition.y};
+      positioning.position = { right: targetSizes.width + targetMarginLeft, top: targetPosition.y };
       positioning.vector = "horLeft";
       break;
     case "leftCenter":
-      positioning.position = {right: targetSizes.width + targetMarginLeft};
+      positioning.position = { right: targetSizes.width + targetMarginLeft };
       positioning.vector = "horLeft";
       break;
     case "leftBottom":
-      positioning.position = {right: targetSizes.width + targetMarginLeft, bottom: targetPosition.y};
+      positioning.position = { right: targetSizes.width + targetMarginLeft, bottom: targetPosition.y };
       positioning.vector = "horLeft";
       break;
     case "rightTop":
-      positioning.position = {left: targetSizes.width + targetMarginRight, top: targetPosition.y};
+      positioning.position = { left: targetSizes.width + targetMarginRight, top: targetPosition.y };
       positioning.vector = "horRight";
       break;
     case "rightCenter":
-      positioning.position = {left: targetSizes.width + targetMarginRight};
+      positioning.position = { left: targetSizes.width + targetMarginRight };
       positioning.vector = "horRight";
       break;
     case "rightBottom":
-      positioning.position = {left: targetSizes.width + targetMarginRight, bottom: targetPosition.y};
+      positioning.position = { left: targetSizes.width + targetMarginRight, bottom: targetPosition.y };
       positioning.vector = "horRight";
       break;
   }
@@ -240,9 +240,9 @@ export function placeElement(getVariants, properties) {
 export function rgb2hex(rgb) {
   if (rgb) rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
   return (rgb && rgb.length === 4) ? "#" +
-      ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) +
-      ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) +
-      ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
+    ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) +
+    ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) +
+    ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
 }
 
 export function cutString(string, maxLength = 80) {

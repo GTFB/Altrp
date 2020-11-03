@@ -43,6 +43,7 @@ class ButtonWidget extends Component {
   async onClick(e) {
     if (isEditor()) {
       console.log(this.state.settings);
+      e.preventDefault();
     } else if (this.props.element.getSettings('actions', []).length){
       const actionsManager = (await import('../../../../../front-app/src/js/classes/modules/ActionsManager.js')).default;
       await actionsManager.callAllWidgetActions(this.props.element.getId());
@@ -97,7 +98,6 @@ class ButtonWidget extends Component {
     } else if( this.props.element.getSettings('other_action_type', []).includes('print_elements')){
       let IDs = this.props.element.getSettings('print_elements_ids', '');
       IDs = IDs.split(',');
-      console.log(IDs);
       let elementsToPrint = [];
       IDs.forEach(elementId=>{
         if((! elementId) || ! elementId.trim()){

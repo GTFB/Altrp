@@ -71,6 +71,11 @@ div[x-placement="top"]{
   color: #ffc107!important;
 }
 
+.chart-content-container{
+  width: 80%;
+  height: 80%;
+}
+
 .drawer{
   $full: 100%;
   $content: 30vh;
@@ -132,7 +137,8 @@ div[x-placement="top"]{
       }
       &-content{
         width: 700px;
-        height: 600px;
+        height: 500px;
+        max-height: 800;
         padding: 10px 0;
         
         & .chart-container{
@@ -141,6 +147,13 @@ div[x-placement="top"]{
           display: flex;
           justify-content: center;
           align-items: center;
+
+          &>.chart-content-container{
+            width: 80%;
+            height: 80%;
+          }
+          
+
           &.right{
             flex-direction: row;
           }
@@ -591,6 +604,14 @@ div[x-placement="top"]{
 .discrete__legend {
   overflow: unset !important;
   flex-wrap: wrap;
+  &.horizontal{
+    // height: 20%;
+    // width: 100%;
+  }
+  &.vertical{
+    // width: 20%;
+    // height: 100%;
+  }
   &>div{
     padding: 4px 8px !important;
   }
