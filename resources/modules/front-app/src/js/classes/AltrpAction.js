@@ -150,6 +150,10 @@ class AltrpAction extends AltrpModel {
         result = await this.doActionTableToCSV();
       }
         break;
+      case 'login': {
+        result = await this.doActionLogin();
+      }
+        break;
     }
     let alertText = '';
     if(result.success){
@@ -403,6 +407,14 @@ class AltrpAction extends AltrpModel {
       console.error(error);
       return {success: false}
     }
+  }
+  /**
+   * действие-логин
+   * @return {Promise<{}>}
+   */
+  async doActionLogin() {
+
+
   }
   /**
    * Триггер события на тругом компоненте

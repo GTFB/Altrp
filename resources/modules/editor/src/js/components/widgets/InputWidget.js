@@ -42,10 +42,8 @@ class InputWidget extends Component {
       e.preventDefault();
       const inputs = Array.from(document.querySelectorAll("input,select"));
       const index = inputs.indexOf(e.target);
-      console.log(index);
-      console.log(inputs);
       if (index === undefined) return;
-      inputs[index + 1].focus();
+      inputs[index + 1] && inputs[index + 1].focus();
     }
   };
 

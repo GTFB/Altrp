@@ -252,6 +252,10 @@ class Button extends BaseElement {
           value: 'table_to_csv',
           label: 'Table to CSV',
         },
+        {
+          value: 'login',
+          label: 'Login',
+        },
       ],
     });
 
