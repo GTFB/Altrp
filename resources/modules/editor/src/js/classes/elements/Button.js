@@ -240,6 +240,14 @@ class Button extends BaseElement {
           value: 'page_to_pdf',
           label: 'Page to PDF',
         },
+        {
+          value: 'elements_to_pdf',
+          label: 'Elements to PDF',
+        },
+        {
+          value: 'data_to_csv',
+          label: 'Data Convert to CSV',
+        },
       ],
     });
 
@@ -298,6 +306,8 @@ class Button extends BaseElement {
       conditions: {
         type: [
           'page_to_pdf',
+          'elements_to_pdf',
+          'data_to_csv',
         ],
       },
     });
@@ -315,6 +325,18 @@ class Button extends BaseElement {
       },
     });
 
+    actionsRepeater.addControl('back', {
+      label: 'Back',
+      type: CONTROLLER_SWITCHER,
+      responsive: false,
+      dynamic: false,
+      conditions: {
+        type: [
+          'redirect',
+        ],
+      },
+    });
+
     actionsRepeater.addControl('elements_ids', {
       label: 'Elements',
       responsive: false,
@@ -324,6 +346,7 @@ class Button extends BaseElement {
         type: [
           'toggle_element',
           'print_elements',
+          'elements_to_pdf',
         ],
       },
     });
@@ -337,6 +360,18 @@ class Button extends BaseElement {
         type: [
           'scroll_to_element',
           'trigger'
+        ],
+      },
+    });
+
+    actionsRepeater.addControl('path', {
+      label: 'Path',
+      responsive: false,
+      dynamic: false,
+      description: 'altrpdata.alias',
+      conditions: {
+        type: [
+          'data_to_csv',
         ],
       },
     });
@@ -364,7 +399,13 @@ class Button extends BaseElement {
     actionsRepeater.addControl('alert', {
       type: CONTROLLER_TEXTAREA,
       dynamic: false,
-      label: 'After Text',
+      label: 'Success',
+    });
+
+    actionsRepeater.addControl('reject', {
+      type: CONTROLLER_TEXTAREA,
+      dynamic: false,
+      label: 'Reject',
     });
 
     this.addControl('actions', {

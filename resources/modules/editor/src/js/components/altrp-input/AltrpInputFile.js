@@ -60,13 +60,15 @@ class AltrpInputFile extends Component {
     }
     let files = [];
     let types = this.props.settings.content_accept ? this.props.settings.content_accept.split(',') : [];
-    types = types.map(type=>{
-      return type.trim();
-    });
+
     _.each(e.target.files, _f=>{
-      if(types.indexOf(_f.type) !== -1 || ! types.length){
-        files.push(_f);
-      }
+      types.forEach(type=>{
+        type = type.trim();
+        type = type.replace('*', '');
+        if(_f.type.indexOf(type) === 0){
+          files.push(_f);
+        }
+      });
     });
     let filesForDisplay = [];
     if(! files.length){
@@ -81,6 +83,7 @@ class AltrpInputFile extends Component {
           alt: f.name ||'',
         });
         if(filesForDisplay.length === files.length){
+          console.log(filesForDisplay);
           this.setState(state =>({...state,filesForDisplay, files}));
         }
       };

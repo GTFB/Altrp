@@ -160,7 +160,7 @@ class ApiController extends Controller
         $relations = $model->relationships();
         if (!$relations) return false;
         foreach ($relations as $relation => $info) {
-            if (in_array($relation, $requestKeys) && is_file($request->$relation)) return [
+            if (in_array($relation, $requestKeys) && is_file($request->$relation[0])) return [
                 'relation' => $relation,
                 'foreign_key' => $info['foreignKey']
             ];

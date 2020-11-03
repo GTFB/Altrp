@@ -38,6 +38,7 @@
     "highlight.js": "^10.1.1",
     "html2pdf.js": "^0.9.2",
     "immutability-helper": "^3.1.1",
+    "json2csv": "^5.0.3",
     "jspdf": "^2.1.1",
     "leaflet": "^1.6.0",
     "leaflet-draw": "^1.0.4",
