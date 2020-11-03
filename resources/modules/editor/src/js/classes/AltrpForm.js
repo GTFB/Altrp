@@ -147,7 +147,8 @@ class AltrpForm {
         break;
       }
     } else {
-      return await alert('Пожалуйста, заполните все обязательные поля');
+      await alert('Пожалуйста, заполните все обязательные поля');
+      return{success: false};
     }
   }
 
