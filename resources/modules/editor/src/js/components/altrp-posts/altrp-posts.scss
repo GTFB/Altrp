@@ -27,11 +27,31 @@
 
 .altrp-post.altrp-post--hover {
   position: absolute;
-  top: 0;
-  transform: translate(-100%, 0);
-  transition: transform 0.5s ease-out;
+  top: 0;  
+  transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+
+  &--left {
+    transform: translate(-100%, 0);
+  }
+  &--right {
+    transform: translate(100%, 0);
+  }
+  &--top {
+    transform: translate(0, -100%);
+  }
+  &--bottom {
+    transform: translate(0, 100%);
+  }
+  &--fade {
+    opacity: 0;
+  }
+  &--zoom {
+    transform: scale(0)
+  }
 }
 
 .altrp-post:hover .altrp-post.altrp-post--hover {
-  transform: translate(0, 0);
+  transform: scale(1) translate(0, 0);
+  opacity: 1;
+  
 }

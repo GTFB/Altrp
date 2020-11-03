@@ -94,7 +94,7 @@ class AltrpPosts extends React.Component {
     }
     return <React.Fragment key={post.id + Math.random()}>
       <div className="altrp-post">{PostContentComponent}
-        {/* <div className="altrp-post altrp-post--hover">{PostContentComponent}</div> */}
+        {hoverTemplateId && <div className={`altrp-post altrp-post--hover altrp-post--hover--${transitionType}`}>{PostContentComponent}</div>}
       </div>
       
     </React.Fragment>
