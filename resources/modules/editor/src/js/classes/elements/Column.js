@@ -460,31 +460,6 @@ class Column  extends BaseElement {
       },
     });
 
-    this.addControl('style_position_margin_element', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Margin element',
-      default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit:'px'
-      },
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}}': [
-          'margin-top: {{TOP}}{{UNIT}} !important;',
-          'margin-right: {{RIGHT}}{{UNIT}} !important;',
-          'margin-bottom: {{BOTTOM}}{{UNIT}} !important;',
-          'margin-left: {{LEFT}}{{UNIT}} !important;'
-        ]
-      },
-    });
-
     this.addControl('position_z_index', {
       type: CONTROLLER_NUMBER,
       label: "Z-index",
