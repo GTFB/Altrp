@@ -26,6 +26,8 @@ function altrpZip() {
     '!./storage/app/public/**',
     '!./storage/installed',
     '!./storage/logs/**',
+    '!./storage/framework/cache/**',
+    '!./storage/framework/sessions/**',
     '!./tests/**',
     '!./gulpfile.js',
     '!./webpack.admin.common.js',
