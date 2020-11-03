@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import AltrpLink from "../../altrp-link/AltrpLink";
+import AltrpImage from "../../altrp-image/AltrpImage";
+import {iconsManager} from "../../../helpers";
 
 class DropdownSub extends Component {
   constructor(props) {
@@ -47,10 +49,21 @@ class DropdownSub extends Component {
   render() {
     return (
       <div className="altrp-nav-menu-dropdown-sub">
-        <div className="altrp-nav-menu-li-link altrp-nav-menu-li-link-label altrp-nav-menu-dropdown-sub-label" onClick={this.changeShow}>
-          {
-            this.props.li.label_repeater_menu_layout
-          }
+        <div className="altrp-nav-menu-li-link altrp-nav-menu-dropdown-sub-label" onClick={this.changeShow}>
+          <span>
+            {
+              this.props.li.label_repeater_menu_layout
+            }
+          </span>
+          <AltrpImage
+            image={this.props.settings.chevron_dropdown_menu_section}
+            default={{
+              assetType: "icon",
+              name: 'chevron',
+              iconComponent: iconsManager().renderIcon('chevron')
+            }}
+            className={"altrp-nav-menu-li-link-chevron-dropdown" + (this.state.show ? " altrp-nav-menu-li-link-active-chevron-dropdown" : "")}
+          />
         </div>
         <div className={"altrp-nav-menu-dropdown-sub-content altrp-nav-menu-ul-wrapper altrp-nav-menu-dropdown-content" + (!this.state.show ? " altrp-nav-menu-dropdown-content-hide" : " altrp-nav-menu-dropdown-content-show")}>
           <ul className="altrp-nav-menu-ul">

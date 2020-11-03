@@ -53,7 +53,7 @@ class MediaController extends Controller
 
     foreach ( $_files as $file ) {
       if( strpos(  $file->getClientMimeType(), 'image' ) === 0 &&
-        $file->getSize() < config( 'filesystems', 'max_file_size' )
+        $file->getSize() < config( 'filesystems.max_file_size' )
       ){
         $files[] = $file;
       }

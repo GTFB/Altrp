@@ -18,11 +18,11 @@ class RootComponent extends Component {
   }
 
   _componentDidMount() {
-    let hiddenElemtsTriggers = this.state.settings.hidden_elemants_triggers;
+    let hiddenElementsTriggers = this.state.settings.hidden_elements_triggers;
     
-    if (hiddenElemtsTriggers) {
-      hiddenElemtsTriggers = hiddenElemtsTriggers.split(",").map(item => item.trim());
-      this.props.setDefaultTriggers(hiddenElemtsTriggers);
+    if (hiddenElementsTriggers && _.isString(hiddenElementsTriggers)) {
+      hiddenElementsTriggers = hiddenElementsTriggers.split(",").map(item => item.trim());
+      this.props.setDefaultTriggers(hiddenElementsTriggers);
     }
   }
 

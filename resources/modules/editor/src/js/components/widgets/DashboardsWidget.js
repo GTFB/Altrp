@@ -1,6 +1,8 @@
-import React, { Component, Suspense } from "react";
+import React, { Component, Suspense, useRef } from "react";
+// import DataSourceDashboards from "../altrp-dashboards/DataSourceDashboards";
 
 import axios from "axios";
+import { thresholdFreedmanDiaconis } from "d3";
 
 const AltrpDashboards = React.lazy(() => import("../altrp-dashboards/AltrpDashboards"));
 const DataSourceDashboards = React.lazy(() => import("../altrp-dashboards/DataSourceDashboards"));
@@ -11,21 +13,30 @@ class DashboardsWidget extends Component {
 
     this.state = {
       settings: props.element.getSettings(),
-      settingsData: []
+      settingsData: [],
+      child: {}
     };
 
+    this.refChild = React.createRef();
+    this.fireAction = this.fireAction.bind(this);
     props.element.component = this;
 
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
+
+
   }
 
   async componentWillMount() {
     try {
       const id = this.props.element.getId();
-      const req = await axios.get(`/ajax/dashboards/datasource/${id}/data`);
-      let data = req.data.settings || '{}'
+      const req = await axios.get(`/ajax/dashboards/datasource/${id}/data`, {
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+      });
+      let data = req.data.settings || '{}';
       this.setState(state => ({
         ...state,
         settingsData: JSON.parse(data)
@@ -36,12 +47,21 @@ class DashboardsWidget extends Component {
     }
   }
 
+  fireAction(action) {
+    if (typeof this.refChild.current[action] !== 'undefined') {
+      this.refChild.current[action]();
+    }
+    else {
+      alert('ERROR, NOT FOUND ACTION');
+    }
+  }
+
   render() {
     const containerWidth = this.props.element.getSettings().positioning_custom_width.size;
     const dataByDataSource = this.props.element.getSettings().dataSource;
     const settings = this.props.element.getSettings();
     const global_parameter = this.state.settings.global_parameter;
-
+    const showButton = this.props.element.getSettings().showButton;
     const currentUser = this.props.currentUser.data;
 
     const settingsData = this.state.settingsData;
@@ -57,6 +77,8 @@ class DashboardsWidget extends Component {
               id={this.props.element.getId()} />)
             :
             (<DataSourceDashboards
+              ref={this.refChild}
+              showButton={showButton}
               settings={this.props.element.getSettings()}
               id={this.props.element.getId()}
               containerWidth={containerWidth}
