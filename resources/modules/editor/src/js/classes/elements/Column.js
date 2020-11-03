@@ -43,6 +43,21 @@ class Column  extends BaseElement {
       }
     });
 
+    this.addControl("layout_column_height", {
+      type: CONTROLLER_SLIDER,
+      label: "column height",
+      default: {
+        size: 100,
+        unit: "%"
+      },
+      units: ["px", "%", "vh"],
+      max: 1000,
+      min: 0,
+      rules: {
+        "{{ELEMENT}}": "height: {{SIZE}}{{UNIT}}"
+      }
+    });
+
     this.addControl(
       'layout_type', {
         type: CONTROLLER_SELECT,
@@ -78,8 +93,9 @@ class Column  extends BaseElement {
           }
         ],
         rules: {
-          '{{ELEMENT}} .altrp-column{{STATE}}': 'align-content: {{VALUE}};',
-          '{{ELEMENT}} .altrp-column': 'align-items: {{VALUE}};',
+          '{{ELEMENT}} .altrp-column{{STATE}}': ['align-content: {{VALUE}};',
+            'align-items: {{VALUE}};'
+          ],
         },
       }
     );
@@ -436,6 +452,31 @@ class Column  extends BaseElement {
       ],
       rules: {
         '{{ELEMENT}} .altrp-column{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}} !important;',
+          'margin-right: {{RIGHT}}{{UNIT}} !important;',
+          'margin-bottom: {{BOTTOM}}{{UNIT}} !important;',
+          'margin-left: {{LEFT}}{{UNIT}} !important;'
+        ]
+      },
+    });
+
+    this.addControl('style_position_margin_element', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin element',
+      default:{
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}}': [
           'margin-top: {{TOP}}{{UNIT}} !important;',
           'margin-right: {{RIGHT}}{{UNIT}} !important;',
           'margin-bottom: {{BOTTOM}}{{UNIT}} !important;',

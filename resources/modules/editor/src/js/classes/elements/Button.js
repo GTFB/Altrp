@@ -702,6 +702,58 @@ class Button extends BaseElement {
       },
     });
 
+    this.addControl('position_margin_element', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin element',
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('position_padding_element', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding element',
+      default: {
+        // top: 20,
+        // right: 25,
+        // bottom: 20,
+        // left: 25,
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
     this.addControl('position_z_index', {
       type: CONTROLLER_NUMBER,
       label: 'Z-index',
