@@ -79,7 +79,10 @@ class AltrpPosts extends React.Component {
    * Отрисовывает отдельную карточку
    * @param {integer} idx - индекс в массиве записей
    */
-  renderPost(idx){
+  renderPost = (idx) => {
+    const hoverTemplateId = _.get(this.props.settings, 'posts_card_hover_template', null);
+    const transitionType = _.get(this.props.settings, 'posts_transition_type', null);
+    console.log(hoverTemplateId);
     let post = _.cloneDeep(this.props.data[idx] || this.props.data);
     let PostContentComponent = post.component || <h2>{post.title || post.id || ''}</h2>;
     if(this.state.simpleTemplate){
@@ -91,7 +94,12 @@ class AltrpPosts extends React.Component {
           children: template.children
         });
     }
-    return <div className="altrp-post" key={post.id + Math.random()}>{PostContentComponent}</div>
+    return <React.Fragment key={post.id + Math.random()}>
+      <div className="altrp-post">{PostContentComponent}
+        {/* <div className="altrp-post altrp-post--hover">{PostContentComponent}</div> */}
+      </div>
+      
+    </React.Fragment>
   }
 
   render() {

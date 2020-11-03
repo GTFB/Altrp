@@ -135,6 +135,47 @@ class Table extends BaseElement {
       nullable: true,
     });
 
+    this.addControl("posts_card_hover_template", {
+      type: CONTROLLER_SELECT2,
+      prefetch_options: true,
+      label: "Hover Template",
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options?template_type=card&value=guid',
+      nullable: true,
+    });
+
+    this.addControl("posts_transition_type", {
+      type: CONTROLLER_SELECT,
+      label: "Select Transition Type",
+      options: [
+        {
+          label: 'Left to Right',
+          value: 'left'
+        },
+        {
+          label: 'Right to Left',
+          value: 'right'
+        },
+        {
+          label: 'Top to Bottom',
+          value: 'top'
+        },
+        {
+          label: 'Bottom to Top',
+          value: 'bottom'
+        },
+        {
+          label: 'Fade In',
+          value: 'fade'
+        },
+        {
+          label: 'Zoom',
+          value: 'zoom'
+        }
+      ],
+      default: 'left',
+    });
+
     this.addControl("posts_skin", {
       type: CONTROLLER_SELECT,
       label: "Skin",
