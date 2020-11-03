@@ -144,28 +144,58 @@ class Input extends BaseElement{
       }
     );
 
-    this.addControl('content_label_nowrap', {
-      type: CONTROLLER_SELECT,
-      label: 'One Line Label',
-      default: 'normal', 
-      conditions: {
-        'content_label_position_type': ['left']
+    // this.addControl('content_label_nowrap', {
+    //   type: CONTROLLER_SELECT,
+    //   label: 'One Line Label',
+    //   default: 'normal', 
+    //   conditions: {
+    //     'content_label_position_type': ['left']
+    //   },
+    //   options: [
+    //     {
+    //       'value': 'normal',
+    //       'label': 'Normal',
+    //     },
+    //     {
+    //       'value': 'nowrap',
+    //       'label': 'One Line',
+    //     }
+    //   ],
+    //   rules: {
+    //     "{{ELEMENT}} .altrp-field-label{{STATE}}": 'white-space: {{VALUE}};'
+    //   }
+    // }
+    // );
+
+    this.addControl("label_width", {
+      type: CONTROLLER_SLIDER,
+      label: "Label Width",
+      default: {
+        unit: "px",
+        size: null
       },
-      options: [
-        {
-          'value': 'normal',
-          'label': 'Normal',
-        },
-        {
-          'value': 'nowrap',
-          'label': 'One Line',
-        }
-      ],
+      units: ["px", "%", "vh"],
+      max: 1000,
+      min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-field-label{{STATE}}": 'white-space: {{VALUE}};'
+        "{{ELEMENT}} .altrp-field-label{{STATE}}": 'width: {{SIZE}}{{UNIT}};'
       }
-    }
-    );
+    });
+
+    this.addControl("input_width", {
+      type: CONTROLLER_SLIDER,
+      label: "Field Width",
+      default: {
+        unit: "px",
+        size: null
+      },
+      units: ["px", "%", "vh"],
+      max: 1000,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-field{{STATE}}": 'width: {{SIZE}}{{UNIT}};'
+      }
+    });
 
     this.addControl('content_placeholder', {
       type: CONTROLLER_TEXT,
