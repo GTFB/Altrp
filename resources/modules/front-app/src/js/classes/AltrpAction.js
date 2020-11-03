@@ -1,6 +1,7 @@
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import { isString } from "lodash";
 import {
+  dataFromTable,
   dataToCSV,
   elementsToPdf,
   getComponentByElementId, getDataByPath,
@@ -143,6 +144,14 @@ class AltrpAction extends AltrpModel {
         break;
       case 'data_to_csv': {
         result = await this.doActionDataToCSV();
+      }
+        break;
+      case 'table_to_csv': {
+        result = await this.doActionTableToCSV();
+      }
+        break;
+      case 'login': {
+        result = await this.doActionLogin();
       }
         break;
     }
@@ -353,7 +362,7 @@ class AltrpAction extends AltrpModel {
     return await elementsToPdf(elements, filename)
   }
   /**
-   * Данные в CSV-фалйл
+   * Данные в CSV-файл
    * @return {Promise<{}>}
    */
   async doActionDataToCSV() {
@@ -365,6 +374,47 @@ class AltrpAction extends AltrpModel {
       console.error(error);
       return {success: false}
     }
+  }
+  /**
+   * HTML-Таблицу в CSV-файл
+   * @return {Promise<{}>}
+   */
+  async doActionTableToCSV() {
+
+    let elementId = this.getProperty('element_id');
+    if (! elementId) {
+      return { success: true };
+    }
+    elementId = elementId.trim();
+    const element = getHTMLElementById(elementId);
+    if (! element) {
+      return { success: true };
+    }
+    let data;
+    try{
+      data = dataFromTable(element);
+    } catch(error){
+      console.error(error);
+      return {success: false}
+    }
+    if(_.isEmpty(data)){
+      return { success: true };
+    }
+    let filename = replaceContentWithData(this.getProperty('name','file'));
+    try{
+      return await dataToCSV(data, filename)
+    } catch(error){
+      console.error(error);
+      return {success: false}
+    }
+  }
+  /**
+   * действие-логин
+   * @return {Promise<{}>}
+   */
+  async doActionLogin() {
+
+
   }
   /**
    * Триггер события на тругом компоненте

@@ -248,6 +248,14 @@ class Button extends BaseElement {
           value: 'data_to_csv',
           label: 'Data Convert to CSV',
         },
+        {
+          value: 'table_to_csv',
+          label: 'Table to CSV',
+        },
+        {
+          value: 'login',
+          label: 'Login',
+        },
       ],
     });
 
@@ -308,6 +316,7 @@ class Button extends BaseElement {
           'page_to_pdf',
           'elements_to_pdf',
           'data_to_csv',
+          'table_to_csv',
         ],
       },
     });
@@ -359,7 +368,8 @@ class Button extends BaseElement {
       conditions: {
         type: [
           'scroll_to_element',
-          'trigger'
+          'trigger',
+          'table_to_csv',
         ],
       },
     });
