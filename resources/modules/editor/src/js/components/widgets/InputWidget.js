@@ -34,6 +34,20 @@ class InputWidget extends Component {
   }
 
   /**
+   * Обработка нажатия клавиши
+   * @param {{}} e
+   */
+  handleEnter = e => {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      const inputs = Array.from(document.querySelectorAll("input,select"));
+      const index = inputs.indexOf(e.target);
+      if (index === undefined) return;
+      inputs[index + 1] && inputs[index + 1].focus();
+    }
+  };
+
+  /**
    * Загрузка виджета
    */
   async _componentDidMount() {
@@ -359,16 +373,19 @@ class InputWidget extends Component {
     } else {
       autocomplete = "off";
     }
+
     let input = null;
     switch (this.state.settings.content_type) {
       case 'select':{
         let options = this.state.options || [];
         // options = _.sortBy(options, (o => o.label ? o.label.toString() : o));
         input = <select value={value || ''}
-          onChange={this.onChange}
-          id={this.state.settings.position_css_id}
-          className={"altrp-field " + this.state.settings.position_css_classes}>
-          {this.state.settings.content_options_nullable ? <option value="" /> : ''}
+                        onChange={this.onChange}
+                        onKeyDown={this.handleEnter}
+                        id={this.state.settings.position_css_id}
+                        className={"altrp-field " + this.state.settings.position_css_classes}>
+          {this.state.settings.content_options_nullable ? <option value=""/> : ''}
+
 
           {
             (options_sorting ? sortOptions(options, options_sorting) : options)
@@ -395,6 +412,7 @@ class InputWidget extends Component {
             placeholder={this.state.settings.content_placeholder}
             className={"altrp-field " + this.state.settings.position_css_classes}
             settings={this.props.element.getSettings()}
+            onKeyDown={this.handleEnter}
             onChange={this.onChange}
             onBlur={this.onBlur}
             id={this.state.settings.position_css_id}
@@ -465,8 +483,8 @@ class InputWidget extends Component {
     } = this.props.element.getSettings();
 
     let options = this.state.options;
-    if (content_options_nullable) {
-      options = _.union([{ label: nulled_option_title, value: 'all', }], options);
+    if(content_options_nullable){
+      options = _.union([{ label: nulled_option_title, value: '', }], options);
     }
 
 
@@ -539,6 +557,7 @@ class InputWidget extends Component {
       value,
       placeholder: content_placeholder,
       isMulti: this.props.element.getSettings('select2_multiple', false),
+      onKeyDown: this.handleEnter
       // menuIsOpen: true,
     };
     return <AltrpSelect  {...select2Props} />;

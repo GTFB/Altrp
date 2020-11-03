@@ -8,6 +8,8 @@
 }
 .altrp-post{
   width: 100%;
+  position: relative;
+  overflow: hidden;
 }
 .altrp-post > .sections-wrapper{
   width: auto;
@@ -21,4 +23,15 @@
   & > .altrp-element.altrp-element_column {
     width: 100%;
   }
+}
+
+.altrp-post.altrp-post--hover {
+  position: absolute;
+  top: 0;
+  transform: translate(-100%, 0);
+  transition: transform 0.5s ease-out;
+}
+
+.altrp-post:hover .altrp-post.altrp-post--hover {
+  transform: translate(0, 0);
 }

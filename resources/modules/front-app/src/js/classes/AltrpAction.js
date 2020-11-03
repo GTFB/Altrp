@@ -1,8 +1,10 @@
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import { isString } from "lodash";
 import {
+  dataFromTable,
+  dataToCSV,
   elementsToPdf,
-  getComponentByElementId,
+  getComponentByElementId, getDataByPath,
   getHTMLElementById,
   printElements,
   replaceContentWithData,
@@ -136,8 +138,29 @@ class AltrpAction extends AltrpModel {
         result = await this.doActionPageToPDF();
       }
         break;
+      case 'elements_to_pdf': {
+        result = await this.doActionElementsToPDF();
+      }
+        break;
+      case 'data_to_csv': {
+        result = await this.doActionDataToCSV();
+      }
+        break;
+      case 'table_to_csv': {
+        result = await this.doActionTableToCSV();
+      }
+        break;
+      case 'login': {
+        result = await this.doActionLogin();
+      }
+        break;
     }
-    let alertText = this.getProperty('alert');
+    let alertText = '';
+    if(result.success){
+      alertText = this.getProperty('alert');
+    } else {
+      alertText = this.getProperty('reject');
+    }
     if (alertText) {
       alert(alertText);
     }
@@ -163,7 +186,15 @@ class AltrpAction extends AltrpModel {
   async doActionRedirect() {
 
     let URL = this.getReplacedProperty('form_url');
-    frontAppRouter.history.push(URL);
+    if(frontAppRouter){
+      if(this.getProperty('back')){
+        frontAppRouter.history.back();
+
+      } else {
+        frontAppRouter.history.push(URL);
+      }
+
+    }
     return {
       success: true,
     }
@@ -299,25 +330,96 @@ class AltrpAction extends AltrpModel {
     }
   }
   /**
-   * Скролл на верх страницы
+   * Страницу в PDF
    * @return {Promise<{}>}
    */
   async doActionPageToPDF() {
     let filename = replaceContentWithData(this.getProperty('name','file'));
     const elements = [];
-    const styles = document.getElementsByTagName('style');
-    const links = document.getElementsByTagName('link');
-    // _.each(styles, style=>{
-    //   elements.push(style);
-    // });
-    // _.each(links, link=>{
-    //   elements.push(link);
-    // });
+
     elements.push(document.getElementById('route-content'));
-    // elements.push(document.getElementById('styles-container'));
     return await elementsToPdf(elements, filename)
   }
 
+  /**
+   * Элементы в PDF
+   * @return {Promise<{}>}
+   */
+  async doActionElementsToPDF() {
+    let filename = replaceContentWithData(this.getProperty('name','file'));
+    const elements = [];
+    let IDs = this.getProperty('elements_ids');
+    if (!IDs) {
+      return { success: true }
+    }
+    IDs = IDs.split(',');
+    IDs.forEach(elementId => {
+      if ((!elementId) || !elementId.trim()) {
+        return;
+      }
+      getHTMLElementById(elementId.trim()) && elements.push(getHTMLElementById(elementId));
+    });
+    return await elementsToPdf(elements, filename)
+  }
+  /**
+   * Данные в CSV-файл
+   * @return {Promise<{}>}
+   */
+  async doActionDataToCSV() {
+    let data = getDataByPath(this.getProperty('path'));
+    let filename = replaceContentWithData(this.getProperty('name','file'));
+    try{
+      return await dataToCSV(data, filename)
+    } catch(error){
+      console.error(error);
+      return {success: false}
+    }
+  }
+  /**
+   * HTML-Таблицу в CSV-файл
+   * @return {Promise<{}>}
+   */
+  async doActionTableToCSV() {
+
+    let elementId = this.getProperty('element_id');
+    if (! elementId) {
+      return { success: true };
+    }
+    elementId = elementId.trim();
+    const element = getHTMLElementById(elementId);
+    if (! element) {
+      return { success: true };
+    }
+    let data;
+    try{
+      data = dataFromTable(element);
+    } catch(error){
+      console.error(error);
+      return {success: false}
+    }
+    if(_.isEmpty(data)){
+      return { success: true };
+    }
+    let filename = replaceContentWithData(this.getProperty('name','file'));
+    try{
+      return await dataToCSV(data, filename)
+    } catch(error){
+      console.error(error);
+      return {success: false}
+    }
+  }
+  /**
+   * действие-логин
+   * @return {Promise<{}>}
+   */
+  async doActionLogin() {
+
+
+  }
+  /**
+   * Триггер события на тругом компоненте
+   * @return {Promise<{}>}
+   */
   async doActionTrigger() {
     let elementId = this.getProperty('element_id');
     let element = getComponentByElementId(elementId);
@@ -325,7 +427,7 @@ class AltrpAction extends AltrpModel {
 
 
     try {
-      element.props.element.component.fireAction(action)
+      element.props.element.component.fireAction(action);
       return {
         success: true,
       }
