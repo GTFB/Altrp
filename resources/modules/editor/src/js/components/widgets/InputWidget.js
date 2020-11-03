@@ -33,6 +33,16 @@ class InputWidget extends Component {
     }
   }
 
+  handleEnter = e => {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      const inputs = Array.from(document.querySelectorAll("input,select"));
+      const index = inputs.indexOf(e.target);
+      if (index === undefined) return;
+      inputs[index + 1].focus();
+    }
+  }
+
   /**
    * Загрузка виджета
    */
@@ -364,6 +374,7 @@ class InputWidget extends Component {
                   onChange={this.onChange}
                   onBlur={this.onBlur}
                   id={this.state.settings.position_css_id}
+                  onKeyDown={this.handleEnter}
     /></React.Suspense>;
     switch (this.state.settings.content_type) {
       case 'text':
@@ -380,6 +391,7 @@ class InputWidget extends Component {
         // options = _.sortBy(options, (o => o.label ? o.label.toString() : o));
         input = <select value={value || ''}
                         onChange={this.onChange}
+                        onKeyDown={this.handleEnter}
                         id={this.state.settings.position_css_id}
                         className={"altrp-field " + this.state.settings.position_css_classes}>
           {this.state.settings.content_options_nullable ? <option value=""/> : ''}
@@ -540,6 +552,7 @@ class InputWidget extends Component {
       value,
       placeholder: content_placeholder,
       isMulti: this.props.element.getSettings('select2_multiple', false),
+      onKeyDown: this.handleEnter
       // menuIsOpen: true,
     };
     return <AltrpSelect  {...select2Props} />;
