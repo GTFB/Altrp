@@ -1,6 +1,11 @@
 import CONSTANTS from "../../../editor/src/js/consts";
 import AltrpModel from "../../../editor/src/js/classes/AltrpModel";
 import moment from "moment";
+import Resource from "../../../editor/src/js/classes/Resource";
+import appStore from "./store/store";
+import {changeCurrentUser} from "./store/current-user/actions";
+import {changeAppRoutes} from "./store/routes/actions";
+import Route from "./classes/Route";
 
 export function getRoutes() {
   return import('./classes/Routes.js');
@@ -918,4 +923,75 @@ export async function  dataToCSV (data = {}, filename){
   link.click();
   document.body.removeChild(link);
   return {success: true}
+}
+
+/**
+ * Логиним пользователя
+ * @param {{}} data
+ * @return {Promise<{}>}
+ */
+export async function altrpLogin(data = {}){
+  data.altrpLogin = true;
+  let res = await (new Resource({route:'/login'})).post(data);
+  if(! (res.success || res._token)){
+    return {
+      success: false,
+    }
+  }
+  _token = res._token;
+
+  let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
+  currentUser = currentUser.data;
+  appStore.dispatch(changeCurrentUser(currentUser));
+  let routes = [];
+  try{
+    let routesData = await (new Resource({
+      route: '/ajax/routes'
+    }).getAll());
+
+    for(let _data of routesData.pages){
+      routes.push(Route.routeFabric(_data));
+    }
+    appStore.dispatch(changeAppRoutes(routes));
+  } catch (err) {
+    console.error(err);
+    return {success: false};
+  }
+  return {success: true};
+}
+
+/**
+ * Выход
+ * @return {Promise<{}>}
+ */
+export async function altrpLogout(){
+  let res = await (new Resource({route:'/logout'})).post();
+  console.log( res );
+  if(! (res.success || res._token)){
+    return {
+      success: false,
+    }
+  }
+  _token = res._token;
+
+  let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
+  currentUser = currentUser.data;
+  console.log(currentUser);
+  appStore.dispatch(changeCurrentUser(currentUser));
+  let routes = [];
+  try{
+    let routesData = await (new Resource({
+      route: '/ajax/routes'
+    }).getAll());
+
+    for(let _data of routesData.pages){
+      routes.push(Route.routeFabric(_data));
+    }
+    console.log(routes);
+    appStore.dispatch(changeAppRoutes(routes));
+  } catch (err) {
+    console.error(err);
+    return {success: false};
+  }
+  return {success: true};
 }

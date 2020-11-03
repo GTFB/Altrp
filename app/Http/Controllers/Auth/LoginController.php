@@ -57,6 +57,7 @@ class LoginController extends Controller
     return  response( )->json( [
       'success' => true,
       'reload' => true,
+      '_token' => csrf_token(),
     ] );
   }
 
@@ -106,10 +107,18 @@ class LoginController extends Controller
 
     $this->clearLoginAttempts($request);
 
-    return $this->authenticated($request, $this->guard()->user())
-      ?: (( $request->get( 'altrp_ajax' ) ) ? response()->json([
+    if( ( ! $this->authenticated( $request, $this->guard()->user() ) ) && $request->get( 'altrpLogin' ) ){
+
+      return response()->json([
+        'success' => true,
+        '_token' => csrf_token(),
+      ]);
+    }
+
+    return $this->authenticated( $request, $this->guard()->user() )
+      ? : ( ( $request->get( 'altrp_ajax' ) ) ? response()->json([
         'success' => true,
         'reload' => true,
-      ]) : redirect( )->intended('/'));
+      ] ) : redirect( )->intended('/'));
   }
 }
