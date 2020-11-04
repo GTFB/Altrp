@@ -272,6 +272,38 @@ class Input extends BaseElement{
       default: false
     });
 
+    this.addControl('cross_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Cross Color',
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      conditions: {
+        'content_clearable': [true]
+      },
+      rules: {
+        '{{ELEMENT}} .input-clear-btn{{STATE}}': 'color: {{COLOR}};',
+      }
+    });
+
+    this.addControl("cross_size", {
+      type: CONTROLLER_SLIDER,
+      label: "Cross Size",
+      default: {
+        unit: "px",
+        size: null
+      },
+      conditions: {
+        'content_clearable': [true]
+      },
+      max: 50,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .input-clear-btn{{STATE}}": 'font-size: {{SIZE}}px;'
+      }
+    });
+
     this.addControl('content_options_nullable', {
       type: CONTROLLER_SWITCHER,
       label: 'Select Nullable',
