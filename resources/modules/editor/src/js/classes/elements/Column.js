@@ -39,7 +39,22 @@ class Column  extends BaseElement {
       label: 'Column width (%)',
       default: null,
       rules: {
-        '{{ELEMENT}}.altrp-element_column{{STATE}}': 'width: {{VALUE}}%',
+        '{{ELEMENT}}.altrp-element.altrp-element_column': 'width: {{VALUE}}%',
+      }
+    });
+
+    this.addControl("layout_column_height", {
+      type: CONTROLLER_SLIDER,
+      label: "column height",
+      default: {
+        size: 100,
+        unit: "%"
+      },
+      units: ["px", "%", "vh"],
+      max: 1000,
+      min: 0,
+      rules: {
+        "{{ELEMENT}}": "height: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -78,8 +93,9 @@ class Column  extends BaseElement {
           }
         ],
         rules: {
-          '{{ELEMENT}} .altrp-column{{STATE}}': 'align-content: {{VALUE}};',
-          '{{ELEMENT}} .altrp-column': 'align-items: {{VALUE}};',
+          '{{ELEMENT}} .altrp-column{{STATE}}': ['align-content: {{VALUE}};',
+            'align-items: {{VALUE}};'
+          ],
         },
       }
     );
@@ -224,7 +240,7 @@ class Column  extends BaseElement {
         value: ""
       },
       rules: {
-        "{{ELEMENT}} .altrp-column{{STATE}}": "background-image: {{VALUE}}" 
+        "{{ELEMENT}} .altrp-column{{STATE}}": "background-image: {{VALUE}}"
       }
     });
 
@@ -410,11 +426,11 @@ class Column  extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-column{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}} !important;",
-          "padding-right: {{RIGHT}}{{UNIT}} !important;",
-          "padding-bottom: {{BOTTOM}}{{UNIT}} !important;",
-          "padding-left: {{LEFT}}{{UNIT}} !important;"
+        "{{ELEMENT}}.altrp-element_column.altrp-element .altrp-column{{STATE}}": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
         ]
       }
     });
@@ -435,11 +451,11 @@ class Column  extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-column{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}} !important;',
-          'margin-right: {{RIGHT}}{{UNIT}} !important;',
-          'margin-bottom: {{BOTTOM}}{{UNIT}} !important;',
-          'margin-left: {{LEFT}}{{UNIT}} !important;'
+        '{{ELEMENT}}.altrp-element_column.altrp-element .altrp-column{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
         ]
       },
     });

@@ -381,6 +381,26 @@ class Nav extends BaseElement{
       ],
     });
 
+    this.addControl("breakpoint_dropdown_menu_layout", {
+      type: CONTROLLER_SELECT,
+      label: "Breakpoint",
+      default: "never",
+      options: [
+        {
+          value: "never",
+          label: "Never"
+        },
+        {
+          value: "mobile",
+          label: "Mobile (< 768px)"
+        },
+        {
+          value: "tablet",
+          label: "Tablet (< 1025px)"
+        },
+      ],
+    });
+
     this.addControl('label_dropdown_menu_layout', {
       type: CONTROLLER_HEADING,
       label: "Dropdown"
@@ -404,11 +424,11 @@ class Nav extends BaseElement{
     this.addControl('align_dropdown_menu_layout', {
       type: CONTROLLER_CHOOSE,
       label: "Align",
-      default: 'flex-start',
+      default: 'left',
       options:[
         {
           icon: 'left',
-          value: 'flex-start',
+          value: 'left',
         },
         {
           icon: 'center',
@@ -416,12 +436,9 @@ class Nav extends BaseElement{
         },
         {
           icon: 'right',
-          value: 'flex-end',
+          value: 'right',
         },
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-nav-menu-dropdown-content .altrp-nav-menu-li-link': "justify-content: {{VALUE}}",
-      },
     });
 
     this.addControl('toggle_align_dropdown_menu_layout', {
@@ -634,6 +651,59 @@ class Nav extends BaseElement{
     this.startControlSection('dropdown_hor_ver_menu_section', {
       tab: TAB_STYLE,
       label: 'Dropdown (Hor Ver)',
+    });
+
+    this.addControl('alignment_dropdown_hor_ver_menu_section', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment',
+      default: 'left',
+      options:[
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        }
+      ],
+    });
+
+    this.addControl('content_alignment_dropdown_hor_ver_menu_section', {
+        type: CONTROLLER_SELECT,
+        label: 'Content alignment',
+        options:[
+          {
+            'value' : 'left',
+            'label' : 'Left',
+          },
+          {
+            'value' : 'center',
+            'label' : 'Center',
+          },
+          {
+            'value' : 'right',
+            'label' : 'Right',
+          },
+          {
+            'value' : 'spaceBetween',
+            'label' : 'Space-between',
+          },
+          {
+            'value' : 'spaceBetweenReverse',
+            'label' : 'Space-between reverse',
+          },
+        ],
+      }
+    );
+
+    this.addControl("heading_dropdown_dropdown_hor_ver_menu_section", {
+      type: CONTROLLER_HEADING,
+      label: "Dropdown"
     });
 
     this.addControl('typographic_dropdown_hor_ver_menu_section', {
@@ -1125,12 +1195,24 @@ class Nav extends BaseElement{
     this.addControl("background_color_dropdown_menu_section", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       rules: {
         "{{ELEMENT}} .altrp-nav-menu-li{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("background_color_sub_dropdown_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Background color sub",
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-sub{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("color_sub_dropdown_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Text color sub",
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-sub{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -1163,10 +1245,6 @@ class Nav extends BaseElement{
     this.addControl("horizontal_padding_dropdown_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Horizontal padding',
-      default:{
-        size: 0,
-        unit: 'px',
-      },
       units:[
         'px',
       ],
@@ -1180,10 +1258,6 @@ class Nav extends BaseElement{
     this.addControl("vertical_padding_dropdown_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Vertical padding',
-      default:{
-        size: 0,
-        unit: 'px',
-      },
       units:[
         'px',
       ],
@@ -1237,10 +1311,6 @@ class Nav extends BaseElement{
     this.addControl("divider_color_dropdown_menu_section", {
       type: CONTROLLER_COLOR,
       label: "Color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       rules: {
         "{{ELEMENT}} .altrp-nav-menu-dropdown-content-divider{{STATE}}": "border-top-color: {{COLOR}};"
       }
@@ -1249,10 +1319,6 @@ class Nav extends BaseElement{
     this.addControl("divider_width_dropdown_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default:{
-        size: 0,
-        unit: 'px',
-      },
       units:[
         'px',
       ],
@@ -1260,6 +1326,221 @@ class Nav extends BaseElement{
       min: 0,
       rules: {
         "{{ELEMENT}} .altrp-nav-menu-dropdown-content-divider{{STATE}}": "border-top-width: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("chevron_heading_dropdown_menu_section", {
+      type: CONTROLLER_HEADING,
+      label: "Chevron"
+    });
+
+    this.addControl('chevron_dropdown_menu_section', {
+      type: CONTROLLER_MEDIA,
+      label: 'Choose chevron',
+    });
+
+    this.addControl("chevron_width_dropdown_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Size',
+      default:{
+        size: 25,
+        unit: 'px',
+      },
+      units:[
+        'px',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link-chevron-dropdown{{STATE}}": [
+          "width: {{SIZE}}{{UNIT}}",
+          "height: {{SIZE}}{{UNIT}}"
+        ]
+      }
+    });
+
+    this.addControl("chevron_color_dropdown_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Color",
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link-chevron-dropdown{{STATE}} path": [
+          "fill: {{COLOR}};",
+          "stroke: {{COLOR}}"
+        ]
+      }
+    });
+
+    this.addControl("chevron_rotate_dropdown_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Rotate',
+      default:{
+        size: 180,
+        unit: 'deg',
+      },
+      units:[
+        'deg',
+      ],
+      max: 360,
+      min: -360,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link-chevron-dropdown{{STATE}}": "transform: rotate({{SIZE}}deg)",
+      }
+    });
+
+    this.addControl("chevron_active_rotate_dropdown_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Active rotate',
+      default:{
+        size: 0,
+        unit: 'deg',
+      },
+      units:[
+        'deg',
+      ],
+      max: 360,
+      min: -360,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link-active-chevron-dropdown{{STATE}}": "transform: rotate({{SIZE}}deg)",
+      }
+    });
+
+    this.addControl("toggle_button_heading_dropdown_menu_section", {
+      type: CONTROLLER_HEADING,
+      label: "Toggle button"
+    });
+
+    this.addControl("color_toggle_button_fill_dropdown_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Color fill",
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}} .altrp-nav-menu-dropdown-button-icon path": "fill: {{COLOR}};"
+      }
+    });
+
+    this.addControl("color_toggle_button_stroke_dropdown_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Color stroke",
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}} .altrp-nav-menu-dropdown-button-icon path": "stroke: {{COLOR}}"
+      }
+    });
+
+    this.addControl("background_color_toggle_button_dropdown_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("size_toggle_button_dropdown_menu_section", {
+      type: CONTROLLER_SLIDER,
+      label: 'Size',
+      default:{
+        unit: 'px',
+      },
+      units:[
+        'px',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}} .altrp-nav-menu-dropdown-button-icon": [
+          "height: {{SIZE}}{{UNIT}}",
+          "width: {{SIZE}}{{UNIT}}"
+        ]
+      }
+    });
+
+    this.addControl('padding_toggle_button_dropdown_menu_section', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default:{
+        unit:'px',
+        bind: true
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl("border_type_toggle_button_dropdown_menu_section", {
+      type: CONTROLLER_SELECT,
+      label: "Border type",
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}}": "border-style: {{VALUE}};"
+      }
+    });
+
+    this.addControl("border_width_toggle_button_dropdown_menu_section", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}}":
+          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      }
+    });
+
+    this.addControl("border_color_toggle_button_dropdown_menu_section", {
+      type: CONTROLLER_COLOR,
+      label: "Border color",
+      default: {
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}}": "border-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("border_radius_toggle_button_dropdown_menu_section", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border radius",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
       }
     });
 

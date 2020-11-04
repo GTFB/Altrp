@@ -100,7 +100,6 @@ class SaveImportModule extends BaseModule{
 
     _.set(globalStyle.data, 'choose_page', oldChoosePage);
     rootElement.setSettings(globalStyle.data);
-    console.log(globalStyle.data);
     rootElement.updateStyles();
     return {
       success: true,

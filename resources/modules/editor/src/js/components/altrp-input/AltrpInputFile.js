@@ -1,5 +1,5 @@
 import {iconsManager} from "../../../../../admin/src/js/helpers";
-import {isEditor} from "../../../../../front-app/src/js/helpers";
+import {isEditor, renderAsset} from "../../../../../front-app/src/js/helpers";
 
 class AltrpInputFile extends Component {
   constructor(props) {
@@ -32,6 +32,7 @@ class AltrpInputFile extends Component {
     if(! files.length){
       this.setState(state =>({...state,filesForDisplay, files}));
     }
+    console.log(files);
     _.each(files, f=>{
       let fr = new FileReader();
       fr.readAsDataURL(f);
@@ -59,13 +60,15 @@ class AltrpInputFile extends Component {
     }
     let files = [];
     let types = this.props.settings.content_accept ? this.props.settings.content_accept.split(',') : [];
-    types = types.map(type=>{
-      return type.trim();
-    });
+
     _.each(e.target.files, _f=>{
-      if(types.indexOf(_f.type) !== -1 || ! types.length){
-        files.push(_f);
-      }
+      types.forEach(type=>{
+        type = type.trim();
+        type = type.replace('*', '');
+        if(_f.type.indexOf(type) === 0){
+          files.push(_f);
+        }
+      });
     });
     let filesForDisplay = [];
     if(! files.length){
@@ -80,6 +83,7 @@ class AltrpInputFile extends Component {
           alt: f.name ||'',
         });
         if(filesForDisplay.length === files.length){
+          console.log(filesForDisplay);
           this.setState(state =>({...state,filesForDisplay, files}));
         }
       };
@@ -108,7 +112,16 @@ class AltrpInputFile extends Component {
              accept={accept}
              onChange={this.onChange}/>
       <span className="altrp-field-file-media-list media-list">
-        {filesForDisplay.map((f, idx)=>{
+        {isEditor() ?
+            <span className="media-list-item">
+              {iconsManager().renderIcon('times',{
+                className:'media-list-item__remove',
+              })}{renderAsset({}, {
+                className:'media-list-item__img'
+            })}
+          </span>
+
+            : filesForDisplay.map((f, idx)=>{
           return <span key={idx} className="media-list-item">
               {iconsManager().renderIcon('times',{
                 className:'media-list-item__remove',

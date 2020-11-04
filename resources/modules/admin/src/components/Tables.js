@@ -61,7 +61,6 @@ export default class Tables extends Component{
         }
 	
 	setModules(modules){
-            console.log(modules);
             let urlModules = modules.map((row) => {
                 row.editUrl = "/admin/tables/edit/" + row.id;
                 return row;

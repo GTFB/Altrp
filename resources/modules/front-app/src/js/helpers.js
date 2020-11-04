@@ -169,6 +169,18 @@ export function renderAssetIcon(asset, props = null) {
  * @throws Исключение если иконка не найдена
  * */
 export function renderAsset(asset, props = null) {
+  if(asset instanceof File){
+    let refImg = React.createRef();
+    let fr = new FileReader();
+    fr.readAsDataURL(asset);
+    fr.onload = () => {
+      if(refImg.current){
+        refImg.current.src =fr.result;
+        refImg.current.alt =asset.name;
+      }
+    };
+    return React.createElement('img', {...props, src: asset.url, ref: refImg})
+  }
   switch (asset.assetType) {
     case 'icon': {
       return iconsManager().renderIcon(asset.name, props)
@@ -306,7 +318,7 @@ function conditionChecker(c, model, dataByPath = true){
  * @param {*} _default
  * @param {AltrpModel} context
  * @param {boolean} altrpCheck - проверять ли altrp
- * @return {string}
+ * @return {*}
  */
 export function getDataByPath(path = '', _default = null, context = null, altrpCheck = false){
   /**
@@ -784,7 +796,7 @@ window.altrphelpers = {
 export function printElements(elements, title = ''){
   let myWindow = window.open('', 'my div', 'height=400,width=1200');
   myWindow.document.write(`<html><head><title>${title}</title></head>`);
-  myWindow.document.write('</head><body >');
+  myWindow.document.write('<body >');
   elements = _.isArray(elements) ? elements : [elements];
   elements.forEach(element => {
     myWindow.document.write(element.outerHTML);
@@ -795,4 +807,115 @@ export function printElements(elements, title = ''){
   myWindow.print();
   myWindow.close();
   return true;
+}
+
+/**
+ * Функция конвертирует HTML в PDF
+ * @params {HTMLElement[]} element
+ * @params {string} filename
+ */
+export async function elementsToPdf(elements, filename = ''){
+  console.log(elements, filename);
+
+  let html2pdf = (await import('html2pdf.js')).default;
+  elements = elements.body ? elements.body : elements;
+  if(! elements){
+    return{
+      success: true,
+    };
+  }
+  let myWindow = window.open('', 'my div', 'height=400,width=1440');
+  myWindow.document.write(`<html><head><title></title></head>`);
+  myWindow.document.write('</head><body >');
+  elements = _.isArray(elements) ? elements : [elements];
+  elements.forEach(element => {
+    myWindow.document.write(element.outerHTML);
+  });
+  myWindow.document.write('</body></html>');
+  return new Promise((resolve, reject) =>{
+    html2pdf().from(myWindow.document.body).save(filename);
+    myWindow.close();
+    resolve({success: true})
+  });
+}
+
+/**
+ * Забирает данные из HTML таблицы
+ * @param {{}}HTMLElement
+ */
+export function dataFromTable(HTMLElement){
+  const data = [];
+  const headers = [];
+  if(! (HTMLElement &&  HTMLElement.querySelectorAll)){
+    return data;
+  }
+  let table = HTMLElement.querySelector('table');
+  if((! table) && HTMLElement.querySelector('tr')){
+    table = HTMLElement;
+  }
+  if(! table){
+    return data;
+  }
+  const ths = table.querySelectorAll('th');
+  _.each(ths, (th) => {
+    if(th.innerText){
+      headers.push(th.innerText || '');
+    }
+  });
+  const rows = table.querySelectorAll('tbody tr');
+  _.each(rows, (row) => {
+    const cells = row.querySelectorAll('td');
+    const part = {};
+    headers.forEach((header, idx)=>{
+      part[header] = cells[idx].innerText || '';
+    });
+    data.push(part);
+  });
+  return data;
+}
+
+/**
+ * Создать csv-файл из данных и скачать
+ * @param {{}} data
+ * @param {string} filename
+ */
+export async function  dataToCSV (data = {}, filename){
+  filename = filename || 'File';
+  if(! data){
+    return {success: false}
+  }
+  if(_.isObject() && ! _.isArray(data)){
+    data = [data];
+  }
+  if(! _.isArray(data)){
+    return {success: false}
+  }
+
+  let headers = _.toPairs(data[0]).map(([name, value])=>name);
+  let csvContent =
+      // "data:text/csv;charset=utf-8,"
+      ""
+      + headers.join(";")
+      + '\n'
+      + data.map(item => {
+        let line = '';
+        headers.forEach((h, idx)=>{
+          let value = _.get(item, h) || '';
+          if(_.isObject(value)){
+            value = JSON.stringify(value)
+          }
+
+          line += (_.isString(value) ? value.replace(/\s/g, ' ') : value)
+              + (headers.length === idx + 1 ? '' : ';');
+        });
+        return line;
+      }).join('\n');
+  let blob = new Blob([csvContent], {type: 'text/csv',charset: 'utf-8'});
+  let link = document.createElement('a');
+  link.setAttribute('href', window.URL.createObjectURL(blob));
+  link.setAttribute('download', filename + '.csv');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  return {success: true}
 }

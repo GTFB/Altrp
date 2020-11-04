@@ -11,7 +11,13 @@ class DatasourceDashboardController extends Controller
     
     public function index(Request $request, $id) 
     {
-        $panel = DatasourceDashboard::where('dashboard_id', '=', $id)->first();
+        if(auth()->user()!==null){
+            $user_id = auth()->user()->id;
+            $panel = DatasourceDashboard::where('dashboard_id', '=', $id)->where('user_id','=',$user_id)->first();
+        }
+        else{
+            $panel = DatasourceDashboard::where('dashboard_id', '=', $id)->first();
+        }
         return response()->json($panel, 200, [], JSON_UNESCAPED_UNICODE);
     }
 

@@ -221,6 +221,6 @@ let controllerDecorate = function elementWrapperDecorate(component) {
   component.removeDynamicSettings = removeDynamicSettings.bind(component);
   component.openDynamicContent = openDynamicContent.bind(component);
   component.getSettings = getSettings.bind(component);
-  store.subscribe(component.conditionSubscriber);
+  store.subscribe(component.conditionSubscriber);//todo: изменить подписку на изменение хранилища
 };
 export default controllerDecorate;

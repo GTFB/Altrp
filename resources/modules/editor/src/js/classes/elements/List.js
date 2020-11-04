@@ -142,6 +142,25 @@ class List extends BaseElement{
       label: 'Choose icon',
     });
 
+    repeater.addControl('vertical_alignment_icon_repeater', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Vertical alignment',
+      options:[
+        {
+          icon: 'left',
+          value: 'top',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'bottom',
+        }
+      ],
+    });
+
     repeater.addControl('position_relative_switcher_custom_repeater', {
       type: CONTROLLER_SWITCHER,
       label: 'Position relative',

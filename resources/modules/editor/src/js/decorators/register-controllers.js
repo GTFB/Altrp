@@ -30,7 +30,7 @@ export function advancedTabControllers(element) {
   //     label: 'Sizes',
   //   }
   // );
-  
+
   // element.addControl(
   //   'element_sizes_width', {
   //     type: CONTROLLER_SLIDER,
@@ -102,6 +102,52 @@ export function advancedTabControllers(element) {
           label: 'Positioning',
         }
     );
+
+    element.addControl("positioning_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      // default: {
+      //   top: 0,
+      //   right: 0,
+      //   bottom: 0,
+      //   left: 0,
+      //   unit: "px"
+      // },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}}": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}}",
+          "padding-bottom: {{BOTTOM}}{{UNIT}}",
+          "padding-left: {{LEFT}}{{UNIT}}"
+        ]
+      }
+    });
+
+    element.addControl('positioning_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      // default:{
+      //   top: 0,
+      //   right: 0,
+      //   bottom: 0,
+      //   left: 0,
+      //   unit:'px'
+      // },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}}': [
+          'margin-top: {{TOP}}{{UNIT}}',
+          'margin-right: {{RIGHT}}{{UNIT}}',
+          'margin-bottom: {{BOTTOM}}{{UNIT}}',
+          'margin-left: {{LEFT}}{{UNIT}}'
+        ]
+      },
+    });
 
     element.addControl('positioning_width_type', {
       type: CONTROLLER_SELECT,
@@ -175,7 +221,7 @@ export function advancedTabControllers(element) {
           '{{ELEMENT}}': 'align-self: {{VALUE}};',
         },
       });
-    }    
+    }
 
     element.addControl('positioning_position_type', {
       type: CONTROLLER_SELECT,
@@ -594,7 +640,7 @@ export function advancedTabControllers(element) {
     label: 'Responsive',
   }
   );
-  
+
   element.addControl('hide_on_wide_screen', {
     type: CONTROLLER_SWITCHER,
     label: 'Hide On Wide Screen',
@@ -626,5 +672,4 @@ export function advancedTabControllers(element) {
   });
 
   element.endControlSection();
-
 }

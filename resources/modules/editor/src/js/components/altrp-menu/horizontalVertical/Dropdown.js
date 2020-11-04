@@ -78,9 +78,26 @@ class Dropdown extends Component {
       }
     }
 
+    let classes = "altrp-nav-menu-ul-dropdown-hor-ver";
+
+    switch (this.props.settings.content_alignment_dropdown_hor_ver_menu_section) {
+      case "center":
+        classes += " altrp-nav-menu-ul-dropdown-hor-ver-center";
+        break;
+      case "right":
+        classes += " altrp-nav-menu-ul-dropdown-hor-ver-right";
+        break
+      case "spaceBetween":
+        classes += " altrp-nav-menu-ul-dropdown-hor-ver-space-between";
+        break
+      case "spaceBetweenReverse":
+        classes += " altrp-nav-menu-ul-dropdown-hor-ver-space-between-reverse";
+        break
+    }
+
     return (
-      <AltrpPortal id={this.props.idElement} childrenRef={childrenRef} show={this.props.show}>
-        <div className="altrp-nav-menu-ul-dropdown-hor-ver">
+      <AltrpPortal position={this.props.settings.alignment_dropdown_hor_ver_menu_section} id={this.props.idElement} childrenRef={childrenRef} show={this.props.show}>
+        <div className={classes}>
           <ul className="altrp-nav-menu-ul-dropdown-hor-ver-ul">
             {
               this.state.list.map((li, idx) => {

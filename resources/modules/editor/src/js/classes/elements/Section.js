@@ -83,10 +83,9 @@ class Section extends BaseElement{
       }
     );
 
-    this.addControl(
-      'layout_align_content', {
+    this.addControl('layout_column_position', {
       type: CONTROLLER_SELECT,
-      label: 'Align Content',
+      label: 'Vertical align',
       options: [
         {
           'value': 'baseline',
@@ -122,9 +121,97 @@ class Section extends BaseElement{
         },
       ],
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "align-content: {{VALUE}}",
+        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": ["align-content: {{VALUE}}",
+          "align-items: {{VALUE}}"
+        ],
       },
     }
+    );
+
+    this.addControl('layout_justify_content', {
+        type: CONTROLLER_SELECT,
+        label: 'Horizontal content',
+        options: [
+          {
+            'value': 'baseline',
+            'label': 'baseline'
+          },
+          {
+            'value': 'center',
+            'label': 'center'
+          },
+          {
+            'value': 'flex-start',
+            'label': 'flex-start'
+          },
+          {
+            'value': 'flex-end',
+            'label': 'flex-end'
+          },
+          {
+            'value': 'space-around',
+            'label': 'space-around'
+          },
+          {
+            'value': 'space-between',
+            'label': 'space-between'
+          },
+          {
+            'value': 'space-evenly',
+            'label': 'space-evenly'
+          },
+          {
+            'value': 'unset',
+            'label': 'unset'
+          },
+        ],
+        rules: {
+          "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "justify-content: {{VALUE}}",
+        },
+      }
+    );
+
+    this.addControl('layout_column_direction', {
+        type: CONTROLLER_SELECT,
+        label: 'direction',
+        options: [
+          {
+            'value': 'row',
+            'label': 'row'
+          },
+          {
+            'value': 'row-reverse',
+            'label': 'row reverse'
+          },
+          {
+            'value': 'column',
+            'label': 'column'
+          },
+          {
+            'value': 'column-reverse',
+            'label': 'column-reverse'
+          },
+          {
+            'value': 'space-around',
+            'label': 'space-around'
+          },
+          {
+            'value': 'space-between',
+            'label': 'space-between'
+          },
+          {
+            'value': 'space-evenly',
+            'label': 'space-evenly'
+          },
+          {
+            'value': 'unset',
+            'label': 'unset'
+          },
+        ],
+        rules: {
+          "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "flex-direction: {{VALUE}}"
+        },
+      }
     );
 
     // this.addControl("layout_content_full_width", {
@@ -228,32 +315,36 @@ class Section extends BaseElement{
       }
     });
 
-    this.addControl('layout_column_position', {
-      type: CONTROLLER_SELECT,
-      label: 'Column Posiion',
-      default: 'stretch',
-      options: [
-        {
-          value: 'initial',
-          label: 'Stretch'
-        },
-        {
-          value: 'flex-start',
-          label: 'Top'
-        },
-        {
-          value: 'center',
-          label: 'Middle'
-        },
-        {
-          value: 'flex-end',
-          label: 'Bottom'
-        }
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}': 'align-items: {{VALUE}};',
-      }
-    });
+    // this.addControl('layout_column_position', {
+    //   type: CONTROLLER_SELECT,
+    //   label: 'Column Posiion',
+    //   default: 'stretch',
+    //   options: [
+    //     {
+    //       value: '',
+    //       label: 'Stretch'
+    //     },
+    //     {
+    //       value: 'initial',
+    //       label: 'Stretch'
+    //     },
+    //     {
+    //       value: 'flex-start',
+    //       label: 'Top'
+    //     },
+    //     {
+    //       value: 'center',
+    //       label: 'Middle'
+    //     },
+    //     {
+    //       value: 'flex-end',
+    //       label: 'Bottom'
+    //     }
+    //   ],
+    //   rules: {
+    //     '{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}': 'align-items: {{VALUE}};',
+    //   }
+    // });
 
     // this.addControl('layout_ver_align', {
     //     type: CONTROLLER_SELECT,

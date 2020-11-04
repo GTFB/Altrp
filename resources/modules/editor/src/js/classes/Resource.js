@@ -125,29 +125,29 @@ class Resource {
       // 'Accept': 'application/json',
     };
     let formData = new FormData();
-    let hasObject = false;
+    let hasFile = false;
     _.each(data, (value, key) => {
       if(_.isArray(value)){
         for (let i = 0; i < value.length; i++) {
+          if(value[i] instanceof File){
+            hasFile = true;
+          }
           if(value[i].size > MAX_FILE_SIZE){
             continue;
           }
           formData.append(`${key}[${i}]`, value[i]);
         }
       } else {
-        if(_.isObject(value)){
-          hasObject = true;
-        }
         formData.append(key, value);
       }
     });
-    if(hasObject){
+    if(! hasFile){
       headers['Content-Type']= 'application/json';
       headers['Accept']= 'application/json';
     }
     let options = {
       method: 'POST',
-      body: hasObject ? JSON.stringify(data) : formData,
+      body: hasFile ?  formData : JSON.stringify(data),
       headers,
     };
     return fetch(this.getRoute(), options).then(res => {
@@ -204,11 +204,14 @@ class Resource {
       // 'Accept': 'application/json',
     };
     let formData = new FormData();
-    let hasObject = false;
+    let hasFile = false;
 
     _.each(data, (value, key) => {
       if(_.isArray(value)){
         for (let i = 0; i < value.length; i++) {
+          if(value[i] instanceof File){
+            hasFile = true;
+          }
           if(value[i].size > MAX_FILE_SIZE){
             console.log(value[i]);
             continue;
@@ -216,22 +219,18 @@ class Resource {
           formData.append(`${key}[${i}]`, value[i]);
         }
       } else {
-
-        if(_.isObject(value)){
-          hasObject = true;
-        }
         formData.append(key, value);
       }
     });
 
-    if(hasObject){
+    if(! hasFile){
       headers['Content-Type']= 'application/json';
       headers['Accept']= 'application/json';
     }
     let options = {
       method: 'put',
       // body: JSON.stringify(data),
-      body: hasObject ? JSON.stringify(data) : formData,
+      body: hasFile ? formData : JSON.stringify(data),
       headers: headers,
     };
     let url = this.getRoute() + (id ? '/' + id : '');

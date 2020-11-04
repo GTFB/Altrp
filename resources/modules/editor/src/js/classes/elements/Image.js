@@ -46,7 +46,14 @@ class Image extends BaseElement{
 
     this.addControl('content_media', {
       type: CONTROLLER_MEDIA,
-      label: 'Choose image',
+      label: 'Image',
+    });
+
+    this.addControl('content_path', {
+      type: CONTROLLER_TEXT,
+      dynamic: false,
+      responsive: false,
+      label: 'Path',
     });
 
     this.endControlSection();

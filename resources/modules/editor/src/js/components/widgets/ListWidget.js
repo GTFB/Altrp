@@ -92,8 +92,21 @@ class ListWidget extends Component {
       };
 
         li_icon_classes = li.position_relative_switcher_custom_repeater ? "altrp-list-icon-relative" : li_icon_classes;
+        switch (li.vertical_alignment_icon_repeater) {
+          case "top":
+            li_icon_classes += " altrp-list-icon-top";
+            break;
+          case "center":
+            li_icon_classes += " altrp-list-icon-center";
+            break;
+          case "bottom":
+            li_icon_classes += " altrp-list-icon-bottom";
+            break;
+          default:
+            li_icon_classes += " altrp-list-icon-center";
+        }
 
-        let li_icon = li.icon_select_repeater == "custom" ? 
+        let li_icon = li.icon_select_repeater == "custom" ?
           <span className={"altrp-list-icon " + li_icon_classes} style={li_icon_styles}>
             {renderAssetIcon(li.icon_repeater)}
           </span> : null;
