@@ -353,6 +353,12 @@ class InputWidget extends Component {
         // this.label.current.classList.add("hello")
 
         break;
+      case "absolute":
+        styleLabel = {
+          position: 'absolute',
+        };
+        classLabel = "";
+        break;
     }
 
     if (this.state.settings.content_label != null) {
@@ -424,6 +430,7 @@ class InputWidget extends Component {
       {this.state.settings.content_label_position_type == "top" ? required : ""}
       {this.state.settings.content_label_position_type == "left" ? label : ""}
       {this.state.settings.content_label_position_type == "left" ? required : ""}
+      {this.state.settings.content_label_position_type == "absolute" ? label : ""}
       {/* .altrp-field-label-container */}
       {input}
       {/* <InputMask mask="99/99/9999" onChange={this.onChange} value={this.state.value} /> */}
