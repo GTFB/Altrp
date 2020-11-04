@@ -17,10 +17,10 @@ class InputWidget extends Component {
   constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this);
-    let value = props.element.getSettings().content_default_value || '';
+    this.defaultValue = props.element.getSettings().content_default_value || '';
     this.state = {
       settings: { ...props.element.getSettings() },
-      value: value,
+      value: this.defaultValue,
       options: parseOptionsFromSettings(props.element.getSettings('content_options')),
       paramsForUpdate: null,
     };
@@ -411,18 +411,24 @@ class InputWidget extends Component {
       }
         break;
       default: {
+        const isClearable = this.state.settings.content_clearable;
+        // console.log(isClearable)
         input = <React.Suspense fallback={<input />}>
-          <AltrpInput type={this.state.settings.content_type}
-            value={value || ''}
-            autoComplete={autocomplete}
-            placeholder={this.state.settings.content_placeholder}
-            className={"altrp-field " + this.state.settings.position_css_classes}
-            settings={this.props.element.getSettings()}
-            onKeyDown={this.handleEnter}
-            onChange={this.onChange}
-            onBlur={this.onBlur}
-            id={this.state.settings.position_css_id}
-          /></React.Suspense>;
+          <div className="position-relative">
+            <AltrpInput type={this.state.settings.content_type}
+              value={value || ''}
+              autoComplete={autocomplete}
+              placeholder={this.state.settings.content_placeholder}
+              className={"altrp-field " + this.state.settings.position_css_classes}
+              settings={this.props.element.getSettings()}
+              onKeyDown={this.handleEnter}
+              onChange={this.onChange}
+              onBlur={this.onBlur}
+              id={this.state.settings.position_css_id}
+            />
+            {isClearable && <button className="input-clear-btn" onClick={() => this.setState({ value: this.defaultValue})}>✖</button>}
+          </div>
+        </React.Suspense>;
       }
     }
     return <div className={"altrp-field-container " + classLabel}>

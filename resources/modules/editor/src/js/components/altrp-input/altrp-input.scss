@@ -19,3 +19,20 @@
     }
   }
 }
+
+.input-clear-btn {
+  background: transparent;
+  padding: 0;
+  position: absolute;
+  bottom: calc(50% - 7px);
+  right: 15px;
+  display: none;
+
+  &:hover {
+    font-weight: bold;
+  }
+}
+
+.altrp-field:hover + .input-clear-btn, .input-clear-btn:hover {
+  display: block;
+}

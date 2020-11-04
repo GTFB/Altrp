@@ -266,6 +266,12 @@ class Input extends BaseElement{
       default: false
     });
 
+    this.addControl('content_clearable', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Clearable',
+      default: false
+    });
+
     this.addControl('content_options_nullable', {
       type: CONTROLLER_SWITCHER,
       label: 'Select Nullable',
