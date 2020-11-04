@@ -16,7 +16,7 @@ import {
   CONTROLLER_TRANSFORM,
   CONTROLLER_CHOOSE,
   CONTROLLER_GRADIENT,
-  CONTROLLER_MEDIA, CONTROLLER_SWITCHER, CONTROLLER_HEADING
+  CONTROLLER_MEDIA, CONTROLLER_SWITCHER, CONTROLLER_HEADING, CONTROLLER_CREATIVE_LINK
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 
@@ -62,7 +62,7 @@ class Heading extends BaseElement {
       options:[
         {
           icon: 'left',
-          value: 'left',
+          value: 'flex-start',
         },
         {
           icon: 'center',
@@ -70,15 +70,15 @@ class Heading extends BaseElement {
         },
         {
           icon: 'right',
-          value: 'right',
+          value: 'flex-end',
         },
         {
           icon: 'in_width',
-          value: 'justify',
+          value: 'stretch',
         }
       ],
       rules: {
-            '{{ELEMENT}}': 'text-align: {{VALUE}};',
+            '{{ELEMENT}} .altrp-heading': 'justify-content: {{VALUE}};',
       },
     });
 
@@ -134,6 +134,16 @@ class Heading extends BaseElement {
         noFollow: false
       },
       label: 'link',
+    });
+
+    this.addControl('creative_link_link', {
+      type: CONTROLLER_LINK,
+      default: {
+        url: "",
+        attributes: "",
+        noFollow: false
+      },
+      label: 'for creative link',
     });
 
     this.endControlSection();
@@ -965,6 +975,34 @@ class Heading extends BaseElement {
 
       }
     });
+
+    this.endControlSection();
+
+    this.startControlSection('creative_link', {
+        tab: TAB_STYLE,
+        label: 'Creative Link',
+      }
+    );
+
+    this.addControl('creative_link_controller', {
+        type: CONTROLLER_CREATIVE_LINK,
+        label: 'Creative Link',
+        rules: {
+          '{{ELEMENT}} .altrp-btn:after{{STATE}}': [
+            'transition-duration: {{SIZE}}s;',
+            'height: {{LINEHEIGHT}}px;',
+            'color: {{COLOR}};',
+            'background: {{BACKGROUND}};',
+          ],
+          '{{ELEMENT}} .altrp-btn:before{{STATE}}': [
+            'transition-duration: {{SIZE}}s;',
+            'height: {{LINEHEIGHT}}px;',
+            'color: {{COLOR}};',
+            'background: {{BACKGROUND}};',
+          ],
+        },
+      }
+    );
 
     this.endControlSection();
 

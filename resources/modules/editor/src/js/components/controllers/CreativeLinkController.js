@@ -46,8 +46,8 @@ class CreativeLinkController extends Component {
   }
   getDefaultValue() {
     return {
-      style: {}
-    };
+      style: ""
+    }
   }
 
 
@@ -180,88 +180,120 @@ class CreativeLinkController extends Component {
       },
       {
         value: 'cl-style-1',
-        label: 'Style 1'
+        label: 'Brace'
       },
       {
         value: 'cl-style-2',
-        label: 'Style 2'
+        label: 'Rotate block up'
       },
       {
         value: 'cl-style-3',
-        label: 'Style 3'
+        label: 'Bottom line up'
       },
       {
         value: 'cl-style-4',
-        label: 'Style 4'
+        label: 'Bottom line down'
       },
-      // {
-      //   value: 'cl-style-5',
-      //   label: 'Style 5'
-      // },
+      {
+        value: 'cl-style-5',
+        label: 'Rotate word up'
+      },
       {
         value: 'cl-style-6',
-        label: 'Style 6'
+        label: 'Upper line down'
       },
       {
         value: 'cl-style-7',
-        label: 'Style 7'
+        label: 'Upper line up'
       },
       {
         value: 'cl-style-8',
-        label: 'Style 8'
+        label: 'Border corner'
       },
-      // {
-      //   value: 'cl-style-9',
-      //   label: 'Style 9'
-      // },
-      // {
-      //   value: 'cl-style-10',
-      //   label: 'Style 10'
-      // },
-      // {
-      //   value: 'cl-style-11',
-      //   label: 'Style 11'
-      // },
+      {
+        value: 'cl-style-9',
+        label: 'Description'
+      },
+      {
+        value: 'cl-style-10',
+        label: 'Block left'
+      },
+      {
+        value: 'cl-style-11',
+        label: 'Fill with line'
+      },
       {
         value: 'cl-style-12',
-        label: 'Style 12'
+        label: 'Circles on hover'
       },
       {
         value: 'cl-style-13',
-        label: 'Style 13'
+        label: 'Dots on hover'
       },
       {
         value: 'cl-style-14',
-        label: 'Style 14'
+        label: 'Lines rotate'
       },
       {
         value: 'cl-style-15',
-        label: 'Style 15'
+        label: 'Text push'
       },
       {
         value: 'cl-style-16',
-        label: 'Style 16'
+        label: 'Text corner'
       },
       {
         value: 'cl-style-17',
-        label: 'Style 17'
+        label: 'Text fade bottom'
       },
       {
         value: 'cl-style-18',
-        label: 'Style 18'
+        label: 'Lines X rotate'
       },
       {
         value: 'cl-style-19',
-        label: 'Style 19'
+        label: 'Rotate block right'
       },
       {
         value: 'cl-style-20',
-        label: 'Style 20'
+        label: 'Flip card'
       },
       {
         value: 'cl-style-21',
-        label: 'Style 21'
+        label: 'Lines on hover'
       },
+      {
+        value: 'cl-style-22',
+        label: 'Bottom L-R'
+      },
+      {
+        value: 'cl-style-23',
+        label: 'Bottom R-L'
+      },
+      {
+        value: 'cl-style-24',
+        label: 'Center line'
+      },
+      {
+        value: 'cl-style-25',
+        label: 'Bottom L-L'
+      },
+      {
+        value: 'cl-style-26',
+        label: 'Bottom R-R'
+      },
+      {
+        value: 'cl-style-27',
+        label: 'Center border'
+      },
+      {
+        value: 'cl-style-28',
+        label: 'C-R-C'
+      },
+      {
+        value: 'cl-style-29',
+        label: 'C-L-C'
+      }
     ];
     // стили для select2
     const customStyles = {
