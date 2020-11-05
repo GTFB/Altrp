@@ -32,6 +32,7 @@ class CKeditor extends Component {
         // You can store the "editor" and use when it is needed.
         console.log('Editor is ready to use!', editor);
       }}
+      onChange={(event, editor) => this.props.changeText(editor.getData(), true)}
     />
   }
 }

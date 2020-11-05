@@ -301,6 +301,7 @@ class InputWidget extends Component {
     let fieldName = this.props.element.getSettings('field_id');
     let timestamp = this.props.element.getSettings('content_timestamp');
     let isDate = this.state.settings.content_type === 'date';
+
     if (isDate && timestamp && value != '') {
       value = Math.round(new Date(value).getTime()); // timestamp
     }
@@ -581,7 +582,11 @@ class InputWidget extends Component {
   }
 
   renderWysiwyg() {
-    return <CKeditor text={this.getContent('content_default_value')} readOnly={this.getContent('read_only')} />
+    return <CKeditor
+      changeText={this.dispatchFieldValueToStore}
+      text={this.getContent('content_default_value')}
+      readOnly={this.getContent('read_only')}
+    />
   }
 }
 
