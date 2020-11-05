@@ -52,26 +52,26 @@ export default class ElementsManger {
     //список элементов
     this.elements[RootElement.getName()] = RootElement;
     this.elements[HeadingElement.getName()] = HeadingElement;
+    this.elements[Image.getName()] = Image;
+    this.elements[Button.getName()] = Button;
+    this.elements[Icon.getName()] = Icon;
+    this.elements[Text.getName()] = Text;
+    this.elements[Divider.getName()] = Divider;
     this.elements[Column.getName()] = Column;
     this.elements[Section.getName()] = Section;
-    this.elements[Button.getName()] = Button;
+    this.elements[List.getName()] = List;
+    this.elements[Nav.getName()] = Nav;
     this.elements[Input.getName()] = Input;
-    this.elements[Text.getName()] = Text;
-    this.elements[Image.getName()] = Image;
     this.elements[Table.getName()] = Table;
     this.elements[Posts.getName()] = Posts;
-    this.elements[Nav.getName()] = Nav;
-    this.elements[Divider.getName()] = Divider;
-    this.elements[Tabs.getName()] = Tabs;
     this.elements[Poster.getName()] = Poster;
-    this.elements[List.getName()] = List;
+    this.elements[Tabs.getName()] = Tabs;
     this.elements[Accordion.getName()] = Accordion;
-    this.elements[Carousel.getName()] = Carousel;
     this.elements[Map.getName()] = Map;
     this.elements[MapConstructor.getName()] = MapConstructor;
     this.elements[Diagram.getName()] = Diagram;
     this.elements[Dashboards.getName()] = Dashboards;
-    this.elements[Icon.getName()] = Icon;
+    this.elements[Carousel.getName()] = Carousel;
     this.elements[Tour.getName()] = Tour;
     //список компонентов
     this.components = {};

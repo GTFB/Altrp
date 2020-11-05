@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import TextIcon from "../../../svgs/widget_text.svg";
+import TextIcon from "../../../svgs/text.svg";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_SWITCHER,

@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import TableIcon from "../../../svgs/widget_post.svg";
+import TableIcon from "../../../svgs/post-list.svg";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_SWITCHER,

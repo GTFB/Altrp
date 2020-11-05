@@ -1,5 +1,5 @@
 import BaseElement from './BaseElement';
-import FromIcon from '../../../svgs/form.svg';
+import FromIcon from '../../../svgs/form-horizontal.svg';
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXTAREA,
@@ -24,7 +24,7 @@ class Input extends BaseElement {
     return 'input';
   }
   static getTitle() {
-    return 'Field';
+    return 'Form';
   }
   static getIconComponent() {
     return FromIcon;
