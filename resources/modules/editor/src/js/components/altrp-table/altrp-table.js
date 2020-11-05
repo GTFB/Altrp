@@ -19,20 +19,29 @@ import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput
  * @param {Query} query
  * @param {{}} data
  * @param {AltrpModel} currentModel
+ * @param {string} _status
+ * @param {{}} _error
+ * @param {function} setSortSettings
+ * @param {function} setFilterSettings
+ * @param {{}} filterSetting
+ * @param {{}} sortSetting
  * @return {*}
  * @constructor
  */
-const AltrpTable = ({settings, query, data, currentModel}) => {
+const AltrpTable = ({settings,
+                      query,
+                      data,
+                      currentModel,
+                      _status,
+                      _error,
+                      setSortSettings,
+                      setFilterSettings,
+                      filterSetting,
+                      sortSetting}) => {
   if (! (settings.tables_columns && settings.tables_columns.length)) {
     return <div children="Please Add Column"/>
   }
-  const useQuerySettings = {
-    forceFetchOnMount: true,
-    refetchOnWindowFocus: true,
-  };
-  /**
-   * проверим есть ли настройки для сортировок по умолчанию
-   */
+
   const defaultSortSettings =  {};
   settings.tables_columns.forEach(column => {
     if(column.column_is_default_sorted && !defaultSortSettings.order_by){
@@ -49,85 +58,24 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
   const [page, setPage] = useState(1);
 
   let counter = query.getCounterStart(page);
-  let _data =[], _status, _error, _latestData;
 
   const collapsing = React.useMemo(()=>settings.group_collapsing);
   const collapsedInitiate = [];
   const [collapsedGroups, setCollapsedGroups] = React.useState(collapsedInitiate);
   const [updatedData, setUpdatedData] = useState({});
-  const [sortSetting, setSortSettings] = useState(defaultSortSettings);
-  const [filterSetting, setFilterSettings] = useState({});
   const [doubleClicked, setDoubleClicked] =  useState({});
   const groupingStore = [];
-  const filterSettingJSON = JSON.stringify(filterSetting);
-  const fetchModels = useCallback(async (key, page = 1, sortSetting, filterSetting, params,  groupBy) => {
-    let queryData = {page};
-    const filterSettingJSON = JSON.stringify(filterSetting);
-    if(sortSetting){
-      queryData = _.assign(sortSetting, queryData);
-    }
-    if(groupBy){
-      queryData.order = 'ASC';
-      queryData.order_by = groupBy;
-    }
-    if(filterSettingJSON.length > 2){
-      queryData.filters = filterSettingJSON;
-    }
-    return query.getQueried(queryData)
-  });
 
-  if(_.get(settings, 'choose_datasource', 'query') === 'datasource'){
-    /**
-     * Если данные берутся со страницы
-     */
-    _data = getDataByPath(extractPathFromString(_.get(settings, 'table_datasource', '')), []);
-  } else if(query.pageSize){
-    /**
-     * Если есть пагинация
-     */
-    const {
-      status,
-      resolvedData,
-      latestData,
-      error,
-    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting, query.getParams(), groupBy],
-        fetchModels,
-        useQuerySettings);
-    _data = resolvedData ? resolvedData : _data;
-    _status = status;
-    _error = error;
-    _latestData = latestData;
-    useEffect(() => {
-      if (latestData?.hasMore) {
-        queryCache.prefetchQuery([query.dataSourceName, page + 1], fetchModels);
-      }
-    }, [latestData, fetchModels, page, sortSetting, filterSetting]);
-  }else {
-    /**
-     * Если нет пагинации
-     */
-    const {status, data, error,} = useQuery([query.dataSourceName,query.getParams()],
-        () => {
-      return query.getResource().getQueried({...sortSetting,filters: filterSettingJSON, groupBy})
-    }, useQuerySettings);
-    _data = data;
-    _status = status;
-    _error = error;
-  }
+  
   let columns = [];
   columns = settingsToColumns(settings);
-  if(_.isObject(_data) && ! _.isArray(_data)){
-    _data = [_data];
-  }
-  if(! _data.length){
-    _data = data;
-  }
+  
   /**
    * обновление данных при изменении ячейки
    * @type {any[]}
    * @private
    */
-  _data = _data.map((row)=>{
+  data = data.map((row)=>{
     if(row.id === updatedData.rowId){
       row[updatedData.column] = updatedData.value;
       return{...row};
@@ -147,7 +95,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
         ),
         [settings.tables_columns]
     ),
-    data: React.useMemo(() => (_data || []), [_data]),
+    data: React.useMemo(() => (data || []), [data]),
   }, );
   /**
    * Обработка клика для сортировки
@@ -319,7 +267,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
           )
       })}
     </tbody>
-    {renderFooter(settings, _data)}
+    {renderFooter(settings, data)}
   </table>
     {((query.paginationType === 'prev-next') && query.pageSize) ?
       <div className="altrp-pagination">

@@ -69,8 +69,8 @@ class TableWidget extends Component {
         renderTrackVertical={({style, ...props})=>{
           return<div className="altrp-scroll__vertical-track" style={style} {...props} />}}
     ><this.state.TableComponent query={query}
-                                      currentModel={this.props.currentModel}
-                                      data={query.getFromModel(this.state.modelData)}
+                                currentModel={this.props.currentModel}
+                                data={query.getFromModel(this.state.modelData)}
                                 settings={this.props.element.getSettings()}/>
     </Scrollbars>;
   }

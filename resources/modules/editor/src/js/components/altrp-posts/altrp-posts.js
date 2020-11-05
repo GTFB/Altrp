@@ -97,7 +97,7 @@ class AltrpPosts extends React.Component {
       </div>
       
     </React.Fragment>
-  }
+  };
 
   render() {
     let {data: posts} = this.props;
