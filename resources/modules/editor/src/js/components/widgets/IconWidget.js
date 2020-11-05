@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import AltrpImage from "../altrp-image/AltrpImage";
-import {iconsManager} from "../../helpers";
 import AltrpLink from "../altrp-link/AltrpLink";
 
 class IconWidget extends Component {

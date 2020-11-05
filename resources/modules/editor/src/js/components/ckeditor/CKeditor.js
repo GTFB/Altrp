@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Alignments from '../../../../../altrp-reports/src/components/painter/widgets/Alignments';
-import { getEditor } from '../../helpers';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import BalloonEditor from '@ckeditor/ckeditor5-build-balloon';

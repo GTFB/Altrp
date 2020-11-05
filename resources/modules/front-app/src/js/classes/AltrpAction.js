@@ -200,9 +200,26 @@ class AltrpAction extends AltrpModel {
     if(frontAppRouter){
       if(this.getProperty('back')){
         frontAppRouter.history.back();
-
       } else {
-        frontAppRouter.history.push(URL);
+        let routes = appStore.getState().appRoutes.routes || [];
+        let innerRedirect = false;
+        if(URL === '/'){
+          innerRedirect = true;
+        } else {
+          routes.forEach(route => {
+            if(! route.path){
+              return;
+            }
+            if(route.path === URL){
+              innerRedirect = true;
+            }
+          });
+        }
+        if(innerRedirect){
+          frontAppRouter.history.push(URL);
+        } else {
+          window.location.replace(URL);
+        }
       }
 
     }

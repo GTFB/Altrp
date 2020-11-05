@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import AltrpLink from "../../altrp-link/AltrpLink";
 import AltrpImage from "../../altrp-image/AltrpImage";
-import {iconsManager} from "../../../helpers";
 
 class DropdownSub extends Component {
   constructor(props) {

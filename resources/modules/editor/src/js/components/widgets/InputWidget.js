@@ -2,13 +2,12 @@ import React, { Component } from "react";
 import {
   altrpCompare, isEditor,
   parseOptionsFromSettings,
-  parseParamsFromString
+  parseParamsFromString, sortOptions
 } from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
-import { cutString, sortOptions } from "../../helpers";
 import { connect } from "react-redux";
 import CKeditor from "../ckeditor/CKeditor";
 const AltrpInput = React.lazy(() => import("../altrp-input/AltrpInput"));

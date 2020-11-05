@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {iconsManager} from "../../../helpers";
 import Dropdown from "./Dropdown";
 import {renderAsset} from "../../../../../../front-app/src/js/helpers";
 import AltrpLink from "../../altrp-link/AltrpLink";
