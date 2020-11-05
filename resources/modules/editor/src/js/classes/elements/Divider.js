@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import DividerIcon from "../../../svgs/widget_divider.svg";
+import DividerIcon from "../../../svgs/divider.svg";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_COLOR,
@@ -51,8 +51,8 @@ class Divider extends BaseElement {
           label: 'solid'
         },
         {
-					value: 'none',
-					label: 'none'
+          value: 'none',
+          label: 'none'
 
         },
         {
@@ -64,8 +64,8 @@ class Divider extends BaseElement {
           label: 'dotted'
         },
         {
-            value: 'dashed',
-            label: 'dashed'
+          value: 'dashed',
+          label: 'dashed'
         },
         {
           value: 'curly',
@@ -103,7 +103,7 @@ class Divider extends BaseElement {
       },
       max: 1000,
       min: 0,
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -114,46 +114,46 @@ class Divider extends BaseElement {
     });
 
     this.addControl('divider_alignment', {
-        type: CONTROLLER_CHOOSE,
-        label: 'alignment',
-        default: 'left',
-        options:[
-          {
-            icon: 'left',
-            value: 'left',
-          },
-          {
-            icon: 'center',
-            value: 'center',
-          },
-          {
-            icon: 'right',
-            value: 'right',
-          }
-        ],
-        rules: {
-              '{{ELEMENT}}': 'align-items: {{VALUE}};',
+      type: CONTROLLER_CHOOSE,
+      label: 'alignment',
+      default: 'left',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
         },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        }
+      ],
+      rules: {
+        '{{ELEMENT}}': 'align-items: {{VALUE}};',
+      },
     });
 
-      this.addControl('divider_add_element', {
-        type: CONTROLLER_CHOOSE,
-        label: 'add Element',
-        default: 'left',
-        options:[
-          {
-            icon: 'left',
-            value: 'none',
-          },
-          {
-            icon: 'center',
-            value: 'text',
-          },
-          {
-            icon: 'right',
-            value: 'icon',
-          }
-        ],
+    this.addControl('divider_add_element', {
+      type: CONTROLLER_CHOOSE,
+      label: 'add Element',
+      default: 'left',
+      options: [
+        {
+          icon: 'left',
+          value: 'none',
+        },
+        {
+          icon: 'center',
+          value: 'text',
+        },
+        {
+          icon: 'right',
+          value: 'icon',
+        }
+      ],
     });
 
     this.addControl('divider_text', {
@@ -325,49 +325,49 @@ class Divider extends BaseElement {
     });
 
     this.addControl('text_style_typographic', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: "normal",
-          spacing: 0,
-          size: "medium",
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-divider-label{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: "normal",
+        spacing: 0,
+        size: "medium",
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-divider-label{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.addControl('text_style_position', {
-        type: CONTROLLER_CHOOSE,
-        label: 'position',
-        default: 'center',
-        options:[
-          {
-            icon: 'left',
-            value: 'left',
-          },
-          {
-            icon: 'center',
-            value: 'center',
-          },
-          {
-            icon: 'right',
-            value: 'right',
-          }
-        ],
+      type: CONTROLLER_CHOOSE,
+      label: 'position',
+      default: 'center',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        }
+      ],
     });
 
     this.addControl('text_style_spacing', {
@@ -379,11 +379,11 @@ class Divider extends BaseElement {
       },
       max: 100,
       min: 0,
-      units:[
+      units: [
         'px',
         '%',
         'vh',
-			],
+      ],
     });
 
     this.endControlSection();

@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import IconIcon from '../../../svgs/widget_icon.svg';
+import IconIcon from '../../../svgs/favorite.svg';
 import {advancedTabControllers} from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXTAREA,

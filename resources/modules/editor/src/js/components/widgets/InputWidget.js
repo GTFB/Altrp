@@ -2,14 +2,14 @@ import React, { Component } from "react";
 import {
   altrpCompare, isEditor,
   parseOptionsFromSettings,
-  parseParamsFromString
+  parseParamsFromString, sortOptions
 } from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
-import { cutString, sortOptions } from "../../helpers";
 import { connect } from "react-redux";
+import CKeditor from "../ckeditor/CKeditor";
 const AltrpInput = React.lazy(() => import("../altrp-input/AltrpInput"));
 
 class InputWidget extends Component {
@@ -17,10 +17,10 @@ class InputWidget extends Component {
   constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this);
-    let value = props.element.getSettings().content_default_value || '';
+    this.defaultValue = props.element.getSettings().content_default_value || '';
     this.state = {
       settings: { ...props.element.getSettings() },
-      value: value,
+      value: this.defaultValue,
       options: parseOptionsFromSettings(props.element.getSettings('content_options')),
       paramsForUpdate: null,
     };
@@ -185,7 +185,7 @@ class InputWidget extends Component {
     try {
       content_calculation = content_calculation.replace(/}}/g, '\')').replace(/{{/g, '_.get(context, \'');
       value = eval(content_calculation);
-      if(value === this.state.value){
+      if (value === this.state.value) {
         return;
       }
       this.setState(state => ({ ...state, value }), () => { this.dispatchFieldValueToStore(value); });
@@ -301,6 +301,7 @@ class InputWidget extends Component {
     let fieldName = this.props.element.getSettings('field_id');
     let timestamp = this.props.element.getSettings('content_timestamp');
     let isDate = this.state.settings.content_type === 'date';
+
     if (isDate && timestamp && value != '') {
       value = Math.round(new Date(value).getTime()); // timestamp
     }
@@ -353,6 +354,12 @@ class InputWidget extends Component {
         // this.label.current.classList.add("hello")
 
         break;
+      case "absolute":
+        styleLabel = {
+          position: 'absolute',
+        };
+        classLabel = "";
+        break;
     }
 
     if (this.state.settings.content_label != null) {
@@ -376,15 +383,15 @@ class InputWidget extends Component {
 
     let input = null;
     switch (this.state.settings.content_type) {
-      case 'select':{
+      case 'select': {
         let options = this.state.options || [];
         // options = _.sortBy(options, (o => o.label ? o.label.toString() : o));
         input = <select value={value || ''}
-                        onChange={this.onChange}
-                        onKeyDown={this.handleEnter}
-                        id={this.state.settings.position_css_id}
-                        className={"altrp-field " + this.state.settings.position_css_classes}>
-          {this.state.settings.content_options_nullable ? <option value=""/> : ''}
+          onChange={this.onChange}
+          onKeyDown={this.handleEnter}
+          id={this.state.settings.position_css_id}
+          className={"altrp-field " + this.state.settings.position_css_classes}>
+          {this.state.settings.content_options_nullable ? <option value="" /> : ''}
 
 
           {
@@ -404,19 +411,29 @@ class InputWidget extends Component {
         input = this.renderRepeatedInput();
       }
         break;
+      case 'wysiwyg': {
+        input = this.renderWysiwyg();
+      }
+        break;
       default: {
+        const isClearable = this.state.settings.content_clearable;
+        // console.log(isClearable)
         input = <React.Suspense fallback={<input />}>
-          <AltrpInput type={this.state.settings.content_type}
-            value={value || ''}
-            autoComplete={autocomplete}
-            placeholder={this.state.settings.content_placeholder}
-            className={"altrp-field " + this.state.settings.position_css_classes}
-            settings={this.props.element.getSettings()}
-            onKeyDown={this.handleEnter}
-            onChange={this.onChange}
-            onBlur={this.onBlur}
-            id={this.state.settings.position_css_id}
-          /></React.Suspense>;
+          <div className="position-relative">
+            <AltrpInput type={this.state.settings.content_type}
+              value={value || ''}
+              autoComplete={autocomplete}
+              placeholder={this.state.settings.content_placeholder}
+              className={"altrp-field " + this.state.settings.position_css_classes}
+              settings={this.props.element.getSettings()}
+              onKeyDown={this.handleEnter}
+              onChange={this.onChange}
+              onBlur={this.onBlur}
+              id={this.state.settings.position_css_id}
+            />
+            {isClearable && <button className="input-clear-btn" onClick={() => this.setState({ value: this.defaultValue})}>✖</button>}
+          </div>
+        </React.Suspense>;
       }
     }
     return <div className={"altrp-field-container " + classLabel}>
@@ -424,6 +441,7 @@ class InputWidget extends Component {
       {this.state.settings.content_label_position_type == "top" ? required : ""}
       {this.state.settings.content_label_position_type == "left" ? label : ""}
       {this.state.settings.content_label_position_type == "left" ? required : ""}
+      {this.state.settings.content_label_position_type == "absolute" ? label : ""}
       {/* .altrp-field-label-container */}
       {input}
       {/* <InputMask mask="99/99/9999" onChange={this.onChange} value={this.state.value} /> */}
@@ -483,7 +501,7 @@ class InputWidget extends Component {
     } = this.props.element.getSettings();
 
     let options = this.state.options;
-    if(content_options_nullable){
+    if (content_options_nullable) {
       options = _.union([{ label: nulled_option_title, value: '', }], options);
     }
 
@@ -561,6 +579,14 @@ class InputWidget extends Component {
       // menuIsOpen: true,
     };
     return <AltrpSelect  {...select2Props} />;
+  }
+
+  renderWysiwyg() {
+    return <CKeditor
+      changeText={this.dispatchFieldValueToStore}
+      text={this.getContent('content_default_value')}
+      readOnly={this.getContent('read_only')}
+    />
   }
 }
 

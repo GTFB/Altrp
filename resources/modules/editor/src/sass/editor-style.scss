@@ -195,6 +195,10 @@ button {
   &__title {
     margin-top: 8px;
   }
+
+  &>svg{
+    fill: #343B4C;
+  }
 }
 
 .right-panel {

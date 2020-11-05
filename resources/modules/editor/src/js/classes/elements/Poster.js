@@ -1,6 +1,6 @@
 import BaseElement from './BaseElement';
-import FromIcon from '../../../svgs/form.svg';
-import {advancedTabControllers} from "../../decorators/register-controllers";
+import FromIcon from '../../../svgs/gallery-group.svg';
+import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_TEXT,
@@ -17,17 +17,17 @@ import {
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 
-class Poster extends BaseElement{
-  static getName(){
+class Poster extends BaseElement {
+  static getName() {
     return 'poster';
   }
-  static getTitle(){
-    return'Poster';
+  static getTitle() {
+    return 'Poster';
   }
-  static getIconComponent(){
+  static getIconComponent() {
     return FromIcon;
   }
-  static getType(){
+  static getType() {
     return 'widget';
   }
   _registerControls() {
@@ -42,31 +42,31 @@ class Poster extends BaseElement{
 
     this.addControl(
       'skin_type', {
-        type: CONTROLLER_SELECT,
-        label: 'Skin',
-        options:[
-          {
-            'value' : 'default',
-            'label' : 'default',
-          },
-          {
-            'value' : 'vast',
-            'label' : 'vast',
-          },
-          {
-            'value' : 'postActiveFilters',
-            'label' : 'posts active filters',
-          },
-          {
-            'value' : 'postsFilterElement',
-            'label' : 'posts filter element',
-          },
-          {
-            'value' : 'postsOrderingElement',
-            'label' : 'posts ordering element',
-          }
-        ],
-      }
+      type: CONTROLLER_SELECT,
+      label: 'Skin',
+      options: [
+        {
+          'value': 'default',
+          'label': 'default',
+        },
+        {
+          'value': 'vast',
+          'label': 'vast',
+        },
+        {
+          'value': 'postActiveFilters',
+          'label': 'posts active filters',
+        },
+        {
+          'value': 'postsFilterElement',
+          'label': 'posts filter element',
+        },
+        {
+          'value': 'postsOrderingElement',
+          'label': 'posts ordering element',
+        }
+      ],
+    }
     );
 
     this.endControlSection();
@@ -105,7 +105,7 @@ class Poster extends BaseElement{
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
       default: 'center',
-      options:[
+      options: [
         {
           icon: 'left',
           value: 'flex-start',
@@ -154,45 +154,45 @@ class Poster extends BaseElement{
       type: CONTROLLER_SELECT,
       label: 'Taxonomy',
       default: null,
-      options:[
+      options: [
         {
-          'value' : 'none',
-          'label' : 'none',
+          'value': 'none',
+          'label': 'none',
         },
         {
-          'value' : 'categories',
-          'label' : 'categories',
+          'value': 'categories',
+          'label': 'categories',
         },
         {
-          'value' : 'tags',
-          'label' : 'tags',
+          'value': 'tags',
+          'label': 'tags',
         },
         {
-          'value' : 'navigationMenus',
-          'label' : 'navigation menus',
+          'value': 'navigationMenus',
+          'label': 'navigation menus',
         },
         {
-          'value' : 'linkCategories',
-          'label' : 'link categories',
+          'value': 'linkCategories',
+          'label': 'link categories',
         },
         {
-          'value' : 'formats',
-          'label' : 'formats',
+          'value': 'formats',
+          'label': 'formats',
         },
         {
-          'value' : 'type',
-          'label' : 'type',
+          'value': 'type',
+          'label': 'type',
         },
         {
-          'value' : 'categories2',
-          'label' : 'categories 2',
+          'value': 'categories2',
+          'label': 'categories 2',
         },
         {
-          'value' : 'fontTypes',
-          'label' : 'font types',
+          'value': 'fontTypes',
+          'label': 'font types',
         },
       ],
-      }
+    }
     );
 
     // а тут вот это https://prnt.sc/tj1vix
@@ -203,20 +203,20 @@ class Poster extends BaseElement{
     });
 
     this.addControl('expand_default_filter_element_content', {
-        type: CONTROLLER_SELECT,
-        label: 'Expand default',
-        default: null,
-        options:[
-          {
-            'value' : 'none',
-            'label' : 'none',
-          },
-          {
-            'value' : 'all',
-            'label' : 'all',
-          },
-        ],
-      }
+      type: CONTROLLER_SELECT,
+      label: 'Expand default',
+      default: null,
+      options: [
+        {
+          'value': 'none',
+          'label': 'none',
+        },
+        {
+          'value': 'all',
+          'label': 'all',
+        },
+      ],
+    }
     );
 
     this.addControl('show_count_filter_element_content', {
@@ -272,20 +272,20 @@ class Poster extends BaseElement{
     });
 
     this.addControl('type_posts_ordering_element_layout', {
-        type: CONTROLLER_SELECT,
-        label: 'Layout type',
-        default: "SelectMenu",
-        options:[
-          {
-            'value' : 'SelectMenu',
-            'label' : 'select menu',
-          },
-          {
-            'value' : 'buttons',
-            'label' : 'buttons',
-          },
-        ],
-      }
+      type: CONTROLLER_SELECT,
+      label: 'Layout type',
+      default: "SelectMenu",
+      options: [
+        {
+          'value': 'SelectMenu',
+          'label': 'select menu',
+        },
+        {
+          'value': 'buttons',
+          'label': 'buttons',
+        },
+      ],
+    }
     );
 
     this.addControl('alignment_posts_ordering_element_layout', {
@@ -295,7 +295,7 @@ class Poster extends BaseElement{
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
       default: 'left',
-      options:[
+      options: [
         {
           icon: 'left',
           value: 'flex-start',
@@ -329,7 +329,7 @@ class Poster extends BaseElement{
       type: CONTROLLER_CHOOSE,
       label: 'Sorting direction',
       default: 'left',
-      options:[
+      options: [
         {
           icon: 'block_top',
           value: 'top',
@@ -342,47 +342,47 @@ class Poster extends BaseElement{
     });
 
     repeater.addControl('field_items_posts_ordering_element_content', {
-        type: CONTROLLER_SELECT,
-        label: 'Sorting field',
-        default: "Title",
-        options:[
-          {
-            'value' : 'id',
-            'label' : 'ID',
-          },
-          {
-            'value' : 'authorId',
-            'label' : 'author ID',
-          },
-          {
-            'value' : 'title',
-            'label' : 'title',
-          },
-          {
-            'value' : 'postSlug',
-            'label' : 'post slug',
-          },
-          {
-            'value' : 'postDate',
-            'label' : 'post date',
-          },
-          {
-            'value' : 'modificationDate',
-            'label' : 'modification date',
-          },
-          {
-            'value' : 'random',
-            'label' : 'random',
-          },
-          {
-            'value' : 'commentCount',
-            'label' : 'comment count',
-          },
-        ],
-      }
+      type: CONTROLLER_SELECT,
+      label: 'Sorting field',
+      default: "Title",
+      options: [
+        {
+          'value': 'id',
+          'label': 'ID',
+        },
+        {
+          'value': 'authorId',
+          'label': 'author ID',
+        },
+        {
+          'value': 'title',
+          'label': 'title',
+        },
+        {
+          'value': 'postSlug',
+          'label': 'post slug',
+        },
+        {
+          'value': 'postDate',
+          'label': 'post date',
+        },
+        {
+          'value': 'modificationDate',
+          'label': 'modification date',
+        },
+        {
+          'value': 'random',
+          'label': 'random',
+        },
+        {
+          'value': 'commentCount',
+          'label': 'comment count',
+        },
+      ],
+    }
     );
 
-    repeater.addControl('title_items_posts_ordering_element_content',{
+    repeater.addControl('title_items_posts_ordering_element_content', {
       type: CONTROLLER_TEXT,
       label: 'title',
     });
@@ -398,20 +398,20 @@ class Poster extends BaseElement{
     });
 
     repeater.addControl('icon_position_items_posts_ordering_element_content', {
-        type: CONTROLLER_SELECT,
-        label: 'Icon position',
-        default: "after",
-        options:[
-          {
-            'value' : 'after',
-            'label' : 'after',
-          },
-          {
-            'value' : 'before',
-            'label' : 'before',
-          },
-        ],
-      }
+      type: CONTROLLER_SELECT,
+      label: 'Icon position',
+      default: "after",
+      options: [
+        {
+          'value': 'after',
+          'label': 'after',
+        },
+        {
+          'value': 'before',
+          'label': 'before',
+        },
+      ],
+    }
     );
 
     this.addControl('items_posts_ordering_element_content', {
@@ -528,7 +528,7 @@ class Poster extends BaseElement{
     this.addControl("icon_size_item_style_active_filters_style", {
       type: CONTROLLER_SLIDER,
       label: 'Icon size',
-      default:{
+      default: {
         size: null,
         unit: 'px',
       },
@@ -542,7 +542,7 @@ class Poster extends BaseElement{
     this.addControl("icon_spacing_item_style_active_filters_style", {
       type: CONTROLLER_SLIDER,
       label: 'Icon Spacing',
-      default:{
+      default: {
         size: null,
         unit: 'px',
       },
@@ -554,29 +554,29 @@ class Poster extends BaseElement{
     });
 
     this.addControl('typographic_item_style_active_filters_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1.5,
-          spacing: 0,
-          size: 14,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-tab-btn': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 14,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-tab-btn': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.endControlSection();
@@ -825,29 +825,29 @@ class Poster extends BaseElement{
     });
 
     this.addControl('typographic_hierarchical_items_filter_element_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1.5,
-          spacing: 0,
-          size: 14,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-tab-content div': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 14,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-tab-content div': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     // а тут вот это https://prnt.sc/tj991w
@@ -934,23 +934,23 @@ class Poster extends BaseElement{
     });
 
     this.addControl('box_shadow_link_hierarchical_items_filter_element_style', {
-        type: CONTROLLER_SHADOW,
-        label: 'Box shadow',
-        default:{
-          blur: 0,
-          horizontal: 0,
-          vertical: 0,
-          opacity: 1,
-          spread: 0,
-          colorRGB: 'rgb(0, 0, 0)',
-          color: 'rgb(0, 0, 0)',
-          colorPickedHex: '#000000',
-          type: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-btn': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_SHADOW,
+      label: 'Box shadow',
+      default: {
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        opacity: 1,
+        spread: 0,
+        colorRGB: 'rgb(0, 0, 0)',
+        color: 'rgb(0, 0, 0)',
+        colorPickedHex: '#000000',
+        type: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-btn': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    }
     );
 
     this.addControl("border_radius_link_hierarchical_items_filter_element_style", {
@@ -966,7 +966,7 @@ class Poster extends BaseElement{
     this.addControl('size_toggle_hierarchical_items_filter_element_style', {
       type: CONTROLLER_SLIDER,
       label: 'Size',
-      default:{
+      default: {
         size: null,
         unit: 'px',
       },
@@ -1119,29 +1119,29 @@ class Poster extends BaseElement{
     });
 
     this.addControl('typographic_tags_items_filter_element_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1.5,
-          spacing: 0,
-          size: 14,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-tab-content div': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 14,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-tab-content div': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     // https://prnt.sc/tj9gxn
@@ -1270,29 +1270,29 @@ class Poster extends BaseElement{
     });
 
     this.addControl('typographic_buttons_ordering_element_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1.5,
-          spacing: 0,
-          size: 14,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-tab-btn': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 14,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-tab-btn': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     // https://prnt.sc/tj9kgu
@@ -1396,7 +1396,7 @@ class Poster extends BaseElement{
       }
     });
 
-    this.addControl( "border_color_buttons_ordering_element_style", {
+    this.addControl("border_color_buttons_ordering_element_style", {
       type: CONTROLLER_COLOR,
       label: "Border color",
       default: {

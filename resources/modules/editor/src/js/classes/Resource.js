@@ -166,7 +166,6 @@ class Resource {
    * @return {Promise}
    * */
   postFiles(files, fileType){
-    // data._token = _token;
     let boundary = String(Math.random()).slice(2);
     fileType = fileType || 'image';
     let headers = {

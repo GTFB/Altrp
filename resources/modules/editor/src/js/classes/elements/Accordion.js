@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import WidgetIcon from "../../../svgs/widget_accordion.svg";
+import WidgetIcon from "../../../svgs/accordion.svg";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_COLOR,
@@ -174,7 +174,7 @@ class Accordion extends BaseElement {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
       default: 'left',
-      options:[
+      options: [
         {
           icon: 'left',
           value: 'left',
@@ -197,7 +197,7 @@ class Accordion extends BaseElement {
     this.addControl('spacing_item_style', {
       type: CONTROLLER_SLIDER,
       label: 'Item spacing',
-      default:{
+      default: {
         size: 0,
         unit: 'px',
       },
@@ -216,63 +216,63 @@ class Accordion extends BaseElement {
     });
 
     this.addControl('background_color_title_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Background color',
-        default: {
-          color: "",
-          colorPickedHex: "",
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-accordion-item-button{{STATE}}': 'background-color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Background color',
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-accordion-item-button{{STATE}}': 'background-color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('color_title_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Color',
-        default: {
-          color: "",
-          colorPickedHex: "",
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-accordion-item-label{{STATE}}': 'color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Color',
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-accordion-item-label{{STATE}}': 'color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('box_shadow_title_style', {
-        type: CONTROLLER_SHADOW,
-        label: 'Box shadow',
-        default:{
-          blur: 0,
-          horizontal: 0,
-          vertical: 0,
-          opacity: 1,
-          spread: 0,
-          colorRGB: 'rgb(0, 0, 0)',
-          color: 'rgb(0, 0, 0)',
-          colorPickedHex: '#000000',
-          type: ""
-        },
-        presetColors: [
-          '#eaeaea',
-          '#9c18a8'
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-accordion-item-button{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_SHADOW,
+      label: 'Box shadow',
+      default: {
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        opacity: 1,
+        spread: 0,
+        colorRGB: 'rgb(0, 0, 0)',
+        color: 'rgb(0, 0, 0)',
+        colorPickedHex: '#000000',
+        type: ""
+      },
+      presetColors: [
+        '#eaeaea',
+        '#9c18a8'
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-accordion-item-button{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('padding_title_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default:{
-        unit:'px',
+      default: {
+        unit: 'px',
         bind: true
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -288,82 +288,82 @@ class Accordion extends BaseElement {
     });
 
     this.addControl('border_type_title_style', {
-        type: CONTROLLER_SELECT,
-        label: 'Border Type',
-        options:[
-          {
-            'value' : 'none',
-            'label' : 'None',
-          },
-          {
-            'value' : 'solid',
-            'label' : 'Solid',
-          },
-          {
-            'value' : 'double',
-            'label' : 'Double',
-          },
-          {
-            'value' : 'dotted',
-            'label' : 'Dotted',
-          },
-          {
-            'value' : 'dashed',
-            'label' : 'Dashed',
-          },
-          {
-            'value' : 'groove',
-            'label' : 'Groove',
-          },
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-accordion-item-button{{STATE}}': 'border-style: {{VALUE}};',
+      type: CONTROLLER_SELECT,
+      label: 'Border Type',
+      options: [
+        {
+          'value': 'none',
+          'label': 'None',
         },
-      }
+        {
+          'value': 'solid',
+          'label': 'Solid',
+        },
+        {
+          'value': 'double',
+          'label': 'Double',
+        },
+        {
+          'value': 'dotted',
+          'label': 'Dotted',
+        },
+        {
+          'value': 'dashed',
+          'label': 'Dashed',
+        },
+        {
+          'value': 'groove',
+          'label': 'Groove',
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-accordion-item-button{{STATE}}': 'border-style: {{VALUE}};',
+      },
+    }
     );
 
     this.addControl(
       'border_width_title_style', {
-        type: CONTROLLER_DIMENSIONS,
-        label: 'Border Width',
-        default: {
-          bind: true
-        },
-        units:[
-          'px',
-          '%',
-          'vh',
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-accordion-item-button{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-        },
-      }
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Width',
+      default: {
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-accordion-item-button{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    }
     );
 
     this.addControl('border_color_title_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Border Color',
-        default: {
-          color: "rgb(50,168,82)",
-          colorPickedHex: "#32a852",
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-accordion-item-button{{STATE}}': 'border-color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Border Color',
+      default: {
+        color: "rgb(50,168,82)",
+        colorPickedHex: "#32a852",
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-accordion-item-button{{STATE}}': 'border-color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('border_radius_title_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border radius',
-      default:{
+      default: {
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
         unit: 'px',
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -376,28 +376,28 @@ class Accordion extends BaseElement {
     });
 
     this.addControl('font_typographic_title_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1,
-          spacing: 0,
-          size: 16,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-accordion-item-label{{STATE}}': [
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-accordion-item-label{{STATE}}': [
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.endControlSection();
@@ -411,7 +411,7 @@ class Accordion extends BaseElement {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
       default: 'right',
-      options:[
+      options: [
         {
           icon: 'left',
           value: 'row-reverse',
@@ -427,22 +427,22 @@ class Accordion extends BaseElement {
     });
 
     this.addControl('color_icon_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Color',
-        default: {
-          color: "",
-          colorPickedHex: "",
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-accordion-item-icon{{STATE}} path': 'fill: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Color',
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-accordion-item-icon{{STATE}} path': 'fill: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('spacing_icon_style', {
       type: CONTROLLER_SLIDER,
       label: 'Spacing',
-      default:{
+      default: {
         size: 0,
         unit: 'px',
       },
@@ -464,42 +464,42 @@ class Accordion extends BaseElement {
     });
 
     this.addControl('background_color_content_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Background color',
-        default: {
-          color: "",
-          colorPickedHex: "",
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-accordion-item-content{{STATE}}': 'background-color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Background color',
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-accordion-item-content{{STATE}}': 'background-color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('color_content_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Color',
-        default: {
-          color: "",
-          colorPickedHex: "",
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-accordion-item-content{{STATE}}': 'color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Color',
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-accordion-item-content{{STATE}}': 'color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('border_radius_content_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border radius',
-      default:{
+      default: {
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
         unit: 'px',
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -514,11 +514,11 @@ class Accordion extends BaseElement {
     this.addControl('padding_content_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default:{
-        unit:'px',
+      default: {
+        unit: 'px',
         bind: true
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -536,7 +536,7 @@ class Accordion extends BaseElement {
     this.addControl('spacing_content_style', {
       type: CONTROLLER_SLIDER,
       label: 'Spacing',
-      default:{
+      default: {
         size: 0,
         unit: 'px',
       },
@@ -548,28 +548,28 @@ class Accordion extends BaseElement {
     });
 
     this.addControl('typographic_content_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1,
-          spacing: 0,
-          size: 16,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-accordion-item-content-show{{STATE}}': [
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-accordion-item-content-show{{STATE}}': [
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.endControlSection();

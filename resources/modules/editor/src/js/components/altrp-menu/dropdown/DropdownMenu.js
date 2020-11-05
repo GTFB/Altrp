@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {iconsManager} from "../../../helpers";
 import AltrpImage from "../../altrp-image/AltrpImage";
 import AltrpLink from "../../altrp-link/AltrpLink";
 import DropdownSub from "./DropdownSub";

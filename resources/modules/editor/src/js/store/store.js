@@ -4,6 +4,7 @@ import rootReducer from "./reducers";
 
 let store = createStore(rootReducer, composeWithDevTools());
 window.appStore = store;
+console.error(store);
 export default store;
 
 /**

@@ -245,12 +245,3 @@ export function rgb2hex(rgb) {
     ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
 }
 
-export function cutString(string, maxLength = 80) {
-  if (string.length <= maxLength) return string;
-  return string.slice(0, maxLength) + '...';
-}
-
-export function sortOptions(options, sortDirection) {
-  options.sort((a, b) => a.label.toLowerCase() > b.label.toLowerCase() ? 1 : b.label.toLowerCase() > a.label.toLowerCase() ? -1 : 0);
-  return sortDirection === "asc" ? options : options.reverse();
-}

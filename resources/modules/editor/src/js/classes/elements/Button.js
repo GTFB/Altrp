@@ -256,6 +256,10 @@ class Button extends BaseElement {
           value: 'login',
           label: 'Login',
         },
+        {
+          value: 'logout',
+          label: 'Logout',
+        },
       ],
     });
 
@@ -304,6 +308,7 @@ class Button extends BaseElement {
       conditions: {
         type: [
           'form',
+          'login',
         ],
       },
     });

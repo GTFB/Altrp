@@ -1,6 +1,6 @@
 import { schemes } from "reaviz";
 import BaseElement from "./BaseElement";
-import PieIcon from "../../../svgs/pie.svg";
+import PieIcon from "../../../svgs/skill-bar.svg";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_DIMENSIONS,
@@ -11,9 +11,12 @@ import {
   TAB_CONTENT,
   TAB_STYLE,
   CONTROLLER_TEXTAREA,
-} from "../modules/ControllersManager";
+  CONTROLLER_REPEATER,
+  CONTROLLER_COLOR
+} from '../modules/ControllersManager';
 
-import { TABLE, widgetTypes } from "../../../../../admin/src/components/dashboard/widgetTypes";
+import { TABLE, LINE, AREA, widgetTypes } from "../../../../../admin/src/components/dashboard/widgetTypes";
+import Repeater from '../Repeater';
 
 class Diagram extends BaseElement {
   static getName() {
@@ -42,6 +45,7 @@ class Diagram extends BaseElement {
       type: CONTROLLER_QUERY,
     });
 
+
     this.addControl("datasource_path", {
       dynamic: false,
       label: "Path to Data",
@@ -57,6 +61,52 @@ class Diagram extends BaseElement {
       label: "Data Field",
     });
 
+    this.endControlSection();
+
+    this.startControlSection('multiple_data', {
+      dynamic: false,
+      label: "Multiple data",
+      conditions: {
+        'type': {
+          LINE, AREA
+        }
+      }
+    });
+
+    let repeater = new Repeater();
+    repeater.addControl(
+      'path',
+      {
+        label: 'Path',
+        dynamic: false,
+      }
+    );
+    repeater.addControl(
+      'data',
+      {
+        label: 'Data',
+        dynamic: false,
+      }
+    );
+    repeater.addControl(
+      'key',
+      {
+        label: 'Key',
+        dynamic: false,
+      }
+    );
+
+    this.addControl("isMultiple", {
+      type: CONTROLLER_SWITCHER,
+      label: "Use multiple data?",
+      default: false,
+    });
+
+    this.addControl("rep", {
+      type: CONTROLLER_REPEATER,
+      default: [],
+      fields: repeater.getControls(),
+    });
     this.endControlSection();
 
     this.startControlSection("style", {
@@ -109,6 +159,31 @@ class Diagram extends BaseElement {
     });
 
     colors.push({ label: "Custom", value: "Custom" });
+
+
+    this.addControl("isCustomColors", {
+      type: CONTROLLER_SWITCHER,
+      label: "Set custom colors?",
+      default: false,
+    });
+
+    let repeaterColor = new Repeater();
+
+    repeaterColor.addControl(
+      'color',
+      {
+        label: 'HEX color',
+        dynamic: false,
+        type: CONTROLLER_COLOR
+      }
+    );
+
+    this.addControl("repcolor", {
+      type: CONTROLLER_REPEATER,
+      default: [],
+      fields: repeaterColor.getControls(),
+    });
+
 
     this.addControl("colorScheme", {
       type: CONTROLLER_SELECT,

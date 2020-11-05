@@ -80,7 +80,6 @@ class AltrpPosts extends React.Component {
   renderPost = (idx) => {
     const hoverTemplateId = _.get(this.props.settings, 'posts_card_hover_template', null);
     const transitionType = _.get(this.props.settings, 'posts_transition_type', null);
-    console.log(hoverTemplateId);
     let post = _.cloneDeep(this.props.data[idx] || this.props.data);
     let PostContentComponent = post.component || <h2>{post.title || post.id || ''}</h2>;
     if(this.state.simpleTemplate){

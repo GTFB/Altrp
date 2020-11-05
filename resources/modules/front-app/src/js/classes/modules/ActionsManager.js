@@ -51,6 +51,7 @@ class ActionsManager extends AltrpModel{
         }
       } catch(error){
         errors.push(error);
+        console.error(error);
       }
     }
     if (errors.length){

@@ -156,6 +156,13 @@ input[type="checkbox"] {
   z-index: 55;
   width: auto;
 }
+
+.position-relative {
+  position: relative;
+}
+.ck.ck-balloon-panel{
+  z-index: 99999999999 !important;
+}
 //.altrp-table-th svg{
 //
 //}

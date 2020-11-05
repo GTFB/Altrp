@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import HeadingIcon from "../../../svgs/widget_heading.svg";
+import HeadingIcon from "../../../svgs/t-letter.svg";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_COLOR,
@@ -16,7 +16,7 @@ import {
   CONTROLLER_TRANSFORM,
   CONTROLLER_CHOOSE,
   CONTROLLER_GRADIENT,
-  CONTROLLER_MEDIA, CONTROLLER_SWITCHER, CONTROLLER_HEADING
+  CONTROLLER_MEDIA, CONTROLLER_SWITCHER, CONTROLLER_HEADING, CONTROLLER_CREATIVE_LINK
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 
@@ -62,7 +62,7 @@ class Heading extends BaseElement {
       options:[
         {
           icon: 'left',
-          value: 'left',
+          value: 'flex-start',
         },
         {
           icon: 'center',
@@ -70,15 +70,15 @@ class Heading extends BaseElement {
         },
         {
           icon: 'right',
-          value: 'right',
+          value: 'flex-end',
         },
         {
           icon: 'in_width',
-          value: 'justify',
+          value: 'stretch',
         }
       ],
       rules: {
-            '{{ELEMENT}}': 'text-align: {{VALUE}};',
+            '{{ELEMENT}} .altrp-heading': 'justify-content: {{VALUE}};',
       },
     });
 
@@ -134,6 +134,16 @@ class Heading extends BaseElement {
         noFollow: false
       },
       label: 'link',
+    });
+
+    this.addControl('creative_link_link', {
+      type: CONTROLLER_LINK,
+      default: {
+        url: "",
+        attributes: "",
+        noFollow: false
+      },
+      label: 'for creative link',
     });
 
     this.endControlSection();
@@ -964,6 +974,84 @@ class Heading extends BaseElement {
         "{{ELEMENT}} .altrp-heading-advanced{{STATE}}": "opacity: {{SIZE}};"
 
       }
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('creative_link', {
+        tab: TAB_STYLE,
+        label: 'Creative Link',
+      }
+    );
+
+    this.addControl('creative_link_controller', {
+        type: CONTROLLER_CREATIVE_LINK,
+        label: 'Creative Link',
+        rules: {
+          "{{ELEMENT}} .altrp-link-creative{{STATE}}": "background-color: {{BACKGROUND}}",
+          "{{ELEMENT}} .altrp-link-cl-style-1{{STATE}}": "color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-3:after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-4:after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-5-clone{{STATE}}": [
+            "color: {{COLOR}};",
+            "background-color: {{SECONDCOLOR}};"
+          ],
+          "{{ELEMENT}} .altrp-link-cl-style-6::after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-7::after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-7::before{{STATE}}": "background-color: {{SECONDCOLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-8::before{{STATE}}": "border-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-8::after{{STATE}}": "border-color: {{SECONDCOLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-9::before{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-9::after{{STATE}}": "background-color: {{SECONDCOLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-9-description{{STATE}}": [
+            "color: {{THIRDCOLOR}};",
+            "background-color: {{FOURTHCOLOR}};"
+          ],
+          "{{ELEMENT}} .altrp-link-cl-style-10::after{{STATE}}": [
+            "background: {{COLOR}};",
+            "color: {{SECONDCOLOR}};",
+          ],
+          "{{ELEMENT}} .altrp-link-cl-style-11::after{{STATE}}": [
+            "color: {{COLOR}};",
+            "border-bottom-color: {{SECONDCOLOR}};",
+          ],
+          "{{ELEMENT}} .altrp-link-cl-style-12::after{{STATE}}": "border-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-12::before{{STATE}}": "border-color: {{SECONDCOLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-13-link:hover .altrp-link-cl-style-13:after": [
+            "color: {{COLOR}};",
+            "text-shadow: 10px 0 {{COLOR}}, -10px 0 {{COLOR}};",
+          ],
+          "{{ELEMENT}} .altrp-link-cl-style-14::after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-14::before{{STATE}}": "background-color: {{SECONDCOLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-15::before{{STATE}}": "color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-16::before{{STATE}}": "color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-17::before{{STATE}}": "color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-17::after{{STATE}}": "background-color: {{SECONDCOLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-18::after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-18::before{{STATE}}": "background-color: {{SECONDCOLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-19::before{{STATE}}": [
+            "background-color: {{COLOR}};",
+            "color: {{SECONDCOLOR}}"
+          ],
+          "{{ELEMENT}} .altrp-link-cl-style-20::before{{STATE}}": [
+            "background-color: {{SECONDCOLOR}};",
+            "color: {{COLOR}}"
+          ],
+          "{{ELEMENT}} .altrp-link-cl-style-21::after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-21::before{{STATE}}": "background-color: {{SECONDCOLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-22::before{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-23::before{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-24::after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-24::before{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-25::before{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-26::before{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-27::before{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-27::after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-28::after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-28::before{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-29::after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-29::before{{STATE}}": "background-color: {{COLOR}};",
+        }
     });
 
     this.endControlSection();

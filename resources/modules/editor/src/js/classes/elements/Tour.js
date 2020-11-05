@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import Preview from "../../../svgs/preview.svg";
+import Preview from "../../../svgs/sidebar.svg";
 import {
       CONTROLLER_SWITCHER,
       TAB_CONTENT,
@@ -14,7 +14,7 @@ class Tour extends BaseElement {
             return "tour";
       }
       static getTitle() {
-            return "Tour Guide";
+            return "Tour";
       }
       static getIconComponent() {
             return Preview;

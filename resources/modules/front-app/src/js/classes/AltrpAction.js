@@ -1,6 +1,7 @@
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import { isString } from "lodash";
 import {
+  altrpLogin, altrpLogout,
   dataFromTable,
   dataToCSV,
   elementsToPdf,
@@ -12,6 +13,7 @@ import {
 } from "../helpers";
 import { togglePopup } from "../store/popup-trigger/actions";
 import reactDom from 'react-dom';
+import Resource from "../../../../editor/src/js/classes/Resource";
 
 // let  history = require('history');
 // // import {history} from 'history';
@@ -60,6 +62,11 @@ class AltrpAction extends AltrpModel {
         const form = formsManager.registerForm(this.getProperty('form_id'), '', this.getProperty('form_method'), formOptions);
         this.setProperty('_form', form);
         return;
+      }
+      case 'login':{
+        const formsManager = (await import('../../../../editor/src/js/classes/modules/FormsManager.js')).default;
+        const form = formsManager.registerForm(this.getProperty('form_id'), 'login', 'POST');
+        this.setProperty('_form', form);
       }
     }
   }
@@ -154,6 +161,10 @@ class AltrpAction extends AltrpModel {
         result = await this.doActionLogin();
       }
         break;
+      case 'logout': {
+        result = await this.doActionLogout();
+      }
+        break;
     }
     let alertText = '';
     if(result.success){
@@ -189,9 +200,26 @@ class AltrpAction extends AltrpModel {
     if(frontAppRouter){
       if(this.getProperty('back')){
         frontAppRouter.history.back();
-
       } else {
-        frontAppRouter.history.push(URL);
+        let routes = appStore.getState().appRoutes.routes || [];
+        let innerRedirect = false;
+        if(URL === '/'){
+          innerRedirect = true;
+        } else {
+          routes.forEach(route => {
+            if(! route.path){
+              return;
+            }
+            if(route.path === URL){
+              innerRedirect = true;
+            }
+          });
+        }
+        if(innerRedirect){
+          frontAppRouter.history.push(URL);
+        } else {
+          window.location.replace(URL);
+        }
       }
 
     }
@@ -413,8 +441,29 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionLogin() {
+    /**
+     *
+     * @member {AltrpForm} form
+     */
+    let form = this.getProperty('_form');
+    let success = true;
+    form.fields.forEach(field=>{
+      if(! field.fieldValidate()){
+        success = false;
+      }
+    });
+    if(! success){
+      return{success:false}
+    }
 
-
+    return await altrpLogin(form.getData());
+  }
+  /**
+   * действие-выход из приложения
+   * @return {Promise<{}>}
+   */
+  async doActionLogout() {
+    return await altrpLogout();
   }
   /**
    * Триггер события на тругом компоненте

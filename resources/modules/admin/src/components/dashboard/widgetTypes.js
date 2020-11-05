@@ -4,6 +4,7 @@ export const DONUT = "CHART/DONUT";
 export const AREA = "CHART/AREA";
 export const LINE = "CHART/LINE";
 export const TABLE = "CHART/TABLE";
+export const POINT = "CHART/POINT";
 
 export const widgetTypes = [
   { name: "Столбцы", value: BAR },
@@ -12,6 +13,7 @@ export const widgetTypes = [
   { name: "Линии", value: LINE },
   { name: "Графики", value: AREA },
   { name: "Таблица", value: TABLE },
+  { name: "Точечная", value: POINT },
 ];
 
 export const getTypeName = (value) => widgetTypes.find((w) => w.value === value).name;

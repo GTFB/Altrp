@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import DashIcon from "../../../svgs/dashboard.svg";
+import DashIcon from "../../../svgs/archive.svg";
 import {
   advancedTabControllers
 } from "../../decorators/register-controllers";
@@ -22,7 +22,7 @@ class Dashboards extends BaseElement {
     return "dashboards";
   }
   static getTitle() {
-    return "Dashboards";
+    return "Dashboard";
   }
   static getIconComponent() {
     return DashIcon;
