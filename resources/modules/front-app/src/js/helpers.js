@@ -966,7 +966,6 @@ export async function altrpLogin(data = {}){
  */
 export async function altrpLogout(){
   let res = await (new Resource({route:'/logout'})).post();
-  console.log( res );
   if(! (res.success || res._token)){
     return {
       success: false,
@@ -976,7 +975,6 @@ export async function altrpLogout(){
 
   let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
   currentUser = currentUser.data;
-  console.log(currentUser);
   appStore.dispatch(changeCurrentUser(currentUser));
   let routes = [];
   try{
@@ -987,7 +985,6 @@ export async function altrpLogout(){
     for(let _data of routesData.pages){
       routes.push(Route.routeFabric(_data));
     }
-    console.log(routes);
     appStore.dispatch(changeAppRoutes(routes));
   } catch (err) {
     console.error(err);
