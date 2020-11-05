@@ -14,22 +14,22 @@ export function getRoutes() {
  * @return {IconsManager}
  * */
 export function iconsManager() {
-    return window.iconsManager;
+  return window.iconsManager;
 }
 
 /**
  * Устанавливаент заголовок страницы на фронтенде
  * @param {string} title
  */
-export function setTitle(title){
+export function setTitle(title) {
   let titleElement = document.title;
-  if(!defaultTitle){
+  if (!defaultTitle) {
     defaultTitle = titleElement.innerHTML;
   }
-  if(! title){
+  if (!title) {
     title = defaultTitle;
   }
-  if(document.title !== title){
+  if (document.title !== title) {
     document.title = title;
   }
 }
@@ -52,29 +52,29 @@ let defaultTitle;
  * @param string
  */
 export function parseOptionsFromSettings(string) {
-  if(! string){
-    return[];
+  if (!string) {
+    return [];
   }
   let options = string.split('\n');
   let path = extractPathFromString(string);
   let _optionsFromData = getDataByPath(path);
-  if(_.isArray(_optionsFromData)){
+  if (_.isArray(_optionsFromData)) {
     return _optionsFromData;
   }
-  options = options.map(option=>{
+  options = options.map(option => {
     let value = option.split('|')[0];
     value = value.trim();
     let valuePath = extractPathFromString(value);
-    if(valuePath){
+    if (valuePath) {
       value = getDataByPath(valuePath);
     }
     let label = option.split('|')[1] || value || '';
     label = label.trim();
     let labelPath = extractPathFromString(label);
-    if(labelPath){
+    if (labelPath) {
       label = getDataByPath(labelPath);
     }
-    return{
+    return {
       value,
       label,
     }
@@ -89,8 +89,8 @@ export function parseOptionsFromSettings(string) {
  */
 export function getMediaQueryByName(screenSettingName) {
   let mediaQuery = '';
-  CONSTANTS.SCREENS.forEach(screen=>{
-    if(screen.name === screenSettingName){
+  CONSTANTS.SCREENS.forEach(screen => {
+    if (screen.name === screenSettingName) {
       mediaQuery = screen.mediaQuery;
     }
   });
@@ -103,8 +103,8 @@ export function getMediaQueryByName(screenSettingName) {
  */
 export function getMediaSettingsByName(screenSettingName) {
   let screen = CONSTANTS.SCREENS[0];
-  CONSTANTS.SCREENS.forEach(_screen=>{
-    if(_screen.name === screenSettingName){
+  CONSTANTS.SCREENS.forEach(_screen => {
+    if (_screen.name === screenSettingName) {
       screen = _screen;
     }
   });
@@ -115,34 +115,34 @@ export function getMediaSettingsByName(screenSettingName) {
  *@param {string} URLTemplate
  *@param {{}} object
  */
-export function parseURLTemplate(URLTemplate = '', object = {}){
+export function parseURLTemplate(URLTemplate = '', object = {}) {
   let url = URLTemplate;
   let protocol = '';
   url = url.trim();
-   if(url.indexOf('https://') === 0){
-     protocol = 'https://';
-     url = url.replace('https://', '');
-   }
-   if(url.indexOf('http://') === 0){
-     protocol = 'http://';
-     url = url.replace('http://', '');
-   }
+  if (url.indexOf('https://') === 0) {
+    protocol = 'https://';
+    url = url.replace('https://', '');
+  }
+  if (url.indexOf('http://') === 0) {
+    protocol = 'http://';
+    url = url.replace('http://', '');
+  }
   // columnEditUrl = columnEditUrl.replace(':id', row.original.id);
   let idTemplates = url.match(/:([\s\S]+?)(\/|$)/g);
-  if(! idTemplates){
+  if (!idTemplates) {
     return protocol + url;
   }
-  idTemplates.forEach(idTemplate=>{
+  idTemplates.forEach(idTemplate => {
     let replace = object[idTemplate.replace(/:|\//g, '')] || '';
     idTemplate = idTemplate.replace('/', '');
-    url = url.replace(new RegExp(idTemplate,'g'), replace);
+    url = url.replace(new RegExp(idTemplate, 'g'), replace);
   });
   return protocol + url;
 }
 
 export function getWindowWidth() {
   let window;
-  if(isEditor()) {
+  if (isEditor()) {
     window = document.getElementById("editorWindow").offsetWidth;
   } else {
     window = document.getElementById("front-app").offsetWidth
@@ -151,16 +151,16 @@ export function getWindowWidth() {
 }
 
 export function renderAssetIcon(asset, props = null) {
-  if(asset) {
+  if (asset) {
     switch (asset.assetType) {
       case 'icon': {
         return iconsManager().renderIcon(asset.name)
       }
       case 'image': {
-        return React.createElement('img', {...props, src: asset.url})
+        return React.createElement('img', { ...props, src: asset.url })
       }
       case 'media': {
-        return React.createElement('img', {...props, src: asset.url})
+        return React.createElement('img', { ...props, src: asset.url })
       }
     }
   }
@@ -174,33 +174,33 @@ export function renderAssetIcon(asset, props = null) {
  * @throws Исключение если иконка не найдена
  * */
 export function renderAsset(asset, props = null) {
-  if(asset instanceof File){
+  if (asset instanceof File) {
     let refImg = React.createRef();
     let fr = new FileReader();
     fr.readAsDataURL(asset);
     fr.onload = () => {
-      if(refImg.current){
-        refImg.current.src =fr.result;
-        refImg.current.alt =asset.name;
+      if (refImg.current) {
+        refImg.current.src = fr.result;
+        refImg.current.alt = asset.name;
       }
     };
-    return React.createElement('img', {...props, src: asset.url, ref: refImg})
+    return React.createElement('img', { ...props, src: asset.url, ref: refImg })
   }
   switch (asset.assetType) {
     case 'icon': {
       return iconsManager().renderIcon(asset.name, props)
     }
     case 'image': {
-      return React.createElement('img', {...props, src: asset.url})
+      return React.createElement('img', { ...props, src: asset.url })
     }
     case 'media': {
-      return React.createElement('img', {...props, src: asset.url})
+      return React.createElement('img', { ...props, src: asset.url })
     }
     case 'mediaBackground': {
-      return React.createElement('div', {...props, style:{backgroundImage: `url(${asset.url})`}})
+      return React.createElement('div', { ...props, style: { backgroundImage: `url(${asset.url})` } })
     }
     case undefined: {
-      return React.createElement('img', {...props, src: '/img/nullImage.png'})
+      return React.createElement('img', { ...props, src: '/img/nullImage.png' })
     }
   }
   return '';
@@ -212,23 +212,23 @@ export function renderAsset(asset, props = null) {
  * @param {string} string
  * @param {AltrpModel} context
  */
-export function parseParamsFromString(string, context = {}){
+export function parseParamsFromString(string, context = {}) {
   const params = {};
   const urlParams = window.currentRouterMatch instanceof AltrpModel ? window.currentRouterMatch.getProperty('params') : {};
 
-  if(! string){
+  if (!string) {
     return params;
   }
   const lines = string.split('\n');
-  lines.forEach((line)=>{
+  lines.forEach((line) => {
     let [left, right] = line.split('|');
-    if(! left || ! right){
+    if (!left || !right) {
       return;
     }
     left = left.trim();
     right = right.trim();
-    if(right.match(/{{([\s\S]+?)(?=}})/g)){
-      if(context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', ''))){//todo ошибка в сафари
+    if (right.match(/{{([\s\S]+?)(?=}})/g)) {
+      if (context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', ''))) {//todo ошибка в сафари
         params[left] = context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')) || '';
       } else {
         params[left] = urlParams[right] ? urlParams[right] : '';
@@ -236,7 +236,7 @@ export function parseParamsFromString(string, context = {}){
     } else {
       params[left] = right;
     }
-    if(_.isObject(params[left])){
+    if (_.isObject(params[left])) {
       delete params[left];
     }
   });
@@ -251,13 +251,13 @@ export function parseParamsFromString(string, context = {}){
  * @param {boolean} dataByPath - брать ли данный из getDataByPath
  * @return {boolean}
  */
-export function conditionsChecker(conditions = [], AND = true, model, dataByPath = true){
-  if(! conditions.length){
+export function conditionsChecker(conditions = [], AND = true, model, dataByPath = true) {
+  if (!conditions.length) {
     return true;
   }
   let result = AND;
-  _.each(conditions, c =>{
-    if(AND){
+  _.each(conditions, c => {
+    if (AND) {
       result *= conditionChecker(c, model, dataByPath);
     } else {
       result += conditionChecker(c, model, dataByPath);
@@ -273,44 +273,44 @@ export function conditionsChecker(conditions = [], AND = true, model, dataByPath
  * @param {boolean} dataByPath - брать ли данный из getDataByPath
  * @return {boolean}
  */
-function conditionChecker(c, model, dataByPath = true){
+function conditionChecker(c, model, dataByPath = true) {
   let result = 0;
   const {
-     operator,
+    operator,
   } = c;
   let {
     modelField: left,
     value
   } = c;
-  if(dataByPath){
+  if (dataByPath) {
     value = getDataByPath(value, '', model, true);
     left = getDataByPath(left, '', model);
     return altrpCompare(left, value, operator);
   }
   return altrpCompare(model.getProperty(left), value, operator);
-  switch(operator){
-    case 'empty':{
-      return ! model.getProperty(modelField, '');
+  switch (operator) {
+    case 'empty': {
+      return !model.getProperty(modelField, '');
     }
-    case 'not_empty':{
-      return ! ! model.getProperty(modelField, '');
+    case 'not_empty': {
+      return ! !model.getProperty(modelField, '');
     }
-    case '==':{
-      return _.isEqual(model.getProperty(modelField, ''), value );
+    case '==': {
+      return _.isEqual(model.getProperty(modelField, ''), value);
     }
-    case '<>':{
-      return ! _.isEqual(model.getProperty(modelField, ''), value );
+    case '<>': {
+      return !_.isEqual(model.getProperty(modelField, ''), value);
     }
-    case '>':{
+    case '>': {
       return Number(model.getProperty(modelField, '')) > Number(value);
     }
-    case '>=':{
+    case '>=': {
       return Number(model.getProperty(modelField, '')) >= Number(value);
     }
-    case '<':{
+    case '<': {
       return Number(model.getProperty(modelField, '')) < Number(value);
     }
-    case '<=':{
+    case '<=': {
       return Number(model.getProperty(modelField, '')) <= Number(value);
     }
   }
@@ -325,38 +325,38 @@ function conditionChecker(c, model, dataByPath = true){
  * @param {boolean} altrpCheck - проверять ли altrp
  * @return {*}
  */
-export function getDataByPath(path = '', _default = null, context = null, altrpCheck = false){
+export function getDataByPath(path = '', _default = null, context = null, altrpCheck = false) {
   /**
    * проверим путь
    */
-  if(altrpCheck && (path.trim().indexOf('altrp') !== 0)){
+  if (altrpCheck && (path.trim().indexOf('altrp') !== 0)) {
     return path;
   }
   path = path.trim();
 
-  let {currentModel, currentDataStorage, altrpresponses, formsStore} = appStore.getState();
-  if(context){
+  let { currentModel, currentDataStorage, altrpresponses, formsStore } = appStore.getState();
+  if (context) {
     currentModel = context;
   }
   const urlParams = window.currentRouterMatch instanceof AltrpModel ? window.currentRouterMatch.getProperty('params') : {};
   let value = _default;
-  if(! _.isString(path)){
+  if (!_.isString(path)) {
     return value;
   }
-  if(path.indexOf('altrpdata.') === 0){
+  if (path.indexOf('altrpdata.') === 0) {
     path = path.replace('altrpdata.', '');
     value = currentDataStorage.getProperty(path, _default)
-  } else if(path.indexOf('altrpresponses.') === 0){
+  } else if (path.indexOf('altrpresponses.') === 0) {
     path = path.replace('altrpresponses.', '');
     value = altrpresponses.getProperty(path, _default)
-  }else if(path.indexOf('altrptime.') === 0){
-    value = getTimeValue(path.replace('altrptime.',''));
-  }else if(path.indexOf('altrpforms.') === 0){
+  } else if (path.indexOf('altrptime.') === 0) {
+    value = getTimeValue(path.replace('altrptime.', ''));
+  } else if (path.indexOf('altrpforms.') === 0) {
     value = _.get(formsStore, path.replace('altrpforms.', ''), _default);
   } else {
     value = urlParams[path] ? urlParams[path] : currentModel.getProperty(path, _default);
   }
-  return value ;
+  return value;
 }
 
 /**
@@ -364,9 +364,9 @@ export function getDataByPath(path = '', _default = null, context = null, altrpC
  * @param {string} string
  * @return {string}
  */
-export function extractPathFromString(string = ''){
+export function extractPathFromString(string = '') {
   let path = '';
-  if(_.isString(string)){
+  if (_.isString(string)) {
     // path = string.match(/(?<={{)([\s\S]+?)(?=}})/g)[0]
     path = _.get(string.match(/{{([\s\S]+?)(?=}})/g), '0', '').replace('{{', '');
   }
@@ -379,13 +379,13 @@ export function extractPathFromString(string = ''){
  * @param {{}} object - если в объекте есть свойство test__test то вернет {test: test__test_value}
  * @return {{}}
  */
-export function getObjectByPrefix(prefix = '', object = {}){
+export function getObjectByPrefix(prefix = '', object = {}) {
   let result = {};
-  if(! prefix){
+  if (!prefix) {
     return result;
   }
-  _.forEach(object, (value, key) =>{
-    if(key.indexOf(`${prefix}__`, '') === 0){
+  _.forEach(object, (value, key) => {
+    if (key.indexOf(`${prefix}__`, '') === 0) {
       result[key.replace(`${prefix}__`, '')] = value;
     }
   });
@@ -398,10 +398,10 @@ export function getObjectByPrefix(prefix = '', object = {}){
  * @param {*} _default
  * @return {*}
  */
-export function mbParseJSON(string, _default = null){
-  try{
+export function mbParseJSON(string, _default = null) {
+  try {
     return JSON.parse(string);
-  } catch(e){
+  } catch (e) {
     return _default;
   }
 }
@@ -413,54 +413,54 @@ export function mbParseJSON(string, _default = null){
  * @param operator
  * @return {boolean}
  */
-export function altrpCompare( leftValue = '', rightValue = '', operator = 'empty' ) {
+export function altrpCompare(leftValue = '', rightValue = '', operator = 'empty') {
 
-  switch(operator){
-    case 'empty':{
-      return  _.isEmpty(leftValue,);
+  switch (operator) {
+    case 'empty': {
+      return _.isEmpty(leftValue,);
     }
-    case 'not_empty':{
-      return !  _.isEmpty(leftValue,);
+    case 'not_empty': {
+      return !_.isEmpty(leftValue,);
     }
-    case '==':{
-      if(!(_.isObject(leftValue) || _.isObject(rightValue))){
+    case '==': {
+      if (!(_.isObject(leftValue) || _.isObject(rightValue))) {
         return leftValue == rightValue;
       } else {
         return _.isEqual(leftValue, rightValue);
       }
     }
-    case '===':{
+    case '===': {
       return _.isEqual(leftValue, rightValue);
     }
-    case '<>':{
-      return ! _.isEqual(leftValue, rightValue );
+    case '<>': {
+      return !_.isEqual(leftValue, rightValue);
     }
-    case '>':{
+    case '>': {
       return Number(leftValue) > Number(rightValue);
     }
-    case '>=':{
+    case '>=': {
       return Number(leftValue) >= Number(rightValue);
     }
-    case '<':{
+    case '<': {
       return Number(leftValue) < Number(rightValue);
     }
-    case '<=':{
+    case '<=': {
       return Number(leftValue) <= Number(rightValue);
     }
-    case 'in':{
-      if(! _.isArray(rightValue)){
+    case 'in': {
+      if (!_.isArray(rightValue)) {
         return false;
       }
       let result = false;
       rightValue.forEach(item => {
-        if(! result){
+        if (!result) {
           result = altrpCompare(leftValue, item, '==')
         }
       });
       return result;
     }
-    case 'not_in':{
-      return ! altrpCompare(leftValue, rightValue, 'in');
+    case 'not_in': {
+      return !altrpCompare(leftValue, rightValue, 'in');
     }
   }
 }
@@ -535,35 +535,35 @@ export function getTopPosition(element) {
  * @param {string} path
  * @param {string} defaultValue
  */
-export function getTimeValue(path, defaultValue){
+export function getTimeValue(path, defaultValue) {
 
   let value = defaultValue;
 
-  switch(path){
-    case 'now':{
+  switch (path) {
+    case 'now': {
       value = _.now();
-    }break;
-    case 'month_start':{
+    } break;
+    case 'month_start': {
       value = startOfMonth(new Date);
-    }break;
-    case 'prev_month_start':{
+    } break;
+    case 'prev_month_start': {
       value = startOfMonth(new Date, -1);
-    }break;
-    case 'year_start':{
+    } break;
+    case 'year_start': {
       value = startOfYear(new Date);
-    }break;
-    case 'prev_year_start':{
+    } break;
+    case 'prev_year_start': {
       value = startOfYear(new Date, -1);
-    }break;
-    case 'prev_week_start':{
+    } break;
+    case 'prev_week_start': {
       value = getPrevWeekStart();
-    }break;
-    case 'next_week_start':{
+    } break;
+    case 'next_week_start': {
       value = getNextWeekStart();
-    }break;
-    case 'week_start':{
+    } break;
+    case 'week_start': {
       value = getWeekStart();
-    }break;
+    } break;
   }
   value = moment(value).format('YYYY-MM-DD');
   return value;
@@ -576,7 +576,7 @@ export function getTimeValue(path, defaultValue){
  * @param {int} monthShift
  * @return {Date}
  */
-export function startOfMonth(date, monthShift = 0){
+export function startOfMonth(date, monthShift = 0) {
   return new Date(date.getFullYear(), date.getMonth() + monthShift, 1);
 }
 /**
@@ -585,7 +585,7 @@ export function startOfMonth(date, monthShift = 0){
  * @param {int} yearShift
  * @return {Date}
  */
-export function startOfYear(date, yearShift = 0){
+export function startOfYear(date, yearShift = 0) {
   return new Date(date.getFullYear() + yearShift, 0, 1);
 }
 /**
@@ -594,15 +594,15 @@ export function startOfYear(date, yearShift = 0){
  * @param {int} weekShift
  * @return {Date}
  */
-export function startOfWeek(date, weekShift = 0){
-  return moment(new Date(date.getFullYear(),date.getMonth(), date.getDate() + (weekShift * 7))).firstDayOfWeek();
+export function startOfWeek(date, weekShift = 0) {
+  return moment(new Date(date.getFullYear(), date.getMonth(), date.getDate() + (weekShift * 7))).firstDayOfWeek();
 }
 
 /**
  * Получить ссылку на состояние хранилища
  * @return {*}
  */
-export function getCurrentStoreState(){
+export function getCurrentStoreState() {
   return appStore.getState();
 }
 
@@ -611,23 +611,23 @@ export function getCurrentStoreState(){
  * @param {{}}scrollbars
  * @param {{}}HTMLElement
  */
-export function scrollToElement(scrollbars, HTMLElement){
-  const {container} = scrollbars;
+export function scrollToElement(scrollbars, HTMLElement) {
+  const { container } = scrollbars;
   /**
    * @member {HTMLElement} container
    */
-  if(! container){
+  if (!container) {
     return;
   }
-  if(! _.isFunction(scrollbars.scrollTop)){
+  if (!_.isFunction(scrollbars.scrollTop)) {
     return
   }
 
   let parent = HTMLElement.offsetParent;
   let top = HTMLElement.offsetTop;
 
-  while (parent !== container){
-    if(! parent){
+  while (parent !== container) {
+    if (!parent) {
       /**
        * ушли в самый корень ДОМ и контейнер не встретился
        */
@@ -640,7 +640,7 @@ export function scrollToElement(scrollbars, HTMLElement){
   /**
    * не получили каеое-либо значение
    */
-  if(! top){
+  if (!top) {
     return;
   }
   scrollbars.scrollTop(top)
@@ -651,20 +651,20 @@ export function scrollToElement(scrollbars, HTMLElement){
  * @param {string} elementId
  * @return {null | HTMLElement}
  */
-export function getHTMLElementById(elementId = ''){
+export function getHTMLElementById(elementId = '') {
   let HTMLElement = null;
-  if((! elementId) || ! elementId.trim()){
+  if ((!elementId) || !elementId.trim()) {
     return HTMLElement;
   }
   elementId = elementId.trim();
-  appStore.getState().elements.forEach(el=>{
-    if(! el.elementWrapperRef.current){
+  appStore.getState().elements.forEach(el => {
+    if (!el.elementWrapperRef.current) {
       return
     }
-    if(! el.elementWrapperRef.current.id){
+    if (!el.elementWrapperRef.current.id) {
       return
     }
-    if(el.elementWrapperRef.current.id.toString().split(' ').indexOf(elementId) !== -1){
+    if (el.elementWrapperRef.current.id.toString().split(' ').indexOf(elementId) !== -1) {
       HTMLElement = el.elementWrapperRef.current;
     }
   });
@@ -675,20 +675,20 @@ export function getHTMLElementById(elementId = ''){
  * @param {string} elementId
  * @return {null | HTMLElement}
  */
-export function getComponentByElementId(elementId = ''){
+export function getComponentByElementId(elementId = '') {
   let component = null;
-  if((! elementId) || ! elementId.trim()){
+  if ((!elementId) || !elementId.trim()) {
     return component;
   }
   elementId = elementId.trim();
-  appStore.getState().elements.forEach(el=>{
-    if(! el.elementWrapperRef.current){
+  appStore.getState().elements.forEach(el => {
+    if (!el.elementWrapperRef.current) {
       return
     }
-    if(! el.elementWrapperRef.current.id){
+    if (!el.elementWrapperRef.current.id) {
       return
     }
-    if(el.elementWrapperRef.current.id.toString().split(' ').indexOf(elementId) !== -1){
+    if (el.elementWrapperRef.current.id.toString().split(' ').indexOf(elementId) !== -1) {
       component = el;
     }
   });
@@ -701,8 +701,8 @@ export function getComponentByElementId(elementId = ''){
  */
 function getNextWeekStart() {
   let today = moment();
-  let daystoMonday = 7 - (today.isoWeekday() - 1) ;
-  return today.add(daystoMonday,'days');
+  let daystoMonday = 7 - (today.isoWeekday() - 1);
+  return today.add(daystoMonday, 'days');
 }
 
 /**
@@ -747,7 +747,7 @@ function getPrevWeekEnd() {
 /**
  * Elfkztn gecnst cdjqcndf d j,]trnf[
  */
-export function clearEmptyProps(){
+export function clearEmptyProps() {
 
 }
 
@@ -757,9 +757,9 @@ export function clearEmptyProps(){
  * @param {null | {}}modelContext
  */
 
-export function replaceContentWithData(content = '', modelContext = null){
+export function replaceContentWithData(content = '', modelContext = null) {
   let paths = _.isString(content) ? content.match(/{{([\s\S]+?)(?=}})/g) : null;
-  if(_.isArray(paths)){
+  if (_.isArray(paths)) {
     paths.forEach(path => {
       path = path.replace('{{', '');
       let value = getDataByPath(path, '', modelContext);
@@ -778,16 +778,16 @@ window.altrphelpers = {
    * @param {string}fieldName
    * @return {number}
    */
-  sumFields: function sumFields(fieldName){
+  sumFields: function sumFields(fieldName) {
     let sum = 0;
-    if(! _.isObject(this.context)){
+    if (!_.isObject(this.context)) {
       return sum;
     }
-    if(! _.isArray(this.context)){
+    if (!_.isArray(this.context)) {
       this.context = [this.context];
     }
-    this.context.forEach(c=>{
-      sum += Number(_.get(c,fieldName)) || 0;
+    this.context.forEach(c => {
+      sum += Number(_.get(c, fieldName)) || 0;
     });
     return sum;
   },
@@ -798,7 +798,7 @@ window.altrphelpers = {
  * @params {HTMLElement[]} elements
  * @params {null || HTMLElement} stylesTag
  */
-export function printElements(elements, title = ''){
+export function printElements(elements, title = '') {
   let myWindow = window.open('', 'my div', 'height=400,width=1200');
   myWindow.document.write(`<html><head><title>${title}</title></head>`);
   myWindow.document.write('<body >');
@@ -819,13 +819,13 @@ export function printElements(elements, title = ''){
  * @params {HTMLElement[]} element
  * @params {string} filename
  */
-export async function elementsToPdf(elements, filename = ''){
+export async function elementsToPdf(elements, filename = '') {
   console.log(elements, filename);
 
   let html2pdf = (await import('html2pdf.js')).default;
   elements = elements.body ? elements.body : elements;
-  if(! elements){
-    return{
+  if (!elements) {
+    return {
       success: true,
     };
   }
@@ -837,10 +837,10 @@ export async function elementsToPdf(elements, filename = ''){
     myWindow.document.write(element.outerHTML);
   });
   myWindow.document.write('</body></html>');
-  return new Promise((resolve, reject) =>{
+  return new Promise((resolve, reject) => {
     html2pdf().from(myWindow.document.body).save(filename);
     myWindow.close();
-    resolve({success: true})
+    resolve({ success: true })
   });
 }
 
@@ -848,22 +848,22 @@ export async function elementsToPdf(elements, filename = ''){
  * Забирает данные из HTML таблицы
  * @param {{}}HTMLElement
  */
-export function dataFromTable(HTMLElement){
+export function dataFromTable(HTMLElement) {
   const data = [];
   const headers = [];
-  if(! (HTMLElement &&  HTMLElement.querySelectorAll)){
+  if (!(HTMLElement && HTMLElement.querySelectorAll)) {
     return data;
   }
   let table = HTMLElement.querySelector('table');
-  if((! table) && HTMLElement.querySelector('tr')){
+  if ((!table) && HTMLElement.querySelector('tr')) {
     table = HTMLElement;
   }
-  if(! table){
+  if (!table) {
     return data;
   }
   const ths = table.querySelectorAll('th');
   _.each(ths, (th) => {
-    if(th.innerText){
+    if (th.innerText) {
       headers.push(th.innerText || '');
     }
   });
@@ -871,7 +871,7 @@ export function dataFromTable(HTMLElement){
   _.each(rows, (row) => {
     const cells = row.querySelectorAll('td');
     const part = {};
-    headers.forEach((header, idx)=>{
+    headers.forEach((header, idx) => {
       part[header] = cells[idx].innerText || '';
     });
     data.push(part);
@@ -884,45 +884,45 @@ export function dataFromTable(HTMLElement){
  * @param {{}} data
  * @param {string} filename
  */
-export async function  dataToCSV (data = {}, filename){
+export async function dataToCSV(data = {}, filename) {
   filename = filename || 'File';
-  if(! data){
-    return {success: false}
+  if (!data) {
+    return { success: false }
   }
-  if(_.isObject() && ! _.isArray(data)){
+  if (_.isObject() && !_.isArray(data)) {
     data = [data];
   }
-  if(! _.isArray(data)){
-    return {success: false}
+  if (!_.isArray(data)) {
+    return { success: false }
   }
 
-  let headers = _.toPairs(data[0]).map(([name, value])=>name);
+  let headers = _.toPairs(data[0]).map(([name, value]) => name);
   let csvContent =
-      // "data:text/csv;charset=utf-8,"
-      ""
-      + headers.join(";")
-      + '\n'
-      + data.map(item => {
-        let line = '';
-        headers.forEach((h, idx)=>{
-          let value = _.get(item, h) || '';
-          if(_.isObject(value)){
-            value = JSON.stringify(value)
-          }
+    // "data:text/csv;charset=utf-8,"
+    ""
+    + headers.join(";")
+    + '\n'
+    + data.map(item => {
+      let line = '';
+      headers.forEach((h, idx) => {
+        let value = _.get(item, h) || '';
+        if (_.isObject(value)) {
+          value = JSON.stringify(value)
+        }
 
-          line += (_.isString(value) ? value.replace(/\s/g, ' ') : value)
-              + (headers.length === idx + 1 ? '' : ';');
-        });
-        return line;
-      }).join('\n');
-  let blob = new Blob([csvContent], {type: 'text/csv',charset: 'utf-8'});
+        line += (_.isString(value) ? value.replace(/\s/g, ' ') : value)
+          + (headers.length === idx + 1 ? '' : ';');
+      });
+      return line;
+    }).join('\n');
+  let blob = new Blob([csvContent], { type: 'text/csv', charset: 'utf-8' });
   let link = document.createElement('a');
   link.setAttribute('href', window.URL.createObjectURL(blob));
   link.setAttribute('download', filename + '.csv');
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  return {success: true}
+  return { success: true }
 }
 
 /**
