@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import HeadingIcon from "../../../svgs/widget_heading.svg";
+import HeadingIcon from "../../../svgs/t-letter.svg";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_COLOR,
@@ -59,7 +59,7 @@ class Heading extends BaseElement {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
       default: 'left',
-      options:[
+      options: [
         {
           icon: 'left',
           value: 'left',
@@ -78,10 +78,10 @@ class Heading extends BaseElement {
         }
       ],
       rules: {
-            '{{ELEMENT}}': 'text-align: {{VALUE}};',
+        '{{ELEMENT}}': 'text-align: {{VALUE}};',
       },
     });
-    
+
     this.addControl('heading_settings_html_tag', {
       type: CONTROLLER_SELECT,
       label: 'HTML tag',
@@ -157,51 +157,51 @@ class Heading extends BaseElement {
     });
 
     this.addControl('heading_style_typographic', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        // default:{
-        //   lineHeight: 1.5,
-        //   spacing: 0,
-        //   size: 36,
-        //   weight: "normal",
-        //   family: "Open Sans",
-        //   decoration: ""
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-heading{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      // default:{
+      //   lineHeight: 1.5,
+      //   spacing: 0,
+      //   size: 36,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-heading{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.addControl('heading_style_text_shadow', {
-        type: CONTROLLER_SHADOW,
-        label: 'Shadow',
-        default:{
-          blur: 0,
-          horizontal: 0,
-          vertical: 0,
-          opacity: 1,
-          colorRGB: 'rgb(0, 0, 0)',
-          color: 'rgb(0, 0, 0)',
-          colorPickedHex: '#000000',
-        },
-        presetColors: [
-          '#eaeaea',
-          '#9c18a8'
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-heading{{STATE}}': 'text-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_SHADOW,
+      label: 'Shadow',
+      default: {
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        opacity: 1,
+        colorRGB: 'rgb(0, 0, 0)',
+        color: 'rgb(0, 0, 0)',
+        colorPickedHex: '#000000',
+      },
+      presetColors: [
+        '#eaeaea',
+        '#9c18a8'
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-heading{{STATE}}': 'text-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
+      },
+    }
     );
 
     this.endControlSection();
@@ -214,14 +214,14 @@ class Heading extends BaseElement {
     this.addControl('style_position_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
-      default:{
+      default: {
         // top: 5,
         // right: 0,
         // bottom: 5,
         // left: 0,
-        unit:'px'
+        unit: 'px'
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -557,11 +557,11 @@ class Heading extends BaseElement {
     this.addControl("style_border_radius", {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
-      default:{
+      default: {
         size: 0,
         unit: 'px',
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',

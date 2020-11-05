@@ -1,6 +1,6 @@
 import BaseElement from "./BaseElement";
-import IconIcon from '../../../svgs/widget_icon.svg';
-import {advancedTabControllers} from "../../decorators/register-controllers";
+import IconIcon from '../../../svgs/favorite.svg';
+import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_DIMENSIONS,
@@ -24,19 +24,19 @@ import {
   CONTROLLER_GRADIENT, CONTROLLER_REPEATER, CONTROLLER_HEADING
 } from "../modules/ControllersManager";
 
-class Icon extends BaseElement{
+class Icon extends BaseElement {
 
-  static getName(){
-    return'icon';
+  static getName() {
+    return 'icon';
   }
-  static getTitle(){
-    return'Icon';
+  static getTitle() {
+    return 'Icon';
   }
 
-  static getIconComponent(){
+  static getIconComponent() {
     return IconIcon;
   }
-  static getType(){
+  static getType() {
     return 'widget';
   }
   _registerControls() {
@@ -93,47 +93,47 @@ class Icon extends BaseElement{
     });
 
     this.addControl('html_tag_additional_options_content', {
-        type: CONTROLLER_SELECT,
-        label: 'Title HTML tag',
-        options:[
-          {
-            'value' : 'h1',
-            'label' : 'H1',
-          },
-          {
-            'value' : 'h2',
-            'label' : 'H2',
-          },
-          {
-            'value' : 'h3',
-            'label' : 'H3',
-          },
-          {
-            'value' : 'h4',
-            'label' : 'H4',
-          },
-          {
-            'value' : 'h5',
-            'label' : 'H5',
-          },
-          {
-            'value' : 'h6',
-            'label' : 'H6',
-          },
-          {
-            'value' : 'div',
-            'label' : 'div',
-          },
-          {
-            'value' : 'span',
-            'label' : 'span',
-          },
-          {
-            'value' : 'p',
-            'label' : 'p',
-          },
-        ],
-      }
+      type: CONTROLLER_SELECT,
+      label: 'Title HTML tag',
+      options: [
+        {
+          'value': 'h1',
+          'label': 'H1',
+        },
+        {
+          'value': 'h2',
+          'label': 'H2',
+        },
+        {
+          'value': 'h3',
+          'label': 'H3',
+        },
+        {
+          'value': 'h4',
+          'label': 'H4',
+        },
+        {
+          'value': 'h5',
+          'label': 'H5',
+        },
+        {
+          'value': 'h6',
+          'label': 'H6',
+        },
+        {
+          'value': 'div',
+          'label': 'div',
+        },
+        {
+          'value': 'span',
+          'label': 'span',
+        },
+        {
+          'value': 'p',
+          'label': 'p',
+        },
+      ],
+    }
     );
 
     this.addControl('read_more_button_additional_options_content', {
@@ -181,7 +181,7 @@ class Icon extends BaseElement{
       },
       type: CONTROLLER_SLIDER,
       label: 'Hover all transition',
-      default:{
+      default: {
         size: 0,
         unit: 'px',
       },
@@ -226,26 +226,26 @@ class Icon extends BaseElement{
     });
 
     this.addControl('icon_position_additional_options_content', {
-        type: CONTROLLER_SELECT,
-        label: 'Icon position',
-        default: "right",
-        options:[
-          {
-            'value' : 'right',
-            'label' : 'Right',
-          },
-          {
-            'value' : 'left',
-            'label' : 'Left',
-          },
-        ],
-      }
+      type: CONTROLLER_SELECT,
+      label: 'Icon position',
+      default: "right",
+      options: [
+        {
+          'value': 'right',
+          'label': 'Right',
+        },
+        {
+          'value': 'left',
+          'label': 'Left',
+        },
+      ],
+    }
     );
 
     this.addControl("icon_spacing_additional_options_content", {
       type: CONTROLLER_SLIDER,
       label: 'Icon spacing',
-      default:{
+      default: {
         size: 5,
         unit: 'px',
       },
@@ -270,7 +270,7 @@ class Icon extends BaseElement{
       },
       type: CONTROLLER_SLIDER,
       label: 'Horizontal offset',
-      default:{
+      default: {
         size: -50,
         unit: 'px',
       },
@@ -290,7 +290,7 @@ class Icon extends BaseElement{
       },
       type: CONTROLLER_SLIDER,
       label: 'Vertical offset',
-      default:{
+      default: {
         size: 0,
         unit: 'px',
       },
@@ -319,7 +319,7 @@ class Icon extends BaseElement{
     this.addControl("width_indicator_content", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default:{
+      default: {
         size: 25,
         unit: 'px',
       },
@@ -336,7 +336,7 @@ class Icon extends BaseElement{
     this.addControl("horizontal_offset_indicator_content", {
       type: CONTROLLER_SLIDER,
       label: 'Horizontal offset',
-      default:{
+      default: {
         size: 0,
         unit: 'px',
       },
@@ -353,7 +353,7 @@ class Icon extends BaseElement{
     this.addControl("vertical_offset_indicator_content", {
       type: CONTROLLER_SLIDER,
       label: 'Vertical offset',
-      default:{
+      default: {
         size: 0,
         unit: 'px',
       },
@@ -370,7 +370,7 @@ class Icon extends BaseElement{
     this.addControl("rotate_indicator_content", {
       type: CONTROLLER_SLIDER,
       label: 'Horizontal offset',
-      default:{
+      default: {
         size: 0,
         unit: 'px',
       },
@@ -397,58 +397,58 @@ class Icon extends BaseElement{
     });
 
     this.addControl('position_badge_content', {
-        type: CONTROLLER_SELECT,
-        label: 'Position',
-        default: "topRight",
-        options:[
-          {
-            'value' : 'default',
-            'label' : 'Default',
-          },
-          {
-            'value' : 'topLeft',
-            'label' : 'Top left',
-          },
-          {
-            'value' : 'topCenter',
-            'label' : 'Top center',
-          },
-          {
-            'value' : 'topRight',
-            'label' : 'Top right',
-          },
-          {
-            'value' : 'center',
-            'label' : 'Center',
-          },
-          {
-            'value' : 'centerLeft',
-            'label' : 'Center left',
-          },
-          {
-            'value' : 'centerRight',
-            'label' : 'Center Right',
-          },
-          {
-            'value' : 'bottomLeft',
-            'label' : 'Bottom left',
-          },
-          {
-            'value' : 'bottomCenter',
-            'label' : 'Bottom center',
-          },
-          {
-            'value' : 'bottomRight',
-            'label' : 'Bottom right',
-          },
-        ],
-      }
+      type: CONTROLLER_SELECT,
+      label: 'Position',
+      default: "topRight",
+      options: [
+        {
+          'value': 'default',
+          'label': 'Default',
+        },
+        {
+          'value': 'topLeft',
+          'label': 'Top left',
+        },
+        {
+          'value': 'topCenter',
+          'label': 'Top center',
+        },
+        {
+          'value': 'topRight',
+          'label': 'Top right',
+        },
+        {
+          'value': 'center',
+          'label': 'Center',
+        },
+        {
+          'value': 'centerLeft',
+          'label': 'Center left',
+        },
+        {
+          'value': 'centerRight',
+          'label': 'Center Right',
+        },
+        {
+          'value': 'bottomLeft',
+          'label': 'Bottom left',
+        },
+        {
+          'value': 'bottomCenter',
+          'label': 'Bottom center',
+        },
+        {
+          'value': 'bottomRight',
+          'label': 'Bottom right',
+        },
+      ],
+    }
     );
 
     this.addControl("horizontal_offset_badge_content", {
       type: CONTROLLER_SLIDER,
       label: 'Horizontal offset',
-      default:{
+      default: {
         size: 0,
         unit: 'px',
       },
@@ -465,7 +465,7 @@ class Icon extends BaseElement{
     this.addControl("vertical_offset_badge_content", {
       type: CONTROLLER_SLIDER,
       label: 'Vertical offset',
-      default:{
+      default: {
         size: 0,
         unit: 'px',
       },
@@ -482,7 +482,7 @@ class Icon extends BaseElement{
     this.addControl("rotate_badge_content", {
       type: CONTROLLER_SLIDER,
       label: 'Rotate',
-      default:{
+      default: {
         size: 0,
         unit: 'px',
       },
@@ -507,7 +507,7 @@ class Icon extends BaseElement{
       type: CONTROLLER_CHOOSE,
       label: 'Icon position',
       default: 'center',
-      options:[
+      options: [
         {
           icon: 'left',
           value: 'left',
@@ -526,7 +526,7 @@ class Icon extends BaseElement{
     this.addControl('icon_position_desktop_alignment_position_style', {
       type: CONTROLLER_CHOOSE,
       label: 'Horizontal alignment',
-      options:[
+      options: [
         {
           icon: 'left',
           value: 'left',
@@ -550,44 +550,44 @@ class Icon extends BaseElement{
     });
 
     this.addControl('color_icon_or_image_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Icon color',
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'fill: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Icon color',
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'fill: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('svg_border_color_icon_or_image_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Svg border color',
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'fill {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Svg border color',
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'fill {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('background_color_icon_or_image_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Background color',
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Background color',
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('padding_icon_or_image_style', {
-        type: CONTROLLER_DIMENSIONS,
-        label: 'Padding',
-        units:[
-          'px',
-          '%',
-          'vh',
-        ],
-        rules: {
-          '.{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-        },
-      }
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    }
     );
 
     this.addControl('border_heading_icon_or_image_style', {
@@ -596,61 +596,61 @@ class Icon extends BaseElement{
     });
 
     this.addControl('border_type_icon_or_image_style', {
-        type: CONTROLLER_SELECT,
-        label: 'Border Type',
-        options:[
-          {
-            'value' : 'none',
-            'label' : 'None',
-          },
-          {
-            'value' : 'solid',
-            'label' : 'Solid',
-          },
-          {
-            'value' : 'double',
-            'label' : 'Double',
-          },
-          {
-            'value' : 'dotted',
-            'label' : 'Dotted',
-          },
-          {
-            'value' : 'dashed',
-            'label' : 'Dashed',
-          },
-          {
-            'value' : 'groove',
-            'label' : 'Groove',
-          },
-        ],
-        rules: {
-          '.{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
+      type: CONTROLLER_SELECT,
+      label: 'Border Type',
+      options: [
+        {
+          'value': 'none',
+          'label': 'None',
         },
-      }
+        {
+          'value': 'solid',
+          'label': 'Solid',
+        },
+        {
+          'value': 'double',
+          'label': 'Double',
+        },
+        {
+          'value': 'dotted',
+          'label': 'Dotted',
+        },
+        {
+          'value': 'dashed',
+          'label': 'Dashed',
+        },
+        {
+          'value': 'groove',
+          'label': 'Groove',
+        },
+      ],
+      rules: {
+        '.{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
+      },
+    }
     );
 
     this.addControl('border_width_icon_or_image_style', {
-        type: CONTROLLER_DIMENSIONS,
-        label: 'Border width',
-        units:[
-          'px',
-          '%',
-          'vh',
-        ],
-        rules: {
-          '.{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-        },
-      }
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border width',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    }
     );
 
     this.addControl('border_color_icon_or_image_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Color',
-        rules: {
-          '.{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Color',
+      rules: {
+        '.{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl("border_radius_icon_or_image_style", {
@@ -687,29 +687,29 @@ class Icon extends BaseElement{
     });
 
     this.addControl('typographic_other_icon_or_image_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        // default:{
-        //   lineHeight: 1,
-        //   spacing: 0,
-        //   size: 16,
-        //   weight: "normal",
-        //   family: 'roboto',
-        //   decoration: ""
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      // default:{
+      //   lineHeight: 1,
+      //   spacing: 0,
+      //   size: 16,
+      //   weight: "normal",
+      //   family: 'roboto',
+      //   decoration: ""
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.addControl("spacing_other_icon_or_image_style", {
@@ -811,7 +811,7 @@ class Icon extends BaseElement{
 
     this.addControl('continuous_animation_heading_icon_or_image_style', {
       type: CONTROLLER_HEADING,
-        label: 'Continuous animation',
+      label: 'Continuous animation',
     });
 
     this.addControl('continuous_animation_switcher_icon_or_image_style', {
@@ -823,81 +823,81 @@ class Icon extends BaseElement{
       conditions: {
         'continuous_animation_switcher_icon_or_image_style': true,
       },
-        type: CONTROLLER_SELECT,
-        label: 'Effect',
-        options:[
-          {
-            'value' : 'pulse',
-            'label' : 'Pulse',
-          },
-          {
-            'value' : 'floating',
-            'label' : 'Floating',
-          },
-          {
-            'value' : 'tossing',
-            'label' : 'Tossing',
-          },
-          {
-            'value' : 'rotating',
-            'label' : 'Rotating',
-          },
-        ],
-        rules: {
-          '.{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
+      type: CONTROLLER_SELECT,
+      label: 'Effect',
+      options: [
+        {
+          'value': 'pulse',
+          'label': 'Pulse',
         },
-      }
+        {
+          'value': 'floating',
+          'label': 'Floating',
+        },
+        {
+          'value': 'tossing',
+          'label': 'Tossing',
+        },
+        {
+          'value': 'rotating',
+          'label': 'Rotating',
+        },
+      ],
+      rules: {
+        '.{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
+      },
+    }
     );
 
     this.addControl('continuous_animation_transform_origin_icon_or_image_style', {
-        conditions: {
-          'continuous_animation_switcher_icon_or_image_style': true,
-          'continuous_animation_effect_icon_or_image_style': 'rotating'
+      conditions: {
+        'continuous_animation_switcher_icon_or_image_style': true,
+        'continuous_animation_effect_icon_or_image_style': 'rotating'
+      },
+      type: CONTROLLER_SELECT,
+      label: 'Transform origin',
+      options: [
+        {
+          'value': 'topLeft',
+          'label': 'Top left',
         },
-        type: CONTROLLER_SELECT,
-        label: 'Transform origin',
-        options:[
-          {
-            'value' : 'topLeft',
-            'label' : 'Top left',
-          },
-          {
-            'value' : 'topCenter',
-            'label' : 'Top center',
-          },
-          {
-            'value' : 'topRight',
-            'label' : 'Top right',
-          },
-          {
-            'value' : 'centerLeft',
-            'label' : 'Center left',
-          },
-          {
-            'value' : 'centerCenter',
-            'label' : 'Center center',
-          },
-          {
-            'value' : 'centerRight',
-            'label' : 'Center right',
-          },
-          {
-            'value' : 'bottomLeft',
-            'label' : 'Bottom left',
-          },
-          {
-            'value' : 'bottomCenter',
-            'label' : 'Bottom center',
-          },
-          {
-            'value' : 'bottomRight',
-            'label' : 'Bottom right',
-          },
-        ],
-        rules: {
-          '.{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
+        {
+          'value': 'topCenter',
+          'label': 'Top center',
         },
-      }
+        {
+          'value': 'topRight',
+          'label': 'Top right',
+        },
+        {
+          'value': 'centerLeft',
+          'label': 'Center left',
+        },
+        {
+          'value': 'centerCenter',
+          'label': 'Center center',
+        },
+        {
+          'value': 'centerRight',
+          'label': 'Center right',
+        },
+        {
+          'value': 'bottomLeft',
+          'label': 'Bottom left',
+        },
+        {
+          'value': 'bottomCenter',
+          'label': 'Bottom center',
+        },
+        {
+          'value': 'bottomRight',
+          'label': 'Bottom right',
+        },
+      ],
+      rules: {
+        '.{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
+      },
+    }
     );
 
     this.addControl('hover_animation_switcher_icon_or_image_style', {
@@ -936,7 +936,7 @@ class Icon extends BaseElement{
     this.addControl('alignment_content_style', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      options:[
+      options: [
         {
           icon: 'left',
           value: 'flex-start',
@@ -963,7 +963,7 @@ class Icon extends BaseElement{
     this.addControl('padding_content_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -997,47 +997,47 @@ class Icon extends BaseElement{
     });
 
     this.addControl('title_color_content_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Color',
-        // default: {
-        //   color: "rgb(255,255,255)",
-        //   colorPickedHex: "#FFF",
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Color',
+      // default: {
+      //   color: "rgb(255,255,255)",
+      //   colorPickedHex: "#FFF",
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('title_background_color_content_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Color',
-        // default: {
-        //   color: "rgb(255,255,255)",
-        //   colorPickedHex: "#FFF",
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Color',
+      // default: {
+      //   color: "rgb(255,255,255)",
+      //   colorPickedHex: "#FFF",
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('title_typographic_content_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typography',
-        rules: {
-          '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typography',
+      rules: {
+        '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.addControl('description_heading_content_style', {
@@ -1059,47 +1059,47 @@ class Icon extends BaseElement{
     });
 
     this.addControl('description_color_content_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Color',
-        // default: {
-        //   color: "rgb(255,255,255)",
-        //   colorPickedHex: "#FFF",
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Color',
+      // default: {
+      //   color: "rgb(255,255,255)",
+      //   colorPickedHex: "#FFF",
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('description_background_color_content_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Color',
-        // default: {
-        //   color: "rgb(255,255,255)",
-        //   colorPickedHex: "#FFF",
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Color',
+      // default: {
+      //   color: "rgb(255,255,255)",
+      //   colorPickedHex: "#FFF",
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('description_typographic_content_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typography',
-        rules: {
-          '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typography',
+      rules: {
+        '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.endControlSection();
@@ -1115,94 +1115,94 @@ class Icon extends BaseElement{
     });
 
     this.addControl('text_color_read_more_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Text color',
-        // default: {
-        //   color: "rgb(255,255,255)",
-        //   colorPickedHex: "#FFF",
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Text color',
+      // default: {
+      //   color: "rgb(255,255,255)",
+      //   colorPickedHex: "#FFF",
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('background_color_read_more_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Background color',
-        // default: {
-        //   color: "rgb(255,255,255)",
-        //   colorPickedHex: "#FFF",
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Background color',
+      // default: {
+      //   color: "rgb(255,255,255)",
+      //   colorPickedHex: "#FFF",
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('border_type_read_more_style', {
-        type: CONTROLLER_SELECT,
-        label: 'Border Type',
-        options:[
-          {
-            'value' : 'none',
-            'label' : 'None',
-          },
-          {
-            'value' : 'solid',
-            'label' : 'Solid',
-          },
-          {
-            'value' : 'double',
-            'label' : 'Double',
-          },
-          {
-            'value' : 'dotted',
-            'label' : 'Dotted',
-          },
-          {
-            'value' : 'dashed',
-            'label' : 'Dashed',
-          },
-          {
-            'value' : 'groove',
-            'label' : 'Groove',
-          },
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-style: {{VALUE}};',
+      type: CONTROLLER_SELECT,
+      label: 'Border Type',
+      options: [
+        {
+          'value': 'none',
+          'label': 'None',
         },
-      }
+        {
+          'value': 'solid',
+          'label': 'Solid',
+        },
+        {
+          'value': 'double',
+          'label': 'Double',
+        },
+        {
+          'value': 'dotted',
+          'label': 'Dotted',
+        },
+        {
+          'value': 'dashed',
+          'label': 'Dashed',
+        },
+        {
+          'value': 'groove',
+          'label': 'Groove',
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-style: {{VALUE}};',
+      },
+    }
     );
 
     this.addControl('border_width_read_more_style', {
-        type: CONTROLLER_DIMENSIONS,
-        label: 'Border Width',
-        default: {
-          bind: true
-        },
-        units:[
-          'px',
-          '%',
-          'vh',
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-        },
-      }
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Width',
+      default: {
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    }
     );
 
     this.addControl('border_color_read_more_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Border Color',
-        // default: {
-        //   color: "rgb(50,168,82)",
-        //   colorPickedHex: "#32a852",
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Border Color',
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852",
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('border_radius_read_more_style', {
@@ -1245,7 +1245,7 @@ class Icon extends BaseElement{
     this.addControl('padding_read_more_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -1261,21 +1261,21 @@ class Icon extends BaseElement{
     });
 
     this.addControl('typography_read_more_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typography',
-        rules: {
-          '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typography',
+      rules: {
+        '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.endControlSection();
@@ -1293,7 +1293,7 @@ class Icon extends BaseElement{
     this.addControl("stroke_width_indicator_style", {
       type: CONTROLLER_SLIDER,
       label: 'Stroke width',
-      units:[
+      units: [
         'px',
         'em',
         'vh',
@@ -1311,7 +1311,7 @@ class Icon extends BaseElement{
     this.addControl("stroke_dash_array_indicator_style", {
       type: CONTROLLER_SLIDER,
       label: 'Stroke dash array',
-      units:[
+      units: [
         'px',
         'em',
         'vh',
@@ -1329,7 +1329,7 @@ class Icon extends BaseElement{
     this.addControl("stroke_dash_offset_indicator_style", {
       type: CONTROLLER_SLIDER,
       label: 'Stroke dash offset',
-      units:[
+      units: [
         'px',
         'em',
         'vh',
@@ -1345,42 +1345,42 @@ class Icon extends BaseElement{
     });
 
     this.addControl('fill_color_indicator_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Fill color',
-        // default: {
-        //   color: "rgb(50,168,82)",
-        //   colorPickedHex: "#32a852",
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Fill color',
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852",
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('background_indicator_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Background color',
-        // default: {
-        //   color: "rgb(50,168,82)",
-        //   colorPickedHex: "#32a852",
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Background color',
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852",
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('color_indicator_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Color',
-        // default: {
-        //   color: "rgb(50,168,82)",
-        //   colorPickedHex: "#32a852",
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Color',
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852",
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
+      },
+    }
     );
 
     this.endControlSection();
@@ -1391,29 +1391,29 @@ class Icon extends BaseElement{
     });
 
     this.addControl('text_color_badge_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Text color',
-        // default: {
-        //   color: "rgb(50,168,82)",
-        //   colorPickedHex: "#32a852",
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Text color',
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852",
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('background_color_badge_style', {
-        type: CONTROLLER_COLOR,
-        label: 'Background color',
-        // default: {
-        //   color: "rgb(50,168,82)",
-        //   colorPickedHex: "#32a852",
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Background color',
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852",
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl("border_type_badge_style", {
@@ -1478,29 +1478,29 @@ class Icon extends BaseElement{
     });
 
     this.addControl('box_shadow_badge_style', {
-        type: CONTROLLER_SHADOW,
-        label: 'Box shadow',
-        default:{
-          blur: 0,
-          horizontal: 0,
-          vertical: 0,
-          opacity: 1,
-          spread: 0,
-          colorRGB: 'rgb(0, 0, 0)',
-          color: 'rgb(0, 0, 0)',
-          colorPickedHex: '#000000',
-          type: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_SHADOW,
+      label: 'Box shadow',
+      default: {
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        opacity: 1,
+        spread: 0,
+        colorRGB: 'rgb(0, 0, 0)',
+        color: 'rgb(0, 0, 0)',
+        colorPickedHex: '#000000',
+        type: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('padding_badge_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -1516,21 +1516,21 @@ class Icon extends BaseElement{
     });
 
     this.addControl('typography_badge_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typography',
-        rules: {
-          '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typography',
+      rules: {
+        '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.endControlSection();

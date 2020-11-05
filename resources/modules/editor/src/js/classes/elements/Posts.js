@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import TableIcon from "../../../svgs/widget_post.svg";
+import TableIcon from "../../../svgs/post-list.svg";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_SWITCHER,
@@ -42,14 +42,14 @@ class Table extends BaseElement {
     }
 
     this.startControlSection("posts_content_datasource", {
-        tab: TAB_CONTENT,
-        label: "Data Source"
+      tab: TAB_CONTENT,
+      label: "Data Source"
     });
 
     this.addControl("choose_datasource", {
       type: CONTROLLER_SELECT,
       label: 'Choose Data Source',
-      options:[
+      options: [
         {
           label: 'Query',
           value: 'query'
@@ -96,7 +96,7 @@ class Table extends BaseElement {
       type: CONTROLLER_SELECT,
       label: "Columns",
       prefixClass: 'altrp-columns_',
-      options:[
+      options: [
         {
           label: '1',
           value: 1
@@ -175,7 +175,7 @@ class Table extends BaseElement {
       max: 120,
       min: 0
     });
-    
+
     this.addControl('posts_image', {
       type: CONTROLLER_SWITCHER,
       label: 'Show Thumbnail',
@@ -255,7 +255,7 @@ class Table extends BaseElement {
     this.addControl('posts_header', {
       type: CONTROLLER_SWITCHER,
       label: 'Header',
-    });    
+    });
 
     this.addControl("posts_header_tag", {
       type: CONTROLLER_SELECT,
@@ -267,7 +267,7 @@ class Table extends BaseElement {
         {
           label: 'H1',
           value: 'h1'
-        }, 
+        },
         {
           label: 'H2',
           value: 'h2'

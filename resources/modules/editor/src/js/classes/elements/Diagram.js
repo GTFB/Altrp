@@ -1,6 +1,6 @@
 import { schemes } from "reaviz";
 import BaseElement from "./BaseElement";
-import PieIcon from "../../../svgs/pie.svg";
+import PieIcon from "../../../svgs/skill-bar.svg";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_DIMENSIONS,

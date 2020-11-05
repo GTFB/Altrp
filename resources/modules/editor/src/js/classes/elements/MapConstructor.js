@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import MapIcon from "../../../svgs/map.svg";
+import MapIcon from "../../../svgs/layout-settings.svg";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXT,

@@ -1,6 +1,6 @@
 import BaseElement from "./BaseElement";
-import widgetIcon from '../../../svgs/widget_list.svg';
-import {advancedTabControllers} from "../../decorators/register-controllers";
+import widgetIcon from '../../../svgs/bullet-list.svg';
+import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_DIMENSIONS,
@@ -22,19 +22,19 @@ import {
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 
-class List extends BaseElement{
+class List extends BaseElement {
 
-  static getName(){
-    return'list';
+  static getName() {
+    return 'list';
   }
-  static getTitle(){
-    return'List';
+  static getTitle() {
+    return 'List';
   }
 
-  static getIconComponent(){
+  static getIconComponent() {
     return widgetIcon;
   }
-  static getType(){
+  static getType() {
     return 'widget';
   }
   _registerControls() {
@@ -51,7 +51,7 @@ class List extends BaseElement{
       type: CONTROLLER_CHOOSE,
       label: 'Layout',
       default: 'default',
-      options:[
+      options: [
         {
           icon: 'left',
           value: 'default',
@@ -150,7 +150,7 @@ class List extends BaseElement{
     repeater.addControl("position_relative_x_custom_repeater", {
       type: CONTROLLER_SLIDER,
       label: "Position X",
-      units:[
+      units: [
         'px',
         '%',
       ],
@@ -161,7 +161,7 @@ class List extends BaseElement{
     repeater.addControl("position_relative_y_custom_repeater", {
       type: CONTROLLER_SLIDER,
       label: "Position Y",
-      units:[
+      units: [
         'px',
         '%',
       ],
@@ -264,7 +264,7 @@ class List extends BaseElement{
     this.addControl("space_between_list_style", {
       type: CONTROLLER_SLIDER,
       label: 'Space between',
-      default:{
+      default: {
         size: 10,
         unit: 'px',
       },
@@ -276,7 +276,7 @@ class List extends BaseElement{
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
       default: '',
-      options:[
+      options: [
         {
           icon: 'left',
           value: 'flex-start',
@@ -338,7 +338,7 @@ class List extends BaseElement{
       // },
       type: CONTROLLER_SLIDER,
       label: 'Weight',
-      default:{
+      default: {
         size: 1,
         unit: 'px',
       },
@@ -356,11 +356,11 @@ class List extends BaseElement{
       // },
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default:{
+      default: {
         size: 100,
         unit: '%',
       },
-      units:[
+      units: [
         'px',
         '%',
       ],
@@ -384,7 +384,7 @@ class List extends BaseElement{
       rules: {
         '{{ELEMENT}} .altrp-list-li-divider{{STATE}}': 'border-color: {{COLOR}};',
       },
-      }
+    }
     );
 
     this.endControlSection();
@@ -397,7 +397,7 @@ class List extends BaseElement{
     this.addControl('size_icon_style', {
       type: CONTROLLER_SLIDER,
       label: 'Size',
-      default:{
+      default: {
         size: null,
         unit: 'px',
       },
@@ -437,14 +437,14 @@ class List extends BaseElement{
     this.addControl('padding_icon_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default:{
+      default: {
         top: 0,
         right: 0,
         bottom: 0,
         left: 0,
-        unit:'px'
+        unit: 'px'
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -462,14 +462,14 @@ class List extends BaseElement{
     this.addControl('border-radius_icon_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border radius',
-      default:{
+      default: {
         top: 0,
         right: 0,
         bottom: 0,
         left: 0,
-        unit:'px'
+        unit: 'px'
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -541,7 +541,7 @@ class List extends BaseElement{
     this.addControl("indent_text_style", {
       type: CONTROLLER_SLIDER,
       label: 'Indent',
-      default:{
+      default: {
         // size: 0,
         unit: 'px',
       },
@@ -586,7 +586,7 @@ class List extends BaseElement{
       //   left: 0,
       //   unit:'px'
       // },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -604,14 +604,14 @@ class List extends BaseElement{
     this.addControl('border-radius_text_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border radius',
-      default:{
+      default: {
         top: 0,
         right: 0,
         bottom: 0,
         left: 0,
-        unit:'px'
+        unit: 'px'
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -674,29 +674,29 @@ class List extends BaseElement{
     });
 
     this.addControl('typographic_text_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        // default:{
-        //   lineHeight: 1,
-        //   spacing: 0,
-        //   size: 16,
-        //   weight: "normal",
-        //   family: "Open Sans",
-        //   decoration: ""
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-list-label{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      // default:{
+      //   lineHeight: 1,
+      //   spacing: 0,
+      //   size: 16,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-list-label{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.addControl("link_decoration_text_style", {

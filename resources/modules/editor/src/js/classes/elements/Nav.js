@@ -1,6 +1,6 @@
 import BaseElement from "./BaseElement";
-import widgetIcon from '../../../svgs/widget_nav.svg';
-import {advancedTabControllers} from "../../decorators/register-controllers";
+import widgetIcon from '../../../svgs/nav-menu.svg';
+import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_DIMENSIONS,
@@ -20,19 +20,19 @@ import {
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 
-class Nav extends BaseElement{
+class Nav extends BaseElement {
 
-  static getName(){
-    return'nav';
+  static getName() {
+    return 'nav';
   }
-  static getTitle(){
-    return'Nav';
+  static getTitle() {
+    return 'Nav';
   }
 
-  static getIconComponent(){
+  static getIconComponent() {
     return widgetIcon;
   }
-  static getType(){
+  static getType() {
     return 'widget';
   }
   _registerControls() {
@@ -169,7 +169,7 @@ class Nav extends BaseElement{
       type: CONTROLLER_CHOOSE,
       label: 'Align (hor, ver)',
       default: 'center',
-      options:[
+      options: [
         {
           icon: 'left',
           value: 'start',
@@ -425,7 +425,7 @@ class Nav extends BaseElement{
       type: CONTROLLER_CHOOSE,
       label: "Align",
       default: 'left',
-      options:[
+      options: [
         {
           icon: 'left',
           value: 'left',
@@ -445,7 +445,7 @@ class Nav extends BaseElement{
       type: CONTROLLER_CHOOSE,
       label: "Toggle align",
       default: 'flex-start',
-      options:[
+      options: [
         {
           icon: 'left',
           value: 'flex-start',
@@ -472,29 +472,29 @@ class Nav extends BaseElement{
     });
 
     this.addControl('typographic_main_menu_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1.5,
-          spacing: 0,
-          size: 16,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-nav-menu-li-link-label{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-nav-menu-li-link-label{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.addControl("text_color_main_menu_style", {
@@ -512,7 +512,7 @@ class Nav extends BaseElement{
     this.addControl("horizontal_padding_main_menu_style", {
       type: CONTROLLER_SLIDER,
       label: 'Horizontal padding',
-      default:{
+      default: {
         size: "15",
         unit: 'px',
       },
@@ -529,7 +529,7 @@ class Nav extends BaseElement{
     this.addControl("vertical_padding_main_menu_style", {
       type: CONTROLLER_SLIDER,
       label: 'Vertical padding',
-      default:{
+      default: {
         size: "10",
         unit: 'px',
       },
@@ -546,7 +546,7 @@ class Nav extends BaseElement{
     this.addControl("space_between_main_menu_style", {
       type: CONTROLLER_SLIDER,
       label: 'Space between',
-      default:{
+      default: {
         size: "0",
         unit: 'px',
       },
@@ -562,7 +562,7 @@ class Nav extends BaseElement{
     this.addControl("dropdown_indicator_space_main_menu_style", {
       type: CONTROLLER_SLIDER,
       label: 'dropdown indicator space',
-      default:{
+      default: {
         size: "1",
         unit: 'px',
       },
@@ -595,7 +595,7 @@ class Nav extends BaseElement{
     this.addControl("pointer_height_main_menu_style", {
       type: CONTROLLER_SLIDER,
       label: 'Height',
-      default:{
+      default: {
         size: "3",
         unit: 'px',
       },
@@ -657,7 +657,7 @@ class Nav extends BaseElement{
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
       default: 'left',
-      options:[
+      options: [
         {
           icon: 'left',
           value: 'left',
@@ -674,31 +674,31 @@ class Nav extends BaseElement{
     });
 
     this.addControl('content_alignment_dropdown_hor_ver_menu_section', {
-        type: CONTROLLER_SELECT,
-        label: 'Content alignment',
-        options:[
-          {
-            'value' : 'left',
-            'label' : 'Left',
-          },
-          {
-            'value' : 'center',
-            'label' : 'Center',
-          },
-          {
-            'value' : 'right',
-            'label' : 'Right',
-          },
-          {
-            'value' : 'spaceBetween',
-            'label' : 'Space-between',
-          },
-          {
-            'value' : 'spaceBetweenReverse',
-            'label' : 'Space-between reverse',
-          },
-        ],
-      }
+      type: CONTROLLER_SELECT,
+      label: 'Content alignment',
+      options: [
+        {
+          'value': 'left',
+          'label': 'Left',
+        },
+        {
+          'value': 'center',
+          'label': 'Center',
+        },
+        {
+          'value': 'right',
+          'label': 'Right',
+        },
+        {
+          'value': 'spaceBetween',
+          'label': 'Space-between',
+        },
+        {
+          'value': 'spaceBetweenReverse',
+          'label': 'Space-between reverse',
+        },
+      ],
+    }
     );
 
     this.addControl("heading_dropdown_dropdown_hor_ver_menu_section", {
@@ -707,29 +707,29 @@ class Nav extends BaseElement{
     });
 
     this.addControl('typographic_dropdown_hor_ver_menu_section', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1.5,
-          spacing: 0,
-          size: 15,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '.{{ID}}-altrp-portal .altrp-nav-menu-li-dropdown-hor-ver-link-label{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 15,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '.{{ID}}-altrp-portal .altrp-nav-menu-li-dropdown-hor-ver-link-label{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.addControl("text_color_dropdown_hor_ver_menu_section", {
@@ -762,7 +762,7 @@ class Nav extends BaseElement{
     this.addControl("width_dropdown_hor_ver_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default:{
+      default: {
         unit: 'px',
       },
       max: 300,
@@ -773,68 +773,68 @@ class Nav extends BaseElement{
     });
 
     this.addControl('border_type_dropdown_hor_ver_menu_section', {
-        type: CONTROLLER_SELECT,
-        label: 'Border Type',
-        options:[
-          {
-            'value' : 'none',
-            'label' : 'None',
-          },
-          {
-            'value' : 'solid',
-            'label' : 'Solid',
-          },
-          {
-            'value' : 'double',
-            'label' : 'Double',
-          },
-          {
-            'value' : 'dotted',
-            'label' : 'Dotted',
-          },
-          {
-            'value' : 'dashed',
-            'label' : 'Dashed',
-          },
-          {
-            'value' : 'groove',
-            'label' : 'Groove',
-          },
-        ],
-        rules: {
-          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
+      type: CONTROLLER_SELECT,
+      label: 'Border Type',
+      options: [
+        {
+          'value': 'none',
+          'label': 'None',
         },
-      }
+        {
+          'value': 'solid',
+          'label': 'Solid',
+        },
+        {
+          'value': 'double',
+          'label': 'Double',
+        },
+        {
+          'value': 'dotted',
+          'label': 'Dotted',
+        },
+        {
+          'value': 'dashed',
+          'label': 'Dashed',
+        },
+        {
+          'value': 'groove',
+          'label': 'Groove',
+        },
+      ],
+      rules: {
+        '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
+      },
+    }
     );
 
     this.addControl('border_width_dropdown_hor_ver_menu_section', {
-        type: CONTROLLER_DIMENSIONS,
-        label: 'Border Width',
-        default: {
-          bind: true
-        },
-        units:[
-          'px',
-          '%',
-          'vh',
-        ],
-        rules: {
-          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-        },
-      }
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Width',
+      default: {
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    }
     );
 
     this.addControl('border_color_dropdown_hor_ver_menu_section', {
-        type: CONTROLLER_COLOR,
-        label: 'Border Color',
-        default: {
-          color: "",
-          colorPickedHex: "",
-        },
-        rules: {
-          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Border Color',
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl("border_radius_dropdown_hor_ver_menu_section", {
@@ -892,7 +892,7 @@ class Nav extends BaseElement{
     this.addControl("submenu_indicator_space_main_menu_style", {
       type: CONTROLLER_SLIDER,
       label: 'submenu indicator space',
-      default:{
+      default: {
         size: "1",
         unit: 'px',
       },
@@ -906,7 +906,7 @@ class Nav extends BaseElement{
     this.addControl("distance_dropdown_hor_ver_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Distance',
-      default:{
+      default: {
         size: "0",
         unit: 'px',
       },
@@ -923,29 +923,29 @@ class Nav extends BaseElement{
     });
 
     this.addControl('typographic_submenu_dropdown_hor_ver_menu_section', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1.5,
-          spacing: 0,
-          size: 15,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '.{{ID}}-altrp-portal .altrp-nav-menu-li-dropdown-children-hor-ver-link-label{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 15,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '.{{ID}}-altrp-portal .altrp-nav-menu-li-dropdown-children-hor-ver-link-label{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-sefir;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.addControl("text_color_submenu_dropdown_hor_ver_menu_section", {
@@ -978,7 +978,7 @@ class Nav extends BaseElement{
     this.addControl("width_submenu_dropdown_hor_ver_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default:{
+      default: {
         unit: 'px',
       },
       max: 300,
@@ -989,68 +989,68 @@ class Nav extends BaseElement{
     });
 
     this.addControl('border_type_submenu_dropdown_hor_ver_menu_section', {
-        type: CONTROLLER_SELECT,
-        label: 'Border Type',
-        options:[
-          {
-            'value' : 'none',
-            'label' : 'None',
-          },
-          {
-            'value' : 'solid',
-            'label' : 'Solid',
-          },
-          {
-            'value' : 'double',
-            'label' : 'Double',
-          },
-          {
-            'value' : 'dotted',
-            'label' : 'Dotted',
-          },
-          {
-            'value' : 'dashed',
-            'label' : 'Dashed',
-          },
-          {
-            'value' : 'groove',
-            'label' : 'Groove',
-          },
-        ],
-        rules: {
-          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
+      type: CONTROLLER_SELECT,
+      label: 'Border Type',
+      options: [
+        {
+          'value': 'none',
+          'label': 'None',
         },
-      }
+        {
+          'value': 'solid',
+          'label': 'Solid',
+        },
+        {
+          'value': 'double',
+          'label': 'Double',
+        },
+        {
+          'value': 'dotted',
+          'label': 'Dotted',
+        },
+        {
+          'value': 'dashed',
+          'label': 'Dashed',
+        },
+        {
+          'value': 'groove',
+          'label': 'Groove',
+        },
+      ],
+      rules: {
+        '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
+      },
+    }
     );
 
     this.addControl('border_width_submenu_dropdown_hor_ver_menu_section', {
-        type: CONTROLLER_DIMENSIONS,
-        label: 'Border Width',
-        default: {
-          bind: true
-        },
-        units:[
-          'px',
-          '%',
-          'vh',
-        ],
-        rules: {
-          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-        },
-      }
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Width',
+      default: {
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    }
     );
 
     this.addControl('border_color_submenu_dropdown_hor_ver_menu_section', {
-        type: CONTROLLER_COLOR,
-        label: 'Border Color',
-        default: {
-          color: "",
-          colorPickedHex: "",
-        },
-        rules: {
-          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Border Color',
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl("border-radius_submenu_dropdown_hor_ver_menu_section", {
@@ -1109,7 +1109,7 @@ class Nav extends BaseElement{
     this.addControl("distance_submenu_dropdown_hor_ver_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Distance',
-      default:{
+      default: {
         size: "0",
         unit: 'px',
       },
@@ -1160,7 +1160,7 @@ class Nav extends BaseElement{
     this.addControl("height_divider_dropdown_hor_ver_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Height',
-      default:{
+      default: {
         size: "1",
         unit: 'px',
       },
@@ -1217,35 +1217,35 @@ class Nav extends BaseElement{
     });
 
     this.addControl('typographic_dropdown_menu_section', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1.2,
-          spacing: 0,
-          size: 16,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-nav-menu-li-link-label': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.2,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-nav-menu-li-link-label': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.addControl("horizontal_padding_dropdown_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Horizontal padding',
-      units:[
+      units: [
         'px',
       ],
       max: 100,
@@ -1258,7 +1258,7 @@ class Nav extends BaseElement{
     this.addControl("vertical_padding_dropdown_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Vertical padding',
-      units:[
+      units: [
         'px',
       ],
       max: 100,
@@ -1319,7 +1319,7 @@ class Nav extends BaseElement{
     this.addControl("divider_width_dropdown_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      units:[
+      units: [
         'px',
       ],
       max: 50,
@@ -1342,11 +1342,11 @@ class Nav extends BaseElement{
     this.addControl("chevron_width_dropdown_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Size',
-      default:{
+      default: {
         size: 25,
         unit: 'px',
       },
-      units:[
+      units: [
         'px',
       ],
       max: 100,
@@ -1373,11 +1373,11 @@ class Nav extends BaseElement{
     this.addControl("chevron_rotate_dropdown_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Rotate',
-      default:{
+      default: {
         size: 180,
         unit: 'deg',
       },
-      units:[
+      units: [
         'deg',
       ],
       max: 360,
@@ -1390,11 +1390,11 @@ class Nav extends BaseElement{
     this.addControl("chevron_active_rotate_dropdown_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Active rotate',
-      default:{
+      default: {
         size: 0,
         unit: 'deg',
       },
-      units:[
+      units: [
         'deg',
       ],
       max: 360,
@@ -1436,10 +1436,10 @@ class Nav extends BaseElement{
     this.addControl("size_toggle_button_dropdown_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Size',
-      default:{
+      default: {
         unit: 'px',
       },
-      units:[
+      units: [
         'px',
       ],
       max: 100,
@@ -1455,11 +1455,11 @@ class Nav extends BaseElement{
     this.addControl('padding_toggle_button_dropdown_menu_section', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default:{
-        unit:'px',
+      default: {
+        unit: 'px',
         bind: true
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -1552,29 +1552,29 @@ class Nav extends BaseElement{
     });
 
     this.addControl('bread_crumbs_style_typographic', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1.5,
-          spacing: 0,
-          size: 36,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-heading': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 36,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-heading': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.addControl("bread_crumbs_style_color", {
@@ -1611,7 +1611,7 @@ class Nav extends BaseElement{
       type: CONTROLLER_CHOOSE,
       label: 'alignment',
       default: 'left',
-      options:[
+      options: [
         {
           icon: 'left',
           value: 'left',
@@ -1626,7 +1626,7 @@ class Nav extends BaseElement{
         }
       ],
       rules: {
-            '{{ELEMENT}}': 'text-align: {{VALUE}};',
+        '{{ELEMENT}}': 'text-align: {{VALUE}};',
       },
     });
 
@@ -1638,29 +1638,29 @@ class Nav extends BaseElement{
     });
 
     this.addControl('links_style_typographic', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1.5,
-          spacing: 0,
-          size: 36,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-heading{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 36,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-heading{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.addControl("links_style_color", {
@@ -1684,29 +1684,29 @@ class Nav extends BaseElement{
     });
 
     this.addControl('separator_style_typographic', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1.5,
-          spacing: 0,
-          size: 36,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-heading{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 36,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-heading{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.addControl("separator_style_color", {
@@ -1730,29 +1730,29 @@ class Nav extends BaseElement{
     });
 
     this.addControl('current_page_style_typographic', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1.5,
-          spacing: 0,
-          size: 36,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-heading{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 36,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-heading{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.addControl("current_page_style_color", {

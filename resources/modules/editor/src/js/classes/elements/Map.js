@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import MapIcon from "../../../svgs/map.svg";
+import MapIcon from "../../../svgs/google-maps.svg";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXT,
@@ -18,7 +18,7 @@ class Map extends BaseElement {
     return "map";
   }
   static getTitle() {
-    return "Dynamic Map";
+    return "Map";
   }
   static getIconComponent() {
     return MapIcon;
