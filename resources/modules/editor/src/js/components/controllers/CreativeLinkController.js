@@ -16,13 +16,17 @@ class CreativeLinkController extends Component {
     this.changeStyle = this.changeStyle.bind(this);
     this.inputBlurUpdate = this.inputBlurUpdate.bind(this);
     this.blurChange = this.blurChange.bind(this);
-    this.inputHorUpdate = this.inputHorUpdate.bind(this);
-    this.horChange = this.horChange.bind(this);
     this.openColorPicker = this.openColorPicker.bind(this);
     this.colorChange = this.colorChange.bind(this);
     this.openBackgroundPicker = this.openBackgroundPicker.bind(this);
     this.backgroundChange = this.backgroundChange.bind(this);
-    this.units = ['s']
+    this.secondColorChange = this.secondColorChange.bind(this);
+    this.secondOpenColorPicker = this.secondOpenColorPicker.bind(this);
+    this.thirdColorChange = this.thirdColorChange.bind(this);
+    this.thirdOpenColorPicker = this.thirdOpenColorPicker.bind(this);
+    this.fourthColorChange = this.fourthColorChange.bind(this);
+    this.fourthOpenColorPicker = this.fourthOpenColorPicker.bind(this);
+    this.units = ['s'];
     let value = this.getSettings(this.props.controlId);
     if (value === null && this.props.default) {
       value = this.props.default;
@@ -34,6 +38,12 @@ class CreativeLinkController extends Component {
       activeCreativeLink: false,
       //color
       activeColor: false,
+      //secondColor
+      secondActiveColor: false,
+      //thirdColor
+      thirdActiveColor: false,
+      //fourthColor
+      fourthActiveColor: false,
       //background
       activeBackground: false,
       //duration
@@ -103,23 +113,6 @@ class CreativeLinkController extends Component {
     });
   };
   //конец duration
-  //начало bottomLineHeight
-  inputHorUpdate(e) {
-    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
-    this._changeValue({
-      ...value,
-      lineHeight: e.target.value
-    });
-  }
-
-  horChange(e) {
-    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
-    this._changeValue({
-      ...value,
-      lineHeight: e.target.value
-    });
-  };
-  //конец bottomLineHeight
   //начало color
   colorChange(color) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
@@ -144,6 +137,60 @@ class CreativeLinkController extends Component {
     })
   };
   //конец color
+  //начало secondColor
+  secondColorChange(color) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    this._changeValue({
+      ...value,
+      secondColor: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+      secondColorRGB: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+      secondColorPickedHex: color.hex,
+      secondOpacity: color.rgb.a,
+    });
+  };
+
+  secondOpenColorPicker() {
+    this.setState({
+      secondActiveColor: !this.state.secondActiveColor
+    })
+  };
+  //конец secondColor
+  //начало thirdColor
+  thirdColorChange(color) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    this._changeValue({
+      ...value,
+      thirdColor: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+      thirdColorRGB: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+      thirdColorPickedHex: color.hex,
+      thirdOpacity: color.rgb.a,
+    });
+  };
+
+  thirdOpenColorPicker() {
+    this.setState({
+      thirdActiveColor: !this.state.thirdActiveColor
+    })
+  };
+  //конец thirdColor
+  //начало fourthColor
+  fourthColorChange(color) {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    this._changeValue({
+      ...value,
+      fourthColor: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+      fourthColorRGB: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+      fourthColorPickedHex: color.hex,
+      fourthOpacity: color.rgb.a,
+    });
+  };
+
+  fourthOpenColorPicker() {
+    this.setState({
+      fourthActiveColor: !this.state.fourthActiveColor
+    })
+  };
+  //конец fourthColor
   // начало background
   backgroundChange(color) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
@@ -323,10 +370,27 @@ class CreativeLinkController extends Component {
       return '';
     }
 
+    //color
     let colorPickedStyle = {
       backgroundColor: value.color
     };
 
+    //secondColor
+    let secondColorPickedStyle = {
+      backgroundColor: value.secondColor
+    };
+
+    //thirdColor
+    let thirdColorPickedStyle = {
+      backgroundColor: value.thirdColor
+    };
+
+    //fourthColor
+    let fourthColorPickedStyle = {
+      backgroundColor: value.fourthColor
+    };
+
+    //background
     let backgroundPickedStyle = {
       backgroundColor: value.background
     };
@@ -378,40 +442,19 @@ class CreativeLinkController extends Component {
           </div>
         </div>
         {/* конец slider duration */}
-        {/* начало slider Bottom Line Height */}
-        <div className="control-slider-header controller-container_slider_typographic_top">
-          <div className="control-slider-label">
-            Bottom Line Height
-          </div>
-        </div>
-        <div className="control-slider-input-wrapper">
-          <input type="range"
-                 min={this.state.lineHeightMin}
-                 max={this.state.lineHeightMax}
-                 step="0.1"
-                 className="control-slider" value={value.lineHeight || 0} onChange={this.inputHorUpdate} name="horizontal" />
-          <div className="control-slider-input-box">
-            <input className="control-slider-input" type="number"
-                   min={this.state.lineHeightMin}
-                   max={this.state.lineHeightMax}
-                   step="0.1"
-                   value={value.lineHeight || 0} name="horizontalNumber" onChange={this.horChange} />
-          </div>
-        </div>
-        {/* конец slider Bottom Line Height */}
         {/* начало color */}
         <div className="control-color-header">
-          <div className="controller-container__label">color</div>
+          <div className="controller-container__label">First color</div>
         </div>
         <div className="control-color-wrapper" onClick={this.openColorPicker}>
           <div className="control-color-input">
             <div className="control-color-colorPicked-container">
-              <div className="control-color-colorPicked" style={colorPickedStyle}></div>
+              <div className="control-color-colorPicked" style={colorPickedStyle} />
             </div>
             <label className="control-color-hex">{value.colorPickedHex}</label>
           </div>
           <div className="control-color-opacity-container">
-            <label className="control-color-opacity" >{(value.opacity * 100).toFixed() + "%"}</label>
+            <label className="control-color-opacity" >{(value.opacity * 100 || 0).toFixed() + "%"}</label>
           </div>
         </div>
         {
@@ -420,9 +463,81 @@ class CreativeLinkController extends Component {
               <SketchPicker width="90%" presetColors={this.props.presetColors} color={value.colorRGB}
                             onChange={this.colorChange} className="sketchPicker" />
             </div>
-            : <div></div>
+            : ""
         }
         {/* конец color */}
+        {/* начало secondColor */}
+        <div className="control-color-header">
+          <div className="controller-container__label">Second color</div>
+        </div>
+        <div className="control-color-wrapper" onClick={this.secondOpenColorPicker}>
+          <div className="control-color-input">
+            <div className="control-color-colorPicked-container">
+              <div className="control-color-colorPicked" style={secondColorPickedStyle} />
+            </div>
+            <label className="control-color-hex">{value.secondColorPickedHex}</label>
+          </div>
+          <div className="control-color-opacity-container">
+            <label className="control-color-opacity" >{(value.secondOpacity * 100 || 0).toFixed() + "%"}</label>
+          </div>
+        </div>
+        {
+          this.state.secondActiveColor ?
+            <div id="colorPicker" className="control-color-colorPicker">
+              <SketchPicker width="90%" presetColors={this.props.presetColors} color={value.secondColorRGB}
+                            onChange={this.secondColorChange} className="sketchPicker" />
+            </div>
+            : ""
+        }
+        {/* конец secondColor */}
+        {/* начало thirdColor */}
+        <div className="control-color-header">
+          <div className="controller-container__label">Third color</div>
+        </div>
+        <div className="control-color-wrapper" onClick={this.thirdOpenColorPicker}>
+          <div className="control-color-input">
+            <div className="control-color-colorPicked-container">
+              <div className="control-color-colorPicked" style={thirdColorPickedStyle} />
+            </div>
+            <label className="control-color-hex">{value.thirdColorPickedHex}</label>
+          </div>
+          <div className="control-color-opacity-container">
+            <label className="control-color-opacity" >{(value.thirdOpacity * 100 || 0).toFixed() + "%"}</label>
+          </div>
+        </div>
+        {
+          this.state.thirdActiveColor ?
+            <div id="colorPicker" className="control-color-colorPicker">
+              <SketchPicker width="90%" presetColors={this.props.presetColors} color={value.thirdColorRGB}
+                            onChange={this.thirdColorChange} className="sketchPicker" />
+            </div>
+            : ""
+        }
+        {/* конец thirdColor */}
+        {/* начало fourthColor */}
+        <div className="control-color-header">
+          <div className="controller-container__label">Fourth color</div>
+        </div>
+        <div className="control-color-wrapper" onClick={this.fourthOpenColorPicker}>
+          <div className="control-color-input">
+            <div className="control-color-colorPicked-container">
+              <div className="control-color-colorPicked" style={fourthColorPickedStyle} />
+            </div>
+            <label className="control-color-hex">{value.fourthColorPickedHex}</label>
+          </div>
+          <div className="control-color-opacity-container">
+            <label className="control-color-opacity" >{(value.fourthOpacity * 100 || 0).toFixed() + "%"}</label>
+          </div>
+        </div>
+        {
+          this.state.fourthActiveColor ?
+            <div id="colorPicker" className="control-color-colorPicker">
+              <SketchPicker width="90%" presetColors={this.props.presetColors} color={value.fourthColorRGB}
+                            onChange={this.fourthColorChange} className="sketchPicker" />
+            </div>
+            : ""
+        }
+        {/* конец fourthColor */}
         {/* начало background */}
         <div className="control-color-header">
           <div className="controller-container__label">background</div>
@@ -435,7 +550,7 @@ class CreativeLinkController extends Component {
             <label className="control-color-hex">{value.backgroundPickedHex}</label>
           </div>
           <div className="control-color-opacity-container">
-            <label className="control-color-opacity" >{(value.opacityBg * 100).toFixed() + "%"}</label>
+            <label className="control-color-opacity" >{(value.opacityBg * 100 || 0).toFixed() + "%"}</label>
           </div>
         </div>
         {
