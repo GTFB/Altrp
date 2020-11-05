@@ -8,6 +8,7 @@ function altrpZip() {
     './**/.htaccess',
     '!./app/Http/Controllers/AltrpControllers/**',
     '!./app/Http/Requests/AltrpRequests/**',
+    '!./app/Plugins/plugins.json',
     '!./public/storage',
     '!./public/favicon.ico',
     '!./out/**',
