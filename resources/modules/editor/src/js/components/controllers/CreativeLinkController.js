@@ -84,7 +84,23 @@ class CreativeLinkController extends Component {
     this._changeValue({
       ..._value,
       style: value.value,
-      label: value.label
+      label: value.label,
+      color: ``,
+      colorRGB: ``,
+      colorPickedHex: "",
+      opacity: 1,
+      secondColor: ``,
+      secondColorRGB: ``,
+      secondColorPickedHex: "",
+      secondOpacity: 1,
+      thirdColor: ``,
+      thirdColorRGB: ``,
+      thirdColorPickedHex: "",
+      thirdOpacity: 1,
+      fourthColor: ``,
+      fourthColorRGB: ``,
+      fourthColorPickedHex: "",
+      fourthOpacity: 1,
     })
   };
   //конец select2 (style)
@@ -572,7 +588,7 @@ class CreativeLinkController extends Component {
         {/* конец fourthColor */}
         {/* начало background */}
         <div className="control-color-header">
-          <div className="controller-container__label">background</div>
+          <div className="controller-container__label">Background</div>
         </div>
         <div className="control-color-wrapper" onClick={this.openBackgroundPicker}>
           <div className="control-color-input">
