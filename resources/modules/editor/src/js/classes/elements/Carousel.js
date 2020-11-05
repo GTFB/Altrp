@@ -100,6 +100,11 @@ class Carousel extends BaseElement{
       label: 'link',
     });
 
+    repeater.addControl('overlay_text_repeater', {
+      type: CONTROLLER_TEXT,
+      label: '(Overlay) text',
+    });
+
     this.addControl('slides_repeater', {
       label: 'Tab Items',
       type: CONTROLLER_REPEATER,
@@ -212,7 +217,7 @@ class Carousel extends BaseElement{
 
     this.addControl('per_row_slides_content', {
       type: CONTROLLER_SELECT,
-      label: 'Slides per row',
+      label: 'Rows',
       default: 1,
       options: [
         {
@@ -752,7 +757,7 @@ class Carousel extends BaseElement{
         'arrows_navigation_content': true,
       },
       type: CONTROLLER_DIMENSIONS,
-      label: 'Padding',
+      label: 'Border radius',
       default:{
         top: 0,
         right: 0,
@@ -860,8 +865,8 @@ class Carousel extends BaseElement{
       type: CONTROLLER_COLOR,
       label: 'Dots color',
       default: {
-        color: "rgb(201,201,201)",
-        colorPickedHex: "#c9c9c9",
+        color: "rgb(164,164,164)",
+        colorPickedHex: "#a4a4a4",
       },
       rules: {
         '{{ELEMENT}} .altrp-carousel-paging{{STATE}}': 'background-color: {{COLOR}};',
@@ -919,12 +924,70 @@ class Carousel extends BaseElement{
 
     this.endControlSection();
 
-    this.startControlSection('lightbox_style', {
+    this.startControlSection('overlay_style', {
       tab: TAB_STYLE,
-      label: 'Lightbox',
+      label: 'Overlay',
     });
 
+    this.addControl('background_color_overlay', {
+      type: CONTROLLER_COLOR,
+      label: 'Background color',
+      default: {
+        color: "rgb(255, 255, 255)",
+        colorPickedHex: "#FFFFFF",
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-carousel-slide-overlay{{STATE}}': 'background-color: {{COLOR}};',
+        },
+      }
+    );
+    
+    this.addControl("font_color_overlay", {
+      type: CONTROLLER_COLOR,
+      label: "text color",
+      default: {
+        color: "rgb(0, 0, 0)",
+        colorPickedHex: "#000000",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-carousel-slide-overlay-text{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('typographic_overlay', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default:{
+          lineHeight: 1.5,
+          spacing: 0,
+          size: 16,
+          weight: "normal",
+          family: '"roboto"',
+          decoration: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-carousel-slide-overlay-text{{STATE}}': [
+            'font-family: "{{FAMILY}}", sans-serif;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
     this.endControlSection();
+
+    // this.startControlSection('lightbox_style', {
+    //   tab: TAB_STYLE,
+    //   label: 'Lightbox',
+    // });
+
+    // this.endControlSection();
 
     advancedTabControllers(this);
   }

@@ -62,6 +62,17 @@ class Relationship extends EloquentModel
       }
       foreach ( $model->altrp_relationships as $altrp_relation ) {
         if( $imported_relation['name'] === $altrp_relation->name ){
+          $altrp_relation->always_with = $imported_relation['always_with'];
+          $altrp_relation->onDelete = $imported_relation['onDelete'];
+          $altrp_relation->onUpdate = $imported_relation['onUpdate'];
+          $altrp_relation->title = $imported_relation['title'];
+          $altrp_relation->target_model_id = $target_model->id;
+          try{
+            $altrp_relation->save();
+          } catch (\Exception $e){
+            Log::error( $e->getMessage(), [$e->getFile()] );
+            continue;
+          }
           continue 2;
         }
       }
@@ -378,6 +389,7 @@ class Relationship extends EloquentModel
 
         $result = DB::table($foreign_table->name)
             ->leftJoin($local_table->name, $foreign_table->name.".".$local_key, '=', $local_table->name.".".$foreign_key)
+            ->whereNotNull($foreign_table->name.".".$local_key)
             ->havingRaw($prefix.$local_table->name.".".$foreign_key." IS NULL")
             ->get();
 

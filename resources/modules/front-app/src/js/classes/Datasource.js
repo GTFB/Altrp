@@ -3,6 +3,7 @@ import appStore from "../store/store"
  * @class Datasource
  */
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
+import {getDataByPath} from "../helpers";
 
 class Datasource extends AltrpModel{
   /**
@@ -30,9 +31,10 @@ class Datasource extends AltrpModel{
   /**
    * Получить параметры для запроса к ресурсу
    * @params {{}} urlParams
+   * @params {string} excludePath - исключение из параметров, которые должны браться динамически
    * @return{null | {}}
    */
-  getParams(urlParams = {}){
+  getParams(urlParams = {}, excludePath = ''){
     const {currentModel, currentDataStorage} = appStore.getState();
     let parsedTemplate = this.getProperty('parameters');
     const params = {};
@@ -52,14 +54,15 @@ class Datasource extends AltrpModel{
       return line
     });
     parsedTemplate.forEach(([left, right])=>{
-      if(right.match(/(?<={{)([\s\S]+?)(?=}})/g)){
-        right = right.match(/(?<={{)([\s\S]+?)(?=}})/g)[0];
-        if(right.indexOf('altrpdata.') === 0){
-          right = right.replace('altrpdata.', '');
-          right = currentDataStorage.getProperty(right)
+      if(right.match(/{{([\s\S]+?)(?=}})/g)){
+        right = right.trim();
+        right = right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '');
+        if(excludePath && right.indexOf(excludePath) === 0){
+          right = right;
         } else {
-          right = urlParams[right] ? urlParams[right] : currentModel.getProperty(right);
+          right = getDataByPath(right) ? getDataByPath(right) : right;
         }
+
       }
       if(right || right === 0){
         params[left] = right;

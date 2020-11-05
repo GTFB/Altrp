@@ -36,7 +36,8 @@ class Column extends Model
       'calculation',
       'calculation_logic',
       "hidden",
-      "model_id"
+      "model_id",
+      "preset"
     ];
 
   /**

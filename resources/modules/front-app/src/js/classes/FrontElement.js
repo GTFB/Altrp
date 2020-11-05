@@ -1,5 +1,6 @@
 import CONSTANTS from "../../../../editor/src/js/consts";
 import {getMediaQueryByName} from "../helpers";
+import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 
 class FrontElement {
 
@@ -82,7 +83,7 @@ class FrontElement {
   }
 
   /**
-   * Вызывается для обновление элемента
+   * Вызывается для обновления элемента
    */
   update(){
     this.updateStyles();
@@ -90,6 +91,16 @@ class FrontElement {
         'button',
         'input',
     ];
+    let widgetsWithActions = [
+        'button',
+    ];
+    /**
+     * Инициация событий в первую очередь
+     */
+    if(widgetsWithActions.indexOf(this.getName()) >= 0 && this.getSettings('actions', []).length){
+      this.registerActions();
+      return;
+    }
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_id')){
       this.formInit();
       return;
@@ -99,7 +110,13 @@ class FrontElement {
       return;
     }
   }
-
+  async registerActions(){
+    /**
+     * @member {ActionsManager|*} actionsManager
+     */
+    const actionsManager = (await import('./modules/ActionsManager.js')).default;
+    actionsManager.registerWidgetActions(this.getId(), this.getSettings('actions', []));
+  }
   /**
    * Если элемент поле или кнопка нужно инициализирваоть форму в FormsManager
    */
@@ -150,7 +167,19 @@ class FrontElement {
           ));
           }
           break;
+          case 'email':{
+            method = 'POST';
+            this.addForm(formsManager.registerForm(this.getSettings('form_id'),
+                'email',
+                method,
+                {afterLogoutRedirect:this.getSettings('redirect_after')}
+          ));
+          }
+          break;
         }
+        this.getForms().forEach(form=>{
+          form.addSubmitButton(this);
+        });
       }
       break;
       case 'input': {
@@ -197,8 +226,8 @@ class FrontElement {
 
   /**
    * Получить настройку или все настройки
-   * @param settingName
-   * @param {string} _default
+   * @param {string} settingName
+   * @param {*} _default
    * @return {*}
    */
   getSettings(settingName, _default = ''){
@@ -206,7 +235,7 @@ class FrontElement {
     {
       return _.cloneDeep(this.settings);
     }
-    return this.settings[settingName] || _default;
+    return _.get(this.settings, settingName) || _default;
   }
   updateStyles(){
     window.stylesModulePromise.then(stylesModule => {
@@ -337,6 +366,23 @@ class FrontElement {
   }
 
   /**
+   * Проверяет рекурсивно (проверяет всех предков) виден ли элмент свойство elementDisplay пропсов компонента
+   * @return {boolean}
+   */
+  elementIsDisplay(){
+    let display = true;
+    if(this.getName() === 'root-element'){
+      return true;
+    }
+    if(this.component.props.elementDisplay){
+      display = this.parent ? this.parent.elementIsDisplay() : true;
+    } else {
+      return false;
+    }
+    return display;
+  }
+
+  /**
    * Возвращает значение если виджет input, если другое, то null
    */
   getValue(){
@@ -344,13 +390,22 @@ class FrontElement {
     if(this.getName() !== 'input'){
       return null;
     }
+    if(! this.elementIsDisplay()){
+      return null;
+    }
     let value = this.component.state.value;
     /**
      * Если значение динамическое и не менялось в виджете,
      * то используем метод this.getContent для получения значения, а не динмического объекта
      */
-    if(value.dynamic){
+    if(value && value.dynamic){
       value = this.getContent('content_default_value')
+    }
+    /**
+     * Если нужен массив
+     */
+    if(this.getSettings('content_type') === 'checkbox'){
+      value = _.isArray(value) ? value : (value ? [value] : []);
     }
     return value;
   }
@@ -465,6 +520,60 @@ class FrontElement {
       classStorage += `${element[1]} `;
     });
     return classStorage;
+  }
+
+  /**
+   * Модель для карточки внутри виджетов
+   * @param {AltrpModel} model
+   */
+  setCardModel(model) {
+    let rootElement = this.getRoot();
+    if(! model){
+      rootElement.cardModel = null;
+      rootElement.isCard = false;
+      return;
+    }
+    if(! model instanceof AltrpModel){
+      model = new AltrpModel(model);
+    }
+    rootElement.cardModel = model;
+    rootElement.isCard = true;
+    // console.log(rootElement);
+  }
+
+  /**
+   * Есть ли данные модели для карточки
+   * @return {boolean}
+   */
+  hasCardModel(){
+    let rootElement = this.getRoot();
+    return ! ! (rootElement.cardModel && rootElement.isCard)
+  }
+  /**
+   * Получить данные модели для карточки
+   * @return {AltrpModel}
+   */
+  getCardModel(){
+    let model;
+    if(this.getType() === 'root-element'){
+      model = this.cardModel;
+    } else {
+      model = this.getRoot().cardModel;
+    }
+    if(! model instanceof AltrpModel){
+      model = new AltrpModel(model);
+    }
+    return model;
+  }
+
+
+  /**
+   * Возвращает текущую модель для элемента
+   * (для карточки на странице будут свои модели)
+   * @return {AltrpModel}
+   */
+  getCurrentModel(){
+    return this.hasCardModel() ? this.getCardModel() : (appStore.getState().currentModel || new AltrpModel);
   }
 }
 

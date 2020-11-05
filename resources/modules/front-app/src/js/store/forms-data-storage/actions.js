@@ -6,14 +6,16 @@ export const CLEAR_FORM_FIELD_VALUE = 'CHANGE_FORM_FIELD_VALUE';
  * @param {string}fieldName
  * @param {*}value
  * @param {string}formId
+ * @param {boolean}userInput
  * @return {{type: string, fieldName: *, value: *, formId: *}}
  */
-export function changeFormFieldValue(fieldName, value, formId) {
+export function changeFormFieldValue(fieldName, value, formId, userInput) {
   return {
     type: CHANGE_FORM_FIELD_VALUE,
     fieldName,
     value,
     formId,
+    changedField: userInput ? `${formId}.${fieldName}` : null,
   };
 }
 /**

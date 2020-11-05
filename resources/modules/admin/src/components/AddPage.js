@@ -5,6 +5,7 @@ import AltrpSelect from "./altrp-select/AltrpSelect";
 import AdminTable from "./AdminTable";
 import AdminModal2 from "./AdminModal2";
 import PageDataSourceForm from "./pages/PageDataSourceForm";
+import { titleToPath } from "../js/helpers";
 
 const columns = [
   {
@@ -28,25 +29,6 @@ const columns = [
   }
 ];
 
-const dataSources = [
-  {
-    id: 1,
-    page_id: 1,
-    data_source_id: 1,
-    alias: "alias",
-    priority: 1,
-    parameters: "parameters"
-  },
-  {
-    id: 2,
-    page_id: 1,
-    data_source_id: 2,
-    alias: "alias_2",
-    priority: 2,
-    parameters: "parameters_2"
-  },
-]
-
 /**
  * @class
  * @property {Resource} resource
@@ -63,12 +45,15 @@ class AddPage extends Component {
       models: [],
       isModalOpened: false,
       dataSources: [],
-      editingDataSource: null
+      editingDataSource: null,
+      pagesOptions: []
     };
     this.resource = new Resource({ route: '/admin/ajax/pages' });
+    this.pagesOptionsResource = new Resource({ route: '/admin/ajax/pages_options' });
     this.model_resource = new Resource({ route: '/admin/ajax/models_options' });
     this.templateResource = new Resource({ route: '/admin/ajax/templates' });
     this.dataSourceResource = new Resource({ route: '/admin/ajax/page_data_sources/pages' });
+
     this.savePage = this.savePage.bind(this);
   }
 
@@ -78,6 +63,9 @@ class AddPage extends Component {
    * @return {Promise<void>}
    */
   async componentDidMount() {
+    this.pagesOptionsResource.getAll()
+      .then(pagesOptions => this.setState({ pagesOptions }));
+
     let res = await this.templateResource.getOptions();
     this.setState(state => {
       return { ...state, templates: res }
@@ -117,6 +105,7 @@ class AddPage extends Component {
   async savePage(e) {
     e.preventDefault();
     let res;
+    const { parent_page_id } = this.state.value;
     let path = this.state.value.path;
     path = path.split('\\').join('/');
     path = (path[0] !== '/') ? `/${path}` : path;
@@ -129,9 +118,9 @@ class AddPage extends Component {
     this.state.value.redirect = redirect;
     this.state.value.path = path;
     if (this.state.id) {
-      res = await this.resource.put(this.state.id, this.state.value);
+      res = await this.resource.put(this.state.id, { ...this.state.value, parent_page_id: parent_page_id === "root" ? null : parent_page_id });
     } else {
-      res = await this.resource.post(this.state.value);
+      res = await this.resource.post({ ...this.state.value, parent_page_id: parent_page_id === "root" ? null : parent_page_id });
     }
     if (res.success) {
       this.setState(state => {
@@ -143,6 +132,7 @@ class AddPage extends Component {
       });
     }
   }
+
   changeValue(value, field) {
     if (field === 'path') {
       value = value.split('\\').join('/');
@@ -155,11 +145,23 @@ class AddPage extends Component {
       }
     }
     this.setState(state => {
-      state = { ...state };
-      state.value[field] = value;
-      return state
+      const newState = _.cloneDeep(state);
+      newState.value[field] = value;
+      return newState;
     })
   }
+
+  parentChangeHandler = parentId => {
+    if (parentId === 'root') {
+      this.setState({ value: { ...this.state.value, parent_page_id: parentId, path: "/" } });
+    } else {
+      this.resource.get(parentId)
+        .then(({ path }) => this.setState({ value: { 
+          ...this.state.value, parent_page_id: parentId, path: path + (path.endsWith("/") ? "" : "/") + titleToPath(this.state.value.title) } 
+        }));
+    }
+  }
+
   render() {
     const { isModalOpened, editingDataSource } = this.state;
     if (this.state.redirectAfterSave) {
@@ -185,6 +187,40 @@ class AddPage extends Component {
               onChange={e => { this.changeValue(e.target.value, 'title') }}
               className="form-control" />
           </div>
+
+          <div className="form-group">
+            <label htmlFor="parent_page_id">Parent Page</label>
+            <select id="parent_page_id"
+              value={this.state.value.parent_page_id || ''}
+              onChange={e => {
+                // this.changeValue(e.target.value, 'parent_page_id');
+                this.parentChangeHandler(e.target.value);
+              }}
+              className="form-control"
+            >
+              <option value="" disabled />
+              <option value="root">Root</option>
+              {
+                this.state.pagesOptions.map(page => {
+                  return <option value={page.value} key={page.value}>{page.label}</option>
+                })
+              }
+            </select>
+            {/* <AltrpSelect id="parent_page_id"
+              // isMulti={true}
+              optionsRoute="/admin/ajax/pages_options"
+              placeholder=""
+              defaultOptions={[
+                {
+                  value: '',
+                  label: '',
+                }
+              ]}
+              value={this.state.value.parent_page_id || ''}
+              onChange={({ value }) => { this.parentChangeHandler(value) }}
+            /> */}
+          </div>
+
           <div className="form-group">
             <label htmlFor="page-path">Path</label>
             <input type="text" id="page-path" required={1}
@@ -221,6 +257,7 @@ class AddPage extends Component {
               }
             </select>
           </div>
+
           <div className="form-group">
             <label htmlFor="page-roles">Roles</label>
             <AltrpSelect id="page-roles"

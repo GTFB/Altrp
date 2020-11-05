@@ -195,6 +195,10 @@ class TypographicController extends Component {
         value: 'Open Sans',
         label: 'Open Sans'
       },
+      {
+        value: 'Montserrat',
+        label: 'Montserrat'
+      },
 
     ];
 

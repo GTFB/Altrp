@@ -66,6 +66,12 @@ function getSettings(settingName){
      */
     return _.isFunction(this.getDefaultValue) ? this.getDefaultValue() : '';
   }
+  /**
+   * Repeater не может менять своё значение при смене разрешения
+   */
+  if(this.props.type === 'repeater'){
+    return this.props.currentElement.getSettings(settingName);
+  }
   return this.props.currentElement.getSettings(settingName +
       getElementSettingsSuffix(this.props.controller))
 }
@@ -125,9 +131,9 @@ function conditionSubscriber() {
         return key.replace('!', '');
       }
     });
-    if(keys.indexOf(controllerValue.controlId)>=0){
+    // if(keys.indexOf(controllerValue.controlId)>=0){
       this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController() ;
-    }
+    // }
   }
 }
 
@@ -215,6 +221,6 @@ let controllerDecorate = function elementWrapperDecorate(component) {
   component.removeDynamicSettings = removeDynamicSettings.bind(component);
   component.openDynamicContent = openDynamicContent.bind(component);
   component.getSettings = getSettings.bind(component);
-  store.subscribe(component.conditionSubscriber);
+  store.subscribe(component.conditionSubscriber);//todo: изменить подписку на изменение хранилища
 };
 export default controllerDecorate;

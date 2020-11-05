@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.2",
         "ext-json": "*",
+        "chrisjean/php-ico": "^1.0",
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
         "ixudra/curl": "^6.20",
@@ -47,11 +48,13 @@
             "app/Helpers/functions.php"
         ],
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "Plugins\\":"Plugins"
         },
         "classmap": [
             "database/seeds",
-            "database/factories"
+            "database/factories",
+            "app/Plugins"
         ]
     },
     "autoload-dev": {

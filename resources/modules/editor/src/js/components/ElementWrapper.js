@@ -245,6 +245,8 @@ class ElementWrapper extends Component {
   }
 
   render() {
+    const elementHideTrigger = this.props.element.settings.hide_on_trigger;
+    const { isFixed } = this.props.element.getSettings();
 
     if(this.state.errorInfo){
       return  <div className="altrp-error">
@@ -295,8 +297,11 @@ class ElementWrapper extends Component {
         </div>
       );
     }
-    return (
-      <div
+    if (isFixed) {
+      classes += " fixed-section";
+    }
+
+    return elementHideTrigger && this.props.hideTriggers.includes(elementHideTrigger) ? null : <div
         className={classes}
         style={this.props.width}
         ref={this.wrapper}
@@ -352,7 +357,6 @@ class ElementWrapper extends Component {
         })}
         {emptyColumn}
       </div>
-    );
   }
 
   chooseElement(e) {
@@ -385,6 +389,7 @@ function mapStateToProps(state) {
     currentUser: state.currentUser,
     controllerValue: state.controllerValue,
     currentDataStorage: state.currentDataStorage,
+    hideTriggers: state.hideTriggers
   };
 }
 

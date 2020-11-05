@@ -31,24 +31,21 @@ class AltrpCarousel extends Component {
         img.url = img.url || '/img/nullImage.png';
 
         state.sliderImages.push(img.url);
-        return ({...state})
-      })
-    })
+        return ({...state});
+      });
+    });
   }
 
   componentDidUpdate(prevProps) {
     if(this.props.slides_repeater !== prevProps.slides_repeater) {
+      let sliderImagesArray = [];
       this.props.slides_repeater.forEach(image => {
-        this.setState((state) => {
-
-          let img = {...image.image_slides_repeater} || {};
-          img.url = img.url || '/img/nullImage.png';
-
-          state.sliderImages.push(img.url);
-          return ({...state})
-        })
-      })
-    }
+        let img = {...image.image_slides_repeater} || {};
+        img.url = img.url || '/img/nullImage.png';
+        sliderImagesArray.push(img.url);
+      });
+      this.setState((state) => ({...state, sliderImages: sliderImagesArray}));
+    };
   }
 
   next() {
@@ -75,36 +72,38 @@ class AltrpCarousel extends Component {
       </a>
     );
 
-    let dotsClasses = "altrp-carousel-dots"
+    let dotsClasses = "altrp-carousel-dots";
+
+    let sliderClasses = "altrp-carousel-slides";
 
     //позиция точек
     if(this.props.dots_navigation_content) {
       switch (this.props.dots_position_navigation_content) {
         case "topLeft":
           dotsClasses += " altrp-carousel-dots-top-left";
-          carouselContainerClasses += " altrp-carousel-dots-top-container";
-          break
+          sliderClasses += " altrp-carousel-slides-dots-top";
+          break;
         case "top":
           dotsClasses += " altrp-carousel-dots-top";
-          carouselContainerClasses += " altrp-carousel-dots-top-container";
-          break
+          sliderClasses += " altrp-carousel-slides-dots-top";
+          break;
         case "topRight":
           dotsClasses += " altrp-carousel-dots-top-right";
-          carouselContainerClasses += " altrp-carousel-dots-top-container";
-          break
+          sliderClasses += " altrp-carousel-slides-dots-top";
+          break;
         case "bottomLeft":
           dotsClasses += " altrp-carousel-dots-bottom-left";
-          carouselContainerClasses += " altrp-carousel-dots-bottom-container";
-          break
+          sliderClasses += " altrp-carousel-slides-dots-bottom";
+          break;
         case "bottom":
-          carouselContainerClasses += " altrp-carousel-dots-bottom-container";
-          break
+          sliderClasses += " altrp-carousel-slides-dots-bottom";
+          break;
         case "bottomRight":
           dotsClasses += " altrp-carousel-dots-bottom-right";
-          carouselContainerClasses += " altrp-carousel-dots-bottom-container";
+          sliderClasses += " altrp-carousel-slides-dots-bottom";
           break
-      };
-    };
+      }
+    }
 
     // настройки слайдера
     let settings = {
@@ -115,7 +114,7 @@ class AltrpCarousel extends Component {
       infinite: this.props.infinite_loop_additional_content,
       pauseOnHover: this.props.pause_on_interaction_loop_additional_content,
       autoplay: this.props.autoplay_additional_content,
-      className: "altrp-carousel-slides",
+      className: sliderClasses,
       autoplaySpeed: Number(this.props.transition_autoplay_duration_additional_content),
       speed: Number(this.props.transition_duration_additional_content),
       slidesToShow: Number(this.props.per_view_slides_content),
@@ -128,29 +127,37 @@ class AltrpCarousel extends Component {
     // слайды
     let slidesMap = slides.map((slide, idx) => {
 
-      let media = {...slide.image_slides_repeater} || {};
+      let media = slide.image_slides_repeater ? {...slide.image_slides_repeater} : {};
 
       media.url = media.url || '/img/nullImage.png';
       media.name = media.name || 'null';
       media.assetType = media.assetType || "mediaBackground";
       if(media.assetType === "media") {
-        media.assetType = "mediaBackground"
+        media.assetType = "mediaBackground";
       }
 
       return (
-        <div className="altrp-carousel-slide" key={idx}>
+        <div className="altrp-carousel-slide" key={idx}
+          onDoubleClick={ () => {
+            if(this.props.lightbox_slides_content) {
+              this.setState((state) => ({
+                ...state,
+                openLightBox: true
+              }))
+            }
+          }}
+        >
           {
             renderAsset(media, {
               className: "altrp-carousel-slide-img",
-              onDoubleClick: () => {
-                if(this.props.lightbox_slides_content) {
-                  this.setState((state) => ({
-                    ...state,
-                    openLightBox: true
-                  }))
-                }
-              }
             })
+          }
+          {
+            this.props.overlay_select_heading_additional_content === "text" ? (
+              <div className="altrp-carousel-slide-overlay">
+                <p className="altrp-carousel-slide-overlay-text">{slide.overlay_text_repeater}</p>
+              </div>
+            ) : null
           }
         </div>
       );
@@ -164,22 +171,22 @@ class AltrpCarousel extends Component {
 
     switch (this.props.arrows_position_navigation_content) {
       case "topLeft":
-        arrowsClasses += " altrp-carousel-arrow-top-left";
-        break
+        arrowsClasses += " altrp-carousel-arrow-top-left altrp-carousel-arrow-top-wrapper";
+        break;
       case "top":
-        arrowsClasses += " altrp-carousel-arrow-top"
-        break
+        arrowsClasses += " altrp-carousel-arrow-top altrp-carousel-arrow-top-wrapper"
+        break;
       case "topRight":
-        arrowsClasses += " altrp-carousel-arrow-top-right"
-        break
+        arrowsClasses += " altrp-carousel-arrow-top-right altrp-carousel-arrow-top-wrapper"
+        break;
       case "bottomLeft":
-        arrowsClasses += " altrp-carousel-arrow-bottom-left"
-        break
+        arrowsClasses += " altrp-carousel-arrow-bottom-left altrp-carousel-arrow-bottom-wrapper"
+        break;
       case "bottom":
-        arrowsClasses += " altrp-carousel-arrow-bottom"
-        break
+        arrowsClasses += " altrp-carousel-arrow-bottom altrp-carousel-arrow-bottom-wrapper"
+        break;
       case "bottomRight":
-        arrowsClasses += " altrp-carousel-arrow-bottom-right"
+        arrowsClasses += " altrp-carousel-arrow-bottom-right altrp-carousel-arrow-bottom-wrapper"
         break
     }
 
@@ -197,7 +204,6 @@ class AltrpCarousel extends Component {
     ) : "";
 
     let lightbox = "";
-
     if(this.props.lightbox_slides_content) {
 
       lightbox =  this.state.openLightBox ? (
@@ -211,21 +217,24 @@ class AltrpCarousel extends Component {
       ) : ""
 
     }
-
+    
     return <div className="altrp-carousel">
       {
         this.props.lightbox_slides_content ? lightbox : ""
       }
       { this.props.arrows_position_navigation_content === "center" ?
         prevArrow
-        : (
-         <div className={"altrp-carousel-arrows-container" + arrowsClasses}>
-           {prevArrow}
-           {nextArrow}
-         </div>
-        )
+        : ""
       }
       <div className={carouselContainerClasses}>
+        {
+          this.props.arrows_position_navigation_content !== "center" ? (
+            <div className={"altrp-carousel-arrows-container" + arrowsClasses}>
+              {prevArrow}
+              {nextArrow}
+            </div>
+          ) : ""
+        }
         <Slider ref={c => (this.slider = c)} {...settings}>
           {
             slidesMap

@@ -4,6 +4,7 @@ namespace App;
 
 use App\Constructor\Template;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class PagesTemplate extends Model
 {
@@ -23,17 +24,21 @@ class PagesTemplate extends Model
    */
   public static function import( $imported_data = [] )
   {
-    foreach ( $imported_data as $imported_datum ) {
-      if( self::where([
-        'page_guid' => $imported_datum['page_guid'],
-        'template_guid' => $imported_datum['template_guid'],
-        'condition_type' => $imported_datum['condition_type'],
-      ])->first() ){
-        continue;
+    foreach ( self::all() as $item ) {
+      try {
+        $item->delete();
+      } catch (\Exception $e){
+        Log::error( $e->getMessage() );
+        continue;//
       }
+    }
+    foreach ( $imported_data as $imported_datum ) {
       $new_data =  new self( $imported_datum );
       $template = Template::where( 'guid', $imported_datum['template_guid'] )->first();
       $page = Page::where( 'guid', $imported_datum['page_guid'] )->first();
+      if( ! ( $page && $template ) ){
+        continue;
+      }
       $area = Area::find( $template->area );
       if( ! ( $area && $page && $template ) ){
         continue;
@@ -41,7 +46,12 @@ class PagesTemplate extends Model
       $new_data->template_type = $area->name;
       $new_data->template_id = $template->id;
       $new_data->page_id = $page->id;
-      $new_data->save();
+      try {
+        $new_data->save();
+      } catch (\Exception $e){
+        Log::error( $e->getMessage(), $imported_datum );
+        continue;//
+      }
     }
   }
 

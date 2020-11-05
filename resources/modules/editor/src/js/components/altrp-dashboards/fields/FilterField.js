@@ -2,16 +2,18 @@ import React, { useState, useEffect, useCallback } from "react";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 
-function FilterField({ widget, setWidget, param }) {
+function FilterField({ widget, setWidget, param, changeTitle }) {
   const [options, setOptions] = useState([]);
   //const [selected, setSelected] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const getOptions = useCallback(
     async (param) => {
+      console.log('KOSTYA =>', param);
       setIsLoading(true);
       const req = await axios(`/ajax/models/queries/${param.model}/${param.value}`);
       if (req.status === 200) {
+        console.log(req.data.data);
         setOptions(req.data.data);
         setIsLoading(false);
       }
@@ -30,8 +32,15 @@ function FilterField({ widget, setWidget, param }) {
         as="select"
         custom
         value={widget.filter?.[param.value] || ""}
-        onChange={(e) =>
+        onChange={(e) => {
+          let oldParam = widget.filter[param.value] || {};
+          let findLabel = options.find(option => option.value == oldParam);
+          let oldLabel = typeof findLabel !== 'undefined' ? findLabel.label : false;
+          console.log(oldLabel, '<---');
           setWidget({ ...widget, filter: { ...widget.filter, [param.value]: e.target.value } })
+          let paramName = options.find(option => option.value == e.target.value).label || '';
+          changeTitle(` / ${paramName}`, ` / ${oldLabel}`);
+        }
         }
         required
       >

@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {renderAsset, renderAssetIcon} from "../../../../../front-app/src/js/helpers";
+import TemplateLoader from "../template-loader/TemplateLoader";
 
 class TabsWidget extends Component {
   constructor(props){
@@ -8,7 +9,8 @@ class TabsWidget extends Component {
     this.switcher = this.switcher.bind(this)
     this.state = {
       settings: props.element.getSettings(),
-      switcher: false
+      switcher: false,
+      activeTab: 0
     };
     props.element.component = this;
     if(window.elementDecorator){
@@ -25,14 +27,15 @@ class TabsWidget extends Component {
       collectionTabs.children[i].classList.remove("altrp-tab-show");
       e.currentTarget.parentNode.children[i].classList.remove("active");
     }
-
     currentTab.classList.add("altrp-tab-show");
-    e.currentTarget.classList.add("active");
+    // e.currentTarget.classList.add("active");
+    this.setState(state=>({...state, activeTab: Number(button.dataset.key) || 0}))
   }
 
   switcher() {
     this.setState({switcher: !this.state.switcher});
   }
+
 
   render(){
     let tab = null;
@@ -59,9 +62,9 @@ class TabsWidget extends Component {
       if(this.state.settings.items_tabs) {;
         tabs = this.state.settings.items_tabs.map((tab, idx) => {
 
-          let iconStyles = {}
+          let iconStyles = {};
 
-          if(this.state.settings.alignment_icon_style == "left") {
+          if(this.state.settings.alignment_icon_style === "left") {
             iconStyles = {paddingRight: this.state.settings.spacing_icon_style.size + this.state.settings.spacing_icon_style.unit}
           } else {
             iconStyles = {paddingLeft: this.state.settings.spacing_icon_style.size + this.state.settings.spacing_icon_style.unit}
@@ -73,7 +76,12 @@ class TabsWidget extends Component {
             })}</div>
           }
 
-          return<button data-key={idx} className={"altrp-tab-btn" + buttonClasses} onClick={this.show} key={idx}>{this.state.settings.alignment_icon_style == "left" ? icon : null}<p>{tab.title_and_content_items}</p>{this.state.settings.alignment_icon_style == "right" ? icon : null}</button>
+          return<button data-key={idx}
+                        className={"altrp-tab-btn"
+                          + buttonClasses
+                          + (this.state.activeTab === idx ? ' active' : '') }
+                        onClick={this.show}
+                        key={idx}>{this.state.settings.alignment_icon_style == "left" ? icon : null}<p>{tab.title_and_content_items}</p>{this.state.settings.alignment_icon_style == "right" ? icon : null}</button>
         });
       };
 
@@ -85,7 +93,11 @@ class TabsWidget extends Component {
             show = "altrp-tab-show";
           }
 
-          return<div data-key={idx} className={"altrp-tab " + show} key={idx}>{tab.wysiwyg_items}</div>
+          return<div data-key={idx} className={"altrp-tab " + show} key={idx}>{
+            tab.card_template ?
+                <TemplateLoader templateId={tab.card_template}/>
+                : tab.wysiwyg_items
+          }</div>
         });
       };
 

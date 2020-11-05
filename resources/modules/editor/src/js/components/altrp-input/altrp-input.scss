@@ -1,0 +1,21 @@
+.altrp-field-file{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  &__field{
+    display: none;
+  }
+  &__placeholder{
+    display: none;
+  }
+  &_empty{
+    & .altrp-field-file__placeholder{
+      display: block;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      background-color: rgb(52,59,76);
+      color: #fff;
+    }
+  }
+}

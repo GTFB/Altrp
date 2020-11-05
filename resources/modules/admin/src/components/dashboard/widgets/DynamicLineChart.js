@@ -17,24 +17,40 @@ import EmptyWidget from "./EmptyWidget";
 import { getWidgetData } from "../services/getWidgetData";
 import { customStyle } from "../widgetTypes";
 
-const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3 }) => {
+const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3, dataSource = [] }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
 
   const getData = useCallback(async () => {
     setIsLoading(true);
-    const charts = await getWidgetData(widget.source, widget.filter);
-    if (charts.status === 200) {
-      const newData = charts.data.data.map((item) => {
-        const key = new Date(item.key);
-        if (key) {
+    if (dataSource.length == 0) {
+      const charts = await getWidgetData(widget.source, widget.filter);
+      if (charts.status === 200) {
+        const newData = charts.data.data.map((item) => {
+          const key = new Date(item.key);
+          if (key) {
+            return {
+              key,
+              data: item.data,
+            };
+          }
+        });
+        setData(newData);
+        setIsLoading(false);
+      }
+    }
+    else {
+      const newData = dataSource.map((item) => {
+        let key = new Date(item.key);
+        if (key instanceof Date && !isNaN(key)) {
           return {
-            key,
-            data: item.data,
+            key: key,
+            data: Number(item.data),
           };
         }
-      });
-      setData(newData);
+      }).filter(item => typeof item != 'undefined');
+
+      setData(newData || []);
       setIsLoading(false);
     }
   }, [widget]);
@@ -70,7 +86,7 @@ const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3 }
     <>
       <LineChart
         height={height}
-        width={width}
+        // width={width}
         data={data}
         xAxis={
           <LinearXAxis
@@ -79,8 +95,6 @@ const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3 }
               <LinearXAxisTickSeries
                 label={
                   <LinearXAxisTickLabel
-                    //fontSize={12}
-                    //fill="#000000"
                     format={formattingDate}
                   />
                 }

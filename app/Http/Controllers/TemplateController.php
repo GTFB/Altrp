@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 
 class TemplateController extends Controller
 {
@@ -22,18 +23,26 @@ class TemplateController extends Controller
     public function index( Request $request )
     {
       $page_count = 1;
+      $search = $request->get('s');
+      $orderColumn = $request->get('order_by') ?? 'id';
+      $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
+      $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
       if ( ! $request->get( 'page' ) ) {
-        $_templates = Template::where( 'type', '!=', 'review' )->get()->sortByDesc( 'id' )->values();
+        $_templates = $search
+           ? Template::getBySearchWhere([['type', '!=', 'review']], $search, $orderColumn, $orderType)
+            : Template::where( 'type', '!=', 'review' )->get()->$sortType( $orderColumn )->values();
       } else {
         $page_size = $request->get( 'pageSize', 10 );
         $area_name = $request->get( 'area', 'content' );
-        $_templates = Template::where( 'type', '!=', 'review' )
-          ->join( 'areas', 'areas.id', '=', 'templates.area' )
+        $_templates = $search
+            ? Template::getBySearchAsObject($search, 'templates')->where( 'type', '!=', 'review' )
+            : Template::where( 'type', '!=', 'review' );
+        $_templates = $_templates->join( 'areas', 'areas.id', '=', 'templates.area' )
           ->where( 'areas.name', $area_name )
           ->offset( $page_size * ( $request->get( 'page' ) - 1 ) )
           ->limit( $page_size );
         $page_count = $_templates->toBase()->getCountForPagination();
-        $_templates = $_templates->get( 'templates.*' )->sortByDesc( 'id' )->values();
+        $_templates = $_templates->get( 'templates.*' )->$sortType( $orderColumn )->values();
 
         $page_count = ceil( $page_count / $page_size );
       }
@@ -85,9 +94,15 @@ class TemplateController extends Controller
 
         $options = [];
 
+        if( $request->get( 'template_type' ) ){
+          $templates = $templates->filter( function( Template $template) use ( $request ){
+            return $template->template_type === $request->get( 'template_type' );
+          } );
+        }
+        $value_field = $request->get( 'value', 'id' );
         foreach ($templates as $template) {
             $options[] = [
-                'value' => $template->id,
+                'value' => data_get( $template, $value_field, $template->id ),
                 'label' => $template->title,
             ];
         }
@@ -191,9 +206,16 @@ class TemplateController extends Controller
      */
     public function show_frontend(string $template_id)
     {
+      if( Uuid::isValid( $template_id ) ){
+        $template = Template::where( 'guid', $template_id )->first();
+      } else {
         $template = Template::find($template_id);
-
-        return response()->json( $template->toArray() );
+      }
+      if( ! $template ){
+        return response()->json( ['success' => false, 'message' => 'Template not found'], 404, JSON_UNESCAPED_UNICODE );
+      }
+      $template->check_elements_conditions();
+      return response()->json( $template->toArray() );
     }
     /**
      * Show the form for editing the specified resource.
@@ -354,6 +376,10 @@ class TemplateController extends Controller
    * @return \Illuminate\Http\JsonResponse
    */
   public function settingSet( $template_id, $setting_name, Request $request ){
+    $template = Template::find( $template_id );
+    if( ! $template ){
+      return response()->json( ['message' => 'Template not Found'], 404, [], JSON_UNESCAPED_UNICODE );
+    }
     $setting = TemplateSetting::where( [
       'template_id' => $template_id,
       'setting_name' => $setting_name,
@@ -362,6 +388,7 @@ class TemplateController extends Controller
       $setting = new TemplateSetting( [
         'template_id' => $template_id,
         'setting_name' => $setting_name,
+        'template_guid' => $template->guid,
         'data' => $request->get( 'data' ),
       ] );
     } else {
@@ -395,7 +422,10 @@ class TemplateController extends Controller
    * @return \Illuminate\Http\JsonResponse
    */
   public function conditionsSet( $template_id, Request $request ){
-
+    $template = Template::find( $template_id );
+    if( ! $template ){
+      return response()->json( ['message' => 'Template not Found'], 404, [], JSON_UNESCAPED_UNICODE );
+    }
     /**
      * Сначала сохраним сами настройки
      */
@@ -407,6 +437,7 @@ class TemplateController extends Controller
       $setting = new TemplateSetting( [
         'template_id' => $template_id,
         'setting_name' => 'conditions',
+        'template_guid' => $template->guid,
         'data' => $request->get( 'data' ),
       ] );
     } else {
@@ -430,11 +461,11 @@ class TemplateController extends Controller
           JSON_UNESCAPED_UNICODE );
       }
       $template->pages()->detach();
-      foreach ( $request->get( 'data' ) as $datum ) {
+      foreach ( $request->get( 'data', [] ) as $datum ) {
 
         switch ($datum['object_type']) {
           case 'all_site';{
-            $template->all_site = $datum['condition_type'] !== 'exclude';
+            $template->all_site = $datum['condition_type'] === 'include';
             if( ! $template->save() ){
               return response()->json( ['message' => 'Conditions "all_site" not Saved'],
                 500,
@@ -454,14 +485,14 @@ class TemplateController extends Controller
                 'condition_type' => $datum['condition_type'],
                 'template_type' => $template->template_type
               ]);
+              if( ! $pages_template->save() ){
+                return response()->json( ['message' => 'Conditions "page" not Saved'],
+                  500,
+                  [],
+                  JSON_UNESCAPED_UNICODE );
+              }
             }
-            if( ! $pages_template->save() ){
-              return response()->json( ['message' => 'Conditions "page" not Saved'],
-                500,
-                [],
-                JSON_UNESCAPED_UNICODE );
-            }          }
-            break;
+          }break;
 
         }
       }

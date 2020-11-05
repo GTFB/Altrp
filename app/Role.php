@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Traits\Paginate;
+use App\Traits\Searchable;
 use Laratrust\Models\LaratrustRole;
 
 class Role extends LaratrustRole
 {
+    use Searchable, Paginate;
     //
   protected $fillable = [
     'name',

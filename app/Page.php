@@ -5,11 +5,13 @@ namespace App;
 use App\Altrp\Source;
 use App\Altrp\Model as AltrpModel;
 use App\Constructor\Template;
+use App\Traits\Searchable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Mockery\Exception;
@@ -24,7 +26,7 @@ use Mockery\Exception;
 class Page extends Model
 {
   //
-  use SoftDeletes;
+  use SoftDeletes, Searchable;
   protected $fillable = [
     'title',
     'author',
@@ -34,6 +36,7 @@ class Page extends Model
     'redirect',
     'guid',
     'for_guest',
+    'parent_page_id'
   ];
 
   /**
@@ -49,8 +52,11 @@ class Page extends Model
       return $pages;
     }
     try{
-      $pages = Page::all()->map->only( [ 'path' ] )->map( function ( $path ) {
-        return $path['path'];
+      $pages = Page::all()->map->only( [ 'path','title' ] )->map( function ( $path ) {
+        return [
+          'path'=>$path['path'],
+          'title'=>$path['title']
+        ];
       } )->toArray();
     } catch (Exception $e){
     }
@@ -429,19 +435,32 @@ class Page extends Model
       }
       $old_page = self::where( 'guid', $imported_page['guid'] )->first();
       if( $old_page ){
-        $old_page->model_id = $model_id;
-        $old_page->redirect = $imported_page['redirect'];
-        $old_page->content = $imported_page['content'];
-        $old_page->path = $imported_page['path'];
-        $old_page->title = $imported_page['title'];
-        $old_page->for_guest = $imported_page['for_guest'];
-        $old_page->author = Auth::user()->id;
+        if( strtotime( $imported_page['updated_at'] ) > strtotime( $old_page->updated_at ) ) {
+          $old_page->model_id = $model_id;
+          $old_page->redirect = $imported_page['redirect'];
+          $old_page->content = $imported_page['content'];
+          $old_page->path = $imported_page['path'];
+          $old_page->title = $imported_page['title'];
+          $old_page->for_guest = $imported_page['for_guest'];
+          $old_page->author = Auth::user()->id;
+          try {
+            $old_page->save();
+          } catch ( \Exception $e ) {
+            Log::error( $e->getMessage(), $imported_page ); //
+            continue;
+          }
+        }
         continue;
       }
       $new_page = new self( $imported_page );
       $new_page->author = Auth::user()->id;
       $new_page->model_id = $model_id;
-      $new_page->save();
+      try {
+        $new_page->save();
+      } catch (\Exception $e){
+        Log::error( $e->getMessage(), $imported_page ); //
+        continue;
+      }
     }
   }
 }

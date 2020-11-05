@@ -1,19 +1,27 @@
 import React, {Component} from "react";
 import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 import appStore from "../store/store"
-import {conditionsChecker} from "../helpers";
+import {altrpCompare, conditionsChecker} from "../helpers";
+import {addElement} from "../store/elements-storage/actions";
 
 class ElementWrapper extends Component {
   constructor(props){
     super(props);
     this.state = {
-      currentModel: appStore.getState().currentModel,
-      currentUser: appStore.getState().currentUser,
-      currentDataStorage: appStore.getState().currentDataStorage,
-      formsStore: appStore.getState().formsStore,
+      // currentModel: appStore.getState().currentModel,
+      // currentUser: appStore.getState().currentUser,
+      // currentDataStorage: appStore.getState().currentDataStorage,
+      // altrpresponses: appStore.getState().altrpresponses,
       elementDisplay: true,
     };
-    appStore.subscribe(this.updateStore)
+    this.elementWrapperRef = React.createRef();
+    // console.log(props.element.getName());
+    // console.error(window._i = window._i ? ++window._i  : 1);
+    // console.log('constructor');
+
+    appStore.dispatch(addElement(this));
+    // appStore.subscribe(this.updateStore);
   }
 
   /**
@@ -50,13 +58,19 @@ class ElementWrapper extends Component {
       this.setState(state => ({...state, currentDataStorage: appStore.getState().currentDataStorage}));
     }
 
-    if((this.props.element.getName() === 'input') && this.state.formsStore !== appStore.getState().formsStore){
-      // console.log(this.state.formsStore);
-      // console.log(appStore.getState().formsStore);
-      this.setState(state => ({...state, formsStore: appStore.getState().formsStore}));
-    }
   };
 
+  /**
+   * Вернет HTMLElement, в котором записаны css стили текущего компонента
+   * @return {null | HTMLElement}
+   */
+  getStylesHTMLElement(){
+    if(! _.get(window, 'stylesModule.stylesContainer.current')){
+      return null;
+    }
+
+    return window.stylesModule.stylesContainer.current.getElementsByClassName(`altrp-styles${this.props.element.getId()}`)[0] || null;
+  }
   /**
    * Нужно ли обновить отображение обертки элементов
    */
@@ -72,11 +86,10 @@ class ElementWrapper extends Component {
      * @member {FrontElement} element
      */
     const {element} = this.props;
-    if(! element.getSettings('conditional_other')){
+    if((! element.getSettings('conditional_other'))){
       return;
     }
     let conditions = element.getSettings('conditions',[]);
-    // console.log(this.state.currentModel);
     conditions = conditions.map(c=>{
       const {
         conditional_model_field: modelField,
@@ -91,13 +104,49 @@ class ElementWrapper extends Component {
     });
     let elementDisplay = conditionsChecker(conditions,
         element.getSettings('conditional_other_display') === 'AND',
-        this.state.currentModel);
+        this.props.element.getCurrentModel(), true);
+
     if(this.state.elementDisplay === elementDisplay){
       return;
     }
+
     this.setState(({
-      elementDisplay
+      elementDisplay,
     }));
+  }
+
+  /**
+   * Переключает видимость элемента
+   */
+  toggleElementDisplay(){
+    this.setState(state=>({...state, elementDisplay: !state.elementDisplay}))
+  }
+  /**
+   * Метод для проверки видимости поля формы
+   * @return {boolean}
+   */
+  inputIsDisplay(){
+    const {formsStore} = this.state;
+    const formId = this.props.element.getSettings('form_id', '');
+    const logic = this.props.element.getSettings('form_condition_display_on', 'AND');
+    const formConditions = this.props.element.getSettings('form_conditions', []);
+    let display = true;
+    formConditions.forEach(c=>{
+      if(logic === 'AND'){
+        display *= altrpCompare(
+          _.get(formsStore,`${formId}.${c.field_id}`),
+          c.value,
+          c.operator
+        );
+      } else {
+        display += altrpCompare(
+            _.get(formsStore,`${formId}.${c.field_id}`),
+            c.value,
+            c.operator
+        );
+      }
+    });
+    return display;
   }
 
   render() {
@@ -107,9 +156,10 @@ class ElementWrapper extends Component {
       hide_on_laptop,
       hide_on_tablet,
       hide_on_big_phone,
-      hide_on_small_phone 
+      hide_on_small_phone,
+      hide_on_trigger,
+      isFixed
     } = this.props.element.settings;
-
     let classes = `altrp-element altrp-element${this.props.element.getId()} altrp-element_${this.props.element.getType()}`;
     classes += this.props.element.getPrefixClasses() + " ";
     if(this.props.element.getType() === 'widget'){
@@ -133,6 +183,9 @@ class ElementWrapper extends Component {
     if (hide_on_small_phone) {
       classes += ' hide_on_small_phone';
     }
+    if (isFixed) {
+      classes += " fixed-section";
+    }
     if(this.state.errorInfo){
       return  <div className="altrp-error">
         <h2>Something went wrong.</h2>
@@ -145,18 +198,26 @@ class ElementWrapper extends Component {
     }
     const styles = {};
     if(! this.state.elementDisplay){
+
       styles.display = 'none';
     }
-    return <div className={classes} style={styles}>
+    const CSSId = this.props.element.getSettings('advanced_element_id', '');
+    return hide_on_trigger && this.props.hideTriggers.includes(hide_on_trigger) ? null : <div className={classes}
+                ref={this.elementWrapperRef}
+                style={styles}
+                id={CSSId}>
       {
         React.createElement(this.props.component, {
+          ElementWrapper: this.props.ElementWrapper,
           element: this.props.element,
           children: this.props.element.getChildren(),
           match: this.props.match,
-          currentModel: this.state.currentModel,
-          currentUser: this.state.currentUser,
-          currentDataStorage: this.state.currentDataStorage,
-          formsStore: this.state.formsStore,
+          currentModel: this.props.currentModel,
+          currentUser: this.props.currentUser,
+          currentDataStorage: this.props.currentDataStorage,
+          altrpresponses: this.props.altrpresponses,
+          formsStore: this.props.formsStore,
+          elementDisplay: this.state.elementDisplay,
           appStore
         })
       }
@@ -164,4 +225,15 @@ class ElementWrapper extends Component {
   }
 }
 
-export default withRouter(ElementWrapper);
+function mapStateToProps(state) {
+  return {
+    hideTriggers: state.hideTriggers,
+    altrpresponses: state.altrpresponses,
+    formsStore: state.formsStore,
+    currentDataStorage: state.currentDataStorage,
+    currentModel: state.currentModel,
+    currentUser: state.currentUser,
+  };
+}
+
+export default connect(mapStateToProps)(withRouter(ElementWrapper));

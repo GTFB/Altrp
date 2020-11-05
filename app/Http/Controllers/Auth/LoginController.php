@@ -110,6 +110,6 @@ class LoginController extends Controller
       ?: (( $request->get( 'altrp_ajax' ) ) ? response()->json([
         'success' => true,
         'reload' => true,
-      ]) : redirect( '/' ));
+      ]) : redirect( )->intended('/'));
   }
 }

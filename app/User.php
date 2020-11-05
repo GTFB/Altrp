@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Traits\Searchable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -14,6 +15,7 @@ class User extends Authenticatable
     use LaratrustUserTrait;
     use Notifiable;
     use HasApiTokens;
+    use Searchable;
 
     protected $table = 'users';
 
@@ -52,7 +54,7 @@ class User extends Authenticatable
 
     /**
      * Получение данных о пользователе
-     * @return type
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     function usermeta() {
         return $this->hasOne(UserMeta::class, 'user_id');
@@ -60,11 +62,34 @@ class User extends Authenticatable
 
     /**
      * Получение данных о пользователе
-     * @return type
+     * @return string
      */
     public function getFullNameAttribute() {
         if(!$this->usermeta) return "";
 
         return $this->usermeta->first_name." ".$this->usermeta->second_name;
+    }
+
+    /**
+     * Связь пользователей с ролями
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'role_user');
+    }
+
+    /**
+     * Проверять, является ли пользователь админом
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        foreach ($this->roles()->get() as $role) {
+            if ($role->name == 'admin') {
+                return true;
+            }
+        }
+        return false;
     }
 }

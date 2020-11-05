@@ -39,6 +39,7 @@ class Accessor extends Model
            * @var self $altrp_accessor
            */
           $altrp_accessor->fill( $imported_accessor );
+          $altrp_accessor->model_id = $model->id;
           $altrp_accessor->user_id = auth()->user()->id;
           try {
             $altrp_accessor->save();

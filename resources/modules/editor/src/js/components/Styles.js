@@ -6,6 +6,7 @@ class Styles extends Component {
     this.state = {
       elementStyles: []
     };
+    this.stylesContainer = React.createRef();
     window.stylesModule = this;
     window.stylesModuleResolve(this);
   }
@@ -37,9 +38,13 @@ class Styles extends Component {
     })
   }
   render(){
-    return <div className="styles-container">
-      {this.state.elementStyles.map(elementStyle => {
-        return<style data-styles-id={elementStyle.elementId} key={elementStyle.elementId}>{elementStyle.styles}</style>
+    let elementStyles = _.uniqBy(this.state.elementStyles, 'elementId');
+    return <div className="styles-container" id="styles-container" ref={this.stylesContainer}>
+      {elementStyles.map(elementStyle => {
+        return<style data-styles-id={elementStyle.elementId}
+                     id={`altrp-styles${elementStyle.elementId}`}
+                     className={`altrp-styles${elementStyle.elementId}`}
+                     key={elementStyle.elementId}>{elementStyle.styles}</style>
       })}
     </div>
   }

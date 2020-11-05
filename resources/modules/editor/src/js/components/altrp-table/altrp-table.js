@@ -1,5 +1,5 @@
 import React, {useCallback, useState, useEffect} from "react";
-import {useTable, useSortBy} from "react-table";
+import {useTable, useGroupBy} from "react-table";
 import {useQuery, usePaginatedQuery, queryCache} from  "react-query";
 import '../../../sass/altrp-pagination.scss';
 import {Link} from "react-router-dom";
@@ -7,10 +7,11 @@ import {
   extractPathFromString,
   getDataByPath, getObjectByPrefix,
   isEditor, mbParseJSON,
-  parseURLTemplate
+  parseURLTemplate, renderAsset, replaceContentWithData
 } from "../../../../../front-app/src/js/helpers";
 import {iconsManager} from "../../../../../admin/src/js/helpers";
 import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput";
+
 
 /**
  *
@@ -39,21 +40,35 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
       defaultSortSettings.order = _.get(column, 'column_is_default_sorted_direction', 'ASC')
     }
   });
+  let groupBy = React.useMemo(
+      ()=> {
+        return _.get(settings, 'group_by_column_name') ? _.get(settings, 'group_by_column_name') : getGroupBy(settings.tables_columns)
+      }, [settings]
+      );
+
   const [page, setPage] = useState(1);
 
   let counter = query.getCounterStart(page);
   let _data =[], _status, _error, _latestData;
 
+  const collapsing = React.useMemo(()=>settings.group_collapsing);
+  const collapsedInitiate = [];
+  const [collapsedGroups, setCollapsedGroups] = React.useState(collapsedInitiate);
   const [updatedData, setUpdatedData] = useState({});
   const [sortSetting, setSortSettings] = useState(defaultSortSettings);
   const [filterSetting, setFilterSettings] = useState({});
   const [doubleClicked, setDoubleClicked] =  useState({});
+  const groupingStore = [];
   const filterSettingJSON = JSON.stringify(filterSetting);
-  const fetchModels = useCallback(async (key, page = 1, sortSetting, filterSetting) => {
+  const fetchModels = useCallback(async (key, page = 1, sortSetting, filterSetting, params,  groupBy) => {
     let queryData = {page};
     const filterSettingJSON = JSON.stringify(filterSetting);
     if(sortSetting){
       queryData = _.assign(sortSetting, queryData);
+    }
+    if(groupBy){
+      queryData.order = 'ASC';
+      queryData.order_by = groupBy;
     }
     if(filterSettingJSON.length > 2){
       queryData.filters = filterSettingJSON;
@@ -75,7 +90,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
       resolvedData,
       latestData,
       error,
-    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting, query.getParams()],
+    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting, query.getParams(), groupBy],
         fetchModels,
         useQuerySettings);
     _data = resolvedData ? resolvedData : _data;
@@ -93,7 +108,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
      */
     const {status, data, error,} = useQuery([query.dataSourceName,query.getParams()],
         () => {
-      return query.getResource().getQueried({...sortSetting,filters: filterSettingJSON})
+      return query.getResource().getQueried({...sortSetting,filters: filterSettingJSON, groupBy})
     }, useQuerySettings);
     _data = data;
     _status = status;
@@ -101,11 +116,11 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
   }
   let columns = [];
   columns = settingsToColumns(settings);
+  if(_.isObject(_data) && ! _.isArray(_data)){
+    _data = [_data];
+  }
   if(! _data.length){
     _data = data;
-  }
-  if(! _.isArray(_data)){
-    _data = [_data];
   }
   /**
    * обновление данных при изменении ячейки
@@ -158,7 +173,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
     setFilterSettings(filterParams);
   };
   
-  return <><table className="altrp-table" {...getTableProps()}>
+  return <><table className={"altrp-table altrp-table_columns-" + columns.length} {...getTableProps()}>
     <thead className="altrp-table-head">
     {renderAdditionalRows(settings)}
     {headerGroups.map(headerGroup => (
@@ -181,10 +196,17 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
           let rowStyles = _.get(settings, 'field_name_for_row_styling');
           rowStyles = _.get(row.original, rowStyles, '');
           rowStyles = mbParseJSON(rowStyles, {});
-          return (
+
+          return (<React.Fragment key={row.id}>
+                {renderGroupingTr(row, groupBy, groupingStore, settings, collapsing, setCollapsedGroups, collapsedGroups)}
             <tr {...row.getRowProps()}
                 style={rowStyles}
-                className={`altrp-table-tr ${settings.table_hover_row ? 'altrp-table-background' : ''}`}>
+                className={`altrp-table-tr ${settings.table_hover_row ? 'altrp-table-background' : ''} ${
+                  /**
+                   * Проверка нужно ли скрыть эту строку
+                   */
+                    (collapsing && (collapsedGroups.indexOf(_.last(groupingStore)) !== -1)) ? 'altrp-d-none' : ''
+                    }`}>
               {row.cells.map((cell, _i) => {
                 let cellContent = cell.render('Cell');
                 let linkTag = isEditor() ? 'a': Link;
@@ -223,7 +245,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
                     }
                   };
                 }
-                let cellClassName = 'altrp-table-td';
+                let cellClassName = `altrp-table-td ${cell.column.column_body_alignment ? `altrp-table-td_alignment-${cell.column.column_body_alignment}` : '' } `;
                 if(doubleClicked.column === columns[_i]._accessor && row.original.id === doubleClicked.rowId){
                   cellClassName += ' altrp-table-td_double-clicked';
                 }
@@ -243,9 +265,9 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
                 /**
                  * Если в настройках колонки есть url, и в данных есть id, то делаем ссылку
                  */
-                if(columns[_i].column_link && row.original.id){
+                if(columns[_i].column_link){
                   cellContent = React.createElement(linkTag, {
-                    to: parseURLTemplate(columns[_i].column_link,  row.original),
+                    to: parseURLTemplate(columns[_i].column_link, row.original),
                     className: 'altrp-inherit altrp-table-td__default-content',
                     dangerouslySetInnerHTML: {
                       __html: cell.value
@@ -262,7 +284,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
                 /**
                  * Если нужно указать номер по порядку
                  */
-                if(cell.column._accessor.trim() === '##'){
+                if(cell.column._accessor && cell.column._accessor.trim() === '##'){
                   cellContent = counter++;
                 }
                 let cellStyles = _.get(cell, 'column.column_styles_field');
@@ -270,7 +292,14 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
                 cellStyles = mbParseJSON(cellStyles, {});
 
                 style = _.assign(style, cellStyles);
-
+                /**
+                 * Если есть actions, то надо их вывести
+                 */
+                if(_.isArray(_.get(cell,'column.actions'))){
+                  return <td {...cellProps}
+                             className={cellClassName}
+                             style={style}>{renderCellActions(cell, row)}</td>
+                }
                 if(_.isString(cellContent) && ! doubleClickContent){
                   return <td {...cellProps}
                              className={cellClassName}
@@ -286,10 +315,11 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
                     {cellContent}{doubleClickContent}
                   </td>
               })}
-            </tr>
+            </tr></React.Fragment>
           )
       })}
     </tbody>
+    {renderFooter(settings, _data)}
   </table>
     {((query.paginationType === 'prev-next') && query.pageSize) ?
       <div className="altrp-pagination">
@@ -336,7 +366,10 @@ function settingsToColumns(settings) {
    * Если в колонке пустые поля, то мы их игнорируем, чтобы не было ошибки
    */
   tables_columns.forEach(_column => {
-    if (_column.column_name && _column.accessor) {
+    /**
+     * Колонку проказываем, если есть accessor или список actions
+     */
+    if (_column.column_name && ((_column.actions && _column.actions.length) || _column.accessor)) {
       _column._accessor = _column.accessor;
       columns.push(_column);
     }
@@ -414,4 +447,198 @@ function renderTh({column, sortSetting, sortingHandler, filterSetting, filterHan
     </label>}
 
   </th>
+}
+
+/**
+ * Получить поле для группировки строк
+ * @param {array} columns - array({
+ *  group_by:{boolean},
+ *  accessor:{string},
+ * })
+ *
+ * @return {string|null}
+ */
+function getGroupBy(columns){
+  let groupBy = null;
+  columns.forEach(column=>{
+    if(column.group_by){
+      groupBy = column.accessor;
+    }
+  });
+  return groupBy;
+}
+
+/**
+ * Выводит группирующую строку в таблице
+ * @params {{}} row
+ * @params {null|string} row
+ * @params {array} groupingStore
+ * @params {{}} settings
+ * @params {boolean} collapsing
+ * @params {function} setCollapsedGroups
+ * @params {array} collapsedGroups
+ * @return {string|React.Component}
+ */
+function renderGroupingTr(row, groupBy, groupingStore, settings = {}, collapsing, setCollapsedGroups, collapsedGroups){
+  if(! groupBy){
+    return null;
+  }
+  let text = _.get(row, 'original.' + groupBy, '');
+  if(! text){
+    text = _.get(settings, 'group_default_text', '');
+  }
+  if(groupingStore.indexOf(text) >= 0){
+    return null;
+  }
+  groupingStore.push(text);
+  let collapsed = (collapsedGroups.indexOf(text) !== -1);
+  let {collapsed_icon, expanded_icon} = settings;
+  /**
+   * С сервера может приходить массив если иконка удалена
+   */
+  if(_.isArray(collapsed_icon)){
+    collapsed_icon = null;
+  }
+  if(_.isArray(expanded_icon)){
+    expanded_icon = null;
+  }
+  return text ? <tr className="altrp-table-tr" >
+    <td colSpan={_.get(row, 'cells.length', 1)}
+        onClick={()=>{
+          collapsing && toggleGroup(text, setCollapsedGroups, collapsedGroups)
+        }}
+        className={`altrp-table-td__grouping altrp-table-td altrp-table-background ${collapsing
+            ? (collapsed ? 'altrp-pointer' : 'altrp-pointer active') : ''} `}>
+      {collapsing ? (<span className={`altrp-table__collapse-icon ${collapsed ? 'altrp-table__collapse-icon_collapsed' : ''}`}>{
+            collapsed ? renderAsset(collapsed_icon || {
+                  assetType: "icon",
+                  name: "add",
+                })
+                : renderAsset(expanded_icon || {
+                  assetType: "icon",
+                  name: "minus",
+                })
+        }</span>
+      ) : null}
+      {text}
+    </td>
+  </tr> : null;
+}
+
+/**
+ * Сохраняет/удаляет текущаю группу по заголовку из с списка схлопнутых групп в таблице
+ * @param {string} currentRowHeading
+ * @param {function} setCollapsedGroups - функция задает новый список collapsedGroups
+ * @param {array} collapsedGroups - список заголовков, которые схлопнуты
+ */
+function toggleGroup(currentRowHeading, setCollapsedGroups, collapsedGroups) {
+
+  if(collapsedGroups.indexOf(currentRowHeading) === -1){
+    collapsedGroups.push(currentRowHeading);
+    setCollapsedGroups([...collapsedGroups]);
+  } else {
+    collapsedGroups = _.filter(collapsedGroups, g=>{
+      return g !== currentRowHeading;
+    });
+    setCollapsedGroups(collapsedGroups);
+  }
+}
+
+/**
+ * Отрисовка футера таблицы
+ * @param {{}}settings
+ * @param {array}data
+ */
+
+function renderFooter(settings, data){
+  let footerColumns = settings.footer_columns || [];
+  if(footerColumns.length === 0){
+    return null;
+  }
+  return <tfoot className="altrp-table-foot">
+  <tr className="altrp-table-tr">
+    {footerColumns.map(footerColumn=>{
+      const style = {
+        textAlign: footerColumn.column_footer_alignment || 'left'
+      };
+      let content = footerColumn.content;
+      if(content.indexOf('{{altrphelpers.') !== -1){
+        window.altrphelpers.context = data;
+        content = content.replace(/{{/g, '').replace(/}}/g, '');
+        try{
+          content = eval(content);
+        } catch(e){
+          console.log(content);
+          console.error(e);
+          content = '';
+        }
+      } else {
+        content = replaceContentWithData(content);
+      }
+      return <td className="altrp-table-td"
+                 key={footerColumn.id}
+                 style={style}
+                 colSpan={footerColumn.colspan || 1}>{content}</td>
+    })}
+  </tr>
+  </tfoot>
+}
+
+
+/**
+ * Выводит список элементов соответствующих настройкам Actions для колнки
+ * @param cell
+ * @param row
+ */
+function renderCellActions(cell, row = {}) {
+  let actions = _.get(cell,'column.actions', []);
+  return <div className="altrp-actions">
+    {actions.map(action =>{
+      let tag = action.type || 'Link';
+      let actionContent = replaceContentWithData(action.text || '');
+      let link = parseURLTemplate(action.link, row.original);
+      const actionProps = {
+        className: 'altrp-actions-item altrp-link ' + (action.classes || ''),
+        style: {},
+        key: (action.id || '') + (row.id || ''),
+        title: action.text || '',
+      };
+      actionProps.style.marginLeft = _.get(action, 'spacing.left')
+          ? _.get(action, 'spacing.left') + _.get(action, 'spacing.unit')
+          : null;
+      actionProps.style.marginRight = _.get(action, 'spacing.right')
+          ? _.get(action, 'spacing.right') + _.get(action, 'spacing.unit')
+          : null;
+      actionProps.style.marginTop = _.get(action, 'spacing.top')
+          ? _.get(action, 'spacing.top') + _.get(action, 'spacing.unit')
+          : null;
+      actionProps.style.marginBottom = _.get(action, 'spacing.bottom')
+          ? _.get(action, 'spacing.bottom') + _.get(action, 'spacing.unit')
+          : null;
+      if(tag === 'Link'){
+        tag = Link;
+        actionProps.to = link;
+      }
+
+      if(tag === 'a' && action.target_blank){
+        actionProps.target = '_blank';
+      }
+      if(tag === 'a') {
+        actionProps.href = parseURLTemplate(action.link, row.original);
+      }
+      if(_.get(action, 'icon.assetType')){
+        let iconSize = _.get(action, 'size.size') ? _.get(action, 'size.size') + _.get(action, 'size.unit', 'px') : null;
+        const iconProps = {className: 'altrp-actions-item__icon',
+          style:{
+          }};
+
+        if(iconSize){
+          iconProps.style.width = iconSize;
+          iconProps.style.height = iconSize;
+        }
+        actionContent = renderAsset(action.icon, iconProps)
+      }
+      return React.createElement(tag, actionProps, actionContent);
+    })}
+  </div>
 }

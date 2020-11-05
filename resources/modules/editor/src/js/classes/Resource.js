@@ -1,4 +1,6 @@
 import queryString from 'query-string';
+import {replaceContentWithData} from "../../../../front-app/src/js/helpers";
+window.queryString = queryString;
 /**
  * @class Resource
  * */
@@ -17,10 +19,23 @@ class Resource {
   constructor(data){
 
     this.route = data.route;
+    /**
+     * Нужно ли при каждом запросе подставлять в URL данные
+     * @type {*|boolean}
+     */
+    this.dynamicURL = data.dynamicURL || false;
     if(! this.route){
       throw 'Нужен route';
     }
 
+  }
+
+  /**
+   * Получить роут
+   * @return {string}
+   */
+  getRoute(){
+    return this.dynamicURL ? replaceContentWithData(this.route) : this.route;
   }
   /**
    * @return {Promise}
@@ -36,7 +51,8 @@ class Resource {
         'Content-Type': 'application/json'
       },
     };
-    let route = this.route;
+    let route = this.getRoute();
+
     let url;
     if(route[route.length - 1] === '/'){
        url = route + id;
@@ -63,7 +79,7 @@ class Resource {
       },
     };
 
-    let url = this.route;
+    let url = this.getRoute();
     return fetch(url, options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);
@@ -85,10 +101,10 @@ class Resource {
       },
     };
     let url;
-    if(this.route.indexOf('?') === -1){
-      url = this.route + `?s=${searchString}`;
+    if(this.getRoute().indexOf('?') === -1){
+      url = this.getRoute() + `?s=${searchString}`;
     } else {
-      url = this.route + `&s=${searchString}`;
+      url = this.getRoute() + `&s=${searchString}`;
     }
     return fetch(url, options).then(res => {
       if(res.ok === false){
@@ -105,19 +121,43 @@ class Resource {
   post(data = {}, headers){
     headers = headers || {
       'X-CSRF-TOKEN': _token,
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      // 'Content-Type': 'application/json',
+      // 'Accept': 'application/json',
     };
+    let formData = new FormData();
+    let hasFile = false;
+    _.each(data, (value, key) => {
+      if(_.isArray(value)){
+        for (let i = 0; i < value.length; i++) {
+          if(value[i] instanceof File){
+            hasFile = true;
+          }
+          if(value[i].size > MAX_FILE_SIZE){
+            continue;
+          }
+          formData.append(`${key}[${i}]`, value[i]);
+        }
+      } else {
+        formData.append(key, value);
+      }
+    });
+    if(! hasFile){
+      headers['Content-Type']= 'application/json';
+      headers['Accept']= 'application/json';
+    }
     let options = {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: hasFile ?  formData : JSON.stringify(data),
       headers,
     };
-    return fetch(this.route, options).then(res => {
+    return fetch(this.getRoute(), options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);
       }
       return res.json()
+    }).catch((err)=>{
+      console.log(err);
+      return err.then();
     });
   }
   /**
@@ -146,7 +186,7 @@ class Resource {
       body: formData,
       headers,
     };
-    return fetch(this.route, options).then(res => {
+    return fetch(this.getRoute(), options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);
       }
@@ -157,16 +197,43 @@ class Resource {
   /**
    * @return {Promise}
    * */
-  put(id, data){
+  put(id, data, headers = null){
+    headers = headers || {
+      'X-CSRF-TOKEN': _token,
+      // 'Content-Type': 'application/json',
+      // 'Accept': 'application/json',
+    };
+    let formData = new FormData();
+    let hasFile = false;
+
+    _.each(data, (value, key) => {
+      if(_.isArray(value)){
+        for (let i = 0; i < value.length; i++) {
+          if(value[i] instanceof File){
+            hasFile = true;
+          }
+          if(value[i].size > MAX_FILE_SIZE){
+            console.log(value[i]);
+            continue;
+          }
+          formData.append(`${key}[${i}]`, value[i]);
+        }
+      } else {
+        formData.append(key, value);
+      }
+    });
+
+    if(! hasFile){
+      headers['Content-Type']= 'application/json';
+      headers['Accept']= 'application/json';
+    }
     let options = {
       method: 'put',
-      body: JSON.stringify(data),
-      headers: {
-        'X-CSRF-TOKEN': _token,
-        'Content-Type': 'application/json'
-      },
+      // body: JSON.stringify(data),
+      body: hasFile ? formData : JSON.stringify(data),
+      headers: headers,
     };
-    let url = this.route + (id ? '/' + id : '');
+    let url = this.getRoute() + (id ? '/' + id : '');
     return fetch(url, options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);
@@ -186,7 +253,7 @@ class Resource {
         'Content-Type': 'application/json'
       },
     };
-    let url = this.route + (id ? '/' + id : '');
+    let url = this.getRoute() + (id ? '/' + id : '');
     return fetch(url, options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);
@@ -205,7 +272,7 @@ class Resource {
         'Content-Type': 'application/json'
       },
     };
-    let url = this.route + '/options';
+    let url = this.getRoute() + '/options';
     return fetch(url, options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);
@@ -226,7 +293,16 @@ class Resource {
         'Content-Type': 'application/json'
       },
     };
-    let url = `${this.route}?${queryString.stringify(params)}`;
+    let _params = {};
+    _.forEach(params, (paramValue, paramName)=>{
+      if(_.isArray(paramValue)){
+        paramValue = paramValue.join(',');
+      }
+      _params[paramName] = paramValue;
+    });
+    let url = queryString.parseUrl(this.getRoute()).url;
+    _params = _.assign( queryString.parseUrl(this.route).query, _params);
+    url = `${url}?${queryString.stringify(_params)}`;
     let res =  await fetch(url, options).then(res => {
       if(res.ok === false){
         return Promise.reject(res.text(), res.status);

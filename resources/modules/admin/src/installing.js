@@ -31,6 +31,15 @@ import("ace-builds").then(ace=>{
           meta: 'Altrp'
         }];
       }
+      if (0 < prefix.length && ('prefix'.match(prefix) || '{{PREFIX}}'.match(prefix)) && (session.getMode().$id.indexOf('sql') >= -1)) {
+        list = [{
+          name: '{{PREFIX}}',
+          caption: '{{PREFIX}}',
+          value: '{{PREFIX}}',
+          score: 1,
+          meta: 'Altrp'
+        }];
+      }
 
       callback(null, list);
     }

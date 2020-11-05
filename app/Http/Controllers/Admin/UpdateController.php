@@ -25,7 +25,7 @@ class UpdateController extends Controller
     }
     $res = ['result' => false];
 
-    if( env( 'APP_ENV' ) === 'local'){
+    if( env( 'APP_ENV', 'local' ) === 'local'){
       return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE );
     }
     if( version_compare( $new_version, env( 'APP_VERSION'  ) ) > 0){
@@ -44,6 +44,9 @@ class UpdateController extends Controller
    * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
    */
   public function update_altrp( AltrpUpdateService $updateService ){
+    if( env( 'APP_ENV', 'local' ) === 'local'){
+      return response()->json( ['result' => false] );
+    }
     try {
       Artisan::call( 'down' );
       $result = $updateService->update();

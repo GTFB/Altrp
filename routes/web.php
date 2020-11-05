@@ -40,7 +40,7 @@ Route::group([
 
 Route::get( '/admin/editor', function (){
   return view( 'editor' );
-} )->middleware( 'auth' )->name('editor');
+} )->middleware( 'auth', 'admin' )->name('editor');
 
 Route::get( '/admin/editor-content', function (){
   return view( 'editor-content' );
@@ -56,7 +56,7 @@ Route::get('/reports/html/{id}', "ReportsController@page");
  * Роуты Админки
  */
 
-Route::group(['prefix' => 'admin'/* , 'middleware' => 'auth' */], function () {
+Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
   Route::group(['prefix' => 'ajax'], function () {
 
@@ -156,6 +156,11 @@ Route::group(['prefix' => 'admin'/* , 'middleware' => 'auth' */], function () {
       ->name( 'get-template-setting' );
     Route::put( 'templates/{template_id}/conditions', 'TemplateController@conditionsSet' )
       ->name( 'set-template-setting' );
+    /**
+     * Global Style
+     */
+    Route::resource( 'global_styles', 'Admin\GlobalStyleController' );
+    Route::get( 'global_styles_options', 'Admin\GlobalStyleController@options' );
     /**
      * Reports
      */
@@ -257,6 +262,21 @@ Route::group(['prefix' => 'admin'/* , 'middleware' => 'auth' */], function () {
     Route::delete( '/models/{model_id}/relations/{field_id}', 'Admin\ModelsController@destroyModelRelation');
 
     /**
+    * Валидационные правила
+    */
+    Route::get( '/models/{model_id}/validations', 'Admin\ModelsController@getValidationFields');
+    Route::get( '/models/{model_id}/validations/{validation_field_id}', 'Admin\ModelsController@showValidationField');
+    Route::post( '/models/{model_id}/validations', 'Admin\ModelsController@storeValidationField');
+    Route::put( '/models/{model_id}/validations/{validation_field_id}', 'Admin\ModelsController@updateValidationField');
+    Route::delete( '/models/{model_id}/validations/{validation_field_id}', 'Admin\ModelsController@destroyValidationField');
+
+    Route::get( '/models/{model_id}/validations/{validation_field_id}/validation_rules', 'Admin\ModelsController@getValidationRules');
+    Route::get( '/models/{model_id}/validations/{validation_field_id}/validation_rules/{rule_id}', 'Admin\ModelsController@showValidationRule');
+    Route::post( '/models/{model_id}/validations/{validation_field_id}/validation_rules', 'Admin\ModelsController@storeValidationRule');
+    Route::put( '/models/{model_id}/validations/{validation_field_id}/validation_rules/{rule_id}', 'Admin\ModelsController@updateValidationRule');
+    Route::delete( '/models/{model_id}/validations/{validation_field_id}/validation_rules/{rule_id}', 'Admin\ModelsController@destroyValidationRule');
+
+    /**
     * Источники данных
     */
     Route::get( '/data_sources', 'Admin\ModelsController@getDataSources');
@@ -265,6 +285,7 @@ Route::group(['prefix' => 'admin'/* , 'middleware' => 'auth' */], function () {
     Route::put( '/data_sources/{source_id}', 'Admin\ModelsController@updateDataSource');
     Route::get( '/data_sources/{source_id}', 'Admin\ModelsController@showDataSource');
     Route::delete( '/data_sources/{source_id}', 'Admin\ModelsController@destroyDataSource');
+    Route::get( '/models/{model_id}/data_source_options', 'Admin\ModelsController@getDataSourcesByModel');
 
     Route::get('/tables', "Admin\TableController@getTables");
     Route::get('/tables/options', "Admin\TableController@getTablesForOptions");
@@ -300,21 +321,36 @@ Route::group(['prefix' => 'admin'/* , 'middleware' => 'auth' */], function () {
     Route::get('/tables/{table}/controller', "Admin\TableController@getController");
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
 
+    /**
+    * Роут для загрузки favicon
+    */
+    Route::post( '/favicon', 'Admin\FileUploadController@loadFavicon' );
 
+    /**
+     * Плагины
+     */
+
+    Route::get('/plugins',"Admin\PluginController@index");
+    Route::post('/plugins/switch',"Admin\PluginController@switch");
+
+    /**
+     * Настройка почты
+     */
+    Route::post('/write_mail_settings', 'MailController@writeSettingsToEnv');
+    Route::get('/get_mail_settings', 'MailController@getSettings');
+    /**
+     * Роуты ипортов Админки
+     */
+    Route::group(['prefix' => 'import'], function () {
+      Route::post( 'settings', 'Admin\ImportsController@importAltrpSettings' )->name( 'admin.download.settings' );
+    } );
+    /**
+     * Роуты загрузок Админки
+     */
+    Route::group(['prefix' => 'downloads'], function () {
+      Route::get( 'settings', 'Admin\DownloadsController@exportAltrpSettings' )->name( 'admin.download.settings' );
+    } );
   });
-
-  /**
-   * Роуты загрузок Админки
-   */
-  Route::group(['prefix' => 'downloads'], function () {
-    Route::get( 'settings', 'Admin\DownloadsController@exportAltrpSettings' )->name( 'admin.download.settings' );
-  } );
-  /**
-   * Роуты ипортов Админки
-   */
-  Route::group(['prefix' => 'import'], function () {
-    Route::post( 'settings', 'Admin\ImportsController@importAltrpSettings' )->name( 'admin.download.settings' );
-  } );
 
 });
 
@@ -324,7 +360,7 @@ Route::group(['prefix' => 'admin'/* , 'middleware' => 'auth' */], function () {
 
 Route::view('/admin/{path?}', 'admin')
   ->where('path', '.*')
-  ->middleware( [ 'auth','web', 'installation.checker',]  )
+  ->middleware( [ 'auth','web', 'installation.checker', 'admin']  )
   ->name('admin');
 
 /**
@@ -335,16 +371,17 @@ $frontend_routes = \App\Page::get_frontend_routes();
 
 Route::get('/', function () {
 
-  return view('front-app');
+  return view('front-app', ['title'=> 'Main']);
 })->middleware( ['web', 'installation.checker'] );
 
 foreach ( $frontend_routes as $frontend_route ) {
+  $path = $frontend_route['path'];
+  $title = $frontend_route['title'];
+  $frontend_route = str_replace( ':id', '{id}', $path );
 
-  $frontend_route = str_replace( ':id', '{id}', $frontend_route );
-  Route::get($frontend_route, function () {
-    return view('front-app');
-  })->middleware( ['web', 'installation.checker'] );
-
+  Route::get( $frontend_route, function () use ( $title ) {
+    return view('front-app',['title'=> $title]);
+  } )->middleware( ['web', 'installation.checker'] );
 }
 
 /**
@@ -366,6 +403,15 @@ Route::group( ['prefix' => 'ajax'], function(){
 
   // Отдает данные для виджета панели аналитики
   Route::get('dashboards/{id}', 'DashboardsController@index');
+
+  // Загружаем настройки для виджета панели аналитики
+  Route::get('dashboards/{id}/settings', 'DashboardsController@settings');
+  Route::get('dashboards/datasource/{id}/data', 'DatasourceDashboardController@index');
+
+  // Записываем новые настройки для виджета панели аналитики
+  Route::post('dashboards/{id}/settings', 'DashboardsController@settings');
+  // Записываем новые настройки для виджета панели аналитики с датасурсами
+  Route::post('dashboards/datasource/{id}/settings', 'DatasourceDashboardController@settings');
 
   // Записывает данные для виджета панели аналитики
   Route::post('dashboards/{id}', 'DashboardsController@store');
@@ -391,27 +437,14 @@ Route::group( ['prefix' => 'ajax'], function(){
    */
   Route::get( 'pages/{page_id}', 'Frontend\PageController@pageForRoutes' )->name( 'front.page-for-routes' );
   /**
-   * todo: реализовать в контроллерах моделей
-   */
-//  Route::get( 'models/{model_name}', 'Frontend\ModelsController@models' )
-//    ->name( 'front.models.all' );
-//
-//  Route::get( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@show' )
-//    ->name( 'front.models.show' );
-//
-//  Route::delete( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@delete' )
-//    ->name( 'front.models.delete' );
-//
-//  Route::put( 'models/{model_name}/{model_id}', 'Frontend\ModelsController@edit' )
-//    ->name( 'front.models.edit' );
-//
-//  Route::post( 'models/{model_name}', 'Frontend\ModelsController@create' )
-//    ->name( 'front.models.create' );
-
-  /**
-   * todo: для загрузчика шаблонов для виджетов
+   * для загрузки шаблонов внутри виджетов
    */
   Route::get( 'templates/{template_id}', 'TemplateController@show_frontend' )->name( 'templates.show.frontend' );
+
+  /**
+   * Настройка почты
+   */
+  Route::post('/feedback', 'MailController@sendMail');
 
 } );
 

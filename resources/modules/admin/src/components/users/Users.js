@@ -4,7 +4,7 @@ import VectorSvg from '../../svgs/vector.svg';
 import UserSvg from '../../svgs/user.svg';
 import {Link} from "react-router-dom";
 import Resource from "../../../../editor/src/js/classes/Resource";
-
+import Pagination from "../Pagination";
 export default class Users extends Component{
     constructor(props){
         super(props);
@@ -12,10 +12,11 @@ export default class Users extends Component{
             data: [],
             role_filter: "all",
             search: "",
+            currentPage: 1
         };
         
         this.resource = new Resource({route: '/admin/ajax/users'});
-        
+        this.itemsPerPage = 10;
         /*
         
         
@@ -36,14 +37,22 @@ export default class Users extends Component{
     }
     
     async componentDidMount(){
-        let users_result = await this.resource.getAll();
-        this.setState(state=>{
-            return{...state, data: users_result};
-        });
+        // let users_result = await this.resource.getAll();
+        // this.setState(state=>{
+        //     return{...state, data: users_result};
+        // });
+      this.getUsers();
     }
     
+    getUsers = async() => {
+      let users_result = await this.resource.getQueried({ s: this.state.search });
+      this.setState(state => {
+        return { ...state, data: users_result };
+      });
+    }
         
   render(){
+    const { currentPage, data, search } = this.state;
     return <div className="admin-users">
         <div className="wrapper">
             <div className="admin-heading-users">
@@ -76,8 +85,8 @@ export default class Users extends Component{
                         <button className="btn btn_bare admin-users-button">Change</button>
                     </form>
                     <form className="admin-users-form form-bulk-search" >
-                        <input type="search" className="form-control input-sm" placeholder="" aria-controls="example1"/>
-                        <button type="search" className="btn btn_bare admin-users-button">Search Users</button>
+                        <input className="form-control input-sm" value={search} onChange={e => this.setState({search: e.target.value})} />
+                        <button type="button" onClick={this.getUsers} className="btn btn_bare admin-users-button">Search Users</button>
                     </form>
                 </div>
             <div className="admin-users-table">
@@ -100,7 +109,7 @@ export default class Users extends Component{
                     <tbody className="admin-table-body">
                     {
                     
-                        this.state.data.map((row, idx) => 
+                        data.slice(currentPage * this.itemsPerPage - this.itemsPerPage, currentPage * this.itemsPerPage).map((row, idx) => 
                             
                             <tr className="admin-table-row" key={row.id}>
                                 <td className="admin-table__td admin-table__td_check ">
@@ -121,6 +130,16 @@ export default class Users extends Component{
                     }   
                     </tbody>
                 </table>
+                <Pagination pageCount={Math.ceil(data.length / this.itemsPerPage) || 1}
+                  currentPage={currentPage}
+                  changePage={page => {
+                    if (currentPage !== page) {
+                      this.setState({ currentPage: page })
+                    }
+                  }
+                  }
+                  itemsCount={data.length}
+                />
             </div>
         </div>
     </div>

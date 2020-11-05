@@ -15,7 +15,10 @@ import {
   CONTROLLER_REPEATER,
   TAB_CONTENT,
   TAB_STYLE,
-  TAB_ADVANCED, CONTROLLER_MEDIA, CONTROLLER_SWITCHER, CONTROLLER_LINK
+  TAB_ADVANCED,
+  CONTROLLER_MEDIA,
+  CONTROLLER_SWITCHER,
+  CONTROLLER_LINK
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 
@@ -139,6 +142,25 @@ class List extends BaseElement{
       label: 'Choose icon',
     });
 
+    repeater.addControl('vertical_alignment_icon_repeater', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Vertical alignment',
+      options:[
+        {
+          icon: 'left',
+          value: 'top',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'bottom',
+        }
+      ],
+    });
+
     repeater.addControl('position_relative_switcher_custom_repeater', {
       type: CONTROLLER_SWITCHER,
       label: 'Position relative',
@@ -182,14 +204,14 @@ class List extends BaseElement{
     this.addControl('position_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
-      default: {
-        top: 10,
-        right: 10,
-        bottom: 10,
-        left: 10,
-        unit: 'px',
-        bind: true
-      },
+      // default: {
+      //   top: 10,
+      //   right: 10,
+      //   bottom: 10,
+      //   left: 10,
+      //   unit: 'px',
+      //   bind: true
+      // },
       units: [
         'px',
         '%',
@@ -208,14 +230,14 @@ class List extends BaseElement{
     this.addControl('position_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default: {
-        top: 20,
-        right: 25,
-        bottom: 20,
-        left: 25,
-        unit: 'px',
-        bind: true
-      },
+      // default: {
+      //   top: 20,
+      //   right: 25,
+      //   bottom: 20,
+      //   left: 25,
+      //   unit: 'px',
+      //   bind: true
+      // },
       units: [
         'px',
         '%',
@@ -272,7 +294,7 @@ class List extends BaseElement{
     this.addControl('alignment_list_style', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: 'left',
+      default: '',
       options:[
         {
           icon: 'left',
@@ -539,7 +561,7 @@ class List extends BaseElement{
       type: CONTROLLER_SLIDER,
       label: 'Indent',
       default:{
-        size: 0,
+        // size: 0,
         unit: 'px',
       },
       max: 50,
@@ -576,13 +598,13 @@ class List extends BaseElement{
     this.addControl('padding_text_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit:'px'
-      },
+      // default:{
+      //   top: 0,
+      //   right: 0,
+      //   bottom: 0,
+      //   left: 0,
+      //   unit:'px'
+      // },
       units:[
         'px',
         '%',
@@ -673,17 +695,17 @@ class List extends BaseElement{
     this.addControl('typographic_text_style', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
-        default:{
-          lineHeight: 1,
-          spacing: 0,
-          size: 16,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
+        // default:{
+        //   lineHeight: 1,
+        //   spacing: 0,
+        //   size: 16,
+        //   weight: "normal",
+        //   family: "Open Sans",
+        //   decoration: ""
+        // },
         rules: {
           '{{ELEMENT}} .altrp-list-label{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -699,7 +721,7 @@ class List extends BaseElement{
     this.addControl("link_decoration_text_style", {
       type: CONTROLLER_SELECT,
       label: "Text decoration",
-      default: "none",
+      // default: "none",
       options: [
         {
           value: "none",

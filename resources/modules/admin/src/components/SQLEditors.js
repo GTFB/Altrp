@@ -1,7 +1,7 @@
-import React, {Component} from "react";
-import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
+import React, { Component } from "react";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import 'react-tabs/style/react-tabs.scss';
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import AdminTable from "./AdminTable";
 import Pagination from "./Pagination";
@@ -61,13 +61,15 @@ export default class SQLEditors extends Component {
     this.state = {
       sql_editorsPagination: initPaginationProps,
       sql_editors: [],
+      sqlEditorSearch: '',
+      sorting: {}
     };
     this.changePage = this.changePage.bind(this);
-    this.sql_editorsResource = new Resource({route: '/admin/ajax/sql_editors'});
+    this.sql_editorsResource = new Resource({ route: '/admin/ajax/sql_editors' });
   }
 
   changePage(currentPage, pagination) {
-    this.setState(state => ({...state, [pagination]: {...state[pagination], currentPage}}));
+    this.setState(state => ({ ...state, [pagination]: { ...state[pagination], currentPage } }));
   }
 
   /**
@@ -86,8 +88,21 @@ export default class SQLEditors extends Component {
     }))
   }
 
+  getSqlEditors = async () => {
+    let sql_editors = await this.sql_editorsResource.getQueried({ s: this.state.sqlEditorSearch, ...this.state.sorting});
+    sql_editors = sql_editors.sql_editors;
+    this.setState(state => ({
+      ...state,
+      sql_editors,
+    }))
+  }
+
+  sortingHandler = (order_by, order) => {
+    this.setState({ sorting: { order_by, order } }, this.getSqlEditors);
+  }
+
   render() {
-    const { sql_editors, sql_editorsPagination} = this.state;
+    const { sql_editors, sql_editorsPagination, sqlEditorSearch, sorting } = this.state;
     return <div className="admin-settings admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
@@ -98,33 +113,37 @@ export default class SQLEditors extends Component {
         <Link className="btn" to={`/admin/tables/sql_editors/add`}>Add New</Link>
       </div>
       <div className="admin-content">
-
-        {/* TODO: что делать с колoнкой с чекбоксами? */}
+        <div className="admin-panel py-2">
+          <input className="input-sm mr-2" value={sqlEditorSearch} onChange={e => this.setState({ sqlEditorSearch: e.target.value })} />
+          <button type="button" onClick={this.getSqlEditors} className="btn btn_bare admin-users-button">Search</button>
+        </div>
         <AdminTable
-            columns={columns}
-            quickActions={[{
-              tag: 'Link', props: {
-                href: '/admin/tables/sql_editors/edit/:id',
-              },
-              title: 'Edit'
-            }, {
-              tag: 'button',
-              route: '/admin/ajax/sql_editors/:id',
-              method: 'delete',
-              confirm: 'Are You Sure?',
-              // after: () => this.updateModels(this.state.currentPage, this.state.activeTemplateArea),
-              className: 'quick-action-menu__item_danger',
-              title: 'Trash'
-            }]}
-            rows={sql_editors.map(sql_editor => ({
-              ...sql_editor,
-              editUrl: '/admin/tables/sql_editors/edit/' + sql_editor.id
-            }))}
+          columns={columns}
+          quickActions={[{
+            tag: 'Link', props: {
+              href: '/admin/tables/sql_editors/edit/:id',
+            },
+            title: 'Edit'
+          }, {
+            tag: 'button',
+            route: '/admin/ajax/sql_editors/:id',
+            method: 'delete',
+            confirm: 'Are You Sure?',
+            // after: () => this.updateModels(this.state.currentPage, this.state.activeTemplateArea),
+            className: 'quick-action-menu__item_danger',
+            title: 'Trash'
+          }]}
+          rows={sql_editors.map(sql_editor => ({
+            ...sql_editor,
+            editUrl: '/admin/tables/sql_editors/edit/' + sql_editor.id
+          }))}
+          sortingHandler={this.sortingHandler}
+          sortingField={sorting.order_by}
         />
         <Pagination pageCount={sql_editorsPagination.pageCount}
-                    currentPage={sql_editorsPagination.currentPage}
-                    changePage={currentPage => this.changePage(currentPage, "sql_editorsPagination")}
-                    itemsCount={sql_editors.length}
+          currentPage={sql_editorsPagination.currentPage}
+          changePage={currentPage => this.changePage(currentPage, "sql_editorsPagination")}
+          itemsCount={sql_editors.length}
         />
       </div>
     </div>

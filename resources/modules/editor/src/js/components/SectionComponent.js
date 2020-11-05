@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import '../../sass/section.scss';
 import { connect } from "react-redux";
 import '../../sass/section.scss'
-import { isEditor, getWindowWidth } from "../../../../front-app/src/js/helpers"
 
 class SectionComponent extends Component {
   constructor(props) {
@@ -46,9 +45,9 @@ class SectionComponent extends Component {
   render() {
     let styles = {};
     const  background_image  = this.props.element.getSettings('background_image', {});
-    const { isScrollEffect } = this.props.element.getSettings();
-    const isContentBoxed = this.state.settings.layout_content_width_type === "boxed";
-    const widthType = this.state.settings.layout_content_width_type;
+    const { isScrollEffect, isFixed } = this.props.element.getSettings();
+    const isContentBoxed = this.props.element.getSettings().layout_content_width_type === "boxed";
+    const widthType = this.props.element.getSettings().layout_content_width_type;
     // if (this.state.settings.layout_content_width_type === "full") {
     //   width = {
     //     width: getWindowWidth() + "px"
@@ -67,19 +66,21 @@ class SectionComponent extends Component {
       sectionClasses.push('altrp-background-image');
     }
 
-    if (widthType === "boxed") {
+    if (widthType === "boxed" && !isFixed) {
       sectionClasses.push('altrp-section--boxed');
     }
 
-    if (widthType === "full") {
+    if (widthType === "full" && !isFixed) {
       sectionClasses.push('altrp-section--full-width');
     }
 
+    let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
     let sectionWrapper = this.state.children.map(column => (
       <ElementWrapper
-        key={column.getId()}
-        component={column.componentClass}
-        element={column}
+          ElementWrapper={ElementWrapper}
+          key={column.getId()}
+          component={column.componentClass}
+          element={column}
       // columnCount={this.props.element.getColumnsCount()}
       />
     ));

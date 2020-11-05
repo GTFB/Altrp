@@ -1,3 +1,5 @@
+/.history
+launch.json
 /node_modules
 /public/hot
 /public/storage
@@ -19,6 +21,7 @@ s.sql
 /config/ide-helper.php
 .phpstorm.meta.php
 _ide_helper.php
+.vscode
 
 # Altrp User Activity
 /database/altrp_migrations
@@ -29,9 +32,16 @@ _ide_helper.php
 /app/Providers/AltrpRepositoryServiceProvider.php
 /routes/AltrpRoutes.php
 /routes/AltrpApiRoutes.php
+/routes/AltrpCustomRoutes.php
 /out
+/app/Http/Requests/AltrpRequests
+/app/Plugins/*/
+/app/Plugins/plugins.json
+=======
 
 #bundles
 public/modules/admin
+public/favicon.ico
 public/modules/front-app
 public/modules/editor
+/routes/AltrpCustomRoutes.php

@@ -40,6 +40,9 @@ class Select2Controller extends Component {
       let options = await resource.search(
         this.props.currentElement.getSettings(this.props.controlId)
       );
+      if(! _.isArray(options)){
+        options = _.get(options, 'data', []);
+      }
       if (this.props.nullable) {
         options = _.union([{ label: "None", value: "" }], options);
       }
@@ -51,12 +54,15 @@ class Select2Controller extends Component {
     } else if (this.props.nullable) {
       this.setState((state) => ({
         ...state,
-        options: [{ label: "None", value: "" }],
+        options: _.union([{ label: "None", value: "" }], this.state.options),
       }));
     }
     if (this.props.prefetch_options) {
       let resource = new Resource({ route: this.getRoute() });
       let options = await resource.getAll();
+      if(! _.isArray(options)){
+        options = _.get(options, 'data', []);
+      }
       this.setState((state) => ({
         ...state,
         options,
@@ -90,6 +96,9 @@ class Select2Controller extends Component {
     }
     let resource = new Resource({ route: this.getRoute() });
     let options = await resource.search(searchString);
+    if(! _.isArray(options)){
+      options = _.get(options, 'data', []);
+    }
     if (this.props.nullable) {
       options = _.union([{ label: "None", value: "" }], options);
     }
@@ -106,8 +115,6 @@ class Select2Controller extends Component {
         let _v = value.map((v) => {
           return v.value;
         });
-        console.log(value);
-        console.log(_v);
         this._changeValue(_v);
       } else {
         this._changeValue(value.value);
@@ -116,6 +123,8 @@ class Select2Controller extends Component {
     if (action.action === "clear") {
       if (this.props.isMulti) {
         this._changeValue(value);
+      } else {
+        this._changeValue('');
       }
     }
     if (action.action === "remove-value") {
@@ -154,6 +163,7 @@ class Select2Controller extends Component {
         overflow: "auto",
         borderRadius: "0px 0px 3px 3px",
         borderWidth: "0px 1px 1px 1px",
+        backgroundColor: "#FFF",
         borderStyle: "solid",
         borderColor: "#E5E6EA",
         position: "absolute",
@@ -161,6 +171,7 @@ class Select2Controller extends Component {
       }),
 
       menuList: () => ({
+        backgroundColor: "#FFF",
         margin: 0,
         padding: 0,
       }),

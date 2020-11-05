@@ -118,6 +118,15 @@ class Tabs extends BaseElement {
       default: "text"
     });
 
+    repeater.addControl("card_template", {
+      type: CONTROLLER_SELECT2,
+      prefetch_options: true,
+      label: "Template",
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options?value=guid',
+      nullable: true,
+    });
+
     this.addControl('items_tabs', {
       label: 'Tab Items',
       type: CONTROLLER_REPEATER,
@@ -461,7 +470,7 @@ class Tabs extends BaseElement {
         },
         rules: {
           '{{ELEMENT}} .altrp-tab-btn{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -617,7 +626,7 @@ class Tabs extends BaseElement {
         },
         rules: {
           '{{ELEMENT}} .altrp-tab-content div{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -841,7 +850,7 @@ class Tabs extends BaseElement {
         },
         rules: {
           '{{ELEMENT}} .altrp-tabs-switcher-label-section-one': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -884,7 +893,7 @@ class Tabs extends BaseElement {
         },
         rules: {
           '{{ELEMENT}} .altrp-tabs-switcher-section-one-text p': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -934,7 +943,7 @@ class Tabs extends BaseElement {
         },
         rules: {
           '{{ELEMENT}} .altrp-tabs-switcher-label-section-two': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',
@@ -977,7 +986,7 @@ class Tabs extends BaseElement {
         },
         rules: {
           '{{ELEMENT}} .altrp-tabs-switcher-section-two-text p': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
+            'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',
             'letter-spacing: {{SPACING}}px',

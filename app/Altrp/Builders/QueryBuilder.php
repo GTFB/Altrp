@@ -14,6 +14,7 @@ use App\Altrp\Generators\Route\RouteFile;
 use App\Altrp\Generators\Route\RouteFileWriter;
 use App\Altrp\Model;
 use App\Altrp\Query;
+use App\Altrp\Relationship;
 use App\Altrp\Source;
 use App\Altrp\SourcePermission;
 use App\Altrp\SourceRole;
@@ -191,7 +192,10 @@ class QueryBuilder
         $routeFile = new RouteFile($this->model);
         $controllerFile = new ControllerFile($this->model);
         $fileWriter = new RouteFileWriter($routeFile, $controllerFile);
-        if ($fileWriter->addRoute($this->getMethodName())) {
+        $apiRouteFile = new RouteFile($this->model, 'routes/AltrpApiRoutes.php', true);
+        $apiFileWriter = new RouteFileWriter($apiRouteFile, $controllerFile);
+        $methodName = $this->getMethodName();
+        if ($fileWriter->addRoute($methodName) && $apiFileWriter->addRoute($methodName)) {
             return true;
         }
         return false;
@@ -297,7 +301,10 @@ class QueryBuilder
         $routeFile = new RouteFile($this->model);
         $controllerFile = new ControllerFile($this->model);
         $fileWriter = new RouteFileWriter($routeFile, $controllerFile);
-        if ($fileWriter->removeRoute($this->getOldMethodName())) {
+        $apiRouteFile = new RouteFile($this->model, 'routes/AltrpApiRoutes.php', true);
+        $apiFileWriter = new RouteFileWriter($apiRouteFile, $controllerFile);
+        $oldMethodName = $this->getOldMethodName();
+        if ($fileWriter->removeRoute($oldMethodName) && $apiFileWriter->removeRoute($oldMethodName)) {
             return true;
         }
         return false;
@@ -588,13 +595,21 @@ class QueryBuilder
         $aggregatesList = [];
         if (is_array($aggregates)) {
             foreach ($aggregates as $aggregate) {
-                $aggregatesList[] = $aggregate['type'] . "({$aggregate['column']}) as {$aggregate['alias']}";
+                if (!Str::contains($aggregate['column'], '.')) {
+                    $aggregate['column'] = $this->model->table->name . '.' . $aggregate['column'];
+                    $aggregatesList[] = $aggregate['type'] . "(" . config('database.connections.mysql.prefix')
+                        . "{$aggregate['column']}) as {$aggregate['alias']}";
+                } elseif (Str::contains($aggregate['column'], '.') && $this->query->joins) {
+                    $aggregatesList[] = $aggregate['type'] . "(" . config('database.connections.mysql.prefix')
+                        . "{$aggregate['column']}) as {$aggregate['alias']}";
+                }
             }
         } else {
             $aggregatesList[] = $aggregates;
         }
 
-        $this->queryBody->aggregates = '$model = $model->selectRaw(\'' . implode(', ', $aggregatesList) . '\');' . "\n";
+        $this->queryBody->aggregates = '$model = $model->selectRaw(\''
+            . implode(', ', $aggregatesList) . '\');' . "\n";
         return $this;
     }
 
@@ -615,8 +630,10 @@ class QueryBuilder
         foreach ($columns as $column) {
             if (!Str::contains($column, '.')) {
                 $column = $this->model->table->name . '.' . $column;
+                $columnsList[] = $column;
+            } elseif (Str::contains($column, '.') && $this->query->joins) {
+                $columnsList[] = $column;
             }
-            $columnsList[] = $column;
         }
         $this->queryBody->columns = $columns
             ? "{$threeTabs}\$model = \$model->select(['" . implode("','", $columnsList) . "']);\n"
@@ -675,12 +692,32 @@ class QueryBuilder
         if (! $relations) return $this;
         $eol = (count($relations) > 1) ? "\n" : null;
         $tab = (count($relations) > 1) ? "{$this->tabIndent}" : null;
-        $closure = '';
+        $relationsList = [];
+        foreach ($relations as $rel) {
+            $relationsList[$rel] = [];
+        }
         if ($this->query->order_by) {
             $orders = $this->query->order_by;
+            foreach ($orders as $order) {
+                if (Str::contains($order['column'], '.')) {
+                    $parts = explode('.', $order['column']);
+                    $table = $parts[0];
+                    $column = $parts[1];
+                    foreach ($relationsList as $relation => $args) {
+                        $rel = Relationship::where('name',$relation)->with('altrp_target_model.table')->first();
+                        if ($rel->altrp_target_model->table->name == $table) {
+                            $relationsList[$relation][] = '$q->orderBy(\'' . $column . '\', \'' . $order['type'] . '\')';
+                        }
+                    }
+                }
+            }
         }
-        $this->queryBody->relations = "{$this->twoTabs}\$model = \$model->with([$eol$tab$tab$tab$tab'"
-            . implode("',$eol$tab$tab$tab$tab'", $relations) . "'$eol$tab$tab$tab]);\n";
+        $str = "{$this->twoTabs}\$model = \$model->with([";
+        foreach ($relationsList as $name => $args) {
+            $str .= "$eol$tab$tab$tab$tab'$name'" . ($args ? ' => function ($q) {' . implode(';',$args) . ';}' : '') . ',';
+        }
+        $str = rtrim($str, ',') . "$eol$tab$tab$tab]);\n";
+        $this->queryBody->relations = $str;
         return $this;
     }
 
@@ -810,7 +847,7 @@ class QueryBuilder
         if (! $cond) return $this;
         $conditionList = [];
         $condition = '';
-        $prefix = isset($cond['or']) ? 'orW': 'w';
+        $prefix = $cond['or'] ? 'orW': 'w';
         $condition .= "{$prefix}hereColumn([";
         $condition .= "['{$this->model->table->name}.{$cond['first_column']}',"
             . "'{$cond['operator']}'," . "'{$this->model->table->name}.{$cond['second_column']}']";
@@ -829,8 +866,8 @@ class QueryBuilder
     public function getWhereNullConditions($cond)
     {
         if (! $cond) return $this;
-        $isNot = isset($cond['not']) ? 'Not' : null;
-        $prefix = isset($cond['or']) ? 'orW' : 'w';
+        $isNot = $cond['not'] ? 'Not' : null;
+        $prefix = $cond['or'] ? 'orW' : 'w';
         $condition = "{$prefix}here{$isNot}Null(\"{$this->model->table->name}.{$cond['column']}\")";
         $this->queryBody->conditions[] = "->" . $condition . "\n";
         return $this;
@@ -848,13 +885,16 @@ class QueryBuilder
         $ordersList = [];
         $columnsListArr = [];
         foreach ($orders as $order) {
-//            if (!isset($order['column'])) $order['column'] = 'id';
-//            $order['column'] = strtolower($order['column']);
+            if (!$order['column'] || !isset($order['column'])) $order['column'] = 'id';
+            $order['column'] = strtolower($order['column']);
             if (!Str::contains($order['column'], '.')) {
-                $order = $this->model->table->name . '.' . $order['column'];
+                $order['column'] = $this->model->table->name . '.' . $order['column'];
+                $columnsListArr[] = ['column' => $order['column'],'type' => $order['type']];
+            } elseif (Str::contains($order['column'], '.') && $this->query->joins) {
+                $columnsListArr[] = ['column' => $order['column'],'type' => $order['type']];
             }
-            $columnsListArr[] = $order;
         }
+        if (! $columnsListArr) return $this;
         foreach ($columnsListArr as $order) {
             $ordersList[] = "orderBy('{$order['column']}', '{$order['type']}')";
         }
@@ -871,7 +911,8 @@ class QueryBuilder
     public function getGroupTypes($types)
     {
         if (! $types) return $this;
-        $groupsList = "\$model = \$model" . "->groupBy('" . implode("','", $types) ."');\n";
+        $groups = $this->getColumnsWithFullName($types);
+        $groupsList = "\$model = \$model" . "->groupBy('" . implode("','", $groups) ."');\n";
         $this->queryBody->group_by = $groupsList;
         return $this;
     }
@@ -938,7 +979,7 @@ class QueryBuilder
                     . "'{$operator}','{$targetTableName}.{$targetColumn}')";
             }
         }
-        $this->queryBody->joins = "\$model = \$model->" . implode("\n{$this->threeTabs}->",$joinList) . ";\n";
+        $this->queryBody->joins = "{$this->twoTabs}\$model = \$model->" . implode("\n{$this->threeTabs}->",$joinList) . ";\n";
 
         return $this;
     }
@@ -976,5 +1017,26 @@ class QueryBuilder
             return $value;
         }
         return '"' . $value . '"';
+    }
+
+    /**
+     * Получить колонки с полным именем (имя_таблицы.имя_колонки)
+     *
+     * @param $columns
+     * @return array
+     */
+    protected function getColumnsWithFullName($columns)
+    {
+        if (! $columns) return [];
+        $columnsList = [];
+        foreach ($columns as $column) {
+            if (!Str::contains($column, '.')) {
+                $column = $this->model->table->name . '.' . $column;
+                $columnsList[] = $column;
+            } elseif (Str::contains($column, '.') && $this->query->joins) {
+                $columnsList[] = $column;
+            }
+        }
+        return $columnsList;
     }
 }

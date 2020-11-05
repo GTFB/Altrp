@@ -7,6 +7,8 @@
 @import "../js/components/altrp-lightbox/altrp-lightbox";
 @import "./altrp-pagination";
 @import "./altrp-dashboards";
+@import "altrp-list";
+@import "default-styles";
 
 //google fonts
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&display=swap");
@@ -21,8 +23,8 @@
     max-height: 100%;
   }
 }
-.editor-content-body {
-}
+// .editor-content-body {
+// }
 .left-panel {
   width: 270px;
   display: flex;
@@ -154,6 +156,12 @@ button {
     }
   }
 }
+.control-button-container{
+  justify-content: flex-end;
+  & > .btn {
+    padding: 5px 10px;
+  }
+}
 
 .icon {
   display: inline-block;
@@ -183,6 +191,10 @@ button {
   background-color: #fff;
   cursor: move;
   border-radius: 2px;
+  font-size: 0.8rem;
+  &__title {
+    margin-top: 8px;
+  }
 }
 
 .right-panel {
@@ -424,10 +436,27 @@ button {
       border-bottom: 1px solid $border-gray;
       border-left: 1px solid $border-gray;
       border-right: 1px solid $border-gray;
+      & .repeater-item-content .controller-media-choose svg,
+      & .repeater-item-content .controller-media-choose img{
+        width: 200px;
+      }
     }
     &_open {
       & .repeater-item-content {
         display: block;
+        & .repeater-item-content {
+          & .controller-container{
+            max-width: 200px;
+          }
+          & .control-dimensions-container{
+            width: 40px;
+          }
+          & .control-field-bind{
+            width: 43px;
+            padding-left: 14px;
+            padding-right: 14px;
+          }
+        }
       }
     }
   }
@@ -1298,7 +1327,7 @@ button {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 9999;
+  z-index: 999999;
   outline: 2px solid transparent;
   display: none;
   pointer-events: none;
@@ -1398,7 +1427,7 @@ button {
 .altrp-element_section {
   & > .overlay {
     & .overlay-settings__button {
-      z-index: 9998;
+      z-index: 49;
       &:first-child {
         border-radius: 5px 0 0 0;
         &::before {
@@ -1442,7 +1471,7 @@ button {
   z-index: 99999;
 }
 
-.altrp-element_section:first-of-type {
+.altrp-element_section:first-of-type, .altrp-element_section.fixed-section {
   & > .overlay {
     z-index: 100;
     & .overlay-settings {
@@ -1466,6 +1495,9 @@ button {
       }
     }
   }
+}
+.altrp-element_section.fixed-section > .overlay .overlay-settings {
+  transform: unset;
 }
 .altrp-element_column.altrp-element_current,
 .altrp-element_column:hover {
@@ -1760,4 +1792,8 @@ button {
 
 .assigning-types {
   width: 100%;
+}
+
+.editor-content .altrp-element{
+  min-height: 1px;
 }

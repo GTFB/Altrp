@@ -10,9 +10,11 @@ import WidgetDiagram from "../../../../../admin/src/components/dashboard/WidgetD
 import TypeField from "./fields/TypeField";
 import FilterField from "./fields/FilterField";
 import LegendField from "./fields/LegendField";
+import LegendPositionField from "./fields/LegendPositionField";
 import SourceField from "./fields/SourceField";
 import ColorSchemeField from "./fields/colorSchemeField";
 import VerticalTableField from "./fields/VerticalTableField";
+import { queryString } from "./helpers/queryString";
 
 const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
   const [widget, setWidget] = useState({
@@ -21,6 +23,8 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
     options: {
       isVertical: false,
       legend: "",
+      legendPosition: "bottom",
+      colorScheme: 'Custom'
     },
     filter: {},
   });
@@ -34,6 +38,8 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
       options: JSON.stringify(widget.options),
       filter: JSON.stringify(widget.filter),
     };
+    console.log('ON SAVE =>', JSON.stringify(widget.options),
+      JSON.stringify(widget.filter));
     const req = await axios.post(`/ajax/dashboards/${id}`, data);
     if (req.status === 200) {
       onAdd(req.data);
@@ -56,14 +62,26 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
   };
 
   const getTypesBySource = (s) => {
+    let string = s;
+    string = string.includes('?') ? string.split('?')[0] : s;
+
     const source = settings.sql?.find(
-      (item) => s === `/ajax/models/queries/${item.model}/${item.value}`
+      (item) => string === `/ajax/models/queries/${item.model}/${item.value}`
     );
     return source?.types?.map((type) => type.value) || [];
   };
 
+  const titleHandle = (string, oldString = false) => {
+    if (title.current.value.includes(oldString)) {
+      title.current.value = title.current.value.replace(oldString, string);
+    }
+    if (!title.current.value.includes(string)) {
+      title.current.value += string;
+    }
+  }
+
   const composeSources = (sources = []) => {
-    if (sources.length === 0) return [];
+    if ((!sources) || sources.length === 0) return [];
 
     return sources.map((source) => {
       return {
@@ -73,7 +91,16 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
     });
   };
 
-  console.log("ADDWIDGET settings :>> ", settings.filter);
+  if (composeSources(settings.sql).length === 1) {
+    let currentSource = composeSources(settings.sql)[0];
+    // let filter = '';
+    // if (Object.keys(widget.filter).length !== 0) {
+    //   filter = queryString(widget.filter);
+    // }
+    widget.source = currentSource.url;
+
+    setTimeout(() => titleHandle(`${currentSource.name}`), 0);
+  }
 
   return (
     <Card>
@@ -89,7 +116,7 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
               ref={title}
               onFocus={handleFocus}
               onBlur={handleBlur}
-              defaultValue="Новый виджет"
+              defaultValue=""
               required
             />
           </Form.Group>
@@ -98,12 +125,14 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
             widget={widget}
             setWidget={setWidget}
             sources={composeSources(settings.sql)}
+            changeTitle={titleHandle}
           />
 
           {widget.source &&
             settings.filter?.length > 0 &&
             settings.filter?.map((param) => (
-              <FilterField key={param.value} widget={widget} setWidget={setWidget} param={param} />
+              <FilterField key={param.value} widget={widget} setWidget={setWidget} param={param}
+                changeTitle={titleHandle} />
             ))}
 
           <TypeField
@@ -118,10 +147,11 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
 
           <ColorSchemeField widget={widget} setWidget={setWidget} />
 
-          <LegendField widget={widget} setWidget={setWidget} />
+          {/* <LegendField widget={widget} setWidget={setWidget} /> */}
+          {widget.options?.legend && <LegendPositionField widget={widget} setWidget={setWidget} />}
         </Form>
 
-        <div className="widget-placeholder">
+        <div className={`widget-placeholder altrp-chart ${widget.options?.legendPosition}`}>
           {widget.source && <WidgetDiagram widget={widget} width={360} height={360} />}
         </div>
       </Card.Body>
@@ -130,7 +160,7 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
           Закрыть
         </Button>
         <Button variant="warning" onClick={onSave} disabled={widget.source === ""}>
-          Сохранить изменения
+          Сохранить
         </Button>
       </Card.Footer>
     </Card>

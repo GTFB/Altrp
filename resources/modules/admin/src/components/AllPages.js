@@ -2,21 +2,25 @@ import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
-
+import Pagination from "./Pagination";
+import { buildPagesTree } from "../js/helpers";
 
 export default class AllPages extends Component{
   constructor(props){
     super(props);
     this.state = {
       pages: [],
+      currentPage: 1,
+      pagesSearch: ''
     };
     this.resource = new Resource({route: '/admin/ajax/pages'});
+    this.itemsPerPage = 20;
   }
 
-  getPages = async () => {
-    let res = await this.resource.getAll();
+  getPages = async (s) => {
+    let res = await this.resource.getQueried({ s });
     this.setState(state => {
-      return { ...state, pages: res }
+      return { ...state, pages: res, pagesSearch: s }
     })
   }
 
@@ -24,7 +28,12 @@ export default class AllPages extends Component{
     this.getPages();
   }
 
+  changeSearchHandler = e => {
+    this.getPages(e.target.value);
+  };
+
   render(){
+    const { currentPage, pages, pagesSearch } = this.state;
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
@@ -67,7 +76,22 @@ export default class AllPages extends Component{
             title: 'Trash'
            }
           ]}
-          rows={this.state.pages}/>
+          rows={buildPagesTree(pages).slice(currentPage * this.itemsPerPage - this.itemsPerPage, currentPage * this.itemsPerPage)}
+          search={{
+            value: pagesSearch || '',
+            changeHandler: this.changeSearchHandler
+          }}
+        />
+        <Pagination pageCount={Math.ceil(pages.length / this.itemsPerPage) || 1}
+          currentPage={currentPage}
+          changePage={page => {
+            if (currentPage !== page) {
+              this.setState({ currentPage: page })
+            }
+          }
+          }
+          itemsCount={pages.length}
+        />
       </div>
     </div>;
   }

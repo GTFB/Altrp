@@ -51,6 +51,9 @@ class AltrpUpdateService
     if ( ! $this->update_files() ) {
       throw new \HttpException( 'Не удалось обновить файлы' );
     }
+    if ( ! $this->write_public_permissions() ) {
+      throw new \HttpException( 'Не удалось обновить режим чтения файлов' );
+    }
     if ( ! $this->delete_archive() ) {
       throw new \HttpException( 'Не удалось удалить архив' );
     }
@@ -122,8 +125,23 @@ class AltrpUpdateService
     if ( ! $archive->open( $file_path ) ) {
       return false;
     }
-
+    if( File::exists( public_path( 'modules' ) ) ){
+      File::cleanDirectory( public_path( 'modules' ) );
+    }
     return $archive->extractTo( base_path() );
+  }
+  /**
+   * Записываем права для папки public
+   * @return bool
+   */
+  private function write_public_permissions()
+  {
+    try{
+      exec("chmod -R 0777  " . base_path( 'public' ) );
+      return true;
+    } catch (\Exception $e){
+      return false;
+    }
   }
 
   /**

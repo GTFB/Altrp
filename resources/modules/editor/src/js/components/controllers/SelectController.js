@@ -18,11 +18,15 @@ class SelectController extends Component {
      */
     const responsive = _.get(props, 'responsive', true);
     value = value || '';
+    const options = _.cloneDeep(this.props.options) || [];
+    if (props.nullable) {
+      options.unshift({ label: '', value: '', })
+    }
     this.state = {
       value,
       show: true,
       responsive,
-      options: this.props.options || [],
+      options
     };
     this.changeValue = this.changeValue.bind(this);
     if (this.props.resource) {
@@ -42,6 +46,7 @@ class SelectController extends Component {
     if (this.state.show === false) {
       return '';
     }
+
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     return <div className="controller-container controller-container_select">
       <div className="controller-container__label control-select__label">

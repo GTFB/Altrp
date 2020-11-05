@@ -1,0 +1,27 @@
+.altrp-heading-advanced-wrapper {
+    position: absolute;
+    left: 0;
+    margin: 0;
+    z-index: -1;
+    width: 100%;
+    top: 0;
+    box-sizing: border-box;
+}
+
+.altrp-heading-advanced {
+    display: inline-block;
+    margin: 0;
+}
+
+.altrp-heading-advanced-main-fill {
+    background-clip: unset;
+    text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.altrp-heading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

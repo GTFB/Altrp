@@ -65,18 +65,6 @@
         & .input-users{
             margin-right: 10px;
         }
-        & .vector-svg{
-            position: relative;
-            margin-left: 8px;
-            width: 16px;
-            height: 16px;
-            display: inline-block;
-            align-items: center;
-            fill: red;
-        }
-        .role-svg{
-            transform: rotate(180deg);
-        }
         .users-svg{
             position: relative;
             margin-right: 5px;
@@ -86,4 +74,21 @@
             align-items: center;
         }
    }
+}
+
+.vector-svg {
+    position: relative;
+    margin-left: 8px;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    align-items: center;
+    fill: red;
+    &.vector-svg--active {
+      border: 1px solid red;
+      border-radius: 100%;
+    }
+}
+.role-svg{
+    transform: rotate(180deg);
 }

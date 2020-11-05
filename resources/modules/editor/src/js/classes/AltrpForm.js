@@ -1,16 +1,26 @@
 import Resource from "./Resource";
+import {addResponseData, clearAllResponseData} from "../../../../front-app/src/js/store/responses-storage/actions";
 
 /**
  * Класс имитирующий поведение формы (собирает данные с виджетов полей и отправляет их на сервер)
  */
 class AltrpForm {
-  constructor(formId, modelName, method = 'POST', options = {}){
+  /**
+   *
+   * @param {string} formId
+   * @param {string} modelName
+   * @param {string} method
+   * @param {{}} options
+   */
+  constructor(formId, modelName = '', method = 'POST', options = {}){
     this.formId = formId;
     this.fields = [];
+    this.submitButtons = [];
     this.method = method;
     this.options = options;
     this.modelName = modelName;
     let route = `/ajax/models/${modelName}`;
+    const {dynamicURL, customRoute} = this.options;
 
     switch (modelName){
       case 'login':{
@@ -19,8 +29,14 @@ class AltrpForm {
       case 'logout':{
         route = `/logout`
       }break;
+      case 'email':{
+        route = `/ajax/feedback`
+      }break;
     }
-    this.resource = new Resource({route});
+    if(customRoute){
+      route = customRoute;
+    }
+    this.resource = new Resource({route, dynamicURL});
   }
 
   /**
@@ -32,7 +48,13 @@ class AltrpForm {
   }
 
   /**
-   * Добавлйет поле
+   * Добавляет кнопку
+   */
+  addSubmitButton(buttonElement){
+    this.submitButtons.push(buttonElement);
+  }
+  /**
+   * Добавляет поле
    * @param {FrontElement} field
    */
   addField(field){
@@ -60,7 +82,7 @@ class AltrpForm {
    * @param {string} submitText
    * @return {boolean}
    */
-  async submit(modelID, submitText = ''){
+  async submit(modelID = null, submitText = ''){
     let success = true;
     if(submitText){
       let confirmed =  await confirm(submitText);
@@ -89,48 +111,106 @@ class AltrpForm {
             document.location.reload();
             return;
           }
+          this.clearInputs();
+          this.updateResponseStorage(res);
           return res;
         }
+
         case 'PUT':{
-          // return await alert(JSON.stringify(this.getData()));
           let res;
-          if(modelID){
+          if(modelID || this.options.customRoute){
             res =  await this.resource.put(modelID, this.getData());
             import('./modules/ModelsManager').then(modelsManager=>{
               modelsManager.default.updateModelWithData(this.modelName, modelID, this.getData());
             });
-
+            // this.clearInputs();
+            this.updateResponseStorage(res);
             return res;
           }
-          console.error('Не удалось получить ИД модели для удаления!');
+          console.error('Не удалось получить ИД модели для обновления или customRoute!');
         }
         break;
+        case 'GET':{
+          // return await alert(JSON.stringify(this.getData()));
+          let res;
+          res =  await this.resource.getQueried(this.getData());
+          this.updateResponseStorage(res);
+          return res;
+        }
         case 'DELETE':{
-          if(modelID){
+          if(modelID || this.options.customRoute){
             // return await await alert('Удаление!');
             return await this.resource.delete(modelID);
           }
-          console.error('Не удалось получить ИД модели для удаления!');
+          console.error('Не удалось получить ИД модели для удаления или customRoute!');
         }
+        break;
       }
     } else {
-      return await alert('Валидация не прошла');
+      await alert('Пожалуйста, заполните все обязательные поля');
+      return{success: false};
     }
   }
 
   /**
+   * Очистим поля формы
+   */
+  clearInputs(){
+    this.fields.forEach(field=>{
+      try {
+        if (_.isFunction(_.get(field, 'component.setState'))) {
+          field.component.setState(state => ({...state, value: ''}));
+        }
+      }catch(error){
+        console.error(error);
+      }
+    });
+  }
+
+  /**
    * Собирает данные с полей для отправки
-   * @return {object}
+   * @return {{}}
    */
   getData(){
     let data = {altrp_ajax: true};
-    this.fields.forEach(field=>{
-      if(field.getValue() !== null){
-        data[field.getSettings('field_id')] = field.getValue();
-      }
-    });
+
+    if(this.modelName === 'email'){
+      let userMessage = '';
+      let subject = 'Altrp Email';
+
+      this.submitButtons.forEach(b=>{
+        if(b.getSettings('email_subject')){
+          subject = b.getSettings('email_subject');
+        }
+      });
+      this.fields.forEach(field=>{
+        if(field.getValue() !== null){
+          let fieldLabel = field.getSettings('content_label')
+              || field.getSettings('content_placeholder') || '';
+          let fieldValue = field.getValue();
+          userMessage += `${fieldLabel}: ${fieldValue} <br/> `
+        }
+      });
+      data.subject = subject;
+      data.user_message = userMessage;
+    } else {
+      this.fields.forEach(field=>{
+        if(field.getValue() !== null){
+          data[field.getSettings('field_id')] = field.getValue();
+        }
+      });
+    }
     return data;
   }
+
+  /**
+   * Обновить responses-storage данными
+   * @param {{}} res
+   */
+  updateResponseStorage(res = {}){
+    appStore.dispatch(addResponseData(this.formId, res));
+  }
+
 }
 
 export default AltrpForm

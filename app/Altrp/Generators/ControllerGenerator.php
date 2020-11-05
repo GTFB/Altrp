@@ -212,21 +212,12 @@ class ControllerGenerator extends AppGenerator
     {
         $actions = ['get', 'options', 'show', 'add', 'update', 'delete', 'update_column', 'filters'];
         $oldSources = $this->getSourceActions();
-//        if ($oldSources) {
-//            foreach ($oldSources as $source) {
-//                if (in_array($source->type, $actions)) {
-//                    $actions = $this->deleteAction($actions, $source->type);
-//                    if (!$actions) break;
-//                }
-//            }
-//        }
-//        if (!$actions) return true;
         $sources = [];
         $modelName = strtolower(Str::plural(Str::snake($this->getModelName())));
         $singleResource = Str::singular($modelName);
         $nowTime = Carbon::now();
         foreach ($actions as $action) {
-            if ($action == 'get') {
+            if ($action == 'get' || $action == 'add') {
                 $url = $modelName;
                 $name = ucfirst($action) . ' ' . Str::studly($modelName);
             } elseif ($action == 'options') {
@@ -709,8 +700,8 @@ class ControllerGenerator extends AppGenerator
         $apiAuthActions = ['add','update','delete','update_column'];
         foreach ($sources as $source) {
             if (in_array($source->type, $actions)) {
-                $routeMiddleware = $routeGenerator->getMiddleware($source);
-                $isApiAuth = $api && in_array($source->type, $apiAuthActions) ? "'auth:api'," : '';
+                $routeMiddleware = $routeGenerator->getMiddleware($source, $api);
+                $isApiAuth = $api && in_array($source->type, $apiAuthActions) && !$source->auth ? "'auth:api'," : '';
                 if ($routeMiddleware)
                     $routeMiddleware = "'middleware' => [{$isApiAuth}'" . implode("','",$routeMiddleware) . "'], ";
                 else {
@@ -735,7 +726,7 @@ class ControllerGenerator extends AppGenerator
         $routeGenerator->addDynamicVariable('id', \Str::singular($modelName));
         $routeGenerator->addDynamicVariable('column', 'column');
         $routeGenerator->addDynamicVariable('controllerName', $controller);
-        return $routeGenerator->generate($oldModelName, $modelName, $controller);
+        return $routeGenerator->generate($oldModelName, $modelName, $controller, $api);
     }
 
     /**
