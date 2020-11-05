@@ -139,10 +139,50 @@ class Input extends BaseElement{
           {
             'value' : 'left',
             'label' : 'left',
+          },
+          {
+            'value': 'absolute',
+            'label': 'absolute',
           }
         ],
       }
     );
+
+    this.addControl("label_position_top", {
+      type: CONTROLLER_SLIDER,
+      label: "Label Top Position",
+      default: {
+        unit: "px",
+        size: null
+      },
+      conditions: {
+        'content_label_position_type': ['absolute']
+      },
+      units: ["px", "%", "vh"],
+      max: 100,
+      min: -100,
+      rules: {
+        "{{ELEMENT}} .altrp-field-label-container{{STATE}}": 'top: {{SIZE}}{{UNIT}};'
+      }
+    });
+
+    this.addControl("label_position_left", {
+      type: CONTROLLER_SLIDER,
+      label: "Label Left Position",
+      default: {
+        unit: "px",
+        size: null
+      },
+      conditions: {
+        'content_label_position_type': ['absolute']
+      },
+      units: ["px", "%", "vh"],
+      max: 100,
+      min: -100,
+      rules: {
+        "{{ELEMENT}} .altrp-field-label-container{{STATE}}": 'left: {{SIZE}}{{UNIT}};'
+      }
+    });
 
     // this.addControl('content_label_nowrap', {
     //   type: CONTROLLER_SELECT,
@@ -224,6 +264,44 @@ class Input extends BaseElement{
       type: CONTROLLER_SWITCHER,
       label: 'Timestamp',
       default: false
+    });
+
+    this.addControl('content_clearable', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Clearable',
+      default: false
+    });
+
+    this.addControl('cross_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Cross Color',
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      conditions: {
+        'content_clearable': [true]
+      },
+      rules: {
+        '{{ELEMENT}} .input-clear-btn{{STATE}}': 'color: {{COLOR}};',
+      }
+    });
+
+    this.addControl("cross_size", {
+      type: CONTROLLER_SLIDER,
+      label: "Cross Size",
+      default: {
+        unit: "px",
+        size: null
+      },
+      conditions: {
+        'content_clearable': [true]
+      },
+      max: 50,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .input-clear-btn{{STATE}}": 'font-size: {{SIZE}}px;'
+      }
     });
 
     this.addControl('content_options_nullable', {
@@ -455,6 +533,43 @@ class Input extends BaseElement{
       min: 0,
       rules: {
       }
+    });
+
+    this.addControl('label_background_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Background Color',
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-field-label-container{{STATE}}': 'background-color: {{COLOR}};',
+      }
+    });
+
+    this.addControl('label_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        // top: 2,
+        // right: 2,
+        // bottom: 2,
+        // left: 2,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-field-label-container{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
     });
 
     this.addControl("label_style_font_color", {
