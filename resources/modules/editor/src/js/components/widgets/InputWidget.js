@@ -10,6 +10,7 @@ import { changeFormFieldValue } from "../../../../../front-app/src/js/store/form
 import AltrpModel from "../../classes/AltrpModel";
 import { cutString, sortOptions } from "../../helpers";
 import { connect } from "react-redux";
+import CKeditor from "../ckeditor/CKeditor";
 const AltrpInput = React.lazy(() => import("../altrp-input/AltrpInput"));
 
 class InputWidget extends Component {
@@ -187,7 +188,7 @@ class InputWidget extends Component {
     try {
       content_calculation = content_calculation.replace(/}}/g, '\')').replace(/{{/g, '_.get(context, \'');
       value = eval(content_calculation);
-      if(value === this.state.value){
+      if (value === this.state.value) {
         return;
       }
       this.setState(state => ({ ...state, value }), () => { this.dispatchFieldValueToStore(value); });
@@ -378,15 +379,15 @@ class InputWidget extends Component {
 
     let input = null;
     switch (this.state.settings.content_type) {
-      case 'select':{
+      case 'select': {
         let options = this.state.options || [];
         // options = _.sortBy(options, (o => o.label ? o.label.toString() : o));
         input = <select value={value || ''}
-                        onChange={this.onChange}
-                        onKeyDown={this.handleEnter}
-                        id={this.state.settings.position_css_id}
-                        className={"altrp-field " + this.state.settings.position_css_classes}>
-          {this.state.settings.content_options_nullable ? <option value=""/> : ''}
+          onChange={this.onChange}
+          onKeyDown={this.handleEnter}
+          id={this.state.settings.position_css_id}
+          className={"altrp-field " + this.state.settings.position_css_classes}>
+          {this.state.settings.content_options_nullable ? <option value="" /> : ''}
 
 
           {
@@ -404,6 +405,10 @@ class InputWidget extends Component {
       case 'radio':
       case 'checkbox': {
         input = this.renderRepeatedInput();
+      }
+        break;
+      case 'wysiwyg': {
+        input = this.renderWysiwyg();
       }
         break;
       default: {
@@ -485,7 +490,7 @@ class InputWidget extends Component {
     } = this.props.element.getSettings();
 
     let options = this.state.options;
-    if(content_options_nullable){
+    if (content_options_nullable) {
       options = _.union([{ label: nulled_option_title, value: '', }], options);
     }
 
@@ -563,6 +568,10 @@ class InputWidget extends Component {
       // menuIsOpen: true,
     };
     return <AltrpSelect  {...select2Props} />;
+  }
+
+  renderWysiwyg() {
+    return <CKeditor text={this.getContent('content_default_value')} readOnly={this.getContent('read_only')} />
   }
 }
 

@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@ckeditor/ckeditor5-build-balloon": "^23.1.0",
     "@loadable/component": "^5.13.1",
     "@material-ui/core": "^4.11.0",
     "@tinymce/tinymce-react": "^3.6.0",
@@ -101,6 +102,9 @@
     "@babel/preset-es2017": "^7.0.0-beta.53",
     "@babel/preset-react": "^7.10.4",
     "@babel/runtime": "^7.10.3",
+    "@ckeditor/ckeditor5-alignment": "^23.1.0",
+    "@ckeditor/ckeditor5-editor-balloon": "^23.1.0",
+    "@ckeditor/ckeditor5-react": "^3.0.0",
     "@hot-loader/react-dom": "^16.13.0",
     "@svgr/webpack": "^5.4.0",
     "autoprefixer": "^9.8.1",
