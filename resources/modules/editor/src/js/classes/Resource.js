@@ -194,6 +194,29 @@ class Resource {
   }
 
   /**
+   * @param {File} file
+   * @return {Promise}
+   * */
+  postFile(file) {
+    let headers = {
+      'X-CSRF-TOKEN': _token,
+    };
+    let formData = new FormData();
+    formData.append("favicon", file);
+    let options = {
+      method: 'POST',
+      body: formData,
+      headers,
+    };
+    return fetch(this.getRoute(), options).then(res => {
+      if (res.ok === false) {
+        return Promise.reject(res.text(), res.status);
+      }
+      return res.json()
+    });
+  }
+
+  /**
    * @return {Promise}
    * */
   put(id, data, headers = null){
