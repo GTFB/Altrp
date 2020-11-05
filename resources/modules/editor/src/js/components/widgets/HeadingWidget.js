@@ -35,7 +35,7 @@ class HeadingWidget extends Component {
         linkProps.target = '_black';
       }
       if ((this.state.settings.link_link.tag === 'Link') && ! isEditor()) {
-        tag = Link;
+        tag = AltrpLink;
         linkProps.to = this.state.settings.link_link.url.replace(':id', this.getModelId() || '');
         if(_.isObject(modelData)){
           linkProps.to = parseURLTemplate(this.state.settings.link_link.url, modelData);

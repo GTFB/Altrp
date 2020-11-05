@@ -438,5 +438,13 @@ use Illuminate\Support\Facades\Route;
  */
 ';
     File::put( $filename, $content );
+    /**
+     * Файл AltrpCustomRoutes.php для пользовательских роутов
+     */
+
+    $filename = base_path( 'routes/AltrpCustomRoutes.php' );
+    $content = '<?php
+/*Custom routes*/';
+    File::put( $filename, $content );
   }
 }
