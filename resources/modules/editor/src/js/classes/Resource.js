@@ -166,15 +166,13 @@ class Resource {
    * @return {Promise}
    * */
   postFiles(files, fileType){
-    let boundary = String(Math.random()).slice(2);
     fileType = fileType || 'image';
     let headers = {
       'X-CSRF-TOKEN': _token,
-      // 'Content-Type': 'multipart/form-data; boundary=' + boundary
     };
     let formData = new FormData();
     for (let i = 0; i < files.length; i++) {
-      if(files[i].size > MAX_FILE_SIZE || files[i].type.indexOf(fileType) !== 0){
+      if(files[i].size > MAX_FILE_SIZE || files[i].type.indexOf(fileType) === -1){
         console.log(files[i]);
         continue;
       }
