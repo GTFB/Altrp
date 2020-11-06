@@ -13,7 +13,7 @@ import {useQuery, usePaginatedQuery, queryCache} from  "react-query";
  * @constructor
  */
 const AltrpQueryComponent = (props)=>{
-  let _data =[], _status, _error, _latestData;
+  let _data = [], _status, _error, _latestData;
 
   const useQuerySettings = {
     forceFetchOnMount: true,
@@ -25,12 +25,14 @@ const AltrpQueryComponent = (props)=>{
    * проверим есть ли настройки для сортировок по умолчанию
    */
   const defaultSortSettings =  {};
-  settings.tables_columns.forEach(column => {
+  settings.tables_columns && settings.tables_columns.forEach(column => {
     if(column.column_is_default_sorted && !defaultSortSettings.order_by){
       defaultSortSettings.order_by = column.accessor;
       defaultSortSettings.order = _.get(column, 'column_is_default_sorted_direction', 'ASC')
     }
   });
+  const [page, setPage] = useState(1);
+
   const [sortSetting, setSortSettings] = useState(defaultSortSettings);
   const [filterSetting, setFilterSettings] = useState({});
   const fetchModels = useCallback(async (key, page = 1, sortSetting, filterSetting, params,  groupBy) => {
@@ -58,7 +60,7 @@ const AltrpQueryComponent = (props)=>{
       resolvedData,
       latestData,
       error,
-    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting, query.getParams(), groupBy],
+    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting, query.getParams()],
         fetchModels,
         useQuerySettings);
     _data = resolvedData ? resolvedData : _data;
@@ -103,7 +105,11 @@ const AltrpQueryComponent = (props)=>{
     setSortSettings,
     filterSetting,
     sortSetting,
+    _latestData,
+    setPage,
+    page,
     _error};
+  console.log(data);
   return children.map(child => React.cloneElement(child, {...childrenProps, key:child.key}));
 
 };

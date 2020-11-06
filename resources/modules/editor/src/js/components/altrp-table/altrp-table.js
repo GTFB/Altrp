@@ -11,6 +11,7 @@ import {
 } from "../../../../../front-app/src/js/helpers";
 import {iconsManager} from "../../../../../admin/src/js/helpers";
 import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput";
+import AltrpQueryComponent from "../altrp-query-component/altrp-query-component";
 
 
 /**
@@ -23,8 +24,10 @@ import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput
  * @param {{}} _error
  * @param {function} setSortSettings
  * @param {function} setFilterSettings
+ * @param {function} setPage
  * @param {{}} filterSetting
  * @param {{}} sortSetting
+ * @param {int} page
  * @return {*}
  * @constructor
  */
@@ -37,6 +40,9 @@ const AltrpTable = ({settings,
                       setSortSettings,
                       setFilterSettings,
                       filterSetting,
+                      setPage,
+                      _latestData,
+                      page,
                       sortSetting}) => {
   if (! (settings.tables_columns && settings.tables_columns.length)) {
     return <div children="Please Add Column"/>
@@ -55,7 +61,12 @@ const AltrpTable = ({settings,
       }, [settings]
       );
 
-  const [page, setPage] = useState(1);
+  if(groupBy){
+    setSortSettings({
+      order: 'ASC',
+      order_by: groupBy,
+  })
+  }
 
   let counter = query.getCounterStart(page);
 
@@ -298,8 +309,6 @@ const AltrpTable = ({settings,
     }
   </>
 };
-
-export default AltrpTable
 
 /**
  * Парсинг колонок из настроек в колонки для react-table
@@ -589,4 +598,9 @@ function renderCellActions(cell, row = {}) {
       return React.createElement(tag, actionProps, actionContent);
     })}
   </div>
+}
+
+
+export default (props) => {
+  return <AltrpQueryComponent {...props}><AltrpTable/></AltrpQueryComponent>
 }
