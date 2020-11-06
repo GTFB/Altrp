@@ -546,54 +546,54 @@ class Button extends BaseElement {
     this.addControl("position_dropbar_options", {
       type: CONTROLLER_SELECT,
       label: "Position",
-      default: "bottomLeft",
+      default: "bottom-start",
       options: [
         {
-          value: "bottomLeft",
+          value: "bottom-start",
           label: "Bottom left"
         },
         {
-          value: "bottomCenter",
+          value: "bottom",
           label: "Bottom center"
         },
         {
-          value: "bottomRight",
+          value: "bottom-end",
           label: "Bottom right"
         },
         {
-          value: "topLeft",
+          value: "top-start",
           label: "Top left"
         },
         {
-          value: "topCenter",
+          value: "top",
           label: "Top center"
         },
         {
-          value: "topRight",
+          value: "top-end",
           label: "Top right"
         },
         {
-          value: "leftTop",
+          value: "left-start",
           label: "Left top"
         },
         {
-          value: "leftCenter",
+          value: "left",
           label: "Left center"
         },
         {
-          value: "leftBottom",
+          value: "left-end",
           label: "Left bottom"
         },
         {
-          value: "rightTop",
+          value: "right-start",
           label: "Right top"
         },
         {
-          value: "rightCenter",
+          value: "right",
           label: "Right center"
         },
         {
-          value: "rightBottom",
+          value: "right-end",
           label: "Right bottom"
         },
       ],
@@ -624,7 +624,7 @@ class Button extends BaseElement {
       max: 1000,
       min: 0,
       rules: {
-        // "{{ELEMENT}} .altrp-text{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-dropbar-container{{STATE}}": "width: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -637,9 +637,6 @@ class Button extends BaseElement {
       },
       max: 1000,
       min: 0,
-      rules: {
-        // "{{ELEMENT}} .altrp-text{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
-      }
     });
 
     this.addControl("hide_delay_dropbar_options", {
@@ -651,9 +648,6 @@ class Button extends BaseElement {
       },
       max: 1000,
       min: 0,
-      rules: {
-        // "{{ELEMENT}} .altrp-text{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
-      }
     });
 
     this.addControl("offset_dropbar_options", {
@@ -665,9 +659,6 @@ class Button extends BaseElement {
       },
       max: 100,
       min: -100,
-      rules: {
-        // "{{ELEMENT}} .altrp-text{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
-      }
     });
 
     this.endControlSection();
