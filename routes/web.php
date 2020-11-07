@@ -46,9 +46,12 @@ Route::get( '/admin/editor-content', function (){
   return view( 'editor-content' );
 } )->middleware( 'auth' )->name('editor-content');
 
-Route::get( '/admin/editor-reports', function (){
-  return view( 'editor-reports' );
-} )->middleware( 'auth' )->name('editor-reports');
+Route::get('/admin/reports',fn()=>view('reports'));
+Route::get('/admin/reports-content',fn()=>view('reports-content'));
+
+// Route::get( '/admin/editor-reports', function (){
+//   return view( 'editor-reports' );
+// } )->middleware( 'auth' )->name('editor-reports');
 
 Route::get('/reports/html/{id}', "ReportsController@page");
 

@@ -44,4 +44,5 @@ public/modules/admin
 public/favicon.ico
 public/modules/front-app
 public/modules/editor
+public/modules/reports
 /routes/AltrpCustomRoutes.php
