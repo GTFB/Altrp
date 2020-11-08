@@ -19,13 +19,13 @@ export default function AltrpPopper(props) {
   });
 
   useEffect(() => {
-    if(placement !== props.settings.placement) {
+    if (placement !== props.settings.placement) {
       setPlacement(props.settings.placement);
       forceUpdate()
     }
 
-    if(Object.keys(updateSettings).length !== 0) {
-      if(JSON.stringify(updateSettings) !== JSON.stringify(props.settings.updateSettings)) {
+    if (Object.keys(updateSettings).length !== 0) {
+      if (JSON.stringify(updateSettings) !== JSON.stringify(props.settings.updateSettings)) {
         setUpdateSettings(props.settings.updateSettings);
         forceUpdate()
       }
@@ -35,6 +35,6 @@ export default function AltrpPopper(props) {
   return React.cloneElement(props.children, {
     ref: object,
     style: styles.popper,
-    ...attributes.popper
+    ...attributes.popper,
   })
 }

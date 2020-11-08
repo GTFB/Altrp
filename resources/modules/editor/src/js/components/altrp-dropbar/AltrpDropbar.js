@@ -7,8 +7,6 @@ class Dropbar extends Component {
 
     this.state = {
       show: false,
-      activePosition: { class: "", position: "" },
-      contentPosition: {},
     };
 
     this.show = this.show.bind(this);
@@ -16,7 +14,6 @@ class Dropbar extends Component {
     this.enterShow = this.enterShow.bind(this);
 
     this.children = React.createRef();
-    this.object = React.createRef();
   };
 
   show() {
@@ -65,34 +62,33 @@ class Dropbar extends Component {
     const children = React.Children.only(this.props.children);
 
     let mainClass = "altrp-dropbar-" + this.props.className;
-
+    console.log((this.state.show ? " altrp-dropbar-container-show" : " altrp-dropbar-container-hide"))
     return (
       <div className={"altrp-dropbar altrp-dropbar-" + mainClass}>
-          <span className={"altrp-dropbar-children-wrapper " + mainClass + "-wrapper"}>
-            {
-              React.cloneElement(children,
-                {
-                  ref: this.children,
-                  onClick: this.props.settings.mode_dropbar_options === "click" ? this.show : null,
-                  onMouseEnter: this.props.settings.mode_dropbar_options === "hover" ? this.enterShow : null,
-                  onMouseLeave: this.props.settings.mode_dropbar_options === "hover" ? this.leaveHide : null
-                }
+        <span className={"altrp-dropbar-children-wrapper " + mainClass + "-wrapper"}>
+          {
+            React.cloneElement(children,
+              {
+                ref: this.children,
+                onClick: this.props.settings.mode_dropbar_options === "click" ? this.show : null,
+                onMouseEnter: this.props.settings.mode_dropbar_options === "hover" ? this.enterShow : null,
+                onMouseLeave: this.props.settings.mode_dropbar_options === "hover" ? this.leaveHide : null
+              }
               )
-            }
-            <AltrpPopper
-              target={this.children}
-              settings={{
-                placement: this.props.settings.position_dropbar_options,
-                offset: [0, this.props.settings.offset_dropbar_options.size],
-                updateSettings: {
-                  width: this.props.settings.width_dropbar_options
-                }
-              }}
+          }
+          <AltrpPopper
+            target={this.children}
+            settings={{
+              placement: this.props.settings.position_dropbar_options,
+              offset: [0, this.props.settings.offset_dropbar_options.size],
+              updateSettings: {
+                width: this.props.settings.width_dropbar_options
+              }
+            }}
+          >
+            <div
+              className={"altrp-dropbar-container " + mainClass + "-containter" + (this.state.show ? " altrp-dropbar-container-show" : " altrp-dropbar-container-hide")}
             >
-              <div
-                ref={this.object}
-                className={"altrp-dropbar-container " + mainClass + "-containter" + (this.state.show ? " altrp-dropbar-container-show" : " altrp-dropbar-container-hide")}
-              >
               {
                 React.createElement("div",
                   {
@@ -101,11 +97,11 @@ class Dropbar extends Component {
                       __html: this.props.settings.content_dropbar_section
                     },
                   }
-                )
+                  )
               }
             </div>
-            </AltrpPopper>
-          </span>
+          </AltrpPopper>
+        </span>
       </div>
     );
   };
