@@ -357,6 +357,7 @@ class InputWidget extends Component {
       case "absolute":
         styleLabel = {
           position: 'absolute',
+          zIndex: 2
         };
         classLabel = "";
         break;
@@ -417,9 +418,8 @@ class InputWidget extends Component {
         break;
       default: {
         const isClearable = this.state.settings.content_clearable;
-        // console.log(isClearable)
         input = <React.Suspense fallback={<input />}>
-          <div className="position-relative">
+          <div className="altrp-input-wrapper">
             <AltrpInput type={this.state.settings.content_type}
               value={value || ''}
               autoComplete={autocomplete}

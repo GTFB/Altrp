@@ -36,3 +36,8 @@
 .altrp-field:hover + .input-clear-btn, .input-clear-btn:hover {
   display: block;
 }
+
+.altrp-input-wrapper {
+  position: relative;
+  flex-grow: 1;
+}

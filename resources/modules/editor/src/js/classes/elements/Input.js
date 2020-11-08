@@ -134,7 +134,7 @@ class Input extends BaseElement {
         options:[
           {
             'value' : 'top',
-            'label' : 'Default',
+            'label' : 'Top',
           },
           {
             'value' : 'bottom',
@@ -215,31 +215,31 @@ class Input extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "Label Width",
       default: {
-        unit: "px",
+        unit: "%",
         size: null
       },
-      units: ["px", "%", "vh"],
-      max: 1000,
+      units: ["%"],
+      max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-field-label{{STATE}}": 'width: {{SIZE}}{{UNIT}};'
+        "{{ELEMENT}} .altrp-field-label-container{{STATE}}": 'width: {{SIZE}}%; flex-shrink: 0;'
       }
     });
 
-    this.addControl("input_width", {
-      type: CONTROLLER_SLIDER,
-      label: "Field Width",
-      default: {
-        unit: "px",
-        size: null
-      },
-      units: ["px", "%", "vh"],
-      max: 1000,
-      min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-field{{STATE}}": 'width: {{SIZE}}{{UNIT}};'
-      }
-    });
+    // this.addControl("input_width", {
+    //   type: CONTROLLER_SLIDER,
+    //   label: "Field Width",
+    //   default: {
+    //     unit: "px",
+    //     size: null
+    //   },
+    //   units: ["px", "%", "vh"],
+    //   max: 1000,
+    //   min: 0,
+    //   rules: {
+    //     "{{ELEMENT}} .altrp-field{{STATE}}": 'width: {{SIZE}}{{UNIT}};'
+    //   }
+    // });
 
     this.addControl('content_placeholder', {
       type: CONTROLLER_TEXT,
