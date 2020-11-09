@@ -542,7 +542,7 @@ class Input extends BaseElement {
 
     this.addControl("label_position_top", {
       type: CONTROLLER_SLIDER,
-      label: "Label X Position",
+      label: "Label Y Position",
       default: {
         unit: "px",
         size: null
@@ -560,7 +560,7 @@ class Input extends BaseElement {
 
     this.addControl("label_position_left", {
       type: CONTROLLER_SLIDER,
-      label: "Label Y Position",
+      label: "Label X Position",
       default: {
         unit: "px",
         size: null
