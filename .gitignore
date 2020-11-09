@@ -37,7 +37,6 @@ _ide_helper.php
 /app/Http/Requests/AltrpRequests
 /app/Plugins/*/
 /app/Plugins/plugins.json
-=======
 
 #bundles
 public/modules/admin

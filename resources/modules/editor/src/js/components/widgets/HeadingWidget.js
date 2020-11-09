@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from 'react-router-dom'
+import AltrpLink from "../altrp-link/AltrpLink";
 import {isEditor, parseURLTemplate} from "../../../../../front-app/src/js/helpers";
 import "../../../sass/altrp-heading.scss";
 
@@ -35,7 +35,7 @@ class HeadingWidget extends Component {
         linkProps.target = '_black';
       }
       if ((this.state.settings.link_link.tag === 'Link') && ! isEditor()) {
-        tag = Link;
+        tag = AltrpLink;
         linkProps.to = this.state.settings.link_link.url.replace(':id', this.getModelId() || '');
         if(_.isObject(modelData)){
           linkProps.to = parseURLTemplate(this.state.settings.link_link.url, modelData);
@@ -44,7 +44,17 @@ class HeadingWidget extends Component {
       if(isEditor()){
         linkProps.onClick = e => {e.preventDefault()}
       }
-      link = React.createElement(tag, { ...linkProps, dangerouslySetInnerHTML: { __html: text }});
+      link = React.createElement(tag, { ...linkProps, }, text);
+    } else if (this.state.settings.creative_link_link && this.state.settings.creative_link_link.url && this.state.settings.heading_settings_html_tag !== "p") {
+      link = <AltrpLink
+        link={this.state.settings.creative_link_link}
+        className="altrp-inherit"
+        creativeLink={this.getContent("creative_link_controller")}
+      >
+        {
+          text
+        }
+      </AltrpLink>
     }
 
     let advancedHeading = "";
