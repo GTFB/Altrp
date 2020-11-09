@@ -48,7 +48,7 @@ const AltrpQueryComponent = (props)=>{
     if(filterSettingJSON.length > 2){
       queryData.filters = filterSettingJSON;
     }
-    return query.getQueried(queryData)
+    return await query.getQueried(queryData)
   });
 
   if(query.pageSize){
@@ -109,7 +109,6 @@ const AltrpQueryComponent = (props)=>{
     setPage,
     page,
     _error};
-  console.log(data);
   return children.map(child => React.cloneElement(child, {...childrenProps, key:child.key}));
 
 };

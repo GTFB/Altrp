@@ -524,6 +524,29 @@ class Table extends BaseElement {
      * Настройки для футера таблицы END
      */
 
+    /**
+     * Настройки для футера таблицы
+     */
+
+    this.startControlSection("deep_customization", {
+      label: "Deep Customization"
+    });
+
+    this.addControl('inner_page_size', {
+      type: CONTROLLER_NUMBER,
+      label: 'Page Size',
+      default: 0
+    });
+
+
+    this.addControl('inner_sort', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Sort',
+      default: false
+    });
+
+    this.endControlSection();
+
     this.startControlSection("filter_style_table", {
       tab: TAB_STYLE,
       label: "Filter"

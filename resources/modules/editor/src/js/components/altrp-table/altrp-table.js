@@ -28,6 +28,7 @@ import AltrpQueryComponent from "../altrp-query-component/altrp-query-component"
  * @param {{}} filterSetting
  * @param {{}} sortSetting
  * @param {int} page
+ * @param {[]} _latestData
  * @return {*}
  * @constructor
  */
@@ -243,8 +244,8 @@ const AltrpTable = ({settings,
                 /**
                  * Если нужно указать номер по порядку
                  */
-                if(cell.column._accessor && cell.column._accessor.trim() === '##'){
-                  cellContent = counter++;
+                if(cell.column._accessor && (cell.column._accessor.trim() === '##')){
+                  cellContent = (counter++) + '';
                 }
                 let cellStyles = _.get(cell, 'column.column_styles_field');
                 cellStyles = _.get(row.original, cellStyles, '');
@@ -254,7 +255,7 @@ const AltrpTable = ({settings,
                 /**
                  * Если есть actions, то надо их вывести
                  */
-                if(_.isArray(_.get(cell,'column.actions'))){
+                if(_.get(cell,'column.actions.length')){
                   return <td {...cellProps}
                              className={cellClassName}
                              style={style}>{renderCellActions(cell, row)}</td>
@@ -263,7 +264,7 @@ const AltrpTable = ({settings,
                   return <td {...cellProps}
                              className={cellClassName}
                              dangerouslySetInnerHTML={
-                               {__html:cellContent}
+                               {__html:cellContent + ''}
                              }
                              style={style}>
                   </td>
@@ -315,7 +316,7 @@ const AltrpTable = ({settings,
  * @param settings
  * @return {Array}
  */
-function settingsToColumns(settings) {
+export function settingsToColumns(settings) {
   let columns = [];
   let { tables_columns } = settings;
   tables_columns = tables_columns || [];
@@ -339,7 +340,7 @@ function settingsToColumns(settings) {
  * @param {{}}settings
  * @return {string|array}
  */
-function renderAdditionalRows(settings) {
+export function renderAdditionalRows(settings) {
   let { additional_rows } = settings;
   if(! _.isArray(additional_rows)){
     return '';

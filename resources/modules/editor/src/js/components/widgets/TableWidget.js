@@ -16,9 +16,31 @@ class TableWidget extends Component {
     this.scrollbar = React.createRef();
   }
   _componentDidMount(){
-    import('../altrp-table/altrp-table').then(res=>{
-      this.setState(state=>({...state,TableComponent:res.default}))
-    })
+    switch(this.props.element.getSettings('choose_datasource')){
+      case 'datasource':{
+        import('../altrp-table/altrp-table-without-update').then(res=>{
+          this.setState(state=>({...state,TableComponent:res.default}))
+        });
+      } break;
+      case 'query':{
+        const query = this.props.element.getSettings('table_query');
+        if((! query.pageSize) || (query.pageSize <=0 )){
+          import('../altrp-table/altrp-table-without-update').then(res=>{
+            this.setState(state=>({...state,TableComponent:res.default}))
+          });
+        } else {
+          import('../altrp-table/altrp-table').then(res=>{
+            this.setState(state=>({...state,TableComponent:res.default}))
+          });
+        }
+      }
+      break;
+      default:{
+        import('../altrp-table/altrp-table').then(res=>{
+          this.setState(state=>({...state,TableComponent:res.default}))
+        });
+      }
+    }
   }
 
   /**
