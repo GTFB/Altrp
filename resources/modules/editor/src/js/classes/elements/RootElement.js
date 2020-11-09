@@ -974,29 +974,29 @@ class RootElement extends BaseElement {
       },
     });
 
-    // this.addControl('button_gradient', {
-    //   type: CONTROLLER_GRADIENT,
-    //   label: 'Gradient',
-    //   default: {
-    //     isWithGradient: false,
-    //     firstColor: "rgba(97,206,112,1)",
-    //     firstPoint: '0',
-    //     secondColor: "rgba(242,41,91,1)",
-    //     secondPoint: "100",
-    //     angle: "0",
-    //     value: ""
-    //   },
-    //   rules: {
-    //     ".altrp-btn{{STATE}}": "background-image: {{VALUE}}"
-    //   }
-    // });
-
     this.addControl('button_background_image', {
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
       default: { url: "" },
       rules: {
         ".altrp-btn{{STATE}}": "background-image: url({{URL}});"
+      }
+    });
+
+    this.addControl('button_gradient', {
+      type: CONTROLLER_GRADIENT,
+      label: 'Gradient',
+      default: {
+        isWithGradient: false,
+        firstColor: "rgba(97,206,112,1)",
+        firstPoint: '0',
+        secondColor: "rgba(242,41,91,1)",
+        secondPoint: "100",
+        angle: "0",
+        value: ""
+      },
+      rules: {
+        ".altrp-btn{{STATE}}": "background-image: {{VALUE}}"
       }
     });
 
