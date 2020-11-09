@@ -996,7 +996,7 @@ class RootElement extends BaseElement {
         value: ""
       },
       rules: {
-        ".altrp-btn{{STATE}}": "background-image: {{VALUE}}"
+        "div .altrp-btn{{STATE}}": "background-image: {{VALUE}}"
       }
     });
 
