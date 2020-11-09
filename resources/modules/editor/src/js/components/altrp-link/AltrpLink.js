@@ -6,7 +6,6 @@ import BasicLink from "./BasicLink";
 
 class AltrpLink extends Component {
   render() {
-    console.log(this.props);
     let link = <BasicLink {...this.props} link={this.props.link} className={this.props.className}>
       {
       this.props.children

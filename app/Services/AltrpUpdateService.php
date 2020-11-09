@@ -143,7 +143,7 @@ class AltrpUpdateService
   private function write_public_permissions( $path = '')
   {
     try{
-      exec("chmod -R 0777  " . base_path( $path ) );
+      exec("chmod -R 0775  " . base_path( $path ) );
       return true;
     } catch (\Exception $e){
       return false;

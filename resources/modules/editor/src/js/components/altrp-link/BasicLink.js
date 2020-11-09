@@ -12,8 +12,8 @@ class BasicLink extends Component {
       noFollow: false,
       url: "/",
       tag: "a",
-      to: this.props.to || '/',
-      href: this.props.href || '/',
+      to: this.props.to || _.get(this,'props.link.url', '/'),
+      href: this.props.href || _.get(this,'props.link.url', '/'),
       toPrevPage: false
     };
     if(this.props.link) {
