@@ -12,7 +12,7 @@ import FilterField from "./fields/FilterField";
 import LegendField from "./fields/LegendField";
 import LegendPositionField from "./fields/LegendPositionField";
 import SourceField from "./fields/SourceField";
-import ColorSchemeField from "./fields/colorSchemeField";
+import ColorSchemeField from "./fields/ColorSchemeField";
 import VerticalTableField from "./fields/VerticalTableField";
 import { queryString } from "./helpers/queryString";
 
