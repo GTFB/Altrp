@@ -861,7 +861,7 @@ class Input extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-field-required{{STATE}}": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-field-label--required::after{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -871,13 +871,13 @@ class Input extends BaseElement {
       default: {
         lineHeight: 1.5,
         spacing: 0,
-        size: 13,
+        // size: 13,
         weight: "normal",
         family: "Open Sans",
         decoration: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-field-required{{STATE}}': [
+        '{{ELEMENT}} .altrp-field-label--required::after{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',

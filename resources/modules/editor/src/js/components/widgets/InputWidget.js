@@ -316,7 +316,6 @@ class InputWidget extends Component {
 
   render() {
     let label = null;
-    let required = null;
     const { options_sorting } = this.state.settings;
 
     let value = this.state.value;
@@ -364,15 +363,13 @@ class InputWidget extends Component {
     }
 
     if (this.state.settings.content_label != null) {
-      label = <div className={"altrp-field-label-container " + classLabel} style={styleLabel}><label className="altrp-field-label">{this.state.settings.content_label}</label></div>
+      label = <div className={"altrp-field-label-container " + classLabel} style={styleLabel}>
+        <label className={`altrp-field-label ${this.state.settings.content_required ? 'altrp-field-label--required' : ''}`}>
+          {this.state.settings.content_label}
+        </label>
+      </div>
     } else {
       label = null
-    }
-
-    if (this.state.settings.content_required) {
-      required = <div className="altrp-field-label-container"><label className="altrp-field-required">*</label></div>
-    } else {
-      required = null
     }
 
     let autocomplete = "off";
@@ -438,15 +435,11 @@ class InputWidget extends Component {
     }
     return <div className={"altrp-field-container " + classLabel}>
       {this.state.settings.content_label_position_type == "top" ? label : ""}
-      {this.state.settings.content_label_position_type == "top" ? required : ""}
       {this.state.settings.content_label_position_type == "left" ? label : ""}
-      {this.state.settings.content_label_position_type == "left" ? required : ""}
       {this.state.settings.content_label_position_type == "absolute" ? label : ""}
       {/* .altrp-field-label-container */}
       {input}
-      {/* <InputMask mask="99/99/9999" onChange={this.onChange} value={this.state.value} /> */}
       {this.state.settings.content_label_position_type == "bottom" ? label : ""}
-      {this.state.settings.content_label_position_type == "bottom" ? required : ""}
     </div>
   }
 

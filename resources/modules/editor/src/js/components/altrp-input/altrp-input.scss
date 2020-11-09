@@ -41,3 +41,10 @@
   position: relative;
   flex-grow: 1;
 }
+
+.altrp-field-label--required::after {
+  content: "*";
+  color: red;
+  font-size: inherit;
+  padding-left: 10px;
+}
