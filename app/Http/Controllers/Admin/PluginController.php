@@ -10,50 +10,45 @@ use Nwidart\Modules\Facades\Module;
 
 class PluginController extends Controller
 {
-
-      public function index(Request $request)
+    /**
+     * Главная страница со всеми плагинами
+     * @return \Illuminate\Http\JsonResponse
+     */
+      public function index()
       {
           $modules = Module::all();
+          $modulesStatusesFile = base_path('modules_statuses.json');
+          if (!file_exists($modulesStatusesFile)) {
+              file_put_contents($modulesStatusesFile, '{}');
+          }
+          $modulesStatusesConfig = json_decode(file_get_contents($modulesStatusesFile), true);
           $modulesArr = [];
           if ($modules) {
               foreach ($modules as $module) {
+                  if (!isset($modulesStatusesConfig[$module->getName()])) {
+                      $modulesStatusesConfig[$module->getName()] = false;
+                      file_put_contents($modulesStatusesFile, json_encode($modulesStatusesConfig));
+                  }
+                  $enabled = $module->isEnabled();
                   $modulesArr[] = [
                       'name' => $module->getName(),
-                      'enabled' => $module->isEnabled(),
+                      'enabled' => $enabled,
                       'image' => $module->json()->image
                   ];
               }
           }
           return response()->json($modulesArr);
-//            $pluginsConfig = json_decode(file_get_contents(app_path() . "/Plugins/plugins.json"), true);
-//
-//            $pluginsInstalled = $pluginsConfig['installed'];
-
-//            $plugins = [];
-
-//            foreach ($pluginsInstalled as $plugin) {
-//                  $pluginFile = app_path() . "/Plugins/$plugin/$plugin.php";
-//                  $pluginClass = "App\\Plugins\\$plugin\\$plugin";
-//                  //Проверяем, есть ли основной класс
-//                  if (is_file($pluginFile)) {
-//                        $pluginInstance = new $pluginClass();
-//                        $plugins[] = [
-//                              'name' => $pluginInstance->getPluginName(),
-//                              'enabled' => $pluginInstance->pluginEnabled(),
-//                              'image' => $pluginInstance->getImage()
-//                        ];
-//                  }
-//            }
-
-//            return response()->json($plugins);
       }
 
+    /**
+     * Переключатель состояния плагина (вкл./выкл.)
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
       public function switch(Request $request)
       {
-            $moduleName = $request->name;
-            $value = $request->value;
-//            $pluginClass = "App\\Plugins\\$pluginName\\$pluginName";
-//            $pluginInstance = new $pluginClass();
+          $moduleName = $request->name;
+          $value = $request->value;
           $module = Module::has(ucfirst($moduleName));
           if (! $module)
               return response()->json('Module no found', 404);
