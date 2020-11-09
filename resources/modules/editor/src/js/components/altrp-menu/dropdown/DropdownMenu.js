@@ -82,7 +82,7 @@ class DropdownMenu extends Component {
         default={{
           name: "in_width",
           assetType: "icon",
-          iconComponent: iconsManager().renderIcon("in_width")
+          iconComponent: iconsManager.renderIcon("in_width")
         }}
         className="altrp-nav-menu-dropdown-button-icon"
       />
@@ -95,7 +95,7 @@ class DropdownMenu extends Component {
           default={{
             name: "add",
             assetType: "icon",
-            iconComponent: iconsManager().renderIcon("add")
+            iconComponent: iconsManager.renderIcon("add")
           }}
           className="altrp-nav-menu-dropdown-button-icon altrp-nav-menu-dropdown-button-icon-close"
         />
@@ -111,26 +111,26 @@ class DropdownMenu extends Component {
             }
           </div>
         </div>
-        <div className={"altrp-nav-menu-ul-wrapper altrp-nav-menu-dropdown-content" + (!this.state.show ? "" : " altrp-nav-menu-dropdown-content-show")}>
-          <ul className="altrp-nav-menu-ul">
+        <div className={"altrp-nav-menu-ul-wrapper-dropdown altrp-nav-menu-dropdown-content" + (!this.state.show ? "" : " altrp-nav-menu-dropdown-content-show")}>
+          <ul className="altrp-nav-menu-ul-dropdown">
             {
               list.map((li, idx) => {
                 return (
                   !li.id_repeater_menu_layout ? (
                       !li.childrenParent ? (
-                        <li className="altrp-nav-menu-li" key={idx}>
-                          <AltrpLink link={li.link_repeater_menu_layout} className="altrp-nav-menu-li-link altrp-nav-menu-li-link-label">
+                        <li className="altrp-nav-menu-li-dropdown" key={idx}>
+                          <AltrpLink link={li.link_repeater_menu_layout} className="altrp-nav-menu-li-link-dropdown altrp-nav-menu-li-link-label-dropdown">
                             {
                               li.label_repeater_menu_layout
                             }
                           </AltrpLink>
                           {
-                            this.props.settings.divider_switch_dropdown_menu_section ? <div className="altrp-nav-menu-dropdown-content-divider"/> : ""
+                            this.props.settings.divider_switch_dropdown_menu_section ? <div className="altrp-nav-menu-dropdown-s-content-divider"/> : ""
                           }
                         </li>
                       ) : ""
                     ) :
-                    !li.childrenParent ? <li className="altrp-nav-menu-li altrp-nav-menu-li-sub" key={idx}>
+                    !li.childrenParent ? <li className="altrp-nav-menu-li-dropdown altrp-nav-menu-li-sub" key={idx}>
                         <DropdownSub settings={this.props.settings} list={this.state.list} li={li}/>
                       </li>
                       : ""

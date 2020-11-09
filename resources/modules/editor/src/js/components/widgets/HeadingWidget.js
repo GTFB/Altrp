@@ -46,7 +46,7 @@ class HeadingWidget extends Component {
       if(isEditor()){
         linkProps.onClick = e => {e.preventDefault()}
       }
-      link = React.createElement(tag, { ...linkProps, }, text);
+      link = React.createElement(tag, { ...linkProps, dangerouslySetInnerHTML: { __html: text }});
     } else if (this.state.settings.creative_link_link && this.state.settings.creative_link_link.url && this.state.settings.heading_settings_html_tag !== "p") {
       link = <AltrpLink
         link={this.state.settings.creative_link_link}
