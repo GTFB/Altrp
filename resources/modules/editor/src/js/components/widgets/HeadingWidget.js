@@ -37,8 +37,10 @@ class HeadingWidget extends Component {
       if ((this.state.settings.link_link.tag === 'Link') && ! isEditor()) {
         tag = AltrpLink;
         linkProps.to = this.state.settings.link_link.url.replace(':id', this.getModelId() || '');
+        linkProps.href = this.state.settings.link_link.url.replace(':id', this.getModelId() || '');
         if(_.isObject(modelData)){
           linkProps.to = parseURLTemplate(this.state.settings.link_link.url, modelData);
+          linkProps.href = parseURLTemplate(this.state.settings.link_link.url, modelData);
         }
       }
       if(isEditor()){

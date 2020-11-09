@@ -12,6 +12,8 @@ class AltrpLink extends Component {
       openInNew: false,
       noFollow: false,
       url: "/",
+      to: this.props.to || '/',
+      href: this.props.href || '/',
       tag: "a",
       toPrevPage: false
     };
@@ -39,10 +41,10 @@ class AltrpLink extends Component {
       if(linkProps.classLink) {
         className += " altrp-link" + " " + linkProps.classLink
       }
-
+      console.log(settings);
       return settings.tag === "a" ? (
         <a
-          href={settings.url}
+          href={settings.href}
           rel={rel}
           style={styleChildren}
           className={className}
@@ -57,7 +59,7 @@ class AltrpLink extends Component {
           style={styleChildren}
           className={className}
           onClick={isEditor() ? (e) => e.preventDefault() : () => {}}
-          to={settings.url}
+          to={settings.to}
         >
           {
             linkProps.children
