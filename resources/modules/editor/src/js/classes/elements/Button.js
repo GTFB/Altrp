@@ -57,11 +57,15 @@ class Button extends BaseElement {
       options: [
         {
           value: 'none',
-          label: 'none'
+          label: 'None'
         },
         {
           value: 'dropbar',
-          label: 'dropbar'
+          label: 'Dropbar'
+        },
+        {
+          value: 'offcanvas',
+          label: 'Offcanvas'
         },
       ],
     });
@@ -1210,6 +1214,7 @@ class Button extends BaseElement {
       rules: {
         '{{ELEMENT}} .altrp-btn-icon{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
         '{{ELEMENT}} .altrp-btn-icon svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-btn-icon img{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
       },
     });
 
