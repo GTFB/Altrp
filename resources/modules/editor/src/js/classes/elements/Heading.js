@@ -77,6 +77,7 @@ class Heading extends BaseElement {
           value: 'stretch',
         }
       ],
+      prefixClass: 'altrp-alignment_',
       rules: {
             '{{ELEMENT}} .altrp-heading': 'justify-content: {{VALUE}};',
       },
