@@ -16,9 +16,11 @@ yarn-error.log
 .idea
 storage/installed
 s.sql
+modules_statuses.json
 
 # IDE helpers
 /config/ide-helper.php
+/config/modules.php
 .phpstorm.meta.php
 _ide_helper.php
 .vscode
@@ -36,7 +38,10 @@ _ide_helper.php
 /out
 /app/Http/Requests/AltrpRequests
 /app/Plugins/*/
+/Modules/*/
 /app/Plugins/plugins.json
+public/modules/
+=======
 
 #bundles
 public/modules/admin
