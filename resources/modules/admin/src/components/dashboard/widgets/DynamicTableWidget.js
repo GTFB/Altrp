@@ -33,7 +33,22 @@ const DynamicTableWidget = ({ widget, width, dataSource = [] }) => {
     if (dataSource.length == 0) {
       const charts = await getWidgetData(widget.source, widget.filter);
       if (charts.status === 200) {
-        setData(charts.data.data.sort(sortData("data")));
+        let data = charts.data.data;
+        switch (Number(widget.options.sort)) {
+          case 0:
+            data = charts.data.data;
+            break;
+          case 1:
+            data = _.sortBy(data,'key');
+            break;
+          case 2:
+            data = _.sortBy(data,'data');
+            break;
+          default:
+            data = charts.data.data;
+            break;
+        }
+        setData(data || []);
         setIsLoading(false);
       }
     }
