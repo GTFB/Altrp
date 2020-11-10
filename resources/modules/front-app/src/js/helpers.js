@@ -228,7 +228,7 @@ export function parseParamsFromString(string, context = {}) {
     left = left.trim();
     right = right.trim();
     if (right.match(/{{([\s\S]+?)(?=}})/g)) {
-      if (context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', ''))) {//todo ошибка в сафари
+      if (context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', ''))) {//todo ошибка в IOS
         params[left] = context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')) || '';
       } else {
         params[left] = urlParams[right] ? urlParams[right] : '';
