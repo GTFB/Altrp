@@ -223,11 +223,11 @@
     }
   }
 }
-.altrp-field-required {
-  color: red;
-  font-size: 18px;
-  padding-left: 10px;
-}
+// .altrp-field-required {
+//   color: red;
+//   font-size: 18px;
+//   padding-left: 10px;
+// }
 
 .altrp-field-container-label {
   display: flex;
@@ -1039,4 +1039,18 @@
 
 .altrp-icon-content {
     width: 100%;
+}
+.altrp-alignment_{
+  &flex-start{
+    text-align: left;
+  }
+  &flex-end{
+    text-align: right;
+  }
+  &center{
+    text-align: center;
+  }
+  &stretch{
+    text-align: justify;
+  }
 }
