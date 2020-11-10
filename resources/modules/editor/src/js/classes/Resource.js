@@ -162,22 +162,29 @@ class Resource {
   }
   /**
    * @param {FileList} files
-   * @param {string} fileType
+   * @param {string} fileTypes
    * @return {Promise}
    * */
-  postFiles(files, fileType){
-    fileType = fileType || 'image';
+  postFiles(files, fileTypes){
+    fileTypes = fileTypes || 'image';
     let headers = {
       'X-CSRF-TOKEN': _token,
     };
     let formData = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      if(files[i].size > MAX_FILE_SIZE || files[i].type.indexOf(fileType) === -1){
-        console.log(files[i]);
-        continue;
+    fileTypes = fileTypes.split(',');
+    fileTypes.forEach(fileType => {
+      if(! fileType){
+        return;
       }
-      formData.append(`files[${i}]`, files[i]);
-    }
+      fileType = fileType.trim();
+      for (let i = 0; i < files.length; i++) {
+        if(files[i].size > MAX_FILE_SIZE || files[i].type.indexOf(fileType) === -1){
+          console.log(files[i]);
+          continue;
+        }
+        formData.append(`files[${i}]`, files[i]);
+      }
+    });
     let options = {
       method: 'POST',
       body: formData,
