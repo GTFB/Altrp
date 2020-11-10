@@ -81,7 +81,7 @@ class TableDataSource extends Component {
                               <tbody>
                                     {this.state.data.map((item, key) => (
                                           <tr key={key}>
-                                                <td style={{ backgroundColor: this.state.color[item.key] || '#666666' }}>{item.key}</td>
+                                                <td>{item.key}</td>
                                                 <td>{item.data}</td>
                                           </tr>
                                     ))}

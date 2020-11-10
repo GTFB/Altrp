@@ -46,7 +46,22 @@ const DynamicAreaChart = ({ widget, width = 300, height = 300, color = "#FFD51F"
             };
           }
         });
-        setData(newData);
+        let data = newData;
+        switch (Number(widget.options.sort)) {
+          case 0:
+            data = charts.data.data;
+            break;
+          case 1:
+            data = _.sortBy(data,'key');
+            break;
+          case 2:
+            data = _.sortBy(data,'data');
+            break;
+          default:
+            data = charts.data.data;
+            break;
+        }
+        setData(data || []);
         setIsLoading(false);
       }
     }

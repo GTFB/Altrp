@@ -1228,3 +1228,18 @@
     flex-basis: 70%;
   }
 }
+
+.altrp-alignment_{
+  &flex-start{
+    text-align: left;
+  }
+  &flex-end{
+    text-align: right;
+  }
+  &center{
+    text-align: center;
+  }
+  &stretch{
+    text-align: justify;
+  }
+}

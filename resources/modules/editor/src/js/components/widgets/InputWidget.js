@@ -277,7 +277,7 @@ class InputWidget extends Component {
       /**
        * Обновляем хранилище только если не текстовое поле
        */
-      if (['text', 'email', 'phone', 'number', 'password'].indexOf(this.state.settings.content_type) === -1) {
+      if (['text', 'email', 'phone', 'tel', 'number', 'password'].indexOf(this.state.settings.content_type) === -1) {
         this.dispatchFieldValueToStore(value, true);
       }
     });
@@ -287,7 +287,7 @@ class InputWidget extends Component {
    * Потеря фокуса для оптимизации
    */
   onBlur = (e) => {
-    if (['text', 'email', 'phone', 'number', 'password'].indexOf(this.state.settings.content_type) !== -1) {
+    if (['text', 'email', 'phone', 'tel', 'number', 'password'].indexOf(this.state.settings.content_type) !== -1) {
       this.dispatchFieldValueToStore(e.target.value, true);
     }
   };
