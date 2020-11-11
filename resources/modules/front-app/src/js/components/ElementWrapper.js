@@ -230,6 +230,7 @@ function mapStateToProps(state) {
     currentModel: state.currentModel,
     currentUser: state.currentUser,
     altrpMeta: state.altrpMeta,
+    altrpPageState: state.altrpPageState,
   };
 }
 

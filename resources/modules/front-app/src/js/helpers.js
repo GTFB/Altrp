@@ -326,6 +326,9 @@ function conditionChecker(c, model, dataByPath = true) {
  * @return {*}
  */
 export function getDataByPath(path = '', _default = null, context = null, altrpCheck = false) {
+  if(! path){
+    return _default;
+  }
   /**
    * проверим путь
    */

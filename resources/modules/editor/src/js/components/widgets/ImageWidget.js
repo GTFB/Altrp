@@ -30,7 +30,7 @@ class ImageWidget extends Component {
       } else {
         media.assetType = 'media';
       }
-    } else if(_.isString(getDataByPath(this.state.settings.content_path))){
+    } else if(this.state.settings.content_path &&_.isString(getDataByPath(this.state.settings.content_path))){
       media = getDataByPath(this.state.settings.content_path);
       media = {
         assetType: 'media',
