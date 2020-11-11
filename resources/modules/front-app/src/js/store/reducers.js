@@ -11,7 +11,7 @@ import { hideTriggersReducer } from "./hide-triggers/reducers";
 import { responsesStorageReducer } from "./responses-storage/reducers";
 import { elementReducer } from '../../../../editor/src/js/store/altrp-dashboard/reducers';
 import {altrpMetaReducer} from "./altrp-meta-storage/reducers";
-import {altrpPageStateReducer} from "./altrp-page--state-storage/reducers";
+import {altrpPageStateReducer} from "./altrp-page-state-storage/reducers";
 
 export default combineReducers({
   appRoutes: appRoutesReducer,

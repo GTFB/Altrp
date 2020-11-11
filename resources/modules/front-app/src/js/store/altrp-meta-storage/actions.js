@@ -11,7 +11,7 @@ export const CHANGE_ALTRP_META = 'CHANGE_ALTRP_META';
  *     metaName: {string},
  *   }
  */
-export function changeAltrpMeta(metaName, metaValue = {}) {
+export function changeAltrpMeta(metaName, metaValue) {
   return {
     type: CHANGE_ALTRP_META,
     metaValue,

@@ -22,7 +22,7 @@ export function changePageState(stateName, stateValue = {}) {
 /**
  * Очищает состояние страницы
  */
-export function clearPageState(stateName, stateValue = {}) {
+export function clearPageState() {
   return {
     type: CLEAR_PAGE_STATE,
   };

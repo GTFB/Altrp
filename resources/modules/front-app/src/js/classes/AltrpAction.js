@@ -9,7 +9,7 @@ import {
   getHTMLElementById,
   printElements,
   replaceContentWithData,
-  scrollToElement
+  scrollToElement, setDataByPath
 } from "../helpers";
 import { togglePopup } from "../store/popup-trigger/actions";
 import reactDom from 'react-dom';
@@ -163,6 +163,10 @@ class AltrpAction extends AltrpModel {
         break;
       case 'logout': {
         result = await this.doActionLogout();
+      }
+        break;
+      case 'set_data': {
+        result = await this.doActionSetData();
       }
         break;
     }
@@ -466,7 +470,42 @@ class AltrpAction extends AltrpModel {
     return await altrpLogout();
   }
   /**
-   * Триггер события на тругом компоненте
+   * действие-установка значения по для пути `path`
+   * @return {Promise<{}>}
+   */
+  async doActionSetData() {
+    let path = this.getProperty('path');
+    const result = {
+      success: false
+    };
+    if( ! path){
+      return result;
+    }
+    let value = this.getProperty('value');
+    switch(value){
+      case 'true': value = true; break;
+      case 'false': value = false; break;
+      case 'null': value = null; break;
+      case 'undefined': value = undefined; break;
+    }
+    const setType = this.getProperty('set_type');
+
+    switch (setType) {
+      case 'toggle':{
+        value = ! getDataByPath(path);
+        result.success = setDataByPath(path, value);
+      }
+      break;
+      case 'set':{
+        result.success = setDataByPath(path, value);
+      }
+      break;
+    }
+
+    return result;
+  }
+  /**
+   * Триггер события на другом компоненте
    * @return {Promise<{}>}
    */
   async doActionTrigger() {

@@ -19,9 +19,9 @@ export function altrpPageStateReducer(altrpPageState, action) {
   altrpPageState = altrpPageState || new AltrpModel(defaultPageState);
   switch (action.type) {
     case CHANGE_PAGE_STATE:{
-      let metaValue = action.metaValue;
+      let stateValue = action.stateValue;
       altrpPageState = _.cloneDeep(altrpPageState);
-      altrpPageState.setProperty(action.metaName, metaValue);
+      altrpPageState.setProperty(action.stateName, stateValue);
     }break;
     case CLEAR_PAGE_STATE:{
       altrpPageState = new AltrpModel(defaultPageState);

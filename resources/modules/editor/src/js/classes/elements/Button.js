@@ -395,7 +395,6 @@ class Button extends BaseElement {
         ],
       },
     });
-
     actionsRepeater.addControl('set_type', {
       label: 'Set Type',
       type: CONTROLLER_SELECT,
@@ -405,10 +404,29 @@ class Button extends BaseElement {
         {
           label: 'Toggle',
           value: 'toggle',
-        }
+        },
+        {
+          label: 'Set',
+          value: 'set',
+        },
       ],
       conditions: {
         type: 'set_data',
+      },
+    });
+
+    actionsRepeater.addControl('value', {
+      label: 'Value',
+      type: CONTROLLER_TEXTAREA,
+      responsive: false,
+      dynamic: false,
+      conditions: {
+        type: [
+          'set_data',
+        ],
+        set_type: [
+          'set',
+        ],
       },
     });
 

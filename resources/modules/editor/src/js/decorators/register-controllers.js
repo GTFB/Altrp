@@ -12,6 +12,7 @@ import {
   CONTROLLER_TEXT
 } from "../classes/modules/ControllersManager";
 import Repeater from "../classes/Repeater";
+import {CONDITIONS_OPTIONS} from "../../../../front-app/src/js/helpers";
 /**
  * Функция декорирует элемент неободимыми контроллерами
  * @param {BaseElement} element
@@ -426,51 +427,14 @@ export function advancedTabControllers(element) {
 
   modelRepeater.addControl('conditional_model_field', {
     responsive: false,
-    label: 'Model Field',
+    label: 'Path',
   });
 
   modelRepeater.addControl('conditional_other_operator', {
     type: CONTROLLER_SELECT,
     responsive: false,
     default: 'empty',
-    options: [
-      {
-        value: 'empty',
-        label: 'Empty',
-      },
-      {
-        value: 'not_empty',
-        label: 'Not Empty',
-      },
-      {
-        value: '==',
-        label: 'Equals',
-      },
-      {
-        value: '<>',
-        label: 'Not Equals',
-      },
-      {
-        value: 'between',
-        label: 'Between',
-      },
-      {
-        value: '>',
-        label: '>',
-      },
-      {
-        value: '>=',
-        label: '>=',
-      },
-      {
-        value: '<',
-        label: '<',
-      },
-      {
-        value: '<=',
-        label: '<=',
-      },
-    ]
+    options:  CONDITIONS_OPTIONS,
   });
 
   modelRepeater.addControl('conditional_other_condition_value', {
@@ -576,51 +540,14 @@ export function advancedTabControllers(element) {
 
   disabledModelRepeater.addControl('conditional_model_field', {
     responsive: false,
-    label: 'Model Field',
+    label: 'Path',
   });
 
   disabledModelRepeater.addControl('conditional_other_operator', {
     type: CONTROLLER_SELECT,
     responsive: false,
     default: 'empty',
-    options: [
-      {
-        value: 'empty',
-        label: 'Empty',
-      },
-      {
-        value: 'not_empty',
-        label: 'Not Empty',
-      },
-      {
-        value: '==',
-        label: 'Equals',
-      },
-      {
-        value: '<>',
-        label: 'Not Equals',
-      },
-      {
-        value: 'between',
-        label: 'Between',
-      },
-      {
-        value: '>',
-        label: '>',
-      },
-      {
-        value: '>=',
-        label: '>=',
-      },
-      {
-        value: '<',
-        label: '<',
-      },
-      {
-        value: '<=',
-        label: '<=',
-      },
-    ]
+    options: CONDITIONS_OPTIONS,
   });
 
   disabledModelRepeater.addControl('conditional_other_condition_value', {

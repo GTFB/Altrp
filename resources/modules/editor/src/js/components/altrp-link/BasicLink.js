@@ -11,7 +11,7 @@ class BasicLink extends Component {
       openInNew: false,
       noFollow: false,
       url: "/",
-      tag: "a",
+      tag: this.props.tag || "a",
       to: this.props.to || _.get(this,'props.link.url', '/'),
       href: this.props.href || _.get(this,'props.link.url', '/'),
       toPrevPage: false
@@ -39,6 +39,8 @@ class BasicLink extends Component {
     if(this.props.classLink) {
       className += " altrp-link" + " " + this.props.classLink
     }
+    console.log(settings.tag);
+    console.log(this.props);
     return settings.tag === "a" ? (
       <a
           {...this.props}
