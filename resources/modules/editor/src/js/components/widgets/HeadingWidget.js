@@ -14,6 +14,7 @@ class HeadingWidget extends Component {
       window.elementDecorator(this);
     }
   }
+
   render() {
     let modelData = this.props.element.hasCardModel()
         ? this.props.element.getCardModel().getData()
@@ -48,15 +49,18 @@ class HeadingWidget extends Component {
       }
       link = React.createElement(tag, { ...linkProps, dangerouslySetInnerHTML: { __html: text }});
     } else if (this.state.settings.creative_link_link && this.state.settings.creative_link_link.url && this.state.settings.heading_settings_html_tag !== "p") {
-      link = <AltrpLink
-        link={this.state.settings.creative_link_link}
-        className="altrp-inherit"
-        creativeLink={this.getContent("creative_link_controller")}
-      >
-        {
-          text
-        }
-      </AltrpLink>
+      link = (
+        <AltrpLink
+          className="altrp-inherit"
+          creativelink={this.getContent("creative_link_controller")}
+        >
+          {
+            React.createElement("span", {
+              dangerouslySetInnerHTML:{ __html: text },
+            })
+          }
+        </AltrpLink>
+      )
     }
 
     let advancedHeading = "";
