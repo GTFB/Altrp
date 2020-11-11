@@ -87,9 +87,15 @@ export function advancedTabControllers(element) {
 
   });
 
-  element.addControl('hide_on_trigger', {
-    type: CONTROLLER_TEXT,
-    label: 'Hide on Trigger'
+  // element.addControl('hide_on_trigger', {
+  //   type: CONTROLLER_TEXT,
+  //   label: 'Hide on Trigger'
+  // });
+
+  element.addControl('default_hidden', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Default Hidden',
+    default: false,
   });
 
   element.endControlSection();

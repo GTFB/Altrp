@@ -36,25 +36,9 @@ class StylesSettings extends Component {
 
   submitHandler = e => {
     e.preventDefault();
-    const data = new FormData();
-    data.append("favicon", this.state.iconFile);
-    let headers = {
-      'X-CSRF-TOKEN': _token,
-    };
-    let options = {
-      method: 'POST',
-      body: data,
-      headers,
-    };
-
-    fetch('http://altrp.nz/admin/ajax/favicon', options)
-      .then(res => {
-        if (res.ok === false) {
-          return alert("Ups... something went wrong.");
-        }
-        alert("Icon successfully  uploaded.");
-        this.setState({ iconFile: null });
-      });
+    new Resource({ route: '/admin/ajax/favicon' })
+      .postFile(this.state.iconFile)
+      .then(() => alert("Icon successfully  uploaded."));
   }
 
   render() {

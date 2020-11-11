@@ -77,6 +77,7 @@ class Heading extends BaseElement {
           value: 'stretch',
         }
       ],
+      prefixClass: 'altrp-alignment_',
       rules: {
             '{{ELEMENT}} .altrp-heading': 'justify-content: {{VALUE}};',
       },
@@ -136,15 +137,15 @@ class Heading extends BaseElement {
       label: 'link',
     });
 
-    this.addControl('creative_link_link', {
-      type: CONTROLLER_LINK,
-      default: {
-        url: "",
-        attributes: "",
-        noFollow: false
-      },
-      label: 'for creative link',
-    });
+    // this.addControl('creative_link_link', {
+    //   type: CONTROLLER_LINK,
+    //   default: {
+    //     url: "",
+    //     attributes: "",
+    //     noFollow: false
+    //   },
+    //   label: 'for creative link',
+    // });
 
     this.endControlSection();
 

@@ -34,14 +34,14 @@ class CSSRule {
     }
   }
   insertValueString(value){
-    this.properties = this.defaultPoperties.map(property => property.replace('{{VALUE}}', value));
+    this.properties = this.defaultPoperties.map(property => property.replace(/{{VALUE}}/g, value));
   }
   insertValueObject(object){
     let pairs = _.toPairs(object);
     this.properties = this.defaultPoperties.map(property => {
       pairs.forEach(pair => {
         if(pair[1]){
-          property = property.split(`{{${pair[0].toUpperCase()}}}`).join(pair[1] );
+          property = property.split(`{{${pair[0].toUpperCase()}}}`).join(pair[1]);
         }
       });
       return property;

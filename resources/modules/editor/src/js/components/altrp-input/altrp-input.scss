@@ -36,3 +36,15 @@
 .altrp-field:hover + .input-clear-btn, .input-clear-btn:hover {
   display: block;
 }
+
+.altrp-input-wrapper, .altrp-field-select2 {
+  position: relative;
+  flex-grow: 1;
+}
+
+.altrp-field-label--required::after {
+  content: "*";
+  color: red;
+  font-size: inherit;
+  padding-left: 10px;
+}

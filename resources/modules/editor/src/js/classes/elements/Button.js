@@ -264,6 +264,10 @@ class Button extends BaseElement {
           value: 'logout',
           label: 'Logout',
         },
+        {
+          value: 'set_data',
+          label: 'Set Data',
+        },
       ],
     });
 
@@ -391,7 +395,24 @@ class Button extends BaseElement {
       conditions: {
         type: [
           'data_to_csv',
+          'set_data',
         ],
+      },
+    });
+
+    actionsRepeater.addControl('set_type', {
+      label: 'Set Type',
+      type: CONTROLLER_SELECT,
+      responsive: false,
+      nullable: true,
+      options: [
+        {
+          label: 'Toggle',
+          value: 'toggle',
+        }
+      ],
+      conditions: {
+        type: 'set_data',
       },
     });
 

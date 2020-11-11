@@ -228,7 +228,7 @@ export function parseParamsFromString(string, context = {}) {
     left = left.trim();
     right = right.trim();
     if (right.match(/{{([\s\S]+?)(?=}})/g)) {
-      if (context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', ''))) {//todo ошибка в сафари
+      if (context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', ''))) {//todo ошибка в IOS
         params[left] = context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')) || '';
       } else {
         params[left] = urlParams[right] ? urlParams[right] : '';
@@ -334,7 +334,7 @@ export function getDataByPath(path = '', _default = null, context = null, altrpC
   }
   path = path.trim();
 
-  let { currentModel, currentDataStorage, altrpresponses, formsStore } = appStore.getState();
+  let { currentModel, currentDataStorage, altrpresponses, formsStore, altrpMeta } = appStore.getState();
   if (context) {
     currentModel = context;
   }
@@ -349,6 +349,9 @@ export function getDataByPath(path = '', _default = null, context = null, altrpC
   } else if (path.indexOf('altrpresponses.') === 0) {
     path = path.replace('altrpresponses.', '');
     value = altrpresponses.getProperty(path, _default)
+  } else if (path.indexOf('altrpmeta.') === 0) {
+    path = path.replace('altrpmeta.', '');
+    value = altrpMeta.getProperty(path, _default)
   } else if (path.indexOf('altrptime.') === 0) {
     value = getTimeValue(path.replace('altrptime.', ''));
   } else if (path.indexOf('altrpforms.') === 0) {
@@ -423,7 +426,11 @@ export function altrpCompare(leftValue = '', rightValue = '', operator = 'empty'
       return !_.isEmpty(leftValue,);
     }
     case '==': {
-      if (!(_.isObject(leftValue) || _.isObject(rightValue))) {
+      if((! leftValue) && ! rightValue){
+        console.log(leftValue);
+        return true;
+      }
+        if (!(_.isObject(leftValue) || _.isObject(rightValue))) {
         return leftValue == rightValue;
       } else {
         return _.isEqual(leftValue, rightValue);

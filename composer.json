@@ -16,11 +16,13 @@
         "ixudra/curl": "^6.20",
         "jackiedo/dotenv-editor": "1.*",
         "jenssegers/date": "^3.2",
+        "joshbrw/laravel-module-installer": "^1.0",
         "kint-php/kint": "^3.3",
         "laravel/framework": "^6.2",
         "laravel/passport": "^8.4",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^1.2",
+        "nwidart/laravel-modules": "^8.0",
         "pulkitjalan/geoip": "^4.1",
         "santigarcor/laratrust": "5.2.*"
     },
@@ -49,7 +51,8 @@
         ],
         "psr-4": {
             "App\\": "app/",
-            "Plugins\\":"Plugins"
+            "Plugins\\":"Plugins",
+            "Modules\\": "Modules/"
         },
         "classmap": [
             "database/seeds",
@@ -78,7 +81,11 @@
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
             "@php artisan ide-helper:generate",
-            "@php artisan ide-helper:meta"
+            "@php artisan ide-helper:meta",
+            "php artisan vendor:publish --tag=public --force"
+        ],
+        "post-install-cmd": [
+            "php artisan vendor:publish --tag=public --force"
         ]
     }
 }
