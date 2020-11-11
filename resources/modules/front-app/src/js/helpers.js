@@ -329,6 +329,14 @@ export function setDataByPath(path = '', value){
   if(! path){
     return false;
   }
+
+  switch(value){
+    case 'true': value = true; break;
+    case 'false': value = false; break;
+    case 'null': value = null; break;
+    case 'undefined': value = undefined; break;
+  }
+
   if (path.indexOf('altrppagestate.') === 0) {
     path = path.replace('altrppagestate.', '');
     if(! path){

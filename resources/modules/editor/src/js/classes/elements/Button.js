@@ -409,6 +409,10 @@ class Button extends BaseElement {
           label: 'Set',
           value: 'set',
         },
+        {
+          label: 'Toggle/Set',
+          value: 'toggle_set',
+        },
       ],
       conditions: {
         type: 'set_data',
@@ -426,6 +430,7 @@ class Button extends BaseElement {
         ],
         set_type: [
           'set',
+          'toggle_set',
         ],
       },
     });

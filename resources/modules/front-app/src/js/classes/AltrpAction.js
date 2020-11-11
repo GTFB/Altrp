@@ -482,12 +482,6 @@ class AltrpAction extends AltrpModel {
       return result;
     }
     let value = this.getProperty('value');
-    switch(value){
-      case 'true': value = true; break;
-      case 'false': value = false; break;
-      case 'null': value = null; break;
-      case 'undefined': value = undefined; break;
-    }
     const setType = this.getProperty('set_type');
 
     switch (setType) {
@@ -497,6 +491,20 @@ class AltrpAction extends AltrpModel {
       }
       break;
       case 'set':{
+        result.success = setDataByPath(path, value);
+      }
+      break;
+      case 'toggle_set':{
+        let currentValue = getDataByPath(path);
+        value = value.split('\n').map(v=>v.trim());
+        if(value.length === 1){
+          value.push('');
+        }
+        let nextIndex = value.indexOf(currentValue) + 1;
+        if(nextIndex >= value.length){
+          nextIndex = 0;
+        }
+        value = value[nextIndex] || '';
         result.success = setDataByPath(path, value);
       }
       break;

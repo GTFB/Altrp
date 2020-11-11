@@ -39,8 +39,6 @@ class BasicLink extends Component {
     if(this.props.classLink) {
       className += " altrp-link" + " " + this.props.classLink
     }
-    console.log(settings.tag);
-    console.log(this.props);
     return settings.tag === "a" ? (
       <a
           {...this.props}
