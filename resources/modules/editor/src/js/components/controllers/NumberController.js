@@ -1,3 +1,4 @@
+import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import DynamicIcon from '../../../svgs/dynamic.svg'
@@ -56,11 +57,4 @@ class NumberController extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    currentElement: state.currentElement.currentElement,
-    currentState: state.currentState,
-    currentScreen: state.currentScreen
-  };
-}
-export default connect(mapStateToProps)(NumberController);
+export default connect(controllerMapStateToProps)(NumberController);

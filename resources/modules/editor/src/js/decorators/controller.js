@@ -5,17 +5,21 @@ import {getElementSettingsSuffix} from "../helpers";
  * Обновление значения в компоненте контроллера при загрузке нового экземпляра того же элемента
  */
 function componentDidUpdate(prevProps, prevState) {
-  console.log('update');
   if(!this.props.repeater){
     let elementValue = this.props.currentElement.getSettings(this.props.controlId);
     if(this.state.value !== elementValue){
       if(elementValue === null){
         elementValue = this.getDefaultValue();
         this.props.currentElement.setSettingValue(this.props.controlId, elementValue);
+        this.setState({
+          value: elementValue
+        });
       }
-      this.setState({
-        value: elementValue
-      });
+      if(prevProps.currentElement !== this.props.currentElement){
+        this.setState({
+          value: elementValue
+        });
+      }
     }
     if(prevProps.currentElement.getId() !== this.props.currentElement.getId()){
       /**
@@ -113,7 +117,7 @@ function _changeValue(value, updateElement = true) {
     });
   }
   if(updateElement){
-    this.props.controller.changeValue(value);
+    this.props.controller.changeValue(value, updateElement);
   }
 
 }
@@ -234,3 +238,13 @@ let controllerDecorate = function elementWrapperDecorate(component) {
   // store.subscribe(component.conditionSubscriber);//todo: изменить подписку на изменение хранилища
 };
 export default controllerDecorate;
+
+
+export function controllerMapStateToProps(state){
+  return {
+    currentElement: state.currentElement.currentElement,
+    currentState: state.currentState,
+    currentScreen: state.currentScreen,
+    controllerValue: state.controllerValue,
+  };
+}

@@ -18,10 +18,28 @@
     text-fill-color: transparent;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    -webkit-transition-property: prop;
+    -moz-transition-property: prop;
+    -ms-transition-property: prop;
+    -o-transition-property: prop;
+    transition-property: prop;
 }
 
 .altrp-heading {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.altrp-heading-sub {
+    margin: 0;
+    padding: 0;
+}
+
+.altrp-heading-sub-link {
+    display: flex;
+}
+
+.altrp-heading-sub-container-link {
+    margin: 0;
 }

@@ -1,3 +1,4 @@
+import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import DynamicIcon from '../../../svgs/dynamic.svg'
@@ -36,53 +37,6 @@ class TextController extends Component {
    * @param e
    */
   changeValue(e) {
-    let variants = [
-      /**
-       * Вариант для одной колонки
-       */
-      [
-        {
-          name: '1_100',
-          variants: [
-            {
-              title: '100',
-              length: 100,
-            }
-          ]
-        },
-      ],
-      /**
-       * Вариант для двух колонок
-       */
-      [
-        {
-          name: '2_50',
-          variants: [
-            {
-              title: '50',
-              length: 50,
-            },
-            {
-              title: '50',
-              length: 50,
-            },
-          ]
-        },
-        {
-          name: '2_33',
-          variants: [
-            {
-              title: '33',
-              length: 33.33,
-            },
-            {
-              title: '66',
-              length: 66.66,
-            },
-          ]
-        },
-      ],
-    ];
     this._changeValue(e.target.value, false)
   }
 
@@ -96,6 +50,7 @@ class TextController extends Component {
     }
     // let value = this.getSettings(this.props.controlId) || this.getDefaultValue(); todo: удалить если будет работать
     let value = this.state.value || this.getDefaultValue();
+    console.log(value);
     return <div className="controller-container controller-container_text">
       <div className="controller-container__label textcontroller-responsive">
         {this.props.label}
@@ -131,12 +86,5 @@ class TextController extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    currentElement: state.currentElement.currentElement,
-    currentState: state.currentState,
-    currentScreen: state.currentScreen
-  };
-}
 
-export default connect(mapStateToProps)(TextController);
+export default connect(controllerMapStateToProps)(TextController);

@@ -1,3 +1,4 @@
+import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { SketchPicker } from "react-color";
@@ -22,7 +23,7 @@ class GradientController extends Component {
     this._changeValue({
       ...gradient,
       value: isWithGradient ? 
-        `linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%);` : ''
+        `linear-gradient(${angle}deg, ${secondColor} ${secondPoint}%, ${firstColor} ${firstPoint}%);` : ''
     });
   };
 
@@ -34,7 +35,7 @@ class GradientController extends Component {
     this._changeValue({
       ...gradient,
       value: isWithGradient ?
-        `linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%);` : ''
+        `linear-gradient(${angle}deg, ${secondColor} ${secondPoint}%, ${firstColor} ${firstPoint}%);` : ''
     });
   };
 
@@ -46,7 +47,7 @@ class GradientController extends Component {
     this._changeValue({ 
       ...gradient, 
       value: isWithGradient ? 
-        `linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%);` : ''
+        `linear-gradient(${angle}deg, ${secondColor} ${secondPoint}%, ${firstColor} ${firstPoint}%);` : ''
     });
   };
 
@@ -209,4 +210,4 @@ function mapStateToProps(state) {
     currentScreen: state.currentScreen
   };
 }
-export default connect(mapStateToProps)(GradientController);
+export default connect(controllerMapStateToProps)(GradientController);

@@ -1,3 +1,4 @@
+import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Select from "react-select";
@@ -277,4 +278,4 @@ function mapStateToProps(state) {
     controllerValue: state.controllerValue,
   };
 }
-export default connect(mapStateToProps)(Select2Controller);
+export default connect(controllerMapStateToProps)(Select2Controller);

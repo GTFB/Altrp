@@ -1,3 +1,4 @@
+import {controllerMapStateToProps} from "../../decorators/controller";
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import controllerDecorate from "../../decorators/controller";
@@ -435,4 +436,4 @@ function mapStateToProps(state) {
     currentElement:state.currentElement.currentElement,
   };
 }
-export default connect(mapStateToProps)(ColumnsWidthController);
+export default connect(controllerMapStateToProps)(ColumnsWidthController);
