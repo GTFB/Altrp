@@ -23,7 +23,7 @@ class GradientController extends Component {
     this._changeValue({
       ...gradient,
       value: isWithGradient ? 
-        `linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%);` : ''
+        `linear-gradient(${angle}deg, ${secondColor} ${secondPoint}%, ${firstColor} ${firstPoint}%);` : ''
     });
   };
 
@@ -35,7 +35,7 @@ class GradientController extends Component {
     this._changeValue({
       ...gradient,
       value: isWithGradient ?
-        `linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%);` : ''
+        `linear-gradient(${angle}deg, ${secondColor} ${secondPoint}%, ${firstColor} ${firstPoint}%);` : ''
     });
   };
 
@@ -47,7 +47,7 @@ class GradientController extends Component {
     this._changeValue({ 
       ...gradient, 
       value: isWithGradient ? 
-        `linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%);` : ''
+        `linear-gradient(${angle}deg, ${secondColor} ${secondPoint}%, ${firstColor} ${firstPoint}%);` : ''
     });
   };
 
