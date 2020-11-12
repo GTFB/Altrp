@@ -17,11 +17,20 @@ class ImageWidget extends Component {
   }
 
   render() {
+    const {element} = this.props;
     const link = this.state.settings.image_link || {};
     const background_image = this.props.element.getSettings('background_image', {});
     let media = this.state.settings.content_media;
-    if (this.state.settings.content_path && _.isObject(getDataByPath(this.state.settings.content_path))) {
-      media = getDataByPath(this.state.settings.content_path);
+    /**
+     * Для карточки модель может быть другой
+     * @type {AltrpModel}
+     */
+    let model = element.hasCardModel() ? element.getCardModel() : this.props.currentModel;
+    /**
+     * Возьмем данные из окружения
+     */
+    if (this.state.settings.content_path && _.isObject(getDataByPath(this.state.settings.content_path,null, model))) {
+      media = getDataByPath(this.state.settings.content_path,null, model);
       /**
        * Проверим массив ли с файлами content_path
        */
@@ -30,8 +39,8 @@ class ImageWidget extends Component {
       } else {
         media.assetType = 'media';
       }
-    } else if(this.state.settings.content_path &&_.isString(getDataByPath(this.state.settings.content_path))){
-      media = getDataByPath(this.state.settings.content_path);
+    } else if(this.state.settings.content_path &&_.isString(getDataByPath(this.state.settings.content_path,null, model))){
+      media = getDataByPath(this.state.settings.content_path,null, model);
       media = {
         assetType: 'media',
         url: media,

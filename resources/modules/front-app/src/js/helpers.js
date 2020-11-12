@@ -356,7 +356,7 @@ export function setDataByPath(path = '', value){
   return false;
 }
 /**
- * Получить данные
+ * Получить данные из окружения
  * @param {string} path
  * @param {*} _default
  * @param {AltrpModel} context
