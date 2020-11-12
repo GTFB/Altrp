@@ -201,7 +201,7 @@ class Input extends BaseElement {
       type: CONTROLLER_TEXT,
       label: 'Mask',
       conditions: {
-        'content_type': 'text'
+        'content_type': ['text', 'tel']
       }
     });
     this.addControl('read_only', {

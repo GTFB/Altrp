@@ -30,6 +30,13 @@ class ImageWidget extends Component {
       } else {
         media.assetType = 'media';
       }
+    } else if(this.state.settings.content_path &&_.isString(getDataByPath(this.state.settings.content_path))){
+      media = getDataByPath(this.state.settings.content_path);
+      media = {
+        assetType: 'media',
+        url: media,
+        name: 'null',
+      };
     }
     let altrpImage = <AltrpImage
       image={media}

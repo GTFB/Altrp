@@ -17,6 +17,8 @@ import { currentDataStorageReducer } from "../../../../front-app/src/js/store/cu
 import { elementsStorageReducer } from "../../../../front-app/src/js/store/elements-storage/reducers";
 import { hideTriggersReducer } from "../../../../front-app/src/js/store/hide-triggers/reducers";
 import { elementReducer } from './altrp-dashboard/reducers';
+import {altrpMetaReducer} from "../../../../front-app/src/js/store/altrp-meta-storage/reducers";
+import {altrpPageStateReducer} from "../../../../front-app/src/js/store/altrp-page-state-storage/reducers";
 
 export default combineReducers({
   currentElement: currentElementReducer,
@@ -36,5 +38,7 @@ export default combineReducers({
   currentDataStorage: currentDataStorageReducer,
   elements: elementsStorageReducer,
   hideTriggers: hideTriggersReducer,
-  editElement: elementReducer
+  editElement: elementReducer,
+  altrpMeta: altrpMetaReducer,
+  altrpPageState: altrpPageStateReducer,
 });

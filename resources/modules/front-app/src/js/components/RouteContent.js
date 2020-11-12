@@ -16,6 +16,7 @@ import { setScrollValue } from "../store/scroll-position/actions";
 import dataStorageUpdater from '../classes/modules/DatastorageUpdater';
 import { clearElements } from "../store/elements-storage/actions";
 import {clearAllResponseData} from "../store/responses-storage/actions";
+import {clearPageState} from "../store/altrp-page-state-storage/actions";
 
 class RouteContent extends Component {
   constructor(props) {
@@ -59,13 +60,14 @@ class RouteContent extends Component {
      */
     appStore.dispatch(clearAllResponseData());
     /**
-     * затем отправляем запросы на обновление
+     * затем отправляем запросы на обновление данных и altrpPageState
      */
     this.updateDataStorage();
   }
 
   /**
    *  обновление currentDataStorage
+   *  Сброс altrpPageState
    */
   async updateDataStorage() {
     /**
@@ -74,6 +76,7 @@ class RouteContent extends Component {
     let { data_sources } = this.props;
 
     dataStorageUpdater.updateCurrent(data_sources);
+    appStore.dispatch(clearPageState());
   }
   /**
    * Меняем текущую модель
@@ -101,7 +104,10 @@ class RouteContent extends Component {
     ) {
       this.changeRouteCurrentModel();
     }
-
+    /**
+     * При изменении страницы без изменения текущего ройта
+     * отправляем запросы на обновление данных и altrpPageState
+     */
     if (!_.isEqual(_.get(this.props, 'match.params'), _.get(prevProps, 'match.params'))) {
       this.updateDataStorage();
     }

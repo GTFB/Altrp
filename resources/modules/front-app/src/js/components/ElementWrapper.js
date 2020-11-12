@@ -9,19 +9,10 @@ class ElementWrapper extends Component {
   constructor(props){
     super(props);
     this.state = {
-      // currentModel: appStore.getState().currentModel,
-      // currentUser: appStore.getState().currentUser,
-      // currentDataStorage: appStore.getState().currentDataStorage,
-      // altrpresponses: appStore.getState().altrpresponses,
-      elementDisplay: true,
+      elementDisplay: ! this.props.element.getSettings('default_hidden'),
     };
     this.elementWrapperRef = React.createRef();
-    // console.log(props.element.getName());
-    // console.error(window._i = window._i ? ++window._i  : 1);
-    // console.log('constructor');
-
     appStore.dispatch(addElement(this));
-    // appStore.subscribe(this.updateStore);
   }
 
   /**
@@ -71,17 +62,22 @@ class ElementWrapper extends Component {
 
     return window.stylesModule.stylesContainer.current.getElementsByClassName(`altrp-styles${this.props.element.getId()}`)[0] || null;
   }
+
   /**
    * Нужно ли обновить отображение обертки элементов
+   * @param {{}} prevProps
+   * @param {{}} prevState
    */
-  componentDidUpdate(){
+  componentDidUpdate(prevProps, prevState){
     this.checkElementDisplay();
   }
 
   /**
    * Проверка видимости элемента
+   * @param {{}} prevProps
+   * @param {{}} prevState
    */
-  checkElementDisplay(){
+  checkElementDisplay(prevProps, prevState){
     /**
      * @member {FrontElement} element
      */
@@ -233,6 +229,8 @@ function mapStateToProps(state) {
     currentDataStorage: state.currentDataStorage,
     currentModel: state.currentModel,
     currentUser: state.currentUser,
+    altrpMeta: state.altrpMeta,
+    altrpPageState: state.altrpPageState,
   };
 }
 

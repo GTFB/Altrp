@@ -117,3 +117,44 @@ export function rgb2hex(rgb) {
     ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
 }
 
+/**
+ * Сохранить данные в localStorage
+ * @param {string} name
+ * @param {*} data
+ * @return {boolean}
+ */
+export function saveDataToLocalStorage(name, data){
+  if(! name){
+    return false;
+  }
+  if(_.isObject(data)){
+    data = JSON.stringify(data);
+  }
+  console.log(data);
+  localStorage.setItem(name, data);
+  return true;
+}
+/**
+ * Сохранить данные в localStorage
+ * @param {string} name
+ * @param {*} _default
+ * @return {*}
+ */
+export function getDataFromLocalStorage(name, _default = null){
+  if(! name){
+    return _default;
+  }
+  let value = localStorage.getItem(name);
+  if(! value){
+    return _default;
+  }
+  try {
+    value = JSON.parse(value);
+  } catch(error){
+    console.error(error);
+  }
+  if(_.isString(value) && Number(value)){
+    value = Number(value);
+  }
+  return value || _default;
+}

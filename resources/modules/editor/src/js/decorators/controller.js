@@ -5,6 +5,7 @@ import {getElementSettingsSuffix} from "../helpers";
  * Обновление значения в компоненте контроллера при загрузке нового экземпляра того же элемента
  */
 function componentDidUpdate(prevProps, prevState) {
+  console.log('update');
   if(!this.props.repeater){
     let elementValue = this.props.currentElement.getSettings(this.props.controlId);
     if(this.state.value !== elementValue){
@@ -33,6 +34,9 @@ function componentDidUpdate(prevProps, prevState) {
    */
   if(_.isFunction(this._componentDidUpdate)){
     this._componentDidUpdate(prevProps, prevState);
+  }
+  if(_.isFunction(this.conditionSubscriber)){
+    this.conditionSubscriber();
   }
 }
 
@@ -82,8 +86,10 @@ function getSettings(settingName){
  * и передача в класс Controller
  * @member {object} props
  * @property {Controller} props.controller
+ * @param {*} value
+ * @param {boolean} updateElement - по умолчанию обновляем текущий элемент тоже
  */
-function _changeValue(value) {
+function _changeValue(value, updateElement = true) {
   if(typeof value === 'object' && value.length !== undefined){
     value = [...value];
   }else if(typeof value === 'object'){
@@ -106,7 +112,9 @@ function _changeValue(value) {
       }
     });
   }
-  this.props.controller.changeValue(value);
+  if(updateElement){
+    this.props.controller.changeValue(value);
+  }
 
 }
 
@@ -132,7 +140,9 @@ function conditionSubscriber() {
       }
     });
     // if(keys.indexOf(controllerValue.controlId)>=0){
+    if(this.props.controller.isShow() !== this.state.show){
       this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController() ;
+    }
     // }
   }
 }
@@ -221,6 +231,6 @@ let controllerDecorate = function elementWrapperDecorate(component) {
   component.removeDynamicSettings = removeDynamicSettings.bind(component);
   component.openDynamicContent = openDynamicContent.bind(component);
   component.getSettings = getSettings.bind(component);
-  store.subscribe(component.conditionSubscriber);//todo: изменить подписку на изменение хранилища
+  // store.subscribe(component.conditionSubscriber);//todo: изменить подписку на изменение хранилища
 };
 export default controllerDecorate;
