@@ -218,9 +218,9 @@ class Column  extends BaseElement {
       default: {
         isWithGradient: false,
         firstColor: "rgba(97,206,112,1)",
-        firstPoint: '0',
+        firstPoint: '100',
         secondColor: "rgba(242,41,91,1)",
-        secondPoint: "100",
+        secondPoint: "0",
         angle: "0",
         value: ""
       },
