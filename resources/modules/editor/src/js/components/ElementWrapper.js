@@ -244,9 +244,26 @@ class ElementWrapper extends Component {
     }));
   }
 
+  /**
+   * Нужно ли обновлять компонент
+   * @param {{}} nextProps
+   * @param {{}} nextState
+   */
+  shouldComponentUpdate(nextProps, nextState){
+    /**
+     * не обновляем элемент, если изменился контроллер не текущего элемента
+     */
+    if((nextProps.controllerValue !== this.props.controllerValue)
+        && this.props.element !== this.props.currentElement
+      ){
+      return false;
+    }
+    return true;
+  }
   render() {
     const elementHideTrigger = this.props.element.settings.hide_on_trigger;
     const { isFixed } = this.props.element.getSettings();
+    console.log('update element');
 
     if(this.state.errorInfo){
       return  <div className="altrp-error">
@@ -389,7 +406,7 @@ function mapStateToProps(state) {
     currentUser: state.currentUser,
     controllerValue: state.controllerValue,
     currentDataStorage: state.currentDataStorage,
-    hideTriggers: state.hideTriggers
+    hideTriggers: state.hideTriggers,
   };
 }
 
