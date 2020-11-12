@@ -43,21 +43,6 @@ class Column  extends BaseElement {
       }
     });
 
-    this.addControl("layout_column_height", {
-      type: CONTROLLER_SLIDER,
-      label: "column height",
-      default: {
-        size: 100,
-        unit: "%"
-      },
-      units: ["px", "%", "vh"],
-      max: 1000,
-      min: 0,
-      rules: {
-        "{{ELEMENT}}": "height: {{SIZE}}{{UNIT}}"
-      }
-    });
-
     this.addControl(
       'layout_type', {
         type: CONTROLLER_SELECT,
