@@ -46,7 +46,6 @@ class ElementWrapper extends Component {
     });
   }
   onDragOver(e) {
-    // console.log('over');
     let draggableElement = store.getState().elementDrag.element;
     e.preventDefault();
     let cursorPos = topOrBottomHover(e, this.wrapper.current);
@@ -204,7 +203,6 @@ class ElementWrapper extends Component {
     let classes = " ";
     classes += this.props.element.getPrefixClasses() + " ";
     let draggableElement = store.getState().elementDrag.element;
-    // console.log(draggableElement);
     if (this.state.isDrag) {
       classes += " altrp-element_is-drag";
       return classes;
@@ -263,7 +261,6 @@ class ElementWrapper extends Component {
   render() {
     const elementHideTrigger = this.props.element.settings.hide_on_trigger;
     const { isFixed } = this.props.element.getSettings();
-    console.log('update element');
 
     if(this.state.errorInfo){
       return  <div className="altrp-error">

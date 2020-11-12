@@ -1,3 +1,4 @@
+import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { useState, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Select from "react-select";

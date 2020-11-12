@@ -1,3 +1,4 @@
+import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { SketchPicker } from "react-color"
@@ -444,6 +445,12 @@ class CreativeLinkController extends Component {
     };
 
     if (this.state.activeCreativeLink === true) {
+      let valueCreativeLink = {
+        style: "style",
+        label: "Choose style",
+        ...value
+      };
+
       creativeLink = <div id="creativeLinkContainer" className="control-typographic-wrapper control-shadow-wrapper-none">
         {/* начало select2 */}
         <div className="controller-container controller-container_select2">
@@ -453,10 +460,10 @@ class CreativeLinkController extends Component {
           <div className="control-container_select2-wrapper">
             <Select
               onChange={this.changeStyle}
-              value={value.style.label}
+              value={valueCreativeLink.style}
               options={styleOptions}
               styles={customStyles}
-              placeholder={value.label}
+              placeholder={valueCreativeLink.label}
               noOptionsMessage={() => "no fonts found"}
             />
           </div>
@@ -642,4 +649,4 @@ function mapStateToProps(state) {
     currentScreen: state.currentScreen
   };
 }
-export default connect(mapStateToProps)(CreativeLinkController);
+export default connect(controllerMapStateToProps)(CreativeLinkController);

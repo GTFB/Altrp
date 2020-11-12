@@ -152,37 +152,38 @@ class ButtonWidget extends Component {
     }
 
     classes += this.classStateDisabled();
-    let button = (
-      this.props.element.getSettings('link_button_type', 'none') === "none" ? (
-        <button
-          onClick={this.onClick}
-          className={classes}
-          id={this.state.settings.position_css_id}
-        >
-          {buttonText}
-          <span className={"altrp-btn-icon "}>{ renderAssetIcon( buttonMedia ) } </span>
-        </button>
-      ) : (
-        <Suspense fallback={<div>Загрузка...</div>}>
-          <Dropbar
-            settings={this.props.element.getSettings()}
-            className="btn"
-            showDelay={this.state.settings.show_delay_dropbar_options}
-          >
-            <button
-              onClick={this.onClick}
-              className={classes}
-              id={this.state.settings.position_css_id}
-            >
-              {buttonText}
-              <span className={"altrp-btn-icon "}>{ renderAssetIcon( buttonMedia ) } </span>
-            </button>
-          </Dropbar>
-        </Suspense>
-      )
-
-
+    let button;
+    let buttonTemplate = (
+      <button
+        onClick={this.onClick}
+        className={classes}
+        id={this.state.settings.position_css_id}
+      >
+        {buttonText}
+        <span className={"altrp-btn-icon "}>{ renderAssetIcon( buttonMedia ) } </span>
+      </button>
     );
+
+    switch (this.props.element.getSettings('link_button_type', 'none')) {
+      case "dropbar":
+        button = (
+          <Suspense fallback={<div>Загрузка...</div>}>
+            <Dropbar
+              settings={this.props.element.getSettings()}
+              className="btn"
+              showDelay={this.state.settings.show_delay_dropbar_options}
+            >
+              {
+                buttonTemplate
+              }
+            </Dropbar>
+          </Suspense>
+        );
+        break;
+      default:
+        button = buttonTemplate
+
+    }
 
     let link = null;
     if (this.state.settings.link_link?.url && !this.state.settings.link_link.toPrevPage) {

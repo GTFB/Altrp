@@ -57,11 +57,15 @@ class Button extends BaseElement {
       options: [
         {
           value: 'none',
-          label: 'none'
+          label: 'None'
         },
         {
           value: 'dropbar',
-          label: 'dropbar'
+          label: 'Dropbar'
+        },
+        {
+          value: 'offcanvas',
+          label: 'Offcanvas'
         },
       ],
     });
@@ -207,6 +211,10 @@ class Button extends BaseElement {
         {
           value: 'toggle_popup',
           label: 'Toggle Popup',
+        },
+        {
+          value: 'toggle_offcanvas',
+          label: 'Toggle Offcanvas',
         },
         {
           value: 'print_page',
@@ -379,6 +387,7 @@ class Button extends BaseElement {
           'scroll_to_element',
           'trigger',
           'table_to_csv',
+          'toggle_offcanvas'
         ],
       },
     });
@@ -1254,6 +1263,7 @@ class Button extends BaseElement {
       rules: {
         '{{ELEMENT}} .altrp-btn-icon{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
         '{{ELEMENT}} .altrp-btn-icon svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-btn-icon img{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
       },
     });
 
