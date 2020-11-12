@@ -15,6 +15,11 @@ function componentDidUpdate(prevProps, prevState) {
           value: elementValue
         });
       }
+      if(prevProps.currentElement !== this.props.currentElement){
+        this.setState({
+          value: elementValue
+        });
+      }
     }
     if(prevProps.currentElement.getId() !== this.props.currentElement.getId()){
       /**

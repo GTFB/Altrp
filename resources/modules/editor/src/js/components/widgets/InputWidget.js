@@ -494,9 +494,7 @@ class InputWidget extends Component {
     } = this.props.element.getSettings();
 
     let options = this.state.options;
-    if (content_options_nullable) {
-      options = _.union([{ label: nulled_option_title, value: '', }], options);
-    }
+
 
 
     let value = this.state.value;
@@ -560,6 +558,9 @@ class InputWidget extends Component {
      * @type {Array|*}
      */
     options = _.sortBy(options, (o => o.label ? o.label.toString() : o));
+    if (content_options_nullable) {
+      options = _.union([{ label: nulled_option_title, value: '', }], options);
+    }
     const select2Props = {
       className: 'altrp-field-select2',
       classNamePrefix: this.props.element.getId() + ' altrp-field-select2',
