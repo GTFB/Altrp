@@ -11,10 +11,10 @@ function componentDidUpdate(prevProps, prevState) {
       if(elementValue === null){
         elementValue = this.getDefaultValue();
         this.props.currentElement.setSettingValue(this.props.controlId, elementValue);
+        this.setState({
+          value: elementValue
+        });
       }
-      this.setState({
-        value: elementValue
-      });
     }
     if(prevProps.currentElement.getId() !== this.props.currentElement.getId()){
       /**
@@ -111,8 +111,9 @@ function _changeValue(value, updateElement = true) {
       }
     });
   }
-  this.props.controller.changeValue(value, updateElement);
-
+  if(updateElement){
+    this.props.controller.changeValue(value, updateElement);
+  }
 
 }
 

@@ -50,6 +50,7 @@ class TextController extends Component {
     }
     // let value = this.getSettings(this.props.controlId) || this.getDefaultValue(); todo: удалить если будет работать
     let value = this.state.value || this.getDefaultValue();
+    console.log(value);
     return <div className="controller-container controller-container_text">
       <div className="controller-container__label textcontroller-responsive">
         {this.props.label}
@@ -85,14 +86,5 @@ class TextController extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  console.log(state);
-  return {
-    currentElement: state.currentElement.currentElement,
-    currentState: state.currentState,
-    currentScreen: state.currentScreen,
-    controllerValue: state.controllerValue,
-  };
-}
 
 export default connect(controllerMapStateToProps)(TextController);

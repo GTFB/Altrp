@@ -130,7 +130,6 @@ export function saveDataToLocalStorage(name, data){
   if(_.isObject(data)){
     data = JSON.stringify(data);
   }
-  console.log(data);
   localStorage.setItem(name, data);
   return true;
 }
