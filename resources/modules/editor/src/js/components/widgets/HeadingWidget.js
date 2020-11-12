@@ -24,6 +24,18 @@ class HeadingWidget extends Component {
     let link;
     const className = "altrp-heading altrp-heading--link " +
       + this.state.settings.position_css_classes + (background_image.url ? ' altrp-background-image' : '');
+    const subTag = this.state.settings.sub_heading_settings_html_tag || "h2";
+
+    //sub heading
+    let subHeading = "";
+    if(this.state.settings.text_sub_switch) {
+      const subText = this.state.settings.text_sub;
+
+      subHeading = React.createElement(subTag, {
+        dangerouslySetInnerHTML: { __html: subText },
+        className: "altrp-heading-sub"
+      })
+    }
 
     if (this.state.settings.link_link && this.state.settings.link_link.url) {
       let linkProps = {
@@ -47,19 +59,24 @@ class HeadingWidget extends Component {
       if(isEditor()){
         linkProps.onClick = e => {e.preventDefault()}
       }
-      link = React.createElement(tag, { ...linkProps, dangerouslySetInnerHTML: { __html: text }});
+      link = React.createElement(tag, { ...linkProps, dangerouslySetInnerHTML: { __html: text }})
     } else if (this.state.settings.creative_link_link && this.state.settings.creative_link_link.url && this.state.settings.heading_settings_html_tag !== "p") {
       link = (
-        <AltrpLink
-          className="altrp-inherit"
-          creativelink={this.getContent("creative_link_controller")}
-        >
+        <React.Fragment>
+          <AltrpLink
+            className="altrp-inherit"
+            creativelink={this.getContent("creative_link_controller")}
+          >
+            {
+              React.createElement("span", {
+                dangerouslySetInnerHTML:{ __html: text },
+              })
+            }
+          </AltrpLink>
           {
-            React.createElement("span", {
-              dangerouslySetInnerHTML:{ __html: text },
-            })
+            subHeading
           }
-        </AltrpLink>
+        </React.Fragment>
       )
     }
 
@@ -128,11 +145,13 @@ class HeadingWidget extends Component {
       }
       advancedHeading = (
         <div className="altrp-heading-advanced-wrapper">
-          <div className={classes} style={styles}>
-            {
-              this.getContent("text_advanced_heading_content")
-            }
-          </div>
+          {
+            React.createElement(this.state.settings.heading_settings_html_tag || 'h2', {
+              className: classes,
+              style: styles,
+              dangerouslySetInnerHTML: { __html:  this.getContent("text_advanced_heading_content") }
+            })
+          }
         </div>
       );
 
@@ -173,22 +192,47 @@ class HeadingWidget extends Component {
     }
 
     let headingContainer = link ?
-      React.createElement(
-        this.state.settings.heading_settings_html_tag || 'h2',
+      <React.Fragment>
         {
-          className,
-          id: this.state.settings.position_css_id || "",
-        },
-        link):
-      React.createElement(
-        this.state.settings.heading_settings_html_tag || 'h2',
+          React.createElement(
+            this.state.settings.heading_settings_html_tag || 'h2',
+            {
+              className,
+              id: this.state.settings.position_css_id || "",
+            },
+            link
+          )
+        }
         {
-          className,
-          id: this.state.settings.position_css_id || "",
-          dangerouslySetInnerHTML: { __html: text }
-        },
-        // this.state.settings.switch_advanced_heading_content ? advancedHeading : ""
-      );
+          React.createElement(subTag, {
+            className: "altrp-heading-sub-container-link"
+          }, (
+            React.createElement(AltrpLink, {
+              link: this.state.settings.link_link,
+              dangerouslySetInnerHTML: { __html: this.state.settings.text_sub},
+              className: "altrp-inherit altrp-heading-sub"
+            })
+            )
+          )
+        }
+      </React.Fragment>
+      :
+      <React.Fragment>
+        {
+          React.createElement(
+            this.state.settings.heading_settings_html_tag || 'h2',
+            {
+              className,
+              id: this.state.settings.position_css_id || "",
+              dangerouslySetInnerHTML: { __html: text }
+            },
+            // this.state.settings.switch_advanced_heading_content ? advancedHeading : ""
+          )
+        }
+        {
+          subHeading
+        }
+      </React.Fragment>
 
     return (
       <div className="altrp-heading-wrapper">

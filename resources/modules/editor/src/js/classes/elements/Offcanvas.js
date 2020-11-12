@@ -99,6 +99,7 @@ class Offcanvas extends BaseElement {
         'px',
         '%',
         'vh',
+        'vw'
       ],
       max: 1200,
       min: 0,
@@ -208,11 +209,11 @@ class Offcanvas extends BaseElement {
       label: 'Custom content before',
     });
 
-    // this.addControl("offcanvas_custom_content_before", {
-    //   type: CONTROLLER_WYSIWYG,
-    //   label: "Custom content before (offcanvas)",
-    //   default: "This is your custom content for before of your offcanvas.",
-    // });
+    this.addControl("offcanvas_custom_content_before", {
+      type: CONTROLLER_WYSIWYG,
+      label: "Custom content before (offcanvas)",
+      default: "This is your custom content for before of your offcanvas.",
+    });
 
     this.endControlSection();
 
@@ -220,11 +221,11 @@ class Offcanvas extends BaseElement {
       label: 'Custom content after (offcanvas)',
     });
 
-    // this.addControl("offcanvas_custom_content_after", {
-    //   type: CONTROLLER_WYSIWYG,
-    //   label: "Custom content after",
-    //   default: "This is your custom content for after of your offcanvas.",
-    // });
+    this.addControl("offcanvas_custom_content_after", {
+      type: CONTROLLER_WYSIWYG,
+      label: "Custom content after",
+      default: "This is your custom content for after of your offcanvas.",
+    });
 
     this.endControlSection();
 

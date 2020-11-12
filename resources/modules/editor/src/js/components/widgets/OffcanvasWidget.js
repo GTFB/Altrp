@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {isEditor} from "../../../../../front-app/src/js/helpers";
 import "../../../sass/altrp-offcanvas.scss";
+import TemplateLoader from "../template-loader/TemplateLoader";
+import ReactDOM from "react-dom";
 
 class OffcanvasWidget extends Component {
   constructor(props) {
@@ -8,6 +10,7 @@ class OffcanvasWidget extends Component {
 
     this.state = {
       settings: props.element.getSettings(),
+      elementId: this.props.element.getId(),
       show: false
     };
 
@@ -42,7 +45,8 @@ class OffcanvasWidget extends Component {
   }
 
   hide(e) {
-    if (e.target !== this.offcanvasContentRef.current) {
+    console.log();
+    if (!e.path.includes(this.offcanvasContentRef.current)) {
       this.setState((state) => {
         return {
           ...state,
@@ -60,7 +64,6 @@ class OffcanvasWidget extends Component {
   }
 
   render() {
-    const elementId = this.props.element.getId();
     let classes = "altrp-offcanvas";
 
     switch (this.getContent('direction_offcanvas')) {
@@ -104,6 +107,13 @@ class OffcanvasWidget extends Component {
       default:
         classesWrapper += " altrp-offcanvas-animation-slide";
     }
+
+    let content = "";
+    let templtateId = this.getContent("template_offcanvas");
+
+    if(this.getContent("source_offcanvas") === "template" && templtateId) {
+      content = <TemplateLoader templateId={templtateId}/>
+    }
     return (
       <React.Fragment>
         {
@@ -120,13 +130,15 @@ class OffcanvasWidget extends Component {
               <div
                 className={"altrp-offcanvas-wrapper" +
                 (this.state.show ? " altrp-offcanvas-wrapper-show" : "") +
-                ` ${elementId}-altrp-offcanvas` +
+                ` ${this.state.elementId}-altrp-offcanvas` +
                 (this.state.hideAnimation ? " altrp-offcanvas-wrapper-animation-hide" : "") +
                 classesWrapper
                 }
               >
                 <div className={classes} ref={this.offcanvasContentRef}>
-
+                  {
+                    content
+                  }
                 </div>
               </div>
             ),

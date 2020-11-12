@@ -48,6 +48,21 @@ class Heading extends BaseElement {
       default: "I Am Advanced Heading",
     });
 
+    this.addControl('text_sub_switch', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Sub heading',
+      default: false
+    });
+
+    this.addControl("text_sub", {
+      conditions: {
+        'text_sub_switch': true,
+      },
+      type: CONTROLLER_TEXTAREA,
+      label: "Sub text",
+      default: "I Am Sub Heading",
+    });
+
     this.endControlSection();
 
     this.startControlSection('heading_settings', {
@@ -86,7 +101,54 @@ class Heading extends BaseElement {
     this.addControl('heading_settings_html_tag', {
       type: CONTROLLER_SELECT,
       label: 'HTML tag',
-      default: 'p',
+      default: 'h2',
+      options: [
+        {
+          value: 'h1',
+          label: 'h1'
+        },
+        {
+          value: 'h2',
+          label: 'h2'
+        },
+        {
+          value: 'h3',
+          label: 'h3'
+        },
+        {
+          value: 'h4',
+          label: 'h4'
+        },
+        {
+          value: 'h5',
+          label: 'h5'
+        },
+        {
+          value: 'h6',
+          label: 'h6'
+        },
+        {
+          value: 'p',
+          label: 'p'
+        },
+        {
+          value: 'span',
+          label: 'span'
+        },
+        {
+          value: 'div',
+          label: 'div'
+        }
+      ]
+    });
+
+    this.addControl('sub_heading_settings_html_tag', {
+      conditions: {
+        'text_sub_switch': true,
+      },
+      type: CONTROLLER_SELECT,
+      label: 'Sub HTML tag',
+      default: 'h5',
       options: [
         {
           value: 'h1',
@@ -1054,6 +1116,118 @@ class Heading extends BaseElement {
           "{{ELEMENT}} .altrp-link-cl-style-29::before{{STATE}}": "background-color: {{COLOR}};",
         }
     });
+
+    this.endControlSection();
+
+    this.startControlSection('sub_heading', {
+      tab: TAB_STYLE,
+      label: 'Sub heading',
+    });
+
+    this.addControl("spacing_sub_heading", {
+      type: CONTROLLER_SLIDER,
+      label: 'Space heading',
+      default: {
+        size: 0,
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+      ],
+      max: 1200,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-heading-sub{{STATE}}": "margin-top: {{SIZE}}{{UNIT}};",
+        "{{ELEMENT}} .altrp-heading-sub-container-link{{STATE}}": "margin-top: {{SIZE}}{{UNIT}};",
+      }
+    });
+
+    this.addControl('bg_sub_heading', {
+        type: CONTROLLER_COLOR,
+        label: 'Background color',
+        rules: {
+          '{{ELEMENT}} .altrp-heading-sub{{STATE}}': 'background-color: {{COLOR}};',
+        },
+      }
+    );
+
+    this.addControl('color_sub_heading', {
+        type: CONTROLLER_COLOR,
+        label: 'Background color',
+        rules: {
+          '{{ELEMENT}} .altrp-heading-sub{{STATE}}': 'color: {{COLOR}};',
+        },
+      }
+    );
+
+    this.addControl('padding_sub_heading', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-heading-sub{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('typographic_sub_heading', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default: {
+          lineHeight: 1,
+          spacing: 0,
+          size: 16,
+          weight: "normal",
+          family: 'roboto',
+          decoration: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-heading-sub{{STATE}}': [
+            'font-family: "{{FAMILY}}", sans-serif;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
+    this.addControl('text_shadow_sub_heading', {
+      type: CONTROLLER_SHADOW,
+      label: 'Text shadow',
+      default:{
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        opacity: 1,
+        spread: 0,
+        colorRGB: 'rgb(0, 0, 0)',
+        color: 'rgb(0, 0, 0)',
+        colorPickedHex: '#000000',
+        type: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-heading-sub{{STATE}}': 'text-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
+        },
+      }
+    );
 
     this.endControlSection();
 

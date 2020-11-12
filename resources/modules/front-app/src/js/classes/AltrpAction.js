@@ -165,6 +165,10 @@ class AltrpAction extends AltrpModel {
         result = await this.doActionLogout();
       }
         break;
+      case 'toggle_offcanvas': {
+        result = await this.doActionToggleOffcanvas();
+      }
+        break;
     }
     let alertText = '';
     if(result.success){
@@ -470,6 +474,29 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionTrigger() {
+    let elementId = this.getProperty('element_id');
+    let element = getComponentByElementId(elementId);
+    let action = this.getProperty('action');
+
+
+    try {
+      element.props.element.component.fireAction(action);
+      return {
+        success: true,
+      }
+    }
+    catch (error) {
+      return {
+        success: false,
+      }
+    }
+  }
+
+  /**
+   * Триггер offcanvas
+   * @return {Promise<{}>}
+   */
+  async doActionToggleOffcanvas() {
     let elementId = this.getProperty('element_id');
     let element = getComponentByElementId(elementId);
     let action = this.getProperty('action');
