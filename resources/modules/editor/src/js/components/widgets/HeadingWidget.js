@@ -205,12 +205,12 @@ class HeadingWidget extends Component {
         }
         {
           React.createElement(subTag, {
-            className: "altrp-heading-sub-container-link"
+            className: "altrp-heading-sub-container-link altrp-heading-sub"
           }, (
             React.createElement(AltrpLink, {
               link: this.state.settings.link_link,
               dangerouslySetInnerHTML: { __html: this.state.settings.text_sub},
-              className: "altrp-inherit altrp-heading-sub"
+              className: "altrp-inherit"
             })
             )
           )

@@ -1139,7 +1139,6 @@ class Heading extends BaseElement {
       min: 0,
       rules: {
         "{{ELEMENT}} .altrp-heading-sub{{STATE}}": "margin-top: {{SIZE}}{{UNIT}};",
-        "{{ELEMENT}} .altrp-heading-sub-container-link{{STATE}}": "margin-top: {{SIZE}}{{UNIT}};",
       }
     });
 
