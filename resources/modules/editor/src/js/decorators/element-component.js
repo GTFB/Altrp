@@ -10,7 +10,6 @@ export function changeSetting(settingName, value) {
   /**
    * Если виджет поле, то обнолвяем и значение
    */
-  console.log(settingName);
   if((settingName === 'content_default_value')){
     newState.value = value;
   }

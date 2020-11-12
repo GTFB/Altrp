@@ -18,6 +18,11 @@
     text-fill-color: transparent;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    -webkit-transition-property: prop;
+    -moz-transition-property: prop;
+    -ms-transition-property: prop;
+    -o-transition-property: prop;
+    transition-property: prop;
 }
 
 .altrp-heading {

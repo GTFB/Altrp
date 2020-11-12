@@ -205,7 +205,7 @@ class HeadingWidget extends Component {
           )
         }
         {
-          React.createElement(subTag, {
+          this.state.settings.text_sub_switch && React.createElement(subTag, {
             className: "altrp-heading-sub-container-link altrp-heading-sub"
           }, (
             React.createElement(AltrpLink, {
