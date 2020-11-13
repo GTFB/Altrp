@@ -539,6 +539,11 @@ class Table extends BaseElement {
     });
 
 
+    this.addControl('inner_page_count_options', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Counts',
+    });
+
     this.addControl('inner_sort', {
       type: CONTROLLER_SWITCHER,
       label: 'Sort',

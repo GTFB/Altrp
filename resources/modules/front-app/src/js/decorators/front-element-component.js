@@ -207,7 +207,7 @@ function componentDidUpdate(prevProps, prevState) {
   if(currentDataStorage.getProperty('currentDataStorageLoaded')
       && (currentDataStorage.getProperty('currentDataStorageLoaded') !== prevDataStorage.getProperty('currentDataStorageLoaded'))){
     if(_.isFunction(this._componentDidMount)){
-      // this._componentDidMount();
+      this._componentDidMount();
     }
   }
   /**

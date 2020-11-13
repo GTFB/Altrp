@@ -89,8 +89,12 @@ class TableWidget extends Component {
         autoHideTimeout={500}
         autoHideDuration={200}
         renderTrackVertical={({style, ...props})=>{
-          return<div className="altrp-scroll__vertical-track" style={style} {...props} />}}
+          style.display = 'none';
+          return <div className="altrp-scroll__vertical-track" style={style} {...props} />}}
+        renderTrackHorizontal={({style, ...props})=>{
+          return <div className="altrp-scroll__horizontal-track" style={style} {...props} />}}
     ><this.state.TableComponent query={query}
+                                widgetId={this.props.element.getId()}
                                 currentModel={this.props.currentModel}
                                 data={query.getFromModel(this.state.modelData)}
                                 settings={this.props.element.getSettings()}/>
