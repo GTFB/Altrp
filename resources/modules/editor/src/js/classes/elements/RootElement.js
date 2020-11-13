@@ -1235,6 +1235,72 @@ class RootElement extends BaseElement {
         ".altrp-btn{{STATE}}": "background-size: {{VALUE}};"
       }
     });
+
+    this.addControl('button_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        ".altrp-btn": "transition-property: {{VALUE}};"
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("button_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-btn": "transition-duration: {{SIZE}}s;"
+      }
+    });
+
+    this.addControl('button_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        ".altrp-btn": "transition-timing-function: {{VALUE}};"
+      }
+    });
+
+    this.addControl("button_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-btn": "transition-delay: {{SIZE}}s;"
+      }
+    });
     
     this.endControlSection();
 
