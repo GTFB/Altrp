@@ -841,7 +841,7 @@ class RootElement extends BaseElement {
       ],
       label: 'Transition Timing Function',
       rules: {
-        ".altrp-heading": "background-position: {{VALUE}};"
+        ".altrp-heading": "transition-timing-function: {{VALUE}};"
       }
     });
 
