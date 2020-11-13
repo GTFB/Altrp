@@ -783,21 +783,29 @@ class RootElement extends BaseElement {
       }
     });
 
+    // this.addControl('heading_default_transition_property', {
+    //   type: CONTROLLER_SELECT2,
+    //   label: 'Transition Property',
+    //   isMulti: true,
+    //   options: [
+    //     { label: 'color', value: 'color' }, 
+    //     { label: 'font-size', value: 'font-size' },
+    //     { label: 'margin', value: 'margin' }, 
+    //     { label: 'padding', value: 'padding' }, 
+    //     { label: 'background-color', value: 'background-color' }, 
+    //     { label: 'opacity', value: 'opacity' }, 
+    //   ],
+    //   rules: {
+    //     ".altrp-heading": "transition-property: {{VALUE}};"
+    //   }
+    // });
     this.addControl('heading_default_transition_property', {
-      type: CONTROLLER_SELECT2,
+      type: CONTROLLER_TEXTAREA,
       label: 'Transition Property',
-      isMulti: true,
-      options: [
-        { label: 'color', value: 'color' }, 
-        { label: 'font-size', value: 'font-size' },
-        { label: 'margin', value: 'margin' }, 
-        { label: 'padding', value: 'padding' }, 
-        { label: 'background-color', value: 'background-color' }, 
-        { label: 'opacity', value: 'opacity' }, 
-      ],
       rules: {
         ".altrp-heading": "transition-property: {{VALUE}};"
-      }
+      },
+      description: 'Input properties, commas separated'
     });
 
     this.addControl("heading_default_transition_duration", {
