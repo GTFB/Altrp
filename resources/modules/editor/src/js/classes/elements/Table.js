@@ -265,11 +265,87 @@ class Table extends BaseElement {
       label: 'Is Sorted',
       default: false
     });
+
     repeater.addControl('column_is_filtered', {
       type: CONTROLLER_SWITCHER,
       label: 'Add Filter Input',
       default: false
     });
+
+    repeater.addControl('column_filter_type', {
+      type: CONTROLLER_SELECT,
+      label: 'Filter Type',
+      nullable: true,
+      options: [
+        {
+          label: 'Text',
+          value: 'text',
+        },
+        {
+          label: 'Min-Max',
+          value: 'min_max',
+        },
+        {
+          label: 'Select',
+          value: 'select',
+        },
+        {
+          label: 'Slider',
+          value: 'slider',
+        },
+      ],
+      responsive: false,
+      conditions: {
+        'column_is_filtered': true,
+      },
+    });
+
+    repeater.addControl('filter_placeholder', {
+      label: 'Placeholder',
+      conditions: {
+        'column_is_filtered': true,
+        'column_filter_type': 'text',
+      },
+      dynamic: false,
+      responsive: false,
+      description: 'Search {{count}} records...',
+    });
+
+
+    repeater.addControl('filter_min_placeholder', {
+      label: 'MinPlaceholder',
+      conditions: {
+        'column_is_filtered': true,
+        'column_filter_type': 'min_max',
+      },
+      dynamic: false,
+      responsive: false,
+      description: 'Min ({{min}})',
+    });
+
+
+    repeater.addControl('filter_max_placeholder', {
+      label: 'Max Placeholder',
+      conditions: {
+        'column_is_filtered': true,
+        'column_filter_type': 'min_max',
+      },
+      dynamic: false,
+      responsive: false,
+      description: 'Min ({{max}})',
+    });
+
+    repeater.addControl('filter_button_text', {
+      label: 'Placeholder',
+      conditions: {
+        'column_is_filtered': true,
+        'column_filter_type': 'slider',
+      },
+      dynamic: false,
+      responsive: false,
+      description: 'Off',
+    });
+
 
     repeater.addControl('column_is_editable', {
       type: CONTROLLER_SWITCHER,

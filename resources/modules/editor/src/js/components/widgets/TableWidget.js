@@ -58,6 +58,7 @@ class TableWidget extends Component {
     return true;
   }
   render(){
+    const settings = this.props.element.getSettings();
     if(! this.props.currentModel.getProperty('altrpModelUpdated')){
       return '';
     }
@@ -79,6 +80,10 @@ class TableWidget extends Component {
       scrollbarsProps.autoHeight = true;
       scrollbarsProps.autoHeightMax = 10000;
 
+    }
+
+    if (! (_.get(settings,'tables_columns.length'))) {
+      return <div children="Please Add Column"/>
     }
     return <Scrollbars
         ref={this.scrollbar}

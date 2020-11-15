@@ -1,12 +1,61 @@
 import '../../../sass/altrp-pagination.scss';
 import {isEditor, parseURLTemplate} from "../../../../../front-app/src/js/helpers";
 import {Link} from "react-router-dom";
-import {renderAdditionalRows, settingsToColumns} from "./altrp-table";
-import {useSortBy, useTable, usePagination} from "react-table";
+import {renderAdditionalRows,} from "./altrp-table";
+import {useSortBy, useTable, usePagination, useFilters, useGlobalFilter, useAsyncDebounce} from "react-table";
 import AltrpQueryComponent from "../altrp-query-component/altrp-query-component";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import {iconsManager} from "../../../../../admin/src/js/helpers";
+import {matchSorter} from 'match-sorter'
+import React from "react";
+/**
+ *
+ * @param rows
+ * @param ids
+ * @param filterValue
+ * @return {*}
+ */
+function includesSome(rows, ids, filterValue) {
+  return rows.filter(function (row) {
+    return ids.some(function (id) {
+      let rowValue = row.values[id];
+      return filterValue.some(function (val) {
+        if (!(val || rowValue)) {
+          return true;
+        }
+        if (! _.isString(rowValue)) {
+          rowValue += '';
+        }
+        return rowValue.includes(val);
+      });
+    });
+  });
+}
 
+includesSome.autoRemove = function (val) {
+  return !val || !val.length;
+};
+
+/**
+ *
+ * @param rows
+ * @param id
+ * @param filterValue
+ * @return {*}
+ */
+function fuzzyTextFilterFn(rows, id, filterValue) {
+  id = id ?  id[0] : undefined;
+  return matchSorter(rows, filterValue, { keys: [row => {
+    let rowValue = row.values[id];
+    if(id === '##'){
+      rowValue = row.index + 1;
+    }
+    return rowValue
+  } ]})
+}
+
+// Let the table remove the filter if the string is empty
+fuzzyTextFilterFn.autoRemove = val => !val;
 /**
  * Компонент, который работает только с внешними данными, которые не обновляются с сервера
  * @param {{}} settings
@@ -40,6 +89,71 @@ function AltrpTableWithoutUpdate(
       _latestData,
       sortSetting
     }) {
+  const filterTypes = React.useMemo(
+      () => ({
+        // Add a new fuzzyTextFilterFn filter type.
+        fuzzyText: fuzzyTextFilterFn,
+        // Or, override the default text filter to use
+        // "startWith"
+        text: (rows, id, filterValue) => {
+          id = id ?  id[0] : undefined;
+          return rows.filter(row => {
+            let rowValue = row.values[id];
+            if(id === '##'){
+              rowValue = row.index + 1;
+            }
+            console.log(rowValue);
+            return rowValue !== undefined
+                ? String(rowValue)
+                    .toLowerCase()
+                    .startsWith(String(filterValue).toLowerCase())
+                : true
+          })
+        },
+        between: (rows, ids, filterValue) => {
+          let _ref = filterValue || [],
+              min = _ref[0],
+              max = _ref[1];
+          min = typeof min === 'number' ? min : -Infinity;
+          max = typeof max === 'number' ? max : Infinity;
+
+          if (min > max) {
+            let temp = min;
+            min = max;
+            max = temp;
+          }
+
+          return rows.filter(function (row) {
+            return ids.some(function (id) {
+              let rowValue = row.values[id];
+              if (id === '##') {
+                rowValue = row.index + 1;
+              }
+              return rowValue >= min && rowValue <= max;
+            });
+          });
+        },
+        equals: (rows, ids, filterValue) => {
+          return rows.filter(function (row) {
+            return ids.some(function (id) {
+              let rowValue = row.values[id];
+              if (id === '##') {
+                rowValue = row.index + 1;
+              }
+              return rowValue == filterValue;
+            });
+          });
+        },
+        includesSome: includesSome,
+      }),
+      []
+  );
+  const defaultColumn = React.useMemo(
+      () => ({
+        Filter: DefaultColumnFilter,
+      }),
+      []
+  );
   React.useEffect(() => {
     if (!data) {
       data = [];
@@ -50,23 +164,15 @@ function AltrpTableWithoutUpdate(
     }
   }, [data]);
   const {inner_page_size, inner_sort} = settings;
-  let columns = React.useMemo(() => settingsToColumns(settings), [settings]);
-  // const plugins =
-  //     React.useMemo(() => {
-  //       const plugins = [];
-  //       if (inner_sort) {
-  //         plugins.push(useSortBy);
-  //       }
-  //       if (inner_page_size && (inner_page_size >= 1)) {
-  //         plugins.push(usePagination);
-  //       }
-  //       return plugins;
-  //     }, [inner_page_size, inner_sort]);
-  const plugins = [useSortBy, usePagination, ];
+  let columns = React.useMemo(() => settingsToColumns(settings, widgetId), [settings, widgetId]);
+
+  const plugins = [ useFilters, useGlobalFilter, useSortBy, usePagination,useAsyncDebounce];
   const tableSettings = React.useMemo(() => {
     const tableSettings = {
       columns,
       data,
+      filterTypes,
+      defaultColumn,
     };
     if ((inner_page_size >= 1)) {
       tableSettings.initialState = {
@@ -80,7 +186,6 @@ function AltrpTableWithoutUpdate(
     tableSettings.disableSortBy = ! inner_sort;
     return tableSettings;
   }, [inner_page_size, inner_sort, data, columns]);
-  console.log(tableSettings);
   const ReactTable = useTable(
       tableSettings,
       ...plugins
@@ -107,7 +212,7 @@ function AltrpTableWithoutUpdate(
     setPageSize,
     state: {pageIndex, pageSize},
   } = ReactTable;
-  console.log(ReactTable);
+  // console.log(ReactTable);
   React.useEffect(
       () => {
         if (!setPageSize) {
@@ -140,7 +245,7 @@ function AltrpTableWithoutUpdate(
           };
         }
         return paginationProps;
-      }, [inner_page_size, pageSize, pageCount, pageIndex ]);
+      }, [inner_page_size, pageSize, pageCount, pageIndex, settings ]);
 
 
   return <>
@@ -173,6 +278,13 @@ function AltrpTableWithoutUpdate(
                               : iconsManager().renderIcon('chevron', {className: 'sort-icon'})
                           : '')
                     }
+                    {
+                      column.column_is_filtered &&
+                      <label className={`altrp-label altrp-label_${column.column_filter_type}`} onClick={e => { e.stopPropagation()}}>
+                        {column.render('Filter')}
+                      </label>
+                    }
+
                   </th>;
                 }
             )}
@@ -237,7 +349,6 @@ export function Pagination(
         }
         return countOptions
       }, [inner_page_count_options]);
-  console.log(pageSize);
   return <div className="altrp-pagination">
     <button className={"altrp-pagination__previous"}
             onClick={() => {
@@ -276,6 +387,269 @@ export function Pagination(
   </div>
 }
 
+/**
+ * Define a default UI for filtering
+ * @param filterValue
+ * @param preFilteredRows
+ * @param setFilter
+ * @param {string} filter_placeholder
+ * @param {string} column_filter_type
+ * @param {boolean} column_is_filtered
+ * @param {{}}settings
+ * @return {*}
+ * @constructor
+ */
+
+function DefaultColumnFilter({
+                               column: { filterValue,
+                                 preFilteredRows,
+                                 setFilter,
+                                 filter_placeholder,
+                                 column_filter_type,
+                                 column_is_filtered,
+                               },
+                             }, settings) {
+  const count = preFilteredRows.length;
+  filter_placeholder = filter_placeholder ? filter_placeholder.replace('{{count}}', count) : `Search ${count} records...`;
+  return (
+      <input
+          value={filterValue || ''}
+          className="altrp-field"
+          onChange={e => {
+            setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
+          }}
+          placeholder={filter_placeholder}
+      />
+  )
+}
+/**
+ * Селект для фильтрации по значениям в колонке
+ * @param filterValue
+ * @param setFilter
+ * @param preFilteredRows
+ * @param id
+ * @param widgetId
+ * @param filter_placeholder
+ * @return {*}
+ * @constructor
+ */
+function SelectColumnFilter({
+                              column: { filterValue, setFilter, preFilteredRows, id, filter_placeholder },
+                              widgetId
+                            }) {
+  const options = React.useMemo(() => {
+    let _options = new Set();
+    preFilteredRows.forEach(row => {
+      _options.add(row.values[id])
+    });
+    return [..._options.values()].map(option =>({
+      value: option,
+      label: option + '',
+    }));
+  }, [id, preFilteredRows]);
+
+  // Render a multi-select box
+  return (<AltrpSelect options={options}
+                       isMulti={true}
+                       placeholder={filter_placeholder || 'Select some...'}
+                       className="altrp-table__filter-select"
+                       classNamePrefix={widgetId + ' altrp-field-select2'}
+                       onChange={v=>{
+        if(! _.isArray(v)){
+          v = [];
+        }
+        let filterValue = v.map(option=>option.value);
+        setFilter(filterValue);
+      }}/>
+  );
+  return (
+      <select
+          multiple
+          value={filterValue}
+          onChange={e => {
+            console.log(e.target.value);
+            setFilter(e.target.value || undefined)
+          }}
+      >
+        <option value="">All</option>
+        {options.map((option, i) => (
+            <option key={i} value={option}>
+              {option}
+            </option>
+        ))}
+      </select>
+  )
+}
+
+/**
+ * This is a custom filter UI that uses a
+ * slider to set the filter value between a column's
+ * min and max values
+ * @param filterValue
+ * @param setFilter
+ * @param preFilteredRows
+ * @param filter_button_text
+ * @param id
+ * @return {*}
+ * @constructor
+ */
+function SliderColumnFilter({
+                              column: { filterValue, setFilter, preFilteredRows, id, filter_button_text },
+                            }) {
+  // Calculate the min and max
+  // using the preFilteredRows
+
+  const [min, max] = React.useMemo(() => {
+    let min = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
+    let max = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
+    preFilteredRows.forEach(row => {
+      min = Math.min(row.values[id], min);
+      max = Math.max(row.values[id], max);
+    });
+    return [min, max]
+  }, [id, preFilteredRows]);
+  const buttonText = filter_button_text || 'Off';
+  return (
+      <>
+        <input
+            type="range"
+            className="altrp-field"
+            min={min}
+            max={max}
+            value={filterValue || min}
+            onChange={e => {
+              setFilter(parseInt(e.target.value, 10))
+            }}
+        />
+        <button className="altrp-btn" onClick={() => setFilter(undefined)}>{buttonText}</button>
+      </>
+  )
+}
+/**
+ * This is a custom UI for our 'between' or number range
+ * filter. It uses two number boxes and filters rows to
+ * ones that have values between the two
+ * @param filterValue
+ * @param preFilteredRows
+ * @param setFilter
+ * @param filter_max_placeholder
+ * @param filter_min_placeholder
+ * @param id
+ * @return {*}
+ * @constructor
+ */
+function NumberRangeColumnFilter({
+                                   column: { filterValue = [],
+                                     preFilteredRows,
+                                     setFilter,
+                                     filter_max_placeholder,
+                                     filter_min_placeholder,
+                                     id },
+                                 }) {
+  const [min, max] = React.useMemo(() => {
+    let value = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
+    if(id === '##' && preFilteredRows.length) {
+      value = preFilteredRows[0].index;
+    }
+    let min = value;
+    let max = value;
+    preFilteredRows.forEach(row => {
+      let value = row.values[id];
+      if(id === '##'){
+        value = row.index;
+      }
+      min = Math.min(value, min);
+      max = Math.max(value, max);
+    });
+    return [min, max]
+  }, [id, preFilteredRows]);
+  let minPlaceHolder = filter_min_placeholder || `Min (${min})`;
+  let maxPlaceHolder = filter_max_placeholder || `Max (${max})`;
+  return (
+      <div className="altrp-filter-group"
+          style={{
+            display: 'flex',
+          }}
+      >
+        <input
+            value={filterValue[0] || ''}
+            type="number"
+            className="altrp-field"
+            onChange={e => {
+              const val = e.target.value;
+              setFilter((old = []) => [val ? parseInt(val, 10) : undefined, old[1]])
+            }}
+            placeholder={minPlaceHolder}
+            style={{
+              width: '70px',
+              marginRight: '0.5rem',
+            }}
+        />
+        to
+        <input
+            value={filterValue[1] || ''}
+            type="number"
+            className="altrp-field"
+            onChange={e => {
+              const val = e.target.value;
+              setFilter((old = []) => [old[0], val ? parseInt(val, 10) : undefined])
+            }}
+            placeholder={maxPlaceHolder}
+            style={{
+              width: '70px',
+              marginLeft: '0.5rem',
+            }}
+        />
+      </div>
+  )
+}
+
+/**
+ * Парсинг колонок из настроек в колонки для react-table
+ * @param settings
+ * @param widgetId
+ * @return {Array}
+ */
+export function settingsToColumns(settings, widgetId) {
+  let columns = [];
+  let { tables_columns } = settings;
+  tables_columns = tables_columns || [];
+  /**
+   * Если в колонке пустые поля, то мы их игнорируем, чтобы не было ошибки
+   */
+  tables_columns.forEach(_column => {
+    /**
+     * Колонку проказываем, если есть accessor или список actions
+     */
+    if (_column.column_name && ((_column.actions && _column.actions.length) || _column.accessor)) {
+      _column._accessor = _column.accessor;
+      if(_column.column_is_filtered){
+
+        _column.filter = 'fuzzyText';
+        switch (_column.column_filter_type){
+          case 'min_max':{
+            _column.filter = 'between';
+            _column.Filter = NumberRangeColumnFilter;
+          }
+          break;
+          case 'slider':{
+            _column.filter = 'equals';
+            _column.Filter = SliderColumnFilter;
+          }
+          break;
+          case 'select':{
+            _column.filter = 'includesSome';
+            _column.Filter = ({column}) => <SelectColumnFilter column={column} widgetId={widgetId}/>;
+          }
+          break;
+        }
+      }
+      columns.push(_column);
+    }
+
+  });
+  return columns;
+}
 export default (props) => {
   return <AltrpQueryComponent {...props}><AltrpTableWithoutUpdate/></AltrpQueryComponent>
 }
