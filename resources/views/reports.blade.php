@@ -8,7 +8,7 @@
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>Builder</title>
+  <title>Reports</title>
 
   <!-- Scripts -->
   <script>
@@ -23,9 +23,9 @@
   let _altrpVersion = '{{ getCurrentVersion() }}';
   </script>
   {{--  <script src="{{ asset( '/modules/editor/editor.js' ) }}" defer></script>--}}
-  <script src="{{ altrp_asset( '/modules/reports/reports.js', 'http://localhost:3005/' ) }}" crossorigin defer></script>
+  <script src="{{ altrp_asset( '/modules/reports-new/reports.js', 'http://localhost:3005/' ) }}" crossorigin defer></script>
 
-  <link rel="stylesheet" href="{{ asset( '/modules/reports/reports.css?' ) . getCurrentVersion() }}">
+  <link rel="stylesheet" href="{{ asset( '/modules/reports-new/reports.css?' ) . getCurrentVersion() }}">
   {{--<link rel="dns-prefetch" href="//fonts.gstatic.com">--}}
 </head>
 

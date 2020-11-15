@@ -1,7 +1,13 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { BrowserRouter as Router, Switch, Route, Redirect, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+  Link
+} from "react-router-dom";
 import { hot } from "react-hot-loader";
 
 import Bars from "./svgs/bars.svg";
@@ -30,6 +36,7 @@ import Tables from "./components/Tables";
 import Templates from "./components/Templates";
 import AdminModal from "./components/AdminModal";
 import AddPage from "./components/AddPage";
+import AddReport from "./components/AddReport";
 import UserTopPanel from "./components/UserTopPanel";
 import Models from "./components/Models";
 import EditModel from "./components/models/EditModel";
@@ -65,9 +72,9 @@ class Admin extends Component {
     super(props);
     this.state = {
       adminState: {
-        adminEnable: true,
+        adminEnable: true
       },
-      pagesMenuShow: false,
+      pagesMenuShow: false
     };
     this.toggleMenu = this.toggleMenu.bind(this);
   }
@@ -81,12 +88,12 @@ class Admin extends Component {
    */
   updateAdminState() {
     let adminState = store.getState().adminState;
-    this.setState((state) => {
+    this.setState(state => {
       return { ...state, adminState: { ...adminState } };
     });
   }
   toggleMenu() {
-    this.setState((state) => {
+    this.setState(state => {
       return { ...state, pagesMenuShow: !state.pagesMenuShow };
     });
   }
@@ -110,7 +117,10 @@ class Admin extends Component {
               <div className="admin-nav-main">
                 <ul className="admin-nav-list">
                   <li>
-                    <Link to="/admin/dashboard" className="admin-nav-list__link">
+                    <Link
+                      to="/admin/dashboard"
+                      className="admin-nav-list__link"
+                    >
                       <DashboardSvg className="icon" />
                       <span>Dashboard</span>
                     </Link>
@@ -127,13 +137,19 @@ class Admin extends Component {
                     {/*<span>Tables</span>*/}
                     {/*</Link>*/}
 
-                    <Link to="/admin/tables/models" className="admin-nav-list__link">
+                    <Link
+                      to="/admin/tables/models"
+                      className="admin-nav-list__link"
+                    >
                       <TableSvg className="icon" />
                       <span>Tables</span>
                     </Link>
                     <ul className="admin-nav-sublist">
                       <li>
-                        <Link to="/admin/tables/sql_editors" className="admin-nav-list__link">
+                        <Link
+                          to="/admin/tables/sql_editors"
+                          className="admin-nav-list__link"
+                        >
                           <TableSvg className="icon" />
                           <span>SQL Editors</span>
                         </Link>
@@ -141,17 +157,20 @@ class Admin extends Component {
                     </ul>
                   </li>
                   <li>
-                    <Link to="/admin/templates" className="admin-nav-list__link">
+                    <Link
+                      to="/admin/templates"
+                      className="admin-nav-list__link"
+                    >
                       <TemplateSvg className="icon" />
                       <span>Templates</span>
                     </Link>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link to="/admin/reports" className="admin-nav-list__link">
                       <ReportSvg className="icon" />
                       <span>Reports</span>
                     </Link>
-                  </li>
+                  </li> */}
                   <li>
                     <Link to="/admin/users" className="admin-nav-list__link">
                       <UserSvg className="icon" />
@@ -164,7 +183,10 @@ class Admin extends Component {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/admin/access/roles" className="admin-nav-list__link">
+                    <Link
+                      to="/admin/access/roles"
+                      className="admin-nav-list__link"
+                    >
                       <UserSvg className="icon" />
                       <span>Access</span>
                     </Link>
@@ -189,11 +211,20 @@ class Admin extends Component {
                       <span>Pages</span>
                     </Link>
                   </li>
+                  <li>
+                    <Link to="/admin/reports" className="admin-nav-list__link">
+                      <ReportSvg className="icon" />
+                      <span>Reports</span>
+                    </Link>
+                  </li>
                 </ul>
               </div>
               <AdminVersion />
             </nav>
             <Switch>
+              <Route path="/admin/reports/add">
+                <AddReport />
+              </Route>
               <Route path="/admin/" exact>
                 <Redirect to="/admin/dashboard" />
               </Route>
@@ -233,7 +264,11 @@ class Admin extends Component {
               <Route path="/admin/tables/edit/:id" component={EditTable} exact>
                 <EditTable />
               </Route>
-              <Route path="/admin/tables/edit/:id/setting" component={SettingTable} exact />
+              <Route
+                path="/admin/tables/edit/:id/setting"
+                component={SettingTable}
+                exact
+              />
               <Route
                 path="/admin/tables/edit/:id/setting/migrations/add"
                 component={AddMigrationPage}

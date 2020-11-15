@@ -4,13 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Constructor\Template;
 use App\Http\Controllers\Controller;
-use App\Media;
 use App\Page;
 use App\PagesTemplate;
-use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PagesController extends Controller
@@ -28,8 +24,8 @@ class PagesController extends Controller
     $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
     $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
     $_pages = $search
-        ? Page::getBySearch($search, 'title', [], $orderColumn, $orderType)
-        : Page::all()->$sortType( $orderColumn )->values();
+        ? Page::where('type',null)->getBySearch($search, 'title', [], $orderColumn, $orderType)
+        : Page::where('type',null)->get()->$sortType( $orderColumn )->values();
     $pages = [];
     foreach ( $_pages as $page ) {
 
@@ -216,9 +212,30 @@ class PagesController extends Controller
     }
     return response()->json( $pages_options );
   }
+  
+  /**
+   * Обработка запроса на получение списка отчетов
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function reports_options( Request $request )
+  {
+    $reports = Page::where( 'title', 'like', '%' . $request->get( 's' ) . '%' )
+      ->where('type','report')->orWhere( 'path', 'like', '%' . $request->get( 's' ) . '%' )
+      ->orWhere( 'id', 'like', '%' . $request->get( 's' ) . '%' )->get();
+
+    $reports_options = [];
+    foreach ( $reports as $page ) {
+      $pages_options[] = [
+        'value' => $page->id,
+        'label' => $page->title,
+      ];
+    }
+    return response()->json( $reports_options );
+  }
 
   /**
-   * Обработка запроса на получение списка страниц
+   * Обработка запроса на получение списка страниц (аналогично для репортсов)
    * @param string $page_id
    * @return \Illuminate\Http\JsonResponse
    */

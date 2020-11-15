@@ -7,7 +7,7 @@
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>Builder</title>
+  <title>Reports</title>
 
   <!-- Scripts -->
 

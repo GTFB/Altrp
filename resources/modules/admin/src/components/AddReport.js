@@ -34,7 +34,7 @@ const columns = [
  * @property {Resource} resource
  */
 
-class AddPage extends Component {
+class AddReport extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -48,9 +48,9 @@ class AddPage extends Component {
       editingDataSource: null,
       pagesOptions: []
     };
-    this.resource = new Resource({ route: "/admin/ajax/pages" });
+    this.resource = new Resource({ route: "/admin/ajax/reports" });
     this.pagesOptionsResource = new Resource({
-      route: "/admin/ajax/pages_options"
+      route: "/admin/ajax/reports_options"
     });
     this.model_resource = new Resource({ route: "/admin/ajax/models_options" });
     this.templateResource = new Resource({ route: "/admin/ajax/templates" });
@@ -121,7 +121,8 @@ class AddPage extends Component {
       redirect = redirect[0] !== "/" ? `/${redirect}` : redirect;
     }
     this.state.value.redirect = redirect;
-    this.state.value.path = path;
+    this.state.value.path = `/reports${path}`;
+    this.state.value.type = "report";
     if (this.state.id) {
       res = await this.resource.put(this.state.id, {
         ...this.state.value,
@@ -195,8 +196,8 @@ class AddPage extends Component {
       <div className="admin-pages admin-page">
         <div className="admin-heading">
           <div className="admin-breadcrumbs">
-            <Link className="admin-breadcrumbs__link" to="/admin/pages">
-              Pages
+            <Link className="admin-breadcrumbs__link" to="/admin/reports">
+              Reports
             </Link>
             <span className="admin-breadcrumbs__separator">/</span>
             <span className="admin-breadcrumbs__current">
@@ -222,42 +223,6 @@ class AddPage extends Component {
                 }}
                 className="form-control"
               />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="parent_page_id">Parent Page</label>
-              <select
-                id="parent_page_id"
-                value={this.state.value.parent_page_id || ""}
-                onChange={e => {
-                  // this.changeValue(e.target.value, 'parent_page_id');
-                  this.parentChangeHandler(e.target.value);
-                }}
-                className="form-control"
-              >
-                <option value="" disabled />
-                <option value="root">Root</option>
-                {this.state.pagesOptions.map(page => {
-                  return (
-                    <option value={page.value} key={page.value}>
-                      {page.label}
-                    </option>
-                  );
-                })}
-              </select>
-              {/* <AltrpSelect id="parent_page_id"
-              // isMulti={true}
-              optionsRoute="/admin/ajax/pages_options"
-              placeholder=""
-              defaultOptions={[
-                {
-                  value: '',
-                  label: '',
-                }
-              ]}
-              value={this.state.value.parent_page_id || ''}
-              onChange={({ value }) => { this.parentChangeHandler(value) }}
-            /> */}
             </div>
 
             <div className="form-group">
@@ -396,4 +361,4 @@ class AddPage extends Component {
   }
 }
 
-export default withRouter(AddPage);
+export default withRouter(AddReport);

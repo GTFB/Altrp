@@ -5,7 +5,7 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
-  entry: "./resources/modules/reports/src/index.js",
+  entry: "./resources/modules/reports-new/src/index.js",
   mode: "development",
   module: {
     rules: [
@@ -15,8 +15,8 @@ module.exports = {
         loader: "babel-loader",
         options: {
           presets: ["@babel/env", "@babel/preset-react"],
-          plugins: ["@babel/plugin-syntax-jsx", "inline-react-svg"],
-        },
+          plugins: ["@babel/plugin-syntax-jsx", "inline-react-svg"]
+        }
       },
       {
         test: /\.css$/,
@@ -25,8 +25,8 @@ module.exports = {
           // Creates `style` nodes from JS strings
           "style-loader",
           // Translates CSS into CommonJS
-          "css-loader",
-        ],
+          "css-loader"
+        ]
       },
 
       // {
@@ -42,8 +42,8 @@ module.exports = {
           // Translates CSS into CommonJS
           "css-loader",
           // Compiles Sass to CSS
-          "sass-loader",
-        ],
+          "sass-loader"
+        ]
 
         // loader: ExtractTextPlugin.extract({
         //   fallback: 'style-loader',
@@ -55,37 +55,37 @@ module.exports = {
         exclude: /slick.svg$/,
         use: [
           {
-            loader: "babel-loader",
+            loader: "babel-loader"
           },
           {
             loader: "react-svg-loader",
             options: {
               //jsx: true, // true outputs JSX tags
-            },
-          },
-        ],
+            }
+          }
+        ]
       },
       {
         test: /\.(png|jpg|gif)$/,
         loader: "file-loader",
         options: {
-          name: "[path][name].[ext]",
-        },
+          name: "[path][name].[ext]"
+        }
       },
       {
         test: /(\.(woff|woff2|eot|ttf|otf)|slick.svg)$/,
-        use: ["file-loader"],
-      },
-    ],
+        use: ["file-loader"]
+      }
+    ]
   },
   resolve: {
-    extensions: ["*", ".js", ".jsx"],
+    extensions: ["*", ".js", ".jsx"]
   },
   output: {
-    path: path.resolve(__dirname, "reports/"),
+    path: path.resolve(__dirname, "reports-new/"),
     publicPath: "http://localhost:3005/src/",
     chunkFilename: "[chunkhash].bundle.js",
-    filename: "bundle.js",
+    filename: "bundle.js"
   },
   devServer: {
     contentBase: path.join(__dirname, "public/"),
@@ -94,13 +94,14 @@ module.exports = {
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
+      "Access-Control-Allow-Headers":
+        "X-Requested-With, content-type, Authorization"
     },
-    hotOnly: true,
+    hotOnly: true
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new CleanWebpackPlugin(),
+    new CleanWebpackPlugin()
     // new ExtractTextPlugin('style.css'),
     // new MiniCssExtractPlugin({
     //   // Options similar to the same options in webpackOptions.output
@@ -108,5 +109,5 @@ module.exports = {
     //   filename: '[name].css',
     //   chunkFilename: '[id].css',
     // }),
-  ],
+  ]
 };

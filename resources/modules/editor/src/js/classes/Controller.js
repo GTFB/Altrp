@@ -1,5 +1,5 @@
-import store, { getCurrentElement,  } from '../store/store';
-import {getElementSettingsSuffix} from "../helpers";
+import store, { getCurrentElement } from "../store/store";
+import { getElementSettingsSuffix } from "../helpers";
 import CONSTANTS from "../consts";
 import CSSRule from "../classes/CSSRule";
 import { changeTemplateStatus } from "../store/template-status/actions";
@@ -29,8 +29,12 @@ class Controller {
       }
     }
 
-    if(this.data.prefixClass) {
-      currentElement.setCssClass(this.getSettingName(), this.data.prefixClass + currentElement.getSettings(this.getSettingName()));
+    if (this.data.prefixClass) {
+      currentElement.setCssClass(
+        this.getSettingName(),
+        this.data.prefixClass +
+          currentElement.getSettings(this.getSettingName())
+      );
     }
     if (this.rules.length) {
       currentElement.addStyles(this.getSettingName(), this.rules);
@@ -45,34 +49,35 @@ class Controller {
     /**
      * Если значение контроллера объект, то создаем его копию
      */
-    if(_.isObject(value)){
+    if (_.isObject(value)) {
       value = _.cloneDeep(value);
     }
     /**
      * @member {BaseElement} currentElement
      * */
     let currentElement = getCurrentElement();
-    if (! this.data.repeater) {
+    if (!this.data.repeater) {
       currentElement.setSettingValue(this.getSettingName(), value);
       this.rules.forEach(rule => {
         rule.insertValue(value);
       });
       if (this.rules.length) {
-
-        value ? currentElement.addStyles(this.getSettingName(), this.rules)
+        value
+          ? currentElement.addStyles(this.getSettingName(), this.rules)
           : currentElement.removeStyle(this.getSettingName());
       }
       /**
        *
        * Вызываем currentElement setCssClass в случае если есть this.data.prefixClass
        */
-      if(this.data.prefixClass) {
-        currentElement.setCssClass(this.getSettingName(), this.data.prefixClass + value);
+      if (this.data.prefixClass) {
+        currentElement.setCssClass(
+          this.getSettingName(),
+          this.data.prefixClass + value
+        );
       }
       store.dispatch(controllerValue(value, this.getSettingName()));
-
     } else {
-
       /**
        * @type {RepeaterController}
        * @public
@@ -80,9 +85,10 @@ class Controller {
       this.data.repeater.changeValue(
         this.data.itemIndex,
         this.data.controlId,
-        value);
+        value
+      );
     }
-    if (this.getSettingName() === 'element_css_editor') {
+    if (this.getSettingName() === "element_css_editor") {
       currentElement.setStringStyles(value);
     }
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
@@ -104,30 +110,29 @@ class Controller {
     let show = true;
     conditionPairs.forEach(condition => {
       let [controlId, comparedValue] = condition;
-      let negative = (controlId.indexOf('!') >= 0);
-      controlId = controlId.replace('!', '');
+      let negative = controlId.indexOf("!") >= 0;
+      controlId = controlId.replace("!", "");
       let _value = getCurrentElement().getSettings(controlId);
-      if((this.data.repeater) && (this.data.itemIndex !== undefined)){
+      if (this.data.repeater && this.data.itemIndex !== undefined) {
         let item = this.data.repeater.getItem(this.data.itemIndex);
         _value = _.get(item, controlId);
       }
-      if(! _.isArray(_value)){
+      if (!_.isArray(_value)) {
         _value = [_value];
-      } else if(_value.length === 0){
+      } else if (_value.length === 0) {
         show = false;
       }
       _value.forEach(value => {
-        if(! show){
+        if (!show) {
           return;
         }
-        if(_.isString(comparedValue) || _.isBoolean(comparedValue)){
-          show = value !== comparedValue ? negative : ! negative;
+        if (_.isString(comparedValue) || _.isBoolean(comparedValue)) {
+          show = value !== comparedValue ? negative : !negative;
         }
-        if(_.isArray(comparedValue) ){
-          show = comparedValue.indexOf(value) === -1 ? negative : ! negative;
+        if (_.isArray(comparedValue)) {
+          show = comparedValue.indexOf(value) === -1 ? negative : !negative;
         }
       });
-
     });
     return show;
   }
@@ -140,11 +145,11 @@ class Controller {
     /**
      * Если css редактор, то добавляем суффикс
      */
-    if(this.data.controlId === 'element_css_editor'){
-      return 'element_css_editor';
+    if (this.data.controlId === "element_css_editor") {
+      return "element_css_editor";
     }
     return this.data.controlId + getElementSettingsSuffix(this);
   }
 }
 
-export default Controller
+export default Controller;

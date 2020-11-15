@@ -462,7 +462,6 @@ class TemplateController extends Controller
       }
       $template->pages()->detach();
       foreach ( $request->get( 'data', [] ) as $datum ) {
-
         switch ($datum['object_type']) {
           case 'all_site';{
             $template->all_site = $datum['condition_type'] === 'include';
@@ -475,6 +474,25 @@ class TemplateController extends Controller
           }
             break;
           case 'page';{
+            foreach ( $datum['object_ids'] as $id ) {
+              $page = Page::find( $id );
+              $pages_template = new PagesTemplate([
+                'page_id' => $id,
+                'page_guid' => $page->guid,
+                'template_id' => $template_id,
+                'template_guid' => $template->guid,
+                'condition_type' => $datum['condition_type'],
+                'template_type' => $template->template_type
+              ]);
+              if( ! $pages_template->save() ){
+                return response()->json( ['message' => 'Conditions "page" not Saved'],
+                  500,
+                  [],
+                  JSON_UNESCAPED_UNICODE );
+              }
+            }
+          }break;
+          case 'reports';{
             foreach ( $datum['object_ids'] as $id ) {
               $page = Page::find( $id );
               $pages_template = new PagesTemplate([

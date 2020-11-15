@@ -3,7 +3,11 @@ import { isEditor } from "../../../front-app/src/js/helpers";
 import CONSTANTS from "./consts";
 
 export function getTemplateId() {
-  return (new URL(window.location)).searchParams.get('template_id');
+  return new URL(window.location).searchParams.get("template_id");
+}
+
+export function getReportsId() {
+  return new URL(window.location).searchParams.get("id");
 }
 
 /**
@@ -11,11 +15,11 @@ export function getTemplateId() {
  * */
 export function getClassNames(names) {
   if (!names.length) {
-    return '';
+    return "";
   }
-  let result = '';
+  let result = "";
   for (let cssClass of names) {
-    result += cssClass + ' ';
+    result += cssClass + " ";
   }
   return result;
 }
@@ -26,12 +30,16 @@ export function settingToState(setting) {
   }
   return {
     value: setting.getValue(),
-    label: setting.getLabel(),
+    label: setting.getLabel()
   };
 }
 
 export function getEditorContent() {
   return window.frames[0].window.altrpEditorContent;
+}
+
+export function getReportsContent() {
+  return window.frames[0].window.altrpReportsContent;
 }
 
 /**
@@ -49,7 +57,7 @@ export function editorSetCurrentElement(element) {
  * @return {TemplateDataStorage}
  * */
 export function getTemplateDataStorage() {
-  return window.altrpEditor.modules.templateDataStorage
+  return window.altrpEditor.modules.templateDataStorage;
 }
 
 /**
@@ -67,7 +75,7 @@ export function getFactory() {
 export function topOrBottomHover(e, element) {
   let rect = element.getBoundingClientRect();
   let y = e.clientY - rect.top;
-  return (y < (rect.height / 2)) ? 'top' : 'bottom';
+  return y < rect.height / 2 ? "top" : "bottom";
 }
 
 /**
@@ -85,11 +93,14 @@ export function iconsManager() {
  */
 export function getElementSettingsSuffix(controller) {
   let suffix_1 = getElementState().value;
-  let suffix_2 = (getCurrentScreen().name === CONSTANTS.DEFAULT_BREAKPOINT) ? '' : getCurrentScreen().name;
+  let suffix_2 =
+    getCurrentScreen().name === CONSTANTS.DEFAULT_BREAKPOINT
+      ? ""
+      : getCurrentScreen().name;
   if (!(suffix_2 || suffix_1)) {
-    return '';
+    return "";
   }
-  return `_${getElementState().value}_${getCurrentScreen().name}`
+  return `_${getElementState().value}_${getCurrentScreen().name}`;
 }
 
 /**
@@ -102,9 +113,9 @@ export function parseURLTemplate(URLTemplate, object = {}) {
   // columnEditUrl = columnEditUrl.replace(':id', row.original.id);
   let idTemplates = url.match(/:([\s\S]+?)(\/|$)/g);
   idTemplates.forEach(idTemplate => {
-    let replace = object[idTemplate.replace(/:|\//g, '')] || '';
-    idTemplate = idTemplate.replace('/', '');
-    url = url.replace(new RegExp(idTemplate, 'g'), replace);
+    let replace = object[idTemplate.replace(/:|\//g, "")] || "";
+    idTemplate = idTemplate.replace("/", "");
+    url = url.replace(new RegExp(idTemplate, "g"), replace);
   });
   return url;
 }
@@ -158,25 +169,28 @@ export function placeElement(getVariants, properties) {
     {
       position: "rightBottom",
       class: "right-bottom"
-    },
+    }
   ];
 
   if (getVariants) {
-    return { variants }
+    return { variants };
   }
-  ;
-
   let { target, object, place } = properties;
 
-  let
-    targetSizes = { width: target.offsetWidth, height: target.offsetHeight },
+  let targetSizes = { width: target.offsetWidth, height: target.offsetHeight },
     targetPosition = { x: target.offsetLeft, y: target.offsetTop },
     objectSizes = { width: object.offsetWidth, height: object.offsetHeight },
     targetBottom = targetPosition.y + targetSizes.height,
     targetTop = targetPosition.y - objectSizes.height,
     targetStyles = window.getComputedStyle(target),
-    targetMarginLeft = parseInt(targetStyles.getPropertyValue('margin-left').replace(/\D+/g, "")) || 0,
-    targetMarginRight = parseInt(targetStyles.getPropertyValue('margin-right').replace(/\D+/g, "")) || 0;
+    targetMarginLeft =
+      parseInt(
+        targetStyles.getPropertyValue("margin-left").replace(/\D+/g, "")
+      ) || 0,
+    targetMarginRight =
+      parseInt(
+        targetStyles.getPropertyValue("margin-right").replace(/\D+/g, "")
+      ) || 0;
   console.log(target.offsetLeft);
   let positioning = {
     place,
@@ -210,7 +224,10 @@ export function placeElement(getVariants, properties) {
       positioning.vector = "verTop";
       break;
     case "leftTop":
-      positioning.position = { right: targetSizes.width + targetMarginLeft, top: targetPosition.y };
+      positioning.position = {
+        right: targetSizes.width + targetMarginLeft,
+        top: targetPosition.y
+      };
       positioning.vector = "horLeft";
       break;
     case "leftCenter":
@@ -218,11 +235,17 @@ export function placeElement(getVariants, properties) {
       positioning.vector = "horLeft";
       break;
     case "leftBottom":
-      positioning.position = { right: targetSizes.width + targetMarginLeft, bottom: targetPosition.y };
+      positioning.position = {
+        right: targetSizes.width + targetMarginLeft,
+        bottom: targetPosition.y
+      };
       positioning.vector = "horLeft";
       break;
     case "rightTop":
-      positioning.position = { left: targetSizes.width + targetMarginRight, top: targetPosition.y };
+      positioning.position = {
+        left: targetSizes.width + targetMarginRight,
+        top: targetPosition.y
+      };
       positioning.vector = "horRight";
       break;
     case "rightCenter":
@@ -230,18 +253,25 @@ export function placeElement(getVariants, properties) {
       positioning.vector = "horRight";
       break;
     case "rightBottom":
-      positioning.position = { left: targetSizes.width + targetMarginRight, bottom: targetPosition.y };
+      positioning.position = {
+        left: targetSizes.width + targetMarginRight,
+        bottom: targetPosition.y
+      };
       positioning.vector = "horRight";
       break;
   }
-  return positioning
+  return positioning;
 }
 
 export function rgb2hex(rgb) {
-  if (rgb) rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
-  return (rgb && rgb.length === 4) ? "#" +
-    ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) +
-    ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) +
-    ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
+  if (rgb)
+    rgb = rgb.match(
+      /^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i
+    );
+  return rgb && rgb.length === 4
+    ? "#" +
+        ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) +
+        ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) +
+        ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2)
+    : "";
 }
-

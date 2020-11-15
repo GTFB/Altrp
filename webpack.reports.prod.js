@@ -1,12 +1,12 @@
-const merge = require('webpack-merge');
-const common = require('./webpack.editor.common.js');
+const merge = require("webpack-merge");
+const common = require("./webpack.editor.common.js");
 const path = require("path");
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = merge(common, {
-  mode: 'production',
-  devtool: 'source-map',
+  mode: "production",
+  devtool: "source-map",
   module: {
     rules: [
       // {
@@ -16,23 +16,19 @@ module.exports = merge(common, {
       // },
       {
         test: /\.s[ac]ss$/i,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'sass-loader',
-        ],
+        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
 
         // loader: ExtractTextPlugin.extract({
         //   fallback: 'style-loader',
         //   use: ['css-loader', 'sass-loader'],
         // }),
-      },
+      }
     ]
   },
   output: {
-    path: path.resolve(__dirname, "public/modules/reports/"),
-    publicPath: "/modules/reports/",
-    filename: "reports.js",
+    path: path.resolve(__dirname, "public/modules/reports-new/"),
+    publicPath: "/modules/reports-new/",
+    filename: "reports.js"
   },
 
   plugins: [
@@ -40,18 +36,16 @@ module.exports = merge(common, {
     // new CleanWebpackPlugin(),
     // new ExtractTextPlugin('style.css'),
     new MiniCssExtractPlugin({
-      chunkFilename: '[chunkhash].reports.css',
+      chunkFilename: "[chunkhash].reports.css",
 
-      filename: 'reports.css',
+      filename: "reports.css"
     }),
     new CopyWebpackPlugin({
       patterns: [
-
         {
-          from: 'resources/modules/reports/src/skins',
-          to: 'skins'
-        },
-
+          from: "resources/modules/editor/src/skins",
+          to: "skins"
+        }
       ]
     })
     //   // Options similar to the same options in webpackOptions.output
