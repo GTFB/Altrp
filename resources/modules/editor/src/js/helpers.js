@@ -120,149 +120,6 @@ export function parseURLTemplate(URLTemplate, object = {}) {
   return url;
 }
 
-export function placeElement(getVariants, properties) {
-  let variants = [
-    {
-      position: "bottomLeft",
-      class: "bottom-left"
-    },
-    {
-      position: "bottomCenter",
-      class: "bottom-center"
-    },
-    {
-      position: "bottomRight",
-      class: "bottom-right"
-    },
-    {
-      position: "topLeft",
-      class: "top-left"
-    },
-    {
-      position: "topCenter",
-      class: "top-center"
-    },
-    {
-      position: "topRight",
-      class: "top-right"
-    },
-    {
-      position: "leftTop",
-      class: "left-top"
-    },
-    {
-      position: "leftCenter",
-      class: "left-center"
-    },
-    {
-      position: "leftBottom",
-      class: "left-bottom"
-    },
-    {
-      position: "rightTop",
-      class: "right-top"
-    },
-    {
-      position: "rightCenter",
-      class: "right-center"
-    },
-    {
-      position: "rightBottom",
-      class: "right-bottom"
-    }
-  ];
-
-  if (getVariants) {
-    return { variants };
-  }
-  let { target, object, place } = properties;
-
-  let targetSizes = { width: target.offsetWidth, height: target.offsetHeight },
-    targetPosition = { x: target.offsetLeft, y: target.offsetTop },
-    objectSizes = { width: object.offsetWidth, height: object.offsetHeight },
-    targetBottom = targetPosition.y + targetSizes.height,
-    targetTop = targetPosition.y - objectSizes.height,
-    targetStyles = window.getComputedStyle(target),
-    targetMarginLeft =
-      parseInt(
-        targetStyles.getPropertyValue("margin-left").replace(/\D+/g, "")
-      ) || 0,
-    targetMarginRight =
-      parseInt(
-        targetStyles.getPropertyValue("margin-right").replace(/\D+/g, "")
-      ) || 0;
-  console.log(target.offsetLeft);
-  let positioning = {
-    place,
-    vector: "verBottom",
-    position: {}
-  };
-
-  switch (place) {
-    case "bottomLeft":
-      positioning.position = { left: targetPosition.x, top: targetBottom };
-      positioning.vector = "verBottom";
-      break;
-    case "bottomCenter":
-      positioning.position = { top: targetBottom };
-      positioning.vector = "verBottom";
-      break;
-    case "bottomRight":
-      positioning.position = { right: targetMarginRight, top: targetBottom };
-      positioning.vector = "verBottom";
-      break;
-    case "topLeft":
-      positioning.position = { left: targetPosition.x, top: targetTop };
-      positioning.vector = "verTop";
-      break;
-    case "topCenter":
-      positioning.position = { top: targetTop };
-      positioning.vector = "verTop";
-      break;
-    case "topRight":
-      positioning.position = { right: targetMarginRight, top: targetTop };
-      positioning.vector = "verTop";
-      break;
-    case "leftTop":
-      positioning.position = {
-        right: targetSizes.width + targetMarginLeft,
-        top: targetPosition.y
-      };
-      positioning.vector = "horLeft";
-      break;
-    case "leftCenter":
-      positioning.position = { right: targetSizes.width + targetMarginLeft };
-      positioning.vector = "horLeft";
-      break;
-    case "leftBottom":
-      positioning.position = {
-        right: targetSizes.width + targetMarginLeft,
-        bottom: targetPosition.y
-      };
-      positioning.vector = "horLeft";
-      break;
-    case "rightTop":
-      positioning.position = {
-        left: targetSizes.width + targetMarginRight,
-        top: targetPosition.y
-      };
-      positioning.vector = "horRight";
-      break;
-    case "rightCenter":
-      positioning.position = { left: targetSizes.width + targetMarginRight };
-      positioning.vector = "horRight";
-      break;
-    case "rightBottom":
-      positioning.position = {
-        left: targetSizes.width + targetMarginRight,
-        bottom: targetPosition.y
-      };
-      positioning.vector = "horRight";
-      break;
-  }
-  return positioning;
-}
-
 export function rgb2hex(rgb) {
   if (rgb)
     rgb = rgb.match(
@@ -274,4 +131,45 @@ export function rgb2hex(rgb) {
         ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) +
         ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2)
     : "";
+}
+
+/**
+ * Сохранить данные в localStorage
+ * @param {string} name
+ * @param {*} data
+ * @return {boolean}
+ */
+export function saveDataToLocalStorage(name, data) {
+  if (!name) {
+    return false;
+  }
+  if (_.isObject(data)) {
+    data = JSON.stringify(data);
+  }
+  localStorage.setItem(name, data);
+  return true;
+}
+/**
+ * Сохранить данные в localStorage
+ * @param {string} name
+ * @param {*} _default
+ * @return {*}
+ */
+export function getDataFromLocalStorage(name, _default = null) {
+  if (!name) {
+    return _default;
+  }
+  let value = localStorage.getItem(name);
+  if (!value) {
+    return _default;
+  }
+  try {
+    value = JSON.parse(value);
+  } catch (error) {
+    console.error(error);
+  }
+  if (_.isString(value) && Number(value)) {
+    value = Number(value);
+  }
+  return value || _default;
 }

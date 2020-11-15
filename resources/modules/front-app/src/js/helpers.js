@@ -6,6 +6,8 @@ import appStore from "./store/store";
 import {changeCurrentUser} from "./store/current-user/actions";
 import {changeAppRoutes} from "./store/routes/actions";
 import Route from "./classes/Route";
+import {changePageState} from "./store/altrp-page-state-storage/actions";
+import {changeAltrpMeta} from "./store/altrp-meta-storage/actions";
 
 export function getRoutes() {
   return import('./classes/Routes.js');
@@ -228,7 +230,7 @@ export function parseParamsFromString(string, context = {}) {
     left = left.trim();
     right = right.trim();
     if (right.match(/{{([\s\S]+?)(?=}})/g)) {
-      if (context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', ''))) {//todo ошибка в сафари
+      if (context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', ''))) {//todo ошибка в IOS
         params[left] = context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')) || '';
       } else {
         params[left] = urlParams[right] ? urlParams[right] : '';
@@ -318,7 +320,43 @@ function conditionChecker(c, model, dataByPath = true) {
 }
 
 /**
- * Получить данные
+ * Установить данные
+ * @param {string} path
+ * @param {*} value
+ * @return {boolean}
+ */
+export function setDataByPath(path = '', value){
+  if(! path){
+    return false;
+  }
+
+  switch(value){
+    case 'true': value = true; break;
+    case 'false': value = false; break;
+    case 'null': value = null; break;
+    case 'undefined': value = undefined; break;
+  }
+
+  if (path.indexOf('altrppagestate.') === 0) {
+    path = path.replace('altrppagestate.', '');
+    if(! path){
+      return false;
+    }
+    appStore.dispatch(changePageState(path, value));
+    return true;
+  }
+  if(path.indexOf('altrpmeta.') === 0){
+    path = path.replace('altrpmeta.', '');
+    if(! path){
+      return false;
+    }
+    appStore.dispatch(changeAltrpMeta(path, value));
+    return true;
+  }
+  return false;
+}
+/**
+ * Получить данные из окружения
  * @param {string} path
  * @param {*} _default
  * @param {AltrpModel} context
@@ -326,6 +364,9 @@ function conditionChecker(c, model, dataByPath = true) {
  * @return {*}
  */
 export function getDataByPath(path = '', _default = null, context = null, altrpCheck = false) {
+  if(! path){
+    return _default;
+  }
   /**
    * проверим путь
    */
@@ -334,7 +375,12 @@ export function getDataByPath(path = '', _default = null, context = null, altrpC
   }
   path = path.trim();
 
-  let { currentModel, currentDataStorage, altrpresponses, formsStore } = appStore.getState();
+  let { currentModel,
+    currentDataStorage,
+    altrpresponses,
+    formsStore,
+    altrpPageState,
+    altrpMeta, } = appStore.getState();
   if (context) {
     currentModel = context;
   }
@@ -349,6 +395,12 @@ export function getDataByPath(path = '', _default = null, context = null, altrpC
   } else if (path.indexOf('altrpresponses.') === 0) {
     path = path.replace('altrpresponses.', '');
     value = altrpresponses.getProperty(path, _default)
+  } else if (path.indexOf('altrpmeta.') === 0) {
+    path = path.replace('altrpmeta.', '');
+    value = altrpMeta.getProperty(path, _default)
+  }else if (path.indexOf('altrppagestate.') === 0) {
+    path = path.replace('altrppagestate.', '');
+    value = altrpPageState.getProperty(path, _default)
   } else if (path.indexOf('altrptime.') === 0) {
     value = getTimeValue(path.replace('altrptime.', ''));
   } else if (path.indexOf('altrpforms.') === 0) {
@@ -422,8 +474,18 @@ export function altrpCompare(leftValue = '', rightValue = '', operator = 'empty'
     case 'not_empty': {
       return !_.isEmpty(leftValue,);
     }
+    case 'null': {
+      return ! leftValue;
+    }
+    case 'not_null': {
+      return ! ! leftValue;
+    }
     case '==': {
-      if (!(_.isObject(leftValue) || _.isObject(rightValue))) {
+      if((! leftValue) && ! rightValue){
+        console.log(leftValue);
+        return true;
+      }
+        if (!(_.isObject(leftValue) || _.isObject(rightValue))) {
         return leftValue == rightValue;
       } else {
         return _.isEqual(leftValue, rightValue);
@@ -473,6 +535,14 @@ export const CONDITIONS_OPTIONS = [
   {
     value: 'not_empty',
     label: 'Not Empty',
+  },
+  {
+    value: 'null',
+    label: 'Null',
+  },
+  {
+    value: 'not_null',
+    label: 'Not Null',
   },
   {
     value: '==',
@@ -533,9 +603,9 @@ export function getTopPosition(element) {
 /**
  * Получить какое-то время по шаблону `YYYY-MM-DD`
  * @param {string} path
- * @param {string} defaultValue
+ * @param {string | null} defaultValue
  */
-export function getTimeValue(path, defaultValue) {
+export function getTimeValue(path, defaultValue = null) {
 
   let value = defaultValue;
 
@@ -1002,3 +1072,4 @@ export function sortOptions(options, sortDirection) {
   options.sort((a, b) => a.label.toLowerCase() > b.label.toLowerCase() ? 1 : b.label.toLowerCase() > a.label.toLowerCase() ? -1 : 0);
   return sortDirection === "asc" ? options : options.reverse();
 }
+

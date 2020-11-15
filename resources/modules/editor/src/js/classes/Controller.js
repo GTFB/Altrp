@@ -44,8 +44,9 @@ class Controller {
   /**
    * Изменение значения либо в текущем элементе, либо в репитере
    * @param {*} value
+   * @param {boolean} updateElement
    */
-  changeValue(value) {
+  changeValue(value, updateElement = true) {
     /**
      * Если значение контроллера объект, то создаем его копию
      */
@@ -57,7 +58,9 @@ class Controller {
      * */
     let currentElement = getCurrentElement();
     if (!this.data.repeater) {
-      currentElement.setSettingValue(this.getSettingName(), value);
+      if (updateElement) {
+        currentElement.setSettingValue(this.getSettingName(), value);
+      }
       this.rules.forEach(rule => {
         rule.insertValue(value);
       });

@@ -43,21 +43,6 @@ class Column  extends BaseElement {
       }
     });
 
-    this.addControl("layout_column_height", {
-      type: CONTROLLER_SLIDER,
-      label: "column height",
-      default: {
-        size: 100,
-        unit: "%"
-      },
-      units: ["px", "%", "vh"],
-      max: 1000,
-      min: 0,
-      rules: {
-        "{{ELEMENT}}": "height: {{SIZE}}{{UNIT}}"
-      }
-    });
-
     this.addControl(
       'layout_type', {
         type: CONTROLLER_SELECT,
@@ -233,9 +218,9 @@ class Column  extends BaseElement {
       default: {
         isWithGradient: false,
         firstColor: "rgba(97,206,112,1)",
-        firstPoint: '0',
+        firstPoint: '100',
         secondColor: "rgba(242,41,91,1)",
-        secondPoint: "100",
+        secondPoint: "0",
         angle: "0",
         value: ""
       },

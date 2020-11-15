@@ -57,11 +57,15 @@ class Button extends BaseElement {
       options: [
         {
           value: 'none',
-          label: 'none'
+          label: 'None'
         },
         {
           value: 'dropbar',
-          label: 'dropbar'
+          label: 'Dropbar'
+        },
+        {
+          value: 'offcanvas',
+          label: 'Offcanvas'
         },
       ],
     });
@@ -209,6 +213,10 @@ class Button extends BaseElement {
           label: 'Toggle Popup',
         },
         {
+          value: 'toggle_offcanvas',
+          label: 'Toggle Offcanvas',
+        },
+        {
           value: 'print_page',
           label: 'Print Page',
         },
@@ -259,6 +267,10 @@ class Button extends BaseElement {
         {
           value: 'logout',
           label: 'Logout',
+        },
+        {
+          value: 'set_data',
+          label: 'Set Data',
         },
       ],
     });
@@ -375,6 +387,7 @@ class Button extends BaseElement {
           'scroll_to_element',
           'trigger',
           'table_to_csv',
+          'toggle_offcanvas'
         ],
       },
     });
@@ -387,6 +400,46 @@ class Button extends BaseElement {
       conditions: {
         type: [
           'data_to_csv',
+          'set_data',
+        ],
+      },
+    });
+    actionsRepeater.addControl('set_type', {
+      label: 'Set Type',
+      type: CONTROLLER_SELECT,
+      responsive: false,
+      nullable: true,
+      options: [
+        {
+          label: 'Toggle',
+          value: 'toggle',
+        },
+        {
+          label: 'Set',
+          value: 'set',
+        },
+        {
+          label: 'Toggle/Set',
+          value: 'toggle_set',
+        },
+      ],
+      conditions: {
+        type: 'set_data',
+      },
+    });
+
+    actionsRepeater.addControl('value', {
+      label: 'Value',
+      type: CONTROLLER_TEXTAREA,
+      responsive: false,
+      dynamic: false,
+      conditions: {
+        type: [
+          'set_data',
+        ],
+        set_type: [
+          'set',
+          'toggle_set',
         ],
       },
     });
@@ -546,54 +599,54 @@ class Button extends BaseElement {
     this.addControl("position_dropbar_options", {
       type: CONTROLLER_SELECT,
       label: "Position",
-      default: "bottomLeft",
+      default: "bottom-start",
       options: [
         {
-          value: "bottomLeft",
+          value: "bottom-start",
           label: "Bottom left"
         },
         {
-          value: "bottomCenter",
+          value: "bottom",
           label: "Bottom center"
         },
         {
-          value: "bottomRight",
+          value: "bottom-end",
           label: "Bottom right"
         },
         {
-          value: "topLeft",
+          value: "top-start",
           label: "Top left"
         },
         {
-          value: "topCenter",
+          value: "top",
           label: "Top center"
         },
         {
-          value: "topRight",
+          value: "top-end",
           label: "Top right"
         },
         {
-          value: "leftTop",
+          value: "left-start",
           label: "Left top"
         },
         {
-          value: "leftCenter",
+          value: "left",
           label: "Left center"
         },
         {
-          value: "leftBottom",
+          value: "left-end",
           label: "Left bottom"
         },
         {
-          value: "rightTop",
+          value: "right-start",
           label: "Right top"
         },
         {
-          value: "rightCenter",
+          value: "right",
           label: "Right center"
         },
         {
-          value: "rightBottom",
+          value: "right-end",
           label: "Right bottom"
         },
       ],
@@ -624,7 +677,7 @@ class Button extends BaseElement {
       max: 1000,
       min: 0,
       rules: {
-        // "{{ELEMENT}} .altrp-text{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-dropbar-container{{STATE}}": "width: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -637,9 +690,6 @@ class Button extends BaseElement {
       },
       max: 1000,
       min: 0,
-      rules: {
-        // "{{ELEMENT}} .altrp-text{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
-      }
     });
 
     this.addControl("hide_delay_dropbar_options", {
@@ -651,9 +701,6 @@ class Button extends BaseElement {
       },
       max: 1000,
       min: 0,
-      rules: {
-        // "{{ELEMENT}} .altrp-text{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
-      }
     });
 
     this.addControl("offset_dropbar_options", {
@@ -665,9 +712,6 @@ class Button extends BaseElement {
       },
       max: 100,
       min: -100,
-      rules: {
-        // "{{ELEMENT}} .altrp-text{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
-      }
     });
 
     this.endControlSection();
@@ -978,9 +1022,9 @@ class Button extends BaseElement {
       default: {
         isWithGradient: false,
         firstColor: "rgba(97,206,112,1)",
-        firstPoint: '0',
+        firstPoint: '100',
         secondColor: "rgba(242,41,91,1)",
-        secondPoint: "100",
+        secondPoint: "0",
         angle: "0",
         value: ""
       },
@@ -1219,6 +1263,7 @@ class Button extends BaseElement {
       rules: {
         '{{ELEMENT}} .altrp-btn-icon{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
         '{{ELEMENT}} .altrp-btn-icon svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-btn-icon img{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
       },
     });
 

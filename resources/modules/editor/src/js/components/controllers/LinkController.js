@@ -1,3 +1,4 @@
+import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import DynamicIcon from '../../../svgs/dynamic.svg'
@@ -199,4 +200,4 @@ function mapStateToProps(state) {
     currentScreen: state.currentScreen
   };
 }
-export default connect(mapStateToProps)(LinkController);
+export default connect(controllerMapStateToProps)(LinkController);

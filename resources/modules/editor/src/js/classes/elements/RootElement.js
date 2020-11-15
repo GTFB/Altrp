@@ -291,9 +291,9 @@ class RootElement extends BaseElement {
       default: {
         isWithGradient: false,
         firstColor: "rgba(97,206,112,1)",
-        firstPoint: '0',
+        firstPoint: '100',
         secondColor: "rgba(242,41,91,1)",
-        secondPoint: "100",
+        secondPoint: "0",
         angle: "0",
         value: ""
       },
@@ -783,6 +783,80 @@ class RootElement extends BaseElement {
       }
     });
 
+    this.addControl('heading_default_transition_property', {
+      type: CONTROLLER_SELECT2,
+      label: 'Transition Property',
+      isMulti: true,
+      options: [
+        { label: 'color', value: 'color' }, 
+        { label: 'font-size', value: 'font-size' },
+        { label: 'margin', value: 'margin' }, 
+        { label: 'padding', value: 'padding' }, 
+        { label: 'background-color', value: 'background-color' }, 
+        { label: 'opacity', value: 'opacity' }, 
+      ],
+      rules: {
+        ".altrp-heading": "transition-property: {{VALUE}};"
+      }
+    });
+
+    this.addControl("heading_default_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-heading": "transition-duration: {{SIZE}}s;"
+      }
+    });
+
+    this.addControl('heading_default_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        ".altrp-heading": "transition-timing-function: {{VALUE}};"
+      }
+    });
+
+    this.addControl("heading_default_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-heading": "transition-delay: {{SIZE}}s;"
+      }
+    });
+
     this.endControlSection();
 
     this.startControlSection('button_defaults', {
@@ -974,29 +1048,29 @@ class RootElement extends BaseElement {
       },
     });
 
-    // this.addControl('button_gradient', {
-    //   type: CONTROLLER_GRADIENT,
-    //   label: 'Gradient',
-    //   default: {
-    //     isWithGradient: false,
-    //     firstColor: "rgba(97,206,112,1)",
-    //     firstPoint: '0',
-    //     secondColor: "rgba(242,41,91,1)",
-    //     secondPoint: "100",
-    //     angle: "0",
-    //     value: ""
-    //   },
-    //   rules: {
-    //     ".altrp-btn{{STATE}}": "background-image: {{VALUE}}"
-    //   }
-    // });
-
     this.addControl('button_background_image', {
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
       default: { url: "" },
       rules: {
         ".altrp-btn{{STATE}}": "background-image: url({{URL}});"
+      }
+    });
+
+    this.addControl('button_gradient', {
+      type: CONTROLLER_GRADIENT,
+      label: 'Gradient',
+      default: {
+        isWithGradient: false,
+        firstColor: "rgba(97,206,112,1)",
+        firstPoint: '100',
+        secondColor: "rgba(242,41,91,1)",
+        secondPoint: "0",
+        angle: "0",
+        value: ""
+      },
+      rules: {
+        "div .altrp-btn{{STATE}}": "background-image: {{VALUE}}"
       }
     });
 
@@ -2482,6 +2556,259 @@ class RootElement extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('tabs_defaults', {
+      tab: TAB_STYLE,
+      label: 'Tabs Defaults',
+    });
+
+    this.addControl('defaults_alignment_tabs', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment',
+      default: 'flex-start',
+      options: [
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+        {
+          icon: 'in_width',
+          value: 'space-between',
+        },
+      ],
+      rules: {
+        '.altrp-tab-btn-container{{STATE}}': 'justify-content: {{VALUE}};',
+      },
+    });
+
+    this.addControl("defaults_spacing_column_tabs", {
+      type: CONTROLLER_SLIDER,
+      label: "Tab spacing",
+      default: {
+        size: 10,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      max: 100,
+      min: 0,
+      rules: {
+        ".altrp-tab-btn-column{{STATE}}": "margin-right: {{SIZE}}{{UNIT}}",
+        ".altrp-tab-btn-row{{STATE}}": "margin-bottom: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("defaults_spacing_content_tabs", {
+      type: CONTROLLER_SLIDER,
+      label: "Content spacing",
+      default: {
+        size: 10,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      max: 100,
+      min: 0,
+      rules: {
+        ".altrp-tab-btn-top{{STATE}}": "margin-bottom: {{SIZE}}{{UNIT}}",
+        ".altrp-tab-btn-bottom{{STATE}}": "margin-top: {{SIZE}}{{UNIT}}",
+        ".altrp-tab-btn-left{{STATE}}": "margin-right: {{SIZE}}{{UNIT}}",
+        ".altrp-tab-btn-right{{STATE}}": "margin-left: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("defaults_background_tab_style", {
+      type: CONTROLLER_COLOR,
+      label: "Background tabs",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        ".altrp-tab-btn-container{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("defaults_background_type_tab_style", {
+      type: CONTROLLER_COLOR,
+      label: "Background buttons",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        ".altrp-tab-btn{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("defaults_background_text_color_tab_style", {
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        ".altrp-tab-btn{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('defaults_box_shadow_tab_style', {
+      type: CONTROLLER_SHADOW,
+      label: 'Box shadow',
+      default: {
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        opacity: 1,
+        spread: 0,
+        colorRGB: 'rgb(0, 0, 0)',
+        color: 'rgb(0, 0, 0)',
+        colorPickedHex: '#000000',
+        type: ""
+      },
+      presetColors: [
+        '#eaeaea',
+        '#9c18a8'
+      ],
+      rules: {
+        '.altrp-tab-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    });
+
+    this.addControl("defaults_padding_tab_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 10,
+        right: 15,
+        bottom: 10,
+        left: 15,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        ".altrp-tab-btn{{STATE}}": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+
+    this.addControl("defaults_border_type_tab_style", {
+      type: CONTROLLER_SELECT,
+      label: "Border type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        ".altrp-tab-btn{{STATE}}": "border-style: {{VALUE}};"
+      }
+    });
+
+    this.addControl("defaults_border_width_tab_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        ".altrp-tab-btn{{STATE}}":
+          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      }
+    });
+
+    this.addControl("defaults_border_color_tab_style", {
+      type: CONTROLLER_COLOR,
+      label: "Border color",
+      default: {
+        color: "rgb(50,168,82)",
+        colorPickedHex: "#32a852"
+      },
+      rules: {
+        ".altrp-tab-btn{{STATE}}": "border-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("defaults_border_radius_tab_style", {
+      type: CONTROLLER_SLIDER,
+      label: 'Border radius',
+      default: {
+        size: 0,
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        ".altrp-tab-btn{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    // this.addControl('defaults_typographic_tab_style', {
+    //   type: CONTROLLER_TYPOGRAPHIC,
+    //   label: 'Typographic',
+    //   default: {
+    //     lineHeight: 1.5,
+    //     spacing: 0,
+    //     size: 14,
+    //     weight: "normal",
+    //     family: "Open Sans",
+    //     decoration: ""
+    //   },
+    //   rules: {
+    //     '.altrp-tab-btn{{STATE}}': [
+    //       'font-family: "{{FAMILY}}", sans-serif;',
+    //       'font-size: {{SIZE}}px;',
+    //       'line-height: {{LINEHEIGHT}};',
+    //       'letter-spacing: {{SPACING}}px',
+    //       'font-weight: {{WEIGHT}}',
+    //       'text-transform: {{TRANSFORM}}',
+    //       'font-style: {{STYLE}}',
+    //       'text-decoration: {{DECORATION}}'
+    //     ],
+    //   },
+    // }
+    // );
+
+
+    this.endControlSection();
 
     /**
      * импорт/сохранение глобальных настроек

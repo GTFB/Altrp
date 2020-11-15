@@ -69,10 +69,19 @@ class InputWidget extends Component {
     if (_.get(value, 'dynamic') && this.props.currentModel.getProperty('altrpModelUpdated')) {
       value = this.getContent('content_default_value');
     }
-    if (!_.isObject(value)) {
+    // if (!_.isObject(value)) {
+    //   value = this.getContent('content_default_value');
+    // }
+    if(this.props.currentModel.getProperty('altrpModelUpdated')
+        && this.props.currentDataStorage.getProperty('currentDataStorageLoaded')
+        && ! this.state.contentLoaded){
       value = this.getContent('content_default_value');
+      this.setState(state => ({ ...state, value, contentLoaded: true }), () => { this.dispatchFieldValueToStore(value); });
+      return;
     }
-    this.setState(state => ({ ...state, value }), () => { this.dispatchFieldValueToStore(value); });
+    if(this.state.value !== value){
+      this.setState(state => ({ ...state, value }), () => { this.dispatchFieldValueToStore(value); });
+    }
   }
 
   /**
@@ -277,7 +286,7 @@ class InputWidget extends Component {
       /**
        * Обновляем хранилище только если не текстовое поле
        */
-      if (['text', 'email', 'phone', 'number', 'password'].indexOf(this.state.settings.content_type) === -1) {
+      if (['text', 'email', 'phone', 'tel', 'number', 'password'].indexOf(this.state.settings.content_type) === -1) {
         this.dispatchFieldValueToStore(value, true);
       }
     });
@@ -287,7 +296,7 @@ class InputWidget extends Component {
    * Потеря фокуса для оптимизации
    */
   onBlur = (e) => {
-    if (['text', 'email', 'phone', 'number', 'password'].indexOf(this.state.settings.content_type) !== -1) {
+    if (['text', 'email', 'phone', 'tel', 'number', 'password'].indexOf(this.state.settings.content_type) !== -1) {
       this.dispatchFieldValueToStore(e.target.value, true);
     }
   };
@@ -316,7 +325,6 @@ class InputWidget extends Component {
 
   render() {
     let label = null;
-    let required = null;
     const { options_sorting } = this.state.settings;
 
     let value = this.state.value;
@@ -357,21 +365,20 @@ class InputWidget extends Component {
       case "absolute":
         styleLabel = {
           position: 'absolute',
+          zIndex: 2
         };
         classLabel = "";
         break;
     }
 
     if (this.state.settings.content_label != null) {
-      label = <div className={"altrp-field-label-container " + classLabel} style={styleLabel}><label className="altrp-field-label">{this.state.settings.content_label}</label></div>
+      label = <div className={"altrp-field-label-container " + classLabel} style={styleLabel}>
+        <label className={`altrp-field-label ${this.state.settings.content_required ? 'altrp-field-label--required' : ''}`}>
+          {this.state.settings.content_label}
+        </label>
+      </div>
     } else {
       label = null
-    }
-
-    if (this.state.settings.content_required) {
-      required = <div className="altrp-field-label-container"><label className="altrp-field-required">*</label></div>
-    } else {
-      required = null
     }
 
     let autocomplete = "off";
@@ -417,9 +424,8 @@ class InputWidget extends Component {
         break;
       default: {
         const isClearable = this.state.settings.content_clearable;
-        // console.log(isClearable)
         input = <React.Suspense fallback={<input />}>
-          <div className="position-relative">
+          <div className="altrp-input-wrapper">
             <AltrpInput type={this.state.settings.content_type}
               value={value || ''}
               autoComplete={autocomplete}
@@ -438,15 +444,11 @@ class InputWidget extends Component {
     }
     return <div className={"altrp-field-container " + classLabel}>
       {this.state.settings.content_label_position_type == "top" ? label : ""}
-      {this.state.settings.content_label_position_type == "top" ? required : ""}
       {this.state.settings.content_label_position_type == "left" ? label : ""}
-      {this.state.settings.content_label_position_type == "left" ? required : ""}
       {this.state.settings.content_label_position_type == "absolute" ? label : ""}
       {/* .altrp-field-label-container */}
       {input}
-      {/* <InputMask mask="99/99/9999" onChange={this.onChange} value={this.state.value} /> */}
       {this.state.settings.content_label_position_type == "bottom" ? label : ""}
-      {this.state.settings.content_label_position_type == "bottom" ? required : ""}
     </div>
   }
 
@@ -501,9 +503,7 @@ class InputWidget extends Component {
     } = this.props.element.getSettings();
 
     let options = this.state.options;
-    if (content_options_nullable) {
-      options = _.union([{ label: nulled_option_title, value: '', }], options);
-    }
+
 
 
     let value = this.state.value;
@@ -567,6 +567,9 @@ class InputWidget extends Component {
      * @type {Array|*}
      */
     options = _.sortBy(options, (o => o.label ? o.label.toString() : o));
+    if (content_options_nullable) {
+      options = _.union([{ label: nulled_option_title, value: '', }], options);
+    }
     const select2Props = {
       className: 'altrp-field-select2',
       classNamePrefix: this.props.element.getId() + ' altrp-field-select2',

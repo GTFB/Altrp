@@ -129,12 +129,12 @@ class Input extends BaseElement {
 
     this.addControl('content_label_position_type', {
         type: CONTROLLER_SELECT,
-        label: 'label position',
+        label: 'Label Position',
         default: 'top',
         options:[
           {
             'value' : 'top',
-            'label' : 'Default',
+            'label' : 'Top',
           },
           {
             'value' : 'bottom',
@@ -151,42 +151,6 @@ class Input extends BaseElement {
         ],
       }
     );
-
-    this.addControl("label_position_top", {
-      type: CONTROLLER_SLIDER,
-      label: "Label Top Position",
-      default: {
-        unit: "px",
-        size: null
-      },
-      conditions: {
-        'content_label_position_type': ['absolute']
-      },
-      units: ["px", "%", "vh"],
-      max: 100,
-      min: -100,
-      rules: {
-        "{{ELEMENT}} .altrp-field-label-container{{STATE}}": 'top: {{SIZE}}{{UNIT}};'
-      }
-    });
-
-    this.addControl("label_position_left", {
-      type: CONTROLLER_SLIDER,
-      label: "Label Left Position",
-      default: {
-        unit: "px",
-        size: null
-      },
-      conditions: {
-        'content_label_position_type': ['absolute']
-      },
-      units: ["px", "%", "vh"],
-      max: 100,
-      min: -100,
-      rules: {
-        "{{ELEMENT}} .altrp-field-label-container{{STATE}}": 'left: {{SIZE}}{{UNIT}};'
-      }
-    });
 
     // this.addControl('content_label_nowrap', {
     //   type: CONTROLLER_SELECT,
@@ -211,35 +175,21 @@ class Input extends BaseElement {
     // }
     // );
 
-    this.addControl("label_width", {
-      type: CONTROLLER_SLIDER,
-      label: "Label Width",
-      default: {
-        unit: "px",
-        size: null
-      },
-      units: ["px", "%", "vh"],
-      max: 1000,
-      min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-field-label{{STATE}}": 'width: {{SIZE}}{{UNIT}};'
-      }
-    });
-
-    this.addControl("input_width", {
-      type: CONTROLLER_SLIDER,
-      label: "Field Width",
-      default: {
-        unit: "px",
-        size: null
-      },
-      units: ["px", "%", "vh"],
-      max: 1000,
-      min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-field{{STATE}}": 'width: {{SIZE}}{{UNIT}};'
-      }
-    });
+    
+    // this.addControl("input_width", {
+    //   type: CONTROLLER_SLIDER,
+    //   label: "Field Width",
+    //   default: {
+    //     unit: "px",
+    //     size: null
+    //   },
+    //   units: ["px", "%", "vh"],
+    //   max: 1000,
+    //   min: 0,
+    //   rules: {
+    //     "{{ELEMENT}} .altrp-field{{STATE}}": 'width: {{SIZE}}{{UNIT}};'
+    //   }
+    // });
 
     this.addControl('content_placeholder', {
       type: CONTROLLER_TEXT,
@@ -251,7 +201,7 @@ class Input extends BaseElement {
       type: CONTROLLER_TEXT,
       label: 'Mask',
       conditions: {
-        'content_type': 'text'
+        'content_type': ['text', 'tel']
       }
     });
     this.addControl('read_only', {
@@ -281,38 +231,6 @@ class Input extends BaseElement {
       type: CONTROLLER_SWITCHER,
       label: 'Clearable',
       default: false
-    });
-
-    this.addControl('cross_color', {
-      type: CONTROLLER_COLOR,
-      label: 'Cross Color',
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
-      conditions: {
-        'content_clearable': [true]
-      },
-      rules: {
-        '{{ELEMENT}} .input-clear-btn{{STATE}}': 'color: {{COLOR}};',
-      }
-    });
-
-    this.addControl("cross_size", {
-      type: CONTROLLER_SLIDER,
-      label: "Cross Size",
-      default: {
-        unit: "px",
-        size: null
-      },
-      conditions: {
-        'content_clearable': [true]
-      },
-      max: 50,
-      min: 0,
-      rules: {
-        "{{ELEMENT}} .input-clear-btn{{STATE}}": 'font-size: {{SIZE}}px;'
-      }
     });
 
     this.addControl('content_options_nullable', {
@@ -622,6 +540,90 @@ class Input extends BaseElement {
     }
     );
 
+    this.addControl("label_position_top", {
+      type: CONTROLLER_SLIDER,
+      label: "Label Y Position",
+      default: {
+        unit: "px",
+        size: null
+      },
+      conditions: {
+        'content_label_position_type': ['absolute']
+      },
+      units: ["px", "%", "vh"],
+      max: 100,
+      min: -100,
+      rules: {
+        "{{ELEMENT}} .altrp-field-label-container{{STATE}}": 'top: {{SIZE}}{{UNIT}};'
+      }
+    });
+
+    this.addControl("label_position_left", {
+      type: CONTROLLER_SLIDER,
+      label: "Label X Position",
+      default: {
+        unit: "px",
+        size: null
+      },
+      conditions: {
+        'content_label_position_type': ['absolute']
+      },
+      units: ["px", "%", "vh"],
+      max: 100,
+      min: -100,
+      rules: {
+        "{{ELEMENT}} .altrp-field-label-container{{STATE}}": 'left: {{SIZE}}{{UNIT}};'
+      }
+    });
+
+    this.addControl("label_width", {
+      type: CONTROLLER_SLIDER,
+      label: "Label Width",
+      default: {
+        unit: "%",
+        size: null
+      },
+      units: ["%"],
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-field-label-container{{STATE}}": 'width: {{SIZE}}%; flex-shrink: 0;'
+      }
+    });
+
+    this.addControl('cross_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Cross Color',
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      conditions: {
+        'content_clearable': [true]
+      },
+      rules: {
+        '{{ELEMENT}} .input-clear-btn{{STATE}}': 'color: {{COLOR}};',
+      }
+    });
+
+    this.addControl("cross_size", {
+      type: CONTROLLER_SLIDER,
+      label: "Cross Size",
+      default: {
+        unit: "px",
+        size: null
+      },
+      conditions: {
+        'content_clearable': [true]
+      },
+      max: 50,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .input-clear-btn{{STATE}}": 'font-size: {{SIZE}}px;'
+      }
+    });
+
+
     this.endControlSection();
 
     this.startControlSection('font_style_section', {
@@ -859,7 +861,7 @@ class Input extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-field-required{{STATE}}": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-field-label--required::after{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -869,13 +871,13 @@ class Input extends BaseElement {
       default: {
         lineHeight: 1.5,
         spacing: 0,
-        size: 13,
+        // size: 13,
         weight: "normal",
         family: "Open Sans",
         decoration: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-field-required{{STATE}}': [
+        '{{ELEMENT}} .altrp-field-label--required::after{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',

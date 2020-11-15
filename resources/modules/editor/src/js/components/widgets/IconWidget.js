@@ -69,7 +69,7 @@ class IconWidget extends Component {
         default={{
           assetType: "icon",
           name: "arrow",
-          iconComponent: iconsManager().renderIcon("arrow")
+          iconComponent: iconsManager.renderIcon("arrow")
         }}
         style={pos}
         image={this.state.settings.icon_indicator_content}
@@ -276,7 +276,7 @@ class IconWidget extends Component {
               default={{
                 assetType: "icon",
                 name: 'star',
-                iconComponent: iconsManager().renderIcon('star')
+                iconComponent: iconsManager.renderIcon('star')
               }}
               className={"altrp-icon-i"}
             />

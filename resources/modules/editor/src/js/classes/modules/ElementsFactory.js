@@ -2,7 +2,14 @@ import BaseModule from "./BaseModule";
 import { getEditor } from "../../helpers";
 
 class ElementsFactory extends BaseModule {
-  parseData(object, parent) {
+  /**
+   * Парсит объект и создает из него дерево элементов
+   * @param object
+   * @param parent
+   * @param {boolean} rewriteStyles
+   * @return {BaseElement}
+   */
+  parseData(object, parent, rewriteStyles = false) {
     let children = [];
     const elementsManager = window.elementsManager;
     /**
@@ -12,14 +19,24 @@ class ElementsFactory extends BaseModule {
     if (object.children && object.children.length) {
       for (let child of object.children) {
         elementsManager.checkElementExists(child.name)
-          ? children.push(this.parseData(child, element))
+          ? children.push(this.parseData(child, element, rewriteStyles))
           : "";
       }
     }
-    element.id = object.id;
+    if (rewriteStyles) {
+      let oldId = object.id;
+      element.id = element.getId();
+      object.settings = JSON.stringify(object.settings).replace(
+        RegExp(oldId, "g"),
+        element.getId()
+      );
+      object.settings = JSON.parse(object.settings);
+    } else {
+      element.id = object.id;
+    }
     element.children = children;
     /**
-     * Если настройки пустый то с сервера приходит пустой массив -- меняем на пустой объект
+     * Если настройки пустыe то с сервера приходит пустой массив -- меняем на пустой объект
      * */
     let settings = object.settings.length === 0 ? {} : object.settings;
     element.setSettings(settings);

@@ -16,7 +16,7 @@ import {
   CONTROLLER_TRANSFORM,
   CONTROLLER_CHOOSE,
   CONTROLLER_GRADIENT,
-  CONTROLLER_MEDIA, CONTROLLER_SWITCHER, CONTROLLER_HEADING
+  CONTROLLER_MEDIA, CONTROLLER_SWITCHER, CONTROLLER_HEADING, CONTROLLER_CREATIVE_LINK
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 
@@ -48,6 +48,21 @@ class Heading extends BaseElement {
       default: "I Am Advanced Heading",
     });
 
+    this.addControl('text_sub_switch', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Sub heading',
+      default: false
+    });
+
+    this.addControl("text_sub", {
+      conditions: {
+        'text_sub_switch': true,
+      },
+      type: CONTROLLER_TEXTAREA,
+      label: "Sub text",
+      default: "I Am Sub Heading",
+    });
+
     this.endControlSection();
 
     this.startControlSection('heading_settings', {
@@ -62,7 +77,7 @@ class Heading extends BaseElement {
       options:[
         {
           icon: 'left',
-          value: 'left',
+          value: 'flex-start',
         },
         {
           icon: 'center',
@@ -70,22 +85,70 @@ class Heading extends BaseElement {
         },
         {
           icon: 'right',
-          value: 'right',
+          value: 'flex-end',
         },
         {
           icon: 'in_width',
-          value: 'justify',
+          value: 'stretch',
         }
       ],
+      prefixClass: 'altrp-alignment_',
       rules: {
-            '{{ELEMENT}}': 'text-align: {{VALUE}};',
+            '{{ELEMENT}} .altrp-heading': 'justify-content: {{VALUE}};',
       },
     });
 
     this.addControl('heading_settings_html_tag', {
       type: CONTROLLER_SELECT,
       label: 'HTML tag',
-      default: 'p',
+      default: 'h2',
+      options: [
+        {
+          value: 'h1',
+          label: 'h1'
+        },
+        {
+          value: 'h2',
+          label: 'h2'
+        },
+        {
+          value: 'h3',
+          label: 'h3'
+        },
+        {
+          value: 'h4',
+          label: 'h4'
+        },
+        {
+          value: 'h5',
+          label: 'h5'
+        },
+        {
+          value: 'h6',
+          label: 'h6'
+        },
+        {
+          value: 'p',
+          label: 'p'
+        },
+        {
+          value: 'span',
+          label: 'span'
+        },
+        {
+          value: 'div',
+          label: 'div'
+        }
+      ]
+    });
+
+    this.addControl('sub_heading_settings_html_tag', {
+      conditions: {
+        'text_sub_switch': true,
+      },
+      type: CONTROLLER_SELECT,
+      label: 'Sub HTML tag',
+      default: 'h5',
       options: [
         {
           value: 'h1',
@@ -135,6 +198,16 @@ class Heading extends BaseElement {
       },
       label: 'link',
     });
+
+    // this.addControl('creative_link_link', {
+    //   type: CONTROLLER_LINK,
+    //   default: {
+    //     url: "",
+    //     attributes: "",
+    //     noFollow: false
+    //   },
+    //   label: 'for creative link',
+    // });
 
     this.endControlSection();
 
@@ -965,6 +1038,195 @@ class Heading extends BaseElement {
 
       }
     });
+
+    this.endControlSection();
+
+    this.startControlSection('creative_link', {
+        tab: TAB_STYLE,
+        label: 'Creative Link',
+      }
+    );
+
+    this.addControl('creative_link_controller', {
+        type: CONTROLLER_CREATIVE_LINK,
+        label: 'Creative Link',
+        rules: {
+          "{{ELEMENT}} .altrp-link-creative{{STATE}}": "background-color: {{BACKGROUND}}",
+          "{{ELEMENT}} .altrp-link-cl-style-1{{STATE}}": "color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-3:after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-4:after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-5-clone{{STATE}}": [
+            "color: {{COLOR}};",
+            "background-color: {{SECONDCOLOR}};"
+          ],
+          "{{ELEMENT}} .altrp-link-cl-style-6::after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-7::after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-7::before{{STATE}}": "background-color: {{SECONDCOLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-8::before{{STATE}}": "border-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-8::after{{STATE}}": "border-color: {{SECONDCOLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-9::before{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-9::after{{STATE}}": "background-color: {{SECONDCOLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-9-description{{STATE}}": [
+            "color: {{THIRDCOLOR}};",
+            "background-color: {{FOURTHCOLOR}};"
+          ],
+          "{{ELEMENT}} .altrp-link-cl-style-10::after{{STATE}}": [
+            "background: {{COLOR}};",
+            "color: {{SECONDCOLOR}};",
+          ],
+          "{{ELEMENT}} .altrp-link-cl-style-11::after{{STATE}}": [
+            "color: {{COLOR}};",
+            "border-bottom-color: {{SECONDCOLOR}};",
+          ],
+          "{{ELEMENT}} .altrp-link-cl-style-12::after{{STATE}}": "border-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-12::before{{STATE}}": "border-color: {{SECONDCOLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-13-link:hover .altrp-link-cl-style-13:after": [
+            "color: {{COLOR}};",
+            "text-shadow: 10px 0 {{COLOR}}, -10px 0 {{COLOR}};",
+          ],
+          "{{ELEMENT}} .altrp-link-cl-style-14::after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-14::before{{STATE}}": "background-color: {{SECONDCOLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-15::before{{STATE}}": "color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-16::before{{STATE}}": "color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-17::before{{STATE}}": "color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-17::after{{STATE}}": "background-color: {{SECONDCOLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-18::after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-18::before{{STATE}}": "background-color: {{SECONDCOLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-19::before{{STATE}}": [
+            "background-color: {{COLOR}};",
+            "color: {{SECONDCOLOR}}"
+          ],
+          "{{ELEMENT}} .altrp-link-cl-style-20::before{{STATE}}": [
+            "background-color: {{SECONDCOLOR}};",
+            "color: {{COLOR}}"
+          ],
+          "{{ELEMENT}} .altrp-link-cl-style-21::after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-21::before{{STATE}}": "background-color: {{SECONDCOLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-22::before{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-23::before{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-24::after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-24::before{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-25::before{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-26::before{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-27::before{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-27::after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-28::after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-28::before{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-29::after{{STATE}}": "background-color: {{COLOR}};",
+          "{{ELEMENT}} .altrp-link-cl-style-29::before{{STATE}}": "background-color: {{COLOR}};",
+        }
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('sub_heading', {
+      tab: TAB_STYLE,
+      label: 'Sub heading',
+    });
+
+    this.addControl("spacing_sub_heading", {
+      type: CONTROLLER_SLIDER,
+      label: 'Space heading',
+      default: {
+        size: 0,
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+      ],
+      max: 1200,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-heading-sub{{STATE}}": "margin-top: {{SIZE}}{{UNIT}};",
+      }
+    });
+
+    this.addControl('bg_sub_heading', {
+        type: CONTROLLER_COLOR,
+        label: 'Background color',
+        rules: {
+          '{{ELEMENT}} .altrp-heading-sub{{STATE}}': 'background-color: {{COLOR}};',
+        },
+      }
+    );
+
+    this.addControl('color_sub_heading', {
+        type: CONTROLLER_COLOR,
+        label: 'Background color',
+        rules: {
+          '{{ELEMENT}} .altrp-heading-sub{{STATE}}': 'color: {{COLOR}};',
+        },
+      }
+    );
+
+    this.addControl('padding_sub_heading', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-heading-sub{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('typographic_sub_heading', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default: {
+          lineHeight: 1,
+          spacing: 0,
+          size: 16,
+          weight: "normal",
+          family: 'roboto',
+          decoration: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-heading-sub{{STATE}}': [
+            'font-family: "{{FAMILY}}", sans-serif;',
+            'font-size: {{SIZE}}px;',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
+    this.addControl('text_shadow_sub_heading', {
+      type: CONTROLLER_SHADOW,
+      label: 'Text shadow',
+      default:{
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        opacity: 1,
+        spread: 0,
+        colorRGB: 'rgb(0, 0, 0)',
+        color: 'rgb(0, 0, 0)',
+        colorPickedHex: '#000000',
+        type: ""
+        },
+        rules: {
+          '{{ELEMENT}} .altrp-heading-sub{{STATE}}': 'text-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
+        },
+      }
+    );
 
     this.endControlSection();
 

@@ -9,7 +9,7 @@ import {
   getHTMLElementById,
   printElements,
   replaceContentWithData,
-  scrollToElement
+  scrollToElement, setDataByPath
 } from "../helpers";
 import { togglePopup } from "../store/popup-trigger/actions";
 import reactDom from 'react-dom';
@@ -163,6 +163,10 @@ class AltrpAction extends AltrpModel {
         break;
       case 'logout': {
         result = await this.doActionLogout();
+      }
+        break;
+      case 'set_data': {
+        result = await this.doActionSetData();
       }
         break;
     }
@@ -466,7 +470,50 @@ class AltrpAction extends AltrpModel {
     return await altrpLogout();
   }
   /**
-   * Триггер события на тругом компоненте
+   * действие-установка значения по для пути `path`
+   * @return {Promise<{}>}
+   */
+  async doActionSetData() {
+    let path = this.getProperty('path');
+    const result = {
+      success: false
+    };
+    if( ! path){
+      return result;
+    }
+    let value = this.getProperty('value');
+    const setType = this.getProperty('set_type');
+
+    switch (setType) {
+      case 'toggle':{
+        value = ! getDataByPath(path);
+        result.success = setDataByPath(path, value);
+      }
+      break;
+      case 'set':{
+        result.success = setDataByPath(path, value);
+      }
+      break;
+      case 'toggle_set':{
+        let currentValue = getDataByPath(path);
+        value = value.split('\n').map(v=>v.trim());
+        if(value.length === 1){
+          value.push('');
+        }
+        let nextIndex = value.indexOf(currentValue) + 1;
+        if(nextIndex >= value.length){
+          nextIndex = 0;
+        }
+        value = value[nextIndex] || '';
+        result.success = setDataByPath(path, value);
+      }
+      break;
+    }
+
+    return result;
+  }
+  /**
+   * Триггер события на другом компоненте
    * @return {Promise<{}>}
    */
   async doActionTrigger() {
@@ -487,6 +534,8 @@ class AltrpAction extends AltrpModel {
       }
     }
   }
+
+
 }
 
 export default AltrpAction

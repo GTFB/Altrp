@@ -184,27 +184,55 @@ class Resource {
   }
   /**
    * @param {FileList} files
-   * @param {string} fileType
+   * @param {string} fileTypes
    * @return {Promise}
    * */
-  postFiles(files, fileType) {
-    let boundary = String(Math.random()).slice(2);
-    fileType = fileType || "image";
+  postFiles(files, fileTypes) {
+    fileTypes = fileTypes || "image";
     let headers = {
       "X-CSRF-TOKEN": _token
-      // 'Content-Type': 'multipart/form-data; boundary=' + boundary
     };
     let formData = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      if (
-        files[i].size > MAX_FILE_SIZE ||
-        files[i].type.indexOf(fileType) !== 0
-      ) {
-        console.log(files[i]);
-        continue;
+    fileTypes = fileTypes.split(",");
+    fileTypes.forEach(fileType => {
+      if (!fileType) {
+        return;
       }
-      formData.append(`files[${i}]`, files[i]);
-    }
+      fileType = fileType.trim();
+      for (let i = 0; i < files.length; i++) {
+        if (
+          files[i].size > MAX_FILE_SIZE ||
+          files[i].type.indexOf(fileType) === -1
+        ) {
+          console.log(files[i]);
+          continue;
+        }
+        formData.append(`files[${i}]`, files[i]);
+      }
+    });
+    let options = {
+      method: "POST",
+      body: formData,
+      headers
+    };
+    return fetch(this.getRoute(), options).then(res => {
+      if (res.ok === false) {
+        return Promise.reject(res.text(), res.status);
+      }
+      return res.json();
+    });
+  }
+
+  /**
+   * @param {File} file
+   * @return {Promise}
+   * */
+  postFile(file) {
+    let headers = {
+      "X-CSRF-TOKEN": _token
+    };
+    let formData = new FormData();
+    formData.append("favicon", file);
     let options = {
       method: "POST",
       body: formData,

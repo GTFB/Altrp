@@ -500,10 +500,6 @@ class Nav extends BaseElement {
     this.addControl("text_color_main_menu_style", {
       type: CONTROLLER_COLOR,
       label: "Text color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       rules: {
         "{{ELEMENT}} .altrp-nav-menu-li-link-label{{STATE}}": "color: {{COLOR}};"
       }
@@ -614,6 +610,44 @@ class Nav extends BaseElement {
     this.addControl('chevron_media_main_menu_style', {
       type: CONTROLLER_MEDIA,
       label: 'Choose chevron',
+    });
+
+    this.addControl("fill_chevron_main_menu_style", {
+      type: CONTROLLER_COLOR,
+      label: "Chevron fill",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link-icon path{{STATE}}": "fill: {{COLOR}};"
+      }
+    });
+
+    this.addControl("stroke_chevron_main_menu_style", {
+      type: CONTROLLER_COLOR,
+      label: "Chevron stroke",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link-icon path{{STATE}}": "stroke: {{COLOR}};"
+      }
+    });
+
+    this.addControl("size_chevron_main_menu_style", {
+      type: CONTROLLER_SLIDER,
+      label: "Size",
+      units: ["px", "%", "vh"],
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-nav-menu-li-link-icon svg{{STATE}}": [
+          "height: {{SIZE}}{{UNIT}}",
+          "width: {{SIZE}}{{UNIT}}"
+        ]
+      }
     });
 
     this.addControl("chevron_rotate_main_menu_style", {
@@ -1188,7 +1222,7 @@ class Nav extends BaseElement {
         colorPickedHex: "#363636",
       },
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link-label{{STATE}}": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-nav-menu-li-link-label-dropdown{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -1196,7 +1230,7 @@ class Nav extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Background color",
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li{{STATE}}": "background-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-nav-menu-li-dropdown{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
@@ -1228,7 +1262,7 @@ class Nav extends BaseElement {
         decoration: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-nav-menu-li-link-label': [
+        '{{ELEMENT}} .altrp-nav-menu-li-link-label-dropdown': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -1251,7 +1285,7 @@ class Nav extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}}": ["padding-left: {{SIZE}}{{UNIT}}", "padding-right: {{SIZE}}{{UNIT}}"]
+        "{{ELEMENT}} .altrp-nav-menu-li-link-dropdown{{STATE}}": ["padding-left: {{SIZE}}{{UNIT}}", "padding-right: {{SIZE}}{{UNIT}}"]
       }
     });
 
@@ -1264,7 +1298,7 @@ class Nav extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}}": ["padding-top: {{SIZE}}{{UNIT}}", "padding-bottom: {{SIZE}}{{UNIT}}"]
+        "{{ELEMENT}} .altrp-nav-menu-li-link-dropdown{{STATE}}": ["padding-top: {{SIZE}}{{UNIT}}", "padding-bottom: {{SIZE}}{{UNIT}}"]
       }
     });
 
@@ -1304,7 +1338,7 @@ class Nav extends BaseElement {
         }
       ],
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-dropdown-content-divider{{STATE}}": "border-top-style: {{VALUE}};"
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-s-content-divider{{STATE}}": "border-top-style: {{VALUE}};"
       }
     });
 
@@ -1312,7 +1346,7 @@ class Nav extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Color",
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-dropdown-content-divider{{STATE}}": "border-top-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-s-content-divider{{STATE}}": "border-top-color: {{COLOR}};"
       }
     });
 
@@ -1325,7 +1359,7 @@ class Nav extends BaseElement {
       max: 50,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-dropdown-content-divider{{STATE}}": "border-top-width: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-s-content-divider{{STATE}}": "border-top-width: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -1342,10 +1376,6 @@ class Nav extends BaseElement {
     this.addControl("chevron_width_dropdown_menu_section", {
       type: CONTROLLER_SLIDER,
       label: 'Size',
-      default: {
-        size: 25,
-        unit: 'px',
-      },
       units: [
         'px',
       ],

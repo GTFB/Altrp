@@ -1,3 +1,4 @@
+import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import controllerDecorate from "../../decorators/controller";
@@ -228,4 +229,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(QueryController);
+export default connect(controllerMapStateToProps)(QueryController);

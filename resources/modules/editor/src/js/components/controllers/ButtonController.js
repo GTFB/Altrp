@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import {controllerMapStateToProps} from "../../decorators/controller";
 
 class ButtonController extends Component {
   constructor(props) {
@@ -40,4 +41,4 @@ function mapStateToProps(state) {
     currentScreen: state.currentScreen
   };
 }
-export default connect(mapStateToProps)(ButtonController);
+export default connect(controllerMapStateToProps)(ButtonController);
