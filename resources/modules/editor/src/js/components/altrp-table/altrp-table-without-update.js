@@ -8,12 +8,15 @@ import {useSortBy,
   useFilters,
   useGroupBy,
   useGlobalFilter,
+  useExpanded,
+  useRowSelect,
   useAsyncDebounce,} from "react-table";
 import AltrpQueryComponent from "../altrp-query-component/altrp-query-component";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import {iconsManager} from "../../../../../admin/src/js/helpers";
 import {matchSorter} from 'match-sorter'
 import React from "react";
+import {recurseCount} from "../../helpers";
 /**
  *
  * @param rows
@@ -176,8 +179,37 @@ function AltrpTableWithoutUpdate(
     useGlobalFilter,
     useGroupBy,
     useSortBy,
+    useExpanded,
     usePagination,
+    useRowSelect,
+
     ];
+  if(settings.row_select){
+    plugins.push(hooks => {
+      hooks.visibleColumns.push(columns => [
+        // Let's make a column for selection
+        {
+          id: 'selection',
+          // The header can use the table's getToggleAllRowsSelectedProps method
+          // to render a checkbox
+          column_name: ({getToggleAllRowsSelectedProps}) => {
+            return (
+                <div className="altrp-toggle-row">
+                  <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+                </div>
+            )},
+          // The cell can use the individual row's getToggleRowSelectedProps method
+          // to the render a checkbox
+          Cell: ({row}) => (
+              <div className="altrp-toggle-row">
+                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+              </div>
+          ),
+        },
+        ...columns,
+      ]);
+    },)
+  }
   const tableSettings = React.useMemo(() => {
     const tableSettings = {
       columns,
@@ -224,9 +256,13 @@ function AltrpTableWithoutUpdate(
     preGlobalFilteredRows,
     setGlobalFilter,
     setPageSize,
+    selectedFlatRows,
     state: {
       pageIndex,
       globalFilter,
+      groupBy,
+      selectedRowIds,
+      expanded,
       pageSize},
   } = ReactTable;
   // console.log(ReactTable);
@@ -288,6 +324,12 @@ function AltrpTableWithoutUpdate(
                              key={idx}>{
                     column.render('column_name')
                   }
+                    {column.canGroupBy ? (
+                        // If the column can be grouped, let's add a toggle
+                        <span {...column.getGroupByToggleProps()} className="altrp-table-th__group-toggle">
+                      {column.isGrouped ? ' 🛑 ' : ' 👊 '}
+                    </span>
+                    ) : null}
                     {
                       (inner_sort) && (column.isSorted
                           ? column.isSortedDesc
@@ -336,7 +378,25 @@ function AltrpTableWithoutUpdate(
                 if (cell.column.id === '##') {
                   cellContent = cell.row.index + 1;
                 }
-                return <td {...cell.getCellProps()} className="altrp-table-td">{cellContent}</td>
+                if(cell.isGrouped){
+                  cellContent = (
+                      <>
+                        <span {...row.getToggleRowExpandedProps()}>
+                            {row.isExpanded ? '👇' : '👉'}
+                          </span>{' '}
+                                 {cell.render('Cell')} ({recurseCount(row, 'subRows')})
+                      </>
+                  );
+                } else if (cell.isAggregated){
+                  cellContent = cell.render('Aggregated');
+                } else if (cell.isPlaceholder){
+                  cellContent = cell.render('Cell');
+                }
+                const cellClassNames = ['altrp-table-td'];
+                cell.isAggregated && cellClassNames.push('altrp-table-td_aggregated');
+                cell.isPlaceholder && cellClassNames.push('altrp-table-td_placeholder');
+                cell.isGrouped && cellClassNames.push('altrp-table-td_grouped');
+                return <td {...cell.getCellProps()} className={cellClassNames.join(' ')}>{cellContent}</td>
               })}
             </tr>
         )
@@ -445,7 +505,6 @@ function DefaultColumnFilter({
                              }, settings) {
   const count = preFilteredRows.length;
   filter_placeholder = filter_placeholder ? filter_placeholder.replace('{{count}}', count) : `Search ${count} records...`;
-  console.log(preFilteredRows);
   return (
       <input
           value={filterValue || ''}
@@ -683,14 +742,66 @@ export function settingsToColumns(settings, widgetId) {
           }
           break;
         }
+        _column.canGroupBy = _column.group_by;
+        if(_column.aggregate){
+          let aggregateTemplate = _column.aggregate_template || `{{value}} Unique Names`;
+          _column.Aggregated = ({value}) => {
+            return aggregateTemplate.replace(/{{value}}/g, value)
+          };
+        }
       }
       columns.push(_column);
     }
-
   });
+  if(settings.row_expand){
+    columns.unshift({
+      id: 'expander', // Make sure it has an ID
+      column_name: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
+          <span {...getToggleAllRowsExpandedProps()}>
+            {isAllRowsExpanded ? '👇' : '👉'}
+          </span>
+      ),
+      Cell: ({ row }) =>
+          // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
+          // to build the toggle for expanding a row
+          row.canExpand ? (
+              <span
+                  {...row.getToggleRowExpandedProps({
+                    style: {
+                      // We can even use the row.depth property
+                      // and paddingLeft to indicate the depth
+                      // of the row
+                      paddingLeft: `${row.depth * 2}rem`,
+                    },
+                  })}
+              >
+              {row.isExpanded ? '👇' : '👉'}
+            </span>
+          ) : null,
+    });
+  }
   return columns;
 }
 
+/**
+ * Отрисовка чекбокса
+ * @type {*|React.ForwardRefExoticComponent<React.PropsWithoutRef<{indeterminate: *, rest: *}> & React.RefAttributes<any>>}
+ */
+const IndeterminateCheckbox = React.forwardRef(
+    ({ indeterminate, ...rest }, ref) => {
+      const defaultRef = React.useRef();
+      const resolvedRef = ref || defaultRef;
+
+      React.useEffect(() => {
+        resolvedRef.current.indeterminate = indeterminate
+      }, [resolvedRef, indeterminate]);
+      return (
+          <>
+            <input type="checkbox" ref={resolvedRef} {...rest} />
+          </>
+      )
+    }
+);
 /**
  * Define a default UI for filtering
  * @param {[]} preGlobalFilteredRows
