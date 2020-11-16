@@ -1485,6 +1485,77 @@ class RootElement extends BaseElement {
       }
     });
 
+    this.addControl('list_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        ".altrp-list-label": "transition-property: {{VALUE}};",
+        ".altrp-list": "transition-property: {{VALUE}};"
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("list_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-list-label": "transition-duration: {{SIZE}}s;",
+        ".altrp-list": "transition-duration: {{SIZE}}s;"
+      }
+    });
+
+    this.addControl('list_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        ".altrp-list-label": "transition-timing-function: {{VALUE}};",
+        ".altrp-list": "transition-timing-function: {{VALUE}};"
+      }
+    });
+
+    this.addControl("list_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-list-label": "transition-delay: {{SIZE}}s;",
+        ".altrp-list": "transition-delay: {{SIZE}}s;"
+      }
+    });
+
+
     this.endControlSection();
 
     this.startControlSection('text_defaults', {
