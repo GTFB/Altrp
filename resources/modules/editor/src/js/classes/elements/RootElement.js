@@ -2918,6 +2918,88 @@ class RootElement extends BaseElement {
       }
     });
 
+    this.addControl('table_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        ".altrp-table-th": "transition-property: {{VALUE}};",
+        "..altrp-table-td": "transition-property: {{VALUE}};",
+        ".altrp-table": "transition-property: {{VALUE}};",
+        ".altrp-table-head": "transition-property: {{VALUE}};",
+        ".altrp-table-background": "transition-property: {{VALUE}};",
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("table_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-table-th": "transition-duration: {{SIZE}}s;",
+        "..altrp-table-td": "transition-duration: {{SIZE}}s;",
+        ".altrp-table": "transition-duration: {{SIZE}}s;",
+        ".altrp-table-head": "transition-duration: {{SIZE}}s;",
+        ".altrp-table-background": "transition-duration: {{SIZE}}s;",
+      }
+    });
+
+    this.addControl('table_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        ".altrp-table-th": "transition-timing-function: {{VALUE}};",
+        "..altrp-table-td": "transition-timing-function: {{VALUE}};",
+        ".altrp-table": "transition-timing-function: {{VALUE}};",
+        ".altrp-table-head": "transition-timing-function: {{VALUE}};",
+        ".altrp-table-background": "transition-timing-function: {{VALUE}};",
+      }
+    });
+
+    this.addControl("table_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-table-th": "transition-delay: {{SIZE}}s;",
+        "..altrp-table-td": "transition-delay: {{SIZE}}s;",
+        ".altrp-table": "transition-delay: {{SIZE}}s;",
+        ".altrp-table-head": "transition-delay: {{SIZE}}s;",
+        ".altrp-table-background": "transition-delay: {{SIZE}}s;",
+      }
+    });
+
     this.endControlSection();
 
     this.startControlSection('tabs_defaults', {
