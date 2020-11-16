@@ -688,6 +688,18 @@ class Table extends BaseElement {
       description: '{{counts}} records ...',
     });
 
+    this.addControl('row_select', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Row Select',
+      default: false,
+    });
+
+    this.addControl('row_expand', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Row Select',
+      default: false,
+    });
+
     this.endControlSection();
 
     this.startControlSection("filter_style_table", {
