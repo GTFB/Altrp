@@ -94,7 +94,39 @@ class Heading extends BaseElement {
       ],
       prefixClass: 'altrp-alignment_',
       rules: {
-            '{{ELEMENT}} .altrp-heading': 'justify-content: {{VALUE}};',
+        '{{ELEMENT}} .altrp-heading': 'justify-content: {{VALUE}};',
+        '{{ELEMENT}} .altrp-heading-wrapper': 'justify-content: {{VALUE}};',
+      },
+    });
+
+    this.addControl('sub_heading_settings_alignment', {
+      conditions: {
+        'text_sub_switch': true,
+      },
+      type: CONTROLLER_CHOOSE,
+      label: 'Sub alignment',
+      default: 'left',
+      options:[
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+        {
+          icon: 'in_width',
+          value: 'stretch',
+        }
+      ],
+      prefixClass: 'altrp-alignment_',
+      rules: {
+        '{{ELEMENT}} .altrp-heading-sub': 'justify-content: {{VALUE}};',
       },
     });
 
@@ -185,6 +217,33 @@ class Heading extends BaseElement {
         {
           value: 'div',
           label: 'div'
+        }
+      ]
+    });
+
+    this.addControl('sub_heading_settings_position', {
+      conditions: {
+        'text_sub_switch': true,
+      },
+      type: CONTROLLER_SELECT,
+      label: 'Sub position',
+      default: 'bottom',
+      options: [
+        {
+          value: 'bottom',
+          label: 'Bottom'
+        },
+        {
+          value: 'top',
+          label: 'Top'
+        },
+        {
+          value: 'right',
+          label: 'Right'
+        },
+        {
+          value: 'left',
+          label: 'Left'
         }
       ]
     });
@@ -1138,9 +1197,29 @@ class Heading extends BaseElement {
       max: 1200,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-heading-sub{{STATE}}": "margin-top: {{SIZE}}{{UNIT}};",
+        "{{ELEMENT}} .altrp-heading-wrapper-sub-bottom .altrp-heading-sub{{STATE}}": "margin-top: {{SIZE}}{{UNIT}};",
+        "{{ELEMENT}} .altrp-heading-wrapper-sub-top .altrp-heading-sub{{STATE}}": "margin-bottom: {{SIZE}}{{UNIT}};",
+        "{{ELEMENT}} .altrp-heading-wrapper-sub-left .altrp-heading-sub{{STATE}}": "margin-right: {{SIZE}}{{UNIT}};",
+        "{{ELEMENT}} .altrp-heading-wrapper-sub-right .altrp-heading-sub{{STATE}}": "margin-left: {{SIZE}}{{UNIT}};",
       }
     });
+
+    this.addControl("width_sub_heading", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default: {
+        unit: '%',
+      },
+      units: [
+        '%',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-heading-sub{{STATE}}": "width: {{SIZE}}{{UNIT}};",
+      }
+    });
+
 
     this.addControl('bg_sub_heading', {
         type: CONTROLLER_COLOR,
@@ -1153,7 +1232,7 @@ class Heading extends BaseElement {
 
     this.addControl('color_sub_heading', {
         type: CONTROLLER_COLOR,
-        label: 'Background color',
+        label: 'text color',
         rules: {
           '{{ELEMENT}} .altrp-heading-sub{{STATE}}': 'color: {{COLOR}};',
         },

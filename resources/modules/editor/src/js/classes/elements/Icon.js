@@ -568,6 +568,221 @@ class Icon extends BaseElement{
 
     this.endControlSection();
 
+    this.startControlSection("style_background", {
+      tab: TAB_STYLE,
+      label: "Background"
+    });
+
+    this.addControl("style_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}} .altrp-icon{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("style_background_opacity", {
+      type: CONTROLLER_SLIDER,
+      label: "Opacity",
+      // default: {
+      //   size: 1
+      // },
+      max: 1,
+      min: 0,
+      step: 0.01,
+      rules: {
+        "{{ELEMENT}} .altrp-icon{{STATE}}": "opacity: {{SIZE}}"
+      }
+    });
+
+    this.addControl('gradient', {
+      type: CONTROLLER_GRADIENT,
+      label: 'Gradient',
+      default: {
+        isWithGradient: false,
+        firstColor: "rgba(97,206,112,1)",
+        firstPoint: '0',
+        secondColor: "rgba(242,41,91,1)",
+        secondPoint: "100",
+        angle: "0",
+        value: ""
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-icon{{STATE}}": "background-image: {{VALUE}}"
+      }
+    });
+
+    this.addControl('background_image', {
+      type: CONTROLLER_MEDIA,
+      label: 'Background Image',
+      default: { url: "" },
+      rules: {
+        "{{ELEMENT}} .altrp-icon{{STATE}}": "background-image: url({{URL}});"
+      }
+    });
+
+    this.addControl('background_position', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "top left",
+          label: "top left"
+        },
+        {
+          value: "top",
+          label: "top"
+        },
+        {
+          value: "top right",
+          label: "top right"
+        },
+        {
+          value: "right",
+          label: "right"
+        },
+        {
+          value: "bottom right",
+          label: "bottom right"
+        },
+        {
+          value: "bottom",
+          label: "bottom"
+        },
+        {
+          value: "bottom left",
+          label: "bottom left"
+        },
+        {
+          value: "left",
+          label: "left"
+        },
+        {
+          value: "center",
+          label: "center"
+        }
+      ],
+      label: 'Background Position',
+      default: 'top left',
+      rules: {
+        "{{ELEMENT}} .altrp-icon{{STATE}}": "background-position: {{VALUE}};"
+      }
+    });
+
+    this.addControl('background_attachment', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "scroll",
+          label: "scroll"
+        },
+        {
+          value: "fixed",
+          label: "fixed"
+        },
+        {
+          value: "local",
+          label: "local"
+        }
+      ],
+      label: 'Background Attachment',
+      default: 'scroll',
+      rules: {
+        "{{ELEMENT}} .altrp-icon{{STATE}}": "background-attachment: {{VALUE}};"
+      }
+    });
+
+    this.addControl('background_repeat', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "repeat",
+          label: "repeat"
+        },
+        {
+          value: "repeat-x",
+          label: "repeat-x"
+        },
+        {
+          value: "repeat-y",
+          label: "repeat-y"
+        },
+        {
+          value: "space",
+          label: "space"
+        },
+        {
+          value: "round",
+          label: "round"
+        },
+        {
+          value: "no-repeat",
+          label: "no-repeat"
+        }
+      ],
+      label: 'Background Repeat',
+      default: 'repeat',
+      rules: {
+        "{{ELEMENT}} .altrp-icon{{STATE}}": "background-repeat: {{VALUE}};"
+      }
+    });
+
+    this.addControl("background_image_width", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default: {
+        size: 100,
+        unit: 'px',
+      },
+      conditions: {
+        'background_size': [''],
+      },
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 1000,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-icon{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
+      }
+    });
+
+    this.addControl('background_size', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "unset",
+          label: "unset"
+        },
+        {
+          value: "cover",
+          label: "cover"
+        },
+        {
+          value: "contain",
+          label: "contain"
+        },
+        {
+          value: "",
+          label: "set width"
+        },
+      ],
+      label: 'Background Size',
+      default: 'unset',
+      rules: {
+        "{{ELEMENT}} .altrp-icon{{STATE}}": "background-size: {{VALUE}};"
+      }
+    });
+
+
+    this.endControlSection();
+
     this.startControlSection('icon_or_image_style', {
       tab: TAB_STYLE,
       label: 'Icon/image',

@@ -24,13 +24,27 @@ class HeadingWidget extends Component {
     let link;
     const className = "altrp-heading altrp-heading--link " +
       + this.state.settings.position_css_classes + (background_image.url ? ' altrp-background-image' : '');
-    const subTag = this.state.settings.sub_heading_settings_html_tag || "h2";
+    let wrapperClasses = "altrp-heading-wrapper";
 
     //sub heading
+    const subTag = this.state.settings.sub_heading_settings_html_tag || "h2";
     let subHeading = "";
     if(this.state.settings.text_sub_switch) {
       const subText = this.getContent('text_sub');
 
+      switch (this.getContent("sub_heading_settings_position")) {
+        case "top":
+          wrapperClasses += " altrp-heading-wrapper-sub-top";
+          break;
+        case "left":
+          wrapperClasses += " altrp-heading-wrapper-sub-left";
+          break;
+        case "right":
+          wrapperClasses += " altrp-heading-wrapper-sub-right";
+          break;
+        default:
+          wrapperClasses += " altrp-heading-wrapper-sub-bottom";
+      }
       subHeading = React.createElement(subTag, {
         dangerouslySetInnerHTML: { __html: subText },
         className: "altrp-heading-sub"
@@ -233,10 +247,10 @@ class HeadingWidget extends Component {
         {
           subHeading
         }
-      </React.Fragment>
+      </React.Fragment>;
 
     return (
-      <div className="altrp-heading-wrapper">
+      <div className={wrapperClasses}>
         {
           advancedHeading
         }

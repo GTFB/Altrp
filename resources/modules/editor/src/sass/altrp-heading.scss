@@ -31,8 +31,18 @@
     align-items: center;
 }
 
+.altrp-heading-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.altrp-heading-wrapper-sub-top {
+    flex-direction: column-reverse;
+}
+
 .altrp-heading-sub {
     margin: 0;
+    display: flex;
     padding: 0;
 }
 
@@ -42,4 +52,14 @@
 
 .altrp-heading-sub-container-link {
     margin: 0;
+}
+
+.altrp-heading-wrapper-sub-left {
+    flex-direction: row-reverse;
+    align-items: center;
+}
+
+.altrp-heading-wrapper-sub-right {
+    flex-direction: row;
+    align-items: center;
 }
