@@ -69,10 +69,19 @@ class InputWidget extends Component {
     if (_.get(value, 'dynamic') && this.props.currentModel.getProperty('altrpModelUpdated')) {
       value = this.getContent('content_default_value');
     }
-    if (!_.isObject(value)) {
+    // if (!_.isObject(value)) {
+    //   value = this.getContent('content_default_value');
+    // }
+    if(this.props.currentModel.getProperty('altrpModelUpdated')
+        && this.props.currentDataStorage.getProperty('currentDataStorageLoaded')
+        && ! this.state.contentLoaded){
       value = this.getContent('content_default_value');
+      this.setState(state => ({ ...state, value, contentLoaded: true }), () => { this.dispatchFieldValueToStore(value); });
+      return;
     }
-    this.setState(state => ({ ...state, value }), () => { this.dispatchFieldValueToStore(value); });
+    if(this.state.value !== value){
+      this.setState(state => ({ ...state, value }), () => { this.dispatchFieldValueToStore(value); });
+    }
   }
 
   /**

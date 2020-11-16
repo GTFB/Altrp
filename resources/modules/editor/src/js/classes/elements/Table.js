@@ -265,11 +265,87 @@ class Table extends BaseElement {
       label: 'Is Sorted',
       default: false
     });
+
     repeater.addControl('column_is_filtered', {
       type: CONTROLLER_SWITCHER,
       label: 'Add Filter Input',
       default: false
     });
+
+    repeater.addControl('column_filter_type', {
+      type: CONTROLLER_SELECT,
+      label: 'Filter Type',
+      nullable: true,
+      options: [
+        {
+          label: 'Text',
+          value: 'text',
+        },
+        {
+          label: 'Min-Max',
+          value: 'min_max',
+        },
+        {
+          label: 'Select',
+          value: 'select',
+        },
+        {
+          label: 'Slider',
+          value: 'slider',
+        },
+      ],
+      responsive: false,
+      conditions: {
+        'column_is_filtered': true,
+      },
+    });
+
+    repeater.addControl('filter_placeholder', {
+      label: 'Placeholder',
+      conditions: {
+        'column_is_filtered': true,
+        'column_filter_type': 'text',
+      },
+      dynamic: false,
+      responsive: false,
+      description: 'Search {{count}} records...',
+    });
+
+
+    repeater.addControl('filter_min_placeholder', {
+      label: 'MinPlaceholder',
+      conditions: {
+        'column_is_filtered': true,
+        'column_filter_type': 'min_max',
+      },
+      dynamic: false,
+      responsive: false,
+      description: 'Min ({{min}})',
+    });
+
+
+    repeater.addControl('filter_max_placeholder', {
+      label: 'Max Placeholder',
+      conditions: {
+        'column_is_filtered': true,
+        'column_filter_type': 'min_max',
+      },
+      dynamic: false,
+      responsive: false,
+      description: 'Min ({{max}})',
+    });
+
+    repeater.addControl('filter_button_text', {
+      label: 'Placeholder',
+      conditions: {
+        'column_is_filtered': true,
+        'column_filter_type': 'slider',
+      },
+      dynamic: false,
+      responsive: false,
+      description: 'Off',
+    });
+
 
     repeater.addControl('column_is_editable', {
       type: CONTROLLER_SWITCHER,
@@ -523,6 +599,61 @@ class Table extends BaseElement {
     /**
      * Настройки для футера таблицы END
      */
+
+    /**
+     * Настройки для футера таблицы
+     */
+
+    this.startControlSection("deep_customization", {
+      label: "Deep Customization"
+    });
+
+    this.addControl('inner_page_size', {
+      type: CONTROLLER_NUMBER,
+      label: 'Page Size',
+      default: 0
+    });
+
+
+    this.addControl('inner_page_count_options', {
+      type: CONTROLLER_TEXTAREA,
+      dynamic: false,
+      label: 'Counts',
+    });
+
+    this.addControl('inner_sort', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Sort',
+      default: false
+    });
+
+    this.addControl('global_filter', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Global Filter',
+      default: false
+    });
+
+    this.addControl('global_filter_label', {
+      type: CONTROLLER_TEXTAREA,
+      dynamic: false,
+      label: 'Label',
+      conditions: {
+        global_filter: true,
+      },
+    });
+
+
+    this.addControl('global_filter_placeholder', {
+      type: CONTROLLER_TEXTAREA,
+      dynamic: false,
+      label: 'Placeholder',
+      conditions: {
+        global_filter: true,
+      },
+      description: '{{counts}} records ...',
+    });
+
+    this.endControlSection();
 
     this.startControlSection("filter_style_table", {
       tab: TAB_STYLE,

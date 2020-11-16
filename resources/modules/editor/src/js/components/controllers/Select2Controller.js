@@ -270,12 +270,4 @@ class Select2Controller extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    currentElement: state.currentElement.currentElement,
-    currentState: state.currentState,
-    currentScreen: state.currentScreen,
-    controllerValue: state.controllerValue,
-  };
-}
 export default connect(controllerMapStateToProps)(Select2Controller);

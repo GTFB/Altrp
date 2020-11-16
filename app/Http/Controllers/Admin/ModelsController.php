@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\ApiRequest;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -67,6 +68,7 @@ class ModelsController extends HttpController
    */
     public function models_options( Request $request )
     {
+      $search_text = $request->get( 's' );
       if( ! $request->get( 'with_sql_queries' ) ){
         return response()->json(
           Model::getModelsOptions(
@@ -104,7 +106,7 @@ class ModelsController extends HttpController
          */
         $sql_editors_data_sources = [];
 
-        $_sqls = SQLEditor::all();
+        $_sqls = SQLEditor::where( 'title', 'LIKE', '%' . $search_text . '%' )->get();
 
         foreach ( $_sqls as $sql ) {
           $sql_editors_data_sources[] = [

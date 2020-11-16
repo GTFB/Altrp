@@ -140,7 +140,7 @@ class Tabs extends BaseElement {
     this.addControl('alignment_tabs', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: 'flex-start',
+      // default: 'flex-start',
       options: [
         {
           icon: 'left',
@@ -168,7 +168,7 @@ class Tabs extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "Tab spacing",
       default: {
-        size: 10,
+        // size: 10,
         unit: "px"
       },
       units: ["px", "%", "vh"],
@@ -184,7 +184,7 @@ class Tabs extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "Content spacing",
       default: {
-        size: 10,
+        // size: 10,
         unit: "px"
       },
       units: ["px", "%", "vh"],
@@ -364,10 +364,10 @@ class Tabs extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        top: 10,
+        /* top: 10,
         right: 15,
         bottom: 10,
-        left: 15,
+        left: 15, */
         unit: "px"
       },
       units: ["px", "%", "vh"],
@@ -430,8 +430,8 @@ class Tabs extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Border color",
       default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852"
+        // color: "rgb(50,168,82)",
+        // colorPickedHex: "#32a852"
       },
       rules: {
         "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "border-color: {{COLOR}};"
@@ -442,7 +442,7 @@ class Tabs extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
       default: {
-        size: 0,
+        // size: 0,
         unit: 'px',
       },
       units: [
