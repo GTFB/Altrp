@@ -580,7 +580,6 @@ class Icon extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-icon{{STATE}}": "background-color: {{COLOR}};"
       }
@@ -613,7 +612,7 @@ class Icon extends BaseElement{
         value: ""
       },
       rules: {
-        "{{ELEMENT}} .altrp-icon{{STATE}}": "background-image: {{VALUE}}"
+        "{{ELEMENT}} .altrp-icon{{STATE}}": "background: {{VALUE}}"
       }
     });
 
@@ -622,7 +621,7 @@ class Icon extends BaseElement{
       label: 'Background Image',
       default: { url: "" },
       rules: {
-        "{{ELEMENT}} .altrp-icon{{STATE}}": "background-image: url({{URL}});"
+        "{{ELEMENT}} .altrp-icon-background-image{{STATE}}": "background-image: url({{URL}});"
       }
     });
 
@@ -669,7 +668,7 @@ class Icon extends BaseElement{
       label: 'Background Position',
       default: 'top left',
       rules: {
-        "{{ELEMENT}} .altrp-icon{{STATE}}": "background-position: {{VALUE}};"
+        "{{ELEMENT}} .altrp-icon-background-image{{STATE}}": "background-position: {{VALUE}};"
       }
     });
 
@@ -692,7 +691,7 @@ class Icon extends BaseElement{
       label: 'Background Attachment',
       default: 'scroll',
       rules: {
-        "{{ELEMENT}} .altrp-icon{{STATE}}": "background-attachment: {{VALUE}};"
+        "{{ELEMENT}} .altrp-icon-background-image{{STATE}}": "background-attachment: {{VALUE}};"
       }
     });
 
@@ -727,7 +726,7 @@ class Icon extends BaseElement{
       label: 'Background Repeat',
       default: 'repeat',
       rules: {
-        "{{ELEMENT}} .altrp-icon{{STATE}}": "background-repeat: {{VALUE}};"
+        "{{ELEMENT}} .altrp-icon-background-image{{STATE}}": "background-repeat: {{VALUE}};"
       }
     });
 
@@ -749,7 +748,7 @@ class Icon extends BaseElement{
       max: 1000,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-icon{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
+        "{{ELEMENT}} .altrp-icon-background-image{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
       }
     });
 
@@ -776,10 +775,122 @@ class Icon extends BaseElement{
       label: 'Background Size',
       default: 'unset',
       rules: {
-        "{{ELEMENT}} .altrp-icon{{STATE}}": "background-size: {{VALUE}};"
+        "{{ELEMENT}} .altrp-icon-background-image{{STATE}}": "background-size: {{VALUE}};"
       }
     });
 
+    this.endControlSection();
+
+    this.startControlSection('border_section', {
+      tab: TAB_STYLE,
+      label: 'Border'
+    });
+
+    this.addControl('border_type', {
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+        rules: {
+          '{{ELEMENT}} .altrp-icon{{STATE}}': 'border-style: {{VALUE}};',
+        },
+      }
+    );
+
+    this.addControl(
+      'border_width', {
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        default: {
+          bind: true
+        },
+        units: [
+          'px',
+          '%',
+          'vh',
+        ],
+        rules: {
+          '{{ELEMENT}} .altrp-icon{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        },
+      }
+    );
+
+    this.addControl('border_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+        // default: {
+        //   color: "rgb(50,168,82)",
+        //   colorPickedHex: "#32a852",
+        // },
+        rules: {
+          '{{ELEMENT}} .altrp-icon{{STATE}}': 'border-color: {{COLOR}};',
+        },
+      }
+    );
+
+    this.addControl('border_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-icon{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
+    });
+
+    this.addControl('style_background_shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'Shadow',
+      default: {
+        // blur: 0,
+        // horizontal: 0,
+        // vertical: 0,
+        // opacity: 1,
+        // spread: 0,
+        // colorRGB: 'rgb(0, 0, 0)',
+        // color: 'rgb(0, 0, 0)',
+        // colorPickedHex: '#000000',
+        // type: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-icon{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    });
 
     this.endControlSection();
 
