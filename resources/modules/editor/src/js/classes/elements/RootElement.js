@@ -1507,7 +1507,8 @@ class RootElement extends BaseElement {
       step: 0.1,
       rules: {
         ".altrp-list-label": "transition-duration: {{SIZE}}s;",
-        ".altrp-list": "transition-duration: {{SIZE}}s;"
+        ".altrp-list": "transition-duration: {{SIZE}}s;",
+        ".altrp-list-icon": "transition-delay: {{SIZE}}s;"   
       }
     });
 
@@ -1538,7 +1539,8 @@ class RootElement extends BaseElement {
       label: 'Transition Timing Function',
       rules: {
         ".altrp-list-label": "transition-timing-function: {{VALUE}};",
-        ".altrp-list": "transition-timing-function: {{VALUE}};"
+        ".altrp-list": "transition-timing-function: {{VALUE}};",
+        ".altrp-list-icon": "transition-delay: {{VALUE}};"   
       }
     });
 
@@ -1551,7 +1553,8 @@ class RootElement extends BaseElement {
       step: 0.1,
       rules: {
         ".altrp-list-label": "transition-delay: {{SIZE}}s;",
-        ".altrp-list": "transition-delay: {{SIZE}}s;"
+        ".altrp-list": "transition-delay: {{SIZE}}s;",
+        ".altrp-list-icon": "transition-delay: {{SIZE}}s;"        
       }
     });
 
