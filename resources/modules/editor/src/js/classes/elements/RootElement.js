@@ -2450,6 +2450,85 @@ class RootElement extends BaseElement {
       },
     });
 
+    this.addControl('input_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        ".altrp-field": "transition-property: {{VALUE}};",
+        ".altrp-field-label": "transition-property: {{VALUE}};",
+        ".altrp-field-select2__control": "transition-property: {{VALUE}};",
+        ".altrp-field-select2__single-value": "transition-property: {{VALUE}};",
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("input_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-field": "transition-duration: {{SIZE}}s;",
+        ".altrp-field-label": "transition-duration: {{SIZE}}s;",
+        ".altrp-field-select2__control": "transition-duration: {{SIZE}}s;",
+        ".altrp-field-select2__single-value": "transition-duration: {{SIZE}}s;",
+      }
+    });
+
+    this.addControl('input_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        ".altrp-field": "transition-timing-function: {{VALUE}};",
+        ".altrp-field-label": "transition-timing-function: {{VALUE}};",
+        ".altrp-field-select2__control": "transition-timing-function: {{VALUE}};",
+        ".altrp-field-select2__single-value": "transition-timing-function: {{VALUE}};",
+      }
+    });
+
+    this.addControl("input_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-field": "transition-delay: {{SIZE}}s;",
+        ".altrp-field-label": "transition-delay: {{SIZE}}s;",
+        ".altrp-field-select2__control": "transition-delay: {{SIZE}}s;",
+        ".altrp-field-select2__single-value": "transition-delay: {{SIZE}}s;",
+      }
+    });
+
+
     this.endControlSection();
 
     this.startControlSection('table_defaults', {
