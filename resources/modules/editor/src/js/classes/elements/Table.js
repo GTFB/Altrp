@@ -260,6 +260,7 @@ class Table extends BaseElement {
         },
       ]
     });
+
     repeater.addControl('column_is_sorted', {
       type: CONTROLLER_SWITCHER,
       label: 'Is Sorted',
@@ -268,7 +269,7 @@ class Table extends BaseElement {
 
     repeater.addControl('column_is_filtered', {
       type: CONTROLLER_SWITCHER,
-      label: 'Add Filter Input',
+      label: 'Add Filter',
       default: false
     });
 
@@ -346,6 +347,41 @@ class Table extends BaseElement {
       description: 'Off',
     });
 
+    repeater.addControl('aggregate', {
+      type: CONTROLLER_SELECT,
+      label: 'Aggregate',
+      nullable: true,
+      options: [
+        {
+          label: 'Average',
+          value: 'average',
+        },
+        {
+          label: 'Sum',
+          value: 'sum',
+        },
+        {
+          label: 'Count',
+          value: 'count',
+        },
+        {
+          label: 'Unique Count',
+          value: 'uniqueCount',
+        },
+      ],
+      responsive: false,
+    });
+
+    repeater.addControl('aggregate_template', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Aggregate Template',
+      responsive: false,
+      dynamic: false,
+      conditions:{
+        'aggregate!' : '',
+      },
+      description: '{{value}} Unique Names',
+    });
 
     repeater.addControl('column_is_editable', {
       type: CONTROLLER_SWITCHER,
@@ -641,7 +677,6 @@ class Table extends BaseElement {
         global_filter: true,
       },
     });
-
 
     this.addControl('global_filter_placeholder', {
       type: CONTROLLER_TEXTAREA,
