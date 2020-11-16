@@ -2,7 +2,13 @@ import '../../../sass/altrp-pagination.scss';
 import {isEditor, parseURLTemplate} from "../../../../../front-app/src/js/helpers";
 import {Link} from "react-router-dom";
 import {renderAdditionalRows,} from "./altrp-table";
-import {useSortBy, useTable, usePagination, useFilters, useGlobalFilter, useAsyncDebounce} from "react-table";
+import {useSortBy,
+  useTable,
+  usePagination,
+  useFilters,
+  useGroupBy,
+  useGlobalFilter,
+  useAsyncDebounce,} from "react-table";
 import AltrpQueryComponent from "../altrp-query-component/altrp-query-component";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import {iconsManager} from "../../../../../admin/src/js/helpers";
@@ -163,10 +169,15 @@ function AltrpTableWithoutUpdate(
       data = [data];
     }
   }, [data]);
-  const {inner_page_size, inner_sort} = settings;
+  const {inner_page_size, inner_sort, global_filter} = settings;
   let columns = React.useMemo(() => settingsToColumns(settings, widgetId), [settings, widgetId]);
 
-  const plugins = [ useFilters, useGlobalFilter, useSortBy, usePagination,useAsyncDebounce];
+  const plugins = [ useFilters,
+    useGlobalFilter,
+    useGroupBy,
+    useSortBy,
+    usePagination,
+    ];
   const tableSettings = React.useMemo(() => {
     const tableSettings = {
       columns,
@@ -209,8 +220,14 @@ function AltrpTableWithoutUpdate(
     previousPage,
     getRowId,
     rows,
+    visibleColumns,
+    preGlobalFilteredRows,
+    setGlobalFilter,
     setPageSize,
-    state: {pageIndex, pageSize},
+    state: {
+      pageIndex,
+      globalFilter,
+      pageSize},
   } = ReactTable;
   // console.log(ReactTable);
   React.useEffect(
@@ -290,6 +307,23 @@ function AltrpTableWithoutUpdate(
             )}
           </tr>
       ))}
+      {global_filter &&  <tr>
+        <th className="altrp-table-th"
+            colSpan={visibleColumns.length}
+            style={{
+              textAlign: 'left',
+            }}
+        >
+          <GlobalFilter
+              widgetId={widgetId}
+              preGlobalFilteredRows={preGlobalFilteredRows}
+              globalFilter={globalFilter}
+              setGlobalFilter={setGlobalFilter}
+              settings={settings}
+          />
+        </th>
+      </tr>
+      }
       </thead>
       <tbody {...getTableBodyProps()}>
       {(page ? page : rows).map((row, i) => {
@@ -411,6 +445,7 @@ function DefaultColumnFilter({
                              }, settings) {
   const count = preFilteredRows.length;
   filter_placeholder = filter_placeholder ? filter_placeholder.replace('{{count}}', count) : `Search ${count} records...`;
+  console.log(preFilteredRows);
   return (
       <input
           value={filterValue || ''}
@@ -496,15 +531,20 @@ function SelectColumnFilter({
 function SliderColumnFilter({
                               column: { filterValue, setFilter, preFilteredRows, id, filter_button_text },
                             }) {
-  // Calculate the min and max
-  // using the preFilteredRows
-
   const [min, max] = React.useMemo(() => {
-    let min = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
-    let max = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
+    let value = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
+    if(id === '##' && preFilteredRows.length) {
+      value = preFilteredRows[0].index;
+    }
+    let min = value;
+    let max = value;
     preFilteredRows.forEach(row => {
-      min = Math.min(row.values[id], min);
-      max = Math.max(row.values[id], max);
+      let value = row.values[id];
+      if(id === '##'){
+        value = row.index;
+      }
+      min = Math.min(value, min);
+      max = Math.max(value, max);
     });
     return [min, max]
   }, [id, preFilteredRows]);
@@ -649,6 +689,51 @@ export function settingsToColumns(settings, widgetId) {
 
   });
   return columns;
+}
+
+/**
+ * Define a default UI for filtering
+ * @param {[]} preGlobalFilteredRows
+ * @param {string} globalFilter
+ * @param {function} setGlobalFilter
+ * @param {string} widgetId
+ * @param {{}} settings
+ * @return {*}
+ * @constructor
+ */
+function GlobalFilter({
+                        preGlobalFilteredRows,
+                        globalFilter,
+                        setGlobalFilter,
+                        widgetId,
+                        settings,
+                      }) {
+  const {global_filter_placeholder, global_filter_label} = settings;
+  const count = preGlobalFilteredRows.length;
+  const [value, setValue] = React.useState(globalFilter);
+  const onChange = useAsyncDebounce(value => {
+    setGlobalFilter(value || undefined);
+  }, 200);
+  let labelText = global_filter_label || `Search:${' '}`;
+  let placeholder = global_filter_placeholder || `${count} records...`;
+  placeholder = placeholder.replace(/{{count}}/g, count);
+  return (
+      <span className="altrp-table-global-filter">
+        <label htmlFor={`altrp-table-global-filter${widgetId}`}>
+          {labelText}
+        </label>
+        <input
+            id={`altrp-table-global-filter${widgetId}`}
+            value={value || ""}
+            onChange={e => {
+              setValue(e.target.value);
+              onChange(e.target.value);
+            }}
+            placeholder={placeholder}
+
+        />
+    </span>
+  )
 }
 export default (props) => {
   return <AltrpQueryComponent {...props}><AltrpTableWithoutUpdate/></AltrpQueryComponent>

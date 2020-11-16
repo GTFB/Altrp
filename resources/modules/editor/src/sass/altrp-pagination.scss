@@ -37,6 +37,8 @@
     }
   }
 }
-#editor-content .altrp-pagination__select-size{
+#editor-content .altrp-pagination__select-size,
+#editor-content .altrp-table-th .altrp-label_select,
+#editor-content .altrp-table__filter-select{
   pointer-events: none;
 }

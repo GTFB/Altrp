@@ -617,6 +617,7 @@ class Table extends BaseElement {
 
     this.addControl('inner_page_count_options', {
       type: CONTROLLER_TEXTAREA,
+      dynamic: false,
       label: 'Counts',
     });
 
@@ -624,6 +625,32 @@ class Table extends BaseElement {
       type: CONTROLLER_SWITCHER,
       label: 'Sort',
       default: false
+    });
+
+    this.addControl('global_filter', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Global Filter',
+      default: false
+    });
+
+    this.addControl('global_filter_label', {
+      type: CONTROLLER_TEXTAREA,
+      dynamic: false,
+      label: 'Label',
+      conditions: {
+        global_filter: true,
+      },
+    });
+
+
+    this.addControl('global_filter_placeholder', {
+      type: CONTROLLER_TEXTAREA,
+      dynamic: false,
+      label: 'Placeholder',
+      conditions: {
+        global_filter: true,
+      },
+      description: '{{counts}} records ...',
     });
 
     this.endControlSection();
