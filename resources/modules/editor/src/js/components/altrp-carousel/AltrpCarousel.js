@@ -139,11 +139,11 @@ class AltrpCarousel extends Component {
       let content = renderAsset(media, {
         className: "altrp-carousel-slide-img",
       });
-      
+
       if(typeSlide === true) {
-        console.log(slide.card_slides_repeater)
         content = <TemplateLoader templateId={slide.card_slides_repeater}/>
       }
+      
       return (
         <div className="altrp-carousel-slide" key={idx}
           onDoubleClick={ () => {
