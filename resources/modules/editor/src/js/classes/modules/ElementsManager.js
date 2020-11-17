@@ -44,6 +44,8 @@ import IconWidget from "../../components/widgets/IconWidget";
 import Icon from "../elements/Icon";
 import Tour from "../elements/Tour";
 import TourGuide from "../../components/widgets/TourGuide";
+import OffcanvasWidget from "../../components/widgets/OffcanvasWidget";
+import Offcanvas from "../elements/Offcanvas";
 
 export default class ElementsManger {
   constructor() {
@@ -73,6 +75,7 @@ export default class ElementsManger {
     this.elements[Dashboards.getName()] = Dashboards;
     this.elements[Carousel.getName()] = Carousel;
     this.elements[Tour.getName()] = Tour;
+    this.elements[Offcanvas.getName()] = Offcanvas;
     //список компонентов
     this.components = {};
     this.components[RootElement.getName()] = RootComponent;
@@ -98,6 +101,7 @@ export default class ElementsManger {
     this.components[Dashboards.getName()] = DashboardsWidget;
     this.components[Icon.getName()] = IconWidget;
     this.components[Tour.getName()] = TourGuide;
+    this.components[Offcanvas.getName()] = OffcanvasWidget;
   }
 
   getElements() {

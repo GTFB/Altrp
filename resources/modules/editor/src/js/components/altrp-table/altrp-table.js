@@ -11,6 +11,7 @@ import {
 } from "../../../../../front-app/src/js/helpers";
 import {iconsManager} from "../../../../../admin/src/js/helpers";
 import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput";
+import AltrpQueryComponent from "../altrp-query-component/altrp-query-component";
 
 
 /**
@@ -19,20 +20,35 @@ import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput
  * @param {Query} query
  * @param {{}} data
  * @param {AltrpModel} currentModel
+ * @param {string} _status
+ * @param {{}} _error
+ * @param {function} setSortSettings
+ * @param {function} setFilterSettings
+ * @param {function} setPage
+ * @param {{}} filterSetting
+ * @param {{}} sortSetting
+ * @param {int} page
+ * @param {[]} _latestData
  * @return {*}
  * @constructor
  */
-const AltrpTable = ({settings, query, data, currentModel}) => {
+const AltrpTable = ({settings,
+                      query,
+                      data,
+                      currentModel,
+                      _status,
+                      _error,
+                      setSortSettings,
+                      setFilterSettings,
+                      filterSetting,
+                      setPage,
+                      _latestData,
+                      page,
+                      sortSetting}) => {
   if (! (settings.tables_columns && settings.tables_columns.length)) {
     return <div children="Please Add Column"/>
   }
-  const useQuerySettings = {
-    forceFetchOnMount: true,
-    refetchOnWindowFocus: true,
-  };
-  /**
-   * проверим есть ли настройки для сортировок по умолчанию
-   */
+
   const defaultSortSettings =  {};
   settings.tables_columns.forEach(column => {
     if(column.column_is_default_sorted && !defaultSortSettings.order_by){
@@ -46,88 +62,32 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
       }, [settings]
       );
 
-  const [page, setPage] = useState(1);
+  if(groupBy){
+    setSortSettings({
+      order: 'ASC',
+      order_by: groupBy,
+  })
+  }
 
   let counter = query.getCounterStart(page);
-  let _data =[], _status, _error, _latestData;
 
   const collapsing = React.useMemo(()=>settings.group_collapsing);
   const collapsedInitiate = [];
   const [collapsedGroups, setCollapsedGroups] = React.useState(collapsedInitiate);
   const [updatedData, setUpdatedData] = useState({});
-  const [sortSetting, setSortSettings] = useState(defaultSortSettings);
-  const [filterSetting, setFilterSettings] = useState({});
   const [doubleClicked, setDoubleClicked] =  useState({});
   const groupingStore = [];
-  const filterSettingJSON = JSON.stringify(filterSetting);
-  const fetchModels = useCallback(async (key, page = 1, sortSetting, filterSetting, params,  groupBy) => {
-    let queryData = {page};
-    const filterSettingJSON = JSON.stringify(filterSetting);
-    if(sortSetting){
-      queryData = _.assign(sortSetting, queryData);
-    }
-    if(groupBy){
-      queryData.order = 'ASC';
-      queryData.order_by = groupBy;
-    }
-    if(filterSettingJSON.length > 2){
-      queryData.filters = filterSettingJSON;
-    }
-    return query.getQueried(queryData)
-  });
 
-  if(_.get(settings, 'choose_datasource', 'query') === 'datasource'){
-    /**
-     * Если данные берутся со страницы
-     */
-    _data = getDataByPath(extractPathFromString(_.get(settings, 'table_datasource', '')), []);
-  } else if(query.pageSize){
-    /**
-     * Если есть пагинация
-     */
-    const {
-      status,
-      resolvedData,
-      latestData,
-      error,
-    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting, query.getParams(), groupBy],
-        fetchModels,
-        useQuerySettings);
-    _data = resolvedData ? resolvedData : _data;
-    _status = status;
-    _error = error;
-    _latestData = latestData;
-    useEffect(() => {
-      if (latestData?.hasMore) {
-        queryCache.prefetchQuery([query.dataSourceName, page + 1], fetchModels);
-      }
-    }, [latestData, fetchModels, page, sortSetting, filterSetting]);
-  }else {
-    /**
-     * Если нет пагинации
-     */
-    const {status, data, error,} = useQuery([query.dataSourceName,query.getParams()],
-        () => {
-      return query.getResource().getQueried({...sortSetting,filters: filterSettingJSON, groupBy})
-    }, useQuerySettings);
-    _data = data;
-    _status = status;
-    _error = error;
-  }
+  
   let columns = [];
   columns = settingsToColumns(settings);
-  if(_.isObject(_data) && ! _.isArray(_data)){
-    _data = [_data];
-  }
-  if(! _data.length){
-    _data = data;
-  }
+  
   /**
    * обновление данных при изменении ячейки
    * @type {any[]}
    * @private
    */
-  _data = _data.map((row)=>{
+  data = data.map((row)=>{
     if(row.id === updatedData.rowId){
       row[updatedData.column] = updatedData.value;
       return{...row};
@@ -147,7 +107,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
         ),
         [settings.tables_columns]
     ),
-    data: React.useMemo(() => (_data || []), [_data]),
+    data: React.useMemo(() => (data || []), [data]),
   }, );
   /**
    * Обработка клика для сортировки
@@ -284,8 +244,8 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
                 /**
                  * Если нужно указать номер по порядку
                  */
-                if(cell.column._accessor && cell.column._accessor.trim() === '##'){
-                  cellContent = counter++;
+                if(cell.column._accessor && (cell.column._accessor.trim() === '##')){
+                  cellContent = (counter++) + '';
                 }
                 let cellStyles = _.get(cell, 'column.column_styles_field');
                 cellStyles = _.get(row.original, cellStyles, '');
@@ -295,7 +255,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
                 /**
                  * Если есть actions, то надо их вывести
                  */
-                if(_.isArray(_.get(cell,'column.actions'))){
+                if(_.get(cell,'column.actions.length')){
                   return <td {...cellProps}
                              className={cellClassName}
                              style={style}>{renderCellActions(cell, row)}</td>
@@ -304,7 +264,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
                   return <td {...cellProps}
                              className={cellClassName}
                              dangerouslySetInnerHTML={
-                               {__html:cellContent}
+                               {__html:cellContent + ''}
                              }
                              style={style}>
                   </td>
@@ -319,7 +279,7 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
           )
       })}
     </tbody>
-    {renderFooter(settings, _data)}
+    {renderFooter(settings, data)}
   </table>
     {((query.paginationType === 'prev-next') && query.pageSize) ?
       <div className="altrp-pagination">
@@ -351,14 +311,12 @@ const AltrpTable = ({settings, query, data, currentModel}) => {
   </>
 };
 
-export default AltrpTable
-
 /**
  * Парсинг колонок из настроек в колонки для react-table
  * @param settings
  * @return {Array}
  */
-function settingsToColumns(settings) {
+export function settingsToColumns(settings) {
   let columns = [];
   let { tables_columns } = settings;
   tables_columns = tables_columns || [];
@@ -382,7 +340,7 @@ function settingsToColumns(settings) {
  * @param {{}}settings
  * @return {string|array}
  */
-function renderAdditionalRows(settings) {
+export function renderAdditionalRows(settings) {
   let { additional_rows } = settings;
   if(! _.isArray(additional_rows)){
     return '';
@@ -641,4 +599,9 @@ function renderCellActions(cell, row = {}) {
       return React.createElement(tag, actionProps, actionContent);
     })}
   </div>
+}
+
+
+export default (props) => {
+  return <AltrpQueryComponent {...props}><AltrpTable/></AltrpQueryComponent>
 }

@@ -69,10 +69,19 @@ class InputWidget extends Component {
     if (_.get(value, 'dynamic') && this.props.currentModel.getProperty('altrpModelUpdated')) {
       value = this.getContent('content_default_value');
     }
-    if (!_.isObject(value)) {
+    // if (!_.isObject(value)) {
+    //   value = this.getContent('content_default_value');
+    // }
+    if(this.props.currentModel.getProperty('altrpModelUpdated')
+        && this.props.currentDataStorage.getProperty('currentDataStorageLoaded')
+        && ! this.state.contentLoaded){
       value = this.getContent('content_default_value');
+      this.setState(state => ({ ...state, value, contentLoaded: true }), () => { this.dispatchFieldValueToStore(value); });
+      return;
     }
-    this.setState(state => ({ ...state, value }), () => { this.dispatchFieldValueToStore(value); });
+    if(this.state.value !== value){
+      this.setState(state => ({ ...state, value }), () => { this.dispatchFieldValueToStore(value); });
+    }
   }
 
   /**
@@ -494,9 +503,7 @@ class InputWidget extends Component {
     } = this.props.element.getSettings();
 
     let options = this.state.options;
-    if (content_options_nullable) {
-      options = _.union([{ label: nulled_option_title, value: '', }], options);
-    }
+
 
 
     let value = this.state.value;
@@ -560,6 +567,9 @@ class InputWidget extends Component {
      * @type {Array|*}
      */
     options = _.sortBy(options, (o => o.label ? o.label.toString() : o));
+    if (content_options_nullable) {
+      options = _.union([{ label: nulled_option_title, value: '', }], options);
+    }
     const select2Props = {
       className: 'altrp-field-select2',
       classNamePrefix: this.props.element.getId() + ' altrp-field-select2',

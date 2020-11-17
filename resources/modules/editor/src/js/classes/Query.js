@@ -112,6 +112,10 @@ class Query {
   getParams(params) {
     params = {..._.assign(this.getDefaultParams(), params)};
     params.page = params.page || 1;
+    if(_.has(params, 'pageSize') && (params.pageSize <= 0)){
+      delete params.pageSize;
+      delete params.page;
+    }
     return params;
   }
 

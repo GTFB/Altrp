@@ -46,7 +46,6 @@ class ElementWrapper extends Component {
     });
   }
   onDragOver(e) {
-    // console.log('over');
     let draggableElement = store.getState().elementDrag.element;
     e.preventDefault();
     let cursorPos = topOrBottomHover(e, this.wrapper.current);
@@ -204,7 +203,6 @@ class ElementWrapper extends Component {
     let classes = " ";
     classes += this.props.element.getPrefixClasses() + " ";
     let draggableElement = store.getState().elementDrag.element;
-    // console.log(draggableElement);
     if (this.state.isDrag) {
       classes += " altrp-element_is-drag";
       return classes;
@@ -244,6 +242,22 @@ class ElementWrapper extends Component {
     }));
   }
 
+  /**
+   * Нужно ли обновлять компонент
+   * @param {{}} nextProps
+   * @param {{}} nextState
+   */
+  shouldComponentUpdate(nextProps, nextState){
+    /**
+     * не обновляем элемент, если изменился контроллер не текущего элемента
+     */
+    if((nextProps.controllerValue !== this.props.controllerValue)
+        && this.props.element !== this.props.currentElement
+      ){
+      return false;
+    }
+    return true;
+  }
   render() {
     const elementHideTrigger = this.props.element.settings.hide_on_trigger;
     const { isFixed } = this.props.element.getSettings();
@@ -389,7 +403,7 @@ function mapStateToProps(state) {
     currentUser: state.currentUser,
     controllerValue: state.controllerValue,
     currentDataStorage: state.currentDataStorage,
-    hideTriggers: state.hideTriggers
+    hideTriggers: state.hideTriggers,
   };
 }
 

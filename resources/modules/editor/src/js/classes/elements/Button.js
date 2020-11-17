@@ -57,11 +57,15 @@ class Button extends BaseElement {
       options: [
         {
           value: 'none',
-          label: 'none'
+          label: 'None'
         },
         {
           value: 'dropbar',
-          label: 'dropbar'
+          label: 'Dropbar'
+        },
+        {
+          value: 'offcanvas',
+          label: 'Offcanvas'
         },
       ],
     });
@@ -209,6 +213,10 @@ class Button extends BaseElement {
           label: 'Toggle Popup',
         },
         {
+          value: 'toggle_offcanvas',
+          label: 'Toggle Offcanvas',
+        },
+        {
           value: 'print_page',
           label: 'Print Page',
         },
@@ -259,6 +267,10 @@ class Button extends BaseElement {
         {
           value: 'logout',
           label: 'Logout',
+        },
+        {
+          value: 'set_data',
+          label: 'Set Data',
         },
       ],
     });
@@ -375,6 +387,7 @@ class Button extends BaseElement {
           'scroll_to_element',
           'trigger',
           'table_to_csv',
+          'toggle_offcanvas'
         ],
       },
     });
@@ -387,6 +400,46 @@ class Button extends BaseElement {
       conditions: {
         type: [
           'data_to_csv',
+          'set_data',
+        ],
+      },
+    });
+    actionsRepeater.addControl('set_type', {
+      label: 'Set Type',
+      type: CONTROLLER_SELECT,
+      responsive: false,
+      nullable: true,
+      options: [
+        {
+          label: 'Toggle',
+          value: 'toggle',
+        },
+        {
+          label: 'Set',
+          value: 'set',
+        },
+        {
+          label: 'Toggle/Set',
+          value: 'toggle_set',
+        },
+      ],
+      conditions: {
+        type: 'set_data',
+      },
+    });
+
+    actionsRepeater.addControl('value', {
+      label: 'Value',
+      type: CONTROLLER_TEXTAREA,
+      responsive: false,
+      dynamic: false,
+      conditions: {
+        type: [
+          'set_data',
+        ],
+        set_type: [
+          'set',
+          'toggle_set',
         ],
       },
     });
@@ -1210,6 +1263,7 @@ class Button extends BaseElement {
       rules: {
         '{{ELEMENT}} .altrp-btn-icon{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
         '{{ELEMENT}} .altrp-btn-icon svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-btn-icon img{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
       },
     });
 

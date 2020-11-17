@@ -11,10 +11,15 @@ function componentDidUpdate(prevProps, prevState) {
       if(elementValue === null){
         elementValue = this.getDefaultValue();
         this.props.currentElement.setSettingValue(this.props.controlId, elementValue);
+        this.setState({
+          value: elementValue
+        });
       }
-      this.setState({
-        value: elementValue
-      });
+      if(prevProps.currentElement !== this.props.currentElement){
+        this.setState({
+          value: elementValue
+        });
+      }
     }
     if(prevProps.currentElement.getId() !== this.props.currentElement.getId()){
       /**
@@ -33,6 +38,9 @@ function componentDidUpdate(prevProps, prevState) {
    */
   if(_.isFunction(this._componentDidUpdate)){
     this._componentDidUpdate(prevProps, prevState);
+  }
+  if(_.isFunction(this.conditionSubscriber)){
+    this.conditionSubscriber();
   }
 }
 
@@ -82,8 +90,10 @@ function getSettings(settingName){
  * и передача в класс Controller
  * @member {object} props
  * @property {Controller} props.controller
+ * @param {*} value
+ * @param {boolean} updateElement - по умолчанию обновляем текущий элемент тоже
  */
-function _changeValue(value) {
+function _changeValue(value, updateElement = true) {
   if(typeof value === 'object' && value.length !== undefined){
     value = [...value];
   }else if(typeof value === 'object'){
@@ -106,7 +116,9 @@ function _changeValue(value) {
       }
     });
   }
-  this.props.controller.changeValue(value);
+  if(updateElement){
+    this.props.controller.changeValue(value, updateElement);
+  }
 
 }
 
@@ -132,7 +144,9 @@ function conditionSubscriber() {
       }
     });
     // if(keys.indexOf(controllerValue.controlId)>=0){
+    if(this.props.controller.isShow() !== this.state.show){
       this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController() ;
+    }
     // }
   }
 }
@@ -221,6 +235,16 @@ let controllerDecorate = function elementWrapperDecorate(component) {
   component.removeDynamicSettings = removeDynamicSettings.bind(component);
   component.openDynamicContent = openDynamicContent.bind(component);
   component.getSettings = getSettings.bind(component);
-  store.subscribe(component.conditionSubscriber);//todo: изменить подписку на изменение хранилища
+  // store.subscribe(component.conditionSubscriber);//todo: изменить подписку на изменение хранилища
 };
 export default controllerDecorate;
+
+
+export function controllerMapStateToProps(state){
+  return {
+    currentElement: state.currentElement.currentElement,
+    currentState: state.currentState,
+    currentScreen: state.currentScreen,
+    controllerValue: state.controllerValue,
+  };
+}

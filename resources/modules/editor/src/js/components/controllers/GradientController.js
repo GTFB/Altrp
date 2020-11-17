@@ -1,3 +1,4 @@
+import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { SketchPicker } from "react-color";
@@ -209,4 +210,4 @@ function mapStateToProps(state) {
     currentScreen: state.currentScreen
   };
 }
-export default connect(mapStateToProps)(GradientController);
+export default connect(controllerMapStateToProps)(GradientController);

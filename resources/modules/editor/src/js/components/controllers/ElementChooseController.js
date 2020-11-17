@@ -1,4 +1,4 @@
-
+import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import controllerDecorate from "../../decorators/controller";
@@ -69,4 +69,4 @@ function mapStateToProps(state) {
             currentScreen: state.currentScreen
       };
 }
-export default connect(mapStateToProps)(ElementChooseController);
+export default connect(controllerMapStateToProps)(ElementChooseController);
