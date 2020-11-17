@@ -89,7 +89,7 @@ class TableWidget extends Component {
         ref={this.scrollbar}
         style={{zIndex: 99999}}
         autoHide
-        autoHeightMax={10000}
+        autoHeightMax={20000}
         autoHeight={true}
         autoHideTimeout={500}
         autoHideDuration={200}

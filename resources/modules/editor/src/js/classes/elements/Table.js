@@ -15,7 +15,13 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_NUMBER,
-  CONTROLLER_WYSIWYG, CONTROLLER_QUERY, CONTROLLER_REPEATER, CONTROLLER_FILTERS, CONTROLLER_HEADING, CONTROLLER_MEDIA
+  CONTROLLER_WYSIWYG,
+  CONTROLLER_QUERY,
+  CONTROLLER_REPEATER,
+  CONTROLLER_FILTERS,
+  CONTROLLER_HEADING,
+  CONTROLLER_MEDIA,
+  CONTROLLER_SELECT2
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import Repeater from "../Repeater";
@@ -716,6 +722,19 @@ class Table extends BaseElement {
       type: CONTROLLER_SWITCHER,
       label: 'Row Expand',
       default: false,
+    });
+
+    this.addControl('card_template', {
+      type: CONTROLLER_SELECT2,
+      label: 'Card Template',
+      default: false,
+      prefetch_options: true,
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options?template_type=card&value=guid',
+      nullable: true,
+      conditions: {
+        row_expand: true,
+      },
     });
 
     this.endControlSection();

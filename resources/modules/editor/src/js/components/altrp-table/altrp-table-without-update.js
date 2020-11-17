@@ -22,6 +22,9 @@ import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpS
 import {iconsManager} from "../../../../../admin/src/js/helpers";
 import {matchSorter} from 'match-sorter'
 import React from "react";
+import templateLoader from "../../classes/modules/TemplateLoader";
+import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric";
+import AltrpModel from "../../classes/AltrpModel";
 /**
  *
  * @param rows
@@ -105,6 +108,7 @@ function AltrpTableWithoutUpdate(
       setDataByPath,
       sortSetting
     }) {
+  const [cardTemplate, setCardTemplate] = React.useState(null);
   const filterTypes = React.useMemo(
       () => ({
         // Add a new fuzzyTextFilterFn filter type.
@@ -178,9 +182,24 @@ function AltrpTableWithoutUpdate(
       data = [data];
     }
   }, [data]);
-  const {inner_page_size, inner_sort, global_filter, selected_storage, row_select, ids_storage} = settings;
+  const {inner_page_size,
+    inner_sort,
+    global_filter,
+    card_template ,
+    row_expand,
+    selected_storage,
+    row_select,
+    ids_storage} = settings;
   let columns = React.useMemo(() => settingsToColumns(settings, widgetId), [settings, widgetId]);
 
+  React.useEffect(()=>{
+    if(card_template && row_expand){
+      (async ()=>{
+        const template = await templateLoader.loadParsedTemplate(card_template);
+        setCardTemplate(template);
+      })()
+    }
+  }, [row_expand, card_template]);
   const plugins = [ useFilters,
     useGlobalFilter,
     useGroupBy,
@@ -411,7 +430,21 @@ function AltrpTableWithoutUpdate(
       <tbody {...getTableBodyProps()}>
       {(page ? page : rows).map((row, i) => {
         prepareRow(row);
+        const fragmentProps = {...row.getRowProps()};
+        delete fragmentProps.role;
+        let ExpandCard = null;
+        if(cardTemplate){
+          let template = frontElementsFabric.cloneElement(cardTemplate);
+          template.setCardModel(new AltrpModel(row.original || {}));
+          ExpandCard = React.createElement(template.componentClass,
+              {
+                element: template,
+                children: template.children
+              });
+        }
         return (
+          <React.Fragment {...fragmentProps}>
+
             <tr {...row.getRowProps()} className="altrp-table-tr">
 
               {row.cells.map(cell => {
@@ -440,7 +473,10 @@ function AltrpTableWithoutUpdate(
                 return <td {...cell.getCellProps()} className={cellClassNames.join(' ')}>{cellContent}</td>
               })}
             </tr>
-        )
+            {row.isExpanded && row_expand && card_template && cardTemplate && <tr className="altrp-table-tr altrp-posts">
+              <td colSpan={visibleColumns.length} className="altrp-table-td altrp-post">{ExpandCard}</td>
+            </tr>}
+          </React.Fragment> )
       })}
 
       </tbody>
@@ -735,7 +771,7 @@ function NumberRangeColumnFilter({
  */
 export function settingsToColumns(settings, widgetId) {
   let columns = [];
-  let { tables_columns } = settings;
+  let { tables_columns, card_template, row_expand } = settings;
   tables_columns = tables_columns || [];
   /**
    * Если в колонке пустые поля, то мы их игнорируем, чтобы не было ошибки
@@ -781,15 +817,15 @@ export function settingsToColumns(settings, widgetId) {
     columns.unshift({
       id: 'expander', // Make sure it has an ID
       column_name: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
-          <span {...getToggleAllRowsExpandedProps()}>
+          <span {...getToggleAllRowsExpandedProps()}  className="altrp-table__all-row-expander">
             {isAllRowsExpanded ? '👇' : '👉'}
           </span>
       ),
       Cell: ({ row }) =>
           // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
           // to build the toggle for expanding a row
-          row.canExpand ? (
-              <span
+          (card_template && row_expand || row.canExpand) ? (
+              <span className="altrp-table__row-expander"
                   {...row.getToggleRowExpandedProps({
                     style: {
                       // We can even use the row.depth property
