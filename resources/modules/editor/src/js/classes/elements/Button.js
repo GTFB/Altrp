@@ -401,9 +401,24 @@ class Button extends BaseElement {
         type: [
           'data_to_csv',
           'set_data',
+          'form',
         ],
       },
     });
+
+    actionsRepeater.addControl('data', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Data',
+      responsive: false,
+      dynamic: false,
+      description: 'altrpdata.alias',
+      conditions: {
+        type: [
+          'form',
+        ],
+      },
+    });
+
     actionsRepeater.addControl('set_type', {
       label: 'Set Type',
       type: CONTROLLER_SELECT,

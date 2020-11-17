@@ -8,6 +8,7 @@ import {changeAppRoutes} from "./store/routes/actions";
 import Route from "./classes/Route";
 import {changePageState} from "./store/altrp-page-state-storage/actions";
 import {changeAltrpMeta} from "./store/altrp-meta-storage/actions";
+import {useDispatch} from "react-redux";
 
 export function getRoutes() {
   return import('./classes/Routes.js');
@@ -213,8 +214,10 @@ export function renderAsset(asset, props = null) {
  * (если в context нет свойства, то не записываем)
  * @param {string} string
  * @param {AltrpModel} context
+ * @param {boolean} allowObject
+ * @return {{}}
  */
-export function parseParamsFromString(string, context = {}) {
+export function parseParamsFromString(string, context = {}, allowObject = false) {
   const params = {};
   const urlParams = window.currentRouterMatch instanceof AltrpModel ? window.currentRouterMatch.getProperty('params') : {};
 
@@ -230,6 +233,8 @@ export function parseParamsFromString(string, context = {}) {
     left = left.trim();
     right = right.trim();
     if (right.match(/{{([\s\S]+?)(?=}})/g)) {
+      console.log(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', ''));
+      console.log(context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')));
       if (context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', ''))) {//todo ошибка в IOS
         params[left] = context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')) || '';
       } else {
@@ -238,7 +243,7 @@ export function parseParamsFromString(string, context = {}) {
     } else {
       params[left] = right;
     }
-    if (_.isObject(params[left])) {
+    if ((! allowObject) &&_.isObject(params[left])) {
       delete params[left];
     }
   });
@@ -323,13 +328,14 @@ function conditionChecker(c, model, dataByPath = true) {
  * Установить данные
  * @param {string} path
  * @param {*} value
+ * @param {function} dispatch
  * @return {boolean}
  */
-export function setDataByPath(path = '', value){
+export function setDataByPath(path = '', value, dispatch){
   if(! path){
     return false;
   }
-
+  path = path.trim();
   switch(value){
     case 'true': value = true; break;
     case 'false': value = false; break;
@@ -342,7 +348,15 @@ export function setDataByPath(path = '', value){
     if(! path){
       return false;
     }
-    appStore.dispatch(changePageState(path, value));
+    const oldValue = appStore.getState().altrpPageState.getProperty(path);
+    if(_.isEqual(oldValue, value)){
+      return true;
+    }
+    if(_.isFunction(dispatch)){
+      dispatch(changePageState(path, value))
+    } else {
+      appStore.dispatch(changePageState(path, value));
+    }
     return true;
   }
   if(path.indexOf('altrpmeta.') === 0){
@@ -350,11 +364,20 @@ export function setDataByPath(path = '', value){
     if(! path){
       return false;
     }
-    appStore.dispatch(changeAltrpMeta(path, value));
+    const oldValue = appStore.getState().altrpMeta.getProperty(path);
+    if(_.isEqual(oldValue, value)){
+      return true;
+    }
+    if(_.isFunction(dispatch)){
+      dispatch(changePageState(path, value))
+    } else {
+      appStore.dispatch(changePageState(path, value));
+    }
     return true;
   }
   return false;
 }
+
 /**
  * Получить данные из окружения
  * @param {string} path
@@ -1073,3 +1096,41 @@ export function sortOptions(options, sortDirection) {
   return sortDirection === "asc" ? options : options.reverse();
 }
 
+
+/**
+ * рекурсивно считает общую длину по пути
+ * @param {{}} object
+ * @param {string} path
+ * @return {number}
+ */
+export function recurseCount(object = {}, path = '') {
+  let count = 0;
+  if(! path){
+    return count;
+  }
+  let array = _.get(object, path, []);
+  if(! array.length){
+    count++;
+    return count;
+  }
+  array.forEach(item=>{
+    count += recurseCount(item, path);
+  });
+  return count;
+}
+
+export function getAppContext(){
+  const {currentModel} = appStore.getState();
+  const currentModelData = currentModel.getData();
+  const urlParams = _.cloneDeep(window.currentRouterMatch instanceof AltrpModel ? window.currentRouterMatch.getProperty('params') : {});
+  const context = new AltrpModel(_.assign(urlParams, currentModelData));
+  const {altrpPageState, altrpMeta, currentDataStorage, currentUser, altrpresponses, formsStore} = appStore.getState();
+
+  context.setProperty('altrpdata', currentDataStorage);
+  context.setProperty('altrppagestate', altrpPageState);
+  context.setProperty('altrpmeta', altrpMeta);
+  context.setProperty('altrpuser', currentUser);
+  context.setProperty('altrpresponses', altrpresponses);
+  context.setProperty('altrpforms', formsStore);
+  return context;
+}

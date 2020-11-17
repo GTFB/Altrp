@@ -694,9 +694,27 @@ class Table extends BaseElement {
       default: false,
     });
 
+    this.addControl('selected_storage', {
+      label: 'Selected Storage',
+      dynamic: false,
+      responsive: false,
+      conditions: {
+        row_select: true,
+      },
+    });
+
+    this.addControl('ids_storage', {
+      label: 'Selected IDs Storage',
+      dynamic: false,
+      responsive: false,
+      conditions: {
+        row_select: true,
+      },
+    });
+
     this.addControl('row_expand', {
       type: CONTROLLER_SWITCHER,
-      label: 'Row Select',
+      label: 'Row Expand',
       default: false,
     });
 

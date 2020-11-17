@@ -1,5 +1,11 @@
 import '../../../sass/altrp-pagination.scss';
-import {isEditor, parseURLTemplate} from "../../../../../front-app/src/js/helpers";
+import {
+  isEditor,
+  parseURLTemplate,
+  recurseCount,
+  setDataByPath,
+  useSetDataByPath
+} from "../../../../../front-app/src/js/helpers";
 import {Link} from "react-router-dom";
 import {renderAdditionalRows,} from "./altrp-table";
 import {useSortBy,
@@ -16,7 +22,6 @@ import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpS
 import {iconsManager} from "../../../../../admin/src/js/helpers";
 import {matchSorter} from 'match-sorter'
 import React from "react";
-import {recurseCount} from "../../helpers";
 /**
  *
  * @param rows
@@ -80,6 +85,7 @@ fuzzyTextFilterFn.autoRemove = val => !val;
  * @param {{}} filterSetting
  * @param {{}} sortSetting
  * @param {[]} _latestData
+ * @param {function} setDataByPath
  * @return {*}
  * @constructor
  */
@@ -96,6 +102,7 @@ function AltrpTableWithoutUpdate(
       setFilterSettings,
       filterSetting,
       _latestData,
+      setDataByPath,
       sortSetting
     }) {
   const filterTypes = React.useMemo(
@@ -111,7 +118,6 @@ function AltrpTableWithoutUpdate(
             if(id === '##'){
               rowValue = row.index + 1;
             }
-            console.log(rowValue);
             return rowValue !== undefined
                 ? String(rowValue)
                     .toLowerCase()
@@ -172,7 +178,7 @@ function AltrpTableWithoutUpdate(
       data = [data];
     }
   }, [data]);
-  const {inner_page_size, inner_sort, global_filter} = settings;
+  const {inner_page_size, inner_sort, global_filter, selected_storage, row_select, ids_storage} = settings;
   let columns = React.useMemo(() => settingsToColumns(settings, widgetId), [settings, widgetId]);
 
   const plugins = [ useFilters,
@@ -184,7 +190,7 @@ function AltrpTableWithoutUpdate(
     useRowSelect,
 
     ];
-  if(settings.row_select){
+  if(row_select){
     plugins.push(hooks => {
       hooks.visibleColumns.push(columns => [
         // Let's make a column for selection
@@ -192,12 +198,20 @@ function AltrpTableWithoutUpdate(
           id: 'selection',
           // The header can use the table's getToggleAllRowsSelectedProps method
           // to render a checkbox
-          column_name: ({getToggleAllRowsSelectedProps}) => {
+          column_name: ({getToggleAllRowsSelectedProps, getToggleAllPageRowsSelectedProps}) => {
+            if((! settings.inner_page_size) || (settings.inner_page_size < 0)){
+              return (
+                  <div className="altrp-toggle-row">
+                    <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+                  </div>
+              );
+            }
             return (
                 <div className="altrp-toggle-row">
-                  <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+                  <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
                 </div>
-            )},
+            );
+            },
           // The cell can use the individual row's getToggleRowSelectedProps method
           // to the render a checkbox
           Cell: ({row}) => (
@@ -234,6 +248,7 @@ function AltrpTableWithoutUpdate(
       ...plugins
   );
   // console.log(ReactTable);
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -265,7 +280,7 @@ function AltrpTableWithoutUpdate(
       expanded,
       pageSize},
   } = ReactTable;
-  // console.log(ReactTable);
+
   React.useEffect(
       () => {
         if (!setPageSize) {
@@ -278,6 +293,32 @@ function AltrpTableWithoutUpdate(
       },
       [inner_page_size, data],
   );
+  // console.log(selectedRowIds);
+  // console.log(selectedFlatRows);
+  function flatRows(rows = [], field = ''){
+    let _rows = [];
+    if(_.isEmpty(rows)){
+      return _rows;
+    }
+    rows.forEach(r=>{
+      r.original && (field ? _rows.push(_.get(r.original, field)) : _rows.push(r.original));
+      r.subRows && (_rows = _.concat(_rows, flatRows(r.subRows)));
+    });
+    return _rows;
+  }
+  const originalSelectedRows = React.useMemo(()=> flatRows(selectedFlatRows), [selectedFlatRows]);
+  const selectedIds = React.useMemo(()=> flatRows(selectedFlatRows, 'id'), [selectedFlatRows]);
+  React.useEffect(()=>{
+    if(selected_storage){
+      setDataByPath(selected_storage, originalSelectedRows);
+    }
+  }, [selected_storage, originalSelectedRows]);
+  React.useEffect(()=>{
+    if(ids_storage){
+      setDataByPath(ids_storage, selectedIds);
+    }
+  }, [ids_storage, selectedIds]);
+
   /**
    * Настройки пагинации
    */
@@ -556,23 +597,6 @@ function SelectColumnFilter({
         setFilter(filterValue);
       }}/>
   );
-  return (
-      <select
-          multiple
-          value={filterValue}
-          onChange={e => {
-            console.log(e.target.value);
-            setFilter(e.target.value || undefined)
-          }}
-      >
-        <option value="">All</option>
-        {options.map((option, i) => (
-            <option key={i} value={option}>
-              {option}
-            </option>
-        ))}
-      </select>
-  )
 }
 
 /**
@@ -791,7 +815,6 @@ const IndeterminateCheckbox = React.forwardRef(
     ({ indeterminate, ...rest }, ref) => {
       const defaultRef = React.useRef();
       const resolvedRef = ref || defaultRef;
-
       React.useEffect(() => {
         resolvedRef.current.indeterminate = indeterminate
       }, [resolvedRef, indeterminate]);
@@ -847,5 +870,6 @@ function GlobalFilter({
   )
 }
 export default (props) => {
+  props = {...props, setDataByPath};
   return <AltrpQueryComponent {...props}><AltrpTableWithoutUpdate/></AltrpQueryComponent>
 }

@@ -271,7 +271,7 @@ class Resource {
   /**
    * @return {Promise}
    * */
-  delete(id = ''){
+  delete(id = '', data = {}){
 
     let options = {
       method: 'delete',
@@ -280,6 +280,9 @@ class Resource {
         'Content-Type': 'application/json'
       },
     };
+    if(! _.isEmpty(data)){
+      options.body = JSON.stringify(data);
+    }
     let url = this.getRoute() + (id ? '/' + id : '');
     return fetch(url, options).then(res => {
       if(res.ok === false){

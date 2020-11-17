@@ -4,9 +4,9 @@ import {
   altrpLogin, altrpLogout,
   dataFromTable,
   dataToCSV,
-  elementsToPdf,
+  elementsToPdf, getAppContext,
   getComponentByElementId, getDataByPath,
-  getHTMLElementById,
+  getHTMLElementById, parseParamsFromString,
   printElements,
   replaceContentWithData,
   scrollToElement, setDataByPath
@@ -191,6 +191,20 @@ class AltrpAction extends AltrpModel {
         success: false,
         message: 'Нет Формы',
       };
+    }
+    if(this.getProperty('path')){
+      let data = getDataByPath(this.getProperty('path'));
+      if(! _.isEmpty(data)){
+        return this.getProperty('_form').submit('', '', data);
+      }
+      return {success: true};
+    }
+    if(this.getProperty('data')){
+      let data = parseParamsFromString(this.getProperty('data'), getAppContext(), true);
+      if(! _.isEmpty(data)){
+        return this.getProperty('_form').submit('', '', data);
+      }
+      return {success: true};
     }
     return this.getProperty('_form').submit()
   }

@@ -157,25 +157,3 @@ export function getDataFromLocalStorage(name, _default = null){
   }
   return value || _default;
 }
-
-/**
- * рекурсивно сыитает общую длину по пути
- * @param {{}} object
- * @param {string} path
- * @return {number}
- */
-export function recurseCount(object = {}, path = '') {
-  let count = 0;
-  if(! path){
-    return count;
-  }
-  let array = _.get(object, path, []);
-  if(! array.length){
-    count++;
-    return count;
-  }
-  array.forEach(item=>{
-    count += recurseCount(item, path);
-  });
-  return count;
-}
