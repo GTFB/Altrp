@@ -243,7 +243,6 @@ class Template extends Model
         $conditions = $setting['data'];
       }
     }
-
     if( ! count( $conditions ) ){
       if( $this->all_site ){
         $conditions[] = [

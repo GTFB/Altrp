@@ -28,7 +28,7 @@ export default class DialogConditionsTab extends Component {
     }).getAll();
     let reportsOptions = await new Resource({
       route: "/admin/ajax/reports_options"
-    });
+    }).getAll();
     this.setState({
       value: conditions.data || [],
       pageOptions,
@@ -195,7 +195,6 @@ export default class DialogConditionsTab extends Component {
         <div className="modal-repeater-fields-wrapper">
           <div className="modal-repeater-fields">
             {this.state.value.map(test => {
-              console.log(test);
               return (
                 <div className="modal-repeater-field" key={test.id}>
                   <AltrpSelect
@@ -259,11 +258,12 @@ export default class DialogConditionsTab extends Component {
                       className="modal-repeater-field-c3"
                     />
                   )}
-                  {test.object_type === "reports" && (
+
+                  {test.object_type === "report" && (
                     <AltrpSelect
                       // value={(test.object_ids || []).map(o=>this.state.pageOptions.find())}
                       value={_.filter(
-                        this.state.pageOptions,
+                        this.state.reportsOptions,
                         p =>
                           test.object_ids &&
                           test.object_ids.indexOf(p.value) >= 0
@@ -272,7 +272,7 @@ export default class DialogConditionsTab extends Component {
                       isMulti={true}
                       closeMenuOnSelect={false}
                       placeholder="Choose Pages"
-                      options={this.state.pageOptions}
+                      options={this.state.reportsOptions}
                       className="modal-repeater-field-c3"
                     />
                   )}

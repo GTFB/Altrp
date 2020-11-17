@@ -23,9 +23,6 @@ class PageLoader {
       // });
       return this.pagesStorage[pageId];
     }
-    console.log("====================================");
-    console.log(pageId);
-    console.log("====================================");
     let page = await this.resource.get(pageId);
     this.pagesStorage[pageId] = page;
     return page;

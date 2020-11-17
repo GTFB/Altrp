@@ -116,9 +116,13 @@ class ReportsController extends Controller
      * @param  \App\Reports  $reports
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Reports $reports)
+    public function destroy(Reports $reports,$id)
     {
-        //
+        $report = Page::findReport($id);
+        if( $report->delete() ){
+          return response()->json( ['success' => true,], 200, [], JSON_UNESCAPED_UNICODE );
+        }
+        return response()->json( ['success' => false, 'message' => 'Could not deleting'], 500, [], JSON_UNESCAPED_UNICODE );
     }
 
     /**

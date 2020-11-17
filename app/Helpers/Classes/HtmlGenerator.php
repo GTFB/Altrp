@@ -39,25 +39,50 @@ class HtmlGenerator{
         if(!is_dir($currentReportPath.'/css')){
             mkdir($currentReportPath.'/css',0777, true);
         }
+        else{
+            $files = glob($cssPath.'/*');  
+            foreach($files as $file) { 
+                if(is_file($file))  
+                    unlink($file);  
+            } 
+        }
 
         $jsPath = $currentReportPath.'/js';
         if(!is_dir($currentReportPath.'/js')){
             mkdir($currentReportPath.'/js',0777, true);
+        }
+        else{
+            $files = glob($jsPath.'/*');  
+            foreach($files as $file) { 
+                if(is_file($file))  
+                    unlink($file);  
+            } 
         }
         
         $imgPath = $currentReportPath.'/img';
         if(!is_dir($currentReportPath.'/img')){
             mkdir($currentReportPath.'/img',0777, true);
         }
+        else{
+            $files = glob($imgPath.'/*');  
+            foreach($files as $file) { 
+                if(is_file($file))  
+                    unlink($file);  
+            } 
+        }
 
         $cssFile = fopen($cssPath.'/style.css','w');
-        $oldLinkNode = $dom->getElementsByTagName('link')->item(1);
-        $oldLink = $oldLinkNode->getAttribute('href');
-        $oldCss =  file_get_contents($oldLink);
-        fwrite($cssFile,$oldCss);
-        fwrite($cssFile,$this->cssRules);
-        fclose($cssFile);
-        $oldLinkNode->parentNode->removeChild($oldLinkNode);
+        if($dom->getElementsByTagName('link')->length>0){
+            $oldLinkNode = $dom->getElementsByTagName('link')->item(1);
+            $oldLink = $oldLinkNode->getAttribute('href');
+            $oldCss =  file_get_contents($oldLink);
+            fwrite($cssFile,$oldCss);
+            fwrite($cssFile,$this->cssRules);
+            $oldLinkNode = $dom->getElementsByTagName('link')->item(1);
+            $oldLink = $oldLinkNode->getAttribute('href');
+            $oldCss =  file_get_contents($oldLink);
+            fwrite($cssFile,$oldCss);
+        }
 
         $head  = $dom->getElementsByTagName('head')->item(0);
         $link = $dom->createElement('link');

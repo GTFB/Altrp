@@ -1,18 +1,19 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import appStore from "../store/store";
-import { altrpCompare, conditionsChecker } from "../helpers";
-import { addElement } from "../store/elements-storage/actions";
+import appStore from "../../front-app/src/js/store/store";
+import {
+  altrpCompare,
+  conditionsChecker
+} from "../../front-app/src/js/helpers";
+import { addElement } from "../../front-app/src/js/store/elements-storage/actions";
 
-class ElementWrapper extends Component {
+class ReportsElementWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
       elementDisplay: !this.props.element.getSettings("default_hidden")
     };
     this.elementWrapperRef = React.createRef();
-    this.elementRef = React.createRef();
     appStore.dispatch(addElement(this));
   }
 
@@ -235,7 +236,6 @@ class ElementWrapper extends Component {
         id={CSSId}
       >
         {React.createElement(this.props.component, {
-          ref: this.elementRef,
           ElementWrapper: this.props.ElementWrapper,
           element: this.props.element,
           children: this.props.element.getChildren(),
@@ -266,6 +266,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, null, null, {
-  forwardRef: true
-})(withRouter(ElementWrapper));
+export default connect(mapStateToProps)(ReportsElementWrapper);

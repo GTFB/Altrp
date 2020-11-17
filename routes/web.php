@@ -393,16 +393,17 @@ foreach ( $frontend_routes as $frontend_route ) {
 /**
  * Reports
  */
- $reports_routes = \App\Page::get_reports_routes();
-
- foreach($reports_routes as $report_route){
+$reports_routes = \App\Page::get_reports_routes();
+foreach($reports_routes as $report_route){
   $path = $report_route['path'];
   $title = $report_route['title'];
+
   $report_route = str_replace( ':id', '{id}', $path );
-   Route::get("/reports$report_route", function () use ($title){
+  
+  Route::get($report_route, function () use ($title){
     return view('front-app',['title'=>$title]);
-   })->middleware(['web','installation.checker']);
- }
+  })->middleware(['web','installation.checker']);
+}
 
 /**
  * AJAX routes for frontend

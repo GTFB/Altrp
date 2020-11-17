@@ -492,7 +492,7 @@ class TemplateController extends Controller
               }
             }
           }break;
-          case 'reports';{
+          case 'report';{
             foreach ( $datum['object_ids'] as $id ) {
               $page = Page::find( $id );
               $pages_template = new PagesTemplate([

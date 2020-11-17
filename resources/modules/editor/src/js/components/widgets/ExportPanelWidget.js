@@ -1,12 +1,12 @@
-import Frame3 from "../../../../editor/src/svgs/Frame 3.svg";
-import Code from "../../../../editor/src/svgs/code.svg";
+import Frame3 from "../../../svgs/Frame 3.svg";
+import Code from "../../../svgs/code.svg";
 import React, { Component } from "react";
-import Resource from "../../../../editor/src/js/classes/Resource";
+import Resource from "../../classes/Resource";
 import _ from "lodash";
-import CodeEditor from "./CodeEditor";
 import beautify from "js-beautify";
+import { getRoutes } from "../../../../../front-app/src/js/helpers";
 
-class ExportPanel extends Component {
+class ExportPanelWindget extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,6 +14,15 @@ class ExportPanel extends Component {
     };
     this.print = this.print.bind(this);
     this.code = this.code.bind(this);
+    this.fireAction = this.fireAction.bind(this);
+  }
+
+  fireAction(action) {
+    if (typeof this[action] !== "undefined") {
+      this[action]();
+    } else {
+      alert("NOT FOUND ACTION");
+    }
   }
 
   /**
@@ -42,36 +51,42 @@ class ExportPanel extends Component {
     });
     return result;
   }
-
-  code() {
+  /**
+   * Работает только при собранном проекте (npm run front-build)
+   */
+  async code() {
     let documentVar = document.cloneNode(true);
     let exportPanel = documentVar.getElementById("export-panel");
-    /**
-     * Удаляем панель перед отправкой
-     */
-    exportPanel.remove();
 
-    documentVar.getElementById("ace-solarized-dark").remove();
-    documentVar.getElementById("ace-tm").remove();
-    documentVar.getElementById("ace_editor.css").remove();
-    // documentVar.getElementById("styles-container").remove();
-    /**
-     * Собираем информацию по тэгам style
-     */
-    let styleTags = documentVar.getElementsByTagName("style");
+    exportPanel.remove();
+    let currentRoute = window.location.pathname;
+    let routes = await (await getRoutes()).default.resource.getAll();
+    let currentID = _.find(routes.pages, { path: currentRoute }).id;
+    console.log(currentID);
+    if (documentVar.getElementById("ace-solarized-dark") !== null)
+      documentVar.getElementById("ace-solarized-dark").remove();
+    if (documentVar.getElementById("ace-tm") !== null)
+      documentVar.getElementById("ace-tm").remove();
+    if (documentVar.getElementById("ace_editor.css") !== null)
+      documentVar.getElementById("ace_editor.css").remove();
+    if (documentVar.getElementById("styles-container") !== null)
+      documentVar.getElementById("styles-container").remove();
+
     let completeStyles = "";
-    for (let styleTag of styleTags) {
-      if (styleTag.hasAttribute("data-styles-id")) {
-        completeStyles += styleTag.innerText;
+    let styleTags = document.getElementsByTagName("style");
+
+    let indexStyle = 0;
+    while (styleTags.length > 0 && indexStyle < styleTags.length) {
+      if (styleTags[indexStyle] !== "undefined") {
+        completeStyles +=
+          typeof styleTags[indexStyle] !== "undefined"
+            ? styleTags[indexStyle].innerText
+            : "";
+        styleTags[indexStyle].parentNode.removeChild(styleTags[indexStyle]);
+        indexStyle++;
       }
-      if (styleTag.hasAttribute("type")) {
-        completeStyles += styleTag.innerText;
-      }
-      styleTag.remove();
-      styleTag.remove();
-      styleTag.remove();
     }
-    documentVar.getElementById("styles-container").remove();
+
     for (let element of documentVar.querySelectorAll("[id]")) {
       if (element.hasAttribute("id") && element.getAttribute("id") == "") {
         element.removeAttribute("id");
@@ -83,20 +98,19 @@ class ExportPanel extends Component {
         element.removeAttribute("id");
       }
     }
-    /**
-     * Выставляем абсолютные пути на картинки
-     */
+
     var imgs = documentVar.getElementsByTagName("img");
     for (let img of imgs) {
       img.src = img.src.toString();
     }
+    console.log(this.props.reportID);
     const html = this.formatting(documentVar.documentElement.innerHTML);
     new Resource({
       route: "/reports/generate"
     })
       .post({
         dom: html,
-        reportID: this.props.reportID,
+        reportID: currentID,
         cssRules: completeStyles
       })
       .then(
@@ -137,4 +151,4 @@ class ExportPanel extends Component {
   }
 }
 
-export default ExportPanel;
+export default ExportPanelWindget;

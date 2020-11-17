@@ -201,8 +201,8 @@ class PagesController extends Controller
   {
     $pages = Page::where( 'title', 'like', '%' . $request->get( 's' ) . '%' )
       ->orWhere( 'path', 'like', '%' . $request->get( 's' ) . '%' )
-      ->orWhere( 'id', 'like', '%' . $request->get( 's' ) . '%' )->get();
-
+      ->orWhere( 'id', 'like', '%' . $request->get( 's' ) . '%' )->get()->where('type',null);
+      
     $pages_options = [];
     foreach ( $pages as $page ) {
       $pages_options[] = [
@@ -221,14 +221,14 @@ class PagesController extends Controller
   public function reports_options( Request $request )
   {
     $reports = Page::where( 'title', 'like', '%' . $request->get( 's' ) . '%' )
-      ->where('type','report')->orWhere( 'path', 'like', '%' . $request->get( 's' ) . '%' )
-      ->orWhere( 'id', 'like', '%' . $request->get( 's' ) . '%' )->get();
+      ->orWhere( 'path', 'like', '%' . $request->get( 's' ) . '%' )
+      ->orWhere( 'id', 'like', '%' . $request->get( 's' ) . '%' )->get()->where('type','report');
 
     $reports_options = [];
-    foreach ( $reports as $page ) {
-      $pages_options[] = [
-        'value' => $page->id,
-        'label' => $page->title,
+    foreach ( $reports as $report ) {
+      $reports_options[] = [
+        'value' => $report->id,
+        'label' => $report->title,
       ];
     }
     return response()->json( $reports_options );

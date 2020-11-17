@@ -166,7 +166,7 @@ input[type="checkbox"] {
     z-index: 99999999999 !important;
 }
 .export-panel {
-    position: fixed;
+    position: relative;
     z-index: 99999999999;
     @media print {
         display: none;

@@ -19,20 +19,28 @@
       window.admin_logo = {!! env( 'ALTRP_SETTING_ADMIN_LOGO' ) !!};
     </script>
   @endif
+  <style>
+    .app-area > .sections-wrapper{
+      width: {{ get_altrp_setting( 'container_width', '1440' ) }}px;
+    }
+    .altrp-section--boxed {
+      padding-left: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
+      padding-right: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
+    }
+  </style>
   <script>
   let _altrpVersion = '{{ getCurrentVersion() }}';
   </script>
-  {{--  <script src="{{ asset( '/modules/editor/editor.js' ) }}" defer></script>--}}
   <script src="{{ altrp_asset( '/modules/reports-new/reports.js', 'http://localhost:3005/' ) }}" crossorigin defer></script>
 
   <link rel="stylesheet" href="{{ asset( '/modules/reports-new/reports.css?' ) . getCurrentVersion() }}">
-  {{--<link rel="dns-prefetch" href="//fonts.gstatic.com">--}}
 </head>
 
 <body>
   <div id="reports">
 
   </div>
+  <script src="{{ altrp_asset( '/modules/reports-new/reports.js', 'http://localhost:3005/' ) }}" defer></script>
 </body>
 
 </html>

@@ -153,17 +153,18 @@ class RouteContent extends Component {
           );
         }}
       >
-        {this.isReport && <ExportPanel reportID={this.props.id} />}
         <div className="route-content" id="route-content">
-          {this.state.areas.map(area => (
-            <AreaComponent
-              {...area}
-              area={area}
-              page={this.props.id}
-              models={[this.props.model]}
-              key={"appArea_" + area.id}
-            />
-          ))}
+          {this.state.areas.map(area => {
+            return (
+              <AreaComponent
+                {...area}
+                area={area}
+                page={this.props.id}
+                models={[this.props.model]}
+                key={"appArea_" + area.id}
+              />
+            );
+          })}
         </div>
       </Scrollbars>
     );

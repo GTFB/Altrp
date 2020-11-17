@@ -90,16 +90,29 @@ class Page extends Model
     return $pages;
   }
 
+
+  /**
+   * Ищет отчет по номеру айди среди страниц
+   * @param int $id
+   */
+  public static function findReport(int $id)
+  {
+    try {
+      return (new static)->where('type','report')->where('id',$id)->first();
+    } catch (\Throwable $th) {
+      throw $th->getTrace();
+    }
+  }
+
   /**
    * @param bool $lazy
    * @return array
    */
   public static function get_pages_for_frontend( $lazy = false )
   {
-    //Исключаем отчеты
     $_pages = static::all();
 
-    $pages = (new static)->getPageData($_pages, $lazy);
+    $pages = (new static)->getPagesData($_pages, $lazy);
 
     return $pages;
   }
@@ -110,15 +123,14 @@ class Page extends Model
    */
   public static function get_reports_for_frontend( $lazy = false )
   {
-    //Исключаем отчеты
     $_pages = static::all()->where('type','report');
 
-    $pages = (new static)->getPageData($_pages, $lazy);
+    $pages = (new static)->getPagesData($_pages, $lazy);
 
     return $pages;
   }
 
-  private function getPageData(Collection $_pages, bool $lazy = true): Array
+  private function getPagesData(Collection $_pages, bool $lazy = true): Array
   {
     $pages = [];
     /** @var Page $page */
