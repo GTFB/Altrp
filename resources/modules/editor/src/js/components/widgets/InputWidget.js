@@ -12,6 +12,7 @@ import { connect } from "react-redux";
 import CKeditor from "../ckeditor/CKeditor";
 const AltrpInput = React.lazy(() => import("../altrp-input/AltrpInput"));
 
+const selectAllOption = { label: 'ALL', value: '*' };
 class InputWidget extends Component {
 
   constructor(props) {
@@ -53,6 +54,11 @@ class InputWidget extends Component {
   async _componentDidMount() {
     if (this.props.element.getSettings('content_options')) {
       let options = parseOptionsFromSettings(this.props.element.getSettings('content_options'));
+      // добавление опции "выбрать все"
+      if (this.props.element.getSettings('is_select_all_allowed', false)) {
+        options.push(selectAllOption);
+      }
+
       this.setState(state => ({ ...state, options }));
     } else if ((['select', 'select2'].indexOf(this.state.settings.content_type) >= 0) && this.state.settings.model_for_options) {
       let options = await (new Resource({ route: this.getRoute() })).getAll();
@@ -251,6 +257,11 @@ class InputWidget extends Component {
    */
   onChange(e) {
     let value = '';
+    // при выборе опции "выбрать все"
+    if (Array.isArray(e) && e.includes(selectAllOption)) {
+      return this.setState({ value: parseOptionsFromSettings(this.props.element.getSettings('content_options')).map(({ value }) => value ) })
+    }
+
     if (e && e.target) {
       if (this.props.element.getSettings('content_type') === 'checkbox') {
         let inputs = document.getElementsByName(e.target.name);
@@ -503,9 +514,6 @@ class InputWidget extends Component {
     } = this.props.element.getSettings();
 
     let options = this.state.options;
-
-
-
     let value = this.state.value;
     if (_.get(value, 'dynamic') && this.props.currentModel.getProperty('altrpModelUpdated')) {
       value = this.getContent('content_default_value');
