@@ -44,6 +44,8 @@ class TableWidget extends Component {
     }
     if(this.props.element.getSettings('store_state') && getWidgetState(this.props.element.getId())){
       this.setState(state=>({...state, widgetState: getWidgetState(this.props.element.getId())}));
+    } else if (this.props.element.getSettings('store_state')){
+      storeWidgetState(this.props.element.getId(), null);
     }
   }
 
@@ -83,7 +85,6 @@ class TableWidget extends Component {
     if(this.props.element.getSettings('table_transpose', false)){
       scrollbarsProps.autoHeight = true;
       scrollbarsProps.autoHeightMax = 10000;
-
     }
 
     if (! (_.get(settings,'tables_columns.length'))) {

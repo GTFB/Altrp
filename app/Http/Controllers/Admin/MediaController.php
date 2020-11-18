@@ -64,7 +64,7 @@ class MediaController extends Controller
       $media = new Media();
       $media->media_type = $file->getClientMimeType();
       $media->author = Auth::user()->id;
-      File::ensureDirectoryExists( 'app/media/' .  date("Y") . '/' .  date("m" ), '0775' );
+      File::ensureDirectoryExists( 'app/media/' .  date("Y") . '/' .  date("m" ), 0775 );
       $media->filename =  $file->store( 'media/' .  date("Y") . '/' .  date("m" ) ,
         ['disk' => 'public'] );
       $media->url =  Storage::url( $media->filename );

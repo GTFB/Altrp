@@ -1143,10 +1143,10 @@ export function getAppContext(){
  * Сохраняет состояние виджет в localStorage
  * Для виджетов ,которые могут сохранять состояния при смене страниц
  * @param {string} widgetId
- * @param {{}} state
+ * @param {*} state
  * @return {boolean}
  */
-export function storeWidgetState(widgetId, state = {}){
+export function storeWidgetState(widgetId, state = null){
   if(! widgetId){
     return false;
   }
