@@ -12,7 +12,7 @@ import { connect } from "react-redux";
 import CKeditor from "../ckeditor/CKeditor";
 const AltrpInput = React.lazy(() => import("../altrp-input/AltrpInput"));
 
-const selectAllOption = { label: 'ALL', value: '*' };
+const selectAllOption = { label: 'ALL', value: '<all options>' };
 class InputWidget extends Component {
 
   constructor(props) {
@@ -583,7 +583,10 @@ class InputWidget extends Component {
       classNamePrefix: this.props.element.getId() + ' altrp-field-select2',
       options,
       onChange: this.onChange,
-      value,
+      value: this.props.element.getSettings('is_select_all_allowed', false) && 
+        value.length === parseOptionsFromSettings(this.props.element.getSettings('content_options')).length ? 
+        [selectAllOption.value] : value,
+      isOptionSelected:  option => this.state.value.includes(option.value),
       placeholder: content_placeholder,
       isMulti: this.props.element.getSettings('select2_multiple', false),
       onKeyDown: this.handleEnter
