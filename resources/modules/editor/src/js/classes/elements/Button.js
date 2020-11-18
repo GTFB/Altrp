@@ -63,10 +63,6 @@ class Button extends BaseElement {
           value: 'dropbar',
           label: 'Dropbar'
         },
-        {
-          value: 'offcanvas',
-          label: 'Offcanvas'
-        },
       ],
     });
 
@@ -598,10 +594,42 @@ class Button extends BaseElement {
       label: 'Dropbar content',
     });
 
+    this.addControl('type_dropbar_section', {
+      type: CONTROLLER_SELECT,
+      label: 'Type',
+      default: 'text',
+      options: [
+        {
+          'value': 'text',
+          'label': 'Text',
+        },
+        {
+          'value': 'card',
+          'label': 'Card',
+        },
+      ],
+      }
+    );
+
     this.addControl("content_dropbar_section", {
+      conditions: {
+        'type_dropbar_section': "text",
+      },
       type: CONTROLLER_WYSIWYG,
       label: "Content",
       default: "I Am Text in dropbar"
+    });
+
+    this.addControl("template_dropbar_section", {
+      conditions: {
+        'type_dropbar_section': "card",
+      },
+      type: CONTROLLER_SELECT2,
+      prefetch_options: true,
+      label: "Template",
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options?value=guid',
+      nullable: true,
     });
 
     this.endControlSection();
@@ -826,11 +854,6 @@ class Button extends BaseElement {
       }
     });
 
-    this.addControl('position_css_id', {
-      type: CONTROLLER_TEXT,
-      label: 'CSS ID'
-    });
-
     this.addControl('position_css_classes', {
       type: CONTROLLER_TEXT,
       label: 'CSS Classes',
@@ -847,52 +870,6 @@ class Button extends BaseElement {
         '{{ELEMENT}} .altrp-btn{{STATE}}': 'opacity: {{SIZE}};'
       },
     });
-
-    this.endControlSection();
-
-    this.startControlSection('font_section', {
-      tab: TAB_STYLE,
-      label: 'Font',
-    });
-
-    this.addControl('font_typographic', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Typographic',
-      // default:{
-      //   lineHeight: 1,
-      //   spacing: 0,
-      //   size: 16,
-      //   weight: "normal",
-      //   family: "Open Sans",
-      //   decoration: ""
-      // },
-      rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}}': [
-          'font-size: {{SIZE}}px;',
-          'font-family: {{FAMILY}}',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
-    }
-    );
-
-    this.addControl('font_color', {
-      type: CONTROLLER_COLOR,
-      label: 'Color',
-      // default: {
-      //   color: "rgb(255,255,255)",
-      //   colorPickedHex: "#FFF",
-      // },
-      rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
-      },
-    }
-    );
 
     this.endControlSection();
 
@@ -1011,6 +988,52 @@ class Button extends BaseElement {
       },
     });
 
+
+    this.endControlSection();
+
+    this.startControlSection('font_section', {
+      tab: TAB_STYLE,
+      label: 'Font',
+    });
+
+    this.addControl('font_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        // default:{
+        //   lineHeight: 1,
+        //   spacing: 0,
+        //   size: 16,
+        //   weight: "normal",
+        //   family: "Open Sans",
+        //   decoration: ""
+        // },
+        rules: {
+          '{{ELEMENT}} .altrp-btn{{STATE}}': [
+            'font-size: {{SIZE}}px;',
+            'font-family: {{FAMILY}}',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
+    this.addControl('font_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Color',
+        // default: {
+        //   color: "rgb(255,255,255)",
+        //   colorPickedHex: "#FFF",
+        // },
+        rules: {
+          '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
+        },
+      }
+    );
 
     this.endControlSection();
 
