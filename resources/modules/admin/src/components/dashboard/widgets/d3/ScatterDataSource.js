@@ -1,25 +1,27 @@
 import React, { Component } from "react";
+import { customStyle } from "../../widgetTypes";
+import format from "date-fns/format";
 import {
-  BarChart,
-  BarSeries,
-  Bar,
-  Gradient,
-  GradientStop,
+  ScatterPlot,
+  ChartZoomPan,
+  LinearXAxis,
+  LinearXAxisTickSeries,
+  LinearXAxisTickLabel,
   DiscreteLegend,
   DiscreteLegendEntry,
-  LinearXAxis,
-  LinearYAxis,
-  LinearYAxisTickSeries
+  TooltipArea
 } from "reaviz";
-import { customStyle } from "../../widgetTypes";
-import { connect } from "react-redux";
+import formatDistanceStrict from "date-fns/formatDistanceStrict";
+import ru from "date-fns/locale/ru";
 import { Spinner } from "react-bootstrap";
+import { connect } from "react-redux";
 import DataAdapter from "../../../../../../editor/src/js/components/altrp-dashboards/helpers/DataAdapter";
 
 const mapStateToProps = state => {
   return { formsStore: state.formsStore };
 };
-class BarDataSource extends Component {
+
+class ScatterDataSource extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -42,6 +44,7 @@ class BarDataSource extends Component {
         color: this.props.element.settings.color,
         params: this.props.element.settings.params
       }));
+
       await this.getData();
     }
     if (
@@ -70,32 +73,45 @@ class BarDataSource extends Component {
 
   async getData() {
     let globalParams = _.cloneDeep(this.props.formsStore.form_data, []);
-    let globalParamsArray = _.keys(globalParams)
-      .map(param => {
-        return { [param]: globalParams[param] };
-      })
-      .filter(param => {
-        let key = _.keys(param)[0];
-        return param[key] !== "";
-      });
+    let globalParamsArray = _.keys(globalParams).map(param => {
+      return { [param]: globalParams[param] };
+    });
     let localParams = _.cloneDeep(this.state.params, []);
     let paramsResult = localParams.concat(globalParamsArray);
     if (typeof this.props.element.settings.source.path !== "undefined") {
-      let data = [];
+      let data = await new DataAdapter().adaptDataByPath(
+        this.state.source.path,
+        this.state.source.key,
+        this.state.source.data
+      );
       if (_.keys(this.state.params).length > 0) {
         data = await new DataAdapter().adaptDataByPath(
-          this.state.source,
+          this.state.source.path,
+          this.state.source.key,
+          this.state.source.data,
           paramsResult
         );
-      } else {
-        data = await new DataAdapter().adaptDataByPath(this.state.source);
-      }
-      if (data.length === 0) {
-        setTimeout(() => {
-          this.getData();
-        }, 2500);
       }
       this.setState(s => ({ ...s, data: data }));
+    }
+  }
+
+  formattingDate(data) {
+    //  Первая дата
+    const firstDate = data.slice().shift();
+    // Последняя дата
+    const lastDate = data.slice().pop();
+    // Разница между датами в месяцах
+    const diff = parseInt(
+      formatDistanceStrict(firstDate.key, lastDate.key, {
+        unit: "month"
+      })
+    );
+
+    if (diff >= 0 && diff <= 12) {
+      return format(data, "d MMM", { locale: ru });
+    } else {
+      return format(data, "d MMM yy", { locale: ru });
     }
   }
 
@@ -129,51 +145,31 @@ class BarDataSource extends Component {
 
   render() {
     if (Object.keys(this.state.source).length === 0) {
+      return <div>Нет данных </div>;
+    }
+
+    if (
+      typeof this.state.data !== "undefined" &&
+      this.state.data.length === 0
+    ) {
       return <div>Нет данных</div>;
     }
-    if (typeof this.state.data !== "undefined" && this.state.data.length > 0) {
-      let customColors = _.keys(this.state.color).length > 0;
-      return (
-        <>
-          <div className="chart-content-container">
-            <BarChart
-              data={this.state.data}
-              series={
-                <BarSeries
-                  colorScheme={
-                    customColors
-                      ? (_data, index) => {
-                          return (
-                            this.state.color[_data.key] ||
-                            customStyle[index % customStyle.length]
-                          );
-                        }
-                      : customStyle
-                  }
-                  bar={
-                    <Bar
-                      gradient={
-                        <Gradient stops={[<GradientStop stopOpacity={1} />]} />
-                      }
-                    />
-                  }
-                />
-              }
-            />
-          </div>
-          {this.state.legend.enabled && (
-            <DiscreteLegend
-              className={`discrete__legend  ${this.props.element.settings.legend
-                .side || ""}`}
-              orientation={this.state.legend.side}
-              entries={this.renderLegend(this.state.data)}
-            />
-          )}
-        </>
-      );
-    }
-    return <div>Нет данных</div>;
+
+    return (
+      <>
+        <ScatterPlot data={this.state.data}></ScatterPlot>
+
+        {this.state.legend.enabled && (
+          <DiscreteLegend
+            className={`discrete__legend  ${this.props.element.settings.legend
+              .side || ""}`}
+            orientation={this.state.legend.side}
+            entries={this.renderLegend(this.state.data)}
+          />
+        )}
+      </>
+    );
   }
 }
 
-export default connect(mapStateToProps)(BarDataSource);
+export default connect(mapStateToProps)(ScatterDataSource);
