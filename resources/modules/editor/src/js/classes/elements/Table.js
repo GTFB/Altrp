@@ -656,10 +656,20 @@ class Table extends BaseElement {
       default: 0
     });
 
+    this.addControl('store_state', {
+      type: CONTROLLER_SWITCHER,
+      dynamic: false,
+      label: 'Store State',
+    });
+
+    this.addControl('loading_text', {
+      type: CONTROLLER_TEXTAREA,
+      default: 'Loading...',
+      label: 'Loading Text',
+    });
 
     this.addControl('inner_page_count_options', {
       type: CONTROLLER_TEXTAREA,
-      dynamic: false,
       label: 'Counts',
     });
 

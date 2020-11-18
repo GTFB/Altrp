@@ -3,8 +3,7 @@ import {
   isEditor,
   parseURLTemplate,
   recurseCount,
-  setDataByPath,
-  useSetDataByPath
+  setDataByPath, storeWidgetState,
 } from "../../../../../front-app/src/js/helpers";
 import {Link} from "react-router-dom";
 import {renderAdditionalRows,} from "./altrp-table";
@@ -88,7 +87,7 @@ fuzzyTextFilterFn.autoRemove = val => !val;
  * @param {{}} filterSetting
  * @param {{}} sortSetting
  * @param {[]} _latestData
- * @param {function} setDataByPath
+ * @param {{}} widgetState
  * @return {*}
  * @constructor
  */
@@ -105,7 +104,7 @@ function AltrpTableWithoutUpdate(
       setFilterSettings,
       filterSetting,
       _latestData,
-      setDataByPath,
+      widgetState,
       sortSetting
     }) {
   const [cardTemplate, setCardTemplate] = React.useState(null);
@@ -189,6 +188,7 @@ function AltrpTableWithoutUpdate(
     row_expand,
     selected_storage,
     row_select,
+    loading_text,
     ids_storage} = settings;
   let columns = React.useMemo(() => settingsToColumns(settings, widgetId), [settings, widgetId]);
 
@@ -250,7 +250,9 @@ function AltrpTableWithoutUpdate(
       filterTypes,
       defaultColumn,
     };
-    if ((inner_page_size >= 1)) {
+    if(_.isObject(widgetState)){
+      tableSettings.initialState = widgetState;
+    } else if ((inner_page_size >= 1)) {
       tableSettings.initialState = {
         pageSize: Number(inner_page_size),
       };
@@ -261,13 +263,19 @@ function AltrpTableWithoutUpdate(
     }
     tableSettings.disableSortBy = ! inner_sort;
     return tableSettings;
-  }, [inner_page_size, inner_sort, data, columns]);
+  }, [inner_page_size, inner_sort, data, columns, widgetState]);
   const ReactTable = useTable(
       tableSettings,
       ...plugins
   );
-  // console.log(ReactTable);
+  console.log(ReactTable);
+  React.useEffect(()=>{
 
+    return function cleanup() {
+      console.log(widgetId);
+      storeWidgetState(widgetId, reactTableState)
+    };
+  }, [reactTableState]);
   const {
     getTableProps,
     getTableBodyProps,
@@ -291,14 +299,16 @@ function AltrpTableWithoutUpdate(
     setGlobalFilter,
     setPageSize,
     selectedFlatRows,
-    state: {
-      pageIndex,
-      globalFilter,
-      groupBy,
-      selectedRowIds,
-      expanded,
-      pageSize},
+    state: reactTableState,
   } = ReactTable;
+  const {
+     pageIndex,
+     globalFilter,
+     groupBy,
+     selectedRowIds,
+     expanded,
+     pageSize} = reactTableState;
+
 
   React.useEffect(
       () => {
@@ -312,8 +322,6 @@ function AltrpTableWithoutUpdate(
       },
       [inner_page_size, data],
   );
-  // console.log(selectedRowIds);
-  // console.log(selectedFlatRows);
   function flatRows(rows = [], field = ''){
     let _rows = [];
     if(_.isEmpty(rows)){
@@ -427,6 +435,7 @@ function AltrpTableWithoutUpdate(
       </tr>
       }
       </thead>
+      {_status === 'success' ?
       <tbody {...getTableBodyProps()}>
       {(page ? page : rows).map((row, i) => {
         prepareRow(row);
@@ -479,7 +488,10 @@ function AltrpTableWithoutUpdate(
           </React.Fragment> )
       })}
 
-      </tbody>
+      </tbody> :
+          <tbody><tr className="altrp-table-tr"><td className="altrp-table-td">
+            {(_status === 'loading' ? (loading_text || null) : null )}
+          </td></tr></tbody>}
     </table>
     {paginationProps && <Pagination {...paginationProps}/>}
   </>
@@ -680,7 +692,7 @@ function SliderColumnFilter({
               setFilter(parseInt(e.target.value, 10))
             }}
         />
-        <button className="altrp-btn" onClick={() => setFilter(undefined)}>{buttonText}</button>
+        <button className={`altrp-btn ${(filterValue !== undefined) ? 'active' : ''}`} onClick={() => setFilter(undefined)}>{buttonText}</button>
       </>
   )
 }
@@ -906,6 +918,6 @@ function GlobalFilter({
   )
 }
 export default (props) => {
-  props = {...props, setDataByPath};
+  props = {...props};
   return <AltrpQueryComponent {...props}><AltrpTableWithoutUpdate/></AltrpQueryComponent>
 }

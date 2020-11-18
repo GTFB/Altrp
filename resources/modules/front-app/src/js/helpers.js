@@ -1119,6 +1119,10 @@ export function recurseCount(object = {}, path = '') {
   return count;
 }
 
+/**
+ * Вовращает AltrpModel, в котором храняться все источники данных на странице
+ * @return {AltrpModel}
+ */
 export function getAppContext(){
   const {currentModel} = appStore.getState();
   const currentModelData = currentModel.getData();
@@ -1133,4 +1137,74 @@ export function getAppContext(){
   context.setProperty('altrpresponses', altrpresponses);
   context.setProperty('altrpforms', formsStore);
   return context;
+}
+
+/**
+ * Сохраняет состояние виджет в localStorage
+ * Для виджетов ,которые могут сохранять состояния при смене страниц
+ * @param {string} widgetId
+ * @param {{}} state
+ * @return {boolean}
+ */
+export function storeWidgetState(widgetId, state = {}){
+  if(! widgetId){
+    return false;
+  }
+  const path = `widget_state${widgetId}`;
+  return saveDataToLocalStorage(path, state)
+}
+/**
+ * абирает состояние из localStorage
+ * Для виджетов ,которые могут сохранять состояния при смене страниц
+ * @param {string} widgetId
+ * @param {*} _default
+ * @return {boolean}
+ */
+export function getWidgetState(widgetId, _default = null){
+  if(! widgetId){
+    return _default;
+  }
+  const path = `widget_state${widgetId}`;
+  return getDataFromLocalStorage(path, _default)
+}
+
+/**
+ * Сохранить данные в localStorage
+ * @param {string} name
+ * @param {*} data
+ * @return {boolean}
+ */
+export function saveDataToLocalStorage(name, data){
+  if(! name){
+    return false;
+  }
+  if(_.isObject(data)){
+    data = JSON.stringify(data);
+  }
+  localStorage.setItem(name, data);
+  return true;
+}
+/**
+ * Сохранить данные в localStorage
+ * @param {string} name
+ * @param {*} _default
+ * @return {*}
+ */
+export function getDataFromLocalStorage(name, _default = null){
+  if(! name){
+    return _default;
+  }
+  let value = localStorage.getItem(name);
+  if(! value){
+    return _default;
+  }
+  try {
+    value = JSON.parse(value);
+  } catch(error){
+    console.error(error);
+  }
+  if(_.isString(value) && Number(value)){
+    value = Number(value);
+  }
+  return value || _default;
 }

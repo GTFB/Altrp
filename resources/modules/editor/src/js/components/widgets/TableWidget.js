@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import Query from "../../classes/Query";
 import {Scrollbars} from "react-custom-scrollbars";
+import {getWidgetState} from "../../../../../front-app/src/js/helpers";
 
 class TableWidget extends Component {
   constructor(props){
@@ -40,6 +41,9 @@ class TableWidget extends Component {
           this.setState(state=>({...state,TableComponent:res.default}))
         });
       }
+    }
+    if(this.props.element.getSettings('store_state') && getWidgetState(this.props.element.getId())){
+      this.setState(state=>({...state, widgetState: getWidgetState(this.props.element.getId())}));
     }
   }
 
@@ -89,7 +93,7 @@ class TableWidget extends Component {
         ref={this.scrollbar}
         style={{zIndex: 99999}}
         autoHide
-        autoHeightMax={20000}
+        autoHeightMax={30000}
         autoHeight={true}
         autoHideTimeout={500}
         autoHideDuration={200}
@@ -100,6 +104,7 @@ class TableWidget extends Component {
           return <div className="altrp-scroll__horizontal-track" style={style} {...props} />}}
     ><this.state.TableComponent query={query}
                                 widgetId={this.props.element.getId()}
+                                widgetState={this.state.widgetState}
                                 currentModel={this.props.currentModel}
                                 data={query.getFromModel(this.state.modelData)}
                                 settings={this.props.element.getSettings()}/>

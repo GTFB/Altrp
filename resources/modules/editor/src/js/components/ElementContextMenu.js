@@ -4,7 +4,8 @@ import { Menu, Item, Separator } from "react-contexify";
 import "react-contexify/scss/main.scss";
 import {connect} from "react-redux";
 import Column from "../classes/elements/Column";
-import {getDataFromLocalStorage, getFactory, saveDataToLocalStorage} from "../helpers";
+import {getFactory,} from "../helpers";
+import {getDataFromLocalStorage, saveDataToLocalStorage} from "../../../../front-app/src/js/helpers";
 
 class ElementContextMenu extends Component{
   constructor(props) {
