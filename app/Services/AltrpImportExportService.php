@@ -236,7 +236,7 @@ class AltrpImportExportService
    */
   private function getFilename() {
     File::ensureDirectoryExists( storage_path( 'tmp' ) );
-    return storage_path( 'tmp/' . self::ARCHIVE_NAME  );
+    return storage_path( 'tmp/' . request()->server->get( 'SERVER_NAME' ) . '.zip'  );
   }
 
   /**
