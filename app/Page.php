@@ -116,7 +116,7 @@ class Page extends Model
    */
   public static function get_pages_for_frontend( $lazy = false )
   {
-    $_pages = static::all();
+    $_pages = static::all()->where('type',null);
 
     $pages = (new static)->getPagesData($_pages, $lazy);
 
