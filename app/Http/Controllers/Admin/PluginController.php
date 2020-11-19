@@ -73,4 +73,25 @@ class PluginController extends Controller
                     : "Plugin already deactivated"
             ]);
       }
+
+    /**
+     * Установить плагин
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function install(Request $request)
+    {
+        \Validator::make($request->all(), [
+            'name' => 'required',
+            'version' => 'required'
+        ]);
+        $moduleName = $request->get('name');
+        $moduleVersion = $request->get('version');
+        $success = Module::install($moduleName, $moduleVersion);
+        $exitCode = Artisan::call('migrate', ['--force' => true]);
+        if ($success)
+            return response()->json('Successfully installed!', 200);
+
+        return response()->json('Failed of installation!', 500);
+    }
 }
