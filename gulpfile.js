@@ -10,6 +10,7 @@ function altrpZip() {
     '!./app/Http/Requests/AltrpRequests/**',
     '!./app/Plugins/plugins.json',
     '!./bootstrap/cache/**',
+    '!./Modules/**',
     '!./public/storage',
     '!./public/favicon.ico',
     '!./out/**',
