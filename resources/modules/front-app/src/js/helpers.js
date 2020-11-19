@@ -1,3 +1,4 @@
+import React from "react";
 import CONSTANTS from "../../../editor/src/js/consts";
 import AltrpModel from "../../../editor/src/js/classes/AltrpModel";
 import moment from "moment";
@@ -8,6 +9,7 @@ import { changeAppRoutes } from "./store/routes/actions";
 import Route from "./classes/Route";
 import { changePageState } from "./store/altrp-page-state-storage/actions";
 import { changeAltrpMeta } from "./store/altrp-meta-storage/actions";
+import { useDispatch } from "react-redux";
 
 export function getRoutes() {
   return import("./classes/Routes.js");
@@ -40,6 +42,8 @@ export function setTitle(title) {
  * @return {boolean}
  * */
 export function isEditor() {
+  const path = window.location.pathname;
+  return path.includes("admin");
   return !!(window.altrpEditor || window.parent.altrpEditor);
 }
 
@@ -223,8 +227,14 @@ export function renderAsset(asset, props = null) {
  * (если в context нет свойства, то не записываем)
  * @param {string} string
  * @param {AltrpModel} context
+ * @param {boolean} allowObject
+ * @return {{}}
  */
-export function parseParamsFromString(string, context = {}) {
+export function parseParamsFromString(
+  string,
+  context = {},
+  allowObject = false
+) {
   const params = {};
   const urlParams =
     window.currentRouterMatch instanceof AltrpModel
@@ -259,7 +269,7 @@ export function parseParamsFromString(string, context = {}) {
     } else {
       params[left] = right;
     }
-    if (_.isObject(params[left])) {
+    if (!allowObject && _.isObject(params[left])) {
       delete params[left];
     }
   });
@@ -344,9 +354,10 @@ function conditionChecker(c, model, dataByPath = true) {
  * Установить данные
  * @param {string} path
  * @param {*} value
+ * @param {function} dispatch
  * @return {boolean}
  */
-export function setDataByPath(path = "", value) {
+export function setDataByPath(path = "", value, dispatch) {
   if (!path) {
     return false;
   }
@@ -371,7 +382,15 @@ export function setDataByPath(path = "", value) {
     if (!path) {
       return false;
     }
-    appStore.dispatch(changePageState(path, value));
+    const oldValue = appStore.getState().altrpPageState.getProperty(path);
+    if (_.isEqual(oldValue, value)) {
+      return true;
+    }
+    if (_.isFunction(dispatch)) {
+      dispatch(changePageState(path, value));
+    } else {
+      appStore.dispatch(changePageState(path, value));
+    }
     return true;
   }
   if (path.indexOf("altrpmeta.") === 0) {
@@ -379,11 +398,20 @@ export function setDataByPath(path = "", value) {
     if (!path) {
       return false;
     }
-    appStore.dispatch(changeAltrpMeta(path, value));
+    const oldValue = appStore.getState().altrpMeta.getProperty(path);
+    if (_.isEqual(oldValue, value)) {
+      return true;
+    }
+    if (_.isFunction(dispatch)) {
+      dispatch(changePageState(path, value));
+    } else {
+      appStore.dispatch(changePageState(path, value));
+    }
     return true;
   }
   return false;
 }
+
 /**
  * Получить данные из окружения
  * @param {string} path
@@ -1159,4 +1187,126 @@ export function sortOptions(options, sortDirection) {
       : 0
   );
   return sortDirection === "asc" ? options : options.reverse();
+}
+/**
+ * рекурсивно считает общую длину по пути
+ * @param {{}} object
+ * @param {string} path
+ * @return {number}
+ */
+export function recurseCount(object = {}, path = "") {
+  let count = 0;
+  if (!path) {
+    return count;
+  }
+  let array = _.get(object, path, []);
+  if (!array.length) {
+    count++;
+    return count;
+  }
+  array.forEach(item => {
+    count += recurseCount(item, path);
+  });
+  return count;
+}
+
+/**
+ * Вовращает AltrpModel, в котором храняться все источники данных на странице
+ * @return {AltrpModel}
+ */
+export function getAppContext() {
+  const { currentModel } = appStore.getState();
+  const currentModelData = currentModel.getData();
+  const urlParams = _.cloneDeep(
+    window.currentRouterMatch instanceof AltrpModel
+      ? window.currentRouterMatch.getProperty("params")
+      : {}
+  );
+  const context = new AltrpModel(_.assign(urlParams, currentModelData));
+  const {
+    altrpPageState,
+    altrpMeta,
+    currentDataStorage,
+    currentUser,
+    altrpresponses,
+    formsStore
+  } = appStore.getState();
+
+  context.setProperty("altrpdata", currentDataStorage);
+  context.setProperty("altrppagestate", altrpPageState);
+  context.setProperty("altrpmeta", altrpMeta);
+  context.setProperty("altrpuser", currentUser);
+  context.setProperty("altrpresponses", altrpresponses);
+  context.setProperty("altrpforms", formsStore);
+  return context;
+}
+
+/**
+ * Сохраняет состояние виджет в localStorage
+ * Для виджетов ,которые могут сохранять состояния при смене страниц
+ * @param {string} widgetId
+ * @param {*} state
+ * @return {boolean}
+ */
+export function storeWidgetState(widgetId, state = null) {
+  if (!widgetId) {
+    return false;
+  }
+  const path = `widget_state${widgetId}`;
+  return saveDataToLocalStorage(path, state);
+}
+/**
+ * абирает состояние из localStorage
+ * Для виджетов ,которые могут сохранять состояния при смене страниц
+ * @param {string} widgetId
+ * @param {*} _default
+ * @return {boolean}
+ */
+export function getWidgetState(widgetId, _default = null) {
+  if (!widgetId) {
+    return _default;
+  }
+  const path = `widget_state${widgetId}`;
+  return getDataFromLocalStorage(path, _default);
+}
+
+/**
+ * Сохранить данные в localStorage
+ * @param {string} name
+ * @param {*} data
+ * @return {boolean}
+ */
+export function saveDataToLocalStorage(name, data) {
+  if (!name) {
+    return false;
+  }
+  if (_.isObject(data)) {
+    data = JSON.stringify(data);
+  }
+  localStorage.setItem(name, data);
+  return true;
+}
+/**
+ * Сохранить данные в localStorage
+ * @param {string} name
+ * @param {*} _default
+ * @return {*}
+ */
+export function getDataFromLocalStorage(name, _default = null) {
+  if (!name) {
+    return _default;
+  }
+  let value = localStorage.getItem(name);
+  if (!value) {
+    return _default;
+  }
+  try {
+    value = JSON.parse(value);
+  } catch (error) {
+    console.error(error);
+  }
+  if (_.isString(value) && Number(value)) {
+    value = Number(value);
+  }
+  return value || _default;
 }

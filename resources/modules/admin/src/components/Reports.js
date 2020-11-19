@@ -1,112 +1,110 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { useDispatch } from "react-redux";
-import { setModalSettings, toggleModal } from "../js/store/modal-settings/actions";
-
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
+import Pagination from "./Pagination";
+import { buildPagesTree } from "../js/helpers";
 
-function Reports() {
-  const dispatch = useDispatch();
-  const [reports, setReports] = useState([]);
-
-  const openPreview = (item) => {
-    window.open(item.preview, "_blank");
-  };
-
-  const columns = [
-    {
-      name: "id",
-      title: "ID",
-    },
-    {
-      name: "name",
-      title: "Name",
-      url: true,
-      target: "_blank",
-    },
-    {
-      name: "description",
-      title: "Description",
-    },
-    {
-      name: "updated_at",
-      title: "Updated At",
-    },
-    {
-      name: "preview",
-      title: "Preview",
-      is_button: true,
-      button: {
-        class: "",
-        function: openPreview,
-        title: "Preview",
-      },
-    },
-  ];
-
-  const showModal = () => {
-    const modalSettings = {
-      title: "Add New Report",
-      submitButton: "Add",
-      active: true,
-      submit: function(formData) {
-        return axios.post("/admin/ajax/reports", formData);
-      },
-      fields: [
-        {
-          name: "name",
-          label: "Report Name",
-          required: true,
-        },
-        {
-          name: "description",
-          label: "Description",
-          required: true,
-        },
-      ],
-      success: function(res) {
-        setReports([...reports, res.data]);
-        dispatch(toggleModal());
-      },
+export default class Reports extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pages: [],
+      currentPage: 1,
+      pagesSearch: ""
     };
-    dispatch(setModalSettings(modalSettings));
+    this.resource = new Resource({ route: "/admin/ajax/reports" });
+    this.itemsPerPage = 20;
+  }
+
+  getPages = async s => {
+    let res = await this.resource.getQueried({ s });
+    this.setState(state => {
+      return { ...state, pages: res, pagesSearch: s };
+    });
   };
 
-  // Функция получения отчетов из БД
-  const getReports = async () => {
-    const req = await axios("/admin/ajax/reports");
-    if (req.status === 200 && typeof req.data !== "string") {
-      setReports(req.data);
-    }
+  componentDidMount() {
+    this.getPages();
+  }
+
+  changeSearchHandler = e => {
+    this.getPages(e.target.value);
   };
 
-  // Получаем отчеты при рендере компонента
-  useEffect(() => {
-    getReports();
-  }, []);
-
-  return (
-    <div className="admin-tables admin-page">
-      <div className="admin-heading">
-        <div className="admin-breadcrumbs">
-          <a className="admin-breadcrumbs__link" href="#">
-            Reports
-          </a>
-          <span className="admin-breadcrumbs__separator">/</span>
-          <span className="admin-breadcrumbs__current">All Reports</span>
+  render() {
+    const { currentPage, pages, pagesSearch } = this.state;
+    return (
+      <div className="admin-pages admin-page">
+        <div className="admin-heading">
+          <div className="admin-breadcrumbs">
+            <a className="admin-breadcrumbs__link" href="#">
+              Reports
+            </a>
+            <span className="admin-breadcrumbs__separator">/</span>
+            <span className="admin-breadcrumbs__current">All Reports</span>
+          </div>
+          <Link className="btn" to="/admin/reports/add">
+            Add New Report
+          </Link>
+          <div className="admin-filters">
+            <span className="admin-filters__current">
+              All ({this.state.pages.length || "0"})
+            </span>
+          </div>
         </div>
-        <button onClick={showModal} className="btn">
-          Add New
-        </button>
-        <div className="admin-filters">
-          <span className="admin-filters__current">All ({reports.length || "0"})</span>
+        <div className="admin-content">
+          <AdminTable
+            columns={[
+              {
+                name: "title",
+                title: "Title",
+                editUrl: true,
+                tag: "Link"
+              },
+              {
+                name: "author",
+                title: "Author"
+              },
+              {
+                name: "path",
+                title: "Path",
+                url: true,
+                target: "_blank"
+              }
+            ]}
+            quickActions={[
+              {
+                tag: "button",
+                route: `/admin/ajax/pages/:id`,
+                method: "delete",
+                confirm: "Are You Sure?",
+                after: this.getPages,
+                className: "quick-action-menu__item_danger",
+                title: "Trash"
+              }
+            ]}
+            rows={buildPagesTree(pages).slice(
+              currentPage * this.itemsPerPage - this.itemsPerPage,
+              currentPage * this.itemsPerPage
+            )}
+            search={{
+              value: pagesSearch || "",
+              changeHandler: this.changeSearchHandler
+            }}
+          />
+          <Pagination
+            pageCount={Math.ceil(pages.length / this.itemsPerPage) || 1}
+            currentPage={currentPage}
+            changePage={page => {
+              if (currentPage !== page) {
+                this.setState({ currentPage: page });
+              }
+            }}
+            itemsCount={pages.length}
+          />
         </div>
       </div>
-      <div className="admin-content">
-        {reports.length > 0 && <AdminTable columns={columns} rows={reports} />}
-      </div>
-    </div>
-  );
+    );
+  }
 }
-
-export default Reports;

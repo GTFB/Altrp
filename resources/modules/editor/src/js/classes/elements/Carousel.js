@@ -65,9 +65,29 @@ class Carousel extends BaseElement {
 
     let repeater = new Repeater();
 
+    repeater.addControl('switch_slides_repeater', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Image or card',
+    });
+
     repeater.addControl('image_slides_repeater', {
+      conditions: {
+        'switch_slides_repeater': false,
+      },
       type: CONTROLLER_MEDIA,
       label: 'image',
+    });
+
+    repeater.addControl("card_slides_repeater", {
+      conditions: {
+        'switch_slides_repeater': true,
+      },
+      type: CONTROLLER_SELECT2,
+      prefetch_options: true,
+      label: "Card",
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options?value=guid',
+      nullable: true,
     });
 
     repeater.addControl('link_to_slides_repeater', {

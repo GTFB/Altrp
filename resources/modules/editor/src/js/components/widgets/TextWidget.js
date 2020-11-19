@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Tooltip from "./Tooltip";
 import { set } from "lodash";
-import { isEditor } from '../../../../../front-app/src/js/helpers';
-import CKEditor from '../ckeditor/CKeditor';
+import { isEditor } from "../../../../../front-app/src/js/helpers";
+import CKEditor from "../ckeditor/CKeditor";
 
 class TextWidget extends Component {
   constructor(props) {
@@ -23,12 +23,12 @@ class TextWidget extends Component {
     if (this.state.tooltipActiveValue) {
       this.setState({
         tooltipActiveValue: !this.state.tooltipActiveValue
-      })
+      });
     } else {
       setTimeout(() => {
         this.setState({
           tooltipActiveValue: !this.state.tooltipActiveValue
-        })
+        });
       }, 500);
     }
   }
@@ -41,18 +41,31 @@ class TextWidget extends Component {
   }
 
   render() {
-    let tooltip = <Tooltip
-      switch={this.state.settings.text_advanced_tooltip_active || false}
-      label={this.state.settings.text_advanced_tooltip_label}
-      active={this.state.tooltipActiveValue}
-    />;
+    let tooltip = (
+      <Tooltip
+        switch={this.state.settings.text_advanced_tooltip_active || false}
+        label={this.state.settings.text_advanced_tooltip_label}
+        active={this.state.tooltipActiveValue}
+      />
+    );
     let tooltipActive = null;
     if (this.state.settings.text_advanced_tooltip_active) {
-      tooltipActive = this.tooltipActive
+      tooltipActive = this.tooltipActive;
     }
-    let textContent = this.getContent('text');
-    let textCap = <><span className="altrp-text-drop-cap">{this.state.settings.text?.slice(0, 1)}</span><span>{this.state.settings.text?.slice(2)}</span> {tooltip}</>;
-    let text = <>{this.state.settings.text} {tooltip}</>;
+    let textContent = this.getContent("text");
+    let textCap = (
+      <>
+        <span className="altrp-text-drop-cap">
+          {this.state.settings.text?.slice(0, 1)}
+        </span>
+        <span>{this.state.settings.text?.slice(2)}</span> {tooltip}
+      </>
+    );
+    let text = (
+      <>
+        {this.state.settings.text} {tooltip}
+      </>
+    );
 
     let activeText = "";
     if (this.state.settings.text_drop_cap === true) {
@@ -61,24 +74,29 @@ class TextWidget extends Component {
       activeText = text;
     }
 
-    if (this.state.settings.ckeditor) {
-      return <CKEditor changeText={this.changeText} text={textContent} readOnly={isEditor()} textWidget={true} />;
+    if (this.state.settings.ckeditor && isEditor()) {
+      return (
+        <CKEditor
+          changeText={this.changeText}
+          text={textContent}
+          readOnly={isEditor()}
+          textWidget={true}
+        />
+      );
     }
 
-    return React.createElement('div',
-      {
-        className: "altrp-text " + this.state.settings.text_position_css_classes,
-        id: this.state.settings.text_position_css_id || "",
-        onMouseOver: tooltipActive,
-        dangerouslySetInnerHTML: {
-          __html: textContent || '',
-        },
-        // dangerouslySetInnerHTML: activeText,
+    return React.createElement("div", {
+      className: "altrp-text " + this.state.settings.text_position_css_classes,
+      id: this.state.settings.text_position_css_id || "",
+      onMouseOver: tooltipActive,
+      dangerouslySetInnerHTML: {
+        __html: textContent || ""
+      },
+      // dangerouslySetInnerHTML: activeText,
 
-        onMouseLeave: tooltipActive
-      });
-
+      onMouseLeave: tooltipActive
+    });
   }
 }
 
-export default TextWidget
+export default TextWidget;

@@ -1,5 +1,11 @@
+import update from 'immutability-helper'
+import {HTML5Backend} from 'react-dnd-html5-backend'
 import '../../../sass/altrp-pagination.scss';
-import {isEditor, parseURLTemplate} from "../../../../../front-app/src/js/helpers";
+import {
+  recurseCount,
+  setDataByPath, storeWidgetState,
+} from "../../../../../front-app/src/js/helpers";
+import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import {Link} from "react-router-dom";
 import {renderAdditionalRows,} from "./altrp-table";
 import {useSortBy,
@@ -10,13 +16,17 @@ import {useSortBy,
   useGlobalFilter,
   useExpanded,
   useRowSelect,
+  useResizeColumns,
+  useBlockLayout,
   useAsyncDebounce,} from "react-table";
 import AltrpQueryComponent from "../altrp-query-component/altrp-query-component";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import {iconsManager} from "../../../../../admin/src/js/helpers";
 import {matchSorter} from 'match-sorter'
 import React from "react";
-import {recurseCount} from "../../helpers";
+import templateLoader from "../../classes/modules/TemplateLoader";
+import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric";
+import AltrpModel from "../../classes/AltrpModel";
 /**
  *
  * @param rows
@@ -80,6 +90,7 @@ fuzzyTextFilterFn.autoRemove = val => !val;
  * @param {{}} filterSetting
  * @param {{}} sortSetting
  * @param {[]} _latestData
+ * @param {{}} widgetState
  * @return {*}
  * @constructor
  */
@@ -96,8 +107,46 @@ function AltrpTableWithoutUpdate(
       setFilterSettings,
       filterSetting,
       _latestData,
+      widgetState,
       sortSetting
     }) {
+
+  const {inner_page_size,
+    inner_sort,
+    global_filter,
+    card_template ,
+    row_expand,
+    selected_storage,
+    row_select,
+    store_state,
+    loading_text,
+    row_select_all,
+    hide_columns,
+    resize_columns,
+    replace_rows,
+    ids_storage} = settings;
+  const [cardTemplate, setCardTemplate] = React.useState(null);
+  /**
+   * Для перетаскивания
+   */
+  const [records, setRecords] = React.useState(data);
+  React.useEffect(()=>{
+    if(replace_rows){
+      setRecords(data);
+    }
+  }, [data, replace_rows]);
+  const moveRow = (dragIndex, hoverIndex) => {
+    const dragRecord = records[dragIndex];
+    setRecords(
+        update(records, {
+          $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, dragRecord],
+          ],
+        })
+    )
+  };
+
   const filterTypes = React.useMemo(
       () => ({
         // Add a new fuzzyTextFilterFn filter type.
@@ -111,7 +160,6 @@ function AltrpTableWithoutUpdate(
             if(id === '##'){
               rowValue = row.index + 1;
             }
-            console.log(rowValue);
             return rowValue !== undefined
                 ? String(rowValue)
                     .toLowerCase()
@@ -172,9 +220,18 @@ function AltrpTableWithoutUpdate(
       data = [data];
     }
   }, [data]);
-  const {inner_page_size, inner_sort, global_filter} = settings;
   let columns = React.useMemo(() => settingsToColumns(settings, widgetId), [settings, widgetId]);
-
+  /**
+   * Сохраним шаблон для выпадашки
+   */
+  React.useEffect(()=>{
+    if(card_template && row_expand){
+      (async ()=>{
+        const template = await templateLoader.loadParsedTemplate(card_template);
+        setCardTemplate(template);
+      })()
+    }
+  }, [row_expand, card_template]);
   const plugins = [ useFilters,
     useGlobalFilter,
     useGroupBy,
@@ -182,9 +239,13 @@ function AltrpTableWithoutUpdate(
     useExpanded,
     usePagination,
     useRowSelect,
-
+    useResizeColumns,
+    useBlockLayout,
     ];
-  if(settings.row_select){
+  /**
+   * Добавим кастомный хук для выбора строк
+   */
+  if(row_select){
     plugins.push(hooks => {
       hooks.visibleColumns.push(columns => [
         // Let's make a column for selection
@@ -192,12 +253,20 @@ function AltrpTableWithoutUpdate(
           id: 'selection',
           // The header can use the table's getToggleAllRowsSelectedProps method
           // to render a checkbox
-          column_name: ({getToggleAllRowsSelectedProps}) => {
+          column_name: ({getToggleAllRowsSelectedProps, getToggleAllPageRowsSelectedProps}) => {
+            if((! settings.inner_page_size) || (settings.inner_page_size < 0) || row_select_all){
+              return (
+                  <div className="altrp-toggle-row">
+                    <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+                  </div>
+              );
+            }
             return (
                 <div className="altrp-toggle-row">
-                  <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+                  <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
                 </div>
-            )},
+            );
+            },
           // The cell can use the individual row's getToggleRowSelectedProps method
           // to the render a checkbox
           Cell: ({row}) => (
@@ -210,14 +279,27 @@ function AltrpTableWithoutUpdate(
       ]);
     },)
   }
+
+  const getRowId = React.useCallback(row => {
+    return row.id
+  }, []);
+  /**
+   * настройки таблицы, свызов хука таблицы
+   * @type {*|{columns: (*|Array), data: {}, filterTypes: (*|{fuzzyText: (function(*=, *, *=): (*|Array)), text: (function(*, *, *=): *), between: (function(*, *, *=): *), equals: (function(*, *, *=): *), includesSome: (function(*, *, *=): *)}), defaultColumn: (*|{Filter: (function({column: *}, {}): *)})}}
+   */
   const tableSettings = React.useMemo(() => {
     const tableSettings = {
       columns,
-      data,
+      data: replace_rows ? records : data,
       filterTypes,
       defaultColumn,
     };
-    if ((inner_page_size >= 1)) {
+    if(replace_rows){
+      tableSettings.getRowId = getRowId;
+    }
+    if(_.isObject(widgetState)){
+      tableSettings.initialState = widgetState;
+    } else if ((inner_page_size >= 1)) {
       tableSettings.initialState = {
         pageSize: Number(inner_page_size),
       };
@@ -228,11 +310,14 @@ function AltrpTableWithoutUpdate(
     }
     tableSettings.disableSortBy = ! inner_sort;
     return tableSettings;
-  }, [inner_page_size, inner_sort, data, columns]);
+  }, [inner_page_size, inner_sort, data, columns, widgetState, records, replace_rows]);
+
   const ReactTable = useTable(
       tableSettings,
       ...plugins
   );
+
+
   // console.log(ReactTable);
   const {
     getTableProps,
@@ -250,22 +335,31 @@ function AltrpTableWithoutUpdate(
     gotoPage,
     nextPage,
     previousPage,
-    getRowId,
+    getToggleHideAllColumnsProps,
+    allColumns,
+    // getRowId,
     rows,
     visibleColumns,
     preGlobalFilteredRows,
     setGlobalFilter,
     setPageSize,
     selectedFlatRows,
-    state: {
-      pageIndex,
-      globalFilter,
-      groupBy,
-      selectedRowIds,
-      expanded,
-      pageSize},
+    state: reactTableState,
   } = ReactTable;
-  // console.log(ReactTable);
+  const {
+     pageIndex,
+     globalFilter,
+     groupBy,
+     selectedRowIds,
+     expanded,
+     pageSize} = reactTableState;
+
+  React.useEffect(()=>{
+    if(store_state){
+      storeWidgetState(widgetId, reactTableState);
+    }
+  }, );
+
   React.useEffect(
       () => {
         if (!setPageSize) {
@@ -278,6 +372,30 @@ function AltrpTableWithoutUpdate(
       },
       [inner_page_size, data],
   );
+  function flatRows(rows = [], field = ''){
+    let _rows = [];
+    if(_.isEmpty(rows)){
+      return _rows;
+    }
+    rows.forEach(r=>{
+      r.original && (field ? _rows.push(_.get(r.original, field)) : _rows.push(r.original));
+      r.subRows && (_rows = _.concat(_rows, flatRows(r.subRows)));
+    });
+    return _rows;
+  }
+  const originalSelectedRows = React.useMemo(()=> flatRows(selectedFlatRows), [selectedFlatRows]);
+  const selectedIds = React.useMemo(()=> flatRows(selectedFlatRows, 'id'), [selectedFlatRows]);
+  React.useEffect(()=>{
+    if(selected_storage){
+      setDataByPath(selected_storage, originalSelectedRows);
+    }
+  }, [selected_storage, originalSelectedRows]);
+  React.useEffect(()=>{
+    if(ids_storage){
+      setDataByPath(ids_storage, selectedIds);
+    }
+  }, [ids_storage, selectedIds]);
+
   /**
    * Настройки пагинации
    */
@@ -299,59 +417,102 @@ function AltrpTableWithoutUpdate(
         }
         return paginationProps;
       }, [inner_page_size, pageSize, pageCount, pageIndex, settings ]);
+  const {WrapperComponent, wrapperProps} = React.useMemo(()=>{
+    return {
+      WrapperComponent: replace_rows ? DndProvider : React.Fragment,
+      wrapperProps: replace_rows ? {backend:HTML5Backend} : {},
+    };
+  }, [replace_rows]);
 
-
-  return <>
+  return <WrapperComponent {...wrapperProps}>
+    {hide_columns &&<div className="altrp-table-hidden">
+      <div className="altrp-table-hidden__all">
+        <IndeterminateCheckbox {...getToggleHideAllColumnsProps()} /> Toggle
+        All
+      </div>
+      {allColumns.map(column => {
+        if(['expander', 'selection'].indexOf(column.id) >= 0){
+          return null;
+        }
+        return(
+          <div key={column.id} className="altrp-table-hidden__column">
+            <label>
+              <input type="checkbox" {...column.getToggleHiddenProps()} />{' '}
+              {column.column_name || column.id}
+              {column.id}
+            </label>
+          </div>
+      )})}
+      <br />
+    </div>}
     <table className={"altrp-table altrp-table_columns-" + columns.length} {...getTableProps()}>
       <thead className="altrp-table-head">
       {renderAdditionalRows(settings)}
-      {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()} className="altrp-table-tr">
-            {headerGroup.headers.map((column, idx) => {
-                  const {column_width, column_header_alignment} = column;
-                  let columnProps = column.getHeaderProps();
-                  if (inner_sort) {
-                    columnProps = column.getHeaderProps(column.getSortByToggleProps());
-                  }
-                  if (column_width) {
-                    columnProps.width = column_width + '%';
-                  }
-                  // columnProps.style = {};
-                  // if (column_width)  columnProps.style.width = column_width;
-                  // if (column_header_alignment)  columnProps.style.textAlign = column_header_alignment;
-                  return <th {...columnProps}
-                             className="altrp-table-th"
-                             key={idx}>{
-                    column.render('column_name')
-                  }
-                    {column.canGroupBy ? (
-                        // If the column can be grouped, let's add a toggle
-                        <span {...column.getGroupByToggleProps()} className="altrp-table-th__group-toggle">
-                      {column.isGrouped ? ' 🛑 ' : ' 👊 '}
-                    </span>
-                    ) : null}
-                    {
-                      (inner_sort) && (column.isSorted
-                          ? column.isSortedDesc
-                              ? iconsManager().renderIcon('chevron', {className: 'rotate-180 sort-icon '})
-                              : iconsManager().renderIcon('chevron', {className: 'sort-icon'})
-                          : '')
-                    }
-                    {
-                      column.column_is_filtered &&
-                      <label className={`altrp-label altrp-label_${column.column_filter_type}`} onClick={e => { e.stopPropagation()}}>
-                        {column.render('Filter')}
-                      </label>
-                    }
+      {headerGroups.map(headerGroup => {
+        const headerGroupProps = headerGroup.getHeaderGroupProps();
 
-                  </th>;
-                }
-            )}
-          </tr>
-      ))}
-      {global_filter &&  <tr>
+        if(! resize_columns){
+          delete headerGroupProps.style;
+        }
+        return (
+        <tr {...headerGroupProps} className="altrp-table-tr">
+          {replace_rows && <th className="altrp-table-th"/>}
+          {headerGroup.headers.map((column, idx) => {
+            const {column_width, column_header_alignment} = column;
+            let columnProps = column.getHeaderProps();
+            if (inner_sort) {
+              columnProps = column.getHeaderProps(column.getSortByToggleProps());
+            }
+            const resizerProps = {...column.getResizerProps(), onClick: e=>{e.stopPropagation();}};
+            if (Number(column_width)) {
+              columnProps.width = column_width + '%';
+            }
+            if(! resize_columns){
+              delete columnProps.style;
+            }
+            // columnProps.style = {};
+            // if (column_width)  columnProps.style.width = column_width;
+            // if (column_header_alignment)  columnProps.style.textAlign = column_header_alignment;
+            return <th {...columnProps}
+                       className="altrp-table-th"
+                       key={idx}>{
+              column.render('column_name')
+            }
+              {column.canGroupBy ? (
+                  // If the column can be grouped, let's add a toggle
+                  <span {...column.getGroupByToggleProps()} className="altrp-table-th__group-toggle">
+                {column.isGrouped ? ' 🛑 ' : ' 👊 '}
+              </span>
+              ) : null}
+              {
+                (inner_sort) && (column.isSorted
+                    ? column.isSortedDesc
+                        ? iconsManager().renderIcon('chevron', {className: 'rotate-180 sort-icon '})
+                        : iconsManager().renderIcon('chevron', {className: 'sort-icon'})
+                    : '')
+              }
+              {
+                column.column_is_filtered &&
+                <label className={`altrp-label altrp-label_${column.column_filter_type}`} onClick={e => {e.stopPropagation()}}>
+                  {column.render('Filter')}
+                </label>
+              }
+              {
+                resize_columns && <div
+                    {...resizerProps}
+                    className={`altrp-table__resizer ${
+                        column.isResizing ? 'altrp-table__resizer_resizing' : ''
+                        }`}
+                />
+              }
+            </th>;
+              }
+          )}
+        </tr>)}
+      )}
+      {global_filter &&  <tr className="altrp-table-tr">
         <th className="altrp-table-th"
-            colSpan={visibleColumns.length}
+            colSpan={visibleColumns.length + replace_rows}
             style={{
               textAlign: 'left',
             }}
@@ -367,11 +528,40 @@ function AltrpTableWithoutUpdate(
       </tr>
       }
       </thead>
+      {_status === 'success' ?
       <tbody {...getTableBodyProps()}>
       {(page ? page : rows).map((row, i) => {
         prepareRow(row);
-        return (
-            <tr {...row.getRowProps()} className="altrp-table-tr">
+        return <Row
+            index={i}
+            row={row}
+            visibleColumns={visibleColumns}
+            moveRow={moveRow}
+            settings={settings}
+            cardTemplate={cardTemplate}
+            {...row.getRowProps()}
+        />;
+        const fragmentProps = {...row.getRowProps()};
+        delete fragmentProps.role;
+        delete fragmentProps.style;
+        let ExpandCard = null;
+        if(cardTemplate){
+          let template = frontElementsFabric.cloneElement(cardTemplate);
+          template.setCardModel(new AltrpModel(row.original || {}));
+          ExpandCard = React.createElement(template.componentClass,
+              {
+                element: template,
+                children: template.children
+              });
+        }
+        let rowProps = row.getRowProps();
+        if(! resize_columns){
+          delete rowProps.style;
+        }
+        /*return (
+          <React.Fragment {...fragmentProps}>
+
+            <tr {...rowProps} className="altrp-table-tr">
 
               {row.cells.map(cell => {
                 let cellContent = cell.render('Cell');
@@ -396,16 +586,29 @@ function AltrpTableWithoutUpdate(
                 cell.isAggregated && cellClassNames.push('altrp-table-td_aggregated');
                 cell.isPlaceholder && cellClassNames.push('altrp-table-td_placeholder');
                 cell.isGrouped && cellClassNames.push('altrp-table-td_grouped');
-                return <td {...cell.getCellProps()} className={cellClassNames.join(' ')}>{cellContent}</td>
+
+                let cellProps = cell.getCellProps();
+                if(! resize_columns){
+                  delete cellProps.style;
+                }
+                return <td {...cellProps} className={cellClassNames.join(' ')}>{cellContent}</td>
               })}
             </tr>
-        )
+            {row.isExpanded && row_expand && card_template && cardTemplate &&
+              <tr className="altrp-table-tr altrp-posts">
+                <td colSpan={visibleColumns.length} className="altrp-table-td altrp-post">{ExpandCard}</td>
+              </tr>
+            }
+          </React.Fragment> )*/
       })}
 
-      </tbody>
+      </tbody> :
+          <tbody><tr className="altrp-table-tr"><td className="altrp-table-td" colSpan={visibleColumns.length + replace_rows}>
+            {(_status === 'loading' ? (loading_text || null) : null )}
+          </td></tr></tbody>}
     </table>
     {paginationProps && <Pagination {...paginationProps}/>}
-  </>
+  </WrapperComponent>
 }
 
 /**
@@ -556,23 +759,6 @@ function SelectColumnFilter({
         setFilter(filterValue);
       }}/>
   );
-  return (
-      <select
-          multiple
-          value={filterValue}
-          onChange={e => {
-            console.log(e.target.value);
-            setFilter(e.target.value || undefined)
-          }}
-      >
-        <option value="">All</option>
-        {options.map((option, i) => (
-            <option key={i} value={option}>
-              {option}
-            </option>
-        ))}
-      </select>
-  )
 }
 
 /**
@@ -620,7 +806,7 @@ function SliderColumnFilter({
               setFilter(parseInt(e.target.value, 10))
             }}
         />
-        <button className="altrp-btn" onClick={() => setFilter(undefined)}>{buttonText}</button>
+        <button className={`altrp-btn ${(filterValue !== undefined) ? 'active' : ''}`} onClick={() => setFilter(undefined)}>{buttonText}</button>
       </>
   )
 }
@@ -711,7 +897,7 @@ function NumberRangeColumnFilter({
  */
 export function settingsToColumns(settings, widgetId) {
   let columns = [];
-  let { tables_columns } = settings;
+  let { tables_columns, card_template, row_expand } = settings;
   tables_columns = tables_columns || [];
   /**
    * Если в колонке пустые поля, то мы их игнорируем, чтобы не было ошибки
@@ -743,6 +929,8 @@ export function settingsToColumns(settings, widgetId) {
           break;
         }
         _column.canGroupBy = _column.group_by;
+        console.log(_column);
+        console.log(_column.group_by);
         if(_column.aggregate){
           let aggregateTemplate = _column.aggregate_template || `{{value}} Unique Names`;
           _column.Aggregated = ({value}) => {
@@ -757,15 +945,15 @@ export function settingsToColumns(settings, widgetId) {
     columns.unshift({
       id: 'expander', // Make sure it has an ID
       column_name: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
-          <span {...getToggleAllRowsExpandedProps()}>
+          <span {...getToggleAllRowsExpandedProps()}  className="altrp-table__all-row-expander">
             {isAllRowsExpanded ? '👇' : '👉'}
           </span>
       ),
       Cell: ({ row }) =>
           // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
           // to build the toggle for expanding a row
-          row.canExpand ? (
-              <span
+          (card_template && row_expand || row.canExpand) ? (
+              <span className="altrp-table__row-expander"
                   {...row.getToggleRowExpandedProps({
                     style: {
                       // We can even use the row.depth property
@@ -791,7 +979,6 @@ const IndeterminateCheckbox = React.forwardRef(
     ({ indeterminate, ...rest }, ref) => {
       const defaultRef = React.useRef();
       const resolvedRef = ref || defaultRef;
-
       React.useEffect(() => {
         resolvedRef.current.indeterminate = indeterminate
       }, [resolvedRef, indeterminate]);
@@ -846,6 +1033,173 @@ function GlobalFilter({
     </span>
   )
 }
+const DND_ITEM_TYPE = 'row';
+
+/**
+ * Компонент строки
+ * @param {{}} row
+ * @param {number} index
+ * @param {function} moveRow
+ * @param {{}}settings
+ * @param {{}}cardTemplate
+ *
+ * @return {*}
+ * @constructor
+ */
+const Row = ({ row,
+               index,
+               moveRow,
+               visibleColumns,
+               cardTemplate,
+               settings }) => {
+  const dropRef = React.useRef(null);
+  const dragRef = React.useRef(null);
+  const fragmentProps = {...row.getRowProps()};
+  delete fragmentProps.role;
+  delete fragmentProps.style;
+  let ExpandCard = null;
+  const {
+    resize_columns,
+    replace_rows,
+    row_expand,
+    card_template,
+  } = settings;
+  if(cardTemplate){
+    let template = frontElementsFabric.cloneElement(cardTemplate);
+    template.setCardModel(new AltrpModel(row.original || {}));
+    ExpandCard = React.createElement(template.componentClass,
+        {
+          element: template,
+          children: template.children
+        });
+  }
+
+  let rowProps = React.useMemo(()=>{
+    let rowProps = row.getRowProps();
+    if(! resize_columns){
+      delete rowProps.style;
+    }
+    if(replace_rows){
+      rowProps.ref = dropRef;
+    }
+    return rowProps;
+  }, [resize_columns, replace_rows]);
+
+  const [, drop] = useDrop({
+    accept: DND_ITEM_TYPE,
+    hover(item, monitor) {
+      if (!dropRef.current) {
+        return
+      }
+      const dragIndex = item.index;
+      const hoverIndex = index;
+      // Don't replace items with themselves
+      if (dragIndex === hoverIndex) {
+        return
+      }
+      // Determine rectangle on screen
+      const hoverBoundingRect = dropRef.current.getBoundingClientRect();
+      // Get vertical middle
+      const hoverMiddleY =
+          (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      // Determine mouse position
+      const clientOffset = monitor.getClientOffset();
+      // Get pixels to the top
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+      // Only perform the move when the mouse has crossed half of the items height
+      // When dragging downwards, only move when the cursor is below 50%
+      // When dragging upwards, only move when the cursor is above 50%
+      // Dragging downwards
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return
+      }
+      // Dragging upwards
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return
+      }
+      // Time to actually perform the action
+      moveRow(dragIndex, hoverIndex);
+      // Note: we're mutating the monitor item here!
+      // Generally it's better to avoid mutations,
+      // but it's good here for the sake of performance
+      // to avoid expensive index searches.
+      item.index = hoverIndex
+    },
+  });
+
+  const [{ isDragging }, drag, preview] = useDrag({
+    item: { type: DND_ITEM_TYPE, index },
+    collect: monitor => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  const opacity = isDragging ? 0 : 1;
+
+  preview(drop(dropRef));
+  drag(dragRef);
+
+  // return (
+  //     <tr ref={dropRef} style={{ opacity }}>
+  //       <td ref={dragRef}>move</td>
+  //       {row.cells.map(cell => {
+  //         return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+  //       })}
+  //     </tr>
+  // );
+  return (
+    <React.Fragment {...fragmentProps}>
+
+      <tr {...rowProps} className={`altrp-table-tr ${ isDragging ? 'altrp-table-tr__dragging' : ''}`} style={{ opacity }}>
+        {replace_rows && <td className="altrp-table-td" ref={dragRef}>move</td>}
+        {row.cells.map(cell => {
+          let cellContent = cell.render('Cell');
+          if (cell.column.id === '##') {
+            cellContent = cell.row.index + 1;
+          }
+          if(cell.isGrouped){
+            cellContent = (
+                <>
+                  <span {...row.getToggleRowExpandedProps()}>
+                          {row.isExpanded ? '👇' : '👉'}
+                        </span>{' '}
+                               {cell.render('Cell')} ({recurseCount(row, 'subRows')})
+                </>
+            );
+          } else if (cell.isAggregated){
+            cellContent = cell.render('Aggregated');
+          } else if (cell.isPlaceholder){
+            cellContent = cell.render('Cell');
+          }
+          const cellClassNames = ['altrp-table-td'];
+          cell.isAggregated && cellClassNames.push('altrp-table-td_aggregated');
+          cell.isPlaceholder && cellClassNames.push('altrp-table-td_placeholder');
+          cell.isGrouped && cellClassNames.push('altrp-table-td_grouped');
+
+          let cellProps = React.useMemo(()=>{
+            let cellProps = cell.getCellProps();
+            if(! resize_columns){
+              delete cellProps.style;
+            }
+            if(replace_rows){
+              cellProps.ref = dropRef;
+            }
+            return cellProps;
+          }, [resize_columns, replace_rows]);
+
+          return <td {...cellProps} className={cellClassNames.join(' ')}>{cellContent}</td>
+        })}
+      </tr>
+      {row.isExpanded && row_expand && card_template && cardTemplate &&
+      <tr className="altrp-table-tr altrp-posts">
+        <td colSpan={visibleColumns.length + replace_rows} className="altrp-table-td altrp-post">{ExpandCard}</td>
+      </tr>
+      }
+    </React.Fragment> );
+};
+
+
 export default (props) => {
+  props = {...props};
   return <AltrpQueryComponent {...props}><AltrpTableWithoutUpdate/></AltrpQueryComponent>
 }

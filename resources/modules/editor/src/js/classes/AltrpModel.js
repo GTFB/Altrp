@@ -46,6 +46,9 @@ class AltrpModel {
    * @return {{}}
    */
   setProperty(name, value = '') {
+    if(value instanceof AltrpModel){
+      value = value.getData(false);
+    }
     return set(this.data, name, value);
   }
   /**
@@ -55,6 +58,13 @@ class AltrpModel {
    * @return {*}
    */
   unsetProperty(name, value = '') {
+    if(value){
+      const oldValue = get(this.data, name);
+      if(_.isEqual(oldValue, value)){
+        return unset(this.data, name);
+      }
+      return false;
+    }
     return unset(this.data, name);
   }
 }

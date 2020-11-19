@@ -65,6 +65,6 @@ return [
         ],
 
     ],
-  'max_file_size' => 10485760,
+  'max_file_size' => 20971520,
 
 ];

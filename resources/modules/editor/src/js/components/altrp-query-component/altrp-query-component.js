@@ -48,6 +48,9 @@ const AltrpQueryComponent = (props)=>{
     if(filterSettingJSON.length > 2){
       queryData.filters = filterSettingJSON;
     }
+    if(settings.choose_datasource === 'datasource'){
+      return data;
+    }
     return await query.getQueried(queryData)
   });
 

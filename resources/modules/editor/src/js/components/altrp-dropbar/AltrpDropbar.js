@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import AltrpPopper from "../altrp-popper/AltrpPopper";
+import TemplateLoader from "../template-loader/TemplateLoader";
 
 class Dropbar extends Component {
   constructor(props) {
@@ -62,7 +63,9 @@ class Dropbar extends Component {
     const children = React.Children.only(this.props.children);
 
     let mainClass = "altrp-dropbar-" + this.props.className;
-    console.log((this.state.show ? " altrp-dropbar-container-show" : " altrp-dropbar-container-hide"))
+
+    let type = this.props.settings.type_dropbar_section || "text";
+
     return (
       <div className={"altrp-dropbar altrp-dropbar-" + mainClass}>
         <span className={"altrp-dropbar-children-wrapper " + mainClass + "-wrapper"}>
@@ -90,14 +93,18 @@ class Dropbar extends Component {
               className={"altrp-dropbar-container " + mainClass + "-containter" + (this.state.show ? " altrp-dropbar-container-show" : " altrp-dropbar-container-hide")}
             >
               {
-                React.createElement("div",
-                  {
-                    className: "altrp-dropbar-content " + mainClass + "-content",
-                    dangerouslySetInnerHTML: {
-                      __html: this.props.settings.content_dropbar_section
-                    },
-                  }
+                type === "text" ? (
+                  React.createElement("div",
+                    {
+                      className: "altrp-dropbar-content " + mainClass + "-content",
+                      dangerouslySetInnerHTML: {
+                        __html: this.props.settings.content_dropbar_section
+                      },
+                    }
                   )
+                ) : (
+                  <TemplateLoader templateId={this.props.settings.template_dropbar_section}/>
+                )
               }
             </div>
           </AltrpPopper>

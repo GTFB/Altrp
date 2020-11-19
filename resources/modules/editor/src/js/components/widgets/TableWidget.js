@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import Query from "../../classes/Query";
 import {Scrollbars} from "react-custom-scrollbars";
+import {getDataByPath, getWidgetState} from "../../../../../front-app/src/js/helpers";
 
 class TableWidget extends Component {
   constructor(props){
@@ -18,9 +19,12 @@ class TableWidget extends Component {
   _componentDidMount(){
     switch(this.props.element.getSettings('choose_datasource')){
       case 'datasource':{
-        import('../altrp-table/altrp-table-without-update').then(res=>{
+        import('../altrp-table/altrp-table').then(res=>{
           this.setState(state=>({...state,TableComponent:res.default}))
         });
+        // import('../altrp-table/altrp-table-without-update').then(res=>{
+        //   this.setState(state=>({...state,TableComponent:res.default}))
+        // });
       } break;
       case 'query':{
         const query = this.props.element.getSettings('table_query');
@@ -40,6 +44,11 @@ class TableWidget extends Component {
           this.setState(state=>({...state,TableComponent:res.default}))
         });
       }
+    }
+    if(this.props.element.getSettings('store_state') && getWidgetState(this.props.element.getId())){
+      this.setState(state=>({...state, widgetState: getWidgetState(this.props.element.getId())}));
+    } else if (this.props.element.getSettings('store_state')){
+      storeWidgetState(this.props.element.getId(), null);
     }
   }
 
@@ -62,6 +71,12 @@ class TableWidget extends Component {
     if(! this.props.currentModel.getProperty('altrpModelUpdated')){
       return '';
     }
+    let data = null;
+    if(this.props.element.getSettings('table_datasource')
+        && this.props.element.getSettings('choose_datasource') === 'datasource'){
+      let path = this.props.element.getSettings('table_datasource').replace(/{{/g, '').replace(/}}/g, '');
+      data = getDataByPath(path)
+    }
     let query = new Query(this.props.element.getSettings().table_query || {}, this);
     if(! this.showTable(query)){
       return <div children="Please Choose Source"/>
@@ -79,7 +94,6 @@ class TableWidget extends Component {
     if(this.props.element.getSettings('table_transpose', false)){
       scrollbarsProps.autoHeight = true;
       scrollbarsProps.autoHeightMax = 10000;
-
     }
 
     if (! (_.get(settings,'tables_columns.length'))) {
@@ -89,7 +103,7 @@ class TableWidget extends Component {
         ref={this.scrollbar}
         style={{zIndex: 99999}}
         autoHide
-        autoHeightMax={10000}
+        autoHeightMax={30000}
         autoHeight={true}
         autoHideTimeout={500}
         autoHideDuration={200}
@@ -100,8 +114,9 @@ class TableWidget extends Component {
           return <div className="altrp-scroll__horizontal-track" style={style} {...props} />}}
     ><this.state.TableComponent query={query}
                                 widgetId={this.props.element.getId()}
+                                widgetState={this.state.widgetState}
                                 currentModel={this.props.currentModel}
-                                data={query.getFromModel(this.state.modelData)}
+                                data={data || query.getFromModel(this.state.modelData)}
                                 settings={this.props.element.getSettings()}/>
     </Scrollbars>;
   }
