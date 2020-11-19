@@ -121,7 +121,7 @@ class OffcanvasWidget extends Component {
     let content = "";
     let rootElement = this.props.template;
 
-    if(this.state.settings.source_offcanvas === "template" && rootElement) {
+    if(rootElement) {
       content = (
         React.createElement(rootElement.componentClass,
           {

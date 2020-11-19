@@ -186,7 +186,6 @@ class RootElement extends BaseElement {
       },
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
-      default: { url: "" },
     });
 
     this.addControl("close_cursor_offcanvas", {
@@ -1031,12 +1030,12 @@ class RootElement extends BaseElement {
     //   label: 'Transition Property',
     //   isMulti: true,
     //   options: [
-    //     { label: 'color', value: 'color' }, 
+    //     { label: 'color', value: 'color' },
     //     { label: 'font-size', value: 'font-size' },
-    //     { label: 'margin', value: 'margin' }, 
-    //     { label: 'padding', value: 'padding' }, 
-    //     { label: 'background-color', value: 'background-color' }, 
-    //     { label: 'opacity', value: 'opacity' }, 
+    //     { label: 'margin', value: 'margin' },
+    //     { label: 'padding', value: 'padding' },
+    //     { label: 'background-color', value: 'background-color' },
+    //     { label: 'opacity', value: 'opacity' },
     //   ],
     //   rules: {
     //     ".altrp-heading": "transition-property: {{VALUE}};"
@@ -1553,7 +1552,7 @@ class RootElement extends BaseElement {
         ".altrp-btn": "transition-delay: {{SIZE}}s;"
       }
     });
-    
+
     this.endControlSection();
 
     this.startControlSection('list_defaults', {
@@ -1760,7 +1759,7 @@ class RootElement extends BaseElement {
       rules: {
         ".altrp-list-label": "transition-duration: {{SIZE}}s;",
         ".altrp-list": "transition-duration: {{SIZE}}s;",
-        ".altrp-list-icon": "transition-delay: {{SIZE}}s;"   
+        ".altrp-list-icon": "transition-delay: {{SIZE}}s;"
       }
     });
 
@@ -1792,7 +1791,7 @@ class RootElement extends BaseElement {
       rules: {
         ".altrp-list-label": "transition-timing-function: {{VALUE}};",
         ".altrp-list": "transition-timing-function: {{VALUE}};",
-        ".altrp-list-icon": "transition-delay: {{VALUE}};"   
+        ".altrp-list-icon": "transition-delay: {{VALUE}};"
       }
     });
 
@@ -1806,7 +1805,7 @@ class RootElement extends BaseElement {
       rules: {
         ".altrp-list-label": "transition-delay: {{SIZE}}s;",
         ".altrp-list": "transition-delay: {{SIZE}}s;",
-        ".altrp-list-icon": "transition-delay: {{SIZE}}s;"        
+        ".altrp-list-icon": "transition-delay: {{SIZE}}s;"
       }
     });
 

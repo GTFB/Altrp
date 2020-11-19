@@ -209,10 +209,6 @@ class Button extends BaseElement {
           label: 'Toggle Popup',
         },
         {
-          value: 'toggle_offcanvas',
-          label: 'Toggle Offcanvas',
-        },
-        {
           value: 'print_page',
           label: 'Print Page',
         },
