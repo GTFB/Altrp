@@ -246,6 +246,19 @@ class Input extends BaseElement {
       },
     });
 
+    this.addControl('is_select_all_allowed', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Allow Select All',
+      default: false,
+      conditions: {
+        'content_type':
+          [
+            'select2',
+          ],
+        'select2_multiple' : [ true ]
+      },
+    });
+
     this.addControl('nulled_option_title', {
       type: CONTROLLER_TEXT,
       label: 'Nulled Option Label',

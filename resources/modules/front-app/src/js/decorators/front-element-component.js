@@ -164,7 +164,8 @@ function getContent(settingName) {
   if(content && content.dynamic){
     content = '';
   }
-  return content;
+  
+  return content === 'null' ? '' : content;
 }
 /**
  * Компоненте загрузился в DOM

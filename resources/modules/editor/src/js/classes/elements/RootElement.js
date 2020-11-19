@@ -329,6 +329,73 @@ class RootElement extends BaseElement {
       },
     });
 
+    this.addControl('global_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        "body *": "transition-property: {{VALUE}};"
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("global_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        "body *": "transition-duration: {{SIZE}}s;"
+      }
+    });
+
+    this.addControl('global_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        "body *": "transition-timing-function: {{VALUE}};"
+      }
+    });
+
+    this.addControl("global_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        "body *": "transition-delay: {{SIZE}}s;"
+      }
+    });
+
+
     this.endControlSection();
 
     this.startControlSection('heading_defaults', {
@@ -783,21 +850,29 @@ class RootElement extends BaseElement {
       }
     });
 
+    // this.addControl('heading_default_transition_property', {
+    //   type: CONTROLLER_SELECT2,
+    //   label: 'Transition Property',
+    //   isMulti: true,
+    //   options: [
+    //     { label: 'color', value: 'color' }, 
+    //     { label: 'font-size', value: 'font-size' },
+    //     { label: 'margin', value: 'margin' }, 
+    //     { label: 'padding', value: 'padding' }, 
+    //     { label: 'background-color', value: 'background-color' }, 
+    //     { label: 'opacity', value: 'opacity' }, 
+    //   ],
+    //   rules: {
+    //     ".altrp-heading": "transition-property: {{VALUE}};"
+    //   }
+    // });
     this.addControl('heading_default_transition_property', {
-      type: CONTROLLER_SELECT2,
+      type: CONTROLLER_TEXTAREA,
       label: 'Transition Property',
-      isMulti: true,
-      options: [
-        { label: 'color', value: 'color' }, 
-        { label: 'font-size', value: 'font-size' },
-        { label: 'margin', value: 'margin' }, 
-        { label: 'padding', value: 'padding' }, 
-        { label: 'background-color', value: 'background-color' }, 
-        { label: 'opacity', value: 'opacity' }, 
-      ],
       rules: {
         ".altrp-heading": "transition-property: {{VALUE}};"
-      }
+      },
+      description: 'Input properties, commas separated'
     });
 
     this.addControl("heading_default_transition_duration", {
@@ -1227,6 +1302,72 @@ class RootElement extends BaseElement {
         ".altrp-btn{{STATE}}": "background-size: {{VALUE}};"
       }
     });
+
+    this.addControl('button_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        ".altrp-btn": "transition-property: {{VALUE}};"
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("button_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-btn": "transition-duration: {{SIZE}}s;"
+      }
+    });
+
+    this.addControl('button_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        ".altrp-btn": "transition-timing-function: {{VALUE}};"
+      }
+    });
+
+    this.addControl("button_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-btn": "transition-delay: {{SIZE}}s;"
+      }
+    });
     
     this.endControlSection();
 
@@ -1408,6 +1549,79 @@ class RootElement extends BaseElement {
       ],
       rules: {
         "div .altrp-list-li-link{{STATE}}": "text-decoration: {{VALUE}};"
+      }
+    });
+
+    this.addControl('list_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        ".altrp-list-label": "transition-property: {{VALUE}};",
+        ".altrp-list": "transition-property: {{VALUE}};"
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("list_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-list-label": "transition-duration: {{SIZE}}s;",
+        ".altrp-list": "transition-duration: {{SIZE}}s;",
+        ".altrp-list-icon": "transition-delay: {{SIZE}}s;"   
+      }
+    });
+
+    this.addControl('list_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        ".altrp-list-label": "transition-timing-function: {{VALUE}};",
+        ".altrp-list": "transition-timing-function: {{VALUE}};",
+        ".altrp-list-icon": "transition-delay: {{VALUE}};"   
+      }
+    });
+
+    this.addControl("list_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-list-label": "transition-delay: {{SIZE}}s;",
+        ".altrp-list": "transition-delay: {{SIZE}}s;",
+        ".altrp-list-icon": "transition-delay: {{SIZE}}s;"        
       }
     });
 
@@ -1608,6 +1822,73 @@ class RootElement extends BaseElement {
       }
     });
 
+    this.addControl('text_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        ".altrp-text": "transition-property: {{VALUE}};",
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("text_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-text": "transition-duration: {{SIZE}}s;",
+      }
+    });
+
+    this.addControl('text_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        ".altrp-text": "transition-timing-function: {{VALUE}};",
+      }
+    });
+
+    this.addControl("text_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-text": "transition-delay: {{SIZE}}s;",
+      }
+    });
+
+
     this.endControlSection();
 
     this.startControlSection('image_defaults', {
@@ -1801,6 +2082,77 @@ class RootElement extends BaseElement {
         ]
       }
     });
+
+    this.addControl('image_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        ".altrp-image": "transition-property: {{VALUE}};",
+        ".altrp-image-container": "transition-property: {{VALUE}};",
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("image_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-image": "transition-duration: {{SIZE}}s;",
+        ".altrp-image-container": "transition-duration: {{SIZE}}s;",
+      }
+    });
+
+    this.addControl('image_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        ".altrp-image": "transition-timing-function: {{VALUE}};",
+        ".altrp-image-container": "transition-timing-function: {{VALUE}};",
+      }
+    });
+
+    this.addControl("image_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-image": "transition-delay: {{SIZE}}s;",
+        ".altrp-image-container": "transition-delay: {{SIZE}}s;",
+      }
+    });
+
 
     this.endControlSection();
 
@@ -2164,6 +2516,85 @@ class RootElement extends BaseElement {
         '.altrp-field-select2__control{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};'
       },
     });
+
+    this.addControl('input_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        ".altrp-field": "transition-property: {{VALUE}};",
+        ".altrp-field-label": "transition-property: {{VALUE}};",
+        ".altrp-field-select2__control": "transition-property: {{VALUE}};",
+        ".altrp-field-select2__single-value": "transition-property: {{VALUE}};",
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("input_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-field": "transition-duration: {{SIZE}}s;",
+        ".altrp-field-label": "transition-duration: {{SIZE}}s;",
+        ".altrp-field-select2__control": "transition-duration: {{SIZE}}s;",
+        ".altrp-field-select2__single-value": "transition-duration: {{SIZE}}s;",
+      }
+    });
+
+    this.addControl('input_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        ".altrp-field": "transition-timing-function: {{VALUE}};",
+        ".altrp-field-label": "transition-timing-function: {{VALUE}};",
+        ".altrp-field-select2__control": "transition-timing-function: {{VALUE}};",
+        ".altrp-field-select2__single-value": "transition-timing-function: {{VALUE}};",
+      }
+    });
+
+    this.addControl("input_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-field": "transition-delay: {{SIZE}}s;",
+        ".altrp-field-label": "transition-delay: {{SIZE}}s;",
+        ".altrp-field-select2__control": "transition-delay: {{SIZE}}s;",
+        ".altrp-field-select2__single-value": "transition-delay: {{SIZE}}s;",
+      }
+    });
+
 
     this.endControlSection();
 
@@ -2551,6 +2982,88 @@ class RootElement extends BaseElement {
         colorPickedHex: ""
       },
       rules: {
+      }
+    });
+
+    this.addControl('table_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        ".altrp-table-th": "transition-property: {{VALUE}};",
+        "..altrp-table-td": "transition-property: {{VALUE}};",
+        ".altrp-table": "transition-property: {{VALUE}};",
+        ".altrp-table-head": "transition-property: {{VALUE}};",
+        ".altrp-table-background": "transition-property: {{VALUE}};",
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("table_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-table-th": "transition-duration: {{SIZE}}s;",
+        "..altrp-table-td": "transition-duration: {{SIZE}}s;",
+        ".altrp-table": "transition-duration: {{SIZE}}s;",
+        ".altrp-table-head": "transition-duration: {{SIZE}}s;",
+        ".altrp-table-background": "transition-duration: {{SIZE}}s;",
+      }
+    });
+
+    this.addControl('table_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        ".altrp-table-th": "transition-timing-function: {{VALUE}};",
+        "..altrp-table-td": "transition-timing-function: {{VALUE}};",
+        ".altrp-table": "transition-timing-function: {{VALUE}};",
+        ".altrp-table-head": "transition-timing-function: {{VALUE}};",
+        ".altrp-table-background": "transition-timing-function: {{VALUE}};",
+      }
+    });
+
+    this.addControl("table_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-table-th": "transition-delay: {{SIZE}}s;",
+        "..altrp-table-td": "transition-delay: {{SIZE}}s;",
+        ".altrp-table": "transition-delay: {{SIZE}}s;",
+        ".altrp-table-head": "transition-delay: {{SIZE}}s;",
+        ".altrp-table-background": "transition-delay: {{SIZE}}s;",
       }
     });
 
