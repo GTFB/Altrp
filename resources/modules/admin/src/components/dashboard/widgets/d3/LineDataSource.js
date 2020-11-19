@@ -34,6 +34,7 @@ class LineDataSource extends Component {
       params: props.element.settings.params,
       countRequest: 0,
       isMultiple: false,
+      isDate: true,
       data: []
     };
   }
@@ -74,6 +75,19 @@ class LineDataSource extends Component {
 
   async componentWillMount() {
     await this.getData();
+  }
+
+  formattingDate(data) {
+    try {
+      return new Date(data).toLocaleString("ru", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+    } catch (error) {
+      return false;
+    }
+    y;
   }
 
   async getDataFromIterableDatasources(sources, paramsResult = {}) {
@@ -151,7 +165,14 @@ class LineDataSource extends Component {
           this.setState(s => ({ ...s, countRequest: count }));
         }, 3500);
       }
-      this.setState(s => ({ ...s, data: data, isMultiple: isMultiple }));
+      const dates = data.map(obj => obj.key instanceof Date);
+      const isDate = _.includes(dates, true);
+      this.setState(s => ({
+        ...s,
+        data: data,
+        isMultiple: isMultiple,
+        isDate: isDate
+      }));
     }
   }
 
@@ -193,13 +214,23 @@ class LineDataSource extends Component {
       if (check) {
         return <div>Загрузка...</div>;
       }
+    } else {
+      if (!this.state.isDate) {
+        return <div>Ключ должен быть в формате даты</div>;
+      }
     }
     if (
       typeof this.state.data !== "undefined" &&
       this.state.data.length === 0
     ) {
+      if (this.state.countRequest < 5) {
+        return <div>Загрузка...</div>;
+      }
       return <div>Нет данных</div>;
     }
+
+    const customColors = _.keys(this.state.color).length > 0;
+    const custromColorsArray = _.values(this.state.color).map(item => item);
     return (
       <>
         <ErrorBoundary>
@@ -209,7 +240,7 @@ class LineDataSource extends Component {
             series={
               <LineSeries
                 type={this.state.isMultiple ? "grouped" : "standard"}
-                colorScheme={customStyle}
+                colorScheme={customColors ? custromColorsArray : customStyle}
               />
             }
             xAxis={
@@ -217,7 +248,9 @@ class LineDataSource extends Component {
                 type="time"
                 tickSeries={
                   <LinearXAxisTickSeries
-                    label={<LinearXAxisTickLabel rotation={false} />}
+                    label={
+                      <LinearXAxisTickLabel format={this.formattingDate} />
+                    }
                   />
                 }
               />

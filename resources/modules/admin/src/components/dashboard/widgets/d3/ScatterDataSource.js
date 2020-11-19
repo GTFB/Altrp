@@ -3,13 +3,15 @@ import { customStyle } from "../../widgetTypes";
 import format from "date-fns/format";
 import {
   ScatterPlot,
+  ScatterSeries,
   ChartZoomPan,
   LinearXAxis,
   LinearXAxisTickSeries,
   LinearXAxisTickLabel,
   DiscreteLegend,
   DiscreteLegendEntry,
-  TooltipArea
+  TooltipArea,
+  ScatterPoint
 } from "reaviz";
 import formatDistanceStrict from "date-fns/formatDistanceStrict";
 import ru from "date-fns/locale/ru";
@@ -147,7 +149,14 @@ class ScatterDataSource extends Component {
           this.setState(s => ({ ...s, countRequest: count }));
         }, 3500);
       }
-      this.setState(s => ({ ...s, data: data, isMultiple: isMultiple }));
+      const dates = data.map(obj => obj.key instanceof Date);
+      const isDate = _.includes(dates, true);
+      this.setState(s => ({
+        ...s,
+        data: data,
+        isMultiple: isMultiple,
+        isDate: isDate
+      }));
     }
   }
 
@@ -191,6 +200,14 @@ class ScatterDataSource extends Component {
       return <div>Нет данных </div>;
     }
 
+    if (Object.keys(this.state.sources).length > 1) {
+      return <div>Укажите только один источник данных</div>;
+    } else {
+      if (!this.state.isDate) {
+        return <div>Ключ должен быть в формате даты</div>;
+      }
+    }
+
     if (
       typeof this.state.data !== "undefined" &&
       this.state.data.length === 0
@@ -201,8 +218,24 @@ class ScatterDataSource extends Component {
     return (
       <>
         <div className="chart-content-container">
-          <ScatterPlot data={this.state.data} />
-
+          <ScatterPlot
+            data={this.state.data}
+            zoomPan={<ChartZoomPan />}
+            series={
+              <ScatterSeries point={<ScatterPoint color={customStyle[0]} />} />
+            }
+            xAxis={
+              <LinearXAxis
+                tickSeries={
+                  <LinearXAxisTickSeries
+                    label={
+                      <LinearXAxisTickLabel format={this.formattingDate} />
+                    }
+                  />
+                }
+              />
+            }
+          />
           {this.state.legend.enabled && (
             <DiscreteLegend
               className={`discrete__legend  ${this.props.element.settings.legend

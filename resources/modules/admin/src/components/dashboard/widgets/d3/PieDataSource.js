@@ -18,11 +18,12 @@ class PieDataSource extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      source: props.source,
+      sources: props.sources,
       legend: props.element.settings.legend,
       color: props.element.settings.color,
       params: props.element.settings.params,
       countRequest: 0,
+      isMultiple: false,
       data: []
     };
   }
@@ -62,6 +63,100 @@ class PieDataSource extends Component {
     }
   }
 
+  async componentWillMount() {
+    await this.getData();
+  }
+
+  async getDataFromIterableDatasources(sources, paramsResult = {}) {
+    return Promise.all(
+      sources.map(async source => {
+        let dataArray = [];
+        if (_.keys(this.state.params).length > 0) {
+          dataArray = await new DataAdapter().adaptDataByPath(
+            source,
+            paramsResult
+          );
+        } else {
+          dataArray = await new DataAdapter().adaptDataByPath(source);
+        }
+        const multipleDataArray = _.uniq(
+          _.sortBy(
+            dataArray.map((item, index) => {
+              return {
+                data: item.data,
+                key: item.key,
+                id: index
+              };
+            }),
+            "key"
+          ),
+          "key"
+        );
+        return {
+          key: source.title || source.path,
+          data: multipleDataArray
+        };
+      })
+    );
+  }
+
+  async getData() {
+    let globalParams = _.cloneDeep(this.props.formsStore.form_data, []);
+    let globalParamsArray = _.keys(globalParams)
+      .map(param => {
+        return { [param]: globalParams[param] };
+      })
+      .filter(param => {
+        let key = _.keys(param)[0];
+        return param[key] !== "";
+      });
+    let localParams = _.cloneDeep(this.state.params, []);
+    let paramsResult = localParams.concat(globalParamsArray);
+    if (_.keys(this.props.element.settings.sources).length > 0) {
+      let data = [];
+      let isMultiple = false;
+      if (_.keys(this.props.element.settings.sources).length === 1) {
+        let source = this.props.element.settings.sources[0];
+        if (_.keys(this.state.params).length > 0) {
+          data = await new DataAdapter().adaptDataByPath(source, paramsResult);
+        } else {
+          data = await new DataAdapter().adaptDataByPath(source);
+        }
+      } else {
+        data = await this.getDataFromIterableDatasources(
+          this.props.element.settings.sources,
+          paramsResult
+        );
+        isMultiple = true;
+      }
+      let needCallAgain = true;
+      if (this.props.element.settings.sources.length > 1) {
+        let matches = data.map(obj => obj.data.length > 0);
+        needCallAgain = _.includes(matches, false);
+      } else {
+        needCallAgain =
+          _.keys(data).length === 0 && this.state.countRequest < 5;
+      }
+      if (needCallAgain) {
+        setTimeout(() => {
+          this.getData();
+          let count = this.state.countRequest;
+          count += 1;
+          this.setState(s => ({ ...s, countRequest: count }));
+        }, 3500);
+      }
+      this.setState(s => ({ ...s, data: data, isMultiple: isMultiple }));
+    }
+  }
+
+  formattingDate(data) {
+    return new Date(data).toLocaleString("ru", {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    });
+  }
+
   renderLegend(data) {
     let customColors = _.keys(this.state.color).length > 0;
     let legend = data.map((item, key) => {
@@ -69,71 +164,69 @@ class PieDataSource extends Component {
         <DiscreteLegendEntry
           key={key}
           className="discrete__legend-item"
-          label={`${item.key} (${item.data})`}
-          color={customStyle[item.key] || "#606060"}
+          label={`${
+            item.key instanceof Date ? this.formattingDate(item.key) : item.key
+          } (${item.data})`}
+          color={customStyle[item.key % customStyle.length] || "#606060"}
         />
       );
     });
     if (customColors) {
-      legend = data.map((item, key) => {
-        return (
-          <DiscreteLegendEntry
-            key={key}
-            className="discrete__legend-item"
-            label={`${item.key} (${item.data})`}
-            color={this.state.color[item.key] || "#606060"}
-          />
-        );
-      });
+      if (this.state.isMultiple) {
+        legend = data.map((item, key) => {
+          return (
+            <DiscreteLegendEntry
+              key={key}
+              className="discrete__legend-item"
+              label={`${
+                item.key instanceof Date
+                  ? this.formattingDate(item.key)
+                  : item.key
+              }`}
+              color={this.state.color[item.key] || "#606060"}
+            />
+          );
+        });
+      } else {
+        legend = data.map((item, key) => {
+          return (
+            <DiscreteLegendEntry
+              key={key}
+              className="discrete__legend-item"
+              label={`${
+                item.key instanceof Date
+                  ? this.formattingDate(item.key)
+                  : item.key
+              } (${item.data})`}
+              color={this.state.color[item.key] || "#606060"}
+            />
+          );
+        });
+      }
     }
 
     return legend;
   }
-
-  async componentWillMount() {
-    await this.getData();
-  }
-
-  async getData() {
-    let globalParams = _.cloneDeep(this.props.formsStore.form_data, []);
-    let globalParamsArray = _.keys(globalParams).map(param => {
-      return { [param]: globalParams[param] };
-    });
-    let localParams = _.cloneDeep(this.state.params, []);
-    let paramsResult = localParams.concat(globalParamsArray);
-    console.log(paramsResult);
-    if (typeof this.props.element.settings.source.path !== "undefined") {
-      let data = [];
-      if (_.keys(this.state.params).length > 0) {
-        data = await new DataAdapter().adaptDataByPath(
-          this.state.source,
-          paramsResult
-        );
-      } else {
-        data = await new DataAdapter().adaptDataByPath(this.state.source);
-      }
-      if (_.keys(data).length === 0 && this.state.countRequest < 5) {
-        setTimeout(() => {
-          this.getData();
-          let count = this.state.countRequest;
-          count += 1;
-          this.setState(s => ({ ...s, countRequest: count }));
-        }, 2500);
-      }
-      this.setState(s => ({ ...s, data: data }));
-    }
-  }
-
   render() {
-    if (Object.keys(this.state.source).length === 0) {
+    if (Object.keys(this.state.sources).length === 0) {
       return <div>Нет данных </div>;
     }
+
+    if (this.state.isMultiple) {
+      return <div>Укажите только один источник данных</div>;
+    }
+
     if (
       typeof this.state.data !== "undefined" &&
       this.state.data.length === 0
     ) {
+      if (this.state.countRequest < 5) {
+        console.log(this.state.countRequest);
+        return <div>Загрузка...</div>;
+      }
       return <div>Нет данных</div>;
     }
+
     let customColors = _.keys(this.state.color).length > 0;
     return (
       <>

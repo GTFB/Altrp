@@ -45,6 +45,23 @@ class DatasourceSettings extends Component {
               defaultValue={this.state.editElement.settings.sources}
               name="type"
               as="select"
+              styles={{
+                menuList: (provided, state) => ({
+                  ...provided,
+                  zIndex: "999999999999999999999",
+                  position: "relative"
+                }),
+                menu: (provided, state) => ({
+                  ...provided,
+                  zIndex: "999999999999999999999",
+                  position: "relative"
+                }),
+                menuPortal: (provided, state) => ({
+                  ...provided,
+                  zIndex: "999999999999999999999",
+                  position: "relative"
+                })
+              }}
               options={this.props.datasources}
               getOptionValue={option => option}
               getOptionLabel={option => option.title || option.path}

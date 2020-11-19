@@ -249,7 +249,7 @@ class WidgetSettings extends Component {
             </div>
           </Button>
           <Collapse in={this.state.openDataSettings}>
-            <div>
+            <div style={{ width: "100%" }}>
               <DatasourceSettings
                 datasources={this.state.datasources}
                 setDatasource={this.setDatasource}
@@ -316,7 +316,7 @@ class WidgetSettings extends Component {
                   )}
                 </>
               )}
-              {/* <ColorSettings setDatakeyColor={this.setDatakeyColor} /> */}
+              <ColorSettings setDatakeyColor={this.setDatakeyColor} />
             </div>
           </Collapse>
         </div>

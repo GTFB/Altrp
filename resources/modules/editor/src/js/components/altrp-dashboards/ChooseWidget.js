@@ -136,7 +136,7 @@ class ChooseWidget extends Component {
     return (
       <TableDataSource
         element={this.props.editElement}
-        sources={this.state.sourcess}
+        sources={this.state.sources}
       />
     );
   }
@@ -145,7 +145,7 @@ class ChooseWidget extends Component {
     return (
       <ScatterDataSource
         element={this.props.editElement}
-        sources={this.state.sourcess}
+        sources={this.state.sources}
       />
     );
   }

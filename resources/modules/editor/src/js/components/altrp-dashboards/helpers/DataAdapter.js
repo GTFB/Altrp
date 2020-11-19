@@ -69,9 +69,6 @@ class DataAdapter {
   }
 
   async adaptDataByPath(datasourceObject, params = {}) {
-    console.log("====================================");
-    console.log(datasourceObject);
-    console.log("====================================");
     const { path, key, data } = datasourceObject;
     if (_.keys(params).length > 0) {
       const datasource = this.getDataByPath(path);
@@ -81,7 +78,6 @@ class DataAdapter {
     }
     try {
       let dataArray = getDataByPath(path, []);
-      console.log(path);
       if (dataArray.length > 0) {
         //Исключаем дублирование ключей, т.к. это приводит к ошибкам рендера всех диаграм
         dataArray = _.uniqBy(dataArray, key);
@@ -90,7 +86,11 @@ class DataAdapter {
           const keyFormatted = isNaN(Date.parse(currentKey))
             ? currentKey
             : new Date(currentKey);
-          return { data: _.get(d, data), key: keyFormatted };
+          return {
+            data: _.get(d, data),
+            key: keyFormatted,
+            source: datasourceObject.title || datasourceObject.path
+          };
         });
         if (datasourceObject.splitTo && datasourceObject.splitFrom) {
           dataArray = dataArray.slice(
@@ -98,7 +98,6 @@ class DataAdapter {
             datasourceObject.splitTo
           );
         }
-        console.log(dataArray);
       }
       return dataArray;
     } catch (error) {

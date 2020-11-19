@@ -152,11 +152,16 @@ class BarDataSource extends Component {
           this.setState(s => ({ ...s, countRequest: count }));
         }, 3500);
       }
-      console.log("====================================");
-      console.log(data);
-      console.log("====================================");
       this.setState(s => ({ ...s, data: data, isMultiple: isMultiple }));
     }
+  }
+
+  formattingDate(data) {
+    return new Date(data).toLocaleString("ru", {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    });
   }
 
   renderLegend(data) {
@@ -215,16 +220,6 @@ class BarDataSource extends Component {
             <ErrorBoundary>
               <BarChart
                 data={this.state.data}
-                // xAxis={
-                //   <LinearXAxis
-                //     type="time"
-                //     tickSeries={
-                //       <LinearXAxisTickSeries
-                //         label={<LinearXAxisTickLabel rotation={false} />}
-                //       />
-                //     }
-                //   />
-                // }
                 series={
                   <BarSeries
                     colorScheme={

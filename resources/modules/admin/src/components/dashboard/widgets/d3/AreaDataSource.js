@@ -8,6 +8,9 @@ import {
   LinearXAxis,
   LinearXAxisTickSeries,
   LinearXAxisTickLabel,
+  LinearYAxis,
+  LinearYAxisTickLabel,
+  LinearYAxisTickSeries,
   Area,
   Gradient,
   GradientStop,
@@ -35,9 +38,11 @@ class AreaDataSource extends Component {
       color: props.element.settings.color,
       params: props.element.settings.params,
       isMultiple: false,
+      isDate: true,
       countRequest: 0,
       data: []
     };
+    this.renderLegend = this.renderLegend.bind(this);
   }
 
   async componentDidUpdate(prevProps, prevState) {
@@ -138,27 +143,23 @@ class AreaDataSource extends Component {
           this.setState(s => ({ ...s, countRequest: count }));
         }, 3500);
       }
-      this.setState(s => ({ ...s, data: data, isMultiple: isMultiple }));
+      const dates = data.map(obj => obj.key instanceof Date);
+      const isDate = _.includes(dates, true);
+      this.setState(s => ({
+        ...s,
+        data: data,
+        isMultiple: isMultiple,
+        isDate: isDate
+      }));
     }
   }
 
   formattingDate(data) {
-    //  Первая дата
-    const firstDate = data.slice().shift();
-    // Последняя дата
-    const lastDate = data.slice().pop();
-    // Разница между датами в месяцах
-    const diff = parseInt(
-      formatDistanceStrict(firstDate.key, lastDate.key, {
-        unit: "month"
-      })
-    );
-
-    if (diff >= 0 && diff <= 12) {
-      return format(data, "d MMM", { locale: ru });
-    } else {
-      return format(data, "d MMM yy", { locale: ru });
-    }
+    return new Date(data).toLocaleString("ru", {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    });
   }
 
   renderLegend(data) {
@@ -168,22 +169,45 @@ class AreaDataSource extends Component {
         <DiscreteLegendEntry
           key={key}
           className="discrete__legend-item"
-          label={`${item.key} (${item.data})`}
+          label={`${
+            item.key instanceof Date ? this.formattingDate(item.key) : item.key
+          } (${item.data})`}
           color={customStyle[item.key % customStyle.length] || "#606060"}
         />
       );
     });
     if (customColors) {
-      legend = data.map((item, key) => {
-        return (
-          <DiscreteLegendEntry
-            key={key}
-            className="discrete__legend-item"
-            label={`${item.key} (${item.data})`}
-            color={this.state.color[item.key] || "#606060"}
-          />
-        );
-      });
+      if (this.state.isMultiple) {
+        legend = data.map((item, key) => {
+          return (
+            <DiscreteLegendEntry
+              key={key}
+              className="discrete__legend-item"
+              label={`${
+                item.key instanceof Date
+                  ? this.formattingDate(item.key)
+                  : item.key
+              }`}
+              color={this.state.color[item.key] || "#606060"}
+            />
+          );
+        });
+      } else {
+        legend = data.map((item, key) => {
+          return (
+            <DiscreteLegendEntry
+              key={key}
+              className="discrete__legend-item"
+              label={`${
+                item.key instanceof Date
+                  ? this.formattingDate(item.key)
+                  : item.key
+              } (${item.data})`}
+              color={this.state.color[item.key] || "#606060"}
+            />
+          );
+        });
+      }
     }
 
     return legend;
@@ -198,9 +222,25 @@ class AreaDataSource extends Component {
       typeof this.state.data !== "undefined" &&
       this.state.data.length === 0
     ) {
+      if (this.state.countRequest < 5) {
+        return <div>Загрузка...</div>;
+      }
       return <div>Нет данных</div>;
     }
+    if (this.props.element.settings.sources.length > 1) {
+      let matches = this.state.data.map(obj => obj.data.length > 0);
+      let check = _.includes(matches, false);
+      if (check) {
+        return <div>Загрузка...</div>;
+      }
+    } else {
+      if (!this.state.isDate) {
+        return <div>Ключ должен быть в формате даты</div>;
+      }
+    }
 
+    const customColors = _.keys(this.state.color).length > 0;
+    const custromColorsArray = _.values(this.state.color).map(item => item);
     return (
       <>
         <AreaChart
@@ -208,9 +248,7 @@ class AreaDataSource extends Component {
           series={
             <AreaSeries
               type={this.state.isMultiple ? "grouped" : "standard"}
-              tooltip={<TooltipArea disabled={true} />}
-              colorScheme={customStyle}
-              markLine={null}
+              colorScheme={customColors ? custromColorsArray : customStyle}
             />
           }
           xAxis={
@@ -218,7 +256,15 @@ class AreaDataSource extends Component {
               type="time"
               tickSeries={
                 <LinearXAxisTickSeries
-                  label={<LinearXAxisTickLabel rotation={false} />}
+                  label={
+                    <LinearXAxisTickLabel
+                      rotation="60"
+                      padding={{
+                        fromAxis: 90
+                      }}
+                      format={this.formattingDate}
+                    />
+                  }
                 />
               }
             />
