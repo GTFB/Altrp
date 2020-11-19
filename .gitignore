@@ -20,7 +20,6 @@ modules_statuses.json
 
 # IDE helpers
 /config/ide-helper.php
-/config/modules.php
 .phpstorm.meta.php
 _ide_helper.php
 .vscode
