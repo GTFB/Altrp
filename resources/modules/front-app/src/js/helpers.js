@@ -351,7 +351,7 @@ function conditionChecker(c, model, dataByPath = true) {
  * @param {function} dispatch
  * @return {boolean}
  */
-export function setDataByPath(path = "", value) {
+export function setDataByPath(path = "", value, dispatch) {
   if (!path) {
     return false;
   }

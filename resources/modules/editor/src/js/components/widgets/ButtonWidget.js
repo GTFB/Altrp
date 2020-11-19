@@ -73,7 +73,7 @@ class ButtonWidget extends Component {
                 redirect_after
               } = this.state.settings;
               if (redirect_to_prev_page) {
-                return this.props.history.goBack();
+                return history.back();
               }
               if (redirect_after) {
                 redirect_after = parseURLTemplate(redirect_after, res.data);
@@ -156,7 +156,7 @@ class ButtonWidget extends Component {
 
   render() {
     const { link_link = {} } = this.state.settings;
-    const { goBack } = this.props.history;
+    const { back } = history;
     const background_image = this.props.element.getSettings(
       "background_image",
       {}
@@ -273,7 +273,7 @@ class ButtonWidget extends Component {
     if (_.get(this.state, "settings.link_link.toPrevPage")) {
       link = (
         <button
-          onClick={() => (isEditor() ? null : goBack())}
+          onClick={() => (isEditor() ? null : back())}
           className={classes}
           id={this.state.settings.position_css_id}
         >
@@ -296,4 +296,5 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(withRouter(ButtonWidget));
+// export default connect(null, mapDispatchToProps)(withRouter(ButtonWidget));
+export default ButtonWidget;

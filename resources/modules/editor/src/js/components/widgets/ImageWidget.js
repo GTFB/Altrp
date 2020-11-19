@@ -77,7 +77,7 @@ class ImageWidget extends Component {
       return (
         <div
           className="altrp-image-container cursor-pointer"
-          onClick={() => this.props.history.goBack()}
+          onClick={() => history.back()}
         >
           {altrpImage}
         </div>
@@ -100,11 +100,11 @@ class ImageWidget extends Component {
   }
 }
 
-const path = window.location.pathname;
-let _export;
-if (path.includes("reports")) {
-  _export = ImageWidget;
-} else {
-  _export = withRouter(ImageWidget);
-}
-export default _export;
+// const path = window.location.pathname;
+// let _export;
+// if (path.includes("reports")) {
+//   _export = ImageWidget;
+// } else {
+//   _export = withRouter(ImageWidget);
+// }
+export default ImageWidget;

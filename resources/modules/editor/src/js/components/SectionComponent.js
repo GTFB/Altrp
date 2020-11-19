@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+  import React, { Component } from "react";
 import '../../sass/section.scss';
 import { connect } from "react-redux";
 import '../../sass/section.scss'
@@ -121,4 +121,7 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(SectionComponent);
+// export default connect(mapStateToProps, null, null, {
+//   forwardRef: true
+// })(SectionComponent);
+export default SectionComponent;
