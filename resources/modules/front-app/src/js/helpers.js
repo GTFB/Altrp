@@ -42,6 +42,8 @@ export function setTitle(title) {
  * @return {boolean}
  * */
 export function isEditor() {
+  const path = window.location.pathname;
+  return path.includes("admin");
   return !!(window.altrpEditor || window.parent.altrpEditor);
 }
 

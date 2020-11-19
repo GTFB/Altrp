@@ -2,6 +2,7 @@
 import '../../sass/section.scss';
 import { connect } from "react-redux";
 import '../../sass/section.scss'
+  import {isEditor} from "../../../../front-app/src/js/helpers";
 
 class SectionComponent extends Component {
   constructor(props) {
@@ -120,7 +121,7 @@ function mapStateToProps(state) {
     changeWidthColumns: state.columnWidth,
   };
 }
-
+console.log(isEditor());
 // export default connect(mapStateToProps, null, null, {
 //   forwardRef: true
 // })(SectionComponent);
