@@ -21,7 +21,7 @@ import {
   TAB_CONTENT,
   TAB_STYLE,
   CONTROLLER_SHADOW,
-  CONTROLLER_MEDIA, CONTROLLER_REPEATER,
+  CONTROLLER_MEDIA, CONTROLLER_REPEATER, CONTROLLER_WYSIWYG,
 } from "../modules/ControllersManager";
   import Repeater from "../Repeater";
   import SaveImportModule from "../modules/SaveImportModule";
@@ -100,6 +100,182 @@ class RootElement extends BaseElement {
       dynamic: false,
       label: 'Hidden Elements Triggers',
       description: 'Input triggers, commas separated'
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('popup_section', {
+      label: 'Popup',
+    });
+
+    this.addControl("type_popup", {
+      type: CONTROLLER_SELECT,
+      label: "Type",
+      default: "popup",
+      options: [
+        {
+          value: "popup",
+          label: "Popup"
+        },
+        {
+          value: "offcanvas",
+          label: "Offcanvas"
+        }
+      ],
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('offcanvas_section', {
+      label: 'Offcanvas',
+    });
+
+    this.addControl("width_offcanvas", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default: {
+        size: 300,
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+        'vw'
+      ],
+      max: 1200,
+      min: 0,
+      rules: {
+        '.{{ID}}-altrp-offcanvas .altrp-offcanvas-vertical{{STATE}}': 'width: {{SIZE}}{{UNIT}};',
+        '.{{ID}}-altrp-offcanvas .altrp-offcanvas-horizontal{{STATE}}': 'height: {{SIZE}}{{UNIT}};'
+      },
+    });
+
+    // this.addControl('overlay_offcanvas', {
+    //   type: CONTROLLER_SWITCHER,
+    //   label: 'Overlay',
+    // });
+
+    this.addControl('close_offcanvas', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Close button',
+    });
+
+    this.addControl('close_button_position_offcanvas', {
+      conditions: {
+        'close_offcanvas': true,
+      },
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment',
+      default: 'right',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ],
+    });
+
+    this.addControl('close_button_icon_offcanvas', {
+      conditions: {
+        'close_offcanvas': true,
+      },
+      type: CONTROLLER_MEDIA,
+      label: 'Background Image',
+      default: { url: "" },
+    });
+
+    this.addControl("close_cursor_offcanvas", {
+      type: CONTROLLER_SELECT,
+      label: "Close cursor",
+      default: "none",
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "crosshair",
+          label: "Crosshair"
+        },
+        {
+          value: "pointer",
+          label: "Pointer"
+        },
+      ],
+    });
+
+    this.addControl("direction_offcanvas", {
+      type: CONTROLLER_SELECT,
+      label: "Content box direction",
+      default: "left",
+      options: [
+        {
+          value: "left",
+          label: "Left"
+        },
+        {
+          value: "right",
+          label: "Right"
+        },
+        {
+          value: "top",
+          label: "Top"
+        },
+        {
+          value: "bottom",
+          label: "Bottom"
+        },
+        // {
+        //   value: "topLeft",
+        //   label: "Top left"
+        // },
+        // {
+        //   value: "topRight",
+        //   label: "Top right"
+        // },
+        // {
+        //   value: "bottomLeft",
+        //   label: "Bottom Left"
+        // },
+        // {
+        //   value: "bottomRight",
+        //   label: "Bottom right"
+        // },
+      ],
+    });
+
+    this.addControl("animations_offcanvas", {
+      type: CONTROLLER_SELECT,
+      label: "Animations",
+      default: "slide",
+      options: [
+        {
+          value: "slide",
+          label: "Slide"
+        },
+        {
+          value: "push",
+          label: "Push"
+        },
+        {
+          value: "reveal",
+          label: "Reveal"
+        },
+        {
+          value: "none",
+          label: "none"
+        }
+      ],
+    });
+
+    this.addControl('overflow_visible_offcanvas', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Offcanvas overflow visible',
     });
 
     this.endControlSection();
@@ -788,12 +964,12 @@ class RootElement extends BaseElement {
       label: 'Transition Property',
       isMulti: true,
       options: [
-        { label: 'color', value: 'color' }, 
+        { label: 'color', value: 'color' },
         { label: 'font-size', value: 'font-size' },
-        { label: 'margin', value: 'margin' }, 
-        { label: 'padding', value: 'padding' }, 
-        { label: 'background-color', value: 'background-color' }, 
-        { label: 'opacity', value: 'opacity' }, 
+        { label: 'margin', value: 'margin' },
+        { label: 'padding', value: 'padding' },
+        { label: 'background-color', value: 'background-color' },
+        { label: 'opacity', value: 'opacity' },
       ],
       rules: {
         ".altrp-heading": "transition-property: {{VALUE}};"
@@ -1005,7 +1181,7 @@ class RootElement extends BaseElement {
       ],
       rules: {
         'div .altrp-btn{{STATE}}': [
-          'border-top-left-radius: {{TOP}}{{UNIT}}', 
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
           'border-top-right-radius: {{RIGHT}}{{UNIT}}',
           'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
           'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
@@ -1227,7 +1403,7 @@ class RootElement extends BaseElement {
         ".altrp-btn{{STATE}}": "background-size: {{VALUE}};"
       }
     });
-    
+
     this.endControlSection();
 
     this.startControlSection('list_defaults', {
@@ -2171,7 +2347,7 @@ class RootElement extends BaseElement {
       tab: TAB_STYLE,
       label: 'Table Defaults',
     });
-    
+
     this.addControl('table_default_header_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Header alignment',
@@ -2810,6 +2986,209 @@ class RootElement extends BaseElement {
 
     this.endControlSection();
 
+    //offcanvas style
+    this.startControlSection('offcanvas_style', {
+      tab: TAB_STYLE,
+      label: 'Offcanvas',
+    });
+
+    this.addControl("background_offcanvas", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      rules: {
+        ".{{ID}}-altrp-offcanvas .altrp-offcanvas{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('shadow_offcanvas', {
+      default: {
+        // blur: 0,
+        // horizontal: 0,
+        // vertical: 0,
+        // opacity: 1,
+        // spread: 0,
+        // colorRGB: 'rgb(0, 0, 0)',
+        // color: 'rgb(0, 0, 0)',
+        // colorPickedHex: '#000000',
+        // type: ""
+      },
+      type: CONTROLLER_SHADOW,
+      label: 'Shadow',
+      rules: {
+        '.{{ID}}-altrp-offcanvas .altrp-offcanvas{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    });
+
+    this.addControl('padding_offcanvas', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.{{ID}}-altrp-offcanvas .altrp-offcanvas{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('close_heading_offcanvas', {
+      type: CONTROLLER_HEADING,
+      label: 'Close button',
+    });
+
+    this.addControl("top_close_offcanvas", {
+      type: CONTROLLER_SLIDER,
+      label: 'Top position',
+      default: {
+        unit: 'px',
+      },
+      max: 100,
+      min: 0,
+      rules: {
+        ".{{ID}}-altrp-offcanvas .altrp-offcanvas-button{{STATE}}": "top: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("left_close_offcanvas", {
+      type: CONTROLLER_SLIDER,
+      label: 'Left position',
+      default: {
+        unit: 'px',
+      },
+      max: 100,
+      min: 0,
+      rules: {
+        ".{{ID}}-altrp-offcanvas .altrp-offcanvas-button{{STATE}}": "left: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("right_close_offcanvas", {
+      type: CONTROLLER_SLIDER,
+      label: 'Right position',
+      default: {
+        unit: 'px',
+      },
+      max: 100,
+      min: 0,
+      rules: {
+        ".{{ID}}-altrp-offcanvas .altrp-offcanvas-button{{STATE}}": "right: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("size_close_offcanvas", {
+      type: CONTROLLER_SLIDER,
+      label: 'Size',
+      default: {
+        unit: 'px',
+      },
+      max: 100,
+      min: 0,
+      rules: {
+        ".{{ID}}-altrp-offcanvas .altrp-offcanvas-button{{STATE}} .altrp-offcanvas-button-icon": [
+          "width: {{SIZE}}{{UNIT}}",
+          "height: {{SIZE}}{{UNIT}}"
+        ]
+      }
+    });
+
+    this.addControl('background_close_offcanvas', {
+      type: CONTROLLER_COLOR,
+      label: 'Background color',
+      default: {
+        // color: "rgb(52,59,76)",
+        // colorPickedHex: "#343B4C",
+      },
+      rules: {
+        '.{{ID}}-altrp-offcanvas .altrp-offcanvas-button{{STATE}}': 'background-color: {{COLOR}};',
+      },
+    });
+
+    this.addControl('fill_close_offcanvas', {
+      type: CONTROLLER_COLOR,
+      label: 'Fill color',
+      default: {
+        // color: "rgb(52,59,76)",
+        // colorPickedHex: "#343B4C",
+      },
+      rules: {
+        '.{{ID}}-altrp-offcanvas .altrp-offcanvas-button{{STATE}} .altrp-offcanvas-button-icon path': 'fill: {{COLOR}};',
+      },
+    });
+
+    this.addControl('stroke_close_offcanvas', {
+      type: CONTROLLER_COLOR,
+      label: 'Stroke color',
+      default: {
+        // color: "rgb(52,59,76)",
+        // colorPickedHex: "#343B4C",
+      },
+      rules: {
+        '.{{ID}}-altrp-offcanvas .altrp-offcanvas-button{{STATE}} .altrp-offcanvas-button-icon path': 'stroke: {{COLOR}};',
+      },
+    });
+
+    this.addControl('border_radius_close_offcanvas', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.{{ID}}-altrp-offcanvas .altrp-offcanvas-button{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
+    });
+
+    this.addControl('padding_close_offcanvas', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.{{ID}}-altrp-offcanvas .altrp-offcanvas-button{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.endControlSection();
     /**
      * импорт/сохранение глобальных настроек
      */
@@ -2889,7 +3268,7 @@ class RootElement extends BaseElement {
     this.endControlSection();
   }
 
-  
+
 
   appendNewSection(newSection) {
     if (newSection.getType() !== 'section') {

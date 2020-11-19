@@ -873,170 +873,6 @@ class Button extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection('border_section', {
-      tab: TAB_STYLE,
-      label: 'Border'
-    });
-
-    this.addControl('border_type', {
-      type: CONTROLLER_SELECT,
-      label: 'Border Type',
-      options: [
-        {
-          'value': 'none',
-          'label': 'None',
-        },
-        {
-          'value': 'solid',
-          'label': 'Solid',
-        },
-        {
-          'value': 'double',
-          'label': 'Double',
-        },
-        {
-          'value': 'dotted',
-          'label': 'Dotted',
-        },
-        {
-          'value': 'dashed',
-          'label': 'Dashed',
-        },
-        {
-          'value': 'groove',
-          'label': 'Groove',
-        },
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-style: {{VALUE}};',
-      },
-    }
-    );
-
-    this.addControl(
-      'border_width', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Border Width',
-      default: {
-        bind: true
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-      },
-    }
-    );
-
-    this.addControl('border_color', {
-      type: CONTROLLER_COLOR,
-      label: 'Border Color',
-      // default: {
-      //   color: "rgb(50,168,82)",
-      //   colorPickedHex: "#32a852",
-      // },
-      rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
-      },
-    }
-    );
-
-    this.addControl('border_radius', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Border Radius',
-      default: {
-        unit: 'px'
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}}': [
-          'border-top-left-radius: {{TOP}}{{UNIT}}',
-          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
-        ]
-      }
-    });
-
-    this.addControl('style_background_shadow', {
-      type: CONTROLLER_SHADOW,
-      label: 'Shadow',
-      default: {
-        // blur: 0,
-        // horizontal: 0,
-        // vertical: 0,
-        // opacity: 1,
-        // spread: 0,
-        // colorRGB: 'rgb(0, 0, 0)',
-        // color: 'rgb(0, 0, 0)',
-        // colorPickedHex: '#000000',
-        // type: ""
-      },
-      presetColors: [
-        '#eaeaea',
-        '#9c18a8'
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      },
-    });
-
-
-    this.endControlSection();
-
-    this.startControlSection('font_section', {
-      tab: TAB_STYLE,
-      label: 'Font',
-    });
-
-    this.addControl('font_typographic', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        // default:{
-        //   lineHeight: 1,
-        //   spacing: 0,
-        //   size: 16,
-        //   weight: "normal",
-        //   family: "Open Sans",
-        //   decoration: ""
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': [
-            'font-size: {{SIZE}}px;',
-            'font-family: {{FAMILY}}',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
-    );
-
-    this.addControl('font_color', {
-        type: CONTROLLER_COLOR,
-        label: 'Color',
-        // default: {
-        //   color: "rgb(255,255,255)",
-        //   colorPickedHex: "#FFF",
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
-        },
-      }
-    );
-
-    this.endControlSection();
-
     this.startControlSection('background_section', {
       tab: TAB_STYLE,
       label: 'Background'
@@ -1233,6 +1069,170 @@ class Button extends BaseElement {
         "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
       }
     });
+
+    this.endControlSection();
+
+    this.startControlSection('border_section', {
+      tab: TAB_STYLE,
+      label: 'Border'
+    });
+
+    this.addControl('border_type', {
+      type: CONTROLLER_SELECT,
+      label: 'Border Type',
+      options: [
+        {
+          'value': 'none',
+          'label': 'None',
+        },
+        {
+          'value': 'solid',
+          'label': 'Solid',
+        },
+        {
+          'value': 'double',
+          'label': 'Double',
+        },
+        {
+          'value': 'dotted',
+          'label': 'Dotted',
+        },
+        {
+          'value': 'dashed',
+          'label': 'Dashed',
+        },
+        {
+          'value': 'groove',
+          'label': 'Groove',
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-style: {{VALUE}};',
+      },
+    }
+    );
+
+    this.addControl(
+      'border_width', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Width',
+      default: {
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    }
+    );
+
+    this.addControl('border_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Border Color',
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852",
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
+      },
+    }
+    );
+
+    this.addControl('border_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
+    });
+
+    this.addControl('style_background_shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'Shadow',
+      default: {
+        // blur: 0,
+        // horizontal: 0,
+        // vertical: 0,
+        // opacity: 1,
+        // spread: 0,
+        // colorRGB: 'rgb(0, 0, 0)',
+        // color: 'rgb(0, 0, 0)',
+        // colorPickedHex: '#000000',
+        // type: ""
+      },
+      presetColors: [
+        '#eaeaea',
+        '#9c18a8'
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    });
+
+
+    this.endControlSection();
+
+    this.startControlSection('font_section', {
+      tab: TAB_STYLE,
+      label: 'Font',
+    });
+
+    this.addControl('font_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        // default:{
+        //   lineHeight: 1,
+        //   spacing: 0,
+        //   size: 16,
+        //   weight: "normal",
+        //   family: "Open Sans",
+        //   decoration: ""
+        // },
+        rules: {
+          '{{ELEMENT}} .altrp-btn{{STATE}}': [
+            'font-size: {{SIZE}}px;',
+            'font-family: {{FAMILY}}',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
+    this.addControl('font_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Color',
+        // default: {
+        //   color: "rgb(255,255,255)",
+        //   colorPickedHex: "#FFF",
+        // },
+        rules: {
+          '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
+        },
+      }
+    );
 
     this.endControlSection();
 
