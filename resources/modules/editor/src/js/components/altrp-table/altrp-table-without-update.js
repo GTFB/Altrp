@@ -512,7 +512,7 @@ function AltrpTableWithoutUpdate(
       )}
       {global_filter &&  <tr className="altrp-table-tr">
         <th className="altrp-table-th"
-            colSpan={visibleColumns.length}
+            colSpan={visibleColumns.length + replace_rows}
             style={{
               textAlign: 'left',
             }}
@@ -535,6 +535,7 @@ function AltrpTableWithoutUpdate(
         return <Row
             index={i}
             row={row}
+            visibleColumns={visibleColumns}
             moveRow={moveRow}
             settings={settings}
             cardTemplate={cardTemplate}
@@ -557,7 +558,7 @@ function AltrpTableWithoutUpdate(
         if(! resize_columns){
           delete rowProps.style;
         }
-        return (
+        /*return (
           <React.Fragment {...fragmentProps}>
 
             <tr {...rowProps} className="altrp-table-tr">
@@ -598,11 +599,11 @@ function AltrpTableWithoutUpdate(
                 <td colSpan={visibleColumns.length} className="altrp-table-td altrp-post">{ExpandCard}</td>
               </tr>
             }
-          </React.Fragment> )
+          </React.Fragment> )*/
       })}
 
       </tbody> :
-          <tbody><tr className="altrp-table-tr"><td className="altrp-table-td" colSpan={visibleColumns.length}>
+          <tbody><tr className="altrp-table-tr"><td className="altrp-table-td" colSpan={visibleColumns.length + replace_rows}>
             {(_status === 'loading' ? (loading_text || null) : null )}
           </td></tr></tbody>}
     </table>
@@ -928,6 +929,8 @@ export function settingsToColumns(settings, widgetId) {
           break;
         }
         _column.canGroupBy = _column.group_by;
+        console.log(_column);
+        console.log(_column.group_by);
         if(_column.aggregate){
           let aggregateTemplate = _column.aggregate_template || `{{value}} Unique Names`;
           _column.Aggregated = ({value}) => {
@@ -1033,7 +1036,7 @@ function GlobalFilter({
 const DND_ITEM_TYPE = 'row';
 
 /**
- * Компонент строки для перетаскивания
+ * Компонент строки
  * @param {{}} row
  * @param {number} index
  * @param {function} moveRow
@@ -1046,6 +1049,7 @@ const DND_ITEM_TYPE = 'row';
 const Row = ({ row,
                index,
                moveRow,
+               visibleColumns,
                cardTemplate,
                settings }) => {
   const dropRef = React.useRef(null);
@@ -1188,7 +1192,7 @@ const Row = ({ row,
       </tr>
       {row.isExpanded && row_expand && card_template && cardTemplate &&
       <tr className="altrp-table-tr altrp-posts">
-        <td colSpan={visibleColumns.length} className="altrp-table-td altrp-post">{ExpandCard}</td>
+        <td colSpan={visibleColumns.length + replace_rows} className="altrp-table-td altrp-post">{ExpandCard}</td>
       </tr>
       }
     </React.Fragment> );

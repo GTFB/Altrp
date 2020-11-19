@@ -2,19 +2,22 @@
 
 namespace App;
 
+use App\Reports;
 use App\Altrp\Source;
-use App\Altrp\Model as AltrpModel;
-use App\Constructor\Template;
+use Mockery\Exception;
 use App\Traits\Searchable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use App\Constructor\Template;
+use Facade\FlareClient\Report;
+use App\Altrp\Model as AltrpModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Str;
-use Mockery\Exception;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Page
@@ -36,7 +39,8 @@ class Page extends Model
     'redirect',
     'guid',
     'for_guest',
-    'parent_page_id'
+    'parent_page_id',
+    'type'
   ];
 
   /**
@@ -62,6 +66,49 @@ class Page extends Model
     }
     return $pages;
   }
+  /**
+   * @return array
+   */
+  static function get_reports_routes( )
+  {
+    $pages = [];
+    if( ! appIsInstalled()  ){
+      return $pages;
+    }
+    if( ! Schema::hasTable( 'pages' )  ){
+      return $pages;
+    }
+    if( app()->runningInConsole() ){
+      return $pages;
+    }
+    try{
+      $pages = Page::where('type','report')->get()->map->only( [ 'path','title' ] )->map( function ( $path ) {
+        return [
+          'path'=>$path['path'],
+          'title'=>$path['title']
+        ];
+      } )->toArray();
+    } catch (Exception $e){
+      error_log($e->getMessage());
+    }
+    return $pages;
+  }
+
+
+  /**
+   * Ищет отчет по номеру айди среди страниц
+   * @param int $id
+   * @return \Illuminate\Database\Eloquent\Builder|Model|null|object
+   * @throws \Throwable
+   */
+  public static function findReport(int $id)
+  {
+    try {
+      return (new static)->where('type','report')->where('id',$id)->first();
+    } catch (\Throwable $th) {
+      throw $th;
+    }
+  }
 
   /**
    * @param bool $lazy
@@ -69,10 +116,29 @@ class Page extends Model
    */
   public static function get_pages_for_frontend( $lazy = false )
   {
-    $pages = [];
-
     $_pages = static::all();
 
+    $pages = (new static)->getPagesData($_pages, $lazy);
+
+    return $pages;
+  }
+
+  /**
+   * @param bool $lazy
+   * @return array
+   */
+  public static function get_reports_for_frontend( $lazy = false )
+  {
+    $_pages = static::all()->where('type','report');
+
+    $pages = (new static)->getPagesData($_pages, $lazy);
+
+    return $pages;
+  }
+
+  private function getPagesData(Collection $_pages, bool $lazy = true): Array
+  {
+    $pages = [];
     /** @var Page $page */
     foreach ( $_pages as $page ) {
       if( $page->allowedForUser() ){
@@ -91,7 +157,6 @@ class Page extends Model
            * Если лениво загружаем области то возвращаем пустой массив
            */
           'areas' => $lazy ? [] : self::get_areas_for_page( $page->id ),
-//          'areas' => self::get_areas_for_page( $page->id ),
         ];
       } else {
         $_page = [
@@ -106,12 +171,9 @@ class Page extends Model
         $_page['model'] = $page->model->toArray();
         $_page['model']['modelName'] = Str::plural( $page->model->name );
       }
-//      if( $page->get_models() ){
-//        $_page['models'] = $page->get_models();
-//      }
+
       $pages[] = $_page;
     }
-
     return $pages;
   }
 
@@ -121,7 +183,6 @@ class Page extends Model
    */
   public static function get_areas_for_page( $page_id ){
     $areas = [];
-
 //    $header = Template::where( 'area', 2 )->where( 'type', 'template' )->first();
 //    if( $header ){
 //      $header->check_elements_conditions();
@@ -166,7 +227,8 @@ class Page extends Model
 //        ],
 //      ];
 //    }
-
+    $currentPage = Page::find($page_id);
+    $contentType = $currentPage->type;
     $areas[] = [
       'area_name' => 'header',
       'id' => 'header',
@@ -183,7 +245,7 @@ class Page extends Model
       'settings' => [],
       'template' => Template::getTemplate([
         'page_id' => $page_id,
-        'template_type' => 'content',
+        'template_type' => $contentType ? 'reports' : 'content',
       ]),
     ];
 
