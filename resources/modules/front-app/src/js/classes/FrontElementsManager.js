@@ -21,6 +21,7 @@ import DashboardsWidget from "../../../../editor/src/js/components/widgets/Dashb
 import PostsWidget from "../../../../editor/src/js/components/widgets/PostsWidget";
 import IconWidget from "../../../../editor/src/js/components/widgets/IconWidget";
 import TourGuide from "../../../../editor/src/js/components/widgets/TourGuide";
+import ExportPanelWindget from "../../../../editor/src/js/components/widgets/ExportPanelWidget";
 
 export default class FrontElementsManager {
   constructor() {
@@ -49,6 +50,7 @@ export default class FrontElementsManager {
     this.components["dashboards"] = DashboardsWidget;
     this.components["tour"] = TourGuide;
     this.components["icon"] = IconWidget;
+    this.components["export"] = ExportPanelWindget;
   }
 
   getComponentClass(name) {

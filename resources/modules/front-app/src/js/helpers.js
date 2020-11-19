@@ -1,17 +1,18 @@
+import React from "react";
 import CONSTANTS from "../../../editor/src/js/consts";
 import AltrpModel from "../../../editor/src/js/classes/AltrpModel";
 import moment from "moment";
 import Resource from "../../../editor/src/js/classes/Resource";
 import appStore from "./store/store";
-import {changeCurrentUser} from "./store/current-user/actions";
-import {changeAppRoutes} from "./store/routes/actions";
+import { changeCurrentUser } from "./store/current-user/actions";
+import { changeAppRoutes } from "./store/routes/actions";
 import Route from "./classes/Route";
 import {changePageState} from "./store/altrp-page-state-storage/actions";
 import {changeAltrpMeta} from "./store/altrp-meta-storage/actions";
 import {useDispatch} from "react-redux";
 
 export function getRoutes() {
-  return import('./classes/Routes.js');
+  return import("./classes/Routes.js");
 }
 /**
  * @return {IconsManager}
@@ -41,6 +42,8 @@ export function setTitle(title) {
  * @return {boolean}
  * */
 export function isEditor() {
+  const path = window.location.pathname;
+  return path.includes("admin");
   return !!(window.altrpEditor || window.parent.altrpEditor);
 }
 
@@ -58,20 +61,20 @@ export function parseOptionsFromSettings(string) {
   if (!string) {
     return [];
   }
-  let options = string.split('\n');
+  let options = string.split("\n");
   let path = extractPathFromString(string);
   let _optionsFromData = getDataByPath(path);
   if (_.isArray(_optionsFromData)) {
     return _optionsFromData;
   }
   options = options.map(option => {
-    let value = option.split('|')[0];
+    let value = option.split("|")[0];
     value = value.trim();
     let valuePath = extractPathFromString(value);
     if (valuePath) {
       value = getDataByPath(valuePath);
     }
-    let label = option.split('|')[1] || value || '';
+    let label = option.split("|")[1] || value || "";
     label = label.trim();
     let labelPath = extractPathFromString(label);
     if (labelPath) {
@@ -79,8 +82,8 @@ export function parseOptionsFromSettings(string) {
     }
     return {
       value,
-      label,
-    }
+      label
+    };
   });
   return options;
 }
@@ -91,7 +94,7 @@ export function parseOptionsFromSettings(string) {
  * @return {string}
  */
 export function getMediaQueryByName(screenSettingName) {
-  let mediaQuery = '';
+  let mediaQuery = "";
   CONSTANTS.SCREENS.forEach(screen => {
     if (screen.name === screenSettingName) {
       mediaQuery = screen.mediaQuery;
@@ -118,17 +121,17 @@ export function getMediaSettingsByName(screenSettingName) {
  *@param {string} URLTemplate
  *@param {{}} object
  */
-export function parseURLTemplate(URLTemplate = '', object = {}) {
+export function parseURLTemplate(URLTemplate = "", object = {}) {
   let url = URLTemplate;
-  let protocol = '';
+  let protocol = "";
   url = url.trim();
-  if (url.indexOf('https://') === 0) {
-    protocol = 'https://';
-    url = url.replace('https://', '');
+  if (url.indexOf("https://") === 0) {
+    protocol = "https://";
+    url = url.replace("https://", "");
   }
-  if (url.indexOf('http://') === 0) {
-    protocol = 'http://';
-    url = url.replace('http://', '');
+  if (url.indexOf("http://") === 0) {
+    protocol = "http://";
+    url = url.replace("http://", "");
   }
   // columnEditUrl = columnEditUrl.replace(':id', row.original.id);
   let idTemplates = url.match(/:([\s\S]+?)(\/|$)/g);
@@ -136,9 +139,9 @@ export function parseURLTemplate(URLTemplate = '', object = {}) {
     return protocol + url;
   }
   idTemplates.forEach(idTemplate => {
-    let replace = object[idTemplate.replace(/:|\//g, '')] || '';
-    idTemplate = idTemplate.replace('/', '');
-    url = url.replace(new RegExp(idTemplate, 'g'), replace);
+    let replace = object[idTemplate.replace(/:|\//g, "")] || "";
+    idTemplate = idTemplate.replace("/", "");
+    url = url.replace(new RegExp(idTemplate, "g"), replace);
   });
   return protocol + url;
 }
@@ -148,26 +151,26 @@ export function getWindowWidth() {
   if (isEditor()) {
     window = document.getElementById("editorWindow").offsetWidth;
   } else {
-    window = document.getElementById("front-app").offsetWidth
+    window = document.getElementById("front-app").offsetWidth;
   }
-  return window
+  return window;
 }
 
 export function renderAssetIcon(asset, props = null) {
   if (asset) {
     switch (asset.assetType) {
-      case 'icon': {
-        return iconsManager().renderIcon(asset.name)
+      case "icon": {
+        return iconsManager().renderIcon(asset.name);
       }
-      case 'image': {
-        return React.createElement('img', { ...props, src: asset.url })
+      case "image": {
+        return React.createElement("img", { ...props, src: asset.url });
       }
-      case 'media': {
-        return React.createElement('img', { ...props, src: asset.url })
+      case "media": {
+        return React.createElement("img", { ...props, src: asset.url });
       }
     }
   }
-  return '';
+  return "";
 }
 
 /**
@@ -187,26 +190,36 @@ export function renderAsset(asset, props = null) {
         refImg.current.alt = asset.name;
       }
     };
-    return React.createElement('img', { ...props, src: asset.url, ref: refImg })
+    return React.createElement("img", {
+      ...props,
+      src: asset.url,
+      ref: refImg
+    });
   }
   switch (asset.assetType) {
-    case 'icon': {
-      return iconsManager().renderIcon(asset.name, props)
+    case "icon": {
+      return iconsManager().renderIcon(asset.name, props);
     }
-    case 'image': {
-      return React.createElement('img', { ...props, src: asset.url })
+    case "image": {
+      return React.createElement("img", { ...props, src: asset.url });
     }
-    case 'media': {
-      return React.createElement('img', { ...props, src: asset.url })
+    case "media": {
+      return React.createElement("img", { ...props, src: asset.url });
     }
-    case 'mediaBackground': {
-      return React.createElement('div', { ...props, style: { backgroundImage: `url(${asset.url})` } })
+    case "mediaBackground": {
+      return React.createElement("div", {
+        ...props,
+        style: { backgroundImage: `url(${asset.url})` }
+      });
     }
     case undefined: {
-      return React.createElement('img', { ...props, src: '/img/nullImage.png' })
+      return React.createElement("img", {
+        ...props,
+        src: "/img/nullImage.png"
+      });
     }
   }
-  return '';
+  return "";
 }
 
 /**
@@ -219,26 +232,35 @@ export function renderAsset(asset, props = null) {
  */
 export function parseParamsFromString(string, context = {}, allowObject = false) {
   const params = {};
-  const urlParams = window.currentRouterMatch instanceof AltrpModel ? window.currentRouterMatch.getProperty('params') : {};
+  const urlParams =
+    window.currentRouterMatch instanceof AltrpModel
+      ? window.currentRouterMatch.getProperty("params")
+      : {};
 
   if (!string) {
     return params;
   }
-  const lines = string.split('\n');
-  lines.forEach((line) => {
-    let [left, right] = line.split('|');
+  const lines = string.split("\n");
+  lines.forEach(line => {
+    let [left, right] = line.split("|");
     if (!left || !right) {
       return;
     }
     left = left.trim();
     right = right.trim();
     if (right.match(/{{([\s\S]+?)(?=}})/g)) {
-      console.log(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', ''));
-      console.log(context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')));
-      if (context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', ''))) {//todo ошибка в IOS
-        params[left] = context.getProperty(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')) || '';
+      if (
+        context.getProperty(
+          right.match(/{{([\s\S]+?)(?=}})/g)[0].replace("{{", "")
+        )
+      ) {
+        //todo ошибка в IOS
+        params[left] =
+          context.getProperty(
+            right.match(/{{([\s\S]+?)(?=}})/g)[0].replace("{{", "")
+          ) || "";
       } else {
-        params[left] = urlParams[right] ? urlParams[right] : '';
+        params[left] = urlParams[right] ? urlParams[right] : "";
       }
     } else {
       params[left] = right;
@@ -258,7 +280,12 @@ export function parseParamsFromString(string, context = {}, allowObject = false)
  * @param {boolean} dataByPath - брать ли данный из getDataByPath
  * @return {boolean}
  */
-export function conditionsChecker(conditions = [], AND = true, model, dataByPath = true) {
+export function conditionsChecker(
+  conditions = [],
+  AND = true,
+  model,
+  dataByPath = true
+) {
   if (!conditions.length) {
     return true;
   }
@@ -282,43 +309,38 @@ export function conditionsChecker(conditions = [], AND = true, model, dataByPath
  */
 function conditionChecker(c, model, dataByPath = true) {
   let result = 0;
-  const {
-    operator,
-  } = c;
-  let {
-    modelField: left,
-    value
-  } = c;
+  const { operator } = c;
+  let { modelField: left, value } = c;
   if (dataByPath) {
-    value = getDataByPath(value, '', model, true);
-    left = getDataByPath(left, '', model);
+    value = getDataByPath(value, "", model, true);
+    left = getDataByPath(left, "", model);
     return altrpCompare(left, value, operator);
   }
   return altrpCompare(model.getProperty(left), value, operator);
   switch (operator) {
-    case 'empty': {
-      return !model.getProperty(modelField, '');
+    case "empty": {
+      return !model.getProperty(modelField, "");
     }
-    case 'not_empty': {
-      return ! !model.getProperty(modelField, '');
+    case "not_empty": {
+      return !!model.getProperty(modelField, "");
     }
-    case '==': {
-      return _.isEqual(model.getProperty(modelField, ''), value);
+    case "==": {
+      return _.isEqual(model.getProperty(modelField, ""), value);
     }
-    case '<>': {
-      return !_.isEqual(model.getProperty(modelField, ''), value);
+    case "<>": {
+      return !_.isEqual(model.getProperty(modelField, ""), value);
     }
-    case '>': {
-      return Number(model.getProperty(modelField, '')) > Number(value);
+    case ">": {
+      return Number(model.getProperty(modelField, "")) > Number(value);
     }
-    case '>=': {
-      return Number(model.getProperty(modelField, '')) >= Number(value);
+    case ">=": {
+      return Number(model.getProperty(modelField, "")) >= Number(value);
     }
-    case '<': {
-      return Number(model.getProperty(modelField, '')) < Number(value);
+    case "<": {
+      return Number(model.getProperty(modelField, "")) < Number(value);
     }
-    case '<=': {
-      return Number(model.getProperty(modelField, '')) <= Number(value);
+    case "<=": {
+      return Number(model.getProperty(modelField, "")) <= Number(value);
     }
   }
   return result;
@@ -331,21 +353,29 @@ function conditionChecker(c, model, dataByPath = true) {
  * @param {function} dispatch
  * @return {boolean}
  */
-export function setDataByPath(path = '', value, dispatch){
-  if(! path){
+export function setDataByPath(path = "", value, dispatch) {
+  if (!path) {
     return false;
   }
-  path = path.trim();
-  switch(value){
-    case 'true': value = true; break;
-    case 'false': value = false; break;
-    case 'null': value = null; break;
-    case 'undefined': value = undefined; break;
+
+  switch (value) {
+    case "true":
+      value = true;
+      break;
+    case "false":
+      value = false;
+      break;
+    case "null":
+      value = null;
+      break;
+    case "undefined":
+      value = undefined;
+      break;
   }
 
-  if (path.indexOf('altrppagestate.') === 0) {
-    path = path.replace('altrppagestate.', '');
-    if(! path){
+  if (path.indexOf("altrppagestate.") === 0) {
+    path = path.replace("altrppagestate.", "");
+    if (!path) {
       return false;
     }
     const oldValue = appStore.getState().altrpPageState.getProperty(path);
@@ -359,9 +389,9 @@ export function setDataByPath(path = '', value, dispatch){
     }
     return true;
   }
-  if(path.indexOf('altrpmeta.') === 0){
-    path = path.replace('altrpmeta.', '');
-    if(! path){
+  if (path.indexOf("altrpmeta.") === 0) {
+    path = path.replace("altrpmeta.", "");
+    if (!path) {
       return false;
     }
     const oldValue = appStore.getState().altrpMeta.getProperty(path);
@@ -386,50 +416,62 @@ export function setDataByPath(path = '', value, dispatch){
  * @param {boolean} altrpCheck - проверять ли altrp
  * @return {*}
  */
-export function getDataByPath(path = '', _default = null, context = null, altrpCheck = false) {
-  if(! path){
+export function getDataByPath(
+  path = "",
+  _default = null,
+  context = null,
+  altrpCheck = false
+) {
+  if (!path) {
     return _default;
   }
   /**
    * проверим путь
    */
-  if (altrpCheck && (path.trim().indexOf('altrp') !== 0)) {
+  if (altrpCheck && path.trim().indexOf("altrp") !== 0) {
     return path;
   }
   path = path.trim();
 
-  let { currentModel,
+  let {
+    currentModel,
     currentDataStorage,
     altrpresponses,
     formsStore,
     altrpPageState,
-    altrpMeta, } = appStore.getState();
+    altrpMeta
+  } = appStore.getState();
   if (context) {
     currentModel = context;
   }
-  const urlParams = window.currentRouterMatch instanceof AltrpModel ? window.currentRouterMatch.getProperty('params') : {};
+  const urlParams =
+    window.currentRouterMatch instanceof AltrpModel
+      ? window.currentRouterMatch.getProperty("params")
+      : {};
   let value = _default;
   if (!_.isString(path)) {
     return value;
   }
-  if (path.indexOf('altrpdata.') === 0) {
-    path = path.replace('altrpdata.', '');
-    value = currentDataStorage.getProperty(path, _default)
-  } else if (path.indexOf('altrpresponses.') === 0) {
-    path = path.replace('altrpresponses.', '');
-    value = altrpresponses.getProperty(path, _default)
-  } else if (path.indexOf('altrpmeta.') === 0) {
-    path = path.replace('altrpmeta.', '');
-    value = altrpMeta.getProperty(path, _default)
-  }else if (path.indexOf('altrppagestate.') === 0) {
-    path = path.replace('altrppagestate.', '');
-    value = altrpPageState.getProperty(path, _default)
-  } else if (path.indexOf('altrptime.') === 0) {
-    value = getTimeValue(path.replace('altrptime.', ''));
-  } else if (path.indexOf('altrpforms.') === 0) {
-    value = _.get(formsStore, path.replace('altrpforms.', ''), _default);
+  if (path.indexOf("altrpdata.") === 0) {
+    path = path.replace("altrpdata.", "");
+    value = currentDataStorage.getProperty(path, _default);
+  } else if (path.indexOf("altrpresponses.") === 0) {
+    path = path.replace("altrpresponses.", "");
+    value = altrpresponses.getProperty(path, _default);
+  } else if (path.indexOf("altrpmeta.") === 0) {
+    path = path.replace("altrpmeta.", "");
+    value = altrpMeta.getProperty(path, _default);
+  } else if (path.indexOf("altrppagestate.") === 0) {
+    path = path.replace("altrppagestate.", "");
+    value = altrpPageState.getProperty(path, _default);
+  } else if (path.indexOf("altrptime.") === 0) {
+    value = getTimeValue(path.replace("altrptime.", ""));
+  } else if (path.indexOf("altrpforms.") === 0) {
+    value = _.get(formsStore, path.replace("altrpforms.", ""), _default);
   } else {
-    value = urlParams[path] ? urlParams[path] : currentModel.getProperty(path, _default);
+    value = urlParams[path]
+      ? urlParams[path]
+      : currentModel.getProperty(path, _default);
   }
   return value;
 }
@@ -439,11 +481,14 @@ export function getDataByPath(path = '', _default = null, context = null, altrpC
  * @param {string} string
  * @return {string}
  */
-export function extractPathFromString(string = '') {
-  let path = '';
+export function extractPathFromString(string = "") {
+  let path = "";
   if (_.isString(string)) {
     // path = string.match(/(?<={{)([\s\S]+?)(?=}})/g)[0]
-    path = _.get(string.match(/{{([\s\S]+?)(?=}})/g), '0', '').replace('{{', '');
+    path = _.get(string.match(/{{([\s\S]+?)(?=}})/g), "0", "").replace(
+      "{{",
+      ""
+    );
   }
   return path;
 }
@@ -454,14 +499,14 @@ export function extractPathFromString(string = '') {
  * @param {{}} object - если в объекте есть свойство test__test то вернет {test: test__test_value}
  * @return {{}}
  */
-export function getObjectByPrefix(prefix = '', object = {}) {
+export function getObjectByPrefix(prefix = "", object = {}) {
   let result = {};
   if (!prefix) {
     return result;
   }
   _.forEach(object, (value, key) => {
-    if (key.indexOf(`${prefix}__`, '') === 0) {
-      result[key.replace(`${prefix}__`, '')] = value;
+    if (key.indexOf(`${prefix}__`, "") === 0) {
+      result[key.replace(`${prefix}__`, "")] = value;
     }
   });
   return result;
@@ -488,126 +533,128 @@ export function mbParseJSON(string, _default = null) {
  * @param operator
  * @return {boolean}
  */
-export function altrpCompare(leftValue = '', rightValue = '', operator = 'empty') {
-
+export function altrpCompare(
+  leftValue = "",
+  rightValue = "",
+  operator = "empty"
+) {
   switch (operator) {
-    case 'empty': {
-      return _.isEmpty(leftValue,);
+    case "empty": {
+      return _.isEmpty(leftValue);
     }
-    case 'not_empty': {
-      return !_.isEmpty(leftValue,);
+    case "not_empty": {
+      return !_.isEmpty(leftValue);
     }
-    case 'null': {
-      return ! leftValue;
+    case "null": {
+      return !leftValue;
     }
-    case 'not_null': {
-      return ! ! leftValue;
+    case "not_null": {
+      return !!leftValue;
     }
-    case '==': {
-      if((! leftValue) && ! rightValue){
+    case "==": {
+      if (!leftValue && !rightValue) {
         console.log(leftValue);
         return true;
       }
-        if (!(_.isObject(leftValue) || _.isObject(rightValue))) {
+      if (!(_.isObject(leftValue) || _.isObject(rightValue))) {
         return leftValue == rightValue;
       } else {
         return _.isEqual(leftValue, rightValue);
       }
     }
-    case '===': {
+    case "===": {
       return _.isEqual(leftValue, rightValue);
     }
-    case '<>': {
+    case "<>": {
       return !_.isEqual(leftValue, rightValue);
     }
-    case '>': {
+    case ">": {
       return Number(leftValue) > Number(rightValue);
     }
-    case '>=': {
+    case ">=": {
       return Number(leftValue) >= Number(rightValue);
     }
-    case '<': {
+    case "<": {
       return Number(leftValue) < Number(rightValue);
     }
-    case '<=': {
+    case "<=": {
       return Number(leftValue) <= Number(rightValue);
     }
-    case 'in': {
+    case "in": {
       if (!_.isArray(rightValue)) {
         return false;
       }
       let result = false;
       rightValue.forEach(item => {
         if (!result) {
-          result = altrpCompare(leftValue, item, '==')
+          result = altrpCompare(leftValue, item, "==");
         }
       });
       return result;
     }
-    case 'not_in': {
-      return !altrpCompare(leftValue, rightValue, 'in');
+    case "not_in": {
+      return !altrpCompare(leftValue, rightValue, "in");
     }
   }
 }
 
 export const CONDITIONS_OPTIONS = [
   {
-    value: 'empty',
-    label: 'Empty',
+    value: "empty",
+    label: "Empty"
   },
   {
-    value: 'not_empty',
-    label: 'Not Empty',
+    value: "not_empty",
+    label: "Not Empty"
   },
   {
-    value: 'null',
-    label: 'Null',
+    value: "null",
+    label: "Null"
   },
   {
-    value: 'not_null',
-    label: 'Not Null',
+    value: "not_null",
+    label: "Not Null"
   },
   {
-    value: '==',
-    label: 'Equals',
+    value: "==",
+    label: "Equals"
   },
   {
-    value: '<>',
-    label: 'Not Equals',
+    value: "<>",
+    label: "Not Equals"
   },
   {
-    value: 'between',
-    label: 'Between',
+    value: "between",
+    label: "Between"
   },
   {
-    value: '>',
-    label: '>',
+    value: ">",
+    label: ">"
   },
   {
-    value: '>=',
-    label: '>=',
+    value: ">=",
+    label: ">="
   },
   {
-    value: '<',
-    label: '<',
+    value: "<",
+    label: "<"
   },
   {
-    value: '<=',
-    label: '<=',
+    value: "<=",
+    label: "<="
   },
   {
-    value: 'in',
-    label: 'In',
+    value: "in",
+    label: "In"
   },
   {
-    value: 'not_in',
-    label: 'Not In',
-  },
+    value: "not_in",
+    label: "Not In"
+  }
 ];
 
 export function isElementTopInViewport(top, scrollTop, clientHeight) {
-
-  return top > scrollTop && top < (scrollTop + clientHeight)
+  return top > scrollTop && top < scrollTop + clientHeight;
 }
 
 export function getTopPosition(element) {
@@ -629,38 +676,52 @@ export function getTopPosition(element) {
  * @param {string | null} defaultValue
  */
 export function getTimeValue(path, defaultValue = null) {
-
   let value = defaultValue;
 
   switch (path) {
-    case 'now': {
-      value = _.now();
-    } break;
-    case 'month_start': {
-      value = startOfMonth(new Date);
-    } break;
-    case 'prev_month_start': {
-      value = startOfMonth(new Date, -1);
-    } break;
-    case 'year_start': {
-      value = startOfYear(new Date);
-    } break;
-    case 'prev_year_start': {
-      value = startOfYear(new Date, -1);
-    } break;
-    case 'prev_week_start': {
-      value = getPrevWeekStart();
-    } break;
-    case 'next_week_start': {
-      value = getNextWeekStart();
-    } break;
-    case 'week_start': {
-      value = getWeekStart();
-    } break;
+    case "now":
+      {
+        value = _.now();
+      }
+      break;
+    case "month_start":
+      {
+        value = startOfMonth(new Date());
+      }
+      break;
+    case "prev_month_start":
+      {
+        value = startOfMonth(new Date(), -1);
+      }
+      break;
+    case "year_start":
+      {
+        value = startOfYear(new Date());
+      }
+      break;
+    case "prev_year_start":
+      {
+        value = startOfYear(new Date(), -1);
+      }
+      break;
+    case "prev_week_start":
+      {
+        value = getPrevWeekStart();
+      }
+      break;
+    case "next_week_start":
+      {
+        value = getNextWeekStart();
+      }
+      break;
+    case "week_start":
+      {
+        value = getWeekStart();
+      }
+      break;
   }
-  value = moment(value).format('YYYY-MM-DD');
+  value = moment(value).format("YYYY-MM-DD");
   return value;
-
 }
 
 /**
@@ -688,7 +749,13 @@ export function startOfYear(date, yearShift = 0) {
  * @return {Date}
  */
 export function startOfWeek(date, weekShift = 0) {
-  return moment(new Date(date.getFullYear(), date.getMonth(), date.getDate() + (weekShift * 7))).firstDayOfWeek();
+  return moment(
+    new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate() + weekShift * 7
+    )
+  ).firstDayOfWeek();
 }
 
 /**
@@ -713,7 +780,7 @@ export function scrollToElement(scrollbars, HTMLElement) {
     return;
   }
   if (!_.isFunction(scrollbars.scrollTop)) {
-    return
+    return;
   }
 
   let parent = HTMLElement.offsetParent;
@@ -736,7 +803,7 @@ export function scrollToElement(scrollbars, HTMLElement) {
   if (!top) {
     return;
   }
-  scrollbars.scrollTop(top)
+  scrollbars.scrollTop(top);
 }
 
 /**
@@ -744,20 +811,25 @@ export function scrollToElement(scrollbars, HTMLElement) {
  * @param {string} elementId
  * @return {null | HTMLElement}
  */
-export function getHTMLElementById(elementId = '') {
+export function getHTMLElementById(elementId = "") {
   let HTMLElement = null;
-  if ((!elementId) || !elementId.trim()) {
+  if (!elementId || !elementId.trim()) {
     return HTMLElement;
   }
   elementId = elementId.trim();
   appStore.getState().elements.forEach(el => {
     if (!el.elementWrapperRef.current) {
-      return
+      return;
     }
     if (!el.elementWrapperRef.current.id) {
-      return
+      return;
     }
-    if (el.elementWrapperRef.current.id.toString().split(' ').indexOf(elementId) !== -1) {
+    if (
+      el.elementWrapperRef.current.id
+        .toString()
+        .split(" ")
+        .indexOf(elementId) !== -1
+    ) {
       HTMLElement = el.elementWrapperRef.current;
     }
   });
@@ -768,20 +840,25 @@ export function getHTMLElementById(elementId = '') {
  * @param {string} elementId
  * @return {null | HTMLElement}
  */
-export function getComponentByElementId(elementId = '') {
+export function getComponentByElementId(elementId = "") {
   let component = null;
-  if ((!elementId) || !elementId.trim()) {
+  if (!elementId || !elementId.trim()) {
     return component;
   }
   elementId = elementId.trim();
   appStore.getState().elements.forEach(el => {
     if (!el.elementWrapperRef.current) {
-      return
+      return;
     }
     if (!el.elementWrapperRef.current.id) {
-      return
+      return;
     }
-    if (el.elementWrapperRef.current.id.toString().split(' ').indexOf(elementId) !== -1) {
+    if (
+      el.elementWrapperRef.current.id
+        .toString()
+        .split(" ")
+        .indexOf(elementId) !== -1
+    ) {
       component = el;
     }
   });
@@ -795,7 +872,7 @@ export function getComponentByElementId(elementId = '') {
 function getNextWeekStart() {
   let today = moment();
   let daystoMonday = 7 - (today.isoWeekday() - 1);
-  return today.add(daystoMonday, 'days');
+  return today.add(daystoMonday, "days");
 }
 
 /**
@@ -804,8 +881,8 @@ function getNextWeekStart() {
  */
 function getWeekStart() {
   let today = moment();
-  let daystoMonday = (today.isoWeekday() - 1);
-  return today.subtract(daystoMonday, 'days');
+  let daystoMonday = today.isoWeekday() - 1;
+  return today.subtract(daystoMonday, "days");
 }
 
 /**
@@ -814,7 +891,7 @@ function getWeekStart() {
  */
 function getNextWeekEnd() {
   let nextMonday = getNextWeekStart();
-  return nextMonday.add('days', 6);
+  return nextMonday.add("days", 6);
 }
 
 /**
@@ -823,8 +900,8 @@ function getNextWeekEnd() {
  */
 function getPrevWeekStart() {
   let today = moment();
-  let daystoLastMonday = (today.isoWeekday() - 1) + 7;
-  return today.subtract(daystoLastMonday, 'days');
+  let daystoLastMonday = today.isoWeekday() - 1 + 7;
+  return today.subtract(daystoLastMonday, "days");
 }
 
 /**
@@ -833,16 +910,13 @@ function getPrevWeekStart() {
  */
 function getPrevWeekEnd() {
   let lastMonday = getPrevWeekStart();
-  return lastMonday.add('days', 6);
-
+  return lastMonday.add("days", 6);
 }
 
 /**
  * Elfkztn gecnst cdjqcndf d j,]trnf[
  */
-export function clearEmptyProps() {
-
-}
+export function clearEmptyProps() {}
 
 /**
  * Заменяет в тексте конструкции типа {{altrpdata...}} на данные
@@ -850,13 +924,13 @@ export function clearEmptyProps() {
  * @param {null | {}}modelContext
  */
 
-export function replaceContentWithData(content = '', modelContext = null) {
+export function replaceContentWithData(content = "", modelContext = null) {
   let paths = _.isString(content) ? content.match(/{{([\s\S]+?)(?=}})/g) : null;
   if (_.isArray(paths)) {
     paths.forEach(path => {
-      path = path.replace('{{', '');
-      let value = getDataByPath(path, '', modelContext);
-      content = content.replace(new RegExp(`{{${path}}}`, 'g'), value)
+      path = path.replace("{{", "");
+      let value = getDataByPath(path, "", modelContext);
+      content = content.replace(new RegExp(`{{${path}}}`, "g"), value);
     });
   }
   return content;
@@ -883,7 +957,7 @@ window.altrphelpers = {
       sum += Number(_.get(c, fieldName)) || 0;
     });
     return sum;
-  },
+  }
 };
 
 /**
@@ -891,15 +965,15 @@ window.altrphelpers = {
  * @params {HTMLElement[]} elements
  * @params {null || HTMLElement} stylesTag
  */
-export function printElements(elements, title = '') {
-  let myWindow = window.open('', 'my div', 'height=400,width=1200');
+export function printElements(elements, title = "") {
+  let myWindow = window.open("", "my div", "height=400,width=1200");
   myWindow.document.write(`<html><head><title>${title}</title></head>`);
-  myWindow.document.write('<body >');
+  myWindow.document.write("<body >");
   elements = _.isArray(elements) ? elements : [elements];
   elements.forEach(element => {
     myWindow.document.write(element.outerHTML);
   });
-  myWindow.document.write('</body></html>');
+  myWindow.document.write("</body></html>");
   myWindow.document.close(); // necessary for IE >= 10
   myWindow.focus(); // necessary for IE >= 10
   myWindow.print();
@@ -912,28 +986,30 @@ export function printElements(elements, title = '') {
  * @params {HTMLElement[]} element
  * @params {string} filename
  */
-export async function elementsToPdf(elements, filename = '') {
+export async function elementsToPdf(elements, filename = "") {
   console.log(elements, filename);
 
-  let html2pdf = (await import('html2pdf.js')).default;
+  let html2pdf = (await import("html2pdf.js")).default;
   elements = elements.body ? elements.body : elements;
   if (!elements) {
     return {
-      success: true,
+      success: true
     };
   }
-  let myWindow = window.open('', 'my div', 'height=400,width=1440');
+  let myWindow = window.open("", "my div", "height=400,width=1440");
   myWindow.document.write(`<html><head><title></title></head>`);
-  myWindow.document.write('</head><body >');
+  myWindow.document.write("</head><body >");
   elements = _.isArray(elements) ? elements : [elements];
   elements.forEach(element => {
     myWindow.document.write(element.outerHTML);
   });
-  myWindow.document.write('</body></html>');
+  myWindow.document.write("</body></html>");
   return new Promise((resolve, reject) => {
-    html2pdf().from(myWindow.document.body).save(filename);
+    html2pdf()
+      .from(myWindow.document.body)
+      .save(filename);
     myWindow.close();
-    resolve({ success: true })
+    resolve({ success: true });
   });
 }
 
@@ -947,25 +1023,25 @@ export function dataFromTable(HTMLElement) {
   if (!(HTMLElement && HTMLElement.querySelectorAll)) {
     return data;
   }
-  let table = HTMLElement.querySelector('table');
-  if ((!table) && HTMLElement.querySelector('tr')) {
+  let table = HTMLElement.querySelector("table");
+  if (!table && HTMLElement.querySelector("tr")) {
     table = HTMLElement;
   }
   if (!table) {
     return data;
   }
-  const ths = table.querySelectorAll('th');
-  _.each(ths, (th) => {
+  const ths = table.querySelectorAll("th");
+  _.each(ths, th => {
     if (th.innerText) {
-      headers.push(th.innerText || '');
+      headers.push(th.innerText || "");
     }
   });
-  const rows = table.querySelectorAll('tbody tr');
-  _.each(rows, (row) => {
-    const cells = row.querySelectorAll('td');
+  const rows = table.querySelectorAll("tbody tr");
+  _.each(rows, row => {
+    const cells = row.querySelectorAll("td");
     const part = {};
     headers.forEach((header, idx) => {
-      part[header] = cells[idx].innerText || '';
+      part[header] = cells[idx].innerText || "";
     });
     data.push(part);
   });
@@ -978,44 +1054,47 @@ export function dataFromTable(HTMLElement) {
  * @param {string} filename
  */
 export async function dataToCSV(data = {}, filename) {
-  filename = filename || 'File';
+  filename = filename || "File";
   if (!data) {
-    return { success: false }
+    return { success: false };
   }
   if (_.isObject() && !_.isArray(data)) {
     data = [data];
   }
   if (!_.isArray(data)) {
-    return { success: false }
+    return { success: false };
   }
 
   let headers = _.toPairs(data[0]).map(([name, value]) => name);
   let csvContent =
     // "data:text/csv;charset=utf-8,"
-    ""
-    + headers.join(";")
-    + '\n'
-    + data.map(item => {
-      let line = '';
-      headers.forEach((h, idx) => {
-        let value = _.get(item, h) || '';
-        if (_.isObject(value)) {
-          value = JSON.stringify(value)
-        }
+    "" +
+    headers.join(";") +
+    "\n" +
+    data
+      .map(item => {
+        let line = "";
+        headers.forEach((h, idx) => {
+          let value = _.get(item, h) || "";
+          if (_.isObject(value)) {
+            value = JSON.stringify(value);
+          }
 
-        line += (_.isString(value) ? value.replace(/\s/g, ' ') : value)
-          + (headers.length === idx + 1 ? '' : ';');
-      });
-      return line;
-    }).join('\n');
-  let blob = new Blob([csvContent], { type: 'text/csv', charset: 'utf-8' });
-  let link = document.createElement('a');
-  link.setAttribute('href', window.URL.createObjectURL(blob));
-  link.setAttribute('download', filename + '.csv');
+          line +=
+            (_.isString(value) ? value.replace(/\s/g, " ") : value) +
+            (headers.length === idx + 1 ? "" : ";");
+        });
+        return line;
+      })
+      .join("\n");
+  let blob = new Blob([csvContent], { type: "text/csv", charset: "utf-8" });
+  let link = document.createElement("a");
+  link.setAttribute("href", window.URL.createObjectURL(blob));
+  link.setAttribute("download", filename + ".csv");
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  return { success: true }
+  return { success: true };
 }
 
 /**
@@ -1023,80 +1102,88 @@ export async function dataToCSV(data = {}, filename) {
  * @param {{}} data
  * @return {Promise<{}>}
  */
-export async function altrpLogin(data = {}){
+export async function altrpLogin(data = {}) {
   data.altrpLogin = true;
-  let res = await (new Resource({route:'/login'})).post(data);
-  if(! (res.success || res._token)){
+  let res = await new Resource({ route: "/login" }).post(data);
+  if (!(res.success || res._token)) {
     return {
-      success: false,
-    }
+      success: false
+    };
   }
   _token = res._token;
 
-  let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
+  let currentUser = await new Resource({
+    route: "/ajax/current-user"
+  }).getAll();
   currentUser = currentUser.data;
   appStore.dispatch(changeCurrentUser(currentUser));
   let routes = [];
-  try{
-    let routesData = await (new Resource({
-      route: '/ajax/routes'
-    }).getAll());
+  try {
+    let routesData = await new Resource({
+      route: "/ajax/routes"
+    }).getAll();
 
-    for(let _data of routesData.pages){
+    for (let _data of routesData.pages) {
       routes.push(Route.routeFabric(_data));
     }
     appStore.dispatch(changeAppRoutes(routes));
   } catch (err) {
     console.error(err);
-    return {success: false};
+    return { success: false };
   }
-  return {success: true};
+  return { success: true };
 }
 
 /**
  * Выход
  * @return {Promise<{}>}
  */
-export async function altrpLogout(){
-  let res = await (new Resource({route:'/logout'})).post();
-  if(! (res.success || res._token)){
+export async function altrpLogout() {
+  let res = await new Resource({ route: "/logout" }).post();
+  if (!(res.success || res._token)) {
     return {
-      success: false,
-    }
+      success: false
+    };
   }
   _token = res._token;
 
-  let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
+  let currentUser = await new Resource({
+    route: "/ajax/current-user"
+  }).getAll();
   currentUser = currentUser.data;
   appStore.dispatch(changeCurrentUser(currentUser));
   let routes = [];
-  try{
-    let routesData = await (new Resource({
-      route: '/ajax/routes'
-    }).getAll());
+  try {
+    let routesData = await new Resource({
+      route: "/ajax/routes"
+    }).getAll();
 
-    for(let _data of routesData.pages){
+    for (let _data of routesData.pages) {
       routes.push(Route.routeFabric(_data));
     }
     appStore.dispatch(changeAppRoutes(routes));
   } catch (err) {
     console.error(err);
-    return {success: false};
+    return { success: false };
   }
-  return {success: true};
+  return { success: true };
 }
 
 export function cutString(string, maxLength = 80) {
   if (string.length <= maxLength) return string;
-  return string.slice(0, maxLength) + '...';
+  return string.slice(0, maxLength) + "...";
 }
 
 export function sortOptions(options, sortDirection) {
-  options.sort((a, b) => a.label.toLowerCase() > b.label.toLowerCase() ? 1 : b.label.toLowerCase() > a.label.toLowerCase() ? -1 : 0);
+  options.sort((a, b) =>
+    a.label.toLowerCase() > b.label.toLowerCase()
+      ? 1
+      : b.label.toLowerCase() > a.label.toLowerCase()
+      ? -1
+      : 0
+  );
   return sortDirection === "asc" ? options : options.reverse();
 }
-
-
 /**
  * рекурсивно считает общую длину по пути
  * @param {{}} object
@@ -1143,10 +1230,10 @@ export function getAppContext(){
  * Сохраняет состояние виджет в localStorage
  * Для виджетов ,которые могут сохранять состояния при смене страниц
  * @param {string} widgetId
- * @param {{}} state
+ * @param {*} state
  * @return {boolean}
  */
-export function storeWidgetState(widgetId, state = {}){
+export function storeWidgetState(widgetId, state = null){
   if(! widgetId){
     return false;
   }

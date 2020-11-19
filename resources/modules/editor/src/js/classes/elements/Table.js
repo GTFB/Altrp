@@ -218,16 +218,19 @@ class Table extends BaseElement {
       default: false,
       label: 'Group by',
     });
+
     repeater.addControl('column_link', {
       label: 'Link Template',
       dynamic: false,
       description: '/path/:id',
     });
+
     repeater.addControl('column_width', {
       label: 'Column Width',
       dynamic: false,
       type: CONTROLLER_NUMBER,
     });
+
     repeater.addControl('column_header_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Header alignment',
@@ -710,6 +713,15 @@ class Table extends BaseElement {
       default: false,
     });
 
+    this.addControl('row_select_all', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Select All',
+      default: false,
+      conditions: {
+        row_select: true,
+      },
+    });
+
     this.addControl('selected_storage', {
       label: 'Selected Storage',
       dynamic: false,
@@ -726,6 +738,24 @@ class Table extends BaseElement {
       conditions: {
         row_select: true,
       },
+    });
+
+    this.addControl('hide_columns', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hide Columns',
+      default: false,
+    });
+
+    this.addControl('resize_columns', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Resize',
+      default: false,
+    });
+
+    this.addControl('replace_rows', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Replacing Rows',
+      default: false,
     });
 
     this.addControl('row_expand', {

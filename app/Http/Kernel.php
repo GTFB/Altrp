@@ -63,6 +63,7 @@ class Kernel extends HttpKernel
     'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     'installation.checker' => \App\Http\Middleware\InstallationChecker::class,
     'admin' => \App\Http\Middleware\IsAdmin::class,
+      'inputStream' => \App\Http\Middleware\ParseMultipartFormDataInputForNonPostRequests::class
   ];
 
   /**
