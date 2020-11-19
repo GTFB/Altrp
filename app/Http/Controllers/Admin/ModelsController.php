@@ -1550,4 +1550,31 @@ class ModelsController extends HttpController
         $data_sources = Source::select(['title as label', 'id as value'])->where('model_id',$model_id)->get();
         return response()->json($data_sources, 200, [], JSON_UNESCAPED_UNICODE);
     }
+
+    // Custom models dashboard
+
+    public function getCustomModelRecords($model_id)
+    {
+        $model = Model::where([['id', $model_id], ['preset', 0]])->first();
+        if (!$model)
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        $columns = explode(',', $model->table->columns->where('type', '!=', 'calculated')->implode('name', ','));
+        $url = config('app.url') . "/ajax/models/" . $model->table->name;
+        $response = \Curl::to($url)
+            ->withData(request()->all())
+            ->asJson()
+            ->get();
+
+        foreach ($response->data as $record) {
+            foreach ($record as $key => $value) {
+                if (!in_array($key, $columns)) {
+                    unset($record->$key);
+                }
+            }
+        }
+        return response()->json($response, 200, [], JSON_UNESCAPED_UNICODE);
+    }
 }

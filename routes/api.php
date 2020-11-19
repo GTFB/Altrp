@@ -144,6 +144,8 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::post( 'update-all-resources', 'Admin\UpdateController@upgradeAllResources' );
         Route::resource( 'sql_editors', 'Admin\SQLEditorController' );
         Route::post( '/favicon', 'Admin\FileUploadController@loadFavicon' );
+
+        Route::get( '/custom_models/{model_id}', 'Admin\ModelsController@getCustomModelRecords');
     });
 
 });
