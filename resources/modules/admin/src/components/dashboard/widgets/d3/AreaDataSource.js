@@ -30,10 +30,12 @@ class AreaDataSource extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      source: props.source,
+      sources: props.sources,
       legend: props.element.settings.legend,
       color: props.element.settings.color,
       params: props.element.settings.params,
+      isMultiple: false,
+      countRequest: 0,
       data: []
     };
   }
@@ -58,35 +60,85 @@ class AreaDataSource extends Component {
     await this.getData();
   }
 
+  async getDataFromIterableDatasources(sources, paramsResult = {}) {
+    return Promise.all(
+      sources.map(async source => {
+        let dataArray = [];
+        if (_.keys(this.state.params).length > 0) {
+          dataArray = await new DataAdapter().adaptDataByPath(
+            source,
+            paramsResult
+          );
+        } else {
+          dataArray = await new DataAdapter().adaptDataByPath(source);
+        }
+        const multipleDataArray = _.uniq(
+          _.sortBy(
+            dataArray.map((item, index) => {
+              return {
+                data: item.data,
+                key: item.key,
+                id: index
+              };
+            }),
+            "key"
+          ),
+          "key"
+        );
+        return {
+          key: source.title || source.path,
+          data: multipleDataArray
+        };
+      })
+    );
+  }
+
   async getData() {
     let globalParams = _.cloneDeep(this.props.formsStore.form_data, []);
-    let globalParamsArray = _.keys(globalParams).map(param => {
-      return { [param]: globalParams[param] };
-    });
+    let globalParamsArray = _.keys(globalParams)
+      .map(param => {
+        return { [param]: globalParams[param] };
+      })
+      .filter(param => {
+        let key = _.keys(param)[0];
+        return param[key] !== "";
+      });
     let localParams = _.cloneDeep(this.state.params, []);
     let paramsResult = localParams.concat(globalParamsArray);
-    console.log(paramsResult);
-    if (typeof this.props.element.settings.source.path !== "undefined") {
-      let data = {};
-      if (_.keys(this.state.params).length > 0) {
-        data = await new DataAdapter().adaptDataByPath(
-          this.state.source.path,
-          this.state.source.key,
-          this.state.source.data,
+    if (_.keys(this.props.element.settings.sources).length > 0) {
+      let data = [];
+      let isMultiple = false;
+      if (_.keys(this.props.element.settings.sources).length === 1) {
+        let source = this.props.element.settings.sources[0];
+        if (_.keys(this.state.params).length > 0) {
+          data = await new DataAdapter().adaptDataByPath(source, paramsResult);
+        } else {
+          data = await new DataAdapter().adaptDataByPath(source);
+        }
+      } else {
+        data = await this.getDataFromIterableDatasources(
+          this.props.element.settings.sources,
           paramsResult
         );
-      } else {
-        data = await new DataAdapter().adaptDataByPath(
-          this.state.source.path,
-          this.state.source.key,
-          this.state.source.data
-        );
+        isMultiple = true;
       }
-      if (_.keys(data).length === 0) {
+      let needCallAgain = true;
+      if (this.props.element.settings.sources.length > 1) {
+        let matches = data.map(obj => obj.data.length > 0);
+        needCallAgain = _.includes(matches, false);
+      } else {
+        needCallAgain =
+          _.keys(data).length === 0 && this.state.countRequest < 5;
+      }
+      if (needCallAgain) {
         setTimeout(() => {
           this.getData();
-        }, 2500);
+          let count = this.state.countRequest;
+          count += 1;
+          this.setState(s => ({ ...s, countRequest: count }));
+        }, 3500);
       }
+      this.setState(s => ({ ...s, data: data, isMultiple: isMultiple }));
     }
   }
 
@@ -138,7 +190,7 @@ class AreaDataSource extends Component {
   }
 
   render() {
-    if (Object.keys(this.state.source).length === 0) {
+    if (Object.keys(this.state.sources).length === 0) {
       return <div>Нет данных </div>;
     }
 
@@ -155,14 +207,15 @@ class AreaDataSource extends Component {
           zoomPan={<ChartZoomPan />}
           series={
             <AreaSeries
+              type={this.state.isMultiple ? "grouped" : "standard"}
               tooltip={<TooltipArea disabled={true} />}
+              colorScheme={customStyle}
               markLine={null}
             />
           }
-          data={this.state.data}
           xAxis={
             <LinearXAxis
-              type="category"
+              type="time"
               tickSeries={
                 <LinearXAxisTickSeries
                   label={<LinearXAxisTickLabel rotation={false} />}
@@ -170,22 +223,7 @@ class AreaDataSource extends Component {
               }
             />
           }
-          series={
-            <AreaSeries
-              markLine={<MarkLine strokeWidth={0} />}
-              line={<Line strokeWidth={0} />}
-              area={
-                <Area
-                  gradient={
-                    <Gradient
-                      color={"#FFD51F"}
-                      stops={[<GradientStop color={"#FFD51F"} />]}
-                    />
-                  }
-                />
-              }
-            />
-          }
+          data={this.state.data}
         />
         {this.state.legend.enabled && (
           <DiscreteLegend

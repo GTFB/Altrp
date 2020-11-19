@@ -23,7 +23,7 @@ class ChooseWidget extends Component {
     super(props);
     let element = _.cloneDeep(props.editElement, []);
     this.state = {
-      source: props.source,
+      sources: props.sources,
       type: props.type,
       editElement: element,
       params: props.params,
@@ -45,8 +45,8 @@ class ChooseWidget extends Component {
     if (!_.isEqual(prevProps.type, this.props.type)) {
       this.setState(state => ({ ...state, type: this.props.type }));
     }
-    if (!_.isEqual(prevProps.source, this.props.source)) {
-      this.setState(state => ({ ...state, source: this.props.source }));
+    if (!_.isEqual(prevProps.sources, this.props.sources)) {
+      this.setState(state => ({ ...state, sources: this.props.sources }));
     }
   }
   getWidget() {
@@ -91,7 +91,7 @@ class ChooseWidget extends Component {
     return (
       <BarDataSource
         element={this.props.editElement}
-        source={this.state.source}
+        sources={this.state.sources}
       />
     );
   }
@@ -100,7 +100,7 @@ class ChooseWidget extends Component {
     return (
       <PieDataSource
         element={this.props.editElement}
-        source={this.state.source}
+        sources={this.state.sources}
       />
     );
   }
@@ -109,7 +109,7 @@ class ChooseWidget extends Component {
     return (
       <DonutDataSource
         element={this.props.editElement}
-        source={this.state.source}
+        sources={this.state.sources}
       />
     );
   }
@@ -118,7 +118,7 @@ class ChooseWidget extends Component {
     return (
       <AreaDataSource
         element={this.props.editElement}
-        source={this.state.source}
+        sources={this.state.sources}
       />
     );
   }
@@ -127,7 +127,7 @@ class ChooseWidget extends Component {
     return (
       <LineDataSource
         element={this.props.editElement}
-        source={this.state.source}
+        sources={this.state.sources}
       />
     );
   }
@@ -136,7 +136,7 @@ class ChooseWidget extends Component {
     return (
       <TableDataSource
         element={this.props.editElement}
-        source={this.state.source}
+        sources={this.state.sourcess}
       />
     );
   }
@@ -145,7 +145,7 @@ class ChooseWidget extends Component {
     return (
       <ScatterDataSource
         element={this.props.editElement}
-        source={this.state.source}
+        sources={this.state.sourcess}
       />
     );
   }

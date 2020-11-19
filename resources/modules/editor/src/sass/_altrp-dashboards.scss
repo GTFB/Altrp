@@ -23,6 +23,24 @@ div[x-placement="top"] {
     color: white;
     border-radius: 4px;
 }
+div[x-placement="right"] {
+    z-index: 9999999 !important;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 4px;
+}
+div[x-placement="bottom"] {
+    z-index: 9999999 !important;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 4px;
+}
+div[x-placement="left"] {
+    z-index: 9999999 !important;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 4px;
+}
 #front-app {
     transform: none !important;
     transition: none !important;

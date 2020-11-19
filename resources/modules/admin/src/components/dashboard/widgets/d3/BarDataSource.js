@@ -8,12 +8,16 @@ import {
   DiscreteLegend,
   DiscreteLegendEntry,
   LinearXAxis,
+  LinearXAxisTickSeries,
+  LinearXAxisTickLabel,
+  TooltipArea,
   LinearYAxis,
   LinearYAxisTickSeries
 } from "reaviz";
 import { customStyle } from "../../widgetTypes";
 import { connect } from "react-redux";
 import { Spinner } from "react-bootstrap";
+import ErrorBoundary from "./ErrorBoundary";
 import DataAdapter from "../../../../../../editor/src/js/components/altrp-dashboards/helpers/DataAdapter";
 
 const mapStateToProps = state => {
@@ -23,10 +27,12 @@ class BarDataSource extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      source: props.source,
+      sources: props.sources,
       legend: props.element.settings.legend,
       color: props.element.settings.color,
       params: props.element.settings.params,
+      countRequest: 0,
+      isMultiple: false,
       data: []
     };
   }
@@ -68,6 +74,39 @@ class BarDataSource extends Component {
     await this.getData();
   }
 
+  async getDataFromIterableDatasources(sources, paramsResult = {}) {
+    return Promise.all(
+      sources.map(async source => {
+        let dataArray = [];
+        if (_.keys(this.state.params).length > 0) {
+          dataArray = await new DataAdapter().adaptDataByPath(
+            source,
+            paramsResult
+          );
+        } else {
+          dataArray = await new DataAdapter().adaptDataByPath(source);
+        }
+        const multipleDataArray = _.uniq(
+          _.sortBy(
+            dataArray.map((item, index) => {
+              return {
+                data: item.data,
+                key: item.key,
+                id: index
+              };
+            }),
+            "key"
+          ),
+          "key"
+        );
+        return {
+          key: source.title || source.path,
+          data: multipleDataArray
+        };
+      })
+    );
+  }
+
   async getData() {
     let globalParams = _.cloneDeep(this.props.formsStore.form_data, []);
     let globalParamsArray = _.keys(globalParams)
@@ -80,34 +119,55 @@ class BarDataSource extends Component {
       });
     let localParams = _.cloneDeep(this.state.params, []);
     let paramsResult = localParams.concat(globalParamsArray);
-    if (typeof this.props.element.settings.source.path !== "undefined") {
+    if (_.keys(this.props.element.settings.sources).length > 0) {
       let data = [];
-      if (_.keys(this.state.params).length > 0) {
-        data = await new DataAdapter().adaptDataByPath(
-          this.state.source,
+      let isMultiple = false;
+      if (_.keys(this.props.element.settings.sources).length === 1) {
+        let source = this.props.element.settings.sources[0];
+        if (_.keys(this.state.params).length > 0) {
+          data = await new DataAdapter().adaptDataByPath(source, paramsResult);
+        } else {
+          data = await new DataAdapter().adaptDataByPath(source);
+        }
+      } else {
+        data = await this.getDataFromIterableDatasources(
+          this.props.element.settings.sources,
           paramsResult
         );
-      } else {
-        data = await new DataAdapter().adaptDataByPath(this.state.source);
+        isMultiple = true;
       }
-      if (data.length === 0) {
+      let needCallAgain = true;
+      if (this.props.element.settings.sources.length > 1) {
+        let matches = data.map(obj => obj.data.length > 0);
+        needCallAgain = _.includes(matches, false);
+      } else {
+        needCallAgain =
+          _.keys(data).length === 0 && this.state.countRequest < 5;
+      }
+      if (needCallAgain) {
         setTimeout(() => {
           this.getData();
-        }, 2500);
+          let count = this.state.countRequest;
+          count += 1;
+          this.setState(s => ({ ...s, countRequest: count }));
+        }, 3500);
       }
-      this.setState(s => ({ ...s, data: data }));
+      console.log("====================================");
+      console.log(data);
+      console.log("====================================");
+      this.setState(s => ({ ...s, data: data, isMultiple: isMultiple }));
     }
   }
 
   renderLegend(data) {
-    let customColors = _.keys(this.state.color).length > 0;
-    let legend = data.map((item, key) => {
+    const customColors = _.keys(this.state.color).length > 0;
+    const legend = data.map((item, key) => {
       return (
         <DiscreteLegendEntry
           key={key}
           className="discrete__legend-item"
-          label={`${item.key} (${item.data})`}
-          color={customStyle[item.key % customStyle.length] || "#606060"}
+          label={`${item.key}`}
+          color={customStyle[key % customStyle.length] || "#606060"}
         />
       );
     });
@@ -118,7 +178,7 @@ class BarDataSource extends Component {
             key={key}
             className="discrete__legend-item"
             label={`${item.key} (${item.data})`}
-            color={this.state.color[item.key] || "#606060"}
+            color={this.state.color[key] || "#606060"}
           />
         );
       });
@@ -128,38 +188,68 @@ class BarDataSource extends Component {
   }
 
   render() {
-    if (Object.keys(this.state.source).length === 0) {
+    if (
+      this.state.source === null &&
+      Object.keys(this.state.sources).length === 0
+    ) {
       return <div>Нет данных</div>;
     }
+    if (this.state.isMultiple) {
+      return <div>Укажите только один источник данных</div>;
+    } else {
+      if (this.state.data.length > 101) {
+        return (
+          <div>
+            Для стабильной работы виджета, ограничьте диапозон данных и выберите
+            источник данных заново
+          </div>
+        );
+      }
+    }
+
     if (typeof this.state.data !== "undefined" && this.state.data.length > 0) {
-      let customColors = _.keys(this.state.color).length > 0;
+      const customColors = _.keys(this.state.color).length > 0;
       return (
         <>
           <div className="chart-content-container">
-            <BarChart
-              data={this.state.data}
-              series={
-                <BarSeries
-                  colorScheme={
-                    customColors
-                      ? (_data, index) => {
-                          return (
-                            this.state.color[_data.key] ||
-                            customStyle[index % customStyle.length]
-                          );
+            <ErrorBoundary>
+              <BarChart
+                data={this.state.data}
+                // xAxis={
+                //   <LinearXAxis
+                //     type="time"
+                //     tickSeries={
+                //       <LinearXAxisTickSeries
+                //         label={<LinearXAxisTickLabel rotation={false} />}
+                //       />
+                //     }
+                //   />
+                // }
+                series={
+                  <BarSeries
+                    colorScheme={
+                      customColors
+                        ? (_data, index) => {
+                            return (
+                              this.state.color[_data.key] ||
+                              customStyle[index % customStyle.length]
+                            );
+                          }
+                        : customStyle
+                    }
+                    bar={
+                      <Bar
+                        gradient={
+                          <Gradient
+                            stops={[<GradientStop stopOpacity={1} />]}
+                          />
                         }
-                      : customStyle
-                  }
-                  bar={
-                    <Bar
-                      gradient={
-                        <Gradient stops={[<GradientStop stopOpacity={1} />]} />
-                      }
-                    />
-                  }
-                />
-              }
-            />
+                      />
+                    }
+                  />
+                }
+              />
+            </ErrorBoundary>
           </div>
           {this.state.legend.enabled && (
             <DiscreteLegend
@@ -171,6 +261,9 @@ class BarDataSource extends Component {
           )}
         </>
       );
+    }
+    if (this.state.countRequest < 5) {
+      return <div>Загрузка...</div>;
     }
     return <div>Нет данных</div>;
   }

@@ -9,11 +9,12 @@ import GearFill from "react-bootstrap-icons/dist/icons/sliders";
 import TrashFill from "react-bootstrap-icons/dist/icons/trash";
 import PrinterFill from "react-bootstrap-icons/dist/icons/printer";
 import FileEarMark from "react-bootstrap-icons/dist/icons/cloud-download";
+import Pin from "../../../svgs/pin.svg";
 
 import EditWidget from "./EditWidget";
 import WidgetDiagram from "../../../../../admin/src/components/dashboard/WidgetDiagram";
 
-import { exportComponentAsJPEG } from 'react-component-export-image';
+import { exportComponentAsJPEG } from "react-component-export-image";
 
 function CardWidget({ widget, onDeleted, onEdited, settings, isMobile }) {
   const [isEdit, setIsEdit] = useState(false);
@@ -35,13 +36,16 @@ function CardWidget({ widget, onDeleted, onEdited, settings, isMobile }) {
         <Card.Title>
           <div className="dropdownTogglerContainer">
             <Dropdown drop="left">
-              <Dropdown.Toggle variant="light" >
+              <Dropdown.Toggle variant="light">
                 <ThreeDotsVertical color="#7a7a7b" />
               </Dropdown.Toggle>
-              <Dropdown.Menu className="dropdownMenuToggle" style={{ 
-                zIndex:999999,
-                background: 'rgba(255,255,255,1)' 
-              }}>
+              <Dropdown.Menu
+                className="dropdownMenuToggle"
+                style={{
+                  zIndex: 999999,
+                  background: "rgba(255,255,255,1)"
+                }}
+              >
                 <Dropdown.Item>
                   <ReactToPrint
                     trigger={() => {
@@ -52,19 +56,32 @@ function CardWidget({ widget, onDeleted, onEdited, settings, isMobile }) {
                       );
                     }}
                     content={() => ref.current}
-                  /></Dropdown.Item>
+                  />
+                </Dropdown.Item>
                 <Dropdown.Item>
-                  <button type="button" title="Скачать файл" onClick={saveWidget}>
+                  <button
+                    type="button"
+                    title="Скачать файл"
+                    onClick={saveWidget}
+                  >
                     <FileEarMark />
                   </button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <button type="button" title="Настроить виджет" onClick={() => setIsEdit(!isEdit)}>
+                  <button
+                    type="button"
+                    title="Настроить виджет"
+                    onClick={() => setIsEdit(!isEdit)}
+                  >
                     <GearFill />
                   </button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <button type="button" title="Удалить виджет" onClick={() => onDeleted(widget)}>
+                  <button
+                    type="button"
+                    title="Удалить виджет"
+                    onClick={() => onDeleted(widget)}
+                  >
                     <TrashFill />
                   </button>
                 </Dropdown.Item>
@@ -75,10 +92,15 @@ function CardWidget({ widget, onDeleted, onEdited, settings, isMobile }) {
       </Card.Header>
       <Card.Body className={`altrp-chart ${widget.options?.legendPosition}`}>
         {isEdit ? (
-          <EditWidget settings={settings} data={widget} onEdited={onEdited} setIsEdit={setIsEdit} />
+          <EditWidget
+            settings={settings}
+            data={widget}
+            onEdited={onEdited}
+            setIsEdit={setIsEdit}
+          />
         ) : (
-            <WidgetDiagram widget={widget} width={360} height={300} />
-          )}
+          <WidgetDiagram widget={widget} width={360} height={300} />
+        )}
       </Card.Body>
     </Card>
   );

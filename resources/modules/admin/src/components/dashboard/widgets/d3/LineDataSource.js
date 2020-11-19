@@ -9,7 +9,8 @@ import {
   LinearXAxisTickLabel,
   DiscreteLegend,
   DiscreteLegendEntry,
-  TooltipArea
+  TooltipArea,
+  LinearYAxis
 } from "reaviz";
 import { customStyle } from "../../widgetTypes";
 import format from "date-fns/format";
@@ -18,6 +19,7 @@ import ru from "date-fns/locale/ru";
 import { Spinner } from "react-bootstrap";
 import { connect } from "react-redux";
 import DataAdapter from "../../../../../../editor/src/js/components/altrp-dashboards/helpers/DataAdapter";
+import ErrorBoundary from "./ErrorBoundary";
 
 const mapStateToProps = state => {
   return { formsStore: state.formsStore };
@@ -26,10 +28,12 @@ class LineDataSource extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      source: props.source,
+      sources: props.sources,
       legend: props.element.settings.legend,
       color: props.element.settings.color,
       params: props.element.settings.params,
+      countRequest: 0,
+      isMultiple: false,
       data: []
     };
   }
@@ -69,60 +73,85 @@ class LineDataSource extends Component {
   }
 
   async componentWillMount() {
-    console.log("====================================");
-    console.log("DATA");
-    console.log("====================================");
     await this.getData();
+  }
+
+  async getDataFromIterableDatasources(sources, paramsResult = {}) {
+    return Promise.all(
+      sources.map(async source => {
+        let dataArray = [];
+        if (_.keys(this.state.params).length > 0) {
+          dataArray = await new DataAdapter().adaptDataByPath(
+            source,
+            paramsResult
+          );
+        } else {
+          dataArray = await new DataAdapter().adaptDataByPath(source);
+        }
+        const multipleDataArray = _.sortBy(
+          dataArray.map((item, index) => {
+            return {
+              data: item.data,
+              key: item.key,
+              id: index
+            };
+          }),
+          "key"
+        );
+        return {
+          key: source.title || source.path,
+          data: multipleDataArray
+        };
+      })
+    );
   }
 
   async getData() {
     let globalParams = _.cloneDeep(this.props.formsStore.form_data, []);
-    let globalParamsArray = _.keys(globalParams).map(param => {
-      return { [param]: globalParams[param] };
-    });
+    let globalParamsArray = _.keys(globalParams)
+      .map(param => {
+        return { [param]: globalParams[param] };
+      })
+      .filter(param => {
+        let key = _.keys(param)[0];
+        return param[key] !== "";
+      });
     let localParams = _.cloneDeep(this.state.params, []);
     let paramsResult = localParams.concat(globalParamsArray);
-    if (typeof this.props.element.settings.source.path !== "undefined") {
-      let data = {};
-      if (_.keys(this.state.params).length > 0) {
-        data = await new DataAdapter().adaptDataByPath(
-          this.state.source.path,
-          this.state.source.key,
-          this.state.source.data,
+    let isMultiple = false;
+    if (_.keys(this.props.element.settings.sources).length > 0) {
+      let data = [];
+      if (_.keys(this.props.element.settings.sources).length === 1) {
+        let source = this.props.element.settings.sources[0];
+        if (_.keys(this.state.params).length > 0) {
+          data = await new DataAdapter().adaptDataByPath(source, paramsResult);
+        } else {
+          data = await new DataAdapter().adaptDataByPath(source);
+        }
+      } else {
+        data = await this.getDataFromIterableDatasources(
+          this.props.element.settings.sources,
           paramsResult
         );
-      } else {
-        data = await new DataAdapter().adaptDataByPath(
-          this.state.source.path,
-          this.state.source.key,
-          this.state.source.data
-        );
+        isMultiple = true;
       }
-      if (_.keys(data).length === 0) {
+      let needCallAgain = true;
+      if (this.props.element.settings.sources.length > 1) {
+        let matches = data.map(obj => obj.data.length > 0);
+        needCallAgain = _.includes(matches, false);
+      } else {
+        needCallAgain =
+          _.keys(data).length === 0 && this.state.countRequest < 5;
+      }
+      if (needCallAgain) {
         setTimeout(() => {
           this.getData();
-        }, 2500);
+          let count = this.state.countRequest;
+          count += 1;
+          this.setState(s => ({ ...s, countRequest: count }));
+        }, 3500);
       }
-      this.setState(s => ({ ...s, data: data }));
-    }
-  }
-
-  formattingDate(data) {
-    //  Первая дата
-    const firstDate = data.slice().shift();
-    // Последняя дата
-    const lastDate = data.slice().pop();
-    // Разница между датами в месяцах
-    const diff = parseInt(
-      formatDistanceStrict(firstDate.key, lastDate.key, {
-        unit: "month"
-      })
-    );
-
-    if (diff >= 0 && diff <= 12) {
-      return format(data, "d MMM", { locale: ru });
-    } else {
-      return format(data, "d MMM yy", { locale: ru });
+      this.setState(s => ({ ...s, data: data, isMultiple: isMultiple }));
     }
   }
 
@@ -133,8 +162,8 @@ class LineDataSource extends Component {
         <DiscreteLegendEntry
           key={key}
           className="discrete__legend-item"
-          label={`${item.key} (${item.data})`}
-          color={customStyle[item.key % customStyle.length] || "#606060"}
+          label={`${item.key}`}
+          color={customStyle[key % customStyle.length] || "#606060"}
         />
       );
     });
@@ -144,8 +173,8 @@ class LineDataSource extends Component {
           <DiscreteLegendEntry
             key={key}
             className="discrete__legend-item"
-            label={`${item.key} (${item.data})`}
-            color={this.state.color[item.key] || "#606060"}
+            label={`${item.key}`}
+            color={this.state.color[key] || "#606060"}
           />
         );
       });
@@ -155,51 +184,55 @@ class LineDataSource extends Component {
   }
 
   render() {
-    if (Object.keys(this.state.source).length === 0) {
+    if (Object.keys(this.state.sources).length === 0) {
       return <div>Нет данных </div>;
     }
-
+    if (this.props.element.settings.sources.length > 1) {
+      let matches = this.state.data.map(obj => obj.data.length > 0);
+      let check = _.includes(matches, false);
+      if (check) {
+        return <div>Загрузка...</div>;
+      }
+    }
     if (
       typeof this.state.data !== "undefined" &&
       this.state.data.length === 0
     ) {
       return <div>Нет данных</div>;
     }
-    console.log("====================================");
-    console.log(this.state.data);
-    console.log("====================================");
     return (
       <>
-        <LineChart
-          zoomPan={<ChartZoomPan />}
-          data={this.state.data}
-          series={
-            <LineSeries
-              tooltip={<TooltipArea disabled={true} />}
-              markLine={null}
-            />
-          }
-          xAxis={
-            <LinearXAxis
-              type="category"
-              tickSeries={
-                <LinearXAxisTickSeries
-                  label={<LinearXAxisTickLabel rotation={false} />}
-                />
-              }
-            />
-          }
-          series={<LineSeries colorScheme={customStyle} />}
-        />
-
-        {this.state.legend.enabled && (
-          <DiscreteLegend
-            className={`discrete__legend  ${this.props.element.settings.legend
-              .side || ""}`}
-            orientation={this.state.legend.side}
-            entries={this.renderLegend(this.state.data)}
+        <ErrorBoundary>
+          <LineChart
+            zoomPan={<ChartZoomPan />}
+            data={this.state.data}
+            series={
+              <LineSeries
+                type={this.state.isMultiple ? "grouped" : "standard"}
+                colorScheme={customStyle}
+              />
+            }
+            xAxis={
+              <LinearXAxis
+                type="time"
+                tickSeries={
+                  <LinearXAxisTickSeries
+                    label={<LinearXAxisTickLabel rotation={false} />}
+                  />
+                }
+              />
+            }
           />
-        )}
+
+          {this.state.legend.enabled && (
+            <DiscreteLegend
+              className={`discrete__legend  ${this.props.element.settings.legend
+                .side || ""}`}
+              orientation={this.state.legend.side}
+              entries={this.renderLegend(this.state.data)}
+            />
+          )}
+        </ErrorBoundary>
       </>
     );
   }

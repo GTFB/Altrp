@@ -12,6 +12,7 @@ class TableDataSource extends Component {
       source: props.source,
       color: props.element.settings.color,
       params: props.element.settings.params,
+      countRequest: 0,
       data: []
     };
   }
@@ -63,24 +64,21 @@ class TableDataSource extends Component {
     let paramsResult = localParams.concat(globalParamsArray);
     console.log(paramsResult);
     if (typeof this.props.element.settings.source.path !== "undefined") {
-      let data = {};
+      let data = [];
       if (_.keys(this.state.params).length > 0) {
         data = await new DataAdapter().adaptDataByPath(
-          this.state.source.path,
-          this.state.source.key,
-          this.state.source.data,
+          this.state.source,
           paramsResult
         );
       } else {
-        data = await new DataAdapter().adaptDataByPath(
-          this.state.source.path,
-          this.state.source.key,
-          this.state.source.data
-        );
+        data = await new DataAdapter().adaptDataByPath(this.state.source);
       }
-      if (_.keys(data).length === 0) {
+      if (_.keys(data).length === 0 && this.state.countRequest < 5) {
         setTimeout(() => {
           this.getData();
+          let count = this.state.countRequest;
+          count += 1;
+          this.setState(s => ({ ...s, countRequest: count }));
         }, 2500);
       }
       this.setState(s => ({ ...s, data: data }));

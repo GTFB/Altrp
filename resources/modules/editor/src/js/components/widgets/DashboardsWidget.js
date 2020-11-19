@@ -4,8 +4,12 @@ import React, { Component, Suspense, useRef } from "react";
 import axios from "axios";
 import { thresholdFreedmanDiaconis } from "d3";
 
-const AltrpDashboards = React.lazy(() => import("../altrp-dashboards/AltrpDashboards"));
-const DataSourceDashboards = React.lazy(() => import("../altrp-dashboards/DataSourceDashboards"));
+const AltrpDashboards = React.lazy(() =>
+  import("../altrp-dashboards/AltrpDashboards")
+);
+const DataSourceDashboards = React.lazy(() =>
+  import("../altrp-dashboards/DataSourceDashboards")
+);
 
 class DashboardsWidget extends Component {
   constructor(props) {
@@ -24,8 +28,6 @@ class DashboardsWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-
-
   }
 
   async componentWillMount() {
@@ -33,31 +35,32 @@ class DashboardsWidget extends Component {
       const id = this.props.element.getId();
       const req = await axios.get(`/ajax/dashboards/datasource/${id}/data`, {
         headers: {
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content")
         }
       });
-      let data = req.data.settings || '{}';
+      let data = JSON.parse(req.data.settings) || JSON.parse("{}");
       this.setState(state => ({
         ...state,
-        settingsData: JSON.parse(data)
+        settingsData: data
       }));
-    }
-    catch (e) {
-      console.log('ERROR ==>', e);
+    } catch (e) {
+      console.log("ERROR ==>", e);
     }
   }
 
   fireAction(action) {
-    if (typeof this.refChild.current[action] !== 'undefined') {
+    if (typeof this.refChild.current[action] !== "undefined") {
       this.refChild.current[action]();
-    }
-    else {
-      alert('ERROR, NOT FOUND ACTION');
+    } else {
+      alert("ERROR, NOT FOUND ACTION");
     }
   }
 
   render() {
-    const containerWidth = this.props.element.getSettings().positioning_custom_width.size;
+    const containerWidth = this.props.element.getSettings()
+      .positioning_custom_width.size;
     const dataByDataSource = this.props.element.getSettings().dataSource;
     const settings = this.props.element.getSettings();
     const global_parameter = this.state.settings.global_parameter;
@@ -67,29 +70,28 @@ class DashboardsWidget extends Component {
     const settingsData = this.state.settingsData;
     return (
       <Suspense fallback={"Loading"}>
-        {
-          !dataByDataSource
-            ?
-            (<AltrpDashboards settings={this.props.element.getSettings()}
-              globalParameter={global_parameter}
-              currentUser={currentUser}
-              //  currentDataStorage={this.props.currentDataStorage}
-              id={this.props.element.getId()} />)
-            :
-            (<DataSourceDashboards
-              ref={this.refChild}
-              showButton={showButton}
-              settings={this.props.element.getSettings()}
-              id={this.props.element.getId()}
-              containerWidth={containerWidth}
-              items={settingsData.items}
-              counter={settingsData.newCounter}
-              rep={this.props.element.getSettings('rep', [])} />)
-        }
-
+        {!dataByDataSource ? (
+          <AltrpDashboards
+            settings={this.props.element.getSettings()}
+            globalParameter={global_parameter}
+            currentUser={currentUser}
+            //  currentDataStorage={this.props.currentDataStorage}
+            id={this.props.element.getId()}
+          />
+        ) : (
+          <DataSourceDashboards
+            ref={this.refChild}
+            showButton={showButton}
+            settings={this.props.element.getSettings()}
+            id={this.props.element.getId()}
+            containerWidth={containerWidth}
+            items={settingsData.items}
+            counter={settingsData.newCounter}
+            rep={this.props.element.getSettings("rep", [])}
+          />
+        )}
       </Suspense>
     );
-
   }
 }
 export default DashboardsWidget;

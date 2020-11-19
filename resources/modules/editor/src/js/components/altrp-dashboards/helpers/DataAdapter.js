@@ -1,7 +1,8 @@
 import { getDataByPath } from "../../../../../../front-app/src/js/helpers";
 import axios from "axios";
 import appStore from "../../../../../../front-app/src/js/store/store";
-
+import format from "date-fns";
+import ru from "date-fns/locale/ru";
 //Класс для работы с репитером
 //получает данные из источника и приводит их к указанному формату ключ->значение
 class DataAdapter {
@@ -11,7 +12,11 @@ class DataAdapter {
   }
 
   getAlias(path) {
-    return path.split("altrpdata.")[1];
+    try {
+      return path.split("altrpdata.")[1];
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   getDatasourceByPath(path) {
@@ -63,41 +68,42 @@ class DataAdapter {
     }
   }
 
-  async adaptDataByPath(path, key, dataKey, params = {}) {
+  async adaptDataByPath(datasourceObject, params = {}) {
+    console.log("====================================");
+    console.log(datasourceObject);
+    console.log("====================================");
+    const { path, key, data } = datasourceObject;
     if (_.keys(params).length > 0) {
-      let datasource = this.getDatasourceByPath(path);
+      const datasource = this.getDataByPath(path);
       if (typeof datasource !== "undefined") {
         return await this.getDataWithParams(datasource, key, dataKey, params);
       }
     }
     try {
-      let data = getDataByPath(path, []);
-      // console.log('DATA IN ADAPTER =>', data);
-      if (data.length > 0) {
-        data = data.map(d => ({
-          data: Number(_.get(d, dataKey)),
-          key: _.get(d, key)
-        }));
+      let dataArray = getDataByPath(path, []);
+      console.log(path);
+      if (dataArray.length > 0) {
         //Исключаем дублирование ключей, т.к. это приводит к ошибкам рендера всех диаграм
-        data = _.uniqBy(data, "key");
+        dataArray = _.uniqBy(dataArray, key);
+        dataArray = dataArray.map(d => {
+          let currentKey = _.get(d, key);
+          const keyFormatted = isNaN(Date.parse(currentKey))
+            ? currentKey
+            : new Date(currentKey);
+          return { data: _.get(d, data), key: keyFormatted };
+        });
+        if (datasourceObject.splitTo && datasourceObject.splitFrom) {
+          dataArray = dataArray.slice(
+            datasourceObject.splitFrom,
+            datasourceObject.splitTo
+          );
+        }
+        console.log(dataArray);
       }
-      return data;
+      return dataArray;
     } catch (error) {
       console.log("ADAPTER ERROR =>", error);
     }
-  }
-
-  //Возвращаем данные в паре ключ->значение, указанные в настройках
-  parse() {
-    let source = this.repeater.map(r => {
-      try {
-        let data = this.adaptDataByPath(r.path, r.key, r.data);
-        return { ...r, data };
-      } catch (error) {
-        console.error("PARSE DATA ERROR =>", error);
-      }
-    });
-    return source;
   }
 }
 
