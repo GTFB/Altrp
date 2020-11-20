@@ -10,6 +10,7 @@ import { customStyle } from "../../widgetTypes";
 import { Spinner } from "react-bootstrap";
 import DataAdapter from "../../../../../../editor/src/js/components/altrp-dashboards/helpers/DataAdapter";
 
+import ErrorBoundary from "./ErrorBoundary";
 import { connect } from "react-redux";
 import { editElement } from "../../../../../../editor/src/js/store/altrp-dashboard/actions";
 
@@ -55,12 +56,7 @@ class DonutDataSource extends Component {
       }));
       await this.getData();
     }
-    if (
-      !_.isEqual(
-        prevProps.formsStore.form_data,
-        this.props.formsStore.form_data
-      )
-    ) {
+    if (!_.isEqual(prevProps.formsStore, this.props.formsStore)) {
       await this.getData();
     }
   }
@@ -103,7 +99,8 @@ class DonutDataSource extends Component {
   }
 
   async getData() {
-    let globalParams = _.cloneDeep(this.props.formsStore.form_data, []);
+    let globalParams = _.cloneDeep(this.props.formsStore, []);
+    delete globalParams["changedField"];
     let globalParamsArray = _.keys(globalParams)
       .map(param => {
         return { [param]: globalParams[param] };
@@ -231,33 +228,35 @@ class DonutDataSource extends Component {
     let customColors = _.keys(this.state.color).length > 0;
     return (
       <>
-        <PieChart
-          data={this.state.data}
-          series={
-            <PieArcSeries
-              doughnut={true}
-              colorScheme={
-                customColors
-                  ? (_data, index) => {
-                      return (
-                        this.state.color[_data.key] ||
-                        customStyle[index % customStyle.length]
-                      );
-                    }
-                  : customStyle
-              }
-              label={<PieArcLabel fontSize={12} fontFill="#000000" />}
-            />
-          }
-        />
-        {this.state.legend.enabled && (
-          <DiscreteLegend
-            className={`discrete__legend  ${this.props.element.settings.legend
-              .side || ""}`}
-            orientation={this.state.legend.side}
-            entries={this.renderLegend(this.state.data)}
+        <ErrorBoundary>
+          <PieChart
+            data={this.state.data}
+            series={
+              <PieArcSeries
+                doughnut={true}
+                colorScheme={
+                  customColors
+                    ? (_data, index) => {
+                        return (
+                          this.state.color[_data.key] ||
+                          customStyle[index % customStyle.length]
+                        );
+                      }
+                    : customStyle
+                }
+                label={<PieArcLabel fontSize={12} fontFill="#000000" />}
+              />
+            }
           />
-        )}
+          {this.state.legend.enabled && (
+            <DiscreteLegend
+              className={`discrete__legend  ${this.props.element.settings.legend
+                .side || ""}`}
+              orientation={this.state.legend.side}
+              entries={this.renderLegend(this.state.data)}
+            />
+          )}
+        </ErrorBoundary>
       </>
     );
   }

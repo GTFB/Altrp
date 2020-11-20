@@ -63,12 +63,7 @@ class LineDataSource extends Component {
       }));
       await this.getData();
     }
-    if (
-      !_.isEqual(
-        prevProps.formsStore.form_data,
-        this.props.formsStore.form_data
-      )
-    ) {
+    if (!_.isEqual(prevProps.formsStore, this.props.formsStore)) {
       await this.getData();
     }
   }
@@ -94,7 +89,7 @@ class LineDataSource extends Component {
     return Promise.all(
       sources.map(async source => {
         let dataArray = [];
-        if (_.keys(this.state.params).length > 0) {
+        if (_.keys(paramsResult).length > 0) {
           dataArray = await new DataAdapter().adaptDataByPath(
             source,
             paramsResult
@@ -121,7 +116,8 @@ class LineDataSource extends Component {
   }
 
   async getData() {
-    let globalParams = _.cloneDeep(this.props.formsStore.form_data, []);
+    let globalParams = _.cloneDeep(this.props.formsStore, []);
+    delete globalParams["changedField"];
     let globalParamsArray = _.keys(globalParams)
       .map(param => {
         return { [param]: globalParams[param] };
@@ -137,7 +133,8 @@ class LineDataSource extends Component {
       let data = [];
       if (_.keys(this.props.element.settings.sources).length === 1) {
         let source = this.props.element.settings.sources[0];
-        if (_.keys(this.state.params).length > 0) {
+        if (_.keys(paramsResult).length > 0) {
+          console.log("PARAM");
           data = await new DataAdapter().adaptDataByPath(source, paramsResult);
         } else {
           data = await new DataAdapter().adaptDataByPath(source);
@@ -150,12 +147,22 @@ class LineDataSource extends Component {
         isMultiple = true;
       }
       let needCallAgain = true;
+      let dates = [];
+      let isDate = true;
       if (this.props.element.settings.sources.length > 1) {
         let matches = data.map(obj => obj.data.length > 0);
         needCallAgain = _.includes(matches, false);
+        dates = data.map(dataSet =>
+          dataSet.map(obj => obj.key instanceof Date)
+        );
+        isDate = _.includes(dates, true);
       } else {
         needCallAgain =
           _.keys(data).length === 0 && this.state.countRequest < 5;
+        if (_.keys(data).length > 0) {
+          dates = data.map(obj => obj.key instanceof Date);
+          isDate = _.includes(dates, true);
+        }
       }
       if (needCallAgain) {
         setTimeout(() => {
@@ -165,8 +172,6 @@ class LineDataSource extends Component {
           this.setState(s => ({ ...s, countRequest: count }));
         }, 3500);
       }
-      const dates = data.map(obj => obj.key instanceof Date);
-      const isDate = _.includes(dates, true);
       this.setState(s => ({
         ...s,
         data: data,
@@ -220,7 +225,7 @@ class LineDataSource extends Component {
       }
     }
     if (
-      typeof this.state.data !== "undefined" &&
+      typeof this.state.data !== "undefined" ||
       this.state.data.length === 0
     ) {
       if (this.state.countRequest < 5) {

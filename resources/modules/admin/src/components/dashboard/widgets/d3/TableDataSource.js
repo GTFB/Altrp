@@ -43,12 +43,7 @@ class TableDataSource extends Component {
       }));
       await this.getData();
     }
-    if (
-      !_.isEqual(
-        prevProps.formsStore.form_data,
-        this.props.formsStore.form_data
-      )
-    ) {
+    if (!_.isEqual(prevProps.formsStore, this.props.formsStore)) {
       await this.getData();
     }
   }
@@ -96,7 +91,8 @@ class TableDataSource extends Component {
   }
 
   async getData() {
-    let globalParams = _.cloneDeep(this.props.formsStore.form_data, []);
+    let globalParams = _.cloneDeep(this.props.formsStore, []);
+    delete globalParams["changedField"];
     let globalParamsArray = _.keys(globalParams)
       .map(param => {
         return { [param]: globalParams[param] };

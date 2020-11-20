@@ -24,6 +24,7 @@ import formatDistanceStrict from "date-fns/formatDistanceStrict";
 import ru from "date-fns/locale/ru";
 import { Spinner } from "react-bootstrap";
 import { connect } from "react-redux";
+import ErrorBoundary from "./ErrorBoundary";
 import DataAdapter from "../../../../../../editor/src/js/components/altrp-dashboards/helpers/DataAdapter";
 
 const mapStateToProps = state => {
@@ -57,6 +58,10 @@ class AreaDataSource extends Component {
         params: this.props.element.settings.params
       }));
 
+      await this.getData();
+    }
+
+    if (!_.isEqual(prevProps.formsStore, this.props.formsStore)) {
       await this.getData();
     }
   }
@@ -99,7 +104,8 @@ class AreaDataSource extends Component {
   }
 
   async getData() {
-    let globalParams = _.cloneDeep(this.props.formsStore.form_data, []);
+    let globalParams = _.cloneDeep(this.props.formsStore, []);
+    delete globalParams["changedField"];
     let globalParamsArray = _.keys(globalParams)
       .map(param => {
         return { [param]: globalParams[param] };

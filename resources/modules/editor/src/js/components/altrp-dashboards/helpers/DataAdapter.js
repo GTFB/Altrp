@@ -51,29 +51,43 @@ class DataAdapter {
     return data;
   }
 
+  parseSourceParams(params) {
+    console.log("====================================");
+    console.log(params);
+    console.log("====================================");
+  }
+
   async getDataWithParams(datasource, key, dataKey, params) {
-    let url = datasource.getWebUrl();
-    let sendUrl = url + this.queryString(params);
+    const url = datasource.getWebUrl();
+    console.log("====================================");
+    console.log(datasource);
+    console.log("====================================");
+    let localParams = this.parseSourceParams(datasource.params);
+    const sendUrl = url + this.queryString(params);
     try {
       const req = await axios(sendUrl);
-      let returnData = req.data.data.map(d => {
-        return {
-          data: _.get(d, dataKey),
-          key: _.get(d, key)
-        };
-      });
+      const returnData =
+        req.data.data.map(d => {
+          return {
+            data: _.get(d, dataKey),
+            key: _.get(d, key)
+          };
+        }) || [];
       return returnData;
     } catch (error) {
-      console.log("WITH PARAMS ERROR=>", error);
+      console.log("====================================");
+      console.log(error);
+      console.log("====================================");
+      return [];
     }
   }
 
   async adaptDataByPath(datasourceObject, params = {}) {
     const { path, key, data } = datasourceObject;
     if (_.keys(params).length > 0) {
-      const datasource = this.getDataByPath(path);
+      const datasource = this.getDatasourceByPath(path);
       if (typeof datasource !== "undefined") {
-        return await this.getDataWithParams(datasource, key, dataKey, params);
+        return await this.getDataWithParams(datasource, key, data, params);
       }
     }
     try {
