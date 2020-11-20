@@ -53,7 +53,12 @@ class DonutDataSource extends Component {
       }));
       await this.getData();
     }
-    if (!_.isEqual(prevProps.formsStore, this.props.formsStore)) {
+    if (
+      !_.isEqual(
+        prevProps.formsStore.form_data,
+        this.props.formsStore.form_data
+      )
+    ) {
       await this.getData();
     }
   }
@@ -63,8 +68,7 @@ class DonutDataSource extends Component {
   }
 
   async getData() {
-    let globalParams = _.cloneDeep(this.props.formsStore, []);
-    delete globalParams["changedField"];
+    let globalParams = _.cloneDeep(this.props.formsStore.form_data, []);
     let globalParamsArray = _.keys(globalParams).map(param => {
       return { [param]: globalParams[param] };
     });
