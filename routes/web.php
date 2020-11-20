@@ -291,6 +291,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     * Управление моделями
     */
     Route::get( '/custom_models/{model_id}', 'Admin\ModelsController@getCustomModelRecords');
+    Route::get( '/custom_models/{model_id}/show/{record_id}', 'Admin\ModelsController@getCustomModelRecord');
+    Route::post( '/custom_models/{model_id}', 'Admin\ModelsController@storeCustomModelRecord');
+    Route::put( '/custom_models/{model_id}/edit/{record_id}', 'Admin\ModelsController@editCustomModelRecord');
+    Route::delete( '/custom_models/{model_id}/delete/{record_id}', 'Admin\ModelsController@destroyCustomModelRecord');
 
     Route::get('/tables', "Admin\TableController@getTables");
     Route::get('/tables/options', "Admin\TableController@getTablesForOptions");

@@ -1553,6 +1553,11 @@ class ModelsController extends HttpController
 
     // Custom models dashboard
 
+    /**
+     * Получить все записи модели
+     * @param $model_id
+     * @return JsonResponse
+     */
     public function getCustomModelRecords($model_id)
     {
         $model = Model::where([['id', $model_id], ['preset', 0]])->first();
@@ -1576,5 +1581,114 @@ class ModelsController extends HttpController
             }
         }
         return response()->json($response, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Получить запись модели по ID
+     * @param $model_id
+     * @param $record_id
+     * @return JsonResponse
+     */
+    public function getCustomModelRecord($model_id, $record_id)
+    {
+        $model = Model::where([['id', $model_id], ['preset', 0]])->first();
+        if (!$model)
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        $columns = explode(',', $model->table->columns->where('type', '!=', 'calculated')->implode('name', ','));
+        $url = config('app.url') . "/ajax/models/" . $model->table->name . '/' . $record_id;
+        $response = \Curl::to($url)
+            ->withData(request()->all())
+            ->asJson()
+            ->get();
+
+        foreach ($response as $key => $value) {
+            if (!in_array($key, $columns)) {
+                unset($response->$key);
+            }
+        }
+        return response()->json($response, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Сохранить запись модели
+     * @param $model_id
+     * @return JsonResponse
+     */
+    public function storeCustomModelRecord($model_id)
+    {
+        $model = Model::where([['id', $model_id], ['preset', 0]])->first();
+        if (!$model)
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        $columns = explode(',', $model->table->columns->where('type', '!=', 'calculated')->implode('name', ','));
+        $data = request()->all();
+        foreach ($data as $key => $item) {
+            if (!in_array($key, $columns)) {
+                unset($data[$key]);
+            }
+        }
+        $record = new $model->namespace($data);
+        $response = $record->save();
+        return response()->json(['success' => $response], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Обновить запись модели
+     * @param $model_id
+     * @param $record_id
+     * @return JsonResponse
+     */
+    public function editCustomModelRecord($model_id, $record_id)
+    {
+        $model = Model::where([['id', $model_id], ['preset', 0]])->first();
+        if (!$model)
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        $columns = explode(',', $model->table->columns->where('type', '!=', 'calculated')->implode('name', ','));
+        $data = request()->all();
+        foreach ($data as $key => $item) {
+            if (!in_array($key, $columns)) {
+                unset($data[$key]);
+            }
+        }
+        $record = $model->namespace::find($record_id);
+        if (!$record)
+            return response()->json([
+                'success' => false,
+                'message' => 'Record not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        $response = $record->update($data);
+        return response()->json(['success' => $response], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Удалить запись модели
+     * @param $model_id
+     * @param $record_id
+     * @return JsonResponse
+     */
+    public function destroyCustomModelRecord($model_id, $record_id)
+    {
+        $model = Model::where([['id', $model_id], ['preset', 0]])->first();
+        if (!$model)
+            return response()->json([
+                'success' => false,
+                'message' => 'Model not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        $record = $model->namespace::find($record_id);
+        if (!$record)
+            return response()->json([
+                'success' => false,
+                'message' => 'Record not found'
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        $response = $record->delete();
+        return response()->json(['success' => $response], 200, [], JSON_UNESCAPED_UNICODE);
     }
 }
