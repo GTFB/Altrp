@@ -52,16 +52,16 @@ class DataAdapter {
   }
 
   parseSourceParams(params) {
-    console.log("====================================");
-    console.log(params);
-    console.log("====================================");
+    let parameters = params;
+    parameters.map(param => {
+      console.log("====================================");
+      console.log(param);
+      console.log("====================================");
+    });
   }
 
   async getDataWithParams(datasource, key, dataKey, params) {
     const url = datasource.getWebUrl();
-    console.log("====================================");
-    console.log(datasource);
-    console.log("====================================");
     let localParams = this.parseSourceParams(datasource.params);
     const sendUrl = url + this.queryString(params);
     try {
@@ -75,9 +75,6 @@ class DataAdapter {
         }) || [];
       return returnData;
     } catch (error) {
-      console.log("====================================");
-      console.log(error);
-      console.log("====================================");
       return [];
     }
   }

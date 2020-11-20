@@ -73,7 +73,7 @@ class BarDataSource extends Component {
     return Promise.all(
       sources.map(async source => {
         let dataArray = [];
-        if (_.keys(this.state.params).length > 0) {
+        if (_.keys(paramsResult).length > 0) {
           dataArray = await new DataAdapter().adaptDataByPath(
             source,
             paramsResult
@@ -118,9 +118,12 @@ class BarDataSource extends Component {
     if (_.keys(this.props.element.settings.sources).length > 0) {
       let data = [];
       let isMultiple = false;
+      console.log("====================================");
+      console.log(123);
+      console.log("====================================");
       if (_.keys(this.props.element.settings.sources).length === 1) {
         let source = this.props.element.settings.sources[0];
-        if (_.keys(this.state.params).length > 0) {
+        if (_.keys(paramsResult).length > 0) {
           data = await new DataAdapter().adaptDataByPath(source, paramsResult);
         } else {
           data = await new DataAdapter().adaptDataByPath(source);
