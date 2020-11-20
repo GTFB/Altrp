@@ -3,7 +3,9 @@ import {HTML5Backend} from 'react-dnd-html5-backend'
 import '../../../sass/altrp-pagination.scss';
 import {
   recurseCount,
-  setDataByPath, storeWidgetState,
+  setDataByPath,
+  storeWidgetState,
+  scrollbarWidth,
 } from "../../../../../front-app/src/js/helpers";
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import {Link} from "react-router-dom";
@@ -27,6 +29,7 @@ import React from "react";
 import templateLoader from "../../classes/modules/TemplateLoader";
 import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric";
 import AltrpModel from "../../classes/AltrpModel";
+import {FixedSizeList} from "react-window";
 /**
  *
  * @param rows
@@ -344,6 +347,7 @@ function AltrpTableWithoutUpdate(
     setGlobalFilter,
     setPageSize,
     selectedFlatRows,
+    totalColumnsWidth,
     state: reactTableState,
   } = ReactTable;
   const {
@@ -419,7 +423,7 @@ function AltrpTableWithoutUpdate(
       }, [inner_page_size, pageSize, pageCount, pageIndex, settings ]);
   const {WrapperComponent, wrapperProps} = React.useMemo(()=>{
     return {
-      WrapperComponent: replace_rows ? DndProvider : React.Fragment,
+      WrapperComponent: replace_rows ? DndProvider : DndProvider/*React.Fragment*/,
       wrapperProps: replace_rows ? {backend:HTML5Backend} : {},
     };
   }, [replace_rows]);
@@ -445,8 +449,8 @@ function AltrpTableWithoutUpdate(
       )})}
       <br />
     </div>}
-    <table className={"altrp-table altrp-table_columns-" + columns.length} {...getTableProps()}>
-      <thead className="altrp-table-head">
+    <div className={"altrp-table altrp-table_columns-" + columns.length} {...getTableProps()}>
+      <div className="altrp-table-head">
       {renderAdditionalRows(settings)}
       {headerGroups.map(headerGroup => {
         const headerGroupProps = headerGroup.getHeaderGroupProps();
@@ -455,8 +459,8 @@ function AltrpTableWithoutUpdate(
           delete headerGroupProps.style;
         }
         return (
-        <tr {...headerGroupProps} className="altrp-table-tr">
-          {replace_rows && <th className="altrp-table-th"/>}
+        <div {...headerGroupProps} className="altrp-table-tr">
+          {replace_rows && <div className="altrp-table-th"/>}
           {headerGroup.headers.map((column, idx) => {
             const {column_width, column_header_alignment} = column;
             let columnProps = column.getHeaderProps();
@@ -473,7 +477,7 @@ function AltrpTableWithoutUpdate(
             // columnProps.style = {};
             // if (column_width)  columnProps.style.width = column_width;
             // if (column_header_alignment)  columnProps.style.textAlign = column_header_alignment;
-            return <th {...columnProps}
+            return <div {...columnProps}
                        className="altrp-table-th"
                        key={idx}>{
               column.render('column_name')
@@ -505,13 +509,13 @@ function AltrpTableWithoutUpdate(
                         }`}
                 />
               }
-            </th>;
+            </div>;
               }
           )}
-        </tr>)}
+        </div>)}
       )}
-      {global_filter &&  <tr className="altrp-table-tr">
-        <th className="altrp-table-th"
+      {global_filter &&  <div className="altrp-table-tr">
+        <div className="altrp-table-th"
             colSpan={visibleColumns.length + replace_rows}
             style={{
               textAlign: 'left',
@@ -524,16 +528,55 @@ function AltrpTableWithoutUpdate(
               setGlobalFilter={setGlobalFilter}
               settings={settings}
           />
-        </th>
-      </tr>
+        </div>
+      </div>
       }
-      </thead>
+      </div>
       {_status === 'success' ?
-      <tbody {...getTableBodyProps()}>
-      {(page ? page : rows).map((row, i) => {
+
+        <TableBody {...{
+          getTableBodyProps,
+          prepareRow,
+          totalColumnsWidth,
+          rows,
+          visibleColumns,
+          moveRow,
+          settings,
+          page,
+          cardTemplate,}}
+        />:
+        <div><div className="altrp-table-tr"><div className="altrp-table-td" colSpan={visibleColumns.length + replace_rows}>
+          {(_status === 'loading' ? (loading_text || null) : null )}
+        </div></div></div>}
+    </div>
+    {paginationProps && <Pagination {...paginationProps}/>}
+  </WrapperComponent>
+}
+const TableBody =
+  ({
+     getTableBodyProps,
+     prepareRow,
+     rows,
+     visibleColumns,
+     totalColumnsWidth,
+     moveRow,
+     settings,
+     cardTemplate,
+     page,
+   }) => {
+  const scrollBarSize = React.useMemo(() => scrollbarWidth(), []);
+  const {
+    virtualized_rows,
+  } = settings;
+    const RenderRows = React.useCallback(
+      ({ index, style })=>{
+        const row = page ? page[index] : rows[index];
         prepareRow(row);
+        console.log(index);
+        console.log(page);
         return <Row
-            index={i}
+            index={index}
+            style={style}
             row={row}
             visibleColumns={visibleColumns}
             moveRow={moveRow}
@@ -541,75 +584,42 @@ function AltrpTableWithoutUpdate(
             cardTemplate={cardTemplate}
             {...row.getRowProps()}
         />;
-        const fragmentProps = {...row.getRowProps()};
-        delete fragmentProps.role;
-        delete fragmentProps.style;
-        let ExpandCard = null;
-        if(cardTemplate){
-          let template = frontElementsFabric.cloneElement(cardTemplate);
-          template.setCardModel(new AltrpModel(row.original || {}));
-          ExpandCard = React.createElement(template.componentClass,
-              {
-                element: template,
-                children: template.children
-              });
-        }
-        let rowProps = row.getRowProps();
-        if(! resize_columns){
-          delete rowProps.style;
-        }
-        /*return (
-          <React.Fragment {...fragmentProps}>
 
-            <tr {...rowProps} className="altrp-table-tr">
+      }, [ page,
+          rows,
+          visibleColumns,
+          settings,
+          cardTemplate,
+          moveRow,
+          prepareRow,]);
+  if(virtualized_rows){
+    return <div className="altrp-table-scroll-body" {...getTableBodyProps()}>
+      <FixedSizeList
+          height={400}
+          itemCount={page ? page.length : rows.length}
+          itemSize={35}
+          width={totalColumnsWidth+scrollBarSize}
+      >
+        {RenderRows}
+      </FixedSizeList>
+    </div>
+  }
+  return  <div {...getTableBodyProps()}>
+  {(page ? page : rows).map((row, i) => {
+    prepareRow(row);
+    return <Row
+        index={i}
+        row={row}
+        visibleColumns={visibleColumns}
+        moveRow={moveRow}
+        settings={settings}
+        cardTemplate={cardTemplate}
+        {...row.getRowProps()}
+    />;
+  })}
 
-              {row.cells.map(cell => {
-                let cellContent = cell.render('Cell');
-                if (cell.column.id === '##') {
-                  cellContent = cell.row.index + 1;
-                }
-                if(cell.isGrouped){
-                  cellContent = (
-                      <>
-                        <span {...row.getToggleRowExpandedProps()}>
-                            {row.isExpanded ? '👇' : '👉'}
-                          </span>{' '}
-                                 {cell.render('Cell')} ({recurseCount(row, 'subRows')})
-                      </>
-                  );
-                } else if (cell.isAggregated){
-                  cellContent = cell.render('Aggregated');
-                } else if (cell.isPlaceholder){
-                  cellContent = cell.render('Cell');
-                }
-                const cellClassNames = ['altrp-table-td'];
-                cell.isAggregated && cellClassNames.push('altrp-table-td_aggregated');
-                cell.isPlaceholder && cellClassNames.push('altrp-table-td_placeholder');
-                cell.isGrouped && cellClassNames.push('altrp-table-td_grouped');
-
-                let cellProps = cell.getCellProps();
-                if(! resize_columns){
-                  delete cellProps.style;
-                }
-                return <td {...cellProps} className={cellClassNames.join(' ')}>{cellContent}</td>
-              })}
-            </tr>
-            {row.isExpanded && row_expand && card_template && cardTemplate &&
-              <tr className="altrp-table-tr altrp-posts">
-                <td colSpan={visibleColumns.length} className="altrp-table-td altrp-post">{ExpandCard}</td>
-              </tr>
-            }
-          </React.Fragment> )*/
-      })}
-
-      </tbody> :
-          <tbody><tr className="altrp-table-tr"><td className="altrp-table-td" colSpan={visibleColumns.length + replace_rows}>
-            {(_status === 'loading' ? (loading_text || null) : null )}
-          </td></tr></tbody>}
-    </table>
-    {paginationProps && <Pagination {...paginationProps}/>}
-  </WrapperComponent>
-}
+  </div>
+};
 
 /**
  *
@@ -1040,15 +1050,17 @@ const DND_ITEM_TYPE = 'row';
  * @param {{}} row
  * @param {number} index
  * @param {function} moveRow
- * @param {{}}settings
- * @param {{}}cardTemplate
- *
+ * @param {{}} settings
+ * @param {{}} style
+ * @param {{}} cardTemplate
+ * @param {[]} visibleColumns
  * @return {*}
  * @constructor
  */
 const Row = ({ row,
                index,
                moveRow,
+               style,
                visibleColumns,
                cardTemplate,
                settings }) => {
@@ -1150,8 +1162,8 @@ const Row = ({ row,
   return (
     <React.Fragment {...fragmentProps}>
 
-      <tr {...rowProps} className={`altrp-table-tr ${ isDragging ? 'altrp-table-tr__dragging' : ''}`} style={{ opacity }}>
-        {replace_rows && <td className="altrp-table-td" ref={dragRef}>move</td>}
+      <div {...rowProps} className={`altrp-table-tr ${ isDragging ? 'altrp-table-tr__dragging' : ''}`} style={{ ...style, opacity }}>
+        {replace_rows && <div className="altrp-table-td" ref={dragRef}>move</div>}
         {row.cells.map(cell => {
           let cellContent = cell.render('Cell');
           if (cell.column.id === '##') {
@@ -1187,13 +1199,13 @@ const Row = ({ row,
             return cellProps;
           }, [resize_columns, replace_rows]);
 
-          return <td {...cellProps} className={cellClassNames.join(' ')}>{cellContent}</td>
+          return <div {...cellProps} className={cellClassNames.join(' ')}>{cellContent}</div>
         })}
-      </tr>
+      </div>
       {row.isExpanded && row_expand && card_template && cardTemplate &&
-      <tr className="altrp-table-tr altrp-posts">
-        <td colSpan={visibleColumns.length + replace_rows} className="altrp-table-td altrp-post">{ExpandCard}</td>
-      </tr>
+      <div className="altrp-table-tr altrp-posts">
+        <div colSpan={visibleColumns.length + replace_rows} className="altrp-table-td altrp-post">{ExpandCard}</div>
+      </div>
       }
     </React.Fragment> );
 };

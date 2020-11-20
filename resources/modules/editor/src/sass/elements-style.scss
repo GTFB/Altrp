@@ -199,6 +199,25 @@
 }
 .altrp-table{
   overflow: hidden;
+  display: table;
+  &-head{
+    display: table-header-group;
+  }
+  &-tbody{
+    display: table-row-group;
+  }
+  &-foot{
+    display: table-footer-group;
+  }
+  &-tr{
+    display: table-row;
+  }
+  &-th{
+    display: table-cell;
+  }
+  &-td{
+    display: table-cell;
+  }
   &__resizer{
     display: inline-block;
     background: blue;

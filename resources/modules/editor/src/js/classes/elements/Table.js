@@ -758,6 +758,17 @@ class Table extends BaseElement {
       default: false,
     });
 
+    this.addControl('virtualized_rows', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Virtualized Rows',
+      default: false,
+    });
+
+    this.addControl('virtualized_height', {
+      type: CONTROLLER_NUMBER,
+      label: 'Height',
+    });
+
     this.addControl('row_expand', {
       type: CONTROLLER_SWITCHER,
       label: 'Row Expand',
