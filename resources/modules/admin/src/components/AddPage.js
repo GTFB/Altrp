@@ -301,7 +301,7 @@ class AddPage extends Component {
               title: 'Trash'
             }
           ]}
-          rows={dataSources.map(dataSource => ({ ...dataSource, /* editUrl: `/admin/tables/models/${model.id}/fields/edit/${field.id}` */ }))}
+          rows={dataSources}
         />}
 
         {this.props.match.params.id &&
