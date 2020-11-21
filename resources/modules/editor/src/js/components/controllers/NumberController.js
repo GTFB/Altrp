@@ -25,14 +25,14 @@ class NumberController extends Component {
    * @param e
    */
   onBlur = e =>{
-    this._changeValue(e.target.value)
+    this._changeValue(Number(e.target.value))
   };
   /**
    * Изменение больше не обновляет элемент
    * @param e
    */
   changeValue(e) {
-    this._changeValue(e.target.value, false);
+    this._changeValue(Number(e.target.value));
   }
   getDefaultValue() {
     return '';

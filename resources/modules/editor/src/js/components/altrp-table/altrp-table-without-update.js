@@ -5,7 +5,7 @@ import {
   recurseCount,
   setDataByPath,
   storeWidgetState,
-  scrollbarWidth,
+  scrollbarWidth, isEditor,
 } from "../../../../../front-app/src/js/helpers";
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import {Link} from "react-router-dom";
@@ -113,7 +113,7 @@ function AltrpTableWithoutUpdate(
       widgetState,
       sortSetting
     }) {
-
+  const stateRef = React.useRef(widgetState);
   const {inner_page_size,
     inner_sort,
     global_filter,
@@ -121,11 +121,13 @@ function AltrpTableWithoutUpdate(
     row_expand,
     selected_storage,
     row_select,
+    row_select_width,
     store_state,
     loading_text,
     row_select_all,
     hide_columns,
     resize_columns,
+    virtualized_rows,
     replace_rows,
     ids_storage} = settings;
   const [cardTemplate, setCardTemplate] = React.useState(null);
@@ -211,6 +213,7 @@ function AltrpTableWithoutUpdate(
   const defaultColumn = React.useMemo(
       () => ({
         Filter: DefaultColumnFilter,
+        width: 150,
       }),
       []
   );
@@ -254,6 +257,7 @@ function AltrpTableWithoutUpdate(
         // Let's make a column for selection
         {
           id: 'selection',
+          width: row_select_width || 0,
           // The header can use the table's getToggleAllRowsSelectedProps method
           // to render a checkbox
           column_name: ({getToggleAllRowsSelectedProps, getToggleAllPageRowsSelectedProps}) => {
@@ -300,21 +304,30 @@ function AltrpTableWithoutUpdate(
     if(replace_rows){
       tableSettings.getRowId = getRowId;
     }
-    if(_.isObject(widgetState)){
-      tableSettings.initialState = widgetState;
-    } else if ((inner_page_size >= 1)) {
-      tableSettings.initialState = {
-        pageSize: Number(inner_page_size),
-      };
-    } else {
-      tableSettings.initialState = {
-        pageSize: data.length,
-      };
-    }
-    tableSettings.disableSortBy = ! inner_sort;
-    return tableSettings;
-  }, [inner_page_size, inner_sort, data, columns, widgetState, records, replace_rows]);
+    // if(_.isObject(stateRef.current)){
+    //   tableSettings.initialState = stateRef.current;
+    // } else
+    if(isEditor()){
 
+      if ((inner_page_size >= 1)) {
+        tableSettings.initialState = {
+          pageSize: Number(inner_page_size),
+        };
+      } else {
+        tableSettings.initialState = {
+          pageSize: data.length,
+        };
+      }
+    }
+
+    return tableSettings;
+  }, [inner_page_size, inner_sort, data, columns, stateRef, records, replace_rows]);
+  React.useEffect(()=>{
+
+    if(_.isObject(stateRef.current)){
+      tableSettings.initialState = stateRef.current;
+    }
+  }, [stateRef, data]);
   const ReactTable = useTable(
       tableSettings,
       ...plugins
@@ -424,7 +437,8 @@ function AltrpTableWithoutUpdate(
   const {WrapperComponent, wrapperProps} = React.useMemo(()=>{
     return {
       WrapperComponent: replace_rows ? DndProvider : DndProvider/*React.Fragment*/,
-      wrapperProps: replace_rows ? {backend:HTML5Backend} : {},
+      // wrapperProps: replace_rows ? {backend:HTML5Backend} : {backend:HTML5Backend},
+      wrapperProps:  {backend:HTML5Backend},
     };
   }, [replace_rows]);
 
@@ -455,7 +469,7 @@ function AltrpTableWithoutUpdate(
       {headerGroups.map(headerGroup => {
         const headerGroupProps = headerGroup.getHeaderGroupProps();
 
-        if(! resize_columns){
+        if(! resize_columns && ! virtualized_rows){
           delete headerGroupProps.style;
         }
         return (
@@ -468,10 +482,8 @@ function AltrpTableWithoutUpdate(
               columnProps = column.getHeaderProps(column.getSortByToggleProps());
             }
             const resizerProps = {...column.getResizerProps(), onClick: e=>{e.stopPropagation();}};
-            if (Number(column_width)) {
-              columnProps.width = column_width + '%';
-            }
-            if(! resize_columns){
+
+            if(! resize_columns && ! virtualized_rows){
               delete columnProps.style;
             }
             // columnProps.style = {};
@@ -567,22 +579,21 @@ const TableBody =
   const scrollBarSize = React.useMemo(() => scrollbarWidth(), []);
   const {
     virtualized_rows,
+    virtualized_height,
+    item_size,
   } = settings;
-    const RenderRows = React.useCallback(
+    const RenderRow = React.useCallback(
       ({ index, style })=>{
         const row = page ? page[index] : rows[index];
         prepareRow(row);
-        console.log(index);
-        console.log(page);
         return <Row
             index={index}
-            style={style}
             row={row}
             visibleColumns={visibleColumns}
             moveRow={moveRow}
             settings={settings}
             cardTemplate={cardTemplate}
-            {...row.getRowProps()}
+            {...row.getRowProps({style})}
         />;
 
       }, [ page,
@@ -593,14 +604,15 @@ const TableBody =
           moveRow,
           prepareRow,]);
   if(virtualized_rows){
+    const itemCount = React.useMemo(()=>page ? page.length : rows.length, [page,rows]);
     return <div className="altrp-table-scroll-body" {...getTableBodyProps()}>
       <FixedSizeList
-          height={400}
-          itemCount={page ? page.length : rows.length}
-          itemSize={35}
+          height={Number(virtualized_height) || 0}
+          itemCount={itemCount}
+          itemSize={Number(item_size) || 0}
           width={totalColumnsWidth+scrollBarSize}
       >
-        {RenderRows}
+        {RenderRow}
       </FixedSizeList>
     </div>
   }
@@ -907,7 +919,7 @@ function NumberRangeColumnFilter({
  */
 export function settingsToColumns(settings, widgetId) {
   let columns = [];
-  let { tables_columns, card_template, row_expand } = settings;
+  let { tables_columns, card_template, row_expand, virtualized_rows, resize_columns } = settings;
   tables_columns = tables_columns || [];
   /**
    * Если в колонке пустые поля, то мы их игнорируем, чтобы не было ошибки
@@ -939,13 +951,15 @@ export function settingsToColumns(settings, widgetId) {
           break;
         }
         _column.canGroupBy = _column.group_by;
-        console.log(_column);
-        console.log(_column.group_by);
+        _column.disableSortBy = ! _column.column_is_sorted;
         if(_column.aggregate){
           let aggregateTemplate = _column.aggregate_template || `{{value}} Unique Names`;
           _column.Aggregated = ({value}) => {
             return aggregateTemplate.replace(/{{value}}/g, value)
           };
+        }
+        if(virtualized_rows || resize_columns){
+          _column.width = Number(_column.column_width) || 150;
         }
       }
       columns.push(_column);
@@ -1074,6 +1088,7 @@ const Row = ({ row,
     resize_columns,
     replace_rows,
     row_expand,
+    virtualized_rows,
     card_template,
   } = settings;
   if(cardTemplate){
@@ -1088,14 +1103,14 @@ const Row = ({ row,
 
   let rowProps = React.useMemo(()=>{
     let rowProps = row.getRowProps();
-    if(! resize_columns){
+    if((! resize_columns) && ! virtualized_rows){
       delete rowProps.style;
     }
     if(replace_rows){
       rowProps.ref = dropRef;
     }
     return rowProps;
-  }, [resize_columns, replace_rows]);
+  }, [resize_columns, replace_rows, virtualized_rows]);
 
   const [, drop] = useDrop({
     accept: DND_ITEM_TYPE,
@@ -1190,14 +1205,14 @@ const Row = ({ row,
 
           let cellProps = React.useMemo(()=>{
             let cellProps = cell.getCellProps();
-            if(! resize_columns){
+            if(! resize_columns && ! virtualized_rows){
               delete cellProps.style;
             }
             if(replace_rows){
               cellProps.ref = dropRef;
             }
             return cellProps;
-          }, [resize_columns, replace_rows]);
+          }, [resize_columns, replace_rows, virtualized_rows]);
 
           return <div {...cellProps} className={cellClassNames.join(' ')}>{cellContent}</div>
         })}

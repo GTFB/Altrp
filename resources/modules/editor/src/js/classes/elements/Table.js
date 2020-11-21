@@ -713,6 +713,15 @@ class Table extends BaseElement {
       default: false,
     });
 
+    this.addControl('row_select_width', {
+      type: CONTROLLER_NUMBER,
+      label: 'Width',
+      default: 50,
+      conditions: {
+        row_select: true,
+      },
+    });
+
     this.addControl('row_select_all', {
       type: CONTROLLER_SWITCHER,
       label: 'Select All',
@@ -721,6 +730,7 @@ class Table extends BaseElement {
         row_select: true,
       },
     });
+
 
     this.addControl('selected_storage', {
       label: 'Selected Storage',
@@ -758,15 +768,42 @@ class Table extends BaseElement {
       default: false,
     });
 
+    this.addControl('replace_text', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Text',
+      condition:{
+        replace_rows: true,
+      },
+    });
+
+    this.addControl('replace_width', {
+      type: CONTROLLER_NUMBER,
+      label: 'Width',
+      condition:{
+        replace_rows: true,
+      },
+    });
+
     this.addControl('virtualized_rows', {
       type: CONTROLLER_SWITCHER,
       label: 'Virtualized Rows',
       default: false,
+      prefixClass: 'tableVirtualized'
     });
 
     this.addControl('virtualized_height', {
       type: CONTROLLER_NUMBER,
       label: 'Height',
+      conditions:{
+        virtualized_rows: true,
+      },
+    });
+    this.addControl('item_size', {
+      type: CONTROLLER_NUMBER,
+      label: 'Item Size',
+      conditions:{
+        virtualized_rows: true,
+      },
     });
 
     this.addControl('row_expand', {
