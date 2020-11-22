@@ -16,6 +16,8 @@ use App\Exceptions\Migration\AltrpForeignKeyColumnsCompareException;
 use App\Exceptions\Migration\AltrpForeignKeyChildRowsException;
 use App\Exceptions\Migration\AltrpForeignKeyNotFoundException;
 
+use App\Altrp\Relationships\MigratoryRelationshipFactory;
+
 class AltrpRelationshipObserver
 {
     /**
@@ -26,7 +28,51 @@ class AltrpRelationshipObserver
      */
     public function creating(Relationship $relationship)
     {
+
         $model = Model::find($relationship->model_id);
+        $relation = MigratoryRelationshipFactory::getMigratoryRelationship($relationship);
+
+        $relation->createForeignKeyMigration();
+        $relationship = $relation->getRelationship();
+
+
+
+
+        return;
+
+        if($file === true) {
+            return;
+        }
+
+        if($file === false) {
+            throw new AltrpMigrationCreateFileExceptions("Failed to create migration file");
+        }
+
+
+        //Создаем и выполняем миграцию (выполнение в MigrationObserver)
+
+
+        $migration = new Migration();
+        $migration->name = $name;
+        $migration->file_path = $file;
+        $migration->user_id = auth()->user()->id;
+        $migration->table_id = $model->altrp_table->id;
+        $migration->status = "1";
+        $migration->data = "";
+        $migration->save();
+
+        //Указываем у связи идентификатор миграции
+        $relationship->altrp_migration_id = $migration->id;
+
+
+
+
+
+        if($relationship->type == "belongsToMany") {
+
+        }
+
+
         $dbal_key = $relationship->getDBKey();
 
         //Cвязь belongsTo создается на существующую связь hasOne или hasMany
@@ -101,7 +147,7 @@ class AltrpRelationshipObserver
         }
 
         //После создания связи belongsTo нужно поставить галочку в обратной связи hasOne или hasMany
-        if($relationship->type === "belongsTo") {
+        /*if($relationship->type === "belongsTo") {
             $inverse_relationship = $relationship->getInverseRelationship();
             $inverse_relationship->add_belong_to = true;
 
@@ -110,10 +156,10 @@ class AltrpRelationshipObserver
             });
 
             return;
-        }
+        }*/
 
         //Добавление обратной связи если стоит галочка Add Reverse Relation
-        if ($relationship->add_belong_to && $relationship->target_model_id ) {
+        /*if ($relationship->add_belong_to && $relationship->target_model_id ) {
 
             $targetModel = Model::find($relationship->target_model_id);
             $model_class = '\App\AltrpModels\\' . $model->name;
@@ -144,7 +190,7 @@ class AltrpRelationshipObserver
             if (! $generator->updateModelFile()) {
                 throw new CommandFailedException('Failed to update model file', 500);
             }
-        }
+        }*/
     }
 
     /**
@@ -155,6 +201,15 @@ class AltrpRelationshipObserver
      */
     public function updating(Relationship $relationship)
     {
+
+        $model = Model::find($relationship->model_id);
+        $relation = MigratoryRelationshipFactory::getMigratoryRelationship($relationship);
+
+        $relation->updateForeignKeyMigration();
+        $relationship = $relation->getRelationship();
+
+        return;
+
         $model = Model::find($relationship->model_id);
         $dbal_key = $relationship->getDBKey();
         $old_dbal_key = $relationship->getDBKey(true);
@@ -359,6 +414,18 @@ class AltrpRelationshipObserver
      */
     public function deleting(Relationship $relationship)
     {
+
+        $model = Model::find($relationship->model_id);
+        $relation = MigratoryRelationshipFactory::getMigratoryRelationship($relationship);
+
+        $relation->deleteForeignKeyMigration();
+        $relationship = $relation->getRelationship();
+
+        return;
+
+
+
+
         //Cвязь belongsTo создается на существующую связь hasOne или hasMany
         //Миграция не нужна, она уже выполнялась при добавлении связи hasOne или hasMany
         if($relationship->type === "belongsTo") {
@@ -405,7 +472,7 @@ class AltrpRelationshipObserver
         }
 
         //После удаления связи belongsTo нужно убрать галочку в обратной связи hasOne или hasMany
-        if($relationship->type === "belongsTo") {
+        /*if($relationship->type === "belongsTo") {
             $inverse_relationship = $relationship->getInverseRelationship();
             $inverse_relationship->add_belong_to = false;
 
@@ -421,7 +488,7 @@ class AltrpRelationshipObserver
                     $inverse_relationship->delete();
                 });
             }
-        }
+        }*/
 
         $targetModel = Model::find($relationship->target_model_id);
         $relation = Relationship::where([

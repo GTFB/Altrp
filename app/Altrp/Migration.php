@@ -16,7 +16,9 @@ use App\Exceptions\AltrpMigrationCreateFileExceptions;
 use App\Exceptions\AltrpMigrationRunExceptions;
 
 use Artisan;
+use File;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 /**
  * Class Migration
@@ -41,11 +43,81 @@ class Migration extends Model
 
     /**
      * Создание файла миграции
+     * @param string $name
+     * @param string $template
+     * @return bool|string
      */
-    public function createFile() {
-        $migration = new MigrationGenerator($this);
-        return $migration->generate();
+    public static function createFile($name, $template) {
+
+        $fileName = date('Y_m_d_His').'_'.strtolower($name).'.php';
+        $full_path = self::getPath().$fileName;
+        $d = file_put_contents($full_path, $template);
+
+        if($d !== false) return $full_path;
+        else return false;
     }
+
+    /**
+     * Получаем путь до папки миграций
+     *
+     * @return string
+     */
+    public static function getPath()
+    {
+        $folder_name = config('altrp.admin.migrations_folder_name');
+        $directory = database_path('/'.$folder_name.'/');
+
+        if(!File::exists($directory)) {
+            return self::createMigrationFolder($directory);
+        }
+
+        return $directory;
+    }
+
+    /**
+     * Добавляем папку для миграций
+     *
+     * @return string
+     */
+    public static function createMigrationFolder($directory)
+    {
+        if(File::makeDirectory($directory)) {
+            return $directory;
+        }
+
+        return false;
+    }
+
+    public static function runMigration() {
+
+        $folder_name = config('altrp.admin.migrations_folder_name');
+
+        try {
+            Artisan::call('migrate', array('--force' => true, '--path' => "database/".$folder_name."/",));
+        }
+        catch (\Exception $e) {
+            foreach ($e->getTrace() as $trace) {
+                if(isset($trace['file']) && is_file($trace['file'])) {
+                    if (file_exists($trace['file'])
+                        && Str::contains($trace['file'], 'altrp_migrations')) {
+                        unlink($trace['file']);
+                    }
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Выполнение миграции
@@ -209,4 +281,6 @@ class Migration extends Model
         //$this->attributes['full'] = $data;
         return $data;
     }
+
+
 }

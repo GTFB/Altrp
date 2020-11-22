@@ -16,6 +16,38 @@ const relationTypeOptions = [
     value: 'hasMany',
     label: 'Has Many'
   },
+  {
+    value: 'belongsToMany',
+    label: 'Belongs To Many'
+  },
+  {
+    value: 'hasOneThrough',
+    label: 'Has One Through'
+  },
+  {
+    value: 'hasManyThrough',
+    label: 'Has Many Through'
+  },
+  {
+    value: 'morphOne',
+    label: 'Morph One'
+  },
+  {
+    value: 'morphMany',
+    label: 'Morph Many'
+  },
+  {
+    value: 'morphTo',
+    label: 'morph To'
+  },
+  {
+    value: 'morphToMany',
+    label: 'Morph To Many'
+  },
+  {
+    value: 'morphed By Many',
+    label: 'Morphed By Many'
+  },
 ];
 const deleteUpdateOptions = [
   {
@@ -52,10 +84,12 @@ class AddRelationForm extends Component {
         local_key: '',
         foreign_key: '',
         onDelete: 'set null',
-        onUpdate: 'set null'
+        onUpdate: 'set null',
+        secondary_model_id: ''
       },
       selfFieldsOptions: [],
       foreignFieldsOptions: [],
+      secondaryFieldsOptions: [],
       relationTypeOptions,
     };
     this.modelsResource = new Resource({ route: '/admin/ajax/model_options' });
@@ -77,7 +111,8 @@ class AddRelationForm extends Component {
     this.setState(state=>({...state, selfFieldsOptions}));
     if(id){
       let value = await this.relationsResource.get(id);
-      this.updateForeignFieldOptions(value.target_model_id);
+      this.updateForeignFieldOptions(value.target_model_id, "target_model_id");
+      this.updateForeignFieldOptions(value.secondary_model_id, "secondary_model_id");
       this.changeTargetModel(value.target_model_id);
       this.setState(state=>({...state, value}));
     }
@@ -130,8 +165,8 @@ class AddRelationForm extends Component {
       if(field === 'foreign_key'){
         state.value[field] = titleToName(value);
       }
-      if(field === 'target_model_id'){
-        this.updateForeignFieldOptions(value)
+      if(field === 'target_model_id' || field === 'secondary_model_id'){
+        this.updateForeignFieldOptions(value, field)
       }
       return state
     })
@@ -140,16 +175,24 @@ class AddRelationForm extends Component {
   /**
    * При изменении модели для связи изменяем опции
    * @param {string} modelId
+   * @param {string} field
    */
-  async updateForeignFieldOptions(modelId){
+  async updateForeignFieldOptions(modelId, field){
     let fields = await (new Resource({route: `/admin/ajax/models/${modelId}/fields`})).getAll();
     let foreignFieldsOptions = fields.map(field=>({
       label: field.title,
       value: field.name,
     }));
-    this.setState(state=>({...state, foreignFieldsOptions}))
+
+    if(field === 'target_model_id') {
+      this.setState(state=>({...state, foreignFieldsOptions}))
+    }
+    else if(field === 'secondary_model_id'){
+      this.setState(state=>({...state, secondaryFieldsOptions: foreignFieldsOptions}))
+    }
 
   }
+
   /**
    * Отправка данных
    */
@@ -188,6 +231,14 @@ class AddRelationForm extends Component {
 
   }
 
+  is_secndary_type() {
+    let mas = [
+      'belongsToMany', 'hasOneThrough', 'hasManyThrough', 'hasManyThrough',
+      'morphOne', 'morphMany', 'morphTo', 'morphToMany', 'morphed By Many'
+    ];
+    return mas.includes(this.state.value.type);
+  }
+
 /**
    * вывод поля Foreign Key
    */
@@ -210,6 +261,50 @@ class AddRelationForm extends Component {
     </div>
   }
 
+  /**
+   * вывод поля Secondary Local Key
+   */
+  renderSecondaryLocalKey(){
+    const { id } = this.props.match.params;
+
+    return <div className="form-group form-group_width47">
+      <label htmlFor="relation-local_key">Secondary Local Key</label>
+      <select  id="relation-local_key"
+               value={this.state.value.secondary_local_key || ''}
+               className="form-control"
+               onChange={e => { this.changeValue(e.target.value, 'secondary_local_key') }}
+      >
+        <option disabled value="" />
+        {this.state.secondaryFieldsOptions.map(({ value, label }) =>
+          <option key={value} value={value}>
+            {label}
+          </option>)}
+      </select>
+    </div>
+
+  }
+
+  /**
+   * вывод поля Secondary Foreign Key
+   */
+  renderSecondaryForeignKey(){
+    const { id } = this.props.match.params;
+
+    return<div className="form-group form-group_width47">
+      <label htmlFor="relation-foreign_key">Secondary Foreign Key</label>
+      <select id="relation-foreign_key"
+              value={this.state.value.secondary_foreign_key || ''}
+              onChange={e => { this.changeValue(e.target.value, 'secondary_foreign_key') }}
+              className="form-control"
+      >
+        <option disabled value="" />
+        {this.state.secondaryFieldsOptions.map(({ value, label }) =>
+          <option key={value} value={value}>
+            {label}
+          </option>)}
+      </select>
+    </div>
+  }
 
   render() {
     const { id } = this.props.match.params;
@@ -269,7 +364,31 @@ class AddRelationForm extends Component {
               </option>)}
           </select>
         </div>
+
       </div>
+
+
+      {!this.is_secndary_type() ? '' : <><div class="form-group__inline-wrapper">
+        <div className="form-group form-group_width47">
+          <label htmlFor="relation-model_id">Secondary Model to Bound</label>
+          <select id="relation-model_id" required
+                  value={this.state.value.secondary_model_id || ''}
+                  onChange={e => { this.changeValue(e.target.value, 'secondary_model_id') }}
+                  className="form-control"
+          >
+            <option disabled value="" />
+            {this.state.modelsOptions.map(({ value, label }) =>
+              <option key={value} value={value}>
+                {label}
+              </option>)}
+          </select>
+        </div>
+        {this.renderSecondaryLocalKey()}
+        {this.renderSecondaryForeignKey()}
+      </div></>}
+
+
+
       <div className="row">
         <div className="form-group col-4">
           {this.state.hideAddBelongTo || this.state.value.type === 'belongsTo' ? '' : <><input type="checkbox" id="relation-add_belong_to"

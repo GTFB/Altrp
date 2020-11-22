@@ -69,7 +69,7 @@ class AppServiceProvider extends ServiceProvider
         Table::observe(AltrpTableObserver::class);
         Migration::observe(AltrpMigrationObserver::class);
         Column::observe(AltrpColumnObserver::class);
-        Relationship::observe(AltrpRelationshipObserver::class);
+        /*Relationship::observe(AltrpRelationshipObserver::class);*/
         Model::observe(AltrpModelObserver::class);
         Controller::observe(AltrpControllerObserver::class);
         Query::observe(AltrpQueryObserver::class);

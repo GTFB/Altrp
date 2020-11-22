@@ -8,6 +8,8 @@
 
 namespace App\Altrp;
 
+use App\Altrp\Relationships\IRelationship as IRelationship;
+use App\Observers\AltrpRelationshipObserver;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -15,13 +17,14 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Mockery\Exception;
 use App\Altrp\Model as AltrpModel;
+use App\Altrp\Relationships\RelationshipModifier;
 
 /**
  * Class Relationship
  * @package App\Altrp
  * @property Table $altrp_table
  */
-class Relationship extends EloquentModel
+class Relationship extends EloquentModel implements IRelationship
 {
 
     protected $table = 'altrp_relationships';
@@ -42,8 +45,22 @@ class Relationship extends EloquentModel
         'onDelete',
         'onUpdate',
         'always_with',
-        'editable'
+        'editable',
+        'secondary_model_id',
+        'secondary_foreign_key',
+        'secondary_local_key',
     ];
+
+
+    /**
+     * Указываем observer через boot что бы все дочерние классы так же использовали этот observer
+     * Иначе необходимо будет указывать каждый дочерний класс в AppServiceProvider
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        static::observe( AltrpRelationshipObserver::class );
+    }
 
   /**
    * Импортируем связи
@@ -145,6 +162,11 @@ class Relationship extends EloquentModel
         return $this->belongsTo(\App\Altrp\Model::class, 'target_model_id');
     }
 
+    public function altrp_secondary_model()
+    {
+        return $this->belongsTo(\App\Altrp\Model::class, 'secondary_model_id');
+    }
+
     public static function getBySearch($search, $modelId)
     {
         return self::where('model_id', $modelId)
@@ -187,6 +209,27 @@ class Relationship extends EloquentModel
             })
             ->toBase()
             ->count();
+    }
+
+    /**
+     * IRelationships
+     */
+    public function createForeignKeyMigration() {
+        return;
+    }
+
+    /**
+     * IRelationships
+     */
+    public function updateForeignKeyMigration() {
+        return;
+    }
+
+    /**
+     * IRelationships
+     */
+    public function deleteForeignKeyMigration() {
+        return;
     }
 
 
@@ -425,4 +468,8 @@ class Relationship extends EloquentModel
 
         return $result->first();
     }
+
+
+
+
 }

@@ -28,6 +28,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ApiRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use App\Altrp\Relationships\RelationshipFactory;
 
 
 class ModelsController extends HttpController
@@ -819,6 +820,7 @@ class ModelsController extends HttpController
      */
     public function storeModelRelation( ApiRequest $request, $model_id )
     {
+
       $relation = new Relationship($request->toArray());
       $relation->model_id = $model_id;
       $model = Model::find( $request->get( 'target_model_id' ) );
