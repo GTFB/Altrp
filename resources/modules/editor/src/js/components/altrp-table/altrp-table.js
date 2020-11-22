@@ -549,7 +549,7 @@ function renderFooter(settings, data){
  * @param cell
  * @param row
  */
-function renderCellActions(cell, row = {}) {
+export function renderCellActions(cell, row = {}) {
   let actions = _.get(cell,'column.actions', []);
   return <div className="altrp-actions">
     {actions.map(action =>{

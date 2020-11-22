@@ -211,12 +211,24 @@
   }
   &-tr{
     display: table-row;
+    &_loading{
+      display: block;
+    }
   }
   &-th{
     display: table-cell;
+    &_global-filter{
+      colspan: all;
+      //display: block;
+      //width: 100%;
+    }
   }
   &-td{
     display: table-cell;
+    &_loading{
+      display: block;
+      width: 100%;
+    }
   }
   &__resizer{
     display: inline-block;

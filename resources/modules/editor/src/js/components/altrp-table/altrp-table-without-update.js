@@ -5,11 +5,11 @@ import {
   recurseCount,
   setDataByPath,
   storeWidgetState,
-  scrollbarWidth, isEditor,
+  scrollbarWidth, isEditor, parseURLTemplate, mbParseJSON,
 } from "../../../../../front-app/src/js/helpers";
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import {Link} from "react-router-dom";
-import {renderAdditionalRows,} from "./altrp-table";
+import {renderAdditionalRows, renderCellActions,} from "./altrp-table";
 import {useSortBy,
   useTable,
   usePagination,
@@ -30,6 +30,7 @@ import templateLoader from "../../classes/modules/TemplateLoader";
 import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric";
 import AltrpModel from "../../classes/AltrpModel";
 import {FixedSizeList} from "react-window";
+import ElementWrapper from "../../../../../front-app/src/js/components/ElementWrapper";
 /**
  *
  * @param rows
@@ -75,7 +76,6 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
     return rowValue
   } ]})
 }
-
 // Let the table remove the filter if the string is empty
 fuzzyTextFilterFn.autoRemove = val => !val;
 /**
@@ -113,6 +113,77 @@ function AltrpTableWithoutUpdate(
       widgetState,
       sortSetting
     }) {
+
+  function DefaultCell ({row, cell}){
+    const {column } = cell;
+    const  {column_template} = column;
+    const [columnTemplate, setColumnTemplate] = React.useState(null);
+    React.useEffect(()=>{
+      if(column_template){
+        (async()=>{
+          const columnTemplate = await templateLoader.loadParsedTemplate(column_template);
+          setColumnTemplate(columnTemplate);
+        })();
+      }
+    }, [column_template]);
+    let cellContent = cell.value;
+    let linkTag = isEditor() ? 'a': Link;
+    let style = cell.column.column_body_alignment ? { textAlign: cell.column.column_body_alignment } : {};
+
+    /**
+     * Если значение объект или массив, то отобразим пустую строку
+     */
+    if(_.isObject(cell.value)){
+      cellContent = '';
+    }
+    /**
+     * Если в настройках колонки есть url, и в данных есть id, то делаем ссылку
+     */
+    if(column.column_link){
+      cellContent = React.createElement(linkTag, {
+        to: parseURLTemplate(column.column_link, row.original),
+        className: 'altrp-inherit altrp-table-td__default-content',
+        dangerouslySetInnerHTML: {
+          __html: cell.value
+        }
+      })
+    } else {
+      cellContent = React.createElement('span', {
+        className: 'altrp-inherit altrp-table-td__default-content',
+        dangerouslySetInnerHTML: {
+          __html: cell.value
+        }
+      })
+    }
+
+    const columnTemplateContent = React.useMemo(()=>{
+      if( !columnTemplate){
+        return null;
+      }
+      let columnTemplateContent = frontElementsFabric.cloneElement(columnTemplate);
+      columnTemplateContent.setCardModel(new AltrpModel(row.original || {}));
+      return React.createElement(columnTemplateContent.componentClass,
+          {
+            element: columnTemplateContent,
+            ElementWrapper: ElementWrapper,
+            children: columnTemplateContent.children
+          });
+    }, [columnTemplate]);
+    if(columnTemplateContent){
+      return <div className="altrp-posts"><div className="altrp-post">{columnTemplateContent }</div></div>;
+    }
+    /**
+     * Если есть actions, то надо их вывести
+     */
+    if(_.get(cell,'column.actions.length')){
+      return renderCellActions(cell, row);
+    }
+    if(_.isString(cellContent)){
+      return cellContent;
+    }
+    return <>{cellContent}</>;
+
+  }
   const stateRef = React.useRef(widgetState);
   const {inner_page_size,
     inner_sort,
@@ -129,6 +200,7 @@ function AltrpTableWithoutUpdate(
     resize_columns,
     virtualized_rows,
     replace_rows,
+    replace_width,
     ids_storage} = settings;
   const [cardTemplate, setCardTemplate] = React.useState(null);
   /**
@@ -214,6 +286,7 @@ function AltrpTableWithoutUpdate(
       () => ({
         Filter: DefaultColumnFilter,
         width: 150,
+        Cell: DefaultCell,
       }),
       []
   );
@@ -474,7 +547,7 @@ function AltrpTableWithoutUpdate(
         }
         return (
         <div {...headerGroupProps} className="altrp-table-tr">
-          {replace_rows && <div className="altrp-table-th"/>}
+          {replace_rows && <div className="altrp-table-th" style={{width: replace_width}}/>}
           {headerGroup.headers.map((column, idx) => {
             const {column_width, column_header_alignment} = column;
             let columnProps = column.getHeaderProps();
@@ -482,7 +555,6 @@ function AltrpTableWithoutUpdate(
               columnProps = column.getHeaderProps(column.getSortByToggleProps());
             }
             const resizerProps = {...column.getResizerProps(), onClick: e=>{e.stopPropagation();}};
-
             if(! resize_columns && ! virtualized_rows){
               delete columnProps.style;
             }
@@ -527,7 +599,8 @@ function AltrpTableWithoutUpdate(
         </div>)}
       )}
       {global_filter &&  <div className="altrp-table-tr">
-        <div className="altrp-table-th"
+        <th className="altrp-table-th altrp-table-th_global-filter"
+             role="cell"
             colSpan={visibleColumns.length + replace_rows}
             style={{
               textAlign: 'left',
@@ -540,7 +613,7 @@ function AltrpTableWithoutUpdate(
               setGlobalFilter={setGlobalFilter}
               settings={settings}
           />
-        </div>
+        </th>
       </div>
       }
       </div>
@@ -557,7 +630,7 @@ function AltrpTableWithoutUpdate(
           page,
           cardTemplate,}}
         />:
-        <div><div className="altrp-table-tr"><div className="altrp-table-td" colSpan={visibleColumns.length + replace_rows}>
+        <div><div className="altrp-table-tr altrp-table-tr_loading"><div className="altrp-table-td altrp-table-td_loading" colSpan={visibleColumns.length + replace_rows}>
           {(_status === 'loading' ? (loading_text || null) : null )}
         </div></div></div>}
     </div>
@@ -582,29 +655,29 @@ const TableBody =
     virtualized_height,
     item_size,
   } = settings;
-    const RenderRow = React.useCallback(
-      ({ index, style })=>{
-        const row = page ? page[index] : rows[index];
-        prepareRow(row);
-        return <Row
-            index={index}
-            row={row}
-            visibleColumns={visibleColumns}
-            moveRow={moveRow}
-            settings={settings}
-            cardTemplate={cardTemplate}
-            {...row.getRowProps({style})}
-        />;
+  const RenderRow = React.useCallback(
+    ({ index, style })=>{
+      const row = page ? page[index] : rows[index];
+      prepareRow(row);
+      return <Row
+          index={index}
+          row={row}
+          visibleColumns={visibleColumns}
+          moveRow={moveRow}
+          settings={settings}
+          cardTemplate={cardTemplate}
+          {...row.getRowProps({style})}
+      />;
 
-      }, [ page,
-          rows,
-          visibleColumns,
-          settings,
-          cardTemplate,
-          moveRow,
-          prepareRow,]);
-  if(virtualized_rows){
+    }, [ page,
+        rows,
+        visibleColumns,
+        settings,
+        cardTemplate,
+        moveRow,
+        prepareRow,]);
     const itemCount = React.useMemo(()=>page ? page.length : rows.length, [page,rows]);
+    if(virtualized_rows){
     return <div className="altrp-table-scroll-body" {...getTableBodyProps()}>
       <FixedSizeList
           height={Number(virtualized_height) || 0}
@@ -616,7 +689,7 @@ const TableBody =
       </FixedSizeList>
     </div>
   }
-  return  <div {...getTableBodyProps()}>
+  return  <div {...getTableBodyProps()} className="altrp-table-tbody">
   {(page ? page : rows).map((row, i) => {
     prepareRow(row);
     return <Row
@@ -1090,6 +1163,8 @@ const Row = ({ row,
     row_expand,
     virtualized_rows,
     card_template,
+    replace_text,
+    replace_width,
   } = settings;
   if(cardTemplate){
     let template = frontElementsFabric.cloneElement(cardTemplate);
@@ -1097,6 +1172,7 @@ const Row = ({ row,
     ExpandCard = React.createElement(template.componentClass,
         {
           element: template,
+          ElementWrapper: ElementWrapper,
           children: template.children
         });
   }
@@ -1105,13 +1181,13 @@ const Row = ({ row,
     let rowProps = row.getRowProps();
     if((! resize_columns) && ! virtualized_rows){
       delete rowProps.style;
+      style = {};
     }
     if(replace_rows){
       rowProps.ref = dropRef;
     }
     return rowProps;
   }, [resize_columns, replace_rows, virtualized_rows]);
-
   const [, drop] = useDrop({
     accept: DND_ITEM_TYPE,
     hover(item, monitor) {
@@ -1174,16 +1250,24 @@ const Row = ({ row,
   //       })}
   //     </tr>
   // );
+  // console.log(style);
+  const rowStyles = React.useMemo(()=>{
+    if(! resize_columns && ! virtualized_rows){
+      return {};
+    }
+    return style;
+  },[resize_columns, virtualized_rows, row.getRowProps().style.width]);
   return (
     <React.Fragment {...fragmentProps}>
 
-      <div {...rowProps} className={`altrp-table-tr ${ isDragging ? 'altrp-table-tr__dragging' : ''}`} style={{ ...style, opacity }}>
-        {replace_rows && <div className="altrp-table-td" ref={dragRef}>move</div>}
+      <div {...rowProps} className={`altrp-table-tr ${ isDragging ? 'altrp-table-tr__dragging' : ''}`} style={{ ...rowStyles, opacity }}>
+        {replace_rows && <div className="altrp-table-td" ref={dragRef} style={{width: replace_width}}>{replace_text}</div>}
         {row.cells.map(cell => {
           let cellContent = cell.render('Cell');
           if (cell.column.id === '##') {
             cellContent = cell.row.index + 1;
           }
+          const {column} = cell;
           if(cell.isGrouped){
             cellContent = (
                 <>
@@ -1208,12 +1292,31 @@ const Row = ({ row,
             if(! resize_columns && ! virtualized_rows){
               delete cellProps.style;
             }
+            if(_.get(cell, 'column.column_styles_field')){
+
+              let cellStyles = _.get(cell, 'column.column_styles_field');
+              cellStyles = _.get(row.original, cellStyles, '');
+              cellStyles = mbParseJSON(cellStyles, {});
+              cellProps.style = _.assign(cellStyles, cellProps.style);
+            }
             if(replace_rows){
               cellProps.ref = dropRef;
             }
-            return cellProps;
-          }, [resize_columns, replace_rows, virtualized_rows]);
 
+            return cellProps;
+          }, [resize_columns, replace_rows, virtualized_rows,
+            cell.getCellProps().style.width,
+            _.get(cell, 'column.column_styles_field')]);
+
+          /**
+           * Если в настройках table_hover_row: false, - background для отдельной ячейки
+           */
+          if (!settings.table_hover_row) {
+            cellClassNames.join( 'altrp-table-background');
+          }
+          if (!column.column_body_alignment) {
+            cellClassNames.join( `altrp-table-td_alignment-${column.column_body_alignment}`);
+          }
           return <div {...cellProps} className={cellClassNames.join(' ')}>{cellContent}</div>
         })}
       </div>

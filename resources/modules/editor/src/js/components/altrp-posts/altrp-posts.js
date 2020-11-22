@@ -5,6 +5,7 @@ import AltrpQueryComponent from "../altrp-query-component/altrp-query-component"
 import templateLoader from "../../classes/modules/TemplateLoader"
 import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric"
 import AltrpModel from "../../classes/AltrpModel";
+import ElementWrapper from "../../../../../front-app/src/js/components/ElementWrapper";
 
 class AltrpPosts extends React.Component {
   constructor(props) {
@@ -88,6 +89,7 @@ class AltrpPosts extends React.Component {
       PostContentComponent = React.createElement(template.componentClass,
         {
           element: template,
+          ElementWrapper: ElementWrapper,
           children: template.children
         });
     }

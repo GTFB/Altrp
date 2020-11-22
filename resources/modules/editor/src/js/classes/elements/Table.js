@@ -219,6 +219,16 @@ class Table extends BaseElement {
       label: 'Group by',
     });
 
+    repeater.addControl('column_template', {
+      type: CONTROLLER_SELECT2,
+      label: 'Card Template',
+      default: false,
+      prefetch_options: true,
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options?template_type=card&value=guid',
+      nullable: true,
+    });
+
     repeater.addControl('column_link', {
       label: 'Link Template',
       dynamic: false,
@@ -250,6 +260,7 @@ class Table extends BaseElement {
         },
       ]
     });
+
     repeater.addControl('column_body_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Body alignment',
@@ -320,7 +331,6 @@ class Table extends BaseElement {
       responsive: false,
       description: 'Search {{count}} records...',
     });
-
 
     repeater.addControl('filter_min_placeholder', {
       label: 'MinPlaceholder',
@@ -759,6 +769,7 @@ class Table extends BaseElement {
     this.addControl('resize_columns', {
       type: CONTROLLER_SWITCHER,
       label: 'Resize',
+      prefixClass: 'table-resize_',
       default: false,
     });
 
@@ -779,6 +790,7 @@ class Table extends BaseElement {
     this.addControl('replace_width', {
       type: CONTROLLER_NUMBER,
       label: 'Width',
+      default: 100,
       condition:{
         replace_rows: true,
       },
@@ -788,7 +800,7 @@ class Table extends BaseElement {
       type: CONTROLLER_SWITCHER,
       label: 'Virtualized Rows',
       default: false,
-      prefixClass: 'tableVirtualized'
+      prefixClass: 'table-virtualized_'
     });
 
     this.addControl('virtualized_height', {

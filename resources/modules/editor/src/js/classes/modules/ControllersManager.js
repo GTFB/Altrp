@@ -113,7 +113,6 @@ class ControllersManager {
   }
 
   registerControls() {
-    console.log(window.elementsManager);
     let elementClasses = window.elementsManager.getElements();
     this.elementsControls = {};
     for (let elementClassName in elementClasses) {
