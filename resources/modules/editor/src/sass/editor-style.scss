@@ -195,6 +195,10 @@ button {
   &__title {
     margin-top: 8px;
   }
+
+  &>svg{
+    fill: #343B4C;
+  }
 }
 
 .right-panel {
@@ -1471,7 +1475,7 @@ button {
   z-index: 99999;
 }
 
-.altrp-element_section:first-of-type {
+.altrp-element_section:first-of-type, .altrp-element_section.fixed-section {
   & > .overlay {
     z-index: 100;
     & .overlay-settings {
@@ -1495,6 +1499,9 @@ button {
       }
     }
   }
+}
+.altrp-element_section.fixed-section > .overlay .overlay-settings {
+  transform: unset;
 }
 .altrp-element_column.altrp-element_current,
 .altrp-element_column:hover {

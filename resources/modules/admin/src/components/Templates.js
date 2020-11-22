@@ -142,7 +142,6 @@ export default class Templates extends Component{
         fr.onload = async (e) =>{
           let importedTemplateData = _.get(e, 'target.result', '{}');
           importedTemplateData = JSON.parse(importedTemplateData);
-          console.log(importedTemplateData);
           let areaExists = false;
           this.state.templateAreas.forEach(ta=>{
             if(ta.name === importedTemplateData.area){

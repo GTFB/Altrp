@@ -1,3 +1,4 @@
+import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import DynamicIcon from '../../../svgs/dynamic.svg'
@@ -24,55 +25,19 @@ class TextController extends Component {
     this.dynamicButton = React.createRef();
   }
 
-  changeValue(e) {
-    let variants = [
-      /**
-       * Вариант для одной колонки
-       */
-      [
-        {
-          name: '1_100',
-          variants: [
-            {
-              title: '100',
-              length: 100,
-            }
-          ]
-        },
-      ],
-      /**
-       * Вариант для двух колонок
-       */
-      [
-        {
-          name: '2_50',
-          variants: [
-            {
-              title: '50',
-              length: 50,
-            },
-            {
-              title: '50',
-              length: 50,
-            },
-          ]
-        },
-        {
-          name: '2_33',
-          variants: [
-            {
-              title: '33',
-              length: 33.33,
-            },
-            {
-              title: '66',
-              length: 66.66,
-            },
-          ]
-        },
-      ],
-    ];
+  /**
+   * Потеря фокуса обновляет элемент
+   * @param e
+   */
+  onBlur = e =>{
     this._changeValue(e.target.value)
+  };
+  /**
+   * Изменение больше не обновляет элемент
+   * @param e
+   */
+  changeValue(e) {
+    this._changeValue(e.target.value, false)
   }
 
   getDefaultValue() {
@@ -83,7 +48,8 @@ class TextController extends Component {
     if (this.state.show === false) {
       return '';
     }
-    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    // let value = this.getSettings(this.props.controlId) || this.getDefaultValue(); todo: удалить если будет работать
+    let value = this.state.value || this.getDefaultValue();
     return <div className="controller-container controller-container_text">
       <div className="controller-container__label textcontroller-responsive">
         {this.props.label}
@@ -102,7 +68,9 @@ class TextController extends Component {
               iconsManager().renderIcon('times')
             }
           </div>
-        </div> : <input className="control-field" onChange={this.changeValue} value={value} />
+        </div> : <input className="control-field"
+                        onBlur={this.onBlur}
+                        onChange={this.changeValue} value={value} />
         }
 
         {this.props.dynamic === false ? null : <div className="control-group__append" ref={this.dynamicButton} onClick={this.openDynamicContent}>
@@ -117,12 +85,5 @@ class TextController extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    currentElement: state.currentElement.currentElement,
-    currentState: state.currentState,
-    currentScreen: state.currentScreen
-  };
-}
 
-export default connect(mapStateToProps)(TextController);
+export default connect(controllerMapStateToProps)(TextController);

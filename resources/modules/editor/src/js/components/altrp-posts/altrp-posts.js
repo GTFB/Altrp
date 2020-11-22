@@ -5,6 +5,7 @@ import AltrpQueryComponent from "../altrp-query-component/altrp-query-component"
 import templateLoader from "../../classes/modules/TemplateLoader"
 import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric"
 import AltrpModel from "../../classes/AltrpModel";
+import ElementWrapper from "../../../../../front-app/src/js/components/ElementWrapper";
 
 class AltrpPosts extends React.Component {
   constructor(props) {
@@ -46,8 +47,6 @@ class AltrpPosts extends React.Component {
     }
     // if(this.props.data !== nextProps.data){
     if(! _.isEqual(this.props.data, nextProps.data)){
-      console.log(this.props.data);
-      console.log(nextProps.data);
       return true;
     }
     return false;
@@ -79,7 +78,9 @@ class AltrpPosts extends React.Component {
    * Отрисовывает отдельную карточку
    * @param {integer} idx - индекс в массиве записей
    */
-  renderPost(idx){
+  renderPost = (idx) => {
+    const hoverTemplateId = _.get(this.props.settings, 'posts_card_hover_template', null);
+    const transitionType = _.get(this.props.settings, 'posts_transition_type', null);
     let post = _.cloneDeep(this.props.data[idx] || this.props.data);
     let PostContentComponent = post.component || <h2>{post.title || post.id || ''}</h2>;
     if(this.state.simpleTemplate){
@@ -88,11 +89,17 @@ class AltrpPosts extends React.Component {
       PostContentComponent = React.createElement(template.componentClass,
         {
           element: template,
+          ElementWrapper: ElementWrapper,
           children: template.children
         });
     }
-    return <div className="altrp-post" key={post.id + Math.random()}>{PostContentComponent}</div>
-  }
+    return <React.Fragment key={post.id + Math.random()}>
+      <div className="altrp-post">{PostContentComponent}
+        {hoverTemplateId && <div className={`altrp-post altrp-post--hover altrp-post--hover--${transitionType}`}>{PostContentComponent}</div>}
+      </div>
+      
+    </React.Fragment>
+  };
 
   render() {
     let {data: posts} = this.props;

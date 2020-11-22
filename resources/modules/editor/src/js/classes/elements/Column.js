@@ -39,7 +39,7 @@ class Column  extends BaseElement {
       label: 'Column width (%)',
       default: null,
       rules: {
-        '{{ELEMENT}}.altrp-element_column{{STATE}}': 'width: {{VALUE}}%',
+        '{{ELEMENT}}.altrp-element.altrp-element_column': 'width: {{VALUE}}%',
       }
     });
 
@@ -78,8 +78,9 @@ class Column  extends BaseElement {
           }
         ],
         rules: {
-          '{{ELEMENT}} .altrp-column{{STATE}}': 'align-content: {{VALUE}};',
-          '{{ELEMENT}} .altrp-column': 'align-items: {{VALUE}};',
+          '{{ELEMENT}} .altrp-column{{STATE}}': ['align-content: {{VALUE}};',
+            'align-items: {{VALUE}};'
+          ],
         },
       }
     );
@@ -217,14 +218,14 @@ class Column  extends BaseElement {
       default: {
         isWithGradient: false,
         firstColor: "rgba(97,206,112,1)",
-        firstPoint: '0',
+        firstPoint: '100',
         secondColor: "rgba(242,41,91,1)",
-        secondPoint: "100",
+        secondPoint: "0",
         angle: "0",
         value: ""
       },
       rules: {
-        "{{ELEMENT}} .altrp-column{{STATE}}": "background-image: {{VALUE}}" 
+        "{{ELEMENT}} .altrp-column{{STATE}}": "background-image: {{VALUE}}"
       }
     });
 
@@ -410,11 +411,11 @@ class Column  extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-column{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}} !important;",
-          "padding-right: {{RIGHT}}{{UNIT}} !important;",
-          "padding-bottom: {{BOTTOM}}{{UNIT}} !important;",
-          "padding-left: {{LEFT}}{{UNIT}} !important;"
+        "{{ELEMENT}}.altrp-element_column.altrp-element .altrp-column{{STATE}}": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
         ]
       }
     });
@@ -435,11 +436,11 @@ class Column  extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-column{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}} !important;',
-          'margin-right: {{RIGHT}}{{UNIT}} !important;',
-          'margin-bottom: {{BOTTOM}}{{UNIT}} !important;',
-          'margin-left: {{LEFT}}{{UNIT}} !important;'
+        '{{ELEMENT}}.altrp-element_column.altrp-element .altrp-column{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
         ]
       },
     });

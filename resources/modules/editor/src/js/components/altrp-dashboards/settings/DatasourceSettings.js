@@ -1,3 +1,4 @@
+import React, { Component, Suspense } from "react";
 import Form from 'react-bootstrap/Form';
 
 import { connect } from "react-redux";

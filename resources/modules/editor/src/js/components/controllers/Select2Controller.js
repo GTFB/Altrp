@@ -1,3 +1,4 @@
+import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Select from "react-select";
@@ -269,12 +270,4 @@ class Select2Controller extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    currentElement: state.currentElement.currentElement,
-    currentState: state.currentState,
-    currentScreen: state.currentScreen,
-    controllerValue: state.controllerValue,
-  };
-}
-export default connect(mapStateToProps)(Select2Controller);
+export default connect(controllerMapStateToProps)(Select2Controller);

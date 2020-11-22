@@ -16,7 +16,7 @@ import Loader from "./Loader";
 
 import MemoPaintIcon from "./Icons/PaintIcon";
 
-function noob() {}
+function noob() { }
 
 function MapDesigner({
   className,
@@ -39,6 +39,8 @@ function MapDesigner({
   const handleObserver = (e) => {
     const { leafletElement } = FG.current;
     // Обновляем дерево geojson
+    console.log('HANDLE');
+    console.log(e.type);
     let features = [];
     // Проходимся по каждому слою
     leafletElement.eachLayer((layer) => {
@@ -69,9 +71,9 @@ function MapDesigner({
         geojson.properties.color = geojson.properties.color ? geojson.properties.color : "#3388ff";
         // Polygon style properties
       } else if (layer instanceof L.Marker) {
-        console.log("geojson.properties", geojson.properties);
         geojson.properties.icon = geojson.properties.opacity ? geojson.properties.opacity : 1.0;
-        geojson.properties.icon = geojson.properties.icon ? geojson.properties.icon : "Marker";
+        // geojson.properties.icon = geojson.properties.icon ? geojson.properties.icon : "GoogleMarker";
+        geojson.properties.icon = "GoogleMarker";
         layer.setIcon(customIcon(geojson.properties.icon));
       }
       // Назначаем подпись
@@ -85,7 +87,6 @@ function MapDesigner({
       // Добавляем в массив
       features.push(geojson);
     });
-
     setState({ ...state, features });
 
     if (e.type === "draw:created") {
@@ -194,7 +195,7 @@ function MapDesigner({
             position="topleft"
             onCreated={handleObserver}
             onEdited={handleObserver}
-            onDeleted={handleObserver}
+            onDrawStart={handleObserver}
             draw={{
               circlemarker: false,
               rectangle: false,

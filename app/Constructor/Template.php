@@ -243,7 +243,6 @@ class Template extends Model
         $conditions = $setting['data'];
       }
     }
-
     if( ! count( $conditions ) ){
       if( $this->all_site ){
         $conditions[] = [
@@ -263,12 +262,28 @@ class Template extends Model
             return $value->id;
           } )->toArray(),
         ];
+        $conditions[] = [
+          'object_type' => 'reports',
+          'condition_type' => 'include',
+          'id' => uniqid(),
+          'object_ids' => $this->pages_templates->map(function( $value ){
+            return $value->id;
+          } )->toArray(),
+        ];
       }
       if( $this->pages_templates->filter( function( $value ){
         return $value->condition_type === 'exclude';
       } )->count() ){
         $conditions[] = [
           'object_type' => 'page',
+          'condition_type' => 'exclude',
+          'id' => uniqid(),
+          'object_ids' => $this->pages_templates->map(function( $value ){
+            return $value->id;
+          } )->toArray(),
+        ];
+        $conditions[] = [
+          'object_type' => 'reports',
           'condition_type' => 'exclude',
           'id' => uniqid(),
           'object_ids' => $this->pages_templates->map(function( $value ){

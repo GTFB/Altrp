@@ -1,6 +1,6 @@
 import BaseElement from "./BaseElement";
-import WidgetIcon from '../../../svgs/widget_gallery.svg';
-import {advancedTabControllers} from "../../decorators/register-controllers";
+import WidgetIcon from '../../../svgs/slider-push.svg';
+import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_DIMENSIONS,
@@ -22,19 +22,19 @@ import {
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 
-class Carousel extends BaseElement{
+class Carousel extends BaseElement {
 
-  static getName(){
-    return'carousel';
+  static getName() {
+    return 'carousel';
   }
-  static getTitle(){
-    return'Carousel';
+  static getTitle() {
+    return 'Carousel';
   }
 
-  static getIconComponent(){
+  static getIconComponent() {
     return WidgetIcon;
   }
-  static getType(){
+  static getType() {
     return 'widget';
   }
   _registerControls() {
@@ -65,9 +65,29 @@ class Carousel extends BaseElement{
 
     let repeater = new Repeater();
 
+    repeater.addControl('switch_slides_repeater', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Image or card',
+    });
+
     repeater.addControl('image_slides_repeater', {
+      conditions: {
+        'switch_slides_repeater': false,
+      },
       type: CONTROLLER_MEDIA,
       label: 'image',
+    });
+
+    repeater.addControl("card_slides_repeater", {
+      conditions: {
+        'switch_slides_repeater': true,
+      },
+      type: CONTROLLER_SELECT2,
+      prefetch_options: true,
+      label: "Card",
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options?value=guid',
+      nullable: true,
     });
 
     repeater.addControl('link_to_slides_repeater', {
@@ -266,11 +286,11 @@ class Carousel extends BaseElement{
     this.addControl("height_slides_content", {
       type: CONTROLLER_SLIDER,
       label: 'Height',
-      default:{
+      default: {
         size: 220,
         unit: 'px',
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -285,11 +305,11 @@ class Carousel extends BaseElement{
     this.addControl("width_slides_content", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default:{
+      default: {
         size: 100,
         unit: '%',
       },
-      units:[
+      units: [
         'px',
         '%',
       ],
@@ -439,97 +459,97 @@ class Carousel extends BaseElement{
     });
 
     this.addControl('overlay_select_heading_additional_content', {
-        type: CONTROLLER_SELECT,
-        label: 'Overlay',
-        default: 'none',
-        options:[
-          {
-            'value' : 'none',
-            'label' : 'none',
-          },
-          {
-            'value' : 'text',
-            'label' : 'text',
-          },
-          {
-            'value' : 'icon',
-            'label' : 'icon',
-          },
-        ],
-      }
+      type: CONTROLLER_SELECT,
+      label: 'Overlay',
+      default: 'none',
+      options: [
+        {
+          'value': 'none',
+          'label': 'none',
+        },
+        {
+          'value': 'text',
+          'label': 'text',
+        },
+        {
+          'value': 'icon',
+          'label': 'icon',
+        },
+      ],
+    }
     );
 
     this.addControl('overlay_animation_text_heading_additional_content', {
-        type: CONTROLLER_SELECT,
-        label: 'Animation',
-        default: 'fade',
-        options:[
-          {
-            'value' : 'none',
-            'label' : 'none',
-          },
-          {
-            'value' : 'fade',
-            'label' : 'fade',
-          },
-          {
-            'value' : 'scaleUp',
-            'label' : 'scale up',
-          },
-          {
-            'value' : 'scaleDown',
-            'label' : 'scale down',
-          },
-          {
-            'value' : 'slideTop',
-            'label' : 'slide top',
-          },
-          {
-            'value' : 'slideBottom',
-            'label' : 'slide bottom',
-          },
-          {
-            'value' : 'slideLeft',
-            'label' : 'slide left',
-          },
-          {
-            'value' : 'slideRight',
-            'label' : 'slide right',
-          },
-          {
-            'value' : 'slideTopSmall',
-            'label' : 'slide top small',
-          },
-          {
-            'value' : 'slideBottomSmall',
-            'label' : 'slide bottom small',
-          },
-          {
-            'value' : 'slideLeftSmall',
-            'label' : 'slide left small',
-          },
-          {
-            'value' : 'slideRightSmall',
-            'label' : 'slide right small',
-          },
-          {
-            'value' : 'slideTopMedium',
-            'label' : 'slide top medium',
-          },
-          {
-            'value' : 'slideBottomMedium',
-            'label' : 'slide bottom medium',
-          },
-          {
-            'value' : 'slideLeftMedium',
-            'label' : 'slide left medium',
-          },
-          {
-            'value' : 'slideRightMedium',
-            'label' : 'slide right medium',
-          },
-        ],
-      }
+      type: CONTROLLER_SELECT,
+      label: 'Animation',
+      default: 'fade',
+      options: [
+        {
+          'value': 'none',
+          'label': 'none',
+        },
+        {
+          'value': 'fade',
+          'label': 'fade',
+        },
+        {
+          'value': 'scaleUp',
+          'label': 'scale up',
+        },
+        {
+          'value': 'scaleDown',
+          'label': 'scale down',
+        },
+        {
+          'value': 'slideTop',
+          'label': 'slide top',
+        },
+        {
+          'value': 'slideBottom',
+          'label': 'slide bottom',
+        },
+        {
+          'value': 'slideLeft',
+          'label': 'slide left',
+        },
+        {
+          'value': 'slideRight',
+          'label': 'slide right',
+        },
+        {
+          'value': 'slideTopSmall',
+          'label': 'slide top small',
+        },
+        {
+          'value': 'slideBottomSmall',
+          'label': 'slide bottom small',
+        },
+        {
+          'value': 'slideLeftSmall',
+          'label': 'slide left small',
+        },
+        {
+          'value': 'slideRightSmall',
+          'label': 'slide right small',
+        },
+        {
+          'value': 'slideTopMedium',
+          'label': 'slide top medium',
+        },
+        {
+          'value': 'slideBottomMedium',
+          'label': 'slide bottom medium',
+        },
+        {
+          'value': 'slideLeftMedium',
+          'label': 'slide left medium',
+        },
+        {
+          'value': 'slideRightMedium',
+          'label': 'slide right medium',
+        },
+      ],
+    }
     );
 
     this.addControl('image_heading_additional_content', {
@@ -538,27 +558,27 @@ class Carousel extends BaseElement{
     });
 
     this.addControl('image_fit_additional_content', {
-        type: CONTROLLER_SELECT,
-        label: 'Image fit',
-        default: 'cover',
-        options:[
-          {
-            'value' : 'cover',
-            'label' : 'cover',
-          },
-          {
-            'value' : 'contain',
-            'label' : 'contain',
-          },
-          {
-            'value' : 'auto',
-            'label' : 'auto',
-          },
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-carousel-slide-img{{STATE}}': 'background-size: {{VALUE}};',
+      type: CONTROLLER_SELECT,
+      label: 'Image fit',
+      default: 'cover',
+      options: [
+        {
+          'value': 'cover',
+          'label': 'cover',
         },
-      }
+        {
+          'value': 'contain',
+          'label': 'contain',
+        },
+        {
+          'value': 'auto',
+          'label': 'auto',
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-carousel-slide-img{{STATE}}': 'background-size: {{VALUE}};',
+      },
+    }
     );
 
     this.endControlSection();
@@ -571,7 +591,7 @@ class Carousel extends BaseElement{
     this.addControl('space_between_slides_style', {
       type: CONTROLLER_SLIDER,
       label: 'Space between',
-      default:{
+      default: {
         size: 15,
         unit: 'px',
       },
@@ -679,7 +699,7 @@ class Carousel extends BaseElement{
       },
       type: CONTROLLER_SLIDER,
       label: 'Arrows size',
-      default:{
+      default: {
         size: 50,
         unit: 'px',
       },
@@ -729,15 +749,15 @@ class Carousel extends BaseElement{
       },
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default:{
+      default: {
         top: 0,
         right: 0,
         bottom: 0,
         left: 0,
-        unit:'px',
+        unit: 'px',
         bind: true
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -758,15 +778,15 @@ class Carousel extends BaseElement{
       },
       type: CONTROLLER_DIMENSIONS,
       label: 'Border radius',
-      default:{
+      default: {
         top: 0,
         right: 0,
         bottom: 0,
         left: 0,
-        unit:'px',
+        unit: 'px',
         bind: true
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -779,11 +799,11 @@ class Carousel extends BaseElement{
     this.addControl('horizontal_offset_arrows_navigation_style', {
       conditions: {
         'arrows_navigation_content': true,
-        'arrows_position_navigation_content' : 'center'
+        'arrows_position_navigation_content': 'center'
       },
       type: CONTROLLER_SLIDER,
       label: 'Horizontal offset',
-      default:{
+      default: {
         size: 0,
         unit: 'px',
       },
@@ -797,11 +817,11 @@ class Carousel extends BaseElement{
 
     this.addControl('vertical_no_center_offset_arrows_navigation_style', {
       conditions: {
-        'arrows_navigation_content' : true,
+        'arrows_navigation_content': true,
       },
       type: CONTROLLER_SLIDER,
       label: 'Vertical offset (no center)',
-      default:{
+      default: {
         size: 0,
         unit: 'px',
       },
@@ -843,7 +863,7 @@ class Carousel extends BaseElement{
       },
       type: CONTROLLER_SLIDER,
       label: 'Dots size',
-      default:{
+      default: {
         size: 10,
         unit: 'px',
       },
@@ -894,7 +914,7 @@ class Carousel extends BaseElement{
       },
       type: CONTROLLER_SLIDER,
       label: 'Horizontal offset',
-      default:{
+      default: {
         size: 0,
         unit: 'px',
       },
@@ -911,7 +931,7 @@ class Carousel extends BaseElement{
       },
       type: CONTROLLER_SLIDER,
       label: 'Vertical offset (no center)',
-      default:{
+      default: {
         size: 0,
         unit: 'px',
       },
@@ -938,10 +958,10 @@ class Carousel extends BaseElement{
       },
       rules: {
         '{{ELEMENT}} .altrp-carousel-slide-overlay{{STATE}}': 'background-color: {{COLOR}};',
-        },
-      }
+      },
+    }
     );
-    
+
     this.addControl("font_color_overlay", {
       type: CONTROLLER_COLOR,
       label: "text color",
@@ -955,29 +975,29 @@ class Carousel extends BaseElement{
     });
 
     this.addControl('typographic_overlay', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1.5,
-          spacing: 0,
-          size: 16,
-          weight: "normal",
-          family: '"roboto"',
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-carousel-slide-overlay-text{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: '"roboto"',
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-carousel-slide-overlay-text{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.endControlSection();

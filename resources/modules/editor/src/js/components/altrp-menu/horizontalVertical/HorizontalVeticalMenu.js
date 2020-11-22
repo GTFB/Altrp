@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {iconsManager} from "../../../helpers";
 import Dropdown from "./Dropdown";
 import {renderAsset} from "../../../../../../front-app/src/js/helpers";
 import AltrpLink from "../../altrp-link/AltrpLink";
@@ -137,7 +136,7 @@ class HorizontalVeticalMenu extends Component {
 
     }
 
-    let chevron = iconsManager().renderIcon('chevron');
+    let chevron = iconsManager.renderIcon('chevron');
 
     let chevronMedia = this.props.settings.chevron_media_main_menu_style;
 

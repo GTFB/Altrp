@@ -9,9 +9,11 @@ function FilterField({ widget, setWidget, param, changeTitle }) {
 
   const getOptions = useCallback(
     async (param) => {
+      console.log('KOSTYA =>', param);
       setIsLoading(true);
       const req = await axios(`/ajax/models/queries/${param.model}/${param.value}`);
       if (req.status === 200) {
+        console.log(req.data.data);
         setOptions(req.data.data);
         setIsLoading(false);
       }

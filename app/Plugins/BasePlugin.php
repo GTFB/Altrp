@@ -8,10 +8,10 @@ abstract class BasePlugin
       public $pluginImage;
       public $pluginName; //на будущее, возможность изменять имя плагина
 
-      public function __construct()
-      {
-            $this->pluginImage = asset('/img/plugin.png');
-      }
+//      public function __construct()
+//      {
+//            $this->pluginImage = asset('/img/plugin.png');
+//      }
 
       public function getImage()
       {

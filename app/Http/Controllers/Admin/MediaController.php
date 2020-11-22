@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
@@ -53,7 +54,7 @@ class MediaController extends Controller
 
     foreach ( $_files as $file ) {
       if( strpos(  $file->getClientMimeType(), 'image' ) === 0 &&
-        $file->getSize() < config( 'filesystems', 'max_file_size' )
+        $file->getSize() < config( 'filesystems.max_file_size' )
       ){
         $files[] = $file;
       }
@@ -63,6 +64,7 @@ class MediaController extends Controller
       $media = new Media();
       $media->media_type = $file->getClientMimeType();
       $media->author = Auth::user()->id;
+      File::ensureDirectoryExists( 'app/media/' .  date("Y") . '/' .  date("m" ), 0775 );
       $media->filename =  $file->store( 'media/' .  date("Y") . '/' .  date("m" ) ,
         ['disk' => 'public'] );
       $media->url =  Storage::url( $media->filename );

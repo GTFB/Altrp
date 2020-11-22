@@ -46,11 +46,16 @@ Route::get( '/admin/editor-content', function (){
   return view( 'editor-content' );
 } )->middleware( 'auth' )->name('editor-content');
 
-Route::get( '/admin/editor-reports', function (){
-  return view( 'editor-reports' );
-} )->middleware( 'auth' )->name('editor-reports');
+// Route::get('/admin/reports-editor',fn()=>view('reports'));
+// Route::get('/admin/reports-content',fn()=>view('reports-content'));
 
-Route::get('/reports/html/{id}', "ReportsController@page");
+// Route::get( '/admin/editor-reports', function (){
+//    return view( 'editor-reports' );
+// } )->middleware( 'auth' )->name('editor-reports');
+
+// Route::get('/reports/html/{id}', "ReportsController@page");
+// Route::get('/reports/{id}/html', "ReportsController@html");
+Route::post('/reports/generate', "ReportsController@setHtml");
 
 /**
  * Роуты Админки
@@ -78,6 +83,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     Route::resource( 'pages', 'Admin\PagesController' );
     Route::get( '/pages_options', 'Admin\PagesController@pages_options' )->name( 'admin.pages_options.all' );
+    Route::get( '/reports_options', 'Admin\PagesController@reports_options' )->name( 'admin.reports_options.all' );
     Route::get( '/pages_options/{page_id}', 'Admin\PagesController@show_pages_options' )->name( 'admin.pages_options.show' );
 
     Route::get('/page_data_sources', 'Admin\PageDatasourceController@index');
@@ -287,6 +293,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::delete( '/data_sources/{source_id}', 'Admin\ModelsController@destroyDataSource');
     Route::get( '/models/{model_id}/data_source_options', 'Admin\ModelsController@getDataSourcesByModel');
 
+    /**
+    * Управление моделями
+    */
+    Route::get( '/custom_models/{model_id}', 'Admin\ModelsController@getCustomModelRecords');
+    Route::get( '/custom_models/{model_id}/show/{record_id}', 'Admin\ModelsController@getCustomModelRecord');
+    Route::post( '/custom_models/{model_id}', 'Admin\ModelsController@storeCustomModelRecord');
+    Route::put( '/custom_models/{model_id}/edit/{record_id}', 'Admin\ModelsController@editCustomModelRecord');
+    Route::delete( '/custom_models/{model_id}/delete/{record_id}', 'Admin\ModelsController@destroyCustomModelRecord');
+
     Route::get('/tables', "Admin\TableController@getTables");
     Route::get('/tables/options', "Admin\TableController@getTablesForOptions");
     Route::get('/tables_options', "Admin\TableController@getTablesForOptions");
@@ -322,6 +337,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
 
     /**
+    * Роут для загрузки favicon
+    */
+    Route::post( '/favicon', 'Admin\FileUploadController@loadFavicon' );
+
+    /**
      * Плагины
      */
 
@@ -346,7 +366,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
       Route::get( 'settings', 'Admin\DownloadsController@exportAltrpSettings' )->name( 'admin.download.settings' );
     } );
   });
-
 
 });
 
@@ -378,6 +397,21 @@ foreach ( $frontend_routes as $frontend_route ) {
   Route::get( $frontend_route, function () use ( $title ) {
     return view('front-app',['title'=> $title]);
   } )->middleware( ['web', 'installation.checker'] );
+}
+
+/**
+ * Reports
+ */
+$reports_routes = \App\Page::get_reports_routes();
+foreach($reports_routes as $report_route){
+  $path = $report_route['path'];
+  $title = $report_route['title'];
+
+  $report_route = str_replace( ':id', '{id}', $path );
+  
+  Route::get($report_route, function () use ($title){
+    return view('front-app',['title'=>$title]);
+  })->middleware(['web','installation.checker']);
 }
 
 /**
@@ -436,6 +470,12 @@ Route::group( ['prefix' => 'ajax'], function(){
    * для загрузки шаблонов внутри виджетов
    */
   Route::get( 'templates/{template_id}', 'TemplateController@show_frontend' )->name( 'templates.show.frontend' );
+
+
+  /**
+   * Отдает данные отчётов
+   */
+  Route::get( 'reports/{id}/result', 'ReportsController@report_template' )->name( 'front.reports-for-routes' );
 
   /**
    * Настройка почты

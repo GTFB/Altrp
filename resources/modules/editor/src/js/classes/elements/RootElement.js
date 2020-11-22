@@ -95,8 +95,9 @@ class RootElement extends BaseElement {
       label: 'Default Displaying',
     });
 
-    this.addControl('hidden_elemants_triggers', {
+    this.addControl('hidden_elements_triggers', {
       type: CONTROLLER_TEXTAREA,
+      dynamic: false,
       label: 'Hidden Elements Triggers',
       description: 'Input triggers, commas separated'
     });
@@ -290,9 +291,9 @@ class RootElement extends BaseElement {
       default: {
         isWithGradient: false,
         firstColor: "rgba(97,206,112,1)",
-        firstPoint: '0',
+        firstPoint: '100',
         secondColor: "rgba(242,41,91,1)",
-        secondPoint: "100",
+        secondPoint: "0",
         angle: "0",
         value: ""
       },
@@ -323,9 +324,77 @@ class RootElement extends BaseElement {
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
           'padding-left: {{LEFT}}{{UNIT}};'
-        ]
+        ],
+        '.altrp-section.altrp-section--full-width, .altrp-section.altrp-section--boxed': 'width: calc(100vw - {{RIGHT}}{{UNIT}} - {{LEFT}}{{UNIT}})'
       },
     });
+
+    this.addControl('global_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        "body *": "transition-property: {{VALUE}};"
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("global_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        "body *": "transition-duration: {{SIZE}}s;"
+      }
+    });
+
+    this.addControl('global_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        "body *": "transition-timing-function: {{VALUE}};"
+      }
+    });
+
+    this.addControl("global_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        "body *": "transition-delay: {{SIZE}}s;"
+      }
+    });
+
 
     this.endControlSection();
 
@@ -781,6 +850,88 @@ class RootElement extends BaseElement {
       }
     });
 
+    // this.addControl('heading_default_transition_property', {
+    //   type: CONTROLLER_SELECT2,
+    //   label: 'Transition Property',
+    //   isMulti: true,
+    //   options: [
+    //     { label: 'color', value: 'color' }, 
+    //     { label: 'font-size', value: 'font-size' },
+    //     { label: 'margin', value: 'margin' }, 
+    //     { label: 'padding', value: 'padding' }, 
+    //     { label: 'background-color', value: 'background-color' }, 
+    //     { label: 'opacity', value: 'opacity' }, 
+    //   ],
+    //   rules: {
+    //     ".altrp-heading": "transition-property: {{VALUE}};"
+    //   }
+    // });
+    this.addControl('heading_default_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        ".altrp-heading": "transition-property: {{VALUE}};"
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("heading_default_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-heading": "transition-duration: {{SIZE}}s;"
+      }
+    });
+
+    this.addControl('heading_default_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        ".altrp-heading": "transition-timing-function: {{VALUE}};"
+      }
+    });
+
+    this.addControl("heading_default_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-heading": "transition-delay: {{SIZE}}s;"
+      }
+    });
+
     this.endControlSection();
 
     this.startControlSection('button_defaults', {
@@ -972,29 +1123,29 @@ class RootElement extends BaseElement {
       },
     });
 
-    // this.addControl('button_gradient', {
-    //   type: CONTROLLER_GRADIENT,
-    //   label: 'Gradient',
-    //   default: {
-    //     isWithGradient: false,
-    //     firstColor: "rgba(97,206,112,1)",
-    //     firstPoint: '0',
-    //     secondColor: "rgba(242,41,91,1)",
-    //     secondPoint: "100",
-    //     angle: "0",
-    //     value: ""
-    //   },
-    //   rules: {
-    //     ".altrp-btn{{STATE}}": "background-image: {{VALUE}}"
-    //   }
-    // });
-
     this.addControl('button_background_image', {
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
       default: { url: "" },
       rules: {
         ".altrp-btn{{STATE}}": "background-image: url({{URL}});"
+      }
+    });
+
+    this.addControl('button_gradient', {
+      type: CONTROLLER_GRADIENT,
+      label: 'Gradient',
+      default: {
+        isWithGradient: false,
+        firstColor: "rgba(97,206,112,1)",
+        firstPoint: '100',
+        secondColor: "rgba(242,41,91,1)",
+        secondPoint: "0",
+        angle: "0",
+        value: ""
+      },
+      rules: {
+        "div .altrp-btn{{STATE}}": "background-image: {{VALUE}}"
       }
     });
 
@@ -1149,6 +1300,72 @@ class RootElement extends BaseElement {
       // default: 'unset',
       rules: {
         ".altrp-btn{{STATE}}": "background-size: {{VALUE}};"
+      }
+    });
+
+    this.addControl('button_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        ".altrp-btn": "transition-property: {{VALUE}};"
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("button_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-btn": "transition-duration: {{SIZE}}s;"
+      }
+    });
+
+    this.addControl('button_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        ".altrp-btn": "transition-timing-function: {{VALUE}};"
+      }
+    });
+
+    this.addControl("button_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-btn": "transition-delay: {{SIZE}}s;"
       }
     });
     
@@ -1332,6 +1549,79 @@ class RootElement extends BaseElement {
       ],
       rules: {
         "div .altrp-list-li-link{{STATE}}": "text-decoration: {{VALUE}};"
+      }
+    });
+
+    this.addControl('list_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        ".altrp-list-label": "transition-property: {{VALUE}};",
+        ".altrp-list": "transition-property: {{VALUE}};"
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("list_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-list-label": "transition-duration: {{SIZE}}s;",
+        ".altrp-list": "transition-duration: {{SIZE}}s;",
+        ".altrp-list-icon": "transition-delay: {{SIZE}}s;"   
+      }
+    });
+
+    this.addControl('list_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        ".altrp-list-label": "transition-timing-function: {{VALUE}};",
+        ".altrp-list": "transition-timing-function: {{VALUE}};",
+        ".altrp-list-icon": "transition-delay: {{VALUE}};"   
+      }
+    });
+
+    this.addControl("list_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-list-label": "transition-delay: {{SIZE}}s;",
+        ".altrp-list": "transition-delay: {{SIZE}}s;",
+        ".altrp-list-icon": "transition-delay: {{SIZE}}s;"        
       }
     });
 
@@ -1532,6 +1822,73 @@ class RootElement extends BaseElement {
       }
     });
 
+    this.addControl('text_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        ".altrp-text": "transition-property: {{VALUE}};",
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("text_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-text": "transition-duration: {{SIZE}}s;",
+      }
+    });
+
+    this.addControl('text_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        ".altrp-text": "transition-timing-function: {{VALUE}};",
+      }
+    });
+
+    this.addControl("text_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-text": "transition-delay: {{SIZE}}s;",
+      }
+    });
+
+
     this.endControlSection();
 
     this.startControlSection('image_defaults', {
@@ -1725,6 +2082,77 @@ class RootElement extends BaseElement {
         ]
       }
     });
+
+    this.addControl('image_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        ".altrp-image": "transition-property: {{VALUE}};",
+        ".altrp-image-container": "transition-property: {{VALUE}};",
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("image_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-image": "transition-duration: {{SIZE}}s;",
+        ".altrp-image-container": "transition-duration: {{SIZE}}s;",
+      }
+    });
+
+    this.addControl('image_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        ".altrp-image": "transition-timing-function: {{VALUE}};",
+        ".altrp-image-container": "transition-timing-function: {{VALUE}};",
+      }
+    });
+
+    this.addControl("image_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-image": "transition-delay: {{SIZE}}s;",
+        ".altrp-image-container": "transition-delay: {{SIZE}}s;",
+      }
+    });
+
 
     this.endControlSection();
 
@@ -2088,6 +2516,85 @@ class RootElement extends BaseElement {
         '.altrp-field-select2__control{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};'
       },
     });
+
+    this.addControl('input_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        ".altrp-field": "transition-property: {{VALUE}};",
+        ".altrp-field-label": "transition-property: {{VALUE}};",
+        ".altrp-field-select2__control": "transition-property: {{VALUE}};",
+        ".altrp-field-select2__single-value": "transition-property: {{VALUE}};",
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("input_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-field": "transition-duration: {{SIZE}}s;",
+        ".altrp-field-label": "transition-duration: {{SIZE}}s;",
+        ".altrp-field-select2__control": "transition-duration: {{SIZE}}s;",
+        ".altrp-field-select2__single-value": "transition-duration: {{SIZE}}s;",
+      }
+    });
+
+    this.addControl('input_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        ".altrp-field": "transition-timing-function: {{VALUE}};",
+        ".altrp-field-label": "transition-timing-function: {{VALUE}};",
+        ".altrp-field-select2__control": "transition-timing-function: {{VALUE}};",
+        ".altrp-field-select2__single-value": "transition-timing-function: {{VALUE}};",
+      }
+    });
+
+    this.addControl("input_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-field": "transition-delay: {{SIZE}}s;",
+        ".altrp-field-label": "transition-delay: {{SIZE}}s;",
+        ".altrp-field-select2__control": "transition-delay: {{SIZE}}s;",
+        ".altrp-field-select2__single-value": "transition-delay: {{SIZE}}s;",
+      }
+    });
+
 
     this.endControlSection();
 
@@ -2478,8 +2985,343 @@ class RootElement extends BaseElement {
       }
     });
 
+    this.addControl('table_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        ".altrp-table-th": "transition-property: {{VALUE}};",
+        "..altrp-table-td": "transition-property: {{VALUE}};",
+        ".altrp-table": "transition-property: {{VALUE}};",
+        ".altrp-table-head": "transition-property: {{VALUE}};",
+        ".altrp-table-background": "transition-property: {{VALUE}};",
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("table_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      default: {
+        size: 0.2,
+      },
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-table-th": "transition-duration: {{SIZE}}s;",
+        "..altrp-table-td": "transition-duration: {{SIZE}}s;",
+        ".altrp-table": "transition-duration: {{SIZE}}s;",
+        ".altrp-table-head": "transition-duration: {{SIZE}}s;",
+        ".altrp-table-background": "transition-duration: {{SIZE}}s;",
+      }
+    });
+
+    this.addControl('table_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        ".altrp-table-th": "transition-timing-function: {{VALUE}};",
+        "..altrp-table-td": "transition-timing-function: {{VALUE}};",
+        ".altrp-table": "transition-timing-function: {{VALUE}};",
+        ".altrp-table-head": "transition-timing-function: {{VALUE}};",
+        ".altrp-table-background": "transition-timing-function: {{VALUE}};",
+      }
+    });
+
+    this.addControl("table_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        ".altrp-table-th": "transition-delay: {{SIZE}}s;",
+        "..altrp-table-td": "transition-delay: {{SIZE}}s;",
+        ".altrp-table": "transition-delay: {{SIZE}}s;",
+        ".altrp-table-head": "transition-delay: {{SIZE}}s;",
+        ".altrp-table-background": "transition-delay: {{SIZE}}s;",
+      }
+    });
+
     this.endControlSection();
 
+    this.startControlSection('tabs_defaults', {
+      tab: TAB_STYLE,
+      label: 'Tabs Defaults',
+    });
+
+    this.addControl('defaults_alignment_tabs', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment',
+      default: 'flex-start',
+      options: [
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+        {
+          icon: 'in_width',
+          value: 'space-between',
+        },
+      ],
+      rules: {
+        '.altrp-tab-btn-container{{STATE}}': 'justify-content: {{VALUE}};',
+      },
+    });
+
+    this.addControl("defaults_spacing_column_tabs", {
+      type: CONTROLLER_SLIDER,
+      label: "Tab spacing",
+      default: {
+        size: 10,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      max: 100,
+      min: 0,
+      rules: {
+        ".altrp-tab-btn-column{{STATE}}": "margin-right: {{SIZE}}{{UNIT}}",
+        ".altrp-tab-btn-row{{STATE}}": "margin-bottom: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("defaults_spacing_content_tabs", {
+      type: CONTROLLER_SLIDER,
+      label: "Content spacing",
+      default: {
+        size: 10,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      max: 100,
+      min: 0,
+      rules: {
+        ".altrp-tab-btn-top{{STATE}}": "margin-bottom: {{SIZE}}{{UNIT}}",
+        ".altrp-tab-btn-bottom{{STATE}}": "margin-top: {{SIZE}}{{UNIT}}",
+        ".altrp-tab-btn-left{{STATE}}": "margin-right: {{SIZE}}{{UNIT}}",
+        ".altrp-tab-btn-right{{STATE}}": "margin-left: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("defaults_background_tab_style", {
+      type: CONTROLLER_COLOR,
+      label: "Background tabs",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        ".altrp-tab-btn-container{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("defaults_background_type_tab_style", {
+      type: CONTROLLER_COLOR,
+      label: "Background buttons",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        ".altrp-tab-btn{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("defaults_background_text_color_tab_style", {
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        ".altrp-tab-btn{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('defaults_box_shadow_tab_style', {
+      type: CONTROLLER_SHADOW,
+      label: 'Box shadow',
+      default: {
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        opacity: 1,
+        spread: 0,
+        colorRGB: 'rgb(0, 0, 0)',
+        color: 'rgb(0, 0, 0)',
+        colorPickedHex: '#000000',
+        type: ""
+      },
+      presetColors: [
+        '#eaeaea',
+        '#9c18a8'
+      ],
+      rules: {
+        '.altrp-tab-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    });
+
+    this.addControl("defaults_padding_tab_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 10,
+        right: 15,
+        bottom: 10,
+        left: 15,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        ".altrp-tab-btn{{STATE}}": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+
+    this.addControl("defaults_border_type_tab_style", {
+      type: CONTROLLER_SELECT,
+      label: "Border type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        ".altrp-tab-btn{{STATE}}": "border-style: {{VALUE}};"
+      }
+    });
+
+    this.addControl("defaults_border_width_tab_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        ".altrp-tab-btn{{STATE}}":
+          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      }
+    });
+
+    this.addControl("defaults_border_color_tab_style", {
+      type: CONTROLLER_COLOR,
+      label: "Border color",
+      default: {
+        color: "rgb(50,168,82)",
+        colorPickedHex: "#32a852"
+      },
+      rules: {
+        ".altrp-tab-btn{{STATE}}": "border-color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("defaults_border_radius_tab_style", {
+      type: CONTROLLER_SLIDER,
+      label: 'Border radius',
+      default: {
+        size: 0,
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        ".altrp-tab-btn{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    // this.addControl('defaults_typographic_tab_style', {
+    //   type: CONTROLLER_TYPOGRAPHIC,
+    //   label: 'Typographic',
+    //   default: {
+    //     lineHeight: 1.5,
+    //     spacing: 0,
+    //     size: 14,
+    //     weight: "normal",
+    //     family: "Open Sans",
+    //     decoration: ""
+    //   },
+    //   rules: {
+    //     '.altrp-tab-btn{{STATE}}': [
+    //       'font-family: "{{FAMILY}}", sans-serif;',
+    //       'font-size: {{SIZE}}px;',
+    //       'line-height: {{LINEHEIGHT}};',
+    //       'letter-spacing: {{SPACING}}px',
+    //       'font-weight: {{WEIGHT}}',
+    //       'text-transform: {{TRANSFORM}}',
+    //       'font-style: {{STYLE}}',
+    //       'text-decoration: {{DECORATION}}'
+    //     ],
+    //   },
+    // }
+    // );
+
+
+    this.endControlSection();
 
     /**
      * импорт/сохранение глобальных настроек
@@ -2536,6 +3378,28 @@ class RootElement extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('positioning', {
+      tab: TAB_ADVANCED,
+      label: 'Positioning',
+    });
+
+    this.addControl('positioning_custom_top', {
+      type: CONTROLLER_SLIDER,
+      label: 'Custom top',
+      default: {
+        size: "20",
+        unit: '%'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 1000,
+      min: 0,
+    });
+
+    this.endControlSection();
   }
 
   

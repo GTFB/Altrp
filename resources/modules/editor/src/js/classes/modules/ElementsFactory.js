@@ -1,34 +1,58 @@
-import BaseModule from './BaseModule';
-import {getEditor} from "../../helpers";
+import BaseModule from "./BaseModule";
+import { getEditor } from "../../helpers";
 
-class ElementsFactory extends BaseModule{
-  parseData(object, parent){
+class ElementsFactory extends BaseModule {
+  /**
+   * Парсит объект и создает из него дерево элементов
+   * @param object
+   * @param parent
+   * @param {boolean} rewriteStyles
+   * @return {BaseElement}
+   */
+  parseData(object, parent, rewriteStyles = false) {
     let children = [];
     const elementsManager = window.elementsManager;
     /**
      * @member {BaseElement} element
      * */
-    let element = new (elementsManager.getElementClass(object.name));
-    if( object.children && object.children.length ){
-      for( let child of object.children){
-        elementsManager.checkElementExists(child.name) ?
-          children.push(this.parseData(child, element) ) : '';
+    let element = new (elementsManager.getElementClass(object.name))();
+    if (object.children && object.children.length) {
+      for (let child of object.children) {
+        elementsManager.checkElementExists(child.name)
+          ? children.push(this.parseData(child, element, rewriteStyles))
+          : "";
       }
     }
-    element.id = object.id;
+    if (rewriteStyles) {
+      let oldId = object.id;
+      element.id = element.getId();
+      object.settings = JSON.stringify(object.settings).replace(
+        RegExp(oldId, "g"),
+        element.getId()
+      );
+      object.settings = JSON.parse(object.settings);
+    } else {
+      element.id = object.id;
+    }
     element.children = children;
     /**
-     * Если настройки пустый то с сервера приходит пустой массив -- меняем на пустой объект
+     * Если настройки пустыe то с сервера приходит пустой массив -- меняем на пустой объект
      * */
-    let settings = (object.settings.length === 0) ? {} : object.settings;
+    let settings = object.settings.length === 0 ? {} : object.settings;
     element.setSettings(settings);
-    let cssClassStorage = (object.cssClassStorage && object.cssClassStorage.length === 0) ? {} : object.cssClassStorage;
+    let cssClassStorage =
+      object.cssClassStorage && object.cssClassStorage.length === 0
+        ? {}
+        : object.cssClassStorage;
     element.setCSSStorage(cssClassStorage);
-    if(object.dynamicContentSettings){
-      element.dynamicContentSettings = (object.dynamicContentSettings.length === 0) ? {} : object.dynamicContentSettings;
+    if (object.dynamicContentSettings) {
+      element.dynamicContentSettings =
+        object.dynamicContentSettings.length === 0
+          ? {}
+          : object.dynamicContentSettings;
     }
 
-    if(parent){
+    if (parent) {
       element.parent = parent;
     }
     element.update();
@@ -40,27 +64,29 @@ class ElementsFactory extends BaseModule{
    * @param {BaseElement} target
    * @return{BaseElement}
    * */
-  duplicateElement(element, target){
-
+  duplicateElement(element, target) {
     let newElement = this._duplicateElement(element);
     target.insertNewChildAfter(element.getId(), newElement);
     /**
      * @member {TemplateDataStorage} templateDataStorage
      * */
     let templateDataStorage = getEditor().modules.templateDataStorage;
-    templateDataStorage.elementsIds = _.union(templateDataStorage.elementsIds, newElement.getIds());
+    templateDataStorage.elementsIds = _.union(
+      templateDataStorage.elementsIds,
+      newElement.getIds()
+    );
     return newElement;
   }
   /**
    * @param {BaseElement} element
    * */
-  _duplicateElement(element){
+  _duplicateElement(element) {
     /**
      * @member {BaseElement} newElement
      * */
-    let newElement = new (elementsManager.getElementClass(element.getName()));
+    let newElement = new (elementsManager.getElementClass(element.getName()))();
     let newChildren = [];
-    element.children.map((childrenItem)=>{
+    element.children.map(childrenItem => {
       let newChild = this._duplicateElement(childrenItem);
       newChild.setParent(newElement);
       newChildren.push(newChild);
@@ -68,8 +94,10 @@ class ElementsFactory extends BaseModule{
     // newElement.component = new
     newElement.setChildren(newChildren);
     newElement.settings = _.cloneDeep(element.settings);
-    if(element.dynamicContentSettings){
-      newElement.dynamicContentSettings = _.cloneDeep(element.dynamicContentSettings);
+    if (element.dynamicContentSettings) {
+      newElement.dynamicContentSettings = _.cloneDeep(
+        element.dynamicContentSettings
+      );
     }
     newElement.children = newChildren;
     return newElement;

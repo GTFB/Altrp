@@ -1,6 +1,6 @@
 import BaseElement from "./BaseElement";
 import ImageIcon from '../../../svgs/image.svg';
-import {advancedTabControllers} from "../../decorators/register-controllers";
+import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_MEDIA,
   CONTROLLER_DIMENSIONS,
@@ -20,18 +20,18 @@ import {
   CONTROLLER_GRADIENT
 } from "../modules/ControllersManager";
 
-class Image extends BaseElement{
-	static getName(){
-    return'image';
+class Image extends BaseElement {
+  static getName() {
+    return 'image';
   }
-  static getTitle(){
-    return'Image';
+  static getTitle() {
+    return 'Image';
   }
 
-  static getIconComponent(){
+  static getIconComponent() {
     return ImageIcon;
   }
-  static getType(){
+  static getType() {
     return 'widget';
   }
   _registerControls() {
@@ -46,7 +46,14 @@ class Image extends BaseElement{
 
     this.addControl('content_media', {
       type: CONTROLLER_MEDIA,
-      label: 'Choose image',
+      label: 'Image',
+    });
+
+    this.addControl('content_path', {
+      type: CONTROLLER_TEXT,
+      dynamic: false,
+      responsive: false,
+      label: 'Path',
     });
 
     this.endControlSection();
@@ -84,14 +91,14 @@ class Image extends BaseElement{
     this.addControl('position_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
-      default:{
+      default: {
         // top: 0,
         // right: 0,
         // bottom: 0,
         // left: 0,
-        unit:'px'
+        unit: 'px'
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -109,14 +116,14 @@ class Image extends BaseElement{
     this.addControl('position_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default:{
+      default: {
         // top: 0,
         // right: 0,
         // bottom: 0,
         // left: 0,
-        unit:'px'
+        unit: 'px'
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -179,35 +186,35 @@ class Image extends BaseElement{
     });
 
     this.addControl('image_fit_size', {
-        type: CONTROLLER_SELECT,
-        label: 'Image fit',
-        // default: "cover",
-        options:[
-          {
-            'value' : 'fill',
-            'label' : 'Fill',
-          },
-          {
-            'value' : 'contain',
-            'label' : 'Contain',
-          },
-          {
-            'value' : 'cover',
-            'label' : 'Cover',
-          },
-          {
-            'value' : 'none',
-            'label' : 'None',
-          },
-          {
-            'value' : 'scale-down',
-            'label' : 'Scale down',
-          }
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-image{{STATE}}': 'object-fit: {{VALUE}};',
+      type: CONTROLLER_SELECT,
+      label: 'Image fit',
+      // default: "cover",
+      options: [
+        {
+          'value': 'fill',
+          'label': 'Fill',
         },
-      }
+        {
+          'value': 'contain',
+          'label': 'Contain',
+        },
+        {
+          'value': 'cover',
+          'label': 'Cover',
+        },
+        {
+          'value': 'none',
+          'label': 'None',
+        },
+        {
+          'value': 'scale-down',
+          'label': 'Scale down',
+        }
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-image{{STATE}}': 'object-fit: {{VALUE}};',
+      },
+    }
     );
 
     this.addControl('aspect_ratio_off', {
@@ -222,30 +229,30 @@ class Image extends BaseElement{
       type: CONTROLLER_SELECT,
       label: 'Aspect Ratio',
       default: '0',
-      options:[
+      options: [
         {
-          'value' : '0',
-          'label' : 'None',
+          'value': '0',
+          'label': 'None',
         },
         {
-          'value' : '100',
-          'label' : '1:1',
+          'value': '100',
+          'label': '1:1',
         },
         {
-          'value' : '56.25',
-          'label' : '16:9',
+          'value': '56.25',
+          'label': '16:9',
         },
         {
-          'value' : '75',
-          'label' : '4:3',
+          'value': '75',
+          'label': '4:3',
         },
         {
-          'value' : '133.33',
-          'label' : '3:4',
+          'value': '133.33',
+          'label': '3:4',
         },
         {
-          'value' : '177.78',
-          'label' : '9:16',
+          'value': '177.78',
+          'label': '9:16',
         }
       ],
       rules: {
@@ -257,11 +264,11 @@ class Image extends BaseElement{
     this.addControl('height_size', {
       type: CONTROLLER_SLIDER,
       label: 'height',
-      default:{
+      default: {
         size: 100,
         unit: '%',
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -276,11 +283,11 @@ class Image extends BaseElement{
     this.addControl('width_size', {
       type: CONTROLLER_SLIDER,
       label: 'width',
-      default:{
+      default: {
         size: 100,
         unit: '%',
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -300,27 +307,27 @@ class Image extends BaseElement{
     });
 
     this.addControl('image_style_text_shadow', {
-        type: CONTROLLER_FILTERS,
-        label: 'filters',
-        default: {
-          blur: 0,
-          brightness: 100,
-          contrast: 100,
-          saturate: 100,
-          hue: 0,
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-image{{STATE}}': [
-            'filter: blur({{BLUR}}px)  brightness({{BRIGHTNESS}}%) contrast({{CONTRAST}}%) saturate({{SATURATE}}%) hue-rotate({{HUE}}deg);'
+      type: CONTROLLER_FILTERS,
+      label: 'filters',
+      default: {
+        blur: 0,
+        brightness: 100,
+        contrast: 100,
+        saturate: 100,
+        hue: 0,
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-image{{STATE}}': [
+          'filter: blur({{BLUR}}px)  brightness({{BRIGHTNESS}}%) contrast({{CONTRAST}}%) saturate({{SATURATE}}%) hue-rotate({{HUE}}deg);'
         ],
-        },
-      }
+      },
+    }
     );
     this.addControl('image_style_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
       default: 'center',
-      options:[
+      options: [
         {
           icon: 'left',
           value: 'flex-start',
@@ -335,7 +342,7 @@ class Image extends BaseElement{
         },
       ],
       rules: {
-            '{{ELEMENT}} .altrp-image-container{{STATE}}': 'justify-content: {{VALUE}};',
+        '{{ELEMENT}} .altrp-image-container{{STATE}}': 'justify-content: {{VALUE}};',
       },
     });
 
@@ -364,9 +371,9 @@ class Image extends BaseElement{
       default: {
         isWithGradient: false,
         firstColor: "rgba(97,206,112,1)",
-        firstPoint: '0',
+        firstPoint: '100',
         secondColor: "rgba(242,41,91,1)",
-        secondPoint: "100",
+        secondPoint: "0",
         angle: "0",
         value: ""
       },
@@ -548,83 +555,83 @@ class Image extends BaseElement{
     });
 
     this.addControl('border_type', {
-        type: CONTROLLER_SELECT,
-        label: 'Border Type',
-        units:[
-          'px',
-          '%',
-          'vh',
-        ],
-        options:[
-          {
-            'value' : 'none',
-            'label' : 'None',
-          },
-          {
-            'value' : 'solid',
-            'label' : 'Solid',
-          },
-          {
-            'value' : 'double',
-            'label' : 'Double',
-          },
-          {
-            'value' : 'dotted',
-            'label' : 'Dotted',
-          },
-          {
-            'value' : 'dashed',
-            'label' : 'Dashed',
-          },
-          {
-            'value' : 'groove',
-            'label' : 'Groove',
-          },
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-image{{STATE}}': 'border-style: {{VALUE}};',
+      type: CONTROLLER_SELECT,
+      label: 'Border Type',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      options: [
+        {
+          'value': 'none',
+          'label': 'None',
         },
-      }
+        {
+          'value': 'solid',
+          'label': 'Solid',
+        },
+        {
+          'value': 'double',
+          'label': 'Double',
+        },
+        {
+          'value': 'dotted',
+          'label': 'Dotted',
+        },
+        {
+          'value': 'dashed',
+          'label': 'Dashed',
+        },
+        {
+          'value': 'groove',
+          'label': 'Groove',
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-image{{STATE}}': 'border-style: {{VALUE}};',
+      },
+    }
     );
 
     this.addControl('border_width', {
-        type: CONTROLLER_DIMENSIONS,
-        label: 'Border Width',
-        units:[
-          'px',
-          '%',
-          'vh',
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-image{{STATE}}': `border-top-width: {{TOP}}{{UNIT}};
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Width',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-image{{STATE}}': `border-top-width: {{TOP}}{{UNIT}};
             border-right-width: {{RIGHT}}{{UNIT}};
             border-bottom-width: {{BOTTOM}}{{UNIT}};
             border-left-width: {{LEFT}}{{UNIT}};`,
-        },
-      }
+      },
+    }
     );
 
     this.addControl('border_color', {
-        type: CONTROLLER_COLOR,
-        label: 'Border Color',
-        // default: {
-        //   color: "rgb(50,168,82)",
-        //   colorPickedHex: "#32a852",
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-image{{STATE}}': 'border-color: {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_COLOR,
+      label: 'Border Color',
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852",
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-image{{STATE}}': 'border-color: {{COLOR}};',
+      },
+    }
     );
 
     this.addControl('border_radius', {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
-      default:{
+      default: {
         // size: 0,
         unit: 'px',
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -644,15 +651,15 @@ class Image extends BaseElement{
     });
 
     this.addControl('creative_hover_controller', {
-        type: CONTROLLER_CREATIVE_HOVER,
-        label: 'Creative Hover',
-        rules: {
-          '{{ELEMENT}} .altrp-image{{STATE}}': [
-            'transition-duration: {{SIZE}}s;',
-            'animation-duration: {{SIZE}}s'
-          ],
-        },
-      }
+      type: CONTROLLER_CREATIVE_HOVER,
+      label: 'Creative Hover',
+      rules: {
+        '{{ELEMENT}} .altrp-image{{STATE}}': [
+          'transition-duration: {{SIZE}}s;',
+          'animation-duration: {{SIZE}}s'
+        ],
+      },
+    }
     );
 
     this.endControlSection();

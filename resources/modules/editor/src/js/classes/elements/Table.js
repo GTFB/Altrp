@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import TableIcon from "../../../svgs/widget_post.svg";
+import TableIcon from "../../../svgs/table.svg";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_SWITCHER,
@@ -15,7 +15,13 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_NUMBER,
-  CONTROLLER_WYSIWYG, CONTROLLER_QUERY, CONTROLLER_REPEATER, CONTROLLER_FILTERS, CONTROLLER_HEADING, CONTROLLER_MEDIA
+  CONTROLLER_WYSIWYG,
+  CONTROLLER_QUERY,
+  CONTROLLER_REPEATER,
+  CONTROLLER_FILTERS,
+  CONTROLLER_HEADING,
+  CONTROLLER_MEDIA,
+  CONTROLLER_SELECT2
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import Repeater from "../Repeater";
@@ -43,49 +49,49 @@ class Table extends BaseElement {
     });
 
     this.addControl('table_table_header_alignment', {
-        type: CONTROLLER_CHOOSE,
-        label: 'Header alignment',
-        // default: 'center',
-        options:[
-          {
-            icon: 'left',
-            value: 'left',
-          },
-          {
-            icon: 'center',
-            value: 'center',
-          },
-          {
-            icon: 'right',
-            value: 'right',
-          },
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-table-th{{STATE}}': 'text-align: {{VALUE}}',
+      type: CONTROLLER_CHOOSE,
+      label: 'Header alignment',
+      // default: 'center',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
         },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-table-th{{STATE}}': 'text-align: {{VALUE}}',
+      },
     });
 
-      this.addControl('table_table_body_alignment', {
-        type: CONTROLLER_CHOOSE,
-        label: 'Body alignment',
-        // default: 'left',
-        options:[
-          {
-            icon: 'left',
-            value: 'left',
-          },
-          {
-            icon: 'center',
-            value: 'center',
-          },
-          {
-            icon: 'right',
-            value: 'right',
-          },
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-table-td{{STATE}}': 'text-align: {{VALUE}}',
+    this.addControl('table_table_body_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Body alignment',
+      // default: 'left',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
         },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-table-td{{STATE}}': 'text-align: {{VALUE}}',
+      },
     });
 
     this.addControl('table_hover_row', {
@@ -97,8 +103,8 @@ class Table extends BaseElement {
     this.endControlSection();
 
     this.startControlSection("table_data_settings", {
-        tab: TAB_CONTENT,
-        label: "Data table settings"
+      tab: TAB_CONTENT,
+      label: "Data table settings"
     });
 
     this.addControl('table_data_settings_search', {
@@ -108,34 +114,34 @@ class Table extends BaseElement {
     });
 
     this.addControl('table_data_settings_ordering', {
-        type: CONTROLLER_SWITCHER,
-        label: 'Ordering',
-        default: true
+      type: CONTROLLER_SWITCHER,
+      label: 'Ordering',
+      default: true
     });
 
     this.addControl('table_data_settings_pagination', {
-        type: CONTROLLER_SWITCHER,
-        label: 'Pagination',
-        default: true
+      type: CONTROLLER_SWITCHER,
+      label: 'Pagination',
+      default: true
     });
 
     this.addControl('table_data_settings_info', {
-        type: CONTROLLER_SWITCHER,
-        label: 'Info',
-        default: true
+      type: CONTROLLER_SWITCHER,
+      label: 'Info',
+      default: true
     });
 
     this.endControlSection();
 
     this.startControlSection("table_content_datasource", {
-        tab: TAB_CONTENT,
-        label: "Data Source"
+      tab: TAB_CONTENT,
+      label: "Data Source"
     });
 
     this.addControl("choose_datasource", {
       type: CONTROLLER_SELECT,
       label: 'Choose Data Source',
-      options:[
+      options: [
         {
           label: 'Query',
           value: 'query'
@@ -199,29 +205,42 @@ class Table extends BaseElement {
     });
     let repeater = new Repeater();
 
-    repeater.addControl('accessor',{
+    repeater.addControl('accessor', {
       label: 'Column Name',
       dynamic: false,
     });
-    repeater.addControl('column_name',{
+    repeater.addControl('column_name', {
       label: 'Column Heading',
       dynamic: false,
     });
-    repeater.addControl('group_by',{
+    repeater.addControl('group_by', {
       type: CONTROLLER_SWITCHER,
       default: false,
       label: 'Group by',
     });
-    repeater.addControl('column_link',{
+
+    repeater.addControl('column_template', {
+      type: CONTROLLER_SELECT2,
+      label: 'Card Template',
+      default: false,
+      prefetch_options: true,
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options?template_type=card&value=guid',
+      nullable: true,
+    });
+
+    repeater.addControl('column_link', {
       label: 'Link Template',
       dynamic: false,
       description: '/path/:id',
     });
-    repeater.addControl('column_width',{
+
+    repeater.addControl('column_width', {
       label: 'Column Width',
       dynamic: false,
       type: CONTROLLER_NUMBER,
     });
+
     repeater.addControl('column_header_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Header alignment',
@@ -241,6 +260,7 @@ class Table extends BaseElement {
         },
       ]
     });
+
     repeater.addControl('column_body_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Body alignment',
@@ -260,15 +280,126 @@ class Table extends BaseElement {
         },
       ]
     });
+
     repeater.addControl('column_is_sorted', {
       type: CONTROLLER_SWITCHER,
       label: 'Is Sorted',
       default: false
     });
+
     repeater.addControl('column_is_filtered', {
       type: CONTROLLER_SWITCHER,
-      label: 'Add Filter Input',
+      label: 'Add Filter',
       default: false
+    });
+
+    repeater.addControl('column_filter_type', {
+      type: CONTROLLER_SELECT,
+      label: 'Filter Type',
+      nullable: true,
+      options: [
+        {
+          label: 'Text',
+          value: 'text',
+        },
+        {
+          label: 'Min-Max',
+          value: 'min_max',
+        },
+        {
+          label: 'Select',
+          value: 'select',
+        },
+        {
+          label: 'Slider',
+          value: 'slider',
+        },
+      ],
+      responsive: false,
+      conditions: {
+        'column_is_filtered': true,
+      },
+    });
+
+    repeater.addControl('filter_placeholder', {
+      label: 'Placeholder',
+      conditions: {
+        'column_is_filtered': true,
+        'column_filter_type': 'text',
+      },
+      dynamic: false,
+      responsive: false,
+      description: 'Search {{count}} records...',
+    });
+
+    repeater.addControl('filter_min_placeholder', {
+      label: 'MinPlaceholder',
+      conditions: {
+        'column_is_filtered': true,
+        'column_filter_type': 'min_max',
+      },
+      dynamic: false,
+      responsive: false,
+      description: 'Min ({{min}})',
+    });
+
+
+    repeater.addControl('filter_max_placeholder', {
+      label: 'Max Placeholder',
+      conditions: {
+        'column_is_filtered': true,
+        'column_filter_type': 'min_max',
+      },
+      dynamic: false,
+      responsive: false,
+      description: 'Min ({{max}})',
+    });
+
+    repeater.addControl('filter_button_text', {
+      label: 'Placeholder',
+      conditions: {
+        'column_is_filtered': true,
+        'column_filter_type': 'slider',
+      },
+      dynamic: false,
+      responsive: false,
+      description: 'Off',
+    });
+
+    repeater.addControl('aggregate', {
+      type: CONTROLLER_SELECT,
+      label: 'Aggregate',
+      nullable: true,
+      options: [
+        {
+          label: 'Average',
+          value: 'average',
+        },
+        {
+          label: 'Sum',
+          value: 'sum',
+        },
+        {
+          label: 'Count',
+          value: 'count',
+        },
+        {
+          label: 'Unique Count',
+          value: 'uniqueCount',
+        },
+      ],
+      responsive: false,
+    });
+
+    repeater.addControl('aggregate_template', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Aggregate Template',
+      responsive: false,
+      dynamic: false,
+      conditions:{
+        'aggregate!' : '',
+      },
+      description: '{{value}} Unique Names',
     });
 
     repeater.addControl('column_is_editable', {
@@ -313,28 +444,28 @@ class Table extends BaseElement {
 
     const actionsRepeater = new Repeater();
 
-    actionsRepeater.addControl('icon',{
+    actionsRepeater.addControl('icon', {
       type: CONTROLLER_MEDIA,
       label: 'Icon',
     });
 
-    actionsRepeater.addControl('text',{
+    actionsRepeater.addControl('text', {
       type: CONTROLLER_TEXTAREA,
       dynamic: false,
       label: 'Content',
     });
 
-    actionsRepeater.addControl('link',{
+    actionsRepeater.addControl('link', {
       type: CONTROLLER_TEXT,
       dynamic: false,
       label: 'Link',
     });
 
-    actionsRepeater.addControl('type',{
+    actionsRepeater.addControl('type', {
       type: CONTROLLER_SELECT,
       label: 'Type',
       dynamic: false,
-      options:[
+      options: [
         {
           label: 'Inner Link',
           value: 'Link',
@@ -364,7 +495,7 @@ class Table extends BaseElement {
     actionsRepeater.addControl('size', {
       type: CONTROLLER_SLIDER,
       label: 'Size',
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -374,7 +505,7 @@ class Table extends BaseElement {
     actionsRepeater.addControl('spacing', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Spacing',
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -393,16 +524,16 @@ class Table extends BaseElement {
       fields: repeater.getControls(),
     });
 
-    let additionalTableHeadRowsRepeater =  new Repeater();
+    let additionalTableHeadRowsRepeater = new Repeater();
     let additionalTableHeadCellsRepeater = new Repeater();
-    additionalTableHeadCellsRepeater.addControl('title',{
+    additionalTableHeadCellsRepeater.addControl('title', {
       label: 'Title',
     });
-    additionalTableHeadCellsRepeater.addControl('colspan',{
+    additionalTableHeadCellsRepeater.addControl('colspan', {
       label: 'Colspan',
       type: CONTROLLER_NUMBER
     });
-    additionalTableHeadCellsRepeater.addControl('rowspan',{
+    additionalTableHeadCellsRepeater.addControl('rowspan', {
       label: 'Rowpan',
       type: CONTROLLER_NUMBER
     });
@@ -427,15 +558,15 @@ class Table extends BaseElement {
       label: "Group Settings",
     });
 
-    this.addControl('group_by_column_name',{
+    this.addControl('group_by_column_name', {
       label: 'Group by Column Name',
     });
 
-    this.addControl('group_default_text',{
+    this.addControl('group_default_text', {
       label: 'Group Default Text',
     });
 
-    this.addControl('group_collapsing',{
+    this.addControl('group_collapsing', {
       type: CONTROLLER_SWITCHER,
       default: false,
       label: 'Group Collapsing',
@@ -450,14 +581,14 @@ class Table extends BaseElement {
     //   label: 'Collapsed Default',
     // });
 
-    this.addControl('collapsed_icon',{
+    this.addControl('collapsed_icon', {
       type: CONTROLLER_MEDIA,
       conditions: {
         'group_collapsing': true,
       },
       label: 'Collapsed Icon',
     });
-    this.addControl('expanded_icon',{
+    this.addControl('expanded_icon', {
       type: CONTROLLER_MEDIA,
       conditions: {
         'group_collapsing': true,
@@ -524,6 +655,190 @@ class Table extends BaseElement {
      * Настройки для футера таблицы END
      */
 
+    /**
+     * Настройки для футера таблицы
+     */
+
+    this.startControlSection("deep_customization", {
+      label: "Deep Customization"
+    });
+
+    this.addControl('inner_page_size', {
+      type: CONTROLLER_NUMBER,
+      label: 'Page Size',
+      default: 0
+    });
+
+    this.addControl('store_state', {
+      type: CONTROLLER_SWITCHER,
+      dynamic: false,
+      label: 'Store State',
+    });
+
+    this.addControl('loading_text', {
+      type: CONTROLLER_TEXTAREA,
+      default: 'Loading...',
+      label: 'Loading Text',
+    });
+
+    this.addControl('inner_page_count_options', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Counts',
+    });
+
+    this.addControl('inner_sort', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Sort',
+      default: false
+    });
+
+    this.addControl('global_filter', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Global Filter',
+      default: false
+    });
+
+    this.addControl('global_filter_label', {
+      type: CONTROLLER_TEXTAREA,
+      dynamic: false,
+      label: 'Label',
+      conditions: {
+        global_filter: true,
+      },
+    });
+
+    this.addControl('global_filter_placeholder', {
+      type: CONTROLLER_TEXTAREA,
+      dynamic: false,
+      label: 'Placeholder',
+      conditions: {
+        global_filter: true,
+      },
+      description: '{{counts}} records ...',
+    });
+
+    this.addControl('row_select', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Row Select',
+      default: false,
+    });
+
+    this.addControl('row_select_width', {
+      type: CONTROLLER_NUMBER,
+      label: 'Width',
+      default: 50,
+      conditions: {
+        row_select: true,
+      },
+    });
+
+    this.addControl('row_select_all', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Select All',
+      default: false,
+      conditions: {
+        row_select: true,
+      },
+    });
+
+
+    this.addControl('selected_storage', {
+      label: 'Selected Storage',
+      dynamic: false,
+      responsive: false,
+      conditions: {
+        row_select: true,
+      },
+    });
+
+    this.addControl('ids_storage', {
+      label: 'Selected IDs Storage',
+      dynamic: false,
+      responsive: false,
+      conditions: {
+        row_select: true,
+      },
+    });
+
+    this.addControl('hide_columns', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hide Columns',
+      default: false,
+    });
+
+    this.addControl('resize_columns', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Resize',
+      prefixClass: 'table-resize_',
+      default: false,
+    });
+
+    this.addControl('replace_rows', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Replacing Rows',
+      default: false,
+    });
+
+    this.addControl('replace_text', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Text',
+      condition:{
+        replace_rows: true,
+      },
+    });
+
+    this.addControl('replace_width', {
+      type: CONTROLLER_NUMBER,
+      label: 'Width',
+      default: 100,
+      condition:{
+        replace_rows: true,
+      },
+    });
+
+    this.addControl('virtualized_rows', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Virtualized Rows',
+      default: false,
+      prefixClass: 'table-virtualized_'
+    });
+
+    this.addControl('virtualized_height', {
+      type: CONTROLLER_NUMBER,
+      label: 'Height',
+      conditions:{
+        virtualized_rows: true,
+      },
+    });
+    this.addControl('item_size', {
+      type: CONTROLLER_NUMBER,
+      label: 'Item Size',
+      conditions:{
+        virtualized_rows: true,
+      },
+    });
+
+    this.addControl('row_expand', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Row Expand',
+      default: false,
+    });
+
+    this.addControl('card_template', {
+      type: CONTROLLER_SELECT2,
+      label: 'Card Template',
+      default: false,
+      prefetch_options: true,
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options?template_type=card&value=guid',
+      nullable: true,
+      conditions: {
+        row_expand: true,
+      },
+    });
+
+    this.endControlSection();
+
     this.startControlSection("filter_style_table", {
       tab: TAB_STYLE,
       label: "Filter"
@@ -556,14 +871,14 @@ class Table extends BaseElement {
     this.addControl('filter_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Input Padding',
-      default:{
+      default: {
         top: 0,
         right: 0,
         bottom: 0,
         left: 0,
-        unit:'px'
+        unit: 'px'
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -580,14 +895,14 @@ class Table extends BaseElement {
     this.addControl('label_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Label Padding',
-      default:{
+      default: {
         top: 0,
         right: 0,
         bottom: 0,
         left: 0,
-        unit:'px'
+        unit: 'px'
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -604,29 +919,29 @@ class Table extends BaseElement {
 
     this.addControl(
       'filter_style_typographic', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 0.8,
-          spacing: 0,
-          size: 14,
-          weight: 700,
-          family: 'Open Sans',
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-field{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 0.8,
+        spacing: 0,
+        size: 14,
+        weight: 700,
+        family: 'Open Sans',
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-field{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.addControl("filter_style_table_border_type", {
@@ -693,29 +1008,29 @@ class Table extends BaseElement {
     });
 
     this.addControl('filter_style_border_shadow', {
-        type: CONTROLLER_FILTERS,
-        label: 'filters',
-        rules: {
-          '{{ELEMENT}} .altrp-image{{STATE}}': [
-            'filter: blur({{BLUR}}px);',
-            'filter: brightness({{BRIGHTNESS}}%);',
-            'filter: contrast({{CONTRAST}}%);',
-            'filter: saturate({{SATURATION}}%);',
-            'filter: hue-rotate({{HUE}}deg);;'
-          ],
-        },
-      }
+      type: CONTROLLER_FILTERS,
+      label: 'filters',
+      rules: {
+        '{{ELEMENT}} .altrp-image{{STATE}}': [
+          'filter: blur({{BLUR}}px);',
+          'filter: brightness({{BRIGHTNESS}}%);',
+          'filter: contrast({{CONTRAST}}%);',
+          'filter: saturate({{SATURATION}}%);',
+          'filter: hue-rotate({{HUE}}deg);;'
+        ],
+      },
+    }
     );
     this.endControlSection();
 
     this.startControlSection("table_style_table", {
-        tab: TAB_STYLE,
-        label: "Table"
+      tab: TAB_STYLE,
+      label: "Table"
     });
 
     this.addControl('table_style_table_striple_style', {
-        type: CONTROLLER_SWITCHER,
-        label: 'Striple style'
+      type: CONTROLLER_SWITCHER,
+      label: 'Striple style'
     });
     this.addControl('table_transpose', {
       type: CONTROLLER_SWITCHER,
@@ -802,20 +1117,20 @@ class Table extends BaseElement {
     this.endControlSection();
 
     this.startControlSection("table_style_pagination", {
-        tab: TAB_STYLE,
-        label: "Pagination"
+      tab: TAB_STYLE,
+      label: "Pagination"
     });
 
     this.addControl("table_style_pagination_buttons_text_color", {
-        type: CONTROLLER_COLOR,
-        label: "Buttons text color",
-        default: {
-          color: "",
-          colorPickedHex: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'color: {{COLOR}}'
-        }
+      type: CONTROLLER_COLOR,
+      label: "Buttons text color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'color: {{COLOR}}'
+      }
     });
 
     this.addControl("table_style_pagination_buttons_background_color", {
@@ -828,29 +1143,29 @@ class Table extends BaseElement {
       rules: {
         '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'background-color: {{COLOR}}'
       }
-  });
+    });
 
-  this.addControl('table_style_pagination_padding_buttons', {
-    type: CONTROLLER_DIMENSIONS,
-    label: 'buttons Padding',
-    default:{
-      top: 10,
-      right: 10,
-      bottom: 10,
-      left: 10,
-      unit:'px'
-    },
-    units:[
-      'px',
-      '%',
-      'vh',
-    ],
-    rules: {
-      '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-    },
-  });
+    this.addControl('table_style_pagination_padding_buttons', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'buttons Padding',
+      default: {
+        top: 10,
+        right: 10,
+        bottom: 10,
+        left: 10,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    });
 
-  this.addControl("table_style_pagination_count_text_color", {
+    this.addControl("table_style_pagination_count_text_color", {
       type: CONTROLLER_COLOR,
       label: "Count text color",
       default: {
@@ -860,45 +1175,45 @@ class Table extends BaseElement {
       rules: {
         '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'color: {{COLOR}}'
       }
-  });
+    });
 
-  this.addControl("table_style_pagination_count_background_color", {
-    type: CONTROLLER_COLOR,
-    label: "Count background color",
-    default: {
-      color: "",
-      colorPickedHex: ""
-    },
-    rules: {
-      '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'background-color: {{COLOR}}'
-    }
-  });
+    this.addControl("table_style_pagination_count_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Count background color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'background-color: {{COLOR}}'
+      }
+    });
 
-  this.addControl('table_style_pagination_padding_count', {
-    type: CONTROLLER_DIMENSIONS,
-    label: 'count Padding',
-    default:{
-      top: 10,
-      right: 10,
-      bottom: 10,
-      left: 10,
-      unit:'px'
-    },
-    units:[
-      'px',
-      '%',
-      'vh',
-    ],
-    rules: {
-      '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-    },
-  });
+    this.addControl('table_style_pagination_padding_count', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'count Padding',
+      default: {
+        top: 10,
+        right: 10,
+        bottom: 10,
+        left: 10,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    });
 
-  this.addControl(
-    'table_style_pagination_typographic', {
+    this.addControl(
+      'table_style_pagination_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      default:{
+      default: {
         lineHeight: 0.8,
         spacing: 0,
         size: 16,
@@ -919,89 +1234,89 @@ class Table extends BaseElement {
         ],
       },
     }
-  );
+    );
 
-  this.addControl("table_style_pagination_border_type", {
-    type: CONTROLLER_SELECT,
-    label: "Border type",
-    units: ["px", "%", "vh"],
-    options: [
-      {
-        value: "none",
-        label: "None"
-      },
-      {
-        value: "solid",
-        label: "Solid"
-      },
-      {
-        value: "double",
-        label: "Double"
-      },
-      {
-        value: "dotted",
-        label: "Dotted"
-      },
-      {
-        value: "dashed",
-        label: "Dashed"
-      },
-      {
-        value: "groove",
-        label: "Groove"
+    this.addControl("table_style_pagination_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Border type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-style: {{VALUE}};',
       }
-    ],
-    rules: {
-      '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-style: {{VALUE}};',
-    }
-  });
+    });
 
-  this.addControl("table_style_pagination_border_width", {
-    type: CONTROLLER_DIMENSIONS,
-    label: "Border width",
-    units: ["px", "%", "vh"],
-    rules: {
-      '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-    }
-  });
+    this.addControl("table_style_pagination_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      }
+    });
 
-  this.addControl("table_style_pagination_border_color", {
-    type: CONTROLLER_COLOR,
-    label: "Border color",
-    default: {
-      color: "",
-      colorPickedHex: ""
-    },
-    rules: {
-      '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-color: {{COLOR}};',
-    }
-  });
+    this.addControl("table_style_pagination_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Border color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-color: {{COLOR}};',
+      }
+    });
 
-  this.addControl('table_style_pagination_padding', {
-    type: CONTROLLER_DIMENSIONS,
-    label: 'Padding',
-    default:{
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-      unit:'px'
-    },
-    units:[
-      'px',
-      '%',
-      'vh',
-    ],
-    rules: {
-      '{{ELEMENT}} .altrp-pagination{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-    },
-  });
+    this.addControl('table_style_pagination_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    });
 
-  this.endControlSection();
+    this.endControlSection();
 
     this.startControlSection("table_style_header", {
-        tab: TAB_STYLE,
-        label: "Header"
+      tab: TAB_STYLE,
+      label: "Header"
     });
 
     this.addControl("table_style_header_background", {
@@ -1017,15 +1332,15 @@ class Table extends BaseElement {
     });
 
     this.addControl("table_style_header_text_color", {
-        type: CONTROLLER_COLOR,
-        label: "Text color",
-        default: {
-          color: "",
-          colorPickedHex: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-table-th{{STATE}}': 'color: {{COLOR}}'
-        }
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-table-th{{STATE}}': 'color: {{COLOR}}'
+      }
     });
 
     this.addControl('table_style_header_font', {
@@ -1114,14 +1429,14 @@ class Table extends BaseElement {
     this.addControl('table_style_header_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default:{
+      default: {
         // top: 0,
         // right: 0,
         // bottom: 0,
         // left: 0,
-        unit:'px'
+        unit: 'px'
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -1134,8 +1449,8 @@ class Table extends BaseElement {
     this.endControlSection();
 
     this.startControlSection("table_style_body", {
-        tab: TAB_STYLE,
-        label: "Body"
+      tab: TAB_STYLE,
+      label: "Body"
     });
 
     this.addControl("table_style_body_border_type", {
@@ -1199,14 +1514,14 @@ class Table extends BaseElement {
     this.addControl('table_style_body_cell_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Cell padding',
-      default:{
+      default: {
         // top: 0,
         // right: 0,
         // bottom: 0,
         // left: 0,
-        unit:'px'
+        unit: 'px'
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -1290,14 +1605,14 @@ class Table extends BaseElement {
     this.addControl('table_style_group_cell_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Cell padding',
-      default:{
+      default: {
         top: 0,
         right: 0,
         bottom: 0,
         left: 0,
-        unit:'px'
+        unit: 'px'
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -1481,14 +1796,14 @@ class Table extends BaseElement {
     this.addControl('table_style_footer_cell_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Cell padding',
-      default:{
+      default: {
         top: 0,
         right: 0,
         bottom: 0,
         left: 0,
-        unit:'px'
+        unit: 'px'
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',

@@ -12,7 +12,7 @@ class Import extends Component {
    */
   onSubmit  = async e => {
     e.preventDefault();
-    let res = await this.resource.postFiles(this.inputFile.current.files, 'application/x-zip-compressed');
+    let res = await this.resource.postFiles(this.inputFile.current.files, 'application/zip,application/x-zip,application/x-zip-compressed');
     if( res.success ){
       await alert('Success');
       window.location.href = '/admin/dashboard';

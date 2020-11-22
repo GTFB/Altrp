@@ -1,3 +1,4 @@
+import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import DynamicIcon from '../../../svgs/dynamic.svg'
@@ -21,8 +22,19 @@ class TextareaController extends Component {
     };
     this.dynamicButton = React.createRef();
   }
+  /**
+   * Потеря фокуса обновляет элемент
+   * @param e
+   */
+  onBlur = e =>{
+    this._changeValue(e.target.value)
+  };
+  /**
+   * Изменение больше не обновляет элемент
+   * @param e
+   */
   changeValue(e) {
-    this._changeValue(e.target.value);
+    this._changeValue(e.target.value, false);
   }
   getDefaultValue() {
     return '';
@@ -31,7 +43,8 @@ class TextareaController extends Component {
     if (this.state.show === false) {
       return '';
     }
-    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    // let value = this.getSettings(this.props.controlId) || this.getDefaultValue(); todo: удалить если будет работать
+    let value = this.state.value || this.getDefaultValue();
     return <div className="controller-container controller-container_textarea">
       <div className="controller-container__label">
         {this.props.label}
@@ -55,7 +68,9 @@ class TextareaController extends Component {
             iconsManager().renderIcon('times')
           }
         </div>
-      </div> : <textarea className="controller-container__textarea" onChange={this.changeValue} value={value || this.state.value} />
+      </div> : <textarea className="controller-container__textarea"
+                         onBlur={this.onBlur}
+                         onChange={this.changeValue} value={value} />
       }
       {this.props.description
           ? <div className="controller-container__description"
@@ -71,4 +86,4 @@ function mapStateToProps(state) {
     currentScreen: state.currentScreen
   };
 }
-export default connect(mapStateToProps)(TextareaController);
+export default connect(controllerMapStateToProps)(TextareaController);

@@ -31,6 +31,8 @@ class AltrpPortal extends Component {
 
     if(this.props.childrenRef) {
       let boundingRect = this.props.childrenRef.getBoundingClientRect();
+      // let positionType = this.props.position;
+
       position = {
         left: boundingRect.x,
         top: boundingRect.height + boundingRect.top,

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import AltrpLink from "../../altrp-link/AltrpLink";
+import AltrpImage from "../../altrp-image/AltrpImage";
 
 class DropdownSub extends Component {
   constructor(props) {
@@ -47,25 +48,36 @@ class DropdownSub extends Component {
   render() {
     return (
       <div className="altrp-nav-menu-dropdown-sub">
-        <div className="altrp-nav-menu-li-link altrp-nav-menu-li-link-label altrp-nav-menu-dropdown-sub-label" onClick={this.changeShow}>
-          {
-            this.props.li.label_repeater_menu_layout
-          }
+        <div className="altrp-nav-menu-li-link-dropdown altrp-nav-menu-dropdown-sub-label" onClick={this.changeShow}>
+          <span>
+            {
+              this.props.li.label_repeater_menu_layout
+            }
+          </span>
+          <AltrpImage
+            image={this.props.settings.chevron_dropdown_menu_section}
+            default={{
+              assetType: "icon",
+              name: 'chevron',
+              iconComponent: iconsManager.renderIcon('chevron')
+            }}
+            className={"altrp-nav-menu-li-link-chevron-dropdown" + (this.state.show ? " altrp-nav-menu-li-link-active-chevron-dropdown" : "")}
+          />
         </div>
-        <div className={"altrp-nav-menu-dropdown-sub-content altrp-nav-menu-ul-wrapper altrp-nav-menu-dropdown-content" + (!this.state.show ? " altrp-nav-menu-dropdown-content-hide" : " altrp-nav-menu-dropdown-content-show")}>
-          <ul className="altrp-nav-menu-ul">
+        <div className={"altrp-nav-menu-dropdown-sub-content altrp-nav-menu-ul-wrapper-dropdown altrp-nav-menu-dropdown-content" + (!this.state.show ? " altrp-nav-menu-dropdown-content-hide" : " altrp-nav-menu-dropdown-content-show")}>
+          <ul className="altrp-nav-menu-ul-dropdown">
             {
               this.state.list.map((li, idx) => {
-                return <li className="altrp-nav-menu-li" key={idx}>
+                return <li className="altrp-nav-menu-li-dropdown" key={idx}>
                   {!li.id_repeater_menu_layout ? (
                     <React.Fragment>
-                      <AltrpLink link={li.link_repeater_menu_layout} className="altrp-nav-menu-li-link altrp-nav-menu-li-link-label">
+                      <AltrpLink link={li.link_repeater_menu_layout} className="altrp-nav-menu-li-link-dropdown altrp-nav-menu-li-link-label-dropdown">
                         {
                           li.label_repeater_menu_layout
                         }
                       </AltrpLink>
                       {
-                        this.props.settings.divider_switch_dropdown_menu_section ? <div className="altrp-nav-menu-dropdown-content-divider"/> : ""
+                        this.props.settings.divider_switch_dropdown_menu_section ? <div className="altrp-nav-menu-dropdown-s-content-divider"/> : ""
                       }
                     </React.Fragment>
                   ) : (

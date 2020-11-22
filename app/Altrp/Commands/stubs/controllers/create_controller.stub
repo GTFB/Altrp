@@ -44,7 +44,15 @@ class DummyClass extends ApiController
      */
     public function store({{storeRequest}} $request)
     {
-        ${{crudNameSingular}} = new {{modelName}}($request->all());
+        $data = $request->all();
+        if ($fileInfo = $this->hasFileInRequest($request)) {
+            $medias = $this->saveMedias($request, $fileInfo['relation']);
+            foreach ($medias as $media) {
+                $data[$fileInfo['foreign_key']] = $media->id;
+            }
+        }
+
+        ${{crudNameSingular}} = new {{modelName}}($data);
 
         if(${{crudNameSingular}}->save()){
             return response()->json(['success'=>true, 'data'=>${{crudNameSingular}}], 200, [], JSON_UNESCAPED_UNICODE);
@@ -89,13 +97,21 @@ class DummyClass extends ApiController
      */
     public function update({{updateRequest}} $request, $id)
     {
+        $data = $request->all();
+        if ($fileInfo = $this->hasFileInRequest($request)) {
+            $medias = $this->saveMedias($request, $fileInfo['relation']);
+            foreach ($medias as $media) {
+                $data[$fileInfo['foreign_key']] = $media->id;
+            }
+        }
+
         ${{crudNameSingular}} = {{modelName}}::find($id);
 
         if(! ${{crudNameSingular}}) {
             return response()->json(['success'=>false, 'message' => trans("responses.not_found.{{crudNameSingular}}")], 404, [], JSON_UNESCAPED_UNICODE);
         }
 
-        $result = ${{crudNameSingular}}->update($request->all());
+        $result = ${{crudNameSingular}}->update($data);
 
         if($result){
             return response()->json(['success'=>true], 200, [], JSON_UNESCAPED_UNICODE);

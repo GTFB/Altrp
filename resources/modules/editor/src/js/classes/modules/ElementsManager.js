@@ -40,8 +40,14 @@ import MapConstructor from "../elements/MapConstructor";
 import Diagram from "../elements/Diagram";
 import Dashboards from "../elements/Dashboards";
 import PostsWidget from "../../components/widgets/PostsWidget";
+import IconWidget from "../../components/widgets/IconWidget";
+import Icon from "../elements/Icon";
 import Tour from "../elements/Tour";
 import TourGuide from "../../components/widgets/TourGuide";
+import OffcanvasWidget from "../../components/widgets/OffcanvasWidget";
+import Offcanvas from "../elements/Offcanvas";
+import ExportPanel from "../elements/ExportPanel";
+import ExportPanelWidget from "../../components/widgets/ExportPanelWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -50,26 +56,29 @@ export default class ElementsManger {
     //список элементов
     this.elements[RootElement.getName()] = RootElement;
     this.elements[HeadingElement.getName()] = HeadingElement;
+    this.elements[Image.getName()] = Image;
+    this.elements[Button.getName()] = Button;
+    this.elements[Icon.getName()] = Icon;
+    this.elements[Text.getName()] = Text;
+    this.elements[Divider.getName()] = Divider;
     this.elements[Column.getName()] = Column;
     this.elements[Section.getName()] = Section;
-    this.elements[Button.getName()] = Button;
+    this.elements[List.getName()] = List;
+    this.elements[Nav.getName()] = Nav;
     this.elements[Input.getName()] = Input;
-    this.elements[Text.getName()] = Text;
-    this.elements[Image.getName()] = Image;
     this.elements[Table.getName()] = Table;
     this.elements[Posts.getName()] = Posts;
-    this.elements[Nav.getName()] = Nav;
-    this.elements[Divider.getName()] = Divider;
-    this.elements[Tabs.getName()] = Tabs;
     this.elements[Poster.getName()] = Poster;
-    this.elements[List.getName()] = List;
+    this.elements[Tabs.getName()] = Tabs;
     this.elements[Accordion.getName()] = Accordion;
-    this.elements[Carousel.getName()] = Carousel;
     this.elements[Map.getName()] = Map;
     this.elements[MapConstructor.getName()] = MapConstructor;
     this.elements[Diagram.getName()] = Diagram;
     this.elements[Dashboards.getName()] = Dashboards;
+    this.elements[Carousel.getName()] = Carousel;
     this.elements[Tour.getName()] = Tour;
+    this.elements[Offcanvas.getName()] = Offcanvas;
+    this.elements[ExportPanel.getName()] = ExportPanel;
     //список компонентов
     this.components = {};
     this.components[RootElement.getName()] = RootComponent;
@@ -93,7 +102,10 @@ export default class ElementsManger {
     this.components[MapConstructor.getName()] = MapConstructorWidget;
     this.components[Diagram.getName()] = DiagramWidget;
     this.components[Dashboards.getName()] = DashboardsWidget;
+    this.components[Icon.getName()] = IconWidget;
     this.components[Tour.getName()] = TourGuide;
+    this.components[Offcanvas.getName()] = OffcanvasWidget;
+    this.components[ExportPanel.getName()] = ExportPanelWidget;
   }
 
   getElements() {

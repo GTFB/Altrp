@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import DashIcon from "../../../svgs/dashboard.svg";
+import DashIcon from "../../../svgs/archive.svg";
 import {
   advancedTabControllers
 } from "../../decorators/register-controllers";
@@ -22,7 +22,7 @@ class Dashboards extends BaseElement {
     return "dashboards";
   }
   static getTitle() {
-    return "Dashboards";
+    return "Dashboard";
   }
   static getIconComponent() {
     return DashIcon;
@@ -40,14 +40,17 @@ class Dashboards extends BaseElement {
       label: 'Data type'
     });
 
+    this.addControl('showButton', {
+      type: CONTROLLER_SWITCHER,
+      label: "Show add button?",
+      default: true,
+    });
+
     this.addControl('dataSource', {
       type: CONTROLLER_SWITCHER,
       label: "Get data by data source?",
       default: false,
     });
-
-    console.log('Settings', this);
-
 
     let repeater = new Repeater();
 
@@ -84,6 +87,11 @@ class Dashboards extends BaseElement {
       type: CONTROLLER_REPEATER,
       default: [],
       fields: repeater.getControls(),
+    });
+
+    this.addControl("filter_datasource", {
+      type: CONTROLLER_SQL_PARAMS,
+      default: [],
     });
 
     this.endControlSection();

@@ -80,9 +80,10 @@ class AltrpForm {
    * Проверка полей перед отправкой
    * @param {int |  null} modelID
    * @param {string} submitText
+   * @param {{} | null} data
    * @return {boolean}
    */
-  async submit(modelID = null, submitText = ''){
+  async submit(modelID = null, submitText = '', data = null){
     let success = true;
     if(submitText){
       let confirmed =  await confirm(submitText);
@@ -98,7 +99,7 @@ class AltrpForm {
     if(success){
       switch (this.method){
         case 'POST':{
-          let res =  await this.resource.post(this.getData());
+          let res =  await this.resource.post(_.assign(this.getData(), data));
           if((this.modelName === 'login') && this.options.afterLoginRedirect){
             document.location.replace(this.options.afterLoginRedirect);
             return res;
@@ -119,11 +120,11 @@ class AltrpForm {
         case 'PUT':{
           let res;
           if(modelID || this.options.customRoute){
-            res =  await this.resource.put(modelID, this.getData());
+            res =  await this.resource.put(modelID, _.assign(this.getData(), data));
             import('./modules/ModelsManager').then(modelsManager=>{
               modelsManager.default.updateModelWithData(this.modelName, modelID, this.getData());
             });
-            this.clearInputs();
+            // this.clearInputs();
             this.updateResponseStorage(res);
             return res;
           }
@@ -133,21 +134,22 @@ class AltrpForm {
         case 'GET':{
           // return await alert(JSON.stringify(this.getData()));
           let res;
-          res =  await this.resource.getQueried(this.getData());
+          res =  await this.resource.getQueried(_.assign(this.getData(), data));
           this.updateResponseStorage(res);
           return res;
         }
         case 'DELETE':{
           if(modelID || this.options.customRoute){
             // return await await alert('Удаление!');
-            return await this.resource.delete(modelID);
+            return await this.resource.delete(modelID, _.assign(this.getData(), data));
           }
           console.error('Не удалось получить ИД модели для удаления или customRoute!');
         }
         break;
       }
     } else {
-      return await alert('Пожалуйста, заполните все обязательные поля');
+      await alert('Пожалуйста, заполните все обязательные поля');
+      return{success: false};
     }
   }
 

@@ -76,6 +76,15 @@ class FrontElement {
    * @return {FrontElement}
    */
   findClosestByType(type){
+    if(type === 'widget' && (this.getType() !== 'widget')){
+      return null;
+    }
+    if(type === 'column' && (['root-element', 'section', ].indexOf(this.getType()) !== -1)){
+      return null;
+    }
+    if(type === 'section' && (this.getType() === 'root-element')){
+      return null;
+    }
     if (this.getType() === type){
       return this;
     }
@@ -242,6 +251,10 @@ class FrontElement {
       /**
        * @member {Styles} stylesModule
        * */
+      // console.log(this.id);
+      // console.log(this.getId());
+      // console.log(this.getName());
+      // console.log(this.getType());
       stylesModule.addElementStyles(this.getId(), this.getStringifyStyles());
     });
   }
@@ -335,7 +348,7 @@ class FrontElement {
   }
 
   /**
-   * Возвращает css-селектор в виду строки
+   * Возвращает css-селектор в виде строки
    * @return {string}
    */
   getSelector(){

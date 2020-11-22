@@ -1,7 +1,4 @@
-import DataSourceDashboards from './DataSourceDashboards.js';
-import { connect } from "react-redux";
-import { editElement } from '../../store/altrp-dashboard/actions';
-
+import React, { Component, Suspense } from "react";
 import ChooseWidget from './ChooseWidget';
 import domtoimage from "dom-to-image";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -15,15 +12,19 @@ class WidgetData extends Component {
 
       constructor(props) {
             super(props);
-            this.state = { settings: props.settings, el: props.el };
+            let element = _.cloneDeep(props.editElement, []);
+            console.log(element);
+            this.state = { el: element };
       }
 
       componentDidUpdate(prevProps, prevState, snapshot) {
-            if (prevProps.el !== this.props.el) {
-                  this.setState(state => ({ ...state, el: this.props.el }));
-            }
-            if (prevProps.settings !== this.props.settings) {
-                  this.setState(state => ({ ...state, settings: this.props.settings }));
+            if (!_.isEqual(prevState.el, this.props.editElement) ||
+                  JSON.stringify(prevProps.editElement.settings.params) !== JSON.stringify(this.props.editElement.settings.params)) {
+                  console.log('CHANGE DATA');
+                  this.setState(state => ({
+                        ...state,
+                        el: _.cloneDeep(this.props.editElement, []),
+                  }));
             }
       }
 
@@ -31,7 +32,7 @@ class WidgetData extends Component {
             return (
                   <div className="altrp-dashboard__card">
                         <div className="title">
-                              <div>{this.state.settings.name}</div>
+                              <div>{this.state.el.settings.name}</div>
                               <div className="dropdownTogglerContainer">
                                     <Dropdown drop="left">
                                           <Dropdown.Toggle variant="light" >
@@ -64,13 +65,13 @@ class WidgetData extends Component {
                                                 </Dropdown.Item>
                                                 <Dropdown.Item>
                                                       <button type="button" title="Настроить виджет"
-                                                            onClick={() => this.props.openSettingsHandler(this.state.el)}>
+                                                            onClick={() => this.props.openSettingsHandler(this.props.editElement)}>
                                                             <GearFill />
                                                       </button>
                                                 </Dropdown.Item>
                                                 <Dropdown.Item>
                                                       <button type="button" title="Удалить виджет"
-                                                            onClick={() => this.props.onRemoveItem(this.state.el.i)}>
+                                                            onClick={() => this.props.onRemoveItem(this.props.editElement.i)}>
                                                             <TrashFill />
                                                       </button>
                                                 </Dropdown.Item>
@@ -79,7 +80,7 @@ class WidgetData extends Component {
                               </div>
 
                         </div>
-                        <ChooseWidget element={this.state.el} type={this.state.settings.type} source={this.state.settings.source} />
+                        <ChooseWidget editElement={this.props.editElement} params={this.props.editElement.settings.params} type={this.props.editElement.settings.type} source={this.props.editElement.settings.source} />
                   </div>
             )
       }

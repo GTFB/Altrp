@@ -1,10 +1,14 @@
 import React, { Suspense, useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import {connect, useSelector} from "react-redux";
 import DynamicIcon from "../../../svgs/dynamic.svg";
+import {controllerMapStateToProps} from "../../decorators/controller";
 const TinyMCE = React.lazy(() => import("../tinymce/TinyMCE"));
 
 const WysiwygController = ({ controller, controlId, label }) => {
   const currentElement = useSelector((state) => state.currentElement.currentElement);
+  const currentState = useSelector((state) => state.currentState);
+  const currentScreen = useSelector((state) => state.currentScreen);
+  const controllerValue = useSelector((state) => state.controllerValue);
   const value = currentElement.getSettings(controlId);
   const [content, setContent] = useState(value);
 
@@ -17,8 +21,10 @@ const WysiwygController = ({ controller, controlId, label }) => {
   useEffect(() => {
     setContent(value);
   }, [currentElement]);
-
-  if (!controller.isShow()) {
+  const isShow = React.useMemo(()=>{
+    return controller.isShow();
+  }, [controllerValue, currentElement]);
+  if (!isShow) {
     return "";
   }
   return (

@@ -11,8 +11,9 @@ import LegendField from "./fields/LegendField";
 import LegendPositionField from "./fields/LegendPositionField";
 import FilterField from "./fields/FilterField";
 import SourceField from "./fields/SourceField";
-import ColorSchemeField from "./fields/colorSchemeField";
+import ColorSchemeField from "./fields/ColorSchemeField";
 import VerticalTableField from "./fields/VerticalTableField";
+import SortDataField from "./fields/SortDataField";
 import { queryString } from "./helpers/queryString";
 
 const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
@@ -89,6 +90,7 @@ const EditWidget = ({ data, onEdited, setIsEdit, settings }) => {
             sources={composeSources(settings.sql)}
             changeTitle={titleHandle}
           />
+          <SortDataField widget={widget} setWidget={setWidget} />
 
           {widget.source &&
             settings.filter?.length > 0 &&

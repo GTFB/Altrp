@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import widgetIcon from '../../../svgs/widget_list.svg';
+import widgetIcon from '../../../svgs/bullet-list.svg';
 import {advancedTabControllers} from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXTAREA,
@@ -140,6 +140,25 @@ class List extends BaseElement{
     repeater.addControl('icon_repeater', {
       type: CONTROLLER_MEDIA,
       label: 'Choose icon',
+    });
+
+    repeater.addControl('vertical_alignment_icon_repeater', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Vertical alignment',
+      options:[
+        {
+          icon: 'left',
+          value: 'top',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'bottom',
+        }
+      ],
     });
 
     repeater.addControl('position_relative_switcher_custom_repeater', {

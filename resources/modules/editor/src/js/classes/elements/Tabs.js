@@ -1,5 +1,5 @@
 import BaseElement from "./BaseElement";
-import TabsIcon from "../../../svgs/widget_tabs.svg";
+import TabsIcon from "../../../svgs/tabs.svg";
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_SWITCHER,
@@ -96,13 +96,13 @@ class Tabs extends BaseElement {
 
     let repeater = new Repeater();
 
-    repeater.addControl('title_and_content_items',{
+    repeater.addControl('title_and_content_items', {
       type: CONTROLLER_TEXT,
       label: 'Title & content',
       default: 'tab'
     });
 
-    repeater.addControl('id_items',{
+    repeater.addControl('id_items', {
       type: CONTROLLER_TEXT,
       label: 'ID for default activation',
     });
@@ -132,16 +132,16 @@ class Tabs extends BaseElement {
       type: CONTROLLER_REPEATER,
       fields: repeater.getControls(),
       default: [
-        {title_and_content_items: "tab #1", wysiwyg_items: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." },
-        {title_and_content_items: "tab #2", wysiwyg_items: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)." }
+        { title_and_content_items: "tab #1", wysiwyg_items: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." },
+        { title_and_content_items: "tab #2", wysiwyg_items: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)." }
       ]
     });
 
     this.addControl('alignment_tabs', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: 'flex-start',
-      options:[
+      // default: 'flex-start',
+      options: [
         {
           icon: 'left',
           value: 'flex-start',
@@ -160,7 +160,7 @@ class Tabs extends BaseElement {
         },
       ],
       rules: {
-            '{{ELEMENT}} .altrp-tab-btn-container{{STATE}}': 'justify-content: {{VALUE}};',
+        '{{ELEMENT}} .altrp-tab-btn-container{{STATE}}': 'justify-content: {{VALUE}};',
       },
     });
 
@@ -168,7 +168,7 @@ class Tabs extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "Tab spacing",
       default: {
-        size: 10,
+        // size: 10,
         unit: "px"
       },
       units: ["px", "%", "vh"],
@@ -184,7 +184,7 @@ class Tabs extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "Content spacing",
       default: {
-        size: 10,
+        // size: 10,
         unit: "px"
       },
       units: ["px", "%", "vh"],
@@ -212,20 +212,20 @@ class Tabs extends BaseElement {
     });
 
     this.addControl('type_section_one', {
-        type: CONTROLLER_SELECT,
-        label: 'Type',
-        default: "text",
-        options:[
-          {
-            'value' : 'image',
-            'label' : 'image',
-          },
-          {
-            'value' : 'text',
-            'label' : 'text editor',
-          },
-        ],
-      }
+      type: CONTROLLER_SELECT,
+      label: 'Type',
+      default: "text",
+      options: [
+        {
+          'value': 'image',
+          'label': 'image',
+        },
+        {
+          'value': 'text',
+          'label': 'text editor',
+        },
+      ],
+    }
     );
 
     this.addControl("wysiwyg_section_one", {
@@ -258,20 +258,20 @@ class Tabs extends BaseElement {
     });
 
     this.addControl('type_section_two', {
-        type: CONTROLLER_SELECT,
-        label: 'Type',
-        default: "text",
-        options:[
-          {
-            'value' : 'image',
-            'label' : 'image',
-          },
-          {
-            'value' : 'text',
-            'label' : 'text editor',
-          },
-        ],
-      }
+      type: CONTROLLER_SELECT,
+      label: 'Type',
+      default: "text",
+      options: [
+        {
+          'value': 'image',
+          'label': 'image',
+        },
+        {
+          'value': 'text',
+          'label': 'text editor',
+        },
+      ],
+    }
     );
 
     this.addControl("wysiwyg_section_two", {
@@ -337,37 +337,37 @@ class Tabs extends BaseElement {
     });
 
     this.addControl('box_shadow_tab_style', {
-        type: CONTROLLER_SHADOW,
-        label: 'Box shadow',
-        default:{
-          blur: 0,
-          horizontal: 0,
-          vertical: 0,
-          opacity: 1,
-          spread: 0,
-          colorRGB: 'rgb(0, 0, 0)',
-          color: 'rgb(0, 0, 0)',
-          colorPickedHex: '#000000',
-          type: ""
-        },
-        presetColors: [
-          '#eaeaea',
-          '#9c18a8'
-        ],
-        rules: {
-          '{{ELEMENT}} .altrp-tab-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_SHADOW,
+      label: 'Box shadow',
+      default: {
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        opacity: 1,
+        spread: 0,
+        colorRGB: 'rgb(0, 0, 0)',
+        color: 'rgb(0, 0, 0)',
+        colorPickedHex: '#000000',
+        type: ""
+      },
+      presetColors: [
+        '#eaeaea',
+        '#9c18a8'
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-tab-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    }
     );
 
     this.addControl("padding_tab_style", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        top: 10,
+        /* top: 10,
         right: 15,
         bottom: 10,
-        left: 15,
+        left: 15, */
         unit: "px"
       },
       units: ["px", "%", "vh"],
@@ -430,8 +430,8 @@ class Tabs extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Border color",
       default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852"
+        // color: "rgb(50,168,82)",
+        // colorPickedHex: "#32a852"
       },
       rules: {
         "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "border-color: {{COLOR}};"
@@ -441,11 +441,11 @@ class Tabs extends BaseElement {
     this.addControl("border_radius_tab_style", {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
-      default:{
-        size: 0,
+      default: {
+        // size: 0,
         unit: 'px',
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -458,29 +458,29 @@ class Tabs extends BaseElement {
     });
 
     this.addControl('typographic_tab_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1.5,
-          spacing: 0,
-          size: 14,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-tab-btn{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.5,
+        spacing: 0,
+        size: 14,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-tab-btn{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.endControlSection();
@@ -597,11 +597,11 @@ class Tabs extends BaseElement {
     this.addControl("border_radius_content_style", {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
-      default:{
+      default: {
         size: 0,
         unit: 'px',
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -614,29 +614,29 @@ class Tabs extends BaseElement {
     });
 
     this.addControl('typographic_content_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1.4,
-          spacing: 0,
-          size: 16,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-tab-content div{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.4,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-tab-content div{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.endControlSection();
@@ -650,7 +650,7 @@ class Tabs extends BaseElement {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
       default: 'left',
-      options:[
+      options: [
         {
           icon: 'block_left',
           value: 'left',
@@ -746,7 +746,7 @@ class Tabs extends BaseElement {
     this.addControl("size_switch_button_style", {
       type: CONTROLLER_SLIDER,
       label: 'Size',
-      default:{
+      default: {
         size: '16',
         unit: 'px',
       },
@@ -760,7 +760,7 @@ class Tabs extends BaseElement {
     this.addControl("spacing_switch_button_style", {
       type: CONTROLLER_SLIDER,
       label: 'Spacing',
-      default:{
+      default: {
         size: null,
         unit: 'px',
       },
@@ -777,7 +777,7 @@ class Tabs extends BaseElement {
     this.addControl("margin_bottom_switch_button_style", {
       type: CONTROLLER_SLIDER,
       label: 'Margin bottom',
-      default:{
+      default: {
         size: null,
         unit: 'px',
       },
@@ -791,11 +791,11 @@ class Tabs extends BaseElement {
     this.addControl('border_radius_box_switch_button_style', {
       type: CONTROLLER_SLIDER,
       label: 'Box around border radius',
-      default:{
+      default: {
         size: 100,
         unit: 'vh',
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -810,11 +810,11 @@ class Tabs extends BaseElement {
     this.addControl('border_radius_switch_switch_button_style', {
       type: CONTROLLER_SLIDER,
       label: 'Switch border radius',
-      default:{
+      default: {
         size: 100,
         unit: 'vh',
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -838,29 +838,29 @@ class Tabs extends BaseElement {
     });
 
     this.addControl('typographic_title_section_one_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1.4,
-          spacing: 0,
-          size: 16,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-tabs-switcher-label-section-one': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.4,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-tabs-switcher-label-section-one': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.addControl("color_title_section_one_style", {
@@ -881,29 +881,29 @@ class Tabs extends BaseElement {
     });
 
     this.addControl('typographic_content_section_one_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1.4,
-          spacing: 0,
-          size: 16,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-tabs-switcher-section-one-text p': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.4,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-tabs-switcher-section-one-text p': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.addControl("color_content_section_one_style", {
@@ -931,29 +931,29 @@ class Tabs extends BaseElement {
     });
 
     this.addControl('typographic_title_section_two_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1.4,
-          spacing: 0,
-          size: 16,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-tabs-switcher-label-section-two': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.4,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-tabs-switcher-label-section-two': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.addControl("color_title_section_two_style", {
@@ -974,29 +974,29 @@ class Tabs extends BaseElement {
     });
 
     this.addControl('typographic_content_section_two_style', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        default:{
-          lineHeight: 1.4,
-          spacing: 0,
-          size: 16,
-          weight: "normal",
-          family: "Open Sans",
-          decoration: ""
-        },
-        rules: {
-          '{{ELEMENT}} .altrp-tabs-switcher-section-two-text p': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 1.4,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-tabs-switcher-section-two-text p': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
     );
 
     this.addControl("color_content_section_two_style", {

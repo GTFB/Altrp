@@ -13,8 +13,9 @@ import {
   Tooltip,
   TooltipArea,
   TooltipTemplate,
-  ChartTooltip
-} from "reaviz";
+  ChartTooltip,
+  ChartZoomPan
+} from 'reaviz';
 
 import format from "date-fns/format";
 import formatDistanceStrict from "date-fns/formatDistanceStrict";
@@ -22,10 +23,12 @@ import ru from "date-fns/locale/ru";
 
 import Spinner from "../Spinner";
 import EmptyWidget from "./EmptyWidget";
+import { customStyle } from "../widgetTypes";
+
 
 import { getWidgetData } from "../services/getWidgetData";
 
-const DynamicAreaChart = ({ widget, width = 300, height = 300, color = "#FFD51F", dataSource = [] }) => {
+const DynamicAreaChart = ({ widget, width = 300, height = 300, color = "#FFD51F", dataSource = [], isMultiple, isCustomColor, colorArray }) => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -43,43 +46,64 @@ const DynamicAreaChart = ({ widget, width = 300, height = 300, color = "#FFD51F"
             };
           }
         });
-        setData(newData);
+        let data = newData;
+        switch (Number(widget.options.sort)) {
+          case 0:
+            data = charts.data.data;
+            break;
+          case 1:
+            data = _.sortBy(data,'key');
+            break;
+          case 2:
+            data = _.sortBy(data,'data');
+            break;
+          default:
+            data = charts.data.data;
+            break;
+        }
+        setData(data || []);
         setIsLoading(false);
       }
     }
     else {
-      const newData = dataSource.map((item) => {
-        let key = new Date(item.key);
-        if (key instanceof Date && !isNaN(key)) {
+      if (isMultiple) {
+        let multipleData = dataSource.map((collection, index) => {
           return {
-            key: key,
-            data: Number(item.data),
-          };
-        }
-      }).filter(item => typeof item != 'undefined');
+            key: index,
+            data: collection.map(item => {
+              let key = new Date(item.key);
+              if (key instanceof Date && !isNaN(key)) {
+                return {
+                  key: key,
+                  data: Number(item.data),
+                };
+              };
+            }).filter(item => typeof item != 'undefined')
+          }
+        });
 
-      setData(newData || []);
-      setIsLoading(false);
+        setData(multipleData || []);
+        setIsLoading(false);
+      }
+      else {
+        const newData = dataSource.map((item) => {
+          let key = new Date(item.key);
+          if (key instanceof Date && !isNaN(key)) {
+            return {
+              key: key,
+              data: Number(item.data),
+            };
+          }
+        }).filter(item => typeof item != 'undefined');
+
+        setData(newData || []);
+        setIsLoading(false);
+      }
     }
   }, [widget]);
 
   const formattingDate = (d) => {
-    //  Первая дата
-    const firstDate = data.slice().shift();
-    // Последняя дата
-    const lastDate = data.slice().pop();
-    // Разница между датами в месяцах
-    const diff = parseInt(
-      formatDistanceStrict(firstDate.key, lastDate.key, {
-        unit: "month",
-      })
-    );
-
-    if (diff >= 0 && diff <= 12) {
-      return format(d, "d LLL", { locale: ru });
-    } else {
-      return format(d, "d MMM yy", { locale: ru });
-    }
+    return format(d, "d MMM yy", { locale: ru });
   };
 
   useEffect(() => {
@@ -96,24 +120,35 @@ const DynamicAreaChart = ({ widget, width = 300, height = 300, color = "#FFD51F"
         height={height}
         // width={width}
         data={data}
+        zoomPan={<ChartZoomPan />}
         xAxis={
           <LinearXAxis
             type="time"
             tickSeries={
-              <LinearXAxisTickSeries label={<LinearXAxisTickLabel format={formattingDate} />} />
+              <LinearXAxisTickSeries
+                label={
+                  <LinearXAxisTickLabel
+                    format={formattingDate} />
+                } />
             }
           />
         }
         series={
           <AreaSeries
             animated={widget.options.animated}
-            type={widget.options.type || "standard"}
+            type={isMultiple ? 'grouped' : "standard"}
             markLine={<MarkLine strokeWidth={0} />}
             line={<Line strokeWidth={0} />}
-            area={
-              <Area
-                gradient={<Gradient color={color} stops={[<GradientStop color={color} />]} />}
-              />
+            // area={!isCustomColor ?
+            //   <Area
+            //     gradient={<Gradient color={color} stops={[<GradientStop color={color} />]} />}
+            //   /> : <></>
+            // }
+            colorScheme={
+              isCustomColor ? (data, index) => {
+                return colorArray[index];
+              } :
+                widget.options.colorScheme === "Custom" ? customStyle : widget.options.colorScheme
             }
           />
         }

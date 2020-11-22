@@ -7,7 +7,9 @@ use App\Altrp\Model;
 use App\Altrp\Relationship;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiRequest;
+use App\Media;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
@@ -144,6 +146,56 @@ class ApiController extends Controller
     {
         $parts = explode('?', $url);
         return $parts[0];
+    }
+
+    /**
+     * Проверяем, пришел ли файл в запросе и возвращаем его
+     * @param Request $request
+     * @return array|bool
+     */
+    protected function hasFileInRequest(Request $request)
+    {
+        $requestKeys = collect($request->all())->keys()->toArray();
+        $model = new $this->modelClass();
+        $relations = $model->relationships();
+        if (!$relations) return false;
+        foreach ($relations as $relation => $info) {
+            if (in_array($relation, $requestKeys) && isset($request->$relation[0]) && is_file($request->$relation[0])) return [
+                'relation' => $relation,
+                'foreign_key' => $info['foreignKey']
+            ];
+        }
+        return false;
+    }
+
+    /**
+     * Сохраняем медиа в БД и возвращаем их
+     * @param Request $request
+     * @param $mediaName
+     * @return array
+     */
+    protected function saveMedias(Request $request, $mediaName)
+    {
+        $_files = $request->file($mediaName);
+        if (!is_array($_files)) $_files = [$_files];
+        $res = [];
+        $files = [];
+        foreach ($_files as $file) {
+            if($file->getSize() < config( 'filesystems.max_file_size')) {
+                $files[] = $file;
+            }
+        }
+        foreach ($files as $file) {
+            $media = new Media();
+            $media->media_type = $file->getClientMimeType();
+            $media->author = auth()->user()->id;
+            $media->filename =  $file->store('media/' . date("Y") . '/' . date("m" ),
+                ['disk' => 'public'] );
+            $media->url =  Storage::url($media->filename);
+            $media->save();
+            $res[] = $media;
+        }
+        return array_reverse($res);
     }
 
   /**

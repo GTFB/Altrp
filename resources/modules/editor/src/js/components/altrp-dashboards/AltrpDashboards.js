@@ -40,7 +40,7 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
       });
       // Если успешно
       if (req.status === 200) {
-        // console.log("req.data :>> ", req.data);
+        console.log("req.data :>> ", req.data);
         // Получаем настройки
         return JSON.parse(req.data.settings);
       } else {
@@ -62,6 +62,7 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
         ]
       });
       if (req.status === 200) {
+        console.log("req.data DASHBOARDS:>> ", req.data);
         return req.data;
       } else {
         return [];
@@ -80,13 +81,11 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
         // Получаем виджеты
         const myWidgets = await getWidgets(id);
         // Если виджетов нет ничего не делаем
-        //console.log("myWidgets :>> ", myWidgets);
         //if (myWidgets.length === 0) return;
         // Если есть, получаем настройки
         const filters = await getSettings(id);
-        //console.log("filters :>> ", filters);
         // Если настройки есть
-        if (filters.hasOwnProperty("startDate") && filters.hasOwnProperty("endDate")) {
+        if (filters !== null && filters.hasOwnProperty("startDate") && filters.hasOwnProperty("endDate")) {
           // Записываем вижеты в состояние с настройками
           setWidgets(
             myWidgets.map((w) => {
@@ -118,7 +117,9 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
             ]
           });
         }
-      } catch (error) { }
+      } catch (error) {
+        console.error(error)
+       }
     },
     [id, settings.animated, startDate, endDate]
   );
@@ -313,7 +314,8 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
         {isShow && (
           <AddWidget settings={settings} id={id} setIsShow={setIsShow} onAdd={handleAdd} />
         )}
-        {widgets.map((widget) => (
+        {widgets.map((widget) => {
+          return (
           <CardWidget
             settings={settings}
             key={widget.id}
@@ -322,7 +324,7 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
             onEdited={handleEdit}
             isMobile={isMobile}
           />
-        ))}
+        )})}
       </div>
     </div>
   );

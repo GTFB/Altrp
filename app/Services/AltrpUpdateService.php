@@ -45,13 +45,17 @@ class AltrpUpdateService
 
     $file = $this->client->get( self::UPDATE_DOMAIN . 'download/' . self::PRODUCT_NAME . '/' . $version )->getBody()->getContents();
 
+    if ( ! $this->write_public_permissions() ) {
+      throw new \HttpException( 'Не удалось обновить режим чтения файлов' );
+    }
+
     if ( ! $this->save_archive( $file ) ) {
       throw new \HttpException( 'Не удалось сохранить архив' );
     }
     if ( ! $this->update_files() ) {
       throw new \HttpException( 'Не удалось обновить файлы' );
     }
-    if ( ! $this->write_public_permissions() ) {
+    if ( ! $this->write_public_permissions( 'public' ) ) {
       throw new \HttpException( 'Не удалось обновить режим чтения файлов' );
     }
     if ( ! $this->delete_archive() ) {
@@ -125,17 +129,21 @@ class AltrpUpdateService
     if ( ! $archive->open( $file_path ) ) {
       return false;
     }
-
+    if( File::exists( public_path( 'modules' ) ) ){
+      File::cleanDirectory( public_path( 'modules' ) );
+    }
     return $archive->extractTo( base_path() );
   }
+
   /**
    * Записываем права для папки public
+   * @param string $path
    * @return bool
    */
-  private function write_public_permissions()
+  private function write_public_permissions( $path = '')
   {
     try{
-      exec("chmod -R 0777  " . base_path( 'public' ) );
+      exec("chmod -R 0775  " . base_path( $path ) );
       return true;
     } catch (\Exception $e){
       return false;

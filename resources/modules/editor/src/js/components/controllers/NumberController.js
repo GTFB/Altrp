@@ -1,3 +1,4 @@
+import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import DynamicIcon from '../../../svgs/dynamic.svg'
@@ -19,13 +20,19 @@ class NumberController extends Component {
       show: true
     };
   }
+  /**
+   * Потеря фокуса обновляет элемент
+   * @param e
+   */
+  onBlur = e =>{
+    this._changeValue(Number(e.target.value))
+  };
+  /**
+   * Изменение больше не обновляет элемент
+   * @param e
+   */
   changeValue(e) {
-    // this.setState({
-    //   value:e.target.value
-    // });
-    // this.props.controller.changeValue(e.target.value);
-    // this.props.currentElement.setSettingValue(this.props.conarolId, e.target.value);
-    this._changeValue(e.target.value);
+    this._changeValue(Number(e.target.value));
   }
   getDefaultValue() {
     return '';
@@ -34,24 +41,20 @@ class NumberController extends Component {
     if (this.state.show === false) {
       return '';
     }
-    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    // let value = this.getSettings(this.props.controlId) || this.getDefaultValue(); todo: удалить если будет работать
+    let value = this.state.value || this.getDefaultValue();
     return <div className="controller-container controller-container_number">
       <div className="controller-container__label">
         {this.props.label}
         <ResponsiveDdMenu />
       </div>
       <div className="control-group">
-        <input className="control-field" onChange={this.changeValue} value={value} type="number" />
+        <input className="control-field"
+               onBlur={this.onBlur}
+               onChange={this.changeValue} value={value} type="number" />
       </div>
     </div>
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    currentElement: state.currentElement.currentElement,
-    currentState: state.currentState,
-    currentScreen: state.currentScreen
-  };
-}
-export default connect(mapStateToProps)(NumberController);
+export default connect(controllerMapStateToProps)(NumberController);

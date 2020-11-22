@@ -1,3 +1,5 @@
+import React, { Component, Suspense } from "react";
+
 import { BAR, PIE, DONUT, AREA, LINE, TABLE } from "../../../../../admin/src/components/dashboard/widgetTypes";
 
 import BarDataSource from '../../../../../admin/src/components/dashboard/widgets/d3/BarDataSource';
@@ -11,18 +13,25 @@ class ChooseWidget extends Component {
 
       constructor(props) {
             super(props);
+            let element = _.cloneDeep(props.editElement, []);
             this.state = {
                   source: props.source,
                   type: props.type,
-                  element: props.element,
-                  legend: props.element.settings.legend
+                  editElement: element,
+                  params: props.params,
+                  legend: props.editElement?.settings.legend
             };
       }
 
       componentDidUpdate(prevProps, prevState) {
-            console.log('CHANGE ');
-            if (!_.isEqual(prevProps.element, this.props.element)) {
-                  this.setState(state => ({ ...state, element: this.props.element }));
+
+            if (!_.isEqual(prevProps.editElement, this.props.editElement)) {
+                  let element = _.cloneDeep(this.props.editElement, []);
+                  this.setState(state => ({ ...state, editElement: element }));
+            }
+            if (JSON.stringify(prevProps.params) !== JSON.stringify(this.props.params)) {
+                  let element = _.cloneDeep(this.props.editElement, []);
+                  this.setState(state => ({ ...state, editElement: element }));
             }
             if (!_.isEqual(prevProps.type, this.props.type)) {
                   this.setState(state => ({ ...state, type: this.props.type }));
@@ -31,7 +40,6 @@ class ChooseWidget extends Component {
                   this.setState(state => ({ ...state, source: this.props.source }));
             }
       }
-
       getWidget() {
             let widget = 'Выберите тип диаграммы';
             switch (this.state.type) {
@@ -57,42 +65,42 @@ class ChooseWidget extends Component {
                         widget = <div>Выберите тип диаграммы</div>;
                         break;
             }
-            return <div className={`chart-container ${this.state.element.settings.legend.position}`}>{widget}</div>;
+            return <div className={`chart-container ${this.props.editElement.settings.legend.position || ''}`}>{widget}</div>;
       }
 
       renderBar() {
             return (
-                  <BarDataSource element={this.state.element} source={this.state.source} />
+                  <BarDataSource element={this.props.editElement} source={this.state.source} />
             );
       }
 
       renderPie() {
             return (
-                  <PieDataSource element={this.state.element} source={this.state.source} />
+                  <PieDataSource element={this.props.editElement} source={this.state.source} />
             );
       }
 
       renderDonut() {
             return (
-                  <DonutDataSource element={this.state.element} source={this.state.source} />
+                  <DonutDataSource element={this.props.editElement} source={this.state.source} />
             );
       }
 
       renderArea() {
             return (
-                  <AreaDataSource element={this.state.element} source={this.state.source} />
+                  <AreaDataSource element={this.props.editElement} source={this.state.source} />
             );
       }
 
       renderLine() {
             return (
-                  <LineDataSource element={this.state.element} source={this.state.source} />
+                  <LineDataSource element={this.props.editElement} source={this.state.source} />
             );
       }
 
       renderTable() {
             return (
-                  <TableDataSource element={this.state.element} source={this.state.source} />
+                  <TableDataSource element={this.props.editElement} source={this.state.source} />
             );
       }
 

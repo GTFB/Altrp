@@ -12,8 +12,9 @@ import FilterField from "./fields/FilterField";
 import LegendField from "./fields/LegendField";
 import LegendPositionField from "./fields/LegendPositionField";
 import SourceField from "./fields/SourceField";
-import ColorSchemeField from "./fields/colorSchemeField";
+import ColorSchemeField from "./fields/ColorSchemeField";
 import VerticalTableField from "./fields/VerticalTableField";
+import SortDataField from "./fields/SortDataField";
 import { queryString } from "./helpers/queryString";
 
 const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
@@ -128,6 +129,8 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
             changeTitle={titleHandle}
           />
 
+          <SortDataField widget={widget} setWidget={setWidget} />
+          
           {widget.source &&
             settings.filter?.length > 0 &&
             settings.filter?.map((param) => (
@@ -146,6 +149,7 @@ const AddWidget = ({ id, onAdd, setIsShow, settings }) => {
           )}
 
           <ColorSchemeField widget={widget} setWidget={setWidget} />
+
 
           {/* <LegendField widget={widget} setWidget={setWidget} /> */}
           {widget.options?.legend && <LegendPositionField widget={widget} setWidget={setWidget} />}

@@ -6,9 +6,11 @@ import {
   LinearXAxis,
   LinearXAxisTickSeries,
   LinearXAxisTickLabel,
-} from "reaviz";
+  ChartZoomPan,
+  TooltipArea,
+  PointSeries
+} from 'reaviz';
 import format from "date-fns/format";
-import formatDistanceStrict from "date-fns/formatDistanceStrict";
 import ru from "date-fns/locale/ru";
 
 import Spinner from "./Spinner";
@@ -17,7 +19,7 @@ import EmptyWidget from "./EmptyWidget";
 import { getWidgetData } from "../services/getWidgetData";
 import { customStyle } from "../widgetTypes";
 
-const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3, dataSource = [] }) => {
+const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3, dataSource = [], isMultiple, isCustomColor, colorArray }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
 
@@ -35,43 +37,64 @@ const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3, 
             };
           }
         });
-        setData(newData);
+        let data = newData;
+        switch (Number(widget.options.sort)) {
+          case 0:
+            data = charts.data.data;
+            break;
+          case 1:
+            data = _.sortBy(data,'key');
+            break;
+          case 2:
+            data = _.sortBy(data,'data');
+            break;
+          default:
+            data = charts.data.data;
+            break;
+        }
+        setData(data || []);
         setIsLoading(false);
       }
     }
     else {
-      const newData = dataSource.map((item) => {
-        let key = new Date(item.key);
-        if (key instanceof Date && !isNaN(key)) {
+      if (isMultiple) {
+        let multipleData = dataSource.map((collection, index) => {
           return {
-            key: key,
-            data: Number(item.data),
-          };
-        }
-      }).filter(item => typeof item != 'undefined');
+            key: index,
+            data: collection.map(item => {
+              let key = new Date(item.key);
+              if (key instanceof Date && !isNaN(key)) {
+                return {
+                  key: key,
+                  data: Number(item.data),
+                };
+              };
+            }).filter(item => typeof item != 'undefined')
+          }
+        });
 
-      setData(newData || []);
-      setIsLoading(false);
+        setData(multipleData || []);
+        setIsLoading(false);
+      }
+      else {
+        const newData = dataSource.map((item) => {
+          let key = new Date(item.key);
+          if (key instanceof Date && !isNaN(key)) {
+            return {
+              key: key,
+              data: Number(item.data),
+            };
+          }
+        }).filter(item => typeof item != 'undefined');
+
+        setData(newData || []);
+        setIsLoading(false);
+      }
     }
   }, [widget]);
 
   const formattingDate = (d) => {
-    //  Первая дата
-    const firstDate = data.slice().shift();
-    // Последняя дата
-    const lastDate = data.slice().pop();
-    // Разница между датами в месяцах
-    const diff = parseInt(
-      formatDistanceStrict(firstDate.key, lastDate.key, {
-        unit: "month",
-      })
-    );
-
-    if (diff >= 0 && diff <= 12) {
-      return format(d, "d MMM", { locale: ru });
-    } else {
-      return format(d, "d MMM yy", { locale: ru });
-    }
+    return format(d, "d MMM yy", { locale: ru });
   };
 
   useEffect(() => {
@@ -87,7 +110,7 @@ const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3, 
       <LineChart
         height={height}
         // width={width}
-        data={data}
+        zoomPan={<ChartZoomPan />}
         xAxis={
           <LinearXAxis
             type="time"
@@ -95,6 +118,7 @@ const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3, 
               <LinearXAxisTickSeries
                 label={
                   <LinearXAxisTickLabel
+                    rotation={false}
                     format={formattingDate}
                   />
                 }
@@ -104,13 +128,18 @@ const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3, 
         }
         series={
           <LineSeries
+            type={isMultiple ? "grouped" : 'standard'}
             animated={widget.options.animated}
             line={<Line strokeWidth={strokeWidth} />}
             colorScheme={
-              widget.options.colorScheme === "Custom" ? customStyle : widget.options.colorScheme
+              isCustomColor ? (data, index) => {
+                return colorArray[index];
+              } :
+                widget.options.colorScheme === "Custom" ? customStyle : widget.options.colorScheme
             }
           />
         }
+        data={data}
       />
     </>
   );

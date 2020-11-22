@@ -57,22 +57,49 @@ class DropdownSub extends Component {
     this.setList();
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if(prevProps.list !== this.props.list) {
+  componentDidUpdate(prevProps) {
+    if(prevProps.list !== this.props.list || prevProps.children.length !==  this.props.children.length) {
       this.setList()
     }
   }
 
   render() {
-    let сlasses = "altrp-nav-menu-ul-dropdown-children-hor-ver";
+    let classes = "altrp-nav-menu-ul-dropdown-children-hor-ver";
 
     if(this.state.list.length === 1) {
-      сlasses += " altrp-nav-menu-ul-dropdown-children-hor-ver-only"
+      classes += " altrp-nav-menu-ul-dropdown-children-hor-ver-only"
     }
 
-    let list = (
+    switch (this.props.settings.alignment_dropdown_hor_ver_menu_section) {
+      case "left":
+        classes += " altrp-nav-menu-ul-dropdown-children-hor-ver-left";
+        break;
+      case "center":
+        classes += " altrp-nav-menu-ul-dropdown-children-hor-ver-center";
+        break;
+      case "right":
+        classes += " altrp-nav-menu-ul-dropdown-children-hor-ver-right";
+        break
+    }
+
+    switch (this.props.settings.content_alignment_dropdown_hor_ver_menu_section) {
+      case "center":
+        classes += " altrp-nav-menu-ul-dropdown-sub-hor-ver-center";
+        break;
+      case "right":
+        classes += " altrp-nav-menu-ul-dropdown-sub-hor-ver-right";
+        break;
+      case "spaceBetween":
+        classes += " altrp-nav-menu-ul-dropdown-sub-hor-ver-space-between";
+        break;
+      case "spaceBetweenReverse":
+        classes += " altrp-nav-menu-ul-dropdown-sub-hor-ver-space-between-reverse";
+        break
+    }
+
+    return (
       this.props.show ? (
-        <div className={сlasses}>
+        <div className={classes}>
           <ul className="altrp-nav-menu-ul-dropdown-children-hor-ver-ul">
             {
               this.state.list.map((li, idx) => {
@@ -84,7 +111,8 @@ class DropdownSub extends Component {
                     onMouseLeave={() => this.hideSub(idx)}
                     key={idx}
                   >
-                    <AltrpLink link={li.link_repeater_menu_layout} className="altrp-nav-menu-li-dropdown-children-hor-ver-li-link">
+                    <AltrpLink link={li.link_repeater_menu_layout}
+                               className="altrp-nav-menu-li-dropdown-children-hor-ver-li-link">
                       <div className="altrp-nav-menu-li-dropdown-children-hor-ver-link-label">
                         {li.label_repeater_menu_layout}
                       </div>
@@ -107,7 +135,7 @@ class DropdownSub extends Component {
                         list={this.props.list}
                       /> : ""
                     }
-                    <Divider settings={this.props.settings} />
+                    <Divider settings={this.props.settings}/>
                   </li>
                 )
               })
@@ -116,7 +144,6 @@ class DropdownSub extends Component {
         </div>
       ) : ""
     );
-    return list;
   }
 };
 

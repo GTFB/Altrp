@@ -16,6 +16,7 @@ yarn-error.log
 .idea
 storage/installed
 s.sql
+modules_statuses.json
 
 # IDE helpers
 /config/ide-helper.php
@@ -32,15 +33,20 @@ _ide_helper.php
 /app/Providers/AltrpRepositoryServiceProvider.php
 /routes/AltrpRoutes.php
 /routes/AltrpApiRoutes.php
-/routes/AltrpCUstomRoutes.php
+/routes/AltrpCustomRoutes.php
 /out
 /app/Http/Requests/AltrpRequests
 /app/Plugins/*/
+/Modules/*/
 /app/Plugins/plugins.json
+public/modules/
 =======
 
 #bundles
 public/modules/admin
+public/favicon.ico
 public/modules/front-app
 public/modules/editor
+public/modules/reports
+public/modules/reports-new
 /routes/AltrpCustomRoutes.php

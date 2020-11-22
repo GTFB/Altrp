@@ -12,6 +12,7 @@ import {
   CONTROLLER_TEXT
 } from "../classes/modules/ControllersManager";
 import Repeater from "../classes/Repeater";
+import {CONDITIONS_OPTIONS} from "../../../../front-app/src/js/helpers";
 /**
  * Функция декорирует элемент неободимыми контроллерами
  * @param {BaseElement} element
@@ -30,7 +31,7 @@ export function advancedTabControllers(element) {
   //     label: 'Sizes',
   //   }
   // );
-  
+
   // element.addControl(
   //   'element_sizes_width', {
   //     type: CONTROLLER_SLIDER,
@@ -87,9 +88,15 @@ export function advancedTabControllers(element) {
 
   });
 
-  element.addControl('hide_on_trigger', {
-    type: CONTROLLER_TEXT,
-    label: 'Hide on Trigger'
+  // element.addControl('hide_on_trigger', {
+  //   type: CONTROLLER_TEXT,
+  //   label: 'Hide on Trigger'
+  // });
+
+  element.addControl('default_hidden', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Default Hidden',
+    default: false,
   });
 
   element.endControlSection();
@@ -102,6 +109,52 @@ export function advancedTabControllers(element) {
           label: 'Positioning',
         }
     );
+
+    element.addControl("positioning_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      // default: {
+      //   top: 0,
+      //   right: 0,
+      //   bottom: 0,
+      //   left: 0,
+      //   unit: "px"
+      // },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}}": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}}",
+          "padding-bottom: {{BOTTOM}}{{UNIT}}",
+          "padding-left: {{LEFT}}{{UNIT}}"
+        ]
+      }
+    });
+
+    element.addControl('positioning_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      // default:{
+      //   top: 0,
+      //   right: 0,
+      //   bottom: 0,
+      //   left: 0,
+      //   unit:'px'
+      // },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}}': [
+          'margin-top: {{TOP}}{{UNIT}}',
+          'margin-right: {{RIGHT}}{{UNIT}}',
+          'margin-bottom: {{BOTTOM}}{{UNIT}}',
+          'margin-left: {{LEFT}}{{UNIT}}'
+        ]
+      },
+    });
 
     element.addControl('positioning_width_type', {
       type: CONTROLLER_SELECT,
@@ -175,7 +228,7 @@ export function advancedTabControllers(element) {
           '{{ELEMENT}}': 'align-self: {{VALUE}};',
         },
       });
-    }    
+    }
 
     element.addControl('positioning_position_type', {
       type: CONTROLLER_SELECT,
@@ -374,51 +427,14 @@ export function advancedTabControllers(element) {
 
   modelRepeater.addControl('conditional_model_field', {
     responsive: false,
-    label: 'Model Field',
+    label: 'Path',
   });
 
   modelRepeater.addControl('conditional_other_operator', {
     type: CONTROLLER_SELECT,
     responsive: false,
     default: 'empty',
-    options: [
-      {
-        value: 'empty',
-        label: 'Empty',
-      },
-      {
-        value: 'not_empty',
-        label: 'Not Empty',
-      },
-      {
-        value: '==',
-        label: 'Equals',
-      },
-      {
-        value: '<>',
-        label: 'Not Equals',
-      },
-      {
-        value: 'between',
-        label: 'Between',
-      },
-      {
-        value: '>',
-        label: '>',
-      },
-      {
-        value: '>=',
-        label: '>=',
-      },
-      {
-        value: '<',
-        label: '<',
-      },
-      {
-        value: '<=',
-        label: '<=',
-      },
-    ]
+    options:  CONDITIONS_OPTIONS,
   });
 
   modelRepeater.addControl('conditional_other_condition_value', {
@@ -524,51 +540,14 @@ export function advancedTabControllers(element) {
 
   disabledModelRepeater.addControl('conditional_model_field', {
     responsive: false,
-    label: 'Model Field',
+    label: 'Path',
   });
 
   disabledModelRepeater.addControl('conditional_other_operator', {
     type: CONTROLLER_SELECT,
     responsive: false,
     default: 'empty',
-    options: [
-      {
-        value: 'empty',
-        label: 'Empty',
-      },
-      {
-        value: 'not_empty',
-        label: 'Not Empty',
-      },
-      {
-        value: '==',
-        label: 'Equals',
-      },
-      {
-        value: '<>',
-        label: 'Not Equals',
-      },
-      {
-        value: 'between',
-        label: 'Between',
-      },
-      {
-        value: '>',
-        label: '>',
-      },
-      {
-        value: '>=',
-        label: '>=',
-      },
-      {
-        value: '<',
-        label: '<',
-      },
-      {
-        value: '<=',
-        label: '<=',
-      },
-    ]
+    options: CONDITIONS_OPTIONS,
   });
 
   disabledModelRepeater.addControl('conditional_other_condition_value', {
@@ -594,7 +573,7 @@ export function advancedTabControllers(element) {
     label: 'Responsive',
   }
   );
-  
+
   element.addControl('hide_on_wide_screen', {
     type: CONTROLLER_SWITCHER,
     label: 'Hide On Wide Screen',
@@ -626,5 +605,4 @@ export function advancedTabControllers(element) {
   });
 
   element.endControlSection();
-
 }
