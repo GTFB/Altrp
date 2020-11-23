@@ -31,6 +31,7 @@ import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontEl
 import AltrpModel from "../../classes/AltrpModel";
 import {FixedSizeList} from "react-window";
 import ElementWrapper from "../../../../../front-app/src/js/components/ElementWrapper";
+import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput";
 /**
  *
  * @param rows
@@ -114,10 +115,25 @@ function AltrpTableWithoutUpdate(
       sortSetting
     }) {
 
-  function DefaultCell ({row, cell}){
-    const {column } = cell;
-    const  {column_template} = column;
+  function DefaultCell (
+      {row,
+        cell,value: initialValue,
+        updateData}){
+    const { column } = cell;
+    const [value, setValue] = React.useState(initialValue);
+    React.useEffect(() => {
+      setValue(initialValue);
+    }, [initialValue]);
+    const  {column_template, column_is_editable, column_edit_url, _accessor} = column;
     const [columnTemplate, setColumnTemplate] = React.useState(null);
+    const columnEditUrl =
+      React.useMemo(()=>{
+        if(! column_is_editable || ! column_edit_url){
+          return null;
+        }
+        return  parseURLTemplate(column_edit_url, row.original);
+      }, [column_edit_url, column_is_editable]);
+
     React.useEffect(()=>{
       if(column_template){
         (async()=>{
@@ -128,7 +144,6 @@ function AltrpTableWithoutUpdate(
     }, [column_template]);
     let cellContent = cell.value;
     let linkTag = isEditor() ? 'a': Link;
-    let style = cell.column.column_body_alignment ? { textAlign: cell.column.column_body_alignment } : {};
 
     /**
      * Если значение объект или массив, то отобразим пустую строку
@@ -172,6 +187,22 @@ function AltrpTableWithoutUpdate(
     if(columnTemplateContent){
       return <div className="altrp-posts"><div className="altrp-post">{columnTemplateContent }</div></div>;
     }
+
+    /**
+     * Отоборажаем инпут для редактирования данных
+     */
+    if(columnEditUrl){
+      return <AutoUpdateInput className="altrp-inherit"
+                              route={columnEditUrl}
+                              resourceid={''}
+                              changevalue={value => {
+                                setValue(value)
+                              }}
+                              onBlur={(value) =>{
+                                updateData(row.index, _accessor, value);
+                              }}
+                              value={value}/>;
+    }
     /**
      * Если есть actions, то надо их вывести
      */
@@ -208,10 +239,8 @@ function AltrpTableWithoutUpdate(
    */
   const [records, setRecords] = React.useState(data);
   React.useEffect(()=>{
-    if(replace_rows){
-      setRecords(data);
-    }
-  }, [data, replace_rows]);
+    setRecords(data);
+  }, [data]);
   const moveRow = (dragIndex, hoverIndex) => {
     const dragRecord = records[dragIndex];
     setRecords(
@@ -360,6 +389,32 @@ function AltrpTableWithoutUpdate(
     },)
   }
 
+  /**
+   * Редактирование данных
+   */
+  const [skipPageReset, setSkipPageReset] = React.useState(false);
+
+  // We need to keep the table from resetting the pageIndex when we
+  // Update data. So we can keep track of that flag with a ref.
+
+  // When our cell renderer calls updateData, we'll use
+  // the rowIndex, columnId and new value to update the
+  // original data
+  const updateData = (rowIndex, columnId, value) => {
+    // We also turn on the flag to not reset the page
+    setSkipPageReset(true);
+    setRecords(old =>
+        old.map((row, index) => {
+          if (index === rowIndex) {
+            return {
+              ...old[rowIndex],
+              [columnId]: value,
+            }
+          }
+          return row
+        })
+    )
+  };
   const getRowId = React.useCallback(row => {
     return row.id
   }, []);
@@ -370,9 +425,12 @@ function AltrpTableWithoutUpdate(
   const tableSettings = React.useMemo(() => {
     const tableSettings = {
       columns,
-      data: replace_rows ? records : data,
+      // data: replace_rows ? records : data,
+      data:  records ,
       filterTypes,
+      autoResetPage: ! skipPageReset,
       defaultColumn,
+      updateData,
     };
     if(replace_rows){
       tableSettings.getRowId = getRowId;
@@ -394,7 +452,7 @@ function AltrpTableWithoutUpdate(
     }
 
     return tableSettings;
-  }, [inner_page_size, inner_sort, data, columns, stateRef, records, replace_rows]);
+  }, [inner_page_size, inner_sort, data, columns, stateRef, records, replace_rows, skipPageReset]);
   React.useEffect(()=>{
 
     if(_.isObject(stateRef.current)){
@@ -405,8 +463,9 @@ function AltrpTableWithoutUpdate(
       tableSettings,
       ...plugins
   );
-
-
+  /**
+   * END настройки таблицы, свызов хука таблицы
+   */
   // console.log(ReactTable);
   const {
     getTableProps,
@@ -1023,17 +1082,17 @@ export function settingsToColumns(settings, widgetId) {
           }
           break;
         }
-        _column.canGroupBy = _column.group_by;
-        _column.disableSortBy = ! _column.column_is_sorted;
-        if(_column.aggregate){
-          let aggregateTemplate = _column.aggregate_template || `{{value}} Unique Names`;
-          _column.Aggregated = ({value}) => {
-            return aggregateTemplate.replace(/{{value}}/g, value)
-          };
-        }
-        if(virtualized_rows || resize_columns){
-          _column.width = Number(_column.column_width) || 150;
-        }
+      }
+      _column.canGroupBy = ! ! _column.group_by;
+      _column.disableSortBy = ! _column.column_is_sorted;
+      if(_column.aggregate){
+        let aggregateTemplate = _column.aggregate_template || `{{value}} Unique Names`;
+        _column.Aggregated = ({value}) => {
+          return aggregateTemplate.replace(/{{value}}/g, value)
+        };
+      }
+      if(virtualized_rows || resize_columns){
+        _column.width = Number(_column.column_width) || 150;
       }
       columns.push(_column);
     }
@@ -1131,7 +1190,73 @@ function GlobalFilter({
   )
 }
 const DND_ITEM_TYPE = 'row';
+/**
+ * Ячейка
+ * @return {*}
+ * @constructor
+ */
+const Cell = ({cell, settings})=>{
+  const {row, column} = cell;
+  const {
+    resize_columns,
+    replace_rows,
+    virtualized_rows,
+  } = column;
+  let cellContent = cell.render('Cell');
+  if (cell.column.id === '##') {
+    cellContent = cell.row.index + 1;
+  }
+  if(cell.isGrouped){
+    cellContent = (
+        <>
+          <span {...row.getToggleRowExpandedProps()}>
+                          {row.isExpanded ? '👇' : '👉'}
+                        </span>{' '}
+                               {cell.render('Cell')} ({recurseCount(row, 'subRows')})
+        </>
+    );
+  } else if (cell.isAggregated){
+    cellContent = cell.render('Aggregated');
+  } else if (cell.isPlaceholder){
+    cellContent = cell.render('Cell');
+  }
+  const cellClassNames = ['altrp-table-td'];
+  cell.isAggregated && cellClassNames.push('altrp-table-td_aggregated');
+  cell.isPlaceholder && cellClassNames.push('altrp-table-td_placeholder');
+  cell.isGrouped && cellClassNames.push('altrp-table-td_grouped');
 
+  let cellProps = React.useMemo(()=>{
+    let cellProps = cell.getCellProps();
+    if(! resize_columns && ! virtualized_rows){
+      delete cellProps.style;
+    }
+    if(_.get(cell, 'column.column_styles_field')){
+
+      let cellStyles = _.get(cell, 'column.column_styles_field');
+      cellStyles = _.get(row.original, cellStyles, '');
+      cellStyles = mbParseJSON(cellStyles, {});
+      cellProps.style = _.assign(cellStyles, cellProps.style);
+    }
+    if(replace_rows){
+      cellProps.ref = dropRef;
+    }
+
+    return cellProps;
+  }, [resize_columns, replace_rows, virtualized_rows,
+    cell.getCellProps().style.width,
+    _.get(cell, 'column.column_styles_field')]);
+
+  /**
+   * Если в настройках table_hover_row: false, - background для отдельной ячейки
+   */
+  if (!settings.table_hover_row) {
+    cellClassNames.join( 'altrp-table-background');
+  }
+  if (!column.column_body_alignment) {
+    cellClassNames.join( `altrp-table-td_alignment-${column.column_body_alignment}`);
+  }
+  return <div {...cellProps} className={cellClassNames.join(' ')}>{cellContent}</div>
+};
 /**
  * Компонент строки
  * @param {{}} row
@@ -1262,7 +1387,8 @@ const Row = ({ row,
 
       <div {...rowProps} className={`altrp-table-tr ${ isDragging ? 'altrp-table-tr__dragging' : ''}`} style={{ ...rowStyles, opacity }}>
         {replace_rows && <div className="altrp-table-td" ref={dragRef} style={{width: replace_width}}>{replace_text}</div>}
-        {row.cells.map(cell => {
+        {row.cells.map((cell, idx) => {
+          return <Cell cell={cell} key={idx} settings={settings}/>;
           let cellContent = cell.render('Cell');
           if (cell.column.id === '##') {
             cellContent = cell.row.index + 1;

@@ -438,6 +438,7 @@ export function getDataByPath(
     altrpresponses,
     formsStore,
     altrpPageState,
+    currentUser,
     altrpMeta
   } = appStore.getState();
   if (context) {
@@ -463,6 +464,9 @@ export function getDataByPath(
   } else if (path.indexOf("altrppagestate.") === 0) {
     path = path.replace("altrppagestate.", "");
     value = altrpPageState.getProperty(path, _default);
+  } else if (path.indexOf("altrpuser.") === 0) {
+    path = path.replace("altrpuser.", "");
+    value = currentUser.getProperty(path, _default);
   } else if (path.indexOf("altrptime.") === 0) {
     value = getTimeValue(path.replace("altrptime.", ""));
   } else if (path.indexOf("altrpforms.") === 0) {

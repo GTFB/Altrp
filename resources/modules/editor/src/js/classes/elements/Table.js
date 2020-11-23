@@ -100,6 +100,13 @@ class Table extends BaseElement {
       default: false
     });
 
+
+    this.addControl('table_2_0', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Table 2.0',
+      default: false
+    });
+
     this.endControlSection();
 
     this.startControlSection("table_data_settings", {
@@ -408,6 +415,15 @@ class Table extends BaseElement {
       default: false
     });
 
+    repeater.addControl('column_edit_url', {
+      label: 'Edit URL',
+      description: '/ajax/models/tests/:id/title',
+      default: '',
+      conditions:{
+        column_is_editable: true,
+      },
+    });
+
     repeater.addControl('column_is_default_sorted', {
       type: CONTROLLER_SWITCHER,
       label: 'Is Default Sorted',
@@ -429,12 +445,6 @@ class Table extends BaseElement {
         },
       ],
       default: 'ASC'
-    });
-
-    repeater.addControl('column_edit_url', {
-      label: 'Edit URL',
-      description: '/ajax/models/tests/:id/title',
-      default: ''
     });
 
     repeater.addControl('column_styles_field', {
