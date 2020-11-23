@@ -85,7 +85,7 @@ class AltrpPosts extends React.Component {
     let PostContentComponent = post.component || <h2>{post.title || post.id || ''}</h2>;
     if(this.state.simpleTemplate){
       let template = frontElementsFabric.cloneElement(this.state.simpleTemplate);
-      template.setCardModel(new AltrpModel(post));
+      template.setCardModel(new AltrpModel(post), idx);
       PostContentComponent = React.createElement(template.componentClass,
         {
           element: template,

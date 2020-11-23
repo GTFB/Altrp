@@ -176,7 +176,7 @@ function AltrpTableWithoutUpdate(
         return null;
       }
       let columnTemplateContent = frontElementsFabric.cloneElement(columnTemplate);
-      columnTemplateContent.setCardModel(new AltrpModel(row.original || {}));
+      columnTemplateContent.setCardModel(new AltrpModel(row.original || {}),);
       return React.createElement(columnTemplateContent.componentClass,
           {
             element: columnTemplateContent,

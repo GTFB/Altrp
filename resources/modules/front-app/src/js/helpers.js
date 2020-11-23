@@ -349,10 +349,10 @@ function conditionChecker(c, model, dataByPath = true) {
  * Установить данные
  * @param {string} path
  * @param {*} value
- * @param {function} dispatch
+ * @param {function | null} dispatch
  * @return {boolean}
  */
-export function setDataByPath(path = "", value, dispatch) {
+export function setDataByPath(path = "", value, dispatch = null) {
   if (!path) {
     return false;
   }
@@ -398,9 +398,9 @@ export function setDataByPath(path = "", value, dispatch) {
       return true;
     }
     if(_.isFunction(dispatch)){
-      dispatch(changePageState(path, value))
+      dispatch(changeAltrpMeta(path, value))
     } else {
-      appStore.dispatch(changePageState(path, value));
+      appStore.dispatch(changeAltrpMeta(path, value));
     }
     return true;
   }
@@ -431,7 +431,9 @@ export function getDataByPath(
     return path;
   }
   path = path.trim();
-
+  /**
+   * @type {AltrpModel} currentModel
+   */
   let {
     currentModel,
     currentDataStorage,
@@ -467,6 +469,10 @@ export function getDataByPath(
   } else if (path.indexOf("altrpuser.") === 0) {
     path = path.replace("altrpuser.", "");
     value = currentUser.getProperty(path, _default);
+  } else if (path === "altrpuser") {
+    value = currentUser.getData();
+  } else if (path === "altrpmodel") {
+    value = currentModel.getData();
   } else if (path.indexOf("altrptime.") === 0) {
     value = getTimeValue(path.replace("altrptime.", ""));
   } else if (path.indexOf("altrpforms.") === 0) {
@@ -1308,3 +1314,23 @@ export function scrollbarWidth () {
   return scrollbarWidth;
 }
 
+/**
+ * Добавляем свойство altrpIndex для всех эементов-объектов массива
+ * для их идентификации внутри повторяющихся карточек
+ * @param {[]} array
+ */
+export function setAltrpIndex(array = []){
+  if(! _.isArray(array)){
+    return;
+  }
+  array.forEach((item, idx)=>{
+    if(! _.isObject(item)){
+      return;
+    }
+    if(item instanceof AltrpModel){
+      item.setProperty('altrpIndex', idx);
+      return;
+    }
+    item.altrpIndex = idx;
+  })
+}

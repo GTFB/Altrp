@@ -538,8 +538,9 @@ class FrontElement {
   /**
    * Модель для карточки внутри виджетов
    * @param {AltrpModel} model
+   * @param {null | int} index
    */
-  setCardModel(model) {
+  setCardModel(model, index = null) {
     let rootElement = this.getRoot();
     if(! model){
       rootElement.cardModel = null;
@@ -549,6 +550,8 @@ class FrontElement {
     if(! model instanceof AltrpModel){
       model = new AltrpModel(model);
     }
+    index = Number(index);
+    model.setProperty('altrpIndex', index);
     rootElement.cardModel = model;
     rootElement.isCard = true;
     // console.log(rootElement);

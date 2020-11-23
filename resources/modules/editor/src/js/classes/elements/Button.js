@@ -385,10 +385,11 @@ class Button extends BaseElement {
     });
 
     actionsRepeater.addControl('path', {
+      type: CONTROLLER_TEXTAREA,
       label: 'Path',
       responsive: false,
       dynamic: false,
-      description: 'altrpdata.alias',
+      description: 'altrppagestate.alias',
       conditions: {
         type: [
           'data_to_csv',
@@ -462,6 +463,8 @@ class Button extends BaseElement {
         ],
         set_type: [
           'push_items',
+          'decrement',
+          'increment',
         ],
       },
     });
@@ -471,7 +474,7 @@ class Button extends BaseElement {
       type: CONTROLLER_TEXTAREA,
       responsive: false,
       dynamic: false,
-      description: 'Value or Path',
+      description: 'Value or Path to Value',
       conditions: {
         type: [
           'set_data',
@@ -480,23 +483,6 @@ class Button extends BaseElement {
           'set',
           'toggle_set',
           'push_items',
-          'decrement',
-          'increment',
-        ],
-      },
-    });
-
-    actionsRepeater.addControl('paths', {
-      label: 'Paths',
-      type: CONTROLLER_TEXTAREA,
-      responsive: false,
-      dynamic: false,
-      conditions: {
-        type: [
-          'set_data',
-        ],
-        set_type: [
-          'remove_items',
         ],
       },
     });
