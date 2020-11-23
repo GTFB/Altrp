@@ -34,10 +34,10 @@ class AreaDataSource extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      sources: props.sources,
-      legend: props.element.settings.legend,
-      color: props.element.settings.color,
-      params: props.element.settings.params,
+      sources: _.cloneDeep(props.sources),
+      legend: _.cloneDeep(props.element.settings.legend),
+      color: _.cloneDeep(props.element.settings.color),
+      params: _.cloneDeep(props.element.settings.params),
       isMultiple: false,
       isDate: true,
       countRequest: 0,
@@ -61,7 +61,16 @@ class AreaDataSource extends Component {
       await this.getData();
     }
 
-    if (!_.isEqual(prevProps.formsStore, this.props.formsStore)) {
+    if (
+      !_.isEqual(
+        prevProps.formsStore.form_data,
+        this.props.formsStore.form_data
+      )
+    ) {
+      this.setState(state => ({
+        ...state,
+        countRequest: 0
+      }));
       await this.getData();
     }
   }
@@ -71,41 +80,46 @@ class AreaDataSource extends Component {
   }
 
   async getDataFromIterableDatasources(sources, paramsResult = {}) {
-    return Promise.all(
-      sources.map(async source => {
-        let dataArray = [];
-        if (_.keys(this.state.params).length > 0) {
-          dataArray = await new DataAdapter().adaptDataByPath(
-            source,
-            paramsResult
-          );
-        } else {
-          dataArray = await new DataAdapter().adaptDataByPath(source);
-        }
-        const multipleDataArray = _.uniq(
-          _.sortBy(
-            dataArray.map((item, index) => {
-              return {
-                data: item.data,
-                key: item.key,
-                id: index
-              };
-            }),
-            "key"
-          ),
-          "key"
-        );
-        return {
-          key: source.title || source.path,
-          data: multipleDataArray
-        };
-      })
-    );
+    try {
+      return Promise.all(
+        sources.map(async source => {
+          let dataArray = [];
+          if (_.keys(this.state.params).length > 0) {
+            dataArray = await new DataAdapter().adaptDataByPath(
+              source,
+              paramsResult
+            );
+          } else {
+            dataArray = await new DataAdapter().adaptDataByPath(source);
+          }
+          try {
+            const multipleDataArray = _.uniq(
+              _.sortBy(
+                dataArray.map((item, index) => {
+                  return {
+                    data: item.data,
+                    key: item.key,
+                    id: index
+                  };
+                }),
+                "key"
+              ),
+              "key"
+            );
+            return {
+              key: source.title || source.path,
+              data: multipleDataArray
+            };
+          } catch (error) {
+            return [];
+          }
+        })
+      );
+    } catch (error) {}
   }
 
   async getData() {
-    let globalParams = _.cloneDeep(this.props.formsStore, []);
-    delete globalParams["changedField"];
+    let globalParams = _.cloneDeep(this.props.formsStore.form_data, []);
     let globalParamsArray = _.keys(globalParams)
       .map(param => {
         return { [param]: globalParams[param] };
@@ -121,7 +135,7 @@ class AreaDataSource extends Component {
       let isMultiple = false;
       if (_.keys(this.props.element.settings.sources).length === 1) {
         let source = this.props.element.settings.sources[0];
-        if (_.keys(this.state.params).length > 0) {
+        if (_.keys(paramsResult).length > 0) {
           data = await new DataAdapter().adaptDataByPath(source, paramsResult);
         } else {
           data = await new DataAdapter().adaptDataByPath(source);
@@ -134,12 +148,35 @@ class AreaDataSource extends Component {
         isMultiple = true;
       }
       let needCallAgain = true;
+
+      let dates = [];
+      let resultDates = [];
+      let isDate = true;
+
       if (this.props.element.settings.sources.length > 1) {
-        let matches = data.map(obj => obj.data.length > 0);
+        let matches = data.map(obj => {
+          if (_.keys(obj).length > 0) {
+            return obj.data.length > 0;
+          }
+          return _.keys(obj).length > 0;
+        });
         needCallAgain = _.includes(matches, false);
+        if (!needCallAgain) {
+          dates = data.map(obj => {
+            return obj.data.map(item => item.key instanceof Date);
+          });
+          dates.forEach(array => (resultDates = resultDates.concat(array)));
+          resultDates = _.uniq(resultDates);
+          isDate = _.includes(resultDates, false) === true ? false : true;
+        }
       } else {
         needCallAgain =
           _.keys(data).length === 0 && this.state.countRequest < 5;
+        dates = data.map(obj => {
+          return obj.key instanceof Date;
+        });
+        dates = _.uniq(dates);
+        isDate = _.includes(dates, false) ? false : true;
       }
       if (needCallAgain) {
         setTimeout(() => {
@@ -149,8 +186,6 @@ class AreaDataSource extends Component {
           this.setState(s => ({ ...s, countRequest: count }));
         }, 3500);
       }
-      const dates = data.map(obj => obj.key instanceof Date);
-      const isDate = _.includes(dates, true);
       this.setState(s => ({
         ...s,
         data: data,
@@ -234,16 +269,28 @@ class AreaDataSource extends Component {
       return <div>Нет данных</div>;
     }
     if (this.props.element.settings.sources.length > 1) {
-      let matches = this.state.data.map(obj => obj.data.length > 0);
+      let matches = this.state.data.map(obj => {
+        if (_.keys(obj).length > 0) {
+          return obj.data.length > 0;
+        }
+        return _.keys(obj).length > 0;
+      });
+      if (!this.state.isDate) {
+        return <div>Все ключи должны быть в формате даты</div>;
+      }
       let check = _.includes(matches, false);
       if (check) {
-        return <div>Загрузка...</div>;
-      }
-    } else {
-      if (!this.state.isDate) {
-        return <div>Ключ должен быть в формате даты</div>;
+        if (this.state.countRequest < 5) {
+          return <div>Загрузка...</div>;
+        }
+        return <div>Нет данных</div>;
       }
     }
+    // else {
+    // if (!this.state.isDate) {
+    // return <div>Ключ должен быть в формате даты</div>;
+    // }
+    // }
 
     const customColors = _.keys(this.state.color).length > 0;
     const custromColorsArray = _.values(this.state.color).map(item => item);
@@ -259,17 +306,19 @@ class AreaDataSource extends Component {
           }
           xAxis={
             <LinearXAxis
-              type="time"
+              type={this.state.isDate ? "time" : "category"}
               tickSeries={
                 <LinearXAxisTickSeries
                   label={
-                    <LinearXAxisTickLabel
-                      rotation="60"
-                      padding={{
-                        fromAxis: 90
-                      }}
-                      format={this.formattingDate}
-                    />
+                    this.state.isDate && (
+                      <LinearXAxisTickLabel
+                        rotation="60"
+                        padding={{
+                          fromAxis: 90
+                        }}
+                        format={this.formattingDate}
+                      />
+                    )
                   }
                 />
               }

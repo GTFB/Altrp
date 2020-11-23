@@ -32,6 +32,7 @@ class ScatterDataSource extends Component {
       color: props.element.settings.color,
       params: props.element.settings.params,
       countRequest: 0,
+      isDate: true,
       data: []
     };
   }
@@ -60,7 +61,16 @@ class ScatterDataSource extends Component {
       }));
       await this.getData();
     }
-    if (!_.isEqual(prevProps.formsStore, this.props.formsStore)) {
+    if (
+      !_.isEqual(
+        prevProps.formsStore.form_data,
+        this.props.formsStore.form_data
+      )
+    ) {
+      this.setState(state => ({
+        ...state,
+        countRequest: 0
+      }));
       await this.getData();
     }
   }
@@ -100,8 +110,7 @@ class ScatterDataSource extends Component {
   }
 
   async getData() {
-    let globalParams = _.cloneDeep(this.props.formsStore, []);
-    delete globalParams["changedField"];
+    let globalParams = _.cloneDeep(this.props.formsStore.form_data, []);
     let globalParamsArray = _.keys(globalParams)
       .map(param => {
         return { [param]: globalParams[param] };
@@ -112,12 +121,12 @@ class ScatterDataSource extends Component {
       });
     let localParams = _.cloneDeep(this.state.params, []);
     let paramsResult = localParams.concat(globalParamsArray);
-    let isMultiple = false;
     if (_.keys(this.props.element.settings.sources).length > 0) {
       let data = [];
+      let isMultiple = false;
       if (_.keys(this.props.element.settings.sources).length === 1) {
         let source = this.props.element.settings.sources[0];
-        if (_.keys(this.state.params).length > 0) {
+        if (_.keys(paramsResult).length > 0) {
           data = await new DataAdapter().adaptDataByPath(source, paramsResult);
         } else {
           data = await new DataAdapter().adaptDataByPath(source);
@@ -130,12 +139,35 @@ class ScatterDataSource extends Component {
         isMultiple = true;
       }
       let needCallAgain = true;
+
+      let dates = [];
+      let resultDates = [];
+      let isDate = true;
+
       if (this.props.element.settings.sources.length > 1) {
-        let matches = data.map(obj => obj.data.length > 0);
+        let matches = data.map(obj => {
+          if (_.keys(obj).length > 0) {
+            return obj.data.length > 0;
+          }
+          return _.keys(obj).length > 0;
+        });
         needCallAgain = _.includes(matches, false);
+        if (!needCallAgain) {
+          dates = data.map(obj => {
+            return obj.data.map(item => item.key instanceof Date);
+          });
+          dates.forEach(array => (resultDates = resultDates.concat(array)));
+          resultDates = _.uniq(resultDates);
+          isDate = _.includes(resultDates, false) === true ? false : true;
+        }
       } else {
         needCallAgain =
           _.keys(data).length === 0 && this.state.countRequest < 5;
+        dates = data.map(obj => {
+          return obj.key instanceof Date;
+        });
+        dates = _.uniq(dates);
+        isDate = _.includes(dates, false) ? false : true;
       }
       if (needCallAgain) {
         setTimeout(() => {
@@ -145,8 +177,6 @@ class ScatterDataSource extends Component {
           this.setState(s => ({ ...s, countRequest: count }));
         }, 3500);
       }
-      const dates = data.map(obj => obj.key instanceof Date);
-      const isDate = _.includes(dates, true);
       this.setState(s => ({
         ...s,
         data: data,
@@ -189,27 +219,27 @@ class ScatterDataSource extends Component {
   }
 
   render() {
-    if (
-      typeof this.state.sources !== "undefined" &&
-      Object.keys(this.state.sources).length === 0
-    ) {
+    if (Object.keys(this.state.sources).length === 0) {
       return <div>Нет данных </div>;
     }
 
-    if (Object.keys(this.state.sources).length > 1) {
+    if (this.state.isMultiple) {
       return <div>Укажите только один источник данных</div>;
-    } else {
-      if (!this.state.isDate) {
-        return <div>Ключ должен быть в формате даты</div>;
-      }
     }
 
     if (
       typeof this.state.data !== "undefined" &&
       this.state.data.length === 0
     ) {
+      if (this.state.countRequest < 5) {
+        console.log(this.state.countRequest);
+        return <div>Загрузка...</div>;
+      }
       return <div>Нет данных</div>;
     }
+    // if (!this.state.isDate) {
+    //   return <div>Ключ должен быть в формате даты</div>;
+    // }
 
     return (
       <>
@@ -222,10 +252,13 @@ class ScatterDataSource extends Component {
             }
             xAxis={
               <LinearXAxis
+                type={this.state.isDate ? "time" : "category"}
                 tickSeries={
                   <LinearXAxisTickSeries
                     label={
-                      <LinearXAxisTickLabel format={this.formattingDate} />
+                      this.state.isDate && (
+                        <LinearXAxisTickLabel format={this.formattingDate} />
+                      )
                     }
                   />
                 }

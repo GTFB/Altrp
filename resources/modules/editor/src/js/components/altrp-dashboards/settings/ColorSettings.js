@@ -43,6 +43,9 @@ class ColorSettings extends Component {
         } else {
           dataArray = await new DataAdapter().adaptDataByPath(source);
         }
+        if (_.keys(dataArray).length === 0) {
+          return [];
+        }
         const multipleDataArray = _.uniq(
           _.sortBy(
             dataArray.map((item, index) => {
@@ -95,8 +98,12 @@ class ColorSettings extends Component {
       }
       let needCallAgain = true;
       if (this.props.editElement.settings.sources.length > 1) {
-        let matches = data.map(obj => obj.data.length > 0);
-        needCallAgain = _.includes(matches, false);
+        if (_.keys(data).length > 0) {
+          let matches = data.map(obj =>
+            typeof obj.data !== "undefined" ? obj.data.length > 0 : false
+          );
+          needCallAgain = _.includes(matches, false);
+        }
       } else {
         needCallAgain =
           _.keys(data).length === 0 && this.state.countRequest < 5;

@@ -52,16 +52,23 @@ class AddWidgetDataSource extends Component {
   }
 
   setDatasource(datasource) {
-    this.setState(state => ({
-      ...state,
-      widget: {
-        ...state.widget,
-        settings: {
-          ...state.widget.settings,
-          source: [datasource]
-        }
+    if (datasource != 0) {
+      const datasourceObject = _.find(this.state.dataSourcesList, {
+        path: datasource
+      });
+      if (typeof datasourceObject !== "undefined") {
+        this.setState(state => ({
+          ...state,
+          widget: {
+            ...state.widget,
+            settings: {
+              ...state.widget.settings,
+              sources: [datasourceObject]
+            }
+          }
+        }));
       }
-    }));
+    }
   }
 
   setDiagramType(type) {
@@ -115,8 +122,8 @@ class AddWidgetDataSource extends Component {
               >
                 <option value="0">Выберите источник данных</option>
                 {this.state.dataSourcesList.map((source, index) => (
-                  <option key={index} value={source}>
-                    {source.path}
+                  <option key={index} value={source.path}>
+                    {source.title || source.path}
                   </option>
                 ))}
               </Form.Control>

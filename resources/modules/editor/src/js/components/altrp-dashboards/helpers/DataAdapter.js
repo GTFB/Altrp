@@ -1,8 +1,5 @@
 import { getDataByPath } from "../../../../../../front-app/src/js/helpers";
 import axios from "axios";
-import appStore from "../../../../../../front-app/src/js/store/store";
-import format from "date-fns";
-import ru from "date-fns/locale/ru";
 //Класс для работы с репитером
 //получает данные из источника и приводит их к указанному формату ключ->значение
 class DataAdapter {
@@ -53,28 +50,58 @@ class DataAdapter {
 
   parseSourceParams(params) {
     let parameters = params;
-    parameters.map(param => {
-      console.log("====================================");
-      console.log(param);
-      console.log("====================================");
-    });
+    let string = "";
+    if (typeof parameters !== "undefined") {
+      string = _.keys(parameters)
+        .map((param, index) => {
+          if (typeof parameters[param] !== "undefined")
+            return `${param}=${parameters[param]}`;
+        })
+        .filter(item => typeof item !== "undefined")
+        .join("&");
+    }
+    return string;
   }
 
   async getDataWithParams(datasource, key, dataKey, params) {
     const url = datasource.getWebUrl();
     let localParams = this.parseSourceParams(datasource.params);
-    const sendUrl = url + this.queryString(params);
+    let parameters = this.queryString(params) + "&" + localParams;
+    parameters = Array.from(new Set(parameters.split("&"))).join("&");
+    const sendUrl = url + parameters;
     try {
       const req = await axios(sendUrl);
-      const returnData =
-        req.data.data.map(d => {
-          return {
-            data: _.get(d, dataKey),
-            key: _.get(d, key)
-          };
-        }) || [];
+      let returnData = [];
+      if (typeof req.data.data !== "undefined") {
+        let tempData = _.uniqBy(req.data.data, key);
+        returnData =
+          tempData.map(d => {
+            let currentKey = _.get(d, key);
+            const keyFormatted = isNaN(Date.parse(currentKey))
+              ? currentKey
+              : new Date(currentKey);
+            return {
+              data: Number(_.get(d, dataKey)),
+              key: keyFormatted
+            };
+          }) || [];
+      } else if (typeof req.data !== "undefined") {
+        let tempData = _.uniqBy(req.data, key);
+        returnData =
+          tempData.map(d => {
+            let currentKey = _.get(d, key);
+            const keyFormatted = isNaN(Date.parse(currentKey))
+              ? currentKey
+              : new Date(currentKey);
+            return {
+              data: Number(_.get(d, dataKey)),
+              key: keyFormatted
+            };
+          }) || [];
+      }
       return returnData;
     } catch (error) {
+      // console.error(error);
       return [];
     }
   }
@@ -98,7 +125,7 @@ class DataAdapter {
             ? currentKey
             : new Date(currentKey);
           return {
-            data: _.get(d, data),
+            data: Number(_.get(d, data)),
             key: keyFormatted,
             source: datasourceObject.title || datasourceObject.path
           };

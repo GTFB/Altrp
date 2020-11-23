@@ -74,7 +74,6 @@ class DataSourceDashboards extends Component {
       });
     }
     if (!_.isEqual(prevState.items, this.state.items)) {
-      console.log("CHANGE ITEMS");
       this.setState(state => {
         return { ...state, items: this.state.items };
       });

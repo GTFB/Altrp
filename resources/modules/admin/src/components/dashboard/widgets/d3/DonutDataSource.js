@@ -56,7 +56,16 @@ class DonutDataSource extends Component {
       }));
       await this.getData();
     }
-    if (!_.isEqual(prevProps.formsStore, this.props.formsStore)) {
+    if (
+      !_.isEqual(
+        prevProps.formsStore.form_data,
+        this.props.formsStore.form_data
+      )
+    ) {
+      this.setState(state => ({
+        ...state,
+        countRequest: 0
+      }));
       await this.getData();
     }
   }
@@ -99,8 +108,7 @@ class DonutDataSource extends Component {
   }
 
   async getData() {
-    let globalParams = _.cloneDeep(this.props.formsStore, []);
-    delete globalParams["changedField"];
+    let globalParams = _.cloneDeep(this.props.formsStore.form_data, []);
     let globalParamsArray = _.keys(globalParams)
       .map(param => {
         return { [param]: globalParams[param] };
@@ -116,7 +124,7 @@ class DonutDataSource extends Component {
       let isMultiple = false;
       if (_.keys(this.props.element.settings.sources).length === 1) {
         let source = this.props.element.settings.sources[0];
-        if (_.keys(this.state.params).length > 0) {
+        if (_.keys(paramsResult).length > 0) {
           data = await new DataAdapter().adaptDataByPath(source, paramsResult);
         } else {
           data = await new DataAdapter().adaptDataByPath(source);
@@ -129,12 +137,35 @@ class DonutDataSource extends Component {
         isMultiple = true;
       }
       let needCallAgain = true;
+
+      let dates = [];
+      let resultDates = [];
+      let isDate = true;
+
       if (this.props.element.settings.sources.length > 1) {
-        let matches = data.map(obj => obj.data.length > 0);
+        let matches = data.map(obj => {
+          if (_.keys(obj).length > 0) {
+            return obj.data.length > 0;
+          }
+          return _.keys(obj).length > 0;
+        });
         needCallAgain = _.includes(matches, false);
+        if (!needCallAgain) {
+          dates = data.map(obj => {
+            return obj.data.map(item => item.key instanceof Date);
+          });
+          dates.forEach(array => (resultDates = resultDates.concat(array)));
+          resultDates = _.uniq(resultDates);
+          isDate = _.includes(resultDates, false) === true ? false : true;
+        }
       } else {
         needCallAgain =
           _.keys(data).length === 0 && this.state.countRequest < 5;
+        dates = data.map(obj => {
+          return obj.key instanceof Date;
+        });
+        dates = _.uniq(dates);
+        isDate = _.includes(dates, false) ? false : true;
       }
       if (needCallAgain) {
         setTimeout(() => {
@@ -144,7 +175,12 @@ class DonutDataSource extends Component {
           this.setState(s => ({ ...s, countRequest: count }));
         }, 3500);
       }
-      this.setState(s => ({ ...s, data: data, isMultiple: isMultiple }));
+      this.setState(s => ({
+        ...s,
+        data: data,
+        isMultiple: isMultiple,
+        isDate: isDate
+      }));
     }
   }
 

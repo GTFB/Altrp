@@ -23,11 +23,11 @@ class ChooseWidget extends Component {
     super(props);
     let element = _.cloneDeep(props.editElement, []);
     this.state = {
-      sources: props.sources,
-      type: props.type,
-      editElement: element,
-      params: props.params,
-      legend: props.editElement?.settings.legend
+      sources: _.cloneDeep(props.sources),
+      type: _.cloneDeep(props.type),
+      editElement: _.cloneDeep(element),
+      params: _.cloneDeep(props.params),
+      legend: _.cloneDeep(props.editElement?.settings.legend)
     };
   }
 

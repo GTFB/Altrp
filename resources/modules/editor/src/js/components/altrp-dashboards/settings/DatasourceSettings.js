@@ -21,6 +21,7 @@ class DatasourceSettings extends Component {
     this.state = {
       editElement: props.editElement
     };
+    this.returnOptionsWithKeys = this.returnOptionsWithKeys.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -30,6 +31,15 @@ class DatasourceSettings extends Component {
         editElement: this.props.editElement
       }));
     }
+  }
+
+  returnOptionsWithKeys() {
+    const datasources = _.cloneDeep(this.props.datasources);
+    return datasources.map((source, index) => {
+      source.title =
+        typeof source.title !== "undefined" ? source.title : source.path;
+      return source;
+    });
   }
 
   render() {
@@ -62,9 +72,9 @@ class DatasourceSettings extends Component {
                   position: "relative"
                 })
               }}
-              options={this.props.datasources}
+              options={this.returnOptionsWithKeys()}
               getOptionValue={option => option}
-              getOptionLabel={option => option.title || option.path}
+              getOptionLabel={option => option.title}
             />
           </Form.Group>
         </div>
