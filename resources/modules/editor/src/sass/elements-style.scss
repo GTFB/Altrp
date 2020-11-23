@@ -225,6 +225,9 @@
   }
   &-td{
     display: table-cell;
+    & .altrp-inherit{
+      border: none;
+    }
     &_loading{
       display: block;
       width: 100%;

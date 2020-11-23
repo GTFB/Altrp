@@ -806,7 +806,7 @@ export function Pagination(
     pageText = pageText.replace('{{page}}', pageIndex + 1).replace('{{page_count}}', pageCount);
     if(inner_page_type === 'pages'){
       let paginatePageCount = Number(inner_page_count) || pageCount;
-      if(paginatePageCount <= 0){
+      if(paginatePageCount <= 0 || paginatePageCount > pageCount){
         paginatePageCount = pageCount;
       }
       let array = [];
