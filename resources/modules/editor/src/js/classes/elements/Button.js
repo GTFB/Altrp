@@ -433,9 +433,40 @@ class Button extends BaseElement {
           label: 'Toggle/Set',
           value: 'toggle_set',
         },
+        {
+          label: 'Increment',
+          value: 'increment',
+        },
+        {
+          label: 'Decrement',
+          value: 'decrement',
+        },
+        {
+          label: 'Push Items',
+          value: 'push_items',
+        },
+        {
+          label: 'Remove Items',
+          value: 'remove_items',
+        },
       ],
       conditions: {
         type: 'set_data',
+      },
+    });
+
+    actionsRepeater.addControl('count', {
+      label: 'Count',
+      type: CONTROLLER_NUMBER,
+      responsive: false,
+      dynamic: false,
+      conditions: {
+        type: [
+          'set_data',
+        ],
+        set_type: [
+          'push_items',
+        ],
       },
     });
 
@@ -444,6 +475,7 @@ class Button extends BaseElement {
       type: CONTROLLER_TEXTAREA,
       responsive: false,
       dynamic: false,
+      description: 'Value or Path',
       conditions: {
         type: [
           'set_data',
@@ -451,6 +483,24 @@ class Button extends BaseElement {
         set_type: [
           'set',
           'toggle_set',
+          'push_items',
+          'decrement',
+          'increment',
+        ],
+      },
+    });
+
+    actionsRepeater.addControl('paths', {
+      label: 'Paths',
+      type: CONTROLLER_TEXTAREA,
+      responsive: false,
+      dynamic: false,
+      conditions: {
+        type: [
+          'set_data',
+        ],
+        set_type: [
+          'remove_items',
         ],
       },
     });

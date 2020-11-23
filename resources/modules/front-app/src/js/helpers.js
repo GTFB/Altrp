@@ -441,7 +441,7 @@ export function getDataByPath(
     altrpMeta
   } = appStore.getState();
   if (context) {
-    currentModel = context;
+    currentModel = context instanceof AltrpModel ? context : new AltrpModel(context);
   }
   const urlParams =
     window.currentRouterMatch instanceof AltrpModel
