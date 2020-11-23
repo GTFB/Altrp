@@ -142,6 +142,132 @@ class DataAdapter {
       console.log("ADAPTER ERROR =>", error);
     }
   }
+
+  /**
+   *
+   * @param Array sources
+   * @param Object storeParams
+   * @param Object widgetParams
+   * @param Number countRequest
+   * @return Promise;
+   * */
+  async parseData(sources, storeParams, widgetParams, countRequest) {
+    //возвращаемые значения
+    let data = [];
+    const isMultiple = _.keys(sources).length > 1; //проверка данных на несколько исчтоников
+    let needCallAgain = true; //проверка на повторный вызов http запроса
+    let isDate = true; //проверка на формат ключа
+
+    //Обработка параметров
+    const globalParams = _.cloneDeep(storeParams, []);
+    const globalParamsArray = _.keys(globalParams)
+      .map(param => {
+        return { [param]: globalParams[param] };
+      })
+      .filter(param => {
+        let key = _.keys(param)[0];
+        return param[key] !== "";
+      });
+    const localParams = _.cloneDeep(widgetParams, []);
+    const paramsResult = localParams.concat(globalParamsArray);
+
+    if (_.keys(sources).length > 0) {
+      //Если источник данных один, то возвращаем данные только по нему
+      if (!isMultiple) {
+        let source = sources[0];
+        if (_.keys(paramsResult).length > 0) {
+          data = await this.adaptDataByPath(source, paramsResult);
+        } else {
+          data = await this.adaptDataByPath(source);
+        }
+      } else {
+        // Если несколько истчочников данных, то делаем запросы по каждому
+        data = await this.getDataFromIterableDatasources(sources, paramsResult);
+      }
+
+      let dates = [];
+      let resultDates = [];
+
+      //Если больше одного источника, проверяем вложенные данные
+      if (isMultiple) {
+        let matches = data.map(obj => {
+          if (_.keys(obj).length > 0) {
+            return obj.data.length > 0;
+          }
+          return _.keys(obj).length > 0;
+        });
+        //Если во вложениях есть пустые данные, то вызываем запрос данных снова
+        needCallAgain = _.includes(matches, false);
+        if (!needCallAgain) {
+          //В противном случае проверяем ключи на формат даты
+          dates = data.map(obj => {
+            return obj.data.map(item => item.key instanceof Date);
+          });
+          dates.forEach(array => (resultDates = resultDates.concat(array)));
+          resultDates = _.uniq(resultDates);
+          //Если хотя бы в одном из истчоников нет ключа по дате, то возвращаем ложь
+          isDate = _.includes(resultDates, false) === true ? false : true;
+        }
+      } else {
+        //Если один источник, проверяем данные в нём
+        needCallAgain = _.keys(data).length === 0 && countRequest < 5;
+        dates = data.map(obj => {
+          return obj.key instanceof Date;
+        });
+        dates = _.uniq(dates);
+        isDate = _.includes(dates, false) === true ? false : true;
+      }
+      return {
+        data: data,
+        isMultiple: isMultiple,
+        isDate: isDate,
+        needCallAgain: needCallAgain
+      };
+    }
+
+    return {
+      data: [],
+      isMultiple: isMultiple,
+      isDate: isDate,
+      needCallAgain: needCallAgain
+    };
+  }
+
+  async getDataFromIterableDatasources(sources, paramsResult = {}) {
+    return Promise.all(
+      sources.map(async source => {
+        let dataArray = [];
+        if (_.keys(paramsResult).length > 0) {
+          dataArray = await new DataAdapter().adaptDataByPath(
+            source,
+            paramsResult
+          );
+        } else {
+          dataArray = await new DataAdapter().adaptDataByPath(source);
+        }
+        if (_.keys(dataArray).length === 0) {
+          return [];
+        }
+        const multipleDataArray = _.uniq(
+          _.sortBy(
+            dataArray.map((item, index) => {
+              return {
+                data: item.data,
+                key: item.key,
+                id: index
+              };
+            }),
+            "key"
+          ),
+          "key"
+        );
+        return {
+          key: source.title || source.path,
+          data: multipleDataArray
+        };
+      })
+    );
+  }
 }
 
 export default DataAdapter;

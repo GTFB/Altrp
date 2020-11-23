@@ -8,7 +8,6 @@ import Drawer from "rc-drawer";
 
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-import DataAdapter from "./helpers/DataAdapter";
 
 import WidgetData from "./WidgetData";
 import AddWidgetDataSource from "./AddWidgetDataSource";
