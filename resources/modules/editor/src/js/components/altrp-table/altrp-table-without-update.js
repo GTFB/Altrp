@@ -790,7 +790,7 @@ export function Pagination(
       widgetId,
       gotoPage,
     }) {
-  const {inner_page_count_options} = settings;
+  const {inner_page_count_options, inner_page_type, current_page_text, inner_page_count} = settings;
   let countOptions =
       React.useMemo(() => {
         let countOptions = null;
@@ -800,6 +800,40 @@ export function Pagination(
         }
         return countOptions
       }, [inner_page_count_options]);
+
+  const pageText = React.useMemo(()=>{
+    let pageText = current_page_text || 'Current Page: {{page}}';
+    pageText = pageText.replace('{{page}}', pageIndex + 1).replace('{{page_count}}', pageCount);
+    if(inner_page_type === 'pages'){
+      let paginatePageCount = Number(inner_page_count) || pageCount;
+      if(paginatePageCount <= 0){
+        paginatePageCount = pageCount;
+      }
+      let array = [];
+      for(let i = 0; i < paginatePageCount; i++){
+        array.push(i);
+      }
+      let startIndex = (paginatePageCount === pageCount) ? 1 : (pageIndex + 1) - Math.floor(paginatePageCount / 2);
+      if(startIndex <= 0){
+        startIndex = 1;
+      }
+      if(startIndex + paginatePageCount > pageCount){
+        startIndex = pageCount - paginatePageCount + 1;
+      }
+      pageText = <div className="altrp-pagination-pages">{array.map((i, idx)=>{
+        idx += startIndex;
+        return <button className={`altrp-pagination-pages__item ${(idx - 1 === pageIndex) ? 'active' : ''}`}
+                       key={idx}
+                       onClick={() => {
+                         gotoPage(idx - 1);
+                       }}>
+          {idx}
+          </button>
+
+      })}</div>
+    }
+    return pageText;
+  }, [current_page_text, pageIndex, pageCount, inner_page_type, inner_page_count]);
   return <div className="altrp-pagination">
     <button className={"altrp-pagination__previous"}
             onClick={() => {
@@ -809,8 +843,8 @@ export function Pagination(
       {settings.prev_text || 'Previous Page'}
     </button>
     <div className="altrp-pagination__count">
-      {settings.current_page_text || 'Current Page:'}
-      {pageIndex + 1}
+      {pageText}
+
     </div>
     <button className="altrp-pagination__next"
             onClick={() => {

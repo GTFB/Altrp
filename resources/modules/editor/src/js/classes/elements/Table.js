@@ -679,6 +679,31 @@ class Table extends BaseElement {
       default: 0
     });
 
+    this.addControl('inner_page_type', {
+      type: CONTROLLER_SELECT,
+      nullable: true,
+      label: 'Paginate Type',
+      options:[
+        {
+          label: 'Text',
+          value: 'text',
+        },
+        {
+          label: 'Pages',
+          value: 'pages',
+        },
+      ],
+    });
+
+    this.addControl('inner_page_count', {
+      type: CONTROLLER_NUMBER,
+      default: 5,
+      nullable: true,
+      label: 'Page Count',
+    });
+
+
+
     this.addControl('store_state', {
       type: CONTROLLER_SWITCHER,
       dynamic: false,
