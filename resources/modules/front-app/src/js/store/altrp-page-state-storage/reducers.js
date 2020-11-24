@@ -1,5 +1,6 @@
 import {CHANGE_PAGE_STATE, CLEAR_PAGE_STATE} from './actions'
 import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
+import {setAltrpIndex} from "../../helpers";
 
 const defaultPageState = {
   
@@ -21,6 +22,9 @@ export function altrpPageStateReducer(altrpPageState, action) {
     case CHANGE_PAGE_STATE:{
       let stateValue = action.stateValue;
       altrpPageState = _.cloneDeep(altrpPageState);
+      if(_.isArray(stateValue)){
+        setAltrpIndex(stateValue);
+      }
       altrpPageState.setProperty(action.stateName, stateValue);
     }break;
     case CLEAR_PAGE_STATE:{

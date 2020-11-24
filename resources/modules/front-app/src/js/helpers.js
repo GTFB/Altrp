@@ -44,7 +44,6 @@ export function setTitle(title) {
 export function isEditor() {
   const path = window.location.pathname;
   return path.includes("admin");
-  return !!(window.altrpEditor || window.parent.altrpEditor);
 }
 
 /**
@@ -354,10 +353,10 @@ function conditionChecker(c, model, dataByPath = true) {
  * Установить данные
  * @param {string} path
  * @param {*} value
- * @param {function} dispatch
+ * @param {function | null} dispatch
  * @return {boolean}
  */
-export function setDataByPath(path = "", value, dispatch) {
+export function setDataByPath(path = "", value, dispatch = null) {
   if (!path) {
     return false;
   }
@@ -403,9 +402,9 @@ export function setDataByPath(path = "", value, dispatch) {
       return true;
     }
     if (_.isFunction(dispatch)) {
-      dispatch(changePageState(path, value));
+      dispatch(changeAltrpMeta(path, value));
     } else {
-      appStore.dispatch(changePageState(path, value));
+      appStore.dispatch(changeAltrpMeta(path, value));
     }
     return true;
   }
@@ -436,17 +435,21 @@ export function getDataByPath(
     return path;
   }
   path = path.trim();
-
+  /**
+   * @type {AltrpModel} currentModel
+   */
   let {
     currentModel,
     currentDataStorage,
     altrpresponses,
     formsStore,
     altrpPageState,
+    currentUser,
     altrpMeta
   } = appStore.getState();
   if (context) {
-    currentModel = context;
+    currentModel =
+      context instanceof AltrpModel ? context : new AltrpModel(context);
   }
   const urlParams =
     window.currentRouterMatch instanceof AltrpModel
@@ -468,6 +471,13 @@ export function getDataByPath(
   } else if (path.indexOf("altrppagestate.") === 0) {
     path = path.replace("altrppagestate.", "");
     value = altrpPageState.getProperty(path, _default);
+  } else if (path.indexOf("altrpuser.") === 0) {
+    path = path.replace("altrpuser.", "");
+    value = currentUser.getProperty(path, _default);
+  } else if (path === "altrpuser") {
+    value = currentUser.getData();
+  } else if (path === "altrpmodel") {
+    value = currentModel.getData();
   } else if (path.indexOf("altrptime.") === 0) {
     value = getTimeValue(path.replace("altrptime.", ""));
   } else if (path.indexOf("altrpforms.") === 0) {
@@ -1309,4 +1319,37 @@ export function getDataFromLocalStorage(name, _default = null) {
     value = Number(value);
   }
   return value || _default;
+}
+export function scrollbarWidth() {
+  // thanks too https://davidwalsh.name/detect-scrollbar-width
+  const scrollDiv = document.createElement("div");
+  scrollDiv.setAttribute(
+    "style",
+    "width: 100px; height: 100px; overflow: scroll; position:absolute; top:-9999px;"
+  );
+  document.body.appendChild(scrollDiv);
+  const scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+  document.body.removeChild(scrollDiv);
+  return scrollbarWidth;
+}
+
+/**
+ * Добавляем свойство altrpIndex для всех эементов-объектов массива
+ * для их идентификации внутри повторяющихся карточек
+ * @param {[]} array
+ */
+export function setAltrpIndex(array = []) {
+  if (!_.isArray(array)) {
+    return;
+  }
+  array.forEach((item, idx) => {
+    if (!_.isObject(item)) {
+      return;
+    }
+    if (item instanceof AltrpModel) {
+      item.setProperty("altrpIndex", idx);
+      return;
+    }
+    item.altrpIndex = idx;
+  });
 }

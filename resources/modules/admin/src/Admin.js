@@ -56,8 +56,10 @@ import AddMigrationPage from "./components/tables/AddMigrationPage";
 import AdminVersion from "./components/AdminVersion";
 import SQLEditors from "./components/SQLEditors";
 import ColorSchemes from "./components/dashboard/ColorSchemes";
+import ModelPage from "./components/models/ModelPage";
 
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
+import Resource from "../../editor/src/js/classes/Resource";
 
 import store from "./js/store/store";
 
@@ -74,13 +76,16 @@ class Admin extends Component {
       adminState: {
         adminEnable: true
       },
-      pagesMenuShow: false
+      pagesMenuShow: false,
+      models: [],
     };
     this.toggleMenu = this.toggleMenu.bind(this);
   }
 
   componentDidMount() {
     store.subscribe(this.updateAdminState.bind(this));
+    new Resource({ route: '/admin/ajax/model_options' }).getAll()
+      .then(({ options }) => this.setState({ models: options }));
   }
 
   /**
@@ -98,6 +103,7 @@ class Admin extends Component {
     });
   }
   render() {
+    const { models } = this.state;
     let adminClasses = ["admin"];
     if (!this.state.adminState.adminEnable) {
       adminClasses.push("pointer-event-none");
@@ -211,12 +217,18 @@ class Admin extends Component {
                       <span>Pages</span>
                     </Link>
                   </li>
-                  <li>
-                    <Link to="/admin/reports" className="admin-nav-list__link">
-                      <ReportSvg className="icon" />
-                      <span>Reports</span>
+
+                  Models
+                  {models.sort((a, b) => {
+                    if (a.label.toUpperCase() < b.label.toUpperCase()) return -1;
+                    if (a.label.toUpperCase() > b.label.toUpperCase()) return 1;
+                    return 0;
+                  }).map(({ value: id, label }) => <li key={id}>
+                    <Link to={`/admin/model/${id}`} className="admin-nav-list__link">
+                      {/* <TableSvg className="icon" /> */}
+                      <span>- {label}</span>
                     </Link>
-                  </li>
+                  </li>)}
                 </ul>
               </div>
               <AdminVersion />
@@ -351,6 +363,9 @@ class Admin extends Component {
               </Route>
               <Route path="/admin/access">
                 <AccessOptions />
+              </Route>
+              <Route path="/admin/model/:id">
+                <ModelPage />
               </Route>
             </Switch>
           </Router>

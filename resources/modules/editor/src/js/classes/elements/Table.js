@@ -100,6 +100,13 @@ class Table extends BaseElement {
       default: false
     });
 
+
+    this.addControl('table_2_0', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Table 2.0',
+      default: false
+    });
+
     this.endControlSection();
 
     this.startControlSection("table_data_settings", {
@@ -219,6 +226,16 @@ class Table extends BaseElement {
       label: 'Group by',
     });
 
+    repeater.addControl('column_template', {
+      type: CONTROLLER_SELECT2,
+      label: 'Card Template',
+      default: false,
+      prefetch_options: true,
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options?template_type=card&value=guid',
+      nullable: true,
+    });
+
     repeater.addControl('column_link', {
       label: 'Link Template',
       dynamic: false,
@@ -250,6 +267,7 @@ class Table extends BaseElement {
         },
       ]
     });
+
     repeater.addControl('column_body_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Body alignment',
@@ -320,7 +338,6 @@ class Table extends BaseElement {
       responsive: false,
       description: 'Search {{count}} records...',
     });
-
 
     repeater.addControl('filter_min_placeholder', {
       label: 'MinPlaceholder',
@@ -398,6 +415,15 @@ class Table extends BaseElement {
       default: false
     });
 
+    repeater.addControl('column_edit_url', {
+      label: 'Edit URL',
+      description: '/ajax/models/tests/:id/title',
+      default: '',
+      conditions:{
+        column_is_editable: true,
+      },
+    });
+
     repeater.addControl('column_is_default_sorted', {
       type: CONTROLLER_SWITCHER,
       label: 'Is Default Sorted',
@@ -419,12 +445,6 @@ class Table extends BaseElement {
         },
       ],
       default: 'ASC'
-    });
-
-    repeater.addControl('column_edit_url', {
-      label: 'Edit URL',
-      description: '/ajax/models/tests/:id/title',
-      default: ''
     });
 
     repeater.addControl('column_styles_field', {
@@ -659,6 +679,31 @@ class Table extends BaseElement {
       default: 0
     });
 
+    this.addControl('inner_page_type', {
+      type: CONTROLLER_SELECT,
+      nullable: true,
+      label: 'Paginate Type',
+      options:[
+        {
+          label: 'Text',
+          value: 'text',
+        },
+        {
+          label: 'Pages',
+          value: 'pages',
+        },
+      ],
+    });
+
+    this.addControl('inner_page_count', {
+      type: CONTROLLER_NUMBER,
+      default: 5,
+      nullable: true,
+      label: 'Page Count',
+    });
+
+
+
     this.addControl('store_state', {
       type: CONTROLLER_SWITCHER,
       dynamic: false,
@@ -713,6 +758,15 @@ class Table extends BaseElement {
       default: false,
     });
 
+    this.addControl('row_select_width', {
+      type: CONTROLLER_NUMBER,
+      label: 'Width',
+      default: 50,
+      conditions: {
+        row_select: true,
+      },
+    });
+
     this.addControl('row_select_all', {
       type: CONTROLLER_SWITCHER,
       label: 'Select All',
@@ -721,6 +775,7 @@ class Table extends BaseElement {
         row_select: true,
       },
     });
+
 
     this.addControl('selected_storage', {
       label: 'Selected Storage',
@@ -749,6 +804,7 @@ class Table extends BaseElement {
     this.addControl('resize_columns', {
       type: CONTROLLER_SWITCHER,
       label: 'Resize',
+      prefixClass: 'table-resize_',
       default: false,
     });
 
@@ -756,6 +812,45 @@ class Table extends BaseElement {
       type: CONTROLLER_SWITCHER,
       label: 'Replacing Rows',
       default: false,
+    });
+
+    this.addControl('replace_text', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Text',
+      condition:{
+        replace_rows: true,
+      },
+    });
+
+    this.addControl('replace_width', {
+      type: CONTROLLER_NUMBER,
+      label: 'Width',
+      default: 100,
+      condition:{
+        replace_rows: true,
+      },
+    });
+
+    this.addControl('virtualized_rows', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Virtualized Rows',
+      default: false,
+      prefixClass: 'table-virtualized_'
+    });
+
+    this.addControl('virtualized_height', {
+      type: CONTROLLER_NUMBER,
+      label: 'Height',
+      conditions:{
+        virtualized_rows: true,
+      },
+    });
+    this.addControl('item_size', {
+      type: CONTROLLER_NUMBER,
+      label: 'Item Size',
+      conditions:{
+        virtualized_rows: true,
+      },
     });
 
     this.addControl('row_expand', {

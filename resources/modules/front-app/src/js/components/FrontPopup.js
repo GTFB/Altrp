@@ -2,128 +2,208 @@ import React, { Component } from "react";
 import connect from "react-redux/es/connect/connect";
 // import { isElementTopInViewport, getTopPosition } from "../helpers";
 import { Scrollbars } from "react-custom-scrollbars";
+import AltrpOffcanvas from "./altrp-offcanvas/AltrpOffcanvas";
+import { togglePopup } from "../store/popup-trigger/actions";
 
 class FrontPopup extends Component {
-  state = {
-    isVisible: false,
-    isShownOnScroll: false
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isVisible: false,
+      rootElement: window.frontElementsFabric.parseData(this.props.template.data, null, this.props.page, this.props.models),
+      isShownOnScroll: false
+    };
+
+    this.close = this.close.bind(this)
+  }
 
   componentDidMount() {
-    const { on_page_load, on_click, inactivity, on_exit, to_element } = _.get(this.props, 'template.triggers.data', {});
+    switch (this.state.rootElement.getContent("type_popup")) {
+      case "popup":
+        const { on_page_load, on_click, inactivity, on_exit, to_element } = _.get(this.props, 'template.triggers.data', {});
 
-    if (on_page_load || on_page_load === 0) {
-      setTimeout(() => this.setState({ isVisible: true }), on_page_load * 1000)
-    }
-
-    if (on_click) {
-      this.clickCounter = 0;
-      document.addEventListener('click', () => {
-        this.clickCounter += 1;
-        if (this.clickCounter === +on_click) {
-          this.clickCounter = 0;
-          this.setState({ isVisible: true });
+        if (on_page_load || on_page_load === 0) {
+          setTimeout(() => this.setState({ isVisible: true }), on_page_load * 1000)
         }
-      })
+
+        if (on_click) {
+          this.clickCounter = 0;
+          document.addEventListener('click', () => {
+            this.clickCounter += 1;
+            if (this.clickCounter === +on_click) {
+              this.clickCounter = 0;
+              this.setState({ isVisible: true });
+            }
+          })
+        }
+
+        if (inactivity) {
+          this.inactivityTimeout = setTimeout(() => this.setState({ isVisible: true }), inactivity * 1000);
+
+          this.resetTimer = () => {
+            clearTimeout(this.inactivityTimeout);
+            this.inactivityTimeout = setTimeout(() => this.setState({ isVisible: true }), inactivity * 1000);
+          };
+
+          const events = ['mousedown', 'keydown', 'touchstart'];
+          events.forEach(event => {
+            document.addEventListener(event, this.resetTimer, true);
+          });
+        }
+
+        if (on_exit) {
+          // window.addEventListener('beforeunload', (event) => {
+          //   // Отмените событие, как указано в стандарте.
+          //   event.preventDefault();
+          //   this.setState({ isVisible: true })
+          //   // Хром требует установки возвратного значения.
+          //   event.returnValue = '';
+          // });
+          document.addEventListener('mouseleave', () => this.setState({ isVisible: true }))
+        }
+
+        // if (to_element) {
+        //   const htmlCollection = document.getElementsByClassName(to_element);
+        //   console.log(htmlCollection);
+        //   this.elements = []
+        //   for (let index = 0; index < htmlCollection.length; index++) {
+        //     const element = htmlCollection[index];
+        //     this.elements[index] = getTopPosition(element);
+        //   }
+        //   console.log(this.elements);
+        // }
+        break;
     }
-
-    if (inactivity) {
-      this.inactivityTimeout = setTimeout(() => this.setState({ isVisible: true }), inactivity * 1000);
-
-      this.resetTimer = () => {
-        clearTimeout(this.inactivityTimeout);
-        this.inactivityTimeout = setTimeout(() => this.setState({ isVisible: true }), inactivity * 1000);
-      }
-
-      const events = ['mousedown', 'keydown', 'touchstart'];
-      events.forEach(event => {
-        document.addEventListener(event, this.resetTimer, true);
-      });
-    }
-
-    if (on_exit) {
-      // window.addEventListener('beforeunload', (event) => {
-      //   // Отмените событие, как указано в стандарте.
-      //   event.preventDefault();
-      //   this.setState({ isVisible: true })
-      //   // Хром требует установки возвратного значения.
-      //   event.returnValue = '';
-      // });
-      document.addEventListener('mouseleave', () => this.setState({ isVisible: true }))
-    }
-
-    // if (to_element) {
-    //   const htmlCollection = document.getElementsByClassName(to_element);
-    //   console.log(htmlCollection);
-    //   this.elements = []
-    //   for (let index = 0; index < htmlCollection.length; index++) {
-    //     const element = htmlCollection[index];
-    //     this.elements[index] = getTopPosition(element);
-    //   }
-    //   console.log(this.elements);
-    // }
   }
 
   componentDidUpdate(prevProps) {
+    let { popupTrigger } = this.props;
     const { on_scroll, to_element } = _.get(this.props, 'template.triggers.data', {});
     const { isShownOnScroll } = this.state;
-    const { popupTrigger } = this.props
+    switch (this.state.rootElement.getSettings("type_popup", "popup")) {
+      case "popup":
 
-    if (on_scroll && !isShownOnScroll && on_scroll.size <= this.props.scrollPosition.top * 100) {
-      this.setState({ isVisible: true, isShownOnScroll: true });
+        if (on_scroll && !isShownOnScroll && on_scroll.size <= this.props.scrollPosition.top * 100) {
+          this.setState({ isVisible: true, isShownOnScroll: true });
+        }
+
+        if (this.resetTimer && this.props.scrollPosition.top !== prevProps.scrollPosition.top) {
+          this.resetTimer();
+        }
+
+        // if (to_element && this.props.scrollPosition.top !== prevProps.scrollPosition.top) {
+        //   // console.log(this.elements)
+        //   console.log(this.props.scrollPosition.scrollTop)
+        //   const { scrollTop, clientHeight } = this.props.scrollPosition;
+
+        //   for (let index = 0; index < this.elements.length; index++) {
+        //     const element = this.elements[index];
+
+        //     if (isElementTopInViewport(element, scrollTop, clientHeight)) {
+        //       this.setState({ isVisible: true });
+        //       // this.elements.splice(index, 1);
+        //     }
+        //   }
+
+        // }
+
+        if (popupTrigger !== prevProps.popupTrigger) {
+          this.setState({ isVisible: popupTrigger.popupID === _.get(this.props, 'template.guid') });
+        }
+        break;
+      case "offcanvas":
+        if (on_scroll && !isShownOnScroll && on_scroll.size <= this.props.scrollPosition.top * 100) {
+          this.setState({ isVisible: true, isShownOnScroll: true });
+        }
+
+        if (this.resetTimer && this.props.scrollPosition.top !== prevProps.scrollPosition.top) {
+          this.resetTimer();
+        }
+
+        // if (to_element && this.props.scrollPosition.top !== prevProps.scrollPosition.top) {
+        //   // console.log(this.elements)
+        //   console.log(this.props.scrollPosition.scrollTop)
+        //   const { scrollTop, clientHeight } = this.props.scrollPosition;
+
+        //   for (let index = 0; index < this.elements.length; index++) {
+        //     const element = this.elements[index];
+
+        //     if (isElementTopInViewport(element, scrollTop, clientHeight)) {
+        //       this.setState({ isVisible: true });
+        //       // this.elements.splice(index, 1);
+        //     }
+        //   }
+
+        // }
+        if (popupTrigger !== prevProps.popupTrigger) {
+          this.setState({ isVisible: popupTrigger.popupID === _.get(this.props, 'template.guid') });
+        }
+        break;
     }
+  }
 
-    if (this.resetTimer && this.props.scrollPosition.top !== prevProps.scrollPosition.top) {
-      this.resetTimer();
-    }
-
-    // if (to_element && this.props.scrollPosition.top !== prevProps.scrollPosition.top) {
-    //   // console.log(this.elements)
-    //   console.log(this.props.scrollPosition.scrollTop)
-    //   const { scrollTop, clientHeight } = this.props.scrollPosition;
-
-    //   for (let index = 0; index < this.elements.length; index++) {
-    //     const element = this.elements[index];
-
-    //     if (isElementTopInViewport(element, scrollTop, clientHeight)) {
-    //       this.setState({ isVisible: true });
-    //       // this.elements.splice(index, 1);
-    //     }
-    //   }
-
-    // }
-
-    if (popupTrigger !== prevProps.popupTrigger) {
-      this.setState({ isVisible: popupTrigger.popupID === _.get(this.props, 'template.guid') });
-    }
+  close() {
+    this.setState({ isVisible: false, isShownOnScroll: false });
+    this.props.closePopup();
   }
 
   render() {
     const { isVisible } = this.state;
     let classes = [`app-popup`];
     const { positioning_custom_top } = this.props.template.data.settings;
-    let rootElement = window.frontElementsFabric.parseData(this.props.template.data, null, this.props.page, this.props.models);
-    return isVisible ? 
-      <div className={classes.join(' ')} onClick={() => this.setState({ isVisible: false })}>
-        <Scrollbars style={{ height: '100vh' }}>
-          <div className="popup-window" 
-            style={{ top: positioning_custom_top.size + positioning_custom_top.unit}} 
-            onClick={e => e.stopPropagation()}
-          >
+    let rootElement = this.state.rootElement;
+    const rootElementSettings = rootElement.getSettings("");
 
-            {React.createElement(rootElement.componentClass,
-              {
-                element: rootElement,
-                children: rootElement.children
-              })}
-          </div>
-        </Scrollbars>
-        <button className="popup-close-button" 
-          style={{ top: positioning_custom_top.size + positioning_custom_top.unit }} 
-          onClick={() => this.setState({ isVisible: false })}
-        >✖</button>
-      </div>
-     : null
+    let content = "";
+
+    const popup = (
+      isVisible ?
+        <div
+          className={classes.join(' ')}
+          onClick={() => {
+            this.setState({ isVisible: false });
+            this.props.closePopup()
+          }}
+        >
+          <Scrollbars style={{ height: '100vh' }}>
+            <div className="popup-window"
+                 style={{ top: positioning_custom_top.size + positioning_custom_top.unit}}
+                 onClick={e => e.stopPropagation()}
+            >
+
+              {React.createElement(rootElement.componentClass,
+                {
+                  element: rootElement,
+                  children: rootElement.children
+                })}
+            </div>
+          </Scrollbars>
+          <button className="popup-close-button"
+                  style={{ top: positioning_custom_top.size + positioning_custom_top.unit }}
+                  onClick={() => {
+                    this.setState({ isVisible: false });
+                    this.props.closePopup()
+                  }}
+          >✖</button>
+        </div>
+        : null
+    );
+
+    switch (rootElementSettings.type_popup) {
+      case "popup":
+        content = popup;
+        break;
+      case "offcanvas":
+        content = <AltrpOffcanvas
+          close={this.close}
+          show={this.state.isVisible}
+          settings={rootElementSettings}
+          template={rootElement}
+        />;
+        break
+    }
+    return content
   }
 }
 
@@ -134,4 +214,10 @@ const mapStateToProps = state => {
   }
 };
 
-export default connect(mapStateToProps)(FrontPopup);
+const mapDispatchToProps = dispatch => {
+  return {
+    closePopup: () => dispatch(togglePopup(null))
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(FrontPopup);

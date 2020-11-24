@@ -199,6 +199,40 @@
 }
 .altrp-table{
   overflow: hidden;
+  display: table;
+  &-head{
+    display: table-header-group;
+  }
+  &-tbody{
+    display: table-row-group;
+  }
+  &-foot{
+    display: table-footer-group;
+  }
+  &-tr{
+    display: table-row;
+    &_loading{
+      display: block;
+    }
+  }
+  &-th{
+    display: table-cell;
+    &_global-filter{
+      colspan: all;
+      //display: block;
+      //width: 100%;
+    }
+  }
+  &-td{
+    display: table-cell;
+    & .altrp-inherit{
+      border: none;
+    }
+    &_loading{
+      display: block;
+      width: 100%;
+    }
+  }
   &__resizer{
     display: inline-block;
     background: blue;

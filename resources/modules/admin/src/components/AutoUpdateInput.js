@@ -63,7 +63,11 @@ class AutoUpdateInput extends Component {
         disabled: true,
       }
     });
+    if(_.isFunction(this.props.onBlur)){
+      this.props.onBlur(newValue);
+    }
     let res = await this.resource.put(this.props.resourceid, {value: newValue, column_value: newValue});
+
     this.setState(state=>{
       return{...state,
         disabled: false,

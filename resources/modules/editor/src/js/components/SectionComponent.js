@@ -121,7 +121,6 @@ function mapStateToProps(state) {
     changeWidthColumns: state.columnWidth,
   };
 }
-console.log(isEditor());
 // export default connect(mapStateToProps, null, null, {
 //   forwardRef: true
 // })(SectionComponent);

@@ -111,6 +111,7 @@ class ElementWrapper extends Component {
      * @member {ElementsManger} elementsManager
      * */
     // e.stopPropagation();`
+    e.preventDefault();
     let newWidgetName = e.dataTransfer.getData("text/plain");
     if (newWidgetName) {
       e.stopPropagation();
