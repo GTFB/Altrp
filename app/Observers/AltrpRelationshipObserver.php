@@ -462,6 +462,7 @@ class AltrpRelationshipObserver
     /**
      * @param Relationship $relationship
      * @throws CommandFailedException
+     * @throws \Exception
      */
     public function deleted(Relationship $relationship)
     {
@@ -469,6 +470,22 @@ class AltrpRelationshipObserver
         $generator = new ModelGenerator($model);
         if (! $generator->updateModelFile()) {
             throw new CommandFailedException('Failed to update model file', 500);
+        }
+
+        if ($relationship->type === 'morphTo') {
+            $parts = explode('_', $relationship->foreign_key);
+            if (count($parts) > 1)
+                array_pop($parts);
+            $fk = implode('_', $parts);
+            $rels = Relationship::where([['foreign_key', 'like', "%$fk%"], ['type', 'morphOne']])
+                ->orWhere(function ($query) use ($fk) {
+                    $query->where('foreign_key', 'like', "%$fk%")
+                        ->where('type', '=', 'morphMany');
+                })
+                ->get();
+            foreach ($rels as $rel) {
+                $rel->delete();
+            }
         }
 
         //После удаления связи belongsTo нужно убрать галочку в обратной связи hasOne или hasMany

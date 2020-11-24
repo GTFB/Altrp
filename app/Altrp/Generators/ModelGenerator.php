@@ -335,8 +335,10 @@ class ModelGenerator extends AppGenerator
         $relArr = [];
         foreach ($this->relationships as $rel) {
 
-            $relItem = $rel->name . '#' . $rel->type . '#'
-                . trim($this->screenBacklashes($rel->model_class), '\\');
+            $relItem = $rel->name . '#' . str_replace(' ', '', $rel->type) . '#';
+
+            if ($rel->type !== 'morphTo')
+                $relItem .= trim($this->screenBacklashes($rel->model_class), '\\');
 
             $post_args = "";
 
@@ -348,6 +350,26 @@ class ModelGenerator extends AppGenerator
             }
             else if($rel->type === 'belongsTo') {
                 $post_args = "|" . $rel->local_key . "|" . $rel->foreign_key;
+            }
+            else if($rel->type === 'belongsToMany') {
+                $post_args = "|" . $rel->altrp_secondary_model->table->name . "|" . $rel->secondary_local_key . "|" . $rel->secondary_foreign_key;
+            }
+            else if($rel->type === 'hasOneThrough' || $rel->type === 'hasManyThrough') {
+                $post_args = "|" . $rel->altrp_secondary_model->namespace . "|" . $rel->secondary_foreign_key
+                    . "|" . $rel->foreign_key . "|" . 'id' . "|" . $rel->secondary_local_key;
+            }
+            else if($rel->type === 'morphTo') {
+                $post_args = "|__FUNCTION__|" . $rel->local_key . "|" . $rel->foreign_key;
+            }
+            else if($rel->type === 'morphOne' || $rel->type === 'morphMany') {
+                $parts = explode('_', $rel->foreign_key);
+                array_pop($parts);
+                $type = implode('_', $parts);
+                $post_args = "|" . $type . "|";
+            }
+            else if($rel->type === 'morphToMany' || $rel->type === 'morphed By Many' || $rel->type === 'morphedByMany') {
+                $post_args = "|" . $rel->altrp_secondary_model->name . "|" . $rel->altrp_secondary_model->table->name
+                    . "|" . $rel->secondary_foreign_key . "|" . $rel->secondary_local_key;
             }
 
             $relItem .= $post_args;

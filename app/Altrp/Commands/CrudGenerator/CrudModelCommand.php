@@ -200,6 +200,8 @@ EOD;
                 continue;
             }
 
+            $constants = ['__FUNCTION__'];
+
             // blindly wrap each arg in single quotes
             $args = explode('|', trim($parts[2]));
             $argsString = '';
@@ -207,8 +209,10 @@ EOD;
                 if (trim($v) == '') {
                     continue;
                 }
-
-                $argsString .= "'" . trim($v) . "', ";
+                if (!in_array(trim($v), $constants))
+                    $argsString .= "'" . trim($v) . "', ";
+                else
+                    $argsString .= trim($v) . ", ";
             }
 
             $argsString = substr($argsString, 0, -2); // remove last comma
