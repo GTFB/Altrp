@@ -205,7 +205,6 @@ class IconWidget extends Component {
     }
 
     //bodyAlignment
-    console.log(bodyAlignment)
     switch (bodyAlignment) {
       case "flex-start":
         bodyStyles.textAlign = "left";
