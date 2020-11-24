@@ -268,44 +268,46 @@ class IconWidget extends Component {
     }
 
     let iconContent = (
-      <div className="altrp-icon">
-        <div className="altrp-icon-header" style={headerStyles}>
-          <div className="altrp-icon-i-wrapper">
-            <AltrpImage
-              image={this.state.settings.media_icon_box_content}
-              default={{
-                assetType: "icon",
-                name: 'star',
-                iconComponent: iconsManager.renderIcon('star')
-              }}
-              className={"altrp-icon-i"}
-            />
+      <div className="altrp-icon-background-image">
+        <div className="altrp-icon">
+          <div className="altrp-icon-header" style={headerStyles}>
+            <div className="altrp-icon-i-wrapper">
+              <AltrpImage
+                image={this.state.settings.media_icon_box_content}
+                default={{
+                  assetType: "icon",
+                  name: 'star',
+                  iconComponent: iconsManager.renderIcon('star')
+                }}
+                className={"altrp-icon-i"}
+              />
+            </div>
           </div>
-        </div>
-        <div className="altrp-icon-content">
-          <div className="altrp-icon-body" style={bodyStyles}>
+          <div className="altrp-icon-content">
+            <div className="altrp-icon-body" style={bodyStyles}>
+              {
+                bodyContent
+              }
+            </div>
+            <div className="altrp-icon-footer" style={footerStyles}>
+              <p className="altrp-icon-footer-text">
+                {
+                  this.state.settings.description_icon_box_content
+                }
+              </p>
+            </div>
             {
-              bodyContent
+              readMore
             }
           </div>
-          <div className="altrp-icon-footer" style={footerStyles}>
-            <p className="altrp-icon-footer-text">
-              {
-                this.state.settings.description_icon_box_content
-              }
-            </p>
-          </div>
+
           {
-            readMore
+            indicator
+          }
+          {
+            badge
           }
         </div>
-
-        {
-          indicator
-        }
-        {
-          badge
-        }
       </div>
     );
 

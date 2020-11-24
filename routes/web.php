@@ -46,11 +46,16 @@ Route::get( '/admin/editor-content', function (){
   return view( 'editor-content' );
 } )->middleware( 'auth' )->name('editor-content');
 
-Route::get( '/admin/editor-reports', function (){
-  return view( 'editor-reports' );
-} )->middleware( 'auth' )->name('editor-reports');
+// Route::get('/admin/reports-editor',fn()=>view('reports'));
+// Route::get('/admin/reports-content',fn()=>view('reports-content'));
 
-Route::get('/reports/html/{id}', "ReportsController@page");
+// Route::get( '/admin/editor-reports', function (){
+//    return view( 'editor-reports' );
+// } )->middleware( 'auth' )->name('editor-reports');
+
+// Route::get('/reports/html/{id}', "ReportsController@page");
+// Route::get('/reports/{id}/html', "ReportsController@html");
+Route::post('/reports/generate', "ReportsController@setHtml");
 
 /**
  * Роуты Админки
@@ -78,6 +83,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     Route::resource( 'pages', 'Admin\PagesController' );
     Route::get( '/pages_options', 'Admin\PagesController@pages_options' )->name( 'admin.pages_options.all' );
+    Route::get( '/reports_options', 'Admin\PagesController@reports_options' )->name( 'admin.reports_options.all' );
     Route::get( '/pages_options/{page_id}', 'Admin\PagesController@show_pages_options' )->name( 'admin.pages_options.show' );
 
     Route::get('/page_data_sources', 'Admin\PageDatasourceController@index');
@@ -394,6 +400,21 @@ foreach ( $frontend_routes as $frontend_route ) {
 }
 
 /**
+ * Reports
+ */
+$reports_routes = \App\Page::get_reports_routes();
+foreach($reports_routes as $report_route){
+  $path = $report_route['path'];
+  $title = $report_route['title'];
+
+  $report_route = str_replace( ':id', '{id}', $path );
+  
+  Route::get($report_route, function () use ($title){
+    return view('front-app',['title'=>$title]);
+  })->middleware(['web','installation.checker']);
+}
+
+/**
  * AJAX routes for frontend
 */
 
@@ -449,6 +470,12 @@ Route::group( ['prefix' => 'ajax'], function(){
    * для загрузки шаблонов внутри виджетов
    */
   Route::get( 'templates/{template_id}', 'TemplateController@show_frontend' )->name( 'templates.show.frontend' );
+
+
+  /**
+   * Отдает данные отчётов
+   */
+  Route::get( 'reports/{id}/result', 'ReportsController@report_template' )->name( 'front.reports-for-routes' );
 
   /**
    * Настройка почты

@@ -1,7 +1,8 @@
-import React, { Component } from "react";
+  import React, { Component } from "react";
 import '../../sass/section.scss';
 import { connect } from "react-redux";
 import '../../sass/section.scss'
+  import {isEditor} from "../../../../front-app/src/js/helpers";
 
 class SectionComponent extends Component {
   constructor(props) {
@@ -120,5 +121,7 @@ function mapStateToProps(state) {
     changeWidthColumns: state.columnWidth,
   };
 }
-
-export default connect(mapStateToProps)(SectionComponent);
+// export default connect(mapStateToProps, null, null, {
+//   forwardRef: true
+// })(SectionComponent);
+export default SectionComponent;

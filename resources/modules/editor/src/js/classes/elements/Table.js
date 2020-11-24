@@ -15,7 +15,13 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_NUMBER,
-  CONTROLLER_WYSIWYG, CONTROLLER_QUERY, CONTROLLER_REPEATER, CONTROLLER_FILTERS, CONTROLLER_HEADING, CONTROLLER_MEDIA
+  CONTROLLER_WYSIWYG,
+  CONTROLLER_QUERY,
+  CONTROLLER_REPEATER,
+  CONTROLLER_FILTERS,
+  CONTROLLER_HEADING,
+  CONTROLLER_MEDIA,
+  CONTROLLER_SELECT2
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import Repeater from "../Repeater";
@@ -91,6 +97,13 @@ class Table extends BaseElement {
     this.addControl('table_hover_row', {
       type: CONTROLLER_SWITCHER,
       label: 'Hover Row',
+      default: false
+    });
+
+
+    this.addControl('table_2_0', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Table 2.0',
       default: false
     });
 
@@ -212,16 +225,29 @@ class Table extends BaseElement {
       default: false,
       label: 'Group by',
     });
+
+    repeater.addControl('column_template', {
+      type: CONTROLLER_SELECT2,
+      label: 'Card Template',
+      default: false,
+      prefetch_options: true,
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options?template_type=card&value=guid',
+      nullable: true,
+    });
+
     repeater.addControl('column_link', {
       label: 'Link Template',
       dynamic: false,
       description: '/path/:id',
     });
+
     repeater.addControl('column_width', {
       label: 'Column Width',
       dynamic: false,
       type: CONTROLLER_NUMBER,
     });
+
     repeater.addControl('column_header_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Header alignment',
@@ -241,6 +267,7 @@ class Table extends BaseElement {
         },
       ]
     });
+
     repeater.addControl('column_body_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Body alignment',
@@ -311,7 +338,6 @@ class Table extends BaseElement {
       responsive: false,
       description: 'Search {{count}} records...',
     });
-
 
     repeater.addControl('filter_min_placeholder', {
       label: 'MinPlaceholder',
@@ -389,6 +415,15 @@ class Table extends BaseElement {
       default: false
     });
 
+    repeater.addControl('column_edit_url', {
+      label: 'Edit URL',
+      description: '/ajax/models/tests/:id/title',
+      default: '',
+      conditions:{
+        column_is_editable: true,
+      },
+    });
+
     repeater.addControl('column_is_default_sorted', {
       type: CONTROLLER_SWITCHER,
       label: 'Is Default Sorted',
@@ -410,12 +445,6 @@ class Table extends BaseElement {
         },
       ],
       default: 'ASC'
-    });
-
-    repeater.addControl('column_edit_url', {
-      label: 'Edit URL',
-      description: '/ajax/models/tests/:id/title',
-      default: ''
     });
 
     repeater.addControl('column_styles_field', {
@@ -650,10 +679,45 @@ class Table extends BaseElement {
       default: 0
     });
 
+    this.addControl('inner_page_type', {
+      type: CONTROLLER_SELECT,
+      nullable: true,
+      label: 'Paginate Type',
+      options:[
+        {
+          label: 'Text',
+          value: 'text',
+        },
+        {
+          label: 'Pages',
+          value: 'pages',
+        },
+      ],
+    });
+
+    this.addControl('inner_page_count', {
+      type: CONTROLLER_NUMBER,
+      default: 5,
+      nullable: true,
+      label: 'Page Count',
+    });
+
+
+
+    this.addControl('store_state', {
+      type: CONTROLLER_SWITCHER,
+      dynamic: false,
+      label: 'Store State',
+    });
+
+    this.addControl('loading_text', {
+      type: CONTROLLER_TEXTAREA,
+      default: 'Loading...',
+      label: 'Loading Text',
+    });
 
     this.addControl('inner_page_count_options', {
       type: CONTROLLER_TEXTAREA,
-      dynamic: false,
       label: 'Counts',
     });
 
@@ -694,10 +758,118 @@ class Table extends BaseElement {
       default: false,
     });
 
+    this.addControl('row_select_width', {
+      type: CONTROLLER_NUMBER,
+      label: 'Width',
+      default: 50,
+      conditions: {
+        row_select: true,
+      },
+    });
+
+    this.addControl('row_select_all', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Select All',
+      default: false,
+      conditions: {
+        row_select: true,
+      },
+    });
+
+
+    this.addControl('selected_storage', {
+      label: 'Selected Storage',
+      dynamic: false,
+      responsive: false,
+      conditions: {
+        row_select: true,
+      },
+    });
+
+    this.addControl('ids_storage', {
+      label: 'Selected IDs Storage',
+      dynamic: false,
+      responsive: false,
+      conditions: {
+        row_select: true,
+      },
+    });
+
+    this.addControl('hide_columns', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hide Columns',
+      default: false,
+    });
+
+    this.addControl('resize_columns', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Resize',
+      prefixClass: 'table-resize_',
+      default: false,
+    });
+
+    this.addControl('replace_rows', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Replacing Rows',
+      default: false,
+    });
+
+    this.addControl('replace_text', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Text',
+      condition:{
+        replace_rows: true,
+      },
+    });
+
+    this.addControl('replace_width', {
+      type: CONTROLLER_NUMBER,
+      label: 'Width',
+      default: 100,
+      condition:{
+        replace_rows: true,
+      },
+    });
+
+    this.addControl('virtualized_rows', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Virtualized Rows',
+      default: false,
+      prefixClass: 'table-virtualized_'
+    });
+
+    this.addControl('virtualized_height', {
+      type: CONTROLLER_NUMBER,
+      label: 'Height',
+      conditions:{
+        virtualized_rows: true,
+      },
+    });
+    this.addControl('item_size', {
+      type: CONTROLLER_NUMBER,
+      label: 'Item Size',
+      conditions:{
+        virtualized_rows: true,
+      },
+    });
+
     this.addControl('row_expand', {
       type: CONTROLLER_SWITCHER,
-      label: 'Row Select',
+      label: 'Row Expand',
       default: false,
+    });
+
+    this.addControl('card_template', {
+      type: CONTROLLER_SELECT2,
+      label: 'Card Template',
+      default: false,
+      prefetch_options: true,
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options?template_type=card&value=guid',
+      nullable: true,
+      conditions: {
+        row_expand: true,
+      },
     });
 
     this.endControlSection();

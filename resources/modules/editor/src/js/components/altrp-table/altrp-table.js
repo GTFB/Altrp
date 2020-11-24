@@ -61,13 +61,14 @@ const AltrpTable = ({settings,
         return _.get(settings, 'group_by_column_name') ? _.get(settings, 'group_by_column_name') : getGroupBy(settings.tables_columns)
       }, [settings]
       );
-
-  if(groupBy){
-    setSortSettings({
-      order: 'ASC',
-      order_by: groupBy,
-  })
-  }
+  React.useEffect(()=>{
+    if(groupBy){
+      setSortSettings({
+        order: 'ASC',
+        order_by: groupBy,
+      })
+    }
+  }, [groupBy]);
 
   let counter = query.getCounterStart(page);
 
@@ -548,7 +549,7 @@ function renderFooter(settings, data){
  * @param cell
  * @param row
  */
-function renderCellActions(cell, row = {}) {
+export function renderCellActions(cell, row = {}) {
   let actions = _.get(cell,'column.actions', []);
   return <div className="altrp-actions">
     {actions.map(action =>{

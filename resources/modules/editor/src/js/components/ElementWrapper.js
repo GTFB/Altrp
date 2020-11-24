@@ -17,9 +17,11 @@ import CloseIcon from "../../svgs/close.svg";
 import store from "../store/store";
 import { START_DRAG, startDrag } from "../store/element-drag/actions";
 import { setCurrentElement } from "../store/current-element/actions";
-import {changeWidthColumns} from "../store/column-width/actions";
-import {contextMenu} from "react-contexify/lib/index";
-import {setCurrentContextElement} from "../store/current-context-element/actions";
+import { changeWidthColumns } from "../store/column-width/actions";
+import { contextMenu } from "react-contexify/lib/index";
+import { setCurrentContextElement } from "../store/current-context-element/actions";
+import { TelephoneMinus } from "react-bootstrap-icons";
+import { thresholdSturges } from "d3";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -92,10 +94,10 @@ class ElementWrapper extends Component {
     e.preventDefault();
     e.stopPropagation();
     contextMenu.show({
-      id: 'element-menu',
+      id: "element-menu",
       event: e,
       props: {
-        element: this.props.element,
+        element: this.props.element
       }
     });
   }
@@ -108,7 +110,8 @@ class ElementWrapper extends Component {
      * @member {HTMLElement} target
      * @member {ElementsManger} elementsManager
      * */
-      // e.stopPropagation();
+    // e.stopPropagation();`
+    e.preventDefault();
     let newWidgetName = e.dataTransfer.getData("text/plain");
     if (newWidgetName) {
       e.stopPropagation();
@@ -116,14 +119,14 @@ class ElementWrapper extends Component {
       if (this.props.element.getType() === "widget") {
         switch (this.state.cursorPos) {
           case "top":
-          {
-            this.props.element.insertSiblingBefore(newElement);
-          }
+            {
+              this.props.element.insertSiblingBefore(newElement);
+            }
             break;
           case "bottom":
-          {
-            this.props.element.insertSiblingAfter(newElement);
-          }
+            {
+              this.props.element.insertSiblingAfter(newElement);
+            }
             break;
         }
       }
@@ -235,7 +238,7 @@ class ElementWrapper extends Component {
    * @param errorInfo
    */
   componentDidCatch(error, errorInfo) {
-    this.setState(state=>({
+    this.setState(state => ({
       ...state,
       error: error,
       errorInfo: errorInfo
@@ -247,13 +250,14 @@ class ElementWrapper extends Component {
    * @param {{}} nextProps
    * @param {{}} nextState
    */
-  shouldComponentUpdate(nextProps, nextState){
+  shouldComponentUpdate(nextProps, nextState) {
     /**
      * не обновляем элемент, если изменился контроллер не текущего элемента
      */
-    if((nextProps.controllerValue !== this.props.controllerValue)
-        && this.props.element !== this.props.currentElement
-      ){
+    if (
+      nextProps.controllerValue !== this.props.controllerValue &&
+      this.props.element !== this.props.currentElement
+    ) {
       return false;
     }
     return true;
@@ -262,24 +266,26 @@ class ElementWrapper extends Component {
     const elementHideTrigger = this.props.element.settings.hide_on_trigger;
     const { isFixed } = this.props.element.getSettings();
 
-    if(this.state.errorInfo){
-      return  <div className="altrp-error">
-        <h2>Something went wrong.</h2>
-        <details style={{ whiteSpace: 'pre-wrap' }}>
-          {this.state.error && this.state.error.toString()}
-          <br />
-          {this.state.errorInfo.componentStack}
-        </details>
-      </div>
+    if (this.state.errorInfo) {
+      return (
+        <div className="altrp-error">
+          <h2>Something went wrong.</h2>
+          <details style={{ whiteSpace: "pre-wrap" }}>
+            {this.state.error && this.state.error.toString()}
+            <br />
+            {this.state.errorInfo.componentStack}
+          </details>
+        </div>
+      );
     }
     let classes = `altrp-element ${this.props.element
       .getSelector()
       .replace(".", "")} altrp-element_${this.props.element.getType()}`;
-    if(this.props.element.getType() === 'widget'){
+    if (this.props.element.getType() === "widget") {
       classes += ` altrp-widget_${this.props.element.getName()}`;
     }
     let overlayClasses = `overlay`;
-    let overlayStyles = {width: "100%"};
+    let overlayStyles = { width: "100%" };
     if (this.props.currentElement === this.props.element) {
       classes += " altrp-element_current";
     }
@@ -290,14 +296,14 @@ class ElementWrapper extends Component {
     classes += this.getClasses();
     switch (this.props.element.getType()) {
       case "section":
-      {
-        _EditIcon = DotsIcon;
-      }
+        {
+          _EditIcon = DotsIcon;
+        }
         break;
       case "column":
-      {
-        _EditIcon = ColumnIcon;
-      }
+        {
+          _EditIcon = ColumnIcon;
+        }
         break;
     }
     let emptyColumn = "";
@@ -315,7 +321,9 @@ class ElementWrapper extends Component {
       classes += " fixed-section";
     }
 
-    return elementHideTrigger && this.props.hideTriggers.includes(elementHideTrigger) ? null : <div
+    return elementHideTrigger &&
+      this.props.hideTriggers.includes(elementHideTrigger) ? null : (
+      <div
         className={classes}
         style={this.props.width}
         ref={this.wrapper}
@@ -327,7 +335,6 @@ class ElementWrapper extends Component {
         onDragLeave={this.onDragLeave}
         onDragEnter={this.onDragEnter}
       >
-
         <div className={overlayClasses} id="overlay" style={overlayStyles}>
           <div className="overlay-settings">
             <button
@@ -362,15 +369,18 @@ class ElementWrapper extends Component {
           </div>
         </div>
         {React.createElement(this.props.component, {
+          ref: this.actionRef,
           element: this.props.element,
           children: this.state.children,
           currentModel: this.props.currentModel,
           currentUser: this.props.currentUser,
           currentDataStorage: this.props.currentDataStorage,
-          wrapper: this,
+          fireAction: this.fireAction,
+          wrapper: this
         })}
         {emptyColumn}
       </div>
+    );
   }
 
   chooseElement(e) {
@@ -403,7 +413,7 @@ function mapStateToProps(state) {
     currentUser: state.currentUser,
     controllerValue: state.controllerValue,
     currentDataStorage: state.currentDataStorage,
-    hideTriggers: state.hideTriggers,
+    hideTriggers: state.hideTriggers
   };
 }
 

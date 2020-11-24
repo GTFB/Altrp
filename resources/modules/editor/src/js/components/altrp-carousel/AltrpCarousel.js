@@ -7,6 +7,7 @@ import "slick-carousel/slick/slick.scss";
 import "slick-carousel/slick/slick-theme.scss";
 import './altrp-carousel.scss';
 import {renderAsset} from "../../../../../front-app/src/js/helpers";
+import TemplateLoader from "../template-loader/TemplateLoader";
 
 /**
  * Компонент Карусли
@@ -57,7 +58,6 @@ class AltrpCarousel extends Component {
   }
 
   render(){
-    // console.log(this.props)
     let carouselContainerClasses = "altrp-carousel-container";
 
     carouselContainerClasses += (!this.props.arrows_navigation_content ? " altrp-carousel-container-no-arrow" : "");
@@ -126,7 +126,7 @@ class AltrpCarousel extends Component {
 
     // слайды
     let slidesMap = slides.map((slide, idx) => {
-
+      const typeSlide = slide.switch_slides_repeater || false;
       let media = slide.image_slides_repeater ? {...slide.image_slides_repeater} : {};
 
       media.url = media.url || '/img/nullImage.png';
@@ -136,6 +136,14 @@ class AltrpCarousel extends Component {
         media.assetType = "mediaBackground";
       }
 
+      let content = renderAsset(media, {
+        className: "altrp-carousel-slide-img",
+      });
+
+      if(typeSlide === true) {
+        content = <TemplateLoader templateId={slide.card_slides_repeater}/>
+      }
+      
       return (
         <div className="altrp-carousel-slide" key={idx}
           onDoubleClick={ () => {
@@ -148,9 +156,7 @@ class AltrpCarousel extends Component {
           }}
         >
           {
-            renderAsset(media, {
-              className: "altrp-carousel-slide-img",
-            })
+            content
           }
           {
             this.props.overlay_select_heading_additional_content === "text" ? (
@@ -217,7 +223,7 @@ class AltrpCarousel extends Component {
       ) : ""
 
     }
-    
+
     return <div className="altrp-carousel">
       {
         this.props.lightbox_slides_content ? lightbox : ""

@@ -182,9 +182,12 @@
 .altrp-table-th {
   border-collapse: separate;
 }
-.altrp-table-td__grouping{
-  font-size: 18px;
-  font-weight: bold;
+.altrp-table-td{
+  overflow: hidden;
+  &__grouping{
+    font-size: 18px;
+    font-weight: bold;
+  }
 }
 .altrp-table-th_sort {
   padding: 0;
@@ -195,6 +198,56 @@
   margin-left: 10px;
 }
 .altrp-table{
+  overflow: hidden;
+  display: table;
+  &-head{
+    display: table-header-group;
+  }
+  &-tbody{
+    display: table-row-group;
+  }
+  &-foot{
+    display: table-footer-group;
+  }
+  &-tr{
+    display: table-row;
+    &_loading{
+      display: block;
+    }
+  }
+  &-th{
+    display: table-cell;
+    &_global-filter{
+      colspan: all;
+      //display: block;
+      //width: 100%;
+    }
+  }
+  &-td{
+    display: table-cell;
+    & .altrp-inherit{
+      border: none;
+    }
+    &_loading{
+      display: block;
+      width: 100%;
+    }
+  }
+  &__resizer{
+    display: inline-block;
+    background: blue;
+    width: 10px;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translateX(50%);
+    z-index: 1;
+    touch-action:none;
+    &_resizing {
+      background: red;
+    }
+  }
   &__filter-select{
     width: 100%;
     & .altrp-field-select2{

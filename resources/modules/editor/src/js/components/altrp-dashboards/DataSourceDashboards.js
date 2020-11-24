@@ -1,24 +1,23 @@
 import React, { Component, Suspense } from "react";
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { connect } from "react-redux";
-import { editElement } from '../../store/altrp-dashboard/actions';
+import { editElement } from "../../store/altrp-dashboard/actions";
 
 import axios from "axios";
-import Drawer from 'rc-drawer';
+import Drawer from "rc-drawer";
 
-import 'react-grid-layout/css/styles.css';
-import 'react-resizable/css/styles.css';
-import DataAdapter from "./helpers/DataAdapter";
+import "react-grid-layout/css/styles.css";
+import "react-resizable/css/styles.css";
 
-import WidgetData from './WidgetData';
-import AddWidgetDataSource from './AddWidgetDataSource';
+import WidgetData from "./WidgetData";
+import AddWidgetDataSource from "./AddWidgetDataSource";
 import WidgetPreview from "./WidgetPreview";
-import WidgetSettings from './WidgetSettings';
-import AddItemButton from './settings/AddItemButton';
+import WidgetSettings from "./WidgetSettings";
+import AddItemButton from "./settings/AddItemButton";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return { editElement: state.editElement };
 };
 
@@ -33,7 +32,7 @@ class DataSourceDashboards extends Component {
     className: "layout",
     cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
     rowHeight: 60,
-    onLayoutChange: function () { },
+    onLayoutChange: function() {}
   };
 
   constructor(props) {
@@ -62,33 +61,23 @@ class DataSourceDashboards extends Component {
     this.setCardName = this.setCardName.bind(this);
   }
 
-  // componentDidMount() {
-  //   console.log(this.props.onRef);
-  //   this.props.onRef(this);
-  // }
-
-  // componentWillUnmount() {
-  //   this.props.onRef(undefined);
-  // }
-
   componentDidUpdate(prevProps, prevState) {
     if (!_.isEqual(prevProps.items, this.props.items)) {
       this.setState(state => {
-        return { ...state, items: this.props.items }
+        return { ...state, items: this.props.items };
       });
     }
     if (!_.isEqual(prevProps.counter, this.props.counter)) {
       this.setState(state => {
-        return { ...state, newCounter: this.props.counter }
+        return { ...state, newCounter: this.props.counter };
       });
     }
     if (!_.isEqual(prevState.items, this.state.items)) {
-      console.log('CHANGE ITEMS');
       this.setState(state => {
-        return { ...state, items: this.state.items }
+        return { ...state, items: this.state.items };
       });
     }
-    const drawer = document.querySelector('.drawer');
+    const drawer = document.querySelector(".drawer");
     if (!_.isEqual(this.state.drawer, drawer)) {
       this.setState(state => ({
         ...state,
@@ -104,18 +93,25 @@ class DataSourceDashboards extends Component {
       newCounter: newCounter
     };
     try {
-      const req = axios.post(`/ajax/dashboards/datasource/${id}/settings`, {
-        settings: settings,
-      }, {
-        headers: {
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        }
-      }).then(res => {
-        // console.log(res.data);
-      });
-    }
-    catch (e) {
-      console.log('ERROR ==>', e);
+      const req = axios
+        .post(
+          `/ajax/dashboards/datasource/${id}/settings`,
+          {
+            settings: settings
+          },
+          {
+            headers: {
+              "X-CSRF-TOKEN": document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content")
+            }
+          }
+        )
+        .then(res => {
+          // console.log(res.data);
+        });
+    } catch (e) {
+      console.log("ERROR ==>", e);
     }
   }
 
@@ -126,18 +122,18 @@ class DataSourceDashboards extends Component {
     let index = _.findKey(items, { i: item.i });
     this.setState(state => {
       state.items[index] = item;
-      return { ...state, items: items }
+      return { ...state, items: items };
     });
   }
 
   setCardName(name, el) {
     const { items } = this.state;
-    let widget = _.find(items, { i: el.i })
+    let widget = _.find(items, { i: el.i });
     widget.settings.name = name;
     let index = _.findKey(items, { i: el.i });
     this.setState(state => {
       state.items[index] = widget;
-      return { ...state, items: items }
+      return { ...state, items: items };
     });
     this.saveWidgetData(this.state);
   }
@@ -152,14 +148,14 @@ class DataSourceDashboards extends Component {
       return {
         ...state,
         settingsOpen: !state.settingsOpen
-      }
+      };
     });
   }
 
   onEditItem(key, settings) {
     const { items } = this.state;
 
-    let widget = _.find(items, { i: key })
+    let widget = _.find(items, { i: key });
     widget.settings = settings;
     widget.edit = false;
     // console.log('MAIN HANDLER', settings);
@@ -169,7 +165,7 @@ class DataSourceDashboards extends Component {
     let index = _.findKey(items, { i: key });
     this.setState(state => {
       state.items[index] = widget;
-      return { ...state, items: items }
+      return { ...state, items: items };
     });
 
     this.saveWidgetData();
@@ -184,32 +180,40 @@ class DataSourceDashboards extends Component {
         w: 3,
         h: 5,
         settings: {
-          source: {},
-          type: '',
+          sources: [],
+          type: "",
           legend: {
             enabled: false
           },
           colors: {},
           params: []
         },
-        edit: true,
+        edit: true
       }),
       newCounter: state.newCounter + 1
     }));
   }
 
   onResizeHandler(layout, oldItem, newItem, placeholder) {
-    const newLayoutsSettings = typeof newItem === 'object' ? [newItem] : newItem;
+    const newLayoutsSettings =
+      typeof newItem === "object" ? [newItem] : newItem;
     newLayoutsSettings.forEach(item => {
       const { i, x, y, w, h } = item;
-      let widget = _.find(this.state.items, { i: i })
-      widget = { ...widget, x: x, y: y, w: w, h: h, settings: { ...widget.settings }, };
+      let widget = _.find(this.state.items, { i: i });
+      widget = {
+        ...widget,
+        x: x,
+        y: y,
+        w: w,
+        h: h,
+        settings: { ...widget.settings }
+      };
       let index = _.findKey(this.state.items, { i: i });
       this.setState(state => {
         state.items[index] = widget;
-        return { ...state, items: state.items }
+        return { ...state, items: state.items };
       });
-    })
+    });
   }
 
   onResizeHandlerStop(layout, oldItem, newItem, placeholder) {
@@ -237,25 +241,26 @@ class DataSourceDashboards extends Component {
   createElement(el, key) {
     el.y = el.y == null ? Infinity : el.y;
     return (
-      <div key={el.i} data-grid={el} >
+      <div key={el.i} data-grid={el}>
         {el.edit ? (
           <div className="altrp-dashboard__card">
             <AddWidgetDataSource
               editHandler={this.onEditItem}
               widget={el}
               settings={el.settings}
-              dataSourceList={this.props.rep} />
+              dataSourceList={this.props.rep}
+            />
           </div>
         ) : (
-            <WidgetData
-              editElement={_.cloneDeep(el, {})}
-              settings={el.settings}
-              openSettingsHandler={this.openSettings}
-              setEditItem={this.setEditItem}
-              onRemoveItem={this.onRemoveItem}
-              saveWidget={this.saveWidgetData} />
-          )
-        }
+          <WidgetData
+            editElement={_.cloneDeep(el, {})}
+            settings={el.settings}
+            openSettingsHandler={this.openSettings}
+            setEditItem={this.setEditItem}
+            onRemoveItem={this.onRemoveItem}
+            saveWidget={this.saveWidgetData}
+          />
+        )}
       </div>
     );
   }
@@ -263,7 +268,7 @@ class DataSourceDashboards extends Component {
   render() {
     return (
       <div>
-        {this.props.showButton && (<AddItemButton onAddItem={this.onAddItem} />)}
+        {this.props.showButton && <AddItemButton onAddItem={this.onAddItem} />}
         <ResponsiveReactGridLayout
           onLayoutChange={this.onLayoutChange}
           onResizeStart={this.onResizeHandler}
@@ -280,7 +285,7 @@ class DataSourceDashboards extends Component {
           placement="right"
           open={true}
           defaultOpen={true}
-          width={'30vh'}
+          width={"30vh"}
           open={this.state.settingsOpen}
           onClose={this.openSettings}
           handler={false}
@@ -290,27 +295,19 @@ class DataSourceDashboards extends Component {
               filter_datasource={this.state.settings.filter_datasource}
               datasources={this.props.rep}
               editHandler={this.onEditItem}
-              onCloseHandler={this.openSettings} />
+              onCloseHandler={this.openSettings}
+            />
           )}
-
         </Drawer>
-        {
-          this.state.drawer != null && ReactDOM.createPortal(
-            <WidgetPreview
-              setCardName={this.setCardName}
-            />,
+        {this.state.drawer != null &&
+          ReactDOM.createPortal(
+            <WidgetPreview setCardName={this.setCardName} />,
             this.state.drawer
-          )
-        }
+          )}
       </div>
     );
   }
 }
-
-const DataSourceDashboardsForwardRef = React.forwardRef((props, ref) => {
-  return (
-    <DataSourceDashboards {...props} />
-  )
-});
-// DataSourceDashboardsForwardRef
-export default connect(mapStateToProps, mapDispatchToProps, null, { forwardRef: true })(DataSourceDashboards);
+export default connect(mapStateToProps, mapDispatchToProps, null, {
+  forwardRef: true
+})(DataSourceDashboards);

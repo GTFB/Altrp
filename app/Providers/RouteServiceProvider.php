@@ -89,7 +89,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapAltrpRoutes()
     {
         Route::prefix('ajax/models')
-            ->middleware('web')
+            ->middleware(['web', 'inputStream'])
             ->namespace($this->namespace)
             ->group(base_path('routes/AltrpRoutes.php'));
     }
@@ -100,7 +100,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapApiAltrpRoutes()
     {
         Route::prefix('api/altrp_models')
-            ->middleware('api')
+            ->middleware(['api', 'inputStream'])
             ->namespace($this->namespace)
             ->group(base_path('routes/AltrpApiRoutes.php'));
     }

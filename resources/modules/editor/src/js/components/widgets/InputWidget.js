@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {
   altrpCompare, isEditor,
   parseOptionsFromSettings,
-  parseParamsFromString, sortOptions
+  parseParamsFromString, replaceContentWithData, sortOptions
 } from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
@@ -324,6 +324,9 @@ class InputWidget extends Component {
 
     if (isDate && timestamp && value != '') {
       value = Math.round(new Date(value).getTime()); // timestamp
+    }
+    if(fieldName.indexOf('{{') !== -1){
+      fieldName = replaceContentWithData(fieldName);
     }
     if (_.isObject(this.props.appStore) && fieldName && formId) {
       this.props.appStore.dispatch(changeFormFieldValue(fieldName,

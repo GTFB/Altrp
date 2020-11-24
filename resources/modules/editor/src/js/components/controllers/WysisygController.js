@@ -41,4 +41,4 @@ const WysiwygController = ({ controller, controlId, label }) => {
   );
 };
 
-export default connect(controllerMapStateToProps)(WysiwygController);
+export default WysiwygController;
