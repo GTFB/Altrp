@@ -1,5 +1,5 @@
 import CONSTANTS from "../../../../editor/src/js/consts";
-import {getMediaQueryByName} from "../helpers";
+import {getMediaQueryByName, replaceContentWithData} from "../helpers";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 
 class FrontElement {
@@ -107,7 +107,11 @@ class FrontElement {
      * Инициация событий в первую очередь
      */
     if(widgetsWithActions.indexOf(this.getName()) >= 0 && this.getSettings('actions', []).length){
-      this.registerActions();
+      try{
+        this.registerActions();
+      } catch(e){
+        console.error(e);
+      }
       return;
     }
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_id')){
@@ -124,7 +128,7 @@ class FrontElement {
      * @member {ActionsManager|*} actionsManager
      */
     const actionsManager = (await import('./modules/ActionsManager.js')).default;
-    actionsManager.registerWidgetActions(this.getId(), this.getSettings('actions', []));
+    actionsManager.registerWidgetActions(this.getId(), this.getSettings('actions', []), 'click', this);
   }
   /**
    * Если элемент поле или кнопка нужно инициализирваоть форму в FormsManager
@@ -387,7 +391,8 @@ class FrontElement {
     if(this.getName() === 'root-element'){
       return true;
     }
-    if(this.component.props.elementDisplay){
+    console.log(this);
+    if(this.component.props.elementDisplay || this.getSettings('conditional_ignore_in_forms')){
       display = this.parent ? this.parent.elementIsDisplay() : true;
     } else {
       return false;
@@ -590,6 +595,20 @@ class FrontElement {
    */
   getCurrentModel(){
     return this.hasCardModel() ? this.getCardModel() : (appStore.getState().currentModel || new AltrpModel);
+  }
+
+  /**
+   * Получить id поля
+   */
+  getFieldId(){
+    let fieldId = this.getSettings('field_id');
+    if(! fieldId){
+      return fieldId;
+    }
+    if(fieldId.indexOf('{{') !== -1){
+      fieldId = replaceContentWithData(fieldId, this.getCurrentModel().getData());
+    }
+    return fieldId;
   }
 }
 

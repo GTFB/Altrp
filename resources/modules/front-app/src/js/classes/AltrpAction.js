@@ -30,10 +30,43 @@ import Resource from '../../../../editor/src/js/classes/Resource';
  * @class AltrpAction
  */
 class AltrpAction extends AltrpModel {
-  constructor(data, widgetId) {
+  constructor(data, widgetId, element) {
     super(data);
     this.setProperty('_widgetId', widgetId);
+    this.setProperty('_element', element);
     this.init();
+  }
+
+  /**
+   * Получить id элемента
+   * @return {string}
+   */
+  getElementId(){
+    return this.getProperty('_widgetId');
+  }
+
+  /**
+   * Получить компонент обертки для элемента
+   * @return {{}}
+   */
+  getWrapperComponent(){
+    return getComponentByElementId(this.getElementId());
+  }
+
+  /**
+   * Получить экземпляр элемента
+   * @return {FrontElement | null}
+   */
+  getElement(){
+    return this.getProperty('_element');
+  }
+  /**
+   * Получить экземпляр текущей модели страницы или карточки
+   * @return {AltrpModel | null}
+   */
+  getCurrentModel(){
+    const element = this.getElement();
+    return element.getCurrentModel();
   }
 
   /**
@@ -615,6 +648,9 @@ class AltrpAction extends AltrpModel {
             i = i.trim();
             if(! i){
               return
+            }
+            if(i.indexOf('{{') !== -1){
+              i = replaceContentWithData(i, this.getCurrentModel().getData())
             }
             let item = getDataByPath(i);
             if(! item){

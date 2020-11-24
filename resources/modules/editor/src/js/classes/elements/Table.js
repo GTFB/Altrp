@@ -721,11 +721,11 @@ class Table extends BaseElement {
       label: 'Counts',
     });
 
-    this.addControl('inner_sort', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Sort',
-      default: false
-    });
+    // this.addControl('inner_sort', {
+    //   type: CONTROLLER_SWITCHER,
+    //   label: 'Sort',
+    //   default: false
+    // });
 
     this.addControl('global_filter', {
       type: CONTROLLER_SWITCHER,
@@ -841,6 +841,7 @@ class Table extends BaseElement {
     this.addControl('virtualized_height', {
       type: CONTROLLER_NUMBER,
       label: 'Height',
+      default: 400,
       conditions:{
         virtualized_rows: true,
       },

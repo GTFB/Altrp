@@ -143,7 +143,7 @@ class InputWidget extends Component {
     if (!content_calculation) {
       return
     }
-    const fieldName = this.props.element.getSettings('field_id');
+    const fieldName = this.props.element.getFieldId();
     const formId = this.props.element.getSettings('form_id');
 
     const prevContext = {};
@@ -318,7 +318,7 @@ class InputWidget extends Component {
    */
   dispatchFieldValueToStore = (value, userInput = false) => {
     let formId = this.props.element.getSettings('form_id');
-    let fieldName = this.props.element.getSettings('field_id');
+    let fieldName = this.props.element.getFieldId();
     let timestamp = this.props.element.getSettings('content_timestamp');
     let isDate = this.state.settings.content_type === 'date';
 
@@ -473,7 +473,7 @@ class InputWidget extends Component {
 
     const { options = [], } = this.state;
     let { value = '' } = this.state;
-    const fieldName = this.props.element.getSettings('field_id') || Math.random().toString(36).substr(2, 9);
+    const fieldName = this.props.element.getFieldId() || Math.random().toString(36).substr(2, 9);
     const formID = this.props.element.getSettings('form_id') || Math.random().toString(36).substr(2, 9);
     const inputType = this.props.element.getSettings('content_type', 'radio');
     return <div className="altrp-field-subgroup">

@@ -403,6 +403,12 @@ export function advancedTabControllers(element) {
     default: false,
   });
 
+  element.addControl('conditional_ignore_in_forms', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Ignore in Forms',
+    default: false,
+  });
+
   element.addControl('conditional_other_display', {
     type: CONTROLLER_SELECT,
     label: 'Display on',
@@ -454,7 +460,7 @@ export function advancedTabControllers(element) {
 
   element.endControlSection();
 
-   element.startControlSection(
+  element.startControlSection(
     'conditional_disabled', {
       tab: TAB_ADVANCED,
       label: 'Conditional Disabled',

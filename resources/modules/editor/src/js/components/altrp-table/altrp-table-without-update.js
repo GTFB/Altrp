@@ -217,7 +217,6 @@ function AltrpTableWithoutUpdate(
   }
   const stateRef = React.useRef(widgetState);
   const {inner_page_size,
-    inner_sort,
     global_filter,
     card_template ,
     row_expand,
@@ -452,7 +451,7 @@ function AltrpTableWithoutUpdate(
     }
 
     return tableSettings;
-  }, [inner_page_size, inner_sort, data, columns, stateRef, records, replace_rows, skipPageReset]);
+  }, [inner_page_size, data, columns, stateRef, records, replace_rows, skipPageReset]);
   React.useEffect(()=>{
 
     if(_.isObject(stateRef.current)){
@@ -610,9 +609,9 @@ function AltrpTableWithoutUpdate(
           {headerGroup.headers.map((column, idx) => {
             const {column_width, column_header_alignment} = column;
             let columnProps = column.getHeaderProps();
-            if (inner_sort) {
-              columnProps = column.getHeaderProps(column.getSortByToggleProps());
-            }
+
+            columnProps = column.getHeaderProps(column.getSortByToggleProps());
+
             const resizerProps = {...column.getResizerProps(), onClick: e=>{e.stopPropagation();}};
             if(! resize_columns && ! virtualized_rows){
               delete columnProps.style;
@@ -632,11 +631,11 @@ function AltrpTableWithoutUpdate(
               </span>
               ) : null}
               {
-                (inner_sort) && (column.isSorted
-                    ? column.isSortedDesc
-                        ? iconsManager().renderIcon('chevron', {className: 'rotate-180 sort-icon '})
-                        : iconsManager().renderIcon('chevron', {className: 'sort-icon'})
-                    : '')
+                (column.isSorted
+                  ? column.isSortedDesc
+                    ? iconsManager().renderIcon('chevron', {className: 'rotate-180 sort-icon '})
+                    : iconsManager().renderIcon('chevron', {className: 'sort-icon'})
+                  : '')
               }
               {
                 column.column_is_filtered &&

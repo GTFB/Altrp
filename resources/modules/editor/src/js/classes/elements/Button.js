@@ -404,7 +404,7 @@ class Button extends BaseElement {
       label: 'Data',
       responsive: false,
       dynamic: false,
-      description: 'altrpdata.alias',
+      description: 'param_1 | {{altrpdata.alias}}',
       conditions: {
         type: [
           'form',

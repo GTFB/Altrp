@@ -197,7 +197,7 @@ class AltrpForm {
     } else {
       this.fields.forEach(field=>{
         if(field.getValue() !== null){
-          data[field.getSettings('field_id')] = field.getValue();
+          data[field.getFieldId()] = field.getValue();
         }
       });
     }
