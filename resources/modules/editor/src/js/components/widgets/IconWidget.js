@@ -3,6 +3,7 @@ import AltrpImage from "../altrp-image/AltrpImage";
 import AltrpLink from "../altrp-link/AltrpLink";
 
 class IconWidget extends Component {
+  __;
   constructor(props) {
     super(props);
     this.state = {
@@ -153,6 +154,7 @@ class IconWidget extends Component {
       case "row":
         if(!bodyAlignment) {
           bodyStyles = {
+            textAlign: "left",
             justifyContent: "flex-start"
           };
         }
@@ -169,6 +171,7 @@ class IconWidget extends Component {
       case "column":
         if(!bodyAlignment) {
           bodyStyles = {
+            textAlign: "center",
             justifyContent: "center"
           };
         }
@@ -185,6 +188,7 @@ class IconWidget extends Component {
       case "row-reverse":
         if(!bodyAlignment) {
           bodyStyles = {
+            textAlign: "right",
             justifyContent: "flex-end"
           };
         }
@@ -200,6 +204,21 @@ class IconWidget extends Component {
         break
     }
 
+    //bodyAlignment
+    console.log(bodyAlignment)
+    switch (bodyAlignment) {
+      case "flex-start":
+        bodyStyles.textAlign = "left";
+        break;
+      case "center":
+        bodyStyles.textAlign = "center";
+        break;
+      case "flex-end":
+        bodyStyles.textAlign = "right";
+        break;
+    }
+
+    console.log(bodyStyles)
     //read more
     let readMore = "";
     if(this.state.settings.read_more_button_additional_options_content) {
