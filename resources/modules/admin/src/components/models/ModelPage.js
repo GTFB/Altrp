@@ -1,36 +1,29 @@
 import React, { Component } from "react";
 import { Link, withRouter } from 'react-router-dom';
-
 import Resource from "../../../../editor/src/js/classes/Resource";
-// import AltrpSelect from "./altrp-select/AltrpSelect";
 import AdminTable from "../AdminTable";
 import Pagination from "../Pagination";
-// import AdminModal2 from "../AdminModal2";
-// import PageDataSourceForm from "../pages/PageDataSourceForm";
-// import { titleToPath } from "../../js/helpers";
+import AdminModal2 from "../AdminModal2";
+import ModelItemForm from "./ModelItemForm";
 
 class ModelPage extends Component {
   state = {
-    //   page: {},
-    //   value: {},
-    //   redirectAfterSave: false,
-    //   templates: [],
-    //   models: [],
-    //   isModalOpened: false,
-    //   dataSources: [],
-    //   editingDataSource: null,
-    //   pagesOptions: []
-    // };
     sorting: {},
     search: '',
     currentPage: 1,
     data: [],
     pageCount: 1,
-    itemsPerPage: 20
+    itemsPerPage: 20,
+    isModalOpened: false,
+    editingItem: null,
+    fields: []
   }
 
   componentDidMount() {
     this.getModelData();
+    new Resource({ route: `/admin/ajax/models/${this.props.match.params.id}/fields` }).getAll()
+      .then(fields => this.setState({ fields }))
+      .catch(error => console.log(error));
   }
 
   componentDidUpdate(prevProps) {
@@ -53,13 +46,13 @@ class ModelPage extends Component {
     this.setState({ sorting: { order_by, order } }, this.getModelData);
   }
 
-  editHandler = data => {
-    console.log(data);
-    // this.setState({ data, isModalOpened: true })
+  editHandler = editingItem => {
+    this.setState({ editingItem, isModalOpened: true })
   }
 
   render() {
-    const { data, search, currentPage, pageCount, sorting } = this.state;
+    const { data, search, currentPage, pageCount, sorting, isModalOpened, editingItem, fields } = this.state;
+    const { id } = this.props.match.params;
 
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
@@ -76,21 +69,21 @@ class ModelPage extends Component {
         </div>
         {Boolean(data.length) && <>
           <AdminTable
-            columns={Object.keys(data[0]).map(item => ({ name: item, title: item }))}
+            columns={fields}
             quickActions={[
               {
                 callBack: data => this.editHandler(data),
                 title: 'Edit'
               },
-              // {
-              //   tag: 'button',
-              //   route: `/admin/ajax/page_data_sources/:id`,
-              //   method: 'delete',
-              //   confirm: 'Are You Sure?',
-              //   after: () => this.getDataSources(),
-              //   className: 'quick-action-menu__item_danger',
-              //   title: 'Trash'
-              // }
+              {
+                tag: 'button',
+                route: `/admin/ajax/custom_models/${id}/delete/:id`,
+                method: 'delete',
+                confirm: 'Are You Sure?',
+                after: () => this.getModelData(),
+                className: 'quick-action-menu__item_danger',
+                title: 'Trash'
+              }
             ]}
             rows={data}
             sortingHandler={this.sortingHandler}
@@ -99,18 +92,19 @@ class ModelPage extends Component {
           <Pagination pageCount={pageCount || 1}
             currentPage={currentPage}
             changePage={currentPage => this.setState({ currentPage }, this.getModelData)}
-            // itemsCount={dataSourcesCount}
           />
         </>}
 
-        {/* {this.props.match.params.id &&
-          <button onClick={() => this.setState({ isModalOpened: true })} className="btn btn_add">
-            Add Data Source
-          </button>} */}
+        <button onClick={() => this.setState({ isModalOpened: true })} className="btn btn_add">
+          Add New
+        </button>
 
-        {/* {isModalOpened && <AdminModal2 closeHandler={() => this.setState({ isModalOpened: false, editingDataSource: null })}>
-          <PageDataSourceForm updateHandler={this.getDataSources} dataSource={editingDataSource} />
-        </AdminModal2>} */}
+        {isModalOpened && <AdminModal2 closeHandler={() => this.setState({ isModalOpened: false, editingItem: null })}>
+          <ModelItemForm item={editingItem}
+            submitHandler={() => this.setState({ isModalOpened: false, editingItem: null }, this.getModelData)}
+            fields={fields.map(({ name }) => name).filter(item => item !== 'id')}
+          />
+        </AdminModal2>}
       </div>
     </div>
   }
