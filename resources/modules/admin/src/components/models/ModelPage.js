@@ -50,6 +50,11 @@ class ModelPage extends Component {
     this.setState({ editingItem, isModalOpened: true })
   }
 
+  searchModelData = e => {
+    e.preventDefault();
+    this.getModelData();
+  }
+
   render() {
     const { data, search, currentPage, pageCount, sorting, isModalOpened, editingItem, fields } = this.state;
     const { id } = this.props.match.params;
@@ -63,10 +68,10 @@ class ModelPage extends Component {
         </div>
       </div>
       <div className="admin-content">
-        <div className="admin-panel py-2">
+        <form className="admin-panel py-2" onSubmit={this.searchModelData}>
           <input className="input-sm mr-2" value={search} onChange={e => this.setState({ search: e.target.value })} />
-          <button type="button" onClick={this.getModelData} className="btn btn_bare admin-users-button">Search</button>
-        </div>
+          <button className="btn btn_bare admin-users-button">Search</button>
+        </form>
         {Boolean(data.length) && <>
           <AdminTable
             columns={fields}

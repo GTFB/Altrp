@@ -87,6 +87,16 @@ class AccessOptions extends Component {
     this.getPermissions();
   }
 
+  searchRoles = e => {
+    e.preventDefault();
+    this.getRoles();
+  }
+
+  searchPermissions = e => {
+    e.preventDefault();
+    this.getPermissions();
+  }
+
   render() {
     const { roles, rolesPagination, rolesFilter, rolesSorting, permissions, permissionsPagination, permissionsFilter, permissionsSorting} = this.state;
     const activeTab = this.props.location.pathname === "/admin/access/roles" ? 0 : 1;
@@ -111,10 +121,10 @@ class AccessOptions extends Component {
             <Link to="/admin/access/permissions"><Tab>Permissions</Tab></Link>
           </TabList>
           <TabPanel>
-            <div className="admin-panel py-2">
+            <form className="admin-panel py-2" onSubmit={this.searchRoles}>
               <input className="input-sm mr-2" value={rolesFilter} onChange={e => this.setState({ rolesFilter: e.target.value })} />
-              <button type="button" onClick={this.getRoles} className="btn btn_bare admin-users-button">Search</button>
-            </div>
+              <button className="btn btn_bare admin-users-button">Search</button>
+            </form>
             <AdminTable
               columns={columns}
               quickActions={[
@@ -147,10 +157,10 @@ class AccessOptions extends Component {
             />
           </TabPanel>
           <TabPanel>
-            <div className="admin-panel py-2">
+            <form className="admin-panel py-2" onSubmit={this.searchPermissions}>
               <input className="input-sm mr-2" value={permissionsFilter} onChange={e => this.setState({ permissionsFilter: e.target.value })} />
-              <button type="button" onClick={this.getPermissions} className="btn btn_bare admin-users-button">Search</button>
-            </div>
+              <button className="btn btn_bare admin-users-button">Search</button>
+            </form>
             <AdminTable
               columns={columns}
               quickActions={[
