@@ -155,6 +155,16 @@ export default class Models extends Component {
     this.setState({ dataSourcesSorting: { order_by, order } }, this.getDataSources);
   }
 
+  searchModel = e => {
+    e.preventDefault();
+    this.getModels();
+  }
+
+  searchDataSources = e => {
+    e.preventDefault();
+    this.getDataSources();
+  }
+
   render() {
     const { activeTab, models, dataSources, modelsCurrentPage, dataSourcesCurrentPage, modelsSearch, dataSourcesSearch,
       modelsPageCount, dataSourcesPageCount, modelsCount, dataSourcesCount, modelsSorting, dataSourcesSorting } = this.state;
@@ -179,10 +189,10 @@ export default class Models extends Component {
             </Tab>
           </TabList>
           <TabPanel>
-            <div className="admin-panel py-2">
+            <form className="admin-panel py-2" onSubmit={this.searchModel}>
               <input className="input-sm mr-2" value={modelsSearch} onChange={e => this.setState({ modelsSearch: e.target.value })} />
-              <button type="button" onClick={this.getModels} className="btn btn_bare admin-users-button">Search</button>
-            </div>
+              <button className="btn btn_bare admin-users-button">Search</button>
+            </form>
             <AdminTable
               columns={columnsModel}
               quickActions={[
@@ -220,10 +230,10 @@ export default class Models extends Component {
             />
           </TabPanel>
           <TabPanel>
-            <div className="admin-panel py-2">
+            <form className="admin-panel py-2" onSubmit={this.searchDataSources}>
               <input className="input-sm mr-2" value={dataSourcesSearch} onChange={e => this.setState({ dataSourcesSearch: e.target.value })} />
-              <button type="button" onClick={this.getDataSources} className="btn btn_bare admin-users-button">Search</button>
-            </div>
+              <button className="btn btn_bare admin-users-button">Search</button>
+            </form>
             <AdminTable
               columns={columnsDataSource}
               quickActions={[

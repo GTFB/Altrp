@@ -223,6 +223,11 @@ export default class Templates extends Component{
     this.setState({ sorting: { order_by, order } }, this.updateTemplates);
   }
 
+  searchTemplates = e => {
+    e.preventDefault();
+    this.updateTemplates();
+  }
+
   render(){
     const { templateSearch, sorting } = this.state
     return <div className="admin-templates admin-page">
@@ -262,10 +267,10 @@ export default class Templates extends Component{
             </li>
           })}
         </ul>
-        <div className="admin-panel py-2">
+        <form className="admin-panel py-2" onSubmit={this.searchTemplates}>
           <input className="input-sm mr-2" value={templateSearch} onChange={e => this.setState({ templateSearch: e.target.value })} />
-          <button type="button" onClick={() => this.updateTemplates()} className="btn btn_bare admin-users-button">Search</button>
-        </div>
+          <button className="btn btn_bare admin-users-button">Search</button>
+        </form>
         <AdminTable columns={[
           {
             name: 'title',

@@ -101,6 +101,11 @@ export default class SQLEditors extends Component {
     this.setState({ sorting: { order_by, order } }, this.getSqlEditors);
   }
 
+  searchSqlEditors = e => {
+    e.preventDefault();
+    this.getSqlEditors();
+  }
+
   render() {
     const { sql_editors, sql_editorsPagination, sqlEditorSearch, sorting } = this.state;
     return <div className="admin-settings admin-page">
@@ -113,10 +118,10 @@ export default class SQLEditors extends Component {
         <Link className="btn" to={`/admin/tables/sql_editors/add`}>Add New</Link>
       </div>
       <div className="admin-content">
-        <div className="admin-panel py-2">
+        <form className="admin-panel py-2" onSubmit={this.searchSqlEditors}>
           <input className="input-sm mr-2" value={sqlEditorSearch} onChange={e => this.setState({ sqlEditorSearch: e.target.value })} />
           <button type="button" onClick={this.getSqlEditors} className="btn btn_bare admin-users-button">Search</button>
-        </div>
+        </form>
         <AdminTable
           columns={columns}
           quickActions={[{
