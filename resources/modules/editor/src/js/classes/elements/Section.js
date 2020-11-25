@@ -56,7 +56,8 @@ class Section extends BaseElement{
         //   value: 'full-fill',
         //   label: 'full fill'
         // }
-      ]
+      ],
+      prefixClass: 'altrp-section_'
     });
 
     this.addControl(
@@ -231,7 +232,7 @@ class Section extends BaseElement{
 
     this.addControl("layout_content_width", {
       type: CONTROLLER_SLIDER,
-      label: "width",
+      label: "Width",
       default: {
         size: 1440,
         unit: "px"
@@ -241,7 +242,8 @@ class Section extends BaseElement{
       min: 0,
       rules: {
         // "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "width: {{SIZE}}{{UNIT}}"
-        "{{ELEMENT}} .altrp-section--boxed{{STATE}} > .altrp-element": "width: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-section_boxed{{STATE}}": "width: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}} .altrp-section_section-boxed{{STATE}}": "padding-left: calc((100vw - {{SIZE}}{{UNIT}}) / 2);padding-right: calc((100vw - {{SIZE}}{{UNIT}}) / 2);",
       }
     });
 

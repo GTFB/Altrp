@@ -935,7 +935,7 @@ export function clearEmptyProps() {}
 /**
  * Заменяет в тексте конструкции типа {{altrpdata...}} на данные
  * @param content
- * @param {null | {}}modelContext
+ * @param {{} | null} modelContext
  */
 
 export function replaceContentWithData(content = "", modelContext = null) {

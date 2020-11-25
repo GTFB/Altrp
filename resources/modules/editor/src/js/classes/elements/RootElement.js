@@ -91,18 +91,18 @@ class RootElement extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection('default_displaying', {
-      label: 'Default Displaying',
-    });
-
-    this.addControl('hidden_elements_triggers', {
-      type: CONTROLLER_TEXTAREA,
-      dynamic: false,
-      label: 'Hidden Elements Triggers',
-      description: 'Input triggers, commas separated'
-    });
-
-    this.endControlSection();
+    // this.startControlSection('default_displaying', {
+    //   label: 'Default Displaying',
+    // });
+    //
+    // this.addControl('hidden_elements_triggers', {
+    //   type: CONTROLLER_TEXTAREA,
+    //   dynamic: false,
+    //   label: 'Hidden Elements Triggers',
+    //   description: 'Input triggers, commas separated'
+    // });
+    //
+    // this.endControlSection();
 
     this.startControlSection('popup_section', {
       label: 'Popup',

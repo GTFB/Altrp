@@ -367,7 +367,12 @@
   flex-direction: column;
   overflow: hidden;
 }
+.altrp-section{
+  &_section-boxed{
+    width: 100vw;
+  }
 
+}
 .altrp-section-full-fill {
   display: flex;
   width: 100vh;

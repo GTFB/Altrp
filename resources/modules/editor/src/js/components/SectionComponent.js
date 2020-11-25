@@ -68,7 +68,10 @@ class SectionComponent extends Component {
     }
 
     if (widthType === "boxed" && !isFixed) {
-      sectionClasses.push('altrp-section--boxed');
+      sectionClasses.push('altrp-section_boxed');
+    }
+    if (widthType === "section_boxed" && !isFixed) {
+      sectionClasses.push('altrp-section_section-boxed');
     }
 
     if (widthType === "full" && !isFixed) {

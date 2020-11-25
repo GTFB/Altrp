@@ -9,7 +9,7 @@ import {
   CONTROLLER_CSSEDITOR,
   TAB_ADVANCED,
   CONTROLLER_SWITCHER, CONTROLLER_SELECT2, CONTROLLER_HEADING, CONTROLLER_REPEATER,
-  CONTROLLER_TEXT
+  CONTROLLER_TEXT, CONTROLLER_NUMBER
 } from "../classes/modules/ControllersManager";
 import Repeater from "../classes/Repeater";
 import {CONDITIONS_OPTIONS} from "../../../../front-app/src/js/helpers";
@@ -99,6 +99,25 @@ export function advancedTabControllers(element) {
     default: false,
   });
 
+  element.addControl('z_index', {
+    type: CONTROLLER_NUMBER,
+    label: 'Z-index',
+    rules: {
+      '{{ELEMENT}}': 'z-index: {{VALUE}};'
+    },
+  });
+
+  element.addControl('advanced_opacity', {
+    type: CONTROLLER_SLIDER,
+    label: "Opacity",
+    max: 1,
+    min: 0,
+    step: 0.01,
+    rules: {
+      "{{ELEMENT}}{{STATE}}": "opacity: {{SIZE}}"
+    }
+  });
+
   element.endControlSection();
 
   if(element.getType() !== 'section') {
@@ -113,13 +132,6 @@ export function advancedTabControllers(element) {
     element.addControl("positioning_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      // default: {
-      //   top: 0,
-      //   right: 0,
-      //   bottom: 0,
-      //   left: 0,
-      //   unit: "px"
-      // },
       units: ["px", "%", "vh"],
       rules: {
         "{{ELEMENT}}": [

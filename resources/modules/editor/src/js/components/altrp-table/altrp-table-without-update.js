@@ -1,3 +1,4 @@
+import '../altrp-posts/altrp-posts.scss'
 import update from 'immutability-helper'
 import {HTML5Backend} from 'react-dnd-html5-backend'
 import '../../../sass/altrp-pagination.scss';
@@ -614,11 +615,11 @@ function AltrpTableWithoutUpdate(
 
             const resizerProps = {...column.getResizerProps(), onClick: e=>{e.stopPropagation();}};
             if(! resize_columns && ! virtualized_rows){
-              delete columnProps.style;
+              // delete columnProps.style;
+              columnProps.style = {};
+              if (column_width)  columnProps.style.width = column_width;
+              if (column_header_alignment)  columnProps.style.textAlign = column_header_alignment;
             }
-            // columnProps.style = {};
-            // if (column_width)  columnProps.style.width = column_width;
-            // if (column_header_alignment)  columnProps.style.textAlign = column_header_alignment;
             return <div {...columnProps}
                        className="altrp-table-th"
                        key={idx}>{
