@@ -1184,10 +1184,10 @@ class Table extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'buttons Padding',
       default: {
-        top: 10,
-        right: 10,
-        bottom: 10,
-        left: 10,
+        // top: 10,
+        // right: 10,
+        // bottom: 10,
+        // left: 10,
         unit: 'px'
       },
       units: [
@@ -1196,7 +1196,12 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ],
       },
     });
 
@@ -1265,10 +1270,10 @@ class Table extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'count Padding',
       default: {
-        top: 10,
-        right: 10,
-        bottom: 10,
-        left: 10,
+        // top: 10,
+        // right: 10,
+        // bottom: 10,
+        // left: 10,
         unit: 'px'
       },
       units: [
@@ -1277,7 +1282,12 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-pagination__count{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ],
       },
     });
 
@@ -1311,12 +1321,12 @@ class Table extends BaseElement {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
       default: {
-        lineHeight: 0.8,
-        spacing: 0,
-        size: 16,
-        weight: 700,
-        family: 'Open Sans',
-        decoration: ""
+        // lineHeight: 0.8,
+        // spacing: 0,
+        // size: 16,
+        // weight: 700,
+        // family: 'Open Sans',
+        // decoration: ""
       },
       rules: {
         '{{ELEMENT}} .altrp-pagination__next{{STATE}}, .altrp-pagination-pages__item{{STATE}}, .altrp-pagination__count{{STATE}}, .altrp-pagination__previous{{STATE}}': [
@@ -1461,10 +1471,10 @@ class Table extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: 'px'
       },
       units: [
@@ -1612,7 +1622,12 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-table-th{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-table-th{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ],
       },
     });
 
@@ -1697,7 +1712,12 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-table-td{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-table-td{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ],
       },
     });
 
@@ -1788,7 +1808,12 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ],
       },
     });
 
@@ -1979,7 +2004,12 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-table-foot .altrp-table-td{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-table-foot .altrp-table-td{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ],
       },
     });
 
