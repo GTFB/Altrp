@@ -147,8 +147,8 @@ class IconWidget extends Component {
     let bodyStyles = {};
     let footerStyles = {};
     let headerStyles = {};
-    let bodyAlignment = this.state.settings.header_alignment_content_style;
-    let footerAligment = this.state.settings.description_alignment_content_style;
+    let bodyAlignment = this.props.element.getSettings("header_alignment_content_style", "center");
+    let footerAligment = this.props.element.getSettings("description_alignment_content_style", "center");
 
     switch (this.state.settings.icon_position_desktop_position_style) {
       case "row":
@@ -160,6 +160,7 @@ class IconWidget extends Component {
         }
         if(!footerAligment) {
           footerStyles = {
+            textAlign: "left",
             justifyContent: "flex-start"
           };
         }
@@ -177,6 +178,7 @@ class IconWidget extends Component {
         }
         if(!footerAligment) {
           footerStyles = {
+            textAlign: "center",
             justifyContent: "center"
           };
         }
@@ -194,6 +196,7 @@ class IconWidget extends Component {
         }
         if(!footerAligment) {
           footerStyles = {
+            textAlign: "right",
             justifyContent: "flex-end"
           };
         }
@@ -204,7 +207,7 @@ class IconWidget extends Component {
         break
     }
 
-    //bodyAlignment
+    //footer Alignment
     switch (bodyAlignment) {
       case "flex-start":
         bodyStyles.textAlign = "left";
@@ -217,7 +220,18 @@ class IconWidget extends Component {
         break;
     }
 
-    console.log(bodyStyles)
+    switch (footerAligment) {
+      case "flex-start":
+        footerStyles.textAlign = "left";
+        break;
+      case "center":
+        footerStyles.textAlign = "center";
+        break;
+      case "flex-end":
+        footerStyles.textAlign = "right";
+        break;
+    }
+
     //read more
     let readMore = "";
     if(this.state.settings.read_more_button_additional_options_content) {
