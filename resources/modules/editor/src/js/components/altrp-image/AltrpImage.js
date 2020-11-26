@@ -21,7 +21,7 @@ class AltrpImage extends Component {
         media.assetType = media.assetType || undefined;
       }
     }
-    console.log(media)
+    
     let image = renderAsset(media);
 
     return cloneElement(image, {
