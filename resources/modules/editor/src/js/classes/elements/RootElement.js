@@ -3597,6 +3597,171 @@ class RootElement extends BaseElement {
       },
     });
 
+    // Filters
+
+    this.addControl("filter_style_table_text_color", {
+      type: CONTROLLER_COLOR,
+      label: "Filter Text Color",
+      default: {
+        color: "rgb(27,27,27)",
+        colorPickedHex: "#1B1B1B"
+      },
+      rules: {
+        '.altrp-label_text>.altrp-field{{STATE}}, .altrp-label_min_max .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'color: {{COLOR}}'
+      }
+    });
+
+    this.addControl("filter_style_table_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Filter Background Color",
+      default: {
+        color: "rgb(186,186,186)",
+        colorPickedHex: "#BABABA"
+      },
+      rules: {
+        '.altrp-label_text>.altrp-field{{STATE}}, .altrp-label_min_max .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'background: {{COLOR}}'
+      }
+    });
+
+    this.addControl('filter_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Filter Input Padding',
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-label_text>.altrp-field{{STATE}}, .altrp-label_min_max .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+    this.addControl('label_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Filter Label Padding',
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.altrp-table-th .altrp-label{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl(
+      'filter_style_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Filter Typographic',
+      default: {
+        lineHeight: 0.8,
+        spacing: 0,
+        size: 14,
+        weight: 700,
+        family: 'Open Sans',
+        decoration: ""
+      },
+      rules: {
+        '.altrp-label_text>.altrp-field{{STATE}}, .altrp-label_min_max .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
+    );
+
+    this.addControl("filter_style_table_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Filter Border Type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        '.altrp-label_text>.altrp-field{{STATE}}, .altrp-label_min_max .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-style: {{VALUE}} !important'
+      }
+    });
+
+    this.addControl("filter_style_table_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Filter Border Width",
+      default: {
+        top: 1,
+        right: 1,
+        bottom: 1,
+        left: 1,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        '.altrp-label_text>.altrp-field{{STATE}}, .altrp-label_min_max .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
+      }
+    });
+
+    this.addControl("filter_style_table_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Filter Border Color",
+      default: {
+        color: "rgb(186,186,186)",
+        colorPickedHex: "#32a852"
+      },
+      rules: {
+        '.altrp-label_text>.altrp-field{{STATE}}, .altrp-label_min_max .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-color: {{COLOR}} !important'
+      }
+    });
+
     this.endControlSection();
 
     this.startControlSection('tabs_defaults', {
