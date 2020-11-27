@@ -884,11 +884,11 @@ class Table extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Text Color",
       default: {
-        color: "rgb(27,27,27)",
-        colorPickedHex: "#1B1B1B"
+        // color: "rgb(27,27,27)",
+        // colorPickedHex: "#1B1B1B"
       },
       rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}': 'color: {{COLOR}} !important'
+        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'color: {{COLOR}} !important'
       }
     });
 
@@ -896,11 +896,11 @@ class Table extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Background Color",
       default: {
-        color: "rgb(186,186,186)",
-        colorPickedHex: "#BABABA"
+        // color: "rgb(186,186,186)",
+        // colorPickedHex: "#BABABA"
       },
       rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}': 'background: {{COLOR}} !important'
+        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'background: {{COLOR}} !important'
       }
     });
 
@@ -920,7 +920,7 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}': [
+        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -958,15 +958,15 @@ class Table extends BaseElement {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
       default: {
-        lineHeight: 0.8,
-        spacing: 0,
-        size: 14,
-        weight: 700,
-        family: 'Open Sans',
-        decoration: ""
+        // lineHeight: 0.8,
+        // spacing: 0,
+        // size: 14,
+        // weight: 700,
+        // family: 'Open Sans',
+        // decoration: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}': [
+        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -1011,7 +1011,7 @@ class Table extends BaseElement {
         }
       ],
       rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}': 'border-style: {{VALUE}} !important'
+        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-style: {{VALUE}} !important'
       }
     });
 
@@ -1019,15 +1019,15 @@ class Table extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
       default: {
-        top: 1,
-        right: 1,
-        bottom: 1,
-        left: 1,
+        // top: 1,
+        // right: 1,
+        // bottom: 1,
+        // left: 1,
         unit: "px"
       },
       units: ["px", "%", "vh"],
       rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
+        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
       }
     });
 
@@ -1035,11 +1035,11 @@ class Table extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Border Color",
       default: {
-        color: "rgb(186,186,186)",
-        colorPickedHex: "#32a852"
+        // color: "rgb(186,186,186)",
+        // colorPickedHex: "#32a852"
       },
       rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}': 'border-color: {{COLOR}} !important'
+        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-color: {{COLOR}} !important'
       }
     });
 
