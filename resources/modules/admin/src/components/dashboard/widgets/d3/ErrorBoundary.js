@@ -11,12 +11,18 @@ class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error(errorInfo);
+    // console.log(errorInfo);
+    // console.log(error);
   }
 
   render() {
     if (this.state.hasError) {
-      return <h1>Ошибка отрисовки</h1>;
+      return (
+        <div>
+          <h1 style={{ textAlign: "center" }}>Ошибка отрисовки</h1>
+          <h4>Измените настройки диаграммы и перезагрузите страницу</h4>
+        </div>
+      );
     }
 
     return this.props.children;

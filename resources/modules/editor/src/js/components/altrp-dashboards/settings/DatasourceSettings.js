@@ -52,7 +52,7 @@ class DatasourceSettings extends Component {
               isMulti
               onChange={value => this.props.setDatasource(value)}
               className="select-type"
-              defaultValue={this.state.editElement.settings.sources}
+              defaultValue={this.state.editElement?.settings?.sources}
               name="type"
               as="select"
               styles={{

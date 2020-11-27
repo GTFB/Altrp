@@ -30,6 +30,14 @@ class ElementWrapper extends Component {
   }
 
   /**
+   * Иногда надо обновить элемент (FrontElement)
+   */
+  componentDidMount() {
+    if(_.isFunction(this.props.element.update)){
+      this.props.element.update();
+    }
+  }
+  /**
    * Подписываемся на обновление store редакса
    */
   updateStore = () => {

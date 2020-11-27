@@ -43,6 +43,7 @@ class SaveImportModule extends BaseModule {
           templateDataStorage.replaceAll(parsedData);
           templateDataStorage.setTitle(templateData.title);
           templateDataStorage.setName(templateData.name);
+          templateDataStorage.setType(templateData.template_type);
           getEditor().endLoading();
           store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
         })

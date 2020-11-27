@@ -1,14 +1,6 @@
 import React, { Component } from "react";
-import {
-  PieChart,
-  PieArcSeries,
-  PieArcLabel,
-  DiscreteLegend,
-  DiscreteLegendEntry
-} from "reaviz";
-import { customStyle } from "../../widgetTypes";
 import { connect } from "react-redux";
-
+import { ResponsivePieCanvas } from "@nivo/pie";
 import ErrorBoundary from "./ErrorBoundary";
 import DataAdapter from "./DataAdapter";
 
@@ -19,35 +11,49 @@ class PieDataSource extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      sources: props.sources,
-      legend: props.element.settings.legend,
-      color: props.element.settings.color,
-      params: props.element.settings.params,
+      settings: _.cloneDeep(props.element.settings),
+      sources: _.cloneDeep(props.sources),
+      legend: _.cloneDeep(props.element.settings.legend),
+      color: _.cloneDeep(props.element.settings.color),
+      params: _.cloneDeep(props.element.settings.params),
       countRequest: 0,
-      isMultiple: false,
+      isDate: true,
       data: []
     };
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    if (!_.isEqual(prevProps.source, this.props.source)) {
-      this.setState(state => ({ ...state, source: this.props.source }));
+    if (!_.isEqual(prevProps.sources, this.props.sources)) {
+      this.setState(state => ({ ...state, sources: this.props.sources }));
+      await this.getData();
     }
     if (!_.isEqual(prevProps.element, this.props.element)) {
       this.setState(state => ({
         ...state,
         legend: this.props.element.settings.legend,
         color: this.props.element.settings.color,
-        params: this.props.element.settings.params
+        sources: this.props.element.settings.sources
       }));
-
-      await this.getData();
     }
     if (
-      JSON.stringify(prevState.params) !==
+      !_.isEqual(
+        prevProps.element.settings.params,
+        this.props.element.settings.params
+      )
+    ) {
+      this.setState(state => ({
+        ...state,
+        params: this.props.element.settings.params
+      }));
+      await this.getData();
+    }
+    if (!_.isEqual(prevProps.element.settings, this.props.element.settings)) {
+      this.setState(s => ({ ...s, settings: this.props.element.settings }));
+    }
+    if (
+      JSON.stringify(prevProps.element.settings.params) !==
       JSON.stringify(this.props.element.settings.params)
     ) {
-      console.log("CHANGE IN BAR");
       this.setState(state => ({
         ...state,
         params: this.props.element.settings.params
@@ -78,7 +84,7 @@ class PieDataSource extends Component {
       isMultiple,
       isDate,
       needCallAgain
-    } = await new DataAdapter().parseData(
+    } = await new DataAdapter().parseDataPie(
       this.props.element.settings.sources,
       this.props.formsStore.form_data,
       this.state.params,
@@ -100,116 +106,49 @@ class PieDataSource extends Component {
     }));
   }
 
-  formattingDate(data) {
-    return new Date(data).toLocaleString("ru", {
-      year: "numeric",
-      month: "long",
-      day: "numeric"
-    });
-  }
-
-  renderLegend(data) {
-    let customColors = _.keys(this.state.color).length > 0;
-    let legend = data.map((item, key) => {
-      return (
-        <DiscreteLegendEntry
-          key={key}
-          className="discrete__legend-item"
-          label={`${
-            item.key instanceof Date ? this.formattingDate(item.key) : item.key
-          } (${item.data})`}
-          color={customStyle[item.key % customStyle.length] || "#606060"}
-        />
-      );
-    });
-    if (customColors) {
-      if (this.state.isMultiple) {
-        legend = data.map((item, key) => {
-          return (
-            <DiscreteLegendEntry
-              key={key}
-              className="discrete__legend-item"
-              label={`${
-                item.key instanceof Date
-                  ? this.formattingDate(item.key)
-                  : item.key
-              }`}
-              color={this.state.color[item.key] || "#606060"}
-            />
-          );
-        });
-      } else {
-        legend = data.map((item, key) => {
-          return (
-            <DiscreteLegendEntry
-              key={key}
-              className="discrete__legend-item"
-              label={`${
-                item.key instanceof Date
-                  ? this.formattingDate(item.key)
-                  : item.key
-              } (${item.data})`}
-              color={this.state.color[item.key] || "#606060"}
-            />
-          );
-        });
-      }
-    }
-
-    return legend;
-  }
   render() {
+    if (typeof this.state.sources === "undefined") {
+      return <div>Укажите источник данных</div>;
+    }
     if (Object.keys(this.state.sources).length === 0) {
       return <div>Нет данных </div>;
     }
-
-    if (this.state.isMultiple) {
-      return <div>Укажите только один источник данных</div>;
-    }
-
     if (
       typeof this.state.data !== "undefined" &&
       this.state.data.length === 0
     ) {
       if (this.state.countRequest < 5) {
-        console.log(this.state.countRequest);
         return <div>Загрузка...</div>;
       }
       return <div>Нет данных</div>;
     }
 
-    let customColors = _.keys(this.state.color).length > 0;
     return (
       <>
         <ErrorBoundary>
-          <div className="chart-content-container">
-            <PieChart
-              data={this.state.data}
-              series={
-                <PieArcSeries
-                  colorScheme={
-                    customColors
-                      ? (_data, index) => {
-                          return (
-                            this.state.color[_data.key] ||
-                            customStyle[index % customStyle.length]
-                          );
-                        }
-                      : customStyle
-                  }
-                  label={<PieArcLabel fontSize={12} fontFill="#000000" />}
-                />
+          <ResponsivePieCanvas
+            margin={{ top: 80, right: 250, bottom: 80, left: 140 }}
+            data={this.state.data}
+            colors={this.state.settings?.colors}
+            innerRadius={this.state.settings?.innerRadius}
+            enableSliceLabels={this.state.settings?.enableSliceLabels}
+            legends={[
+              {
+                anchor: "right",
+                direction: "column",
+                justify: false,
+                translateX: 180,
+                translateY: 0,
+                itemsSpacing: 2,
+                itemWidth: 60,
+                itemHeight: 14,
+                itemDirection: "left-to-right",
+                itemOpacity: 1,
+                symbolSize: 14,
+                symbolShape: "circle"
               }
-            />
-          </div>
-          {this.state.legend.enabled && (
-            <DiscreteLegend
-              className={`discrete__legend  ${this.props.element.settings.legend
-                .side || ""}`}
-              orientation={this.state.legend.side}
-              entries={this.renderLegend(this.state.data)}
-            />
-          )}
+            ]}
+          />
         </ErrorBoundary>
       </>
     );

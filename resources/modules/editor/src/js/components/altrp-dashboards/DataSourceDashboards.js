@@ -1,8 +1,7 @@
-import React, { Component, Suspense } from "react";
+import React, { Component } from "react";
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { connect } from "react-redux";
 import { editElement } from "../../store/altrp-dashboard/actions";
-
 import axios from "axios";
 import Drawer from "rc-drawer";
 
@@ -10,7 +9,6 @@ import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 
 import WidgetData from "./WidgetData";
-import AddWidgetDataSource from "./AddWidgetDataSource";
 import WidgetPreview from "./WidgetPreview";
 import WidgetSettings from "./WidgetSettings";
 import AddItemButton from "./settings/AddItemButton";
@@ -44,12 +42,14 @@ class DataSourceDashboards extends Component {
       newCounter: props.counter || 1,
       repeater: _.cloneDeep(props.rep, []),
       settingsOpen: false,
+      addItemPreview: false,
       settings: props.settings,
       drawer: null,
       datasources: null
     };
 
     this.onAddItem = this.onAddItem.bind(this);
+    this.onAddItemCard = this.onAddItemCard.bind(this);
     this.onBreakpointChange = this.onBreakpointChange.bind(this);
     this.onEditItem = this.onEditItem.bind(this);
     this.onResizeHandler = this.onResizeHandler.bind(this);
@@ -59,6 +59,7 @@ class DataSourceDashboards extends Component {
     this.setEditItem = this.setEditItem.bind(this);
     this.openSettings = this.openSettings.bind(this);
     this.setCardName = this.setCardName.bind(this);
+    this.onDragStop = this.onDragStop.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -138,13 +139,20 @@ class DataSourceDashboards extends Component {
     this.saveWidgetData(this.state);
   }
 
-  openSettings(el = null) {
+  openSettings(el = null, addItemPreviewBool = null) {
     this.setState(state => {
       if (el === null) {
         state.drawer = null;
       }
       this.props.editElement(el);
       state.editElement = el;
+      if (addItemPreviewBool !== null) {
+        return {
+          ...state,
+          settingsOpen: !state.settingsOpen,
+          addItemPreview: addItemPreviewBool
+        };
+      }
       return {
         ...state,
         settingsOpen: !state.settingsOpen
@@ -154,44 +162,49 @@ class DataSourceDashboards extends Component {
 
   onEditItem(key, settings) {
     const { items } = this.state;
-
     let widget = _.find(items, { i: key });
     widget.settings = settings;
     widget.edit = false;
-    // console.log('MAIN HANDLER', settings);
     this.props.editElement(widget);
-
     _.replace(items, { i: key }, widget);
     let index = _.findKey(items, { i: key });
     this.setState(state => {
       state.items[index] = widget;
       return { ...state, items: items };
     });
-
     this.saveWidgetData();
   }
 
   onAddItem() {
-    this.setState(state => ({
-      items: state.items.concat({
-        i: "n" + this.state.newCounter,
-        x: (this.state.items.length * 3) % (this.state.cols || 12),
-        y: Infinity,
-        w: 3,
-        h: 5,
-        settings: {
-          sources: [],
-          type: "",
-          legend: {
-            enabled: false
-          },
-          colors: {},
-          params: []
-        },
-        edit: true
-      }),
-      newCounter: state.newCounter + 1
-    }));
+    this.setState(s => ({ ...s, addItemPreview: true }));
+    this.openSettings();
+  }
+
+  onAddItemCard(element) {
+    if (_.keys(element).length > 0) {
+      this.setState(state => ({
+        ...state,
+        items: state.items.concat(
+          this.itemSettingsAdd(state, element.settings)
+        ),
+        newCounter: state.newCounter + 1,
+        addItemPreview: false,
+        settingsOpen: false
+      }));
+      return;
+    }
+    alert("Информация не заполнена");
+  }
+
+  itemSettingsAdd(state, settings) {
+    return {
+      i: "n" + state.newCounter,
+      x: (state.items.length * 3) % (state.cols || 12),
+      y: Infinity,
+      w: 3,
+      h: 5,
+      settings: settings
+    };
   }
 
   onResizeHandler(layout, oldItem, newItem, placeholder) {
@@ -217,7 +230,18 @@ class DataSourceDashboards extends Component {
   }
 
   onResizeHandlerStop(layout, oldItem, newItem, placeholder) {
-    this.saveWidgetData();
+    const { i, x, y, w, h } = newItem;
+    let item = _.find(this.state.items, { i: i });
+    const itemKey = _.findKey(this.state.items, { i: i });
+    item = {
+      ...item,
+      x: x,
+      y: y,
+      w: w,
+      h: h
+    };
+    this.setState(s => ({ ...s, items: { ...s.items, [itemKey]: item } }));
+    this.saveWidgetData(this.state);
   }
 
   onBreakpointChange(breakpoint, cols) {
@@ -231,8 +255,22 @@ class DataSourceDashboards extends Component {
     this.props.onLayoutChange(layout);
   }
 
+  onDragStop(layout, oldItem, newItem, placeholder, event, element) {
+    const { i, x, y, w, h } = newItem;
+    let item = _.find(this.state.items, { i: i });
+    const itemKey = _.findKey(this.state.items, { i: i });
+    item = {
+      ...item,
+      x: x,
+      y: y,
+      w: w,
+      h: h
+    };
+    this.setState(s => ({ ...s, items: { ...s.items, [itemKey]: item } }));
+    this.saveWidgetData(this.state);
+  }
+
   onRemoveItem(i) {
-    // console.log("removing", i);
     this.state.items = _.reject(this.state.items, { i: i });
     this.setState({ items: this.state.items });
     this.saveWidgetData(this.state);
@@ -242,25 +280,14 @@ class DataSourceDashboards extends Component {
     el.y = el.y == null ? Infinity : el.y;
     return (
       <div key={el.i} data-grid={el}>
-        {el.edit ? (
-          <div className="altrp-dashboard__card">
-            <AddWidgetDataSource
-              editHandler={this.onEditItem}
-              widget={el}
-              settings={el.settings}
-              dataSourceList={this.props.rep}
-            />
-          </div>
-        ) : (
-          <WidgetData
-            editElement={_.cloneDeep(el, {})}
-            settings={el.settings}
-            openSettingsHandler={this.openSettings}
-            setEditItem={this.setEditItem}
-            onRemoveItem={this.onRemoveItem}
-            saveWidget={this.saveWidgetData}
-          />
-        )}
+        <WidgetData
+          editElement={_.cloneDeep(el, {})}
+          settings={el.settings}
+          openSettingsHandler={this.openSettings}
+          setEditItem={this.setEditItem}
+          onRemoveItem={this.onRemoveItem}
+          saveWidget={this.saveWidgetData}
+        />
       </div>
     );
   }
@@ -274,6 +301,7 @@ class DataSourceDashboards extends Component {
           onResizeStart={this.onResizeHandler}
           onResizeStop={this.onResizeHandlerStop}
           onDrop={this.onDrop}
+          onDragStop={this.onDragStop}
           onBreakpointChange={this.onBreakpointChange}
           {...this.props}
         >
@@ -292,16 +320,21 @@ class DataSourceDashboards extends Component {
         >
           {this.state.settingsOpen && (
             <WidgetSettings
+              addItemPreview={this.state.addItemPreview}
               filter_datasource={this.state.settings.filter_datasource}
               datasources={this.props.rep}
               editHandler={this.onEditItem}
               onCloseHandler={this.openSettings}
+              onAddItem={this.onAddItemCard}
             />
           )}
         </Drawer>
         {this.state.drawer != null &&
           ReactDOM.createPortal(
-            <WidgetPreview setCardName={this.setCardName} />,
+            <WidgetPreview
+              addItemPreview={this.state.addItemPreview}
+              setCardName={this.setCardName}
+            />,
             this.state.drawer
           )}
       </div>

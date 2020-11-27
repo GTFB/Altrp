@@ -1,13 +1,15 @@
-import { EDIT_ELEMENT } from './actions';
+import { EDIT_ELEMENT } from "./actions";
 
-const defaultState = null;
+const defaultState = {};
 
 export function elementReducer(state, action) {
-      state = state || defaultState;
-      switch (action.type) {
-            case EDIT_ELEMENT: {
-                  state = _.cloneDeep(action.payload, []);
-            } break;
+  state = state || defaultState;
+  switch (action.type) {
+    case EDIT_ELEMENT:
+      {
+        state = _.cloneDeep(action.payload, []);
       }
-      return state;
+      break;
+  }
+  return state;
 }

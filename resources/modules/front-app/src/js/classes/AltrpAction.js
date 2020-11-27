@@ -46,6 +46,36 @@ class AltrpAction extends AltrpModel {
   }
 
   /**
+   * Получить id для регистрации формы
+   * @return {string}
+   */
+  getFormId(){
+    let formId = this.getProperty('form_id');
+    if(! formId){
+      return formId;
+    }
+    if(formId.indexOf('{{') !== -1 ){
+      formId = replaceContentWithData(formId, this.getCurrentModel().getData());
+    }
+    return formId;
+  }
+
+  /**
+   * Получить id для регистрации формы
+   * @return {string}
+   */
+  getFormURL(){
+    let formURL = this.getProperty('form_url');
+    if(! formURL){
+      return formURL;
+    }
+    if(formURL.indexOf('{{') !== -1 ){
+      formURL = replaceContentWithData(formURL, this.getCurrentModel().getData());
+    }
+    return formURL;
+  }
+
+  /**
    * Получить компонент обертки для элемента
    * @return {{}}
    */
@@ -78,7 +108,7 @@ class AltrpAction extends AltrpModel {
   getReplacedProperty(name, defaultValue = '') {
     let value = this.getProperty(name, defaultValue);
     if (_.isString(value)) {
-      value = replaceContentWithData(value);
+      value = replaceContentWithData(value, this.getCurrentModel().getData());
     }
     return value;
   }
@@ -88,7 +118,7 @@ class AltrpAction extends AltrpModel {
   async init() {
     switch (this.getType()) {
       case 'form': {
-        if (!this.getProperty('form_url')) {
+        if (!this.getFormURL()) {
           this.setProperty('_form', null);
           return;
         }
@@ -99,11 +129,11 @@ class AltrpAction extends AltrpModel {
         ).default;
         const formOptions = {
           dynamicURL: true,
-          customRoute: this.getProperty('form_url')
+          customRoute: this.getFormURL()
         };
 
         const form = formsManager.registerForm(
-          this.getProperty('form_id'),
+          this.getFormId(),
           '',
           this.getProperty('form_method'),
           formOptions
@@ -118,7 +148,7 @@ class AltrpAction extends AltrpModel {
           )
         ).default;
         const form = formsManager.registerForm(
-          this.getProperty('form_id'),
+          this.getFormId(),
           'login',
           'POST'
         );
@@ -242,6 +272,11 @@ class AltrpAction extends AltrpModel {
           result = await this.doActionSetData();
         }
         break;
+      case 'update_current_datasources':
+        {
+          result = await this.doActionUpdateCurrentDatasources();
+        }
+        break;
     }
     let alertText = '';
     if (result.success) {
@@ -286,7 +321,7 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionRedirect() {
-    let URL = this.getReplacedProperty('form_url');
+    let URL = this.getFormURL();
     if (frontAppRouter) {
       if (this.getProperty('back')) {
         frontAppRouter.history.back();
@@ -674,6 +709,17 @@ class AltrpAction extends AltrpModel {
     }
 
     return result;
+  }
+  /**
+   * действие - обновление текущего хранилища
+   * @return {Promise<{}>}
+   */
+  async doActionUpdateCurrentDatasources() {
+    /**
+     * @type {DataStorageUpdater}
+     */
+    await window.dataStorageUpdater.updateCurrent();
+    return {success: true};
   }
   /**
    * Триггер события на другом компоненте

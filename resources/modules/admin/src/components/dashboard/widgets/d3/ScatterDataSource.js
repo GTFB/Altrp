@@ -1,36 +1,24 @@
 import React, { Component } from "react";
-import { customStyle } from "../../widgetTypes";
+import { ResponsiveScatterPlotCanvas } from "@nivo/scatterplot";
 import format from "date-fns/format";
-import {
-  ScatterPlot,
-  ScatterSeries,
-  ChartZoomPan,
-  LinearXAxis,
-  LinearXAxisTickSeries,
-  LinearXAxisTickLabel,
-  DiscreteLegend,
-  DiscreteLegendEntry,
-  TooltipArea,
-  ScatterPoint
-} from "reaviz";
-import formatDistanceStrict from "date-fns/formatDistanceStrict";
+import ErrorBoundary from "./ErrorBoundary";
 import ru from "date-fns/locale/ru";
-import { Spinner } from "react-bootstrap";
 import { connect } from "react-redux";
 import DataAdapter from "./DataAdapter";
 
 const mapStateToProps = state => {
-  return { formsStore: state.formsStore };
+  return { formsStore: _.cloneDeep(state.formsStore) };
 };
 
 class ScatterDataSource extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      sources: props.sources,
-      legend: props.element.settings.legend,
-      color: props.element.settings.color,
-      params: props.element.settings.params,
+      settings: _.cloneDeep(props.element.settings),
+      sources: _.cloneDeep(props.sources),
+      legend: _.cloneDeep(props.element.settings.legend),
+      color: _.cloneDeep(props.element.settings.color),
+      params: _.cloneDeep(props.element.settings.params),
       countRequest: 0,
       isDate: true,
       data: []
@@ -38,21 +26,35 @@ class ScatterDataSource extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    if (!_.isEqual(prevProps.source, this.props.source)) {
-      this.setState(state => ({ ...state, source: this.props.source }));
+    if (!_.isEqual(prevProps.sources, this.props.sources)) {
+      this.setState(state => ({ ...state, sources: this.props.sources }));
+      await this.getData();
     }
     if (!_.isEqual(prevProps.element, this.props.element)) {
       this.setState(state => ({
         ...state,
         legend: this.props.element.settings.legend,
         color: this.props.element.settings.color,
-        params: this.props.element.settings.params
+        sources: this.props.element.settings.sources
       }));
-
-      await this.getData();
     }
     if (
-      JSON.stringify(prevState.params) !==
+      !_.isEqual(
+        prevProps.element.settings.params,
+        this.props.element.settings.params
+      )
+    ) {
+      this.setState(state => ({
+        ...state,
+        params: this.props.element.settings.params
+      }));
+      await this.getData();
+    }
+    if (!_.isEqual(prevProps.element.settings, this.props.element.settings)) {
+      this.setState(s => ({ ...s, settings: this.props.element.settings }));
+    }
+    if (
+      JSON.stringify(prevProps.element.settings.params) !==
       JSON.stringify(this.props.element.settings.params)
     ) {
       this.setState(state => ({
@@ -107,91 +109,88 @@ class ScatterDataSource extends Component {
     }));
   }
 
-  formattingDate(data) {
-    return format(data, "d MMM yy", { locale: ru });
-  }
-
-  renderLegend(data) {
-    let customColors = _.keys(this.state.color).length > 0;
-    let legend = data.map((item, key) => {
-      return (
-        <DiscreteLegendEntry
-          key={key}
-          className="discrete__legend-item"
-          label={`${item.key} (${item.data})`}
-          color={customStyle[item.key % customStyle.length] || "#606060"}
-        />
-      );
-    });
-    if (customColors) {
-      legend = data.map((item, key) => {
-        return (
-          <DiscreteLegendEntry
-            key={key}
-            className="discrete__legend-item"
-            label={`${item.key} (${item.data})`}
-            color={this.state.color[item.key] || "#606060"}
-          />
-        );
-      });
-    }
-
-    return legend;
-  }
-
   render() {
+    if (typeof this.state.sources === "undefined") {
+      return <div>Укажите источник данных</div>;
+    }
     if (Object.keys(this.state.sources).length === 0) {
       return <div>Нет данных </div>;
     }
-
-    if (this.state.isMultiple) {
-      return <div>Укажите только один источник данных</div>;
-    }
-
     if (
       typeof this.state.data !== "undefined" &&
       this.state.data.length === 0
     ) {
       if (this.state.countRequest < 5) {
-        console.log(this.state.countRequest);
         return <div>Загрузка...</div>;
       }
       return <div>Нет данных</div>;
     }
+    if (this.props.element.settings.sources.length > 1) {
+      let matches = this.state.data.map(obj => {
+        if (_.keys(obj).length > 0) {
+          return obj.data.length > 0;
+        }
+        return _.keys(obj).length > 0;
+      });
+      let check = _.includes(matches, false);
+      if (check) {
+        if (this.state.countRequest < 5) {
+          return <div>Загрузка...</div>;
+        }
+        return <div>Нет данных</div>;
+      }
+    }
 
     return (
       <>
-        <div className="chart-content-container">
-          <ScatterPlot
+        <ErrorBoundary>
+          <ResponsiveScatterPlotCanvas
             data={this.state.data}
-            zoomPan={<ChartZoomPan />}
-            series={
-              <ScatterSeries point={<ScatterPoint color={customStyle[0]} />} />
+            margin={{ top: 40, right: 120, bottom: 80, left: 100 }}
+            xScale={this.state.settings?.xScale}
+            enableSliceLabels={false}
+            colors={this.state.settings?.colors}
+            xFormat={
+              this.state.settings?.xScale?.type === "time" && "time:%d.%m.%Y"
             }
-            xAxis={
-              <LinearXAxis
-                type={this.state.isDate ? "time" : "category"}
-                tickSeries={
-                  <LinearXAxisTickSeries
-                    label={
-                      this.state.isDate && (
-                        <LinearXAxisTickLabel format={this.formattingDate} />
-                      )
+            axisBottom={
+              this.state.settings?.xScale?.type === "time"
+                ? {
+                    format: this.state.settings.xScale.format,
+                    ...this.state.settings?.axisBottom
+                  }
+                : {
+                    ...this.state.settings?.axisBottom
+                  }
+            }
+            legends={[
+              {
+                anchor: "bottom-right",
+                direction: "column",
+                justify: false,
+                translateX: 100,
+                translateY: 0,
+                itemsSpacing: 0,
+                itemDirection: "left-to-right",
+                itemWidth: 80,
+                itemHeight: 20,
+                itemOpacity: 0.75,
+                symbolSize: 12,
+                symbolShape: "circle",
+                symbolBorderColor: "rgba(0, 0, 0, .5)",
+                effects: [
+                  {
+                    on: "hover",
+                    style: {
+                      itemBackground: "rgba(0, 0, 0, .03)",
+                      itemOpacity: 1
                     }
-                  />
-                }
-              />
-            }
+                  }
+                ]
+              }
+            ]}
           />
-          {this.state.legend.enabled && (
-            <DiscreteLegend
-              className={`discrete__legend  ${this.props.element.settings.legend
-                .side || ""}`}
-              orientation={this.state.legend.side}
-              entries={this.renderLegend(this.state.data)}
-            />
-          )}
-        </div>
+        </ErrorBoundary>
       </>
     );
   }

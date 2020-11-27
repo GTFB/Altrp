@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import DataAdapter from "./DataAdapter";
 import { connect } from "react-redux";
-import ErrorBoundaty from "./ErrorBoundary";
+import ErrorBoundary from "./ErrorBoundary";
 
 const mapStateToProps = state => {
   return { formsStore: state.formsStore };
@@ -20,23 +20,37 @@ class TableDataSource extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    if (!_.isEqual(prevProps.source, this.props.source)) {
-      this.setState(state => ({ ...state, source: this.props.source }));
+    if (!_.isEqual(prevProps.sources, this.props.sources)) {
+      this.setState(state => ({ ...state, sources: this.props.sources }));
+      await this.getData();
     }
     if (!_.isEqual(prevProps.element, this.props.element)) {
       this.setState(state => ({
         ...state,
+        legend: this.props.element.settings.legend,
         color: this.props.element.settings.color,
-        params: this.props.element.settings.params
+        sources: this.props.element.settings.sources
       }));
-
-      await this.getData();
     }
     if (
-      JSON.stringify(prevState.params) !==
+      !_.isEqual(
+        prevProps.element.settings.params,
+        this.props.element.settings.params
+      )
+    ) {
+      this.setState(state => ({
+        ...state,
+        params: this.props.element.settings.params
+      }));
+      await this.getData();
+    }
+    if (!_.isEqual(prevProps.element.settings, this.props.element.settings)) {
+      this.setState(s => ({ ...s, settings: this.props.element.settings }));
+    }
+    if (
+      JSON.stringify(prevProps.element.settings.params) !==
       JSON.stringify(this.props.element.settings.params)
     ) {
-      console.log("CHANGE IN BAR");
       this.setState(state => ({
         ...state,
         params: this.props.element.settings.params
@@ -59,14 +73,6 @@ class TableDataSource extends Component {
 
   async componentWillMount() {
     await this.getData();
-  }
-
-  formattingDate(data) {
-    return new Date(data).toLocaleString("ru", {
-      year: "numeric",
-      month: "long",
-      day: "numeric"
-    });
   }
 
   async getData() {
@@ -108,9 +114,9 @@ class TableDataSource extends Component {
     ) {
       return <div>Нет данных </div>;
     }
-    if (this.state.isMultiple) {
-      return <div>Укажите только один источник данных</div>;
-    }
+    // if (this.state.isMultiple) {
+    //   return <div>Укажите только один источник данных</div>;
+    // }
     if (
       typeof this.state.data !== "undefined" &&
       this.state.data.length === 0
@@ -120,30 +126,42 @@ class TableDataSource extends Component {
       }
       return <div>Нет данных</div>;
     }
-
+    const summary = this.state.data
+      .map(item => item.data.reduce((acc, object) => acc + object.y, 0))
+      .reduce((acc, item) => acc + item, 0);
     return (
-      <ErrorBoundaty>
+      <ErrorBoundary>
         <div className="widget-table">
           <table className="vertical-table">
             <tbody>
-              {this.state.data.map((item, key) => (
-                <tr key={key}>
-                  <td>
-                    {item.key instanceof Date
-                      ? this.formattingDate(item.key)
-                      : item.key}
-                  </td>
-                  <td>{item.data}</td>
-                </tr>
-              ))}
+              {this.state.data.map((item, key) => {
+                const dataset = item.data.map((object, index) => (
+                  <tr key={`${key}${index}`}>
+                    <td>
+                      {object.key instanceof Date
+                        ? this.formattingDate(object.x)
+                        : object.x}
+                    </td>
+                    <td>{object.y}</td>
+                  </tr>
+                ));
+                return (
+                  <React.Fragment key={key}>
+                    <tr key={key} style={{ textAlign: "center" }}>
+                      <td colSpan={2}>{item.id}</td>
+                    </tr>
+                    {dataset}
+                  </React.Fragment>
+                );
+              })}
               <tr>
                 <td>ИТОГО</td>
-                <td>{this.sum(this.state.data)}</td>
+                <td>{summary}</td>
               </tr>
             </tbody>
           </table>
         </div>
-      </ErrorBoundaty>
+      </ErrorBoundary>
     );
   }
 }
