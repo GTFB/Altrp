@@ -24,14 +24,17 @@ const selectSettings = {
 const xScale = [
   {
     id: 0,
+    label: "Линейный",
     value: "linear"
   },
   {
     id: 1,
+    label: "Точечный",
     value: "point"
   },
   {
     id: 2,
+    label: "Временной",
     value: "time"
   }
 ];
@@ -48,9 +51,9 @@ const yScale = [
 ];
 
 const timeScales = [
-  { id: 4, label: "день", value: "day" },
-  { id: 5, label: "месяц", value: "month" },
-  { id: 6, label: "год", value: "year" }
+  { id: 4, label: "День", value: "day" },
+  { id: 5, label: "Месяц", value: "month" },
+  { id: 6, label: "Год", value: "year" }
 ];
 
 const mapStateToProps = state => {
@@ -94,10 +97,14 @@ class AxisBaseSettings extends Component {
             options={xScale}
             className="select-type"
             defaultValue={this.state.editElement?.settings?.xScale?.type}
-            defaultInputValue={this.state.editElement?.settings?.xScale?.type}
+            defaultInputValue={
+              _.find(xScale, {
+                value: this.state.editElement?.settings?.xScale?.type
+              })?.label || ""
+            }
             onChange={option => this.props.setXAxisScale(option.value)}
             getOptionValue={option => option.value}
-            getOptionLabel={option => option.value}
+            getOptionLabel={option => option.label}
             styles={selectSettings}
           />
         </label>
@@ -109,7 +116,9 @@ class AxisBaseSettings extends Component {
               className="select-type"
               defaultValue={this.state.editElement?.settings?.xScale?.precision}
               defaultInputValue={
-                this.state.editElement?.settings?.xScale?.precision
+                _.find(timeScales, {
+                  value: this.state.editElement?.settings?.xScale?.precision
+                })?.label || ""
               }
               onChange={option => this.props.setXAxisTimeScale(option.value)}
               getOptionValue={option => option.value}
