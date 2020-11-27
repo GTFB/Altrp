@@ -581,6 +581,7 @@ class InputWidget extends Component {
     if (content_options_nullable) {
       options = _.union([{ label: nulled_option_title, value: '', }], options);
     }
+    console.log(this.state.value);
     const select2Props = {
       className: 'altrp-field-select2',
       classNamePrefix: this.props.element.getId() + ' altrp-field-select2',
@@ -589,7 +590,12 @@ class InputWidget extends Component {
       value: this.props.element.getSettings('is_select_all_allowed', false) && 
         value.length === parseOptionsFromSettings(this.props.element.getSettings('content_options')).length ? 
         [selectAllOption.value] : value,
-      isOptionSelected:  option => this.state.value.includes(option.value),
+      isOptionSelected:  option => {
+        if(_.isNumber(this.state.value) || _.isString(this.state.value)){
+          return this.state.value == option.value;
+        }
+        return this.state.value && this.state.value.includes(option.value)
+      },
       placeholder: content_placeholder,
       isMulti: this.props.element.getSettings('select2_multiple', false),
       onKeyDown: this.handleEnter

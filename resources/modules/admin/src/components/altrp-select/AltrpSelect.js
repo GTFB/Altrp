@@ -17,6 +17,7 @@ class AltrpSelect extends Component {
     if(props.optionsRoute){
       this.optionsResource = new Resource({route: props.optionsRoute});
     }
+    console.log(props);
   }
 
   /**
