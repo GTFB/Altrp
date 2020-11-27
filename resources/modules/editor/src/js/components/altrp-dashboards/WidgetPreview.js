@@ -1,11 +1,11 @@
-import React, { Component, Suspense } from "react";
+import React, { Component } from "react";
 
 import { connect } from "react-redux";
 import { editElement } from "../../store/altrp-dashboard/actions";
 import ChooseWidget from "./ChooseWidget";
 
 const mapStateToProps = state => {
-  return { editElement: state.editElement };
+  return { editElement: _.cloneDeep(state.editElement, {}) };
 };
 
 function mapDispatchToProps(dispatch) {
@@ -17,56 +17,76 @@ function mapDispatchToProps(dispatch) {
 class WidgetPreview extends Component {
   constructor(props) {
     super(props);
-    let element = _.cloneDeep(props.editElement, []);
+    const element =
+      props.editElement !== null ? _.cloneDeep(props.editElement) : {};
     this.state = {
-      editElement: element
+      editElement: element,
+      cardName: this.props.editElement?.settings?.name
     };
+    this.setCardName = this.setCardName.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
       !_.isEqual(prevProps.editElement, this.props.editElement) ||
-      JSON.stringify(prevProps.editElement.settings.params) !==
-        JSON.stringify(this.props.editElement.settings.params)
+      JSON.stringify(prevProps.editElement?.settings?.params) !==
+        JSON.stringify(this.props.editElement?.settings?.params)
     ) {
       let element = _.cloneDeep(this.props.editElement, []);
-      this.setState(state => ({ ...state, editElement: element }));
+      this.setState(state => ({
+        ...state,
+        editElement: element,
+        cardName: this.props.editElement?.settings?.name
+      }));
     }
   }
 
   //Обновляем название диаграммы
-  setCardName(name) {
-    this.props.setCardName(name, this.props.editElement);
+  setCardName(e) {
+    const value = e.target.value;
+    this.setState(s => ({ ...s, cardName: value }));
+    this.props.setCardName(value, this.props.editElement);
   }
 
   render() {
-    if (!_.isEmpty(this.props.editElement)) {
+    if (!_.isEmpty(this.state.editElement)) {
       return (
         <div className="drawer-preview">
           <div className="drawer-preview__container">
-            <div className="title">
-              <input
-                type="text"
-                onChange={e =>
-                  this.setCardName(e.target.value, this.props.editElement)
-                }
-                value={this.props.editElement.settings.name}
-                placeholder="Введите название диаграммы"
-              />
-            </div>
+            {!this.props.addItemPreview && (
+              <div className="title">
+                <input
+                  type="text"
+                  onChange={this.setCardName}
+                  value={this.state.cardName}
+                  placeholder="Введите название диаграммы"
+                />
+              </div>
+            )}
+
             <div className="drawer-preview__container-content">
               <ChooseWidget
-                sources={this.props.editElement.settings.sources}
-                params={this.props.editElement.settings.params}
-                type={this.props.editElement.settings.type}
-                editElement={this.props.editElement}
+                sources={_.cloneDeep(this.props.editElement?.settings?.sources)}
+                params={_.cloneDeep(this.props.editElement?.settings?.params)}
+                type={_.cloneDeep(this.props.editElement?.settings?.type)}
+                editElement={_.cloneDeep(this.props.editElement)}
               />
             </div>
           </div>
         </div>
       );
     }
-    return <div />;
+    return (
+      <div className="drawer-preview">
+        <div className="drawer-preview__container">
+          <div className="drawer-preview__container-content">
+            <div className="chart-container">
+              <div>Начните настраивать виджет</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 }
 

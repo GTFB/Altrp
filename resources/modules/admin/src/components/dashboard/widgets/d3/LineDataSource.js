@@ -1,18 +1,5 @@
 import React, { Component } from "react";
-import {
-  LineChart,
-  LineSeries,
-  ChartZoomPan,
-  Line,
-  LinearXAxis,
-  LinearXAxisTickSeries,
-  LinearXAxisTickLabel,
-  DiscreteLegend,
-  DiscreteLegendEntry,
-  TooltipArea,
-  LinearYAxis
-} from "reaviz";
-import { customStyle } from "../../widgetTypes";
+import { ResponsiveLineCanvas } from "@nivo/line";
 import { connect } from "react-redux";
 import DataAdapter from "./DataAdapter";
 import ErrorBoundary from "./ErrorBoundary";
@@ -24,33 +11,49 @@ class LineDataSource extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      sources: props.sources,
-      legend: props.element.settings.legend,
-      color: props.element.settings.color,
-      params: props.element.settings.params,
+      settings: _.cloneDeep(props.element.settings),
+      sources: _.cloneDeep(props.sources),
+      legend: _.cloneDeep(props.element.settings.legend),
+      color: _.cloneDeep(props.element.settings.color),
+      params: _.cloneDeep(props.element.settings.params),
       countRequest: 0,
       isMultiple: false,
       isDate: true,
+      isLarge: false,
       data: []
     };
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    if (!_.isEqual(prevProps.source, this.props.source)) {
-      this.setState(state => ({ ...state, source: this.props.source }));
+    if (!_.isEqual(prevProps.sources, this.props.sources)) {
+      this.setState(state => ({ ...state, sources: this.props.sources }));
+      await this.getData();
     }
     if (!_.isEqual(prevProps.element, this.props.element)) {
       this.setState(state => ({
         ...state,
         legend: this.props.element.settings.legend,
         color: this.props.element.settings.color,
-        params: this.props.element.settings.params
+        sources: this.props.element.settings.sources
       }));
-
-      await this.getData();
     }
     if (
-      JSON.stringify(prevState.params) !==
+      !_.isEqual(
+        prevProps.element.settings.params,
+        this.props.element.settings.params
+      )
+    ) {
+      this.setState(state => ({
+        ...state,
+        params: this.props.element.settings.params
+      }));
+      await this.getData();
+    }
+    if (!_.isEqual(prevProps.element.settings, this.props.element.settings)) {
+      this.setState(s => ({ ...s, settings: this.props.element.settings }));
+    }
+    if (
+      JSON.stringify(prevProps.element.settings.params) !==
       JSON.stringify(this.props.element.settings.params)
     ) {
       this.setState(state => ({
@@ -77,25 +80,13 @@ class LineDataSource extends Component {
     await this.getData();
   }
 
-  formattingDate(data) {
-    try {
-      return new Date(data).toLocaleString("ru", {
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-      });
-    } catch (error) {
-      return false;
-    }
-    y;
-  }
-
   async getData() {
     const {
       data,
       isMultiple,
       isDate,
-      needCallAgain
+      needCallAgain,
+      isLarge
     } = await new DataAdapter().parseData(
       this.props.element.settings.sources,
       this.props.formsStore.form_data,
@@ -114,39 +105,15 @@ class LineDataSource extends Component {
       ...s,
       data: data,
       isMultiple: isMultiple,
-      isDate: isDate
+      isDate: isDate,
+      isLarge: isLarge
     }));
   }
 
-  renderLegend(data) {
-    let customColors = _.keys(this.state.color).length > 0;
-    let legend = data.map((item, key) => {
-      return (
-        <DiscreteLegendEntry
-          key={key}
-          className="discrete__legend-item"
-          label={`${item.key}`}
-          color={customStyle[key % customStyle.length] || "#606060"}
-        />
-      );
-    });
-    if (customColors) {
-      legend = data.map((item, key) => {
-        return (
-          <DiscreteLegendEntry
-            key={key}
-            className="discrete__legend-item"
-            label={`${item.key}`}
-            color={this.state.color[key] || "#606060"}
-          />
-        );
-      });
-    }
-
-    return legend;
-  }
-
   render() {
+    if (typeof this.state.sources === "undefined") {
+      return <div>Укажите источник данных</div>;
+    }
     if (Object.keys(this.state.sources).length === 0) {
       return <div>Нет данных </div>;
     }
@@ -166,9 +133,6 @@ class LineDataSource extends Component {
         }
         return _.keys(obj).length > 0;
       });
-      if (!this.state.isDate) {
-        return <div>Все ключи должны быть в формате даты</div>;
-      }
       let check = _.includes(matches, false);
       if (check) {
         if (this.state.countRequest < 5) {
@@ -177,48 +141,59 @@ class LineDataSource extends Component {
         return <div>Нет данных</div>;
       }
     }
-    // else {
-    // if (!this.state.isDate) {
-    // return <div>Ключ должен быть в формате даты</div>;
-    // }
-    // }
-    const customColors = _.keys(this.state.color).length > 0;
-    const custromColorsArray = _.values(this.state.color).map(item => item);
     return (
       <>
         <ErrorBoundary>
-          <LineChart
-            zoomPan={<ChartZoomPan />}
+          <ResponsiveLineCanvas
             data={this.state.data}
-            series={
-              <LineSeries
-                type={this.state.isMultiple ? "grouped" : "standard"}
-                colorScheme={customColors ? custromColorsArray : customStyle}
-              />
+            margin={{ top: 40, right: 120, bottom: 80, left: 100 }}
+            curve={this.state.settings?.curve}
+            colors={this.state.settings?.colors}
+            xScale={this.state.settings?.xScale}
+            enableArea={this.state.settings?.enableArea}
+            pointSize={this.state.settings?.pointSize}
+            enablePoints={this.state.settings?.enablePoints}
+            lineWidth={this.state.settings?.lineWidth}
+            xFormat={
+              this.state.settings?.xScale?.type === "time" && "time:%d.%m.%Y"
             }
-            xAxis={
-              <LinearXAxis
-                type={this.state.isDate ? "time" : "category"}
-                tickSeries={
-                  <LinearXAxisTickSeries
-                    label={
-                      this.state.isDate && (
-                        <LinearXAxisTickLabel format={this.formattingDate} />
-                      )
+            axisBottom={
+              this.state.settings?.xScale?.type === "time"
+                ? {
+                    format: this.state.settings.xScale.format,
+                    ...this.state.settings?.axisBottom
+                  }
+                : {
+                    ...this.state.settings?.axisBottom
+                  }
+            }
+            legends={[
+              {
+                anchor: "bottom-right",
+                direction: "column",
+                justify: false,
+                translateX: 100,
+                translateY: 0,
+                itemsSpacing: 0,
+                itemDirection: "left-to-right",
+                itemWidth: 80,
+                itemHeight: 20,
+                itemOpacity: 0.75,
+                symbolSize: 12,
+                symbolShape: "circle",
+                symbolBorderColor: "rgba(0, 0, 0, .5)",
+                effects: [
+                  {
+                    on: "hover",
+                    style: {
+                      itemBackground: "rgba(0, 0, 0, .03)",
+                      itemOpacity: 1
                     }
-                  />
-                }
-              />
-            }
+                  }
+                ]
+              }
+            ]}
           />
-          {this.state.legend.enabled && (
-            <DiscreteLegend
-              className={`discrete__legend  ${this.props.element.settings.legend
-                .side || ""}`}
-              orientation={this.state.legend.side}
-              entries={this.renderLegend(this.state.data)}
-            />
-          )}
         </ErrorBoundary>
       </>
     );

@@ -1,50 +1,59 @@
 import React, { Component } from "react";
-import {
-  BarChart,
-  BarSeries,
-  Bar,
-  Gradient,
-  GradientStop,
-  DiscreteLegend,
-  DiscreteLegendEntry
-} from "reaviz";
-import { customStyle } from "../../widgetTypes";
+import { ResponsiveBarCanvas, ResponsiveBar } from "@nivo/bar";
 import { connect } from "react-redux";
 import ErrorBoundary from "./ErrorBoundary";
 import DataAdapter from "./DataAdapter";
 
 const mapStateToProps = state => {
-  return { formsStore: state.formsStore };
+  return { formsStore: _.cloneDeep(state.formsStore) };
 };
 class BarDataSource extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      sources: props.sources,
-      legend: props.element.settings.legend,
-      color: props.element.settings.color,
-      params: props.element.settings.params,
+      settings: _.cloneDeep(props.element.settings),
+      sources: _.cloneDeep(props.sources),
+      legend: _.cloneDeep(props.element.settings.legend),
+      color: _.cloneDeep(props.element.settings.color),
+      params: _.cloneDeep(props.element.settings.params),
       countRequest: 0,
       isMultiple: false,
+      isDate: true,
+      isLarge: false,
       data: []
     };
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    if (!_.isEqual(prevProps.source, this.props.source)) {
-      this.setState(state => ({ ...state, source: this.props.source }));
+    if (!_.isEqual(prevProps.sources, this.props.sources)) {
+      this.setState(state => ({ ...state, sources: this.props.sources }));
+      await this.getData();
     }
     if (!_.isEqual(prevProps.element, this.props.element)) {
       this.setState(state => ({
         ...state,
         legend: this.props.element.settings.legend,
         color: this.props.element.settings.color,
+        sources: this.props.element.settings.sources
+      }));
+    }
+    if (
+      !_.isEqual(
+        prevProps.element.settings.params,
+        this.props.element.settings.params
+      )
+    ) {
+      this.setState(state => ({
+        ...state,
         params: this.props.element.settings.params
       }));
       await this.getData();
     }
+    if (!_.isEqual(prevProps.element.settings, this.props.element.settings)) {
+      this.setState(s => ({ ...s, settings: this.props.element.settings }));
+    }
     if (
-      JSON.stringify(prevState.params) !==
+      JSON.stringify(prevProps.element.settings.params) !==
       JSON.stringify(this.props.element.settings.params)
     ) {
       this.setState(state => ({
@@ -76,8 +85,9 @@ class BarDataSource extends Component {
       data,
       isMultiple,
       isDate,
+      isLarge,
       needCallAgain
-    } = await new DataAdapter().parseData(
+    } = await new DataAdapter().parseDataBar(
       this.props.element.settings.sources,
       this.props.formsStore.form_data,
       this.state.params,
@@ -95,108 +105,43 @@ class BarDataSource extends Component {
       ...s,
       data: data,
       isMultiple: isMultiple,
-      isDate: isDate
+      isDate: isDate,
+      isLarge: isLarge
     }));
   }
 
-  formattingDate(data) {
-    return new Date(data).toLocaleString("ru", {
-      year: "numeric",
-      month: "long",
-      day: "numeric"
-    });
-  }
-
-  renderLegend(data) {
-    const customColors = _.keys(this.state.color).length > 0;
-    let legend = data.map((item, key) => {
-      return (
-        <DiscreteLegendEntry
-          key={key}
-          className="discrete__legend-item"
-          label={`${item.key}`}
-          color={customStyle[key % customStyle.length] || "#606060"}
-        />
-      );
-    });
-    if (customColors) {
-      legend = data.map((item, key) => {
-        return (
-          <DiscreteLegendEntry
-            key={key}
-            className="discrete__legend-item"
-            label={`${item.key} (${item.data})`}
-            color={this.state.color[key] || "#606060"}
-          />
-        );
-      });
-    }
-
-    return legend;
-  }
-
   render() {
+    if (typeof this.state.sources === "undefined") {
+      return <div>Укажите источник данных</div>;
+    }
     if (
-      this.state.source === null &&
+      this.state.sources === null &&
       Object.keys(this.state.sources).length === 0
     ) {
       return <div>Нет данных</div>;
     }
-    if (this.state.isMultiple) {
-      return <div>Укажите только один источник данных</div>;
-    } else {
-      if (this.state.data.length > 101) {
-        return (
-          <div>
-            Для стабильной работы виджета, ограничьте диапозон данных и выберите
-            источник данных заново
-          </div>
-        );
-      }
+    if (this.state.isLarge) {
+      return <div>Ограничьте диапозон данных или выберите другой источник</div>;
     }
-
     if (typeof this.state.data !== "undefined" && this.state.data.length > 0) {
-      const customColors = _.keys(this.state.color).length > 0;
       return (
         <>
-          <div className="chart-content-container">
-            <ErrorBoundary>
-              <BarChart
-                data={this.state.data}
-                series={
-                  <BarSeries
-                    colorScheme={
-                      customColors
-                        ? (_data, index) => {
-                            return (
-                              this.state.color[_data.key] ||
-                              customStyle[index % customStyle.length]
-                            );
-                          }
-                        : customStyle
-                    }
-                    bar={
-                      <Bar
-                        gradient={
-                          <Gradient
-                            stops={[<GradientStop stopOpacity={1} />]}
-                          />
-                        }
-                      />
-                    }
-                  />
-                }
-              />
-            </ErrorBoundary>
-          </div>
-          {this.state.legend.enabled && (
-            <DiscreteLegend
-              className={`discrete__legend  ${this.props.element.settings.legend
-                .side || ""}`}
-              orientation={this.state.legend.side}
-              entries={this.renderLegend(this.state.data)}
+          <ErrorBoundary>
+            <ResponsiveBar
+              data={this.state.data}
+              indexBy="key"
+              enableLabel={this.state.settings?.enableSliceLabels}
+              padding={this.state.settings?.padding}
+              innerPadding={this.state.settings?.innerPadding}
+              reverse={this.state.settings?.reverse}
+              groupMode={this.state.settings?.groupMode}
+              layout={this.state.settings?.layout}
+              margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+              colors={this.state.settings?.colors}
+              colorBy="index"
+              axisBottom={{ ...this.state.settings?.axisBottom }}
             />
-          )}
+          </ErrorBoundary>
         </>
       );
     }

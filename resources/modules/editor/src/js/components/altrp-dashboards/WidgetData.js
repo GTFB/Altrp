@@ -1,4 +1,4 @@
-import React, { Component, Suspense } from "react";
+import React, { Component } from "react";
 import ChooseWidget from "./ChooseWidget";
 import domtoimage from "dom-to-image";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -12,7 +12,6 @@ class WidgetData extends Component {
   constructor(props) {
     super(props);
     let element = _.cloneDeep(props.editElement, []);
-    console.log(element);
     this.state = { el: element };
   }
 
@@ -22,7 +21,6 @@ class WidgetData extends Component {
       JSON.stringify(prevProps.editElement.settings.params) !==
         JSON.stringify(this.props.editElement.settings.params)
     ) {
-      console.log("CHANGE DATA");
       this.setState(state => ({
         ...state,
         el: _.cloneDeep(this.props.editElement, [])
@@ -83,10 +81,10 @@ class WidgetData extends Component {
           </div>
         </div>
         <ChooseWidget
-          editElement={this.props.editElement}
-          params={this.props.editElement.settings.params}
-          type={this.props.editElement.settings.type}
-          sources={this.props.editElement.settings.sources}
+          editElement={_.cloneDeep(this.props.editElement)}
+          params={_.cloneDeep(this.props.editElement.settings.params)}
+          type={_.cloneDeep(this.props.editElement.settings.type)}
+          sources={_.cloneDeep(this.props.editElement.settings.sources)}
         />
       </div>
     );

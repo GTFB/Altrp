@@ -161,7 +161,7 @@ div[x-placement="left"] {
                 padding: 10px 0;
 
                 & .chart-container {
-                    overflow: auto;
+                    // overflow: auto;
                     height: 100%;
                     width: 100%;
                     display: flex;
@@ -285,7 +285,7 @@ div[x-placement="left"] {
         }
 
         & .chart-container {
-            overflow: auto;
+            // overflow: auto;
             height: 100%;
             width: 100%;
             padding-top: 10px;

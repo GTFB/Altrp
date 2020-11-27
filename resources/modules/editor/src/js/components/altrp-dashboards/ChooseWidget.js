@@ -1,10 +1,8 @@
-import React, { Component, Suspense } from "react";
+import React, { Component } from "react";
 
 import {
   BAR,
   PIE,
-  DONUT,
-  AREA,
   LINE,
   TABLE,
   POINT
@@ -12,8 +10,6 @@ import {
 
 import BarDataSource from "../../../../../admin/src/components/dashboard/widgets/d3/BarDataSource";
 import PieDataSource from "../../../../../admin/src/components/dashboard/widgets/d3/PieDataSource";
-import DonutDataSource from "../../../../../admin/src/components/dashboard/widgets/d3/DonutDataSource";
-import AreaDataSource from "../../../../../admin/src/components/dashboard/widgets/d3/AreaDataSource";
 import TableDataSource from "../../../../../admin/src/components/dashboard/widgets/d3/TableDataSource";
 import LineDataSource from "../../../../../admin/src/components/dashboard/widgets/d3/LineDataSource";
 import ScatterDataSource from "../../../../../admin/src/components/dashboard/widgets/d3/ScatterDataSource";
@@ -51,18 +47,12 @@ class ChooseWidget extends Component {
   }
   getWidget() {
     let widget = "Выберите тип диаграммы";
-    switch (this.state.type) {
+    switch (this.props.editElement.settings.type) {
       case BAR:
         widget = this.renderBar();
         break;
       case PIE:
         widget = this.renderPie();
-        break;
-      case DONUT:
-        widget = this.renderDonut();
-        break;
-      case AREA:
-        widget = this.renderArea();
         break;
       case LINE:
         widget = this.renderLine();
@@ -77,21 +67,14 @@ class ChooseWidget extends Component {
         widget = <div>Выберите тип диаграммы</div>;
         break;
     }
-    return (
-      <div
-        className={`chart-container ${this.props.editElement.settings.legend
-          .position || ""}`}
-      >
-        {widget}
-      </div>
-    );
+    return <div className="chart-container">{widget}</div>;
   }
 
   renderBar() {
     return (
       <BarDataSource
-        element={this.props.editElement}
-        sources={this.state.sources}
+        element={_.cloneDeep(this.props.editElement)}
+        sources={_.cloneDeep(this.state.sources)}
       />
     );
   }
@@ -99,26 +82,8 @@ class ChooseWidget extends Component {
   renderPie() {
     return (
       <PieDataSource
-        element={this.props.editElement}
-        sources={this.state.sources}
-      />
-    );
-  }
-
-  renderDonut() {
-    return (
-      <DonutDataSource
-        element={this.props.editElement}
-        sources={this.state.sources}
-      />
-    );
-  }
-
-  renderArea() {
-    return (
-      <AreaDataSource
-        element={this.props.editElement}
-        sources={this.state.sources}
+        element={_.cloneDeep(this.props.editElement)}
+        sources={_.cloneDeep(this.state.sources)}
       />
     );
   }
@@ -126,8 +91,8 @@ class ChooseWidget extends Component {
   renderLine() {
     return (
       <LineDataSource
-        element={this.props.editElement}
-        sources={this.state.sources}
+        element={_.cloneDeep(this.props.editElement)}
+        sources={_.cloneDeep(this.state.sources)}
       />
     );
   }
@@ -135,8 +100,8 @@ class ChooseWidget extends Component {
   renderTable() {
     return (
       <TableDataSource
-        element={this.props.editElement}
-        sources={this.state.sources}
+        element={_.cloneDeep(this.props.editElement)}
+        sources={_.cloneDeep(this.state.sources)}
       />
     );
   }
@@ -144,8 +109,8 @@ class ChooseWidget extends Component {
   renderScatter() {
     return (
       <ScatterDataSource
-        element={this.props.editElement}
-        sources={this.state.sources}
+        element={_.cloneDeep(this.props.editElement)}
+        sources={_.cloneDeep(this.state.sources)}
       />
     );
   }
