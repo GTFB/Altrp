@@ -101,6 +101,94 @@ class AltrpModelObserver
             $migration->status = "1";
             $migration->data = "";
             $migration->save();
+
+            if (!$model->hasTimestamps() && $model->time_stamps) {
+                $this->createColumn([
+                    "name" => "created_at",
+                    "title" => "created_at",
+                    "description" => null,
+                    "type" => "timestamp",
+                    "size" => null,
+                    "null" => null,
+                    "default" => null,
+                    "primary" => null,
+                    "unique" => null,
+                    "user_id" => auth()->user()->id,
+                    "table_id" => $table->id,
+                    "altrp_migration_id" => $migration->id,
+                    "is_label" => 0,
+                    "is_title" => 0,
+                    "is_auth" => 0,
+                    "attribute" => null,
+                    "input_type" => null,
+                    "options" => null,
+                    "indexed" => 0,
+                    "editable" => 0,
+                    'calculation' => null,
+                    'calculation_logic' => null,
+                    "hidden" => 0,
+                    "model_id" => $model->id,
+                    "preset" => 0
+                ]);
+
+                $this->createColumn([
+                    "name" => "updated_at",
+                    "title" => "updated_at",
+                    "description" => null,
+                    "type" => "timestamp",
+                    "size" => null,
+                    "null" => null,
+                    "default" => null,
+                    "primary" => null,
+                    "unique" => null,
+                    "user_id" => auth()->user()->id,
+                    "table_id" => $table->id,
+                    "altrp_migration_id" => $migration->id,
+                    "is_label" => 0,
+                    "is_title" => 0,
+                    "is_auth" => 0,
+                    "attribute" => null,
+                    "input_type" => null,
+                    "options" => null,
+                    "indexed" => 0,
+                    "editable" => 0,
+                    'calculation' => null,
+                    'calculation_logic' => null,
+                    "hidden" => 0,
+                    "model_id" => $model->id,
+                    "preset" => 0
+                ]);
+            }
+
+            if (!$model->hasSoftDeletes() && $model->soft_deletes) {
+                $this->createColumn([
+                    "name" => "deleted_at",
+                    "title" => "deleted_at",
+                    "description" => null,
+                    "type" => "timestamp",
+                    "size" => null,
+                    "null" => null,
+                    "default" => null,
+                    "primary" => null,
+                    "unique" => null,
+                    "user_id" => auth()->user()->id,
+                    "table_id" => $table->id,
+                    "altrp_migration_id" => $migration->id,
+                    "is_label" => 0,
+                    "is_title" => 0,
+                    "is_auth" => 0,
+                    "attribute" => null,
+                    "input_type" => null,
+                    "options" => null,
+                    "indexed" => 0,
+                    "editable" => 0,
+                    'calculation' => null,
+                    'calculation_logic' => null,
+                    "hidden" => 0,
+                    "model_id" => $model->id,
+                    "preset" => 0
+                ]);
+            }
         }
     }
 
@@ -112,25 +200,28 @@ class AltrpModelObserver
      */
     public function updating(Model $model)
     {
-
-
         if (!$model->parent_model_id) {
             $table = Table::find($model->table_id);
         } else {
             $parentModel = Model::find($model->parent_model_id);
             $table = Table::find($parentModel->table_id);
         }
+
+        if (!$model->getOriginal('preset'))
+            $model->namespace = 'App\\AltrpModels\\' . $model->name;
+
+        $generator = new ModelGenerator($model);
+
         //При изменении имени модели, переименовываем таблицу
         if ($table && $model->getOriginal('name') != $model->name) {
             $table->name = strtolower(\Str::plural($model->name));
             $table->title = ucfirst(\Str::plural($model->name));
             $table->user_id = auth()->user()->id;
             $table->save();
+
+            $generator->updateAssociateRelations();
         }
 
-        if (!$model->getOriginal('preset'))
-            $model->namespace = 'App\\AltrpModels\\' . $model->name;
-        $generator = new ModelGenerator($model);
         if ($model->altrp_accessors) {
             foreach ($model->altrp_accessors as $accessor) {
                 $accessor->updated_at = Carbon::now();
@@ -216,6 +307,80 @@ class AltrpModelObserver
             $migration->status = "1";
             $migration->data = "";
             $migration->save();
+
+            if (!$model->hasTimestamps() && $model->time_stamps) {
+                $this->createColumn([
+                    "name" => "created_at",
+                    "title" => "created_at",
+                    "description" => null,
+                    "type" => "timestamp",
+                    "size" => null,
+                    "null" => null,
+                    "default" => null,
+                    "primary" => null,
+                    "unique" => null,
+                    "user_id" => auth()->user()->id,
+                    "table_id" => $table->id,
+                    "altrp_migration_id" => $migration->id,
+                    "is_label" => 0,
+                    "is_title" => 0,
+                    "is_auth" => 0,
+                    "attribute" => null,
+                    "input_type" => null,
+                    "options" => null,
+                    "indexed" => 0,
+                    "editable" => 0,
+                    'calculation' => null,
+                    'calculation_logic' => null,
+                    "hidden" => 0,
+                    "model_id" => $model->id,
+                    "preset" => 0
+                ]);
+
+                $this->createColumn([
+                    "name" => "updated_at",
+                    "title" => "updated_at",
+                    "description" => null,
+                    "type" => "timestamp",
+                    "size" => null,
+                    "null" => null,
+                    "default" => null,
+                    "primary" => null,
+                    "unique" => null,
+                    "user_id" => auth()->user()->id,
+                    "table_id" => $table->id,
+                    "altrp_migration_id" => $migration->id,
+                    "is_label" => 0,
+                    "is_title" => 0,
+                    "is_auth" => 0,
+                    "attribute" => null,
+                    "input_type" => null,
+                    "options" => null,
+                    "indexed" => 0,
+                    "editable" => 0,
+                    'calculation' => null,
+                    'calculation_logic' => null,
+                    "hidden" => 0,
+                    "model_id" => $model->id,
+                    "preset" => 0
+                ]);
+            }
+
+            if ($model->getOriginal('time_stamps') && !$model->time_stamps) {
+                $created_at = Column::where([['name', 'created_at'], ['model_id', $model->id]])->first();
+                $updated_at = Column::where([['name', 'updated_at'], ['model_id', $model->id]])->first();
+                Column::withoutEvents(function () use ($created_at, $updated_at){
+                    $created_at->delete();
+                    $updated_at->delete();
+                });
+            }
+
+            if ($model->getOriginal('soft_deletes') && !$model->soft_deletes) {
+                $deleted_at = Column::where([['name', 'deleted_at'], ['model_id', $model->id]])->first();
+                Column::withoutEvents(function () use ($deleted_at){
+                    $deleted_at->delete();
+                });
+            }
         }
     }
 
@@ -280,5 +445,17 @@ class AltrpModelObserver
     public function deleted(Model $model)
     {
 //        $model->table->forceDelete();
+    }
+
+    /**
+     * Создать колонку
+     * @param $data
+     */
+    protected function createColumn($data)
+    {
+        $column = new Column($data);
+        Column::withoutEvents(function () use ($column) {
+            $column->save();
+        });
     }
 }
