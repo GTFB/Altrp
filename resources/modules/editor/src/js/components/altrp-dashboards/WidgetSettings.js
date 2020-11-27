@@ -599,22 +599,23 @@ class WidgetSettings extends Component {
                 datasources={this.state.datasources}
                 setDatasource={this.setDatasource}
               />
-              {this.state.filter_datasource.length > 0 && (
-                <>
-                  <div className="col mb-3">
-                    <div className="label">Параметры</div>
-                  </div>
-                  {this.state.filter_datasource.map((param, index) => {
-                    return (
-                      <FilterParameters
-                        setParam={this.setParam}
-                        key={index}
-                        param={param}
-                      />
-                    );
-                  })}
-                </>
-              )}
+              {typeof this.state.filter_datasource !== "undefined" &&
+                _.keys(this.state.filter_datasource).length > 0 && (
+                  <>
+                    <div className="col mb-3">
+                      <div className="label">Параметры</div>
+                    </div>
+                    {this.state.filter_datasource.map((param, index) => {
+                      return (
+                        <FilterParameters
+                          setParam={this.setParam}
+                          key={index}
+                          param={param}
+                        />
+                      );
+                    })}
+                  </>
+                )}
 
               {/*
                 Настройки осей

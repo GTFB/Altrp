@@ -33,28 +33,26 @@ class DataAdapter {
    * @param {*} params
    */
   queryString(params) {
-    let data = _.values(params)
-      .map((param, index) => {
-        let key = encodeURIComponent(_.keys(param)[0]);
-        let value = encodeURIComponent(param[key]);
-
-        let result = "";
-        if (index === 0) {
-          if (param[key] === null) {
-            result = `?`;
-          } else {
-            result = `?${key}=${value}`;
-          }
+    let data = _.values(params).map((param, index) => {
+      let key = encodeURIComponent(_.keys(param)[0]);
+      let value = encodeURIComponent(param[key]);
+      let result = "";
+      if (index === 0) {
+        if (param[key] === null || param[key] == null) {
+          result = `?`;
         } else {
-          if (param[key] === null) {
-            result = ``;
-          } else {
-            result = `&${key}=${value}`;
-          }
+          result = `?${key}=${value}`;
         }
-        return result;
-      })
-      .join("");
+      } else {
+        if (param[key] === "" || param[key] == null) {
+          result = ``;
+        } else {
+          result = `&${key}=${value}`;
+        }
+      }
+      return result;
+    });
+    data = data.join("");
     return data;
   }
 
@@ -73,7 +71,7 @@ class DataAdapter {
         .filter(item => {
           const value =
             item.split("=")[1] !== "undefined" ? item.split("=")[1] : "";
-          return typeof value !== "undefined" && value !== "";
+          return typeof value !== "undefined" && value !== "" && value !== null;
         })
         .join("&");
     }
@@ -156,7 +154,7 @@ class DataAdapter {
     const url = datasource.getWebUrl();
     const localParams = this.parseSourceParams(datasource.params);
     let parameters = this.queryString(params) + "&" + localParams;
-    // parameters = Array.from(new Set(parameters.split("&"))).join("&");
+    parameters = Array.from(new Set(parameters.split("&"))).join("&");
     const sendUrl = url + parameters;
     try {
       const req = await axios(sendUrl);
@@ -198,6 +196,7 @@ class DataAdapter {
     const url = datasource.getWebUrl();
     const localParams = this.parseSourceParams(datasource.params);
     let parameters = this.queryString(params) + "&" + localParams;
+    parameters = Array.from(new Set(parameters.split("&"))).join("&");
     const sendUrl = url + parameters;
     try {
       const req = await axios(sendUrl);
@@ -236,6 +235,7 @@ class DataAdapter {
     const url = datasource.getWebUrl();
     const localParams = this.parseSourceParams(datasource.params);
     let parameters = this.queryString(params) + "&" + localParams;
+    parameters = Array.from(new Set(parameters.split("&"))).join("&");
     const sendUrl = url + parameters;
     try {
       const req = await axios(sendUrl);
