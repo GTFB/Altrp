@@ -1,6 +1,7 @@
 import React, {useState, useCallback, useEffect} from "react";
 import Query from "../../classes/Query";
 import {useQuery, usePaginatedQuery, queryCache} from  "react-query";
+import {setAltrpIndex} from "../../../../../front-app/src/js/helpers";
 
 /**
  * Компонент для получения данных при помощи запросов
@@ -101,6 +102,9 @@ const AltrpQueryComponent = (props)=>{
   if(_.isEmpty(data)){
     data = _data
   }
+  React.useEffect(()=>{
+    setAltrpIndex(data)
+  }, [data]);
   const childrenProps = {...props,
     data,
     _status,

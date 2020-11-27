@@ -380,6 +380,15 @@ class Input extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('create_options', {
+      tab: TAB_CONTENT,
+      label: 'Create Options Settings',
+    });
+
+
+
+    this.endControlSection();
+
     this.startControlSection('logic_section', {
       tab: TAB_CONTENT,
       label: 'Logic',

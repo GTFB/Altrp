@@ -264,6 +264,10 @@ class Button extends BaseElement {
           value: 'set_data',
           label: 'Set Data',
         },
+        {
+          value: 'update_current_datasources',
+          label: 'Update Current Datasources',
+        },
       ],
     });
 

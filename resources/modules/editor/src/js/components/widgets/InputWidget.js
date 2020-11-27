@@ -144,7 +144,7 @@ class InputWidget extends Component {
       return
     }
     const fieldName = this.props.element.getFieldId();
-    const formId = this.props.element.getSettings('form_id');
+    const formId = this.props.element.getFormId();
 
     const prevContext = {};
 
@@ -214,7 +214,7 @@ class InputWidget extends Component {
    */
   async updateOptions() {
     {
-      let formId = this.props.element.getSettings('form_id');
+      let formId = this.props.element.getFormId();
       let paramsForUpdate = this.props.element.getSettings('params_for_update');
       let formData = _.get(this.props.formsStore, [formId], {});
       paramsForUpdate = parseParamsFromString(paramsForUpdate, new AltrpModel(formData));
@@ -317,7 +317,7 @@ class InputWidget extends Component {
    * @param {boolean} userInput true - имзенилось пользователем
    */
   dispatchFieldValueToStore = (value, userInput = false) => {
-    let formId = this.props.element.getSettings('form_id');
+    let formId = this.props.element.getFormId();
     let fieldName = this.props.element.getFieldId();
     let timestamp = this.props.element.getSettings('content_timestamp');
     let isDate = this.state.settings.content_type === 'date';
@@ -474,7 +474,7 @@ class InputWidget extends Component {
     const { options = [], } = this.state;
     let { value = '' } = this.state;
     const fieldName = this.props.element.getFieldId() || Math.random().toString(36).substr(2, 9);
-    const formID = this.props.element.getSettings('form_id') || Math.random().toString(36).substr(2, 9);
+    const formID = this.props.element.getFormId() || Math.random().toString(36).substr(2, 9);
     const inputType = this.props.element.getSettings('content_type', 'radio');
     return <div className="altrp-field-subgroup">
       {

@@ -55,6 +55,9 @@ class FrontElement {
    * @param {FrontElement} parent
    */
   setParent(parent){
+    if(! parent){
+      console.error(this);
+    }
     this.parent = parent;
   }
 
@@ -88,6 +91,10 @@ class FrontElement {
     if (this.getType() === type){
       return this;
     }
+    if(!this.parent){
+      // console.log(type);
+      // console.log(this);
+    }
     return this.parent.findClosestByType(type)
   }
 
@@ -114,7 +121,7 @@ class FrontElement {
       }
       return;
     }
-    if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_id')){
+    if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getFormId()){
       this.formInit();
       return;
     }
@@ -128,7 +135,8 @@ class FrontElement {
      * @member {ActionsManager|*} actionsManager
      */
     const actionsManager = (await import('./modules/ActionsManager.js')).default;
-    actionsManager.registerWidgetActions(this.getId(), this.getSettings('actions', []), 'click', this);
+
+    actionsManager.registerWidgetActions(this.getIdForAction(), this.getSettings('actions', []), 'click', this);
   }
   /**
    * Если элемент поле или кнопка нужно инициализирваоть форму в FormsManager
@@ -144,7 +152,7 @@ class FrontElement {
         let method = 'POST';
         switch (this.getSettings('form_actions')){
           case 'add_new':{
-            this.addForm(formsManager.registerForm(this.getSettings('form_id'), this.getSettings('choose_model'), method));
+            this.addForm(formsManager.registerForm(this.getFormId(), this.getSettings('choose_model'), method));
           }
           break;
           case 'delete':{
@@ -159,13 +167,13 @@ class FrontElement {
             method = 'PUT';
             let modelName = this.getModelName();
             if(modelName){
-              this.addForm(formsManager.registerForm(this.getSettings('form_id'), modelName, method));
+              this.addForm(formsManager.registerForm(this.getFormId(), modelName, method));
             }
           }
           break;
           case 'login':{
             method = 'POST';
-            this.addForm(formsManager.registerForm(this.getSettings('form_id'),
+            this.addForm(formsManager.registerForm(this.getFormId(),
                 'login',
                 method,
                 {afterLoginRedirect:this.getSettings('redirect_after')}));
@@ -173,7 +181,7 @@ class FrontElement {
           break;
           case 'logout':{
             method = 'POST';
-            this.addForm(formsManager.registerForm(this.getSettings('form_id'),
+            this.addForm(formsManager.registerForm(this.getFormId(),
                 'logout',
                 method,
                 {afterLogoutRedirect:this.getSettings('redirect_after')}
@@ -182,7 +190,7 @@ class FrontElement {
           break;
           case 'email':{
             method = 'POST';
-            this.addForm(formsManager.registerForm(this.getSettings('form_id'),
+            this.addForm(formsManager.registerForm(this.getFormId(),
                 'email',
                 method,
                 {afterLogoutRedirect:this.getSettings('redirect_after')}
@@ -196,7 +204,7 @@ class FrontElement {
       }
       break;
       case 'input': {
-        formsManager.addField(this.getSettings('form_id'), this);
+        formsManager.addField(this.getFormId(), this);
       }
       break;
     }
@@ -225,8 +233,21 @@ class FrontElement {
   getChildren(){
     return this.children;
   }
+
   getId(){
     return this.id;
+  }
+
+  /**
+   * id для повторяющихся виджетов с действиями
+   * @return {string}
+   */
+  getIdForAction(){
+    let id = this.getId();
+    if(this.getCurrentModel().getProperty('altrpIndex') !== ''){
+      id += `_${this.getCurrentModel().getProperty('altrpIndex')}`;
+    }
+    return id;
   }
 
   getName(){
@@ -556,10 +577,9 @@ class FrontElement {
       model = new AltrpModel(model);
     }
     index = Number(index);
-    model.setProperty('altrpIndex', index);
+    // model.setProperty('altrpIndex', index);
     rootElement.cardModel = model;
     rootElement.isCard = true;
-    // console.log(rootElement);
   }
 
   /**
@@ -609,6 +629,19 @@ class FrontElement {
       fieldId = replaceContentWithData(fieldId, this.getCurrentModel().getData());
     }
     return fieldId;
+  }
+  /**
+   * Получить id поля
+   */
+  getFormId(){
+    let formId = this.getSettings('form_id');
+    if(! formId){
+      return formId;
+    }
+    if(formId.indexOf('{{') !== -1 && this.component){
+      formId = replaceContentWithData(formId, this.getCurrentModel().getData());
+    }
+    return formId;
   }
 }
 

@@ -89,6 +89,6 @@ class FormsManager {
     return _form;
   }
 }
-const formsManager = new FormsManager();
+window.formsManager = new FormsManager();
 
 export default formsManager;
