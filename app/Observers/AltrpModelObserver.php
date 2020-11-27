@@ -206,17 +206,22 @@ class AltrpModelObserver
             $parentModel = Model::find($model->parent_model_id);
             $table = Table::find($parentModel->table_id);
         }
+
+        if (!$model->getOriginal('preset'))
+            $model->namespace = 'App\\AltrpModels\\' . $model->name;
+
+        $generator = new ModelGenerator($model);
+
         //При изменении имени модели, переименовываем таблицу
         if ($table && $model->getOriginal('name') != $model->name) {
             $table->name = strtolower(\Str::plural($model->name));
             $table->title = ucfirst(\Str::plural($model->name));
             $table->user_id = auth()->user()->id;
             $table->save();
+
+            $generator->updateAssociateRelations();
         }
 
-        if (!$model->getOriginal('preset'))
-            $model->namespace = 'App\\AltrpModels\\' . $model->name;
-        $generator = new ModelGenerator($model);
         if ($model->altrp_accessors) {
             foreach ($model->altrp_accessors as $accessor) {
                 $accessor->updated_at = Carbon::now();

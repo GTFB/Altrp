@@ -78,8 +78,12 @@ class ApiController extends Controller
             $pageCount = 0;
             $$resource = $search
                 ? $this->modelClass::whereLike($indexedColumns, $search)
-                    ->whereLikeMany( $filters )->$order_method( $order_column )->get()
-                : $this->modelClass::$order_method( $order_column )->whereLikeMany( $filters )->get();
+                    ->whereLikeMany( $filters )
+                    ->$order_method( $order_column )
+                    ->get()
+                : $this->modelClass::whereLikeMany( $filters )
+                    ->$order_method( $order_column )
+                    ->get();
         }
         $hasMore = $pageCount > $page;
 
