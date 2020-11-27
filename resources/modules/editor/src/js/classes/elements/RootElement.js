@@ -3029,7 +3029,7 @@ class RootElement extends BaseElement {
         'vh',
       ],
       rules: {
-        'tr .altrp-table-th{{STATE}}': [
+        'tr .altrp-table-th{{STATE}}, .altrp-table-tr>.altrp-table-th{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
