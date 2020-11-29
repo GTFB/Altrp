@@ -725,14 +725,17 @@
   bottom: 0;
   width: 100%;
   min-height: 100%;
-  background-color: rgba($color: #000000, $alpha: 0.7);
   z-index: 999999;
   overflow: auto;
   .popup-close-button {
     position: absolute;
-    top: 20%;
-    right: 20%;
+    top: 0;
+    right: 0;
+    line-height: 1;
     padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: transparent;
     z-index: 1000;
     color: white;
@@ -740,21 +743,102 @@
   }
   .popup-window {
     position: absolute;
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%, 0);
     width: 50vw;
     min-height: 50vh;
-    overflow: auto;
     background-color: white;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 10px;
     border: 1px solid;
     border-radius: 5px;
-    margin-bottom: 20px;
   }
+}
+
+.popup-content {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.popup-scrollbar-vertical {
+    position: relative;
+    display: block;
+    width: 100%;
+    cursor: pointer;
+    height: 50px;
+    border-radius: 2px;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 0.2);
+    transition-duration: 0.2s;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.popup-scrollbar-track-vertical {
+    height: 100%;
+    position: absolute;
+    border-radius: 2px;
+    z-index: 999;
+    top: 0;
+    right: 0;
+}
+
+.popup-scrollbar-track-horizontal {
+    display: none;
+}
+
+.app-popup-overlay {
+    background-color: rgba($color: #000000, $alpha: 0.7);
+}
+
+.popup-close-button-left {
+    top: 0;
+    left: 0;
+}
+
+.popup-close-button-right {
+    top: 0;
+    right: 0;
+}
+
+.app-popup-horizontal-center .popup-window {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.app-popup-horizontal-left .popup-window {
+    left: 0;
+}
+
+.app-popup-horizontal-right .popup-window {
+    right: 0;
+}
+
+.app-popup-vertical-center .popup-window {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.app-popup-vertical-top .popup-window {
+    top: 0;
+}
+
+.app-popup-vertical-bottom .popup-window {
+    bottom: 0;
+}
+
+.app-popup-horizontal-center.app-popup-vertical-center .popup-window {
+    transform: translate(-50%, -50%);
+}
+
+.app-popup-height-fit-to-screen .popup-window {
+    height: 100vh;
+}
+
+.popup-close-button-icon {
+    height: 25px;
+    width: 25px;
 }
 
 .centred {

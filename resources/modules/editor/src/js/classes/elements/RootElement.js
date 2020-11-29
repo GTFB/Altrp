@@ -59,7 +59,6 @@ class RootElement extends BaseElement {
       },],
   } );
 */
-
     this.startControlSection('preview_section',{
       label: 'Preview Settings',
     });
@@ -126,6 +125,184 @@ class RootElement extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('popup_layout_section',{
+      label: 'Popup layout',
+    });
+
+    this.addControl("width_popup_layout", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default: {
+        size: 50,
+        unit: 'vw',
+      },
+      units: [
+        'px',
+        '%',
+        'vw'
+      ],
+      max: 1200,
+      min: 0,
+      rules: {
+        '.{{ID}}-app-popup .popup-window{{STATE}}': 'width: {{SIZE}}{{UNIT}};',
+      },
+    });
+
+    this.addControl("height_popup_layout", {
+      type: CONTROLLER_SELECT,
+      label: "Height",
+      default: "fitToContent",
+      options: [
+        {
+          value: "fitToContent",
+          label: "Fit to content"
+        },
+        {
+          value: "fitToScreen",
+          label: "Fit to screen"
+        },
+        {
+          value: "custom",
+          label: "Custom"
+        }
+      ],
+    });
+
+    this.addControl("height_custom_popup_layout", {
+      conditions: {
+        'height_popup_layout': 'custom',
+      },
+      type: CONTROLLER_SLIDER,
+      label: 'Custom height',
+      default: {
+        size: 300,
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh'
+      ],
+      max: 1000,
+      min: 0,
+      rules: {
+        '.{{ID}}-app-popup.app-popup-height-custom .popup-window{{STATE}}': 'height: {{SIZE}}{{UNIT}};',
+      },
+    });
+
+    this.addControl("content_position_popup_layout", {
+      type: CONTROLLER_SELECT,
+      label: "Content position",
+      default: "top",
+      options: [
+        {
+          value: "flex-start",
+          label: "Top"
+        },
+        {
+          value: "center",
+          label: "center"
+        },
+        {
+          value: "flex-end",
+          label: "bottom"
+        }
+      ],
+      rules: {
+        '.{{ID}}-app-popup .popup-window{{STATE}}': 'justify-content: {{VALUE}};',
+      },
+    });
+
+    this.addControl('heading_position_popup_layout', {
+      type: CONTROLLER_HEADING,
+      label: "Position"
+    });
+
+    this.addControl('horizontal_position_popup_layout', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Horizontal',
+      default: 'center',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ],
+    });
+
+    this.addControl('vertical_position_popup_layout', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Vertical',
+      default: 'center',
+      options: [
+        {
+          icon: 'left',
+          value: 'top',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'bottom',
+        },
+      ],
+    });
+
+    this.addControl('heading_close_popup_layout', {
+      type: CONTROLLER_HEADING,
+      label: "Close"
+    });
+
+    this.addControl('overlay_close_popup_layout', {
+      type: CONTROLLER_SWITCHER,
+      default: true,
+      label: 'Overlay',
+    });
+
+    this.addControl('switcher_close_button_popup_layout', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Close button',
+    });
+
+    this.addControl('icon_close_button_popup_layout', {
+      conditions: {
+        'switcher_close_button_popup_layout': true,
+      },
+      type: CONTROLLER_MEDIA,
+      label: 'Icon',
+    });
+
+    this.addControl('position_close_button_popup_layout', {
+      conditions: {
+        'switcher_close_button_popup_layout': true,
+      },
+      type: CONTROLLER_CHOOSE,
+      label: 'alignment',
+      default: 'center',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ],
+    });
+
+    this.endControlSection();
+
     this.startControlSection('offcanvas_section', {
       label: 'Offcanvas',
     });
@@ -140,7 +317,6 @@ class RootElement extends BaseElement {
       units: [
         'px',
         '%',
-        'vh',
         'vw'
       ],
       max: 1200,
@@ -4224,6 +4400,237 @@ class RootElement extends BaseElement {
     /**
      * импорт/сохранение глобальных настроек
      */
+    // popup style
+    this.startControlSection('popup_style', {
+      tab: TAB_STYLE,
+      label: 'Popup',
+    });
+
+    this.addControl('background_popup_style', {
+      type: CONTROLLER_COLOR,
+      label: 'Background color',
+      // default: {
+      //   color: "rgb(52,59,76)",
+      //   colorPickedHex: "#343B4C",
+      // },
+      rules: {
+        '.{{ID}}-app-popup .popup-window{{STATE}}': 'background-color: {{COLOR}};',
+      },
+    });
+
+    this.addControl('gradient_popup_style', {
+      type: CONTROLLER_GRADIENT,
+      label: 'Gradient',
+      default: {
+        isWithGradient: false,
+        firstColor: "rgba(97,206,112,1)",
+        firstPoint: '100',
+        secondColor: "rgba(242,41,91,1)",
+        secondPoint: "0",
+        angle: "0",
+        value: ""
+      },
+      rules: {
+        ".{{ID}}-app-popup .popup-window{{STATE}}": "background-image: {{VALUE}}"
+      }
+    });
+
+    this.addControl('border_type_popup_style', {
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+        rules: {
+          '.{{ID}}-app-popup .popup-window{{STATE}}': 'border-style: {{VALUE}};',
+        },
+      }
+    );
+
+    this.addControl('border_width_popup_style', {
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        default: {
+          bind: true
+        },
+        units: [
+          'px',
+          '%',
+          'vh',
+        ],
+        rules: {
+          '.{{ID}}-app-popup .popup-window{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        },
+      }
+    );
+
+    this.addControl('border_color_popup_style', {
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+        // default: {
+        //   color: "rgb(50,168,82)",
+        //   colorPickedHex: "#32a852",
+        // },
+        rules: {
+          '.{{ID}}-app-popup .popup-window{{STATE}}': 'border-color: {{COLOR}};',
+        },
+      }
+    );
+
+    this.addControl('border_radius_popup_style', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.{{ID}}-app-popup .popup-window{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
+    });
+
+    this.addControl('box_shadow_popup_style', {
+      type: CONTROLLER_SHADOW,
+      label: 'Shadow',
+      default: {
+        // blur: 0,
+        // horizontal: 0,
+        // vertical: 0,
+        // opacity: 1,
+        // spread: 0,
+        // colorRGB: 'rgb(0, 0, 0)',
+        // color: 'rgb(0, 0, 0)',
+        // colorPickedHex: '#000000',
+        // type: ""
+      },
+      rules: {
+        '.{{ID}}-app-popup .popup-window{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    });
+
+    this.addControl('close_button_popup_style', {
+      type: CONTROLLER_HEADING,
+      label: 'Close button',
+    });
+
+    this.addControl('vertical_close_button_popup_style', {
+      type: CONTROLLER_SLIDER,
+      label: 'Vertical',
+      default: {
+        size: 0,
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+      ],
+      step: 0.1,
+      max: 100,
+      min: 0,
+      rules: {
+        '.{{ID}}-app-popup .popup-close-button{{STATE}}': 'top: {{SIZE}}{{UNIT}}',
+      },
+    });
+
+    this.addControl('horizontal_close_button_popup_style', {
+      type: CONTROLLER_SLIDER,
+      label: 'Horizontal',
+      default: {
+        size: 0,
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+      ],
+      step: 0.1,
+      max: 100,
+      min: 0,
+      rules: {
+        '.{{ID}}-app-popup .popup-close-button-right{{STATE}}': 'right: {{SIZE}}{{UNIT}}',
+        '.{{ID}}-app-popup .popup-close-button-left{{STATE}}': 'left: {{SIZE}}{{UNIT}}',
+      },
+    });
+
+    this.addControl('fill_close_button_popup_style', {
+      type: CONTROLLER_COLOR,
+      label: 'Fill',
+      rules: {
+        '.{{ID}}-app-popup .popup-close-button-icon fill{{STATE}}': 'fill: {{COLOR}};',
+      },
+    });
+
+    this.addControl('stroke_close_button_popup_style', {
+      type: CONTROLLER_COLOR,
+      label: 'Stroke',
+      rules: {
+        '.{{ID}}-app-popup .popup-close-button-icon stroke{{STATE}}': 'stroke: {{COLOR}};',
+      },
+    });
+
+    this.addControl('background_close_button_popup_style', {
+      type: CONTROLLER_COLOR,
+      label: 'Background color',
+      rules: {
+        '.{{ID}}-app-popup .popup-close-button{{STATE}}': 'background-color: {{COLOR}};',
+      },
+    });
+
+    this.addControl('size_close_button_popup_style', {
+      type: CONTROLLER_SLIDER,
+      label: 'Size',
+      default: {
+        size: 0,
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '.{{ID}}-app-popup .popup-close-button svg{{STATE}}': [
+          'height: {{SIZE}}{{UNIT}}',
+          'width: {{SIZE}}{{UNIT}}'
+        ],
+      },
+    });
+
+    this.endControlSection();
+
     this.startControlSection('import_settings', {
       tab: TAB_ADVANCED,
       label: 'Import Settings',
@@ -4285,7 +4692,7 @@ class RootElement extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Custom top',
       default: {
-        size: "20",
+        size: "0",
         unit: '%'
       },
       units: [
