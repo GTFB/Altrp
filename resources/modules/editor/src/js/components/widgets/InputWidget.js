@@ -66,8 +66,10 @@ class InputWidget extends Component {
 
   /**
    * Загрузка виджета
+   * @param {{}} prevProps
+   * @param {{}} prevState
    */
-  async _componentDidMount() {
+  async _componentDidMount(prevProps, prevState) {
     if (this.props.element.getSettings("content_options")) {
       let options = parseOptionsFromSettings(
         this.props.element.getSettings("content_options")
@@ -102,6 +104,37 @@ class InputWidget extends Component {
     // if (!_.isObject(value)) {
     //   value = this.getContent('content_default_value');
     // }
+    /**
+     * Если модель обновилась при смене URL
+     */
+    if (
+      prevProps &&
+      !prevProps.currentModel.getProperty("altrpModelUpdated") &&
+      this.props.currentModel.getProperty("altrpModelUpdated")
+    ) {
+      value = this.getContent("content_default_value");
+      this.setState(
+        state => ({ ...state, value, contentLoaded: true }),
+        () => {
+          this.dispatchFieldValueToStore(value);
+        }
+      );
+      return;
+    }
+    if (
+      prevProps &&
+      !prevProps.currentModel.getProperty("currentDataStorageLoaded") &&
+      this.props.currentModel.getProperty("currentDataStorageLoaded")
+    ) {
+      value = this.getContent("content_default_value");
+      this.setState(
+        state => ({ ...state, value, contentLoaded: true }),
+        () => {
+          this.dispatchFieldValueToStore(value);
+        }
+      );
+      return;
+    }
     if (
       this.props.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&

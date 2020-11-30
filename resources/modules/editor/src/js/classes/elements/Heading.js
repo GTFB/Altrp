@@ -252,6 +252,7 @@ class Heading extends BaseElement {
       default: {
         url: "",
         attributes: "",
+        tag: 'Link',
         noFollow: false
       },
       label: 'link',
