@@ -3,7 +3,10 @@ import {
   altrpCompare,
   isEditor,
   parseOptionsFromSettings,
-  parseParamsFromString, parseURLTemplate, replaceContentWithData, sortOptions
+  parseParamsFromString,
+  parseURLTemplate,
+  replaceContentWithData,
+  sortOptions
 } from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
@@ -28,8 +31,10 @@ class InputWidget extends Component {
       paramsForUpdate: null
     };
     this.altrpSelectRef = React.createRef();
-    if (props.element.getSettings('content_default_value')) {
-      this.dispatchFieldValueToStore(props.element.getSettings('content_default_value'));
+    if (props.element.getSettings("content_default_value")) {
+      this.dispatchFieldValueToStore(
+        props.element.getSettings("content_default_value")
+      );
     }
     props.element.component = this;
     if (window.elementDecorator) {
@@ -51,9 +56,9 @@ class InputWidget extends Component {
       const {
         create_allowed,
         create_label,
-        create_url,
+        create_url
       } = this.props.element.getSettings();
-      if(create_allowed && create_label && create_url){
+      if (create_allowed && create_label && create_url) {
         this.createItem(e);
       }
     }
@@ -274,7 +279,7 @@ class InputWidget extends Component {
   async updateOptions() {
     {
       let formId = this.props.element.getFormId();
-      let paramsForUpdate = this.props.element.getSettings('params_for_update');
+      let paramsForUpdate = this.props.element.getSettings("params_for_update");
       let formData = _.get(this.props.formsStore, [formId], {});
       paramsForUpdate = parseParamsFromString(
         paramsForUpdate,
@@ -417,55 +422,70 @@ class InputWidget extends Component {
    * Обработка добавления опции по ajax
    * @param {SyntheticKeyboardEvent} e
    */
-  createItem = async (e)=>{
+  createItem = async e => {
     const keyCode = e.keyCode;
-    const {value: inputValue} = e.target;
-    if(keyCode !== 13 || ! inputValue){
+    const { value: inputValue } = e.target;
+    if (keyCode !== 13 || !inputValue) {
       return;
     }
-    const {create_url, create_label, create_data, select2_multiple} = this.props.element.getSettings();
-    if((! create_label) && (! create_url)){
-      return
+    const {
+      create_url,
+      create_label,
+      create_data,
+      select2_multiple
+    } = this.props.element.getSettings();
+    if (!create_label && !create_url) {
+      return;
     }
     const currentModel = this.props.element.getCurrentModel();
     let data = parseParamsFromString(create_data, currentModel, true);
     data[create_label] = inputValue;
     let url = parseURLTemplate(create_url, currentModel.getData());
-    this.setState(state =>({...state, isDisabled: true}));
+    this.setState(state => ({ ...state, isDisabled: true }));
     try {
       const resource = new Resource({
-        route: url,
+        route: url
       });
       let res = await resource.post(data);
-      if(res.success && _.get(res,'data.id')){
+      if (res.success && _.get(res, "data.id")) {
         let newOption = {
           label: inputValue,
-          value: _.get(res,'data.id'),
+          value: _.get(res, "data.id")
         };
-        this.setState(state =>({...state, isDisabled: false,}), ()=>{
-
-          let options = [...this.state.options];
-          options.unshift(newOption);
-          let value = this.state.value;
-          if(select2_multiple){
-            value = value ? [...value] : [];
-            value.push(_.get(res,'data.id'));
-          }else {
-            value = _.get(res,'data.id');
-          }
-          this.setState(state =>({...state, options, value}), ()=>{
-
-            const selectStateManager = _.get(this, 'altrpSelectRef.current.selectRef.current');
-            if(selectStateManager){
-              selectStateManager.setState({menuIsOpen: false, inputValue: ''});
+        this.setState(
+          state => ({ ...state, isDisabled: false }),
+          () => {
+            let options = [...this.state.options];
+            options.unshift(newOption);
+            let value = this.state.value;
+            if (select2_multiple) {
+              value = value ? [...value] : [];
+              value.push(_.get(res, "data.id"));
+            } else {
+              value = _.get(res, "data.id");
             }
-          });
-        });
+            this.setState(
+              state => ({ ...state, options, value }),
+              () => {
+                const selectStateManager = _.get(
+                  this,
+                  "altrpSelectRef.current.selectRef.current"
+                );
+                if (selectStateManager) {
+                  selectStateManager.setState({
+                    menuIsOpen: false,
+                    inputValue: ""
+                  });
+                }
+              }
+            );
+          }
+        );
       }
-      this.setState(state =>({...state, isDisabled: false,}));
-    }catch(error){
+      this.setState(state => ({ ...state, isDisabled: false }));
+    } catch (error) {
       console.error(error);
-      this.setState(state =>({...state, isDisabled: false}));
+      this.setState(state => ({ ...state, isDisabled: false }));
     }
   };
 
@@ -656,15 +676,22 @@ class InputWidget extends Component {
    * Выводит input type=checkbox|radio
    */
   renderRepeatedInput() {
-
-    const { options = [], } = this.state;
-    let { value = '' } = this.state;
-    const fieldName = this.props.element.getFieldId() || Math.random().toString(36).substr(2, 9);
-    const formID = this.props.element.getFormId() || Math.random().toString(36).substr(2, 9);
-    const inputType = this.props.element.getSettings('content_type', 'radio');
-    return <div className="altrp-field-subgroup">
-      {
-        options.map((option, idx) => {
+    const { options = [] } = this.state;
+    let { value = "" } = this.state;
+    const fieldName =
+      this.props.element.getFieldId() ||
+      Math.random()
+        .toString(36)
+        .substr(2, 9);
+    const formID =
+      this.props.element.getFormId() ||
+      Math.random()
+        .toString(36)
+        .substr(2, 9);
+    const inputType = this.props.element.getSettings("content_type", "radio");
+    return (
+      <div className="altrp-field-subgroup">
+        {options.map((option, idx) => {
           let checked = false;
           /**
            * Если значение или опция число, то приведем к числу перед сравнением
@@ -785,21 +812,26 @@ class InputWidget extends Component {
       options = _.union([{ label: nulled_option_title, value: "" }], options);
     }
     const select2Props = {
-      className: 'altrp-field-select2',
+      className: "altrp-field-select2",
       element: this.props.element,
-      classNamePrefix: this.props.element.getId() + ' altrp-field-select2',
+      classNamePrefix: this.props.element.getId() + " altrp-field-select2",
       options,
       ref: this.altrpSelectRef,
       settings: this.props.element.getSettings(),
       onChange: this.onChange,
-      value: this.props.element.getSettings('is_select_all_allowed', false) && 
-        value.length === parseOptionsFromSettings(this.props.element.getSettings('content_options')).length ? 
-        [selectAllOption.value] : value,
-      isOptionSelected:  option => {
-        if(_.isNumber(this.state.value) || _.isString(this.state.value)){
+      value:
+        this.props.element.getSettings("is_select_all_allowed", false) &&
+        value.length ===
+          parseOptionsFromSettings(
+            this.props.element.getSettings("content_options")
+          ).length
+          ? [selectAllOption.value]
+          : value,
+      isOptionSelected: option => {
+        if (_.isNumber(this.state.value) || _.isString(this.state.value)) {
           return this.state.value == option.value;
         }
-        return this.state.value && this.state.value.includes(option.value)
+        return this.state.value && this.state.value.includes(option.value);
       },
       placeholder: content_placeholder,
       isMulti: this.props.element.getSettings("select2_multiple", false),
