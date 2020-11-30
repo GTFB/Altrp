@@ -29,27 +29,29 @@ const AltrpDiagram = ({ settings }) => {
     let repeater = _.cloneDeep(settings.rep, []);
     data = repeater.map(r => {
       let innerData = getDataByPath(r.path, []);
-      // console.log('DATA IN ADAPTER =>', data);
       if (innerData.length > 0) {
         innerData = innerData.map(d => ({
           data: _.get(d, r.data),
           key: _.get(d, r.key)
         }));
         //Исключаем дублирование ключей, т.к. это приводит к ошибкам рендера всех диаграм
-        innerData = _.uniqBy(innerData, 'key');
+        innerData = _.uniqBy(innerData, "key");
       }
       return innerData;
     });
-  }
-  else if (settings.datasource_path != null) {
-    data = getDataByPath(settings.datasource_path, [])?.map(d => {
-      return {
-        data: _.get(d, settings.data_name),
-        key: _.get(d, settings.key_name),
-      };
-    });
+  } else if (settings.datasource_path != null) {
+    try {
+      data = getDataByPath(settings.datasource_path, [])?.map(d => {
+        return {
+          data: _.get(d, settings.data_name),
+          key: _.get(d, settings.key_name)
+        };
+      });
 
-    data = _.uniqBy(data, 'key');
+      data = _.uniqBy(data, "key");
+    } catch (error) {
+      data = [];
+    }
   }
 
   if (isCustomColor) {
@@ -58,13 +60,17 @@ const AltrpDiagram = ({ settings }) => {
   }
 
   if (!sql && data.length === 0) {
-    return <div className={`altrp-chart ${settings.legendPosition}`}>Идет загрузка данных...</div>;
+    return (
+      <div className={`altrp-chart ${settings.legendPosition}`}>
+        Идет загрузка данных...
+      </div>
+    );
   }
 
   const parseQueryParams = (qs = "") => {
     if (!qs) return "";
     const keyValues = qs.split("\n");
-    const result = keyValues.map((item) => item.replace("|", "=")).join("&");
+    const result = keyValues.map(item => item.replace("|", "=")).join("&");
     return `?${result}`;
   };
 
@@ -76,52 +82,101 @@ const AltrpDiagram = ({ settings }) => {
       colorScheme: settings.colorScheme,
       legend: settings.legend,
       animated: settings.animated,
-      isVertical: settings.isVertical,
+      isVertical: settings.isVertical
     },
-    filter: {},
+    filter: {}
   };
 
   switch (settings.type) {
     case BAR:
       return (
         <div className={`altrp-chart ${settings.legendPosition}`}>
-          <DynamicBarChart isCustomColor={isCustomColor} colorArray={colorArray} isMultiple={isMultiple} dataSource={data} widget={widget} width={settings.width?.size} />
+          <DynamicBarChart
+            isCustomColor={isCustomColor}
+            colorArray={colorArray}
+            isMultiple={isMultiple}
+            dataSource={data}
+            widget={widget}
+            width={settings.width?.size}
+          />
         </div>
       );
     case PIE:
       return (
         <div className={`altrp-chart ${settings.legendPosition}`}>
-          <DynamicPieChart isCustomColor={isCustomColor} colorArray={colorArray} isMultiple={isMultiple} dataSource={data} widget={widget} width={settings.width?.size} />
+          <DynamicPieChart
+            isCustomColor={isCustomColor}
+            colorArray={colorArray}
+            isMultiple={isMultiple}
+            dataSource={data}
+            widget={widget}
+            width={settings.width?.size}
+          />
         </div>
       );
     case DONUT:
       return (
         <div className={`altrp-chart ${settings.legendPosition}`}>
-          <DynamicDonutChart isCustomColor={isCustomColor} colorArray={colorArray} isMultiple={isMultiple} dataSource={data} widget={widget} width={settings.width?.size} />
+          <DynamicDonutChart
+            isCustomColor={isCustomColor}
+            colorArray={colorArray}
+            isMultiple={isMultiple}
+            dataSource={data}
+            widget={widget}
+            width={settings.width?.size}
+          />
         </div>
       );
     case LINE:
       return (
         <div className={`altrp-chart ${settings.legendPosition}`}>
-          <DynamicLineChart isCustomColor={isCustomColor} colorArray={colorArray} isMultiple={isMultiple} dataSource={data} widget={widget} width={settings.width?.size} />
+          <DynamicLineChart
+            isCustomColor={isCustomColor}
+            colorArray={colorArray}
+            isMultiple={isMultiple}
+            dataSource={data}
+            widget={widget}
+            width={settings.width?.size}
+          />
         </div>
       );
     case TABLE:
       return (
         <div className={`altrp-chart ${settings.legendPosition}`}>
-          <DynamicTableWidget isCustomColor={isCustomColor} colorArray={colorArray} isMultiple={isMultiple} dataSource={data} widget={widget} width={settings.width?.size} />
+          <DynamicTableWidget
+            isCustomColor={isCustomColor}
+            colorArray={colorArray}
+            isMultiple={isMultiple}
+            dataSource={data}
+            widget={widget}
+            width={settings.width?.size}
+          />
         </div>
       );
     case AREA:
       return (
         <div className={`altrp-chart ${settings.legendPosition}`}>
-          <DynamicAreaChart isCustomColor={isCustomColor} colorArray={colorArray} isMultiple={isMultiple} dataSource={data} widget={widget} width={settings.width?.size} />
+          <DynamicAreaChart
+            isCustomColor={isCustomColor}
+            colorArray={colorArray}
+            isMultiple={isMultiple}
+            dataSource={data}
+            widget={widget}
+            width={settings.width?.size}
+          />
         </div>
       );
     case POINT:
       return (
         <div className={`altrp-chart ${settings.legendPosition}`}>
-          <DynamicPointChart isCustomColor={isCustomColor} colorArray={colorArray} isMultiple={isMultiple} dataSource={data} widget={widget} width={settings.width?.size} />
+          <DynamicPointChart
+            isCustomColor={isCustomColor}
+            colorArray={colorArray}
+            isMultiple={isMultiple}
+            dataSource={data}
+            widget={widget}
+            width={settings.width?.size}
+          />
         </div>
       );
     default:
