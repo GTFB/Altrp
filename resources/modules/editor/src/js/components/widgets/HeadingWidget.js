@@ -66,10 +66,11 @@ class HeadingWidget extends Component {
         linkProps.to = this.state.settings.link_link.url.replace(':id', this.getModelId() || '');
         linkProps.href = this.state.settings.link_link.url.replace(':id', this.getModelId() || '');
         linkProps.tag = this.state.settings.link_link.tag;
-        if(_.isObject(modelData)){
-          linkProps.to = parseURLTemplate(this.state.settings.link_link.url, modelData);
-          linkProps.href = parseURLTemplate(this.state.settings.link_link.url, modelData);
-        }
+
+      }
+      if(_.isObject(modelData)){
+        linkProps.to = parseURLTemplate(this.state.settings.link_link.url, modelData);
+        linkProps.href = parseURLTemplate(this.state.settings.link_link.url, modelData);
       }
       if(isEditor()){
         linkProps.onClick = e => {e.preventDefault()}

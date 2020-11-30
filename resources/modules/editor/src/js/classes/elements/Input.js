@@ -360,7 +360,7 @@ class Input extends BaseElement {
           'checkbox',
         ],
       },
-      description: 'Enter each option in a separate line. To differentiate between label and value, separate them with a pipe char ("|"). For example: First Name|f_name',
+      description: 'Enter each option in a separate line. To differentiate between label and value, separate them with a pipe char ("|"). For example: f_name | First Name',
     });
 
     this.addControl('content_default_value', {
