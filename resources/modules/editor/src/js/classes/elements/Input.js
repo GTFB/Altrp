@@ -367,6 +367,7 @@ class Input extends BaseElement {
       type: CONTROLLER_TEXTAREA,
       label: 'Default Value',
     });
+
     this.addControl('content_calculation', {
       type: CONTROLLER_TEXTAREA,
       label: 'Calculation',
@@ -376,6 +377,51 @@ class Input extends BaseElement {
         ],
       },
       description: 'E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10',
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('create_options', {
+      tab: TAB_CONTENT,
+      label: 'Create Options Settings',
+      conditions: {
+        'content_type': [
+          'select2',
+        ],
+      },
+    });
+
+    this.addControl('create_allowed',{
+      type: CONTROLLER_SWITCHER,
+      label: 'Allowed',
+    });
+
+    this.addControl('create_url',{
+      label: 'URL',
+      dynamic: false,
+      responsive: false,
+      description: '/ajax/models/tests',
+      conditions: {
+        'create_allowed': true,
+      },
+    });
+
+    this.addControl('create_label',{
+      label: 'Label Field',
+      dynamic: false,
+      responsive: false,
+      conditions: {
+        'create_allowed': true,
+      },
+    });
+
+    this.addControl('create_data',{
+      type: CONTROLLER_TEXTAREA,
+      label: 'Data',
+      conditions: {
+        'create_allowed': true,
+      },
+      description: 'Enter additional data for new item in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n',
     });
 
     this.endControlSection();

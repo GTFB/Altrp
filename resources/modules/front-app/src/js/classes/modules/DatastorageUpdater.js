@@ -24,7 +24,13 @@ class DataStorageUpdater extends AltrpModel {
    *  обновление currentDataStorage
    *  @param {Datasource[]} dataSources
    */
-  async updateCurrent(dataSources = []) {
+  async updateCurrent(dataSources = null) {
+    if(! dataSources){
+      dataSources = this.getProperty('currentDataSources');
+    }
+    if(! dataSources){
+      dataSources = [];
+    }
     dataSources = _.sortBy(dataSources, ['data.priority']);
     this.setProperty('currentDataSources', dataSources);
     /**

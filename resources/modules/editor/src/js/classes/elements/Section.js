@@ -38,7 +38,7 @@ class Section extends BaseElement{
     this.addControl('layout_content_width_type', {
       type: CONTROLLER_SELECT,
       label: 'Content width',
-      default: 'section_boxed',
+      default: 'boxed',
       options: [
         {
           value: 'boxed',
@@ -86,43 +86,48 @@ class Section extends BaseElement{
 
     this.addControl('layout_column_position', {
       type: CONTROLLER_SELECT,
-      label: 'Vertical align',
+      label: 'Vertical Alignment',
       options: [
         {
+          'value': 'stretch',
+          'label': 'Stretch'
+        },
+        {
           'value': 'baseline',
-          'label': 'baseline'
+          'label': 'Baseline'
         },
         {
           'value': 'center',
-          'label': 'center'
+          'label': 'Center'
         },
         {
           'value': 'flex-start',
-          'label': 'flex-start'
+          'label': 'Flex Start'
         },
         {
           'value': 'flex-end',
-          'label': 'flex-end'
+          'label': 'Flex End'
         },
         {
           'value': 'space-around',
-          'label': 'space-around'
+          'label': 'Space Around'
         },
         {
           'value': 'space-between',
-          'label': 'space-between'
+          'label': 'Space Between'
         },
         {
           'value': 'space-evenly',
-          'label': 'space-evenly'
+          'label': 'Space Evenly'
         },
         {
           'value': 'unset',
-          'label': 'unset'
+          'label': 'Unset'
         },
       ],
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": ["align-content: {{VALUE}}",
+        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": [
+          "align-content: {{VALUE}}",
           "align-items: {{VALUE}}"
         ],
       },
@@ -131,7 +136,7 @@ class Section extends BaseElement{
 
     this.addControl('layout_justify_content', {
         type: CONTROLLER_SELECT,
-        label: 'Horizontal content',
+        label: 'Horizontal Alignment',
         options: [
           {
             'value': 'baseline',
@@ -174,7 +179,7 @@ class Section extends BaseElement{
 
     this.addControl('layout_column_direction', {
         type: CONTROLLER_SELECT,
-        label: 'direction',
+        label: 'Direction',
         options: [
           {
             'value': 'row',
@@ -191,18 +196,6 @@ class Section extends BaseElement{
           {
             'value': 'column-reverse',
             'label': 'column-reverse'
-          },
-          {
-            'value': 'space-around',
-            'label': 'space-around'
-          },
-          {
-            'value': 'space-between',
-            'label': 'space-between'
-          },
-          {
-            'value': 'space-evenly',
-            'label': 'space-evenly'
           },
           {
             'value': 'unset',
@@ -229,21 +222,20 @@ class Section extends BaseElement{
     //     "{{ELEMENT}} .full-fill div": "width: {{SIZE}}{{UNIT}}"
     //   }
     // });
-
     this.addControl("layout_content_width", {
       type: CONTROLLER_SLIDER,
       label: "Width",
       default: {
-        size: 1440,
+        size: ALTRP_CONTAINER_WIDTH,
         unit: "px"
       },
-      units: ["px", "%", "vh"],
+      units: ["px", "%", "vw", "vh"],
       max: 2000,
       min: 0,
       rules: {
         // "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "width: {{SIZE}}{{UNIT}}"
         "{{ELEMENT}} .altrp-section_boxed{{STATE}}": "width: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-section_section-boxed{{STATE}}": "padding-left: calc((100vw - {{SIZE}}{{UNIT}}) / 2);padding-right: calc((100vw - {{SIZE}}{{UNIT}}) / 2);",
+        "{{ELEMENT}} .altrp-section_section-boxed{{STATE}}": "padding-left: calc((100vw - {{SIZE}}{{UNIT}}) / 2);padding-right: calc((100vw - {{SIZE}}{{UNIT}}) / 2); width: 100vw;",
       }
     });
 

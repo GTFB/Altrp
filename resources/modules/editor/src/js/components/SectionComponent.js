@@ -106,7 +106,7 @@ class SectionComponent extends Component {
       //   </div>
       //   <div className={"get-column-count " + `altrp-element-column-count${this.props.element.id}`} id="columnCount" />
       // </> :
-      <div className={"get-column-count " + `altrp-element-column-count${this.props.element.id}`} id="columnCount" />,
+      /*<div className={"get-column-count " + `altrp-element-column-count${this.props.element.id}`} id="columnCount" />,*/
       sectionWrapper
     );
 

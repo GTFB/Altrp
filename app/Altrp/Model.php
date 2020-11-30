@@ -5,6 +5,7 @@ namespace App\Altrp;
 
 use App\Http\Requests\ApiRequest;
 use App\SQLEditor;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -402,4 +403,32 @@ class Model extends EloquentModel
   public function altrp_queries(){
       return $this->hasMany( Query::class, 'model_id', 'id' );
   }
+
+    /**
+     * Проверить, имеются ли в модели (таблице) created_at и updated_at поля
+     * @return bool
+     */
+  public function hasTimestamps()
+  {
+      $columns = $this->altrp_table->columns->implode('name', ',');
+      $columns = explode(',', $columns);
+      if (in_array('created_at', $columns) || in_array('updated_at', $columns)) {
+          return true;
+      }
+      return false;
+  }
+
+    /**
+     * Проверить, имеются ли в модели (таблице) deleted_at поле
+     * @return bool
+     */
+    public function hasSoftDeletes()
+    {
+        $columns = $this->altrp_table->columns->implode('name', ',');
+        $columns = explode(',', $columns);
+        if (in_array('deleted_at', $columns)) {
+            return true;
+        }
+        return false;
+    }
 }

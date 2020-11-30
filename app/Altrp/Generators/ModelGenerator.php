@@ -571,6 +571,10 @@ class ModelGenerator extends AppGenerator
         return $relations;
     }
 
+    /**
+     * Получить пространство имен расширяемой модели
+     * @return string
+     */
     protected function getExtendModelNamespace()
     {
         $modelNamespace = 'Illuminate\Database\Eloquent\Model';
@@ -578,6 +582,21 @@ class ModelGenerator extends AppGenerator
             $modelNamespace = $this->model->parent->namespace;
         }
         return $modelNamespace;
+    }
+
+    /**
+     * Обновить пространство имён модели в связях тех моделей, которые её используют
+     */
+    public function updateAssociateRelations()
+    {
+        $relationInstance = Relationship::where('target_model_id', $this->model->id);
+        $relationInstance->update(['model_class' => $this->model->namespace]);
+        $models = $relationInstance->get()->implode('model_id', ',');
+        $model_ids = explode(',', $models);
+        $models = Model::whereIn('id', $model_ids)->get();
+        foreach ($models as $mod) {
+            $mod->update(['last_upgrade' => Carbon::now()]);
+        }
     }
 
   /**
