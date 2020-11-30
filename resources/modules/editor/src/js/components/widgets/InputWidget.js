@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {
   altrpCompare, isEditor,
   parseOptionsFromSettings,
-  parseParamsFromString, replaceContentWithData, sortOptions
+  parseParamsFromString, parseURLTemplate, replaceContentWithData, sortOptions
 } from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
@@ -25,6 +25,7 @@ class InputWidget extends Component {
       options: parseOptionsFromSettings(props.element.getSettings('content_options')),
       paramsForUpdate: null,
     };
+    this.altrpSelectRef = React.createRef();
     if (props.element.getSettings('content_default_value')) {
       this.dispatchFieldValueToStore(props.element.getSettings('content_default_value'));
     }
@@ -45,13 +46,23 @@ class InputWidget extends Component {
       const index = inputs.indexOf(e.target);
       if (index === undefined) return;
       inputs[index + 1] && inputs[index + 1].focus();
+      const {
+        create_allowed,
+        create_label,
+        create_url,
+      } = this.props.element.getSettings();
+      if(create_allowed && create_label && create_url){
+        this.createItem(e);
+      }
     }
   };
 
   /**
    * Загрузка виджета
+   * @param {{}} prevProps
+   * @param {{}} prevState
    */
-  async _componentDidMount() {
+  async _componentDidMount(prevProps, prevState) {
     if (this.props.element.getSettings('content_options')) {
       let options = parseOptionsFromSettings(this.props.element.getSettings('content_options'));
       // добавление опции "выбрать все"
@@ -78,6 +89,23 @@ class InputWidget extends Component {
     // if (!_.isObject(value)) {
     //   value = this.getContent('content_default_value');
     // }
+    /**
+     * Если модель обновилась при смене URL
+     */
+    if(prevProps
+        && (! prevProps.currentModel.getProperty('altrpModelUpdated'))
+        && this.props.currentModel.getProperty('altrpModelUpdated')){
+      value = this.getContent('content_default_value');
+      this.setState(state => ({ ...state, value, contentLoaded: true }), () => { this.dispatchFieldValueToStore(value); });
+      return;
+    }
+    if(prevProps
+        && (! prevProps.currentModel.getProperty('currentDataStorageLoaded'))
+        && this.props.currentModel.getProperty('currentDataStorageLoaded')){
+      value = this.getContent('content_default_value');
+      this.setState(state => ({ ...state, value, contentLoaded: true }), () => { this.dispatchFieldValueToStore(value); });
+      return;
+    }
     if(this.props.currentModel.getProperty('altrpModelUpdated')
         && this.props.currentDataStorage.getProperty('currentDataStorageLoaded')
         && ! this.state.contentLoaded){
@@ -337,6 +365,62 @@ class InputWidget extends Component {
     }
   };
 
+  /**
+   * Обработка добавления опции по ajax
+   * @param {SyntheticKeyboardEvent} e
+   */
+  createItem = async (e)=>{
+    const keyCode = e.keyCode;
+    const {value: inputValue} = e.target;
+    if(keyCode !== 13 || ! inputValue){
+      return;
+    }
+    const {create_url, create_label, create_data, select2_multiple} = this.props.element.getSettings();
+    if((! create_label) && (! create_url)){
+      return
+    }
+    const currentModel = this.props.element.getCurrentModel();
+    let data = parseParamsFromString(create_data, currentModel, true);
+    data[create_label] = inputValue;
+    let url = parseURLTemplate(create_url, currentModel.getData());
+    this.setState(state =>({...state, isDisabled: true}));
+    try {
+      const resource = new Resource({
+        route: url,
+      });
+      let res = await resource.post(data);
+      if(res.success && _.get(res,'data.id')){
+        let newOption = {
+          label: inputValue,
+          value: _.get(res,'data.id'),
+        };
+        this.setState(state =>({...state, isDisabled: false,}), ()=>{
+
+          let options = [...this.state.options];
+          options.unshift(newOption);
+          let value = this.state.value;
+          if(select2_multiple){
+            value = value ? [...value] : [];
+            value.push(_.get(res,'data.id'));
+          }else {
+            value = _.get(res,'data.id');
+          }
+          this.setState(state =>({...state, options, value}), ()=>{
+
+            const selectStateManager = _.get(this, 'altrpSelectRef.current.selectRef.current');
+            if(selectStateManager){
+              selectStateManager.setState({menuIsOpen: false, inputValue: ''});
+            }
+          });
+        });
+      }
+      this.setState(state =>({...state, isDisabled: false,}));
+    }catch(error){
+      console.error(error);
+      this.setState(state =>({...state, isDisabled: false}));
+    }
+  };
+
   render() {
     let label = null;
     const { options_sorting } = this.state.settings;
@@ -581,11 +665,13 @@ class InputWidget extends Component {
     if (content_options_nullable) {
       options = _.union([{ label: nulled_option_title, value: '', }], options);
     }
-    console.log(this.state.value);
     const select2Props = {
       className: 'altrp-field-select2',
+      element: this.props.element,
       classNamePrefix: this.props.element.getId() + ' altrp-field-select2',
       options,
+      ref: this.altrpSelectRef,
+      settings: this.props.element.getSettings(),
       onChange: this.onChange,
       value: this.props.element.getSettings('is_select_all_allowed', false) && 
         value.length === parseOptionsFromSettings(this.props.element.getSettings('content_options')).length ? 

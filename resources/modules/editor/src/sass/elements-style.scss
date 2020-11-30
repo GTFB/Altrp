@@ -211,6 +211,13 @@
   }
   &-tr{
     display: table-row;
+    //&.altrp-posts{
+    //  display: flex;
+    //  width: 100%;
+    //  & .altrp-post{
+    //    display: inline-block;
+    //  }
+    //}
     &_loading{
       display: block;
     }

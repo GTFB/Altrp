@@ -1235,7 +1235,7 @@ const Cell = ({cell, settings})=>{
     resize_columns,
     replace_rows,
     virtualized_rows,
-  } = column;
+  } = settings;
   let cellContent = cell.render('Cell');
   if (cell.column.id === '##') {
     cellContent = cell.row.index + 1;
@@ -1271,12 +1271,14 @@ const Cell = ({cell, settings})=>{
       cellStyles = mbParseJSON(cellStyles, {});
       cellProps.style = _.assign(cellStyles, cellProps.style);
     }
-    if(replace_rows){
-      cellProps.ref = dropRef;
-    }
+    // if(replace_rows){
+    //   cellProps.ref = dropRef;
+    // }
 
     return cellProps;
-  }, [resize_columns, replace_rows, virtualized_rows,
+  }, [resize_columns,
+    replace_rows,
+    virtualized_rows,
     cell.getCellProps().style.width,
     _.get(cell, 'column.column_styles_field')]);
 
@@ -1482,7 +1484,7 @@ const Row = ({ row,
       </div>
       {row.isExpanded && row_expand && card_template && cardTemplate &&
       <div className="altrp-table-tr altrp-posts">
-        <div colSpan={visibleColumns.length + replace_rows} className="altrp-table-td altrp-post">{ExpandCard}</div>
+        <td colSpan={visibleColumns.length + replace_rows} className="altrp-table-td altrp-post">{ExpandCard}</td>
       </div>
       }
     </React.Fragment> );
