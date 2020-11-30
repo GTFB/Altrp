@@ -838,12 +838,12 @@ class Table extends BaseElement {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
       default: {
-        // lineHeight: 0.8,
-        // spacing: 0,
-        // size: 14,
-        // weight: 700,
-        // family: 'Open Sans',
-        // decoration: ""
+        lineHeight: 0.8,
+        spacing: 0,
+        size: 14,
+        weight: 700,
+        family: 'Open Sans',
+        decoration: ""
       },
       rules: {
         '{{ELEMENT}} .replace-text{{STATE}}': [
@@ -859,6 +859,42 @@ class Table extends BaseElement {
       },
     }
     );
+
+    this.addControl('replace_image', {
+      type: CONTROLLER_MEDIA,
+      label: 'Image',
+      default: { url: "" }
+    });
+
+    this.addControl("replace_image_width", {
+      type: CONTROLLER_SLIDER,
+      label: "Image Width",
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 800,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .replace-picture': 'width: {{SIZE}}{{UNIT}};'
+      }
+    });
+
+    this.addControl("replace_image_height", {
+      type: CONTROLLER_SLIDER,
+      label: "Image Height",
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 800,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .replace-picture': 'height: {{SIZE}}{{UNIT}};'
+      }
+    });
 
     this.addControl('replace_width', {
       type: CONTROLLER_NUMBER,
