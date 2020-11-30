@@ -99,6 +99,13 @@ class InputWidget extends Component {
       this.setState(state => ({ ...state, value, contentLoaded: true }), () => { this.dispatchFieldValueToStore(value); });
       return;
     }
+    if(prevProps
+        && (! prevProps.currentModel.getProperty('currentDataStorageLoaded'))
+        && this.props.currentModel.getProperty('currentDataStorageLoaded')){
+      value = this.getContent('content_default_value');
+      this.setState(state => ({ ...state, value, contentLoaded: true }), () => { this.dispatchFieldValueToStore(value); });
+      return;
+    }
     if(this.props.currentModel.getProperty('altrpModelUpdated')
         && this.props.currentDataStorage.getProperty('currentDataStorageLoaded')
         && ! this.state.contentLoaded){
