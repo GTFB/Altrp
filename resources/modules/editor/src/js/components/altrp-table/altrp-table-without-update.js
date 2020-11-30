@@ -1271,9 +1271,9 @@ const Cell = ({cell, settings})=>{
       cellStyles = mbParseJSON(cellStyles, {});
       cellProps.style = _.assign(cellStyles, cellProps.style);
     }
-    if(replace_rows){
-      cellProps.ref = dropRef;
-    }
+    // if(replace_rows){
+    //   cellProps.ref = dropRef;
+    // }
 
     return cellProps;
   }, [resize_columns,
