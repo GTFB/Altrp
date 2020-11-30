@@ -1422,7 +1422,7 @@ const Row = ({ row,
     <React.Fragment {...fragmentProps}>
 
       <div {...rowProps} className={`altrp-table-tr ${ isDragging ? 'altrp-table-tr__dragging' : ''}`} style={{ ...rowStyles, opacity }}>
-        {replace_rows && <div className="altrp-table-td" ref={dragRef} style={{width: replace_width}}>{replace_text}</div>}
+        {replace_rows && <div className="altrp-table-td replace-text" ref={dragRef} style={{width: replace_width}}>{replace_text}</div>}
         {row.cells.map((cell, idx) => {
           return <Cell cell={cell} key={idx} settings={settings}/>;
           let cellContent = cell.render('Cell');
