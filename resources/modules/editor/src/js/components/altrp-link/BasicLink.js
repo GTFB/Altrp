@@ -39,9 +39,15 @@ class BasicLink extends Component {
     if(this.props.classlink) {
       className += " altrp-link" + " " + this.props.classlink
     }
+
+    const children = !settings.creativeLink ? React.createElement("span", {
+      className: "altrp-inherit",
+      dangerouslySetInnerHTML: { __html: this.props.children }
+    }) : ( this.props.children );
+
     return settings.tag === "a" ? (
       <a
-          {...this.props}
+        {...this.props}
         href={settings.href}
         rel={rel}
         style={styleChildren}
@@ -49,19 +55,19 @@ class BasicLink extends Component {
         onClick={isEditor() ? (e) => e.preventDefault() : () => {}}
       >
         {
-          this.props.children
+          children
         }
       </a>
     ) : (
       <Link
-          {...this.props}
+        {...this.props}
         style={styleChildren}
         className={className}
         onClick={isEditor() ? (e) => e.preventDefault() : () => {}}
         to={settings.to}
       >
         {
-          this.props.children
+          children
         }
       </Link>
     )
