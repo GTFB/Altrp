@@ -187,11 +187,12 @@ class InputWidget extends Component {
     }
 
     /**
-     * Если обновилось хранилище данных формы или модель, то получаем новые опции
+     * Если обновилось хранилище данных формы, currentDataStorage или модель, то получаем новые опции
      */
     if (
       this.props.formsStore !== prevProps.formsStore ||
-      this.props.currentModel !== prevProps.currentModel
+      this.props.currentModel !== prevProps.currentModel ||
+      this.props.currentDataStorage !== prevProps.currentDataStorage
     ) {
       this.updateOptions();
     }

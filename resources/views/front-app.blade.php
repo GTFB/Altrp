@@ -48,7 +48,6 @@
       padding-right: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
     }
   </style>
-  <link rel="stylesheet" href="{{ asset( '/modules/front-app/front-app.css' ) . '?' . getCurrentVersion() }}" />
 
 </head>
 <body>
@@ -68,4 +67,5 @@ $value = env( 'ALTRP_SETTING_ALL_SITE_JS', '' );
   <script>{!! $value !!}</script>
 @endif
 </body>
+<link rel="stylesheet" href="{{ asset( '/modules/front-app/front-app.css' ) . '?' . getCurrentVersion() }}" />
 </html>

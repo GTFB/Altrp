@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from 'react-router-dom';
 import Resource from "../../../../editor/src/js/classes/Resource";
+import AltrpSelect from "../altrp-select/AltrpSelect";
 
 class PageDataSourceForm extends Component {
   state = {
@@ -38,19 +39,26 @@ class PageDataSourceForm extends Component {
   };
 
   render() {
-    const { source_id, alias, priority, parameters, dataSourceOptions } = this.state;
+    let { source_id, alias, priority, parameters, dataSourceOptions } = this.state;
+    dataSourceOptions = dataSourceOptions.map(source=>({value:source.id, label:source.title || source.name}));
+    console.log(dataSourceOptions);
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="form-group">
         <label htmlFor="source_id">Data Source</label>
-        <select id="source_id"
-          name="source_id"
-          value={source_id}
-          onChange={this.changeHandler}
-          className="form-control"
-        >
-          <option value="" />
-          {dataSourceOptions.map(({ id, name }) => <option value={id} key={id}>{name}</option>)}
-        </select>
+        {/*<select id="source_id"*/}
+          {/*name="source_id"*/}
+          {/*value={source_id}*/}
+          {/*onChange={this.changeHandler}*/}
+          {/*className="form-control"*/}
+        {/*>*/}
+          {/*<option value="" />*/}
+          {/*{dataSourceOptions.map(({ id, name }) => <option value={id} key={id}>{name}</option>)}*/}
+        {/*</select>*/}
+        <AltrpSelect options={dataSourceOptions}
+                     onChange={({value})=>{
+                       this.setState(state => ({...state, source_id: value}));
+                     }}
+                     value={dataSourceOptions.find(({value})=>value === source_id)}/>
       </div>
 
       <div className="form-group">
@@ -76,7 +84,7 @@ class PageDataSourceForm extends Component {
       <div className="form-group">
         <label>Parameters
             <textarea  name="parameters"
-            value={parameters}
+            value={parameters || ''}
             onChange={this.changeHandler}
             className="form-control"
           />
