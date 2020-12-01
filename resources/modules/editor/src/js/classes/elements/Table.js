@@ -1546,6 +1546,27 @@ class Table extends BaseElement {
       }
     });
 
+    this.addControl('table_style_pagination_border_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
+    });
+
     this.addControl("table_style_pagination_border_color", {
       type: CONTROLLER_COLOR,
       label: "Border color",
@@ -1589,7 +1610,7 @@ class Table extends BaseElement {
         }
       ],
       rules: {
-        '.altrp-pagination-pages__item{{STATE}}': 'border-style: {{VALUE}};',
+        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'border-style: {{VALUE}};',
       }
     });
 
@@ -1599,6 +1620,27 @@ class Table extends BaseElement {
       units: ["px", "%", "vh"],
       rules: {
         '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      }
+    });
+
+    this.addControl('table_style_count_item_border_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Item Count Border Radius',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
       }
     });
 
@@ -1625,6 +1667,84 @@ class Table extends BaseElement {
         '{{ELEMENT}} .active.altrp-pagination-pages__item{{STATE}}': 'border-color: {{COLOR}};',
       }
     });
+
+    this.addControl("page_input_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Page Input Border type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'border-style: {{VALUE}};',
+      }
+    });
+
+    this.addControl("page_input_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Page Input Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      }
+    });
+
+    this.addControl('page_input_border_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Page Input Border Radius',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
+    });
+
+    this.addControl("page_input_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Page Input Border Color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'border-color: {{COLOR}};',
+      }
+    });
+
 
     this.addControl('table_style_pagination_padding', {
       type: CONTROLLER_DIMENSIONS,
