@@ -99,13 +99,6 @@ class InputWidget extends Component {
       this.setState(state => ({ ...state, value, contentLoaded: true }), () => { this.dispatchFieldValueToStore(value); });
       return;
     }
-    if(prevProps
-        && (! prevProps.currentModel.getProperty('currentDataStorageLoaded'))
-        && this.props.currentModel.getProperty('currentDataStorageLoaded')){
-      value = this.getContent('content_default_value');
-      this.setState(state => ({ ...state, value, contentLoaded: true }), () => { this.dispatchFieldValueToStore(value); });
-      return;
-    }
     if(this.props.currentModel.getProperty('altrpModelUpdated')
         && this.props.currentDataStorage.getProperty('currentDataStorageLoaded')
         && ! this.state.contentLoaded){
@@ -133,6 +126,12 @@ class InputWidget extends Component {
    * Обновление виджета
    */
   async _componentDidUpdate(prevProps, prevState) {
+    if(prevProps
+        && (! prevProps.currentDataStorage.getProperty('currentDataStorageLoaded'))
+        && this.props.currentDataStorage.getProperty('currentDataStorageLoaded')){
+      let value = this.getContent('content_default_value');
+      this.setState(state => ({ ...state, value, contentLoaded: true }), () => { this.dispatchFieldValueToStore(value); });
+    }
     if (this.props.element.getSettings('content_type') === 'select' && this.props.element.getSettings('model_for_options')) {
       if (!(this.state.settings.model_for_options === prevProps.element.getSettings('model_for_options'))) {
         let model_for_options = prevProps.element.getSettings('model_for_options');
