@@ -24,7 +24,12 @@ const sortData = (key, order = "desc") => {
   };
 };
 
-const DynamicTableWidget = ({ widget, width, dataSource = [] }) => {
+const DynamicTableWidget = ({
+  widget,
+  width,
+  dataSource = [],
+  height = 450
+}) => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,10 +44,10 @@ const DynamicTableWidget = ({ widget, width, dataSource = [] }) => {
             data = charts.data.data;
             break;
           case 1:
-            data = _.sortBy(data,'key');
+            data = _.sortBy(data, "key");
             break;
           case 2:
-            data = _.sortBy(data,'data');
+            data = _.sortBy(data, "data");
             break;
           default:
             data = charts.data.data;
@@ -51,15 +56,20 @@ const DynamicTableWidget = ({ widget, width, dataSource = [] }) => {
         setData(data || []);
         setIsLoading(false);
       }
-    }
-    else {
-      console.log('SOURCE ==>', dataSource);
+    } else {
+      console.log("SOURCE ==>", dataSource);
       setData(dataSource.sort(sortData("data")));
       setIsLoading(false);
     }
   }, [widget]);
 
-  const summary = useMemo(() => data.reduce((acc, item) => acc + item.data, 0), [data]);
+  const summary = useMemo(
+    () =>
+      data
+        .map(item => item.data.reduce((acc, object) => acc + object.y, 0))
+        .reduce((acc, item) => acc + item, 0),
+    [data]
+  );
 
   useEffect(() => {
     getData();
@@ -67,45 +77,42 @@ const DynamicTableWidget = ({ widget, width, dataSource = [] }) => {
 
   if (isLoading) return <Spinner />;
 
-  if (data.length === 0) return <EmptyWidget />;
+  let matches = [];
+  let isNotEmpty = false;
 
-  if (widget.options.isVertical) {
-    return (
-      <div className="widget-table">
-        <table className="vertical-table">
-          <tbody>
-            {data.map((item, key) => (
-              <tr key={key}>
-                <td>{item.key}</td>
-                <td>{item.data}</td>
-              </tr>
-            ))}
-            <tr>
-              <td>ИТОГО</td>
-              <td>{summary}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    );
-  }
+  matches = _.uniq(
+    data.map(item => {
+      return item.data.length > 0;
+    })
+  );
+
+  isNotEmpty = matches.includes(true);
+  if (!isNotEmpty) return <EmptyWidget />;
 
   return (
-    <div className="widget-table">
-      <table>
-        <thead>
-          <tr>
-            {data.map((item, key) => (
-              <th key={key}>{item.key}</th>
-            ))}
-            <th>ИТОГО</th>
-          </tr>
-        </thead>
+    <div className="widget-table" style={{ maxHeight: `${height}px` }}>
+      <table className="vertical-table">
         <tbody>
+          {data.map((item, key) => {
+            const dataset = item.data.map((object, index) => {
+              return (
+                <tr key={`${key}${index}`}>
+                  <td>{object.x}</td>
+                  <td>{object.y}</td>
+                </tr>
+              );
+            });
+            return (
+              <React.Fragment key={key}>
+                <tr key={key} style={{ textAlign: "center" }}>
+                  <td colSpan={2}>{item.id}</td>
+                </tr>
+                {dataset}
+              </React.Fragment>
+            );
+          })}
           <tr>
-            {data.map((item, key) => (
-              <td key={key}>{item.data}</td>
-            ))}
+            <td>ИТОГО</td>
             <td>{summary}</td>
           </tr>
         </tbody>

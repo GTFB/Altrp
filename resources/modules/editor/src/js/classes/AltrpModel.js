@@ -22,6 +22,12 @@ class AltrpModel {
   }
 
   /**
+   * Пустой ли объект
+   */
+  isEmpty(){
+    return _.isEmpty(this.data);
+  }
+  /**
    * Возврашает значение свойства name
    * @params {string} name
    * @params {*} defaultValue

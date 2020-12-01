@@ -8,6 +8,7 @@ import Select from "react-select";
 import HistoryIcon from '../../../svgs/history.svg'
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
+import {addFont, removeFont} from "../../../../../front-app/src/js/store/fonts-storage/actions";
 
 class TypographicController extends Component {
   constructor(props) {
@@ -73,10 +74,16 @@ class TypographicController extends Component {
   //начало select2
   changeFamily(value) {
     let _value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    console.log(this.props.controller.getSettingName());
+    // if(value){
+    //   addFont(value.value);
+    // } else {
+    //   removeFont();
+    // }
     this._changeValue({
       ..._value,
-      family: value.value,
-      label: value.label
+      family: value ? value.value : '',
+      label:value ?  value.label : '',
     })
   };
   //конец select2
@@ -95,7 +102,7 @@ class TypographicController extends Component {
       ...value,
       sizeUnit: unit
     });
-  }
+  };
 
   blurChange(e) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
@@ -391,6 +398,7 @@ class TypographicController extends Component {
               options={familyOptions}
               styles={customStyles}
               placeholder={value.label}
+              isClearable={true}
               noOptionsMessage={() => "no fonts found"}
             />
           </div>

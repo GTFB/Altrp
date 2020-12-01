@@ -71,6 +71,7 @@ class RouteContent extends Component {
    *  Сброс altrpPageState
    */
   async updateDataStorage() {
+    dataStorageUpdater.clearCurrent();
     /**
      * @member {array} data_sources
      */

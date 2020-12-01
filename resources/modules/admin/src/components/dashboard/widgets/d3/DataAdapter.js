@@ -412,12 +412,16 @@ class DataAdapter {
       //Если источник данных один, то возвращаем данные только по нему
       if (!isMultiple) {
         let source = sources[0];
-        if (_.keys(paramsResult).length > 0) {
-          data = await this.adaptDataByPath(source, paramsResult);
-        } else {
-          data = await this.adaptDataByPath(source);
+        try {
+          if (_.keys(paramsResult).length > 0) {
+            data = await this.adaptDataByPath(source, paramsResult);
+          } else {
+            data = await this.adaptDataByPath(source);
+          }
+        } catch (error) {
+          data = [];
         }
-        data = [data];
+        // data = [data];
       } else {
         // Если несколько истчочников данных, то делаем запросы по каждому
         data = await this.getDataFromIterableDatasources(sources, paramsResult);
@@ -451,6 +455,9 @@ class DataAdapter {
         }
       } else {
         //Если один источник, проверяем данные в нём
+        if (!Array.isArray(data)) {
+          data = [data];
+        }
         needCallAgain = _.keys(data).length === 0 && countRequest < 5;
         dates = data.map(obj => {
           if (!isLarge) {
