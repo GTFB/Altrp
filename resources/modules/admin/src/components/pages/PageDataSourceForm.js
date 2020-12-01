@@ -74,13 +74,13 @@ class PageDataSourceForm extends Component {
       </div>
 
       <div className="form-group">
-        <label>Parameters
-            <textarea  name="parameters"
-            value={parameters}
-            onChange={this.changeHandler}
-            className="form-control"
-          />
-        </label>
+        <label htmlFor="parameters">Parameters</label>
+        <textarea name="parameters"
+          id="parameters"
+          value={parameters}
+          onChange={this.changeHandler}
+          className="form-control"
+        />
       </div>
 
       <div className="btn__wrapper">
