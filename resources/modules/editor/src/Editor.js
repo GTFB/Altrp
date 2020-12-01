@@ -35,6 +35,14 @@ import {renderAsset} from "../../front-app/src/js/helpers";
 import {changeCurrentUser} from "../../front-app/src/js/store/current-user/actions";
 import Resource from "./js/classes/Resource";
 import appStore from "../../front-app/src/js/store/store";
+import Indicator from "./svgs/indicator.svg";
+import Gallery from "./svgs/gallery.svg";
+import Tree from "./svgs/tree.svg";
+import Column from "./svgs/column.svg";
+import Chart from "./svgs/chart.svg";
+import Group from "./svgs/group.svg";
+import Plug from "./svgs/plug.svg";
+import ChevronIcon from "./svgs/chevron.svg";
 /**
  * Главный класс редактора.<br/>
  * Реакт-Компонент.<br/>
@@ -53,6 +61,10 @@ class Editor extends Component {
       activePanel: "settings",
       templateStatus: CONSTANTS.TEMPLATE_UPDATED,
       showDialogWindow: false,
+      navigationState: {
+        navigationEnable: true
+      },
+      navigationShow: false
     };
     this.openPageSettings = this.openPageSettings.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
@@ -60,6 +72,8 @@ class Editor extends Component {
     this.onDragEnd = this.onDragEnd.bind(this);
     this.onClick = this.onClick.bind(this);
     store.subscribe(this.templateStatus.bind(this));
+    this.toggleNavigation = this.toggleNavigation.bind(this);
+    this.showNavigationPanel = this.showNavigationPanel.bind(this);
   }
   /**
    * Метод подписчик на изменение состояния Редактора из Редакс хранилища
@@ -109,6 +123,13 @@ class Editor extends Component {
     });
   }
 
+  showNavigationPanel() {
+    this.setState({
+      ...this.state,
+      navigationPanel: "navigation",
+    });
+  }
+
   /**
    * Сработывает при клике
    */
@@ -146,6 +167,7 @@ class Editor extends Component {
     let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
     currentUser = currentUser.data;
     appStore.dispatch(changeCurrentUser(currentUser));
+    store.subscribe(this.updateNavigationState.bind(this));
   }
 
   /**
@@ -155,6 +177,18 @@ class Editor extends Component {
   openPageSettings() {
     this.modules.templateDataStorage.setCurrentRootElement();
     this.showSettingsPanel();
+  }
+
+  toggleNavigation() {
+    this.setState(state => {
+      return { ...state, navigationShow: !state.navigationShow };
+    });
+  }
+  updateNavigationState() {
+    let navigationState = store.getState().navigationState;
+    this.setState(state => {
+      return { ...state, navigationState: { ...navigationState } };
+    });
   }
 
   /**
@@ -173,6 +207,22 @@ class Editor extends Component {
       this.state.activePanel === "settings"
     ) {
       settingsActive = " active";
+    }
+    let navigationClasses = ["navigation"];
+    if (!this.state.navigationState.navigationEnable) {
+      navigationClasses.push("");
+    }
+    if (this.state.navigationShow) {
+      navigationClasses.push("navigation_panel-show");
+    }
+    let navigationActive = "";
+    if (
+      store.getState().currentElement.currentElement.getType &&
+      store.getState().currentElement.currentElement.getType() ===
+      "root-element" &&
+      this.state.navigationPanel === "navigation"
+    ) {
+      navigationActive = " active";
     }
     return (
       <Provider store={store}>
@@ -209,7 +259,10 @@ class Editor extends Component {
               >
                 <Settings className="icon" />
               </button>
-              <button className="btn ">
+              <button
+                className={"btn btn_navigation" + navigationActive}
+                onClick={this.toggleNavigation}
+              >
                 <Navigation className="icon" />
               </button>
               <button className="btn ">
@@ -229,6 +282,48 @@ class Editor extends Component {
             <DialogWindow state={this.state.showDialogWindow}
                           toggleModalWindow={() => this.toggleModalWindow()} />}
             <EditorWindow />
+          </div>
+          <div className={navigationClasses.join(" ")}>
+            <div className="navigation-top-panel align-content-center justify-center">
+              <div  className="settings-section">
+                <div className="settings-section__title d-flex" onClick={this.toggle}>
+                  <div className="settings-section__icon d-flex ">
+                    <ChevronIcon />
+                  </div>
+                  <div className="settings-section__label">
+                    Navigator
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="navigation-tree-panel d-flex align-content-center justify-center">
+            </div>
+            <div className="navigation-bottom-panel d-flex align-content-center justify-center">
+              <button className="btn ">
+                <Indicator className="icon" />
+              </button>
+              <button className="btn ">
+                <Gallery className="icon" />
+              </button>
+              <button className="btn ">
+                <Tree className="icon" />
+              </button>
+              <button className="btn ">
+                <Column className="icon" />
+              </button>
+              <button className="btn ">
+                <Chart className="icon" />
+              </button>
+              <button className="btn ">
+                <Group className="icon" />
+              </button>
+              <button className="btn ">
+                <Plug className="icon" />
+              </button>
+              <button className="btn ">
+                <Settings className="icon" />
+              </button>
+            </div>
           </div>
         </div>
         <AssetsBrowser />
