@@ -680,7 +680,7 @@ class WidgetSettings extends Component {
             aria-expanded={this.state.openTooltipSettings}
           >
             <div className="collapse-button-content">
-              <div>Настройки Tooltip</div>
+              <div>Настройки подсказок</div>
               <div>
                 {!this.state.openTooltipSettings ? <ArrowDown /> : <ArrowUp />}
               </div>
