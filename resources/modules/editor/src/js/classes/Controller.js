@@ -102,6 +102,9 @@ class Controller {
    * @return {boolean}
    */
   isShow() {
+
+    if(this.)
+
     if (!this.data.conditions) {
       return true;
     }
