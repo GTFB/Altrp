@@ -42,6 +42,10 @@ class SettingSection extends Component {
    * @return {undefined}
    */
   checkSectionDisplay(){
+
+    if(this.props.conditionsCallback){
+      return this.props.conditionsCallback();
+    }
     if(! this.props.conditions){
       return;
     }
