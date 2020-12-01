@@ -1,6 +1,7 @@
 import CONSTANTS from "../../../../editor/src/js/consts";
 import {getMediaQueryByName, replaceContentWithData} from "../helpers";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
+import {addFont} from "../store/fonts-storage/actions";
 
 class FrontElement {
 
@@ -103,6 +104,7 @@ class FrontElement {
    */
   update(){
     this.updateStyles();
+
     let widgetsForForm = [
         'button',
         'input',
@@ -642,6 +644,15 @@ class FrontElement {
       formId = replaceContentWithData(formId, this.getCurrentModel().getData());
     }
     return formId;
+  }
+
+  updateFonts(){
+    let fonts = _.get(this.settings,'__altrpFonts__',{});
+
+    fonts = _.toPairs(fonts);
+    fonts.forEach(([settingName, font])=>{
+      appStore.dispatch(addFont(this.getId(), settingName, font));
+    });
   }
 }
 
