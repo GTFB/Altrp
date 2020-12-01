@@ -5,7 +5,7 @@ import Select from "react-select";
 import { Scrollbars } from "react-custom-scrollbars";
 import {parseParamsFromString, parseURLTemplate} from "../../../../front-app/src/js/helpers";
 
-const renderScrollbar = (props) => {
+export const renderScrollbar = (props) => {
   return <Scrollbars autoHeight >{props.children}</Scrollbars>;
 };
 

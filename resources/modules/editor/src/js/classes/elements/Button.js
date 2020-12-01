@@ -125,7 +125,7 @@ class Button extends BaseElement {
         }
       ],
       rules: {
-        '{{ELEMENT}}': 'align-items: {{VALUE}};',
+        '{{ELEMENT}}.table-resize_true': 'align-items: {{VALUE}};',
         '{{ELEMENT}} .altrp-dropbar': 'align-items: {{VALUE}};',
       },
     });

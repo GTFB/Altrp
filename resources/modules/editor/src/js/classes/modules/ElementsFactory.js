@@ -56,6 +56,7 @@ class ElementsFactory extends BaseModule {
       element.parent = parent;
     }
     element.update();
+    element.updateFonts();
     return element;
   }
 

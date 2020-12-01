@@ -9,6 +9,7 @@ import {
   Link
 } from "react-router-dom";
 import { hot } from "react-hot-loader";
+import { Scrollbars } from "react-custom-scrollbars";
 
 import Bars from "./svgs/bars.svg";
 import AssetSvg from "./svgs/assets.svg";
@@ -121,115 +122,120 @@ class Admin extends Component {
                 <Bars className="admin__bars" onClick={this.toggleMenu} />
               </div>
               <div className="admin-nav-main">
-                <ul className="admin-nav-list">
-                  <li>
-                    <Link
-                      to="/admin/dashboard"
-                      className="admin-nav-list__link"
-                    >
-                      <DashboardSvg className="icon" />
-                      <span>Dashboard</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/admin/assets" className="admin-nav-list__link">
-                      <AssetSvg className="icon" />
-                      <span>Assets</span>
-                    </Link>
-                  </li>
-                  <li>
-                    {/*<Link to="/admin/tables" className="admin-nav-list__link">*/}
-                    {/*<TableSvg className="icon"/>*/}
-                    {/*<span>Tables</span>*/}
-                    {/*</Link>*/}
+                {this.state.pagesMenuShow ?
+                  <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
+                    <ul className="admin-nav-list">
+                      <li>
+                        <Link to="/admin/pages" className="admin-nav-list__link">
+                          <PagesSvg className="icon" />
+                          <span>Pages</span>
+                        </Link>
+                      </li>
 
-                    <Link
-                      to="/admin/tables/models"
-                      className="admin-nav-list__link"
-                    >
-                      <TableSvg className="icon" />
-                      <span>Tables</span>
-                    </Link>
-                    <ul className="admin-nav-sublist">
+                  Models
+                  {models.sort((a, b) => {
+                        if (a.label.toUpperCase() < b.label.toUpperCase()) return -1;
+                        if (a.label.toUpperCase() > b.label.toUpperCase()) return 1;
+                        return 0;
+                      }).map(({ value: id, label }) => <li key={id}>
+                        <Link to={`/admin/model/${id}`} className="admin-nav-list__link admin-nav-list__link--models">
+                          {label}
+                        </Link>
+                      </li>)}
+                    </ul>
+                  </Scrollbars> :
+                  <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
+                    <ul className="admin-nav-list">
                       <li>
                         <Link
-                          to="/admin/tables/sql_editors"
+                          to="/admin/dashboard"
+                          className="admin-nav-list__link"
+                        >
+                          <DashboardSvg className="icon" />
+                          <span>Dashboard</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/admin/assets" className="admin-nav-list__link">
+                          <AssetSvg className="icon" />
+                          <span>Assets</span>
+                        </Link>
+                      </li>
+                      <li>
+                        {/*<Link to="/admin/tables" className="admin-nav-list__link">*/}
+                        {/*<TableSvg className="icon"/>*/}
+                        {/*<span>Tables</span>*/}
+                        {/*</Link>*/}
+
+                        <Link
+                          to="/admin/tables/models"
                           className="admin-nav-list__link"
                         >
                           <TableSvg className="icon" />
-                          <span>SQL Editors</span>
+                          <span>Tables</span>
+                        </Link>
+                        <ul className="admin-nav-sublist">
+                          <li>
+                            <Link
+                              to="/admin/tables/sql_editors"
+                              className="admin-nav-list__link"
+                            >
+                              <TableSvg className="icon" />
+                              <span>SQL Editors</span>
+                            </Link>
+                          </li>
+                        </ul>
+                      </li>
+                      <li>
+                        <Link
+                          to="/admin/templates"
+                          className="admin-nav-list__link"
+                        >
+                          <TemplateSvg className="icon" />
+                          <span>Templates</span>
                         </Link>
                       </li>
-                    </ul>
-                  </li>
-                  <li>
-                    <Link
-                      to="/admin/templates"
-                      className="admin-nav-list__link"
-                    >
-                      <TemplateSvg className="icon" />
-                      <span>Templates</span>
-                    </Link>
-                  </li>
-                  {/* <li>
+                      {/* <li>
                     <Link to="/admin/reports" className="admin-nav-list__link">
                       <ReportSvg className="icon" />
                       <span>Reports</span>
                     </Link>
                   </li> */}
-                  <li>
-                    <Link to="/admin/users" className="admin-nav-list__link">
-                      <UserSvg className="icon" />
-                      <span>Users</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/admin/tools" className="admin-nav-list__link">
-                      <span>Tools</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/admin/access/roles"
-                      className="admin-nav-list__link"
-                    >
-                      <UserSvg className="icon" />
-                      <span>Access</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/admin/plugins" className="admin-nav-list__link">
-                      <PluginSvg className="icon" />
-                      <span>Plugins</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/admin/settings" className="admin-nav-list__link">
-                      <SettingSvg className="icon" />
-                      <span>Settings</span>
-                    </Link>
-                  </li>
-                </ul>
-                <ul className="admin-nav-list admin-nav-list_pages">
-                  <li>
-                    <Link to="/admin/pages" className="admin-nav-list__link">
-                      <PagesSvg className="icon" />
-                      <span>Pages</span>
-                    </Link>
-                  </li>
-
-                  Models
-                  {models.sort((a, b) => {
-                    if (a.label.toUpperCase() < b.label.toUpperCase()) return -1;
-                    if (a.label.toUpperCase() > b.label.toUpperCase()) return 1;
-                    return 0;
-                  }).map(({ value: id, label }) => <li key={id}>
-                    <Link to={`/admin/model/${id}`} className="admin-nav-list__link">
-                      {/* <TableSvg className="icon" /> */}
-                      <span>- {label}</span>
-                    </Link>
-                  </li>)}
-                </ul>
+                      <li>
+                        <Link to="/admin/users" className="admin-nav-list__link">
+                          <UserSvg className="icon" />
+                          <span>Users</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/admin/tools" className="admin-nav-list__link">
+                          <span>Tools</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          to="/admin/access/roles"
+                          className="admin-nav-list__link"
+                        >
+                          <UserSvg className="icon" />
+                          <span>Access</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/admin/plugins" className="admin-nav-list__link">
+                          <PluginSvg className="icon" />
+                          <span>Plugins</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/admin/settings" className="admin-nav-list__link">
+                          <SettingSvg className="icon" />
+                          <span>Settings</span>
+                        </Link>
+                      </li>
+                    </ul>
+                  </Scrollbars>
+                }
               </div>
               <AdminVersion />
             </nav>
