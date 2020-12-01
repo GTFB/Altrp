@@ -42,13 +42,16 @@
     top: 0;
     left: 0;
     bottom: 0;
-    //overflow: hidden;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden;
+    // overflow-x: hidden;
+    // overflow-y: auto;
     height: 100vh;
     background-color: $dark-purple;
     width: 271px;
     flex-shrink: 0;
+    &-main {
+      height: 100%;
+    }
     &-top {
       display: flex;
       justify-content: space-between;
@@ -67,6 +70,9 @@
         color: #fff;
         font-size: 17px;
         font-weight: 500;
+        &.admin-nav-list__link--models {
+          margin-left: 40px;
+        }
         &:hover {
           color: $green;
           & path {
