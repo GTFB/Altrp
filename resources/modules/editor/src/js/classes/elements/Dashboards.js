@@ -62,11 +62,11 @@ class Dashboards extends BaseElement {
       dynamic: false
     });
     repeater.addControl("data", {
-      label: "Data",
+      label: "Y",
       dynamic: false
     });
     repeater.addControl("key", {
-      label: "Key",
+      label: "X",
       dynamic: false
     });
     repeater.addControl("splitFrom", {

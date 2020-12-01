@@ -94,6 +94,7 @@ class AxisBaseSettings extends Component {
         <label htmlFor="">
           Ось X
           <ReactSelect
+            placeholder="Выберите отображение"
             options={xScale}
             className="select-type"
             defaultValue={this.state.editElement?.settings?.xScale?.type}
@@ -112,6 +113,7 @@ class AxisBaseSettings extends Component {
           <label>
             Масштаб времени
             <ReactSelect
+              placeholder="Выберите масштаб времени"
               options={timeScales}
               className="select-type"
               defaultValue={this.state.editElement?.settings?.xScale?.precision}

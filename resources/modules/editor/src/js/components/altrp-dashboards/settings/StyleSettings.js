@@ -157,6 +157,7 @@ class StyleSettings extends Component {
             <div className="mb-3">
               <span>Выберите тип кривой</span>
               <ReactSelect
+                placeholder="Выберите тип кривой"
                 options={curvieTypes}
                 className="select-type"
                 defaultValue={this.state.editElement?.settings?.curve}
@@ -174,6 +175,7 @@ class StyleSettings extends Component {
           <span>Выберите цветовую схему </span>
           <ReactSelect
             options={Schemes}
+            placeholder="Выберите цветовую схему"
             className="select-type"
             defaultValue={this.state.editElement?.settings?.colors?.scheme}
             defaultInputValue={this.state.editElement?.settings?.colors?.scheme}
@@ -353,6 +355,7 @@ class StyleSettings extends Component {
               <span>Тип макета</span>
               <ReactSelect
                 options={barLayout}
+                placeholder="Выберите тип макета"
                 className="select-type"
                 defaultValue={this.state.editElement?.settings?.layout}
                 defaultInputValue={this.state.editElement?.settings?.layout}

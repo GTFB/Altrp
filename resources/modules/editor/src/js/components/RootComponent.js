@@ -28,9 +28,10 @@ class RootComponent extends Component {
   }
 
   render() {
+
     let classes = `sections-wrapper ${this.props.element
       .getSelector()
-      .replace(".", "")}`;
+      .replace(".", "")} ${this.props.element.hasCardModel() ? 'sections-wrapper_card' : ''}`;
     let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
     return (
       <div className={classes}>

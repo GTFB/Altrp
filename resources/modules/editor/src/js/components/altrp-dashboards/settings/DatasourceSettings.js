@@ -50,6 +50,7 @@ class DatasourceSettings extends Component {
             <Form.Label className="label">Источники данных</Form.Label>
             <ReactSelect
               isMulti
+              placeholder="Выберите источник данных"
               onChange={value => this.props.setDatasource(value)}
               className="select-type"
               defaultValue={this.state.editElement?.settings?.sources}
