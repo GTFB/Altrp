@@ -344,39 +344,31 @@ class AddPage extends Component {
               {this.state.id ? "Save" : "Add"}
             </button>
           </form>
+          
+          {Boolean(dataSources.length) && <AdminTable
+            columns={columns}
+            quickActions={[
+              {
+                callBack: data => this.editHandler(data),
+                title: 'Edit'
+              },
+              {
+                tag: 'button',
+                route: `/admin/ajax/page_data_sources/:id`,
+                method: 'delete',
+                confirm: 'Are You Sure?',
+                after: () => this.getDataSources(),
+                className: 'quick-action-menu__item_danger',
+                title: 'Trash'
+              }
+            ]}
+            rows={dataSources}
+          />}
 
-          {Boolean(dataSources.length) && (
-            <AdminTable
-              columns={columns}
-              quickActions={[
-                {
-                  callBack: data => this.editHandler(data),
-                  title: "Edit"
-                },
-                {
-                  tag: "button",
-                  route: `/admin/ajax/page_data_sources/:id`,
-                  method: "delete",
-                  confirm: "Are You Sure?",
-                  after: () => this.getDataSources(),
-                  className: "quick-action-menu__item_danger",
-                  title: "Trash"
-                }
-              ]}
-              rows={dataSources.map(dataSource => ({
-                ...dataSource /* editUrl: `/admin/tables/models/${model.id}/fields/edit/${field.id}` */
-              }))}
-            />
-          )}
-
-          {this.props.match.params.id && (
-            <button
-              onClick={() => this.setState({ isModalOpened: true })}
-              className="btn btn_add"
-            >
-              Add Data Source
-            </button>
-          )}
+        {this.props.match.params.id &&
+          <button onClick={() => this.setState({ isModalOpened: true })} className="btn btn_add">
+            Add Data Source
+          </button>}
 
           {isModalOpened && (
             <AdminModal2

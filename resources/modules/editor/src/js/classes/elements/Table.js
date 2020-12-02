@@ -100,6 +100,13 @@ class Table extends BaseElement {
       default: false
     });
 
+
+    this.addControl('table_2_0', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Table 2.0',
+      default: false
+    });
+
     this.endControlSection();
 
     this.startControlSection("table_data_settings", {
@@ -151,7 +158,7 @@ class Table extends BaseElement {
           value: 'datasource'
         },
       ],
-      default: 'query',
+      default: 'datasource',
     });
 
     this.addControl("table_datasource", {
@@ -408,6 +415,15 @@ class Table extends BaseElement {
       default: false
     });
 
+    repeater.addControl('column_edit_url', {
+      label: 'Edit URL',
+      description: '/ajax/models/tests/:id/title',
+      default: '',
+      conditions:{
+        column_is_editable: true,
+      },
+    });
+
     repeater.addControl('column_is_default_sorted', {
       type: CONTROLLER_SWITCHER,
       label: 'Is Default Sorted',
@@ -429,12 +445,6 @@ class Table extends BaseElement {
         },
       ],
       default: 'ASC'
-    });
-
-    repeater.addControl('column_edit_url', {
-      label: 'Edit URL',
-      description: '/ajax/models/tests/:id/title',
-      default: ''
     });
 
     repeater.addControl('column_styles_field', {
@@ -669,6 +679,31 @@ class Table extends BaseElement {
       default: 0
     });
 
+    this.addControl('inner_page_type', {
+      type: CONTROLLER_SELECT,
+      nullable: true,
+      label: 'Paginate Type',
+      options:[
+        {
+          label: 'Text',
+          value: 'text',
+        },
+        {
+          label: 'Pages',
+          value: 'pages',
+        },
+      ],
+    });
+
+    this.addControl('inner_page_count', {
+      type: CONTROLLER_NUMBER,
+      default: 5,
+      nullable: true,
+      label: 'Page Count',
+    });
+
+
+
     this.addControl('store_state', {
       type: CONTROLLER_SWITCHER,
       dynamic: false,
@@ -686,11 +721,11 @@ class Table extends BaseElement {
       label: 'Counts',
     });
 
-    this.addControl('inner_sort', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Sort',
-      default: false
-    });
+    // this.addControl('inner_sort', {
+    //   type: CONTROLLER_SWITCHER,
+    //   label: 'Sort',
+    //   default: false
+    // });
 
     this.addControl('global_filter', {
       type: CONTROLLER_SWITCHER,
@@ -787,6 +822,80 @@ class Table extends BaseElement {
       },
     });
 
+    this.addControl("replace_text_color", {
+      type: CONTROLLER_COLOR,
+      label: "Text Color",
+      default: {
+        // color: "rgb(27,27,27)",
+        // colorPickedHex: "#1B1B1B"
+      },
+      rules: {
+        '{{ELEMENT}} .replace-text{{STATE}}': 'color: {{COLOR}}'
+      }
+    });
+
+    this.addControl('replace_text_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 0.8,
+        spacing: 0,
+        size: 14,
+        weight: 700,
+        family: 'Open Sans',
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .replace-text{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
+    );
+
+    this.addControl('replace_image', {
+      type: CONTROLLER_MEDIA,
+      label: 'Image',
+      default: { url: "" }
+    });
+
+    this.addControl("replace_image_width", {
+      type: CONTROLLER_SLIDER,
+      label: "Image Width",
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 800,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .replace-picture': 'width: {{SIZE}}{{UNIT}};'
+      }
+    });
+
+    this.addControl("replace_image_height", {
+      type: CONTROLLER_SLIDER,
+      label: "Image Height",
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 800,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .replace-picture': 'height: {{SIZE}}{{UNIT}};'
+      }
+    });
+
     this.addControl('replace_width', {
       type: CONTROLLER_NUMBER,
       label: 'Width',
@@ -806,6 +915,7 @@ class Table extends BaseElement {
     this.addControl('virtualized_height', {
       type: CONTROLLER_NUMBER,
       label: 'Height',
+      default: 400,
       conditions:{
         virtualized_rows: true,
       },
@@ -848,11 +958,11 @@ class Table extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Text Color",
       default: {
-        color: "rgb(27,27,27)",
-        colorPickedHex: "#1B1B1B"
+        // color: "rgb(27,27,27)",
+        // colorPickedHex: "#1B1B1B"
       },
       rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}': 'color: {{COLOR}} !important'
+        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'color: {{COLOR}} !important'
       }
     });
 
@@ -860,11 +970,11 @@ class Table extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Background Color",
       default: {
-        color: "rgb(186,186,186)",
-        colorPickedHex: "#BABABA"
+        // color: "rgb(186,186,186)",
+        // colorPickedHex: "#BABABA"
       },
       rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}': 'background: {{COLOR}} !important'
+        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'background: {{COLOR}} !important'
       }
     });
 
@@ -884,7 +994,7 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}': [
+        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -922,15 +1032,15 @@ class Table extends BaseElement {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
       default: {
-        lineHeight: 0.8,
-        spacing: 0,
-        size: 14,
-        weight: 700,
-        family: 'Open Sans',
-        decoration: ""
+        // lineHeight: 0.8,
+        // spacing: 0,
+        // size: 14,
+        // weight: 700,
+        // family: 'Open Sans',
+        // decoration: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}': [
+        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -975,7 +1085,7 @@ class Table extends BaseElement {
         }
       ],
       rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}': 'border-style: {{VALUE}} !important'
+        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-style: {{VALUE}} !important'
       }
     });
 
@@ -983,15 +1093,15 @@ class Table extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
       default: {
-        top: 1,
-        right: 1,
-        bottom: 1,
-        left: 1,
+        // top: 1,
+        // right: 1,
+        // bottom: 1,
+        // left: 1,
         unit: "px"
       },
       units: ["px", "%", "vh"],
       rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
+        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
       }
     });
 
@@ -999,11 +1109,11 @@ class Table extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Border Color",
       default: {
-        color: "rgb(186,186,186)",
-        colorPickedHex: "#32a852"
+        // color: "rgb(186,186,186)",
+        // colorPickedHex: "#32a852"
       },
       rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}': 'border-color: {{COLOR}} !important'
+        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-color: {{COLOR}} !important'
       }
     });
 
@@ -1149,10 +1259,10 @@ class Table extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'buttons Padding',
       default: {
-        top: 10,
-        right: 10,
-        bottom: 10,
-        left: 10,
+        // top: 10,
+        // right: 10,
+        // bottom: 10,
+        // left: 10,
         unit: 'px'
       },
       units: [
@@ -1161,7 +1271,12 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ],
       },
     });
 
@@ -1173,7 +1288,8 @@ class Table extends BaseElement {
         colorPickedHex: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'color: {{COLOR}}'
+        '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'color: {{COLOR}}', 
+        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'color: {{COLOR}}'
       }
     });
 
@@ -1189,14 +1305,50 @@ class Table extends BaseElement {
       }
     });
 
+    this.addControl("table_style_pagination_count_item_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Count Item background color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'background-color: {{COLOR}}'
+      }
+    });
+
+    this.addControl("table_style_pagination_active_count_text_color", {
+      type: CONTROLLER_COLOR,
+      label: "Active Count text color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .active.altrp-pagination-pages__item{{STATE}}': 'color: {{COLOR}}'
+      }
+    });
+
+    this.addControl("table_style_pagination_active_count_item_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Active Count Item background color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .active.altrp-pagination-pages__item{{STATE}}': 'background-color: {{COLOR}}'
+      }
+    });
+
     this.addControl('table_style_pagination_padding_count', {
       type: CONTROLLER_DIMENSIONS,
       label: 'count Padding',
       default: {
-        top: 10,
-        right: 10,
-        bottom: 10,
-        left: 10,
+        // top: 10,
+        // right: 10,
+        // bottom: 10,
+        // left: 10,
         unit: 'px'
       },
       units: [
@@ -1205,7 +1357,37 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-pagination__count{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ],
+      },
+    });
+
+    this.addControl('table_style_pagination_padding_count_item', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Item Count Padding',
+      default: {
+        // top: 10,
+        // right: 10,
+        // bottom: 10,
+        // left: 10,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
       },
     });
 
@@ -1214,15 +1396,15 @@ class Table extends BaseElement {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
       default: {
-        lineHeight: 0.8,
-        spacing: 0,
-        size: 16,
-        weight: 700,
-        family: 'Open Sans',
-        decoration: ""
+        // lineHeight: 0.8,
+        // spacing: 0,
+        // size: 16,
+        // weight: 700,
+        // family: 'Open Sans',
+        // decoration: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-pagination__next{{STATE}}, .altrp-pagination__count{{STATE}}, .altrp-pagination__previous{{STATE}}': [
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}}, .altrp-pagination-pages__item{{STATE}}, .altrp-pagination__count{{STATE}}, .altrp-pagination__previous{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -1292,14 +1474,82 @@ class Table extends BaseElement {
       }
     });
 
+    this.addControl("table_style_pagination_count_item_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Item Count Border type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        '.altrp-pagination-pages__item{{STATE}}': 'border-style: {{VALUE}};',
+      }
+    });
+
+    this.addControl("table_style_pagination_count_item_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Item Count Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      }
+    });
+
+    this.addControl("table_style_pagination_count_item_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Item Count Border color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'border-color: {{COLOR}};',
+      }
+    });
+
+    this.addControl("table_style_pagination_active_count_item_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Active Item Count Border color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .active.altrp-pagination-pages__item{{STATE}}': 'border-color: {{COLOR}};',
+      }
+    });
+
     this.addControl('table_style_pagination_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: 'px'
       },
       units: [
@@ -1308,7 +1558,12 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-pagination{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-pagination{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ],
       },
     });
 
@@ -1442,7 +1697,12 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-table-th{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-table-th{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ],
       },
     });
 
@@ -1527,7 +1787,12 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-table-td{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-table-td{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ],
       },
     });
 
@@ -1618,7 +1883,12 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ],
       },
     });
 
@@ -1783,7 +2053,7 @@ class Table extends BaseElement {
      *
      */
     //</editor-fold>
-    // <editor-fold desc="table_style_footer"
+    // <editor-fold desc="table_style_footer">
     /**
      * Стили для футера группы START
      */
@@ -1809,7 +2079,12 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-table-foot .altrp-table-td{{STATE}}': 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-table-foot .altrp-table-td{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ],
       },
     });
 

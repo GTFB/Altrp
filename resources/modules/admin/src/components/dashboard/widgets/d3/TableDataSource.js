@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import DataAdapter from "../../../../../../editor/src/js/components/altrp-dashboards/helpers/DataAdapter";
+import DataAdapter from "./DataAdapter";
 import { connect } from "react-redux";
+import ErrorBoundary from "./ErrorBoundary";
 
 const mapStateToProps = state => {
   return { formsStore: state.formsStore };
@@ -9,31 +10,47 @@ class TableDataSource extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      source: props.source,
+      sources: props.sources,
       color: props.element.settings.color,
       params: props.element.settings.params,
+      countRequest: 0,
+      isMultiple: false,
       data: []
     };
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    if (!_.isEqual(prevProps.source, this.props.source)) {
-      this.setState(state => ({ ...state, source: this.props.source }));
+    if (!_.isEqual(prevProps.sources, this.props.sources)) {
+      this.setState(state => ({ ...state, sources: this.props.sources }));
+      await this.getData();
     }
     if (!_.isEqual(prevProps.element, this.props.element)) {
       this.setState(state => ({
         ...state,
+        legend: this.props.element.settings.legend,
         color: this.props.element.settings.color,
-        params: this.props.element.settings.params
+        sources: this.props.element.settings.sources
       }));
-
-      await this.getData();
     }
     if (
-      JSON.stringify(prevState.params) !==
+      !_.isEqual(
+        prevProps.element.settings.params,
+        this.props.element.settings.params
+      )
+    ) {
+      this.setState(state => ({
+        ...state,
+        params: this.props.element.settings.params
+      }));
+      await this.getData();
+    }
+    if (!_.isEqual(prevProps.element.settings, this.props.element.settings)) {
+      this.setState(s => ({ ...s, settings: this.props.element.settings }));
+    }
+    if (
+      JSON.stringify(prevProps.element.settings.params) !==
       JSON.stringify(this.props.element.settings.params)
     ) {
-      console.log("CHANGE IN BAR");
       this.setState(state => ({
         ...state,
         params: this.props.element.settings.params
@@ -46,6 +63,10 @@ class TableDataSource extends Component {
         this.props.formsStore.form_data
       )
     ) {
+      this.setState(state => ({
+        ...state,
+        countRequest: 0
+      }));
       await this.getData();
     }
   }
@@ -55,29 +76,31 @@ class TableDataSource extends Component {
   }
 
   async getData() {
-    let globalParams = _.cloneDeep(this.props.formsStore.form_data, []);
-    let globalParamsArray = _.keys(globalParams).map(param => {
-      return { [param]: globalParams[param] };
-    });
-    let localParams = _.cloneDeep(this.state.params, []);
-    let paramsResult = localParams.concat(globalParamsArray);
-    console.log(paramsResult);
-    if (typeof this.props.element.settings.source.path !== "undefined") {
-      let data = await new DataAdapter().adaptDataByPath(
-        this.state.source.path,
-        this.state.source.key,
-        this.state.source.data
-      );
-      if (_.keys(this.state.params).length > 0) {
-        data = await new DataAdapter().adaptDataByPath(
-          this.state.source.path,
-          this.state.source.key,
-          this.state.source.data,
-          paramsResult
-        );
-      }
-      this.setState(s => ({ ...s, data: data }));
+    const {
+      data,
+      isMultiple,
+      isDate,
+      needCallAgain
+    } = await new DataAdapter().parseData(
+      this.props.element.settings.sources,
+      this.props.formsStore.form_data,
+      this.state.params,
+      this.state.countRequest
+    );
+    if (needCallAgain) {
+      setTimeout(() => {
+        this.getData();
+        let count = this.state.countRequest;
+        count += 1;
+        this.setState(s => ({ ...s, countRequest: count }));
+      }, 3500);
     }
+    this.setState(s => ({
+      ...s,
+      data: data,
+      isMultiple: isMultiple,
+      isDate: isDate
+    }));
   }
 
   sum(data) {
@@ -85,52 +108,60 @@ class TableDataSource extends Component {
   }
 
   render() {
-    if (Object.keys(this.state.source).length === 0) {
+    if (
+      typeof this.state.sources === "undefined" ||
+      Object.keys(this.state.sources).length === 0
+    ) {
       return <div>Нет данных </div>;
     }
+    // if (this.state.isMultiple) {
+    //   return <div>Укажите только один источник данных</div>;
+    // }
     if (
       typeof this.state.data !== "undefined" &&
       this.state.data.length === 0
     ) {
+      if (this.state.countRequest < 5) {
+        return <div>Загрузка...</div>;
+      }
       return <div>Нет данных</div>;
     }
+    const summary = this.state.data
+      .map(item => item.data.reduce((acc, object) => acc + object.y, 0))
+      .reduce((acc, item) => acc + item, 0);
     return (
-      <div className="widget-table">
-        <table className="vertical-table">
-          <tbody>
-            {this.state.data.map((item, key) => (
-              <tr key={key}>
-                <td>{item.key}</td>
-                <td>{item.data}</td>
+      <ErrorBoundary>
+        <div className="widget-table">
+          <table className="vertical-table">
+            <tbody>
+              {this.state.data.map((item, key) => {
+                const dataset = item.data.map((object, index) => (
+                  <tr key={`${key}${index}`}>
+                    <td>
+                      {object.key instanceof Date
+                        ? this.formattingDate(object.x)
+                        : object.x}
+                    </td>
+                    <td>{object.y}</td>
+                  </tr>
+                ));
+                return (
+                  <React.Fragment key={key}>
+                    <tr key={key} style={{ textAlign: "center" }}>
+                      <td colSpan={2}>{item.id}</td>
+                    </tr>
+                    {dataset}
+                  </React.Fragment>
+                );
+              })}
+              <tr>
+                <td>ИТОГО</td>
+                <td>{summary}</td>
               </tr>
-            ))}
-            <tr>
-              <td>ИТОГО</td>
-              <td>{this.sum(this.state.data)}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      // <div className="widget-table">
-      //       <table>
-      //             <thead>
-      //                   <tr>
-      //                         {data.map((item, key) => (
-      //                               <th key={key}>{item.key}</th>
-      //                         ))}
-      //                         <th>ИТОГО</th>
-      //                   </tr>
-      //             </thead>
-      //             <tbody>
-      //                   <tr>
-      //                         {data.map((item, key) => (
-      //                               <td key={key}>{item.data}</td>
-      //                         ))}
-      //                         <td>{this.sum(data)}</td>
-      //                   </tr>
-      //             </tbody>
-      //       </table>
-      // </div>
+            </tbody>
+          </table>
+        </div>
+      </ErrorBoundary>
     );
   }
 }

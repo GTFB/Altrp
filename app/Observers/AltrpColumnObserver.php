@@ -15,7 +15,7 @@ use App\Exceptions\AltrpMigrationRunExceptions;
 class AltrpColumnObserver
 {
     /**
-     * Вызываем после создания колонки
+     * Вызываем перед созданием колонки
      * @param Column $column
      * @return bool|void
      * @throws AltrpMigrationCreateFileExceptions
@@ -28,7 +28,7 @@ class AltrpColumnObserver
         $generator = new ColumnMigrationGenerator($column);
         $file = $generator->createColumnGenerate();
         $name = $generator->getMigrationName();
-        if($column->name === 'id'){
+        if($column->name === 'id') {
           return;
         }
 
@@ -48,6 +48,12 @@ class AltrpColumnObserver
         $column->altrp_migration_id = $migration->id;
     }
 
+    /**
+     * Вызываем после создания колонки
+     * @param Column $column
+     * @return bool|void
+     * @throws AltrpMigrationCreateFileExceptions
+     */
     public function created(Column $column)
     {
         $model = Model::find($column->model_id);
@@ -88,6 +94,12 @@ class AltrpColumnObserver
         $column->altrp_migration_id = $migration->id;
     }
 
+    /**
+     * Вызываем после обновления колонки
+     * @param Column $column
+     * @return bool|void
+     * @throws AltrpMigrationCreateFileExceptions
+     */
     public function updated(Column $column)
     {
         $model = Model::find($column->model_id);
@@ -122,6 +134,12 @@ class AltrpColumnObserver
 
     }
 
+    /**
+     * Вызываем после удаления колонки
+     * @param Column $column
+     * @return bool|void
+     * @throws AltrpMigrationCreateFileExceptions
+     */
     public function deleted(Column $column)
     {
         $model = Model::find($column->model_id);

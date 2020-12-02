@@ -1,321 +1,729 @@
-import React, { Component, Suspense } from "react";
-
-import Form from 'react-bootstrap/Form';
+import React, { Component } from "react";
+import {
+  BAR,
+  PIE,
+  LINE,
+  TABLE,
+  POINT
+} from "../../../../../admin/src/components/dashboard/widgetTypes";
 import { connect } from "react-redux";
-import { editElement } from '../../store/altrp-dashboard/actions';
-import { BAR, PIE, DONUT, AREA, LINE, TABLE } from "../../../../../admin/src/components/dashboard/widgetTypes";
-import { Button, Collapse } from 'react-bootstrap';
-import { ArrowUp, ArrowDown } from 'react-bootstrap-icons';
-import DatasourceSettings from './settings/DatasourceSettings';
-import FilterParameters from './settings/FilterParameters';
-import DiagramTypeSettings from './settings/DiagramTypeSettings';
-import LegendSettings from './settings/LegendSettings';
-import ColorSettings from './settings/ColorSettings';
+import { editElement } from "../../store/altrp-dashboard/actions";
+import { Button, Collapse } from "react-bootstrap";
+import { ArrowUp, ArrowDown } from "react-bootstrap-icons";
+//settings
+import DatasourceSettings from "./settings/DatasourceSettings";
+import AxisBaseSettings from "./settings/AxisBaseSettings";
+import StiyleSettings from "./settings/StyleSettings";
+import FilterParameters from "./settings/FilterParameters";
+import DiagramTypeSettings from "./settings/DiagramTypeSettings";
 
-const mapStateToProps = (state) => {
-      return { editElement: state.editElement };
+const mapStateToProps = state => {
+  return { editElement: _.cloneDeep(state.editElement, {}) };
 };
 
 function mapDispatchToProps(dispatch) {
-      return {
-            editElementDispatch: data => dispatch(editElement(data))
-      };
+  return {
+    editElementDispatch: data => dispatch(editElement(data))
+  };
 }
 
 class WidgetSettings extends Component {
+  constructor(props) {
+    super(props);
+    const element =
+      props.editElement !== null ? _.cloneDeep(props.editElement) : {};
+    const settingsElement =
+      props.editElement !== null ? _.cloneDeep(props.editElement.settings) : {};
+    this.state = {
+      settings: _.cloneDeep(settingsElement, {}),
+      datasources: props.datasources,
+      openDataSettings: false,
+      openDiagramSettings: false,
+      openTooltipSettings: false,
+      filter_datasource: props.filter_datasource,
+      editElement: element
+    };
+    this.setDatasource = this.setDatasource.bind(this);
+    this.setType = this.setType.bind(this);
+    this.setParam = this.setParam.bind(this);
+    this.setXAxisScale = this.setXAxisScale.bind(this);
+    this.setXAxisTimeScale = this.setXAxisTimeScale.bind(this);
+    this.setYAxisScale = this.setYAxisScale.bind(this);
+    this.setCurve = this.setCurve.bind(this);
+    this.setColorScheme = this.setColorScheme.bind(this);
+    this.setLineWidth = this.setLineWidth.bind(this);
+    this.enableArea = this.enableArea.bind(this);
+    this.setTickRotation = this.setTickRotation.bind(this);
+    this.enablePoints = this.enablePoints.bind(this);
+    this.setPointSize = this.setPointSize.bind(this);
+    this.setInnerRadius = this.setInnerRadius.bind(this);
+    this.enableSliceLabels = this.enableSliceLabels.bind(this);
+    this.setPadding = this.setPadding.bind(this);
+    this.setInnerPadding = this.setInnerPadding.bind(this);
+    this.setLayout = this.setLayout.bind(this);
+    this.setGroupMode = this.setGroupMode.bind(this);
+    this.setReverse = this.setReverse.bind(this);
+  }
 
-      constructor(props) {
-            super(props);
-            this.state = {
-                  settings: props.editElement.settings,
-                  datasources: props.datasources,
-                  openDataSettings: false,
-                  openDiagramSettings: false,
-                  openTooltipSettings: false,
-                  filter_datasource: props.filter_datasource,
-                  editElement: props.editElement
-            };
-            console.log(this.state.filter_datasource);
-            this.setDatasource = this.setDatasource.bind(this);
-            this.setType = this.setType.bind(this);
-            this.setLegendEnabled = this.setLegendEnabled.bind(this);
-            this.setLegendPosition = this.setLegendPosition.bind(this);
-            this.setDatakeyColor = this.setDatakeyColor.bind(this);
-            this.setParam = this.setParam.bind(this);
+  componentDidUpdate(prevProps, prevState) {
+    if (!_.isEqual(prevProps.datasources, this.props.datasources)) {
+      this.setState(state => ({
+        ...state,
+        datasources: this.props.datasources
+      }));
+    }
+    if (!_.isEqual(prevProps.filter_datasource, this.props.filter_datasource)) {
+      this.setState(state => ({
+        ...state,
+        filter_datasource: this.props.filter_datasource
+      }));
+    }
+    if (!_.isEqual(prevProps.editElement, this.props.editElement)) {
+      this.setState(state => ({
+        ...state,
+        editElement: this.props.editElement
+      }));
+    }
+  }
+
+  setOpenDataSettings(data) {
+    this.setState(state => ({ ...state, openDataSettings: data }));
+  }
+  setOpenDiagramSettings(data) {
+    this.setState(state => ({ ...state, openDiagramSettings: data }));
+  }
+  setOpenTooltipSettings(data) {
+    this.setState(state => ({ ...state, openTooltipSettings: data }));
+  }
+  //Смена типа диаграммы
+  setType(type) {
+    let settings = this.state.settings;
+    settings = {
+      ...settings,
+      type: type
+    };
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({
+        ...s,
+        editElement: { settings: settings }
+      }));
+    }
+  }
+  //Смена источника данных
+  setDatasource(datasourcesArray) {
+    let settings = this.state.settings;
+    let sources = [];
+    if (datasourcesArray === null) {
+      settings = {
+        ...settings,
+        sources: [],
+        params: []
+      };
+      sources = [];
+      this.setState(state => ({
+        ...state,
+        settings: settings
+      }));
+    } else if (datasourcesArray.length === 0) {
+      settings = {
+        ...settings,
+        sources: [],
+        params: []
+      };
+      sources = [];
+      this.setState(state => ({
+        ...state,
+        settings: settings
+      }));
+    } else {
+      settings = {
+        ...settings,
+        sources: datasourcesArray,
+        params: []
+      };
+    }
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings.sources = sources;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: { settings: settings } }));
+    }
+  }
+  //Смена значения локального параметра
+  setParam(left, right) {
+    let settings = this.state.settings;
+    let param = { [left]: right };
+    let currentParamKey = _.findKey(settings.params, left);
+    if (typeof currentParamKey !== "undefined") {
+      settings.params[currentParamKey] = param;
+    } else {
+      settings = {
+        ...settings,
+        params: [...settings.params, param]
+      };
+    }
+    settings.params = settings.params.filter(item => {
+      let key = _.keys(item)[0];
+      return settings.params[key] !== null;
+    });
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  }
+  //Базовая настройка для оси X
+  setXAxisScale(scale) {
+    let settings = {};
+    if (scale === "time") {
+      settings = {
+        ...this.state.settings,
+        xScale: { type: scale, format: "%d.%m.%Y", precision: "day" }
+      };
+    } else {
+      settings = {
+        ...this.state.settings,
+        xScale: { type: scale }
+      };
+    }
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  }
+  //Выбор масштаба времени для оси X
+  setXAxisTimeScale(precision) {
+    const settings = {
+      ...this.state.settings,
+      xScale: {
+        ...this.state.settings.xScale,
+        precision: precision,
+        format: "%d.%m.%Y"
       }
+    };
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  }
+  //Базовая настройка для оси Y
+  setYAxisScale(scale) {
+    const settings = {
+      ...this.state.settings,
+      yScale: { type: scale }
+    };
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  }
+  //Смена типа кривой
+  setCurve(curve) {
+    const settings = { ...this.state.settings, curve: curve };
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  }
+  //Смена цветовой схемы
+  setColorScheme(colorScheme) {
+    const settings = {
+      ...this.state.settings,
+      colors: { scheme: colorScheme }
+    };
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  }
 
-      componentDidUpdate(prevProps, prevState) {
-            if (!_.isEqual(prevProps.datasources, this.props.datasources)) {
-                  this.setState(state => ({ ...state, datasources: this.props.datasources }));
+  setLineWidth(width) {
+    const settings = {
+      ...this.state.settings,
+      lineWidth: width
+    };
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  }
+  //Отображение участков
+  enableArea(value) {
+    const settings = {
+      ...this.state.settings,
+      enableArea: value
+    };
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  } //Отображение участков
+  enablePoints(value) {
+    const settings = {
+      ...this.state.settings,
+      enablePoints: value
+    };
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  }
+  //Указать размер точки
+  setPointSize(value) {
+    const settings = {
+      ...this.state.settings,
+      pointSize: value
+    };
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  }
+  //Наклон нижней легенды
+  setTickRotation(value) {
+    const settings = {
+      ...this.state.settings,
+      axisBottom: {
+        ...settings?.axisBottom,
+        tickRotation: value
+      }
+    };
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  }
+  //Внутренний радиус Pie
+  setInnerRadius(value) {
+    const settings = {
+      ...this.state.settings,
+      innerRadius: value
+    };
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  }
+  //Внешние отступы Bar
+  setPadding(value) {
+    const settings = {
+      ...this.state.settings,
+      padding: value
+    };
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  }
+  //Внутренние отступы Bar
+  setInnerPadding(value) {
+    const settings = {
+      ...this.state.settings,
+      innerPadding: value
+    };
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  }
+  //Отображать метки на сегменах Pie
+  enableSliceLabels(value) {
+    const settings = {
+      ...this.state.settings,
+      enableSliceLabels: value
+    };
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  }
+  setLayout(value) {
+    const settings = {
+      ...this.state.settings,
+      layout: value
+    };
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  }
+  setGroupMode(value) {
+    const settings = {
+      ...this.state.settings,
+      groupMode: value
+    };
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  }
+  setReverse(value) {
+    const settings = {
+      ...this.state.settings,
+      reverse: value
+    };
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  }
+
+  render() {
+    return (
+      <div className="col">
+        <div className="row">
+          <h3 className="mx-auto">Настройка диаграммы</h3>
+        </div>
+        <div className="row">
+          <Button
+            className="collapse-button"
+            onClick={() =>
+              this.setOpenDataSettings(!this.state.openDataSettings)
             }
-            if (!_.isEqual(prevProps.filter_datasource, this.props.filter_datasource)) {
-                  this.setState(state => ({ ...state, filter_datasource: this.props.filter_datasource }));
+            aria-controls="Datasource settings"
+            aria-expanded={this.state.openDataSettings}
+          >
+            <div className="collapse-button-content">
+              <div>Базовые настройки</div>
+              <div>
+                {!this.state.openDataSettings ? <ArrowDown /> : <ArrowUp />}
+              </div>
+            </div>
+          </Button>
+          <Collapse in={this.state.openDataSettings}>
+            <div style={{ width: "100%" }}>
+              <DiagramTypeSettings setType={this.setType} />
+              {/*
+                Настройки данных - сами источники данных и параметры
+              */}
+              <DatasourceSettings
+                datasources={this.state.datasources}
+                setDatasource={this.setDatasource}
+              />
+              {typeof this.state.filter_datasource !== "undefined" &&
+                _.keys(this.state.filter_datasource).length > 0 && (
+                  <>
+                    <div className="col mb-3">
+                      <div className="label">Параметры</div>
+                    </div>
+                    {this.state.filter_datasource.map((param, index) => {
+                      return (
+                        <FilterParameters
+                          setParam={this.setParam}
+                          key={index}
+                          param={param}
+                        />
+                      );
+                    })}
+                  </>
+                )}
+
+              {/*
+                Настройки осей
+              */}
+              {(this.props.editElement?.settings?.type === LINE ||
+                this.props.editElement?.settings?.type === POINT) && (
+                <>
+                  <AxisBaseSettings
+                    setXAxisScale={this.setXAxisScale}
+                    setXAxisTimeScale={this.setXAxisTimeScale}
+                    setYAxisScale={this.setYAxisScale}
+                  />
+                </>
+              )}
+            </div>
+          </Collapse>
+        </div>
+        <div className="row">
+          <Button
+            className="collapse-button"
+            onClick={() =>
+              this.setOpenDiagramSettings(!this.state.openDiagramSettings)
             }
-            if (!_.isEqual(prevProps.editElement, this.props.editElement)) {
-                  this.setState(state => ({ ...state, editElement: this.props.editElement }));
+            aria-controls="Datasource settings"
+            aria-expanded={this.state.openDiagramSettings}
+          >
+            <div className="collapse-button-content">
+              <div>Настройки стилей</div>
+              <div>
+                {!this.state.openDiagramSettings ? <ArrowDown /> : <ArrowUp />}
+              </div>
+            </div>
+          </Button>
+          <Collapse in={this.state.openDiagramSettings}>
+            <div>
+              <StiyleSettings
+                setCurve={this.setCurve}
+                setColorScheme={this.setColorScheme}
+                setLineWidth={this.setLineWidth}
+                enableArea={this.enableArea}
+                setTickRotation={this.setTickRotation}
+                enablePoints={this.enablePoints}
+                setPointSize={this.setPointSize}
+                setInnerRadius={this.setInnerRadius}
+                enableSliceLabels={this.enableSliceLabels}
+                setPadding={this.setPadding}
+                setInnerPadding={this.setInnerPadding}
+                setLayout={this.setLayout}
+                setGroupMode={this.setGroupMode}
+                setReverse={this.setReverse}
+              />
+            </div>
+          </Collapse>
+        </div>
+        <div className="row">
+          <Button
+            className="collapse-button"
+            onClick={() =>
+              this.setOpenTooltipSettings(!this.state.openTooltipSettings)
             }
-      }
-
-      setOpenDataSettings(data) {
-            this.setState(state => ({ ...state, openDataSettings: data }));
-      }
-      setOpenDiagramSettings(data) {
-            this.setState(state => ({ ...state, openDiagramSettings: data }));
-      }
-      setOpenTooltipSettings(data) {
-            this.setState(state => ({ ...state, openTooltipSettings: data }));
-      }
-
-      setDatasource(datasourcePath) {
-            if (datasourcePath === '') {
-                  let settings = this.state.settings;
-                  settings = {
-                        ...settings,
-                        source: {},
-                        params: []
-                  };
-                  this.setState(state => ({
-                        ...state,
-                        settings: settings
-                  }));
-
-                  let element = this.props.editElement;
-                  element.settings.source = {};
-                  this.props.editElementDispatch(element);
-                  this.props.editHandler(this.props.editElement.i, settings);
-                  return;
-            }
-            let datasources = _.cloneDeep(this.state.datasources, []);
-            let currentDataSouce = datasources.find(source => {
-                  return source.path === datasourcePath;
-            });
-
-            let settings = this.state.settings;
-            let source = {
-                  path: currentDataSouce.path,
-                  key: currentDataSouce.key,
-                  data: currentDataSouce.data
-            };
-            settings = {
-                  ...settings,
-                  source: source,
-                  params: []
-            };
-
-            this.setState(state => ({
-                  ...state, settings: settings
-            }));
-            let element = this.props.editElement;
-            element.settings.source = source;
-            this.props.editElementDispatch(element);
-            this.props.editHandler(this.props.editElement.i, settings);
-      }
-
-      setType(type) {
-            let settings = this.state.settings;
-            settings = {
-                  ...settings,
-                  type: type
-            };
-            this.setState(state => ({
-                  ...state,
-                  settings: settings
-            }));
-            let element = this.props.editElement;
-            element.settings = settings;
-            this.props.editElementDispatch(element);
-            this.props.editHandler(this.props.editElement.i, settings);
-      }
-
-      setLegendEnabled(value) {
-            let settings = this.state.settings;
-            console.log(value);
-            settings = {
-                  ...settings,
-                  legend: {
-                        ...this.legend,
-                        enabled: value
-                  }
-            };
-            console.log(settings);
-            this.setState(state => ({
-                  ...state,
-                  settings: settings
-            }));
-            let element = this.props.editElement;
-            element.settings = settings;
-            this.props.editElementDispatch(element);
-            this.props.editHandler(this.props.editElement.i, settings);
-      }
-
-      setLegendPosition(position) {
-            let settings = this.state.settings;
-            settings = {
-                  ...settings,
-                  legend: {
-                        ...settings.legend,
-                        position: position,
-                        side: position == 'left' || position == 'right' ? 'vertical' : 'horizontal'
-                  }
-            };
-            this.setState(state => ({
-                  ...state,
-                  settings: settings
-            }));
-            let element = this.props.editElement;
-            element.settings = settings;
-            this.props.editElementDispatch(element);
-            this.props.editHandler(element.i, settings);
-      }
-
-      setDatakeyColor(key, color) {
-            let settings = this.state.settings;
-            settings = {
-                  ...settings,
-                  color: {
-                        ...settings.color,
-                        [key]: color,
-                  }
-            };
-            this.setState(state => ({
-                  ...state,
-                  settings: settings
-            }));
-            let element = this.props.editElement;
-            element.settings = settings;
-            this.props.editElementDispatch(element);
-            this.props.editHandler(element.i, settings);
-      }
-
-      setParam(left, right) {
-            let settings = this.state.settings;
-            let param = { [left]: right };
-            let currentParamKey = _.findKey(settings.params, left);
-            if (typeof currentParamKey !== 'undefined') {
-                  settings.params[currentParamKey] = param;
-            }
-            else {
-                  settings = {
-                        ...settings,
-                        params: [
-                              ...settings.params,
-                              param
-                        ]
-                  };
-            }
-            settings.params = settings.params.filter(item => {
-                  let key = _.keys(item)[0]
-                  return settings.params[key] !== null
-            });
-            this.setState(state => ({
-                  ...state,
-                  settings: settings
-            }));
-            let element = this.props.editElement;
-            element.settings = settings;
-            this.props.editElementDispatch(element);
-            this.props.editHandler(element.i, settings);
-      }
-
-      render() {
-            return (
-                  <div className="col">
-                        <div className="row">
-                              <h3 className="mx-auto">Настройка диаграммы</h3>
-                        </div>
-                        <div className="row">
-                              <Button
-                                    className='collapse-button'
-                                    onClick={() => this.setOpenDataSettings(!this.state.openDataSettings)}
-                                    aria-controls="Datasource settings"
-                                    aria-expanded={this.state.openDataSettings}
-                              >
-                                    <div className="collapse-button-content">
-                                          <div>Data settings</div>
-                                          <div>{!this.state.openDataSettings ? (<ArrowDown />) : (<ArrowUp />)}</div>
-                                    </div>
-                              </Button>
-                              <Collapse in={this.state.openDataSettings}>
-                                    <div>
-                                          <DatasourceSettings datasources={this.state.datasources} setDatasource={this.setDatasource} />
-                                          {this.state.filter_datasource.length > 0 && (
-                                                <>
-                                                      <div className="col mb-3">
-                                                            <div className="label">Параметры</div>
-                                                      </div>
-                                                      {this.state.filter_datasource.map((param, index) => {
-                                                            return (
-                                                                  <FilterParameters setParam={this.setParam} key={index} param={param} />
-                                                            )
-                                                      })}
-                                                </>
-                                          )}
-                                    </div>
-                              </Collapse>
-                        </div>
-                        <div className="row">
-                              <Button
-                                    className='collapse-button'
-                                    onClick={() => this.setOpenDiagramSettings(!this.state.openDiagramSettings)}
-                                    aria-controls="Datasource settings"
-                                    aria-expanded={this.state.openDiagramSettings}
-                              >
-                                    <div className="collapse-button-content">
-                                          <div>Diagram settings</div>
-                                          <div>{!this.state.openDiagramSettings ? (<ArrowDown />) : (<ArrowUp />)}</div>
-                                    </div>
-                              </Button>
-                              <Collapse in={this.state.openDiagramSettings}>
-                                    <div>
-                                          <DiagramTypeSettings setType={this.setType} />
-                                          {this.state.editElement.settings.type !== TABLE && (
-                                                <>
-                                                      <div className="col-12 mb-3">
-                                                            <Form.Group>
-                                                                  <Form.Check
-                                                                        checked={
-                                                                              typeof this.state.settings?.legend?.enabled !== 'undefined'
-                                                                                    ? this.state.settings.legend.enabled
-                                                                                    : false
-                                                                        }
-                                                                        onChange={e => this.setLegendEnabled(e.target.checked)} type="checkbox" label="Отобразить легенду" />
-                                                            </Form.Group>
-                                                      </div>
-                                                      {this.state.settings.legend.enabled && (
-                                                            <LegendSettings setLegendPosition={this.setLegendPosition} />
-                                                      )}
-                                                </>
-                                          )}
-                                          {/* <ColorSettings setDatakeyColor={this.setDatakeyColor} /> */}
-                                    </div>
-                              </Collapse>
-                        </div>
-                        <div className="row">
-                              <Button
-                                    className='collapse-button'
-                                    onClick={() => this.setOpenTooltipSettings(!this.state.openTooltipSettings)}
-                                    aria-controls="Datasource settings"
-                                    aria-expanded={this.state.openTooltipSettings}
-                              >
-                                    <div className="collapse-button-content">
-                                          <div>Tooltip settings</div>
-                                          <div>{!this.state.openTooltipSettings ? (<ArrowDown />) : (<ArrowUp />)}</div>
-                                    </div>
-                              </Button>
-                              <Collapse in={this.state.openTooltipSettings}>
-                                    <div>
-
-                                    </div>
-                              </Collapse>
-                        </div>
-                        <div className="row justify-content-beetwen mt-3">
-                              <div className="col">
-                                    <button style={{ width: '100%' }} onClick={e => this.props.onCloseHandler(null)}>Закрыть</button>
-                              </div>
-                        </div>
-                  </div>
-            )
-      }
+            aria-controls="Datasource settings"
+            aria-expanded={this.state.openTooltipSettings}
+          >
+            <div className="collapse-button-content">
+              <div>Настройки подсказок</div>
+              <div>
+                {!this.state.openTooltipSettings ? <ArrowDown /> : <ArrowUp />}
+              </div>
+            </div>
+          </Button>
+          <Collapse in={this.state.openTooltipSettings}>
+            <div></div>
+          </Collapse>
+        </div>
+        {this.props.addItemPreview ? (
+          <div className="row justify-content-beetwen mt-3">
+            <div className="col">
+              <button
+                style={{ width: "100%" }}
+                onClick={e => this.props.onAddItem(this.props.editElement)}
+              >
+                Сохранить
+              </button>
+            </div>
+            <div className="col">
+              <button
+                style={{ width: "100%" }}
+                onClick={e => this.props.onCloseHandler(null, false)}
+              >
+                Отмена
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="row justify-content-beetwen mt-3">
+            <div className="col">
+              <button
+                style={{ width: "100%" }}
+                onClick={e => this.props.onCloseHandler(null)}
+              >
+                Сохранить
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(WidgetSettings);

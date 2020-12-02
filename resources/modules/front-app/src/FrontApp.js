@@ -6,6 +6,7 @@ import AppContent from "./js/components/AppContent";
 import { Provider } from "react-redux";
 import Resource from "../../editor/src/js/classes/Resource";
 import { changeCurrentUser } from "./js/store/current-user/actions";
+import FontsManager from "./js/components/FontsManager";
 
 class FrontApp extends Component {
   constructor(props) {
@@ -33,6 +34,7 @@ class FrontApp extends Component {
     return (
       <Provider store={appStore}>
         <AppContent />
+        <FontsManager />
       </Provider>
     );
   }

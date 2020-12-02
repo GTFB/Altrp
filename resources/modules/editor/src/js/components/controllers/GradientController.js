@@ -22,8 +22,8 @@ class GradientController extends Component {
 
     this._changeValue({
       ...gradient,
-      value: isWithGradient ? 
-        `linear-gradient(${angle}deg, ${secondColor} ${secondPoint}%, ${firstColor} ${firstPoint}%);` : ''
+      value: isWithGradient ?
+        `linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%);` : ''
     });
   };
 
@@ -35,7 +35,7 @@ class GradientController extends Component {
     this._changeValue({
       ...gradient,
       value: isWithGradient ?
-        `linear-gradient(${angle}deg, ${secondColor} ${secondPoint}%, ${firstColor} ${firstPoint}%);` : ''
+        `linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%);` : ''
     });
   };
 
@@ -44,14 +44,14 @@ class GradientController extends Component {
     gradient = { ...gradient, isWithGradient: !gradient.isWithGradient };
     const { isWithGradient, angle, firstColor, firstPoint, secondColor, secondPoint } = gradient;
 
-    this._changeValue({ 
-      ...gradient, 
-      value: isWithGradient ? 
-        `linear-gradient(${angle}deg, ${secondColor} ${secondPoint}%, ${firstColor} ${firstPoint}%);` : ''
+    this._changeValue({
+      ...gradient,
+      value: isWithGradient ?
+        `linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%);` : ''
     });
   };
 
-  getDefaultValue(){
+  getDefaultValue() {
     return {};
   }
   render() {
@@ -79,60 +79,9 @@ class GradientController extends Component {
           </div>
         </div>
         <div className="control-color-wrapper">
-          <div className="control-color-input" onClick={() => this.setState({ opened1: !opened1 })}>
-            <div className="control-color-colorPicked-container">
-              <div className="control-color-colorPicked" style={{ backgroundColor: firstColor }}/>
-            </div>
-            <label className="control-color-hex">{rgb2hex(firstColor)}</label>
-          </div>
-          {opened1 && <div id="gradientColor" className="control-color-colorPicker">
-            <SketchPicker width="90%" color={firstColor} onChange={color => this.colorChange(color, 'firstColor')} className="sketchPicker" />
-          </div>}
-          <div className="control-color-opacity-container">
-            {/* TODO: порефакторить */}
-            <label className="control-color-opacity" >{firstColor && ((parseFloat(firstColor.split(',')[3]) * 100).toFixed() + "%")}</label>
-          </div>
-        </div>
-      </div>
-
-      <div className="controller-container">
-        <div className="control-color-header">
-          <div className="controller-container__label">
-            First Stop Point
-          <ResponsiveDdMenu className="controller-container__label-svg" width="12" />
-          </div>
-        </div>
-
-        <div className="control-slider-input-wrapper">
-          <input type="range" min={0} max={100} step={1}
-            className="control-slider"
-            name="firstPoint"
-            value={firstPoint}
-            onChange={this.setNumber}
-          />
-
-          <div className="control-slider-input-box">
-            <input type="number" min={0} max={100}
-              className="control-slider-input"
-              name="firstPoint"
-              value={firstPoint}
-              onChange={this.setNumber}
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="controller-container">
-        <div className="control-color-header">
-          <div className="controller-container__label">
-            Second Color
-          <ResponsiveDdMenu className="controller-container__label-svg" width="12" />
-          </div>
-        </div>
-        <div className="control-color-wrapper">
           <div className="control-color-input" onClick={() => this.setState({ opened2: !opened2 })}>
             <div className="control-color-colorPicked-container">
-              <div className="control-color-colorPicked" style={{ backgroundColor: secondColor }}/>
+              <div className="control-color-colorPicked" style={{ backgroundColor: secondColor }} />
             </div>
             <label className="control-color-hex">{rgb2hex(secondColor)}</label>
           </div>
@@ -149,7 +98,7 @@ class GradientController extends Component {
       <div className="controller-container">
         <div className="control-color-header">
           <div className="controller-container__label">
-            Second Stop Point
+            First Stop Point
           <ResponsiveDdMenu className="controller-container__label-svg" width="12" />
           </div>
         </div>
@@ -167,6 +116,57 @@ class GradientController extends Component {
               className="control-slider-input"
               name="secondPoint"
               value={secondPoint}
+              onChange={this.setNumber}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="controller-container">
+        <div className="control-color-header">
+          <div className="controller-container__label">
+            Second Color
+          <ResponsiveDdMenu className="controller-container__label-svg" width="12" />
+          </div>
+        </div>
+        <div className="control-color-wrapper">
+          <div className="control-color-input" onClick={() => this.setState({ opened1: !opened1 })}>
+            <div className="control-color-colorPicked-container">
+              <div className="control-color-colorPicked" style={{ backgroundColor: firstColor }} />
+            </div>
+            <label className="control-color-hex">{rgb2hex(firstColor)}</label>
+          </div>
+          {opened1 && <div id="gradientColor" className="control-color-colorPicker">
+            <SketchPicker width="90%" color={firstColor} onChange={color => this.colorChange(color, 'firstColor')} className="sketchPicker" />
+          </div>}
+          <div className="control-color-opacity-container">
+            {/* TODO: порефакторить */}
+            <label className="control-color-opacity" >{firstColor && ((parseFloat(firstColor.split(',')[3]) * 100).toFixed() + "%")}</label>
+          </div>
+        </div>
+      </div>
+
+      <div className="controller-container">
+        <div className="control-color-header">
+          <div className="controller-container__label">
+            Second Stop Point
+          <ResponsiveDdMenu className="controller-container__label-svg" width="12" />
+          </div>
+        </div>
+
+        <div className="control-slider-input-wrapper">
+          <input type="range" min={0} max={100} step={1}
+            className="control-slider"
+            name="firstPoint"
+            value={firstPoint}
+            onChange={this.setNumber}
+          />
+
+          <div className="control-slider-input-box">
+            <input type="number" min={0} max={100}
+              className="control-slider-input"
+              name="firstPoint"
+              value={firstPoint}
               onChange={this.setNumber}
             />
           </div>

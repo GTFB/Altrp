@@ -515,6 +515,33 @@ class BaseElement extends ControlStack {
   removeModelSettings(settingName) {
     this.dynamicContentSettings = _.remove(this.dynamicContentSettings, { settingName });
   }
+
+  /**
+   * Сохраняет имя шрифта для контроллера
+   *
+   * @param {string} settingName
+   * @param {string} fontName
+   */
+  addFont(settingName, fontName){
+    console.log(this.settings);
+    if((! settingName) || ! fontName){
+      return;
+    }
+    _.set(this.settings, `__altrpFonts__.${settingName}`, fontName);
+    console.log(this.settings);
+
+  }
+  /**
+   * Сохраняет имя шрифта для контроллера
+   *
+   * @param {string} settingName
+   */
+  removeFont(settingName){
+    if((! settingName) ){
+      return;
+    }
+    _.unset(this.settings, `__altrpFonts__.${settingName}`);
+  }
 }
 
 export default BaseElement

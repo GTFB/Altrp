@@ -9,14 +9,13 @@ export const POINT = "CHART/POINT";
 export const widgetTypes = [
   { name: "Столбцы", value: BAR },
   { name: "Круговая диаграмма", value: PIE },
-  { name: "Кольцевая диаграмма", value: DONUT },
-  { name: "Линии", value: LINE },
-  { name: "Графики", value: AREA },
+  { name: "Графики", value: LINE },
   { name: "Таблица", value: TABLE },
-  { name: "Точечная", value: POINT },
+  { name: "Точечная", value: POINT }
 ];
 
-export const getTypeName = (value) => widgetTypes.find((w) => w.value === value).name;
+export const getTypeName = value =>
+  widgetTypes.find(w => w.value === value).name;
 
 export const customStyle = [
   "#ffd237",
@@ -26,5 +25,5 @@ export const customStyle = [
   "#DC7700",
   "#8F8F8F",
   "#FFD51F",
-  "#FFC01F",
+  "#FFC01F"
 ];

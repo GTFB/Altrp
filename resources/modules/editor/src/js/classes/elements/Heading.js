@@ -73,7 +73,6 @@ class Heading extends BaseElement {
     this.addControl('heading_settings_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: 'left',
       options:[
         {
           icon: 'left',
@@ -253,6 +252,7 @@ class Heading extends BaseElement {
       default: {
         url: "",
         attributes: "",
+        tag: 'Link',
         noFollow: false
       },
       label: 'link',

@@ -1,8 +1,6 @@
 import BaseElement from "./BaseElement";
 import DashIcon from "../../../svgs/archive.svg";
-import {
-  advancedTabControllers
-} from "../../decorators/register-controllers";
+import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
   CONTROLLER_TEXT,
   CONTROLLER_SWITCHER,
@@ -13,7 +11,8 @@ import {
   TAB_CONTENT,
   TAB_STYLE,
   CONTROLLER_SQL,
-  CONTROLLER_SQL_PARAMS, CONTROLLER_REPEATER,
+  CONTROLLER_SQL_PARAMS,
+  CONTROLLER_REPEATER
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 
@@ -35,79 +34,73 @@ class Dashboards extends BaseElement {
       return;
     }
 
-    this.startControlSection('Data type', {
+    this.startControlSection("Data type", {
       tab: TAB_CONTENT,
-      label: 'Data type'
+      label: "Data type"
     });
 
-    this.addControl('showButton', {
+    this.addControl("showButton", {
       type: CONTROLLER_SWITCHER,
       label: "Show add button?",
-      default: true,
+      default: true
     });
 
-    this.addControl('dataSource', {
+    this.addControl("dataSource", {
       type: CONTROLLER_SWITCHER,
       label: "Get data by data source?",
-      default: false,
+      default: false
     });
 
     let repeater = new Repeater();
 
-    repeater.addControl(
-      'path',
-      {
-        label: 'Path',
-        dynamic: false,
-      }
-    );
-    repeater.addControl(
-      'title',
-      {
-        label: 'Title',
-        dynamic: false,
-      }
-    );
-    repeater.addControl(
-      'data',
-      {
-        label: 'Data',
-        dynamic: false,
-      }
-    );
-    repeater.addControl(
-      'key',
-      {
-        label: 'Key',
-        dynamic: false,
-      }
-    );
+    repeater.addControl("path", {
+      label: "Path",
+      dynamic: false
+    });
+    repeater.addControl("title", {
+      label: "Title",
+      dynamic: false
+    });
+    repeater.addControl("data", {
+      label: "Y",
+      dynamic: false
+    });
+    repeater.addControl("key", {
+      label: "X",
+      dynamic: false
+    });
+    repeater.addControl("splitFrom", {
+      label: "Split from",
+      dynamic: false
+    });
+    repeater.addControl("splitTo", {
+      label: "Split To",
+      dynamic: false
+    });
 
     this.addControl("rep", {
       type: CONTROLLER_REPEATER,
       default: [],
-      fields: repeater.getControls(),
+      fields: repeater.getControls()
     });
 
     this.addControl("filter_datasource", {
       type: CONTROLLER_SQL_PARAMS,
-      default: [],
+      default: []
     });
 
     this.endControlSection();
 
     this.startControlSection("content_section", {
       tab: TAB_CONTENT,
-      label: "Content",
+      label: "Content"
     });
 
-
-
-    this.addControl('global_parameter', {
+    this.addControl("global_parameter", {
       type: CONTROLLER_SQL,
       default: [],
       multi: false,
-      label: 'Select global paramenters',
+      label: "Select global paramenters",
       onlySQL: true
     });
 
@@ -119,32 +112,32 @@ class Dashboards extends BaseElement {
 
     this.addControl("sql", {
       type: CONTROLLER_SQL,
-      default: [],
+      default: []
     });
 
     this.addControl("filter", {
       type: CONTROLLER_SQL_PARAMS,
-      default: [],
+      default: []
     });
 
     this.endControlSection();
 
     this.startControlSection("style", {
       tab: TAB_STYLE,
-      label: "Visual type",
+      label: "Visual type"
     });
 
     this.addControl("animated", {
       type: CONTROLLER_SWITCHER,
       label: "Animated",
-      default: false,
+      default: false
     });
 
     this.endControlSection();
 
     this.startControlSection("size", {
       tab: TAB_STYLE,
-      label: "Size",
+      label: "Size"
     });
 
     this.addControl("style_height", {
@@ -152,14 +145,14 @@ class Dashboards extends BaseElement {
       label: "height",
       default: {
         size: 400,
-        unit: "px",
+        unit: "px"
       },
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-image{{STATE}}": "height: {{SIZE}}{{UNIT}}",
-      },
+        "{{ELEMENT}} .altrp-image{{STATE}}": "height: {{SIZE}}{{UNIT}}"
+      }
     });
 
     this.addControl("style_margin", {
@@ -171,7 +164,7 @@ class Dashboards extends BaseElement {
         bottom: 10,
         left: 10,
         unit: "px",
-        bind: true,
+        bind: true
       },
       units: ["px", "%", "vh"],
       rules: {
@@ -179,9 +172,9 @@ class Dashboards extends BaseElement {
           "margin-top: {{TOP}}{{UNIT}};",
           "margin-right: {{RIGHT}}{{UNIT}};",
           "margin-bottom: {{BOTTOM}}{{UNIT}};",
-          "margin-left: {{LEFT}}{{UNIT}};",
-        ],
-      },
+          "margin-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
     });
 
     advancedTabControllers(this);

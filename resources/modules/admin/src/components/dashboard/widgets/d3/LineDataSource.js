@@ -1,23 +1,8 @@
 import React, { Component } from "react";
-import {
-  LineChart,
-  LineSeries,
-  ChartZoomPan,
-  Line,
-  LinearXAxis,
-  LinearXAxisTickSeries,
-  LinearXAxisTickLabel,
-  DiscreteLegend,
-  DiscreteLegendEntry,
-  TooltipArea
-} from "reaviz";
-import { customStyle } from "../../widgetTypes";
-import format from "date-fns/format";
-import formatDistanceStrict from "date-fns/formatDistanceStrict";
-import ru from "date-fns/locale/ru";
-import { Spinner } from "react-bootstrap";
+import { ResponsiveLineCanvas } from "@nivo/line";
 import { connect } from "react-redux";
-import DataAdapter from "../../../../../../editor/src/js/components/altrp-dashboards/helpers/DataAdapter";
+import DataAdapter from "./DataAdapter";
+import ErrorBoundary from "./ErrorBoundary";
 
 const mapStateToProps = state => {
   return { formsStore: state.formsStore };
@@ -26,30 +11,49 @@ class LineDataSource extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      source: props.source,
-      legend: props.element.settings.legend,
-      color: props.element.settings.color,
-      params: props.element.settings.params,
+      settings: _.cloneDeep(props.element.settings),
+      sources: _.cloneDeep(props.sources),
+      legend: _.cloneDeep(props.element.settings.legend),
+      color: _.cloneDeep(props.element.settings.color),
+      params: _.cloneDeep(props.element.settings.params),
+      countRequest: 0,
+      isMultiple: false,
+      isDate: true,
+      isLarge: false,
       data: []
     };
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    if (!_.isEqual(prevProps.source, this.props.source)) {
-      this.setState(state => ({ ...state, source: this.props.source }));
+    if (!_.isEqual(prevProps.sources, this.props.sources)) {
+      this.setState(state => ({ ...state, sources: this.props.sources }));
+      await this.getData();
     }
     if (!_.isEqual(prevProps.element, this.props.element)) {
       this.setState(state => ({
         ...state,
         legend: this.props.element.settings.legend,
         color: this.props.element.settings.color,
-        params: this.props.element.settings.params
+        sources: this.props.element.settings.sources
       }));
-
-      await this.getData();
     }
     if (
-      JSON.stringify(prevState.params) !==
+      !_.isEqual(
+        prevProps.element.settings.params,
+        this.props.element.settings.params
+      )
+    ) {
+      this.setState(state => ({
+        ...state,
+        params: this.props.element.settings.params
+      }));
+      await this.getData();
+    }
+    if (!_.isEqual(prevProps.element.settings, this.props.element.settings)) {
+      this.setState(s => ({ ...s, settings: this.props.element.settings }));
+    }
+    if (
+      JSON.stringify(prevProps.element.settings.params) !==
       JSON.stringify(this.props.element.settings.params)
     ) {
       this.setState(state => ({
@@ -64,6 +68,10 @@ class LineDataSource extends Component {
         this.props.formsStore.form_data
       )
     ) {
+      this.setState(state => ({
+        ...state,
+        countRequest: 0
+      }));
       await this.getData();
     }
   }
@@ -73,121 +81,120 @@ class LineDataSource extends Component {
   }
 
   async getData() {
-    let globalParams = _.cloneDeep(this.props.formsStore.form_data, []);
-    let globalParamsArray = _.keys(globalParams).map(param => {
-      return { [param]: globalParams[param] };
-    });
-    let localParams = _.cloneDeep(this.state.params, []);
-    let paramsResult = localParams.concat(globalParamsArray);
-    if (typeof this.props.element.settings.source.path !== "undefined") {
-      let data = await new DataAdapter().adaptDataByPath(
-        this.state.source.path,
-        this.state.source.key,
-        this.state.source.data
-      );
-      if (_.keys(this.state.params).length > 0) {
-        data = await new DataAdapter().adaptDataByPath(
-          this.state.source.path,
-          this.state.source.key,
-          this.state.source.data,
-          paramsResult
-        );
-      }
-      this.setState(s => ({ ...s, data: data }));
-    }
-  }
-
-  formattingDate(data) {
-    //  Первая дата
-    const firstDate = data.slice().shift();
-    // Последняя дата
-    const lastDate = data.slice().pop();
-    // Разница между датами в месяцах
-    const diff = parseInt(
-      formatDistanceStrict(firstDate.key, lastDate.key, {
-        unit: "month"
-      })
+    const {
+      data,
+      isMultiple,
+      isDate,
+      needCallAgain,
+      isLarge
+    } = await new DataAdapter().parseData(
+      this.props.element.settings.sources,
+      this.props.formsStore.form_data,
+      this.state.params,
+      this.state.countRequest
     );
-
-    if (diff >= 0 && diff <= 12) {
-      return format(data, "d MMM", { locale: ru });
-    } else {
-      return format(data, "d MMM yy", { locale: ru });
+    if (needCallAgain) {
+      setTimeout(() => {
+        this.getData();
+        let count = this.state.countRequest;
+        count += 1;
+        this.setState(s => ({ ...s, countRequest: count }));
+      }, 3500);
     }
-  }
-
-  renderLegend(data) {
-    let customColors = _.keys(this.state.color).length > 0;
-    let legend = data.map((item, key) => {
-      return (
-        <DiscreteLegendEntry
-          key={key}
-          className="discrete__legend-item"
-          label={`${item.key} (${item.data})`}
-          color={customStyle[item.key % customStyle.length] || "#606060"}
-        />
-      );
-    });
-    if (customColors) {
-      legend = data.map((item, key) => {
-        return (
-          <DiscreteLegendEntry
-            key={key}
-            className="discrete__legend-item"
-            label={`${item.key} (${item.data})`}
-            color={this.state.color[item.key] || "#606060"}
-          />
-        );
-      });
-    }
-
-    return legend;
+    this.setState(s => ({
+      ...s,
+      data: data,
+      isMultiple: isMultiple,
+      isDate: isDate,
+      isLarge: isLarge
+    }));
   }
 
   render() {
-    if (Object.keys(this.state.source).length === 0) {
+    if (typeof this.state.sources === "undefined") {
+      return <div>Укажите источник данных</div>;
+    }
+    if (Object.keys(this.state.sources).length === 0) {
       return <div>Нет данных </div>;
     }
-
     if (
       typeof this.state.data !== "undefined" &&
       this.state.data.length === 0
     ) {
+      if (this.state.countRequest < 5) {
+        return <div>Загрузка...</div>;
+      }
       return <div>Нет данных</div>;
     }
-
+    if (this.props.element.settings.sources.length > 1) {
+      let matches = this.state.data.map(obj => {
+        if (_.keys(obj).length > 0) {
+          return obj.data.length > 0;
+        }
+        return _.keys(obj).length > 0;
+      });
+      let check = _.includes(matches, false);
+      if (check) {
+        if (this.state.countRequest < 5) {
+          return <div>Загрузка...</div>;
+        }
+        return <div>Нет данных</div>;
+      }
+    }
     return (
       <>
-        <LineChart
-          zoomPan={<ChartZoomPan />}
-          data={this.state.data}
-          series={
-            <LineSeries
-              tooltip={<TooltipArea disabled={true} />}
-              markLine={null}
-            />
-          }
-          xAxis={
-            <LinearXAxis
-              type="category"
-              tickSeries={
-                <LinearXAxisTickSeries
-                  label={<LinearXAxisTickLabel rotation={false} />}
-                />
+        <ErrorBoundary>
+          <ResponsiveLineCanvas
+            data={this.state.data}
+            margin={{ top: 40, right: 120, bottom: 80, left: 100 }}
+            curve={this.state.settings?.curve}
+            colors={this.state.settings?.colors}
+            xScale={this.state.settings?.xScale}
+            enableArea={this.state.settings?.enableArea}
+            pointSize={this.state.settings?.pointSize}
+            enablePoints={this.state.settings?.enablePoints}
+            lineWidth={this.state.settings?.lineWidth}
+            xFormat={
+              this.state.settings?.xScale?.type === "time" && "time:%d.%m.%Y"
+            }
+            axisBottom={
+              this.state.settings?.xScale?.type === "time"
+                ? {
+                    format: this.state.settings.xScale.format,
+                    ...this.state.settings?.axisBottom
+                  }
+                : {
+                    ...this.state.settings?.axisBottom
+                  }
+            }
+            legends={[
+              {
+                anchor: "bottom-right",
+                direction: "column",
+                justify: false,
+                translateX: 100,
+                translateY: 0,
+                itemsSpacing: 0,
+                itemDirection: "left-to-right",
+                itemWidth: 80,
+                itemHeight: 20,
+                itemOpacity: 0.75,
+                symbolSize: 12,
+                symbolShape: "circle",
+                symbolBorderColor: "rgba(0, 0, 0, .5)",
+                effects: [
+                  {
+                    on: "hover",
+                    style: {
+                      itemBackground: "rgba(0, 0, 0, .03)",
+                      itemOpacity: 1
+                    }
+                  }
+                ]
               }
-            />
-          }
-          series={<LineSeries colorScheme={customStyle} />}
-        />
-
-        {this.state.legend.enabled && (
-          <DiscreteLegend
-            className={`discrete__legend  ${this.props.element.settings.legend
-              .side || ""}`}
-            orientation={this.state.legend.side}
-            entries={this.renderLegend(this.state.data)}
+            ]}
           />
-        )}
+        </ErrorBoundary>
       </>
     );
   }
