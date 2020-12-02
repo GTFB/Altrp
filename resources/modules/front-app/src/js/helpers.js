@@ -7,9 +7,10 @@ import appStore from "./store/store";
 import { changeCurrentUser } from "./store/current-user/actions";
 import { changeAppRoutes } from "./store/routes/actions";
 import Route from "./classes/Route";
-import {changePageState} from "./store/altrp-page-state-storage/actions";
-import {changeAltrpMeta} from "./store/altrp-meta-storage/actions";
-import {useDispatch} from "react-redux";
+import { changePageState } from "./store/altrp-page-state-storage/actions";
+import { changeAltrpMeta } from "./store/altrp-meta-storage/actions";
+import { useDispatch } from "react-redux";
+import {altrpFontsSet, GOOGLE_FONT} from "./components/FontsManager";
 
 export function getRoutes() {
   return import("./classes/Routes.js");
@@ -44,7 +45,6 @@ export function setTitle(title) {
 export function isEditor() {
   const path = window.location.pathname;
   return path.includes("admin");
-  return !!(window.altrpEditor || window.parent.altrpEditor);
 }
 
 /**
@@ -230,7 +230,11 @@ export function renderAsset(asset, props = null) {
  * @param {boolean} allowObject
  * @return {{}}
  */
-export function parseParamsFromString(string, context = {}, allowObject = false) {
+export function parseParamsFromString(
+  string,
+  context = {},
+  allowObject = false
+) {
   const params = {};
   const urlParams =
     window.currentRouterMatch instanceof AltrpModel
@@ -265,7 +269,7 @@ export function parseParamsFromString(string, context = {}, allowObject = false)
     } else {
       params[left] = right;
     }
-    if ((! allowObject) &&_.isObject(params[left])) {
+    if (!allowObject && _.isObject(params[left])) {
       delete params[left];
     }
   });
@@ -350,10 +354,10 @@ function conditionChecker(c, model, dataByPath = true) {
  * Установить данные
  * @param {string} path
  * @param {*} value
- * @param {function} dispatch
+ * @param {function | null} dispatch
  * @return {boolean}
  */
-export function setDataByPath(path = "", value, dispatch) {
+export function setDataByPath(path = "", value, dispatch = null) {
   if (!path) {
     return false;
   }
@@ -379,11 +383,11 @@ export function setDataByPath(path = "", value, dispatch) {
       return false;
     }
     const oldValue = appStore.getState().altrpPageState.getProperty(path);
-    if(_.isEqual(oldValue, value)){
+    if (_.isEqual(oldValue, value)) {
       return true;
     }
-    if(_.isFunction(dispatch)){
-      dispatch(changePageState(path, value))
+    if (_.isFunction(dispatch)) {
+      dispatch(changePageState(path, value));
     } else {
       appStore.dispatch(changePageState(path, value));
     }
@@ -395,13 +399,13 @@ export function setDataByPath(path = "", value, dispatch) {
       return false;
     }
     const oldValue = appStore.getState().altrpMeta.getProperty(path);
-    if(_.isEqual(oldValue, value)){
+    if (_.isEqual(oldValue, value)) {
       return true;
     }
-    if(_.isFunction(dispatch)){
-      dispatch(changePageState(path, value))
+    if (_.isFunction(dispatch)) {
+      dispatch(changeAltrpMeta(path, value));
     } else {
-      appStore.dispatch(changePageState(path, value));
+      appStore.dispatch(changeAltrpMeta(path, value));
     }
     return true;
   }
@@ -432,17 +436,21 @@ export function getDataByPath(
     return path;
   }
   path = path.trim();
-
+  /**
+   * @type {AltrpModel} currentModel
+   */
   let {
     currentModel,
     currentDataStorage,
     altrpresponses,
     formsStore,
     altrpPageState,
+    currentUser,
     altrpMeta
   } = appStore.getState();
   if (context) {
-    currentModel = context;
+    currentModel =
+      context instanceof AltrpModel ? context : new AltrpModel(context);
   }
   const urlParams =
     window.currentRouterMatch instanceof AltrpModel
@@ -464,6 +472,13 @@ export function getDataByPath(
   } else if (path.indexOf("altrppagestate.") === 0) {
     path = path.replace("altrppagestate.", "");
     value = altrpPageState.getProperty(path, _default);
+  } else if (path.indexOf("altrpuser.") === 0) {
+    path = path.replace("altrpuser.", "");
+    value = currentUser.getProperty(path, _default);
+  } else if (path === "altrpuser") {
+    value = currentUser.getData();
+  } else if (path === "altrpmodel") {
+    value = currentModel.getData();
   } else if (path.indexOf("altrptime.") === 0) {
     value = getTimeValue(path.replace("altrptime.", ""));
   } else if (path.indexOf("altrpforms.") === 0) {
@@ -921,7 +936,7 @@ export function clearEmptyProps() {}
 /**
  * Заменяет в тексте конструкции типа {{altrpdata...}} на данные
  * @param content
- * @param {null | {}}modelContext
+ * @param {{} | null} modelContext
  */
 
 export function replaceContentWithData(content = "", modelContext = null) {
@@ -1190,17 +1205,17 @@ export function sortOptions(options, sortDirection) {
  * @param {string} path
  * @return {number}
  */
-export function recurseCount(object = {}, path = '') {
+export function recurseCount(object = {}, path = "") {
   let count = 0;
-  if(! path){
+  if (!path) {
     return count;
   }
   let array = _.get(object, path, []);
-  if(! array.length){
+  if (!array.length) {
     count++;
     return count;
   }
-  array.forEach(item=>{
+  array.forEach(item => {
     count += recurseCount(item, path);
   });
   return count;
@@ -1210,19 +1225,30 @@ export function recurseCount(object = {}, path = '') {
  * Вовращает AltrpModel, в котором храняться все источники данных на странице
  * @return {AltrpModel}
  */
-export function getAppContext(){
-  const {currentModel} = appStore.getState();
+export function getAppContext() {
+  const { currentModel } = appStore.getState();
   const currentModelData = currentModel.getData();
-  const urlParams = _.cloneDeep(window.currentRouterMatch instanceof AltrpModel ? window.currentRouterMatch.getProperty('params') : {});
+  const urlParams = _.cloneDeep(
+    window.currentRouterMatch instanceof AltrpModel
+      ? window.currentRouterMatch.getProperty("params")
+      : {}
+  );
   const context = new AltrpModel(_.assign(urlParams, currentModelData));
-  const {altrpPageState, altrpMeta, currentDataStorage, currentUser, altrpresponses, formsStore} = appStore.getState();
+  const {
+    altrpPageState,
+    altrpMeta,
+    currentDataStorage,
+    currentUser,
+    altrpresponses,
+    formsStore
+  } = appStore.getState();
 
-  context.setProperty('altrpdata', currentDataStorage);
-  context.setProperty('altrppagestate', altrpPageState);
-  context.setProperty('altrpmeta', altrpMeta);
-  context.setProperty('altrpuser', currentUser);
-  context.setProperty('altrpresponses', altrpresponses);
-  context.setProperty('altrpforms', formsStore);
+  context.setProperty("altrpdata", currentDataStorage);
+  context.setProperty("altrppagestate", altrpPageState);
+  context.setProperty("altrpmeta", altrpMeta);
+  context.setProperty("altrpuser", currentUser);
+  context.setProperty("altrpresponses", altrpresponses);
+  context.setProperty("altrpforms", formsStore);
   return context;
 }
 
@@ -1233,12 +1259,12 @@ export function getAppContext(){
  * @param {*} state
  * @return {boolean}
  */
-export function storeWidgetState(widgetId, state = null){
-  if(! widgetId){
+export function storeWidgetState(widgetId, state = null) {
+  if (!widgetId) {
     return false;
   }
   const path = `widget_state${widgetId}`;
-  return saveDataToLocalStorage(path, state)
+  return saveDataToLocalStorage(path, state);
 }
 /**
  * абирает состояние из localStorage
@@ -1247,12 +1273,12 @@ export function storeWidgetState(widgetId, state = null){
  * @param {*} _default
  * @return {boolean}
  */
-export function getWidgetState(widgetId, _default = null){
-  if(! widgetId){
+export function getWidgetState(widgetId, _default = null) {
+  if (!widgetId) {
     return _default;
   }
   const path = `widget_state${widgetId}`;
-  return getDataFromLocalStorage(path, _default)
+  return getDataFromLocalStorage(path, _default);
 }
 
 /**
@@ -1261,11 +1287,11 @@ export function getWidgetState(widgetId, _default = null){
  * @param {*} data
  * @return {boolean}
  */
-export function saveDataToLocalStorage(name, data){
-  if(! name){
+export function saveDataToLocalStorage(name, data) {
+  if (!name) {
     return false;
   }
-  if(_.isObject(data)){
+  if (_.isObject(data)) {
     data = JSON.stringify(data);
   }
   localStorage.setItem(name, data);
@@ -1277,21 +1303,71 @@ export function saveDataToLocalStorage(name, data){
  * @param {*} _default
  * @return {*}
  */
-export function getDataFromLocalStorage(name, _default = null){
-  if(! name){
+export function getDataFromLocalStorage(name, _default = null) {
+  if (!name) {
     return _default;
   }
   let value = localStorage.getItem(name);
-  if(! value){
+  if (!value) {
     return _default;
   }
   try {
     value = JSON.parse(value);
-  } catch(error){
+  } catch (error) {
     console.error(error);
   }
-  if(_.isString(value) && Number(value)){
+  if (_.isString(value) && Number(value)) {
     value = Number(value);
   }
   return value || _default;
+}
+export function scrollbarWidth() {
+  // thanks too https://davidwalsh.name/detect-scrollbar-width
+  const scrollDiv = document.createElement("div");
+  scrollDiv.setAttribute(
+    "style",
+    "width: 100px; height: 100px; overflow: scroll; position:absolute; top:-9999px;"
+  );
+  document.body.appendChild(scrollDiv);
+  const scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+  document.body.removeChild(scrollDiv);
+  return scrollbarWidth;
+}
+
+/**
+ * Добавляем свойство altrpIndex для всех эементов-объектов массива
+ * для их идентификации внутри повторяющихся карточек
+ * @param {[]} array
+ */
+export function setAltrpIndex(array = []) {
+  if (!_.isArray(array)) {
+    return;
+  }
+  array.forEach((item, idx) => {
+    if (!_.isObject(item)) {
+      return;
+    }
+    if (item instanceof AltrpModel) {
+      item.setProperty("altrpIndex", idx);
+      return;
+    }
+    item.altrpIndex = idx;
+  });
+}
+
+/**
+ *
+ * @param {string} font
+ * @return {*}
+ */
+export function renderFontLink(font){
+
+  if(altrpFontsSet[font] !== GOOGLE_FONT){
+    return null;
+  }
+  font = font.replace(/ /g, '+');
+  font += ':100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic';
+  let fontUrl = 'https://fonts.googleapis.com/css?family=' + font + '&subset=cyrillic';
+  fontUrl = encodeURI(fontUrl);
+  return <link rel="stylesheet" key={fontUrl} href={fontUrl}/>
 }

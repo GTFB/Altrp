@@ -2,6 +2,8 @@ import TextareaController from "../../components/controllers/TextareaController"
 import TextController from "../../components/controllers/TextController";
 import NumberController from "../../components/controllers/NumberController";
 import SwitcherController from "../../components/controllers/SwitcherController";
+import DateController from "../../components/controllers/DateController";
+import RangeController from "../../components/controllers/RangeController";
 import Controller from "../Controller";
 import DimensionsController from "../../components/controllers/DimensionsController";
 import SelectController from "../../components/controllers/SelectController";
@@ -34,6 +36,8 @@ export const TAB_CONTENT = "content";
 export const TAB_STYLE = "style";
 export const TAB_ADVANCED = "advanced";
 export const CONTROLLER_TEXTAREA = "textarea";
+export const CONTROLLER_DATE = "date";
+export const CONTROLLER_RANGE = "range";
 export const CONTROLLER_WYSIWYG = "wysiwyg";
 export const CONTROLLER_TEXT = "text";
 export const CONTROLLER_NUMBER = "number";
@@ -59,10 +63,10 @@ export const CONTROLLER_COLWIDTH = "colwidth";
 export const CONTROLLER_GRADIENT = "gradient";
 export const CONTROLLER_SQL = "sql";
 export const CONTROLLER_SQL_PARAMS = "sql-params";
-export const CONTROLLER_CREATIVE_LINK = 'creative-link';
-export const CONTROLLER_CREATIVE_HOVER = 'creative-hover';
+export const CONTROLLER_CREATIVE_LINK = "creative-link";
+export const CONTROLLER_CREATIVE_HOVER = "creative-hover";
 export const CONTROLLER_EVENT_HANDLER = "event-handler";
-export const CONTROLLER_ELEMENTS = 'elements';
+export const CONTROLLER_ELEMENTS = "elements";
 
 class ControllersManager {
   constructor() {
@@ -97,9 +101,11 @@ class ControllersManager {
     this.conttrollers[CONTROLLER_SQL_PARAMS] = SqlAsParamsController;
     this.conttrollers[CONTROLLER_EVENT_HANDLER] = EventSelectController;
     this.conttrollers[CONTROLLER_ELEMENTS] = ElementChooseController;
+    this.conttrollers[CONTROLLER_DATE] = DateController;
+    this.conttrollers[CONTROLLER_RANGE] = RangeController;
     this.elementsControls = null;
     this._cache = {
-      controls: {},
+      controls: {}
     };
   }
   init() {
@@ -113,7 +119,6 @@ class ControllersManager {
   }
 
   registerControls() {
-    console.log(window.elementsManager);
     let elementClasses = window.elementsManager.getElements();
     this.elementsControls = {};
     for (let elementClassName in elementClasses) {

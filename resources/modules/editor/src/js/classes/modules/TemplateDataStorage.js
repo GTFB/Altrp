@@ -46,6 +46,9 @@ class TemplateDataStorage extends BaseModule {
   setName(name) {
     this.name = name;
   }
+  setType(type) {
+    this.type = type;
+  }
 
   setCurrentRootElement() {
     this.currentElement = this.rootElement;
@@ -54,7 +57,6 @@ class TemplateDataStorage extends BaseModule {
   }
 
   setCurrentElement(element) {
-    console.log("HEYHEYHEY");
     if (!element instanceof BaseElement) {
       throw "Only Base Element Can Be Set as Default";
     }

@@ -2,6 +2,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  &-pages{
+    display: flex;
+  }
   &__goto-page{
     margin-left: 10px;
     height: 32px;

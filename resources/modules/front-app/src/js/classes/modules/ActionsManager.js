@@ -16,14 +16,15 @@ class ActionsManager extends AltrpModel{
    * @param {string} widgetId
    * @param {array} actions
    * @param {string} eventName
-   * @param {null | {}} context
+   * @param {FrontElement | null} element
+   * @param {{} | null} context
    */
-  registerWidgetActions(widgetId, actions = [], eventName = 'click', context = null){
+  registerWidgetActions(widgetId, actions = [], eventName = 'click', element = null, context = null ){
     if((! actions) || ! actions.length){
       return null;
     }
     actions = actions.filter(a=>a.type).map(a=>{
-      return new AltrpAction(a, widgetId);
+      return new AltrpAction(a, widgetId, element);
     });
     return this.setProperty(`actions.${widgetId}.${eventName}`, actions);
   }
@@ -63,5 +64,5 @@ class ActionsManager extends AltrpModel{
     return {success: true};
   }
 }
-
-export default new ActionsManager
+window.actionsManager = new ActionsManager;
+export default window.actionsManager

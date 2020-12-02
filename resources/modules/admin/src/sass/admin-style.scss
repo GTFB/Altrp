@@ -16,10 +16,11 @@
 @import "components/admin-charts";
 @import "~react-datepicker/dist/react-datepicker.css";
 @import "components/admin-sql-builder";
-@import url("/fonts/Roboto/stylesheet.css");
-@import url("/fonts/OpenSans/stylesheet.css");
-@import url("/fonts/PTSans/stylesheet.css");
-@import url("/fonts/Montserrat/stylesheet.css");
+@import url("https://fonts.googleapis.com/css?family=Roboto:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic&subset=cyrillic");
+@import url("https://fonts.googleapis.com/css?family=Montserrat:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic&subset=cyrillic");
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic&subset=cyrillic");
+@import url("https://fonts.googleapis.com/css?family=PT+Sans:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic&subset=cyrillic");
+
 
 .admin {
   display: flex;
@@ -42,13 +43,16 @@
     top: 0;
     left: 0;
     bottom: 0;
-    //overflow: hidden;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden;
+    // overflow-x: hidden;
+    // overflow-y: auto;
     height: 100vh;
     background-color: $dark-purple;
     width: 271px;
     flex-shrink: 0;
+    &-main {
+      height: 100%;
+    }
     &-top {
       display: flex;
       justify-content: space-between;
@@ -67,6 +71,9 @@
         color: #fff;
         font-size: 17px;
         font-weight: 500;
+        &.admin-nav-list__link--models {
+          margin-left: 40px;
+        }
         &:hover {
           color: $green;
           & path {
@@ -84,7 +91,8 @@
         top: 44px;
         left: 0;
         right: 0;
-        bottom: 0;
+        // bottom: 0;
+        // min-height: 80%;
         background-color: $dark-purple;
         transform: translate(100%, 0);
         transition-duration: 0.3s;

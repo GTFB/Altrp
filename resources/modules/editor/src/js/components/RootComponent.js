@@ -19,18 +19,19 @@ class RootComponent extends Component {
   _componentDidMount() {
     let hiddenElementsTriggers = this.state.settings.hidden_elements_triggers;
 
-    if (hiddenElementsTriggers && _.isString(hiddenElementsTriggers)) {
-      hiddenElementsTriggers = hiddenElementsTriggers
-        .split(",")
-        .map(item => item.trim());
-      this.props.setDefaultTriggers(hiddenElementsTriggers);
-    }
+    // if (hiddenElementsTriggers && _.isString(hiddenElementsTriggers)) {
+    //   hiddenElementsTriggers = hiddenElementsTriggers
+    //     .split(",")
+    //     .map(item => item.trim());
+    //   this.props.setDefaultTriggers(hiddenElementsTriggers);
+    // }
   }
 
   render() {
+
     let classes = `sections-wrapper ${this.props.element
       .getSelector()
-      .replace(".", "")}`;
+      .replace(".", "")} ${this.props.element.hasCardModel() ? 'sections-wrapper_card' : ''}`;
     let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
     return (
       <div className={classes}>
@@ -54,4 +55,5 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(RootComponent);
+// export default connect(null, mapDispatchToProps)(RootComponent);
+export default RootComponent;

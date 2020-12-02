@@ -14,6 +14,7 @@ import chevronIcon from '../../../svgs/chevron.svg';
 import columnsIcon from '../../../svgs/columns.svg';
 import contentIcon from '../../../svgs/content.svg';
 import deleteIcon from '../../../svgs/delete.svg';
+import deleteIconOne from '../../../svgs/delete_variant_1.svg';
 import desktopIcon from '../../../svgs/desktop.svg';
 import desktopNewIcon from '../../../svgs/desktopNew.svg';
 import dotsSectionIcon from '../../../svgs/dots_section.svg';
@@ -88,6 +89,7 @@ class IconsManager {
     this.icons.push(new Icon('columns', columnsIcon));
     this.icons.push(new Icon('content', contentIcon));
     this.icons.push(new Icon('delete', deleteIcon));
+    this.icons.push(new Icon('deleteOne', deleteIconOne));
     this.icons.push(new Icon('desktop', desktopIcon));
     this.icons.push(new Icon('desktopNew', desktopNewIcon));
     this.icons.push(new Icon('dots_section', dotsSectionIcon));

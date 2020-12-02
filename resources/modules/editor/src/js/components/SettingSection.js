@@ -9,6 +9,7 @@ class SettingSection extends Component {
     super(props);
     this.state = {
       open: false,
+      hidden: false,
     };
     this.toggle = this.toggle.bind(this);
   };
@@ -25,13 +26,67 @@ class SettingSection extends Component {
         && (this.props.settingSection[currentElementName][currentTab] !== undefined))) {
       this.props.dispatch(setActiveSection(getCurrentElement().getName(), getCurrentTab(), 0));
     }
+    this.checkSectionDisplay();
+  }
+
+  componentDidUpdate(){
+    this.checkSectionDisplay();
   }
 
   toggle() {
     this.props.dispatch(setActiveSection(getCurrentElement().getName(), getCurrentTab(), this.props.sectionID));
   };
 
+  /**
+   * Проверим условие отображения
+   * @return {undefined}
+   */
+  checkSectionDisplay(){
+
+    if(this.props.conditionsCallback){
+      let hidden = ! this.props.conditionsCallback();
+      if(this.state.hidden === hidden) {
+        return
+      }
+      this.setState(state => ({...state, hidden }));
+      return ;
+    }
+    if(! this.props.conditions){
+      return;
+    }
+    let hidden = false;
+
+    let conditionPairs = _.toPairs(this.props.conditions);
+    conditionPairs.forEach(condition => {
+      let [controlId, comparedValue] = condition;
+      let negative = controlId.indexOf("!") >= 0;
+      controlId = controlId.replace("!", "");
+      let _value = getCurrentElement().getSettings(controlId);
+      if (!_.isArray(_value)) {
+        _value = [_value];
+      } else if (_value.length === 0) {
+        hidden = true;
+      }
+      _value.forEach(value => {
+        if (hidden) {
+          return;
+        }
+        if (_.isString(comparedValue) || _.isBoolean(comparedValue)) {
+          hidden = value !== comparedValue ? !negative : negative;
+        }
+        if (_.isArray(comparedValue)) {
+          hidden = comparedValue.indexOf(value) === -1 ? !negative : negative;
+        }
+      });
+    });
+    if(this.state.hidden !== hidden){
+      this.setState(state => ({...state, hidden}));
+    }
+  }
   render() {
+    if(this.state.hidden){
+      return null;
+    }
     let currentElementName = getCurrentElement().getName();
     let currentTab = getCurrentTab();
     let activeSectionID = 0;
@@ -68,9 +123,10 @@ class SettingSection extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    settingSection: state.settingSectionMenu
+    settingSection: state.settingSectionMenu,
+    controllerValue: state.controllerValue,
   }
-}
+};
 
 
 export default connect(mapStateToProps, null)(SettingSection);

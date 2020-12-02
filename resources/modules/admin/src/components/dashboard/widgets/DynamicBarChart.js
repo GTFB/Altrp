@@ -1,21 +1,27 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  BarChart,
-  BarSeries,
-  Bar,
-  Gradient,
-  GradientStop,
-  DiscreteLegend,
-  DiscreteLegendEntry,
-} from "reaviz";
 
 import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
-import { getWidgetData } from "../services/getWidgetData";
-import { customStyle } from "../widgetTypes";
+import { ResponsiveBar } from "@nivo/bar";
 
-const DynamicBarChart = ({ widget, width = 300, height = 300, dataSource = [] }) => {
+import { getWidgetData } from "../services/getWidgetData";
+
+const DynamicBarChart = ({
+  widget,
+  width = 300,
+  height = 450,
+  dataSource = [],
+  groupMode = "stacked",
+  layout = "vertical",
+  colorScheme = "red_grey",
+  reverse = false,
+  enableLabel = false,
+  padding = 0.1,
+  innerPadding = 0,
+  borderRadius = 0,
+  borderWidth = 0
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
 
@@ -30,10 +36,10 @@ const DynamicBarChart = ({ widget, width = 300, height = 300, dataSource = [] })
             data = charts.data.data;
             break;
           case 1:
-            data = _.sortBy(data,'key');
+            data = _.sortBy(data, "key");
             break;
           case 2:
-            data = _.sortBy(data,'data');
+            data = _.sortBy(data, "data");
             break;
           default:
             data = charts.data.data;
@@ -42,8 +48,7 @@ const DynamicBarChart = ({ widget, width = 300, height = 300, dataSource = [] })
         setData(data || []);
         setIsLoading(false);
       }
-    }
-    else {
+    } else {
       setData(dataSource || []);
       setIsLoading(false);
     }
@@ -57,41 +62,32 @@ const DynamicBarChart = ({ widget, width = 300, height = 300, dataSource = [] })
 
   if (data.length === 0) return <EmptyWidget />;
 
-  // Формируем легенду
-  const entries = data.map((item, i) => {
-    return (
-      <DiscreteLegendEntry
-        key={i}
-        className="discrete__legend-item"
-        label={`${item.key} (${item.data})`}
-        color={customStyle[i] || "#606060"}
-      />
-    );
-  });
-
   return (
     <>
-      <BarChart
-        height={height}
-        // width={width}
-        data={data}
-        series={
-          <BarSeries
-            colorScheme={
-              widget.options.colorScheme === "Custom" ? customStyle : widget.options.colorScheme
-            }
-            bar={<Bar gradient={<Gradient stops={[<GradientStop stopOpacity={1} />]} />} />}
-            animated={widget.options.animated}
-          />
-        }
-      />
-      {widget.options?.legend && (
-        <DiscreteLegend
-          className="discrete__legend"
-          orientation={widget.options.legend}
-          entries={entries}
+      <div style={{ height: `${height}px` }}>
+        <ResponsiveBar
+          data={data}
+          margin={{ top: 50, right: 180, bottom: 50, left: 60 }}
+          indexBy="key"
+          colors={{ scheme: colorScheme.toString() }}
+          colorBy="index"
+          layout={layout}
+          enableLabel={enableLabel}
+          reverse={reverse}
+          groupMode={groupMode}
+          padding={padding}
+          innerPadding={innerPadding}
+          borderRadius={borderRadius}
+          borderWidth={borderWidth}
+          axisBottom={{
+            tickSize: 5,
+            tickPadding: 5,
+            tickRotation: 0,
+            legend: "key",
+            legendOffset: 32
+          }}
         />
-      )}
+      </div>
     </>
   );
 };

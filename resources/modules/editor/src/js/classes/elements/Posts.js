@@ -59,7 +59,7 @@ class Table extends BaseElement {
           value: 'datasource'
         },
       ],
-      default: 'query',
+      default: 'datasource',
     });
 
     this.addControl("posts_datasource", {

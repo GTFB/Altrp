@@ -12,7 +12,7 @@ class AltrpModel {
   /**
    * Возваращает объект данных
    * @params {boolean} clone - клонировать или ссылку на данные
-   * @return {*}
+   * @return {{}}
    */
   getData(clone = true) {
     if(clone){
@@ -21,6 +21,12 @@ class AltrpModel {
     return this.data;
   }
 
+  /**
+   * Пустой ли объект
+   */
+  isEmpty(){
+    return _.isEmpty(this.data);
+  }
   /**
    * Возврашает значение свойства name
    * @params {string} name

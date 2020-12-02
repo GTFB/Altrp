@@ -68,7 +68,10 @@ class SectionComponent extends Component {
     }
 
     if (widthType === "boxed" && !isFixed) {
-      sectionClasses.push('altrp-section--boxed');
+      sectionClasses.push('altrp-section_boxed');
+    }
+    if (widthType === "section_boxed" && !isFixed) {
+      sectionClasses.push('altrp-section_section-boxed');
     }
 
     if (widthType === "full" && !isFixed) {
@@ -103,7 +106,7 @@ class SectionComponent extends Component {
       //   </div>
       //   <div className={"get-column-count " + `altrp-element-column-count${this.props.element.id}`} id="columnCount" />
       // </> :
-      <div className={"get-column-count " + `altrp-element-column-count${this.props.element.id}`} id="columnCount" />,
+      /*<div className={"get-column-count " + `altrp-element-column-count${this.props.element.id}`} id="columnCount" />,*/
       sectionWrapper
     );
 
@@ -121,7 +124,6 @@ function mapStateToProps(state) {
     changeWidthColumns: state.columnWidth,
   };
 }
-console.log(isEditor());
 // export default connect(mapStateToProps, null, null, {
 //   forwardRef: true
 // })(SectionComponent);

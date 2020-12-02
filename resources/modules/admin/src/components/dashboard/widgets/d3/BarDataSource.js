@@ -1,146 +1,156 @@
 import React, { Component } from "react";
-import {
-      BarChart,
-      BarSeries,
-      Bar,
-      Gradient,
-      GradientStop,
-      DiscreteLegend,
-      DiscreteLegendEntry,
-      LinearXAxis,
-      LinearYAxis,
-      LinearYAxisTickSeries
+import { ResponsiveBarCanvas, ResponsiveBar } from "@nivo/bar";
+import { connect } from "react-redux";
+import ErrorBoundary from "./ErrorBoundary";
+import DataAdapter from "./DataAdapter";
 
-} from "reaviz";
-import { customStyle } from "../../widgetTypes";
-import { connect } from 'react-redux';
-import { Spinner } from 'react-bootstrap';
-import DataAdapter from "../../../../../../editor/src/js/components/altrp-dashboards/helpers/DataAdapter";
-
-const mapStateToProps = (state) => {
-      return { formsStore: state.formsStore };
+const mapStateToProps = state => {
+  return { formsStore: _.cloneDeep(state.formsStore) };
 };
 class BarDataSource extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      settings: _.cloneDeep(props.element.settings),
+      sources: _.cloneDeep(props.sources),
+      legend: _.cloneDeep(props.element.settings.legend),
+      color: _.cloneDeep(props.element.settings.color),
+      params: _.cloneDeep(props.element.settings.params),
+      countRequest: 0,
+      isMultiple: false,
+      isDate: true,
+      isLarge: false,
+      data: []
+    };
+  }
 
-      constructor(props) {
-            super(props);
-            this.state = {
-                  source: props.source,
-                  legend: props.element.settings.legend,
-                  color: props.element.settings.color,
-                  params: props.element.settings.params,
-                  data: []
-            };
+  async componentDidUpdate(prevProps, prevState) {
+    if (!_.isEqual(prevProps.sources, this.props.sources)) {
+      this.setState(state => ({ ...state, sources: this.props.sources }));
+      await this.getData();
+    }
+    if (!_.isEqual(prevProps.element, this.props.element)) {
+      this.setState(state => ({
+        ...state,
+        legend: this.props.element.settings.legend,
+        color: this.props.element.settings.color,
+        sources: this.props.element.settings.sources
+      }));
+    }
+    if (
+      !_.isEqual(
+        prevProps.element.settings.params,
+        this.props.element.settings.params
+      )
+    ) {
+      this.setState(state => ({
+        ...state,
+        params: this.props.element.settings.params
+      }));
+      await this.getData();
+    }
+    if (!_.isEqual(prevProps.element.settings, this.props.element.settings)) {
+      this.setState(s => ({ ...s, settings: this.props.element.settings }));
+    }
+    if (
+      JSON.stringify(prevProps.element.settings.params) !==
+      JSON.stringify(this.props.element.settings.params)
+    ) {
+      this.setState(state => ({
+        ...state,
+        params: this.props.element.settings.params
+      }));
+      await this.getData();
+    }
+    if (
+      !_.isEqual(
+        prevProps.formsStore.form_data,
+        this.props.formsStore.form_data
+      )
+    ) {
+      this.setState(state => ({
+        ...state,
+        countRequest: 0
+      }));
+      await this.getData();
+    }
+  }
 
+  async componentWillMount() {
+    await this.getData();
+  }
 
-      }
+  async getData() {
+    const {
+      data,
+      isMultiple,
+      isDate,
+      isLarge,
+      needCallAgain
+    } = await new DataAdapter().parseDataBar(
+      this.props.element.settings.sources,
+      this.props.formsStore.form_data,
+      this.state.params,
+      this.state.countRequest
+    );
+    if (needCallAgain) {
+      setTimeout(() => {
+        this.getData();
+        let count = this.state.countRequest;
+        count += 1;
+        this.setState(s => ({ ...s, countRequest: count }));
+      }, 3500);
+    }
+    this.setState(s => ({
+      ...s,
+      data: data,
+      isMultiple: isMultiple,
+      isDate: isDate,
+      isLarge: isLarge
+    }));
+  }
 
-      async componentDidUpdate(prevProps, prevState) {
-            if (!_.isEqual(prevProps.source, this.props.source)) {
-                  this.setState(state => ({ ...state, source: this.props.source }));
-            }
-            if (!_.isEqual(prevProps.element, this.props.element)) {
-                  this.setState(state => ({
-                        ...state,
-                        legend: this.props.element.settings.legend,
-                        color: this.props.element.settings.color,
-                        params: this.props.element.settings.params
-                  }));
-                  await this.getData();
-            }
-            if (JSON.stringify(prevState.params) !== JSON.stringify(this.props.element.settings.params)) {
-                  this.setState(state => ({
-                        ...state,
-                        params: this.props.element.settings.params
-                  }));
-                  await this.getData();
-            }
-            if (!_.isEqual(prevProps.formsStore.form_data, this.props.formsStore.form_data)) {
-                  await this.getData();
-            }
-      }
+  render() {
+    if (typeof this.state.sources === "undefined") {
+      return <div>Укажите источник данных</div>;
+    }
+    if (
+      this.state.sources === null &&
+      Object.keys(this.state.sources).length === 0
+    ) {
+      return <div>Нет данных</div>;
+    }
+    if (this.state.isLarge) {
+      return <div>Ограничьте диапозон данных или выберите другой источник</div>;
+    }
+    if (typeof this.state.data !== "undefined" && this.state.data.length > 0) {
+      return (
+        <>
+          <ErrorBoundary>
+            <ResponsiveBar
+              data={this.state.data}
+              indexBy="key"
+              enableLabel={this.state.settings?.enableSliceLabels}
+              padding={this.state.settings?.padding}
+              innerPadding={this.state.settings?.innerPadding}
+              reverse={this.state.settings?.reverse}
+              groupMode={this.state.settings?.groupMode}
+              layout={this.state.settings?.layout}
+              margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+              colors={this.state.settings?.colors}
+              colorBy="index"
+              axisBottom={{ ...this.state.settings?.axisBottom }}
+            />
+          </ErrorBoundary>
+        </>
+      );
+    }
 
-      async componentWillMount() {
-            await this.getData();
-      }
-
-      async getData() {
-            let globalParams = _.cloneDeep(this.props.formsStore.form_data, []);
-            let globalParamsArray = _.keys(globalParams).map(param => {
-                  return { [param]: globalParams[param] }
-            }).filter(param => {
-                  let key = _.keys(param)[0];
-                  return param[key] !== '';
-            });
-            let localParams = _.cloneDeep(this.state.params, []);
-            let paramsResult = localParams.concat(globalParamsArray);
-            if (typeof this.props.element.settings.source.path !== 'undefined') {
-                  let data = await (new DataAdapter()).adaptDataByPath(this.state.source.path, this.state.source.key, this.state.source.data);
-                  if (_.keys(this.state.params).length > 0) {
-                        data = await (new DataAdapter()).adaptDataByPath(this.state.source.path, this.state.source.key, this.state.source.data, paramsResult);
-                  }
-                  this.setState(s => ({ ...s, data: data }));
-            }
-      }
-
-      renderLegend(data) {
-            let customColors = _.keys(this.state.color).length > 0;
-            let legend = data.map((item, key) => {
-                  return <DiscreteLegendEntry
-                        key={key}
-                        className="discrete__legend-item"
-                        label={`${item.key} (${item.data})`}
-                        color={customStyle[item.key % customStyle.length] || "#606060"}
-                  />
-            });
-            if (customColors) {
-                  legend = data.map((item, key) => {
-                        return <DiscreteLegendEntry
-                              key={key}
-                              className="discrete__legend-item"
-                              label={`${item.key} (${item.data})`}
-                              color={this.state.color[item.key] || "#606060"}
-                        />
-                  });
-            }
-
-            return legend;
-      }
-
-      render() {
-            if (Object.keys(this.state.source).length === 0) {
-                  return <div>Нет данных</div>;
-            }
-            if (typeof this.state.data !== 'undefined' && this.state.data.length > 0) {
-                  let customColors = _.keys(this.state.color).length > 0;
-                  return (
-                        <>
-                              <div className="chart-content-container">
-                                    <BarChart
-                                          data={this.state.data}
-                                          series={
-                                                <BarSeries
-                                                      colorScheme={customColors ? (_data, index) => {
-                                                            return this.state.color[_data.key] || customStyle[index % customStyle.length];
-                                                      } : customStyle}
-                                                      bar={<Bar gradient={<Gradient stops={[<GradientStop stopOpacity={1} />]} />} />}
-                                                />
-                                          }
-                                    />
-                              </div>
-                              {this.state.legend.enabled && (
-                                    <DiscreteLegend
-                                          className={`discrete__legend  ${this.props.element.settings.legend.side || ''}`}
-                                          orientation={this.state.legend.side}
-                                          entries={this.renderLegend(this.state.data)}
-                                    />
-                              )}
-                        </>
-                  );
-            }
-            return <div>Нет данных</div>
-
-      }
+    if (this.state.countRequest < 5) {
+      return <div>Загрузка...</div>;
+    }
+    return <div>Нет данных</div>;
+  }
 }
 
 export default connect(mapStateToProps)(BarDataSource);

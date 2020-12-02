@@ -24,6 +24,9 @@
       padding-right: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
     }
   </style>
+  <script>
+    let ALTRP_CONTAINER_WIDTH = {{ get_altrp_setting( 'container_width', '1440' ) }};
+  </script>
 </head>
 
 <body>

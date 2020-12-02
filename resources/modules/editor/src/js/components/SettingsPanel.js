@@ -47,7 +47,6 @@ class SettingsPanel extends Component {
       let allControllersPairs = _.toPairs(
         controllersManager.getControls(this.props.currentElement.getName())
       );
-      console.log(this.props.currentState);
       allControllersPairs.forEach(pair => {
         pair[1].forEach(section => {
           section.controls = section.controls.map(control => {

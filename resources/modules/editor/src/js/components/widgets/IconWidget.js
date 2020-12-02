@@ -3,6 +3,7 @@ import AltrpImage from "../altrp-image/AltrpImage";
 import AltrpLink from "../altrp-link/AltrpLink";
 
 class IconWidget extends Component {
+  __;
   constructor(props) {
     super(props);
     this.state = {
@@ -146,18 +147,20 @@ class IconWidget extends Component {
     let bodyStyles = {};
     let footerStyles = {};
     let headerStyles = {};
-    let bodyAlignment = this.state.settings.header_alignment_content_style;
-    let footerAligment = this.state.settings.description_alignment_content_style;
+    let bodyAlignment = this.props.element.getSettings("header_alignment_content_style", "center");
+    let footerAligment = this.props.element.getSettings("description_alignment_content_style", "center");
 
     switch (this.state.settings.icon_position_desktop_position_style) {
       case "row":
         if(!bodyAlignment) {
           bodyStyles = {
+            textAlign: "left",
             justifyContent: "flex-start"
           };
         }
         if(!footerAligment) {
           footerStyles = {
+            textAlign: "left",
             justifyContent: "flex-start"
           };
         }
@@ -169,11 +172,13 @@ class IconWidget extends Component {
       case "column":
         if(!bodyAlignment) {
           bodyStyles = {
+            textAlign: "center",
             justifyContent: "center"
           };
         }
         if(!footerAligment) {
           footerStyles = {
+            textAlign: "center",
             justifyContent: "center"
           };
         }
@@ -185,11 +190,13 @@ class IconWidget extends Component {
       case "row-reverse":
         if(!bodyAlignment) {
           bodyStyles = {
+            textAlign: "right",
             justifyContent: "flex-end"
           };
         }
         if(!footerAligment) {
           footerStyles = {
+            textAlign: "right",
             justifyContent: "flex-end"
           };
         }
@@ -198,6 +205,31 @@ class IconWidget extends Component {
           marginBottom: 0
         };
         break
+    }
+
+    //footer Alignment
+    switch (bodyAlignment) {
+      case "flex-start":
+        bodyStyles.textAlign = "left";
+        break;
+      case "center":
+        bodyStyles.textAlign = "center";
+        break;
+      case "flex-end":
+        bodyStyles.textAlign = "right";
+        break;
+    }
+
+    switch (footerAligment) {
+      case "flex-start":
+        footerStyles.textAlign = "left";
+        break;
+      case "center":
+        footerStyles.textAlign = "center";
+        break;
+      case "flex-end":
+        footerStyles.textAlign = "right";
+        break;
     }
 
     //read more

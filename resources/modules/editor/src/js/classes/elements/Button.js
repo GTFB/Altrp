@@ -24,6 +24,8 @@ import {
   CONTROLLER_GRADIENT, CONTROLLER_REPEATER
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
+import {actionsControllers} from "../../decorators/actions-controllers";
+import {getTemplateDataStorage} from "../../helpers";
 
 class Button extends BaseElement {
 
@@ -124,7 +126,7 @@ class Button extends BaseElement {
         }
       ],
       rules: {
-        '{{ELEMENT}}': 'align-items: {{VALUE}};',
+        '{{ELEMENT}}.table-resize_true': 'align-items: {{VALUE}};',
         '{{ELEMENT}} .altrp-dropbar': 'align-items: {{VALUE}};',
       },
     });
@@ -180,323 +182,9 @@ class Button extends BaseElement {
     });
 
     this.endControlSection();
-    /**
-     * Список произвольных действия для кнопки START
-     */
-    this.startControlSection("actions_section", {
-      tab: TAB_CONTENT,
-      label: "Actions"
-    });
 
-    let actionsRepeater = new Repeater();
+    actionsControllers(this);
 
-    actionsRepeater.addControl('type', {
-      label: 'Type',
-      type: CONTROLLER_SELECT,
-      nullable: true,
-      responsive: false,
-      options: [
-        {
-          value: 'form',
-          label: 'Form',
-        },
-        {
-          value: 'toggle_element',
-          label: 'Toggle Elements',
-        },
-        {
-          value: 'toggle_popup',
-          label: 'Toggle Popup',
-        },
-        {
-          value: 'toggle_offcanvas',
-          label: 'Toggle Offcanvas',
-        },
-        {
-          value: 'print_page',
-          label: 'Print Page',
-        },
-        {
-          value: 'print_elements',
-          label: 'Print Elements',
-        },
-        {
-          value: 'scroll_to_element',
-          label: 'Scroll to Element',
-        },
-        {
-          value: 'scroll_to_top',
-          label: 'Scroll to Top',
-        },
-        {
-          value: 'scroll_to_bottom',
-          label: 'Scroll to Bottom',
-        },
-        {
-          value: 'redirect',
-          label: 'Redirect',
-        },
-        {
-          value: 'trigger',
-          label: 'Trigger Action',
-        },
-        {
-          value: 'page_to_pdf',
-          label: 'Page to PDF',
-        },
-        {
-          value: 'elements_to_pdf',
-          label: 'Elements to PDF',
-        },
-        {
-          value: 'data_to_csv',
-          label: 'Data Convert to CSV',
-        },
-        {
-          value: 'table_to_csv',
-          label: 'Table to CSV',
-        },
-        {
-          value: 'login',
-          label: 'Login',
-        },
-        {
-          value: 'logout',
-          label: 'Logout',
-        },
-        {
-          value: 'set_data',
-          label: 'Set Data',
-        },
-      ],
-    });
-
-    actionsRepeater.addControl('action', {
-      type: CONTROLLER_TEXT,
-      dynamic: false,
-      label: 'Add action name',
-      conditions: {
-        type: [
-          'trigger'
-        ],
-      },
-    });
-
-    actionsRepeater.addControl('form_method', {
-      label: 'Method',
-      type: CONTROLLER_SELECT,
-      responsive: false,
-      nullable: true,
-      options: [
-        {
-          value: 'GET',
-          label: 'Get',
-        },
-        {
-          value: 'PUT',
-          label: 'Put',
-        },
-        {
-          value: 'POST',
-          label: 'Post',
-        },
-        {
-          value: 'DELETE',
-          label: 'Delete',
-        },
-      ],
-      conditions: {
-        type: 'form',
-      },
-    });
-
-    actionsRepeater.addControl('form_id', {
-      label: 'Form ID',
-      dynamic: false,
-      conditions: {
-        type: [
-          'form',
-          'login',
-        ],
-      },
-    });
-
-    actionsRepeater.addControl('name', {
-      label: 'Name',
-      dynamic: false,
-      conditions: {
-        type: [
-          'page_to_pdf',
-          'elements_to_pdf',
-          'data_to_csv',
-          'table_to_csv',
-        ],
-      },
-    });
-
-    actionsRepeater.addControl('form_url', {
-      label: 'URL',
-      responsive: false,
-      dynamic: false,
-      description: '/ajax/models/tests/{{id}}',
-      conditions: {
-        type: [
-          'form',
-          'redirect',
-        ],
-      },
-    });
-
-    actionsRepeater.addControl('back', {
-      label: 'Back',
-      type: CONTROLLER_SWITCHER,
-      responsive: false,
-      dynamic: false,
-      conditions: {
-        type: [
-          'redirect',
-        ],
-      },
-    });
-
-    actionsRepeater.addControl('elements_ids', {
-      label: 'Elements',
-      responsive: false,
-      dynamic: false,
-      description: 'element_id1, element_id12',
-      conditions: {
-        type: [
-          'toggle_element',
-          'print_elements',
-          'elements_to_pdf',
-        ],
-      },
-    });
-
-    actionsRepeater.addControl('element_id', {
-      label: 'Element',
-      responsive: false,
-      dynamic: false,
-      description: 'element_id1',
-      conditions: {
-        type: [
-          'scroll_to_element',
-          'trigger',
-          'table_to_csv',
-          'toggle_offcanvas'
-        ],
-      },
-    });
-
-    actionsRepeater.addControl('path', {
-      label: 'Path',
-      responsive: false,
-      dynamic: false,
-      description: 'altrpdata.alias',
-      conditions: {
-        type: [
-          'data_to_csv',
-          'set_data',
-          'form',
-        ],
-      },
-    });
-
-    actionsRepeater.addControl('data', {
-      type: CONTROLLER_TEXTAREA,
-      label: 'Data',
-      responsive: false,
-      dynamic: false,
-      description: 'altrpdata.alias',
-      conditions: {
-        type: [
-          'form',
-        ],
-      },
-    });
-
-    actionsRepeater.addControl('set_type', {
-      label: 'Set Type',
-      type: CONTROLLER_SELECT,
-      responsive: false,
-      nullable: true,
-      options: [
-        {
-          label: 'Toggle',
-          value: 'toggle',
-        },
-        {
-          label: 'Set',
-          value: 'set',
-        },
-        {
-          label: 'Toggle/Set',
-          value: 'toggle_set',
-        },
-      ],
-      conditions: {
-        type: 'set_data',
-      },
-    });
-
-    actionsRepeater.addControl('value', {
-      label: 'Value',
-      type: CONTROLLER_TEXTAREA,
-      responsive: false,
-      dynamic: false,
-      conditions: {
-        type: [
-          'set_data',
-        ],
-        set_type: [
-          'set',
-          'toggle_set',
-        ],
-      },
-    });
-
-    actionsRepeater.addControl("popup_id", {
-      type: CONTROLLER_SELECT2,
-      prefetch_options: true,
-      label: "Popup ID",
-      isClearable: true,
-      options_resource: '/admin/ajax/templates/options?template_type=popup&value=guid',
-      nullable: true,
-      conditions: {
-        type: [
-          'toggle_popup',
-        ],
-      },
-    });
-
-    actionsRepeater.addControl('confirm', {
-      type: CONTROLLER_TEXTAREA,
-      dynamic: false,
-      label: 'Confirm Text',
-    });
-
-    actionsRepeater.addControl('alert', {
-      type: CONTROLLER_TEXTAREA,
-      dynamic: false,
-      label: 'Success',
-    });
-
-    actionsRepeater.addControl('reject', {
-      type: CONTROLLER_TEXTAREA,
-      dynamic: false,
-      label: 'Reject',
-    });
-
-    this.addControl('actions', {
-      label: 'Actions',
-      type: CONTROLLER_REPEATER,
-      fields: actionsRepeater.getControls(),
-    });
-
-    this.endControlSection();
-    /**
-     * Список произвольных действия для кнопки END
-     */
     this.startControlSection("form_section", {
       tab: TAB_CONTENT,
       label: "Form Settings"
@@ -873,170 +561,6 @@ class Button extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection('border_section', {
-      tab: TAB_STYLE,
-      label: 'Border'
-    });
-
-    this.addControl('border_type', {
-      type: CONTROLLER_SELECT,
-      label: 'Border Type',
-      options: [
-        {
-          'value': 'none',
-          'label': 'None',
-        },
-        {
-          'value': 'solid',
-          'label': 'Solid',
-        },
-        {
-          'value': 'double',
-          'label': 'Double',
-        },
-        {
-          'value': 'dotted',
-          'label': 'Dotted',
-        },
-        {
-          'value': 'dashed',
-          'label': 'Dashed',
-        },
-        {
-          'value': 'groove',
-          'label': 'Groove',
-        },
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-style: {{VALUE}};',
-      },
-    }
-    );
-
-    this.addControl(
-      'border_width', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Border Width',
-      default: {
-        bind: true
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-      },
-    }
-    );
-
-    this.addControl('border_color', {
-      type: CONTROLLER_COLOR,
-      label: 'Border Color',
-      // default: {
-      //   color: "rgb(50,168,82)",
-      //   colorPickedHex: "#32a852",
-      // },
-      rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
-      },
-    }
-    );
-
-    this.addControl('border_radius', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Border Radius',
-      default: {
-        unit: 'px'
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}}': [
-          'border-top-left-radius: {{TOP}}{{UNIT}}',
-          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
-        ]
-      }
-    });
-
-    this.addControl('style_background_shadow', {
-      type: CONTROLLER_SHADOW,
-      label: 'Shadow',
-      default: {
-        // blur: 0,
-        // horizontal: 0,
-        // vertical: 0,
-        // opacity: 1,
-        // spread: 0,
-        // colorRGB: 'rgb(0, 0, 0)',
-        // color: 'rgb(0, 0, 0)',
-        // colorPickedHex: '#000000',
-        // type: ""
-      },
-      presetColors: [
-        '#eaeaea',
-        '#9c18a8'
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      },
-    });
-
-
-    this.endControlSection();
-
-    this.startControlSection('font_section', {
-      tab: TAB_STYLE,
-      label: 'Font',
-    });
-
-    this.addControl('font_typographic', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-        // default:{
-        //   lineHeight: 1,
-        //   spacing: 0,
-        //   size: 16,
-        //   weight: "normal",
-        //   family: "Open Sans",
-        //   decoration: ""
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': [
-            'font-size: {{SIZE}}px;',
-            'font-family: {{FAMILY}}',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
-      }
-    );
-
-    this.addControl('font_color', {
-        type: CONTROLLER_COLOR,
-        label: 'Color',
-        // default: {
-        //   color: "rgb(255,255,255)",
-        //   colorPickedHex: "#FFF",
-        // },
-        rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
-        },
-      }
-    );
-
-    this.endControlSection();
-
     this.startControlSection('background_section', {
       tab: TAB_STYLE,
       label: 'Background'
@@ -1233,6 +757,170 @@ class Button extends BaseElement {
         "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
       }
     });
+
+    this.endControlSection();
+
+    this.startControlSection('border_section', {
+      tab: TAB_STYLE,
+      label: 'Border'
+    });
+
+    this.addControl('border_type', {
+      type: CONTROLLER_SELECT,
+      label: 'Border Type',
+      options: [
+        {
+          'value': 'none',
+          'label': 'None',
+        },
+        {
+          'value': 'solid',
+          'label': 'Solid',
+        },
+        {
+          'value': 'double',
+          'label': 'Double',
+        },
+        {
+          'value': 'dotted',
+          'label': 'Dotted',
+        },
+        {
+          'value': 'dashed',
+          'label': 'Dashed',
+        },
+        {
+          'value': 'groove',
+          'label': 'Groove',
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-style: {{VALUE}};',
+      },
+    }
+    );
+
+    this.addControl(
+      'border_width', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Width',
+      default: {
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    }
+    );
+
+    this.addControl('border_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Border Color',
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852",
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
+      },
+    }
+    );
+
+    this.addControl('border_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
+    });
+
+    this.addControl('style_background_shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'Shadow',
+      default: {
+        // blur: 0,
+        // horizontal: 0,
+        // vertical: 0,
+        // opacity: 1,
+        // spread: 0,
+        // colorRGB: 'rgb(0, 0, 0)',
+        // color: 'rgb(0, 0, 0)',
+        // colorPickedHex: '#000000',
+        // type: ""
+      },
+      presetColors: [
+        '#eaeaea',
+        '#9c18a8'
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    });
+
+
+    this.endControlSection();
+
+    this.startControlSection('font_section', {
+      tab: TAB_STYLE,
+      label: 'Font',
+    });
+
+    this.addControl('font_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        // default:{
+        //   lineHeight: 1,
+        //   spacing: 0,
+        //   size: 16,
+        //   weight: "normal",
+        //   family: "Open Sans",
+        //   decoration: ""
+        // },
+        rules: {
+          '{{ELEMENT}} .altrp-btn{{STATE}}': [
+            'font-size: {{SIZE}}px;',
+            'font-family: {{FAMILY}}',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
+    this.addControl('font_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Color',
+        // default: {
+        //   color: "rgb(255,255,255)",
+        //   colorPickedHex: "#FFF",
+        // },
+        rules: {
+          '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
+        },
+      }
+    );
 
     this.endControlSection();
 

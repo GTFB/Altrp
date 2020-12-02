@@ -1312,11 +1312,11 @@ class Icon extends BaseElement{
 
     this.addControl('description_alignment_content_style', {
       type: CONTROLLER_CHOOSE,
-      label: 'Description alignment',
+      label: 'Description Alignment',
       options:[
         {
           icon: 'left',
-          value: 'flex-start',
+          value: 'left',
         },
         {
           icon: 'center',
@@ -1324,15 +1324,15 @@ class Icon extends BaseElement{
         },
         {
           icon: 'right',
-          value: 'flex-end',
+          value: 'right',
         },
         {
           icon: 'in_width',
-          value: 'stretch',
+          value: 'justify',
         }
       ],
       rules: {
-        '{{ELEMENT}} .altrp-icon-footer{{STATE}}': 'justify-content: {{VALUE}};'
+        '{{ELEMENT}} .altrp-icon-footer-text{{STATE}}': 'text-align: {{VALUE}};'
       },
     });
 

@@ -23,9 +23,14 @@
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="{{$title ?? ''}}">
-  <title>{{ $title ?? '' ?? 'altrp || FRONT APP'}}</title>
 
+  @isset($title)
+    <meta property="og:title" content="{{$title}}">
+    <title>{{ $title }}</title>
+  @else
+    <meta property="og:title" content="altrp || FRONT APP">
+    <title>altrp || FRONT APP</title>
+  @endisset
   <!-- Scripts -->
 
   <script>
@@ -43,7 +48,6 @@
       padding-right: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
     }
   </style>
-  <link rel="stylesheet" href="{{ asset( '/modules/front-app/front-app.css' ) . '?' . getCurrentVersion() }}" />
 
 </head>
 <body>
@@ -62,5 +66,14 @@ $value = env( 'ALTRP_SETTING_ALL_SITE_JS', '' );
 @if($value)
   <script>{!! $value !!}</script>
 @endif
+<script>
+  let _t = window.performance.addEventListener;
+  window.performance.addEventListener = function(){
+    console.log(...arguments);
+   _t.bind(window.performance, ...arguments);
+  };
+  console.log(window.performance);
+</script>
 </body>
+<link rel="stylesheet" href="{{ asset( '/modules/front-app/front-app.css' ) . '?' . getCurrentVersion() }}" />
 </html>
