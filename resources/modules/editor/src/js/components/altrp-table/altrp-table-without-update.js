@@ -1325,6 +1325,7 @@ const Row = ({ row,
     virtualized_rows,
     card_template,
     replace_text,
+    replace_image,
     replace_width,
   } = settings;
   if(cardTemplate){
@@ -1422,7 +1423,11 @@ const Row = ({ row,
     <React.Fragment {...fragmentProps}>
 
       <div {...rowProps} className={`altrp-table-tr ${ isDragging ? 'altrp-table-tr__dragging' : ''}`} style={{ ...rowStyles, opacity }}>
-        {replace_rows && <div className="altrp-table-td" ref={dragRef} style={{width: replace_width}}>{replace_text}</div>}
+        {replace_rows && <div className="altrp-table-td replace-text" ref={dragRef} style={{width: replace_width}}>
+          {replace_text}
+          {replace_image.url && <img src={replace_image.url} className="replace-picture"/>}
+        </div>}
+        
         {row.cells.map((cell, idx) => {
           return <Cell cell={cell} key={idx} settings={settings}/>;
           let cellContent = cell.render('Cell');

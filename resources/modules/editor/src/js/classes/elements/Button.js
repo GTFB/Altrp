@@ -25,6 +25,7 @@ import {
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 import {actionsControllers} from "../../decorators/actions-controllers";
+import {getTemplateDataStorage} from "../../helpers";
 
 class Button extends BaseElement {
 
@@ -125,7 +126,7 @@ class Button extends BaseElement {
         }
       ],
       rules: {
-        '{{ELEMENT}}': 'align-items: {{VALUE}};',
+        '{{ELEMENT}}.table-resize_true': 'align-items: {{VALUE}};',
         '{{ELEMENT}} .altrp-dropbar': 'align-items: {{VALUE}};',
       },
     });

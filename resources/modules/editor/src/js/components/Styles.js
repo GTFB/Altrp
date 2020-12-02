@@ -1,15 +1,40 @@
 import React, {Component} from "react";
+import {isEditor, renderFontLink} from "../../../../front-app/src/js/helpers";
+import {connect} from "react-redux";
 
 class Styles extends Component {
   constructor(props){
     super(props);
     this.state = {
-      elementStyles: []
+      elementStyles: [],
+      fonts: [],
     };
     this.stylesContainer = React.createRef();
     window.stylesModule = this;
     window.stylesModuleResolve(this);
   }
+
+  /**
+   * шрифты для загрузки в iframe редактора
+   * @param {{}} prevProps
+   * @param {{}} prevState
+   */
+  componentDidUpdate(prevProps,prevState){
+    if(! isEditor()){
+      return;
+    }
+    let fonts = new Set();
+    const fontsPairs = _.toPairs(this.props.altrpFonts.getData());
+    fontsPairs.forEach(([key, value])=>{
+      fonts.add(value);
+    });
+    fonts = _.toArray(fonts);
+    if(_.isEqual(fonts, this.state.fonts)){
+      return;
+    }
+    this.setState(state => ({...state, fonts}));
+  }
+
   /**
    * @param {string} elementId
    * @param {string} styles
@@ -46,8 +71,17 @@ class Styles extends Component {
                      className={`altrp-styles${elementStyle.elementId}`}
                      key={elementStyle.elementId}>{elementStyle.styles}</style>
       })}
+      {isEditor() ? this.state.fonts.map(renderFontLink) : null}
     </div>
   }
 }
 
-export default Styles
+function mapStateToProps(state) {
+  if(! isEditor()){
+    return {};
+  }
+  return {
+    altrpFonts: state.altrpFonts,
+  };
+}
+export default connect(mapStateToProps)(Styles);
