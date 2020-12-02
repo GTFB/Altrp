@@ -16,6 +16,7 @@ class BasicLink extends Component {
       href: this.props.href || _.get(this,'props.link.url', '/'),
       toPrevPage: false
     };
+
     if(this.props.link) {
       settings = {
         ...settings,
@@ -23,9 +24,19 @@ class BasicLink extends Component {
       }
     }
 
+    if(this.props.rel === "nofollow") {
+      settings.noFollow = true
+    }
+
     let rel = "";
     if(settings.noFollow) {
       rel = "noFollow"
+    }
+
+    let target = null;
+
+    if(this.props.target === "_black") {
+      target = "_black"
     }
 
     let styleChildren = {};
@@ -40,16 +51,20 @@ class BasicLink extends Component {
       className += " altrp-link" + " " + this.props.classlink
     }
 
-    const children = !settings.creativeLink ? React.createElement("span", {
-      className: "altrp-inherit",
-      dangerouslySetInnerHTML: { __html: this.props.children }
-    }) : ( this.props.children );
+    let children = this.props.children;
+
+    if(this.props.dangerouslySetInnerHTMLCondition || settings.creativeLink === false) {
+      children = React.createElement("span", {
+        className: "altrp-inherit",
+        dangerouslySetInnerHTML: { __html: this.props.children }
+      });
+    }
 
     return settings.tag === "a" ? (
       <a
-        {...this.props}
         href={settings.href}
         rel={rel}
+        target={target}
         style={styleChildren}
         className={className}
         onClick={isEditor() ? (e) => e.preventDefault() : () => {}}
@@ -60,7 +75,6 @@ class BasicLink extends Component {
       </a>
     ) : (
       <Link
-        {...this.props}
         style={styleChildren}
         className={className}
         onClick={isEditor() ? (e) => e.preventDefault() : () => {}}

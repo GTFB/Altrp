@@ -62,9 +62,9 @@ class AltrpMenu extends Component {
 
     if(this.state.settings.repeater_menu_layout) {
       content = layout !== "dropdown" ?
-        <HorizontalVeticalMenu settings={this.state.settings} idElement={this.props.element.getId()}/>
+        <HorizontalVeticalMenu modelId={this.props.modelId} modelData={this.props.modelData} settings={this.state.settings} idElement={this.props.element.getId()}/>
         :
-        <DropdownMenu settings={this.state.settings} idElement={this.props.element.getId()}/>
+        <DropdownMenu modelId={this.props.modelId} modelData={this.props.modelData} settings={this.state.settings} idElement={this.props.element.getId()}/>
     }
     return (
       <div className="altrp-nav-menu">
