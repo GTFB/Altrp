@@ -25,6 +25,7 @@ import {
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 import {actionsControllers} from "../../decorators/actions-controllers";
+import {getTemplateDataStorage} from "../../helpers";
 
 class Button extends BaseElement {
 

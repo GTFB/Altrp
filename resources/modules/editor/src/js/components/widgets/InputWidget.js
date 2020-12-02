@@ -160,6 +160,7 @@ class InputWidget extends Component {
    * Обновление виджета
    */
   async _componentDidUpdate(prevProps, prevState) {
+    const {content_options, model_for_options} = this.state.settings;
     if(prevProps
         && (! prevProps.currentDataStorage.getProperty('currentDataStorageLoaded'))
         && this.props.currentDataStorage.getProperty('currentDataStorageLoaded')){
@@ -187,13 +188,20 @@ class InputWidget extends Component {
     }
 
     /**
-     * Если обновилось хранилище данных формы или модель, то получаем новые опции
+     * Если обновилось хранилище данных формы, currentDataStorage или модель, то получаем новые опции c сервера
      */
     if (
       this.props.formsStore !== prevProps.formsStore ||
-      this.props.currentModel !== prevProps.currentModel
+      this.props.currentModel !== prevProps.currentModel ||
+      this.props.currentDataStorage !== prevProps.currentDataStorage
     ) {
       this.updateOptions();
+    }
+    if(content_options && ! model_for_options){
+      let options = parseOptionsFromSettings(content_options);
+      if(! _.isEqual(options, this.state.options)){
+        this.setState(state => ({...state, options}));
+      }
     }
     this.updateValue(prevProps);
   }
@@ -646,6 +654,7 @@ class InputWidget extends Component {
             <div className="altrp-input-wrapper">
               <AltrpInput
                 type={this.state.settings.content_type}
+                name={this.props.element.getFieldId()}
                 value={value || ""}
                 autoComplete={autocomplete}
                 placeholder={this.state.settings.content_placeholder}
@@ -831,6 +840,7 @@ class InputWidget extends Component {
       element: this.props.element,
       classNamePrefix: this.props.element.getId() + " altrp-field-select2",
       options,
+      name:this.props.element.getFieldId(),
       ref: this.altrpSelectRef,
       settings: this.props.element.getSettings(),
       onChange: this.onChange,
@@ -861,6 +871,7 @@ class InputWidget extends Component {
       <CKeditor
         changeText={this.dispatchFieldValueToStore}
         text={this.getContent("content_default_value")}
+        name={this.props.element.getFieldId()}
         readOnly={this.getContent("read_only")}
       />
     );
