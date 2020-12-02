@@ -41,7 +41,6 @@ class PageDataSourceForm extends Component {
   render() {
     let { source_id, alias, priority, parameters, dataSourceOptions } = this.state;
     dataSourceOptions = dataSourceOptions.map(source=>({value:source.id, label:source.title || source.name}));
-    console.log(dataSourceOptions);
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="form-group">
         <label htmlFor="source_id">Data Source</label>
@@ -82,13 +81,13 @@ class PageDataSourceForm extends Component {
       </div>
 
       <div className="form-group">
-        <label>Parameters
-            <textarea  name="parameters"
-            value={parameters || ''}
-            onChange={this.changeHandler}
-            className="form-control"
-          />
-        </label>
+        <label htmlFor="parameters">Parameters</label>
+        <textarea name="parameters"
+          id="parameters"
+          value={parameters || ''}
+          onChange={this.changeHandler}
+          className="form-control"
+        />
       </div>
 
       <div className="btn__wrapper">

@@ -66,6 +66,14 @@ $value = env( 'ALTRP_SETTING_ALL_SITE_JS', '' );
 @if($value)
   <script>{!! $value !!}</script>
 @endif
+<script>
+  let _t = window.performance.addEventListener;
+  window.performance.addEventListener = function(){
+    console.log(...arguments);
+   _t.bind(window.performance, ...arguments);
+  };
+  console.log(window.performance);
+</script>
 </body>
 <link rel="stylesheet" href="{{ asset( '/modules/front-app/front-app.css' ) . '?' . getCurrentVersion() }}" />
 </html>
