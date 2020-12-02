@@ -22,9 +22,12 @@ class SendNotifications implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct( User $user)
+    public function __construct( User $user, string $modelName = "user")
     {
         $this->user = $user;
+        //Передаем в конструктор название модели, 
+        //если что нужно будет убрать предустановленный "user" из имени в конструкторе (я написал для примера)
+        $this->modelName = $modelName;
     }
 
     /**
@@ -34,6 +37,11 @@ class SendNotifications implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel("notification.{$this->user->id}");
+        //Используйте просто имя модели в качестве названия канала
+        // 1 модель = 1 канал
+        // Тогда вроде как не придется создавать даже файла для каналов
+        // мы подпишемся на все CRUD запросы этой модели, кроме GET
+        // и будем слушать изменения
+        return new Channel("notification.{$this->modelName}");
     }
 }
