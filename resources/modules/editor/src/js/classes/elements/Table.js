@@ -1475,20 +1475,11 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl(
-      'table_style_pagination_typographic', {
+    this.addControl('table_style_pagination_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      default: {
-        // lineHeight: 0.8,
-        // spacing: 0,
-        // size: 16,
-        // weight: 700,
-        // family: 'Open Sans',
-        // decoration: ""
-      },
       rules: {
-        '{{ELEMENT}} .altrp-pagination__next{{STATE}}, .altrp-pagination-pages__item{{STATE}}, .altrp-pagination__count{{STATE}}, .altrp-pagination__previous{{STATE}}': [
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}}, .altrp-pagination-pages__item{{STATE}}, .altrp-pagination__count{{STATE}}, .altrp-pagination__previous{{STATE}}, .altrp-pagination__goto-page{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -1499,8 +1490,73 @@ class Table extends BaseElement {
           'text-decoration: {{DECORATION}}'
         ],
       },
-    }
-    );
+    });
+
+    this.addControl('table_style_prev_btn_pagination_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Previous Page Button Typographic',
+      rules: {
+        '{{ELEMENT}} .altrp-pagination .altrp-pagination__previous{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
+
+    this.addControl('table_style_item_count_pagination_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Item Count Typographic',
+      rules: {
+        '{{ELEMENT}} .altrp-pagination .altrp-pagination-pages__item{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }); 
+    
+    this.addControl('table_style_next_btn_pagination_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Next Page Button Typographic',
+      rules: {
+        '{{ELEMENT}} .altrp-pagination .altrp-pagination__next{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }); this.addControl('table_style_page_input_pagination_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Page Input Typographic',
+      rules: {
+        '{{ELEMENT}} .altrp-pagination .altrp-pagination__goto-page{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
 
     this.addControl("table_style_pagination_border_type", {
       type: CONTROLLER_SELECT,
