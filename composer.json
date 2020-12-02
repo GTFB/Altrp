@@ -11,6 +11,7 @@
         "php": "^7.2",
         "ext-json": "*",
         "altrpaid/oauth2-module": "9999999-dev",
+        "beyondcode/laravel-websockets": "^1.9",
         "chrisjean/php-ico": "^1.0",
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
@@ -25,6 +26,7 @@
         "laravel/ui": "^1.2",
         "nwidart/laravel-modules": "^8.0",
         "pulkitjalan/geoip": "^4.1",
+        "pusher/pusher-php-server": "~3.0",
         "santigarcor/laratrust": "5.2.*"
     },
     "require-dev": {
