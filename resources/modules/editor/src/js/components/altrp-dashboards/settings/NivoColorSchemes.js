@@ -242,7 +242,7 @@ const Schemes = [
     ]
   },
   {
-    label: "red_grey",
+    label: "regagro",
     value: "red_grey",
     colors: [
       "#67001f",

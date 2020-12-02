@@ -20,7 +20,12 @@ const DynamicBarChart = ({
   padding = 0.1,
   innerPadding = 0,
   borderRadius = 0,
-  borderWidth = 0
+  borderWidth = 0,
+  sort = "",
+  tickRotation = 0,
+  bottomAxis = true,
+  enableGridX = true,
+  enableGridY = true
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -31,15 +36,12 @@ const DynamicBarChart = ({
       const charts = await getWidgetData(widget.source, widget.filter);
       if (charts.status === 200) {
         let data = charts.data.data;
-        switch (Number(widget.options.sort)) {
-          case 0:
-            data = charts.data.data;
+        switch (sort) {
+          case "value":
+            data = _.sortBy(data, ["value"]);
             break;
-          case 1:
-            data = _.sortBy(data, "key");
-            break;
-          case 2:
-            data = _.sortBy(data, "data");
+          case "key":
+            data = _.sortBy(data, ["key"]);
             break;
           default:
             data = charts.data.data;
@@ -49,6 +51,23 @@ const DynamicBarChart = ({
         setIsLoading(false);
       }
     } else {
+      if (
+        sort !== null &&
+        typeof sort !== "undefined" &&
+        typeof dataSource !== "undefined"
+      ) {
+        switch (sort) {
+          case "value":
+            dataSource = _.sortBy(dataSource, ["value"]);
+            break;
+          case "key":
+            dataSource = _.sortBy(dataSource, ["key"]);
+            break;
+          default:
+            dataSource = dataSource;
+            break;
+        }
+      }
       setData(dataSource || []);
       setIsLoading(false);
     }
@@ -72,6 +91,13 @@ const DynamicBarChart = ({
           colors={{ scheme: colorScheme.toString() }}
           colorBy="index"
           layout={layout}
+          axisBottom={
+            bottomAxis && {
+              tickRotation: tickRotation
+            }
+          }
+          enableGridX={enableGridX}
+          enableGridY={enableGridY}
           enableLabel={enableLabel}
           reverse={reverse}
           groupMode={groupMode}

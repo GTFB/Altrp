@@ -5,30 +5,13 @@ import EmptyWidget from "./EmptyWidget";
 
 import { getWidgetData } from "../services/getWidgetData";
 
-const sortData = (key, order = "desc") => {
-  return function innerSort(a, b) {
-    if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
-      return 0;
-    }
-
-    const varA = typeof a[key] === "string" ? a[key].toUpperCase() : a[key];
-    const varB = typeof b[key] === "string" ? b[key].toUpperCase() : b[key];
-
-    let comparison = 0;
-    if (varA > varB) {
-      comparison = 1;
-    } else if (varA < varB) {
-      comparison = -1;
-    }
-    return order === "desc" ? comparison * -1 : comparison;
-  };
-};
-
 const DynamicTableWidget = ({
   widget,
   width,
   dataSource = [],
-  height = 450
+  height = 450,
+  sort = "",
+  tickRotation = 0
 }) => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,15 +22,12 @@ const DynamicTableWidget = ({
       const charts = await getWidgetData(widget.source, widget.filter);
       if (charts.status === 200) {
         let data = charts.data.data;
-        switch (Number(widget.options.sort)) {
-          case 0:
-            data = charts.data.data;
+        switch (sort) {
+          case "value":
+            data = _.sortBy(data, ["y"]);
             break;
-          case 1:
-            data = _.sortBy(data, "key");
-            break;
-          case 2:
-            data = _.sortBy(data, "data");
+          case "key":
+            data = _.sortBy(data, ["x"]);
             break;
           default:
             data = charts.data.data;
@@ -57,8 +37,33 @@ const DynamicTableWidget = ({
         setIsLoading(false);
       }
     } else {
-      console.log("SOURCE ==>", dataSource);
-      setData(dataSource.sort(sortData("data")));
+      if (
+        sort !== null &&
+        sort !== "undefined" &&
+        typeof dataSource !== "undefined"
+      ) {
+        switch (sort) {
+          case "value":
+            dataSource.forEach((item, index) => {
+              if (item.data.length > 0) {
+                dataSource[index].data = _.sortBy(item.data, ["y"]);
+              }
+            });
+            break;
+          case "key":
+            data.forEach((item, index) => {
+              if (item.data.length > 0) {
+                dataSource[index].data = _.sortBy(item.data, ["x"]);
+              }
+            });
+            break;
+
+          default:
+            // data = data;
+            break;
+        }
+      }
+      setData(dataSource || []);
       setIsLoading(false);
     }
   }, [widget]);
