@@ -7,6 +7,8 @@ use App\Altrp\Builders\AccessorBuilder;
 use App\Altrp\Column;
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
+use App\Altrp\Generators\Event\EventFile;
+use App\Altrp\Generators\Event\EventFileWriter;
 use App\Altrp\Generators\ModelGenerator;
 use App\Altrp\Generators\RouteGenerator;
 use App\Altrp\Generators\TableMigrationGenerator;
@@ -72,6 +74,13 @@ class AltrpModelObserver
      */
     public function created(Model $model)
     {
+        $eventFile = new EventFile($model);
+        $eventWriter = new EventFileWriter($eventFile);
+
+        if (!$eventWriter->write()) {
+            throw new CommandFailedException('Failed to create event file', 500);
+        }
+
         $controller = new Controller();
         $controller->model_id = $model->id;
         if (! $controller->save()) {
@@ -249,6 +258,13 @@ class AltrpModelObserver
      */
     public function updated(Model $model)
     {
+        $eventFile = new EventFile($model);
+        $eventWriter = new EventFileWriter($eventFile);
+
+        if (! $eventWriter->write()) {
+            throw new CommandFailedException('Failed to update event file', 500);
+        }
+
         /**
          * @var Controller $controller
          */
@@ -444,6 +460,12 @@ class AltrpModelObserver
 
     public function deleted(Model $model)
     {
+        $eventFile = new EventFile($model);
+        $eventWriter = new EventFileWriter($eventFile);
+
+        if (!$eventWriter->remove()) {
+            throw new CommandFailedException('Failed to delete event file', 500);
+        }
 //        $model->table->forceDelete();
     }
 
