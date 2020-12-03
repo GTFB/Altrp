@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Users;
 
+use App\Events\SendNotifications;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\ApiRequest;
@@ -70,6 +71,8 @@ class Users extends Controller
         $user->password = Hash::make($request->password);
 
         if($user->save()){
+            broadcast( new SendNotifications($user ))->toOthers();        
+
 
           $permissions = $request->get( '_permissions' );
           if( $permissions ){

@@ -16,6 +16,7 @@ import AxisBaseSettings from "./settings/AxisBaseSettings";
 import StiyleSettings from "./settings/StyleSettings";
 import FilterParameters from "./settings/FilterParameters";
 import DiagramTypeSettings from "./settings/DiagramTypeSettings";
+import SortData from "./settings/SortData";
 
 const mapStateToProps = state => {
   return { editElement: _.cloneDeep(state.editElement, {}) };
@@ -63,6 +64,7 @@ class WidgetSettings extends Component {
     this.setLayout = this.setLayout.bind(this);
     this.setGroupMode = this.setGroupMode.bind(this);
     this.setReverse = this.setReverse.bind(this);
+    this.setSort = this.setSort.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -546,10 +548,32 @@ class WidgetSettings extends Component {
       this.setState(s => ({ ...s, editElement: settings }));
     }
   }
+
   setReverse(value) {
     const settings = {
       ...this.state.settings,
       reverse: value
+    };
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  }
+
+  setSort(value) {
+    const settings = {
+      ...this.state.settings,
+      sort: value
     };
     this.setState(state => ({
       ...state,
@@ -630,6 +654,8 @@ class WidgetSettings extends Component {
                   />
                 </>
               )}
+
+              <SortData setSort={this.setSort} />
             </div>
           </Collapse>
         </div>

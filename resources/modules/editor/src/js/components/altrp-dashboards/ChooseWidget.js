@@ -47,7 +47,7 @@ class ChooseWidget extends Component {
   }
   getWidget() {
     let widget = "Выберите тип диаграммы";
-    switch (this.props.editElement.settings.type) {
+    switch (this.props.editElement?.settings?.type) {
       case BAR:
         widget = this.renderBar();
         break;

@@ -5,7 +5,7 @@ import DataAdapter from "./DataAdapter";
 import ErrorBoundary from "./ErrorBoundary";
 
 const mapStateToProps = state => {
-  return { formsStore: state.formsStore };
+  return { formsStore: _.cloneDeep(state.formsStore) };
 };
 class LineDataSource extends Component {
   constructor(props) {
@@ -26,7 +26,10 @@ class LineDataSource extends Component {
 
   async componentDidUpdate(prevProps, prevState) {
     if (!_.isEqual(prevProps.sources, this.props.sources)) {
-      this.setState(state => ({ ...state, sources: this.props.sources }));
+      this.setState(state => ({
+        ...state,
+        sources: _.cloneDeep(this.props.sources)
+      }));
       await this.getData();
     }
     if (!_.isEqual(prevProps.element, this.props.element)) {
@@ -45,7 +48,7 @@ class LineDataSource extends Component {
     ) {
       this.setState(state => ({
         ...state,
-        params: this.props.element.settings.params
+        params: _.cloneDeep(this.props.element.settings.params)
       }));
       await this.getData();
     }
@@ -58,7 +61,7 @@ class LineDataSource extends Component {
     ) {
       this.setState(state => ({
         ...state,
-        params: this.props.element.settings.params
+        params: _.cloneDeep(this.props.element.settings.params)
       }));
       await this.getData();
     }
@@ -66,7 +69,18 @@ class LineDataSource extends Component {
       !_.isEqual(
         prevProps.formsStore.form_data,
         this.props.formsStore.form_data
-      )
+      ) ||
+      JSON.stringify(prevProps.formsStore.form_data) !==
+        JSON.stringify(this.props.formsStore.form_data)
+    ) {
+      this.setState(state => ({
+        ...state,
+        countRequest: 0
+      }));
+      await this.getData();
+    }
+    if (
+      !_.isEqual(prevState?.settings?.sort, this.props.element?.settings?.sort)
     ) {
       this.setState(state => ({
         ...state,
@@ -87,12 +101,13 @@ class LineDataSource extends Component {
       isDate,
       needCallAgain,
       isLarge
-    } = await new DataAdapter().parseData(
+    } = await new DataAdapter(
+      this.props.element.settings.type,
       this.props.element.settings.sources,
-      this.props.formsStore.form_data,
+      _.cloneDeep(this.props.formsStore.form_data),
       this.state.params,
       this.state.countRequest
-    );
+    ).parseData();
     if (needCallAgain) {
       setTimeout(() => {
         this.getData();
@@ -100,6 +115,33 @@ class LineDataSource extends Component {
         count += 1;
         this.setState(s => ({ ...s, countRequest: count }));
       }, 3500);
+    }
+    if (
+      this.state.settings?.sort?.value !== null &&
+      typeof this.state.settings?.sort?.value !== "undefined" &&
+      typeof data !== "undefined"
+    ) {
+      const sort = this.state.settings?.sort.value;
+      switch (sort) {
+        case "value":
+          data.forEach((item, index) => {
+            if (item.data.length > 0) {
+              data[index].data = _.sortBy(item.data, ["y"]);
+            }
+          });
+          break;
+        case "key":
+          data.forEach((item, index) => {
+            if (item.data.length > 0) {
+              data[index].data = _.sortBy(item.data, ["x"]);
+            }
+          });
+          break;
+
+        default:
+          // data = data;
+          break;
+      }
     }
     this.setState(s => ({
       ...s,
@@ -117,16 +159,17 @@ class LineDataSource extends Component {
     if (Object.keys(this.state.sources).length === 0) {
       return <div>Нет данных </div>;
     }
-    if (
-      typeof this.state.data !== "undefined" &&
-      this.state.data.length === 0
-    ) {
-      if (this.state.countRequest < 5) {
-        return <div>Загрузка...</div>;
+    if (!this.state.sources > 1) {
+      if (
+        typeof this.state.data === "undefined" &&
+        this.state.data[0].data.length === 0
+      ) {
+        if (this.state.countRequest < 3) {
+          return <div>Загрузка...</div>;
+        }
+        return <div>Нет данных</div>;
       }
-      return <div>Нет данных</div>;
-    }
-    if (this.props.element.settings.sources.length > 1) {
+    } else {
       let matches = this.state.data.map(obj => {
         if (_.keys(obj).length > 0) {
           return obj.data.length > 0;

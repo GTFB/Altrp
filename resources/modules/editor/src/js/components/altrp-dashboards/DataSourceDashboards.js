@@ -74,6 +74,7 @@ class DataSourceDashboards extends Component {
       });
     }
     if (!_.isEqual(prevState.items, this.state.items)) {
+      this.saveWidgetData(this.state);
       this.setState(state => {
         return { ...state, items: this.state.items };
       });
@@ -182,15 +183,18 @@ class DataSourceDashboards extends Component {
 
   onAddItemCard(element) {
     if (_.keys(element).length > 0) {
-      this.setState(state => ({
-        ...state,
-        items: state.items.concat(
+      this.setState(state => {
+        let items = state.items.concat(
           this.itemSettingsAdd(state, element.settings)
-        ),
-        newCounter: state.newCounter + 1,
-        addItemPreview: false,
-        settingsOpen: false
-      }));
+        );
+        return {
+          ...state,
+          items: items,
+          newCounter: state.newCounter + 1,
+          addItemPreview: false,
+          settingsOpen: false
+        };
+      });
       return;
     }
     alert("Информация не заполнена");
@@ -198,8 +202,11 @@ class DataSourceDashboards extends Component {
 
   itemSettingsAdd(state, settings) {
     return {
-      i: "n" + state.newCounter,
-      x: (state.items.length * 3) % (state.cols || 12),
+      i: typeof state.items !== "undefined" ? "n" + state.newCounter : "n" + 0,
+      x:
+        typeof state.items !== "undefined"
+          ? (state.items.length * 3) % (state.cols || 12)
+          : (0 * 3) % (state.cols || 12),
       y: Infinity,
       w: 3,
       h: 5,

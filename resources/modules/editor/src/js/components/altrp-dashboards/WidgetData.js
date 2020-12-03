@@ -45,7 +45,7 @@ class WidgetData extends Component {
                   background: "rgba(255,255,255,1)"
                 }}
               >
-                <Dropdown.Item>
+                {/* <Dropdown.Item>
                   <button
                     type="button"
                     title="Скачать файл"
@@ -53,7 +53,7 @@ class WidgetData extends Component {
                   >
                     <FileEarMark />
                   </button>
-                </Dropdown.Item>
+                </Dropdown.Item> */}
                 <Dropdown.Item>
                   <button
                     type="button"
