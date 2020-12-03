@@ -3,10 +3,8 @@ import moment from "moment";
 
 import DynamicBarChart from "../../../../../admin/src/components/dashboard/widgets/DynamicBarChart";
 import DynamicPieChart from "../../../../../admin/src/components/dashboard/widgets/DynamicPieChart";
-import DynamicAreaChart from "../../../../../admin/src/components/dashboard/widgets/DynamicAreaChart";
 import DynamicLineChart from "../../../../../admin/src/components/dashboard/widgets/DynamicLineChart";
 import DynamicTableWidget from "../../../../../admin/src/components/dashboard/widgets/DynamicTableWidget";
-import DynamicDonutChart from "../../../../../admin/src/components/dashboard/widgets/DynamicDonutChart";
 import DynamicPointChart from "../../../../../admin/src/components/dashboard/widgets/DynamicPointChart";
 
 import {
@@ -23,7 +21,11 @@ const AltrpDiagram = ({ settings }) => {
   const isMultiple = settings.isMultiple;
   const isCustomColor = settings.isCustomColors;
   const keyIsDate = settings.key_is_date;
-
+  const sort = settings?.sort;
+  const tickRotation = settings?.tickRotation;
+  const bottomAxis = settings?.bottomAxis;
+  const enableGridX = settings?.enableGridX;
+  const enableGridY = settings?.enableGridY;
   //line settings
   const xScaleType = settings?.xScaleType || "point";
   const precision = settings?.precision || "month";
@@ -236,6 +238,11 @@ const AltrpDiagram = ({ settings }) => {
           xMarkerLabel={xMarkerLabel}
           yMarkerLabelColor={yMarkerLabelColor}
           xMarkerLabelColor={xMarkerLabelColor}
+          sort={sort}
+          tickRotation={tickRotation}
+          bottomAxis={bottomAxis}
+          enableGridX={enableGridX}
+          enableGridY={enableGridY}
         />
       );
     case POINT:
@@ -247,6 +254,11 @@ const AltrpDiagram = ({ settings }) => {
           nodeSize={pointSize}
           xScaleType={xScaleType}
           precision={precision}
+          sort={sort}
+          tickRotation={tickRotation}
+          bottomAxis={bottomAxis}
+          enableGridX={enableGridX}
+          enableGridY={enableGridY}
         />
       );
     case BAR:
@@ -263,6 +275,11 @@ const AltrpDiagram = ({ settings }) => {
           borderRadius={borderRadius}
           borderWidth={borderWidth}
           padding={padding}
+          sort={sort}
+          tickRotation={tickRotation}
+          bottomAxis={bottomAxis}
+          enableGridX={enableGridX}
+          enableGridY={enableGridY}
         />
       );
     case PIE:
@@ -278,6 +295,11 @@ const AltrpDiagram = ({ settings }) => {
           cornerRadius={cornerRadius}
           sortByValue={sortByValue}
           enableRadialLabels={enableRadialLabels}
+          sort={sort}
+          tickRotation={tickRotation}
+          bottomAxis={bottomAxis}
+          enableGridX={enableGridX}
+          enableGridY={enableGridY}
         />
       );
     case TABLE:
@@ -289,6 +311,11 @@ const AltrpDiagram = ({ settings }) => {
           dataSource={data}
           widget={widget}
           width={settings.width?.size}
+          sort={sort}
+          tickRotation={tickRotation}
+          bottomAxis={bottomAxis}
+          enableGridX={enableGridX}
+          enableGridY={enableGridY}
         />
       );
 

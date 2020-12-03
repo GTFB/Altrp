@@ -74,6 +74,15 @@ class BarDataSource extends Component {
       }));
       await this.getData();
     }
+    if (
+      !_.isEqual(prevState?.settings?.sort, this.props.element?.settings?.sort)
+    ) {
+      this.setState(state => ({
+        ...state,
+        countRequest: 0
+      }));
+      await this.getData();
+    }
   }
 
   async componentWillMount() {
@@ -81,18 +90,15 @@ class BarDataSource extends Component {
   }
 
   async getData() {
-    const {
-      data,
-      isMultiple,
-      isDate,
-      isLarge,
-      needCallAgain
-    } = await new DataAdapter().parseDataBar(
+    const adapterObject = await new DataAdapter(
+      this.props.element.settings.type,
       this.props.element.settings.sources,
-      this.props.formsStore.form_data,
+      _.cloneDeep(this.props.formsStore.form_data),
       this.state.params,
       this.state.countRequest
-    );
+    ).parseDataNotType();
+    const { isMultiple, isDate, isLarge, needCallAgain } = adapterObject;
+    let data = adapterObject.data;
     if (needCallAgain) {
       setTimeout(() => {
         this.getData();
@@ -100,6 +106,24 @@ class BarDataSource extends Component {
         count += 1;
         this.setState(s => ({ ...s, countRequest: count }));
       }, 3500);
+    }
+    if (
+      this.state.settings?.sort?.value !== null &&
+      typeof this.state.settings?.sort?.value !== "undefined" &&
+      typeof data !== "undefined"
+    ) {
+      const sort = this.state.settings?.sort.value;
+      switch (sort) {
+        case "value":
+          data = _.sortBy(data, ["value"]);
+          break;
+        case "key":
+          data = _.sortBy(data, ["key"]);
+          break;
+        default:
+          data = data;
+          break;
+      }
     }
     this.setState(s => ({
       ...s,

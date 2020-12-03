@@ -48,7 +48,7 @@ class Dashboards extends BaseElement {
     this.addControl("dataSource", {
       type: CONTROLLER_SWITCHER,
       label: "Get data by data source?",
-      default: false
+      default: true
     });
 
     let repeater = new Repeater();
@@ -62,13 +62,21 @@ class Dashboards extends BaseElement {
       dynamic: false
     });
     repeater.addControl("data", {
-      label: "Y",
+      label: "Y (data)",
       dynamic: false
     });
     repeater.addControl("key", {
-      label: "X",
+      label: "X (key)",
       dynamic: false
     });
+
+    repeater.addControl("keyIsDate", {
+      label: "X is date",
+      dynamic: false,
+      type: CONTROLLER_SWITCHER,
+      default: false
+    });
+
     repeater.addControl("splitFrom", {
       label: "Split from",
       dynamic: false
@@ -93,7 +101,7 @@ class Dashboards extends BaseElement {
 
     this.startControlSection("content_section", {
       tab: TAB_CONTENT,
-      label: "Content"
+      label: "Content (DEPRECATED)"
     });
 
     this.addControl("global_parameter", {

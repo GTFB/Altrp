@@ -94,14 +94,15 @@ class Admin extends Component {
         adminEnable: true
       },
       pagesMenuShow: false,
-      models: [],
+      models: []
     };
     this.toggleMenu = this.toggleMenu.bind(this);
   }
 
   componentDidMount() {
     store.subscribe(this.updateAdminState.bind(this));
-    new Resource({ route: '/admin/ajax/model_options' }).getAll()
+    new Resource({ route: "/admin/ajax/model_options" })
+      .getAll()
       .then(({ options }) => this.setState({ models: options }));
   }
 
@@ -138,29 +139,58 @@ class Admin extends Component {
                 <Bars className="admin__bars" onClick={this.toggleMenu} />
               </div>
               <div className="admin-nav-main">
-                {this.state.pagesMenuShow ?
-                  <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
+                {this.state.pagesMenuShow ? (
+                  <Scrollbars
+                    autoHide
+                    autoHideTimeout={500}
+                    autoHideDuration={200}
+                  >
                     <ul className="admin-nav-list">
                       <li>
-                        <Link to="/admin/pages" className="admin-nav-list__link">
+                        <Link
+                          to="/admin/pages"
+                          className="admin-nav-list__link"
+                        >
                           <PagesSvg className="icon" />
                           <span>Pages</span>
                         </Link>
                       </li>
-
-                  Models
-                  {models.sort((a, b) => {
-                        if (a.label.toUpperCase() < b.label.toUpperCase()) return -1;
-                        if (a.label.toUpperCase() > b.label.toUpperCase()) return 1;
-                        return 0;
-                      }).map(({ value: id, label }) => <li key={id}>
-                        <Link to={`/admin/model/${id}`} className="admin-nav-list__link admin-nav-list__link--models">
-                          {label}
+                      <li>
+                        <Link
+                          to="/admin/reports"
+                          className="admin-nav-list__link"
+                        >
+                          <ReportSvg className="icon" />
+                          <span>Reports</span>
                         </Link>
-                      </li>)}
+                      </li>
+                      Models
+                      {models
+                        .sort((a, b) => {
+                          if (a.label.toUpperCase() < b.label.toUpperCase())
+                            return -1;
+                          if (a.label.toUpperCase() > b.label.toUpperCase())
+                            return 1;
+                          return 0;
+                        })
+                        .map(({ value: id, label }) => (
+                          <li key={id}>
+                            <Link
+                              to={`/admin/model/${id}`}
+                              className="admin-nav-list__link admin-nav-list__link--models"
+                            >
+                              {label}
+                            </Link>
+                          </li>
+                        ))}
                     </ul>
-                  </Scrollbars> :
-                  <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
+                  </Scrollbars>
+                ) : (
+                  <Scrollbars
+                    autoHide
+                    autoHideTimeout={500}
+                    autoHideDuration={200}
+                  >
                     <ul className="admin-nav-list">
                       <li>
                         <Link
@@ -172,7 +202,10 @@ class Admin extends Component {
                         </Link>
                       </li>
                       <li>
-                        <Link to="/admin/assets" className="admin-nav-list__link">
+                        <Link
+                          to="/admin/assets"
+                          className="admin-nav-list__link"
+                        >
                           <AssetSvg className="icon" />
                           <span>Assets</span>
                         </Link>
@@ -218,13 +251,19 @@ class Admin extends Component {
                     </Link>
                   </li> */}
                       <li>
-                        <Link to="/admin/users" className="admin-nav-list__link">
+                        <Link
+                          to="/admin/users"
+                          className="admin-nav-list__link"
+                        >
                           <UserSvg className="icon" />
                           <span>Users</span>
                         </Link>
                       </li>
                       <li>
-                        <Link to="/admin/tools" className="admin-nav-list__link">
+                        <Link
+                          to="/admin/tools"
+                          className="admin-nav-list__link"
+                        >
                           <span>Tools</span>
                         </Link>
                       </li>
@@ -238,20 +277,26 @@ class Admin extends Component {
                         </Link>
                       </li>
                       <li>
-                        <Link to="/admin/plugins" className="admin-nav-list__link">
+                        <Link
+                          to="/admin/plugins"
+                          className="admin-nav-list__link"
+                        >
                           <PluginSvg className="icon" />
                           <span>Plugins</span>
                         </Link>
                       </li>
                       <li>
-                        <Link to="/admin/settings" className="admin-nav-list__link">
+                        <Link
+                          to="/admin/settings"
+                          className="admin-nav-list__link"
+                        >
                           <SettingSvg className="icon" />
                           <span>Settings</span>
                         </Link>
                       </li>
                     </ul>
                   </Scrollbars>
-                }
+                )}
               </div>
               <AdminVersion />
             </nav>
