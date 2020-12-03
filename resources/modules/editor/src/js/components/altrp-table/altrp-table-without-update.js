@@ -835,32 +835,32 @@ export function Pagination(
     return pageText;
   }, [current_page_text, pageIndex, pageCount, inner_page_type, inner_page_count]);
   return <div className="altrp-pagination">
-    <button className={"altrp-pagination__previous"}
+    {!settings.hide_pre_page_button && <button className={"altrp-pagination__previous"}
             onClick={() => {
               previousPage();
             }}
             disabled={pageIndex === 0}>
       {settings.prev_text || 'Previous Page'}
-    </button>
-    <div className="altrp-pagination__count">
+    </button>}
+    {!settings.hide_pages_buttons_button && <div className="altrp-pagination__count">
       {pageText}
 
-    </div>
-    <button className="altrp-pagination__next"
+    </div>}
+    {!settings.hide_next_page_button && <button className="altrp-pagination__next"
             onClick={() => {
               nextPage()
             }}
             disabled={pageCount === pageIndex + 1}>
       {settings.next_text || 'Next Page'}
-    </button>
-    {<input className="altrp-pagination__goto-page"
+    </button>}
+    {!settings.hide_page_input && <input className="altrp-pagination__goto-page"
                             type="number"
                             defaultValue={pageIndex + 1}
                             onChange={(e) => {
                               const page = e.target.value ? Number(e.target.value) - 1 : 0;
                               gotoPage(page)
                             }}/>}
-    {countOptions && <AltrpSelect className="altrp-pagination__select-size"
+    {!settings.hide_pagination_select && countOptions && <AltrpSelect className="altrp-pagination__select-size"
                                   options={countOptions}
                                   classNamePrefix={widgetId + ' altrp-field-select2'}
                                   value={countOptions.find(o => o.value === pageSize)}

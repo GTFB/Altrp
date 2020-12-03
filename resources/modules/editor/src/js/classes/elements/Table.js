@@ -1231,6 +1231,36 @@ class Table extends BaseElement {
       label: "Pagination"
     });
 
+    this.addControl('hide_pre_page_button', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hide Prev Page Button',
+      default: false
+    });
+
+    this.addControl('hide_pages_buttons_button', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hide Pages Buttons',
+      default: false
+    });
+    
+    this.addControl('hide_next_page_button', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hide Next Page Button',
+      default: false
+    });
+    
+    this.addControl('hide_page_input', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hide Page Input',
+      default: false
+    });
+    
+    this.addControl('hide_pagination_select', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hide Pagination Select',
+      default: false
+    });
+
     this.addControl("table_style_pagination_buttons_text_color", {
       type: CONTROLLER_COLOR,
       label: "Buttons text color",
