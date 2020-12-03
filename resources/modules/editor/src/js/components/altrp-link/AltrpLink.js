@@ -40,7 +40,7 @@ class AltrpLink extends Component {
         ...this.props.link,
         creativeLink: true
       };
-      
+
       switch (styles.style) {
         case "none":
           creativeLink = "";
