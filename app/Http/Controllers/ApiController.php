@@ -26,6 +26,10 @@ class ApiController extends Controller
     public function index(ApiRequest $request)
     {
         $resources = $this->getModelsAndPageCount($request);
+//        $parts = explode('\\', $this->modelClass);
+//        $modelName = array_pop($parts);
+//        $event = '\\App\\Events\\AltrpEvents\\' . $modelName . 'Event';
+//        broadcast(new $event($resources['data'][0]));
         return response()->json($resources, 200, [], JSON_UNESCAPED_UNICODE);
     }
 

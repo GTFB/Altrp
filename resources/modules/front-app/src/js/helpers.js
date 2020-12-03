@@ -10,6 +10,7 @@ import Route from "./classes/Route";
 import { changePageState } from "./store/altrp-page-state-storage/actions";
 import { changeAltrpMeta } from "./store/altrp-meta-storage/actions";
 import { useDispatch } from "react-redux";
+import {altrpFontsSet, GOOGLE_FONT} from "./components/FontsManager";
 
 export function getRoutes() {
   return import("./classes/Routes.js");
@@ -1352,4 +1353,21 @@ export function setAltrpIndex(array = []) {
     }
     item.altrpIndex = idx;
   });
+}
+
+/**
+ *
+ * @param {string} font
+ * @return {*}
+ */
+export function renderFontLink(font){
+
+  if(altrpFontsSet[font] !== GOOGLE_FONT){
+    return null;
+  }
+  font = font.replace(/ /g, '+');
+  font += ':100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic';
+  let fontUrl = 'https://fonts.googleapis.com/css?family=' + font + '&subset=cyrillic';
+  fontUrl = encodeURI(fontUrl);
+  return <link rel="stylesheet" key={fontUrl} href={fontUrl}/>
 }

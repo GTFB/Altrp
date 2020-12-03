@@ -822,6 +822,80 @@ class Table extends BaseElement {
       },
     });
 
+    this.addControl("replace_text_color", {
+      type: CONTROLLER_COLOR,
+      label: "Text Color",
+      default: {
+        // color: "rgb(27,27,27)",
+        // colorPickedHex: "#1B1B1B"
+      },
+      rules: {
+        '{{ELEMENT}} .replace-text{{STATE}}': 'color: {{COLOR}}'
+      }
+    });
+
+    this.addControl('replace_text_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      default: {
+        lineHeight: 0.8,
+        spacing: 0,
+        size: 14,
+        weight: 700,
+        family: 'Open Sans',
+        decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .replace-text{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
+    );
+
+    this.addControl('replace_image', {
+      type: CONTROLLER_MEDIA,
+      label: 'Image',
+      default: { url: "" }
+    });
+
+    this.addControl("replace_image_width", {
+      type: CONTROLLER_SLIDER,
+      label: "Image Width",
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 800,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .replace-picture': 'width: {{SIZE}}{{UNIT}};'
+      }
+    });
+
+    this.addControl("replace_image_height", {
+      type: CONTROLLER_SLIDER,
+      label: "Image Height",
+      units: [
+        'px',
+        '%',
+        'vw',
+      ],
+      max: 800,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .replace-picture': 'height: {{SIZE}}{{UNIT}};'
+      }
+    });
+
     this.addControl('replace_width', {
       type: CONTROLLER_NUMBER,
       label: 'Width',
@@ -1979,7 +2053,7 @@ class Table extends BaseElement {
      *
      */
     //</editor-fold>
-    // <editor-fold desc="table_style_footer"
+    // <editor-fold desc="table_style_footer">
     /**
      * Стили для футера группы START
      */

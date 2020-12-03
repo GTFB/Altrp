@@ -17,7 +17,7 @@ class NotificationsWidget extends Component {
   componentWillMount() {
     //Этот слушатель вешается на компонент при его создании,
     //сюда из this.props.element.getSettings() передавайте в значения ниже
-    const channelName = "notifications.users"; // вбил для примера
+    const channelName = "notification.user"; // вбил для примера
     const eventName = "SendNotifications"; // вбил для примера
     //После этого происходит прослушивание канала, и если сервер выкидывает в канал изменения,
     //то через параметр {e} вы вытащите нужные данные

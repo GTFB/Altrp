@@ -33,7 +33,7 @@ return [
     |
     */
 
-    'altrp_version' => '0.10.8',
+    'altrp_version' => '0.10.10',
 
 
     /*
@@ -180,7 +180,8 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+//         App\Providers\BroadcastServiceProvider::class,
+        App\Providers\AltrpBroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 

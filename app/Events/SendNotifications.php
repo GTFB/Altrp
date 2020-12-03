@@ -17,16 +17,19 @@ class SendNotifications implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $user;
+
     public $modelName;
+
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param User $user
+     * @param string $modelName
      */
     public function __construct( User $user, string $modelName = "user")
     {
         $this->user = $user;
-        //Передаем в конструктор название модели, 
+        //Передаем в конструктор название модели,
         //если что нужно будет убрать предустановленный "user" из имени в конструкторе (я написал для примера)
         $this->modelName = $modelName;
     }
