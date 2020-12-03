@@ -1296,6 +1296,27 @@ class Table extends BaseElement {
         ],
       },
     });
+    
+    this.addControl('count_button_item_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Page Count Item Margin',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ],
+      },
+    });
 
     this.addControl('next_page_button_margin', {
       type: CONTROLLER_DIMENSIONS,
