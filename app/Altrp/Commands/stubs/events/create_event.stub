@@ -13,7 +13,7 @@ class {{modelName}}Event implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    protected ${{modelSingle}};
+    public ${{modelSingle}};
 
     /**
      * Create a new event instance.
