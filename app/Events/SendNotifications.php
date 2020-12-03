@@ -17,6 +17,7 @@ class SendNotifications implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $user;
+    public $modelName;
     /**
      * Create a new event instance.
      *
@@ -42,6 +43,6 @@ class SendNotifications implements ShouldBroadcast
         // Тогда вроде как не придется создавать даже файла для каналов
         // мы подпишемся на все CRUD запросы этой модели, кроме GET
         // и будем слушать изменения
-        return new Channel("notification.{$this->modelName}");
+        return new Channel("notifications.{$this->modelName}");
     }
 }

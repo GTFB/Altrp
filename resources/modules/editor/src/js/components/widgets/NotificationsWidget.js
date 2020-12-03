@@ -17,15 +17,16 @@ class NotificationsWidget extends Component {
   componentWillMount() {
     //Этот слушатель вешается на компонент при его создании,
     //сюда из this.props.element.getSettings() передавайте в значения ниже
-    const channelName = "notification.users"; // вбил для примера
+    const channelName = "notifications.users"; // вбил для примера
     const eventName = "SendNotifications"; // вбил для примера
     //После этого происходит прослушивание канала, и если сервер выкидывает в канал изменения,
     //то через параметр {e} вы вытащите нужные данные
     Echo.channel(channelName).listen(eventName, e => {
+      console.log(this.props.element.getSettings());
       console.log(e);
       const user = JSON.stringify(e.user);
       this.setState(s => ({ ...s, noticeObject: user, notified: true }));
-      //Уведомление изчезнет через 10 секунд
+      //Уведомление исчезнет через 10 секунд
       setTimeout(() => {
         this.setState(s => ({ ...s, noticeObject: "", notified: false }));
       }, 10000);
@@ -37,8 +38,7 @@ class NotificationsWidget extends Component {
   }
 
   render() {
-    let wrapperClasses = "altrp-heading-wrapper";
-    let advancedHeading = "";
+    let wrapperClasses = "altrp-notifications-wrapper";
     return (
       <>
         {this.state.notified && <div>{this.state.noticeObject}</div>}
