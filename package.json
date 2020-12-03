@@ -27,6 +27,7 @@
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@ckeditor/ckeditor5-build-balloon": "^23.1.0",
+    "@emotion/react": "^11.1.1",
     "@loadable/component": "^5.13.1",
     "@material-ui/core": "^4.11.0",
     "@nivo/bar": "^0.65.1",
@@ -122,6 +123,7 @@
     "@ckeditor/ckeditor5-alignment": "^23.1.0",
     "@ckeditor/ckeditor5-editor-balloon": "^23.1.0",
     "@ckeditor/ckeditor5-react": "^3.0.0",
+    "@emotion/babel-preset-css-prop": "^11.0.0",
     "@hot-loader/react-dom": "^16.13.0",
     "@svgr/webpack": "^5.4.0",
     "autoprefixer": "^9.8.1",

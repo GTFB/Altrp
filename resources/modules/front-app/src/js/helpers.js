@@ -1371,3 +1371,10 @@ export function renderFontLink(font){
   fontUrl = encodeURI(fontUrl);
   return <link rel="stylesheet" key={fontUrl} href={fontUrl}/>
 }
+
+/**
+ * Включен ли режим тестирования
+ */
+export function isAltrpTestMode(){
+  return window.location.href.indexOf('altrp-test=true') > 0;
+}

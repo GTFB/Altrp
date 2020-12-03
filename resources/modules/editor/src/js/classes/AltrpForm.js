@@ -195,7 +195,6 @@ class AltrpForm {
       data.subject = subject;
       data.user_message = userMessage;
     } else {
-      console.log(this.formId);
       this.fields.forEach(field=>{
         if(field.getValue() !== null){
           data[field.getFieldId()] = field.getValue();
