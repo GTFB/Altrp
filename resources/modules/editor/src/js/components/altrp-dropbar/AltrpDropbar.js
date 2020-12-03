@@ -65,17 +65,20 @@ class Dropbar extends Component {
     let mainClass = "altrp-dropbar-" + this.props.className;
 
     let type = this.props.settings.type_dropbar_section || "text";
-
+    let content_dropbar_section = this.props.getContent('content_dropbar_section');
     return (
       <div className={"altrp-dropbar altrp-dropbar-" + mainClass}>
-        <span className={"altrp-dropbar-children-wrapper " + mainClass + "-wrapper"}>
+        <span className={"altrp-dropbar-children-wrapper " + mainClass + "-wrapper"}
+              onMouseEnter={this.props.settings.mode_dropbar_options === "hover" ? this.enterShow : null}
+              onMouseLeave={this.props.settings.mode_dropbar_options === "hover" ? this.leaveHide : null}
+        >
           {
             React.cloneElement(children,
               {
                 ref: this.children,
                 onClick: this.props.settings.mode_dropbar_options === "click" ? this.show : null,
-                onMouseEnter: this.props.settings.mode_dropbar_options === "hover" ? this.enterShow : null,
-                onMouseLeave: this.props.settings.mode_dropbar_options === "hover" ? this.leaveHide : null
+                // onMouseEnter: this.props.settings.mode_dropbar_options === "hover" ? this.enterShow : null,
+                // onMouseLeave: this.props.settings.mode_dropbar_options === "hover" ? this.leaveHide : null
               }
               )
           }
@@ -98,7 +101,7 @@ class Dropbar extends Component {
                     {
                       className: "altrp-dropbar-content " + mainClass + "-content",
                       dangerouslySetInnerHTML: {
-                        __html: this.props.settings.content_dropbar_section
+                        __html: content_dropbar_section || ''
                       },
                     }
                   )

@@ -4,3 +4,9 @@
 @import "../../../editor/src/sass/creative-hover";
 @import "../../../editor/src/sass/_altrp-dashboards";
 @import "./responsive.scss";
+
+.front-app{
+ &-content_test{
+   padding-bottom: 100px;
+ }
+}

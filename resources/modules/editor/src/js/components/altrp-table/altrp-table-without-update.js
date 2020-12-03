@@ -186,7 +186,7 @@ function AltrpTableWithoutUpdate(
           });
     }, [columnTemplate]);
     if(columnTemplateContent){
-      return <div className="altrp-posts"><div className="altrp-post">{columnTemplateContent }</div></div>;
+      return <div className="altrp-posts"><div className="altrp-post overflow-visible">{columnTemplateContent }</div></div>;
     }
 
     /**
@@ -1425,7 +1425,7 @@ const Row = ({ row,
       <div {...rowProps} className={`altrp-table-tr ${ isDragging ? 'altrp-table-tr__dragging' : ''}`} style={{ ...rowStyles, opacity }}>
         {replace_rows && <div className="altrp-table-td replace-text" ref={dragRef} style={{width: replace_width}}>
           {replace_text}
-          {replace_image.url && <img src={replace_image.url} className="replace-picture"/>}
+          {replace_image && replace_image.url && <img src={replace_image.url} className="replace-picture"/>}
         </div>}
         
         {row.cells.map((cell, idx) => {

@@ -133,12 +133,16 @@ class FrontElement {
     }
   }
   async registerActions(){
+    if(this.actionsRegistered){
+      return;
+    }
     /**
      * @member {ActionsManager|*} actionsManager
      */
     const actionsManager = (await import('./modules/ActionsManager.js')).default;
 
     actionsManager.registerWidgetActions(this.getIdForAction(), this.getSettings('actions', []), 'click', this);
+    this.actionsRegistered = true;
   }
   /**
    * Если элемент поле или кнопка нужно инициализирваоть форму в FormsManager
@@ -147,6 +151,10 @@ class FrontElement {
     /**
      * @member {FormsManager} formsManager
      */
+    if(this.formsIsInit){
+      return
+    }
+    this.formsIsInit = true;
     let formsManager = await import('../../../../editor/src/js/classes/modules/FormsManager.js');
     formsManager = formsManager.default;
     switch (this.getName()) {
@@ -187,7 +195,7 @@ class FrontElement {
                 'logout',
                 method,
                 {afterLogoutRedirect:this.getSettings('redirect_after')}
-          ));
+              ));
           }
           break;
           case 'email':{
@@ -196,7 +204,7 @@ class FrontElement {
                 'email',
                 method,
                 {afterLogoutRedirect:this.getSettings('redirect_after')}
-          ));
+              ));
           }
           break;
         }
