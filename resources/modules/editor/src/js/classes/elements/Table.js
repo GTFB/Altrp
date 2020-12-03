@@ -1390,6 +1390,27 @@ class Table extends BaseElement {
       },
     });
 
+    this.addControl('pagination_select_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Pagination Select Margin',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__select-size{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ],
+      },
+    });
+
     this.addControl('table_style_pagination_padding_buttons', {
       type: CONTROLLER_DIMENSIONS,
       label: 'buttons Padding',
@@ -1530,7 +1551,7 @@ class Table extends BaseElement {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
       rules: {
-        '{{ELEMENT}} .altrp-pagination__next{{STATE}}, .altrp-pagination-pages__item{{STATE}}, .altrp-pagination__count{{STATE}}, .altrp-pagination__previous{{STATE}}, .altrp-pagination__goto-page{{STATE}}': [
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}}, .altrp-pagination-pages__item{{STATE}}, .altrp-pagination__count{{STATE}}, .altrp-pagination__previous{{STATE}}, .altrp-pagination__goto-page{{STATE}}, .altrp-pagination__select-size{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -1592,11 +1613,30 @@ class Table extends BaseElement {
           'text-decoration: {{DECORATION}}'
         ],
       },
-    }); this.addControl('table_style_page_input_pagination_typographic', {
+    }); 
+    
+    this.addControl('table_style_page_input_pagination_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Page Input Typographic',
       rules: {
         '{{ELEMENT}} .altrp-pagination .altrp-pagination__goto-page{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
+
+    this.addControl('table_style_pagination_select__pagination_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Pagination Select Typographic',
+      rules: {
+        '{{ELEMENT}} .altrp-pagination .altrp-pagination__select-size{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -1852,6 +1892,172 @@ class Table extends BaseElement {
       }
     });
 
+    this.addControl('page_input_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Page Input Padding',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl("page_input_text_color", {
+      type: CONTROLLER_COLOR,
+      label: "Page Input text color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'color: {{COLOR}}'
+      }
+    });
+
+    this.addControl("page_input_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Page Input background color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'background-color: {{COLOR}}'
+      }
+    });
+
+    this.addControl("pagination_select_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Pagination Select Border type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'border-style: {{VALUE}};',
+      }
+    });
+
+    this.addControl("pagination_select_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Pagination Select Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      }
+    });
+
+    this.addControl('pagination_select_border_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Pagination Select Border Radius',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
+    });
+
+    this.addControl("pagination_select_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Pagination Select Border Color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'border-color: {{COLOR}};',
+      }
+    });
+
+    this.addControl('pagination_select_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Pagination Select Padding',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl("pagination_select_text_color", {
+      type: CONTROLLER_COLOR,
+      label: "Pagination Select text color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'color: {{COLOR}}'
+      }
+    });
+
+    this.addControl("pagination_select_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Pagination Select background color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'background-color: {{COLOR}}'
+      }
+    });
 
     this.addControl('table_style_pagination_padding', {
       type: CONTROLLER_DIMENSIONS,
