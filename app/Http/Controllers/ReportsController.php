@@ -144,7 +144,7 @@ class ReportsController extends Controller
 
     public function setHtml(Request $request){
         $DOM = $request->dom;
-        $cssRules = $request->cssRules;
+        $cssRules = (string) $request->cssRules;
         $reportID = $request->reportID;
         $htmlGenerator = new HtmlGenerator($DOM,$cssRules,$reportID);
         if($htmlGenerator->getParsedHtml()){

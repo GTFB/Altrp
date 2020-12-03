@@ -35,18 +35,13 @@ const DynamicBarChart = ({
     if (dataSource.length == 0) {
       const charts = await getWidgetData(widget.source, widget.filter);
       if (charts.status === 200) {
-        let data = charts.data.data;
-        switch (sort) {
-          case "value":
-            data = _.sortBy(data, ["value"]);
-            break;
-          case "key":
-            data = _.sortBy(data, ["key"]);
-            break;
-          default:
-            data = charts.data.data;
-            break;
-        }
+        let data = charts.data.data.map((item, index) => {
+          return {
+            [key]: Number(item.data),
+            key: item.key,
+            value: Number(item.data)
+          };
+        });
         setData(data || []);
         setIsLoading(false);
       }

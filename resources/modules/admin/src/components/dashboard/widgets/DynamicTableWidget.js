@@ -4,10 +4,12 @@ import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
 import { getWidgetData } from "../services/getWidgetData";
+import moment from "moment";
 
 const DynamicTableWidget = ({
   widget,
   width,
+  keyIsDate,
   dataSource = [],
   height = 450,
   sort = "",
@@ -20,20 +22,24 @@ const DynamicTableWidget = ({
     setIsLoading(true);
     if (dataSource.length == 0) {
       const charts = await getWidgetData(widget.source, widget.filter);
-      if (charts.status === 200) {
-        let data = charts.data.data;
-        switch (sort) {
-          case "value":
-            data = _.sortBy(data, ["y"]);
-            break;
-          case "key":
-            data = _.sortBy(data, ["x"]);
-            break;
-          default:
-            data = charts.data.data;
-            break;
-        }
-        setData(data || []);
+      if (charts.status === 200 && typeof charts.data !== "string") {
+        const newData = charts.data.data.map(item => {
+          const currentKey = item.key;
+          const keyFormatted = !moment(currentKey).isValid()
+            ? currentKey
+            : moment(currentKey).format("DD.MM.YYYY");
+          return {
+            y: Number(item.data),
+            x: keyIsDate ? keyFormatted : currentKey
+          };
+        });
+        let data = [
+          {
+            id: "",
+            data: newData
+          }
+        ];
+        setData(data);
         setIsLoading(false);
       }
     } else {

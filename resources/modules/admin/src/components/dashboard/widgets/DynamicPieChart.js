@@ -6,6 +6,7 @@ import EmptyWidget from "./EmptyWidget";
 
 import { getWidgetData } from "../services/getWidgetData";
 import { axisBottom } from "d3";
+import moment from "moment";
 
 const format = "%d.%m.%Y";
 
@@ -103,23 +104,13 @@ const DynamicLineChart = ({
           const keyFormatted = !moment(currentKey).isValid()
             ? currentKey
             : moment(currentKey).format("DD.MM.YYYY");
+
           return {
-            y: Number(_.get(item, dataKey)),
-            x: keyIsDate ? keyFormatted : currentKey
+            value: Number(item.data),
+            id: keyIsDate ? keyFormatted : currentKey
           };
         });
         let data = newData;
-        switch (sort) {
-          case "value":
-            data = _.sortBy(data, "y");
-            break;
-          case "key":
-            data = _.sortBy(data, "x");
-            break;
-          default:
-            data = charts.data.data;
-            break;
-        }
         setData(data || []);
         setIsLoading(false);
       }

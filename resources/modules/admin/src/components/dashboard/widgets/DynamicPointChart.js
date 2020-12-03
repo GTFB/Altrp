@@ -8,6 +8,7 @@ import { getWidgetData } from "../services/getWidgetData";
 import { customStyle } from "../widgetTypes";
 import { Spinner } from "react-bootstrap";
 
+import moment from "moment";
 const format = "%d.%m.%Y";
 
 const PointChart = ({
@@ -38,22 +39,16 @@ const PointChart = ({
             ? currentKey
             : moment(currentKey).format("DD.MM.YYYY");
           return {
-            y: Number(_.get(item, dataKey)),
+            y: Number(item.data),
             x: keyIsDate ? keyFormatted : currentKey
           };
         });
-        let data = newData;
-        switch (sort) {
-          case "value":
-            data = _.sortBy(data, "y");
-            break;
-          case "key":
-            data = _.sortBy(data, "x");
-            break;
-          default:
-            data = charts.data.data;
-            break;
-        }
+        let data = [
+          {
+            id: "",
+            data: newData
+          }
+        ];
         setData(data);
         setIsLoading(false);
       }
