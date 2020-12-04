@@ -11,6 +11,6 @@
 |
 */
 
-Broadcast::channel('notification.{userId}', function () {
+Broadcast::channel('notifications.{userId}', function () {
 	return true;
 });

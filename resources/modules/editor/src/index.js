@@ -21,7 +21,7 @@ import Echo from "laravel-echo"
 window.Pusher = require('pusher-js');
 window.Echo = new Echo({
     broadcaster: 'pusher',
-    key: 67546843241,
+    key: 324345,
     wsHost: window.location.hostname,
     wsPort: 6001,
     forceTLS: false,

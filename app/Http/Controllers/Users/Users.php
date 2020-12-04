@@ -71,9 +71,6 @@ class Users extends Controller
         $user->password = Hash::make($request->password);
 
         if($user->save()){
-            broadcast( new SendNotifications($user ))->toOthers();        
-
-
           $permissions = $request->get( '_permissions' );
           if( $permissions ){
             $permissions = Permission::find( $permissions );
