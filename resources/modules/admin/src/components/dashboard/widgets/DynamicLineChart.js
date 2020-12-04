@@ -40,7 +40,8 @@ const DynamicLineChart = ({
   tickRotation = 0,
   bottomAxis = true,
   enableGridX = true,
-  enableGridY = true
+  enableGridY = true,
+  isDashboard = false
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -176,7 +177,12 @@ const DynamicLineChart = ({
       >
         <ResponsiveLine
           data={data}
-          margin={{ top: 50, right: 180, bottom: 50, left: 60 }}
+          margin={{
+            top: 50,
+            right: !isDashboard ? 180 : 60,
+            bottom: 50,
+            left: 60
+          }}
           xFormat={xScaleType === "time" && "time:%d.%m.%Y"}
           xScale={
             xScaleType === "time"
@@ -209,32 +215,36 @@ const DynamicLineChart = ({
               ? pointColor.colorPickedHex
               : { from: "color", modifiers: [] }
           }
-          legends={[
-            {
-              anchor: "bottom-right",
-              direction: "column",
-              justify: false,
-              translateX: 130,
-              translateY: 0,
-              itemsSpacing: 0,
-              itemDirection: "left-to-right",
-              itemWidth: 120,
-              itemHeight: 20,
-              itemOpacity: 0.75,
-              symbolSize: 12,
-              symbolShape: "circle",
-              symbolBorderColor: "rgba(0, 0, 0, .5)",
-              effects: [
-                {
-                  on: "hover",
-                  style: {
-                    itemBackground: "rgba(0, 0, 0, .03)",
-                    itemOpacity: 1
+          legends={
+            !isDashboard
+              ? [
+                  {
+                    anchor: "bottom-right",
+                    direction: "column",
+                    justify: false,
+                    translateX: 130,
+                    translateY: 0,
+                    itemsSpacing: 0,
+                    itemDirection: "left-to-right",
+                    itemWidth: 120,
+                    itemHeight: 20,
+                    itemOpacity: 0.75,
+                    symbolSize: 12,
+                    symbolShape: "circle",
+                    symbolBorderColor: "rgba(0, 0, 0, .5)",
+                    effects: [
+                      {
+                        on: "hover",
+                        style: {
+                          itemBackground: "rgba(0, 0, 0, .03)",
+                          itemOpacity: 1
+                        }
+                      }
+                    ]
                   }
-                }
-              ]
-            }
-          ]}
+                ]
+              : []
+          }
         />
       </div>
     </>

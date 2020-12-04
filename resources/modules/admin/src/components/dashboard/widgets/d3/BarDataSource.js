@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ResponsiveBarCanvas, ResponsiveBar } from "@nivo/bar";
+import { ResponsiveBar } from "@nivo/bar";
 import { connect } from "react-redux";
 import ErrorBoundary from "./ErrorBoundary";
 import DataAdapter from "./DataAdapter";
@@ -147,6 +147,7 @@ class BarDataSource extends Component {
     if (this.state.isLarge) {
       return <div>Ограничьте диапозон данных или выберите другой источник</div>;
     }
+
     if (typeof this.state.data !== "undefined" && this.state.data.length > 0) {
       return (
         <>
