@@ -20,7 +20,7 @@ class NotificationsWidget extends Component {
 
     let settings = this.props.element.getSettings('notifi_query');
 
-    if (settings && typeof settings.dataSource !== 'undefined'){
+    if (settings && settings.dataSource){
 
       this.state.model = settings.dataSource.label;
 
