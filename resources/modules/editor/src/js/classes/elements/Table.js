@@ -1131,6 +1131,192 @@ class Table extends BaseElement {
       },
     }
     );
+    
+    this.endControlSection();
+
+    this.startControlSection("global_filter_style_table", {
+      tab: TAB_STYLE,
+      label: "Global Filter"
+    });
+
+    this.addControl("global_filter_input_color", {
+      type: CONTROLLER_COLOR,
+      label: "Input Color",
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'color: {{COLOR}}'
+      }
+    });
+
+    this.addControl("global_filter_input_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Input Background Color",
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'background: {{COLOR}}'
+      }
+    });
+
+    this.addControl('global_filter_input_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Input Typographic',
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
+    );
+
+    this.addControl('global_filter_input_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Input Padding',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter input': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl("global_filter_input_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Input Border Type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter input': 'border-style: {{VALUE}}'
+      }
+    });
+
+    this.addControl("global_filter_input_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Input Border Width",
+      default: {
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter input': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}}'
+      }
+    });
+
+    this.addControl('global_filter_input_border_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Input Border Radius',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
+    });
+
+    this.addControl("global_filter_input_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Input Border Color",
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter input': 'border-color: {{COLOR}}'
+      }
+    });
+
+    this.addControl('global_filter_label_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Label Padding',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter label{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl("global_filter_label_color", {
+      type: CONTROLLER_COLOR,
+      label: "Label Color",
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter label{{STATE}}': 'color: {{COLOR}}'
+      }
+    });
+
+    this.addControl('global_filter_label_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Label Typographic',
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter label{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
+    );
+
     this.endControlSection();
 
     this.startControlSection("table_style_table", {
