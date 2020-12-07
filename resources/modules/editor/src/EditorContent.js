@@ -25,7 +25,6 @@ class EditorContent extends Component {
     this.editorWindow = React.createRef();
     store.subscribe(this.currentElementListener.bind(this));
     window.altrpEditorContent = this;
-    this.editorContent = React.createRef();
   }
 
   currentElementListener(data){
