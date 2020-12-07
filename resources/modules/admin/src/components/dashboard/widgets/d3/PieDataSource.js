@@ -4,6 +4,10 @@ import { ResponsivePieCanvas } from "@nivo/pie";
 import ErrorBoundary from "./ErrorBoundary";
 import DataAdapter from "./DataAdapter";
 
+import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+
 const mapStateToProps = state => {
   return { formsStore: _.cloneDeep(state.formsStore) };
 };
@@ -154,9 +158,14 @@ class PieDataSource extends Component {
           <ResponsivePieCanvas
             margin={{ top: 80, right: 250, bottom: 80, left: 140 }}
             data={this.state.data}
-            colors={this.state.settings?.colors}
+            colors={
+              this.state.settings?.colors?.scheme === "regagro"
+                ? regagroScheme
+                : this.state.settings?.colors
+            }
             innerRadius={this.state.settings?.innerRadius}
             enableSliceLabels={this.state.settings?.enableSliceLabels}
+            enableRadialLabels={this.state.settings?.enableRadialLabels}
             legends={[
               {
                 anchor: "right",

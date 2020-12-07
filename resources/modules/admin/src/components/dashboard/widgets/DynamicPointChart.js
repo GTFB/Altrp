@@ -2,6 +2,9 @@ import React, { useState, useEffect, useCallback } from "react";
 
 import { ResponsiveScatterPlot } from "@nivo/scatterplot";
 
+import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+
 import EmptyWidget from "./EmptyWidget";
 
 import { getWidgetData } from "../services/getWidgetData";
@@ -14,7 +17,6 @@ const format = "%d.%m.%Y";
 const PointChart = ({
   widget,
   dataSource = [],
-  keyIsDate = false,
   xScaleType = "point",
   colorScheme = "red_grey",
   nodeSize = 6,
@@ -24,7 +26,7 @@ const PointChart = ({
   precision,
   enableGridX = true,
   enableGridY = true,
-  isDashboard = false
+  keyIsDate = false
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -114,13 +116,10 @@ const PointChart = ({
       >
         <ResponsiveScatterPlot
           data={data}
-          colors={{ scheme: colorScheme }}
-          margin={{
-            top: 50,
-            right: !isDashboard ? 180 : 60,
-            bottom: 50,
-            left: 60
-          }}
+          colors={
+            colorScheme === "regagro" ? regagroScheme : { scheme: colorScheme }
+          }
+          margin={{ top: 50, right: 180, bottom: 50, left: 60 }}
           xFormat={xScaleType === "time" && "time:%d.%m.%Y"}
           nodeSize={nodeSize}
           xScale={
@@ -141,36 +140,32 @@ const PointChart = ({
                   tickRotation: tickRotation
                 })
           }
-          legends={
-            !isDashboard
-              ? [
-                  {
-                    anchor: "bottom-right",
-                    direction: "column",
-                    justify: false,
-                    translateX: 130,
-                    translateY: 0,
-                    itemsSpacing: 0,
-                    itemDirection: "left-to-right",
-                    itemWidth: 120,
-                    itemHeight: 20,
-                    itemOpacity: 0.75,
-                    symbolSize: 12,
-                    symbolShape: "circle",
-                    symbolBorderColor: "rgba(0, 0, 0, .5)",
-                    effects: [
-                      {
-                        on: "hover",
-                        style: {
-                          itemBackground: "rgba(0, 0, 0, .03)",
-                          itemOpacity: 1
-                        }
-                      }
-                    ]
+          legends={[
+            {
+              anchor: "bottom-right",
+              direction: "column",
+              justify: false,
+              translateX: 130,
+              translateY: 0,
+              itemsSpacing: 0,
+              itemDirection: "left-to-right",
+              itemWidth: 120,
+              itemHeight: 20,
+              itemOpacity: 0.75,
+              symbolSize: 12,
+              symbolShape: "circle",
+              symbolBorderColor: "rgba(0, 0, 0, .5)",
+              effects: [
+                {
+                  on: "hover",
+                  style: {
+                    itemBackground: "rgba(0, 0, 0, .03)",
+                    itemOpacity: 1
                   }
-                ]
-              : []
-          }
+                }
+              ]
+            }
+          ]}
         />
       </div>
     </>

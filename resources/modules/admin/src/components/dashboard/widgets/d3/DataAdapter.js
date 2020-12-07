@@ -384,7 +384,7 @@ class DataAdapter {
 
     //Обработка параметров
     const globalParams = _.cloneDeep(this.storeParams, []);
-    const globalParamsArray = _.keys(this.globalParams)
+    const globalParamsArray = _.keys(globalParams)
       .map(param => {
         return { [param]: globalParams[param] };
       })
@@ -406,6 +406,7 @@ class DataAdapter {
         } else {
           data = await this.adaptDataByPath(source);
         }
+        data = typeof data === "object" && _.keys(data) === 0 ? [] : data;
       } else {
         // Если несколько истчочников данных, то делаем запросы по каждому
         data = await this.getDataFromIterableDatasources(
@@ -444,23 +445,43 @@ class DataAdapter {
           isDate = _.includes(resultDates, false) === true ? false : true;
         }
       } else {
-        let matches = data.map(obj => obj.length > 0);
+        let matches =
+          data.length > 0 ? data.map(obj => obj.length > 0) : [false];
         //Если во вложениях есть пустые данные, то вызываем запрос данных снова
         needCallAgain = _.includes(matches, false) && this.countRequest < 5;
         //Если один источник, проверяем данные в нём
-        dates = data.map(obj => {
-          if (!isLarge) {
-            isLarge = obj.length > MAX_DATA_TO_SVG;
-          }
-          return obj.key instanceof Date;
-        });
+        dates =
+          data.length > 0
+            ? data.map(obj => {
+                if (!isLarge) {
+                  isLarge = obj.length > MAX_DATA_TO_SVG;
+                }
+                return obj.key instanceof Date;
+              })
+            : false;
         dates = _.uniq(dates);
         isDate = _.includes(dates, false) === true ? false : true;
       }
       if (this.diagramType === PIE) {
-        data = _.uniqBy([].concat(...data.map(item => item.data)), "id");
+        if (Array.isArray(data)) {
+          data = _.uniqBy([].concat(...data.map(item => item.data)), "id");
+        } else {
+          if (data.data.length > 0) {
+            data = _.uniqBy(data.data, "id");
+          } else {
+            data = [];
+          }
+        }
       } else {
-        data = [].concat(...data.map(item => item.data));
+        if (!isMultiple && this.diagramType === BAR) {
+          if (Array.isArray(data)) {
+            data = data[0].data;
+          } else {
+            data = data.data;
+          }
+        } else {
+          data = [].concat(...data.map(item => item.data));
+        }
       }
       return {
         data: data,

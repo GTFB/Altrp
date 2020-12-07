@@ -4,6 +4,10 @@ import ErrorBoundary from "./ErrorBoundary";
 import { connect } from "react-redux";
 import DataAdapter from "./DataAdapter";
 
+import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+
 const mapStateToProps = state => {
   return { formsStore: _.cloneDeep(state.formsStore) };
 };
@@ -187,7 +191,11 @@ class ScatterDataSource extends Component {
             margin={{ top: 40, right: 120, bottom: 80, left: 100 }}
             xScale={this.state.settings?.xScale}
             enableSliceLabels={false}
-            colors={this.state.settings?.colors}
+            colors={
+              this.state.settings?.colors?.scheme === "regagro"
+                ? regagroScheme
+                : this.state.settings?.colors
+            }
             xFormat={
               this.state.settings?.xScale?.type === "time" && "time:%d.%m.%Y"
             }

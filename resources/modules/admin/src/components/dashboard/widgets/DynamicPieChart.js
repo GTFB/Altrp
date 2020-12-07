@@ -3,6 +3,9 @@ import { ResponsivePie } from "@nivo/pie";
 import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
+import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+
 import { getWidgetData } from "../services/getWidgetData";
 import moment from "moment";
 
@@ -98,6 +101,9 @@ const DynamicPieChart = ({
             bottomAxis && {
               tickRotation: tickRotation
             }
+          }
+          colors={
+            colorScheme === "regagro" ? regagroScheme : { scheme: colorScheme }
           }
           enableRadialLabels={enableRadialLabels}
           legends={
