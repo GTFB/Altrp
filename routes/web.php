@@ -11,6 +11,8 @@
 |
 */
 
+use App\Constructor\Template;
+use App\Page;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -389,13 +391,18 @@ Route::get('/', function () {
   return view('front-app', ['title'=> 'Main']);
 })->middleware( ['web', 'installation.checker'] );
 
-foreach ( $frontend_routes as $frontend_route ) {
-  $path = $frontend_route['path'];
-  $title = $frontend_route['title'];
+foreach ( $frontend_routes as $_frontend_route ) {
+  $path = $_frontend_route['path'];
+  $title = $_frontend_route['title'];
   $frontend_route = str_replace( ':id', '{id}', $path );
 
-  Route::get( $frontend_route, function () use ( $title ) {
-    return view('front-app',['title'=> $title]);
+  Route::get( $frontend_route, function () use ( $title, $_frontend_route ) {
+    $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
+    return view('front-app',[
+      'title'=> $title,
+      '_frontend_route' => $_frontend_route,
+      'preload_content' => $preload_content,
+    ]);
   } )->middleware( ['web', 'installation.checker'] );
 }
 
@@ -410,7 +417,10 @@ foreach($reports_routes as $report_route){
   $report_route = str_replace( ':id', '{id}', $path );
   
   Route::get($report_route, function () use ($title){
-    return view('front-app',['title'=>$title]);
+
+    return view('front-app',[
+      'title'=>$title,
+    ]);
   })->middleware(['web','installation.checker']);
 }
 

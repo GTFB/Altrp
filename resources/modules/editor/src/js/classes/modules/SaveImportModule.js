@@ -60,15 +60,40 @@ class SaveImportModule extends BaseModule {
    */
   saveTemplate() {
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_SAVING));
+    let html_content = '';
+    let stylesElements = [];
+    let rootElement = null;
+    if(window.altrpEditorContent.editorWindow.current){
+      rootElement = window.altrpEditorContent.editorWindow.current.getElementsByClassName('sections-wrapper')[0];
+      if(rootElement){
+        rootElement = rootElement.cloneNode(true);
+        _.toArray(rootElement.getElementsByClassName('overlay')).forEach(overlayElement=>{
+          overlayElement.remove();
+        });
+        html_content = rootElement.outerHTML;
+      }
+      stylesElements = window.altrpEditorContent.editorWindow.current.getRootNode().getElementById('styles-container').children;
+      stylesElements = _.toArray(stylesElements);
+      stylesElements = stylesElements.map(style => style ? style.outerHTML : '');
+    }
     let templateData = getEditor().modules.templateDataStorage.getTemplateDataForSave();
+    templateData.html_content = html_content;
+    if(stylesElements.length){
+      templateData.styles = {
+        all_styles: stylesElements,
+        important_styles: stylesElements,
+      };
+    }
     this.resource
       .put(this.template_id, templateData)
       .then(res => {
         store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
+        rootElement && rootElement.remove();
       })
       .catch(err => {
         console.error(err);
         store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
+        rootElement && rootElement.remove();
       });
   }
 
