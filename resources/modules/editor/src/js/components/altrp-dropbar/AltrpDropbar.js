@@ -45,14 +45,11 @@ class Dropbar extends Component {
   };
 
   enterShow(e) {
+    console.log(this.props.showDelay.size)
     let current = e.currentTarget;
     if(this.props.showDelay.size && !this.state.show) {
       setTimeout(() => {
-        if(this.children.current === current) {
-          this.setState({ show: true });
-        } else {
-          this.setState({ show: false });
-        }
+        this.setState({ show: true });
       }, this.props.showDelay.size);
     } else {
       this.setState((state) => ({ show: !state.show }));
