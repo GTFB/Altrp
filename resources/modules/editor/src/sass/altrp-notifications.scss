@@ -1,0 +1,50 @@
+.altrp-notification-wrapper {
+
+}
+.box-notification-icon {
+    position: relative;
+}
+.notification-icon {
+
+}
+.count-messages {
+    -webkit-tap-highlight-color: transparent;
+    // letter-spacing: .01rem;
+    // direction: ltr;
+    // list-style: none;
+    -webkit-box-direction: normal;
+    // box-sizing: border-box;
+    white-space: nowrap;
+    // font-weight: 400;
+    // line-height: 1;
+    display: inline-block;
+    font-size: .6rem;
+    text-align: center;
+    // vertical-align: baseline;
+    // transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    border-radius: 2rem;
+    color: #FFF;
+    text-transform: uppercase;
+    background-color: #FF5B5C;
+    padding: .2em .5em .1rem .3rem;
+    position: absolute;
+    top: -10px;
+    right: -8px;
+}
+.box-notification-messages {
+    display: flex;
+    flex-direction: column;
+}
+.notification-message {
+    cursor: pointer;
+    width: 10em;
+    background-color: #a8ebcc;
+    justify-content: space-between;
+    list-style-type: none;
+    margin-bottom: 0.5em;
+
+    p {
+        padding: 0;
+        margin: 5px;
+    }
+}

@@ -14,7 +14,7 @@ class AltrpBroadcastServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Broadcast::routes();
+        Broadcast::routes(["middleware"=>["auth"]]);
 
         $channelsFile = base_path('routes/AltrpChannels.php');
 

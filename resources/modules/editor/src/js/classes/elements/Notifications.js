@@ -1,24 +1,10 @@
 import BaseElement from "./BaseElement";
-import TableIcon from "../../../svgs/post-list.svg";
+import NotificationIcon from "../../../svgs/notification.svg";
 import {
-  CONTROLLER_TEXTAREA,
-  CONTROLLER_SWITCHER,
-  CONTROLLER_COLOR,
-  TAB_ADVANCED,
-  CONTROLLER_DIMENSIONS,
-  CONTROLLER_SELECT,
   CONTROLLER_TEXT,
-  CONTROLLER_SLIDER,
   TAB_CONTENT,
-  CONTROLLER_TYPOGRAPHIC,
-  CONTROLLER_LINK,
-  TAB_STYLE,
-  CONTROLLER_CHOOSE,
-  CONTROLLER_NUMBER,
-  CONTROLLER_SHADOW,
-  CONTROLLER_GRADIENT,
-  CONTROLLER_MEDIA,
-  CONTROLLER_WYSIWYG, CONTROLLER_QUERY, CONTROLLER_REPEATER, CONTROLLER_FILTERS, CONTROLLER_HEADING, CONTROLLER_SELECT2
+  CONTROLLER_QUERY,
+  CONTROLLER_REPEATER
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import Repeater from "../Repeater";
@@ -31,7 +17,7 @@ class Notifications extends BaseElement {
     return "Notifications";
   }
   static getIconComponent() {
-    return TableIcon;
+    return NotificationIcon;
   }
   static getType() {
     return "widget";
@@ -41,23 +27,40 @@ class Notifications extends BaseElement {
       return;
     }
 
-    this.startControlSection("notifi_content_datasource", {
+    this.startControlSection("notice_content_datasource", {
         tab: TAB_CONTENT,
-        label: "Data Source"
+        label: "Select Models"
     });
 
-    this.addControl("notifi_query_heading", {
-      type: CONTROLLER_HEADING,
-      label: 'Select Models',
-    });
+    let repeater = new Repeater();
 
-    this.addControl("notifi_query", {
+    repeater.addControl("model", {
       type: CONTROLLER_QUERY,
     });
 
+    repeater.addControl("text", {
+      type: CONTROLLER_TEXT,
+      label: 'Field name 1',
+      dynamic: false
+    });  
+
+    repeater.addControl("subtext", {
+      type: CONTROLLER_TEXT,
+      label: 'Field name 2',
+      dynamic: false
+    }); 
+
+    this.addControl('repeaterModels', {
+      type: CONTROLLER_REPEATER,
+      fields: repeater.getControls(),
+    });
+  
+
     this.endControlSection();
+
     advancedTabControllers(this);
   }
+
 }
 
 export default Notifications;
