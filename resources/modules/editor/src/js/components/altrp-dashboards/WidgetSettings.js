@@ -19,7 +19,7 @@ import DiagramTypeSettings from "./settings/DiagramTypeSettings";
 import SortData from "./settings/SortData";
 
 const mapStateToProps = state => {
-  return { editElement: _.cloneDeep(state.editElement, {}) };
+  return { editElement: _.cloneDeep(state.editElement) };
 };
 
 function mapDispatchToProps(dispatch) {
@@ -42,7 +42,7 @@ class WidgetSettings extends Component {
       openDiagramSettings: false,
       openTooltipSettings: false,
       filter_datasource: props.filter_datasource,
-      editElement: element
+      editElement: _.cloneDeep(element)
     };
     this.setDatasource = this.setDatasource.bind(this);
     this.setType = this.setType.bind(this);
@@ -65,6 +65,7 @@ class WidgetSettings extends Component {
     this.setGroupMode = this.setGroupMode.bind(this);
     this.setReverse = this.setReverse.bind(this);
     this.setSort = this.setSort.bind(this);
+    this.enableRadialLabels = this.enableRadialLabels.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -81,6 +82,15 @@ class WidgetSettings extends Component {
       }));
     }
     if (!_.isEqual(prevProps.editElement, this.props.editElement)) {
+      this.setState(state => ({
+        ...state,
+        editElement: this.props.editElement
+      }));
+    }
+    if (
+      JSON.stringify(prevProps.editElement?.settings?.params) !==
+      JSON.stringify(this.props.editElement?.settings?.params)
+    ) {
       this.setState(state => ({
         ...state,
         editElement: this.props.editElement
@@ -123,7 +133,7 @@ class WidgetSettings extends Component {
     }
   }
   //Смена источника данных
-  setDatasource(datasourcesArray) {
+  setDatasource(datasourcesArray, changeParams = false) {
     let settings = this.state.settings;
     let sources = [];
     if (datasourcesArray === null) {
@@ -152,7 +162,11 @@ class WidgetSettings extends Component {
       settings = {
         ...settings,
         sources: datasourcesArray,
-        params: []
+        params: !changeParams
+          ? typeof settings?.params !== "undefined"
+            ? [...settings.params]
+            : []
+          : []
       };
     }
     this.setState(state => ({
@@ -163,7 +177,7 @@ class WidgetSettings extends Component {
     if (!this.props.addItemPreview) {
       let element = this.props.editElement;
       element.settings.sources = sources;
-      this.props.editElementDispatch(element);
+      // this.props.editElementDispatch(element);
       this.props.editHandler(this.props.editElement.i, settings);
     } else {
       const element = { settings: { ...settings } };
@@ -508,6 +522,28 @@ class WidgetSettings extends Component {
       this.setState(s => ({ ...s, editElement: settings }));
     }
   }
+  //Отображать метки на сегменах Pie
+  enableRadialLabels(value) {
+    const settings = {
+      ...this.state.settings,
+      enableRadialLabels: value
+    };
+    this.setState(state => ({
+      ...state,
+      settings: settings
+    }));
+    if (!this.props.addItemPreview) {
+      let element = this.props.editElement;
+      element.settings = settings;
+      this.props.editElementDispatch(element);
+      this.props.editHandler(this.props.editElement.i, settings);
+    } else {
+      const element = { settings: { ...settings } };
+      this.props.editElementDispatch(element);
+      this.setState(s => ({ ...s, editElement: settings }));
+    }
+  }
+
   setLayout(value) {
     const settings = {
       ...this.state.settings,
@@ -692,6 +728,7 @@ class WidgetSettings extends Component {
                 setLayout={this.setLayout}
                 setGroupMode={this.setGroupMode}
                 setReverse={this.setReverse}
+                enableRadialLabels={this.enableRadialLabels}
               />
             </div>
           </Collapse>

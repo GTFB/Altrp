@@ -3,17 +3,21 @@ import React, { useState, useEffect, useCallback } from "react";
 import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
+import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+
 import { ResponsiveBar } from "@nivo/bar";
 
 import { getWidgetData } from "../services/getWidgetData";
 
 const DynamicBarChart = ({
   widget,
+  width = 300,
   height = 450,
   dataSource = [],
   groupMode = "stacked",
   layout = "vertical",
-  colorScheme = "red_grey",
+  colorScheme = "regagro",
   reverse = false,
   enableLabel = false,
   padding = 0.1,
@@ -24,8 +28,7 @@ const DynamicBarChart = ({
   tickRotation = 0,
   bottomAxis = true,
   enableGridX = true,
-  enableGridY = true,
-  isDashboard = false
+  enableGridY = true
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -36,10 +39,9 @@ const DynamicBarChart = ({
       const charts = await getWidgetData(widget.source, widget.filter);
       if (charts.status === 200) {
         let data = charts.data.data.map((item, index) => {
-          const key = item.key;
           return {
-            [key]: Number(item.data),
-            key: key,
+            [item.key]: Number(item.data),
+            key: item.key,
             value: Number(item.data)
           };
         });
@@ -82,14 +84,11 @@ const DynamicBarChart = ({
       <div style={{ height: `${height}px` }}>
         <ResponsiveBar
           data={data}
-          margin={{
-            top: 50,
-            right: !isDashboard ? 180 : 60,
-            bottom: 50,
-            left: 60
-          }}
+          margin={{ top: 50, right: 180, bottom: 50, left: 60 }}
           indexBy="key"
-          colors={{ scheme: colorScheme.toString() }}
+          colors={
+            colorScheme === "regagro" ? regagroScheme : { scheme: colorScheme }
+          }
           colorBy="index"
           layout={layout}
           axisBottom={
@@ -97,6 +96,14 @@ const DynamicBarChart = ({
               tickRotation: tickRotation
             }
           }
+          tooltip={datum => {
+            const { indexValue, value, color } = datum;
+            return (
+              <>
+                <span>{indexValue}</span>:<strong> {value}</strong>
+              </>
+            );
+          }}
           enableGridX={enableGridX}
           enableGridY={enableGridY}
           enableLabel={enableLabel}
