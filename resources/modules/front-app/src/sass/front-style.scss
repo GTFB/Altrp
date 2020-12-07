@@ -5,6 +5,10 @@
 @import "../../../editor/src/sass/_altrp-dashboards";
 @import "./responsive.scss";
 
+body {
+    overflow: hidden;
+}
+
 .front-app{
   position: relative;
   z-index: 50;
