@@ -62,7 +62,7 @@ class ExportPanelWindget extends Component {
     let currentRoute = window.location.pathname;
     let routes = await (await getRoutes()).default.resource.getAll();
     let currentID = _.find(routes.pages, { path: currentRoute }).id;
-    console.log(currentID);
+
     if (documentVar.getElementById("ace-solarized-dark") !== null)
       documentVar.getElementById("ace-solarized-dark").remove();
     if (documentVar.getElementById("ace-tm") !== null)
@@ -103,7 +103,6 @@ class ExportPanelWindget extends Component {
     for (let img of imgs) {
       img.src = img.src.toString();
     }
-    console.log(this.props.reportID);
     const html = this.formatting(documentVar.documentElement.innerHTML);
     new Resource({
       route: "/reports/generate"
@@ -115,6 +114,10 @@ class ExportPanelWindget extends Component {
       })
       .then(
         res => {
+          if (typeof res.message !== "undefined") {
+            alert("ОШИБКА");
+            return;
+          }
           window.location.replace(res.path);
         },
         rej => {

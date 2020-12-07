@@ -1,5 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
+import ReactDOM from "react-dom";
 import {usePopper} from "react-popper";
+import {isEditor} from "../../../../../front-app/src/js/helpers";
 
 export default function AltrpPopper(props) {
   const object = useRef();
@@ -32,6 +34,20 @@ export default function AltrpPopper(props) {
     }
   });
 
+  if(props.portal) {
+    return ReactDOM.createPortal((
+      React.cloneElement(props.children, {
+        ref: object,
+        style: styles.popper,
+        ...attributes.popper,
+      })
+    ),
+      isEditor() ?
+        document.getElementById("editorContent").contentWindow.document.body
+        :
+        document.body
+    )
+  }
   return React.cloneElement(props.children, {
     ref: object,
     style: styles.popper,

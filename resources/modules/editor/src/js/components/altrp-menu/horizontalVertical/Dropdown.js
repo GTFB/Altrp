@@ -3,6 +3,8 @@ import AltrpPortal from "../../altrp-portal/AltrpPortal";
 import DropdownSub from "./DropdownSub";
 import AltrpLink from "../../altrp-link/AltrpLink";
 import Divider from "../Divider";
+import LinkMenu from "../LinkMenu";
+import {isEditor} from "../../../../../../front-app/src/js/helpers";
 
 class Dropdown extends Component {
   constructor(props) {
@@ -101,6 +103,28 @@ class Dropdown extends Component {
           <ul className="altrp-nav-menu-ul-dropdown-hor-ver-ul">
             {
               this.state.list.map((li, idx) => {
+                let link = <LinkMenu
+                  defaultChildren={(<div className="altrp-nav-menu-ul-dropdown-hor-ver-li-link"/>)}
+                  modelData={this.props.modelData}
+                  modelId={this.props.modelId || null}
+                  link={li.link_repeater_menu_layout}
+                  className="altrp-nav-menu-ul-dropdown-hor-ver-li-link"
+                >
+                  <div className="altrp-nav-menu-li-dropdown-hor-ver-link-label">
+                    {li.label_repeater_menu_layout}
+                  </div>
+                  {
+                    li.id_repeater_menu_layout ? (
+                      // altrp-nav-menu-li-link-icon-active
+                      <div className="altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon">
+                        {
+                          this.props.chevron
+                        }
+                      </div>
+                    ) : ""
+                  }
+                </LinkMenu>;
+
                 return (
                   <li
                     className="altrp-nav-menu-ul-dropdown-hor-ver-li"
@@ -108,24 +132,14 @@ class Dropdown extends Component {
                     onMouseLeave={() => this.hideSub(idx)}
                     key={idx}
                   >
-                    <AltrpLink link={li.link_repeater_menu_layout} className="altrp-nav-menu-ul-dropdown-hor-ver-li-link">
-                      <div className="altrp-nav-menu-li-dropdown-hor-ver-link-label">
-                        {li.label_repeater_menu_layout}
-                      </div>
-                      {
-                        li.id_repeater_menu_layout ? (
-                          // altrp-nav-menu-li-link-icon-active
-                          <div className="altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon">
-                            {
-                              this.props.chevron
-                            }
-                          </div>
-                        ) : ""
-                      }
-                    </AltrpLink>
+                    {
+                      link
+                    }
                     {
                       li.id_repeater_menu_layout ?
                         <DropdownSub
+                          modelId={this.props.modelId}
+                          modelData={this.props.modelData}
                           chevron={this.props.chevron}
                           settings={this.props.settings}
                           show={li.show}

@@ -1617,10 +1617,10 @@ class RootElement extends BaseElement {
     this.addControl("button_background_image_width", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default: {
-        size: 100,
-        unit: 'px',
-      },
+      // default: {
+      //   size: 100,
+      //   unit: 'px',
+      // },
       conditions: {
         'button_background_size': [''],
       },
@@ -1667,7 +1667,7 @@ class RootElement extends BaseElement {
       type: CONTROLLER_TEXTAREA,
       label: 'Transition Property',
       rules: {
-        ".altrp-btn": "transition-property: {{VALUE}};"
+        ".altrp-btn{{STATE}}": "transition-property: {{VALUE}};"
       },
       description: 'Input properties, commas separated'
     });
@@ -1675,15 +1675,15 @@ class RootElement extends BaseElement {
     this.addControl("button_transition_duration", {
       type: CONTROLLER_SLIDER,
       label: 'Transition Duration',
-      default: {
-        size: 0.2,
-      },
+      // default: {
+      //   size: 0.2,
+      // },
       units: [],
       max: 5,
       min: 0,
       step: 0.1,
       rules: {
-        ".altrp-btn": "transition-duration: {{SIZE}}s;"
+        "div .altrp-btn{{STATE}}": "transition-duration: {{SIZE}}s;"
       }
     });
 
@@ -1713,7 +1713,7 @@ class RootElement extends BaseElement {
       ],
       label: 'Transition Timing Function',
       rules: {
-        ".altrp-btn": "transition-timing-function: {{VALUE}};"
+        "div .altrp-btn{{STATE}}": "transition-timing-function: {{VALUE}};"
       }
     });
 
@@ -1725,7 +1725,7 @@ class RootElement extends BaseElement {
       min: 0,
       step: 0.1,
       rules: {
-        ".altrp-btn": "transition-delay: {{SIZE}}s;"
+        "div .altrp-btn{{STATE}}": "transition-delay: {{SIZE}}s;"
       }
     });
 

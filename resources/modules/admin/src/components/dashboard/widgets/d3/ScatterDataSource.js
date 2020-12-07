@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { ResponsiveScatterPlotCanvas } from "@nivo/scatterplot";
-import format from "date-fns/format";
 import ErrorBoundary from "./ErrorBoundary";
-import ru from "date-fns/locale/ru";
 import { connect } from "react-redux";
 import DataAdapter from "./DataAdapter";
 
@@ -64,6 +62,15 @@ class ScatterDataSource extends Component {
       await this.getData();
     }
     if (
+      !_.isEqual(prevState?.settings?.sort, this.props.element?.settings?.sort)
+    ) {
+      this.setState(state => ({
+        ...state,
+        countRequest: 0
+      }));
+      await this.getData();
+    }
+    if (
       !_.isEqual(
         prevProps.formsStore.form_data,
         this.props.formsStore.form_data
@@ -86,13 +93,15 @@ class ScatterDataSource extends Component {
       data,
       isMultiple,
       isDate,
-      needCallAgain
-    } = await new DataAdapter().parseData(
+      needCallAgain,
+      isLarge
+    } = await new DataAdapter(
+      this.props.element.settings.type,
       this.props.element.settings.sources,
-      this.props.formsStore.form_data,
+      _.cloneDeep(this.props.formsStore.form_data),
       this.state.params,
       this.state.countRequest
-    );
+    ).parseData();
     if (needCallAgain) {
       setTimeout(() => {
         this.getData();
@@ -101,11 +110,39 @@ class ScatterDataSource extends Component {
         this.setState(s => ({ ...s, countRequest: count }));
       }, 3500);
     }
+    if (
+      this.state.settings?.sort?.value !== null &&
+      typeof this.state.settings?.sort?.value !== "undefined" &&
+      typeof data !== "undefined"
+    ) {
+      const sort = this.state.settings?.sort.value;
+      switch (sort) {
+        case "value":
+          data.forEach((item, index) => {
+            if (item.data.length > 0) {
+              data[index].data = _.sortBy(item.data, ["y"]);
+            }
+          });
+          break;
+        case "key":
+          data.forEach((item, index) => {
+            if (item.data.length > 0) {
+              data[index].data = _.sortBy(item.data, ["x"]);
+            }
+          });
+          break;
+
+        default:
+          // data = data;
+          break;
+      }
+    }
     this.setState(s => ({
       ...s,
       data: data,
       isMultiple: isMultiple,
-      isDate: isDate
+      isDate: isDate,
+      isLarge: isLarge
     }));
   }
 
@@ -116,16 +153,17 @@ class ScatterDataSource extends Component {
     if (Object.keys(this.state.sources).length === 0) {
       return <div>Нет данных </div>;
     }
-    if (
-      typeof this.state.data !== "undefined" &&
-      this.state.data.length === 0
-    ) {
-      if (this.state.countRequest < 5) {
-        return <div>Загрузка...</div>;
+    if (!this.state.sources > 1) {
+      if (
+        typeof this.state.data === "undefined" &&
+        this.state.data[0].data.length === 0
+      ) {
+        if (this.state.countRequest < 3) {
+          return <div>Загрузка...</div>;
+        }
+        return <div>Нет данных</div>;
       }
-      return <div>Нет данных</div>;
-    }
-    if (this.props.element.settings.sources.length > 1) {
+    } else {
       let matches = this.state.data.map(obj => {
         if (_.keys(obj).length > 0) {
           return obj.data.length > 0;

@@ -1,51 +1,146 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { ResponsivePie } from "@nivo/pie";
+import { ResponsiveLine } from "@nivo/line";
+
 import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
 import { getWidgetData } from "../services/getWidgetData";
-import { customStyle } from "../widgetTypes";
+import { axisBottom } from "d3";
+import moment from "moment";
 
-const DynamicPieChart = ({
+const format = "%d.%m.%Y";
+
+const DynamicLineChart = ({
   widget,
-  width = 300,
-  height = 450,
+  keyIsDate,
   dataSource = [],
+  lineWidth = 2,
+  pointSize = 10,
+  xScaleType = "point",
+  precision = "month",
   colorScheme = "red_grey",
-  enableSliceLabels = false,
-  innerRadius = 0,
-  padAngle = 0,
-  cornerRadius = 0,
-  sortByValue = 0,
-  enableRadialLabels = true
+  curve = "linear",
+  enableArea = false,
+  enablePoints = true,
+  pointColor,
+  yMarker = false,
+  yMarkerValue = 0,
+  yMarkerOrientation = "vertical",
+  yMarkerColor,
+  yMarkerLabel = "",
+  yMarkerWidth = 2,
+  xMarker = false,
+  xMarkerValue = 0,
+  xMarkerOrientation = "vertical",
+  xMarkerColor,
+  xMarkerLabel = "",
+  xMarkerWidth = 2,
+  yMarkerLabelColor,
+  xMarkerLabelColor,
+  sort = "",
+  tickRotation = 0,
+  bottomAxis = true,
+  enableGridX = true,
+  enableGridY = true
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
+
+  const markers = () => {
+    let markerY = {};
+    let markerX = {};
+    if (yMarker) {
+      markerY = {
+        axis: "y",
+        value: yMarkerValue,
+        lineStyle: {
+          stroke:
+            yMarkerColor != null ? yMarkerColor.colorPickedHex : "#000000",
+          strokeWidth: yMarkerWidth
+        },
+        textStyle: {
+          fill:
+            yMarkerLabelColor != null
+              ? yMarkerLabelColor.colorPickedHex
+              : "#000000"
+        },
+        legend: yMarkerLabel,
+        legendOrientation: yMarkerOrientation
+      };
+    }
+    if (xMarker) {
+      markerX = {
+        axis: "x",
+        value: xMarkerValue,
+        lineStyle: {
+          stroke:
+            xMarkerColor != null ? xMarkerColor.colorPickedHex : "#000000",
+          strokeWidth: xMarkerWidth
+        },
+        textStyle: {
+          fill:
+            xMarkerLabelColor != null
+              ? xMarkerLabelColor.colorPickedHex
+              : "#000000"
+        },
+        legend: xMarkerLabel,
+        legendOrientation: xMarkerOrientation
+      };
+    }
+    if (!yMarker && !xMarker) return [];
+    if (yMarker && !xMarker) return [markerY];
+    if (!yMarker && xMarker) return [markerX];
+
+    return [markerY, markerX];
+  };
 
   const getData = useCallback(async () => {
     setIsLoading(true);
     if (dataSource.length == 0) {
       const charts = await getWidgetData(widget.source, widget.filter);
       if (charts.status === 200) {
-        let data = charts.data.data;
-        switch (Number(widget.options.sort)) {
-          case 0:
-            data = charts.data.data;
-            break;
-          case 1:
-            data = _.sortBy(data, "key");
-            break;
-          case 2:
-            data = _.sortBy(data, "data");
-            break;
-          default:
-            data = charts.data.data;
-            break;
-        }
+        const newData = charts.data.data.map(item => {
+          const currentKey = item.key;
+          const keyFormatted = !moment(currentKey).isValid()
+            ? currentKey
+            : moment(currentKey).format("DD.MM.YYYY");
+
+          return {
+            value: Number(item.data),
+            id: keyIsDate ? keyFormatted : currentKey
+          };
+        });
+        let data = newData;
         setData(data || []);
         setIsLoading(false);
       }
     } else {
+      if (
+        sort !== null &&
+        sort !== "undefined" &&
+        typeof dataSource !== "undefined"
+      ) {
+        switch (sort) {
+          case "value":
+            dataSource.forEach((item, index) => {
+              if (item.data.length > 0) {
+                dataSource[index].data = _.sortBy(item.data, ["y"]);
+              }
+            });
+            break;
+          case "key":
+            data.forEach((item, index) => {
+              if (item.data.length > 0) {
+                dataSource[index].data = _.sortBy(item.data, ["x"]);
+              }
+            });
+            break;
+
+          default:
+            // data = data;
+            break;
+        }
+      }
       setData(dataSource || []);
       setIsLoading(false);
     }
@@ -57,36 +152,84 @@ const DynamicPieChart = ({
 
   if (isLoading) return <Spinner />;
 
-  if (!data || data.length === 0) return <EmptyWidget />;
-  console.log("====================================");
-  console.log(data);
-  console.log("====================================");
+  let matches = [];
+  let isNotEmpty = false;
+
+  matches = _.uniq(
+    data.map(item => {
+      return item.data.length > 0;
+    })
+  );
+
+  isNotEmpty = matches.includes(true);
+  if (!isNotEmpty) return <EmptyWidget />;
   return (
     <>
-      <div style={{ height: `${height}px` }}>
-        <ResponsivePie
+      <div
+        style={{
+          width: `100%`,
+          height: `${450}px`
+        }}
+      >
+        <ResponsiveLine
           data={data}
+          margin={{ top: 50, right: 180, bottom: 50, left: 60 }}
+          xFormat={xScaleType === "time" && "time:%d.%m.%Y"}
+          xScale={
+            xScaleType === "time"
+              ? { type: xScaleType, format: format, precision: precision }
+              : { type: xScaleType }
+          }
+          lineWidth={lineWidth}
+          markers={markers()}
+          enableGridX={enableGridX}
+          enableGridY={enableGridY}
+          axisBottom={
+            bottomAxis &&
+            (xScaleType === "time"
+              ? {
+                  format: format,
+                  tickRotation: tickRotation
+                }
+              : {
+                  tickRotation: tickRotation
+                })
+          }
+          useMesh={true}
+          enableArea={enableArea}
+          enablePoints={enablePoints}
+          pointSize={pointSize}
+          curve={curve}
           colors={{ scheme: colorScheme }}
-          margin={{ top: 80, right: 250, bottom: 80, left: 140 }}
-          innerRadius={innerRadius}
-          enableSliceLabels={enableSliceLabels}
-          padAngle={padAngle}
-          cornerRadius={cornerRadius}
-          sortByValue={sortByValue}
-          enableRadialLabels={enableRadialLabels}
+          pointColor={
+            typeof pointColor !== "undefined" && pointColor !== null
+              ? pointColor.colorPickedHex
+              : { from: "color", modifiers: [] }
+          }
           legends={[
             {
-              anchor: "right",
+              anchor: "bottom-right",
               direction: "column",
-              translateX: 80,
+              justify: false,
+              translateX: 130,
               translateY: 0,
-              itemsSpacing: 2,
-              itemWidth: 60,
-              itemHeight: 14,
+              itemsSpacing: 0,
               itemDirection: "left-to-right",
-              itemOpacity: 1,
-              symbolSize: 14,
-              symbolShape: "circle"
+              itemWidth: 120,
+              itemHeight: 20,
+              itemOpacity: 0.75,
+              symbolSize: 12,
+              symbolShape: "circle",
+              symbolBorderColor: "rgba(0, 0, 0, .5)",
+              effects: [
+                {
+                  on: "hover",
+                  style: {
+                    itemBackground: "rgba(0, 0, 0, .03)",
+                    itemOpacity: 1
+                  }
+                }
+              ]
             }
           ]}
         />
@@ -95,4 +238,4 @@ const DynamicPieChart = ({
   );
 };
 
-export default DynamicPieChart;
+export default DynamicLineChart;

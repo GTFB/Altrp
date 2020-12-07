@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import AltrpLink from "../../altrp-link/AltrpLink";
 import AltrpImage from "../../altrp-image/AltrpImage";
+import LinkMenu from "../LinkMenu";
 
 class DropdownSub extends Component {
   constructor(props) {
@@ -68,14 +69,24 @@ class DropdownSub extends Component {
           <ul className="altrp-nav-menu-ul-dropdown">
             {
               this.state.list.map((li, idx) => {
+                let link = <LinkMenu
+                  defaultChildren={(<div className="altrp-nav-menu-li-link-dropdown altrp-nav-menu-li-link-label-dropdown"/>)}
+                  modelData={this.props.modelData}
+                  modelId={this.props.modelId || null}
+                  link={li.link_repeater_menu_layout}
+                  className="altrp-nav-menu-li-link-dropdown altrp-nav-menu-li-link-label-dropdown"
+                >
+                  {
+                    li.label_repeater_menu_layout
+                  }
+                </LinkMenu>;
+
                 return <li className="altrp-nav-menu-li-dropdown" key={idx}>
                   {!li.id_repeater_menu_layout ? (
                     <React.Fragment>
-                      <AltrpLink link={li.link_repeater_menu_layout} className="altrp-nav-menu-li-link-dropdown altrp-nav-menu-li-link-label-dropdown">
-                        {
-                          li.label_repeater_menu_layout
-                        }
-                      </AltrpLink>
+                      {
+                        link
+                      }
                       {
                         this.props.settings.divider_switch_dropdown_menu_section ? <div className="altrp-nav-menu-dropdown-s-content-divider"/> : ""
                       }
