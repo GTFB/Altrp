@@ -26,7 +26,6 @@ export default function AltrpPopper(props) {
     ]
   });
 
-  console.log(props)
   useEffect(() => {
     if (placement !== props.settings.placement) {
       setPlacement(props.settings.placement);
