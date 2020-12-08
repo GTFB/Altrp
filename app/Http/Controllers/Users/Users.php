@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Users;
 
-use App\Events\SendNotifications;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\ApiRequest;

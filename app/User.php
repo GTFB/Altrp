@@ -49,6 +49,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * Always with relations
+     * @var string[]
+     */
+    protected $with = ['notice_settings'];
+
 
     protected $appends = ['full_name'];
 
@@ -91,5 +97,10 @@ class User extends Authenticatable
             }
         }
         return false;
+    }
+
+    public function notice_settings()
+    {
+        return $this->morphMany('App\Altrp\NoticeSetting', 'noticed', 'noticed_type', 'noticed_id');
     }
 }

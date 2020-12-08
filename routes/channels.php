@@ -11,8 +11,6 @@
 |
 */
 
-// Broadcast::channel('altrpchannel.test1', function ($user) {
-// 	if($user->hasRole('editor')){
-// 		return $user->name;
-// 	}
-// }, ["middleware" => ["role:admin"]]);
+Broadcast::channel('altrpchannel.user.{userId}', function ($user, $userId) {
+    return (int) $user->id === (int) $userId;
+});
