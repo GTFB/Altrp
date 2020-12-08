@@ -65,11 +65,12 @@
 
 .assets {
   &__tabs {
-    bottom: -2px;
+    bottom: -1px;
     position: relative;
   }
 
   &__tab {
+    display: inline-block;
     margin-right: 16px;
     padding: .5rem 1rem;
 
