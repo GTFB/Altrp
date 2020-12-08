@@ -56,7 +56,7 @@ class GradientController extends Component {
   }
   render() {
     const { isWithGradient, angle, firstColor, firstPoint, secondColor, secondPoint } =
-      this.getSettings(this.props.controlId) || this.props.currentElement.settings.gradient;
+      this.getSettings(this.props.controlId) || this.props.currentElement.settings.gradient || {};
     const { opened1, opened2 } = this.state;
 
     return <>

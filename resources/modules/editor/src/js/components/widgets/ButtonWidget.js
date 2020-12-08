@@ -219,6 +219,7 @@ class ButtonWidget extends Component {
         button = (
           <Suspense fallback={<div>Загрузка...</div>}>
             <Dropbar
+              elemenentId={this.props.element.getId()}
               settings={this.props.element.getSettings()}
               className="btn"
               getContent={this.getContent}

@@ -2,6 +2,9 @@ import React, { useState, useEffect, useCallback } from "react";
 
 import { ResponsiveScatterPlot } from "@nivo/scatterplot";
 
+import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+
 import EmptyWidget from "./EmptyWidget";
 
 import { getWidgetData } from "../services/getWidgetData";
@@ -22,7 +25,8 @@ const PointChart = ({
   bottomAxis = true,
   precision,
   enableGridX = true,
-  enableGridY = true
+  enableGridY = true,
+  keyIsDate = false
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -112,7 +116,9 @@ const PointChart = ({
       >
         <ResponsiveScatterPlot
           data={data}
-          colors={{ scheme: colorScheme }}
+          colors={
+            colorScheme === "regagro" ? regagroScheme : { scheme: colorScheme }
+          }
           margin={{ top: 50, right: 180, bottom: 50, left: 60 }}
           xFormat={xScaleType === "time" && "time:%d.%m.%Y"}
           nodeSize={nodeSize}

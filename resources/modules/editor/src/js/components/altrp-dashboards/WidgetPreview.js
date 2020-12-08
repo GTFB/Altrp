@@ -5,7 +5,7 @@ import { editElement } from "../../store/altrp-dashboard/actions";
 import ChooseWidget from "./ChooseWidget";
 
 const mapStateToProps = state => {
-  return { editElement: _.cloneDeep(state.editElement, {}) };
+  return { editElement: _.cloneDeep(state.editElement) };
 };
 
 function mapDispatchToProps(dispatch) {
@@ -17,25 +17,32 @@ function mapDispatchToProps(dispatch) {
 class WidgetPreview extends Component {
   constructor(props) {
     super(props);
-    const element =
-      props.editElement !== null ? _.cloneDeep(props.editElement) : {};
     this.state = {
-      editElement: element,
+      editElement: _.cloneDeep(props.editElement),
       cardName: this.props.editElement?.settings?.name
     };
     this.setCardName = this.setCardName.bind(this);
   }
 
+  componentWillUnmount() {
+    this.props.editElementDispatch({});
+  }
+
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (
-      !_.isEqual(prevProps.editElement, this.props.editElement) ||
-      JSON.stringify(prevProps.editElement?.settings?.params) !==
-        JSON.stringify(this.props.editElement?.settings?.params)
-    ) {
-      let element = _.cloneDeep(this.props.editElement, []);
+    if (!_.isEqual(prevProps.editElement, this.props.editElement)) {
       this.setState(state => ({
         ...state,
-        editElement: element,
+        editElement: _.cloneDeep(this.props.editElement),
+        cardName: this.props.editElement?.settings?.name
+      }));
+    }
+    if (
+      JSON.stringify(prevProps.editElement?.settings?.params) !==
+      JSON.stringify(this.props.editElement?.settings?.params)
+    ) {
+      this.setState(state => ({
+        ...state,
+        editElement: _.cloneDeep(this.props.editElement),
         cardName: this.props.editElement?.settings?.name
       }));
     }

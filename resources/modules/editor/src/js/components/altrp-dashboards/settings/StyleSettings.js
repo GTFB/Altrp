@@ -28,6 +28,8 @@ const selectSettings = {
   })
 };
 
+const regagroScheme = _.find(Schemes, { value: "regagro" }).value;
+
 const curvieTypes = [
   { id: 0, value: "basis" },
   { id: 1, value: "cardinal" },
@@ -89,13 +91,22 @@ class StyleSettings extends Component {
       pointSize: 6,
       innerRadius: 0,
       padding: 0.1,
-      innerPadding: 0
+      innerPadding: 0,
+      currentColorScheme: ""
     };
     this.enableArea = this.enableArea.bind(this);
     this.enableSliceLabels = this.enableSliceLabels.bind(this);
+    this.enableRadialLabels = this.enableRadialLabels.bind(this);
     this.enablePoints = this.enablePoints.bind(this);
     this.setReverse = this.setReverse.bind(this);
+    this.setColorScheme = this.setColorScheme.bind(this);
   }
+
+  // componentWillMount() {
+  //   if (!this.props.editElement?.settings?.color !== "undefined") {
+  //     this.setColorScheme(regagroScheme);
+  //   }
+  // }
 
   componentDidUpdate(prevProps, prevState) {
     if (
@@ -106,6 +117,11 @@ class StyleSettings extends Component {
     ) {
       this.setState(s => ({ ...s, editElement: this.props.editElement }));
     }
+  }
+
+  setColorScheme(value) {
+    this.props.setColorScheme(value);
+    this.setState(s => ({ ...s, currentColorScheme: value }));
   }
 
   changeWidth(width) {
@@ -142,6 +158,9 @@ class StyleSettings extends Component {
   enableSliceLabels(e) {
     this.props.enableSliceLabels(e.target.checked);
   }
+  enableRadialLabels(e) {
+    this.props.enableRadialLabels(e.target.checked);
+  }
   enablePoints(e) {
     this.props.enablePoints(e.target.checked);
   }
@@ -177,9 +196,15 @@ class StyleSettings extends Component {
             options={Schemes}
             placeholder="Выберите цветовую схему"
             className="select-type"
-            defaultValue={this.state.editElement?.settings?.colors?.scheme}
-            defaultInputValue={this.state.editElement?.settings?.colors?.scheme}
-            onChange={option => this.props.setColorScheme(option.value)}
+            defaultValue={
+              this.state.editElement?.settings?.colors?.scheme ||
+              this.state.currentColorScheme
+            }
+            defaultInputValue={
+              this.state.editElement?.settings?.colors?.scheme ||
+              this.state.currentColorScheme
+            }
+            onChange={option => this.setColorScheme(option.value)}
             getOptionValue={option => option.value}
             getOptionLabel={option => option.value}
             styles={selectSettings}
@@ -290,6 +315,16 @@ class StyleSettings extends Component {
                   type="checkbox"
                   checked={this.state.editElement?.settings?.enableSliceLabels}
                   onChange={this.enableSliceLabels}
+                />
+              </label>
+            </div>
+            <div className="mb-3">
+              <label>
+                Внешние надписи
+                <input
+                  type="checkbox"
+                  checked={this.state.editElement?.settings?.enableRadialLabels}
+                  onChange={this.enableRadialLabels}
                 />
               </label>
             </div>

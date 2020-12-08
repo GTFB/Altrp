@@ -40,6 +40,8 @@ class Template extends Model
     'area',
     'guid',
     'user_id',
+    'html_content',
+    'styles',
     'all_site'
   ];
 
