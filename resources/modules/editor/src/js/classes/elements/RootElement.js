@@ -110,7 +110,6 @@ class RootElement extends BaseElement {
     this.addControl("type_popup", {
       type: CONTROLLER_SELECT,
       label: "Type",
-      default: "popup",
       options: [
         {
           value: "popup",
@@ -132,10 +131,6 @@ class RootElement extends BaseElement {
     this.addControl("width_popup_layout", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default: {
-        // size: 50,
-        unit: 'vw',
-      },
       units: [
         'px',
         '%',
@@ -151,7 +146,6 @@ class RootElement extends BaseElement {
     this.addControl("height_popup_layout", {
       type: CONTROLLER_SELECT,
       label: "Height",
-      default: "fitToContent",
       options: [
         {
           value: "fitToContent",
@@ -174,10 +168,6 @@ class RootElement extends BaseElement {
       },
       type: CONTROLLER_SLIDER,
       label: 'Custom height',
-      default: {
-        // size: 300,
-        unit: 'px',
-      },
       units: [
         'px',
         '%',
@@ -193,7 +183,6 @@ class RootElement extends BaseElement {
     this.addControl("content_position_popup_layout", {
       type: CONTROLLER_SELECT,
       label: "Content position",
-      // default: "top",
       options: [
         {
           value: "flex-start",
@@ -221,7 +210,6 @@ class RootElement extends BaseElement {
     this.addControl('horizontal_position_popup_layout', {
       type: CONTROLLER_CHOOSE,
       label: 'Horizontal',
-      default: 'center',
       options: [
         {
           icon: 'left',
@@ -241,7 +229,6 @@ class RootElement extends BaseElement {
     this.addControl('vertical_position_popup_layout', {
       type: CONTROLLER_CHOOSE,
       label: 'Vertical',
-      default: 'center',
       options: [
         {
           icon: 'left',
@@ -265,7 +252,6 @@ class RootElement extends BaseElement {
 
     this.addControl('overlay_close_popup_layout', {
       type: CONTROLLER_SWITCHER,
-      default: true,
       label: 'Overlay',
     });
 
@@ -288,7 +274,6 @@ class RootElement extends BaseElement {
       },
       type: CONTROLLER_CHOOSE,
       label: 'alignment',
-      default: 'center',
       options: [
         {
           icon: 'left',
@@ -310,10 +295,6 @@ class RootElement extends BaseElement {
     this.addControl("width_offcanvas", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default: {
-        // size: 300,
-        unit: 'px',
-      },
       units: [
         'px',
         '%',
@@ -343,7 +324,6 @@ class RootElement extends BaseElement {
       },
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: 'right',
       options: [
         {
           icon: 'left',
@@ -367,7 +347,6 @@ class RootElement extends BaseElement {
     this.addControl("close_cursor_offcanvas", {
       type: CONTROLLER_SELECT,
       label: "Close cursor",
-      default: "none",
       options: [
         {
           value: "none",
@@ -387,7 +366,6 @@ class RootElement extends BaseElement {
     this.addControl("direction_offcanvas", {
       type: CONTROLLER_SELECT,
       label: "Content box direction",
-      default: "left",
       options: [
         {
           value: "left",
@@ -427,7 +405,6 @@ class RootElement extends BaseElement {
     this.addControl("animations_offcanvas", {
       type: CONTROLLER_SELECT,
       label: "Animations",
-      default: "slide",
       options: [
         {
           value: "slide",
@@ -472,7 +449,6 @@ class RootElement extends BaseElement {
     this.addControl('background_image', {
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
-      // default: { url: "" },
       rules: {
         "body{{STATE}}": "background-image: url({{URL}});"
       }
@@ -583,10 +559,6 @@ class RootElement extends BaseElement {
     this.addControl("background_image_width", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default: {
-        // size: 100,
-        unit: 'px',
-      },
       conditions: {
         'background_size': [''],
       },
@@ -623,7 +595,6 @@ class RootElement extends BaseElement {
         },
       ],
       label: 'Background Size',
-      // default: 'unset',
       rules: {
         "body{{STATE}}": "background-size: {{VALUE}};"
       }
@@ -632,15 +603,6 @@ class RootElement extends BaseElement {
     this.addControl('gradient', {
       type: CONTROLLER_GRADIENT,
       label: 'Gradient',
-      default: {
-        isWithGradient: false,
-        firstColor: "rgba(97,206,112,1)",
-        firstPoint: '100',
-        secondColor: "rgba(242,41,91,1)",
-        secondPoint: "0",
-        angle: "0",
-        value: ""
-      },
       rules: {
         "body{{STATE}}": "background-image: {{VALUE}}"
       }
@@ -649,14 +611,6 @@ class RootElement extends BaseElement {
     this.addControl('position_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px',
-        bind: true
-      },
       units: [
         'px',
         '%',
@@ -930,9 +884,6 @@ class RootElement extends BaseElement {
     this.addControl('heading_default_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
-      default: {
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -951,9 +902,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_default_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      default: {
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       rules: {
         "div .altrp-heading{{STATE}}": [
@@ -1098,10 +1046,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_default_background_image_width", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default: {
-        // size: 100,
-        unit: 'px',
-      },
       conditions: {
         'background_size': [''],
       },
@@ -1241,14 +1185,6 @@ class RootElement extends BaseElement {
     this.addControl('button_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default: {
-        // top: 20,
-        // right: 25,
-        // bottom: 20,
-        // left: 25,
-        unit: 'px',
-        bind: true
-      },
       units: [
         'px',
         '%',
@@ -1327,9 +1263,6 @@ class RootElement extends BaseElement {
     this.addControl('button_border_width', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Width',
-      default: {
-        bind: true
-      },
       units: [
         'px',
         '%',
@@ -1353,9 +1286,6 @@ class RootElement extends BaseElement {
     this.addControl('button_default_border_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Radius',
-      default: {
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -1402,15 +1332,6 @@ class RootElement extends BaseElement {
     this.addControl('button_gradient', {
       type: CONTROLLER_GRADIENT,
       label: 'Gradient',
-      default: {
-        isWithGradient: false,
-        firstColor: "rgba(97,206,112,1)",
-        firstPoint: '100',
-        secondColor: "rgba(242,41,91,1)",
-        secondPoint: "0",
-        angle: "0",
-        value: ""
-      },
       rules: {
         "div .altrp-btn{{STATE}}": "background-image: {{VALUE}}"
       }
@@ -1521,10 +1442,6 @@ class RootElement extends BaseElement {
     this.addControl("button_background_image_width", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default: {
-        // size: 100,
-        unit: 'px',
-      },
       conditions: {
         'button_background_size': [''],
       },
@@ -1698,10 +1615,6 @@ class RootElement extends BaseElement {
     this.addControl("indent_list_text_default", {
       type: CONTROLLER_SLIDER,
       label: 'Indent',
-      default: {
-        // size: 0,
-        unit: 'px',
-      },
       max: 50,
       min: 0,
       rules: {
@@ -1728,13 +1641,6 @@ class RootElement extends BaseElement {
     this.addControl('padding_list_text_default', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Text Padding',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -1874,13 +1780,6 @@ class RootElement extends BaseElement {
     this.addControl("text_style_position_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       rules: {
         "div .altrp-text{{STATE}}": [
@@ -1895,13 +1794,6 @@ class RootElement extends BaseElement {
     this.addControl('text_style_position_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
-      default: {
-        // top: 5,
-        // right: 0,
-        // bottom: 5,
-        // left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -2020,9 +1912,6 @@ class RootElement extends BaseElement {
     this.addControl('text_default_border_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Radius',
-      default: {
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -2112,13 +2001,6 @@ class RootElement extends BaseElement {
     this.addControl('image_default_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -2137,13 +2019,6 @@ class RootElement extends BaseElement {
     this.addControl('image_default_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -2270,9 +2145,6 @@ class RootElement extends BaseElement {
     this.addControl('image_default_border_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Radius',
-      default: {
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -2453,13 +2325,6 @@ class RootElement extends BaseElement {
     this.addControl('field_default_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -2478,13 +2343,6 @@ class RootElement extends BaseElement {
     this.addControl('field_default_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default: {
-        // top: 2,
-        // right: 2,
-        // bottom: 2,
-        // left: 2,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -2619,9 +2477,6 @@ class RootElement extends BaseElement {
     this.addControl('input_default_border_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Radius',
-      default: {
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -2829,13 +2684,6 @@ class RootElement extends BaseElement {
     this.addControl("table_default_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Table Border Width",
-      default: {
-        // top: 1,
-        // right: 1,
-        // bottom: 1,
-        // left: 1,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       rules: {
         'div .altrp-table{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
@@ -2938,13 +2786,6 @@ class RootElement extends BaseElement {
     this.addControl('table_default_header_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Header Padding',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -3015,13 +2856,6 @@ class RootElement extends BaseElement {
     this.addControl('table_default_body_cell_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Cell padding',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -3175,13 +3009,6 @@ class RootElement extends BaseElement {
     this.addControl('table_style_pagination_padding_buttons', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Pagination buttons Padding',
-      default: {
-        // top: 10,
-        // right: 10,
-        // bottom: 10,
-        // left: 10,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -3241,13 +3068,6 @@ class RootElement extends BaseElement {
     this.addControl('table_style_pagination_padding_count', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Pagination count Padding',
-      default: {
-        // top: 10,
-        // right: 10,
-        // bottom: 10,
-        // left: 10,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -3266,13 +3086,6 @@ class RootElement extends BaseElement {
     this.addControl('table_style_pagination_padding_count_item', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Pagination Item Count Padding',
-      default: {
-        // top: 10,
-        // right: 10,
-        // bottom: 10,
-        // left: 10,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -3422,13 +3235,6 @@ class RootElement extends BaseElement {
     this.addControl('table_style_pagination_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Pagination Padding',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -3465,13 +3271,6 @@ class RootElement extends BaseElement {
     this.addControl('filter_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Filter Input Padding',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -3489,13 +3288,6 @@ class RootElement extends BaseElement {
     this.addControl('label_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Filter Label Padding',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -3568,13 +3360,6 @@ class RootElement extends BaseElement {
     this.addControl("filter_style_table_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Filter Border Width",
-      default: {
-        // top: 1,
-        // right: 1,
-        // bottom: 1,
-        // left: 1,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       rules: {
         '.altrp-label_text>.altrp-field{{STATE}}, .altrp-label_min_max .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
@@ -3625,10 +3410,6 @@ class RootElement extends BaseElement {
     this.addControl("defaults_spacing_column_tabs", {
       type: CONTROLLER_SLIDER,
       label: "Tab spacing",
-      default: {
-        // size: 10,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       max: 100,
       min: 0,
@@ -3641,10 +3422,6 @@ class RootElement extends BaseElement {
     this.addControl("defaults_spacing_content_tabs", {
       type: CONTROLLER_SLIDER,
       label: "Content spacing",
-      default: {
-        // size: 10,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       max: 100,
       min: 0,
@@ -3765,10 +3542,6 @@ class RootElement extends BaseElement {
     this.addControl("defaults_border_radius_tab_style", {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
-      default: {
-        // size: 0,
-        unit: 'px',
-      },
       units: [
         'px',
         '%',
@@ -3780,33 +3553,6 @@ class RootElement extends BaseElement {
         ".altrp-tab-btn{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
       }
     });
-
-    // this.addControl('defaults_typographic_tab_style', {
-    //   type: CONTROLLER_TYPOGRAPHIC,
-    //   label: 'Typographic',
-    //   default: {
-    //     lineHeight: 1.5,
-    //     spacing: 0,
-    //     size: 14,
-    //     weight: "normal",
-    //     family: "Open Sans",
-    //     decoration: ""
-    //   },
-    //   rules: {
-    //     '.altrp-tab-btn{{STATE}}': [
-    //       'font-family: "{{FAMILY}}", sans-serif;',
-    //       'font-size: {{SIZE}}px;',
-    //       'line-height: {{LINEHEIGHT}};',
-    //       'letter-spacing: {{SPACING}}px',
-    //       'font-weight: {{WEIGHT}}',
-    //       'text-transform: {{TRANSFORM}}',
-    //       'font-style: {{STYLE}}',
-    //       'text-decoration: {{DECORATION}}'
-    //     ],
-    //   },
-    // }
-    // );
-
 
     this.endControlSection();
 
@@ -3835,14 +3581,6 @@ class RootElement extends BaseElement {
     this.addControl('padding_offcanvas', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px',
-        bind: true
-      },
       units: [
         'px',
         '%',
@@ -3866,9 +3604,6 @@ class RootElement extends BaseElement {
     this.addControl("top_close_offcanvas", {
       type: CONTROLLER_SLIDER,
       label: 'Top position',
-      default: {
-        unit: 'px',
-      },
       max: 100,
       min: 0,
       rules: {
@@ -3879,9 +3614,6 @@ class RootElement extends BaseElement {
     this.addControl("left_close_offcanvas", {
       type: CONTROLLER_SLIDER,
       label: 'Left position',
-      default: {
-        unit: 'px',
-      },
       max: 100,
       min: 0,
       rules: {
@@ -3892,9 +3624,6 @@ class RootElement extends BaseElement {
     this.addControl("right_close_offcanvas", {
       type: CONTROLLER_SLIDER,
       label: 'Right position',
-      default: {
-        unit: 'px',
-      },
       max: 100,
       min: 0,
       rules: {
@@ -3905,9 +3634,6 @@ class RootElement extends BaseElement {
     this.addControl("size_close_offcanvas", {
       type: CONTROLLER_SLIDER,
       label: 'Size',
-      default: {
-        unit: 'px',
-      },
       max: 100,
       min: 0,
       rules: {
@@ -3945,9 +3671,6 @@ class RootElement extends BaseElement {
     this.addControl('border_radius_close_offcanvas', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Radius',
-      default: {
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -3966,14 +3689,6 @@ class RootElement extends BaseElement {
     this.addControl('padding_close_offcanvas', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px',
-        bind: true
-      },
       units: [
         'px',
         '%',
@@ -4010,15 +3725,6 @@ class RootElement extends BaseElement {
     this.addControl('gradient_popup_style', {
       type: CONTROLLER_GRADIENT,
       label: 'Gradient',
-      default: {
-        isWithGradient: false,
-        firstColor: "rgba(97,206,112,1)",
-        firstPoint: '100',
-        secondColor: "rgba(242,41,91,1)",
-        secondPoint: "0",
-        angle: "0",
-        value: ""
-      },
       rules: {
         ".{{ID}}-app-popup .popup-window{{STATE}}": "background-image: {{VALUE}}"
       }
@@ -4062,9 +3768,6 @@ class RootElement extends BaseElement {
     this.addControl('border_width_popup_style', {
         type: CONTROLLER_DIMENSIONS,
         label: 'Border Width',
-        default: {
-          bind: true
-        },
         units: [
           'px',
           '%',
@@ -4088,9 +3791,6 @@ class RootElement extends BaseElement {
     this.addControl('border_radius_popup_style', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Radius',
-      default: {
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -4122,10 +3822,6 @@ class RootElement extends BaseElement {
     this.addControl('vertical_close_button_popup_style', {
       type: CONTROLLER_SLIDER,
       label: 'Vertical',
-      default: {
-        // size: 0,
-        unit: 'px',
-      },
       units: [
         'px',
         '%',
@@ -4141,10 +3837,6 @@ class RootElement extends BaseElement {
     this.addControl('horizontal_close_button_popup_style', {
       type: CONTROLLER_SLIDER,
       label: 'Horizontal',
-      default: {
-        // size: 0,
-        unit: 'px',
-      },
       units: [
         'px',
         '%',
@@ -4185,10 +3877,6 @@ class RootElement extends BaseElement {
     this.addControl('size_close_button_popup_style', {
       type: CONTROLLER_SLIDER,
       label: 'Size',
-      default: {
-        // size: 0,
-        unit: 'px',
-      },
       units: [
         'px',
         '%',
@@ -4265,10 +3953,6 @@ class RootElement extends BaseElement {
     this.addControl('positioning_custom_top', {
       type: CONTROLLER_SLIDER,
       label: 'Custom top',
-      default: {
-        size: "0",
-        unit: '%'
-      },
       units: [
         'px',
         '%',
