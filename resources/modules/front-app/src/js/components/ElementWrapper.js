@@ -35,6 +35,7 @@ class ElementWrapper extends Component {
   componentDidMount() {
     if(_.isFunction(this.props.element.update)){
       this.props.element.update();
+      this.props.element.updateFonts();
     }
   }
   /**

@@ -48,24 +48,26 @@
       padding-right: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
     }
   </style>
-  <link rel="stylesheet" href="{{ asset( '/modules/front-app/front-app.css' ) . '?' . getCurrentVersion() }}" />
-
+  @if($preload_content[ 'important_styles'])
+    {!! $preload_content[ 'important_styles'] !!}
+  @endif
 </head>
 <body>
-<div id="front-app">
-
+<div id="front-app" class="front-app">
+  {!!  $preload_content[ 'content'] !!}
 </div>
 <script src="{{ altrp_asset( '/modules/front-app/front-app.js', 'http://localhost:3001/' ) }}" defer></script>
 @php
 $value = env( 'ALTRP_SETTING_ALL_SITE_JS', '' );
-  try {
-   $value = decrypt( $value );
-  } catch( \Illuminate\Contracts\Encryption\DecryptException $e){
-   $value = '';
-  }
+try {
+ $value = decrypt( $value );
+} catch( \Illuminate\Contracts\Encryption\DecryptException $e){
+ $value = '';
+}
 @endphp
 @if($value)
   <script>{!! $value !!}</script>
 @endif
 </body>
+<link rel="stylesheet" href="{{ asset( '/modules/front-app/front-app.css' ) . '?' . getCurrentVersion() }}" />
 </html>

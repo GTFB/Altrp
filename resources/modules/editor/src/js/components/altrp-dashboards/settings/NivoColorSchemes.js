@@ -1,4 +1,18 @@
 const Schemes = [
+  // {
+  //   label: "Regagro",
+  //   value: "regagro",
+  //   colors: [
+  //     "#ffd237",
+  //     "#606060",
+  //     "#FFC01F",
+  //     "#BEBEBE",
+  //     "#DC7700",
+  //     "#8F8F8F",
+  //     "#FFD51F",
+  //     "#FFC01F"
+  //   ]
+  // },
   {
     label: "nivo",
     value: "nivo",
@@ -228,7 +242,7 @@ const Schemes = [
     ]
   },
   {
-    label: "red_grey",
+    label: "regagro",
     value: "red_grey",
     colors: [
       "#67001f",

@@ -57,16 +57,16 @@ class HeadingWidget extends Component {
         href: this.state.settings.link_link.url,
         className: 'altrp-inherit',
       };
-      let tag = 'a';
+
+      linkProps.tag = this.state.settings.link_link.tag;
+      linkProps.creativelink = this.getContent("heading_settings_html_tag") !== "p" ? this.getContent("creative_link_controller") : null;
+
       if(this.state.settings.link_link.openInNew){
         linkProps.target = '_black';
       }
       if ((this.state.settings.link_link.tag === 'Link') && ! isEditor()) {
-        tag = AltrpLink;
         linkProps.to = this.state.settings.link_link.url.replace(':id', this.getModelId() || '');
         linkProps.href = this.state.settings.link_link.url.replace(':id', this.getModelId() || '');
-        linkProps.tag = this.state.settings.link_link.tag;
-
       }
       if(_.isObject(modelData)){
         linkProps.to = parseURLTemplate(this.state.settings.link_link.url, modelData);
@@ -75,24 +75,12 @@ class HeadingWidget extends Component {
       if(isEditor()){
         linkProps.onClick = e => {e.preventDefault()}
       }
-      link = React.createElement(tag, { ...linkProps, dangerouslySetInnerHTML: { __html: text }})
-    } else if (this.state.settings.creative_link_link && this.state.settings.creative_link_link.url && this.state.settings.heading_settings_html_tag !== "p") {
       link = (
-        <React.Fragment>
-          <AltrpLink
-            className="altrp-inherit"
-            creativelink={this.getContent("creative_link_controller")}
-          >
-            {
-              React.createElement("span", {
-                dangerouslySetInnerHTML:{ __html: text },
-              })
-            }
-          </AltrpLink>
+        <AltrpLink {...linkProps}>
           {
-            subHeading
+            text
           }
-        </React.Fragment>
+        </AltrpLink>
       )
     }
 

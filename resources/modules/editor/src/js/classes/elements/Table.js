@@ -2756,7 +2756,7 @@ class Table extends BaseElement {
      *
      */
     //</editor-fold>
-    // <editor-fold desc="table_style_footer"
+    // <editor-fold desc="table_style_footer">
     /**
      * Стили для футера группы START
      */

@@ -1,6 +1,7 @@
 import CONSTANTS from "../../../../editor/src/js/consts";
 import {getMediaQueryByName, replaceContentWithData} from "../helpers";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
+import {addFont} from "../store/fonts-storage/actions";
 
 class FrontElement {
 
@@ -103,6 +104,7 @@ class FrontElement {
    */
   update(){
     this.updateStyles();
+
     let widgetsForForm = [
         'button',
         'input',
@@ -131,12 +133,16 @@ class FrontElement {
     }
   }
   async registerActions(){
+    if(this.actionsRegistered){
+      return;
+    }
     /**
      * @member {ActionsManager|*} actionsManager
      */
     const actionsManager = (await import('./modules/ActionsManager.js')).default;
 
     actionsManager.registerWidgetActions(this.getIdForAction(), this.getSettings('actions', []), 'click', this);
+    this.actionsRegistered = true;
   }
   /**
    * Если элемент поле или кнопка нужно инициализирваоть форму в FormsManager
@@ -145,6 +151,10 @@ class FrontElement {
     /**
      * @member {FormsManager} formsManager
      */
+    if(this.formsIsInit){
+      return
+    }
+    this.formsIsInit = true;
     let formsManager = await import('../../../../editor/src/js/classes/modules/FormsManager.js');
     formsManager = formsManager.default;
     switch (this.getName()) {
@@ -185,7 +195,7 @@ class FrontElement {
                 'logout',
                 method,
                 {afterLogoutRedirect:this.getSettings('redirect_after')}
-          ));
+              ));
           }
           break;
           case 'email':{
@@ -194,7 +204,7 @@ class FrontElement {
                 'email',
                 method,
                 {afterLogoutRedirect:this.getSettings('redirect_after')}
-          ));
+              ));
           }
           break;
         }
@@ -642,6 +652,15 @@ class FrontElement {
       formId = replaceContentWithData(formId, this.getCurrentModel().getData());
     }
     return formId;
+  }
+
+  updateFonts(){
+    let fonts = _.get(this.settings,'__altrpFonts__',{});
+
+    fonts = _.toPairs(fonts);
+    fonts.forEach(([settingName, font])=>{
+      appStore.dispatch(addFont(this.getId(), settingName, font));
+    });
   }
 }
 

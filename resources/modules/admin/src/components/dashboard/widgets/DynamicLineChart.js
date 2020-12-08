@@ -1,101 +1,153 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  LineChart,
-  LineSeries,
-  Line,
-  LinearXAxis,
-  LinearXAxisTickSeries,
-  LinearXAxisTickLabel,
-  ChartZoomPan,
-  TooltipArea,
-  PointSeries
-} from 'reaviz';
-import format from "date-fns/format";
-import ru from "date-fns/locale/ru";
+import { ResponsiveLine } from "@nivo/line";
 
 import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
 import { getWidgetData } from "../services/getWidgetData";
-import { customStyle } from "../widgetTypes";
+import moment from "moment";
 
-const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3, dataSource = [], isMultiple, isCustomColor, colorArray }) => {
+const format = "%d.%m.%Y";
+
+const DynamicLineChart = ({
+  widget,
+  keyIsDate,
+  dataSource = [],
+  lineWidth = 2,
+  pointSize = 10,
+  xScaleType = "point",
+  precision = "month",
+  colorScheme = "red_grey",
+  curve = "linear",
+  enableArea = false,
+  enablePoints = true,
+  pointColor,
+  yMarker = false,
+  yMarkerValue = 0,
+  yMarkerOrientation = "vertical",
+  yMarkerColor,
+  yMarkerLabel = "",
+  yMarkerWidth = 2,
+  xMarker = false,
+  xMarkerValue = 0,
+  xMarkerOrientation = "vertical",
+  xMarkerColor,
+  xMarkerLabel = "",
+  xMarkerWidth = 2,
+  yMarkerLabelColor,
+  xMarkerLabelColor,
+  sort = "",
+  tickRotation = 0,
+  bottomAxis = true,
+  enableGridX = true,
+  enableGridY = true
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
+
+  const markers = () => {
+    let markerY = {};
+    let markerX = {};
+    if (yMarker) {
+      markerY = {
+        axis: "y",
+        value: yMarkerValue,
+        lineStyle: {
+          stroke:
+            yMarkerColor != null ? yMarkerColor.colorPickedHex : "#000000",
+          strokeWidth: yMarkerWidth
+        },
+        textStyle: {
+          fill:
+            yMarkerLabelColor != null
+              ? yMarkerLabelColor.colorPickedHex
+              : "#000000"
+        },
+        legend: yMarkerLabel,
+        legendOrientation: yMarkerOrientation
+      };
+    }
+    if (xMarker) {
+      markerX = {
+        axis: "x",
+        value: xMarkerValue,
+        lineStyle: {
+          stroke:
+            xMarkerColor != null ? xMarkerColor.colorPickedHex : "#000000",
+          strokeWidth: xMarkerWidth
+        },
+        textStyle: {
+          fill:
+            xMarkerLabelColor != null
+              ? xMarkerLabelColor.colorPickedHex
+              : "#000000"
+        },
+        legend: xMarkerLabel,
+        legendOrientation: xMarkerOrientation
+      };
+    }
+    if (!yMarker && !xMarker) return [];
+    if (yMarker && !xMarker) return [markerY];
+    if (!yMarker && xMarker) return [markerX];
+
+    return [markerY, markerX];
+  };
 
   const getData = useCallback(async () => {
     setIsLoading(true);
     if (dataSource.length == 0) {
       const charts = await getWidgetData(widget.source, widget.filter);
       if (charts.status === 200) {
-        const newData = charts.data.data.map((item) => {
-          const key = new Date(item.key);
-          if (key) {
-            return {
-              key,
-              data: item.data,
-            };
-          }
+        const newData = charts.data.data.map(item => {
+          const currentKey = item.key;
+          const keyFormatted = !moment(currentKey).isValid()
+            ? currentKey
+            : moment(currentKey).format("DD.MM.YYYY");
+          return {
+            y: Number(item.data),
+            x: keyIsDate ? keyFormatted : currentKey
+          };
         });
-        let data = newData;
-        switch (Number(widget.options.sort)) {
-          case 0:
-            data = charts.data.data;
-            break;
-          case 1:
-            data = _.sortBy(data,'key');
-            break;
-          case 2:
-            data = _.sortBy(data,'data');
-            break;
-          default:
-            data = charts.data.data;
-            break;
-        }
+        let data = [
+          {
+            id: "",
+            data: newData
+          }
+        ];
         setData(data || []);
         setIsLoading(false);
       }
-    }
-    else {
-      if (isMultiple) {
-        let multipleData = dataSource.map((collection, index) => {
-          return {
-            key: index,
-            data: collection.map(item => {
-              let key = new Date(item.key);
-              if (key instanceof Date && !isNaN(key)) {
-                return {
-                  key: key,
-                  data: Number(item.data),
-                };
-              };
-            }).filter(item => typeof item != 'undefined')
-          }
-        });
+    } else {
+      if (
+        sort !== null &&
+        sort !== "undefined" &&
+        typeof dataSource !== "undefined"
+      ) {
+        switch (sort) {
+          case "value":
+            dataSource.forEach((item, index) => {
+              if (item.data.length > 0) {
+                dataSource[index].data = _.sortBy(item.data, ["y"]);
+              }
+            });
+            break;
+          case "key":
+            data.forEach((item, index) => {
+              if (item.data.length > 0) {
+                dataSource[index].data = _.sortBy(item.data, ["x"]);
+              }
+            });
+            break;
 
-        setData(multipleData || []);
-        setIsLoading(false);
+          default:
+            // data = data;
+            break;
+        }
       }
-      else {
-        const newData = dataSource.map((item) => {
-          let key = new Date(item.key);
-          if (key instanceof Date && !isNaN(key)) {
-            return {
-              key: key,
-              data: Number(item.data),
-            };
-          }
-        }).filter(item => typeof item != 'undefined');
-
-        setData(newData || []);
-        setIsLoading(false);
-      }
+      setData(dataSource || []);
+      setIsLoading(false);
     }
   }, [widget]);
-
-  const formattingDate = (d) => {
-    return format(d, "d MMM yy", { locale: ru });
-  };
 
   useEffect(() => {
     getData();
@@ -103,44 +155,88 @@ const DynamicLineChart = ({ widget, width = 300, height = 300, strokeWidth = 3, 
 
   if (isLoading) return <Spinner />;
 
-  if (data.length === 0) return <EmptyWidget />;
+  let matches = [];
+  let isNotEmpty = false;
 
+  matches = _.uniq(
+    data.map(item => {
+      return item.data.length > 0;
+    })
+  );
+
+  isNotEmpty = matches.includes(true);
+  if (!isNotEmpty) return <EmptyWidget />;
   return (
     <>
-      <LineChart
-        height={height}
-        // width={width}
-        zoomPan={<ChartZoomPan />}
-        xAxis={
-          <LinearXAxis
-            type="time"
-            tickSeries={
-              <LinearXAxisTickSeries
-                label={
-                  <LinearXAxisTickLabel
-                    rotation={false}
-                    format={formattingDate}
-                  />
+      <div
+        style={{
+          width: `100%`,
+          height: `${450}px`
+        }}
+      >
+        <ResponsiveLine
+          data={data}
+          margin={{ top: 50, right: 180, bottom: 50, left: 60 }}
+          xFormat={xScaleType === "time" && "time:%d.%m.%Y"}
+          xScale={
+            xScaleType === "time"
+              ? { type: xScaleType, format: format, precision: precision }
+              : { type: xScaleType }
+          }
+          lineWidth={lineWidth}
+          markers={markers()}
+          enableGridX={enableGridX}
+          enableGridY={enableGridY}
+          axisBottom={
+            bottomAxis &&
+            (xScaleType === "time"
+              ? {
+                  format: format,
+                  tickRotation: tickRotation
                 }
-              />
+              : {
+                  tickRotation: tickRotation
+                })
+          }
+          useMesh={true}
+          enableArea={enableArea}
+          enablePoints={enablePoints}
+          pointSize={pointSize}
+          curve={curve}
+          colors={{ scheme: colorScheme }}
+          pointColor={
+            typeof pointColor !== "undefined" && pointColor !== null
+              ? pointColor.colorPickedHex
+              : { from: "color", modifiers: [] }
+          }
+          legends={[
+            {
+              anchor: "bottom-right",
+              direction: "column",
+              justify: false,
+              translateX: 130,
+              translateY: 0,
+              itemsSpacing: 0,
+              itemDirection: "left-to-right",
+              itemWidth: 120,
+              itemHeight: 20,
+              itemOpacity: 0.75,
+              symbolSize: 12,
+              symbolShape: "circle",
+              symbolBorderColor: "rgba(0, 0, 0, .5)",
+              effects: [
+                {
+                  on: "hover",
+                  style: {
+                    itemBackground: "rgba(0, 0, 0, .03)",
+                    itemOpacity: 1
+                  }
+                }
+              ]
             }
-          />
-        }
-        series={
-          <LineSeries
-            type={isMultiple ? "grouped" : 'standard'}
-            animated={widget.options.animated}
-            line={<Line strokeWidth={strokeWidth} />}
-            colorScheme={
-              isCustomColor ? (data, index) => {
-                return colorArray[index];
-              } :
-                widget.options.colorScheme === "Custom" ? customStyle : widget.options.colorScheme
-            }
-          />
-        }
-        data={data}
-      />
+          ]}
+        />
+      </div>
     </>
   );
 };

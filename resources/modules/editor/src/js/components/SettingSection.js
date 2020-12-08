@@ -42,6 +42,15 @@ class SettingSection extends Component {
    * @return {undefined}
    */
   checkSectionDisplay(){
+
+    if(this.props.conditionsCallback){
+      let hidden = ! this.props.conditionsCallback();
+      if(this.state.hidden === hidden) {
+        return
+      }
+      this.setState(state => ({...state, hidden }));
+      return ;
+    }
     if(! this.props.conditions){
       return;
     }

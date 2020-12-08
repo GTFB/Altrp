@@ -1,7 +1,7 @@
-@import url("/fonts/Roboto/stylesheet.css");
-@import url("/fonts/OpenSans/stylesheet.css");
-@import url("/fonts/PTSans/stylesheet.css");
-@import url("/fonts/Montserrat/stylesheet.css");
+//@import url("/fonts/Roboto/stylesheet.css");
+//@import url("/fonts/OpenSans/stylesheet.css");
+//@import url("/fonts/PTSans/stylesheet.css");
+//@import url("/fonts/Montserrat/stylesheet.css");
 .sections-wrapper {
   display: flex;
   width: 1440px;
@@ -183,7 +183,7 @@
   border-collapse: separate;
 }
 .altrp-table-td{
-  overflow: hidden;
+  //overflow: hidden;
   &__grouping{
     font-size: 18px;
     font-weight: bold;
@@ -1435,4 +1435,7 @@
     justify-content: center;
     flex-wrap: wrap;
   }
+}
+.altrp-dropbar-container{
+  z-index: 9999;
 }

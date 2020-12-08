@@ -25,6 +25,7 @@ import {
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 import {actionsControllers} from "../../decorators/actions-controllers";
+import {getTemplateDataStorage} from "../../helpers";
 
 class Button extends BaseElement {
 
@@ -78,7 +79,7 @@ class Button extends BaseElement {
     //   label: "Popup ID",
     //   isClearable: true,
     //   options_resource: '/admin/ajax/templates/options?template_type=popup&value=guid',
-    //   nullable: true,
+    //   nullable: nullable: true,
     //   conditions: {
     //     'popup_trigger_type': true,
     //   },
@@ -407,7 +408,7 @@ class Button extends BaseElement {
       max: 1000,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-dropbar-container{{STATE}}": "width: {{SIZE}}{{UNIT}}"
+        ".{{ID}}-altrp-dropbar .altrp-dropbar-container{{STATE}}": "width: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -1036,7 +1037,7 @@ class Button extends BaseElement {
         colorPickedHex: "#343B4C",
       },
       rules: {
-        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": "background-color: {{COLOR}};"
+        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
@@ -1048,7 +1049,7 @@ class Button extends BaseElement {
         colorPickedHex: "#FFFFFF",
       },
       rules: {
-        "{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}": "color: {{COLOR}};"
+        ".{{ID}}-altrp-dropbar .altrp-dropbar-btn-content{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -1064,7 +1065,7 @@ class Button extends BaseElement {
         decoration: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}': [
+        '.{{ID}}-altrp-dropbar.altrp-dropbar-btn-content{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -1090,7 +1091,7 @@ class Button extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": [
+        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}": [
           "padding-top: {{TOP}}{{UNIT}};",
           "padding-right: {{RIGHT}}{{UNIT}};",
           "padding-bottom: {{BOTTOM}}{{UNIT}};",
@@ -1129,7 +1130,7 @@ class Button extends BaseElement {
         }
       ],
       rules: {
-        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": "border-style: {{VALUE}};"
+        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}": "border-style: {{VALUE}};"
       }
     });
 
@@ -1138,7 +1139,7 @@ class Button extends BaseElement {
       label: "Border width",
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}":
+        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}":
           "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
       }
     });
@@ -1151,7 +1152,7 @@ class Button extends BaseElement {
         colorPickedHex: "#32a852"
       },
       rules: {
-        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": "border-color: {{COLOR}};"
+        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}": "border-color: {{COLOR}};"
       }
     });
 
@@ -1187,7 +1188,7 @@ class Button extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
       }
     });
 
