@@ -490,6 +490,8 @@ export function getDataByPath(
     value = getTimeValue(path.replace("altrptime.", ""));
   } else if (path.indexOf("altrpforms.") === 0) {
     value = _.get(formsStore, path.replace("altrpforms.", ""), _default);
+  } else if (path.indexOf("altrppage.") === 0) {
+
   } else {
     value = urlParams[path]
       ? urlParams[path]
