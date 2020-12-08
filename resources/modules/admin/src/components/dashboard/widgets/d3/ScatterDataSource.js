@@ -5,8 +5,8 @@ import { connect } from "react-redux";
 import DataAdapter from "./DataAdapter";
 
 import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
-
 const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+import moment from "moment";
 
 const mapStateToProps = state => {
   return { formsStore: _.cloneDeep(state.formsStore) };
@@ -183,11 +183,24 @@ class ScatterDataSource extends Component {
       }
     }
 
+    let data = [];
+    if (this.state.settings?.xScale?.type === "time") {
+      data = _.cloneDeep(this.state.data, []);
+      data = data.map(item => {
+        item.data = item.data.map(object => {
+          object.x = moment(object.x).format("DD.MM.YYYY");
+          return object;
+        });
+        return item;
+      });
+    } else {
+      data = this.state.data;
+    }
     return (
       <>
         <ErrorBoundary>
           <ResponsiveScatterPlotCanvas
-            data={this.state.data}
+            data={data}
             margin={{ top: 40, right: 120, bottom: 80, left: 100 }}
             xScale={this.state.settings?.xScale}
             enableSliceLabels={false}

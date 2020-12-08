@@ -177,7 +177,7 @@ class WidgetSettings extends Component {
     if (!this.props.addItemPreview) {
       let element = this.props.editElement;
       element.settings.sources = sources;
-      // this.props.editElementDispatch(element);
+      this.props.editElementDispatch(element);
       this.props.editHandler(this.props.editElement.i, settings);
     } else {
       const element = { settings: { ...settings } };
