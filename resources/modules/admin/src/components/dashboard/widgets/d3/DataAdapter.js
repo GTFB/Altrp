@@ -232,6 +232,8 @@ class DataAdapter {
     }
     try {
       let dataArray = getDataByPath(path, []);
+      //на случай если приходит просто обект
+      dataArray = Array.isArray(dataArray) ? dataArray : [dataArray];
       if (dataArray.length > 0) {
         //Исключаем дублирование ключей, т.к. это приводит к ошибкам рендера всех диаграм
         dataArray = _.uniqBy(dataArray, key);
@@ -474,10 +476,12 @@ class DataAdapter {
         }
       } else {
         if (!isMultiple && this.diagramType === BAR) {
-          if (Array.isArray(data)) {
-            data = data[0].data;
-          } else {
-            data = data.data;
+          if (!isMultiple && this.diagramType === BAR) {
+            if (Array.isArray(data)) {
+              data = data[0].data;
+            } else {
+              data = data.data;
+            }
           }
         } else {
           data = [].concat(...data.map(item => item.data));
