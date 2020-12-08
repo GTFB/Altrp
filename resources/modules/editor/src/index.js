@@ -17,8 +17,8 @@ window.Component = Component;
 // require('dotenv').config();
 // let my_env_key = process.env.MIX_PUSHER_APP_KEY;
 
-// import Echo from "laravel-echo"
-// window.Pusher = require('pusher-js');
+import Echo from "laravel-echo"
+window.Pusher = require('pusher-js');
 // window.Echo = new Echo({
 //     broadcaster: 'pusher',
 //     key: 123456,
@@ -37,6 +37,7 @@ try {
     forceTLS: false,
     disableStats: true
   });
+  
   if (store.currentUser.data?.id !== "undefined") {
     Echo.channel("altrpchannel.user." + store.currentUser.data.id).listen('.notification.user', e => {
         //если удален = {} || []
