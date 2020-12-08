@@ -63,3 +63,49 @@
   }
 }
 
+.assets {
+  &__tabs {
+    bottom: -2px;
+    position: relative;
+  }
+
+  &__tab {
+    margin-right: 16px;
+    padding: .5rem 1rem;
+
+    border: 1px solid $border-gray;
+    border-radius: 3px 3px 0 0;
+    background-color: #e6e9ec;
+
+    font-family: Montserrat,sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #8e94aa;
+  }
+
+  &__tab:hover {
+    background-color: #f1f3f5; 
+
+    color: #8992b4;
+    text-decoration: none;
+  }
+
+  &__tab--selected {
+    display: inline-block;
+
+    background-color: #fff;
+    border-bottom-color: #fff;
+
+    color: #343b4c; 
+  }
+
+  &__tab--selected:hover {
+    background-color: #fff;
+
+    color: #343b4c; 
+  }
+
+  &__tab-panel {
+    border: 1px solid $border-gray;
+  }
+} 
