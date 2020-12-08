@@ -22,7 +22,7 @@ class HeadingWidget extends Component {
       Loading...
     </div>;
 
-    switch (this.getContent("type")) {
+    switch (this.props.element.getSettings("type", 'heading')) {
       case "heading":
 
         let modelData = this.props.element.hasCardModel()
