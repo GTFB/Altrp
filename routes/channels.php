@@ -11,6 +11,6 @@
 |
 */
 
-Broadcast::channel('notifications.{userId}', function () {
-	return true;
+Broadcast::channel('altrpchannel.user.{userId}', function ($user, $userId) {
+    return (int) $user->id === (int) $userId;
 });

@@ -17,10 +17,12 @@ use App\Observers\AltrpSourceObserver;
 use App\Observers\AltrpSQLEditorObserver;
 use App\Observers\AltrpValidationFieldObserver;
 use App\Observers\AltrpValidationRuleObserver;
+use App\Observers\UserObserver;
 use App\Services\AltrpImportExportService;
 use App\Services\AltrpSettingsService;
 use App\Services\AltrpUpdateService;
 use App\SQLEditor;
+use App\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
@@ -78,6 +80,7 @@ class AppServiceProvider extends ServiceProvider
         Source::observe(AltrpSourceObserver::class);
         ValidationRule::observe(AltrpValidationRuleObserver::class);
         ValidationField::observe(AltrpValidationFieldObserver::class);
+        User::observe(UserObserver::class);
 
         Builder::macro('whereLike', function ($attributes, string $searchTerm) {
             $this->where(function (Builder $query) use ($attributes, $searchTerm) {

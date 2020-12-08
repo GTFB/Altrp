@@ -15,6 +15,8 @@ class Role extends LaratrustRole
     'display_name',
   ];
 
+    protected $with = ['notice_settings'];
+
   /**
    * Импортируем роли
    * @param array $imported_roles
@@ -40,4 +42,9 @@ class Role extends LaratrustRole
 
     }
   }
+
+    public function notice_settings()
+    {
+        return $this->morphMany('App\Altrp\NoticeSetting', 'noticed', 'noticed_type', 'noticed_id');
+    }
 }
