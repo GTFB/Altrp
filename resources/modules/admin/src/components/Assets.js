@@ -20,11 +20,12 @@ class Assets extends Component {
       itemDeleteClasses: 'item__delete',
     };
     this.typesFiles = {
-      images: ['png', 'gif', 'jpg', 'jpeg'],
+      images: ['png', 'gif', 'jpg', 'jpeg', 'webp'],
       svgs: ['svg'],
-      fonts: ['ttf', 'woff2'],
+      fonts: ['ttf', 'woff2', 'otf', 'woff', 'woff2', 'eot'],
       archives: ['zip', 'rar'],
-      documents: ['doc', 'docx', 'xls', 'xlsx'],
+      documents: ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'odt', 'ods', 'odp'],
+      medias: ['wav', 'mp3', 'mp4', 'avi', 'webm'],
       others: ['']
     };
     this.resource  = new Resource({route: '/admin/ajax/media'});
@@ -192,6 +193,13 @@ class Assets extends Component {
             isActive={this.isActiveLink('archives')}
             onClick={this.onFilterAssets('archives')}
           >ARCHIVES</NavLink>
+          <NavLink 
+            className="assets__tab" 
+            activeClassName="assets__tab--selected" 
+            to={`${this.path}/medias`}
+            isActive={this.isActiveLink('medias')}
+            onClick={this.onFilterAssets('medias')}
+          >MEDIAS</NavLink>
           <NavLink 
             className="assets__tab" 
             activeClassName="assets__tab--selected" 
