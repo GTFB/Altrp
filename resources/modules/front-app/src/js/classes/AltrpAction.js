@@ -324,7 +324,7 @@ class AltrpAction extends AltrpModel {
     let URL = this.getFormURL();
     if (frontAppRouter) {
       if (this.getProperty('back')) {
-        frontAppRouter.history.back();
+        frontAppRouter.history.goBack();
       } else {
         let routes = appStore.getState().appRoutes.routes || [];
         let innerRedirect = false;
