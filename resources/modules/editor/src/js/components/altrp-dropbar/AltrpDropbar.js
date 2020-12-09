@@ -109,7 +109,8 @@ class Dropbar extends Component {
                     }
                   )
                 ) : (
-                  <TemplateLoader templateId={this.props.settings.template_dropbar_section}/>
+                  <TemplateLoader templateId={this.props.settings.template_dropbar_section}
+                                  cardModel={this.props.element.getCurrentModel()}/>
                 )
               }
             </div>

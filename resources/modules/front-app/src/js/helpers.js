@@ -363,7 +363,7 @@ export function setDataByPath(path = "", value, dispatch = null) {
   if (!path) {
     return false;
   }
-
+  path = path.replace('{{','').replace('}}', '');
   switch (value) {
     case "true":
       value = true;
