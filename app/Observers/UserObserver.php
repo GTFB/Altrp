@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Events\NoticeUserEvent;
+use App\Events\NotificationEvent;
 use App\User;
 
 class UserObserver
@@ -15,7 +16,7 @@ class UserObserver
      */
     public function created(User $user)
     {
-        broadcast(new NoticeUserEvent($user));
+        broadcast(new NotificationEvent($user));
     }
 
     /**

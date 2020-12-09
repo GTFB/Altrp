@@ -77,6 +77,7 @@ window.Component = React.Component;
 // let my_env_key = process.env.MIX_PUSHER_APP_KEY;
 
 import Echo from "laravel-echo"
+import {changeCurrentUser} from "../../front-app/src/js/store/current-user/actions";
 window.Pusher = require('pusher-js');
 // window.Echo = new Echo({
 //     broadcaster: 'pusher',
@@ -96,18 +97,18 @@ try {
     forceTLS: false,
     disableStats: true
   });
-  console.log(store.getState("curentUser"));
-  if (store.currentUser.data?.id !== "undefined") {
-    Echo.channel("altrpchannel.user." + store.currentUser.data.id).listen('.notification.user', e => {
-        //если удален = {} || []
-        store.dispatch(changeCurrentUser(e.data));
-        // data {...}
-      }
-    );
-  }
-  console.log("====================================");
-  console.log(store.currentUser.data?.id); // 123 || undefined <=> false
-  console.log("====================================");
+  // console.log(store.getState("curentUser"));
+  // if (store.currentUser.data?.id !== "undefined") {
+  //   Echo.channel("altrpchannel.user." + store.currentUser.data.id).listen('.notification.user', e => {
+  //       //если удален = {} || []
+  //       store.dispatch(changeCurrentUser(e.data));
+  //       // data {...}
+  //     }
+  //   );
+  // }
+  // console.log("====================================");
+  // console.log(store.currentUser.data?.id); // 123 || undefined <=> false
+  // console.log("====================================");
 } catch (error) {
   console.log(error);
 
@@ -130,6 +131,21 @@ class Admin extends Component {
     store.subscribe(this.updateAdminState.bind(this));
     new Resource({ route: '/admin/ajax/model_options' }).getAll()
       .then(({ options }) => this.setState({ models: options }));
+  }
+
+  async componentWillMount() {
+    let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
+    currentUser = currentUser.data;
+    console.log(currentUser, 1);
+    window.Echo.channel("altrpchannel.user." + currentUser.id)
+      .listen('.notification.user', e => {
+        //если удален = {} || []
+      console.log(e.user, 2)
+        store.dispatch(changeCurrentUser(e.user));
+        // data {...}
+        console.log(store.getState().currentUser.data, 3);
+      }
+    );
   }
 
   /**

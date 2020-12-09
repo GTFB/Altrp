@@ -11,7 +11,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class NotificationEvent
+class NotificationEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -20,7 +20,7 @@ class NotificationEvent
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param User $user
      */
     public function __construct(User $user)
     {
@@ -34,9 +34,12 @@ class NotificationEvent
      */
     public function broadcastOn()
     {
-        return new Channel("altrpchannel.user.{$this->user->id}");;
+        return new Channel('altrpchannel.user.' . $this->user->id);
     }
 
+    /**
+     * @return string
+     */
     public function broadcastAs()
     {
         return 'notification.user';
