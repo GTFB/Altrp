@@ -111,6 +111,7 @@ class FrontElement {
     ];
     let widgetsWithActions = [
         'button',
+        'input',
     ];
     /**
      * Инициация событий в первую очередь
@@ -121,8 +122,11 @@ class FrontElement {
       } catch(e){
         console.error(e);
       }
-      return;
+      if(this.getName() === 'button'){
+        return;
+      }
     }
+
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getFormId()){
       this.formInit();
       return;
@@ -140,8 +144,16 @@ class FrontElement {
      * @member {ActionsManager|*} actionsManager
      */
     const actionsManager = (await import('./modules/ActionsManager.js')).default;
+    switch (this.getName()){
+      case 'button':{
+        actionsManager.registerWidgetActions(this.getIdForAction(), this.getSettings('actions', []), 'click', this);
+      }
+      break;
+      case 'input':{
+        actionsManager.registerWidgetActions(this.getIdForAction(), this.getSettings('actions', []), 'blur', this);
+      }
+    }
 
-    actionsManager.registerWidgetActions(this.getIdForAction(), this.getSettings('actions', []), 'click', this);
     this.actionsRegistered = true;
   }
   /**
@@ -151,12 +163,16 @@ class FrontElement {
     /**
      * @member {FormsManager} formsManager
      */
+    if(! this.component){
+      return;
+    }
     if(this.formsIsInit){
       return
     }
     this.formsIsInit = true;
     let formsManager = await import('../../../../editor/src/js/classes/modules/FormsManager.js');
     formsManager = formsManager.default;
+
     switch (this.getName()) {
       case 'button': {
         let method = 'POST';
@@ -422,7 +438,6 @@ class FrontElement {
     if(this.getName() === 'root-element'){
       return true;
     }
-    console.log(this);
     if(this.component.props.elementDisplay || this.getSettings('conditional_ignore_in_forms')){
       display = this.parent ? this.parent.elementIsDisplay() : true;
     } else {

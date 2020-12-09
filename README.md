@@ -3,6 +3,8 @@
 
 ## Changelog
 
+### 0.10.15
++ Blur Actions for Input Widget
 
 ### 0.9.0
 + Add Map, Diagram, Dashboards Widgets

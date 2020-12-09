@@ -339,7 +339,7 @@ class Resource {
    * @param {object} params
    * @return {Promise}
    * */
-  async getQueried(params) {
+  async getQueried(params, custom_headers = null) {
     let options = {
       method: "get",
       headers: {
