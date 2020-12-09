@@ -255,6 +255,8 @@ class ElementWrapper extends Component {
           altrpresponses: this.props.altrpresponses,
           formsStore: this.props.formsStore,
           elementDisplay: this.state.elementDisplay,
+          altrpPageState: this.props.altrpPageState,
+          altrpMeta: this.props.altrpMeta,
           appStore
         })}
       </div>
