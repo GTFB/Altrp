@@ -16,9 +16,8 @@ class Assets extends Component {
     this.state = {
       uploaderClasses: 'admin-assets__uploader uploader',
       assets: [],
-      filteredAssets: [],
+      acceptInput: '',
       itemDeleteClasses: 'item__delete',
-      activeLink: '',
     };
     this.typesFiles = {
       images: ['png', 'gif', 'jpg', 'jpeg'],
@@ -26,6 +25,7 @@ class Assets extends Component {
       fonts: ['ttf', 'woff2'],
       archives: ['zip', 'rar'],
       documents: ['doc', 'docx', 'xls', 'xlsx'],
+      others: ['']
     };
     this.resource  = new Resource({route: '/admin/ajax/media'});
   }
@@ -65,7 +65,6 @@ class Assets extends Component {
   }
   componentDidMount(){
     const activeLink = this.changeUrlForTab();
-    
     this.filterAssets(activeLink);
 
     this.resource.getAll().then(res=>{
@@ -105,19 +104,14 @@ class Assets extends Component {
     
   }
   filterAssets(activeLink) {
-    const filteredAssets = this.state.assets.filter(asset => {
-      let typeFile = asset.url.split('.').pop();
-      if(activeLink==="others") {
-        for(const element in this.typesFiles) {
-          if(this.typesFiles[element].includes(typeFile)) return false;
-        }
-        return true;
-      } else {
-        return this.typesFiles[activeLink].includes(typeFile);
-      }
-    });
     this.setState(state => {
-      return {...state, filteredAssets}
+      return {...state, acceptInput: `.${this.typesFiles[activeLink].join(', .')}` }
+    })
+    let filterResource = new Resource({route: `/admin/ajax/media?type=${activeLink}`});
+    filterResource.getAll().then(res=>{
+      this.setState(state=>{
+        return {...state, assets: res}
+      })
     });
   }
   changeUrlForTab() {
@@ -151,10 +145,12 @@ class Assets extends Component {
              onDragOver={this.onDragOver}>
           <label className="uploader__label d-flex flex-column align-items-center">
             <UploadIcon width={100} height={100} className="icon"/>
-            <input type="file"
-                   multiple={true}
-                   onChange={this.onChange}
-                   className="uploader__input"/>
+            <input 
+              type="file"
+              accept={this.state.acceptInput}
+              multiple={true}
+              onChange={this.onChange}
+              className="uploader__input"/>
             <span className="uploader__text text text_bold">
               Drag or Choose File
             </span>
@@ -206,7 +202,7 @@ class Assets extends Component {
         </div>
         <div className="admin-assets__list assets__tab-panel p-4 assets-list d-flex flex-wrap">
           {
-            this.state.filteredAssets.map(asset=>{
+            this.state.assets.map(asset=>{
               return<div className="assets-list__item item col-1" key={asset.id} >
                 <div className="item__background"
                     style={{'backgroundImage': `url('${asset.url}')`}}/>
