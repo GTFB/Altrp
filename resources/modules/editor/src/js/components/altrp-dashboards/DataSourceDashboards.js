@@ -166,6 +166,7 @@ class DataSourceDashboards extends Component {
     let widget = _.find(items, { i: key });
     widget.settings = settings;
     widget.edit = false;
+    // this.props.editElementDispatch(widget);
     _.replace(items, { i: key }, widget);
     let index = _.findKey(items, { i: key });
     this.setState(state => {
@@ -183,6 +184,13 @@ class DataSourceDashboards extends Component {
   onAddItemCard(element) {
     if (_.keys(element).length > 0) {
       this.setState(state => {
+        if (!Array.isArray(state.items)) {
+          console.log("====================================");
+          console.log(state.items);
+          state.items = Object.values(state.items);
+          console.log(state.items);
+          console.log("====================================");
+        }
         let items = state.items.concat(
           this.itemSettingsAdd(state, element.settings)
         );
@@ -332,6 +340,7 @@ class DataSourceDashboards extends Component {
               editHandler={this.onEditItem}
               onCloseHandler={this.openSettings}
               onAddItem={this.onAddItemCard}
+              setCardName={this.setCardName}
             />
           )}
         </Drawer>
