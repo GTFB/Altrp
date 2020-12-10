@@ -4,6 +4,10 @@ import ErrorBoundary from "./ErrorBoundary";
 import { connect } from "react-redux";
 import DataAdapter from "./DataAdapter";
 
+import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+import moment from "moment";
+
 const mapStateToProps = state => {
   return { formsStore: _.cloneDeep(state.formsStore) };
 };
@@ -62,15 +66,6 @@ class ScatterDataSource extends Component {
       await this.getData();
     }
     if (
-      !_.isEqual(prevState?.settings?.sort, this.props.element?.settings?.sort)
-    ) {
-      this.setState(state => ({
-        ...state,
-        countRequest: 0
-      }));
-      await this.getData();
-    }
-    if (
       !_.isEqual(
         prevProps.formsStore.form_data,
         this.props.formsStore.form_data
@@ -109,33 +104,6 @@ class ScatterDataSource extends Component {
         count += 1;
         this.setState(s => ({ ...s, countRequest: count }));
       }, 3500);
-    }
-    if (
-      this.state.settings?.sort?.value !== null &&
-      typeof this.state.settings?.sort?.value !== "undefined" &&
-      typeof data !== "undefined"
-    ) {
-      const sort = this.state.settings?.sort.value;
-      switch (sort) {
-        case "value":
-          data.forEach((item, index) => {
-            if (item.data.length > 0) {
-              data[index].data = _.sortBy(item.data, ["y"]);
-            }
-          });
-          break;
-        case "key":
-          data.forEach((item, index) => {
-            if (item.data.length > 0) {
-              data[index].data = _.sortBy(item.data, ["x"]);
-            }
-          });
-          break;
-
-        default:
-          // data = data;
-          break;
-      }
     }
     this.setState(s => ({
       ...s,
@@ -179,15 +147,59 @@ class ScatterDataSource extends Component {
       }
     }
 
+    let data = [];
+    if (this.state.settings?.xScale?.type === "time") {
+      data = _.cloneDeep(this.state.data, []);
+      data = data.map(item => {
+        item.data = item.data.map(object => {
+          object.x = moment(object.x).format("DD.MM.YYYY");
+          return object;
+        });
+        return item;
+      });
+    } else {
+      data = this.state.data;
+    }
+    if (
+      this.state.settings?.sort?.value !== null &&
+      typeof this.state.settings?.sort?.value !== "undefined" &&
+      typeof data !== "undefined"
+    ) {
+      const sort = this.state.settings?.sort?.value;
+      switch (sort) {
+        case "value":
+          data.forEach((item, index) => {
+            if (item.data.length > 0) {
+              data[index].data = _.sortBy(item.data, ["y"]);
+            }
+          });
+          break;
+        case "key":
+          data.forEach((item, index) => {
+            if (item.data.length > 0) {
+              data[index].data = _.sortBy(item.data, ["x"]);
+            }
+          });
+          break;
+
+        default:
+          // data = data;
+          break;
+      }
+    }
     return (
       <>
         <ErrorBoundary>
           <ResponsiveScatterPlotCanvas
-            data={this.state.data}
+            data={data}
             margin={{ top: 40, right: 120, bottom: 80, left: 100 }}
             xScale={this.state.settings?.xScale}
             enableSliceLabels={false}
-            colors={this.state.settings?.colors}
+            colors={
+              this.state.settings?.colors?.scheme === "regagro"
+                ? regagroScheme
+                : this.state.settings?.colors
+            }
             xFormat={
               this.state.settings?.xScale?.type === "time" && "time:%d.%m.%Y"
             }

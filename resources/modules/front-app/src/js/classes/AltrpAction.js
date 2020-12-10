@@ -307,6 +307,7 @@ class AltrpAction extends AltrpModel {
       }
       return {success: true};
     }
+
     if(this.getProperty('data')){
       let data = parseParamsFromString(this.getProperty('data'), getAppContext(), true);
       if(! _.isEmpty(data)){
@@ -324,7 +325,7 @@ class AltrpAction extends AltrpModel {
     let URL = this.getFormURL();
     if (frontAppRouter) {
       if (this.getProperty('back')) {
-        frontAppRouter.history.back();
+        frontAppRouter.history.goBack();
       } else {
         let routes = appStore.getState().appRoutes.routes || [];
         let innerRedirect = false;
@@ -604,17 +605,29 @@ class AltrpAction extends AltrpModel {
       return result;
     }
     let value = this.getProperty('value');
+    value = value.trim();
+
     const setType = this.getProperty('set_type');
     let count = this.getProperty('count');
     switch (setType) {
       case 'toggle':
         {
-          value = !getDataByPath(path);
+          value = ! getDataByPath(path);
           result.success = setDataByPath(path, value);
         }
         break;
       case 'set':
         {
+
+          if(value.split(/\r?\n/).length === 1
+              && value.indexOf('{{') === 0
+              && value.indexOf('}}') === value.length - 2
+              && getDataByPath(value.replace('{{', '').replace('}}', ''))
+          ){
+            value = getDataByPath(value.replace('{{', '').replace('}}', ''), null, this.getCurrentModel());
+          } else {
+            value = replaceContentWithData(value, this.getCurrentModel().getData());
+          }
           result.success = setDataByPath(path, value);
         }
         break;

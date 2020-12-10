@@ -19,6 +19,7 @@ import {
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 import { CONDITIONS_OPTIONS } from "../../../../../front-app/src/js/helpers";
+import { actionsControllers } from "../../decorators/actions-controllers";
 
 class Input extends BaseElement {
   static getName() {
@@ -171,28 +172,28 @@ class Input extends BaseElement {
     });
 
     this.addControl('content_label_position_type', {
-        type: CONTROLLER_SELECT,
-        label: 'Label Position',
-        default: 'top',
-        options:[
-          {
-            'value' : 'top',
-            'label' : 'Top',
-          },
-          {
-            'value' : 'bottom',
-            'label' : 'Bottom',
-          },
-          {
-            'value' : 'left',
-            'label' : 'Left',
-          },
-          {
-            'value': 'absolute',
-            'label': 'Absolute',
-          }
-        ],
-      }
+      type: CONTROLLER_SELECT,
+      label: 'Label Position',
+      default: 'top',
+      options: [
+        {
+          'value': 'top',
+          'label': 'Top',
+        },
+        {
+          'value': 'bottom',
+          'label': 'Bottom',
+        },
+        {
+          'value': 'left',
+          'label': 'Left',
+        },
+        {
+          'value': 'absolute',
+          'label': 'Absolute',
+        }
+      ],
+    }
     );
 
     // this.addControl('content_label_nowrap', {
@@ -218,7 +219,7 @@ class Input extends BaseElement {
     // }
     // );
 
-    
+
     // this.addControl("input_width", {
     //   type: CONTROLLER_SLIDER,
     //   label: "Field Width",
@@ -298,7 +299,7 @@ class Input extends BaseElement {
           [
             'select2',
           ],
-        'select2_multiple' : [ true ]
+        'select2_multiple': [true]
       },
     });
 
@@ -435,12 +436,12 @@ class Input extends BaseElement {
       },
     });
 
-    this.addControl('create_allowed',{
+    this.addControl('create_allowed', {
       type: CONTROLLER_SWITCHER,
       label: 'Allowed',
     });
 
-    this.addControl('create_url',{
+    this.addControl('create_url', {
       label: 'URL',
       dynamic: false,
       responsive: false,
@@ -450,7 +451,7 @@ class Input extends BaseElement {
       },
     });
 
-    this.addControl('create_label',{
+    this.addControl('create_label', {
       label: 'Label Field',
       dynamic: false,
       responsive: false,
@@ -459,7 +460,7 @@ class Input extends BaseElement {
       },
     });
 
-    this.addControl('create_data',{
+    this.addControl('create_data', {
       type: CONTROLLER_TEXTAREA,
       label: 'Data',
       conditions: {
@@ -469,6 +470,8 @@ class Input extends BaseElement {
     });
 
     this.endControlSection();
+
+    actionsControllers(this);
 
     this.startControlSection('logic_section', {
       tab: TAB_CONTENT,

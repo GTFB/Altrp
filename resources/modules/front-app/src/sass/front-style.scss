@@ -6,6 +6,10 @@
 @import "../../../editor/src/sass/altrp-image-select.scss";
 @import "./responsive.scss";
 
+body {
+    overflow: hidden;
+}
+
 .front-app{
   position: relative;
   z-index: 50;

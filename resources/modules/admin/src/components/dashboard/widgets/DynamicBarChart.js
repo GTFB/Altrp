@@ -3,6 +3,9 @@ import React, { useState, useEffect, useCallback } from "react";
 import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
+import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+
 import { ResponsiveBar } from "@nivo/bar";
 
 import { getWidgetData } from "../services/getWidgetData";
@@ -14,7 +17,7 @@ const DynamicBarChart = ({
   dataSource = [],
   groupMode = "stacked",
   layout = "vertical",
-  colorScheme = "red_grey",
+  colorScheme = "regagro",
   reverse = false,
   enableLabel = false,
   padding = 0.1,
@@ -37,7 +40,7 @@ const DynamicBarChart = ({
       if (charts.status === 200) {
         let data = charts.data.data.map((item, index) => {
           return {
-            [key]: Number(item.data),
+            [item.key]: Number(item.data),
             key: item.key,
             value: Number(item.data)
           };
@@ -83,7 +86,9 @@ const DynamicBarChart = ({
           data={data}
           margin={{ top: 50, right: 180, bottom: 50, left: 60 }}
           indexBy="key"
-          colors={{ scheme: colorScheme.toString() }}
+          colors={
+            colorScheme === "regagro" ? regagroScheme : { scheme: colorScheme }
+          }
           colorBy="index"
           layout={layout}
           axisBottom={
@@ -91,6 +96,14 @@ const DynamicBarChart = ({
               tickRotation: tickRotation
             }
           }
+          tooltip={datum => {
+            const { indexValue, value, color } = datum;
+            return (
+              <>
+                <span>{indexValue}</span>:<strong> {value}</strong>
+              </>
+            );
+          }}
           enableGridX={enableGridX}
           enableGridY={enableGridY}
           enableLabel={enableLabel}

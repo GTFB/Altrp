@@ -15,6 +15,7 @@ class Media extends Model
     'filename',
     'media_type',
     'url',
+    'type',
   ];
 
   /**

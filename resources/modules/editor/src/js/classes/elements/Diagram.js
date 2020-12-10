@@ -178,7 +178,7 @@ class Diagram extends BaseElement {
     this.addControl("colorScheme", {
       type: CONTROLLER_SELECT,
       label: "Color Scheme",
-      default: "red_grey",
+      default: "regagro",
       options: colors
     });
 

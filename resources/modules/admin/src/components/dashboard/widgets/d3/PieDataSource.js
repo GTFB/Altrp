@@ -4,6 +4,10 @@ import { ResponsivePieCanvas } from "@nivo/pie";
 import ErrorBoundary from "./ErrorBoundary";
 import DataAdapter from "./DataAdapter";
 
+import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+
 const mapStateToProps = state => {
   return { formsStore: _.cloneDeep(state.formsStore) };
 };
@@ -72,15 +76,6 @@ class PieDataSource extends Component {
       }));
       await this.getData();
     }
-    if (
-      !_.isEqual(prevState?.settings?.sort, this.props.element?.settings?.sort)
-    ) {
-      this.setState(state => ({
-        ...state,
-        countRequest: 0
-      }));
-      await this.getData();
-    }
   }
 
   async componentWillMount() {
@@ -104,24 +99,6 @@ class PieDataSource extends Component {
         count += 1;
         this.setState(s => ({ ...s, countRequest: count }));
       }, 3500);
-    }
-    if (
-      this.state.settings?.sort?.value !== null &&
-      typeof this.state.settings?.sort?.value !== "undefined" &&
-      typeof data !== "undefined"
-    ) {
-      const sort = this.state.settings?.sort.value;
-      switch (sort) {
-        case "value":
-          data = _.sortBy(data, ["value"]);
-          break;
-        case "key":
-          data = _.sortBy(data, ["id"]);
-          break;
-        default:
-          data = data;
-          break;
-      }
     }
     this.setState(s => ({
       ...s,
@@ -147,16 +124,41 @@ class PieDataSource extends Component {
       }
       return <div>Нет данных</div>;
     }
+    let data = this.state.data;
+
+    if (
+      this.state.settings?.sort?.value !== null &&
+      typeof this.state.settings?.sort?.value !== "undefined" &&
+      typeof data !== "undefined"
+    ) {
+      const sort = this.state.settings?.sort?.value;
+      switch (sort) {
+        case "value":
+          data = _.sortBy(data, ["value"]);
+          break;
+        case "key":
+          data = _.sortBy(data, ["id"]);
+          break;
+        default:
+          data = data;
+          break;
+      }
+    }
 
     return (
       <>
         <ErrorBoundary>
           <ResponsivePieCanvas
             margin={{ top: 80, right: 250, bottom: 80, left: 140 }}
-            data={this.state.data}
-            colors={this.state.settings?.colors}
+            data={data}
+            colors={
+              this.state.settings?.colors?.scheme === "regagro"
+                ? regagroScheme
+                : this.state.settings?.colors
+            }
             innerRadius={this.state.settings?.innerRadius}
             enableSliceLabels={this.state.settings?.enableSliceLabels}
+            enableRadialLabels={this.state.settings?.enableRadialLabels}
             legends={[
               {
                 anchor: "right",

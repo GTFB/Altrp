@@ -222,6 +222,7 @@ class ButtonWidget extends Component {
               elemenentId={this.props.element.getId()}
               settings={this.props.element.getSettings()}
               className="btn"
+              element={this.props.element}
               getContent={this.getContent}
               showDelay={this.state.settings.show_delay_dropbar_options}
             >

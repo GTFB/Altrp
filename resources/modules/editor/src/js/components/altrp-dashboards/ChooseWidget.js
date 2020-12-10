@@ -17,11 +17,10 @@ import ScatterDataSource from "../../../../../admin/src/components/dashboard/wid
 class ChooseWidget extends Component {
   constructor(props) {
     super(props);
-    let element = _.cloneDeep(props.editElement, []);
     this.state = {
       sources: _.cloneDeep(props.sources),
       type: _.cloneDeep(props.type),
-      editElement: _.cloneDeep(element),
+      editElement: _.cloneDeep(props.editElement),
       params: _.cloneDeep(props.params),
       legend: _.cloneDeep(props.editElement?.settings.legend)
     };
@@ -35,8 +34,10 @@ class ChooseWidget extends Component {
     if (
       JSON.stringify(prevProps.params) !== JSON.stringify(this.props.params)
     ) {
-      let element = _.cloneDeep(this.props.editElement, []);
-      this.setState(state => ({ ...state, editElement: element }));
+      this.setState(state => ({
+        ...state,
+        editElement: _.cloneDeep(this.props.editElement)
+      }));
     }
     if (!_.isEqual(prevProps.type, this.props.type)) {
       this.setState(state => ({ ...state, type: this.props.type }));

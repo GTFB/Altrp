@@ -635,10 +635,13 @@ class RootElement extends BaseElement {
     //   },
     //   description: 'Input properties, commas separated'
     // });
-
+    //
     // this.addControl("global_transition_duration", {
     //   type: CONTROLLER_SLIDER,
     //   label: 'Transition Duration',
+    //   default: {
+    //     size: 0.2,
+    //   },
     //   units: [],
     //   max: 5,
     //   min: 0,
@@ -647,7 +650,6 @@ class RootElement extends BaseElement {
     //     "body *": "transition-duration: {{SIZE}}s;"
     //   }
     // });
-
     // this.addControl('global_transition_timing', {
     //   type: CONTROLLER_SELECT,
     //   options: [
@@ -677,7 +679,6 @@ class RootElement extends BaseElement {
     //     "body *": "transition-timing-function: {{VALUE}};"
     //   }
     // });
-
     // this.addControl("global_transition_delay", {
     //   type: CONTROLLER_SLIDER,
     //   label: 'Transition Delay',
