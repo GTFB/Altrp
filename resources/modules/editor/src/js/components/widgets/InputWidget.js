@@ -543,7 +543,7 @@ class InputWidget extends Component {
 
   render() {
     let label = null;
-    const { options_sorting } = this.state.settings;
+    const { options_sorting, content_readonly } = this.state.settings;
 
     let value = this.state.value;
 
@@ -685,6 +685,7 @@ class InputWidget extends Component {
                 type={this.state.settings.content_type}
                 name={this.props.element.getFieldId()}
                 value={value || ""}
+                readOnly={content_readonly}
                 autoComplete={autocomplete}
                 placeholder={this.state.settings.content_placeholder}
                 className={
