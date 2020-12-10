@@ -380,13 +380,11 @@ class AltrpAction extends AltrpModel {
    */
   async doActionTogglePopup() {
     let id = this.getProperty('popup_id');
-
     if (!id) {
       return {
         success: true
       };
     }
-
     appStore.dispatch(togglePopup(id));
 
     return {

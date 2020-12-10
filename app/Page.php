@@ -557,7 +557,7 @@ class Page extends Model
       return $area->name;
     })->sortBy(function( $area ){
       if( $area === 'header'){
-        return /* <![CDATA[ */;
+        return 0;
       }
       if( $area === 'content'){
         return 100;

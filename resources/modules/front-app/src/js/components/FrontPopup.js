@@ -267,8 +267,9 @@ class FrontPopup extends Component {
         </div>
         : null
     );
-
-    switch (rootElementSettings.type_popup) {
+    let {type_popup = 'popup'} = rootElementSettings;
+    type_popup = type_popup || 'popup';
+    switch (type_popup) {
       case "popup":
         content = popup;
         break;
