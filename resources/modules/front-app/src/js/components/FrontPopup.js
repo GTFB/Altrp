@@ -113,7 +113,6 @@ class FrontPopup extends Component {
         //   }
 
         // }
-
         if (popupTrigger !== prevProps.popupTrigger) {
           this.setState({ isVisible: popupTrigger.popupID === _.get(this.props, 'template.guid') });
         }
@@ -188,6 +187,8 @@ class FrontPopup extends Component {
       case "right":
         classes.push("app-popup-horizontal-right");
         break;
+      default:
+        classes.push("app-popup-horizontal-center");
     }
 
     //vertical position vertical_position_popup_layout
@@ -201,10 +202,14 @@ class FrontPopup extends Component {
       case "bottom":
         classes.push("app-popup-vertical-bottom");
         break;
+      default:
+        classes.push("app-popup-vertical-center");
     }
 
     let content = "";
-    const closeButton = rootElementSettings.switcher_close_button_popup_layout ? (
+    const closeButtonCondition = rootElementSettings.switcher_close_button_popup_layout || true;
+
+    const closeButton = closeButtonCondition ? (
       <button
         className={
           "popup-close-button" +
@@ -268,7 +273,9 @@ class FrontPopup extends Component {
         : null
     );
 
-    switch (rootElementSettings.type_popup) {
+    const type = rootElementSettings.type_popup || "popup";
+
+    switch (type) {
       case "popup":
         content = popup;
         break;
