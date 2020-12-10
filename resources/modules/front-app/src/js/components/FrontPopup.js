@@ -162,7 +162,9 @@ class FrontPopup extends Component {
     const rootElementId = rootElement.getId();
 
     classes.push(`${rootElementId}-app-popup`);
-    if(rootElementSettings.overlay_close_popup_layout) {
+    const overlayCondition = rootElementSettings.overlay_close_popup_layout || true;
+
+    if(overlayCondition) {
       classes.push("app-popup-overlay")
     }
 
