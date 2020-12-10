@@ -13,6 +13,7 @@ class Assets extends Component {
     this.onChange = this.onChange.bind(this);
     this.deleteClick = this.deleteClick.bind(this);
     this.isActiveLink = this.isActiveLink.bind(this);
+    this.changeUrlForTab = this.changeUrlForTab.bind(this);
     this.state = {
       uploaderClasses: 'admin-assets__uploader uploader',
       assets: [],
@@ -20,11 +21,12 @@ class Assets extends Component {
       itemDeleteClasses: 'item__delete',
     };
     this.typesFiles = {
-      images: ['png', 'gif', 'jpg', 'jpeg'],
+      images: ['png', 'gif', 'jpg', 'jpeg', 'webp'],
       svgs: ['svg'],
-      fonts: ['ttf', 'woff2'],
+      fonts: ['ttf', 'woff2', 'otf', 'woff', 'woff2', 'eot'],
       archives: ['zip', 'rar'],
-      documents: ['doc', 'docx', 'xls', 'xlsx'],
+      documents: ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'odt', 'ods', 'odp'],
+      medias: ['wav', 'mp3', 'mp4', 'avi', 'webm'],
       others: ['']
     };
     this.resource  = new Resource({route: '/admin/ajax/media'});
@@ -156,51 +158,58 @@ class Assets extends Component {
             </span>
           </label>
         </div>
-        <div className="assets__tabs mt-4">
+        <div className="custom-tab__tabs mt-4">
           <NavLink 
-            className="assets__tab" 
-            activeClassName="assets__tab--selected"  
+            className="custom-tab__tab" 
+            activeClassName="custom-tab__tab--selected"  
             to={`${this.path}/images`}
             isActive={this.isActiveLink('images')}
             onClick={this.onFilterAssets('images')}
           >IMAGES</NavLink>
           <NavLink 
-            className="assets__tab" 
-            activeClassName="assets__tab--selected" 
+            className="custom-tab__tab" 
+            activeClassName="custom-tab__tab--selected"
             to={`${this.path}/documents`}
             isActive={this.isActiveLink('documents')}
             onClick={this.onFilterAssets('documents')}
           >DOCUMENTS</NavLink>
           <NavLink 
-            className="assets__tab" 
-            activeClassName="assets__tab--selected" 
+            className="custom-tab__tab" 
+            activeClassName="custom-tab__tab--selected"
             to={`${this.path}/fonts`}
             isActive={this.isActiveLink('fonts')}
             onClick={this.onFilterAssets('fonts')}
           >FONTS</NavLink>
           <NavLink 
-            className="assets__tab" 
-            activeClassName="assets__tab--selected" 
+            className="custom-tab__tab" 
+            activeClassName="custom-tab__tab--selected" 
             to={`${this.path}/svgs`}
             isActive={this.isActiveLink('svgs')}
             onClick={this.onFilterAssets('svgs')}
           >SVGS</NavLink>
           <NavLink 
-            className="assets__tab" 
-            activeClassName="assets__tab--selected" 
+            className="custom-tab__tab" 
+            activeClassName="custom-tab__tab--selected" 
             to={`${this.path}/archives`}
             isActive={this.isActiveLink('archives')}
             onClick={this.onFilterAssets('archives')}
           >ARCHIVES</NavLink>
           <NavLink 
-            className="assets__tab" 
-            activeClassName="assets__tab--selected" 
+            className="custom-tab__tab" 
+            activeClassName="custom-tab__tab--selected"
+            to={`${this.path}/medias`}
+            isActive={this.isActiveLink('medias')}
+            onClick={this.onFilterAssets('medias')}
+          >MEDIAS</NavLink>
+          <NavLink 
+            className="custom-tab__tab" 
+            activeClassName="custom-tab__tab--selected" 
             to={`${this.path}/others`}
             isActive={this.isActiveLink('others')}
             onClick={this.onFilterAssets('others')}
           >OTHERS</NavLink>
         </div>
-        <div className="admin-assets__list assets__tab-panel p-4 assets-list d-flex flex-wrap">
+        <div className="admin-assets__list custom-tab__tab-panel p-4 assets-list d-flex flex-wrap">
           {
             this.state.assets.map(asset=>{
               return<div className="assets-list__item item col-1" key={asset.id} >
