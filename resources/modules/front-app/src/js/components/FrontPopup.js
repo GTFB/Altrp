@@ -234,6 +234,14 @@ class FrontPopup extends Component {
       </button>
     ) : null;
 
+    let maxHeight = "100%";
+
+    if(rootElementSettings.height_popup_layout === "custom") {
+      maxHeight = Number(rootElementSettings.height_custom_popup_layout.size) || 0;
+    }
+
+    console.log(maxHeight);
+
     const popup = (
       isVisible ?
         <div
@@ -258,7 +266,7 @@ class FrontPopup extends Component {
                 renderTrackVertical={(props) => <div {...props} className="popup-scrollbar-track-vertical"/>}
                 className="popup-scrollbar"
                 autoHeightMin={100}
-                autoHeightMax={"100%"}
+                autoHeightMax={maxHeight}
                 autoHideTimeout={1000}
                 autoHideDuration={200}
               >
