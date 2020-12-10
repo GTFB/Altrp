@@ -566,24 +566,24 @@ class InputWidget extends Component {
       case "top":
         styleLabel = {
           marginBottom:
-            this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit || 2 + "px"
+            this.state.settings.label_style_spacing ? this.state.settings.label_style_spacing.size +
+              this.state.settings.label_style_spacing.unit : 2 + "px"
         };
         classLabel = "";
         break;
       case "bottom":
         styleLabel = {
           marginTop:
-            this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit || 2 + "px"
+            this.state.settings.label_style_spacing ? this.state.settings.label_style_spacing.size +
+              this.state.settings.label_style_spacing.unit : 2 + "px"
         };
         classLabel = "";
         break;
       case "left":
         styleLabel = {
           marginRight:
-            this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit || 2 + "px"
+            this.state.settings.label_style_spacing ? this.state.settings.label_style_spacing.size +
+              this.state.settings.label_style_spacing.unit : 2 + "px"
         };
         classLabel = "altrp-field-label-container-left";
         // this.label.current.classList.add("hello")
