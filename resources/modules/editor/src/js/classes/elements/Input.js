@@ -18,7 +18,7 @@ import {
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 import { CONDITIONS_OPTIONS } from "../../../../../front-app/src/js/helpers";
-import {actionsControllers} from "../../decorators/actions-controllers";
+import { actionsControllers } from "../../decorators/actions-controllers";
 
 class Input extends BaseElement {
   static getName() {
@@ -129,28 +129,28 @@ class Input extends BaseElement {
     });
 
     this.addControl('content_label_position_type', {
-        type: CONTROLLER_SELECT,
-        label: 'Label Position',
-        default: 'top',
-        options:[
-          {
-            'value' : 'top',
-            'label' : 'Top',
-          },
-          {
-            'value' : 'bottom',
-            'label' : 'Bottom',
-          },
-          {
-            'value' : 'left',
-            'label' : 'Left',
-          },
-          {
-            'value': 'absolute',
-            'label': 'Absolute',
-          }
-        ],
-      }
+      type: CONTROLLER_SELECT,
+      label: 'Label Position',
+      default: 'top',
+      options: [
+        {
+          'value': 'top',
+          'label': 'Top',
+        },
+        {
+          'value': 'bottom',
+          'label': 'Bottom',
+        },
+        {
+          'value': 'left',
+          'label': 'Left',
+        },
+        {
+          'value': 'absolute',
+          'label': 'Absolute',
+        }
+      ],
+    }
     );
 
     // this.addControl('content_label_nowrap', {
@@ -176,7 +176,7 @@ class Input extends BaseElement {
     // }
     // );
 
-    
+
     // this.addControl("input_width", {
     //   type: CONTROLLER_SLIDER,
     //   label: "Field Width",
@@ -256,7 +256,7 @@ class Input extends BaseElement {
           [
             'select2',
           ],
-        'select2_multiple' : [ true ]
+        'select2_multiple': [true]
       },
     });
 
@@ -392,12 +392,12 @@ class Input extends BaseElement {
       },
     });
 
-    this.addControl('create_allowed',{
+    this.addControl('create_allowed', {
       type: CONTROLLER_SWITCHER,
       label: 'Allowed',
     });
 
-    this.addControl('create_url',{
+    this.addControl('create_url', {
       label: 'URL',
       dynamic: false,
       responsive: false,
@@ -407,7 +407,7 @@ class Input extends BaseElement {
       },
     });
 
-    this.addControl('create_label',{
+    this.addControl('create_label', {
       label: 'Label Field',
       dynamic: false,
       responsive: false,
@@ -416,7 +416,7 @@ class Input extends BaseElement {
       },
     });
 
-    this.addControl('create_data',{
+    this.addControl('create_data', {
       type: CONTROLLER_TEXTAREA,
       label: 'Data',
       conditions: {
@@ -429,266 +429,265 @@ class Input extends BaseElement {
 
     actionsControllers(this);
 
-    /*
-       this.startControlSection('logic_section', {
-         tab: TAB_CONTENT,
-         label: 'Logic',
-       });
+    this.startControlSection('logic_section', {
+      tab: TAB_CONTENT,
+      label: 'Logic',
+    });
 
-       this.addControl('logic_action', {
-         type: CONTROLLER_SELECT2,
-         label: 'Action',
-         placeholder: 'action',
-         default: '1',
-         options: [
-           {
-             value: '1',
-             label: 'Select sd  Content 1'
-           },
-           {
-             value: '2',
-             label: 'Select Content 2'
-           },
-         ]
-       });
+    this.addControl('logic_action', {
+      type: CONTROLLER_SELECT2,
+      label: 'Action',
+      placeholder: 'action',
+      default: '1',
+      options: [
+        {
+          value: '1',
+          label: 'Select sd  Content 1'
+        },
+        {
+          value: '2',
+          label: 'Select Content 2'
+        },
+      ]
+    });
 
-       this.endControlSection();
+    this.endControlSection();
 
-       this.startControlSection('form_condition_display', {
-         tab: TAB_CONTENT,
-         label: 'Field Condition',
-       });
+    this.startControlSection('form_condition_display', {
+      tab: TAB_CONTENT,
+      label: 'Field Condition',
+    });
 
-       this.addControl('form_condition_display_on', {
-         type: CONTROLLER_SELECT,
-         label: 'Display on',
-         responsive: false,
-         options: [
-           {
-             label: 'All Conditions Met',
-             value: 'AND',
-           },
-           {
-             label: 'Any Condition Met',
-             value: 'OR',
-           },
-         ],
-         default: 'AND',
-       });
+    this.addControl('form_condition_display_on', {
+      type: CONTROLLER_SELECT,
+      label: 'Display on',
+      responsive: false,
+      options: [
+        {
+          label: 'All Conditions Met',
+          value: 'AND',
+        },
+        {
+          label: 'Any Condition Met',
+          value: 'OR',
+        },
+      ],
+      default: 'AND',
+    });
 
-       const formConditionsRepeater = new Repeater();
-
-
-       formConditionsRepeater.addControl('field_id', {
-         responsive: false,
-         dynamic: false,
-         label: 'Field ID',
-       });
-
-       formConditionsRepeater.addControl('operator', {
-         type: CONTROLLER_SELECT,
-         responsive: false,
-         default: 'empty',
-         options: CONDITIONS_OPTIONS
-       });
-
-       formConditionsRepeater.addControl('value', {
-         dynamic: false,
-         responsive: false,
-         label: 'Value',
-       });
-
-       this.addControl('form_conditions', {
-         label: 'Conditions',
-         type: CONTROLLER_REPEATER,
-         fields: formConditionsRepeater.getControls(),
-         default: [
-         ],
-       });
-
-       this.endControlSection();
-
-       this.startControlSection('label_style_section', {
-         tab: TAB_STYLE,
-         label: 'Label',
-       });
-
-       this.addControl("label_style_spacing", {
-         type: CONTROLLER_SLIDER,
-         label: "Spacing",
-         default: {
-           size: 2,
-           unit: "px"
-         },
-         units: ["px", "%", "vh"],
-         max: 60,
-         min: 0,
-         rules: {
-         }
-       });
-
-       this.addControl('label_background_color', {
-         type: CONTROLLER_COLOR,
-         label: 'Background Color',
-         default: {
-           color: "",
-           colorPickedHex: "",
-         },
-         rules: {
-           '{{ELEMENT}} .altrp-field-label-container{{STATE}}': 'background-color: {{COLOR}};',
-         }
-       });
-
-       this.addControl('label_padding', {
-         type: CONTROLLER_DIMENSIONS,
-         label: 'Padding',
-         default: {
-           // top: 2,
-           // right: 2,
-           // bottom: 2,
-           // left: 2,
-           unit: 'px'
-         },
-         units: [
-           'px',
-           '%',
-           'vh',
-         ],
-         rules: {
-           '{{ELEMENT}} .altrp-field-label-container{{STATE}}': [
-             'padding-top: {{TOP}}{{UNIT}};',
-             'padding-right: {{RIGHT}}{{UNIT}};',
-             'padding-bottom: {{BOTTOM}}{{UNIT}};',
-             'padding-left: {{LEFT}}{{UNIT}};'
-           ]
-         },
-       });
-
-       this.addControl("label_style_font_color", {
-         type: CONTROLLER_COLOR,
-         label: "Font Color",
-         default: {
-           color: "",
-           colorPickedHex: "",
-         },
-         presetColors: ["#eaeaea", "#9c18a8"],
-         rules: {
-           "{{ELEMENT}} .altrp-field-label{{STATE}}": "color: {{COLOR}};"
-         }
-       });
-
-       this.addControl('label_style_font_typographic', {
-         type: CONTROLLER_TYPOGRAPHIC,
-         label: 'Typographic',
-         // default:{
-         //   lineHeight: 1.5,
-         //   spacing: 0,
-         //   size: 16,
-         //   weight: "normal",
-         //   family: "Open Sans",
-         //   decoration: ""
-         // },
-         rules: {
-           '{{ELEMENT}} .altrp-field-label{{STATE}}': [
-             'font-family: "{{FAMILY}}", sans-serif;',
-             'font-size: {{SIZE}}px;',
-             'line-height: {{LINEHEIGHT}};',
-             'letter-spacing: {{SPACING}}px',
-             'font-weight: {{WEIGHT}}',
-             'text-transform: {{TRANSFORM}}',
-             'font-style: {{STYLE}}',
-             'text-decoration: {{DECORATION}}'
-           ],
-         },
-       }
-       );
-
-       this.addControl("label_position_top", {
-         type: CONTROLLER_SLIDER,
-         label: "Label Y Position",
-         default: {
-           unit: "px",
-           size: null
-         },
-         conditions: {
-           'content_label_position_type': ['absolute']
-         },
-         units: ["px", "%", "vh"],
-         max: 100,
-         min: -100,
-         rules: {
-           "{{ELEMENT}} .altrp-field-label-container{{STATE}}": 'top: {{SIZE}}{{UNIT}};'
-         }
-       });
-
-       this.addControl("label_position_left", {
-         type: CONTROLLER_SLIDER,
-         label: "Label X Position",
-         default: {
-           unit: "px",
-           size: null
-         },
-         conditions: {
-           'content_label_position_type': ['absolute']
-         },
-         units: ["px", "%", "vh"],
-         max: 100,
-         min: -100,
-         rules: {
-           "{{ELEMENT}} .altrp-field-label-container{{STATE}}": 'left: {{SIZE}}{{UNIT}};'
-         }
-       });
-
-       this.addControl("label_width", {
-         type: CONTROLLER_SLIDER,
-         label: "Label Width",
-         default: {
-           unit: "%",
-           size: null
-         },
-         units: ["%"],
-         max: 100,
-         min: 0,
-         rules: {
-           "{{ELEMENT}} .altrp-field-label-container{{STATE}}": 'width: {{SIZE}}%; flex-shrink: 0;'
-         }
-       });
-
-       this.addControl('cross_color', {
-         type: CONTROLLER_COLOR,
-         label: 'Cross Color',
-         default: {
-           color: "",
-           colorPickedHex: "",
-         },
-         conditions: {
-           'content_clearable': [true]
-         },
-         rules: {
-           '{{ELEMENT}} .input-clear-btn{{STATE}}': 'color: {{COLOR}};',
-         }
-       });
-
-       this.addControl("cross_size", {
-         type: CONTROLLER_SLIDER,
-         label: "Cross Size",
-         default: {
-           unit: "px",
-           size: null
-         },
-         conditions: {
-           'content_clearable': [true]
-         },
-         max: 50,
-         min: 0,
-         rules: {
-           "{{ELEMENT}} .input-clear-btn{{STATE}}": 'font-size: {{SIZE}}px;'
-         }
-       });
+    const formConditionsRepeater = new Repeater();
 
 
-       this.endControlSection();
-       */
+    formConditionsRepeater.addControl('field_id', {
+      responsive: false,
+      dynamic: false,
+      label: 'Field ID',
+    });
+
+    formConditionsRepeater.addControl('operator', {
+      type: CONTROLLER_SELECT,
+      responsive: false,
+      default: 'empty',
+      options: CONDITIONS_OPTIONS
+    });
+
+    formConditionsRepeater.addControl('value', {
+      dynamic: false,
+      responsive: false,
+      label: 'Value',
+    });
+
+    this.addControl('form_conditions', {
+      label: 'Conditions',
+      type: CONTROLLER_REPEATER,
+      fields: formConditionsRepeater.getControls(),
+      default: [
+      ],
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('label_style_section', {
+      tab: TAB_STYLE,
+      label: 'Label',
+    });
+
+    this.addControl("label_style_spacing", {
+      type: CONTROLLER_SLIDER,
+      label: "Spacing",
+      default: {
+        size: 2,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      max: 60,
+      min: 0,
+      rules: {
+      }
+    });
+
+    this.addControl('label_background_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Background Color',
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-field-label-container{{STATE}}': 'background-color: {{COLOR}};',
+      }
+    });
+
+    this.addControl('label_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        // top: 2,
+        // right: 2,
+        // bottom: 2,
+        // left: 2,
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-field-label-container{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl("label_style_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "Font Color",
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}} .altrp-field-label{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('label_style_font_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      // default:{
+      //   lineHeight: 1.5,
+      //   spacing: 0,
+      //   size: 16,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-field-label{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
+    );
+
+    this.addControl("label_position_top", {
+      type: CONTROLLER_SLIDER,
+      label: "Label Y Position",
+      default: {
+        unit: "px",
+        size: null
+      },
+      conditions: {
+        'content_label_position_type': ['absolute']
+      },
+      units: ["px", "%", "vh"],
+      max: 100,
+      min: -100,
+      rules: {
+        "{{ELEMENT}} .altrp-field-label-container{{STATE}}": 'top: {{SIZE}}{{UNIT}};'
+      }
+    });
+
+    this.addControl("label_position_left", {
+      type: CONTROLLER_SLIDER,
+      label: "Label X Position",
+      default: {
+        unit: "px",
+        size: null
+      },
+      conditions: {
+        'content_label_position_type': ['absolute']
+      },
+      units: ["px", "%", "vh"],
+      max: 100,
+      min: -100,
+      rules: {
+        "{{ELEMENT}} .altrp-field-label-container{{STATE}}": 'left: {{SIZE}}{{UNIT}};'
+      }
+    });
+
+    this.addControl("label_width", {
+      type: CONTROLLER_SLIDER,
+      label: "Label Width",
+      default: {
+        unit: "%",
+        size: null
+      },
+      units: ["%"],
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-field-label-container{{STATE}}": 'width: {{SIZE}}%; flex-shrink: 0;'
+      }
+    });
+
+    this.addControl('cross_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Cross Color',
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+      conditions: {
+        'content_clearable': [true]
+      },
+      rules: {
+        '{{ELEMENT}} .input-clear-btn{{STATE}}': 'color: {{COLOR}};',
+      }
+    });
+
+    this.addControl("cross_size", {
+      type: CONTROLLER_SLIDER,
+      label: "Cross Size",
+      default: {
+        unit: "px",
+        size: null
+      },
+      conditions: {
+        'content_clearable': [true]
+      },
+      max: 50,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .input-clear-btn{{STATE}}": 'font-size: {{SIZE}}px;'
+      }
+    });
+
+
+    this.endControlSection();
+
     this.startControlSection('font_style_section', {
       tab: TAB_STYLE,
       label: 'Font',
