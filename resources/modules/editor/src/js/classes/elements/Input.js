@@ -14,7 +14,8 @@ import {
   CONTROLLER_SELECT2,
   TAB_CONTENT,
   TAB_STYLE, CONTROLLER_CHOOSE,
-  CONTROLLER_SHADOW, CONTROLLER_REPEATER
+  CONTROLLER_SHADOW, CONTROLLER_REPEATER,
+  CONTROLLER_MEDIA
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 import { CONDITIONS_OPTIONS } from "../../../../../front-app/src/js/helpers";
@@ -99,6 +100,10 @@ class Input extends BaseElement {
           label: 'Select2'
         },
         {
+          value: 'image_select',
+          label: 'Image Select'
+        },
+        {
           value: 'hidden',
           label: 'Hidden'
         },
@@ -115,6 +120,44 @@ class Input extends BaseElement {
           label: 'wysiwyg'
         },
       ]
+    });
+
+    const optionsRepeater = new Repeater();
+
+    optionsRepeater.addControl('label', {
+      type: CONTROLLER_TEXT,
+      label: 'Label',
+    });
+
+    optionsRepeater.addControl('value', {
+      type: CONTROLLER_TEXT,
+      label: 'Value',
+    });
+
+    optionsRepeater.addControl('image', {
+      type: CONTROLLER_MEDIA,
+      label: 'Image',
+    });
+
+    this.addControl('image_select_options', {
+      label: 'Options',
+      type: CONTROLLER_REPEATER,
+      fields: optionsRepeater.getControls(),
+      conditions: {
+        'content_type': ['image_select']
+      },
+      default: [
+      ],
+    });
+
+    this.addControl("image_select_item_width", {
+      type: CONTROLLER_SLIDER,
+      label: "Item Width (%)",
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-image-select>.altrp-field{{STATE}}": 'flex-basis: {{SIZE}}%;'
+      }
     });
 
     this.addControl('content_accept', {
@@ -345,6 +388,7 @@ class Input extends BaseElement {
         'content_type': [
           'select2',
           'file',
+          'image_select',
         ],
       },
     });

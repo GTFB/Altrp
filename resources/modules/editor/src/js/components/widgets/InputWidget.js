@@ -14,6 +14,7 @@ import { changeFormFieldValue } from "../../../../../front-app/src/js/store/form
 import AltrpModel from "../../classes/AltrpModel";
 import { connect } from "react-redux";
 import CKeditor from "../ckeditor/CKeditor";
+import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 const AltrpInput = React.lazy(() => import("../altrp-input/AltrpInput"));
 
 const selectAllOption = { label: "ALL", value: "<all options>" };
@@ -21,7 +22,7 @@ class InputWidget extends Component {
   constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this);
-    this.defaultValue = props.element.getSettings().content_default_value || "";
+    this.defaultValue = props.element.getSettings().content_default_value || (props.element.getSettings().select2_multiple ? [] : "");
     this.state = {
       settings: { ...props.element.getSettings() },
       value: this.defaultValue,
@@ -514,7 +515,7 @@ class InputWidget extends Component {
 
   render() {
     let label = null;
-    const { options_sorting } = this.state.settings;
+    const { options_sorting, image_select_options, select2_multiple: isMultiple } = this.props.element.getSettings();
 
     let value = this.state.value;
 
@@ -647,6 +648,13 @@ class InputWidget extends Component {
           input = this.renderWysiwyg();
         }
         break;
+      case "image_select":
+        return <AltrpImageSelect 
+          options={image_select_options}
+          value={this.state.value}
+          changeHandler={value => this.setState({ value })}
+          isMultiple={isMultiple}
+        />;
       default: {
         const isClearable = this.state.settings.content_clearable;
         input = (
