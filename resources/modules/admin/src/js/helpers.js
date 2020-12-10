@@ -112,7 +112,7 @@ export function deleteEmptyPropsDeep(collection) {
  * @param templateData
  * @param {FrontElement | null} parent
  */
-function prepareTemplate(templateData, parent = null){
+function prepareTemplate(templateData, parent = null) {
   let template = new FrontElement(templateData);
 
 }
@@ -127,7 +127,7 @@ export function buildPagesTree(pages) {
   roots.forEach(root => {
     tree.push(root);
     treeRecursion(root.id, level + 1);
-  });  
+  });
 
   function treeRecursion(parentId, level) {
     const children = pages.filter(({ parent_page_id }) => parent_page_id === parentId);
@@ -139,4 +139,8 @@ export function buildPagesTree(pages) {
   }
 
   return tree;
+}
+
+export function filterUsers(users, roleFilter) {
+  return users.filter(user => user.roles.some(role => role.id === roleFilter));
 }
