@@ -6,7 +6,7 @@ import ThreeDotsVertical from "react-bootstrap-icons/dist/icons/three-dots-verti
 import GearFill from "react-bootstrap-icons/dist/icons/sliders";
 import TrashFill from "react-bootstrap-icons/dist/icons/trash";
 import PrinterFill from "react-bootstrap-icons/dist/icons/printer";
-import FileEarMark from "react-bootstrap-icons/dist/icons/cloud-download";
+import Files from "react-bootstrap-icons/dist/icons/files";
 
 class WidgetData extends Component {
   constructor(props) {
@@ -37,7 +37,7 @@ class WidgetData extends Component {
     return (
       <div className="altrp-dashboard__card">
         <div className="title">
-          <div>{this.state.el.settings.name}</div>
+          <div>{this.state.el.settings?.name || ""}</div>
           <div className="dropdownTogglerContainer">
             <Dropdown drop="left">
               <Dropdown.Toggle variant="light">
@@ -50,19 +50,19 @@ class WidgetData extends Component {
                   background: "rgba(255,255,255,1)"
                 }}
               >
-                {/* <Dropdown.Item>
-                  <button
-                    type="button"
-                    title="Скачать файл"
-                    onClick={this.props.saveWidget}
-                  >
-                    <FileEarMark />
-                  </button>
-                </Dropdown.Item> */}
                 <Dropdown.Item>
                   <button
                     type="button"
-                    title="Настроить виджет"
+                    title="Дублировать"
+                    onClick={() => this.props.copyWidget(this.state.el)}
+                  >
+                    <Files />
+                  </button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <button
+                    type="button"
+                    title="Настроить"
                     onClick={() =>
                       this.props.openSettingsHandler(this.state.el)
                     }
@@ -73,7 +73,7 @@ class WidgetData extends Component {
                 <Dropdown.Item>
                   <button
                     type="button"
-                    title="Удалить виджет"
+                    title="Удалить"
                     onClick={() => this.props.onRemoveItem(this.state.el.i)}
                   >
                     <TrashFill />

@@ -31,18 +31,14 @@ function mapDispatchToProps(dispatch) {
 class WidgetSettings extends Component {
   constructor(props) {
     super(props);
-    const element =
-      props.editElement !== null ? _.cloneDeep(props.editElement) : {};
-    const settingsElement =
-      props.editElement !== null ? _.cloneDeep(props.editElement.settings) : {};
     this.state = {
-      settings: _.cloneDeep(settingsElement, {}),
+      settings: _.cloneDeep(props.editElement?.settings, {}) || {},
       datasources: props.datasources,
       openDataSettings: false,
       openDiagramSettings: false,
       openTooltipSettings: false,
       filter_datasource: props.filter_datasource,
-      editElement: _.cloneDeep(element)
+      editElement: _.cloneDeep(props.editElement, {}) || {}
     };
     this.setDatasource = this.setDatasource.bind(this);
     this.setType = this.setType.bind(this);
@@ -66,6 +62,8 @@ class WidgetSettings extends Component {
     this.setReverse = this.setReverse.bind(this);
     this.setSort = this.setSort.bind(this);
     this.enableRadialLabels = this.enableRadialLabels.bind(this);
+    this.generateName = this.generateName.bind(this);
+    this.setName = this.setName.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -84,8 +82,34 @@ class WidgetSettings extends Component {
     if (!_.isEqual(prevProps.editElement, this.props.editElement)) {
       this.setState(state => ({
         ...state,
-        editElement: this.props.editElement
+        editElement: _.cloneDeep(this.props.editElement),
+        settings: _.cloneDeep(this.props.editElement?.settings, {})
       }));
+    }
+    if (!this.props.addItemPreview) {
+      if (
+        !_.isEqual(
+          prevProps.editElement?.settings?.name,
+          this.props.editElement?.settings?.name
+        )
+      ) {
+        this.setState(state => ({
+          ...state,
+          editElement: _.cloneDeep(this.props.editElement),
+          settings: _.cloneDeep(this.props.editElement?.settings, {})
+        }));
+      }
+    } else {
+      if (
+        !_.isEqual(
+          prevProps.editElement?.settings?.name,
+          this.props.editElement?.settings?.name
+        )
+      ) {
+        console.log("====================================");
+        console.log(this.props.editElement);
+        console.log("====================================");
+      }
     }
     if (
       JSON.stringify(prevProps.editElement?.settings?.params) !==
@@ -93,9 +117,33 @@ class WidgetSettings extends Component {
     ) {
       this.setState(state => ({
         ...state,
-        editElement: this.props.editElement
+        editElement: _.cloneDeep(this.props.editElement),
+        settings: _.cloneDeep(this.props.editElement?.settings, {})
       }));
     }
+  }
+
+  setName(param, options) {
+    let settings = _.cloneDeep(this.props.editElement?.settings);
+    let name = settings?.name;
+    let paramName = _.find(options, item => item.value == param).label;
+    if (typeof name !== "undefined") {
+      name = name.split("|");
+      let boolChange = false;
+      name.forEach((item, index) => {
+        if (item !== param) {
+          boolChange = true;
+        }
+      });
+      if (boolChange) {
+        name.push(paramName);
+      }
+      name = _.uniq(name);
+      name = name.join("|");
+    } else {
+      name = param;
+    }
+    return name;
   }
 
   setOpenDataSettings(data) {
@@ -132,9 +180,45 @@ class WidgetSettings extends Component {
       }));
     }
   }
+
+  generateName(datasourceArray) {
+    let editElementSettings = _.cloneDeep(this.state.settings);
+    let name = editElementSettings?.name;
+    const arrayOfDatasourceTitles = datasourceArray.map(
+      source => source.title ?? ""
+    );
+    if (typeof name === "undefined" || name.length === 0) {
+      name = arrayOfDatasourceTitles.join("|");
+    } else {
+      if (Array.isArray(name)) {
+        arrayOfDatasourceTitles.forEach((nameDatasource, index) => {
+          const indexFind = _.findIndex(name, nameDatasource);
+          if (indexFind === -1) {
+            name[index] = nameDatasource;
+          }
+        });
+        name = name.join("|");
+      } else {
+        name = name.split("|");
+        arrayOfDatasourceTitles.forEach((nameDatasource, index) => {
+          const indexFind = _.findIndex(name, nameDatasource);
+          if (indexFind === -1) {
+            name[index] = nameDatasource;
+          }
+        });
+        name = name.join("|");
+      }
+      console.log("====================================");
+      console.log(name);
+      console.log("====================================");
+    }
+    return name;
+  }
+
   //Смена источника данных
   setDatasource(datasourcesArray, changeParams = false) {
     let settings = this.state.settings;
+    let name = "";
     let sources = [];
     if (datasourcesArray === null) {
       settings = {
@@ -159,6 +243,7 @@ class WidgetSettings extends Component {
         settings: settings
       }));
     } else {
+      name = this.generateName(_.cloneDeep(datasourcesArray));
       settings = {
         ...settings,
         sources: datasourcesArray,
@@ -166,7 +251,8 @@ class WidgetSettings extends Component {
           ? typeof settings?.params !== "undefined"
             ? [...settings.params]
             : []
-          : []
+          : [],
+        name: name
       };
     }
     this.setState(state => ({
@@ -186,9 +272,12 @@ class WidgetSettings extends Component {
     }
   }
   //Смена значения локального параметра
-  setParam(left, right) {
+  setParam(left, right, options = []) {
     let settings = this.state.settings;
     let param = { [left]: right };
+    if (options.length > 0) {
+      settings.name = this.setName(right, options);
+    }
     let currentParamKey = _.findKey(settings.params, left);
     if (typeof currentParamKey !== "undefined") {
       settings.params[currentParamKey] = param;
@@ -312,7 +401,11 @@ class WidgetSettings extends Component {
   }
   //Смена цветовой схемы
   setColorScheme(colorScheme) {
-    const settings = {
+    console.log("====================================");
+    console.log(this.state.settings);
+    console.log("====================================");
+    let settings = this.state.settings;
+    settings = {
       ...this.state.settings,
       colors: { scheme: colorScheme }
     };
@@ -631,7 +724,9 @@ class WidgetSettings extends Component {
     return (
       <div className="col">
         <div className="row">
-          <h3 className="mx-auto">Настройка диаграммы</h3>
+          <div className="mx-auto">
+            <h3>Настройка диаграммы</h3>
+          </div>
         </div>
         <div className="row">
           <Button
@@ -758,7 +853,7 @@ class WidgetSettings extends Component {
             <div className="col">
               <button
                 style={{ width: "100%" }}
-                onClick={e => this.props.onAddItem(this.props.editElement)}
+                onClick={e => this.props.onAddItem(this.state.editElement)}
               >
                 Сохранить
               </button>

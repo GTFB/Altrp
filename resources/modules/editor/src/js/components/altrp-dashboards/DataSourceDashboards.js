@@ -60,6 +60,7 @@ class DataSourceDashboards extends Component {
     this.openSettings = this.openSettings.bind(this);
     this.setCardName = this.setCardName.bind(this);
     this.onDragStop = this.onDragStop.bind(this);
+    this.copyWidget = this.copyWidget.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -166,7 +167,7 @@ class DataSourceDashboards extends Component {
     let widget = _.find(items, { i: key });
     widget.settings = settings;
     widget.edit = false;
-    // this.props.editElementDispatch(widget);
+    this.props.editElementDispatch(widget);
     _.replace(items, { i: key }, widget);
     let index = _.findKey(items, { i: key });
     this.setState(state => {
@@ -185,11 +186,7 @@ class DataSourceDashboards extends Component {
     if (_.keys(element).length > 0) {
       this.setState(state => {
         if (!Array.isArray(state.items)) {
-          console.log("====================================");
-          console.log(state.items);
           state.items = Object.values(state.items);
-          console.log(state.items);
-          console.log("====================================");
         }
         let items = state.items.concat(
           this.itemSettingsAdd(state, element.settings)
@@ -290,6 +287,10 @@ class DataSourceDashboards extends Component {
     this.saveWidgetData(this.state);
   }
 
+  copyWidget(widget) {
+    this.onAddItemCard(widget);
+  }
+
   createElement(el, key) {
     el.y = el.y == null ? Infinity : el.y;
     return (
@@ -301,6 +302,7 @@ class DataSourceDashboards extends Component {
           setEditItem={this.setEditItem}
           onRemoveItem={this.onRemoveItem}
           saveWidget={this.saveWidgetData}
+          copyWidget={this.copyWidget}
         />
       </div>
     );
