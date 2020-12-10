@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Resource from "../../../editor/src/js/classes/Resource";
-import { Link, NavLink, Redirect, withRouter } from "react-router-dom";
+import { Link, Redirect, withRouter } from "react-router-dom";
 import AltrpSelect from "./altrp-select/AltrpSelect";
 import AdminTable from "./AdminTable";
 import AdminModal2 from "./AdminModal2";
@@ -47,7 +47,7 @@ class AddPage extends Component {
       dataSources: [],
       editingDataSource: null,
       pagesOptions: [],
-      currentTab: '',
+      currentTab: 'content',
     };
     this.resource = new Resource({ route: "/admin/ajax/pages" });
     this.pagesOptionsResource = new Resource({
@@ -68,12 +68,6 @@ class AddPage extends Component {
    * @return {Promise<void>}
    */
   async componentDidMount() {
-    const activeLink = this.changeUrlForTab();
-    this.setState((state) => {
-      return {...state, currentTab: activeLink }
-    });
-    console.log(this.state.currentTab, activeLink, 'currentTab');
-
     this.pagesOptionsResource
       .getAll()
       .then(pagesOptions => this.setState({ pagesOptions }));
@@ -98,10 +92,6 @@ class AddPage extends Component {
     }
   }
 
-  componentDidUpdate() {
-    this.changeUrlForTab();
-  }
-
   getDataSources = async () => {
     let id = this.props.match.params.id;
     const dataSources = await this.dataSourceResource.get(id);
@@ -119,6 +109,15 @@ class AddPage extends Component {
    * @return {Promise<void>}
    */
   async savePage(e) {
+    if(this.state.value.path === undefined || 
+      this.state.value.path === ''  ||
+      this.state.value.title === undefined || 
+      this.state.value.title === '' ) {
+        this.setState(state => {
+          return {...state, currentTab: 'content'}
+        });
+        return;  
+      }
     e.preventDefault();
     let res;
     const { parent_page_id } = this.state.value;
@@ -194,33 +193,9 @@ class AddPage extends Component {
     }
   };
 
-  changeUrlForTab() {
-    const { location, history } = this.props;
-    this.path = location.pathname;
-    const arrayPathname = location.pathname.split('/');
-    if(arrayPathname[arrayPathname.length -1] === 'add' || 
-      arrayPathname[arrayPathname.length -1] === 'edit') {
-      history.push(`${this.path}/content`);
-      return 'content';
-    } else {
-      const activeLink = arrayPathname.pop();
-      this.path = arrayPathname.join('/');
-      return activeLink;
-    }
-  }
-
-  isActiveLink(linkName) {
-    return (_, location) => {
-      const arrayPathname = location.pathname.split('/');
-      const currentLink = arrayPathname[arrayPathname.length - 1];
-      if(currentLink === linkName) return true;
-      return false;
-    }
-  }
-
-  changeCurrentTab(activeLink) {
+  changeCurrentTab(currentTab) {
     return () => this.setState((state)=> {
-      return {...state, currentTab: activeLink}
+      return {...state, currentTab }
     });
   }
 
@@ -247,24 +222,22 @@ class AddPage extends Component {
         </div>
         <div className="admin-content">
           <div className="custom-tab__tabs">
-            <NavLink
-              className="custom-tab__tab"
-              activeClassName="custom-tab__tab--selected" 
-              to={`${this.path}/content`}
-              isActive={this.isActiveLink('content')}
+            <div
+              className={this.state.currentTab === "content" ? 
+              "custom-tab__tab custom-tab__tab--selected" : 
+              "custom-tab__tab"}
               onClick={this.changeCurrentTab('content')}
             >
               content
-            </NavLink>
-            <NavLink
-              className="custom-tab__tab"
-              activeClassName="custom-tab__tab--selected" 
-              to={`${this.path}/SEO`}
-              isActive={this.isActiveLink('SEO')}
+            </div>
+            <div
+              className={this.state.currentTab === "SEO" ? 
+              "custom-tab__tab custom-tab__tab--selected" : 
+              "custom-tab__tab"}
               onClick={this.changeCurrentTab('SEO')}
             >
               SEO
-            </NavLink>
+            </div>
           </div>
           <div className="custom-tab__tab-panel">
             {(() => {
@@ -420,7 +393,6 @@ class AddPage extends Component {
                     <input
                       type="text"
                       id="seo-title"
-                      required={1}
                       value={this.state.value.seo_title || ""}
                       onChange={e => {
                         this.changeValue(e.target.value, "seo_title");
@@ -433,7 +405,6 @@ class AddPage extends Component {
                     <input
                       type="text"
                       id="seo-keywords"
-                      required={1}
                       value={this.state.value.seo_keywords || ""}
                       onChange={e => {
                         this.changeValue(e.target.value, "seo_keywords");
@@ -445,7 +416,6 @@ class AddPage extends Component {
                     <label htmlFor="seo_description">Description</label>
                     <textarea
                       id="seo_description"
-                      required={1}
                       value={this.state.value.seo_description || ""}
                       onChange={e => {
                         this.changeValue(e.target.value, "seo_description");
