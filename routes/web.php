@@ -388,7 +388,11 @@ $frontend_routes = \App\Page::get_frontend_routes();
 
 Route::get('/', function () {
 
-  return view('front-app', ['title'=> 'Main']);
+  return view('front-app', [
+    'title'=> 'Main',
+    '_frontend_route' => [],
+    'preload_content' => [],
+  ]);
 })->middleware( ['web', 'installation.checker'] );
 
 foreach ( $frontend_routes as $_frontend_route ) {
@@ -420,6 +424,8 @@ foreach($reports_routes as $report_route){
 
     return view('front-app',[
       'title'=>$title,
+      '_frontend_route' => [],
+      'preload_content' => [],
     ]);
   })->middleware(['web','installation.checker']);
 }

@@ -4,6 +4,9 @@ import { ResponsiveLine } from "@nivo/line";
 import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
+import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+
 import { getWidgetData } from "../services/getWidgetData";
 import moment from "moment";
 
@@ -203,7 +206,9 @@ const DynamicLineChart = ({
           enablePoints={enablePoints}
           pointSize={pointSize}
           curve={curve}
-          colors={{ scheme: colorScheme }}
+          colors={
+            colorScheme === "regagro" ? regagroScheme : { scheme: colorScheme }
+          }
           pointColor={
             typeof pointColor !== "undefined" && pointColor !== null
               ? pointColor.colorPickedHex

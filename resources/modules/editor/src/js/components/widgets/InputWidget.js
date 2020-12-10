@@ -12,7 +12,6 @@ import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
-import { connect } from "react-redux";
 import CKeditor from "../ckeditor/CKeditor";
 import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 const AltrpInput = React.lazy(() => import("../altrp-input/AltrpInput"));
@@ -230,6 +229,9 @@ class InputWidget extends Component {
     const altrpforms = this.props.formsStore;
     const altrpmodel = this.props.currentModel.getData();
     const altrpuser = this.props.currentUser.getData();
+    const altrppagestate = this.props.altrpPageState.getData();
+    const altrpresponses = this.props.altrpresponses.getData();
+    const altrpmeta = this.props.altrpMeta.getData();
     const context = {};
     if (content_calculation.indexOf("altrpdata") !== -1) {
       context.altrpdata = altrpdata;
@@ -258,6 +260,22 @@ class InputWidget extends Component {
       context.altrpuser = altrpuser;
       prevContext.altrpuser = prevProps.currentUser.getData();
     }
+    if (content_calculation.indexOf("altrpuser") !== -1) {
+      context.altrpuser = altrpuser;
+      prevContext.altrpuser = prevProps.currentUser.getData();
+    }
+    if (content_calculation.indexOf("altrppagestate") !== -1) {
+      context.altrppagestate = altrppagestate;
+      prevContext.altrppagestate = prevProps.altrpPageState.getData();
+    }
+    if (content_calculation.indexOf("altrpmeta") !== -1) {
+      context.altrpmeta = altrpmeta;
+      prevContext.altrpmeta = prevProps.altrpMeta.getData();
+    }
+    if (content_calculation.indexOf("altrpresponses") !== -1) {
+      context.altrpresponses = altrpresponses;
+      prevContext.altrpresponses = prevProps.altrpresponses.getData();
+    }
 
     // if(_.isEqual(prevContext, context)){
     //   return;
@@ -267,6 +285,9 @@ class InputWidget extends Component {
       _.isEqual(prevProps.currentDataStorage, this.props.currentDataStorage) &&
       _.isEqual(prevProps.currentUser, this.props.currentUser) &&
       _.isEqual(prevProps.formsStore, this.props.formsStore) &&
+      _.isEqual(prevProps.altrpPageState, this.props.altrpPageState) &&
+      _.isEqual(prevProps.altrpMeta, this.props.altrpMeta) &&
+      _.isEqual(prevProps.altrpresponses, this.props.altrpresponses) &&
       _.isEqual(prevProps.currentModel, this.props.currentModel)
     ) {
       return;
@@ -409,13 +430,21 @@ class InputWidget extends Component {
   /**
    * Потеря фокуса для оптимизации
    */
-  onBlur = e => {
+   onBlur = async (e) => {
     if (
       ["text", "email", "phone", "tel", "number", "password"].indexOf(
         this.state.settings.content_type
       ) !== -1
     ) {
       this.dispatchFieldValueToStore(e.target.value, true);
+    }
+    if(this.props.element.getSettings("actions", []) && ! isEditor()){
+      const actionsManager = (
+          await import(
+              "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+              )
+      ).default;
+      await actionsManager.callAllWidgetActions(this.props.element.getIdForAction(), 'blur');
     }
   };
   /**
@@ -538,24 +567,24 @@ class InputWidget extends Component {
       case "top":
         styleLabel = {
           marginBottom:
-            this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit || 2 + "px"
+            this.state.settings.label_style_spacing ? this.state.settings.label_style_spacing.size +
+              this.state.settings.label_style_spacing.unit : 2 + "px"
         };
         classLabel = "";
         break;
       case "bottom":
         styleLabel = {
           marginTop:
-            this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit || 2 + "px"
+            this.state.settings.label_style_spacing ? this.state.settings.label_style_spacing.size +
+              this.state.settings.label_style_spacing.unit : 2 + "px"
         };
         classLabel = "";
         break;
       case "left":
         styleLabel = {
           marginRight:
-            this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit || 2 + "px"
+            this.state.settings.label_style_spacing ? this.state.settings.label_style_spacing.size +
+              this.state.settings.label_style_spacing.unit : 2 + "px"
         };
         classLabel = "altrp-field-label-container-left";
         // this.label.current.classList.add("hello")

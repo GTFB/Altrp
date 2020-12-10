@@ -48,7 +48,7 @@
       padding-right: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
     }
   </style>
-  @if($preload_content[ 'important_styles'])
+  @if( isset( $preload_content[ 'important_styles'] ) )
     {!! $preload_content[ 'important_styles'] !!}
   @endif
 </head>

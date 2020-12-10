@@ -9,15 +9,20 @@ window.ReactDOM = ReactDOM;
 window.Component = Component;
 
 import Echo from "laravel-echo";
-window.Pusher = require("pusher-js");
-window.Echo = new Echo({
-  broadcaster: "pusher",
-  key: 324345,
-  wsHost: window.location.hostname,
-  wsPort: 6001,
-  forceTLS: false,
-  disableStats: true
-});
+try {
+  window.Pusher = require("pusher-js");
+  window.Echo = new Echo({
+    broadcaster: "pusher",
+    key: 324345,
+    wsHost: window.location.hostname,
+    wsPort: 6001,
+    forceTLS: false,
+    disableStats: true
+  });
+} catch (e) {
+  console.log(e)
+}
+
 
 window.stylesModulePromise = new Promise(function(resolve) {
   window.stylesModuleResolve = resolve;
