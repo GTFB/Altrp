@@ -27,7 +27,7 @@ class UserObserver
      */
     public function updated(User $user)
     {
-        broadcast(new NoticeUserEvent($user));
+        broadcast(new NotificationEvent($user));
     }
 
     /**
