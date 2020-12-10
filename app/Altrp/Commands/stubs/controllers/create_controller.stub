@@ -55,7 +55,6 @@ class DummyClass extends ApiController
         ${{crudNameSingular}} = new {{modelName}}($data);
         $res = ${{crudNameSingular}}->save();
         if($res){
-            broadcast(new \App\Events\AltrpEvents\{{modelName}}Event(${{crudNameSingular}}))->toOthers();
             return response()->json(['success'=>true, 'data'=>${{crudNameSingular}}], 200, [], JSON_UNESCAPED_UNICODE);
         }
 
@@ -115,7 +114,6 @@ class DummyClass extends ApiController
         $result = ${{crudNameSingular}}->update($data);
 
         if($result){
-            broadcast(new \App\Events\AltrpEvents\{{modelName}}Event(${{crudNameSingular}}))->toOthers();
             return response()->json(['success'=>true], 200, [], JSON_UNESCAPED_UNICODE);
         }
 
@@ -140,7 +138,6 @@ class DummyClass extends ApiController
         $result = ${{crudNameSingular}}->delete();
 
         if($result) {
-            broadcast(new \App\Events\AltrpEvents\{{modelName}}Event(${{crudNameSingular}}))->toOthers();
             return response()->json(['success'=>true, 'message' => trans("responses.delete.{{crudNameSingular}}")], 200, [], JSON_UNESCAPED_UNICODE);
         }
 

@@ -2,7 +2,6 @@
 
 namespace App\Observers;
 
-use App\Events\NoticeUserEvent;
 use App\Events\NotificationEvent;
 use App\User;
 
@@ -27,7 +26,7 @@ class UserObserver
      */
     public function updated(User $user)
     {
-        broadcast(new NoticeUserEvent($user));
+        broadcast(new NotificationEvent($user));
     }
 
     /**
@@ -38,7 +37,7 @@ class UserObserver
      */
     public function deleted(User $user)
     {
-        //
+        broadcast(new NotificationEvent($user));
     }
 
     /**

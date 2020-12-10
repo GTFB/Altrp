@@ -32,6 +32,8 @@ _ide_helper.php
 /app/Repositories/AltrpRepositories
 /app/Http/Requests/AltrpRequests
 /app/Providers/AltrpRepositoryServiceProvider.php
+app/Observers/AltrpObservers
+app/Providers/AltrpProviders
 /routes/AltrpRoutes.php
 /routes/AltrpApiRoutes.php
 /routes/AltrpCustomRoutes.php
