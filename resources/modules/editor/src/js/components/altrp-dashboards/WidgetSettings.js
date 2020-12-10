@@ -126,22 +126,24 @@ class WidgetSettings extends Component {
   setName(param, options) {
     let settings = _.cloneDeep(this.props.editElement?.settings);
     let name = settings?.name;
-    let paramName = _.find(options, item => item.value == param).label;
-    if (typeof name !== "undefined") {
-      name = name.split("|");
-      let boolChange = false;
-      name.forEach((item, index) => {
-        if (item !== param) {
-          boolChange = true;
+    if (param.length > 0) {
+      let paramName = _.find(options, item => item.value == param).label;
+      if (typeof name !== "undefined") {
+        name = name.split("|");
+        let boolChange = false;
+        name.forEach((item, index) => {
+          if (item !== param) {
+            boolChange = true;
+          }
+        });
+        if (boolChange) {
+          name.push(paramName);
         }
-      });
-      if (boolChange) {
-        name.push(paramName);
+        name = _.uniq(name);
+        name = name.join("|");
+      } else {
+        name = param;
       }
-      name = _.uniq(name);
-      name = name.join("|");
-    } else {
-      name = param;
     }
     return name;
   }
@@ -208,9 +210,6 @@ class WidgetSettings extends Component {
         });
         name = name.join("|");
       }
-      console.log("====================================");
-      console.log(name);
-      console.log("====================================");
     }
     return name;
   }
@@ -227,10 +226,6 @@ class WidgetSettings extends Component {
         params: []
       };
       sources = [];
-      this.setState(state => ({
-        ...state,
-        settings: settings
-      }));
     } else if (datasourcesArray.length === 0) {
       settings = {
         ...settings,
@@ -238,10 +233,6 @@ class WidgetSettings extends Component {
         params: []
       };
       sources = [];
-      this.setState(state => ({
-        ...state,
-        settings: settings
-      }));
     } else {
       name = this.generateName(_.cloneDeep(datasourcesArray));
       settings = {
@@ -259,7 +250,6 @@ class WidgetSettings extends Component {
       ...state,
       settings: settings
     }));
-
     if (!this.props.addItemPreview) {
       let element = this.props.editElement;
       element.settings.sources = sources;
@@ -401,9 +391,6 @@ class WidgetSettings extends Component {
   }
   //Смена цветовой схемы
   setColorScheme(colorScheme) {
-    console.log("====================================");
-    console.log(this.state.settings);
-    console.log("====================================");
     let settings = this.state.settings;
     settings = {
       ...this.state.settings,
@@ -752,6 +739,7 @@ class WidgetSettings extends Component {
               */}
               <DatasourceSettings
                 datasources={this.state.datasources}
+                setCardName={this.setCardName}
                 setDatasource={this.setDatasource}
               />
               {typeof this.state.filter_datasource !== "undefined" &&
@@ -765,6 +753,7 @@ class WidgetSettings extends Component {
                         <FilterParameters
                           setParam={this.setParam}
                           key={index}
+                          setCardName={this.setCardName}
                           param={param}
                         />
                       );
@@ -828,7 +817,7 @@ class WidgetSettings extends Component {
             </div>
           </Collapse>
         </div>
-        <div className="row">
+        {/* <div className="row">
           <Button
             className="collapse-button"
             onClick={() =>
@@ -847,7 +836,7 @@ class WidgetSettings extends Component {
           <Collapse in={this.state.openTooltipSettings}>
             <div></div>
           </Collapse>
-        </div>
+        </div> */}
         {this.props.addItemPreview ? (
           <div className="row justify-content-beetwen mt-3">
             <div className="col">

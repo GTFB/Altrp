@@ -16,7 +16,7 @@ import AddItemButton from "./settings/AddItemButton";
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 const mapStateToProps = state => {
-  return { editElement: state.editElement };
+  return { editElement: _.cloneDeep(state.editElement) };
 };
 
 function mapDispatchToProps(dispatch) {
@@ -146,6 +146,10 @@ class DataSourceDashboards extends Component {
       if (el === null) {
         state.drawer = null;
       }
+      console.log("====================================");
+      console.log(element);
+      console.log("====================================");
+      this.props.editElementDispatch(element);
       state.editElement = element;
       if (addItemPreviewBool !== null) {
         return {
@@ -159,7 +163,6 @@ class DataSourceDashboards extends Component {
         settingsOpen: !state.settingsOpen
       };
     });
-    this.props.editElementDispatch(element);
   }
 
   onEditItem(key, settings) {
@@ -329,7 +332,7 @@ class DataSourceDashboards extends Component {
           placement="right"
           open={true}
           defaultOpen={true}
-          width={"30vh"}
+          width={this.props.drawerWidth}
           open={this.state.settingsOpen}
           onClose={this.openSettings}
           handler={false}

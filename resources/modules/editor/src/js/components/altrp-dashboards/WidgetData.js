@@ -1,11 +1,17 @@
 import React, { Component } from "react";
 import ChooseWidget from "./ChooseWidget";
 import domtoimage from "dom-to-image";
+import {
+  exportComponentAsJPEG,
+  exportComponentAsPDF,
+  exportComponentAsPNG
+} from "react-component-export-image";
 import Dropdown from "react-bootstrap/Dropdown";
 import ThreeDotsVertical from "react-bootstrap-icons/dist/icons/three-dots-vertical";
 import GearFill from "react-bootstrap-icons/dist/icons/sliders";
 import TrashFill from "react-bootstrap-icons/dist/icons/trash";
 import PrinterFill from "react-bootstrap-icons/dist/icons/printer";
+import FileEarMark from "react-bootstrap-icons/dist/icons/cloud-download";
 import Files from "react-bootstrap-icons/dist/icons/files";
 
 class WidgetData extends Component {
@@ -13,6 +19,8 @@ class WidgetData extends Component {
     super(props);
     let element = _.cloneDeep(props.editElement);
     this.state = { el: element };
+    this.ref = React.createRef();
+    this.downloadWidget = this.downloadWidget.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -33,6 +41,10 @@ class WidgetData extends Component {
     }
   }
 
+  downloadWidget() {
+    exportComponentAsJPEG(this.ref);
+  }
+
   render() {
     return (
       <div className="altrp-dashboard__card">
@@ -50,6 +62,15 @@ class WidgetData extends Component {
                   background: "rgba(255,255,255,1)"
                 }}
               >
+                <Dropdown.Item>
+                  <button
+                    type="button"
+                    title="Скачать файл"
+                    onClick={this.downloadWidget}
+                  >
+                    <FileEarMark />
+                  </button>
+                </Dropdown.Item>
                 <Dropdown.Item>
                   <button
                     type="button"
@@ -84,6 +105,7 @@ class WidgetData extends Component {
           </div>
         </div>
         <ChooseWidget
+          ref={this.ref}
           editElement={_.cloneDeep(this.state.el)}
           params={_.cloneDeep(this.state.el.settings.params)}
           type={_.cloneDeep(this.state.el.settings.type)}

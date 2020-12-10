@@ -103,18 +103,18 @@ class StyleSettings extends Component {
   }
 
   componentDidMount() {
-    console.log("====================================");
-    console.log(this.props.editElement?.settings?.color);
-    console.log("====================================");
     if (typeof this.props.editElement?.settings?.color === "undefined") {
-      console.log("====================================");
-      console.log(regagroScheme);
-      console.log("====================================");
       setTimeout(() => {
         this.setColorScheme(regagroScheme);
       }, 1000);
     }
   }
+
+  // componentWillMount() {
+  //   if (!this.props.editElement?.settings?.color !== "undefined") {
+  //     this.setColorScheme(regagroScheme);
+  //   }
+  // }
 
   componentDidUpdate(prevProps, prevState) {
     if (
