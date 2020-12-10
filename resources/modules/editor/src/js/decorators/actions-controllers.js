@@ -246,6 +246,18 @@ export function actionsControllers(element){
       ],
     },
   });
+  actionsRepeater.addControl('custom_headers', {
+    type: CONTROLLER_TEXTAREA,
+    label: 'Data',
+    responsive: false,
+    dynamic: false,
+    description: 'param_1 | {{altrpdata.alias}}',
+    conditions: {
+      type: [
+        'form',
+      ],
+    },
+  });
 
   actionsRepeater.addControl('set_type', {
     label: 'Set Type',

@@ -229,6 +229,7 @@ class InputWidget extends Component {
     const altrpmodel = this.props.currentModel.getData();
     const altrpuser = this.props.currentUser.getData();
     const altrppagestate = this.props.altrpPageState.getData();
+    const altrpresponses = this.props.altrpresponses.getData();
     const altrpmeta = this.props.altrpMeta.getData();
     const context = {};
     if (content_calculation.indexOf("altrpdata") !== -1) {
@@ -270,6 +271,10 @@ class InputWidget extends Component {
       context.altrpmeta = altrpmeta;
       prevContext.altrpmeta = prevProps.altrpMeta.getData();
     }
+    if (content_calculation.indexOf("altrpresponses") !== -1) {
+      context.altrpresponses = altrpresponses;
+      prevContext.altrpresponses = prevProps.altrpresponses.getData();
+    }
 
     // if(_.isEqual(prevContext, context)){
     //   return;
@@ -281,6 +286,7 @@ class InputWidget extends Component {
       _.isEqual(prevProps.formsStore, this.props.formsStore) &&
       _.isEqual(prevProps.altrpPageState, this.props.altrpPageState) &&
       _.isEqual(prevProps.altrpMeta, this.props.altrpMeta) &&
+      _.isEqual(prevProps.altrpresponses, this.props.altrpresponses) &&
       _.isEqual(prevProps.currentModel, this.props.currentModel)
     ) {
       return;
@@ -423,13 +429,21 @@ class InputWidget extends Component {
   /**
    * Потеря фокуса для оптимизации
    */
-  onBlur = e => {
+   onBlur = async (e) => {
     if (
       ["text", "email", "phone", "tel", "number", "password"].indexOf(
         this.state.settings.content_type
       ) !== -1
     ) {
       this.dispatchFieldValueToStore(e.target.value, true);
+    }
+    if(this.props.element.getSettings("actions", []) && ! isEditor()){
+      const actionsManager = (
+          await import(
+              "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+              )
+      ).default;
+      await actionsManager.callAllWidgetActions(this.props.element.getIdForAction(), 'blur');
     }
   };
   /**
@@ -552,24 +566,24 @@ class InputWidget extends Component {
       case "top":
         styleLabel = {
           marginBottom:
-            this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit || 2 + "px"
+            this.state.settings.label_style_spacing ? this.state.settings.label_style_spacing.size +
+              this.state.settings.label_style_spacing.unit : 2 + "px"
         };
         classLabel = "";
         break;
       case "bottom":
         styleLabel = {
           marginTop:
-            this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit || 2 + "px"
+            this.state.settings.label_style_spacing ? this.state.settings.label_style_spacing.size +
+              this.state.settings.label_style_spacing.unit : 2 + "px"
         };
         classLabel = "";
         break;
       case "left":
         styleLabel = {
           marginRight:
-            this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit || 2 + "px"
+            this.state.settings.label_style_spacing ? this.state.settings.label_style_spacing.size +
+              this.state.settings.label_style_spacing.unit : 2 + "px"
         };
         classLabel = "altrp-field-label-container-left";
         // this.label.current.classList.add("hello")

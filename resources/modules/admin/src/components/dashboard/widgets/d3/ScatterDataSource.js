@@ -66,15 +66,6 @@ class ScatterDataSource extends Component {
       await this.getData();
     }
     if (
-      !_.isEqual(prevState?.settings?.sort, this.props.element?.settings?.sort)
-    ) {
-      this.setState(state => ({
-        ...state,
-        countRequest: 0
-      }));
-      await this.getData();
-    }
-    if (
       !_.isEqual(
         prevProps.formsStore.form_data,
         this.props.formsStore.form_data
@@ -113,33 +104,6 @@ class ScatterDataSource extends Component {
         count += 1;
         this.setState(s => ({ ...s, countRequest: count }));
       }, 3500);
-    }
-    if (
-      this.state.settings?.sort?.value !== null &&
-      typeof this.state.settings?.sort?.value !== "undefined" &&
-      typeof data !== "undefined"
-    ) {
-      const sort = this.state.settings?.sort.value;
-      switch (sort) {
-        case "value":
-          data.forEach((item, index) => {
-            if (item.data.length > 0) {
-              data[index].data = _.sortBy(item.data, ["y"]);
-            }
-          });
-          break;
-        case "key":
-          data.forEach((item, index) => {
-            if (item.data.length > 0) {
-              data[index].data = _.sortBy(item.data, ["x"]);
-            }
-          });
-          break;
-
-        default:
-          // data = data;
-          break;
-      }
     }
     this.setState(s => ({
       ...s,
@@ -195,6 +159,33 @@ class ScatterDataSource extends Component {
       });
     } else {
       data = this.state.data;
+    }
+    if (
+      this.state.settings?.sort?.value !== null &&
+      typeof this.state.settings?.sort?.value !== "undefined" &&
+      typeof data !== "undefined"
+    ) {
+      const sort = this.state.settings?.sort?.value;
+      switch (sort) {
+        case "value":
+          data.forEach((item, index) => {
+            if (item.data.length > 0) {
+              data[index].data = _.sortBy(item.data, ["y"]);
+            }
+          });
+          break;
+        case "key":
+          data.forEach((item, index) => {
+            if (item.data.length > 0) {
+              data[index].data = _.sortBy(item.data, ["x"]);
+            }
+          });
+          break;
+
+        default:
+          // data = data;
+          break;
+      }
     }
     return (
       <>

@@ -24,10 +24,6 @@ class WidgetPreview extends Component {
     this.setCardName = this.setCardName.bind(this);
   }
 
-  componentWillUnmount() {
-    this.props.editElementDispatch({});
-  }
-
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (!_.isEqual(prevProps.editElement, this.props.editElement)) {
       this.setState(state => ({
@@ -60,7 +56,16 @@ class WidgetPreview extends Component {
       return (
         <div className="drawer-preview">
           <div className="drawer-preview__container">
-            {!this.props.addItemPreview && (
+            {!this.props.addItemPreview ? (
+              <div className="title">
+                <input
+                  type="text"
+                  onChange={this.setCardName}
+                  value={this.state.cardName}
+                  placeholder="Введите название диаграммы"
+                />
+              </div>
+            ) : (
               <div className="title">
                 <input
                   type="text"

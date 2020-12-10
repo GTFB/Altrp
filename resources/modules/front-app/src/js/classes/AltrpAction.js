@@ -307,6 +307,7 @@ class AltrpAction extends AltrpModel {
       }
       return {success: true};
     }
+
     if(this.getProperty('data')){
       let data = parseParamsFromString(this.getProperty('data'), getAppContext(), true);
       if(! _.isEmpty(data)){
