@@ -5,7 +5,7 @@ import UserSvg from '../../svgs/user.svg';
 import { Link } from "react-router-dom";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import Pagination from "../Pagination";
-import { filterUsers } from "../../js/helpers";
+import { filterUsers, sortUsers } from "../../js/helpers";
 export default class Users extends Component {
   constructor(props) {
     super(props);
@@ -14,7 +14,8 @@ export default class Users extends Component {
       roleFilter: null,
       search: "",
       currentPage: 1,
-      roles: []
+      roles: [],
+      sorting: { sortingField: null, order: 'ASC' }
     };
 
     this.resource = new Resource({ route: '/admin/ajax/users' });
@@ -36,6 +37,7 @@ export default class Users extends Component {
 
   render() {
     const { currentPage, data, search, roles, roleFilter } = this.state;
+    const { sortingField, order } = this.state.sorting;
     const users = roleFilter ? filterUsers(data, roleFilter) : data;
 
     return <div className="admin-users">
@@ -51,14 +53,14 @@ export default class Users extends Component {
 
           <div className="admin-filters">
             <span className="admin-filters__current" onClick={() => this.setState({ roleFilter: null })}>
-              <a className="admin-filters__link" href="#">All ({data.length})</a>
+              <a className="admin-filters__link">All ({data.length})</a>
             </span>
             {roles.map(role => {
               const itemsCount = filterUsers(data, role.value).length;
 
               return itemsCount ? <React.Fragment key={role.value}>
                 <span className="admin-filters__separator">|</span>
-                <a className="admin-filters__link" href="#" onClick={() => this.setState({ roleFilter: role.value })}>
+                <a className="admin-filters__link" onClick={() => this.setState({ roleFilter: role.value })}>
                   {role.label} ({itemsCount})
                 </a>
               </React.Fragment> : null
@@ -91,21 +93,39 @@ export default class Users extends Component {
           <table className="table">
             <thead className="admin-users-table-head">
               <tr className="admin-table-row">
-                <td className="admin-table__td admin-table__td_check">
+                <td className="admin-table__td admin-table__td_check" 
+                  onClick={() => this.setState({ sorting: { sortingField: 'name', order: order === 'ASC' ? 'DESC' : 'ASC' } })}
+                >
                   <input className="input-users" type="checkbox" />
                   Username
-                  <VectorSvg className="vector-svg" />
+                  <VectorSvg className={`vector-svg ${order === 'DESC' ? 'role-svg' : ''} ${sortingField === 'name' ? 'vector-svg--active' : ''}`} />
                 </td>
-                <td className="admin-table__td ">Name</td>
-                <td className="admin-table__td ">Email</td>
-                <td className="admin-table__td ">Role<VectorSvg className="vector-svg role-svg" /></td>
+                <td className="admin-table__td "
+                  onClick={() => this.setState({ sorting: { sortingField: 'full_name', order: order === 'ASC' ? 'DESC' : 'ASC' } })}
+                >
+                  Name
+                  <VectorSvg className={`vector-svg ${order === 'DESC' ? 'role-svg' : ''} ${sortingField === 'full_name' ? 'vector-svg--active' : ''}`} />
+                </td>
+                <td className="admin-table__td "
+                  onClick={() => this.setState({ sorting: { sortingField: 'email', order: order === 'ASC' ? 'DESC' : 'ASC' } })}
+                >
+                  Email
+                  <VectorSvg className={`vector-svg ${order === 'DESC' ? 'role-svg' : ''} ${sortingField === 'email' ? 'vector-svg--active' : ''}`} />
+                </td>
+                <td className="admin-table__td ">Role</td>
                 <td className="admin-table__td ">Post</td>
-                <td className="admin-table__td ">Last Enter</td>
+                <td className="admin-table__td "
+                  onClick={() => this.setState({ sorting: { sortingField: 'last_login_at', order: order === 'ASC' ? 'DESC' : 'ASC' } })}
+                >
+                  Last Enter
+                  <VectorSvg className={`vector-svg ${order === 'DESC' ? 'role-svg' : ''} ${sortingField === 'last_login_at' ? 'vector-svg--active' : ''}`} />
+                </td>
                 <td className="admin-table__td ">Status</td>
               </tr>
             </thead>
             <tbody className="admin-table-body">
-              {users.slice(currentPage * this.itemsPerPage - this.itemsPerPage, currentPage * this.itemsPerPage)
+              {sortUsers(users, sortingField, order)
+                .slice(currentPage * this.itemsPerPage - this.itemsPerPage, currentPage * this.itemsPerPage)
                 .map((row, idx) => <tr className="admin-table-row" key={row.id}>
                   <td className="admin-table__td admin-table__td_check ">
                     <input className="input-users" type="checkbox" />
