@@ -10,7 +10,6 @@ class NoticeSetting extends Model
 
     protected $fillable = [
         'notice_name',
-        'source_id',
         'noticed_id',
         'noticed_type',
         'notice_settings'
@@ -19,5 +18,10 @@ class NoticeSetting extends Model
     public function noticed()
     {
         return $this->morphTo(__FUNCTION__, 'noticed_type', 'noticed_id');
+    }
+
+    public function notice_settings()
+    {
+        return $this->belongsToMany(Source::class, 'altrp_notice_setting_source', 'source_id', 'notice_setting_id');
     }
 }

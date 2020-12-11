@@ -44,6 +44,10 @@ class ObserverFileWriter
         return true;
     }
 
+    /**
+     * Записать наблюдателей в сервис провайдер
+     * @return bool|int
+     */
     public function writeToServiceProvider()
     {
         $stubsArr = [];

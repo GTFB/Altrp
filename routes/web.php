@@ -68,6 +68,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/analytics', 'AnalyticsController@index');
     Route::get('/analytics/none', 'AnalyticsController@none');
 
+    Route::get('/users/{user}/notifications', 'Admin\NoticeSettingController@index');
+    Route::post('/users/{user}/notifications', 'Admin\NoticeSettingController@store');
+    Route::put('/users/{user}/notifications/{notification}', 'Admin\NoticeSettingController@update');
+    Route::delete('/users/{user}/notifications/{notification}', 'Admin\NoticeSettingController@destroy');
+
     Route::get('/global-elements', "Constructor\GlobalElements@getElements");
     Route::get('/global-elements/{element}', "Constructor\GlobalElements@getElement");
     Route::post('/global-elements', "Constructor\GlobalElements@insert");
@@ -408,7 +413,7 @@ foreach($reports_routes as $report_route){
   $title = $report_route['title'];
 
   $report_route = str_replace( ':id', '{id}', $path );
-  
+
   Route::get($report_route, function () use ($title){
     return view('front-app',['title'=>$title]);
   })->middleware(['web','installation.checker']);
