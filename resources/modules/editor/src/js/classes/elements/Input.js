@@ -478,29 +478,29 @@ class Input extends BaseElement {
 
     actionsControllers(this);
 
-    this.startControlSection('logic_section', {
-      tab: TAB_CONTENT,
-      label: 'Logic',
-    });
-
-    this.addControl('logic_action', {
-      type: CONTROLLER_SELECT2,
-      label: 'Action',
-      placeholder: 'action',
-      default: '1',
-      options: [
-        {
-          value: '1',
-          label: 'Select sd  Content 1'
-        },
-        {
-          value: '2',
-          label: 'Select Content 2'
-        },
-      ]
-    });
-
-    this.endControlSection();
+    // this.startControlSection('logic_section', {
+    //   tab: TAB_CONTENT,
+    //   label: 'Logic',
+    // });
+    //
+    // this.addControl('logic_action', {
+    //   type: CONTROLLER_SELECT2,
+    //   label: 'Action',
+    //   placeholder: 'action',
+    //   default: '1',
+    //   options: [
+    //     {
+    //       value: '1',
+    //       label: 'Select sd  Content 1'
+    //     },
+    //     {
+    //       value: '2',
+    //       label: 'Select Content 2'
+    //     },
+    //   ]
+    // });
+    //
+    // this.endControlSection();
 
     this.startControlSection('form_condition_display', {
       tab: TAB_CONTENT,
