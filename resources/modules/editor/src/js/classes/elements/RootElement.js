@@ -247,12 +247,14 @@ class RootElement extends BaseElement {
 
     this.addControl('heading_close_popup_layout', {
       type: CONTROLLER_HEADING,
-      label: "Close"
+      label: "Close",
+      default: true
     });
 
     this.addControl('overlay_close_popup_layout', {
       type: CONTROLLER_SWITCHER,
       label: 'Overlay',
+      default: true
     });
 
     this.addControl('switcher_close_button_popup_layout', {

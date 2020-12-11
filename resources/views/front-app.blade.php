@@ -54,7 +54,7 @@
 </head>
 <body>
 <div id="front-app" class="front-app">
-  {!!  $preload_content[ 'content'] !!}
+  {!! isset( $preload_content[ 'content'] ) ? $preload_content['content'] : ''!!}
 </div>
 <script src="{{ altrp_asset( '/modules/front-app/front-app.js', 'http://localhost:3001/' ) }}" defer></script>
 @php
