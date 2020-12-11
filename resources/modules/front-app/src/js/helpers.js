@@ -11,6 +11,8 @@ import { changePageState } from "./store/altrp-page-state-storage/actions";
 import { changeAltrpMeta } from "./store/altrp-meta-storage/actions";
 import { useDispatch } from "react-redux";
 import {altrpFontsSet, GOOGLE_FONT} from "./components/FontsManager";
+import queryString from "query-string";
+
 
 export function getRoutes() {
   return import("./classes/Routes.js");
@@ -361,7 +363,7 @@ export function setDataByPath(path = "", value, dispatch = null) {
   if (!path) {
     return false;
   }
-
+  path = path.replace('{{','').replace('}}', '');
   switch (value) {
     case "true":
       value = true;
@@ -452,10 +454,15 @@ export function getDataByPath(
     currentModel =
       context instanceof AltrpModel ? context : new AltrpModel(context);
   }
-  const urlParams =
+  let urlParams =
     window.currentRouterMatch instanceof AltrpModel
       ? window.currentRouterMatch.getProperty("params")
       : {};
+
+  let gueryData = queryString.parseUrl(window.location.href).query;
+
+  urlParams = _.assign(gueryData, urlParams);
+
   let value = _default;
   if (!_.isString(path)) {
     return value;
@@ -483,6 +490,8 @@ export function getDataByPath(
     value = getTimeValue(path.replace("altrptime.", ""));
   } else if (path.indexOf("altrpforms.") === 0) {
     value = _.get(formsStore, path.replace("altrpforms.", ""), _default);
+  } else if (path.indexOf("altrppage.") === 0) {
+
   } else {
     value = urlParams[path]
       ? urlParams[path]

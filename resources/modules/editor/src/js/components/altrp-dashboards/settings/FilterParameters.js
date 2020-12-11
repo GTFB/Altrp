@@ -5,7 +5,7 @@ import axios from "axios";
 import { connect } from "react-redux";
 
 const mapStateToProps = state => {
-  return { editElement: _.cloneDeep(state.editElement) };
+  return { editElement: state.editElement };
 };
 
 function mapDispatchToProps(dispatch) {

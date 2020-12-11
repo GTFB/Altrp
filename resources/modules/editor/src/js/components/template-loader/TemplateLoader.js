@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import AltrpModel from "../../classes/AltrpModel";
 
 class TemplateLoader extends Component {
   constructor(props) {
@@ -27,6 +28,9 @@ class TemplateLoader extends Component {
     if(this.props.templateId){
       templateComponent = await templateLoader.loadParsedTemplate(this.props.templateId);
       templateComponent = frontElementsFabric.cloneElement(templateComponent);
+      if(this.props.cardModel instanceof AltrpModel){
+        templateComponent.setCardModel(this.props.cardModel);
+      }
       templateComponent = React.createElement(templateComponent.componentClass,
           {...this.props,
             children: templateComponent.children,

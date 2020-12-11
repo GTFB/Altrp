@@ -83,7 +83,7 @@ class AltrpForm {
    * @param {{} | null} data
    * @return {boolean}
    */
-  async submit(modelID = null, submitText = '', data = null){
+  async submit(modelID = null, submitText = '', data = null, customHeaders = null){
     let success = true;
     if(submitText){
       let confirmed =  await confirm(submitText);

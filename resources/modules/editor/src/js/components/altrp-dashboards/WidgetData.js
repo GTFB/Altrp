@@ -11,19 +11,24 @@ import FileEarMark from "react-bootstrap-icons/dist/icons/cloud-download";
 class WidgetData extends Component {
   constructor(props) {
     super(props);
-    let element = _.cloneDeep(props.editElement, []);
+    let element = _.cloneDeep(props.editElement);
     this.state = { el: element };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    if (!_.isEqual(prevState.el, this.props.editElement)) {
+      this.setState(state => ({
+        ...state,
+        el: _.cloneDeep(this.props.editElement)
+      }));
+    }
     if (
-      !_.isEqual(prevState.el, this.props.editElement) ||
       JSON.stringify(prevProps.editElement.settings.params) !==
-        JSON.stringify(this.props.editElement.settings.params)
+      JSON.stringify(this.props.editElement.settings.params)
     ) {
       this.setState(state => ({
         ...state,
-        el: _.cloneDeep(this.props.editElement, [])
+        el: _.cloneDeep(this.props.editElement)
       }));
     }
   }
@@ -59,7 +64,7 @@ class WidgetData extends Component {
                     type="button"
                     title="Настроить виджет"
                     onClick={() =>
-                      this.props.openSettingsHandler(this.props.editElement)
+                      this.props.openSettingsHandler(this.state.el)
                     }
                   >
                     <GearFill />
@@ -69,9 +74,7 @@ class WidgetData extends Component {
                   <button
                     type="button"
                     title="Удалить виджет"
-                    onClick={() =>
-                      this.props.onRemoveItem(this.props.editElement.i)
-                    }
+                    onClick={() => this.props.onRemoveItem(this.state.el.i)}
                   >
                     <TrashFill />
                   </button>
@@ -81,10 +84,10 @@ class WidgetData extends Component {
           </div>
         </div>
         <ChooseWidget
-          editElement={_.cloneDeep(this.props.editElement)}
-          params={_.cloneDeep(this.props.editElement.settings.params)}
-          type={_.cloneDeep(this.props.editElement.settings.type)}
-          sources={_.cloneDeep(this.props.editElement.settings.sources)}
+          editElement={_.cloneDeep(this.state.el)}
+          params={_.cloneDeep(this.state.el.settings.params)}
+          type={_.cloneDeep(this.state.el.settings.type)}
+          sources={_.cloneDeep(this.state.el.settings.sources)}
         />
       </div>
     );

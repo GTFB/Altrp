@@ -1,8 +1,11 @@
 import React, { Component } from "react";
-import { ResponsiveBarCanvas, ResponsiveBar } from "@nivo/bar";
+import { ResponsiveBar } from "@nivo/bar";
 import { connect } from "react-redux";
 import ErrorBoundary from "./ErrorBoundary";
 import DataAdapter from "./DataAdapter";
+import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
 
 const mapStateToProps = state => {
   return { formsStore: _.cloneDeep(state.formsStore) };
@@ -74,15 +77,6 @@ class BarDataSource extends Component {
       }));
       await this.getData();
     }
-    if (
-      !_.isEqual(prevState?.settings?.sort, this.props.element?.settings?.sort)
-    ) {
-      this.setState(state => ({
-        ...state,
-        countRequest: 0
-      }));
-      await this.getData();
-    }
   }
 
   async componentWillMount() {
@@ -107,24 +101,6 @@ class BarDataSource extends Component {
         this.setState(s => ({ ...s, countRequest: count }));
       }, 3500);
     }
-    if (
-      this.state.settings?.sort?.value !== null &&
-      typeof this.state.settings?.sort?.value !== "undefined" &&
-      typeof data !== "undefined"
-    ) {
-      const sort = this.state.settings?.sort.value;
-      switch (sort) {
-        case "value":
-          data = _.sortBy(data, ["value"]);
-          break;
-        case "key":
-          data = _.sortBy(data, ["key"]);
-          break;
-        default:
-          data = data;
-          break;
-      }
-    }
     this.setState(s => ({
       ...s,
       data: data,
@@ -133,7 +109,6 @@ class BarDataSource extends Component {
       isLarge: isLarge
     }));
   }
-
   render() {
     if (typeof this.state.sources === "undefined") {
       return <div>Укажите источник данных</div>;
@@ -148,11 +123,24 @@ class BarDataSource extends Component {
       return <div>Ограничьте диапозон данных или выберите другой источник</div>;
     }
     if (typeof this.state.data !== "undefined" && this.state.data.length > 0) {
+      let data = this.state.data;
+      const sort = this.state.settings?.sort?.value;
+      switch (sort) {
+        case "value":
+          data = _.sortBy(data, ["value"]);
+          break;
+        case "key":
+          data = _.sortBy(data, ["key"]);
+          break;
+        default:
+          data = data;
+          break;
+      }
       return (
         <>
           <ErrorBoundary>
             <ResponsiveBar
-              data={this.state.data}
+              data={data}
               indexBy="key"
               enableLabel={this.state.settings?.enableSliceLabels}
               padding={this.state.settings?.padding}
@@ -161,8 +149,20 @@ class BarDataSource extends Component {
               groupMode={this.state.settings?.groupMode}
               layout={this.state.settings?.layout}
               margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
-              colors={this.state.settings?.colors}
+              colors={
+                this.state.settings?.colors?.scheme === "regagro"
+                  ? regagroScheme
+                  : this.state.settings?.colors
+              }
               colorBy="index"
+              tooltip={datum => {
+                const { indexValue, value, color } = datum;
+                return (
+                  <>
+                    <span>{indexValue}</span>:<strong> {value}</strong>
+                  </>
+                );
+              }}
               axisBottom={{ ...this.state.settings?.axisBottom }}
             />
           </ErrorBoundary>

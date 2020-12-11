@@ -4,6 +4,10 @@ import { connect } from "react-redux";
 import DataAdapter from "./DataAdapter";
 import ErrorBoundary from "./ErrorBoundary";
 
+import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+import moment from "moment";
+
 const mapStateToProps = state => {
   return { formsStore: _.cloneDeep(state.formsStore) };
 };
@@ -79,15 +83,6 @@ class LineDataSource extends Component {
       }));
       await this.getData();
     }
-    if (
-      !_.isEqual(prevState?.settings?.sort, this.props.element?.settings?.sort)
-    ) {
-      this.setState(state => ({
-        ...state,
-        countRequest: 0
-      }));
-      await this.getData();
-    }
   }
 
   async componentWillMount() {
@@ -95,19 +90,16 @@ class LineDataSource extends Component {
   }
 
   async getData() {
-    const {
-      data,
-      isMultiple,
-      isDate,
-      needCallAgain,
-      isLarge
-    } = await new DataAdapter(
+    const dataObject = await new DataAdapter(
       this.props.element.settings.type,
       this.props.element.settings.sources,
       _.cloneDeep(this.props.formsStore.form_data),
       this.state.params,
       this.state.countRequest
     ).parseData();
+
+    const { isMultiple, isDate, needCallAgain, isLarge } = dataObject;
+    let data = dataObject.data;
     if (needCallAgain) {
       setTimeout(() => {
         this.getData();
@@ -115,33 +107,6 @@ class LineDataSource extends Component {
         count += 1;
         this.setState(s => ({ ...s, countRequest: count }));
       }, 3500);
-    }
-    if (
-      this.state.settings?.sort?.value !== null &&
-      typeof this.state.settings?.sort?.value !== "undefined" &&
-      typeof data !== "undefined"
-    ) {
-      const sort = this.state.settings?.sort.value;
-      switch (sort) {
-        case "value":
-          data.forEach((item, index) => {
-            if (item.data.length > 0) {
-              data[index].data = _.sortBy(item.data, ["y"]);
-            }
-          });
-          break;
-        case "key":
-          data.forEach((item, index) => {
-            if (item.data.length > 0) {
-              data[index].data = _.sortBy(item.data, ["x"]);
-            }
-          });
-          break;
-
-        default:
-          // data = data;
-          break;
-      }
     }
     this.setState(s => ({
       ...s,
@@ -184,14 +149,61 @@ class LineDataSource extends Component {
         return <div>Нет данных</div>;
       }
     }
+
+    let data = [];
+    if (this.state.settings?.xScale?.type === "time") {
+      data = _.cloneDeep(this.state.data, []);
+      data = data.map(item => {
+        item.data = item.data.map(object => {
+          object.x = moment(object.x).format("DD.MM.YYYY");
+          return object;
+        });
+        return item;
+      });
+    } else {
+      data = this.state.data;
+    }
+
+    if (
+      this.state.settings?.sort?.value !== null &&
+      typeof this.state.settings?.sort?.value !== "undefined" &&
+      typeof data !== "undefined"
+    ) {
+      const sort = this.state.settings?.sort?.value;
+      switch (sort) {
+        case "value":
+          data.forEach((item, index) => {
+            if (item.data.length > 0) {
+              data[index].data = _.sortBy(item.data, ["y"]);
+            }
+          });
+          break;
+        case "key":
+          data.forEach((item, index) => {
+            if (item.data.length > 0) {
+              data[index].data = _.sortBy(item.data, ["x"]);
+            }
+          });
+          break;
+
+        default:
+          // data = data;
+          break;
+      }
+    }
+
     return (
       <>
         <ErrorBoundary>
           <ResponsiveLineCanvas
-            data={this.state.data}
+            data={data}
             margin={{ top: 40, right: 120, bottom: 80, left: 100 }}
             curve={this.state.settings?.curve}
-            colors={this.state.settings?.colors}
+            colors={
+              this.state.settings?.colors?.scheme === "regagro"
+                ? regagroScheme
+                : this.state.settings?.colors
+            }
             xScale={this.state.settings?.xScale}
             enableArea={this.state.settings?.enableArea}
             pointSize={this.state.settings?.pointSize}

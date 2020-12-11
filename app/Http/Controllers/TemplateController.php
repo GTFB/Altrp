@@ -204,7 +204,7 @@ class TemplateController extends Controller
      * @param string $template_id
      * @return \Illuminate\Http\Response
      */
-    public function show_frontend(string $template_id)
+    public function show_frontend( string $template_id )
     {
       if( Uuid::isValid( $template_id ) ){
         $template = Template::where( 'guid', $template_id )->first();
@@ -212,7 +212,7 @@ class TemplateController extends Controller
         $template = Template::find($template_id);
       }
       if( ! $template ){
-        return response()->json( ['success' => false, 'message' => 'Template not found'], 404, JSON_UNESCAPED_UNICODE );
+        return response()->json( ['success' => false, 'message' => 'Template not found'], 404, [], JSON_UNESCAPED_UNICODE );
       }
       $template->check_elements_conditions();
       return response()->json( $template->toArray() );
@@ -243,15 +243,19 @@ class TemplateController extends Controller
             return response()->json(trans("responses.not_found.template"), 404, [], JSON_UNESCAPED_UNICODE);
         }
 
-        $review = new Template($old_template->toArray());
+        $review = new Template( $old_template->toArray() );
         $review->parent_template = $old_template->id;
         $review->type = 'review';
         $review->guid = null;
+        $review->html_content = null;
+        $review->styles = null;
         if (!$review->save()) {
             return response()->json(trans("responses.dberror"), 400, [], JSON_UNESCAPED_UNICODE);
         }
         $old_template->name = $request->name;
         $old_template->title = $request->title;
+        $old_template->html_content = $request->html_content;
+        $old_template->styles = $request->styles ? json_encode($request->styles) : null;
         $old_template->data = json_encode($request->data);
         $old_template->type = 'template'; //1
         $old_template->user_id = auth()->user()->id;

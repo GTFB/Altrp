@@ -45,14 +45,11 @@ class Dropbar extends Component {
   };
 
   enterShow(e) {
+    console.log(this.props.showDelay.size)
     let current = e.currentTarget;
     if(this.props.showDelay.size && !this.state.show) {
       setTimeout(() => {
-        if(this.children.current === current) {
-          this.setState({ show: true });
-        } else {
-          this.setState({ show: false });
-        }
+        this.setState({ show: true });
       }, this.props.showDelay.size);
     } else {
       this.setState((state) => ({ show: !state.show }));
@@ -62,7 +59,8 @@ class Dropbar extends Component {
   render() {
     const children = React.Children.only(this.props.children);
 
-    let mainClass = "altrp-dropbar-" + this.props.className;
+    let mainClass = "altrp-dropbar-" +
+      this.props.className;
 
     let type = this.props.settings.type_dropbar_section || "text";
     let content_dropbar_section = this.props.getContent('content_dropbar_section');
@@ -84,6 +82,7 @@ class Dropbar extends Component {
           }
           <AltrpPopper
             target={this.children}
+            portal={true}
             settings={{
               placement: this.props.settings.position_dropbar_options,
               offset: [0, this.props.settings.offset_dropbar_options.size],
@@ -93,7 +92,11 @@ class Dropbar extends Component {
             }}
           >
             <div
-              className={"altrp-dropbar-container " + mainClass + "-containter" + (this.state.show ? " altrp-dropbar-container-show" : " altrp-dropbar-container-hide")}
+              className={"altrp-dropbar-container " +
+              (` ${this.props.elemenentId}-altrp-dropbar `) +
+              mainClass +
+              "-containter" +
+              (this.state.show ? " altrp-dropbar-container-show" : " altrp-dropbar-container-hide")}
             >
               {
                 type === "text" ? (
@@ -106,7 +109,8 @@ class Dropbar extends Component {
                     }
                   )
                 ) : (
-                  <TemplateLoader templateId={this.props.settings.template_dropbar_section}/>
+                  <TemplateLoader templateId={this.props.settings.template_dropbar_section}
+                                  cardModel={this.props.element.getCurrentModel()}/>
                 )
               }
             </div>

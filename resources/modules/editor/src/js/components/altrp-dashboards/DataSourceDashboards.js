@@ -21,7 +21,7 @@ const mapStateToProps = state => {
 
 function mapDispatchToProps(dispatch) {
   return {
-    editElement: data => dispatch(editElement(data))
+    editElementDispatch: data => dispatch(editElement(data))
   };
 }
 
@@ -119,7 +119,6 @@ class DataSourceDashboards extends Component {
 
   setEditItem(item) {
     let items = this.state.items;
-    item.edit = true;
     _.replace(items, { i: item.i }, item);
     let index = _.findKey(items, { i: item.i });
     this.setState(state => {
@@ -132,7 +131,7 @@ class DataSourceDashboards extends Component {
     const { items } = this.state;
     let widget = _.find(items, { i: el.i });
     widget.settings.name = name;
-    let index = _.findKey(items, { i: el.i });
+    const index = _.findKey(items, { i: el.i });
     this.setState(state => {
       state.items[index] = widget;
       return { ...state, items: items };
@@ -141,12 +140,12 @@ class DataSourceDashboards extends Component {
   }
 
   openSettings(el = null, addItemPreviewBool = null) {
+    const element = _.cloneDeep(el);
     this.setState(state => {
       if (el === null) {
         state.drawer = null;
       }
-      this.props.editElement(el);
-      state.editElement = el;
+      state.editElement = element;
       if (addItemPreviewBool !== null) {
         return {
           ...state,
@@ -159,6 +158,7 @@ class DataSourceDashboards extends Component {
         settingsOpen: !state.settingsOpen
       };
     });
+    this.props.editElementDispatch(element);
   }
 
   onEditItem(key, settings) {
@@ -166,14 +166,14 @@ class DataSourceDashboards extends Component {
     let widget = _.find(items, { i: key });
     widget.settings = settings;
     widget.edit = false;
-    this.props.editElement(widget);
+    // this.props.editElementDispatch(widget);
     _.replace(items, { i: key }, widget);
     let index = _.findKey(items, { i: key });
     this.setState(state => {
       state.items[index] = widget;
+      this.saveWidgetData(state);
       return { ...state, items: items };
     });
-    this.saveWidgetData();
   }
 
   onAddItem() {
@@ -184,6 +184,13 @@ class DataSourceDashboards extends Component {
   onAddItemCard(element) {
     if (_.keys(element).length > 0) {
       this.setState(state => {
+        if (!Array.isArray(state.items)) {
+          console.log("====================================");
+          console.log(state.items);
+          state.items = Object.values(state.items);
+          console.log(state.items);
+          console.log("====================================");
+        }
         let items = state.items.concat(
           this.itemSettingsAdd(state, element.settings)
         );
@@ -333,6 +340,7 @@ class DataSourceDashboards extends Component {
               editHandler={this.onEditItem}
               onCloseHandler={this.openSettings}
               onAddItem={this.onAddItemCard}
+              setCardName={this.setCardName}
             />
           )}
         </Drawer>
