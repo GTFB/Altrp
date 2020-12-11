@@ -261,6 +261,11 @@ class Input extends BaseElement {
       label: 'Required',
     });
 
+    this.addControl('content_readonly', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Readonly',
+    });
+
     this.addControl('content_autocomplete', {
       type: CONTROLLER_SWITCHER,
       label: 'Autocomplete',

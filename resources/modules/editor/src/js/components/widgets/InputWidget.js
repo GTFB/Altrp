@@ -544,7 +544,7 @@ class InputWidget extends Component {
 
   render() {
     let label = null;
-    const { options_sorting, image_select_options, select2_multiple: isMultiple } = this.props.element.getSettings();
+    const { options_sorting, content_readonly, image_select_options, select2_multiple: isMultiple } = this.props.element.getSettings();
 
     let value = this.state.value;
 
@@ -693,6 +693,7 @@ class InputWidget extends Component {
                 type={this.state.settings.content_type}
                 name={this.props.element.getFieldId()}
                 value={value || ""}
+                readOnly={content_readonly}
                 autoComplete={autocomplete}
                 placeholder={this.state.settings.content_placeholder}
                 className={

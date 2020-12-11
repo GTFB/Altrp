@@ -45,7 +45,6 @@ class Dropbar extends Component {
   };
 
   enterShow(e) {
-    console.log(this.props.showDelay.size)
     let current = e.currentTarget;
     if(this.props.showDelay.size && !this.state.show) {
       setTimeout(() => {
