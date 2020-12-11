@@ -40,6 +40,9 @@ class Page extends Model
     'guid',
     'for_guest',
     'parent_page_id',
+    'seo_description',
+    'seo_keywords',
+    'seo_title',
     'type'
   ];
 
