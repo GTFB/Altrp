@@ -102,6 +102,14 @@ class StyleSettings extends Component {
     this.setColorScheme = this.setColorScheme.bind(this);
   }
 
+  componentDidMount() {
+    if (typeof this.props.editElement?.settings?.color === "undefined") {
+      setTimeout(() => {
+        this.setColorScheme(regagroScheme);
+      }, 1000);
+    }
+  }
+
   // componentWillMount() {
   //   if (!this.props.editElement?.settings?.color !== "undefined") {
   //     this.setColorScheme(regagroScheme);
@@ -197,11 +205,11 @@ class StyleSettings extends Component {
             placeholder="Выберите цветовую схему"
             className="select-type"
             defaultValue={
-              this.state.editElement?.settings?.colors?.scheme ||
+              this.props.editElement?.settings?.colors?.scheme ||
               this.state.currentColorScheme
             }
             defaultInputValue={
-              this.state.editElement?.settings?.colors?.scheme ||
+              this.props.editElement?.settings?.colors?.scheme ||
               this.state.currentColorScheme
             }
             onChange={option => this.setColorScheme(option.value)}

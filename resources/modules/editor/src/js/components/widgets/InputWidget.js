@@ -21,7 +21,9 @@ class InputWidget extends Component {
   constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this);
+
     this.defaultValue = props.element.getSettings().content_default_value || (props.element.getSettings().select2_multiple ? [] : "");
+
     this.state = {
       settings: { ...props.element.getSettings() },
       value: this.defaultValue,
@@ -89,8 +91,7 @@ class InputWidget extends Component {
       options = _.isArray(options) ? options : [];
       this.setState(state => ({ ...state, options }));
     }
-
-    let value = this.state.value;
+    let value = this.storageValue || this.state.value;
     /**
      * Если динамическое значение загрузилось,
      * то используем this.getContent для получение этого динамического значения
@@ -160,20 +161,37 @@ class InputWidget extends Component {
    * Обновление виджета
    */
   async _componentDidUpdate(prevProps, prevState) {
-    const {content_options, model_for_options} = this.state.settings;
-    if(prevProps
-        && (! prevProps.currentDataStorage.getProperty('currentDataStorageLoaded'))
-        && this.props.currentDataStorage.getProperty('currentDataStorageLoaded')){
-      let value = this.getContent('content_default_value');
-      this.setState(state => ({ ...state, value, contentLoaded: true }), () => { this.dispatchFieldValueToStore(value); });
+    const { content_options, model_for_options } = this.state.settings;
+    if (
+      prevProps &&
+      !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
+      this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
+    ) {
+      let value = this.getContent("content_default_value");
+      this.setState(
+        state => ({ ...state, value, contentLoaded: true }),
+        () => {
+          this.dispatchFieldValueToStore(value);
+        }
+      );
     }
-    if (this.props.element.getSettings('content_type') === 'select' && this.props.element.getSettings('model_for_options')) {
-      if (!(this.state.settings.model_for_options === prevProps.element.getSettings('model_for_options'))) {
-        let model_for_options = prevProps.element.getSettings('model_for_options');
-        let options = await (new Resource({ route: this.getRoute() })).getAll();
-        options = (!_.isArray(options)) ? options.data : options;
-        options = (_.isArray(options)) ? options : [];
-        this.setState(state => ({ ...state, options, model_for_options }))
+    if (
+      this.props.element.getSettings("content_type") === "select" &&
+      this.props.element.getSettings("model_for_options")
+    ) {
+      if (
+        !(
+          this.state.settings.model_for_options ===
+          prevProps.element.getSettings("model_for_options")
+        )
+      ) {
+        let model_for_options = prevProps.element.getSettings(
+          "model_for_options"
+        );
+        let options = await new Resource({ route: this.getRoute() }).getAll();
+        options = !_.isArray(options) ? options.data : options;
+        options = _.isArray(options) ? options : [];
+        this.setState(state => ({ ...state, options, model_for_options }));
       }
     }
     /**
@@ -197,10 +215,10 @@ class InputWidget extends Component {
     ) {
       this.updateOptions();
     }
-    if(content_options && ! model_for_options){
+    if (content_options && !model_for_options) {
       let options = parseOptionsFromSettings(content_options);
-      if(! _.isEqual(options, this.state.options)){
-        this.setState(state => ({...state, options}));
+      if (!_.isEqual(options, this.state.options)) {
+        this.setState(state => ({ ...state, options }));
       }
     }
     this.updateValue(prevProps);
@@ -425,12 +443,13 @@ class InputWidget extends Component {
         }
       }
     );
+    window.localStorage.setItem(this.props.element.getI(), value);
   }
 
   /**
    * Потеря фокуса для оптимизации
    */
-   onBlur = async (e) => {
+  onBlur = async e => {
     if (
       ["text", "email", "phone", "tel", "number", "password"].indexOf(
         this.state.settings.content_type
@@ -438,13 +457,16 @@ class InputWidget extends Component {
     ) {
       this.dispatchFieldValueToStore(e.target.value, true);
     }
-    if(this.props.element.getSettings("actions", []) && ! isEditor()){
+    if (this.props.element.getSettings("actions", []) && !isEditor()) {
       const actionsManager = (
-          await import(
-              "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-              )
+        await import(
+          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+        )
       ).default;
-      await actionsManager.callAllWidgetActions(this.props.element.getIdForAction(), 'blur');
+      await actionsManager.callAllWidgetActions(
+        this.props.element.getIdForAction(),
+        "blur"
+      );
     }
   };
   /**
@@ -878,7 +900,7 @@ class InputWidget extends Component {
       element: this.props.element,
       classNamePrefix: this.props.element.getId() + " altrp-field-select2",
       options,
-      name:this.props.element.getFieldId(),
+      name: this.props.element.getFieldId(),
       ref: this.altrpSelectRef,
       settings: this.props.element.getSettings(),
       onChange: this.onChange,
