@@ -22,7 +22,9 @@ class InputWidget extends Component {
     super(props);
     this.onChange = this.onChange.bind(this);
 
-    this.defaultValue = props.element.getSettings().content_default_value || (props.element.getSettings().select2_multiple ? [] : "");
+    this.defaultValue =
+      props.element.getSettings().content_default_value ||
+      (props.element.getSettings().select2_multiple ? [] : "");
 
     this.state = {
       settings: { ...props.element.getSettings() },
@@ -443,7 +445,6 @@ class InputWidget extends Component {
         }
       }
     );
-    window.localStorage.setItem(this.props.element.getI(), value);
   }
 
   /**
@@ -566,7 +567,12 @@ class InputWidget extends Component {
 
   render() {
     let label = null;
-    const { options_sorting, content_readonly, image_select_options, select2_multiple: isMultiple } = this.props.element.getSettings();
+    const {
+      options_sorting,
+      content_readonly,
+      image_select_options,
+      select2_multiple: isMultiple
+    } = this.props.element.getSettings();
 
     let value = this.state.value;
 
@@ -588,25 +594,28 @@ class InputWidget extends Component {
     switch (this.state.settings.content_label_position_type) {
       case "top":
         styleLabel = {
-          marginBottom:
-            this.state.settings.label_style_spacing ? this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit : 2 + "px"
+          marginBottom: this.state.settings.label_style_spacing
+            ? this.state.settings.label_style_spacing.size +
+              this.state.settings.label_style_spacing.unit
+            : 2 + "px"
         };
         classLabel = "";
         break;
       case "bottom":
         styleLabel = {
-          marginTop:
-            this.state.settings.label_style_spacing ? this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit : 2 + "px"
+          marginTop: this.state.settings.label_style_spacing
+            ? this.state.settings.label_style_spacing.size +
+              this.state.settings.label_style_spacing.unit
+            : 2 + "px"
         };
         classLabel = "";
         break;
       case "left":
         styleLabel = {
-          marginRight:
-            this.state.settings.label_style_spacing ? this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit : 2 + "px"
+          marginRight: this.state.settings.label_style_spacing
+            ? this.state.settings.label_style_spacing.size +
+              this.state.settings.label_style_spacing.unit
+            : 2 + "px"
         };
         classLabel = "altrp-field-label-container-left";
         // this.label.current.classList.add("hello")
@@ -700,12 +709,14 @@ class InputWidget extends Component {
         }
         break;
       case "image_select":
-        return <AltrpImageSelect 
-          options={image_select_options}
-          value={this.state.value}
-          changeHandler={value => this.setState({ value })}
-          isMultiple={isMultiple}
-        />;
+        return (
+          <AltrpImageSelect
+            options={image_select_options}
+            value={this.state.value}
+            changeHandler={value => this.setState({ value })}
+            isMultiple={isMultiple}
+          />
+        );
       default: {
         const isClearable = this.state.settings.content_clearable;
         input = (
