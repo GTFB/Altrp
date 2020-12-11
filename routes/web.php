@@ -65,6 +65,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
   Route::group(['prefix' => 'ajax'], function () {
 
+    // Websockets
+    Route::get('/websockets', 'Admin\WebsocketsController@index');
+
     Route::get('/analytics', 'AnalyticsController@index');
     Route::get('/analytics/none', 'AnalyticsController@none');
 

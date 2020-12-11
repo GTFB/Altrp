@@ -79,14 +79,6 @@ window.Component = React.Component;
 import Echo from "laravel-echo"
 import {changeCurrentUser} from "../../front-app/src/js/store/current-user/actions";
 window.Pusher = require('pusher-js');
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: 123456,
-//     wsHost: window.location.hostname,
-//     wsPort: 6001,
-//     forceTLS: false,
-//     disableStats: true,
-// });
 
 try {
   window.Echo = new Echo({
@@ -97,21 +89,8 @@ try {
     forceTLS: false,
     disableStats: true
   });
-  // console.log(store.getState("curentUser"));
-  // if (store.currentUser.data?.id !== "undefined") {
-  //   Echo.channel("altrpchannel.user." + store.currentUser.data.id).listen('.notification.user', e => {
-  //       //если удален = {} || []
-  //       store.dispatch(changeCurrentUser(e.data));
-  //       // data {...}
-  //     }
-  //   );
-  // }
-  // console.log("====================================");
-  // console.log(store.currentUser.data?.id); // 123 || undefined <=> false
-  // console.log("====================================");
 } catch (error) {
   console.log(error);
-
 }
 
 class Admin extends Component {
