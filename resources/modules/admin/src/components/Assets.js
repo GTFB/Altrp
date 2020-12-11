@@ -48,8 +48,10 @@ class Assets extends Component {
     });
   }
   updateAssets(files){
-    this.resource.postFiles(files).then(res=>{
-      if(res.length){
+    // this.resource.postFiles(files)
+    this.resource.post({files: _.toArray(files)})
+        .then(res=>{
+      if(_.isArray(res)){
         let newAssets = res.concat(this.state.assets);
         this.setState(state=>{
           return{...state, assets: newAssets}
@@ -108,7 +110,7 @@ class Assets extends Component {
   filterAssets(activeLink) {
     this.setState(state => {
       return {...state, acceptInput: `.${this.typesFiles[activeLink].join(', .')}` }
-    })
+    });
     let filterResource = new Resource({route: `/admin/ajax/media?type=${activeLink}`});
     filterResource.getAll().then(res=>{
       this.setState(state=>{
