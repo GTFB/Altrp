@@ -21,6 +21,16 @@
       border-color: $purple
     }
   }
+  &_disable {
+    background-color: #cccccc;
+    color: #666666;
+    border-color: #666666;
+    &:hover {
+      background-color: #cccccc;
+      color: #666666;
+    }
+  }
+
 }
 
 .form{
@@ -124,6 +134,8 @@ input[type="text"].form__input{
     font-size: 16px;
     font-weight: bold;
     color: #8e94aa;
+
+    cursor: pointer;
   }
 
   &__tab:hover {
