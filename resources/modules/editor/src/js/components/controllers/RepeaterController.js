@@ -93,7 +93,6 @@ class RepeaterController extends Component {
     this.setState(state => {
       return { ...state, items }
     });
-    console.log(items);
     this._changeValue(items);
   }
   /**
