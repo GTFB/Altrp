@@ -280,6 +280,11 @@ class AltrpAction extends AltrpModel {
           result = await this.doActionUpdateCurrentDatasources();
         }
         break;
+      case "forms_manipulate":
+        {
+          result = await this.doActionFormsManipulate();
+        }
+        break;
     }
     let alertText = "";
     if (result.success) {
@@ -744,6 +749,36 @@ class AltrpAction extends AltrpModel {
     }
 
     return result;
+  }
+  /**
+   * действие - манипуляция с элементами форм
+   * @return {Promise<{}>}
+   */
+  doActionFormsManipulate() {
+    let IDs = this.getProperty("elements_ids");
+    if (!IDs) {
+      return { success: true };
+    }
+    IDs = IDs.split(",");
+    const change = this.getProperty('forms_change');
+    IDs.forEach(id => {
+      let component = getComponentByElementId(id);
+      switch(change){
+        case 'select_all':{
+          if(_.get(component, 'elementRef.current.selectAll')){
+            component.elementRef.current.selectAll();
+          }
+        }
+        break;
+        case 'clear':{
+          if(_.get(component, 'elementRef.current.clearValue')){
+            component.elementRef.current.clearValue();
+          }
+        }
+        break;
+      }
+    });
+    return { success: true };
   }
   /**
    * действие - обновление текущего хранилища

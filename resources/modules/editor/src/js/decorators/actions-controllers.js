@@ -96,6 +96,10 @@ export function actionsControllers(element){
         label: 'Set Data',
       },
       {
+        value: 'forms_manipulate',
+        label: 'Forms Manipulate',
+      },
+      {
         value: 'update_current_datasources',
         label: 'Update Current Datasources',
       },
@@ -110,6 +114,26 @@ export function actionsControllers(element){
       type: [
         'trigger'
       ],
+    },
+  });
+
+  actionsRepeater.addControl('forms_change', {
+    label: 'Change',
+    type: CONTROLLER_SELECT,
+    responsive: false,
+    nullable: true,
+    options: [
+      {
+        value: 'select_all',
+        label: 'Select All',
+      },
+      {
+        value: 'clear',
+        label: 'Clear Value',
+      },
+    ],
+    conditions: {
+      type: 'forms_manipulate',
     },
   });
 
@@ -200,6 +224,7 @@ export function actionsControllers(element){
         'toggle_element',
         'print_elements',
         'elements_to_pdf',
+        'forms_manipulate',
       ],
     },
   });
