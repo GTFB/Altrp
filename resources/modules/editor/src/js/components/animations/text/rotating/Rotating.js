@@ -14,8 +14,10 @@ class Rotating extends Component {
 
     this.rotating = this.rotating.bind(this);
     this.typing = this.typing.bind(this);
+    this.getWidth = this.getWidth.bind(this);
 
-    this.clipRef = React.createRef()
+    this.clipRef = React.createRef();
+    this.flipRef = React.createRef();
   }
 
   componentDidMount() {
@@ -24,13 +26,54 @@ class Rotating extends Component {
     if(this.clipRef.current && this.props.type === "clip") {
       this.setState({ width: this.clipRef.current.offsetWidth })
     }
+
+    if(this.props.type === "flip") {
+      this.getWidth()
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if(prevProps.text !== this.props.text) {
+      this.setState({
+        active: 0,
+        index: 0,
+        step: 0,
+        width: 0,
+      });
+
+      this.rotating();
+    }
+
+    if(prevProps.type !== this.props.type) {
+      this.setState({
+        active: 0,
+        index: 0,
+        step: 0,
+        width: 0,
+      });
+    }
+  }
+
+  getWidth() {
+    for(let i=0; i<this.props.text.split("\n").length; i++) {
+      switch (this.props.type) {
+        case "flip":
+          if(this.flipRef.current) {
+            console.log(this.flipRef.current.offsetWidth)
+            if(this.flipRef.current.offsetWidth > this.state.width) {
+              this.setState({ width: this.flipRef.current.offsetWidth})
+            }
+          }
+          break;
+      }
+    }
   }
 
   rotating() {
     switch (this.props.type) {
       case "typing":
-        const length = this.props.text.split("\n")[this.state.index].split("").length;
         setTimeout(() => {
+          const length = this.props.text.split("\n")[this.state.index].split("").length;
           this.setState((state) => ({ step: 1, active: (length >= state.active + 1) ? state.active : 0 }));
           setTimeout(() => {
             const indexMax = this.props.text.split("\n").length--;
@@ -75,6 +118,17 @@ class Rotating extends Component {
           }, 4000)
         }
         break;
+      case "flip":
+        setTimeout(() => {
+          const length = this.props.text.split("\n").length;
+          this.setState((state) => {
+            return {
+              active: (length > state.active+1 ? state.active+1 : 0)
+            }
+          });
+          this.rotating()
+        }, 3500);
+        break
     }
   }
 
@@ -88,18 +142,6 @@ class Rotating extends Component {
         this.rotating()
       }
     }, 150);
-  }
-
-  componentDidUpdate(prevProps) {
-    if(prevProps.text !== this.props.text) {
-      this.setState({ active: 0, index: 0, step: 0, width: 0 });
-      this.rotating()
-    }
-
-    if(prevProps.type !== this.props.type) {
-      this.setState({ active: 0, index: 0, step: 0, width: 0 });
-      this.rotating();
-    }
   }
 
   render() {
@@ -168,23 +210,32 @@ class Rotating extends Component {
         classes.push("altrp-animating-rotating-flip-container");
 
         text = (
-          textArray.map((word, idx) => {
-            const classNames = "altrp-animating-rotating-flip-word" +
-              (this.state.active !== idx ? " altrp-animating-rotating-flip-hide" : " altrp-animating-rotating-flip-show");
+          <div
+            style={{
+              width: this.state.width
+            }}
+          >
+            {
+              textArray.map((word, idx) => {
+                const classNames = "altrp-animating-rotating-flip-word" +
+                  (this.state.active !== idx ? " altrp-animating-rotating-flip-hide" : " altrp-animating-rotating-flip-show");
 
-            return (
-              <span
-                key={idx}
-                className={classNames}
-              >
+                return (
+                  <span
+                    ref={(this.state.active !== idx ? null : this.flipRef)}
+                    key={idx}
+                    className={classNames}
+                  >
                 <span>
                   {
                     word
                   }
                 </span>
               </span>
-            )
-          })
+                )
+              })
+            }
+          </div>
         );
         break
     }

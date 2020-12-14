@@ -52,7 +52,7 @@
 
 .altrp-animating-rotating-flip-container {
     perspective: 500px;
-    animation: altrp-animating-rotating-flip-show 2s infinite;
+    animation: altrp-animating-rotating-flip-show 5000ms infinite;
     transform-origin: 50% 100%;
     transform-style: preserve-3d;
     transform: rotateX(180deg);
@@ -60,10 +60,17 @@
 
 @keyframes altrp-animating-rotating-flip-show {
     0% {
-        transform: rotateX(0);
+        transform: rotateX(-180deg);
+        opacity: 0;
+    }
+    20% {
+        transform: rotateX(0deg);
         opacity: 1;
     }
-    35% {
+    40% {
+        transform: rotateX(0);
+    }
+    55% {
         transform: rotateX(-40deg);
         opacity: 1;
     }
