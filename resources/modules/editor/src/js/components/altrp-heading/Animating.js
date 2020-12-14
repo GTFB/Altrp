@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Rotating from "../animations/text/rotating/Rotating";
 
 class Animating extends Component {
   render() {
@@ -13,22 +14,12 @@ class Animating extends Component {
 
       animating = "highlighted"
     } else if(settings.style_animating === "rotating") {
-      let text = "rotating";
 
-      const textArray = settings.text_rotating_animating.split("\n");
-
-      function eraseAll(textErase, classNames) {
-        const eraseText = React.cloneElement(textErase, { className: textErase + (classNames ? " " + classNames : "") })
-      }
-
-      switch (settings.animation_animating) {
-        case "typing":
-          text
-          break
-      }
-
-
-      animating = text
+      animating = <Rotating
+        type={settings.animation_animating}
+        prefix="heading"
+        text={settings.text_rotating_animating}
+      />
     }
 
     return <div className="altrp-heading-animating">
@@ -43,9 +34,11 @@ class Animating extends Component {
                   <span dangerouslySetInnerHTML={{ __html: beforeText }}/>
                 ) : null
               }
+              &nbsp;
               {
                 animating
               }
+              &nbsp;
               {
                 afterText ? (
                   <span dangerouslySetInnerHTML={{ __html: afterText }}/>

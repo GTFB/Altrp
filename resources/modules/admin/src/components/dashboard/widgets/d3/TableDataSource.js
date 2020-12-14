@@ -21,9 +21,6 @@ class TableDataSource extends Component {
 
   async componentDidUpdate(prevProps, prevState) {
     if (!_.isEqual(prevProps.sources, this.props.sources)) {
-      console.log("====================================");
-      console.log(1);
-      console.log("====================================");
       this.setState(state => ({
         ...state,
         sources: _.cloneDeep(this.props.sources)
@@ -31,9 +28,6 @@ class TableDataSource extends Component {
       await this.getData();
     }
     if (!_.isEqual(prevProps.element, this.props.element)) {
-      console.log("====================================");
-      console.log(2);
-      console.log("====================================");
       this.setState(state => ({
         ...state,
         legend: _.cloneDeep(this.props.element.settings.legend),
@@ -47,9 +41,6 @@ class TableDataSource extends Component {
         this.props.element.settings.params
       )
     ) {
-      console.log("====================================");
-      console.log(3);
-      console.log("====================================");
       this.setState(state => ({
         ...state,
         params: _.cloneDeep(this.props.element.settings.params)
@@ -57,9 +48,6 @@ class TableDataSource extends Component {
       await this.getData();
     }
     if (!_.isEqual(prevProps.element.settings, this.props.element.settings)) {
-      console.log("====================================");
-      console.log(4);
-      console.log("====================================");
       this.setState(s => ({
         ...s,
         settings: _.cloneDeep(this.props.element.settings)
@@ -69,9 +57,6 @@ class TableDataSource extends Component {
       JSON.stringify(prevProps.element.settings.params) !==
       JSON.stringify(this.props.element.settings.params)
     ) {
-      console.log("====================================");
-      console.log(5);
-      console.log("====================================");
       this.setState(state => ({
         ...state,
         params: _.cloneDeep(this.props.element.settings.params)
@@ -84,9 +69,6 @@ class TableDataSource extends Component {
         this.props.formsStore.form_data
       )
     ) {
-      console.log("====================================");
-      console.log(6);
-      console.log("====================================");
       this.setState(state => ({
         ...state,
         countRequest: 0

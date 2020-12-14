@@ -739,7 +739,7 @@
     top: 0;
     right: 0;
     line-height: 1;
-    padding: 0;
+    padding: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -751,7 +751,7 @@
   .popup-window {
     position: absolute;
     width: 50vw;
-    min-height: 50vh;
+    height: 50vh;
     background-color: white;
     overflow: hidden;
     display: flex;

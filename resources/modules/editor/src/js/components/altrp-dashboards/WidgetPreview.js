@@ -26,11 +26,17 @@ class WidgetPreview extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (!_.isEqual(prevProps.editElement, this.props.editElement)) {
-      this.setState(state => ({
-        ...state,
-        editElement: _.cloneDeep(this.props.editElement),
-        cardName: this.props.editElement?.settings?.name
-      }));
+      if (this.props.addItemPreview) {
+        this.setState(state => ({
+          ...state,
+          editElement: _.cloneDeep(this.props.editElement)
+        }));
+      } else {
+        this.setState(state => ({
+          ...state,
+          editElement: _.cloneDeep(this.props.editElement)
+        }));
+      }
     }
     if (
       JSON.stringify(prevProps.editElement?.settings?.params) !==
@@ -41,6 +47,27 @@ class WidgetPreview extends Component {
         editElement: _.cloneDeep(this.props.editElement),
         cardName: this.props.editElement?.settings?.name
       }));
+    }
+
+    if (
+      !_.isEqual(
+        prevProps.editElement?.settings?.name,
+        this.props.editElement?.settings?.name
+      )
+    ) {
+      if (this.props.addItemPreview) {
+        this.setState(state => ({
+          ...state,
+          editElement: _.cloneDeep(this.props.editElement),
+          cardName: this.props.editElement?.name
+        }));
+      } else {
+        this.setState(state => ({
+          ...state,
+          editElement: _.cloneDeep(this.props.editElement),
+          cardName: this.props.editElement?.settings?.name
+        }));
+      }
     }
   }
 
@@ -69,8 +96,11 @@ class WidgetPreview extends Component {
               <div className="title">
                 <input
                   type="text"
-                  onChange={this.setCardName}
-                  value={this.state.cardName}
+                  // onChange={this.setCardName}
+                  value={
+                    this.props.editElement?.settings?.name ||
+                    this.state.cardName
+                  }
                   placeholder="Введите название диаграммы"
                 />
               </div>

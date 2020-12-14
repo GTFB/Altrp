@@ -149,7 +149,7 @@ class PieDataSource extends Component {
       <>
         <ErrorBoundary>
           <ResponsivePieCanvas
-            margin={{ top: 80, right: 250, bottom: 80, left: 140 }}
+            margin={{ top: 80, right: 180, bottom: 80, left: 120 }}
             data={data}
             colors={
               this.state.settings?.colors?.scheme === "regagro"
