@@ -50,10 +50,8 @@ class Assets extends Component {
   updateAssets(files){
     this.resource.postFiles(files).then(res=>{
       if(res.length){
-        let newAssets = res.concat(this.state.assets);
-        this.setState(state=>{
-          return{...state, assets: newAssets}
-        })
+        const activeLink = this.changeUrlForTab();
+        this.filterAssets(activeLink);
       }
     })
   }
@@ -68,12 +66,6 @@ class Assets extends Component {
   componentDidMount(){
     const activeLink = this.changeUrlForTab();
     this.filterAssets(activeLink);
-
-    this.resource.getAll().then(res=>{
-      this.setState(state=>{
-        return {...state, assets: res}
-      })
-    });
   }
   componentDidUpdate(){
     this.changeUrlForTab();
