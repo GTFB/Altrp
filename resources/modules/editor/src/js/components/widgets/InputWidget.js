@@ -13,14 +13,18 @@ import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpS
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
 import CKeditor from "../ckeditor/CKeditor";
+import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 const AltrpInput = React.lazy(() => import("../altrp-input/AltrpInput"));
 
-const selectAllOption = { label: "ALL", value: "<all options>" };
 class InputWidget extends Component {
   constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this);
-    this.defaultValue = props.element.getSettings().content_default_value || "";
+
+    this.defaultValue =
+      props.element.getSettings().content_default_value ||
+      (props.element.getSettings().select2_multiple ? [] : "");
+
     this.state = {
       settings: { ...props.element.getSettings() },
       value: this.defaultValue,
@@ -41,6 +45,40 @@ class InputWidget extends Component {
     }
   }
 
+  /**
+   * Чистит значение
+   */
+  clearValue(){
+    let value = '';
+    if((this.props.element.getSettings('content_type') === 'checkbox') ||
+        (['select2', 'image_select'].indexOf(this.props.element.getSettings('content_type')) >= 0
+            && this.props.element.getSettings('select2_multiple'))
+    ) {
+      value = [];
+    }
+    this.onChange(value)
+
+  }
+  /**
+   * Метод устанавливает все опции как выбранные
+   */
+  selectAll(){
+    if((this.props.element.getSettings('content_type') === 'checkbox')){
+      let options = [...this.state.options];
+      options = options.map(({value}) => value);
+      this.onChange(options)
+
+    }
+    if(['select2', 'image_select'].indexOf(this.props.element.getSettings('content_type')) >= 0
+            && this.props.element.getSettings('select2_multiple')){
+      let options = [...this.state.options];
+      if(! _.isArray(options)){
+        options = [];
+      }
+      this.onChange(options)
+    }
+
+  }
   /**
    * Обработка нажатия клавиши
    * @param {{}} e
@@ -73,10 +111,6 @@ class InputWidget extends Component {
       let options = parseOptionsFromSettings(
         this.props.element.getSettings("content_options")
       );
-      // добавление опции "выбрать все"
-      if (this.props.element.getSettings("is_select_all_allowed", false)) {
-        options.push(selectAllOption);
-      }
 
       this.setState(state => ({ ...state, options }));
     } else if (
@@ -88,8 +122,7 @@ class InputWidget extends Component {
       options = _.isArray(options) ? options : [];
       this.setState(state => ({ ...state, options }));
     }
-
-    let value = this.state.value;
+    let value = this.storageValue || this.state.value;
     /**
      * Если динамическое значение загрузилось,
      * то используем this.getContent для получение этого динамического значения
@@ -159,20 +192,37 @@ class InputWidget extends Component {
    * Обновление виджета
    */
   async _componentDidUpdate(prevProps, prevState) {
-    const {content_options, model_for_options} = this.state.settings;
-    if(prevProps
-        && (! prevProps.currentDataStorage.getProperty('currentDataStorageLoaded'))
-        && this.props.currentDataStorage.getProperty('currentDataStorageLoaded')){
-      let value = this.getContent('content_default_value');
-      this.setState(state => ({ ...state, value, contentLoaded: true }), () => { this.dispatchFieldValueToStore(value); });
+    const { content_options, model_for_options } = this.state.settings;
+    if (
+      prevProps &&
+      !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
+      this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
+    ) {
+      let value = this.getContent("content_default_value");
+      this.setState(
+        state => ({ ...state, value, contentLoaded: true }),
+        () => {
+          this.dispatchFieldValueToStore(value);
+        }
+      );
     }
-    if (this.props.element.getSettings('content_type') === 'select' && this.props.element.getSettings('model_for_options')) {
-      if (!(this.state.settings.model_for_options === prevProps.element.getSettings('model_for_options'))) {
-        let model_for_options = prevProps.element.getSettings('model_for_options');
-        let options = await (new Resource({ route: this.getRoute() })).getAll();
-        options = (!_.isArray(options)) ? options.data : options;
-        options = (_.isArray(options)) ? options : [];
-        this.setState(state => ({ ...state, options, model_for_options }))
+    if (
+      this.props.element.getSettings("content_type") === "select" &&
+      this.props.element.getSettings("model_for_options")
+    ) {
+      if (
+        !(
+          this.state.settings.model_for_options ===
+          prevProps.element.getSettings("model_for_options")
+        )
+      ) {
+        let model_for_options = prevProps.element.getSettings(
+          "model_for_options"
+        );
+        let options = await new Resource({ route: this.getRoute() }).getAll();
+        options = !_.isArray(options) ? options.data : options;
+        options = _.isArray(options) ? options : [];
+        this.setState(state => ({ ...state, options, model_for_options }));
       }
     }
     /**
@@ -196,10 +246,10 @@ class InputWidget extends Component {
     ) {
       this.updateOptions();
     }
-    if(content_options && ! model_for_options){
+    if (content_options && !model_for_options) {
       let options = parseOptionsFromSettings(content_options);
-      if(! _.isEqual(options, this.state.options)){
-        this.setState(state => ({...state, options}));
+      if (!_.isEqual(options, this.state.options)) {
+        this.setState(state => ({ ...state, options }));
       }
     }
     this.updateValue(prevProps);
@@ -369,14 +419,6 @@ class InputWidget extends Component {
    */
   onChange(e) {
     let value = "";
-    // при выборе опции "выбрать все"
-    if (Array.isArray(e) && e.includes(selectAllOption)) {
-      return this.setState({
-        value: parseOptionsFromSettings(
-          this.props.element.getSettings("content_options")
-        ).map(({ value }) => value)
-      });
-    }
 
     if (e && e.target) {
       if (this.props.element.getSettings("content_type") === "checkbox") {
@@ -406,6 +448,10 @@ class InputWidget extends Component {
         value = value.map(item => item.value);
       }
     }
+    if (this.props.element.getSettings("content_options_nullable") && e.value === '<null>') {
+      value = null;
+    }
+
     this.setState(
       state => ({
         ...state,
@@ -429,7 +475,7 @@ class InputWidget extends Component {
   /**
    * Потеря фокуса для оптимизации
    */
-   onBlur = async (e) => {
+  onBlur = async e => {
     if (
       ["text", "email", "phone", "tel", "number", "password"].indexOf(
         this.state.settings.content_type
@@ -437,13 +483,16 @@ class InputWidget extends Component {
     ) {
       this.dispatchFieldValueToStore(e.target.value, true);
     }
-    if(this.props.element.getSettings("actions", []) && ! isEditor()){
+    if (this.props.element.getSettings("actions", []) && !isEditor()) {
       const actionsManager = (
-          await import(
-              "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-              )
+        await import(
+          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+        )
       ).default;
-      await actionsManager.callAllWidgetActions(this.props.element.getIdForAction(), 'blur');
+      await actionsManager.callAllWidgetActions(
+        this.props.element.getIdForAction(),
+        "blur"
+      );
     }
   };
   /**
@@ -543,7 +592,12 @@ class InputWidget extends Component {
 
   render() {
     let label = null;
-    const { options_sorting } = this.state.settings;
+    const {
+      options_sorting,
+      content_readonly,
+      image_select_options,
+      select2_multiple: isMultiple
+    } = this.props.element.getSettings();
 
     let value = this.state.value;
 
@@ -565,25 +619,28 @@ class InputWidget extends Component {
     switch (this.state.settings.content_label_position_type) {
       case "top":
         styleLabel = {
-          marginBottom:
-            this.state.settings.label_style_spacing ? this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit : 2 + "px"
+          marginBottom: this.state.settings.label_style_spacing
+            ? this.state.settings.label_style_spacing.size +
+              this.state.settings.label_style_spacing.unit
+            : 2 + "px"
         };
         classLabel = "";
         break;
       case "bottom":
         styleLabel = {
-          marginTop:
-            this.state.settings.label_style_spacing ? this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit : 2 + "px"
+          marginTop: this.state.settings.label_style_spacing
+            ? this.state.settings.label_style_spacing.size +
+              this.state.settings.label_style_spacing.unit
+            : 2 + "px"
         };
         classLabel = "";
         break;
       case "left":
         styleLabel = {
-          marginRight:
-            this.state.settings.label_style_spacing ? this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit : 2 + "px"
+          marginRight: this.state.settings.label_style_spacing
+            ? this.state.settings.label_style_spacing.size +
+              this.state.settings.label_style_spacing.unit
+            : 2 + "px"
         };
         classLabel = "altrp-field-label-container-left";
         // this.label.current.classList.add("hello")
@@ -676,6 +733,15 @@ class InputWidget extends Component {
           input = this.renderWysiwyg();
         }
         break;
+      case "image_select":
+        return (
+          <AltrpImageSelect
+            options={image_select_options}
+            value={this.state.value}
+            changeHandler={value => this.setState({ value })}
+            isMultiple={isMultiple}
+          />
+        );
       default: {
         const isClearable = this.state.settings.content_clearable;
         input = (
@@ -685,6 +751,7 @@ class InputWidget extends Component {
                 type={this.state.settings.content_type}
                 name={this.props.element.getFieldId()}
                 value={value || ""}
+                readOnly={content_readonly}
                 autoComplete={autocomplete}
                 placeholder={this.state.settings.content_placeholder}
                 className={
@@ -862,25 +929,35 @@ class InputWidget extends Component {
      */
     options = _.sortBy(options, o => (o.label ? o.label.toString() : o));
     if (content_options_nullable) {
-      options = _.union([{ label: nulled_option_title, value: "" }], options);
+      options = _.union([{ label: nulled_option_title, value: '<null>' }], options);
     }
     const select2Props = {
       className: "altrp-field-select2",
       element: this.props.element,
       classNamePrefix: this.props.element.getId() + " altrp-field-select2",
       options,
-      name:this.props.element.getFieldId(),
+      name: this.props.element.getFieldId(),
       ref: this.altrpSelectRef,
       settings: this.props.element.getSettings(),
       onChange: this.onChange,
-      value:
-        this.props.element.getSettings("is_select_all_allowed", false) &&
-        value.length ===
-          parseOptionsFromSettings(
-            this.props.element.getSettings("content_options")
-          ).length
-          ? [selectAllOption.value]
-          : value,
+/*<<<<<<< HEAD*/
+      value,
+      // value:
+      //     (this.props.element.getSettings("is_select_all_allowed", false) &&
+      //   value.length ===
+      //     parseOptionsFromSettings(
+      //       this.props.element.getSettings("content_options")
+      //     ).length)
+      //     ? [selectAllOption.value]
+      //     : value,
+      // value: content_options_nullable && value === null ? '<null>' :
+      //   this.props.element.getSettings("is_select_all_allowed", false) &&
+      //   value.length ===
+      //     parseOptionsFromSettings(
+      //       this.props.element.getSettings("content_options")
+      //     ).length
+      //     ? [selectAllOption.value]
+      //     : value,
       isOptionSelected: option => {
         if (_.isNumber(this.state.value) || _.isString(this.state.value)) {
           return this.state.value == option.value;

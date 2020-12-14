@@ -40,6 +40,7 @@ class DashboardsWidget extends Component {
             .getAttribute("content")
         }
       });
+      console.log(req.data.settings);
       let data = JSON.parse(req.data.settings) || JSON.parse("{}");
       this.setState(state => ({
         ...state,
@@ -66,6 +67,9 @@ class DashboardsWidget extends Component {
     const global_parameter = this.state.settings.global_parameter;
     const showButton = this.props.element.getSettings().showButton;
     const currentUser = this.props.currentUser.data;
+    const drawerWidth =
+      this.props.element.getSettings().drawerWidth?.size +
+        this.props.element.getSettings().drawerWidth?.unit || "30vh";
 
     const settingsData = this.state.settingsData;
     return (
@@ -87,6 +91,7 @@ class DashboardsWidget extends Component {
             containerWidth={containerWidth}
             items={settingsData.items}
             counter={settingsData.newCounter}
+            drawerWidth={drawerWidth}
             rep={this.props.element.getSettings("rep", [])}
           />
         )}

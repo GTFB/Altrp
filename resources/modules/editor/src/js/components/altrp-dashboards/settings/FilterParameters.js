@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import axios from "axios";
 
 import { connect } from "react-redux";
+import { editElement } from "../../../store/altrp-dashboard/actions";
 
 const mapStateToProps = state => {
   return { editElement: state.editElement };
@@ -79,8 +80,10 @@ class FilterParameters extends Component {
   } //   const req = await axios(`/ajax/models/queries/${param.model}/${param.value}`);
 
   setOption(value) {
-    this.props.setParam(this.state.param.value, value);
-    this.setState(s => ({ ...s, currentSelected: value }));
+    this.props.setParam(this.state.param.value, value, this.state.options);
+    this.setState(s => {
+      return { ...s, currentSelected: value };
+    });
   }
 
   render() {

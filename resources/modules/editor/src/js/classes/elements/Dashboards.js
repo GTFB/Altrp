@@ -148,6 +148,18 @@ class Dashboards extends BaseElement {
       label: "Size"
     });
 
+    this.addControl("drawerWidth", {
+      type: CONTROLLER_SLIDER,
+      label: "drawer width",
+      default: {
+        size: 30,
+        unit: "vh"
+      },
+      units: ["vh"],
+      max: 100,
+      min: 0
+    });
+
     this.addControl("style_height", {
       type: CONTROLLER_SLIDER,
       label: "height",

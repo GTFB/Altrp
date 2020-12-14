@@ -113,7 +113,6 @@ class FrontPopup extends Component {
         //   }
 
         // }
-
         if (popupTrigger !== prevProps.popupTrigger) {
           this.setState({ isVisible: popupTrigger.popupID === _.get(this.props, 'template.guid') });
         }
@@ -163,7 +162,9 @@ class FrontPopup extends Component {
     const rootElementId = rootElement.getId();
 
     classes.push(`${rootElementId}-app-popup`);
-    if(rootElementSettings.overlay_close_popup_layout) {
+    const overlayCondition = rootElementSettings.overlay_close_popup_layout || true;
+
+    if(overlayCondition) {
       classes.push("app-popup-overlay")
     }
 
@@ -188,6 +189,8 @@ class FrontPopup extends Component {
       case "right":
         classes.push("app-popup-horizontal-right");
         break;
+      default:
+        classes.push("app-popup-horizontal-center");
     }
 
     //vertical position vertical_position_popup_layout
@@ -201,14 +204,19 @@ class FrontPopup extends Component {
       case "bottom":
         classes.push("app-popup-vertical-bottom");
         break;
+      default:
+        classes.push("app-popup-vertical-center");
     }
 
     let content = "";
-    const closeButton = rootElementSettings.switcher_close_button_popup_layout ? (
+    const closeButtonCondition = rootElementSettings.switcher_close_button_popup_layout || true;
+    let {position_close_button_popup_layout} = rootElementSettings;
+    position_close_button_popup_layout = position_close_button_popup_layout || 'right';
+    const closeButton = closeButtonCondition ? (
       <button
         className={
           "popup-close-button" +
-          (rootElementSettings.position_close_button_popup_layout === "right" ? " popup-close-button-right" : " popup-close-button-left")
+          (position_close_button_popup_layout === "right" ? " popup-close-button-right" : " popup-close-button-left")
         }
         onClick={() => {
           this.setState({ isVisible: false });
@@ -226,6 +234,14 @@ class FrontPopup extends Component {
         />
       </button>
     ) : null;
+
+    let maxHeight = "100%";
+
+    if(rootElementSettings.height_popup_layout === "custom") {
+      maxHeight = Number(rootElementSettings.height_custom_popup_layout.size) || 0;
+    }
+
+    console.log(maxHeight);
 
     const popup = (
       isVisible ?
@@ -251,7 +267,7 @@ class FrontPopup extends Component {
                 renderTrackVertical={(props) => <div {...props} className="popup-scrollbar-track-vertical"/>}
                 className="popup-scrollbar"
                 autoHeightMin={100}
-                autoHeightMax={"100%"}
+                autoHeightMax={maxHeight}
                 autoHideTimeout={1000}
                 autoHideDuration={200}
               >
@@ -268,7 +284,8 @@ class FrontPopup extends Component {
         : null
     );
 
-    switch (rootElementSettings.type_popup) {
+    const type = rootElementSettings.type_popup || "popup";
+    switch (type) {
       case "popup":
         content = popup;
         break;

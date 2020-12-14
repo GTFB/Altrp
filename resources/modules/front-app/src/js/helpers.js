@@ -5,14 +5,14 @@ import moment from "moment";
 import Resource from "../../../editor/src/js/classes/Resource";
 import appStore from "./store/store";
 import { changeCurrentUser } from "./store/current-user/actions";
+import { changeCurrentUserProperty } from "./store/current-user/actions";
 import { changeAppRoutes } from "./store/routes/actions";
 import Route from "./classes/Route";
 import { changePageState } from "./store/altrp-page-state-storage/actions";
 import { changeAltrpMeta } from "./store/altrp-meta-storage/actions";
 import { useDispatch } from "react-redux";
-import {altrpFontsSet, GOOGLE_FONT} from "./components/FontsManager";
+import { altrpFontsSet, GOOGLE_FONT } from "./components/FontsManager";
 import queryString from "query-string";
-
 
 export function getRoutes() {
   return import("./classes/Routes.js");
@@ -363,7 +363,7 @@ export function setDataByPath(path = "", value, dispatch = null) {
   if (!path) {
     return false;
   }
-  path = path.replace('{{','').replace('}}', '');
+  path = path.replace("{{", "").replace("}}", "");
   switch (value) {
     case "true":
       value = true;
@@ -408,6 +408,22 @@ export function setDataByPath(path = "", value, dispatch = null) {
       dispatch(changeAltrpMeta(path, value));
     } else {
       appStore.dispatch(changeAltrpMeta(path, value));
+    }
+    return true;
+  }
+  if (path.indexOf("altrpuser.local_storage.") === 0) {
+    path = path.replace("altrpuser.", "");
+    if (!path) {
+      return false;
+    }
+    const oldValue = appStore.getState().currentUser.getProperty(path);
+    if (_.isEqual(oldValue, value)) {
+      return true;
+    }
+    if (_.isFunction(dispatch)) {
+      dispatch(changeCurrentUserProperty(path, value));
+    } else {
+      appStore.dispatch(changeCurrentUserProperty(path, value));
     }
     return true;
   }
@@ -491,7 +507,6 @@ export function getDataByPath(
   } else if (path.indexOf("altrpforms.") === 0) {
     value = _.get(formsStore, path.replace("altrpforms.", ""), _default);
   } else if (path.indexOf("altrppage.") === 0) {
-
   } else {
     value = urlParams[path]
       ? urlParams[path]
@@ -954,7 +969,7 @@ export function replaceContentWithData(content = "", modelContext = null) {
     paths.forEach(path => {
       path = path.replace("{{", "");
       let value = getDataByPath(path, "", modelContext);
-      content = content.replace(new RegExp(`{{${path}}}`, "g"), value);
+      content = content.replace(new RegExp(`{{${path}}}`, "g"), value || '');
     });
   }
   return content;
@@ -1369,21 +1384,22 @@ export function setAltrpIndex(array = []) {
  * @param {string} font
  * @return {*}
  */
-export function renderFontLink(font){
-
-  if(altrpFontsSet[font] !== GOOGLE_FONT){
+export function renderFontLink(font) {
+  if (altrpFontsSet[font] !== GOOGLE_FONT) {
     return null;
   }
-  font = font.replace(/ /g, '+');
-  font += ':100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic';
-  let fontUrl = 'https://fonts.googleapis.com/css?family=' + font + '&subset=cyrillic';
+  font = font.replace(/ /g, "+");
+  font +=
+    ":100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic";
+  let fontUrl =
+    "https://fonts.googleapis.com/css?family=" + font + "&subset=cyrillic";
   fontUrl = encodeURI(fontUrl);
-  return <link rel="stylesheet" key={fontUrl} href={fontUrl}/>
+  return <link rel="stylesheet" key={fontUrl} href={fontUrl} />;
 }
 
 /**
  * Включен ли режим тестирования
  */
-export function isAltrpTestMode(){
-  return window.location.href.indexOf('altrp-test=true') > 0;
+export function isAltrpTestMode() {
+  return window.location.href.indexOf("altrp-test=true") > 0;
 }
