@@ -77,7 +77,6 @@ class MediaController extends Controller
       $media->filename =  $file->store( 'media/' .  date("Y") . '/' .  date("m" ) ,
         ['disk' => 'public'] );
       $media->url =  Storage::url( $media->filename );
-      $media->type = $request->get( 'type' );
       $media->save();
       $res[] = $media;
     }
