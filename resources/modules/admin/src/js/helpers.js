@@ -144,3 +144,18 @@ export function buildPagesTree(pages) {
 export function filterUsers(users, roleFilter) {
   return users.filter(user => user.roles.some(role => role.id === roleFilter));
 }
+
+
+export function sortUsers(users, sortingField, order) {
+  const sortedUsers = users.sort((a, b) => {
+    if (a[sortingField] < b[sortingField]) {
+      return -1;
+    }
+    if (a[sortingField] > b[sortingField]) {
+      return 1;
+    }
+    return 0;
+  });
+
+  return order === 'ASC' ? sortedUsers : sortedUsers.reverse();
+}
