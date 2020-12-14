@@ -1173,6 +1173,26 @@ class Table extends BaseElement {
     }
     );
 
+    this.addControl("global_filter_input_width", {
+      type: CONTROLLER_SLIDER,
+      label: "Input Width",
+      max: 800,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'width: {{SIZE}}px;'
+      }
+    });
+
+    this.addControl("global_filter_margin_left", {
+      type: CONTROLLER_SLIDER,
+      label: "Input Margin Left",
+      max: 800,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'margin-left: {{SIZE}}px;'
+      }
+    });
+
     this.addControl('global_filter_input_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Input Padding',
