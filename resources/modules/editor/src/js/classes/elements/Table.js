@@ -104,7 +104,7 @@ class Table extends BaseElement {
     this.addControl('table_2_0', {
       type: CONTROLLER_SWITCHER,
       label: 'Table 2.0',
-      default: false
+      default: true
     });
 
     this.endControlSection();
