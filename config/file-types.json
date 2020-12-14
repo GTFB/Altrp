@@ -33,7 +33,7 @@
     ]
   },
   {
-    "name": "documents",
+    "name": "document",
     "extensions" : [
       "doc",
       "docx",
