@@ -202,6 +202,30 @@ export function actionsControllers(element){
     },
   });
 
+  actionsRepeater.addControl('forms_bulk', {
+    label: 'Bulk Requests',
+    type: CONTROLLER_SWITCHER,
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: [
+        'form',
+      ],
+    },
+  });
+
+  actionsRepeater.addControl('bulk_path', {
+    label: 'Bulk Path',
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: [
+        'form',
+      ],
+      forms_bulk: true,
+    },
+  });
+
   actionsRepeater.addControl('back', {
     label: 'Back',
     type: CONTROLLER_SWITCHER,
@@ -261,7 +285,7 @@ export function actionsControllers(element){
 
   actionsRepeater.addControl('data', {
     type: CONTROLLER_TEXTAREA,
-    label: 'Data',
+    label: 'Data for Form',
     responsive: false,
     dynamic: false,
     description: 'param_1 | {{altrpdata.alias}}',
@@ -271,18 +295,18 @@ export function actionsControllers(element){
       ],
     },
   });
-  actionsRepeater.addControl('custom_headers', {
-    type: CONTROLLER_TEXTAREA,
-    label: 'Data',
-    responsive: false,
-    dynamic: false,
-    description: 'param_1 | {{altrpdata.alias}}',
-    conditions: {
-      type: [
-        'form',
-      ],
-    },
-  });
+  // actionsRepeater.addControl('custom_headers', {
+  //   type: CONTROLLER_TEXTAREA,
+  //   label: 'Data',
+  //   responsive: false,
+  //   dynamic: false,
+  //   description: 'param_1 | {{altrpdata.alias}}',
+  //   conditions: {
+  //     type: [
+  //       'form',
+  //     ],
+  //   },
+  // });
 
   actionsRepeater.addControl('set_type', {
     label: 'Set Type',
