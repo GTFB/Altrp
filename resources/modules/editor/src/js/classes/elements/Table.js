@@ -271,7 +271,7 @@ class Table extends BaseElement {
     repeater.addControl('column_body_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Body alignment',
-      default: 'center',
+      // default: 'center',
       options: [
         {
           icon: 'left',
