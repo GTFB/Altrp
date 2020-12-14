@@ -407,6 +407,10 @@ class InputWidget extends Component {
         value = value.map(item => item.value);
       }
     }
+    if (this.props.element.getSettings("content_options_nullable") && e.value === '<null>') {
+      value = null;
+    }
+
     this.setState(
       state => ({
         ...state,
@@ -871,7 +875,7 @@ class InputWidget extends Component {
      */
     options = _.sortBy(options, o => (o.label ? o.label.toString() : o));
     if (content_options_nullable) {
-      options = _.union([{ label: nulled_option_title, value: "" }], options);
+      options = _.union([{ label: nulled_option_title, value: '<null>' }], options);
     }
     const select2Props = {
       className: "altrp-field-select2",
@@ -882,9 +886,9 @@ class InputWidget extends Component {
       ref: this.altrpSelectRef,
       settings: this.props.element.getSettings(),
       onChange: this.onChange,
-      value:
+      value: content_options_nullable && value === null ? '<null>' : 
         this.props.element.getSettings("is_select_all_allowed", false) &&
-        value.length ===
+        value.length === 
           parseOptionsFromSettings(
             this.props.element.getSettings("content_options")
           ).length
