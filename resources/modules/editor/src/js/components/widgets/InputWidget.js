@@ -916,13 +916,12 @@ class InputWidget extends Component {
       settings: this.props.element.getSettings(),
       onChange: this.onChange,
       value:
-        this.props.element.getSettings("is_select_all_allowed", false) &&
         value.length ===
-          parseOptionsFromSettings(
-            this.props.element.getSettings("content_options")
-          ).length
+        parseOptionsFromSettings(
+          this.props.element.getSettings("content_options")
+        ).length
           ? [selectAllOption.value]
-          : value,
+          : value || _.find(options, o => o.value === this.state.value),
       isOptionSelected: option => {
         if (_.isNumber(this.state.value) || _.isString(this.state.value)) {
           return this.state.value == option.value;

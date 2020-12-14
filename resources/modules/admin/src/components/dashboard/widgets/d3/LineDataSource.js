@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { ResponsiveLineCanvas } from "@nivo/line";
+import { ResponsiveLine } from "@nivo/line";
+import { linearGradientDef } from "@nivo/core";
 import { connect } from "react-redux";
 import DataAdapter from "./DataAdapter";
 import ErrorBoundary from "./ErrorBoundary";
@@ -195,17 +196,36 @@ class LineDataSource extends Component {
     return (
       <>
         <ErrorBoundary>
-          <ResponsiveLineCanvas
+          <ResponsiveLine
             data={data}
-            margin={{ top: 40, right: 120, bottom: 80, left: 100 }}
+            margin={{
+              top: this.state.settings?.margin?.top || 40,
+              right: this.state.settings?.margin?.right || 120,
+              bottom: this.state.settings?.margin?.bottom || 80,
+              left: this.state.settings?.margin?.left || 100
+            }}
             curve={this.state.settings?.curve}
             colors={
               this.state.settings?.colors?.scheme === "regagro"
                 ? regagroScheme
                 : this.state.settings?.colors
             }
-            xScale={this.state.settings?.xScale}
             enableArea={this.state.settings?.enableArea}
+            defs={
+              this.state.settings?.enableArea && [
+                linearGradientDef("gradient", [
+                  { offset: 0, color: "inherit" },
+                  { offset: 100, color: "inherit", opacity: 0.25 }
+                ])
+              ]
+            }
+            fill={
+              this.state.settings?.enableArea && [
+                { match: "*", id: "gradient" }
+              ]
+            }
+            useMesh={true}
+            xScale={this.state.settings?.xScale}
             pointSize={this.state.settings?.pointSize}
             enablePoints={this.state.settings?.enablePoints}
             lineWidth={this.state.settings?.lineWidth}

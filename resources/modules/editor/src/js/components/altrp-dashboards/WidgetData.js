@@ -42,7 +42,11 @@ class WidgetData extends Component {
   }
 
   downloadWidget() {
-    exportComponentAsJPEG(this.ref);
+    exportComponentAsPNG(
+      this.ref,
+      this.props.editElement.settings.name,
+      "#FFFFF"
+    );
   }
 
   render() {

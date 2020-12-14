@@ -80,7 +80,13 @@ class FilterParameters extends Component {
   } //   const req = await axios(`/ajax/models/queries/${param.model}/${param.value}`);
 
   setOption(value) {
-    this.props.setParam(this.state.param.value, value, this.state.options);
+    this.props.setParam(
+      this.state.param.value,
+      value,
+      this.state.options,
+      _.find(this.state.options, o => o.value == this.state.currentSelected)
+        ?.label || ""
+    );
     this.setState(s => {
       return { ...s, currentSelected: value };
     });
