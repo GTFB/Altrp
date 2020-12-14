@@ -101,7 +101,7 @@ class Assets extends Component {
     this.setState(state => {
       return {...state, acceptInput: `.${this.typesFiles[activeLink].join(', .')}` }
     });
-    let filterResource = new Resource({route: `/admin/ajax/media?type=${activeLink}`});
+    let filterResource = new Resource({route: `/admin/ajax/media?type=${activeLink.slice(0, -1)}`});
     filterResource.getAll().then(res=>{
       this.setState(state=>{
         return {...state, assets: res}
