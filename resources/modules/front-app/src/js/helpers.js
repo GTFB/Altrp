@@ -969,7 +969,7 @@ export function replaceContentWithData(content = "", modelContext = null) {
     paths.forEach(path => {
       path = path.replace("{{", "");
       let value = getDataByPath(path, "", modelContext);
-      content = content.replace(new RegExp(`{{${path}}}`, "g"), value);
+      content = content.replace(new RegExp(`{{${path}}}`, "g"), value || '');
     });
   }
   return content;

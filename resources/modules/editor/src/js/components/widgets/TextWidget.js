@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Tooltip from "./Tooltip";
 import { set } from "lodash";
 import { isEditor } from "../../../../../front-app/src/js/helpers";
-import CKEditor from "../ckeditor/CKeditor";
 
 class TextWidget extends Component {
   constructor(props) {
@@ -74,9 +73,9 @@ class TextWidget extends Component {
       activeText = text;
     }
 
-    if (this.state.settings.ckeditor && isEditor()) {
+    if (this.props.CKEditor) {
       return (
-        <CKEditor
+        <this.props.CKEditor
           changeText={this.changeText}
           text={textContent}
           readOnly={isEditor()}

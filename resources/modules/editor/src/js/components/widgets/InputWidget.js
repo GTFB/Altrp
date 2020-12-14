@@ -16,7 +16,6 @@ import CKeditor from "../ckeditor/CKeditor";
 import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 const AltrpInput = React.lazy(() => import("../altrp-input/AltrpInput"));
 
-const selectAllOption = { label: "ALL", value: "<all options>" };
 class InputWidget extends Component {
   constructor(props) {
     super(props);
@@ -46,6 +45,44 @@ class InputWidget extends Component {
     }
   }
 
+  /**
+   * Чистит значение
+   */
+  clearValue() {
+    let value = "";
+    if (
+      this.props.element.getSettings("content_type") === "checkbox" ||
+      (["select2", "image_select"].indexOf(
+        this.props.element.getSettings("content_type")
+      ) >= 0 &&
+        this.props.element.getSettings("select2_multiple"))
+    ) {
+      value = [];
+    }
+    this.onChange(value);
+  }
+  /**
+   * Метод устанавливает все опции как выбранные
+   */
+  selectAll() {
+    if (this.props.element.getSettings("content_type") === "checkbox") {
+      let options = [...this.state.options];
+      options = options.map(({ value }) => value);
+      this.onChange(options);
+    }
+    if (
+      ["select2", "image_select"].indexOf(
+        this.props.element.getSettings("content_type")
+      ) >= 0 &&
+      this.props.element.getSettings("select2_multiple")
+    ) {
+      let options = [...this.state.options];
+      if (!_.isArray(options)) {
+        options = [];
+      }
+      this.onChange(options);
+    }
+  }
   /**
    * Обработка нажатия клавиши
    * @param {{}} e
@@ -78,10 +115,6 @@ class InputWidget extends Component {
       let options = parseOptionsFromSettings(
         this.props.element.getSettings("content_options")
       );
-      // добавление опции "выбрать все"
-      if (this.props.element.getSettings("is_select_all_allowed", false)) {
-        options.push(selectAllOption);
-      }
 
       this.setState(state => ({ ...state, options }));
     } else if (
@@ -390,14 +423,6 @@ class InputWidget extends Component {
    */
   onChange(e) {
     let value = "";
-    // при выборе опции "выбрать все"
-    if (Array.isArray(e) && e.includes(selectAllOption)) {
-      return this.setState({
-        value: parseOptionsFromSettings(
-          this.props.element.getSettings("content_options")
-        ).map(({ value }) => value)
-      });
-    }
 
     if (e && e.target) {
       if (this.props.element.getSettings("content_type") === "checkbox") {
@@ -427,6 +452,13 @@ class InputWidget extends Component {
         value = value.map(item => item.value);
       }
     }
+    if (
+      this.props.element.getSettings("content_options_nullable") &&
+      e.value === "<null>"
+    ) {
+      value = null;
+    }
+
     this.setState(
       state => ({
         ...state,
@@ -904,7 +936,10 @@ class InputWidget extends Component {
      */
     options = _.sortBy(options, o => (o.label ? o.label.toString() : o));
     if (content_options_nullable) {
-      options = _.union([{ label: nulled_option_title, value: "" }], options);
+      options = _.union(
+        [{ label: nulled_option_title, value: "<null>" }],
+        options
+      );
     }
     const select2Props = {
       className: "altrp-field-select2",
@@ -915,13 +950,24 @@ class InputWidget extends Component {
       ref: this.altrpSelectRef,
       settings: this.props.element.getSettings(),
       onChange: this.onChange,
-      value:
-        value.length ===
-        parseOptionsFromSettings(
-          this.props.element.getSettings("content_options")
-        ).length
-          ? [selectAllOption.value]
-          : value || _.find(options, o => o.value === this.state.value),
+      /*<<<<<<< HEAD*/
+      value,
+      // value:
+      //     (this.props.element.getSettings("is_select_all_allowed", false) &&
+      //   value.length ===
+      //     parseOptionsFromSettings(
+      //       this.props.element.getSettings("content_options")
+      //     ).length)
+      //     ? [selectAllOption.value]
+      //     : value,
+      // value: content_options_nullable && value === null ? '<null>' :
+      //   this.props.element.getSettings("is_select_all_allowed", false) &&
+      //   value.length ===
+      //     parseOptionsFromSettings(
+      //       this.props.element.getSettings("content_options")
+      //     ).length
+      //     ? [selectAllOption.value]
+      //     : value,
       isOptionSelected: option => {
         if (_.isNumber(this.state.value) || _.isString(this.state.value)) {
           return this.state.value == option.value;

@@ -96,6 +96,10 @@ export function actionsControllers(element){
         label: 'Set Data',
       },
       {
+        value: 'forms_manipulate',
+        label: 'Forms Manipulate',
+      },
+      {
         value: 'update_current_datasources',
         label: 'Update Current Datasources',
       },
@@ -110,6 +114,26 @@ export function actionsControllers(element){
       type: [
         'trigger'
       ],
+    },
+  });
+
+  actionsRepeater.addControl('forms_change', {
+    label: 'Change',
+    type: CONTROLLER_SELECT,
+    responsive: false,
+    nullable: true,
+    options: [
+      {
+        value: 'select_all',
+        label: 'Select All',
+      },
+      {
+        value: 'clear',
+        label: 'Clear Value',
+      },
+    ],
+    conditions: {
+      type: 'forms_manipulate',
     },
   });
 
@@ -178,6 +202,30 @@ export function actionsControllers(element){
     },
   });
 
+  actionsRepeater.addControl('forms_bulk', {
+    label: 'Bulk Requests',
+    type: CONTROLLER_SWITCHER,
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: [
+        'form',
+      ],
+    },
+  });
+
+  actionsRepeater.addControl('bulk_path', {
+    label: 'Bulk Path',
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: [
+        'form',
+      ],
+      forms_bulk: true,
+    },
+  });
+
   actionsRepeater.addControl('back', {
     label: 'Back',
     type: CONTROLLER_SWITCHER,
@@ -200,6 +248,7 @@ export function actionsControllers(element){
         'toggle_element',
         'print_elements',
         'elements_to_pdf',
+        'forms_manipulate',
       ],
     },
   });
@@ -236,7 +285,7 @@ export function actionsControllers(element){
 
   actionsRepeater.addControl('data', {
     type: CONTROLLER_TEXTAREA,
-    label: 'Data',
+    label: 'Data for Form',
     responsive: false,
     dynamic: false,
     description: 'param_1 | {{altrpdata.alias}}',
@@ -246,18 +295,18 @@ export function actionsControllers(element){
       ],
     },
   });
-  actionsRepeater.addControl('custom_headers', {
-    type: CONTROLLER_TEXTAREA,
-    label: 'Data',
-    responsive: false,
-    dynamic: false,
-    description: 'param_1 | {{altrpdata.alias}}',
-    conditions: {
-      type: [
-        'form',
-      ],
-    },
-  });
+  // actionsRepeater.addControl('custom_headers', {
+  //   type: CONTROLLER_TEXTAREA,
+  //   label: 'Data',
+  //   responsive: false,
+  //   dynamic: false,
+  //   description: 'param_1 | {{altrpdata.alias}}',
+  //   conditions: {
+  //     type: [
+  //       'form',
+  //     ],
+  //   },
+  // });
 
   actionsRepeater.addControl('set_type', {
     label: 'Set Type',

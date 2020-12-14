@@ -3,6 +3,11 @@
 
 ## Changelog
 
+### 0.11.00
++ Select All and Clear Value Action 
++ Save Current User Storage
++ Fix Bug with "null" Content
+
 ### 0.10.16
 + Fix Input Widget Bug
 
