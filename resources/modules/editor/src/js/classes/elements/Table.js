@@ -104,7 +104,7 @@ class Table extends BaseElement {
     this.addControl('table_2_0', {
       type: CONTROLLER_SWITCHER,
       label: 'Table 2.0',
-      default: false
+      default: true
     });
 
     this.endControlSection();
@@ -271,7 +271,7 @@ class Table extends BaseElement {
     repeater.addControl('column_body_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Body alignment',
-      default: 'center',
+      // default: 'center',
       options: [
         {
           icon: 'left',
@@ -1172,6 +1172,26 @@ class Table extends BaseElement {
       },
     }
     );
+
+    this.addControl("global_filter_input_width", {
+      type: CONTROLLER_SLIDER,
+      label: "Input Width",
+      max: 800,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'width: {{SIZE}}px;'
+      }
+    });
+
+    this.addControl("global_filter_margin_left", {
+      type: CONTROLLER_SLIDER,
+      label: "Input Margin Left",
+      max: 800,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'margin-left: {{SIZE}}px;'
+      }
+    });
 
     this.addControl('global_filter_input_padding', {
       type: CONTROLLER_DIMENSIONS,
