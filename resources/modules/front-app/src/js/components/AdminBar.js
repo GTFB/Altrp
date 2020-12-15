@@ -7,6 +7,7 @@ class AdminBar extends React.Component {
     console.log(this.props.state)
   }
   render() {
+    return null;
     return (
       <div>
         admin bar

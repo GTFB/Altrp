@@ -38,7 +38,8 @@ class WidgetSettings extends Component {
       openDiagramSettings: false,
       openTooltipSettings: false,
       filter_datasource: props.filter_datasource,
-      editElement: _.cloneDeep(props.editElement, {}) || {}
+      editElement: _.cloneDeep(props.editElement, {}) || {},
+      delimer: props.delimer
     };
     this.setDatasource = this.setDatasource.bind(this);
     this.setType = this.setType.bind(this);
@@ -46,24 +47,11 @@ class WidgetSettings extends Component {
     this.setXAxisScale = this.setXAxisScale.bind(this);
     this.setXAxisTimeScale = this.setXAxisTimeScale.bind(this);
     this.setYAxisScale = this.setYAxisScale.bind(this);
-    this.setCurve = this.setCurve.bind(this);
     this.setColorScheme = this.setColorScheme.bind(this);
-    this.setLineWidth = this.setLineWidth.bind(this);
-    this.enableArea = this.enableArea.bind(this);
     this.setTickRotation = this.setTickRotation.bind(this);
-    this.enablePoints = this.enablePoints.bind(this);
-    this.setPointSize = this.setPointSize.bind(this);
-    this.setInnerRadius = this.setInnerRadius.bind(this);
-    this.enableSliceLabels = this.enableSliceLabels.bind(this);
-    this.setPadding = this.setPadding.bind(this);
-    this.setInnerPadding = this.setInnerPadding.bind(this);
-    this.setLayout = this.setLayout.bind(this);
-    this.setGroupMode = this.setGroupMode.bind(this);
-    this.setReverse = this.setReverse.bind(this);
-    this.setSort = this.setSort.bind(this);
-    this.enableRadialLabels = this.enableRadialLabels.bind(this);
     this.generateName = this.generateName.bind(this);
     this.setName = this.setName.bind(this);
+    this.setProperty = this.setProperty.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -99,17 +87,6 @@ class WidgetSettings extends Component {
           settings: _.cloneDeep(this.props.editElement?.settings, {})
         }));
       }
-    } else {
-      if (
-        !_.isEqual(
-          prevProps.editElement?.settings?.name,
-          this.props.editElement?.settings?.name
-        )
-      ) {
-        console.log("====================================");
-        console.log(this.props.editElement);
-        console.log("====================================");
-      }
     }
     if (
       JSON.stringify(prevProps.editElement?.settings?.params) !==
@@ -123,31 +100,9 @@ class WidgetSettings extends Component {
     }
   }
 
-  setName(param, options) {
-    let settings = _.cloneDeep(this.props.editElement?.settings);
-    let name = settings?.name;
-    if (param.length > 0) {
-      let paramName = _.find(options, item => item.value == param).label;
-      if (typeof name !== "undefined") {
-        name = name.split("|");
-        let boolChange = false;
-        name.forEach((item, index) => {
-          if (item !== param) {
-            boolChange = true;
-          }
-        });
-        if (boolChange) {
-          name.push(paramName);
-        }
-        name = _.uniq(name);
-        name = name.join("|");
-      } else {
-        name = param;
-      }
-    }
-    return name;
-  }
-
+  /**
+   * Методы, связанные с открытием/закрытием настроек
+   */
   setOpenDataSettings(data) {
     this.setState(state => ({ ...state, openDataSettings: data }));
   }
@@ -156,6 +111,42 @@ class WidgetSettings extends Component {
   }
   setOpenTooltipSettings(data) {
     this.setState(state => ({ ...state, openTooltipSettings: data }));
+  }
+
+  /**
+   * Методы, связанные со сменой параметров с уникальными настройками
+   */
+  setName(param, options, prevParam) {
+    let settings = _.cloneDeep(this.props.editElement?.settings);
+    let name = settings?.name;
+    if (param.length > 0) {
+      let paramName = _.find(options, item => item.value == param).label;
+      if (typeof name !== "undefined") {
+        name = name.split(this.state.delimer);
+        let boolChange = false;
+        let indexPrevValue = -1;
+        if (prevParam.length > 0) {
+          indexPrevValue = _.findIndex(name, o => o == prevParam);
+        }
+        name.forEach((item, index) => {
+          if (item !== param) {
+            boolChange = true;
+          }
+        });
+        if (boolChange) {
+          if (indexPrevValue !== -1) {
+            name[indexPrevValue] = paramName;
+          } else {
+            name.push(paramName);
+          }
+        }
+        name = _.uniq(name);
+        name = name.join(this.state.delimer);
+      } else {
+        name = param;
+      }
+    }
+    return name;
   }
   //Смена типа диаграммы
   setType(type) {
@@ -190,7 +181,7 @@ class WidgetSettings extends Component {
       source => source.title ?? ""
     );
     if (typeof name === "undefined" || name.length === 0) {
-      name = arrayOfDatasourceTitles.join("|");
+      name = arrayOfDatasourceTitles.join(this.state.delimer);
     } else {
       if (Array.isArray(name)) {
         arrayOfDatasourceTitles.forEach((nameDatasource, index) => {
@@ -199,21 +190,20 @@ class WidgetSettings extends Component {
             name[index] = nameDatasource;
           }
         });
-        name = name.join("|");
+        name = name.join(this.state.delimer);
       } else {
-        name = name.split("|");
+        name = name.split(this.state.delimer);
         arrayOfDatasourceTitles.forEach((nameDatasource, index) => {
           const indexFind = _.findIndex(name, nameDatasource);
           if (indexFind === -1) {
             name[index] = nameDatasource;
           }
         });
-        name = name.join("|");
+        name = name.join(this.state.delimer);
       }
     }
     return name;
   }
-
   //Смена источника данных
   setDatasource(datasourcesArray, changeParams = false) {
     let settings = this.state.settings;
@@ -262,11 +252,11 @@ class WidgetSettings extends Component {
     }
   }
   //Смена значения локального параметра
-  setParam(left, right, options = []) {
+  setParam(left, right, options = [], prevParam = "") {
     let settings = this.state.settings;
     let param = { [left]: right };
     if (options.length > 0) {
-      settings.name = this.setName(right, options);
+      settings.name = this.setName(right, options, prevParam);
     }
     let currentParamKey = _.findKey(settings.params, left);
     if (typeof currentParamKey !== "undefined") {
@@ -371,113 +361,12 @@ class WidgetSettings extends Component {
       this.setState(s => ({ ...s, editElement: settings }));
     }
   }
-  //Смена типа кривой
-  setCurve(curve) {
-    const settings = { ...this.state.settings, curve: curve };
-    this.setState(state => ({
-      ...state,
-      settings: settings
-    }));
-    if (!this.props.addItemPreview) {
-      let element = this.props.editElement;
-      element.settings = settings;
-      this.props.editElementDispatch(element);
-      this.props.editHandler(this.props.editElement.i, settings);
-    } else {
-      const element = { settings: { ...settings } };
-      this.props.editElementDispatch(element);
-      this.setState(s => ({ ...s, editElement: settings }));
-    }
-  }
   //Смена цветовой схемы
   setColorScheme(colorScheme) {
     let settings = this.state.settings;
     settings = {
       ...this.state.settings,
       colors: { scheme: colorScheme }
-    };
-    this.setState(state => ({
-      ...state,
-      settings: settings
-    }));
-    if (!this.props.addItemPreview) {
-      let element = this.props.editElement;
-      element.settings = settings;
-      this.props.editElementDispatch(element);
-      this.props.editHandler(this.props.editElement.i, settings);
-    } else {
-      const element = { settings: { ...settings } };
-      this.props.editElementDispatch(element);
-      this.setState(s => ({ ...s, editElement: settings }));
-    }
-  }
-
-  setLineWidth(width) {
-    const settings = {
-      ...this.state.settings,
-      lineWidth: width
-    };
-    this.setState(state => ({
-      ...state,
-      settings: settings
-    }));
-    if (!this.props.addItemPreview) {
-      let element = this.props.editElement;
-      element.settings = settings;
-      this.props.editElementDispatch(element);
-      this.props.editHandler(this.props.editElement.i, settings);
-    } else {
-      const element = { settings: { ...settings } };
-      this.props.editElementDispatch(element);
-      this.setState(s => ({ ...s, editElement: settings }));
-    }
-  }
-  //Отображение участков
-  enableArea(value) {
-    const settings = {
-      ...this.state.settings,
-      enableArea: value
-    };
-    this.setState(state => ({
-      ...state,
-      settings: settings
-    }));
-    if (!this.props.addItemPreview) {
-      let element = this.props.editElement;
-      element.settings = settings;
-      this.props.editElementDispatch(element);
-      this.props.editHandler(this.props.editElement.i, settings);
-    } else {
-      const element = { settings: { ...settings } };
-      this.props.editElementDispatch(element);
-      this.setState(s => ({ ...s, editElement: settings }));
-    }
-  } //Отображение участков
-  enablePoints(value) {
-    const settings = {
-      ...this.state.settings,
-      enablePoints: value
-    };
-    this.setState(state => ({
-      ...state,
-      settings: settings
-    }));
-    if (!this.props.addItemPreview) {
-      let element = this.props.editElement;
-      element.settings = settings;
-      this.props.editElementDispatch(element);
-      this.props.editHandler(this.props.editElement.i, settings);
-    } else {
-      const element = { settings: { ...settings } };
-      this.props.editElementDispatch(element);
-      this.setState(s => ({ ...s, editElement: settings }));
-    }
-  }
-  //Указать размер точки
-  setPointSize(value) {
-    const settings = {
-      ...this.state.settings,
-      pointSize: value
     };
     this.setState(state => ({
       ...state,
@@ -518,179 +407,12 @@ class WidgetSettings extends Component {
       this.setState(s => ({ ...s, editElement: settings }));
     }
   }
-  //Внутренний радиус Pie
-  setInnerRadius(value) {
-    const settings = {
-      ...this.state.settings,
-      innerRadius: value
-    };
-    this.setState(state => ({
-      ...state,
-      settings: settings
-    }));
-    if (!this.props.addItemPreview) {
-      let element = this.props.editElement;
-      element.settings = settings;
-      this.props.editElementDispatch(element);
-      this.props.editHandler(this.props.editElement.i, settings);
-    } else {
-      const element = { settings: { ...settings } };
-      this.props.editElementDispatch(element);
-      this.setState(s => ({ ...s, editElement: settings }));
-    }
-  }
-  //Внешние отступы Bar
-  setPadding(value) {
-    const settings = {
-      ...this.state.settings,
-      padding: value
-    };
-    this.setState(state => ({
-      ...state,
-      settings: settings
-    }));
-    if (!this.props.addItemPreview) {
-      let element = this.props.editElement;
-      element.settings = settings;
-      this.props.editElementDispatch(element);
-      this.props.editHandler(this.props.editElement.i, settings);
-    } else {
-      const element = { settings: { ...settings } };
-      this.props.editElementDispatch(element);
-      this.setState(s => ({ ...s, editElement: settings }));
-    }
-  }
-  //Внутренние отступы Bar
-  setInnerPadding(value) {
-    const settings = {
-      ...this.state.settings,
-      innerPadding: value
-    };
-    this.setState(state => ({
-      ...state,
-      settings: settings
-    }));
-    if (!this.props.addItemPreview) {
-      let element = this.props.editElement;
-      element.settings = settings;
-      this.props.editElementDispatch(element);
-      this.props.editHandler(this.props.editElement.i, settings);
-    } else {
-      const element = { settings: { ...settings } };
-      this.props.editElementDispatch(element);
-      this.setState(s => ({ ...s, editElement: settings }));
-    }
-  }
-  //Отображать метки на сегменах Pie
-  enableSliceLabels(value) {
-    const settings = {
-      ...this.state.settings,
-      enableSliceLabels: value
-    };
-    this.setState(state => ({
-      ...state,
-      settings: settings
-    }));
-    if (!this.props.addItemPreview) {
-      let element = this.props.editElement;
-      element.settings = settings;
-      this.props.editElementDispatch(element);
-      this.props.editHandler(this.props.editElement.i, settings);
-    } else {
-      const element = { settings: { ...settings } };
-      this.props.editElementDispatch(element);
-      this.setState(s => ({ ...s, editElement: settings }));
-    }
-  }
-  //Отображать метки на сегменах Pie
-  enableRadialLabels(value) {
-    const settings = {
-      ...this.state.settings,
-      enableRadialLabels: value
-    };
-    this.setState(state => ({
-      ...state,
-      settings: settings
-    }));
-    if (!this.props.addItemPreview) {
-      let element = this.props.editElement;
-      element.settings = settings;
-      this.props.editElementDispatch(element);
-      this.props.editHandler(this.props.editElement.i, settings);
-    } else {
-      const element = { settings: { ...settings } };
-      this.props.editElementDispatch(element);
-      this.setState(s => ({ ...s, editElement: settings }));
-    }
-  }
 
-  setLayout(value) {
-    const settings = {
-      ...this.state.settings,
-      layout: value
-    };
-    this.setState(state => ({
-      ...state,
-      settings: settings
-    }));
-    if (!this.props.addItemPreview) {
-      let element = this.props.editElement;
-      element.settings = settings;
-      this.props.editElementDispatch(element);
-      this.props.editHandler(this.props.editElement.i, settings);
-    } else {
-      const element = { settings: { ...settings } };
-      this.props.editElementDispatch(element);
-      this.setState(s => ({ ...s, editElement: settings }));
-    }
-  }
-  setGroupMode(value) {
-    const settings = {
-      ...this.state.settings,
-      groupMode: value
-    };
-    this.setState(state => ({
-      ...state,
-      settings: settings
-    }));
-    if (!this.props.addItemPreview) {
-      let element = this.props.editElement;
-      element.settings = settings;
-      this.props.editElementDispatch(element);
-      this.props.editHandler(this.props.editElement.i, settings);
-    } else {
-      const element = { settings: { ...settings } };
-      this.props.editElementDispatch(element);
-      this.setState(s => ({ ...s, editElement: settings }));
-    }
-  }
-
-  setReverse(value) {
-    const settings = {
-      ...this.state.settings,
-      reverse: value
-    };
-    this.setState(state => ({
-      ...state,
-      settings: settings
-    }));
-    if (!this.props.addItemPreview) {
-      let element = this.props.editElement;
-      element.settings = settings;
-      this.props.editElementDispatch(element);
-      this.props.editHandler(this.props.editElement.i, settings);
-    } else {
-      const element = { settings: { ...settings } };
-      this.props.editElementDispatch(element);
-      this.setState(s => ({ ...s, editElement: settings }));
-    }
-  }
-
-  setSort(value) {
-    const settings = {
-      ...this.state.settings,
-      sort: value
-    };
+  /**
+   * Смена параметров без уникальных настроек
+   */
+  setProperty(value, property) {
+    const settings = { ...this.state.settings, [property]: value };
     this.setState(state => ({
       ...state,
       settings: settings
@@ -775,7 +497,7 @@ class WidgetSettings extends Component {
                 </>
               )}
 
-              <SortData setSort={this.setSort} />
+              <SortData setProperty={this.setProperty} />
             </div>
           </Collapse>
         </div>
@@ -798,21 +520,10 @@ class WidgetSettings extends Component {
           <Collapse in={this.state.openDiagramSettings}>
             <div>
               <StiyleSettings
-                setCurve={this.setCurve}
+                setProperty={this.setProperty}
+                setMargin={this.setMargin}
                 setColorScheme={this.setColorScheme}
-                setLineWidth={this.setLineWidth}
-                enableArea={this.enableArea}
                 setTickRotation={this.setTickRotation}
-                enablePoints={this.enablePoints}
-                setPointSize={this.setPointSize}
-                setInnerRadius={this.setInnerRadius}
-                enableSliceLabels={this.enableSliceLabels}
-                setPadding={this.setPadding}
-                setInnerPadding={this.setInnerPadding}
-                setLayout={this.setLayout}
-                setGroupMode={this.setGroupMode}
-                setReverse={this.setReverse}
-                enableRadialLabels={this.enableRadialLabels}
               />
             </div>
           </Collapse>

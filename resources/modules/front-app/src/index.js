@@ -20,9 +20,8 @@ try {
     disableStats: true
   });
 } catch (e) {
-  console.log(e)
+  console.log(e);
 }
-
 
 window.stylesModulePromise = new Promise(function(resolve) {
   window.stylesModuleResolve = resolve;

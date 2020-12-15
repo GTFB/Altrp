@@ -143,9 +143,22 @@ class Dashboards extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection("common", {
+      type: TAB_STYLE,
+      label: "Common"
+    });
+
+    this.addControl("delimer", {
+      type: CONTROLLER_TEXT,
+      label: "Разделитель"
+    });
+
+    this.endControlSection();
+
     this.startControlSection("size", {
       tab: TAB_STYLE,
-      label: "Size"
+      label: "Size",
+      default: "|"
     });
 
     this.addControl("drawerWidth", {
@@ -153,9 +166,9 @@ class Dashboards extends BaseElement {
       label: "drawer width",
       default: {
         size: 30,
-        unit: "vh"
+        unit: "%"
       },
-      units: ["vh"],
+      units: ["%"],
       max: 100,
       min: 0
     });

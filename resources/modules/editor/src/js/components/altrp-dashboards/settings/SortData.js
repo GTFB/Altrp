@@ -49,7 +49,7 @@ class SortData extends Component {
             <Form.Label className="label">Фильтрация</Form.Label>
             <ReactSelect
               placeholder="Выберите фильтр"
-              onChange={value => this.props.setSort(value)}
+              onChange={value => this.props.setProperty(value, "sort")}
               className="select-type"
               defaultValue={
                 this.state.editElement?.settings?.sort || options[0].value
