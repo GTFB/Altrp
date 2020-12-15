@@ -46,7 +46,8 @@ class AddPage extends Component {
       isModalOpened: false,
       dataSources: [],
       editingDataSource: null,
-      pagesOptions: []
+      pagesOptions: [],
+      currentTab: 'content',
     };
     this.resource = new Resource({ route: "/admin/ajax/pages" });
     this.pagesOptionsResource = new Resource({
@@ -108,6 +109,16 @@ class AddPage extends Component {
    * @return {Promise<void>}
    */
   async savePage(e) {
+    if(this.state.value.path === undefined || 
+      this.state.value.path === ''  ||
+      this.state.value.title === undefined || 
+      this.state.value.title === '') {
+        this.setState(state => {
+          return {...state, currentTab: 'content'}
+        });
+        return;  
+      }
+
     e.preventDefault();
     let res;
     const { parent_page_id } = this.state.value;
@@ -183,6 +194,12 @@ class AddPage extends Component {
     }
   };
 
+  changeCurrentTab(currentTab) {
+    return () => this.setState((state)=> {
+      return {...state, currentTab }
+    });
+  }
+
   render() {
     const { isModalOpened, editingDataSource } = this.state;
     if (this.state.redirectAfterSave) {
@@ -205,145 +222,212 @@ class AddPage extends Component {
           </div>
         </div>
         <div className="admin-content">
-          <form
-            className="admin-form"
-            onSubmit={this.savePage}
-            className="mb-2"
-          >
-            <div className="form-group">
-              <label htmlFor="page-title">Title</label>
-              <input
-                type="text"
-                id="page-title"
-                required={1}
-                value={this.state.value.title || ""}
-                onChange={e => {
-                  this.changeValue(e.target.value, "title");
-                }}
-                className="form-control"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="parent_page_id">Parent Page</label>
-              <select
-                id="parent_page_id"
-                value={this.state.value.parent_page_id || ""}
-                onChange={e => {
-                  // this.changeValue(e.target.value, 'parent_page_id');
-                  this.parentChangeHandler(e.target.value);
-                }}
-                className="form-control"
-              >
-                <option value="" disabled />
-                <option value="root">Root</option>
-                {this.state.pagesOptions.map(page => {
-                  return (
-                    <option value={page.value} key={page.value}>
-                      {page.label}
-                    </option>
-                  );
-                })}
-              </select>
-              {/* <AltrpSelect id="parent_page_id"
-              // isMulti={true}
-              optionsRoute="/admin/ajax/pages_options"
-              placeholder=""
-              defaultOptions={[
-                {
-                  value: '',
-                  label: '',
-                }
-              ]}
-              value={this.state.value.parent_page_id || ''}
-              onChange={({ value }) => { this.parentChangeHandler(value) }}
-            /> */}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="page-path">Path</label>
-              <input
-                type="text"
-                id="page-path"
-                required={1}
-                value={this.state.value.path || ""}
-                onChange={e => {
-                  this.changeValue(e.target.value, "path");
-                }}
-                className="form-control"
-              />
-            </div>
-
-            {/*<div className="form-group">*/}
-            {/*<label htmlFor="page-template">Content Template</label>*/}
-            {/*<select id="page-template"*/}
-            {/*value={this.state.value.template_id || ''}*/}
-            {/*onChange={e => {this.changeValue(e.target.value, 'template_id')}}*/}
-            {/*className="form-control">*/}
-            {/*<option value=""/>*/}
-            {/*{*/}
-            {/*this.state.templates.map(template=>{*/}
-            {/*return <option value={template.value} key={template.value}>{template.label}</option>*/}
-            {/*})*/}
-            {/*}*/}
-            {/*</select>*/}
-            {/*</div>*/}
-            <div className="form-group">
-              <label htmlFor="page-model">Model</label>
-              <select
-                id="page-model"
-                value={this.state.value.model_id || ""}
-                onChange={e => {
-                  this.changeValue(e.target.value, "model_id");
-                }}
-                className="form-control"
-              >
-                <option value="" />
-                {this.state.models.map(model => {
-                  return (
-                    <option value={model.value} key={model.value}>
-                      {model.label}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="page-roles">Roles</label>
-              <AltrpSelect
-                id="page-roles"
-                isMulti={true}
-                optionsRoute="/admin/ajax/role_options"
-                placeholder="All"
-                defaultOptions={[
-                  {
-                    value: "guest",
-                    label: "Guest"
-                  }
-                ]}
-                value={this.state.value.roles}
-                onChange={value => {
-                  this.changeValue(value, "roles");
-                }}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="redirect">Redirect</label>
-              <input
-                type="text"
-                id="redirect"
-                value={this.state.value.redirect || ""}
-                onChange={e => {
-                  this.changeValue(e.target.value, "redirect");
-                }}
-                className="form-control"
-              />
-            </div>
-            <button className="btn btn_success">
-              {this.state.id ? "Save" : "Add"}
+          <div className="custom-tab__tabs">
+            <button
+              className={this.state.currentTab === "content" ? 
+              "custom-tab__tab custom-tab__tab--selected" : 
+              "custom-tab__tab"}
+              onClick={this.changeCurrentTab('content')}
+            >
+              content
             </button>
-          </form>
+            <button
+              className={this.state.currentTab === "SEO" ? 
+              "custom-tab__tab custom-tab__tab--selected" : 
+              "custom-tab__tab"}
+              onClick={this.changeCurrentTab('SEO')}
+            >
+              SEO
+            </button>
+          </div>
+          <div className="custom-tab__tab-panel">
+            <form                 
+              className="admin-form mb-2"
+              onSubmit={this.savePage}
+            >
+              {(() => {
+                if(this.state.currentTab === 'content') {
+                return ( 
+                  <React.Fragment>
+                    <div className="form-group">
+                      <label htmlFor="page-title">Title</label>
+                      <input
+                        type="text"
+                        id="page-title"
+                        required={1}
+                        value={this.state.value.title || ""}
+                        onChange={e => {
+                          this.changeValue(e.target.value, "title");
+                        }}
+                        className="form-control"
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="parent_page_id">Parent Page</label>
+                      <select
+                        id="parent_page_id"
+                        value={this.state.value.parent_page_id || ""}
+                        onChange={e => {
+                          // this.changeValue(e.target.value, 'parent_page_id');
+                          this.parentChangeHandler(e.target.value);
+                        }}
+                        className="form-control"
+                      >
+                        <option value="" disabled />
+                        <option value="root">Root</option>
+                        {this.state.pagesOptions.map(page => {
+                          return (
+                            <option value={page.value} key={page.value}>
+                              {page.label}
+                            </option>
+                          );
+                        })}
+                      </select>
+                      {/* <AltrpSelect id="parent_page_id"
+                      // isMulti={true}
+                      optionsRoute="/admin/ajax/pages_options"
+                      placeholder=""
+                      defaultOptions={[
+                        {
+                          value: '',
+                          label: '',
+                        }
+                      ]}
+                      value={this.state.value.parent_page_id || ''}
+                      onChange={({ value }) => { this.parentChangeHandler(value) }}
+                    /> */}
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="page-path">Path</label>
+                      <input
+                        type="text"
+                        id="page-path"
+                        required={1}
+                        value={this.state.value.path || ""}
+                        onChange={e => {
+                          this.changeValue(e.target.value, "path");
+                        }}
+                        className="form-control"
+                      />
+                    </div>
+
+                    {/*<div className="form-group">*/}
+                    {/*<label htmlFor="page-template">Content Template</label>*/}
+                    {/*<select id="page-template"*/}
+                    {/*value={this.state.value.template_id || ''}*/}
+                    {/*onChange={e => {this.changeValue(e.target.value, 'template_id')}}*/}
+                    {/*className="form-control">*/}
+                    {/*<option value=""/>*/}
+                    {/*{*/}
+                    {/*this.state.templates.map(template=>{*/}
+                    {/*return <option value={template.value} key={template.value}>{template.label}</option>*/}
+                    {/*})*/}
+                    {/*}*/}
+                    {/*</select>*/}
+                    {/*</div>*/}
+                    <div className="form-group">
+                      <label htmlFor="page-model">Model</label>
+                      <select
+                        id="page-model"
+                        value={this.state.value.model_id || ""}
+                        onChange={e => {
+                          this.changeValue(e.target.value, "model_id");
+                        }}
+                        className="form-control"
+                      >
+                        <option value="" />
+                        {this.state.models.map(model => {
+                          return (
+                            <option value={model.value} key={model.value}>
+                              {model.label}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="page-roles">Roles</label>
+                      <AltrpSelect
+                        id="page-roles"
+                        isMulti={true}
+                        optionsRoute="/admin/ajax/role_options"
+                        placeholder="All"
+                        defaultOptions={[
+                          {
+                            value: "guest",
+                            label: "Guest"
+                          }
+                        ]}
+                        value={this.state.value.roles}
+                        onChange={value => {
+                          this.changeValue(value, "roles");
+                        }}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="redirect">Redirect</label>
+                      <input
+                        type="text"
+                        id="redirect"
+                        value={this.state.value.redirect || ""}
+                        onChange={e => {
+                          this.changeValue(e.target.value, "redirect");
+                        }}
+                        className="form-control"
+                      />
+                    </div>
+                  </React.Fragment>
+                );
+              } else if(this.state.currentTab === 'SEO') {
+                return (
+                  <React.Fragment>
+                    <div className="form-group">
+                      <label htmlFor="seo-title">Title</label>
+                      <input
+                        type="text"
+                        id="seo-title"
+                        value={this.state.value.seo_title || ""}
+                        onChange={e => {
+                          this.changeValue(e.target.value, "seo_title");
+                        }}
+                        className="form-control"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="seo-keywords">Keywords</label>
+                      <input
+                        type="text"
+                        id="seo-keywords"
+                        value={this.state.value.seo_keywords || ""}
+                        onChange={e => {
+                          this.changeValue(e.target.value, "seo_keywords");
+                        }}
+                        className="form-control"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="seo_description">Description</label>
+                      <textarea
+                        id="seo_description"
+                        value={this.state.value.seo_description || ""}
+                        onChange={e => {
+                          this.changeValue(e.target.value, "seo_description");
+                        }}
+                        className="form-control"
+                      >
+                      </textarea>
+                    </div>
+                  </React.Fragment>
+                );
+              }})()}
+              <button className= {this.state.value.path ? "btn btn_success" : "btn btn_disable"}>
+                {this.state.id ? "Save" : "Add"}
+              </button>
+            </form>
+          </div>
           
           {Boolean(dataSources.length) && <AdminTable
             columns={columns}

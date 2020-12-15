@@ -1,3 +1,4 @@
+import CKEditor from "./ckeditor/CKeditor";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import {
@@ -376,6 +377,7 @@ class ElementWrapper extends Component {
           currentUser: this.props.currentUser,
           currentDataStorage: this.props.currentDataStorage,
           fireAction: this.fireAction,
+          CKEditor: CKEditor,
           wrapper: this
         })}
         {emptyColumn}

@@ -280,6 +280,11 @@ class AltrpAction extends AltrpModel {
           result = await this.doActionUpdateCurrentDatasources();
         }
         break;
+      case "forms_manipulate":
+        {
+          result = await this.doActionFormsManipulate();
+        }
+        break;
     }
     let alertText = "";
     if (result.success) {
@@ -310,19 +315,50 @@ class AltrpAction extends AltrpModel {
       }
       return { success: true };
     }
-
+    let data = null;
     if (this.getProperty("data")) {
-      let data = parseParamsFromString(
-        this.getProperty("data"),
-        getAppContext(),
-        true
+      data = parseParamsFromString(
+          this.getProperty("data"),
+          getAppContext(),
+          true
       );
-      if (!_.isEmpty(data)) {
-        return this.getProperty("_form").submit("", "", data);
-      }
-      return { success: true };
+      // if (!_.isEmpty(data)) {
+      //   return form.submit("", "", data);
+      // }
+      // return { success: true };
     }
-    return this.getProperty("_form").submit();
+    if( this.getProperty("forms_bulk")
+        && _.isArray(getDataByPath(this.getProperty('bulk_path')))
+        && _.get(getDataByPath(this.getProperty('bulk_path')), 'length')
+    ){
+      let bulk = getDataByPath(this.getProperty('bulk_path'));
+
+      for(let idx in bulk){
+        let url = this.getProperty('form_url');
+        url = replaceContentWithData(url, bulk[idx]);
+        const form = formsManager.registerForm(
+            this.getFormId() + idx,
+            "",
+            this.getProperty("form_method"),
+            {
+              customRoute: url,
+            }
+        );
+        console.log(form);
+        console.log(data);
+        let res = await form.submit('', '', data)
+        console.log(res);
+      }
+
+      return {success: true}
+    }
+    /**
+     *
+     * @type {AltrpForm}
+     */
+    let form = this.getProperty("_form");
+    console.log(form);
+    return form.submit("", "", data);
   }
   /**
    * Делает редирект на страницу form_url
@@ -744,6 +780,36 @@ class AltrpAction extends AltrpModel {
     }
 
     return result;
+  }
+  /**
+   * действие - манипуляция с элементами форм
+   * @return {Promise<{}>}
+   */
+  doActionFormsManipulate() {
+    let IDs = this.getProperty("elements_ids");
+    if (!IDs) {
+      return { success: true };
+    }
+    IDs = IDs.split(",");
+    const change = this.getProperty('forms_change');
+    IDs.forEach(id => {
+      let component = getComponentByElementId(id);
+      switch(change){
+        case 'select_all':{
+          if(_.get(component, 'elementRef.current.selectAll')){
+            component.elementRef.current.selectAll();
+          }
+        }
+        break;
+        case 'clear':{
+          if(_.get(component, 'elementRef.current.clearValue')){
+            component.elementRef.current.clearValue();
+          }
+        }
+        break;
+      }
+    });
+    return { success: true };
   }
   /**
    * действие - обновление текущего хранилища

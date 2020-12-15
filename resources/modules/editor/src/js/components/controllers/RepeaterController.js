@@ -4,6 +4,10 @@ import { connect } from "react-redux";
 import controllerDecorate from "../../decorators/controller";
 import { iconsManager } from "../../helpers";
 import Controller from "../../classes/Controller";
+import update from "immutability-helper";
+import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+
 /**
  * @method _changeValue
  * @see {@link controller.js#_changeValue}
@@ -30,6 +34,8 @@ class RepeaterController extends Component {
     };
     this.addItem = this.addItem.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
+    this.duplicateItem = this.duplicateItem.bind(this);
+    this.moveItem = this.moveItem.bind(this);
     this.setActiveItem = this.setActiveItem.bind(this);
     this.changeValue = this.changeValue.bind(this);
   }
@@ -70,14 +76,55 @@ class RepeaterController extends Component {
     this._changeValue(items);
   }
   /**
+   * Копируем итем в повторителе
+   */
+  duplicateItem(e) {
+    let index = parseInt(e.currentTarget.dataset.itemindex);
+    let copyItem = this.state.items[index];
+    
+    let items = update(this.state.items, {
+      $splice: [
+        [index, 0, copyItem]
+      ]
+    });
+    items = items.map((item, index) => {
+      return {...item, id: index}
+    });
+    this.setState(state => {
+      return { ...state, items }
+    });
+    this._changeValue(items);
+  }
+  /**
+   * Перетаскиваем итем в повторителе
+   */
+  moveItem(dragIndex, hoverIndex) {
+    const dragItem = this.state.items[dragIndex];
+    let items = update(this.state.items, {
+      $splice: [
+        [dragIndex, 1],
+        [hoverIndex, 0, dragItem],
+      ],
+    });
+    this.setState(state => {
+      return { ...state, items }
+    });
+    this._changeValue(items);
+  }
+  /**
    * Задает активный итем в повторителе
    */
   setActiveItem(e) {
-    let activeItem = parseInt(e.currentTarget.dataset.itemindex);
-    this.setState(state => {
-      return { ...state, activeItem }
+    if(e) {
+      let activeItem = parseInt(e.currentTarget.dataset.itemindex);
+      this.setState(state => {
+        return { ...state, activeItem }
+      });
+    } else {
+      this.setState(state => {
+        return { ...state, activeItem: undefined }
+      });
     }
-    );
   }
 
   /**
@@ -119,42 +166,27 @@ class RepeaterController extends Component {
       <div className="control-header">
         <div className="controller-container__label">{this.props.label}</div>
       </div>
+
       <div className="repeater-fields">
-        {
-          this.state.items.map((item, idx) => {
-            let itemClasses = ['repeater-item'];
-            if (this.state.activeItem === idx) {
-              itemClasses.push('repeater-item_open');
-            }
-            return <div className={itemClasses.join(' ')} key={idx}>
-              <div className="repeater-item-tools">
-                <div className="repeater-item__caption"
-                  data-itemindex={idx}
-                  onClick={this.setActiveItem}>Item #{idx + 1}</div>
-                <button className="repeater-item__delete"
-                  data-itemindex={idx}
-                  onClick={this.deleteItem}>{iconsManager().renderIcon('times')}</button>
-              </div>
-              <div className="repeater-item-content">
-                {
-                  this.props.fields.map(field => {
-                    let ControllerComponent = controllersManager.getController(field.type);
-                    let controller = new Controller({ ...field, repeater: this, itemIndex: idx });
-                    // value =
-                    let value = item[field.controlId] || '';
-                    return <ControllerComponent {...field}
-                      repeater={this}
-                      itemindex={idx}
-                      key={field.controlId}
-                      default={value}
-                      controller={controller} />
-                  })
-                }
-              </div>
-            </div>
-          })
-        }
+        <DndProvider backend={HTML5Backend}>
+          {
+            this.state.items.map((item, idx) => {
+              let itemClasses = ['repeater-item'];
+              if (this.state.activeItem === idx) {
+                itemClasses.push('repeater-item_open');
+              }
+              return <RepeaterItem 
+                itemClasses={itemClasses}
+                thisController={this}
+                itemController={item} 
+                idx={idx}   
+                key={idx} 
+              />
+            })
+          }
+        </DndProvider>
       </div>
+
       <div className="d-flex justify-center repeater-bottom">
         <button className="altrp-btn altrp-btn_gray d-flex align-items-center" onClick={this.addItem}>
           {iconsManager().renderIcon('plus', {
@@ -165,6 +197,80 @@ class RepeaterController extends Component {
       </div>
     </div>
   }
+}
+
+const RepeaterItem = ({thisController, itemClasses, idx, itemController}) => {
+  const {setActiveItem, duplicateItem, deleteItem, moveItem} = thisController;
+  const propsController = thisController.props;
+  const ref=React.useRef(null);
+
+  const [, drop] = useDrop({
+    accept: "item",
+    hover(item, monitor) {
+      if (!ref.current) {
+        return;
+      }
+      const dragIndex = item.idx;
+      const hoverIndex = idx;
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+      const hoverBoundingRect = ref.current?.getBoundingClientRect();
+      const hoverMiddleY =
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      const clientOffset = monitor.getClientOffset();
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
+      moveItem(dragIndex, hoverIndex);
+      item.idx = hoverIndex;
+    },
+  });
+  const [{ isDragging }, drag] = useDrag({
+    item: { type: "item", idx },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+  const opacity = isDragging ? 0 : 1;
+  drag(drop(ref));
+
+  return (
+    <div className={itemClasses.join(' ')} ref={ref} style={{opacity}}>
+      <div className="repeater-item-tools">
+        <div className="repeater-item__caption"
+          data-itemindex={idx}
+          onClick={setActiveItem}
+          onDoubleClick={() => setActiveItem()}
+        >Item #{idx + 1}</div>
+        <button className="repeater-item__icon"
+          data-itemindex={idx}
+          onClick={duplicateItem}>{iconsManager().renderIcon('duplicate')}</button>
+        <button className="repeater-item__icon"
+          data-itemindex={idx}
+          onClick={deleteItem}>{iconsManager().renderIcon('times')}</button>
+      </div>
+      <div className="repeater-item-content">
+        {
+          propsController.fields.map(field => {
+            let ControllerComponent = controllersManager.getController(field.type);
+            let controller = new Controller({ ...field, repeater: thisController, itemIndex: idx });
+            let value = itemController[field.controlId] || '';
+            return <ControllerComponent {...field}
+              repeater={thisController}
+              itemindex={idx}
+              key={field.controlId}
+              default={value}
+              controller={controller} />
+          })
+        }
+      </div>
+    </div>
+  )
 }
 
 function mapStateToProps(state) {
