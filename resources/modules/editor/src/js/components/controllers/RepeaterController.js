@@ -240,10 +240,11 @@ const RepeaterItem = ({thisController, itemClasses, idx, itemController}) => {
   drag(drop(ref));
 
   return (
-    <div className={itemClasses.join(' ')} ref={ref} style={{opacity}}>
+    <div className={itemClasses.join(' ')} style={{opacity}}>
       <div className="repeater-item-tools">
         <div className="repeater-item__caption"
           data-itemindex={idx}
+          ref={ref}
           onClick={setActiveItem}
           onDoubleClick={() => setActiveItem()}
         >Item #{idx + 1}</div>
