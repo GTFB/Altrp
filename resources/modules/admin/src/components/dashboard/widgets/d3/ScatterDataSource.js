@@ -192,7 +192,12 @@ class ScatterDataSource extends Component {
         <ErrorBoundary>
           <ResponsiveScatterPlotCanvas
             data={data}
-            margin={{ top: 40, right: 120, bottom: 80, left: 100 }}
+            margin={{
+              top: this.state.settings?.margin?.top || 40,
+              right: this.state.settings?.margin?.right || 180,
+              bottom: this.state.settings?.margin?.bottom || 80,
+              left: this.state.settings?.margin?.left || 100
+            }}
             xScale={this.state.settings?.xScale}
             enableSliceLabels={false}
             colors={

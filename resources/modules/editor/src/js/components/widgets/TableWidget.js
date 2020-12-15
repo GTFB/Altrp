@@ -137,6 +137,7 @@ class TableWidget extends Component {
           return <div className="altrp-scroll__horizontal-track" style={style} {...props} />}}
     ><React.Suspense fallback={''}>
       <TableComponent query={query}
+                      updateToken={this.props.updateToken}
                       widgetId={this.props.element.getId()}
                       widgetState={this.state.widgetState}
                       currentModel={this.props.currentModel}

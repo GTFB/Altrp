@@ -92,6 +92,7 @@ class DashboardsWidget extends Component {
             items={settingsData.items}
             counter={settingsData.newCounter}
             drawerWidth={drawerWidth}
+            delimer={this.props.element.getSettings("delimer")}
             rep={this.props.element.getSettings("rep", [])}
           />
         )}

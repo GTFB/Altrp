@@ -1,4 +1,4 @@
-import {controllerMapStateToProps} from "../../decorators/controller";
+import { controllerMapStateToProps } from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Select from "react-select";
@@ -20,7 +20,7 @@ class Select2Controller extends Component {
     this.state = {
       value,
       options: this.props.options || [],
-      show: true,
+      show: true
     };
     // if (this.props.options_resource) {
     //   this.resource = new Resource({ route: this.props.options_resource });
@@ -41,32 +41,32 @@ class Select2Controller extends Component {
       let options = await resource.search(
         this.props.currentElement.getSettings(this.props.controlId)
       );
-      if(! _.isArray(options)){
-        options = _.get(options, 'data', []);
+      if (!_.isArray(options)) {
+        options = _.get(options, "data", []);
       }
       if (this.props.nullable) {
         options = _.union([{ label: "None", value: "" }], options);
       }
 
-      this.setState((state) => ({
+      this.setState(state => ({
         ...state,
-        options,
+        options
       }));
     } else if (this.props.nullable) {
-      this.setState((state) => ({
+      this.setState(state => ({
         ...state,
-        options: _.union([{ label: "None", value: "" }], this.state.options),
+        options: _.union([{ label: "None", value: "" }], this.state.options)
       }));
     }
     if (this.props.prefetch_options) {
       let resource = new Resource({ route: this.getRoute() });
       let options = await resource.getAll();
-      if(! _.isArray(options)){
-        options = _.get(options, 'data', []);
+      if (!_.isArray(options)) {
+        options = _.get(options, "data", []);
       }
-      this.setState((state) => ({
+      this.setState(state => ({
         ...state,
-        options,
+        options
       }));
     }
   }
@@ -97,15 +97,15 @@ class Select2Controller extends Component {
     }
     let resource = new Resource({ route: this.getRoute() });
     let options = await resource.search(searchString);
-    if(! _.isArray(options)){
-      options = _.get(options, 'data', []);
+    if (!_.isArray(options)) {
+      options = _.get(options, "data", []);
     }
     if (this.props.nullable) {
       options = _.union([{ label: "None", value: "" }], options);
     }
-    this.setState((state) => ({
+    this.setState(state => ({
       ...state,
-      options,
+      options
     }));
     return callback(options);
   }
@@ -113,7 +113,7 @@ class Select2Controller extends Component {
   change(value, action) {
     if (action.action === "select-option") {
       if (this.props.isMulti) {
-        let _v = value.map((v) => {
+        let _v = value.map(v => {
           return v.value;
         });
         this._changeValue(_v);
@@ -125,12 +125,12 @@ class Select2Controller extends Component {
       if (this.props.isMulti) {
         this._changeValue(value);
       } else {
-        this._changeValue('');
+        this._changeValue("");
       }
     }
     if (action.action === "remove-value") {
       if (this.props.isMulti) {
-        value = this.state.value.filter((v) => {
+        value = this.state.value.filter(v => {
           return v !== action.removedValue.value;
         });
 
@@ -144,7 +144,8 @@ class Select2Controller extends Component {
       return "";
     }
 
-    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    let value =
+      this.getSettings(this.props.controlId) || this.getDefaultValue();
 
     const customStyles = {
       option: (provided, state) => ({
@@ -153,7 +154,7 @@ class Select2Controller extends Component {
         backgroundColor: state.isSelected ? "#5897fb" : "#FFF",
         fontSize: 13,
         padding: 5,
-        height: 20,
+        height: 20
       }),
 
       menu: () => ({
@@ -168,16 +169,16 @@ class Select2Controller extends Component {
         borderStyle: "solid",
         borderColor: "#E5E6EA",
         position: "absolute",
-        zIndex: "1000",
+        zIndex: "1000"
       }),
 
       menuList: () => ({
         backgroundColor: "#FFF",
         margin: 0,
-        padding: 0,
+        padding: 0
       }),
 
-      control: (state) => ({
+      control: state => ({
         display: "flex",
         // height: 28,
         borderRadius: 3,
@@ -185,22 +186,22 @@ class Select2Controller extends Component {
         borderStyle: "solid",
         borderColor: "#E5E6EA",
         color: "#8E94AA",
-        fontSize: 13,
+        fontSize: 13
       }),
 
       placeholder: () => ({
         color: "#8E94AA",
         fontSize: 13,
-        opacity: 1,
+        opacity: 1
       }),
 
       indicatorSeparator: () => ({
-        display: "none !important",
+        display: "none !important"
       }),
 
       singleValue: () => ({
-        color: "#8E94AA",
-      }),
+        color: "#8E94AA"
+      })
     };
 
     // let value = {};
@@ -208,13 +209,13 @@ class Select2Controller extends Component {
       if (_.isArray(value)) {
         let _value = _.cloneDeep(value);
         value = [];
-        _value.forEach((v) => {
-          this.state.options.forEach((option) => {
+        _value.forEach(v => {
+          this.state.options.forEach(option => {
             if (option.value === v) {
               value.push({ ...option });
             }
             if (_.isArray(option.options)) {
-              option.options.forEach((option) => {
+              option.options.forEach(option => {
                 if (option.value === v) {
                   value.push({ ...option });
                 }
@@ -224,12 +225,12 @@ class Select2Controller extends Component {
         });
       }
     } else {
-      this.state.options.forEach((option) => {
+      this.state.options.forEach(option => {
         if (option.value === value) {
           value = { ...option };
         }
         if (_.isArray(option.options)) {
-          option.options.forEach((option) => {
+          option.options.forEach(option => {
             if (option.value === value) {
               value = { ...option };
             }
@@ -248,7 +249,7 @@ class Select2Controller extends Component {
       value,
       isMulti: this.props.isMulti,
       closeMenuOnSelect: !this.props.isMulti,
-      isClearable: this.props.isClearable,
+      isClearable: this.props.isClearable
       // menuIsOpen: true,
     };
 
