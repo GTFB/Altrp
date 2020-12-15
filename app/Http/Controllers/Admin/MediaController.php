@@ -74,7 +74,8 @@ class MediaController extends Controller
       $media->author = Auth::user()->id;
       $media->type = self::getTypeForFile( $file );
       File::ensureDirectoryExists( 'app/media/' .  date("Y") . '/' .  date("m" ), 0775 );
-      $media->filename =  $file->store( 'media/' .  date("Y") . '/' .  date("m" ) ,
+      $media->filename =  $file->storeAs( 'media/' .  date("Y") . '/' .  date("m" ) ,
+        Str::random(40) . '.' . $file->getClientOriginalExtension(),
         ['disk' => 'public'] );
       $media->url =  Storage::url( $media->filename );
       $media->save();
@@ -149,7 +150,8 @@ class MediaController extends Controller
    * @return string
    */
   public static function getTypeForFile( $file ){
-    $extension_loaded = $file->guessClientExtension();
+    $extension_loaded = $file->getClientOriginalExtension();
+
     $type = '';
     $file_types = self::getFileTypes();
     foreach ( $file_types as $file_type ){
