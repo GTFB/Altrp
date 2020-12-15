@@ -19,11 +19,12 @@ class Assets extends Component {
       assets: [],
       acceptInput: '',
       itemDeleteClasses: 'item__delete',
+      activeLink: '',
     };
     this.typesFiles = {
       images: ['png', 'gif', 'jpg', 'jpeg', 'webp'],
       svgs: ['svg'],
-      fonts: ['ttf', 'woff2', 'otf', 'woff', 'woff2', 'eot'],
+      fonts: ['ttf', 'otf', 'woff', 'woff2', 'eot'],
       archives: ['zip', 'rar'],
       documents: ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'odt', 'ods', 'odp'],
       medias: ['wav', 'mp3', 'mp4', 'avi', 'webm'],
@@ -48,14 +49,10 @@ class Assets extends Component {
     });
   }
   updateAssets(files){
-    // this.resource.postFiles(files)
-    this.resource.post({files: _.toArray(files)})
-        .then(res=>{
-      if(_.isArray(res)){
-        let newAssets = res.concat(this.state.assets);
-        this.setState(state=>{
-          return{...state, assets: newAssets}
-        })
+    this.resource.postFiles(files).then(res=>{
+      if(res.length){
+        const activeLink = this.changeUrlForTab();
+        this.filterAssets(activeLink);
       }
     })
   }
@@ -70,12 +67,6 @@ class Assets extends Component {
   componentDidMount(){
     const activeLink = this.changeUrlForTab();
     this.filterAssets(activeLink);
-
-    this.resource.getAll().then(res=>{
-      this.setState(state=>{
-        return {...state, assets: res}
-      })
-    });
   }
   componentDidUpdate(){
     this.changeUrlForTab();
@@ -111,12 +102,15 @@ class Assets extends Component {
     this.setState(state => {
       return {...state, acceptInput: `.${this.typesFiles[activeLink].join(', .')}` }
     });
-    let filterResource = new Resource({route: `/admin/ajax/media?type=${activeLink}`});
+    let filterResource = new Resource({route: `/admin/ajax/media?type=${activeLink.slice(0, -1)}`});
     filterResource.getAll().then(res=>{
       this.setState(state=>{
         return {...state, assets: res}
       })
     });
+    this.setState((state=> {
+      return { ...state, activeLink }
+    }));
   }
   changeUrlForTab() {
     const { location, history } = this.props;
@@ -134,6 +128,7 @@ class Assets extends Component {
   render() {
     let UploadIcon = iconsManager().getIconComponent('upload');
     let CloseIcon = iconsManager().getIconComponent('close');
+    let AviIcon =  iconsManager().getIconComponent('avi');
     return <div className="admin-assets admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
@@ -214,16 +209,33 @@ class Assets extends Component {
         <div className="admin-assets__list custom-tab__tab-panel p-4 assets-list d-flex flex-wrap">
           {
             this.state.assets.map(asset=>{
-              return<div className="assets-list__item item col-1" key={asset.id} >
-                <div className="item__background"
-                    style={{'backgroundImage': `url('${asset.url}')`}}/>
-                <button className={this.state.itemDeleteClasses}
-                        data-assetid={asset.id}
-                        title="Delete"
-                        onClick={this.deleteClick}>
-                  <CloseIcon className="item__delete-icon"/>
-                </button>
-              </div>}
+              return (
+                <div className="assets-list__item item col-1" key={asset.id} >
+                  {(() => {
+                    if(this.state.activeLink === 'images') 
+                      return (
+                        <div className="item__background"
+                          style={{'backgroundImage': `url('${asset.url}')`}}/>
+                      )
+                    let typeIcon = asset.url.split('.').pop();
+                    let IconFile = iconsManager().getIconComponent('file');
+                    this.typesFiles[this.state.activeLink].forEach((type) => {
+                      if(typeIcon === type) {
+                        IconFile = iconsManager().getIconComponent(typeIcon);
+                        return <IconFile className="item__background" />
+                      }
+                    });
+                    return <IconFile className="item__background" />
+                  }
+                  )()}
+                  <button className={this.state.itemDeleteClasses}
+                          data-assetid={asset.id}
+                          title="Delete"
+                          onClick={this.deleteClick}>
+                    <CloseIcon className="item__delete-icon"/>
+                  </button>
+                </div>
+              )}
             )
           }
         </div>
