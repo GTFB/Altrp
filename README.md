@@ -3,6 +3,10 @@
 
 ## Changelog
 
+### 0.11.1
++ Add Action Update Elements & Bulk Form Action
+
+
 ### 0.11.00
 + Select All and Clear Value Action 
 + Save Current User Storage
