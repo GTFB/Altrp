@@ -212,7 +212,8 @@ class Assets extends Component {
               return (
                 <div className="assets-list__item item col-1" key={asset.id} >
                   {(() => {
-                    if(this.state.activeLink === 'images') 
+                    if(this.state.activeLink === 'images' ||
+                      this.state.activeLink === 'svgs') 
                       return (
                         <div className="item__background"
                           style={{'backgroundImage': `url('${asset.url}')`}}/>
@@ -222,10 +223,10 @@ class Assets extends Component {
                     this.typesFiles[this.state.activeLink].forEach((type) => {
                       if(typeIcon === type) {
                         IconFile = iconsManager().getIconComponent(typeIcon);
-                        return <IconFile className="item__background" />
+                        return <IconFile className="item__icon-background" />
                       }
                     });
-                    return <IconFile className="item__background" />
+                    return <IconFile className="item__icon-background" />
                   }
                   )()}
                   <button className={this.state.itemDeleteClasses}
