@@ -1288,10 +1288,11 @@ const Cell = ({cell, settings})=>{
   if (!settings.table_hover_row) {
     cellClassNames.join( 'altrp-table-background');
   }
-  if (!column.column_body_alignment) {
-    cellClassNames.join( `altrp-table-td_alignment-${column.column_body_alignment}`);
-  }
-  return <div {...cellProps} className={cellClassNames.join(' ')}>{cellContent}</div>
+  // if (!column.column_body_alignment) {
+  //   cellClassNames.join( `altrp-table-td_alignment-${column.column_body_alignment}`);
+  // }
+  let style = cell.column.column_body_alignment ? { textAlign: cell.column.column_body_alignment } : {};
+  return <div {...cellProps} style={style} className={cellClassNames.join(' ')}>{cellContent}</div>
 };
 /**
  * Компонент строки
