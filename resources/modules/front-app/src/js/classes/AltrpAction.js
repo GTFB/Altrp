@@ -66,7 +66,7 @@ class AltrpAction extends AltrpModel {
    */
   getFormURL() {
     let formURL = this.getProperty("form_url");
-    if (!formURL) {
+    if (! formURL) {
       return formURL;
     }
     if (formURL.indexOf("{{") !== -1) {
@@ -335,7 +335,6 @@ class AltrpAction extends AltrpModel {
         let bulk = getDataByPath(this.getProperty('bulk_path'));
         let _form = this.getProperty('_form');
         data = _.assign(_form.getData(), data);
-        console.log(bulk);
         let bulkRequests = bulk.map(async (item, idx)=>{
           // return   ()=>{
             let url = this.getProperty('form_url');
@@ -660,7 +659,7 @@ class AltrpAction extends AltrpModel {
     if (!path) {
       return result;
     }
-    let value = this.getProperty("value");
+    let value = this.getProperty("value") || '';
     value = value.trim();
 
     const setType = this.getProperty("set_type");
