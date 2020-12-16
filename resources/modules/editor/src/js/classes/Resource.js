@@ -201,8 +201,8 @@ class Resource {
       fileType = fileType.trim();
       for (let i = 0; i < files.length; i++) {
         if (
-          files[i].size > MAX_FILE_SIZE ||
-          files[i].type.indexOf(fileType) === -1
+          files[i].size > MAX_FILE_SIZE
+            // ||          files[i].type.indexOf(fileType) === -1
         ) {
           console.log(files[i]);
           continue;

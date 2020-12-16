@@ -109,7 +109,7 @@ export function actionsControllers(element){
   actionsRepeater.addControl('action', {
     type: CONTROLLER_TEXT,
     dynamic: false,
-    label: 'Add action name',
+    label: 'Add Action Name',
     conditions: {
       type: [
         'trigger'

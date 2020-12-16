@@ -15,7 +15,7 @@ import {
   printElements,
   replaceContentWithData,
   scrollToElement,
-  setDataByPath
+  setDataByPath, altrpRandomId
 } from "../helpers";
 import { togglePopup } from "../store/popup-trigger/actions";
 import reactDom from "react-dom";
@@ -328,26 +328,41 @@ class AltrpAction extends AltrpModel {
       // return { success: true };
     }
     if( this.getProperty("forms_bulk")
-        && _.isArray(getDataByPath(this.getProperty('bulk_path')))
-        && _.get(getDataByPath(this.getProperty('bulk_path')), 'length')
     ){
-      let bulk = getDataByPath(this.getProperty('bulk_path'));
-
-      for(let idx in bulk){
-        let url = this.getProperty('form_url');
-        url = replaceContentWithData(url, bulk[idx]);
-        const form = formsManager.registerForm(
-            this.getFormId() + idx,
-            "",
-            this.getProperty("form_method"),
-            {
-              customRoute: url,
-            }
-        );
-        console.log(form);
-        console.log(data);
-        let res = await form.submit('', '', data)
-        console.log(res);
+      if(_.isArray(getDataByPath(this.getProperty('bulk_path')))
+          && _.get(getDataByPath(this.getProperty('bulk_path')), 'length'))
+      {
+        let bulk = getDataByPath(this.getProperty('bulk_path'));
+        let _form = this.getProperty('_form');
+        data = _.assign(_form.getData(), data);
+        console.log(bulk);
+        let bulkRequests = bulk.map(async (item, idx)=>{
+          // return   ()=>{
+            let url = this.getProperty('form_url');
+            url = replaceContentWithData(url, item);
+            const form = formsManager.registerForm(
+                this.getFormId() + idx,
+                "",
+                this.getProperty("form_method"),
+                {
+                  customRoute: url,
+                }
+            );
+            return  await form.submit('', '', data);
+          // }
+        });
+        try{
+          let res = await Promise.all(bulkRequests);
+        } catch(error){
+          console.error(error);
+          bulk.forEach((item, idx)=>{
+            formsManager.deleteFormById(this.getFormId() + idx);
+          });
+          return {success: false}
+        }
+        bulk.forEach((item, idx)=>{
+          formsManager.deleteFormById(this.getFormId() + idx);
+        });
       }
 
       return {success: true}
@@ -830,7 +845,12 @@ class AltrpAction extends AltrpModel {
     let elementId = this.getProperty("element_id");
     let element = getComponentByElementId(elementId);
     let action = this.getProperty("action");
-
+    if(_.isFunction(element[action])) {
+      element[action]();
+      return{
+        success: true
+      };
+    }
     try {
       element.elementRef.current.fireAction(action);
       return {

@@ -117,9 +117,15 @@ class RepeaterController extends Component {
   setActiveItem(e) {
     if(e) {
       let activeItem = parseInt(e.currentTarget.dataset.itemindex);
-      this.setState(state => {
-        return { ...state, activeItem }
-      });
+      if(this.state.activeItem === activeItem) {
+        this.setState(state => {
+          return {...state, activeItem: undefined }
+        })
+      } else {
+        this.setState(state => {
+          return { ...state, activeItem }
+        });
+      }
     } else {
       this.setState(state => {
         return { ...state, activeItem: undefined }
@@ -240,12 +246,12 @@ const RepeaterItem = ({thisController, itemClasses, idx, itemController}) => {
   drag(drop(ref));
 
   return (
-    <div className={itemClasses.join(' ')} ref={ref} style={{opacity}}>
+    <div className={itemClasses.join(' ')} style={{opacity}}>
       <div className="repeater-item-tools">
         <div className="repeater-item__caption"
           data-itemindex={idx}
+          ref={ref}
           onClick={setActiveItem}
-          onDoubleClick={() => setActiveItem()}
         >Item #{idx + 1}</div>
         <button className="repeater-item__icon"
           data-itemindex={idx}

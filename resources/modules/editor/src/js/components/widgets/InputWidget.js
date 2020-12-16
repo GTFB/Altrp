@@ -935,7 +935,11 @@ class InputWidget extends Component {
      * @type {Array|*}
      */
     options = _.sortBy(options, o => (o.label ? o.label.toString() : o));
-    if (content_options_nullable) {
+    if (
+      content_options_nullable &&
+      (this.props.element.getSettings("content_type") !== "select2" ||
+        this.props.element.getSettings("select2_multiple") !== true)
+    ) {
       options = _.union(
         [{ label: nulled_option_title, value: "<null>" }],
         options
@@ -950,24 +954,8 @@ class InputWidget extends Component {
       ref: this.altrpSelectRef,
       settings: this.props.element.getSettings(),
       onChange: this.onChange,
-      /*<<<<<<< HEAD*/
-      value,
-      // value:
-      //     (this.props.element.getSettings("is_select_all_allowed", false) &&
-      //   value.length ===
-      //     parseOptionsFromSettings(
-      //       this.props.element.getSettings("content_options")
-      //     ).length)
-      //     ? [selectAllOption.value]
-      //     : value,
-      // value: content_options_nullable && value === null ? '<null>' :
-      //   this.props.element.getSettings("is_select_all_allowed", false) &&
-      //   value.length ===
-      //     parseOptionsFromSettings(
-      //       this.props.element.getSettings("content_options")
-      //     ).length
-      //     ? [selectAllOption.value]
-      //     : value,
+
+      value: value || _.find(options, o => o.value === this.state.value),
       isOptionSelected: option => {
         if (_.isNumber(this.state.value) || _.isString(this.state.value)) {
           return this.state.value == option.value;

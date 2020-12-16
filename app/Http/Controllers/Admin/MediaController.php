@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Media;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -13,15 +14,26 @@ use Illuminate\Support\Str;
 
 class MediaController extends Controller
 {
+  private static $file_types;
+
   /**
    * Display a listing of the resource.
    *
    * @return \Illuminate\Http\Response
    */
-  public function index()
+  public function index( Request $request )
   {
     //
-    return response()->json( Media::all()->sortByDesc( 'id' )->values()->toArray() );
+    if( $request->get( 'type' ) ){
+      if( $request->get( 'type' ) === 'other' ) {
+        $media = Media::where( 'type', 'other' )->orWhere( 'type', null )->get();
+      } else {
+        $media = Media::where( 'type', $request->get( 'type' ) )->get();
+      }
+      $media = $media->sortByDesc( 'id' )->values()->toArray();
+      return response()->json( $media, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+    return response()->json( Media::all()->sortByDesc( 'id' )->values()->toArray(), 200, [], JSON_UNESCAPED_UNICODE);
   }
 
   /**
@@ -39,7 +51,6 @@ class MediaController extends Controller
    *
    * @param  \Illuminate\Http\Request $request
    * @return \Illuminate\Http\Response
-   * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
    */
   public function store( Request $request )
   {
@@ -53,27 +64,25 @@ class MediaController extends Controller
     $files = [];
 
     foreach ( $_files as $file ) {
-      if( strpos(  $file->getClientMimeType(), 'image' ) === 0 &&
-        $file->getSize() < config( 'filesystems.max_file_size' )
-      ){
-        $files[] = $file;
-      }
+      $files[] = $file;
+
     }
 
     foreach ( $files as $file ) {
       $media = new Media();
       $media->media_type = $file->getClientMimeType();
       $media->author = Auth::user()->id;
+      $media->type = self::getTypeForFile( $file );
       File::ensureDirectoryExists( 'app/media/' .  date("Y") . '/' .  date("m" ), 0775 );
-      $media->filename =  $file->store( 'media/' .  date("Y") . '/' .  date("m" ) ,
+      $media->filename =  $file->storeAs( 'media/' .  date("Y") . '/' .  date("m" ) ,
+        Str::random(40) . '.' . $file->getClientOriginalExtension(),
         ['disk' => 'public'] );
       $media->url =  Storage::url( $media->filename );
-      $media->type = $request->get( 'type' );
       $media->save();
       $res[] = $media;
     }
     $res = array_reverse( $res );
-    return response()->json( $res );
+    return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE);
 
   }
 
@@ -133,5 +142,38 @@ class MediaController extends Controller
       return response()->json( ['success' => false, 'message'=> 'Error deleting media' ], 500 );
     }
     return response()->json( ['success' => false, 'message'=> 'Error deleting file' ], 500 );
+  }
+
+  /**
+   * Получить тип файла для сохранения в БД
+   * @param \Illuminate\Http\UploadedFile $file
+   * @return string
+   */
+  public static function getTypeForFile( $file ){
+    $extension_loaded = $file->getClientOriginalExtension();
+
+    $type = '';
+    $file_types = self::getFileTypes();
+    foreach ( $file_types as $file_type ){
+      if( ( ! $type ) &&  array_search($extension_loaded, $file_type['extensions'] ) !== false ){
+        $type = $file_type['name'];
+      }
+    }
+    if( ! $type ){
+      $type = 'other';
+    }
+    return $type;
+  }
+
+  /**
+   * @return []
+   */
+  public static function getFileTypes(){
+    if( ! self::$file_types ){
+      $file_types = file_get_contents( base_path( 'config/file-types.json' ) );
+      $file_types = json_decode( $file_types, true);
+      self::$file_types = $file_types;
+    }
+    return  self::$file_types;
   }
 }
