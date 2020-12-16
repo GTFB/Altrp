@@ -12,6 +12,7 @@ import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
+import moment from "moment";
 import CKeditor from "../ckeditor/CKeditor";
 import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 const AltrpInput = React.lazy(() => import("../altrp-input/AltrpInput"));
@@ -459,6 +460,13 @@ class InputWidget extends Component {
       value = null;
     }
 
+    let timestamp = this.props.element.getSettings("content_timestamp");
+    let isDate = this.state.settings.content_type === "date";
+
+    if (isDate && timestamp && value != "") {
+      value = new Date(value).getTime(); // timestamp
+    }
+
     this.setState(
       state => ({
         ...state,
@@ -510,12 +518,7 @@ class InputWidget extends Component {
   dispatchFieldValueToStore = (value, userInput = false) => {
     let formId = this.props.element.getFormId();
     let fieldName = this.props.element.getFieldId();
-    let timestamp = this.props.element.getSettings("content_timestamp");
-    let isDate = this.state.settings.content_type === "date";
 
-    if (isDate && timestamp && value != "") {
-      value = Math.round(new Date(value).getTime()); // timestamp
-    }
     if (fieldName.indexOf("{{") !== -1) {
       fieldName = replaceContentWithData(fieldName);
     }
@@ -751,6 +754,18 @@ class InputWidget extends Component {
         );
       default: {
         const isClearable = this.state.settings.content_clearable;
+        const isDate = this.state.settings.content_type === "date";
+        const timestamp = this.props.element.getSettings("content_timestamp");
+        if (isDate && timestamp) {
+          const isValid = moment.unix(value).isValid();
+          if (isValid) {
+            try {
+              value = moment.unix(value / 1000).format("YYYY-MM-DD");
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        }
         input = (
           <React.Suspense fallback={<input />}>
             <div className="altrp-input-wrapper">
