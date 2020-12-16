@@ -315,7 +315,7 @@ class TemplateController extends Controller
             ['type', 'review']
         ]);
       if( ! $result->count() ){
-        $result = true;
+        return response()->json(['success' => 'false'], 404, [], JSON_UNESCAPED_UNICODE);
       } else {
         $result = $result->forceDelete();
       }

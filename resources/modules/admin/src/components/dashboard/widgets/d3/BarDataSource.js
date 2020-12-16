@@ -3,6 +3,7 @@ import { ResponsiveBar } from "@nivo/bar";
 import { connect } from "react-redux";
 import ErrorBoundary from "./ErrorBoundary";
 import DataAdapter from "./DataAdapter";
+import invert from "invert-color";
 import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
 
 const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
@@ -148,7 +149,15 @@ class BarDataSource extends Component {
               reverse={this.state.settings?.reverse}
               groupMode={this.state.settings?.groupMode}
               layout={this.state.settings?.layout}
-              margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+              labelSkipHeight={this.state.settings?.labelSkipHeight}
+              labelSkipWidth={this.state.settings?.labelSkipWidth}
+              labelTextColor={datum => invert(datum.color, true)}
+              margin={{
+                top: this.state.settings?.margin?.top || 40,
+                right: this.state.settings?.margin?.right || 80,
+                bottom: this.state.settings?.margin?.bottom || 80,
+                left: this.state.settings?.margin?.left || 80
+              }}
               colors={
                 this.state.settings?.colors?.scheme === "regagro"
                   ? regagroScheme
@@ -163,7 +172,38 @@ class BarDataSource extends Component {
                   </>
                 );
               }}
-              axisBottom={{ ...this.state.settings?.axisBottom }}
+              axisLeft={
+                this.state.settings?.layout === "horizontal"
+                  ? !this.state.settings?.reverse && {
+                      tickRotation: 0
+                    }
+                  : {
+                      tickRotation: 0
+                    }
+              }
+              axisRight={
+                this.state.settings?.layout === "horizontal"
+                  ? this.state.settings?.reverse && {
+                      tickRotation: 0
+                    }
+                  : null
+              }
+              axisBottom={
+                this.state.settings?.layout === "vertical"
+                  ? !this.state.settings?.reverse && {
+                      ...this.state.settings?.axisBottom
+                    }
+                  : {
+                      ...this.state.settings?.axisBottom
+                    }
+              }
+              axisTop={
+                this.state.settings?.layout === "vertical"
+                  ? this.state.settings?.reverse && {
+                      ...this.state.settings?.axisBottom
+                    }
+                  : null
+              }
             />
           </ErrorBoundary>
         </>

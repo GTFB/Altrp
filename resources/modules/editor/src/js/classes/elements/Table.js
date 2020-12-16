@@ -104,7 +104,7 @@ class Table extends BaseElement {
     this.addControl('table_2_0', {
       type: CONTROLLER_SWITCHER,
       label: 'Table 2.0',
-      default: false
+      default: true
     });
 
     this.endControlSection();
@@ -203,8 +203,72 @@ class Table extends BaseElement {
       label: 'Next Page Text',
     });
 
+    this.addControl('next_icon', {
+      type: CONTROLLER_MEDIA,
+      label: 'Next Page Icon',
+    });
+
+    this.addControl('next_icon_position', {
+      type: CONTROLLER_SELECT,
+      label: 'Next Icon Position',
+      default: 'default',
+      options: [
+        {
+          value: 'row',
+          label: 'Right'
+        },
+        {
+          value: 'row-reverse',
+          label: 'Left'
+        },
+        {
+          value: 'column',
+          label: 'Bottom'
+        },
+        {
+          value: 'column-reverse',
+          label: 'Top'
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}}': 'flex-direction: {{VALUE}};'
+      },
+    });
+
     this.addControl('prev_text', {
       label: 'Previous Page Text',
+    });
+
+    this.addControl('prev_icon', {
+      type: CONTROLLER_MEDIA,
+      label: 'Prev Page Icon',
+    });
+
+    this.addControl('prev_icon_position', {
+      type: CONTROLLER_SELECT,
+      label: 'Prev Icon Position',
+      default: 'default',
+      options: [
+        {
+          value: 'row',
+          label: 'Right'
+        },
+        {
+          value: 'row-reverse',
+          label: 'Left'
+        },
+        {
+          value: 'column',
+          label: 'Bottom'
+        },
+        {
+          value: 'column-reverse',
+          label: 'Top'
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': 'flex-direction: {{VALUE}};'
+      },
     });
 
     this.addControl('current_page_text', {
@@ -271,7 +335,7 @@ class Table extends BaseElement {
     repeater.addControl('column_body_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Body alignment',
-      default: 'center',
+      // default: 'center',
       options: [
         {
           icon: 'left',
@@ -1173,6 +1237,26 @@ class Table extends BaseElement {
     }
     );
 
+    this.addControl("global_filter_input_width", {
+      type: CONTROLLER_SLIDER,
+      label: "Input Width",
+      max: 800,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'width: {{SIZE}}px;'
+      }
+    });
+
+    this.addControl("global_filter_margin_left", {
+      type: CONTROLLER_SLIDER,
+      label: "Input Margin Left",
+      max: 800,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'margin-left: {{SIZE}}px;'
+      }
+    });
+
     this.addControl('global_filter_input_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Input Padding',
@@ -1601,10 +1685,6 @@ class Table extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'buttons Padding',
       default: {
-        // top: 10,
-        // right: 10,
-        // bottom: 10,
-        // left: 10,
         unit: 'px'
       },
       units: [
@@ -1619,6 +1699,96 @@ class Table extends BaseElement {
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
           'padding-left: {{LEFT}}{{UNIT}};'
         ],
+      },
+    });
+
+    this.addControl('prev_icon_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Prev Icon Margin',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous svg{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('prev_icon_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Prev Icon Color',
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous path{{STATE}}': 'fill: {{COLOR}};',
+      },
+    });
+
+    this.addControl('prev_icon_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Prev Icon Size',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      },
+    });
+
+    this.addControl('next_icon_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Next Icon Margin',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__next svg{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('next_icon_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Next Icon Color',
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__next path{{STATE}}': 'fill: {{COLOR}};',
+      },
+    });
+
+    this.addControl('next_icon_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Next Icon Size',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__next svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
       },
     });
 

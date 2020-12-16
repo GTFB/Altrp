@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ReactSelect from "react-select";
 import { connect } from "react-redux";
 import Schemes from "./NivoColorSchemes";
+import MarginInput from "./MarginInput";
 
 import {
   BAR,
@@ -92,6 +93,16 @@ class StyleSettings extends Component {
       innerRadius: 0,
       padding: 0.1,
       innerPadding: 0,
+      sliceLabelsSkipAngle: 0,
+      sliceLabelsRadiusOffset: 0.5,
+      radialLabelsSkipAngle: 0,
+      radialLabelsLinkOffset: 0,
+      radialLabelsLinkDiagonalLength: 16,
+      radialLabelsLinkHorizontalLength: 24,
+      radialLabelsTextXOffset: 6,
+      radialLabelsLinkStrokeWidth: 1,
+      labelSkipHeight: 0,
+      labelSkipWidth: 0,
       currentColorScheme: ""
     };
     this.enableArea = this.enableArea.bind(this);
@@ -100,6 +111,26 @@ class StyleSettings extends Component {
     this.enablePoints = this.enablePoints.bind(this);
     this.setReverse = this.setReverse.bind(this);
     this.setColorScheme = this.setColorScheme.bind(this);
+    this.setSliceLabelsSkipAngle = this.setSliceLabelsSkipAngle.bind(this);
+    this.setRadialLabelsSkipAngle = this.setRadialLabelsSkipAngle.bind(this);
+    this.setSliceLabelsRadiusOffset = this.setSliceLabelsRadiusOffset.bind(
+      this
+    );
+    this.setRadialLabelsLinkOffset = this.setRadialLabelsLinkOffset.bind(this);
+    this.setRadialLabelsLinkDiagonalLength = this.setRadialLabelsLinkDiagonalLength.bind(
+      this
+    );
+    this.setRadialLabelsLinkHorizontalLength = this.setRadialLabelsLinkHorizontalLength.bind(
+      this
+    );
+    this.setRadialLabelsTextXOffset = this.setRadialLabelsTextXOffset.bind(
+      this
+    );
+    this.setRadialLabelsLinkStrokeWidth = this.setRadialLabelsLinkStrokeWidth.bind(
+      this
+    );
+    this.setLabelSkipHeight = this.setLabelSkipHeight.bind(this);
+    this.setLabelSkipWidth = this.setLabelSkipWidth.bind(this);
   }
 
   componentDidMount() {
@@ -109,12 +140,6 @@ class StyleSettings extends Component {
       }, 1000);
     }
   }
-
-  // componentWillMount() {
-  //   if (!this.props.editElement?.settings?.color !== "undefined") {
-  //     this.setColorScheme(regagroScheme);
-  //   }
-  // }
 
   componentDidUpdate(prevProps, prevState) {
     if (
@@ -133,7 +158,7 @@ class StyleSettings extends Component {
   }
 
   changeWidth(width) {
-    this.props.setLineWidth(width);
+    this.props.setProperty(width, "lineWidth");
     this.setState(s => ({ ...s, lineWidth: width }));
   }
 
@@ -143,42 +168,89 @@ class StyleSettings extends Component {
   }
 
   setPointSize(value) {
-    this.props.setPointSize(value);
+    this.props.setProperty(value, "pointSize");
     this.setState(s => ({ ...s, pointSize: value }));
   }
 
   setInnerRadius(value) {
-    this.props.setInnerRadius(value);
+    this.props.setProperty(value, "innerRadius");
     this.setState(s => ({ ...s, innerRadius: value }));
   }
 
   setPadding(value) {
-    this.props.setPadding(value);
+    this.props.setProperty(value, "padding");
     this.setState(s => ({ ...s, padding: value }));
   }
   setInnerPadding(value) {
-    this.props.setInnerPadding(value);
+    this.props.setProperty(value, "innerPadding");
     this.setState(s => ({ ...s, innerPadding: value }));
   }
   enableArea(e) {
-    this.props.enableArea(e.target.checked);
+    this.props.setProperty(e.target.checked, "enableArea");
   }
   enableSliceLabels(e) {
-    this.props.enableSliceLabels(e.target.checked);
+    this.props.setProperty(e.target.checked, "enableSliceLabels");
   }
   enableRadialLabels(e) {
-    this.props.enableRadialLabels(e.target.checked);
+    this.props.setProperty(e.target.checked, "enableRadialLabels");
   }
   enablePoints(e) {
-    this.props.enablePoints(e.target.checked);
+    this.props.setProperty(e.target.checked, "enablePoints");
   }
   setReverse(e) {
-    this.props.setReverse(e.target.checked);
+    this.props.setProperty(e.target.checked, "reverse");
+  }
+  setSliceLabelsSkipAngle(e) {
+    this.props.setProperty(Number(e.target.value), "sliceLabelsSkipAngle");
+  }
+  setRadialLabelsSkipAngle(e) {
+    this.props.setProperty(Number(e.target.value), "radialLabelsSkipAngle");
+  }
+  setSliceLabelsRadiusOffset(e) {
+    this.props.setProperty(Number(e.target.value), "sliceLabelsRadiusOffset");
+  }
+  setRadialLabelsLinkOffset(e) {
+    this.props.setProperty(Number(e.target.value), "radialLabelsLinkOffset");
+  }
+  setRadialLabelsLinkDiagonalLength(e) {
+    this.props.setProperty(
+      Number(e.target.value),
+      "radialLabelsLinkDiagonalLength"
+    );
+  }
+  setRadialLabelsLinkHorizontalLength(e) {
+    this.props.setProperty(
+      Number(e.target.value),
+      "radialLabelsLinkHorizontalLength"
+    );
+  }
+  setRadialLabelsTextXOffset(e) {
+    this.props.setProperty(Number(e.target.value), "radialLabelsTextXOffset");
+  }
+  setRadialLabelsLinkStrokeWidth(e) {
+    this.props.setProperty(
+      Number(e.target.value),
+      "radialLabelsLinkStrokeWidth"
+    );
+  }
+  setLabelSkipHeight(e) {
+    this.props.setProperty(Number(e.target.value), "labelSkipHeight");
+  }
+  setLabelSkipWidth(e) {
+    this.props.setProperty(Number(e.target.value), "labelSkipWidth");
   }
 
   render() {
     return (
       <div className="col">
+        <div className="mb-3">
+          <span>Укажите внутренние отступы</span>
+          <MarginInput
+            setProperty={this.props.setProperty}
+            type={this.state.editElement?.settings?.type}
+            margin={this.state.editElement?.settings?.margin}
+          />
+        </div>
         {this.state.editElement?.settings?.type === LINE && (
           <>
             <div className="mb-3">
@@ -189,7 +261,9 @@ class StyleSettings extends Component {
                 className="select-type"
                 defaultValue={this.state.editElement?.settings?.curve}
                 defaultInputValue={this.state.editElement?.settings?.curve}
-                onChange={option => this.props.setCurve(option.value)}
+                onChange={option =>
+                  this.props.setProperty(option.value, "curve")
+                }
                 getOptionValue={option => option.value}
                 getOptionLabel={option => option.value}
                 styles={selectSettings}
@@ -231,6 +305,11 @@ class StyleSettings extends Component {
                 type="range"
                 min="0"
                 max="20"
+                style={{
+                  "::-webkit-slider-runnable-track": {
+                    background: "#FFFF !important"
+                  }
+                }}
               />
               (
               {this.state.editElement?.settings?.lineWidth ||
@@ -242,6 +321,9 @@ class StyleSettings extends Component {
                 Отобразить участки
                 <input
                   type="checkbox"
+                  defaultChecked={
+                    this.state.editElement?.settings?.enableArea || false
+                  }
                   checked={this.state.editElement?.settings?.enableArea}
                   onChange={this.enableArea}
                 />
@@ -252,6 +334,9 @@ class StyleSettings extends Component {
                 Отобразить точки
                 <input
                   type="checkbox"
+                  defaultChecked={
+                    this.state.editElement?.settings?.enablePoints || true
+                  }
                   checked={this.state.editElement?.settings?.enablePoints}
                   onChange={this.enablePoints}
                 />
@@ -299,7 +384,7 @@ class StyleSettings extends Component {
         {this.state.editElement?.settings?.type === PIE && (
           <>
             <div className="mb-3">
-              <span>Укажите внутренний радиус</span>
+              <div>Укажите внутренний радиус</div>
               <input
                 defaultValue={
                   this.state.editElement?.settings?.innerRadius ||
@@ -321,20 +406,177 @@ class StyleSettings extends Component {
                 Надписи на сегментах
                 <input
                   type="checkbox"
+                  defaultChecked={
+                    this.state.editElement?.settings?.enableSliceLabels || true
+                  }
                   checked={this.state.editElement?.settings?.enableSliceLabels}
                   onChange={this.enableSliceLabels}
                 />
               </label>
+            </div>
+
+            <div className="mb-3">
+              <div>Пропускать внутренние подписи при угле сектора</div>
+              <input
+                defaultValue={
+                  this.state.editElement?.settings?.sliceLabelsSkipAngle ||
+                  this.state.sliceLabelsSkipAngle
+                }
+                onChange={this.setSliceLabelsSkipAngle}
+                type="range"
+                min="0"
+                max="45"
+                step="1"
+              />
+              (
+              {this.state.editElement?.settings?.sliceLabelsSkipAngle ||
+                this.state.sliceLabelsSkipAngle}
+              )
+            </div>
+            <div className="mb-3">
+              <div>Отступ внутренних подписей</div>
+              <input
+                defaultValue={
+                  this.state.editElement?.settings?.sliceLabelsRadiusOffset ||
+                  this.state.sliceLabelsRadiusOffset
+                }
+                onChange={this.setSliceLabelsRadiusOffset}
+                type="range"
+                min="0"
+                max="2"
+                step="0.05"
+              />
+              (
+              {this.state.editElement?.settings?.sliceLabelsRadiusOffset ||
+                this.state.sliceLabelsRadiusOffset}
+              )
             </div>
             <div className="mb-3">
               <label>
                 Внешние надписи
                 <input
                   type="checkbox"
+                  defaultChecked={
+                    this.state.editElement?.settings?.enableRadialLabels || true
+                  }
                   checked={this.state.editElement?.settings?.enableRadialLabels}
                   onChange={this.enableRadialLabels}
                 />
               </label>
+            </div>
+
+            <div className="mb-3">
+              <div>Пропускать внешние подписи при угле сектора</div>
+              <input
+                defaultValue={
+                  this.state.editElement?.settings?.radialLabelsSkipAngle ||
+                  this.state.radialLabelsSkipAngle
+                }
+                onChange={this.setRadialLabelsSkipAngle}
+                type="range"
+                min="0"
+                max="45"
+                step="1"
+              />
+              (
+              {this.state.editElement?.settings?.radialLabelsSkipAngle ||
+                this.state.radialLabelsSkipAngle}
+              )
+            </div>
+            <div className="mb-3">
+              <div>Отступы внешней подписи</div>
+              <input
+                defaultValue={
+                  this.state.editElement?.settings?.radialLabelsLinkOffset ||
+                  this.state.radialLabelsLinkOffset
+                }
+                onChange={this.setRadialLabelsLinkOffset}
+                type="range"
+                min="-48"
+                max="60"
+                step="1"
+              />
+              (
+              {this.state.editElement?.settings?.radialLabelsLinkOffset ||
+                this.state.radialLabelsLinkOffset}
+              )
+            </div>
+            <div className="mb-3">
+              <div>Длина линии подписи по диагонали</div>
+              <input
+                defaultValue={
+                  this.state.editElement?.settings
+                    ?.radialLabelsLinkDiagonalLength ||
+                  this.state.radialLabelsLinkDiagonalLength
+                }
+                onChange={this.setRadialLabelsLinkDiagonalLength}
+                type="range"
+                min="0"
+                max="60"
+                step="1"
+              />
+              (
+              {this.state.editElement?.settings
+                ?.radialLabelsLinkDiagonalLength ||
+                this.state.radialLabelsLinkDiagonalLength}
+              )
+            </div>
+            <div className="mb-3">
+              <div>Длина линии подписи по горизонтали</div>
+              <input
+                defaultValue={
+                  this.state.editElement?.settings
+                    ?.radialLabelsLinkHorizontalLength ||
+                  this.state.radialLabelsLinkHorizontalLength
+                }
+                onChange={this.setRadialLabelsLinkHorizontalLength}
+                type="range"
+                min="0"
+                max="60"
+                step="1"
+              />
+              (
+              {this.state.editElement?.settings
+                ?.radialLabelsLinkHorizontalLength ||
+                this.state.radialLabelsLinkHorizontalLength}
+              )
+            </div>
+            <div className="mb-3">
+              <div>Отступ внешней подписи по горизонтали</div>
+              <input
+                defaultValue={
+                  this.state.editElement?.settings?.radialLabelsTextXOffset ||
+                  this.state.radialLabelsTextXOffset
+                }
+                onChange={this.setRadialLabelsTextXOffset}
+                type="range"
+                min="0"
+                max="60"
+                step="1"
+              />
+              (
+              {this.state.editElement?.settings?.radialLabelsTextXOffset ||
+                this.state.radialLabelsTextXOffset}
+              )
+            </div>
+            <div className="mb-3">
+              <div>Толщина линии внешней подписи</div>
+              <input
+                defaultValue={
+                  this.state.editElement?.settings
+                    ?.radialLabelsLinkStrokeWidth ||
+                  this.state.radialLabelsLinkStrokeWidth
+                }
+                onChange={this.setRadialLabelsLinkStrokeWidth}
+                type="range"
+                min="0"
+                max="20"
+                step="1"
+              />
+              (
+              {this.state.editElement?.settings?.radialLabelsLinkStrokeWidth ||
+                this.state.radialLabelsLinkStrokeWidth}
+              )
             </div>
           </>
         )}
@@ -345,13 +587,16 @@ class StyleSettings extends Component {
                 Надписи на сегментах
                 <input
                   type="checkbox"
+                  defaultChecked={
+                    this.state.editElement?.settings?.enableSliceLabels || true
+                  }
                   checked={this.state.editElement?.settings?.enableSliceLabels}
                   onChange={this.enableSliceLabels}
                 />
               </label>
             </div>
             <div className="mb-3">
-              <span>Внешние отступы</span>
+              <div>Внешние отступы</div>
               <input
                 defaultValue={
                   this.state.editElement?.settings?.padding ||
@@ -367,7 +612,7 @@ class StyleSettings extends Component {
               )
             </div>
             <div className="mb-3">
-              <span>Внутренние отступы</span>
+              <div>Внутренние отступы</div>
               <input
                 defaultValue={
                   this.state.editElement?.settings?.innerPadding ||
@@ -385,10 +630,49 @@ class StyleSettings extends Component {
               )
             </div>
             <div className="mb-3">
+              <div>Пропускать подписи при высоте столбца</div>
+              <input
+                defaultValue={
+                  this.state.editElement?.settings?.labelSkipHeight ||
+                  this.state.labelSkipHeight
+                }
+                onChange={this.setLabelSkipHeight}
+                type="range"
+                min="0"
+                max="36"
+                step="1"
+              />
+              (
+              {this.state.editElement?.settings?.labelSkipHeight ||
+                this.state.labelSkipHeight}
+              )
+            </div>
+            <div className="mb-3">
+              <div>Пропускать подписи при ширине столбца</div>
+              <input
+                defaultValue={
+                  this.state.editElement?.settings?.labelSkipWidth ||
+                  this.state.labelSkipWidth
+                }
+                onChange={this.setLabelSkipWidth}
+                type="range"
+                min="0"
+                max="36"
+                step="1"
+              />
+              (
+              {this.state.editElement?.settings?.labelSkipWidth ||
+                this.state.labelSkipWidth}
+              )
+            </div>
+            <div className="mb-3">
               <label>
                 Отразить
                 <input
                   type="checkbox"
+                  defaultChecked={
+                    this.state.editElement?.settings?.reverse || false
+                  }
                   checked={this.state.editElement?.settings?.reverse}
                   onChange={this.setReverse}
                 />
@@ -402,7 +686,9 @@ class StyleSettings extends Component {
                 className="select-type"
                 defaultValue={this.state.editElement?.settings?.layout}
                 defaultInputValue={this.state.editElement?.settings?.layout}
-                onChange={option => this.props.setLayout(option.value)}
+                onChange={option =>
+                  this.props.setProperty(option.value, "layout")
+                }
                 getOptionValue={option => option.value}
                 getOptionLabel={option => option.label}
                 styles={selectSettings}

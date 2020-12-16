@@ -45,7 +45,8 @@ class DataSourceDashboards extends Component {
       addItemPreview: false,
       settings: props.settings,
       drawer: null,
-      datasources: null
+      datasources: null,
+      delimer: props.delimer
     };
 
     this.onAddItem = this.onAddItem.bind(this);
@@ -346,6 +347,7 @@ class DataSourceDashboards extends Component {
               onCloseHandler={this.openSettings}
               onAddItem={this.onAddItemCard}
               setCardName={this.setCardName}
+              delimer={this.state.delimer}
             />
           )}
         </Drawer>

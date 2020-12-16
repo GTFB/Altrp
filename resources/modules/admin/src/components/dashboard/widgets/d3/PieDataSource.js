@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { ResponsivePieCanvas } from "@nivo/pie";
+import { ResponsivePie } from "@nivo/pie";
 import ErrorBoundary from "./ErrorBoundary";
+import invert from "invert-color";
 import DataAdapter from "./DataAdapter";
 
 import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
@@ -148,13 +149,37 @@ class PieDataSource extends Component {
     return (
       <>
         <ErrorBoundary>
-          <ResponsivePieCanvas
-            margin={{ top: 80, right: 180, bottom: 80, left: 120 }}
+          <ResponsivePie
+            margin={{
+              top: this.state.settings?.margin?.top || 80,
+              right: this.state.settings?.margin?.right || 180,
+              bottom: this.state.settings?.margin?.bottom || 80,
+              left: this.state.settings?.margin?.left || 120
+            }}
+            sliceLabelsTextColor={datum => invert(datum.color, true)}
             data={data}
             colors={
               this.state.settings?.colors?.scheme === "regagro"
                 ? regagroScheme
                 : this.state.settings?.colors
+            }
+            sliceLabelsSkipAngle={this.state.settings?.sliceLabelsSkipAngle}
+            sliceLabelsRadiusOffset={
+              this.state.settings?.sliceLabelsRadiusOffset
+            }
+            radialLabelsSkipAngle={this.state.settings?.radialLabelsSkipAngle}
+            radialLabelsLinkOffset={this.state.settings?.radialLabelsLinkOffset}
+            radialLabelsLinkDiagonalLength={
+              this.state.settings?.radialLabelsLinkDiagonalLength
+            }
+            radialLabelsLinkHorizontalLength={
+              this.state.settings?.radialLabelsLinkHorizontalLength
+            }
+            radialLabelsTextXOffset={
+              this.state.settings?.radialLabelsTextXOffset
+            }
+            radialLabelsLinkStrokeWidth={
+              this.state.settings?.radialLabelsLinkStrokeWidth
             }
             innerRadius={this.state.settings?.innerRadius}
             enableSliceLabels={this.state.settings?.enableSliceLabels}

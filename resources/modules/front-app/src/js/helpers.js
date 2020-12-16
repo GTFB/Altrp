@@ -1403,3 +1403,8 @@ export function renderFontLink(font) {
 export function isAltrpTestMode() {
   return window.location.href.indexOf("altrp-test=true") > 0;
 }
+
+export function altrpRandomId(){
+  return Math.random().toString(36).substr(2, 9);
+
+}
