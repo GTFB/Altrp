@@ -1,4 +1,4 @@
-import React, { Component, Suspense } from "react";
+import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 
@@ -44,8 +44,7 @@ class FilterParameters extends Component {
     }
   }
 
-  async componentWillMount() {
-    await this.getOptions();
+  componentDidMount() {
     let currentOption = _.find(this.state.editElement?.settings?.params, o => {
       if (
         typeof o[this.state.param.value] !== "undefined" &&
@@ -65,8 +64,11 @@ class FilterParameters extends Component {
     }
   }
 
+  async componentWillMount() {
+    await this.getOptions();
+  }
+
   async getOptions() {
-    // console.log(this.state.param);
     try {
       let req = await axios(
         `/ajax/models/queries/${this.state.param.model}/${this.state.param.value}`
@@ -77,10 +79,16 @@ class FilterParameters extends Component {
     } catch (error) {
       console.log("NETWORK ERROR =>", error);
     }
-  } //   const req = await axios(`/ajax/models/queries/${param.model}/${param.value}`);
+  }
 
   setOption(value) {
-    this.props.setParam(this.state.param.value, value, this.state.options);
+    this.props.setParam(
+      this.state.param.value,
+      value,
+      this.state.options,
+      _.find(this.state.options, o => o.value == this.state.currentSelected)
+        ?.label || ""
+    );
     this.setState(s => {
       return { ...s, currentSelected: value };
     });
@@ -90,12 +98,15 @@ class FilterParameters extends Component {
     return (
       <div className="col-12">
         <Form.Group className="mb-2">
-          <Form.Label className="label" style={{ fontSize: "13px" }}>
+          <Form.Label
+            className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+          >
             {this.state.param.label}
           </Form.Label>
           <Form.Control
             className="select-type"
             name="type"
+            defaultValue={this.state.currentSelected}
             value={this.state.currentSelected}
             onChange={e => this.setOption(e.target.value)}
             as="select"

@@ -12,6 +12,7 @@ import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
+import moment from "moment";
 import CKeditor from "../ckeditor/CKeditor";
 import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 const AltrpInput = React.lazy(() => import("../altrp-input/AltrpInput"));
@@ -48,36 +49,40 @@ class InputWidget extends Component {
   /**
    * Чистит значение
    */
-  clearValue(){
-    let value = '';
-    if((this.props.element.getSettings('content_type') === 'checkbox') ||
-        (['select2', 'image_select'].indexOf(this.props.element.getSettings('content_type')) >= 0
-            && this.props.element.getSettings('select2_multiple'))
+  clearValue() {
+    let value = "";
+    if (
+      this.props.element.getSettings("content_type") === "checkbox" ||
+      (["select2", "image_select"].indexOf(
+        this.props.element.getSettings("content_type")
+      ) >= 0 &&
+        this.props.element.getSettings("select2_multiple"))
     ) {
       value = [];
     }
-    this.onChange(value)
-
+    this.onChange(value);
   }
   /**
    * Метод устанавливает все опции как выбранные
    */
-  selectAll(){
-    if((this.props.element.getSettings('content_type') === 'checkbox')){
+  selectAll() {
+    if (this.props.element.getSettings("content_type") === "checkbox") {
       let options = [...this.state.options];
-      options = options.map(({value}) => value);
-      this.onChange(options)
-
+      options = options.map(({ value }) => value);
+      this.onChange(options);
     }
-    if(['select2', 'image_select'].indexOf(this.props.element.getSettings('content_type')) >= 0
-            && this.props.element.getSettings('select2_multiple')){
+    if (
+      ["select2", "image_select"].indexOf(
+        this.props.element.getSettings("content_type")
+      ) >= 0 &&
+      this.props.element.getSettings("select2_multiple")
+    ) {
       let options = [...this.state.options];
-      if(! _.isArray(options)){
+      if (!_.isArray(options)) {
         options = [];
       }
-      this.onChange(options)
+      this.onChange(options);
     }
-
   }
   /**
    * Обработка нажатия клавиши
@@ -448,8 +453,18 @@ class InputWidget extends Component {
         value = value.map(item => item.value);
       }
     }
-    if (this.props.element.getSettings("content_options_nullable") && e.value === '<null>') {
+    if (
+      this.props.element.getSettings("content_options_nullable") &&
+      e.value === "<null>"
+    ) {
       value = null;
+    }
+
+    let timestamp = this.props.element.getSettings("content_timestamp");
+    let isDate = this.state.settings.content_type === "date";
+
+    if (isDate && timestamp && value != "") {
+      value = new Date(value).getTime(); // timestamp
     }
 
     this.setState(
@@ -503,12 +518,7 @@ class InputWidget extends Component {
   dispatchFieldValueToStore = (value, userInput = false) => {
     let formId = this.props.element.getFormId();
     let fieldName = this.props.element.getFieldId();
-    let timestamp = this.props.element.getSettings("content_timestamp");
-    let isDate = this.state.settings.content_type === "date";
 
-    if (isDate && timestamp && value != "") {
-      value = Math.round(new Date(value).getTime()); // timestamp
-    }
     if (fieldName.indexOf("{{") !== -1) {
       fieldName = replaceContentWithData(fieldName);
     }
@@ -744,6 +754,18 @@ class InputWidget extends Component {
         );
       default: {
         const isClearable = this.state.settings.content_clearable;
+        const isDate = this.state.settings.content_type === "date";
+        const timestamp = this.props.element.getSettings("content_timestamp");
+        if (isDate && timestamp) {
+          const isValid = moment.unix(value).isValid();
+          if (isValid) {
+            try {
+              value = moment.unix(value / 1000).format("YYYY-MM-DD");
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        }
         input = (
           <React.Suspense fallback={<input />}>
             <div className="altrp-input-wrapper">
@@ -928,8 +950,15 @@ class InputWidget extends Component {
      * @type {Array|*}
      */
     options = _.sortBy(options, o => (o.label ? o.label.toString() : o));
-    if (content_options_nullable) {
-      options = _.union([{ label: nulled_option_title, value: '<null>' }], options);
+    if (
+      content_options_nullable &&
+      (this.props.element.getSettings("content_type") !== "select2" ||
+        this.props.element.getSettings("select2_multiple") !== true)
+    ) {
+      options = _.union(
+        [{ label: nulled_option_title, value: "<null>" }],
+        options
+      );
     }
     const select2Props = {
       className: "altrp-field-select2",
@@ -940,24 +969,8 @@ class InputWidget extends Component {
       ref: this.altrpSelectRef,
       settings: this.props.element.getSettings(),
       onChange: this.onChange,
-/*<<<<<<< HEAD*/
-      value,
-      // value:
-      //     (this.props.element.getSettings("is_select_all_allowed", false) &&
-      //   value.length ===
-      //     parseOptionsFromSettings(
-      //       this.props.element.getSettings("content_options")
-      //     ).length)
-      //     ? [selectAllOption.value]
-      //     : value,
-      // value: content_options_nullable && value === null ? '<null>' :
-      //   this.props.element.getSettings("is_select_all_allowed", false) &&
-      //   value.length ===
-      //     parseOptionsFromSettings(
-      //       this.props.element.getSettings("content_options")
-      //     ).length
-      //     ? [selectAllOption.value]
-      //     : value,
+
+      value: value || _.find(options, o => o.value === this.state.value),
       isOptionSelected: option => {
         if (_.isNumber(this.state.value) || _.isString(this.state.value)) {
           return this.state.value == option.value;

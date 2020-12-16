@@ -3,6 +3,18 @@
 
 ## Changelog
 
+### 0.11.1
++ Add Action Update Elements & Bulk Form Action
++ Draggable Repeater Items
++ Add File Types:
+    Images
+    Documents 
+    Fonts 
+    SVG
+    Archive 
+    Medias
+    Others
+
 ### 0.11.00
 + Select All and Clear Value Action 
 + Save Current User Storage

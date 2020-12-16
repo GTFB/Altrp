@@ -34,7 +34,7 @@ class ActionsManager extends AltrpModel{
    * @param {string} widgetId
    */
   unregisterWidgetActions(widgetId){
-    return this.setProperty(widgetId, {})
+    return this.unsetProperty(`actions.${widgetId}`)
   }
 
   /**

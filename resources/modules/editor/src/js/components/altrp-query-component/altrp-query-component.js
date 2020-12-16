@@ -21,7 +21,7 @@ const AltrpQueryComponent = (props)=>{
     refetchOnWindowFocus: true,
   };
 
-  let {children = [], query, data, settings} = props;
+  let {children = [], query, data, settings, updateToken} = props;
   /**
    * проверим есть ли настройки для сортировок по умолчанию
    */
@@ -36,11 +36,14 @@ const AltrpQueryComponent = (props)=>{
 
   const [sortSetting, setSortSettings] = useState(defaultSortSettings);
   const [filterSetting, setFilterSettings] = useState({});
-  const fetchModels = useCallback(async (key, page = 1, sortSetting, filterSetting, params,  groupBy) => {
+  const fetchModels = useCallback(async (key, page = 1, sortSetting, filterSetting, params, updateToken, groupBy) => {
     let queryData = {page};
     const filterSettingJSON = JSON.stringify(filterSetting);
     if(sortSetting){
       queryData = _.assign(sortSetting, queryData);
+    }
+    if(updateToken){
+      queryData.altrpUdateToken = updateToken;
     }
     if(groupBy){
       queryData.order = 'ASC';
@@ -64,7 +67,7 @@ const AltrpQueryComponent = (props)=>{
       resolvedData,
       latestData,
       error,
-    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting, query.getParams()],
+    } = usePaginatedQuery([query.dataSourceName, page, sortSetting, filterSetting, query.getParams(), updateToken],
         fetchModels,
         useQuerySettings);
     _data = resolvedData ? resolvedData : _data;
@@ -75,15 +78,16 @@ const AltrpQueryComponent = (props)=>{
       if (latestData?.hasMore) {
         queryCache.prefetchQuery([query.dataSourceName, page + 1], fetchModels);
       }
-    }, [latestData, fetchModels, page, sortSetting, filterSetting]);
+    }, [latestData, fetchModels, page, sortSetting, filterSetting, updateToken]);
   }else {
     /**
      * Если нет пагинации
      */
-    const {status, data, error,} = useQuery([query.dataSourceName,query.getParams()],
-        () => {
-          return query.getResource().getQueried({...sortSetting,filters: filterSettingJSON, groupBy})
-        }, useQuerySettings);
+    const {status, data, error,} = useQuery([query.dataSourceName,query.getParams(), updateToken],
+      (updateToken) => {
+        console.log(updateToken);
+        return query.getResource().getQueried({...sortSetting,filters: filterSettingJSON, groupBy})
+      }, useQuerySettings);
     _data = data;
     _status = status;
     _error = error;

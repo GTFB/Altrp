@@ -78,9 +78,10 @@ class AltrpForm {
 
   /**
    * Проверка полей перед отправкой
-   * @param {int |  null} modelID
+   * @param {int | string | null} modelID
    * @param {string} submitText
    * @param {{} | null} data
+   * @param {{} | null} customHeaders
    * @return {boolean}
    */
   async submit(modelID = null, submitText = '', data = null, customHeaders = null){

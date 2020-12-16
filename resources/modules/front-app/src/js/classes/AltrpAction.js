@@ -15,7 +15,7 @@ import {
   printElements,
   replaceContentWithData,
   scrollToElement,
-  setDataByPath
+  setDataByPath, altrpRandomId
 } from "../helpers";
 import { togglePopup } from "../store/popup-trigger/actions";
 import reactDom from "react-dom";
@@ -66,7 +66,7 @@ class AltrpAction extends AltrpModel {
    */
   getFormURL() {
     let formURL = this.getProperty("form_url");
-    if (!formURL) {
+    if (! formURL) {
       return formURL;
     }
     if (formURL.indexOf("{{") !== -1) {
@@ -315,19 +315,64 @@ class AltrpAction extends AltrpModel {
       }
       return { success: true };
     }
-
+    let data = null;
     if (this.getProperty("data")) {
-      let data = parseParamsFromString(
-        this.getProperty("data"),
-        getAppContext(),
-        true
+      data = parseParamsFromString(
+          this.getProperty("data"),
+          getAppContext(),
+          true
       );
-      if (!_.isEmpty(data)) {
-        return this.getProperty("_form").submit("", "", data);
-      }
-      return { success: true };
+      // if (!_.isEmpty(data)) {
+      //   return form.submit("", "", data);
+      // }
+      // return { success: true };
     }
-    return this.getProperty("_form").submit();
+    if( this.getProperty("forms_bulk")
+    ){
+      if(_.isArray(getDataByPath(this.getProperty('bulk_path')))
+          && _.get(getDataByPath(this.getProperty('bulk_path')), 'length'))
+      {
+        let bulk = getDataByPath(this.getProperty('bulk_path'));
+        let _form = this.getProperty('_form');
+        data = _.assign(_form.getData(), data);
+        let bulkRequests = bulk.map(async (item, idx)=>{
+          // return   ()=>{
+            let url = this.getProperty('form_url');
+            url = replaceContentWithData(url, item);
+            const form = formsManager.registerForm(
+                this.getFormId() + idx,
+                "",
+                this.getProperty("form_method"),
+                {
+                  customRoute: url,
+                }
+            );
+            return  await form.submit('', '', data);
+          // }
+        });
+        try{
+          let res = await Promise.all(bulkRequests);
+        } catch(error){
+          console.error(error);
+          bulk.forEach((item, idx)=>{
+            formsManager.deleteFormById(this.getFormId() + idx);
+          });
+          return {success: false}
+        }
+        bulk.forEach((item, idx)=>{
+          formsManager.deleteFormById(this.getFormId() + idx);
+        });
+      }
+
+      return {success: true}
+    }
+    /**
+     *
+     * @type {AltrpForm}
+     */
+    let form = this.getProperty("_form");
+    console.log(form);
+    return form.submit("", "", data);
   }
   /**
    * Делает редирект на страницу form_url
@@ -614,7 +659,7 @@ class AltrpAction extends AltrpModel {
     if (!path) {
       return result;
     }
-    let value = this.getProperty("value");
+    let value = this.getProperty("value") || '';
     value = value.trim();
 
     const setType = this.getProperty("set_type");
@@ -799,7 +844,12 @@ class AltrpAction extends AltrpModel {
     let elementId = this.getProperty("element_id");
     let element = getComponentByElementId(elementId);
     let action = this.getProperty("action");
-
+    if(_.isFunction(element[action])) {
+      element[action]();
+      return{
+        success: true
+      };
+    }
     try {
       element.elementRef.current.fireAction(action);
       return {

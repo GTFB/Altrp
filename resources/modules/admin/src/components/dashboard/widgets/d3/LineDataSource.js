@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { ResponsiveLineCanvas } from "@nivo/line";
+import { ResponsiveLine } from "@nivo/line";
+import { linearGradientDef } from "@nivo/core";
 import { connect } from "react-redux";
 import DataAdapter from "./DataAdapter";
 import ErrorBoundary from "./ErrorBoundary";
@@ -195,17 +196,36 @@ class LineDataSource extends Component {
     return (
       <>
         <ErrorBoundary>
-          <ResponsiveLineCanvas
+          <ResponsiveLine
             data={data}
-            margin={{ top: 40, right: 120, bottom: 80, left: 100 }}
+            margin={{
+              top: this.state.settings?.margin?.top || 40,
+              right: this.state.settings?.margin?.right || 120,
+              bottom: this.state.settings?.margin?.bottom || 80,
+              left: this.state.settings?.margin?.left || 100
+            }}
             curve={this.state.settings?.curve}
             colors={
               this.state.settings?.colors?.scheme === "regagro"
                 ? regagroScheme
                 : this.state.settings?.colors
             }
-            xScale={this.state.settings?.xScale}
             enableArea={this.state.settings?.enableArea}
+            defs={
+              this.state.settings?.enableArea && [
+                linearGradientDef("gradient", [
+                  { offset: 0, color: "inherit" },
+                  { offset: 100, color: "inherit", opacity: 0.25 }
+                ])
+              ]
+            }
+            fill={
+              this.state.settings?.enableArea && [
+                { match: "*", id: "gradient" }
+              ]
+            }
+            useMesh={true}
+            xScale={this.state.settings?.xScale}
             pointSize={this.state.settings?.pointSize}
             enablePoints={this.state.settings?.enablePoints}
             lineWidth={this.state.settings?.lineWidth}
@@ -222,32 +242,30 @@ class LineDataSource extends Component {
                     ...this.state.settings?.axisBottom
                   }
             }
-            legends={[
-              {
-                anchor: "bottom-right",
-                direction: "column",
-                justify: false,
-                translateX: 100,
-                translateY: 0,
-                itemsSpacing: 0,
-                itemDirection: "left-to-right",
-                itemWidth: 80,
-                itemHeight: 20,
-                itemOpacity: 0.75,
-                symbolSize: 12,
-                symbolShape: "circle",
-                symbolBorderColor: "rgba(0, 0, 0, .5)",
-                effects: [
-                  {
-                    on: "hover",
-                    style: {
-                      itemBackground: "rgba(0, 0, 0, .03)",
-                      itemOpacity: 1
+            animate={Boolean(this.state.settings?.enableAnimation)}
+            legends={
+              this.state.settings?.enableLegend
+                ? [
+                    {
+                      anchor:
+                        this.state.settings?.legendAchor || "bottom-right",
+                      direction: this.state.settings?.legendDirection || "row",
+                      justify: this.state.settings?.legendJustify || false,
+                      translateX: this.state.settings?.legendTranslateX || 0,
+                      translateY: this.state.settings?.legendTranslateY || 0,
+                      itemsSpacing:
+                        this.state.settings?.legendItemsSpacing || 10,
+                      itemWidth: this.state.settings?.legendItemWidth || 10,
+                      itemHeight: this.state.settings?.legendItemHeight || 10,
+                      itemDirection:
+                        this.state.settings?.legendItemDirection ||
+                        "left-to-right",
+                      symbolSize: this.state.settings?.legendSymbolSize || 25,
+                      symbolShape: "circle"
                     }
-                  }
-                ]
-              }
-            ]}
+                  ]
+                : []
+            }
           />
         </ErrorBoundary>
       </>

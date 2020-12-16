@@ -584,9 +584,9 @@ class Button extends BaseElement {
       default: {
         isWithGradient: false,
         firstColor: "rgba(97,206,112,1)",
-        firstPoint: '100',
+        firstPoint: '0',
         secondColor: "rgba(242,41,91,1)",
-        secondPoint: "0",
+        secondPoint: "100",
         angle: "0",
         value: ""
       },
