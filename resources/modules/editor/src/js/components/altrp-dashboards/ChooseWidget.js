@@ -21,8 +21,7 @@ class ChooseWidget extends Component {
       sources: _.cloneDeep(props.sources),
       type: _.cloneDeep(props.type),
       editElement: _.cloneDeep(props.editElement),
-      params: _.cloneDeep(props.params),
-      legend: _.cloneDeep(props.editElement?.settings.legend)
+      params: _.cloneDeep(props.params)
     };
   }
 

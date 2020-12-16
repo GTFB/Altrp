@@ -58,7 +58,11 @@ class DatasourceSettings extends Component {
         <>
           <div className="col-12">
             <Form.Group className="mb-2">
-              <Form.Label className="label">Источники данных</Form.Label>
+              <Form.Label
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Источники данных
+              </Form.Label>
               <ReactSelect
                 isMulti
                 placeholder="Выберите источник данных"
