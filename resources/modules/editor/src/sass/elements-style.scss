@@ -1439,3 +1439,8 @@
 .altrp-dropbar-container{
   z-index: 9999;
 }
+
+.altrp-pagination__previous, .altrp-pagination__next {
+  display: flex;
+  align-items: center;
+}
