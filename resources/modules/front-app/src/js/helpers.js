@@ -77,6 +77,7 @@ export function parseOptionsFromSettings(string) {
       value = getDataByPath(valuePath);
     }
     let label = option.split("|")[1] || value || "";
+    (! _.isString(label)) && (label = '');
     label = label.trim();
     let labelPath = extractPathFromString(label);
     if (labelPath) {

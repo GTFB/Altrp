@@ -43,6 +43,7 @@ class RouteContent extends Component {
     if (this.props.lazy && this.props.allowed) {
       let page = await pageLoader.loadPage(this.props.id);
       let areas = page.areas.map(area => Area.areaFabric(area));
+      console.log(areas);
       this.setState(state => ({
         ...state,
         areas
