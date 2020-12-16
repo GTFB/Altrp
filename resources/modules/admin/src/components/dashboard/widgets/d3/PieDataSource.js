@@ -7,7 +7,7 @@ import DataAdapter from "./DataAdapter";
 
 import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
 
-const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors.reverse();
 
 const mapStateToProps = state => {
   return { formsStore: _.cloneDeep(state.formsStore) };
@@ -184,22 +184,29 @@ class PieDataSource extends Component {
             innerRadius={this.state.settings?.innerRadius}
             enableSliceLabels={this.state.settings?.enableSliceLabels}
             enableRadialLabels={this.state.settings?.enableRadialLabels}
-            legends={[
-              {
-                anchor: "right",
-                direction: "column",
-                justify: false,
-                translateX: 180,
-                translateY: 0,
-                itemsSpacing: 2,
-                itemWidth: 60,
-                itemHeight: 14,
-                itemDirection: "left-to-right",
-                itemOpacity: 1,
-                symbolSize: 14,
-                symbolShape: "circle"
-              }
-            ]}
+            legends={
+              this.state.settings?.enableLegend
+                ? [
+                    {
+                      anchor:
+                        this.state.settings?.legendAchor || "bottom-right",
+                      direction: this.state.settings?.legendDirection || "row",
+                      justify: this.state.settings?.legendJustify || false,
+                      translateX: this.state.settings?.legendTranslateX || 0,
+                      translateY: this.state.settings?.legendTranslateY || 0,
+                      itemsSpacing:
+                        this.state.settings?.legendItemsSpacing || 10,
+                      itemWidth: this.state.settings?.legendItemWidth || 10,
+                      itemHeight: this.state.settings?.legendItemHeight || 10,
+                      itemDirection:
+                        this.state.settings?.legendItemDirection ||
+                        "left-to-right",
+                      symbolSize: this.state.settings?.legendSymbolSize || 25,
+                      symbolShape: "circle"
+                    }
+                  ]
+                : []
+            }
           />
         </ErrorBoundary>
       </>

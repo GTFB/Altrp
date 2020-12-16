@@ -340,6 +340,7 @@ class DataSourceDashboards extends Component {
         >
           {this.state.settingsOpen && (
             <WidgetSettings
+              widgetID={this.state.id}
               addItemPreview={this.state.addItemPreview}
               filter_datasource={this.state.settings.filter_datasource}
               datasources={this.props.rep}
@@ -354,6 +355,7 @@ class DataSourceDashboards extends Component {
         {this.state.drawer != null &&
           ReactDOM.createPortal(
             <WidgetPreview
+              widgetID={this.state.id}
               addItemPreview={this.state.addItemPreview}
               setCardName={this.setCardName}
             />,

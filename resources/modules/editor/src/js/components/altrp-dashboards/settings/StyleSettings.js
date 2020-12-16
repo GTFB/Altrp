@@ -1,15 +1,14 @@
 import React, { Component } from "react";
 import ReactSelect from "react-select";
 import { connect } from "react-redux";
+// import Slider from "rc-slider";
 import Schemes from "./NivoColorSchemes";
 import MarginInput from "./MarginInput";
 
 import {
   BAR,
   PIE,
-  LINE,
-  TABLE,
-  POINT
+  LINE
 } from "../../../../../../admin/src/components/dashboard/widgetTypes";
 const selectSettings = {
   menuList: (provided, state) => ({
@@ -244,8 +243,13 @@ class StyleSettings extends Component {
     return (
       <div className="col">
         <div className="mb-3">
-          <span>Укажите внутренние отступы</span>
+          <div
+            className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+          >
+            Укажите внутренние отступы
+          </div>
           <MarginInput
+            widgetID={this.props.widgetID}
             setProperty={this.props.setProperty}
             type={this.state.editElement?.settings?.type}
             margin={this.state.editElement?.settings?.margin}
@@ -254,7 +258,11 @@ class StyleSettings extends Component {
         {this.state.editElement?.settings?.type === LINE && (
           <>
             <div className="mb-3">
-              <span>Выберите тип кривой</span>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Выберите тип кривой
+              </div>
               <ReactSelect
                 placeholder="Выберите тип кривой"
                 options={curvieTypes}
@@ -273,7 +281,11 @@ class StyleSettings extends Component {
         )}
 
         <div className="mb-3">
-          <span>Выберите цветовую схему </span>
+          <div
+            className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+          >
+            Выберите цветовую схему{" "}
+          </div>
           <ReactSelect
             options={Schemes}
             placeholder="Выберите цветовую схему"
@@ -295,21 +307,22 @@ class StyleSettings extends Component {
         {this.state.editElement?.settings?.type === LINE && (
           <>
             <div className="mb-3">
-              <span>Укажите ширину линии</span>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Укажите ширину линии
+              </div>
               <input
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings?.lineWidth ||
                   this.state.lineWidth
                 }
                 onChange={e => this.changeWidth(e.target.value)}
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 type="range"
                 min="0"
                 max="20"
-                style={{
-                  "::-webkit-slider-runnable-track": {
-                    background: "#FFFF !important"
-                  }
-                }}
               />
               (
               {this.state.editElement?.settings?.lineWidth ||
@@ -317,34 +330,43 @@ class StyleSettings extends Component {
               px)
             </div>
             <div className="mb-3">
-              <label>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
                 Отобразить участки
-                <input
-                  type="checkbox"
-                  defaultChecked={
-                    this.state.editElement?.settings?.enableArea || false
-                  }
-                  checked={this.state.editElement?.settings?.enableArea}
-                  onChange={this.enableArea}
-                />
-              </label>
-            </div>
-            <div className="mb-3">
-              <label>
-                Отобразить точки
-                <input
-                  type="checkbox"
-                  defaultChecked={
-                    this.state.editElement?.settings?.enablePoints || true
-                  }
-                  checked={this.state.editElement?.settings?.enablePoints}
-                  onChange={this.enablePoints}
-                />
-              </label>
-            </div>
-            <div className="mb-3">
-              <span>Укажите размер точки</span>
+              </div>
               <input
+                type="checkbox"
+                defaultChecked={
+                  this.state.editElement?.settings?.enableArea || false
+                }
+                checked={this.state.editElement?.settings?.enableArea}
+                onChange={this.enableArea}
+              />
+            </div>
+            <div className="mb-3">
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Отобразить точки
+              </div>
+              <input
+                type="checkbox"
+                defaultChecked={
+                  this.state.editElement?.settings?.enablePoints || true
+                }
+                checked={this.state.editElement?.settings?.enablePoints}
+                onChange={this.enablePoints}
+              />
+            </div>
+            <div className="mb-3">
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Укажите размер точки
+              </div>
+              <input
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings?.pointSize ||
                   this.state.pointSize
@@ -363,8 +385,13 @@ class StyleSettings extends Component {
         )}
         {this.state.editElement?.settings?.type !== PIE && (
           <div className="mb-3">
-            <span>Укажите наклон нижней легенды</span>
+            <div
+              className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+            >
+              Укажите наклон нижней легенды
+            </div>
             <input
+              className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
               defaultValue={
                 this.state.editElement?.settings?.axisBottom?.tickRotation ||
                 this.state.tickRotation
@@ -384,12 +411,17 @@ class StyleSettings extends Component {
         {this.state.editElement?.settings?.type === PIE && (
           <>
             <div className="mb-3">
-              <div>Укажите внутренний радиус</div>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Укажите внутренний радиус
+              </div>
               <input
                 defaultValue={
                   this.state.editElement?.settings?.innerRadius ||
                   this.state.innerRadius
                 }
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 onChange={e => this.setInnerRadius(e.target.value)}
                 type="range"
                 min="0"
@@ -402,27 +434,34 @@ class StyleSettings extends Component {
               )
             </div>
             <div className="mb-3">
-              <label>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
                 Надписи на сегментах
-                <input
-                  type="checkbox"
-                  defaultChecked={
-                    this.state.editElement?.settings?.enableSliceLabels || true
-                  }
-                  checked={this.state.editElement?.settings?.enableSliceLabels}
-                  onChange={this.enableSliceLabels}
-                />
-              </label>
+              </div>
+              <input
+                type="checkbox"
+                defaultChecked={
+                  this.state.editElement?.settings?.enableSliceLabels || true
+                }
+                checked={this.state.editElement?.settings?.enableSliceLabels}
+                onChange={this.enableSliceLabels}
+              />
             </div>
 
             <div className="mb-3">
-              <div>Пропускать внутренние подписи при угле сектора</div>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Пропускать внутренние подписи при угле сектора
+              </div>
               <input
                 defaultValue={
                   this.state.editElement?.settings?.sliceLabelsSkipAngle ||
                   this.state.sliceLabelsSkipAngle
                 }
                 onChange={this.setSliceLabelsSkipAngle}
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 type="range"
                 min="0"
                 max="45"
@@ -434,13 +473,18 @@ class StyleSettings extends Component {
               )
             </div>
             <div className="mb-3">
-              <div>Отступ внутренних подписей</div>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Отступ внутренних подписей
+              </div>
               <input
                 defaultValue={
                   this.state.editElement?.settings?.sliceLabelsRadiusOffset ||
                   this.state.sliceLabelsRadiusOffset
                 }
                 onChange={this.setSliceLabelsRadiusOffset}
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 type="range"
                 min="0"
                 max="2"
@@ -452,27 +496,34 @@ class StyleSettings extends Component {
               )
             </div>
             <div className="mb-3">
-              <label>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
                 Внешние надписи
-                <input
-                  type="checkbox"
-                  defaultChecked={
-                    this.state.editElement?.settings?.enableRadialLabels || true
-                  }
-                  checked={this.state.editElement?.settings?.enableRadialLabels}
-                  onChange={this.enableRadialLabels}
-                />
-              </label>
+              </div>
+              <input
+                type="checkbox"
+                defaultChecked={
+                  this.state.editElement?.settings?.enableRadialLabels || true
+                }
+                checked={this.state.editElement?.settings?.enableRadialLabels}
+                onChange={this.enableRadialLabels}
+              />
             </div>
 
             <div className="mb-3">
-              <div>Пропускать внешние подписи при угле сектора</div>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Пропускать внешние подписи при угле сектора
+              </div>
               <input
                 defaultValue={
                   this.state.editElement?.settings?.radialLabelsSkipAngle ||
                   this.state.radialLabelsSkipAngle
                 }
                 onChange={this.setRadialLabelsSkipAngle}
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 type="range"
                 min="0"
                 max="45"
@@ -484,13 +535,18 @@ class StyleSettings extends Component {
               )
             </div>
             <div className="mb-3">
-              <div>Отступы внешней подписи</div>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Отступы внешней подписи
+              </div>
               <input
                 defaultValue={
                   this.state.editElement?.settings?.radialLabelsLinkOffset ||
                   this.state.radialLabelsLinkOffset
                 }
                 onChange={this.setRadialLabelsLinkOffset}
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 type="range"
                 min="-48"
                 max="60"
@@ -502,7 +558,11 @@ class StyleSettings extends Component {
               )
             </div>
             <div className="mb-3">
-              <div>Длина линии подписи по диагонали</div>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Длина линии подписи по диагонали
+              </div>
               <input
                 defaultValue={
                   this.state.editElement?.settings
@@ -510,19 +570,24 @@ class StyleSettings extends Component {
                   this.state.radialLabelsLinkDiagonalLength
                 }
                 onChange={this.setRadialLabelsLinkDiagonalLength}
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 type="range"
                 min="0"
                 max="60"
                 step="1"
               />
-              (
+              npm i rc-slider (
               {this.state.editElement?.settings
                 ?.radialLabelsLinkDiagonalLength ||
                 this.state.radialLabelsLinkDiagonalLength}
               )
             </div>
             <div className="mb-3">
-              <div>Длина линии подписи по горизонтали</div>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Длина линии подписи по горизонтали
+              </div>
               <input
                 defaultValue={
                   this.state.editElement?.settings
@@ -530,6 +595,7 @@ class StyleSettings extends Component {
                   this.state.radialLabelsLinkHorizontalLength
                 }
                 onChange={this.setRadialLabelsLinkHorizontalLength}
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 type="range"
                 min="0"
                 max="60"
@@ -542,13 +608,18 @@ class StyleSettings extends Component {
               )
             </div>
             <div className="mb-3">
-              <div>Отступ внешней подписи по горизонтали</div>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Отступ внешней подписи по горизонтали
+              </div>
               <input
                 defaultValue={
                   this.state.editElement?.settings?.radialLabelsTextXOffset ||
                   this.state.radialLabelsTextXOffset
                 }
                 onChange={this.setRadialLabelsTextXOffset}
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 type="range"
                 min="0"
                 max="60"
@@ -560,8 +631,13 @@ class StyleSettings extends Component {
               )
             </div>
             <div className="mb-3">
-              <div>Толщина линии внешней подписи</div>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Толщина линии внешней подписи
+              </div>
               <input
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings
                     ?.radialLabelsLinkStrokeWidth ||
@@ -583,26 +659,33 @@ class StyleSettings extends Component {
         {this.state.editElement?.settings?.type === BAR && (
           <>
             <div className="mb-3">
-              <label>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
                 Надписи на сегментах
-                <input
-                  type="checkbox"
-                  defaultChecked={
-                    this.state.editElement?.settings?.enableSliceLabels || true
-                  }
-                  checked={this.state.editElement?.settings?.enableSliceLabels}
-                  onChange={this.enableSliceLabels}
-                />
-              </label>
+              </div>
+              <input
+                type="checkbox"
+                defaultChecked={
+                  this.state.editElement?.settings?.enableSliceLabels || true
+                }
+                checked={this.state.editElement?.settings?.enableSliceLabels}
+                onChange={this.enableSliceLabels}
+              />
             </div>
             <div className="mb-3">
-              <div>Внешние отступы</div>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Внешние отступы
+              </div>
               <input
                 defaultValue={
                   this.state.editElement?.settings?.padding ||
                   this.state.padding
                 }
                 onChange={e => this.setPadding(e.target.value)}
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 type="range"
                 min="0"
                 max="0.9"
@@ -612,13 +695,18 @@ class StyleSettings extends Component {
               )
             </div>
             <div className="mb-3">
-              <div>Внутренние отступы</div>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Внутренние отступы
+              </div>
               <input
                 defaultValue={
                   this.state.editElement?.settings?.innerPadding ||
                   this.state.innerPadding
                 }
                 onChange={e => this.setInnerPadding(e.target.value)}
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 type="range"
                 min="0"
                 max="10"
@@ -630,13 +718,18 @@ class StyleSettings extends Component {
               )
             </div>
             <div className="mb-3">
-              <div>Пропускать подписи при высоте столбца</div>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Пропускать подписи при высоте столбца
+              </div>
               <input
                 defaultValue={
                   this.state.editElement?.settings?.labelSkipHeight ||
                   this.state.labelSkipHeight
                 }
                 onChange={this.setLabelSkipHeight}
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 type="range"
                 min="0"
                 max="36"
@@ -648,13 +741,18 @@ class StyleSettings extends Component {
               )
             </div>
             <div className="mb-3">
-              <div>Пропускать подписи при ширине столбца</div>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Пропускать подписи при ширине столбца
+              </div>
               <input
                 defaultValue={
                   this.state.editElement?.settings?.labelSkipWidth ||
                   this.state.labelSkipWidth
                 }
                 onChange={this.setLabelSkipWidth}
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 type="range"
                 min="0"
                 max="36"
@@ -666,20 +764,26 @@ class StyleSettings extends Component {
               )
             </div>
             <div className="mb-3">
-              <label>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
                 Отразить
-                <input
-                  type="checkbox"
-                  defaultChecked={
-                    this.state.editElement?.settings?.reverse || false
-                  }
-                  checked={this.state.editElement?.settings?.reverse}
-                  onChange={this.setReverse}
-                />
-              </label>
+              </div>
+              <input
+                type="checkbox"
+                defaultChecked={
+                  this.state.editElement?.settings?.reverse || false
+                }
+                checked={this.state.editElement?.settings?.reverse}
+                onChange={this.setReverse}
+              />
             </div>
             <div className="mb-3">
-              <span>Тип макета</span>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Тип макета
+              </div>
               <ReactSelect
                 options={barLayout}
                 placeholder="Выберите тип макета"
@@ -694,19 +798,6 @@ class StyleSettings extends Component {
                 styles={selectSettings}
               />
             </div>
-            {/* <div className="mb-3">
-              <span>Тип группировки</span>
-              <ReactSelect
-                options={barGroup}
-                className="select-type"
-                defaultValue={this.state.editElement?.settings?.groupMode}
-                defaultInputValue={this.state.editElement?.settings?.groupMode}
-                onChange={option => this.props.setGroupMode(option.value)}
-                getOptionValue={option => option.value}
-                getOptionLabel={option => option.label}
-                styles={selectSettings}
-              />
-            </div> */}
           </>
         )}
       </div>
