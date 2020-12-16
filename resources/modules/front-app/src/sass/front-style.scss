@@ -17,3 +17,17 @@ body {
    padding-bottom: 100px;
  }
 }
+
+.admin-bar {
+  position: fixed;
+  top: 0;
+  height: 25px;
+  width: 100%;
+
+  background-color: #343B4C;
+  color: #fff;
+
+  font-family: 'Open Sans';
+  line-height: 16,25px;
+  
+}

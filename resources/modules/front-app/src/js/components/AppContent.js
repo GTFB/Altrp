@@ -12,6 +12,7 @@ class AppContent extends Component {
     this.router = React.createRef();
   }
   componentDidMount() {
+    console.log(this.props.routes)
     if (this.router.current) {
       window.frontAppRouter = this.router.current;
     }
@@ -19,7 +20,7 @@ class AppContent extends Component {
   render() {
     return (
       <Router ref={this.router}>
-        <AdminBar />
+        {this.props.currentUser.hasRoles('admin') && <AdminBar />}
         <div className={`front-app-content ${isAltrpTestMode() ? 'front-app-content_test' : ''}`}>
           <Switch>
             {this.props.routes.map(route => (
@@ -40,7 +41,8 @@ class AppContent extends Component {
 
 function mapStateToProps(state) {
   return {
-    routes: state.appRoutes.routes
+    routes: state.appRoutes.routes,
+    currentUser: state.currentUser
   };
 }
 
