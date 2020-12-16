@@ -1715,7 +1715,7 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-pagination__previous svg{{STATE}}': [
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}} svg': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -1728,7 +1728,7 @@ class Table extends BaseElement {
       type: CONTROLLER_COLOR,
       label: 'Prev Icon Color',
       rules: {
-        '{{ELEMENT}} .altrp-pagination__previous path{{STATE}}': 'fill: {{COLOR}};',
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}} path': 'fill: {{COLOR}};',
       },
     });
 
@@ -1743,7 +1743,7 @@ class Table extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        '{{ELEMENT}} .altrp-pagination__previous svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}} svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
       },
     });
 
@@ -1760,7 +1760,7 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-pagination__next svg{{STATE}}': [
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}} svg': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -1773,7 +1773,7 @@ class Table extends BaseElement {
       type: CONTROLLER_COLOR,
       label: 'Next Icon Color',
       rules: {
-        '{{ELEMENT}} .altrp-pagination__next path{{STATE}}': 'fill: {{COLOR}};',
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}} path': 'fill: {{COLOR}};',
       },
     });
 
@@ -1788,7 +1788,7 @@ class Table extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        '{{ELEMENT}} .altrp-pagination__next svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}} svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
       },
     });
 

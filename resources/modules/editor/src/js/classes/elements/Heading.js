@@ -780,13 +780,13 @@ class Heading extends BaseElement {
     this.addControl('style_position_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
-      default:{
+      // default:{
         // top: 5,
         // right: 0,
         // bottom: 5,
         // left: 0,
-        unit:'px'
-      },
+        // unit:'px'
+      // },
       units:[
         'px',
         '%',
