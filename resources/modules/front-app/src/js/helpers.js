@@ -121,6 +121,22 @@ export function getMediaSettingsByName(screenSettingName) {
 }
 
 /**
+ * Возвращает брейкпоинт относительно текущего размера экрана
+ */
+export function getCurrentBreakpoint() {
+  const currentWidth = getWindowWidth();
+  const breakPoints = CONSTANTS.SCREENS;
+  const breakPointsSizes = breakPoints.map(item => ({
+    name: item.name,
+    size: Number(item.width.split("px")[0])
+  }));
+  for (let breakpoint of breakPointsSizes) {
+    if (breakpoint.size < currentWidth) {
+      return breakpoint.name;
+    }
+  }
+}
+/**
  *@param {string} URLTemplate
  *@param {{}} object
  */
@@ -421,6 +437,9 @@ export function setDataByPath(path = "", value, dispatch = null) {
     if (_.isEqual(oldValue, value)) {
       return true;
     }
+    console.log("====================================");
+    console.log(value);
+    console.log("====================================");
     if (_.isFunction(dispatch)) {
       dispatch(changeCurrentUserProperty(path, value));
     } else {
@@ -970,7 +989,7 @@ export function replaceContentWithData(content = "", modelContext = null) {
     paths.forEach(path => {
       path = path.replace("{{", "");
       let value = getDataByPath(path, "", modelContext);
-      content = content.replace(new RegExp(`{{${path}}}`, "g"), value || '');
+      content = content.replace(new RegExp(`{{${path}}}`, "g"), value || "");
     });
   }
   return content;
@@ -1412,7 +1431,8 @@ export function isAltrpTestMode() {
   return window.location.href.indexOf("altrp-test=true") > 0;
 }
 
-export function altrpRandomId(){
-  return Math.random().toString(36).substr(2, 9);
-
+export function altrpRandomId() {
+  return Math.random()
+    .toString(36)
+    .substr(2, 9);
 }

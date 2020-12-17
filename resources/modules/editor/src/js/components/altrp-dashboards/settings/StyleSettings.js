@@ -4,11 +4,13 @@ import { connect } from "react-redux";
 // import Slider from "rc-slider";
 import Schemes from "./NivoColorSchemes";
 import MarginInput from "./MarginInput";
+import { SketchPicker } from "react-color";
 
 import {
   BAR,
   PIE,
-  LINE
+  LINE,
+  TABLE
 } from "../../../../../../admin/src/components/dashboard/widgetTypes";
 const selectSettings = {
   menuList: (provided, state) => ({
@@ -102,7 +104,11 @@ class StyleSettings extends Component {
       radialLabelsLinkStrokeWidth: 1,
       labelSkipHeight: 0,
       labelSkipWidth: 0,
-      currentColorScheme: ""
+      currentColorScheme: "",
+      cornerRadius: 0,
+      padAngle: 0,
+      borderWidth: 0,
+      borderColor: ""
     };
     this.enableArea = this.enableArea.bind(this);
     this.enableSliceLabels = this.enableSliceLabels.bind(this);
@@ -130,6 +136,13 @@ class StyleSettings extends Component {
     );
     this.setLabelSkipHeight = this.setLabelSkipHeight.bind(this);
     this.setLabelSkipWidth = this.setLabelSkipWidth.bind(this);
+    this.cornerRadius = this.cornerRadius.bind(this);
+    this.padAngle = this.padAngle.bind(this);
+    this.borderColor = this.borderColor.bind(this);
+    this.borderWidth = this.borderWidth.bind(this);
+    this.enableGridX = this.enableGridX.bind(this);
+    this.enableGridY = this.enableGridY.bind(this);
+    this.enableCrosshair = this.enableCrosshair.bind(this);
   }
 
   componentDidMount() {
@@ -196,6 +209,15 @@ class StyleSettings extends Component {
   enablePoints(e) {
     this.props.setProperty(e.target.checked, "enablePoints");
   }
+  enableGridX(e) {
+    this.props.setProperty(e.target.checked, "enableGridX");
+  }
+  enableGridY(e) {
+    this.props.setProperty(e.target.checked, "enableGridY");
+  }
+  enableCrosshair(e) {
+    this.props.setProperty(e.target.checked, "enableCrosshair");
+  }
   setReverse(e) {
     this.props.setProperty(e.target.checked, "reverse");
   }
@@ -237,6 +259,22 @@ class StyleSettings extends Component {
   }
   setLabelSkipWidth(e) {
     this.props.setProperty(Number(e.target.value), "labelSkipWidth");
+  }
+  cornerRadius(e) {
+    this.props.setProperty(Number(e.target.value), "cornerRadius");
+  }
+  padAngle(e) {
+    this.props.setProperty(Number(e.target.value), "padAngle");
+  }
+  borderWidth(e) {
+    this.props.setProperty(Number(e.target.value), "borderWidth");
+  }
+  borderColor(color) {
+    this.props.setProperty(color.hex, "borderColor");
+    this.setState(s => ({
+      ...s,
+      borderColor: color.hex
+    }));
   }
 
   render() {
@@ -363,6 +401,21 @@ class StyleSettings extends Component {
               <div
                 className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
               >
+                Отобразить перекрестие
+              </div>
+              <input
+                type="checkbox"
+                defaultChecked={
+                  this.state.editElement?.settings?.enableCrosshair || true
+                }
+                checked={this.state.editElement?.settings?.enableCrosshair}
+                onChange={this.enableCrosshair}
+              />
+            </div>
+            <div className="mb-3">
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
                 Укажите размер точки
               </div>
               <input
@@ -383,29 +436,63 @@ class StyleSettings extends Component {
             </div>
           </>
         )}
-        {this.state.editElement?.settings?.type !== PIE && (
-          <div className="mb-3">
-            <div
-              className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
-            >
-              Укажите наклон нижней легенды
+        {(this.state.editElement?.settings?.type !== PIE ||
+          this.state.editElement?.settings?.type !== TABLE) && (
+          <>
+            <div className="mb-3">
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Укажите наклон нижней легенды
+              </div>
+              <input
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
+                defaultValue={
+                  this.state.editElement?.settings?.axisBottom?.tickRotation ||
+                  this.state.tickRotation
+                }
+                onChange={e => this.setTickRotation(e.target.value)}
+                type="range"
+                min="-90"
+                max="90"
+              />
+              (
+              {this.state.editElement?.settings?.axisBottom?.tickRotation ||
+                this.state.tickRotation}
+              °)
             </div>
-            <input
-              className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
-              defaultValue={
-                this.state.editElement?.settings?.axisBottom?.tickRotation ||
-                this.state.tickRotation
-              }
-              onChange={e => this.setTickRotation(e.target.value)}
-              type="range"
-              min="-90"
-              max="90"
-            />
-            (
-            {this.state.editElement?.settings?.axisBottom?.tickRotation ||
-              this.state.tickRotation}
-            °)
-          </div>
+
+            <div className="mb-3">
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Отобразить сетку по X
+              </div>
+              <input
+                type="checkbox"
+                defaultChecked={
+                  this.state.editElement?.settings?.enableGridX || true
+                }
+                checked={this.state.editElement?.settings?.enableGridX}
+                onChange={this.enableGridX}
+              />
+            </div>
+            <div className="mb-3">
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Отобразить сетку по Y
+              </div>
+              <input
+                type="checkbox"
+                defaultChecked={
+                  this.state.editElement?.settings?.enableGridY || true
+                }
+                checked={this.state.editElement?.settings?.enableGridY}
+                onChange={this.enableGridY}
+              />
+            </div>
+          </>
         )}
 
         {this.state.editElement?.settings?.type === PIE && (
@@ -575,8 +662,8 @@ class StyleSettings extends Component {
                 min="0"
                 max="60"
                 step="1"
-              />
-              npm i rc-slider (
+              />{" "}
+              (
               {this.state.editElement?.settings
                 ?.radialLabelsLinkDiagonalLength ||
                 this.state.radialLabelsLinkDiagonalLength}
@@ -653,6 +740,89 @@ class StyleSettings extends Component {
               {this.state.editElement?.settings?.radialLabelsLinkStrokeWidth ||
                 this.state.radialLabelsLinkStrokeWidth}
               )
+            </div>
+            <div className="mb-3">
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Скругление углов сегмента
+              </div>
+              <input
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
+                defaultValue={
+                  this.state.editElement?.settings?.cornerRadius ||
+                  this.state.cornerRadius
+                }
+                onChange={this.cornerRadius}
+                type="range"
+                min="0"
+                max="45"
+                step="1"
+              />
+              (
+              {this.state.editElement?.settings?.cornerRadius ||
+                this.state.cornerRadius}
+              )
+            </div>
+            <div className="mb-3">
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Угол между сегментами
+              </div>
+              <input
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
+                defaultValue={
+                  this.state.editElement?.settings?.padAngle ||
+                  this.state.padAngle
+                }
+                onChange={this.padAngle}
+                type="range"
+                min="0"
+                max="45"
+                step="1"
+              />
+              (
+              {this.state.editElement?.settings?.padAngle ||
+                this.state.padAngle}
+              )
+            </div>
+            <div className="mb-3">
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Толщина рамки сегментов
+              </div>
+              <input
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
+                defaultValue={
+                  this.state.editElement?.settings?.borderWidth ||
+                  this.state.borderWidth
+                }
+                onChange={this.borderWidth}
+                type="range"
+                min="0"
+                max="20"
+                step="1"
+              />
+              (
+              {this.state.editElement?.settings?.borderWidth ||
+                this.state.borderWidth}
+              )
+            </div>
+            <div className="mb-3">
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
+                Цвет рамки сегментов
+              </div>
+              <SketchPicker
+                color={
+                  this.state.editElement?.settings?.borderColor ||
+                  this.state.borderColor
+                }
+                onChange={this.borderColor}
+              />
             </div>
           </>
         )}

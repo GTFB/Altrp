@@ -441,7 +441,7 @@ class Dashboards extends BaseElement {
         size: 30,
         unit: "%"
       },
-      units: ["%"],
+      units: ["px", "%"],
       max: 100,
       min: 0
     });
