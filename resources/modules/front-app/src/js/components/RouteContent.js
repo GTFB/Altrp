@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import AreaComponent from "./AreaComponent";
+import AdminBar from "./AdminBar";
 import { setTitle } from "../helpers";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Redirect, withRouter } from "react-router-dom";
@@ -143,40 +144,48 @@ class RouteContent extends Component {
       return <Redirect to={this.props.redirect || "/"} />;
     }
     return (
-      <Scrollbars
-        ref={this.scrollbar}
-        onUpdate={this.props.setScrollValue}
-        style={{ zIndex: 99999 }}
-        autoHide
-        autoHideTimeout={500}
-        autoHideDuration={200}
-        renderTrackVertical={({ style, ...props }) => {
-          return (
-            <div
-              className="altrp-scroll__vertical-track"
-              style={style}
-              {...props}
-            />
-          );
-        }}
-      >
-        <div className="route-content" id="route-content">
-          {this.state.areas.map(area => {
+      <React.Fragment>
+        {this.props.currentUser.hasRoles('admin') && <AdminBar areas={this.state.areas} />}
+      
+        <Scrollbars
+          ref={this.scrollbar}
+          onUpdate={this.props.setScrollValue}
+          style={{ zIndex: 99999 }}
+          autoHide
+          autoHideTimeout={500}
+          autoHideDuration={200}
+          renderTrackVertical={({ style, ...props }) => {
             return (
-              <AreaComponent
-                {...area}
-                area={area}
-                page={this.props.id}
-                models={[this.props.model]}
-                key={"appArea_" + area.id}
+              <div
+                className="altrp-scroll__vertical-track"
+                style={style}
+                {...props}
               />
             );
-          })}
-        </div>
-      </Scrollbars>
+          }}
+        >
+          <div className="route-content" id="route-content">
+            {this.state.areas.map(area => {
+              return (
+                <AreaComponent
+                  {...area}
+                  area={area}
+                  page={this.props.id}
+                  models={[this.props.model]}
+                  key={"appArea_" + area.id}
+                />
+              );
+            })}
+          </div>
+        </Scrollbars>
+      </React.Fragment>
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  currentUser: state.currentUser
+})
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -184,4 +193,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(withRouter(RouteContent));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(RouteContent));

@@ -19,15 +19,39 @@ body {
 }
 
 .admin-bar {
-  position: fixed;
   top: 0;
   height: 25px;
   width: 100%;
+  display: flex;
+  justify-content: space-between;
 
   background-color: #343B4C;
   color: #fff;
 
   font-family: 'Open Sans';
-  line-height: 16,25px;
+  line-height: 25px;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0em;
+  text-align: left;
+
+  &__tools {
+    display: flex;
+  }
+
+  &__tool {
+    padding-right: 25px;
+  }
   
+  &__profile {
+
+  }
+
+  &__popup-template {
+    position: fixed;
+
+    background-color: #343B4C;
+  }
+
 }

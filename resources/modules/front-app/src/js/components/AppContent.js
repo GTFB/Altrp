@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import RouteContent from "./RouteContent";
 import Styles from "../../../../editor/src/js/components/Styles";
 import {isAltrpTestMode} from "../helpers";
-import AdminBar from "./AdminBar";
 
 class AppContent extends Component {
   constructor(props) {
@@ -12,7 +11,6 @@ class AppContent extends Component {
     this.router = React.createRef();
   }
   componentDidMount() {
-    console.log(this.props.routes)
     if (this.router.current) {
       window.frontAppRouter = this.router.current;
     }
@@ -20,7 +18,6 @@ class AppContent extends Component {
   render() {
     return (
       <Router ref={this.router}>
-        {this.props.currentUser.hasRoles('admin') && <AdminBar />}
         <div className={`front-app-content ${isAltrpTestMode() ? 'front-app-content_test' : ''}`}>
           <Switch>
             {this.props.routes.map(route => (
@@ -41,8 +38,7 @@ class AppContent extends Component {
 
 function mapStateToProps(state) {
   return {
-    routes: state.appRoutes.routes,
-    currentUser: state.currentUser
+    routes: state.appRoutes.routes
   };
 }
 
