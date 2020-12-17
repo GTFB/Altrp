@@ -9,7 +9,8 @@ import { SketchPicker } from "react-color";
 import {
   BAR,
   PIE,
-  LINE
+  LINE,
+  TABLE
 } from "../../../../../../admin/src/components/dashboard/widgetTypes";
 const selectSettings = {
   menuList: (provided, state) => ({
