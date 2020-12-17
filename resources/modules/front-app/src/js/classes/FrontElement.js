@@ -269,11 +269,11 @@ class FrontElement {
    * @return {string}
    */
   getIdForAction(){
-    if(!this.idForAction){
+    if(! this.idForAction){
       this.idForAction = altrpRandomId();
     }
     return this.idForAction;
-    let id = this.getId();
+    let id = this.getId();//todo: delete this
     if(this.getCurrentModel().getProperty('altrpIndex') !== ''){
       id += `_${this.getCurrentModel().getProperty('altrpIndex')}`;
     }
