@@ -662,8 +662,8 @@ class StyleSettings extends Component {
                 min="0"
                 max="60"
                 step="1"
-              />
-              npm i rc-slider (
+              />{" "}
+              (
               {this.state.editElement?.settings
                 ?.radialLabelsLinkDiagonalLength ||
                 this.state.radialLabelsLinkDiagonalLength}
