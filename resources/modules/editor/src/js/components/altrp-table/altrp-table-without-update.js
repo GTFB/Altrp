@@ -607,7 +607,7 @@ function AltrpTableWithoutUpdate(
         {headerGroups.map(headerGroup => {
           const headerGroupProps = headerGroup.getHeaderGroupProps();
 
-          if (!resize_columns && !virtualized_rows) {
+          if (! resize_columns && ! virtualized_rows) {
             delete headerGroupProps.style;
           }
           return (

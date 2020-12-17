@@ -52,7 +52,7 @@ class WidgetData extends Component {
       altrp-dashboard__card--background
       altrp-dashboard__card--font"
       >
-        <div className="title">
+        <div className="title altrp-dashboards__cancle-drag">
           <div
             className="
             altrp-dashboard__card--font

@@ -28,7 +28,7 @@ const options = [
   },
   {
     id: 2,
-    label: "По ключу",
+    label: "По названию",
     value: "key"
   }
 ];
@@ -49,7 +49,7 @@ class SortData extends Component {
             <Form.Label
               className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
             >
-              Фильтрация
+              Сортировать
             </Form.Label>
             <ReactSelect
               placeholder="Выберите фильтр"

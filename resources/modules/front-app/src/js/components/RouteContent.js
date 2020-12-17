@@ -43,7 +43,6 @@ class RouteContent extends Component {
     if (this.props.lazy && this.props.allowed) {
       let page = await pageLoader.loadPage(this.props.id);
       let areas = page.areas.map(area => Area.areaFabric(area));
-      console.log(areas);
       this.setState(state => ({
         ...state,
         areas
@@ -56,7 +55,7 @@ class RouteContent extends Component {
     /**
      * Обнуляем текущее хранилище dataStorage
      */
-    dataStorageUpdater.clearCurrent();
+    // dataStorageUpdater.clearCurrent();
     /**
      * Обнуляем хранилище ответов на отправленные формы
      */
@@ -64,15 +63,18 @@ class RouteContent extends Component {
     /**
      * затем отправляем запросы на обновление данных и altrpPageState
      */
-    this.updateDataStorage();
+    this.updateAppData();
   }
 
   /**
    *  обновление currentDataStorage
    *  Сброс altrpPageState
    */
-  async updateDataStorage() {
+  async updateAppData() {
     dataStorageUpdater.clearCurrent();
+    if(window.formsManager){
+      formsManager.clearFormsStore();
+    }
     /**
      * @member {array} data_sources
      */
@@ -131,7 +133,7 @@ class RouteContent extends Component {
         _.get(prevProps, "match.params")
       )
     ) {
-      this.updateDataStorage();
+      this.updateAppData();
     }
     if (!_.isEqual(_.get(this.props, "match"), _.get(prevProps, "match"))) {
       window.currentRouterMatch = new AltrpModel(this.props.match);
