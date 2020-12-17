@@ -229,6 +229,9 @@ class LineDataSource extends Component {
             pointSize={this.state.settings?.pointSize}
             enablePoints={this.state.settings?.enablePoints}
             lineWidth={this.state.settings?.lineWidth}
+            enableCrosshair={this.state.settings?.enableCrosshair}
+            enableGridY={this.state.settings?.enableGridY}
+            enableGridX={this.state.settings?.enableGridX}
             xFormat={
               this.state.settings?.xScale?.type === "time" && "time:%d.%m.%Y"
             }

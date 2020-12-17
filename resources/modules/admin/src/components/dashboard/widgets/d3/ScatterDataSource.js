@@ -218,6 +218,8 @@ class ScatterDataSource extends Component {
                     ...this.state.settings?.axisBottom
                   }
             }
+            enableGridY={this.state.settings?.enableGridY}
+            enableGridX={this.state.settings?.enableGridX}
             animate={Boolean(this.state.settings?.enableAnimation) || false}
             motionDamping={this.state.settings?.animationMotionDamping}
             motionStiffness={this.state.settings?.animationMotionStiffness}

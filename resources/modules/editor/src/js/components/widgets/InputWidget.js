@@ -25,7 +25,6 @@ class InputWidget extends Component {
     this.defaultValue =
       props.element.getSettings().content_default_value ||
       (props.element.getSettings().select2_multiple ? [] : "");
-
     this.state = {
       settings: { ...props.element.getSettings() },
       value: this.defaultValue,
@@ -127,7 +126,7 @@ class InputWidget extends Component {
       options = _.isArray(options) ? options : [];
       this.setState(state => ({ ...state, options }));
     }
-    let value = this.storageValue || this.state.value;
+    let value = this.state.value;
     /**
      * Если динамическое значение загрузилось,
      * то используем this.getContent для получение этого динамического значения
@@ -703,6 +702,7 @@ class InputWidget extends Component {
             <select
               value={value || ""}
               onChange={this.onChange}
+              onBlur={this.onBlur}
               onKeyDown={this.handleEnter}
               id={this.state.settings.position_css_id}
               className={
@@ -960,6 +960,12 @@ class InputWidget extends Component {
         options
       );
     }
+    console.log("====================================");
+    console.log(
+      value,
+      _.find(options, o => o.value == this.state.value)
+    );
+    console.log("====================================");
     const select2Props = {
       className: "altrp-field-select2",
       element: this.props.element,
@@ -969,7 +975,7 @@ class InputWidget extends Component {
       ref: this.altrpSelectRef,
       settings: this.props.element.getSettings(),
       onChange: this.onChange,
-
+      onBlur: this.onBlur,
       value: value || _.find(options, o => o.value === this.state.value),
       isOptionSelected: option => {
         if (_.isNumber(this.state.value) || _.isString(this.state.value)) {

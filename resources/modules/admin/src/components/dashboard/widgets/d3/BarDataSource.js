@@ -151,7 +151,15 @@ class BarDataSource extends Component {
               layout={this.state.settings?.layout}
               labelSkipHeight={this.state.settings?.labelSkipHeight}
               labelSkipWidth={this.state.settings?.labelSkipWidth}
-              labelTextColor={datum => invert(datum.color, true)}
+              enableGridY={this.state.settings?.enableGridY}
+              enableGridX={this.state.settings?.enableGridX}
+              labelTextColor={datum =>
+                invert(datum.color, {
+                  black: "#000000",
+                  white: "#FFFFFF",
+                  threshold: 0.45
+                })
+              }
               margin={{
                 top: this.state.settings?.margin?.top || 40,
                 right: this.state.settings?.margin?.right || 80,

@@ -1,8 +1,7 @@
-import React, { Component, Suspense, useRef } from "react";
-// import DataSourceDashboards from "../altrp-dashboards/DataSourceDashboards";
+import React, { Component, Suspense } from "react";
 
 import axios from "axios";
-import { thresholdFreedmanDiaconis } from "d3";
+import { getCurrentBreakpoint } from "../../../../../front-app/src/js/helpers";
 
 const AltrpDashboards = React.lazy(() =>
   import("../altrp-dashboards/AltrpDashboards")
@@ -23,6 +22,8 @@ class DashboardsWidget extends Component {
 
     this.refChild = React.createRef();
     this.fireAction = this.fireAction.bind(this);
+    this.calculateDrawerWidth = this.calculateDrawerWidth.bind(this);
+
     props.element.component = this;
 
     if (window.elementDecorator) {
@@ -59,6 +60,28 @@ class DashboardsWidget extends Component {
     }
   }
 
+  calculateDrawerWidth() {
+    const allKeys = _.keys(this.props.element.getSettings());
+    const currentBreakpoint = getCurrentBreakpoint();
+    let result = false;
+    let keyData = "";
+    let keys = allKeys.filter(item => item.includes("drawerWidth"));
+    let drawer = this.props.element.getSettings().drawerWidth;
+    for (let key of keys) {
+      let names = key.split("_");
+      const name = names[names.length - 1];
+      if (name == currentBreakpoint) {
+        result = true;
+        keyData = key;
+        break;
+      }
+    }
+    if (result) {
+      drawer = this.props.element.getSettings(keyData);
+    }
+    return drawer?.size + drawer?.unit || "30%";
+  }
+
   render() {
     const containerWidth = this.props.element.getSettings()
       .positioning_custom_width.size;
@@ -67,10 +90,7 @@ class DashboardsWidget extends Component {
     const global_parameter = this.state.settings.global_parameter;
     const showButton = this.props.element.getSettings().showButton;
     const currentUser = this.props.currentUser.data;
-    const drawerWidth =
-      this.props.element.getSettings().drawerWidth?.size +
-        this.props.element.getSettings().drawerWidth?.unit || "30vh";
-
+    const drawerWidth = this.calculateDrawerWidth();
     const settingsData = this.state.settingsData;
     return (
       <Suspense fallback={"Loading"}>
