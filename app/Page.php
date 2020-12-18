@@ -450,9 +450,6 @@ class Page extends Model
    */
   public function allowedForUser( $user_id = '' ){
 
-//    if( ( ! auth()->user() ) ) {
-//      return true;
-//    }
     if( ! $user_id ) {
       $user = auth()->user();
     } else {
@@ -461,7 +458,6 @@ class Page extends Model
     $allowed = false;
 
     /** @var User $user */
-//    $user = auth()->user();
     $page_role_table = DB::table( 'page_role' );
     $page_roles = $page_role_table->where( 'page_id', $this->id )->get();
     /**
@@ -470,10 +466,6 @@ class Page extends Model
     if( ( ! $page_roles->count() ) && ! $this->for_guest ){
       return true;
     }
-//    echo '<pre style="padding-left: 200px;">';
-//    var_dump( $this->for_guest );
-//    echo '</pre>';
-
     if( ( ! $user ) && $this->for_guest ){
       return true;
     }
