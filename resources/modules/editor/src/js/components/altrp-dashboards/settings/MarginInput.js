@@ -88,9 +88,12 @@ class MarginInput extends Component {
         <div className="col">
           <div className="row">
             <div className="col px-0">
-              <label htmlFor="" className="form-label">
+              <div
+                htmlFor=""
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
                 Слева:
-              </label>
+              </div>
               <input
                 className="form-control"
                 style={{
@@ -104,9 +107,12 @@ class MarginInput extends Component {
               />
             </div>
             <div className="col px-0">
-              <label htmlFor="" className="form-label">
+              <div
+                htmlFor=""
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
                 Справа:
-              </label>
+              </div>
               <input
                 className="form-control"
                 style={{
@@ -122,9 +128,12 @@ class MarginInput extends Component {
           </div>
           <div className="row mt-1">
             <div className="col px-0">
-              <label htmlFor="" className="form-label">
+              <div
+                htmlFor=""
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
                 Сверху:
-              </label>
+              </div>
               <input
                 className="form-control"
                 style={{
@@ -138,9 +147,12 @@ class MarginInput extends Component {
               />
             </div>
             <div className="col px-0">
-              <label htmlFor="" className="form-label">
+              <div
+                htmlFor=""
+                className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+              >
                 Снизу:
-              </label>
+              </div>
               <input
                 className="form-control"
                 style={{

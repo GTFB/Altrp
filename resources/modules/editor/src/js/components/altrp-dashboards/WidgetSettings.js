@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import {
   BAR,
-  PIE,
   LINE,
-  TABLE,
   POINT
 } from "../../../../../admin/src/components/dashboard/widgetTypes";
 import { connect } from "react-redux";
@@ -16,6 +14,8 @@ import AxisBaseSettings from "./settings/AxisBaseSettings";
 import StiyleSettings from "./settings/StyleSettings";
 import FilterParameters from "./settings/FilterParameters";
 import DiagramTypeSettings from "./settings/DiagramTypeSettings";
+import LegendSettings from "./settings/LegendSettings";
+import AnimationSettings from "./settings/AnimationSettings";
 import SortData from "./settings/SortData";
 
 const mapStateToProps = state => {
@@ -37,6 +37,8 @@ class WidgetSettings extends Component {
       openDataSettings: false,
       openDiagramSettings: false,
       openTooltipSettings: false,
+      openLegendSettings: false,
+      openAnimationSettings: false,
       filter_datasource: props.filter_datasource,
       editElement: _.cloneDeep(props.editElement, {}) || {},
       delimer: props.delimer
@@ -112,6 +114,12 @@ class WidgetSettings extends Component {
   setOpenTooltipSettings(data) {
     this.setState(state => ({ ...state, openTooltipSettings: data }));
   }
+  setOpenLegendSettings(data) {
+    this.setState(state => ({ ...state, openLegendSettings: data }));
+  }
+  setOpenAnimationSettings(data) {
+    this.setState(state => ({ ...state, openAnimationSettings: data }));
+  }
 
   /**
    * Методы, связанные со сменой параметров с уникальными настройками
@@ -119,31 +127,40 @@ class WidgetSettings extends Component {
   setName(param, options, prevParam) {
     let settings = _.cloneDeep(this.props.editElement?.settings);
     let name = settings?.name;
-    if (param.length > 0) {
+    if (param.length != 0) {
       let paramName = _.find(options, item => item.value == param).label;
       if (typeof name !== "undefined") {
         name = name.split(this.state.delimer);
-        let boolChange = false;
         let indexPrevValue = -1;
         if (prevParam.length > 0) {
           indexPrevValue = _.findIndex(name, o => o == prevParam);
         }
-        name.forEach((item, index) => {
-          if (item !== param) {
-            boolChange = true;
-          }
-        });
-        if (boolChange) {
-          if (indexPrevValue !== -1) {
-            name[indexPrevValue] = paramName;
-          } else {
-            name.push(paramName);
-          }
+        if (indexPrevValue !== -1) {
+          name[indexPrevValue] = paramName;
+        } else {
+          name.push(paramName);
         }
         name = _.uniq(name);
-        name = name.join(this.state.delimer);
+        name = name.filter(item => item.length !== 0);
+        name = name.join(this.parseHtmlEntities(this.state.delimer));
       } else {
         name = param;
+      }
+    } else {
+      if (typeof name !== "undefined") {
+        name = name.split(this.state.delimer);
+        let indexPrevValue = -1;
+        if (prevParam.length > 0) {
+          indexPrevValue = _.findIndex(name, o => o == prevParam);
+        }
+        if (indexPrevValue !== -1) {
+          delete name[indexPrevValue];
+        }
+        name = _.uniq(name);
+        name = name.filter(
+          item => typeof item !== "undefined" && item.length !== 0
+        );
+        name = name.join(this.parseHtmlEntities(this.state.delimer));
       }
     }
     return name;
@@ -180,7 +197,7 @@ class WidgetSettings extends Component {
     const arrayOfDatasourceTitles = datasourceArray.map(
       source => source.title ?? ""
     );
-    if (typeof name === "undefined" || name.length === 0) {
+    if (name === null || typeof name === "undefined" || name.length === 0) {
       name = arrayOfDatasourceTitles.join(this.state.delimer);
     } else {
       if (Array.isArray(name)) {
@@ -190,7 +207,7 @@ class WidgetSettings extends Component {
             name[index] = nameDatasource;
           }
         });
-        name = name.join(this.state.delimer);
+        name = name.join(this.parseHtmlEntities(this.state.delimer));
       } else {
         name = name.split(this.state.delimer);
         arrayOfDatasourceTitles.forEach((nameDatasource, index) => {
@@ -199,7 +216,7 @@ class WidgetSettings extends Component {
             name[index] = nameDatasource;
           }
         });
-        name = name.join(this.state.delimer);
+        name = name.join(this.parseHtmlEntities(this.state.delimer));
       }
     }
     return name;
@@ -250,6 +267,13 @@ class WidgetSettings extends Component {
       this.props.editElementDispatch(element);
       this.setState(s => ({ ...s, editElement: { settings: settings } }));
     }
+  }
+
+  parseHtmlEntities(str) {
+    return str.replace(/&#([0-9]{1,3});/gi, function(match, numStr) {
+      var num = parseInt(numStr, 10); // read num as normal number
+      return String.fromCharCode(num);
+    });
   }
   //Смена значения локального параметра
   setParam(left, right, options = [], prevParam = "") {
@@ -431,7 +455,9 @@ class WidgetSettings extends Component {
 
   render() {
     return (
-      <div className="col">
+      <div
+        className={`col ${this.props.widgetID} altrp-dashboard__drawer--font`}
+      >
         <div className="row">
           <div className="mx-auto">
             <h3>Настройка диаграммы</h3>
@@ -447,7 +473,11 @@ class WidgetSettings extends Component {
             aria-expanded={this.state.openDataSettings}
           >
             <div className="collapse-button-content">
-              <div>Базовые настройки</div>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font`}
+              >
+                Базовые настройки
+              </div>
               <div>
                 {!this.state.openDataSettings ? <ArrowDown /> : <ArrowUp />}
               </div>
@@ -455,11 +485,15 @@ class WidgetSettings extends Component {
           </Button>
           <Collapse in={this.state.openDataSettings}>
             <div style={{ width: "100%" }}>
-              <DiagramTypeSettings setType={this.setType} />
+              <DiagramTypeSettings
+                widgetID={this.props.widgetID}
+                setType={this.setType}
+              />
               {/*
                 Настройки данных - сами источники данных и параметры
               */}
               <DatasourceSettings
+                widgetID={this.props.widgetID}
                 datasources={this.state.datasources}
                 setCardName={this.setCardName}
                 setDatasource={this.setDatasource}
@@ -468,11 +502,16 @@ class WidgetSettings extends Component {
                 _.keys(this.state.filter_datasource).length > 0 && (
                   <>
                     <div className="col mb-3">
-                      <div className="label">Параметры</div>
+                      <div
+                        className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+                      >
+                        Параметры
+                      </div>
                     </div>
                     {this.state.filter_datasource.map((param, index) => {
                       return (
                         <FilterParameters
+                          widgetID={this.props.widgetID}
                           setParam={this.setParam}
                           key={index}
                           setCardName={this.setCardName}
@@ -490,6 +529,7 @@ class WidgetSettings extends Component {
                 this.props.editElement?.settings?.type === POINT) && (
                 <>
                   <AxisBaseSettings
+                    widgetID={this.props.widgetID}
                     setXAxisScale={this.setXAxisScale}
                     setXAxisTimeScale={this.setXAxisTimeScale}
                     setYAxisScale={this.setYAxisScale}
@@ -497,7 +537,10 @@ class WidgetSettings extends Component {
                 </>
               )}
 
-              <SortData setProperty={this.setProperty} />
+              <SortData
+                widgetID={this.props.widgetID}
+                setProperty={this.setProperty}
+              />
             </div>
           </Collapse>
         </div>
@@ -511,7 +554,11 @@ class WidgetSettings extends Component {
             aria-expanded={this.state.openDiagramSettings}
           >
             <div className="collapse-button-content">
-              <div>Настройки стилей</div>
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font`}
+              >
+                Настройки стилей
+              </div>
               <div>
                 {!this.state.openDiagramSettings ? <ArrowDown /> : <ArrowUp />}
               </div>
@@ -520,8 +567,8 @@ class WidgetSettings extends Component {
           <Collapse in={this.state.openDiagramSettings}>
             <div>
               <StiyleSettings
+                widgetID={this.props.widgetID}
                 setProperty={this.setProperty}
-                setMargin={this.setMargin}
                 setColorScheme={this.setColorScheme}
                 setTickRotation={this.setTickRotation}
               />
@@ -548,6 +595,72 @@ class WidgetSettings extends Component {
             <div></div>
           </Collapse>
         </div> */}
+        <div className="row">
+          <Button
+            className="collapse-button"
+            onClick={() =>
+              this.setOpenLegendSettings(!this.state.openLegendSettings)
+            }
+            aria-controls="Datasource settings"
+            aria-expanded={this.state.openLegendSettings}
+          >
+            <div className="collapse-button-content">
+              <div
+                className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font`}
+              >
+                Настройки легенды
+              </div>
+              <div>
+                {!this.state.openLegendSettings ? <ArrowDown /> : <ArrowUp />}
+              </div>
+            </div>
+          </Button>
+          <Collapse in={this.state.openLegendSettings}>
+            <div>
+              <LegendSettings
+                widgetID={this.props.widgetID}
+                setProperty={this.setProperty}
+              />
+            </div>
+          </Collapse>
+        </div>
+        {(this.state.editElement?.settings?.type === LINE ||
+          this.state.editElement?.settings?.type === POINT ||
+          this.state.editElement?.settings?.type === BAR) && (
+          <div className="row">
+            <Button
+              className="collapse-button"
+              onClick={() =>
+                this.setOpenAnimationSettings(!this.state.openAnimationSettings)
+              }
+              aria-controls="Datasource settings"
+              aria-expanded={this.state.openAnimationSettings}
+            >
+              <div className="collapse-button-content">
+                <div
+                  className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font`}
+                >
+                  Настройки анимации
+                </div>
+                <div>
+                  {!this.state.openAnimationSettings ? (
+                    <ArrowDown />
+                  ) : (
+                    <ArrowUp />
+                  )}
+                </div>
+              </div>
+            </Button>
+            <Collapse in={this.state.openAnimationSettings}>
+              <div>
+                <AnimationSettings
+                  widgetID={this.props.widgetID}
+                  setProperty={this.setProperty}
+                />
+              </div>
+            </Collapse>
+          </div>
+        )}
         {this.props.addItemPreview ? (
           <div className="row justify-content-beetwen mt-3">
             <div className="col">

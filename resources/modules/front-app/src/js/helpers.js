@@ -77,6 +77,7 @@ export function parseOptionsFromSettings(string) {
       value = getDataByPath(valuePath);
     }
     let label = option.split("|")[1] || value || "";
+    (! _.isString(label)) && (label = '');
     label = label.trim();
     let labelPath = extractPathFromString(label);
     if (labelPath) {
@@ -119,6 +120,22 @@ export function getMediaSettingsByName(screenSettingName) {
   return screen;
 }
 
+/**
+ * Возвращает брейкпоинт относительно текущего размера экрана
+ */
+export function getCurrentBreakpoint() {
+  const currentWidth = getWindowWidth();
+  const breakPoints = CONSTANTS.SCREENS;
+  const breakPointsSizes = breakPoints.map(item => ({
+    name: item.name,
+    size: Number(item.width.split("px")[0])
+  }));
+  for (let breakpoint of breakPointsSizes) {
+    if (breakpoint.size < currentWidth) {
+      return breakpoint.name;
+    }
+  }
+}
 /**
  *@param {string} URLTemplate
  *@param {{}} object
@@ -420,6 +437,9 @@ export function setDataByPath(path = "", value, dispatch = null) {
     if (_.isEqual(oldValue, value)) {
       return true;
     }
+    console.log("====================================");
+    console.log(value);
+    console.log("====================================");
     if (_.isFunction(dispatch)) {
       dispatch(changeCurrentUserProperty(path, value));
     } else {
@@ -969,7 +989,7 @@ export function replaceContentWithData(content = "", modelContext = null) {
     paths.forEach(path => {
       path = path.replace("{{", "");
       let value = getDataByPath(path, "", modelContext);
-      content = content.replace(new RegExp(`{{${path}}}`, "g"), value || '');
+      content = content.replace(new RegExp(`{{${path}}}`, "g"), value || "");
     });
   }
   return content;
@@ -1062,24 +1082,27 @@ export function dataFromTable(HTMLElement) {
   if (!(HTMLElement && HTMLElement.querySelectorAll)) {
     return data;
   }
-  let table = HTMLElement.querySelector("table");
-  if (!table && HTMLElement.querySelector("tr")) {
+  let table = HTMLElement.querySelector(".altrp-table");
+  if (!table && HTMLElement.querySelector(".altrp-table-tr")) {
     table = HTMLElement;
   }
   if (!table) {
     return data;
   }
-  const ths = table.querySelectorAll("th");
+  const ths = table.querySelectorAll(".altrp-table-th");
   _.each(ths, th => {
-    if (th.innerText) {
+    // if (th.innerText) {
       headers.push(th.innerText || "");
-    }
+    // }
   });
-  const rows = table.querySelectorAll("tbody tr");
+  const rows = table.querySelectorAll(".altrp-table-tbody .altrp-table-tr");
   _.each(rows, row => {
-    const cells = row.querySelectorAll("td");
+    const cells = row.querySelectorAll(".altrp-table-td");
     const part = {};
     headers.forEach((header, idx) => {
+      if(! header){
+        return;
+      }
       part[header] = cells[idx].innerText || "";
     });
     data.push(part);
@@ -1126,7 +1149,11 @@ export async function dataToCSV(data = {}, filename) {
         return line;
       })
       .join("\n");
-  let blob = new Blob([csvContent], { type: "text/csv", charset: "utf-8" });
+  let blob = new Blob([csvContent], {
+    type: "text/csv",
+    charset: "windows-1251",
+    // charset: "utf-8",
+  });
   let link = document.createElement("a");
   link.setAttribute("href", window.URL.createObjectURL(blob));
   link.setAttribute("download", filename + ".csv");
@@ -1404,7 +1431,8 @@ export function isAltrpTestMode() {
   return window.location.href.indexOf("altrp-test=true") > 0;
 }
 
-export function altrpRandomId(){
-  return Math.random().toString(36).substr(2, 9);
-
+export function altrpRandomId() {
+  return Math.random()
+    .toString(36)
+    .substr(2, 9);
 }

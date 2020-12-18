@@ -19,7 +19,8 @@ class WidgetPreview extends Component {
     super(props);
     this.state = {
       editElement: _.cloneDeep(props.editElement),
-      cardName: this.props.editElement?.settings?.name
+      cardName: this.props.editElement?.settings?.name,
+      width: props.width
     };
     this.setCardName = this.setCardName.bind(this);
   }
@@ -81,7 +82,17 @@ class WidgetPreview extends Component {
   render() {
     if (!_.isEmpty(this.state.editElement)) {
       return (
-        <div className="drawer-preview">
+        <div
+          className="drawer-preview"
+          style={{
+            width: `calc(100% - ${this.state.width})`,
+            fallbacks: [
+              { width: `-moz-calc(100% - ${this.state.width})` },
+              { width: `-webkit-calc(100% - ${this.state.width})` },
+              { width: `-o-calc(100% - ${this.state.width})` }
+            ]
+          }}
+        >
           <div className="drawer-preview__container">
             {!this.props.addItemPreview ? (
               <div className="title">

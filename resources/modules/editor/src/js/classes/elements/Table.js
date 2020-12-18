@@ -1496,63 +1496,13 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("table_style_pagination", {
+    this.startControlSection("table_style_pre_page_button", {
       tab: TAB_STYLE,
-      label: "Pagination"
-    });
-
-    this.addControl('hide_pre_page_button', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Hide Prev Page Button',
-      default: false
-    });
-
-    this.addControl('hide_pages_buttons_button', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Hide Pages Buttons',
-      default: false
-    });
-    
-    this.addControl('hide_next_page_button', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Hide Next Page Button',
-      default: false
-    });
-    
-    this.addControl('hide_page_input', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Hide Page Input',
-      default: false
-    });
-    
-    this.addControl('hide_pagination_select', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Hide Pagination Select',
-      default: false
-    });
-
-    this.addControl("table_style_pagination_buttons_text_color", {
-      type: CONTROLLER_COLOR,
-      label: "Buttons text color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'color: {{COLOR}}'
-      }
-    });
-
-    this.addControl("table_style_pagination_buttons_background_color", {
-      type: CONTROLLER_COLOR,
-      label: "Buttons background color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'background-color: {{COLOR}}'
-      }
+      label: "Prev Page Button",
+      // conditions: {
+      //   'hide_pre_page_button': true,
+      // },
+      
     });
 
     this.addControl('prev_page_button_margin', {
@@ -1576,11 +1526,12 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl('count_buttons_margin', {
+    this.addControl('prev_icon_padding', {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Page Count Buttons Margin',
+      label: 'Prev Icon Margin',
       default: {
-        unit: 'px'
+        unit: 'px',
+        bind: true
       },
       units: [
         'px',
@@ -1588,34 +1539,63 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-pagination__count{{STATE}}': [
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}} svg': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
           'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('prev_icon_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Prev Icon Size',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}} svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      },
+    });
+
+    this.addControl('prev_icon_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Prev Icon Color',
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}} path': 'fill: {{COLOR}};',
+      },
+    });
+
+    this.addControl('table_style_prev_btn_pagination_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Previous Page Button Typographic',
+      rules: {
+        '{{ELEMENT}} .altrp-pagination .altrp-pagination__previous{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
         ],
       },
     });
-    
-    this.addControl('count_button_item_margin', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Page Count Item Margin',
-      default: {
-        unit: 'px'
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ],
-      },
+
+    this.endControlSection();
+
+    this.startControlSection("table_style_next_page_button", {
+      tab: TAB_STYLE,
+      label: "Next Page Button",
+      // conditions: {
+      //   'hide_pre_page_button': true,
+      // },
     });
 
     this.addControl('next_page_button_margin', {
@@ -1639,115 +1619,7 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl('goto-page_margin', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Page Input Margin',
-      default: {
-        unit: 'px'
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ],
-      },
-    });
-
-    this.addControl('pagination_select_margin', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Pagination Select Margin',
-      default: {
-        unit: 'px'
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__select-size{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ],
-      },
-    });
-
-    this.addControl('table_style_pagination_padding_buttons', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'buttons Padding',
-      default: {
-        unit: 'px'
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ],
-      },
-    });
-
-    this.addControl('prev_icon_padding', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Prev Icon Margin',
-      default: {
-        unit: 'px',
-        bind: true
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous svg{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
-    });
-
-    this.addControl('prev_icon_color', {
-      type: CONTROLLER_COLOR,
-      label: 'Prev Icon Color',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous path{{STATE}}': 'fill: {{COLOR}};',
-      },
-    });
-
-    this.addControl('prev_icon_size', {
-      type: CONTROLLER_SLIDER,
-      label: 'Prev Icon Size',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-      max: 100,
-      min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-      },
-    });
-
-    this.addControl('next_icon_padding', {
+    this.addControl('next_icon_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Next Icon Margin',
       default: {
@@ -1760,20 +1632,12 @@ class Table extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-pagination__next svg{{STATE}}': [
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}} svg': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
           'margin-left: {{LEFT}}{{UNIT}};'
         ]
-      },
-    });
-
-    this.addControl('next_icon_color', {
-      type: CONTROLLER_COLOR,
-      label: 'Next Icon Color',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__next path{{STATE}}': 'fill: {{COLOR}};',
       },
     });
 
@@ -1788,30 +1652,99 @@ class Table extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        '{{ELEMENT}} .altrp-pagination__next svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}} svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      },
+    });
+
+    this.addControl('next_icon_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Next Icon Color',
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}} path': 'fill: {{COLOR}};',
+      },
+    });
+
+    this.addControl('table_style_next_btn_pagination_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Next Page Button Typographic',
+      rules: {
+        '{{ELEMENT}} .altrp-pagination .altrp-pagination__next{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }); 
+
+    this.endControlSection();
+
+    this.startControlSection("table_style_page_buttons", {
+      tab: TAB_STYLE,
+      label: "Page Count Buttons",
+      // conditions: {
+      //   'hide_pre_page_button': true,
+      // },
+    });
+
+    this.addControl('count_buttons_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Page Count Buttons Margin',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__count{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ],
+      },
+    });
+
+    this.addControl('count_button_item_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Page Count Item Margin',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ],
       },
     });
 
     this.addControl("table_style_pagination_count_text_color", {
       type: CONTROLLER_COLOR,
-      label: "Count text color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
+      label: "Count Text Color",
       rules: {
-        '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'color: {{COLOR}}', 
+        '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'color: {{COLOR}}',
         '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'color: {{COLOR}}'
       }
     });
 
     this.addControl("table_style_pagination_count_background_color", {
       type: CONTROLLER_COLOR,
-      label: "Count background color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
+      label: "Count Background Color",
       rules: {
         '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'background-color: {{COLOR}}'
       }
@@ -1820,10 +1753,6 @@ class Table extends BaseElement {
     this.addControl("table_style_pagination_count_item_background_color", {
       type: CONTROLLER_COLOR,
       label: "Count Item background color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
         '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'background-color: {{COLOR}}'
       }
@@ -1832,10 +1761,6 @@ class Table extends BaseElement {
     this.addControl("table_style_pagination_active_count_text_color", {
       type: CONTROLLER_COLOR,
       label: "Active Count text color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
         '{{ELEMENT}} .active.altrp-pagination-pages__item{{STATE}}': 'color: {{COLOR}}'
       }
@@ -1844,10 +1769,6 @@ class Table extends BaseElement {
     this.addControl("table_style_pagination_active_count_item_background_color", {
       type: CONTROLLER_COLOR,
       label: "Active Count Item background color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
         '{{ELEMENT}} .active.altrp-pagination-pages__item{{STATE}}': 'background-color: {{COLOR}}'
       }
@@ -1855,12 +1776,8 @@ class Table extends BaseElement {
 
     this.addControl('table_style_pagination_padding_count', {
       type: CONTROLLER_DIMENSIONS,
-      label: 'count Padding',
+      label: 'Count Padding',
       default: {
-        // top: 10,
-        // right: 10,
-        // bottom: 10,
-        // left: 10,
         unit: 'px'
       },
       units: [
@@ -1882,10 +1799,6 @@ class Table extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Item Count Padding',
       default: {
-        // top: 10,
-        // right: 10,
-        // bottom: 10,
-        // left: 10,
         unit: 'px'
       },
       units: [
@@ -1900,40 +1813,6 @@ class Table extends BaseElement {
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
           'padding-left: {{LEFT}}{{UNIT}};'
         ]
-      },
-    });
-
-    this.addControl('table_style_pagination_typographic', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Typographic',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__next{{STATE}}, .altrp-pagination-pages__item{{STATE}}, .altrp-pagination__count{{STATE}}, .altrp-pagination__previous{{STATE}}, .altrp-pagination__goto-page{{STATE}}, .altrp-pagination__select-size{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
-    });
-
-    this.addControl('table_style_prev_btn_pagination_typographic', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Previous Page Button Typographic',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination .altrp-pagination__previous{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
       },
     });
 
@@ -1952,134 +1831,6 @@ class Table extends BaseElement {
           'text-decoration: {{DECORATION}}'
         ],
       },
-    }); 
-    
-    this.addControl('table_style_next_btn_pagination_typographic', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Next Page Button Typographic',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination .altrp-pagination__next{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
-    }); 
-    
-    this.addControl('table_style_page_input_pagination_typographic', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Page Input Typographic',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination .altrp-pagination__goto-page{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
-    });
-
-    this.addControl('table_style_pagination_select__pagination_typographic', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Pagination Select Typographic',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination .altrp-pagination__select-size{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
-    });
-
-    this.addControl("table_style_pagination_border_type", {
-      type: CONTROLLER_SELECT,
-      label: "Border type",
-      units: ["px", "%", "vh"],
-      options: [
-        {
-          value: "none",
-          label: "None"
-        },
-        {
-          value: "solid",
-          label: "Solid"
-        },
-        {
-          value: "double",
-          label: "Double"
-        },
-        {
-          value: "dotted",
-          label: "Dotted"
-        },
-        {
-          value: "dashed",
-          label: "Dashed"
-        },
-        {
-          value: "groove",
-          label: "Groove"
-        }
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-style: {{VALUE}};',
-      }
-    });
-
-    this.addControl("table_style_pagination_border_width", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Border width",
-      units: ["px", "%", "vh"],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-      }
-    });
-
-    this.addControl('table_style_pagination_border_radius', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Border Radius',
-      default: {
-        unit: 'px'
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': [
-          'border-top-left-radius: {{TOP}}{{UNIT}}',
-          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
-        ]
-      }
-    });
-
-    this.addControl("table_style_pagination_border_color", {
-      type: CONTROLLER_COLOR,
-      label: "Border color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-color: {{COLOR}};',
-      }
     });
 
     this.addControl("table_style_pagination_count_item_border_type", {
@@ -2169,6 +1920,54 @@ class Table extends BaseElement {
       rules: {
         '{{ELEMENT}} .active.altrp-pagination-pages__item{{STATE}}': 'border-color: {{COLOR}};',
       }
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("table_style_page_input", {
+      tab: TAB_STYLE,
+      label: "Page Input",
+      // conditions: {
+      //   'hide_pre_page_button': true,
+      // },
+    });
+
+    this.addControl('goto-page_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Page Input Margin',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ],
+      },
+    });
+
+    this.addControl('table_style_page_input_pagination_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Page Input Typographic',
+      rules: {
+        '{{ELEMENT}} .altrp-pagination .altrp-pagination__goto-page{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
     });
 
     this.addControl("page_input_border_type", {
@@ -2293,6 +2092,51 @@ class Table extends BaseElement {
       }
     });
 
+    this.endControlSection();
+
+    this.startControlSection("table_style_pagination_select", {
+      tab: TAB_STYLE,
+      label: "Pagination Select"
+    });
+
+    this.addControl('pagination_select_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Pagination Select Margin',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__select-size{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ],
+      },
+    });
+
+    this.addControl('table_style_pagination_select__pagination_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Pagination Select Typographic',
+      rules: {
+        '{{ELEMENT}} .altrp-pagination .altrp-pagination__select-size{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
+
     this.addControl("pagination_select_border_type", {
       type: CONTROLLER_SELECT,
       label: "Pagination Select Border type",
@@ -2415,14 +2259,184 @@ class Table extends BaseElement {
       }
     });
 
+    this.endControlSection();
+
+    this.startControlSection("table_style_pagination", {
+      tab: TAB_STYLE,
+      label: "Pagination"
+    });
+
+    this.addControl('hide_pre_page_button', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hide Prev Page Button',
+      default: false
+    });
+
+    this.addControl('hide_pages_buttons_button', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hide Pages Buttons',
+      default: false
+    });
+    
+    this.addControl('hide_next_page_button', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hide Next Page Button',
+      default: false
+    });
+    
+    this.addControl('hide_page_input', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hide Page Input',
+      default: false
+    });
+    
+    this.addControl('hide_pagination_select', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hide Pagination Select',
+      default: false
+    });
+
+    this.addControl("table_style_pagination_buttons_text_color", {
+      type: CONTROLLER_COLOR,
+      label: "Buttons Text Color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'color: {{COLOR}}'
+      }
+    });
+
+    this.addControl("table_style_pagination_buttons_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Buttons Background Color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'background-color: {{COLOR}}'
+      }
+    });
+
+    this.addControl('table_style_pagination_padding_buttons', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Buttons Padding',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ],
+      },
+    });
+
+    this.addControl('table_style_pagination_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}}, .altrp-pagination-pages__item{{STATE}}, .altrp-pagination__count{{STATE}}, .altrp-pagination__previous{{STATE}}, .altrp-pagination__goto-page{{STATE}}, .altrp-pagination__select-size{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
+
+    this.addControl("table_style_pagination_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Buttons Border type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-style: {{VALUE}};',
+      }
+    });
+
+    this.addControl("table_style_pagination_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Buttons Border width",
+      units: ["px", "%", "vh"],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      }
+    });
+
+    this.addControl('table_style_pagination_border_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Buttons Border Radius',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
+    });
+
+    this.addControl("table_style_pagination_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Buttons Border color",
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-color: {{COLOR}};',
+      }
+    });
+
+    
+
     this.addControl('table_style_pagination_padding', {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Padding',
+      label: 'Pagination Padding',
       default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
         unit: 'px'
       },
       units: [

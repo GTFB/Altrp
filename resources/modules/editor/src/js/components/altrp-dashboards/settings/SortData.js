@@ -28,7 +28,7 @@ const options = [
   },
   {
     id: 2,
-    label: "По ключу",
+    label: "По названию",
     value: "key"
   }
 ];
@@ -46,7 +46,11 @@ class SortData extends Component {
       <>
         <div className="col-12">
           <Form.Group className="mb-2">
-            <Form.Label className="label">Фильтрация</Form.Label>
+            <Form.Label
+              className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+            >
+              Сортировать
+            </Form.Label>
             <ReactSelect
               placeholder="Выберите фильтр"
               onChange={value => this.props.setProperty(value, "sort")}

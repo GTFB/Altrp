@@ -9,6 +9,7 @@ function componentWillUnmount(){
   // if(this.model){
   //   this.model.uns
   // }
+  actionsManager.unregisterWidgetActions(this.props.element.getIdForAction());
   if(! this.props.element.dynamicContentSettings){
     return
   }

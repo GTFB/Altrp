@@ -1,5 +1,5 @@
 import CONSTANTS from "../../../../editor/src/js/consts";
-import {getMediaQueryByName, replaceContentWithData} from "../helpers";
+import {altrpRandomId, getMediaQueryByName, replaceContentWithData} from "../helpers";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {addFont} from "../store/fonts-storage/actions";
 
@@ -269,7 +269,11 @@ class FrontElement {
    * @return {string}
    */
   getIdForAction(){
-    let id = this.getId();
+    if(! this.idForAction){
+      this.idForAction = altrpRandomId();
+    }
+    return this.idForAction;
+    let id = this.getId();//todo: delete this
     if(this.getCurrentModel().getProperty('altrpIndex') !== ''){
       id += `_${this.getCurrentModel().getProperty('altrpIndex')}`;
     }
