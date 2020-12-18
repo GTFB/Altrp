@@ -156,7 +156,17 @@ class PieDataSource extends Component {
               bottom: this.state.settings?.margin?.bottom || 80,
               left: this.state.settings?.margin?.left || 120
             }}
-            sliceLabelsTextColor={datum => invert(datum.color, true)}
+            sliceLabelsTextColor={datum =>
+              invert(datum.color, {
+                black: "#000000",
+                white: "#FFFFFF",
+                threshold: 0.45
+              })
+            }
+            cornerRadius={this.state.settings?.cornerRadius}
+            padAngle={this.state.settings?.padAngle}
+            borderWidth={this.state.settings?.borderWidth}
+            borderColor={this.state.settings?.borderColor}
             data={data}
             colors={
               this.state.settings?.colors?.scheme === "regagro"

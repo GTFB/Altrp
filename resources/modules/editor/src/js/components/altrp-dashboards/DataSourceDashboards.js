@@ -119,6 +119,8 @@ class DataSourceDashboards extends Component {
     }
   }
 
+  putLayoutToLocalStorage(layout) {}
+
   setEditItem(item) {
     let items = this.state.items;
     _.replace(items, { i: item.i }, item);
@@ -147,9 +149,6 @@ class DataSourceDashboards extends Component {
       if (el === null) {
         state.drawer = null;
       }
-      console.log("====================================");
-      console.log(element);
-      console.log("====================================");
       this.props.editElementDispatch(element);
       state.editElement = element;
       if (addItemPreviewBool !== null) {
@@ -237,6 +236,9 @@ class DataSourceDashboards extends Component {
         settings: { ...widget.settings }
       };
       let index = _.findKey(this.state.items, { i: i });
+      console.log("====================================");
+      console.log(this.state.breakpoint);
+      console.log("====================================");
       this.setState(state => {
         state.items[index] = widget;
         return { ...state, items: state.items };
@@ -255,6 +257,9 @@ class DataSourceDashboards extends Component {
       w: w,
       h: h
     };
+    console.log("====================================");
+    console.log(this.state.breakpoint);
+    console.log("====================================");
     this.setState(s => ({ ...s, items: { ...s.items, [itemKey]: item } }));
     this.saveWidgetData(this.state);
   }
@@ -317,9 +322,11 @@ class DataSourceDashboards extends Component {
       <div>
         {this.props.showButton && <AddItemButton onAddItem={this.onAddItem} />}
         <ResponsiveReactGridLayout
+          draggableCancel=".altrp-dashboards__cancle-drag"
           onLayoutChange={this.onLayoutChange}
           onResizeStart={this.onResizeHandler}
           onResizeStop={this.onResizeHandlerStop}
+          autoSize={true}
           onDrop={this.onDrop}
           onDragStop={this.onDragStop}
           onBreakpointChange={this.onBreakpointChange}
@@ -355,6 +362,7 @@ class DataSourceDashboards extends Component {
         {this.state.drawer != null &&
           ReactDOM.createPortal(
             <WidgetPreview
+              width={this.props.drawerWidth}
               widgetID={this.state.id}
               addItemPreview={this.state.addItemPreview}
               setCardName={this.setCardName}

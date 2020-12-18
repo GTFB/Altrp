@@ -95,6 +95,12 @@ class FormsManager {
     return _form;
   }
 
+  /**
+   * Очищает все формы
+   */
+  clearFormsStore(){
+    this.forms = [];
+  }
 }
 window.formsManager = new FormsManager();
 

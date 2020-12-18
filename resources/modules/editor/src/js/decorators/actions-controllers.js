@@ -177,7 +177,7 @@ export function actionsControllers(element){
   });
 
   actionsRepeater.addControl('name', {
-    label: 'Name',
+    label: 'File Name',
     dynamic: false,
     conditions: {
       type: [

@@ -142,7 +142,7 @@ class WidgetSettings extends Component {
         }
         name = _.uniq(name);
         name = name.filter(item => item.length !== 0);
-        name = name.join(this.state.delimer);
+        name = name.join(this.parseHtmlEntities(this.state.delimer));
       } else {
         name = param;
       }
@@ -160,7 +160,7 @@ class WidgetSettings extends Component {
         name = name.filter(
           item => typeof item !== "undefined" && item.length !== 0
         );
-        name = name.join(this.state.delimer);
+        name = name.join(this.parseHtmlEntities(this.state.delimer));
       }
     }
     return name;
@@ -207,7 +207,7 @@ class WidgetSettings extends Component {
             name[index] = nameDatasource;
           }
         });
-        name = name.join(this.state.delimer);
+        name = name.join(this.parseHtmlEntities(this.state.delimer));
       } else {
         name = name.split(this.state.delimer);
         arrayOfDatasourceTitles.forEach((nameDatasource, index) => {
@@ -216,7 +216,7 @@ class WidgetSettings extends Component {
             name[index] = nameDatasource;
           }
         });
-        name = name.join(this.state.delimer);
+        name = name.join(this.parseHtmlEntities(this.state.delimer));
       }
     }
     return name;
@@ -267,6 +267,13 @@ class WidgetSettings extends Component {
       this.props.editElementDispatch(element);
       this.setState(s => ({ ...s, editElement: { settings: settings } }));
     }
+  }
+
+  parseHtmlEntities(str) {
+    return str.replace(/&#([0-9]{1,3});/gi, function(match, numStr) {
+      var num = parseInt(numStr, 10); // read num as normal number
+      return String.fromCharCode(num);
+    });
   }
   //Смена значения локального параметра
   setParam(left, right, options = [], prevParam = "") {

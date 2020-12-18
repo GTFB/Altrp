@@ -15,7 +15,8 @@ import {
   printElements,
   replaceContentWithData,
   scrollToElement,
-  setDataByPath, altrpRandomId
+  setDataByPath,
+  altrpRandomId
 } from "../helpers";
 import { togglePopup } from "../store/popup-trigger/actions";
 import reactDom from "react-dom";
@@ -318,53 +319,53 @@ class AltrpAction extends AltrpModel {
     let data = null;
     if (this.getProperty("data")) {
       data = parseParamsFromString(
-          this.getProperty("data"),
-          getAppContext(),
-          true
+        this.getProperty("data"),
+        getAppContext(),
+        true
       );
       // if (!_.isEmpty(data)) {
       //   return form.submit("", "", data);
       // }
       // return { success: true };
     }
-    if( this.getProperty("forms_bulk")
-    ){
-      if(_.isArray(getDataByPath(this.getProperty('bulk_path')))
-          && _.get(getDataByPath(this.getProperty('bulk_path')), 'length'))
-      {
-        let bulk = getDataByPath(this.getProperty('bulk_path'));
-        let _form = this.getProperty('_form');
+    if (this.getProperty("forms_bulk")) {
+      if (
+        _.isArray(getDataByPath(this.getProperty("bulk_path"))) &&
+        _.get(getDataByPath(this.getProperty("bulk_path")), "length")
+      ) {
+        let bulk = getDataByPath(this.getProperty("bulk_path"));
+        let _form = this.getProperty("_form");
         data = _.assign(_form.getData(), data);
         let bulkRequests = bulk.map(async (item, idx)=>{
           // return   ()=>{
-            let url = this.getProperty('form_url');
-            url = replaceContentWithData(url, item);
-            const form = formsManager.registerForm(
-                this.getFormId() + idx,
-                "",
-                this.getProperty("form_method"),
-                {
-                  customRoute: url,
-                }
-            );
-            return  await form.submit('', '', data);
+          let url = this.getProperty("form_url");
+          url = replaceContentWithData(url, item);
+          const form = formsManager.registerForm(
+            this.getFormId() + idx,
+            "",
+            this.getProperty("form_method"),
+            {
+              customRoute: url
+            }
+          );
+          return await form.submit("", "", data);
           // }
         });
-        try{
+        try {
           let res = await Promise.all(bulkRequests);
-        } catch(error){
+        } catch (error) {
           console.error(error);
-          bulk.forEach((item, idx)=>{
+          bulk.forEach((item, idx) => {
             formsManager.deleteFormById(this.getFormId() + idx);
           });
-          return {success: false}
+          return { success: false };
         }
-        bulk.forEach((item, idx)=>{
+        bulk.forEach((item, idx) => {
           formsManager.deleteFormById(this.getFormId() + idx);
         });
       }
 
-      return {success: true}
+      return { success: true };
     }
     /**
      *
@@ -661,7 +662,6 @@ class AltrpAction extends AltrpModel {
     }
     let value = this.getProperty("value") || '';
     value = value.trim();
-
     const setType = this.getProperty("set_type");
     let count = this.getProperty("count");
     switch (setType) {
@@ -805,22 +805,24 @@ class AltrpAction extends AltrpModel {
       return { success: true };
     }
     IDs = IDs.split(",");
-    const change = this.getProperty('forms_change');
+    const change = this.getProperty("forms_change");
     IDs.forEach(id => {
       let component = getComponentByElementId(id);
-      switch(change){
-        case 'select_all':{
-          if(_.get(component, 'elementRef.current.selectAll')){
-            component.elementRef.current.selectAll();
+      switch (change) {
+        case "select_all":
+          {
+            if (_.get(component, "elementRef.current.selectAll")) {
+              component.elementRef.current.selectAll();
+            }
           }
-        }
-        break;
-        case 'clear':{
-          if(_.get(component, 'elementRef.current.clearValue')){
-            component.elementRef.current.clearValue();
+          break;
+        case "clear":
+          {
+            if (_.get(component, "elementRef.current.clearValue")) {
+              component.elementRef.current.clearValue();
+            }
           }
-        }
-        break;
+          break;
       }
     });
     return { success: true };
@@ -844,9 +846,9 @@ class AltrpAction extends AltrpModel {
     let elementId = this.getProperty("element_id");
     let element = getComponentByElementId(elementId);
     let action = this.getProperty("action");
-    if(_.isFunction(element[action])) {
+    if (_.isFunction(element[action])) {
       element[action]();
-      return{
+      return {
         success: true
       };
     }
