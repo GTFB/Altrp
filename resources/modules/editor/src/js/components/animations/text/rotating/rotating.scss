@@ -52,37 +52,47 @@
 
 .altrp-animating-rotating-flip-container {
     perspective: 500px;
-    animation: altrp-animating-rotating-flip-show 5000ms infinite;
     transform-origin: 50% 100%;
     transform-style: preserve-3d;
-    transform: rotateX(180deg);
+    transform: rotateX(0deg);
 }
 
-@keyframes altrp-animating-rotating-flip-show {
+.altrp-animating-rotating-flip-container-hiding {
+    animation: altrp-animating-rotating-flip-animation-hiding 1000ms forwards;
+}
+
+@keyframes altrp-animating-rotating-flip-animation-hiding  {
     0% {
-        transform: rotateX(-180deg);
-        opacity: 0;
-    }
-    20% {
-        transform: rotateX(0deg);
+        transform: rotateX(0);
         opacity: 1;
     }
     40% {
-        transform: rotateX(0);
-    }
-    55% {
         transform: rotateX(-40deg);
         opacity: 1;
     }
     100% {
-        opacity: 0;
         transform: rotateX(180deg);
+        opacity: 0;
+    }
+}
+
+.altrp-animating-rotating-flip-container-showing {
+    animation: altrp-animating-rotating-flip-animation-showing 1000ms forwards;
+}
+
+@keyframes altrp-animating-rotating-flip-animation-showing  {
+    0% {
+        transform: rotateX(-180deg);
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+        transform: rotateX(0);
     }
 }
 
 .altrp-animating-rotating-flip-word {
     position: relative;
-    cursor: pointer;
     box-sizing: border-box;
 }
 
