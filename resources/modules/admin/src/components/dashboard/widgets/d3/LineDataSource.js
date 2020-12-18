@@ -242,32 +242,30 @@ class LineDataSource extends Component {
                     ...this.state.settings?.axisBottom
                   }
             }
-            legends={[
-              {
-                anchor: "bottom-right",
-                direction: "column",
-                justify: false,
-                translateX: 100,
-                translateY: 0,
-                itemsSpacing: 0,
-                itemDirection: "left-to-right",
-                itemWidth: 80,
-                itemHeight: 20,
-                itemOpacity: 0.75,
-                symbolSize: 12,
-                symbolShape: "circle",
-                symbolBorderColor: "rgba(0, 0, 0, .5)",
-                effects: [
-                  {
-                    on: "hover",
-                    style: {
-                      itemBackground: "rgba(0, 0, 0, .03)",
-                      itemOpacity: 1
+            animate={Boolean(this.state.settings?.enableAnimation)}
+            legends={
+              this.state.settings?.enableLegend
+                ? [
+                    {
+                      anchor:
+                        this.state.settings?.legendAchor || "bottom-right",
+                      direction: this.state.settings?.legendDirection || "row",
+                      justify: this.state.settings?.legendJustify || false,
+                      translateX: this.state.settings?.legendTranslateX || 0,
+                      translateY: this.state.settings?.legendTranslateY || 0,
+                      itemsSpacing:
+                        this.state.settings?.legendItemsSpacing || 10,
+                      itemWidth: this.state.settings?.legendItemWidth || 10,
+                      itemHeight: this.state.settings?.legendItemHeight || 10,
+                      itemDirection:
+                        this.state.settings?.legendItemDirection ||
+                        "left-to-right",
+                      symbolSize: this.state.settings?.legendSymbolSize || 25,
+                      symbolShape: "circle"
                     }
-                  }
-                ]
-              }
-            ]}
+                  ]
+                : []
+            }
           />
         </ErrorBoundary>
       </>

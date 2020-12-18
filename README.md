@@ -5,6 +5,7 @@
 
 ### 0.11.1
 + Add Action Update Elements & Bulk Form Action
++ Draggable Repeater Items
 + Add File Types:
     Images
     Documents 

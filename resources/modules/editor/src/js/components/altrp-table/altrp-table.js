@@ -291,7 +291,7 @@ const AltrpTable = ({settings,
                   setUpdatedData({});
                 }}
                 disabled={page === 1}>
-          {settings.prev_text || 'Previous Page'}
+          {settings.prev_text || ''}
         </button>
         <div className="altrp-pagination__count">
           {settings.current_page_text || 'Current Page:'}
@@ -304,7 +304,7 @@ const AltrpTable = ({settings,
                   setPage(old => (!_latestData || !_latestData.hasMore ? old : old + 1))
                 }}
                 disabled={!_latestData || !_latestData.hasMore}>
-          {settings.next_text || 'Next Page'}
+          {settings.next_text || ''}
 
         </button>
       </div> : ''

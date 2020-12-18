@@ -6,7 +6,7 @@ import DataAdapter from "./DataAdapter";
 import invert from "invert-color";
 import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
 
-const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors.reverse();
 
 const mapStateToProps = state => {
   return { formsStore: _.cloneDeep(state.formsStore) };
@@ -203,6 +203,34 @@ class BarDataSource extends Component {
                       ...this.state.settings?.axisBottom
                     }
                   : null
+              }
+              animate={Boolean(this.state.settings?.enableAnimation) || false}
+              motionDamping={this.state.settings?.animationMotionDamping}
+              motionStiffness={this.state.settings?.animationMotionStiffness}
+              legends={
+                this.state.settings?.enableLegend
+                  ? [
+                      {
+                        dataFrom: "indexes",
+                        anchor:
+                          this.state.settings?.legendAchor || "bottom-right",
+                        direction:
+                          this.state.settings?.legendDirection || "row",
+                        justify: this.state.settings?.legendJustify || false,
+                        translateX: this.state.settings?.legendTranslateX || 0,
+                        translateY: this.state.settings?.legendTranslateY || 0,
+                        itemsSpacing:
+                          this.state.settings?.legendItemsSpacing || 10,
+                        itemWidth: this.state.settings?.legendItemWidth || 10,
+                        itemHeight: this.state.settings?.legendItemHeight || 10,
+                        itemDirection:
+                          this.state.settings?.legendItemDirection ||
+                          "left-to-right",
+                        symbolSize: this.state.settings?.legendSymbolSize || 25,
+                        symbolShape: "circle"
+                      }
+                    ]
+                  : []
               }
             />
           </ErrorBoundary>
