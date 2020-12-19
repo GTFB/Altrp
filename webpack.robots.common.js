@@ -3,7 +3,7 @@ const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
-  entry: "./resources/modules/admin/src/index.js",
+  entry: "./resources/modules/robots/src/index.js",
   mode: "development",
   module: {
     rules: [
@@ -15,11 +15,6 @@ module.exports = {
           presets: ["@babel/env"]
         }
       },
-      // {
-      //   test: /\.(js|jsx)$/,
-      //   use: 'react-hot-loader/webpack',
-      //   include: /node_modules/
-      // },
       {
         test: /\.s[ac]ss$/i,
         use: [
@@ -58,15 +53,15 @@ module.exports = {
     extensions: ["*", ".js", ".jsx"]
   },
   output: {
-    path: path.resolve(__dirname, "admin/"),
-    publicPath: "http://localhost:3002/src/",
+    path: path.resolve(__dirname, "robots/"),
+    publicPath: "http://localhost:3006/src/",
     chunkFilename: "[chunkhash].bundle.js",
     filename: "bundle.js"
   },
   devServer: {
     contentBase: path.join(__dirname, "public/"),
-    port: 3000,
-    publicPath: "http://localhost:3000/admin/",
+    port: 3006,
+    publicPath: "http://localhost:3006/admin/",
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",

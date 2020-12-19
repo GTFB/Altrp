@@ -1,21 +1,20 @@
 const path = require("path");
 const merge = require("webpack-merge");
-const common = require("./webpack.reports.common.js");
+const common = require("./webpack.robots.common.js");
 const fs = require("fs");
 const http = require("http");
 
-let data;
 module.exports = merge(common, {
   mode: "development",
   devtool: "inline-source-map",
   devServer: {
     disableHostCheck: true,
-    contentBase: path.join(__dirname, "resources/modules/reports-new/public/"),
-    port: 3005,
-    publicPath: "http://localhost:3005/src/",
+    contentBase: path.join(__dirname, "resources/modules/robots/public/"),
+    port: 3006,
+    publicPath: "http://localhost:3006/src/",
     hotOnly: true,
     before: function(app, server, compiler) {
-      app.get("/ajax/routes", function(req, res) {
+      app.get("/storage/*", function(req, res) {
         console.log("http://altrp.nz" + req.url);
         http
           .get("http://altrp.nz" + req.url, data => {
@@ -34,12 +33,12 @@ module.exports = merge(common, {
             console.error(err.message);
           });
       });
-      app.get("/modules/reports-new/reports.js", function(req, res) {
+      app.get("/modules/robots/robots.js", function(req, res) {
         http.get(
           {
             hostname: "localhost",
-            port: 3005,
-            path: "/reports-new/bundle.js",
+            port: 3006,
+            path: "/robots/bundle.js",
             agent: false // Create a new agent just for this one request
           },
           _res => {

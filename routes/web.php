@@ -42,12 +42,15 @@ Route::get( '/admin/editor', function (){
   return view( 'editor' );
 } )->middleware( 'auth', 'admin' )->name('editor');
 
+
 Route::get( '/admin/editor-content', function (){
-  return view( 'editor-content' );
+    return view( 'editor-content' );
 } )->middleware( 'auth' )->name('editor-content');
 
-// Route::get('/admin/reports-editor',fn()=>view('reports'));
-// Route::get('/admin/reports-content',fn()=>view('reports-content'));
+Route::get('/admin/robots-editor', fn() => view('robots'))->middleware('auth', 'admin')->name('robots-editor');
+
+Route::get('/admin/reports-editor',fn()=>view('reports'));
+Route::get('/admin/reports-content',fn()=>view('reports-content'));
 
 // Route::get( '/admin/editor-reports', function (){
 //    return view( 'editor-reports' );
@@ -162,6 +165,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
       ->name( 'get-template-setting' );
     Route::put( 'templates/{template_id}/conditions', 'TemplateController@conditionsSet' )
       ->name( 'set-template-setting' );
+
+    /** Robots routes */
+    Route::resource('robots', 'RobotController');
+
     /**
      * Global Style
      */
@@ -408,7 +415,7 @@ foreach($reports_routes as $report_route){
   $title = $report_route['title'];
 
   $report_route = str_replace( ':id', '{id}', $path );
-  
+
   Route::get($report_route, function () use ($title){
     return view('front-app',['title'=>$title]);
   })->middleware(['web','installation.checker']);

@@ -34,6 +34,7 @@ import Plugins from "./components/Plugins";
 import Reports from "./components/Reports";
 import Tables from "./components/Tables";
 import Templates from "./components/Templates";
+import Robots from "./components/Robots";
 import AdminModal from "./components/AdminModal";
 import AddPage from "./components/AddPage";
 import AddReport from "./components/AddReport";
@@ -77,14 +78,15 @@ class Admin extends Component {
         adminEnable: true
       },
       pagesMenuShow: false,
-      models: [],
+      models: []
     };
     this.toggleMenu = this.toggleMenu.bind(this);
   }
 
   componentDidMount() {
     store.subscribe(this.updateAdminState.bind(this));
-    new Resource({ route: '/admin/ajax/model_options' }).getAll()
+    new Resource({ route: "/admin/ajax/model_options" })
+      .getAll()
       .then(({ options }) => this.setState({ models: options }));
   }
 
@@ -171,6 +173,12 @@ class Admin extends Component {
                       <span>Templates</span>
                     </Link>
                   </li>
+                  <li>
+                    <Link to="/admin/robots" className="admin-nav-list__link">
+                      <TemplateSvg className="icon" />
+                      <span>Robots</span>
+                    </Link>
+                  </li>
                   {/* <li>
                     <Link to="/admin/reports" className="admin-nav-list__link">
                       <ReportSvg className="icon" />
@@ -217,18 +225,26 @@ class Admin extends Component {
                       <span>Pages</span>
                     </Link>
                   </li>
-
                   Models
-                  {models.sort((a, b) => {
-                    if (a.label.toUpperCase() < b.label.toUpperCase()) return -1;
-                    if (a.label.toUpperCase() > b.label.toUpperCase()) return 1;
-                    return 0;
-                  }).map(({ value: id, label }) => <li key={id}>
-                    <Link to={`/admin/model/${id}`} className="admin-nav-list__link">
-                      {/* <TableSvg className="icon" /> */}
-                      <span>- {label}</span>
-                    </Link>
-                  </li>)}
+                  {models
+                    .sort((a, b) => {
+                      if (a.label.toUpperCase() < b.label.toUpperCase())
+                        return -1;
+                      if (a.label.toUpperCase() > b.label.toUpperCase())
+                        return 1;
+                      return 0;
+                    })
+                    .map(({ value: id, label }) => (
+                      <li key={id}>
+                        <Link
+                          to={`/admin/model/${id}`}
+                          className="admin-nav-list__link"
+                        >
+                          {/* <TableSvg className="icon" /> */}
+                          <span>- {label}</span>
+                        </Link>
+                      </li>
+                    ))}
                 </ul>
               </div>
               <AdminVersion />
@@ -290,6 +306,9 @@ class Admin extends Component {
               </Route>
               <Route path="/admin/templates">
                 <Templates />
+              </Route>
+              <Route path="/admin/robots">
+                <Robots />
               </Route>
               <Route path="/admin/pages" exact>
                 <AllPages />

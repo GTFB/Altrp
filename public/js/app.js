@@ -104,8 +104,8 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-!(function webpackMissingModule() { var e = new Error("Cannot find module 'd:\\OpenServer\\domains\\Altrp.nz\\resources\\js\\app.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
-module.exports = __webpack_require__(/*! d:\OpenServer\domains\Altrp.nz\resources\sass\app.scss */"./resources/sass/app.scss");
+!(function webpackMissingModule() { var e = new Error("Cannot find module '/home/gasaichan/Documents/Work/Altrp/resources/js/app.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+module.exports = __webpack_require__(/*! /home/gasaichan/Documents/Work/Altrp/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
