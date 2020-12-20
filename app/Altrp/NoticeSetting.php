@@ -20,8 +20,19 @@ class NoticeSetting extends Model
         return $this->morphTo(__FUNCTION__, 'noticed_type', 'noticed_id');
     }
 
-    public function notice_settings()
+    public function sources()
     {
         return $this->belongsToMany(Source::class, 'altrp_notice_setting_source', 'source_id', 'notice_setting_id');
+    }
+
+    public function getParsedSettingsAttribute()
+    {
+        $setting = json_decode($this->notice_settings);
+        return $setting;
+    }
+
+    public function getConditionsAttribute()
+    {
+        return $this->parsed_settings->conditions;
     }
 }

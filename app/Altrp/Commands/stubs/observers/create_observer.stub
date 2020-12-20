@@ -2,10 +2,12 @@
 
 namespace App\Observers\AltrpObservers;
 
+use App\Altrp\Model;
 use App\Events\AltrpEvents\{{modelName}}Event;
+use App\Observers\BaseObserver;
 use {{modelNamespace}};
 
-class {{modelName}}Observer
+class {{modelName}}Observer extends BaseObserver
 {
     /**
      * Handle the {{modelSingle}} "created" event.
@@ -15,7 +17,18 @@ class {{modelName}}Observer
      */
     public function created({{modelName}} ${{modelSingle}})
     {
-        // broadcast(new {{modelName}}Event(${{modelSingle}}));
+        $model = Model::where('name', '{{modelSingle}}')->first();
+        $source = $model->altrp_sources->where('type', 'add')->first();
+        $columns = explode(',',$model->table->columns->implode('name',','));
+
+        $data = [
+            'model' => $model,
+            'source' => $source,
+            'columns' => $columns,
+            'action_type' => 'create'
+        ];
+
+        $this->sendNotifications($test_post, $source->notice_settings, $data);
     }
 
     /**
@@ -26,7 +39,18 @@ class {{modelName}}Observer
      */
     public function updated({{modelName}} ${{modelSingle}})
     {
-        // broadcast(new {{modelName}}Event(${{modelSingle}}));
+        $model = Model::where('name', '{{modelSingle}}')->first();
+        $source = $model->altrp_sources->where('type', 'update')->first();
+        $columns = explode(',',$model->table->columns->implode('name',','));
+
+        $data = [
+            'model' => $model,
+            'source' => $source,
+            'columns' => $columns,
+            'action_type' => 'update'
+        ];
+
+        $this->sendNotifications($test_post, $source->notice_settings, $data);
     }
 
     /**
@@ -37,7 +61,18 @@ class {{modelName}}Observer
      */
     public function deleted({{modelName}} ${{modelSingle}})
     {
-        // broadcast(new {{modelName}}Event(${{modelSingle}}));
+        $model = Model::where('name', '{{modelSingle}}')->first();
+        $source = $model->altrp_sources->where('type', 'delete')->first();
+        $columns = explode(',',$model->table->columns->implode('name',','));
+
+        $data = [
+            'model' => $model,
+            'source' => $source,
+            'columns' => $columns,
+            'action_type' => 'delete'
+        ];
+
+        $this->sendNotifications($test_post, $source->notice_settings, $data);
     }
 
     /**

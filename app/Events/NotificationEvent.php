@@ -34,14 +34,6 @@ class NotificationEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('altrpchannel.user.' . $this->user->id);
-    }
-
-    /**
-     * @return string
-     */
-    public function broadcastAs()
-    {
-        return 'notification.user';
+        return new PrivateChannel('App.User.' . $this->user->id);
     }
 }

@@ -36,4 +36,9 @@ return [
      * Путь к файлам сервис провайдеров
      */
     'service_providers_path' => 'app/Providers/AltrpProviders',
+
+    /*
+     * Путь к файлам уведомлений
+     */
+    'notifications_path' => 'app/Notifications/AltrpNotifications',
 ];

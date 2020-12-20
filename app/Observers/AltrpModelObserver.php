@@ -277,15 +277,15 @@ class AltrpModelObserver
             throw new CommandFailedException('Failed to update event file', 500);
         }
 
-        $observerFile = new ObserverFile($model);
-        $observerWriter = new ObserverFileWriter($observerFile);
-
-        if (! $observerWriter->write()) {
-            throw new CommandFailedException('Failed to update observer file', 500);
-        }
-        if (! $observerWriter->writeToServiceProvider()) {
-            throw new CommandFailedException('Failed to update service provider file', 500);
-        }
+//        $observerFile = new ObserverFile($model);
+//        $observerWriter = new ObserverFileWriter($observerFile);
+//
+//        if (! $observerWriter->write()) {
+//            throw new CommandFailedException('Failed to update observer file', 500);
+//        }
+//        if (! $observerWriter->writeToServiceProvider()) {
+//            throw new CommandFailedException('Failed to update service provider file', 500);
+//        }
 
         /**
          * @var Controller $controller

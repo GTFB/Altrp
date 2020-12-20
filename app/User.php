@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Altrp\Notification;
 use App\Traits\Searchable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -103,5 +104,15 @@ class User extends Authenticatable
     public function notice_settings()
     {
         return $this->morphMany('App\Altrp\NoticeSetting', 'noticed', 'noticed_type', 'noticed_id');
+    }
+
+    /**
+     * Get the entity's notifications.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'notifiable')->orderBy('created_at', 'desc');
     }
 }
