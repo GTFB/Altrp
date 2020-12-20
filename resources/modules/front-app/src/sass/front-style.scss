@@ -41,17 +41,65 @@ body {
   }
 
   &__tool {
-    padding-right: 25px;
+    width: 150px;
+    padding-left: 10px;
+    svg {
+      margin-right: 10px;
+      vertical-align: text-top;
+    }
+
+    cursor: pointer;
   }
   
   &__profile {
-
+    margin-right: 25px;
+    svg {
+      vertical-align: text-top;
+      margin-left: 10px;
+    }
   }
 
   &__popup-template {
+    position: relative;
+    padding-left: 7px;
+    width: 150px;
+
+    z-index: 999;
+    background-color: #343B4C;
+  }
+  
+  &__popup-template-item {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__popup-popups-items {
     position: fixed;
+    left: 150px;
+    width: 100px;
+    padding-left: 7px;
+    margin-top: -25px;
 
     background-color: #343B4C;
   }
 
+  &__popup-popups-item {
+    overflow: hidden;
+    text-overflow: ellipsis; 
+  }
+
+  &__search {
+    width: 225px;
+  }
+
+  &__button {
+    width: 85px;
+    height: 21px;
+    margin-left: 9px;
+    padding: 3px;
+
+    color: #000000;
+    background-color: #87CA00;
+    border-radius: 2px;
+  }
 }

@@ -29,6 +29,8 @@ class RouteContent extends Component {
     this.scrollbar = React.createRef();
     this.isReport = window.location.href.includes("reports");
     appStore.dispatch(clearElements());
+
+    this.admin = this.props.currentUser.hasRoles('admin');
   }
 
   /**
@@ -148,12 +150,12 @@ class RouteContent extends Component {
     }
     return (
       <React.Fragment>
-        {this.props.currentUser.hasRoles('admin') && <AdminBar areas={this.state.areas} />}
+        {this.admin && <AdminBar areas={this.state.areas} admin={this.admin} />}
       
         <Scrollbars
           ref={this.scrollbar}
           onUpdate={this.props.setScrollValue}
-          style={{ zIndex: 99999 }}
+          // style={{ zIndex: 99999 }}
           autoHide
           autoHideTimeout={500}
           autoHideDuration={200}
