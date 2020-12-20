@@ -12,8 +12,27 @@ export default function AltrpPopper(props) {
       :
       document.body
   });
-  const placement = props.settings.placement;
-  console.log(placement)
+  let placement = props.settings.placement;
+  const variantPlace = [
+    "bottom-start",
+    "bottom",
+    "bottom-end",
+    "top-start",
+    "top",
+    "top-end",
+    "left-start",
+    "left",
+    "left-end",
+    "right-start",
+    "right",
+    "right-end"
+  ];
+
+  if(variantPlace.indexOf(placement) === -1) {
+    console.log(placement)
+    placement = variantPlace[0]
+  }
+
   const {styles, attributes, forceUpdate} = usePopper(props.target.current, object.current, {
     placement,
     modifiers: [
