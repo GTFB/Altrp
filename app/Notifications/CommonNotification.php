@@ -11,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Str;
 use NotificationChannels\Telegram\TelegramChannel;
 use NotificationChannels\Telegram\TelegramFile;
 use NotificationChannels\Telegram\TelegramMessage;
@@ -19,12 +20,28 @@ class CommonNotification extends Notification
 {
     use Queueable;
 
+    /**
+     * Модель данных
+     * @var $model
+     */
     public $model;
 
+    /**
+     * Настройки уведомления
+     * @var $noticeSettings
+     */
     protected $noticeSettings;
 
+    /**
+     * Обработанные настройки уведомления
+     * @var $parsedNoticeSettings
+     */
     protected $parsedNoticeSettings;
 
+    /**
+     * Дополнительные данные
+     * @var $data
+     */
     protected $data;
 
     /**
@@ -71,10 +88,24 @@ class CommonNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+        $mailObj = new MailMessage;
+        $data = $this->parsedNoticeSettings->data;
+
+        foreach ($data as $item) {
+            switch ($item->type) {
+                case 'content':
+                    $mailObj = $mailObj->line($this->replaceColumns($item->value));
+                    break;
+                case 'button':
+                    $url = $this->replaceColumns($item->value);
+                    $url = Str::contains($url, 'http') || Str::contains($url, 'https')
+                        ? $url : url($url);
+                    $mailObj = $mailObj->action($item->field, $url);
+                    break;
+            }
+        }
+
+        return $mailObj;
     }
 
     /**
@@ -154,7 +185,10 @@ class CommonNotification extends Notification
                     $tmObj = $tmObj->animation($this->replaceColumns($item->value));
                     break;
                 case 'button':
-                    $tmObj = $tmObj->button($item->field, $this->replaceColumns($item->value));
+                    $url = $this->replaceColumns($item->value);
+                    $url = Str::contains($url, 'http') || Str::contains($url, 'https')
+                        ? $url : url($url);
+                    $tmObj = $tmObj->button($item->field, $url);
                     break;
             }
         }
