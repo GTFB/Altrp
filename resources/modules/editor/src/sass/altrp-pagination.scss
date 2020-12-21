@@ -39,6 +39,10 @@
       }
     }
   }
+  &__ellipsis {
+    align-self: center;
+    margin: 0 5px;
+  }
 }
 #editor-content .altrp-pagination__select-size,
 #editor-content .altrp-table-th .altrp-label_select,
