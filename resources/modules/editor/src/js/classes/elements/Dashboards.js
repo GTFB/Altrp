@@ -154,7 +154,7 @@ class Dashboards extends BaseElement {
 
     this.addControl("style_background_color", {
       type: CONTROLLER_COLOR,
-      label: "Цвет фона",
+      label: "Background color",
       default: {
         color: "",
         colorPickedHex: ""

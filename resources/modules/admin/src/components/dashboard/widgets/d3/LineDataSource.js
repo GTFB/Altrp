@@ -4,6 +4,7 @@ import { linearGradientDef } from "@nivo/core";
 import { connect } from "react-redux";
 import DataAdapter from "./DataAdapter";
 import ErrorBoundary from "./ErrorBoundary";
+import Tooltip from "./Tooltip";
 
 import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
 const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
@@ -192,7 +193,7 @@ class LineDataSource extends Component {
           break;
       }
     }
-
+    const enabled = true;
     return (
       <>
         <ErrorBoundary>
@@ -245,6 +246,15 @@ class LineDataSource extends Component {
                     ...this.state.settings?.axisBottom
                   }
             }
+            tooltip={datum => (
+              <Tooltip
+                datum={datum}
+                settings={{
+                  padding: this.state.settings?.tooltipPadding
+                }}
+                enable={this.state.settings?.enableCustomTooltip}
+              />
+            )}
             animate={Boolean(this.state.settings?.enableAnimation)}
             legends={
               this.state.settings?.enableLegend

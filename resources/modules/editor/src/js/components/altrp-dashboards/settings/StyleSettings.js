@@ -286,11 +286,11 @@ class StyleSettings extends Component {
           >
             Укажите внутренние отступы
           </div>
-          <MarginInput
+          {/* <MarginInput
             widgetID={this.props.widgetID}
             setProperty={this.props.setProperty}
             type={this.state.editElement?.settings?.type}
-            margin={this.state.editElement?.settings?.margin}
+            margin={this.state.editElement?.settings?.margin} */}
           />
         </div>
         {this.state.editElement?.settings?.type === LINE && (
