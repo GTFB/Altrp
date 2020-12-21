@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class Media extends Model
 {
-  protected $table = 'media';
+  protected $table = 'altrp_media';
 
   protected $fillable = [
     'author',
