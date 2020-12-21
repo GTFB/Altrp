@@ -627,7 +627,7 @@ function AltrpTableWithoutUpdate(
                 if (!resize_columns && !virtualized_rows) {
                   // delete columnProps.style;
                   columnProps.style = {};
-                  if (column_width) columnProps.style.width = column_width;
+                  if (column_width) columnProps.style.width = column_width + '%';
                   if (column_header_alignment) columnProps.style.textAlign = column_header_alignment;
                 }
                 return <div {...columnProps}
@@ -1155,7 +1155,7 @@ export function settingsToColumns(settings, widgetId) {
         };
       }
       if (virtualized_rows || resize_columns) {
-        _column.width = Number(_column.column_width) || 150;
+        _column.width = (Number(_column.column_width) || 150) + '%';
       }
       columns.push(_column);
     }
