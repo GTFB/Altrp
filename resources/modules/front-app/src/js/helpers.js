@@ -975,7 +975,7 @@ function getPrevWeekEnd() {
 /**
  * Elfkztn gecnst cdjqcndf d j,]trnf[
  */
-export function clearEmptyProps() {}
+export function clearEmptyProps() { }
 
 /**
  * Заменяет в тексте конструкции типа {{altrpdata...}} на данные
@@ -1245,8 +1245,8 @@ export function sortOptions(options, sortDirection) {
     a.label.toLowerCase() > b.label.toLowerCase()
       ? 1
       : b.label.toLowerCase() > a.label.toLowerCase()
-      ? -1
-      : 0
+        ? -1
+        : 0
   );
   return sortDirection === "asc" ? options : options.reverse();
 }
@@ -1435,4 +1435,15 @@ export function altrpRandomId() {
   return Math.random()
     .toString(36)
     .substr(2, 9);
+}
+
+export function generateButtonsArray(pageIndex, pageCount) {
+  if (pageIndex <= 3) {
+    return [0, 1, 2, 3, 4, "ellipsis", pageCount - 2, pageCount - 1]
+  }
+  if (pageIndex >= pageCount - 4) {
+    return [0, 1, "ellipsis", pageCount - 5, pageCount - 4, pageCount - 3, pageCount - 2, pageCount - 1]
+  }
+
+  return [0, 1, "ellipsis", pageIndex - 1, pageIndex, pageIndex + 1, "ellipsis", pageCount - 2, pageCount - 1];
 }

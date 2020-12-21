@@ -758,16 +758,7 @@ class Table extends BaseElement {
         },
       ],
     });
-
-    this.addControl('inner_page_count', {
-      type: CONTROLLER_NUMBER,
-      default: 5,
-      nullable: true,
-      label: 'Page Count',
-    });
-
-
-
+    
     this.addControl('store_state', {
       type: CONTROLLER_SWITCHER,
       dynamic: false,
