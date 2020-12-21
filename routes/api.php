@@ -17,6 +17,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::get('/notifications', 'NotificationsController@getAllNotifications');
+    Route::get('/notifications/delete_all', 'NotificationsController@deleteAllNotifications');
+    Route::get('/unread_notifications', 'NotificationsController@getAllUnreadNotifications');
+    Route::get('/unread_notifications/mark_as_read_all', 'NotificationsController@markAsReadAll');
+    Route::get('/unread_notifications/{notification_id}/mark_as_read', 'NotificationsController@markAsRead');
+});
+
 Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], function () {
 
     Route::group(['prefix' => 'ajax'], function () {

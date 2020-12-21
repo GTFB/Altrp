@@ -188,6 +188,7 @@ return [
         Laratrust\LaratrustServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
         App\Providers\CrudGeneratorServiceProvider::class,
+        NotificationChannels\Telegram\TelegramServiceProvider::class,
 
         App\Providers\RepositoryServiceProvider::class,
 //        App\Providers\AltrpRepositoryServiceProvider::class,

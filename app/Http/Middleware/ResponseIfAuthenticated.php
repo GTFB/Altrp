@@ -21,14 +21,14 @@ class ResponseIfAuthenticated
   {
 
     if ( Auth::guard( $guard )->check() ) {
-      if( Page::where( 'path', '/login' )->first() ){
-        return response()->json( [
-          'success' => false,
-          'message' => 'Are Already Logged',
-        ] );
-      } else {
+//      if( Page::where( 'path', '/login' )->first() ){
+//        return response()->json( [
+//          'success' => false,
+//          'message' => 'Are Already Logged',
+//        ] );
+//      } else {
         return redirect( '/' );
-      }
+//      }
     }
 
     return $next( $request );

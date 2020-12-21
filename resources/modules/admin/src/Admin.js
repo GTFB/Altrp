@@ -112,14 +112,10 @@ class Admin extends Component {
   async componentWillMount() {
     let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
     currentUser = currentUser.data;
-    window.Echo.channel("altrpchannel.user." + currentUser.id)
-      .listen('.notification.user', e => {
-        //если удален = {} || []
-        store.dispatch(changeCurrentUser(e.user));
-        // data {...}
-        // console.log(store.getState().currentUser.data, 3);
-      }
-    );
+    window.Echo.private("App.User." + currentUser.id)
+      .notification((notification) => {
+        console.log(notification);
+      });
   }
 
   /**
