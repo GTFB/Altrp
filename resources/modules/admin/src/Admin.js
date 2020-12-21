@@ -26,8 +26,10 @@ import AdminLogo from "./components/AdminLogo";
 import AllPages from "./components/AllPages";
 import AdminSettings from "./components/AdminSettings";
 import Users from "./components/users/Users";
+import Notifications from "./components/users/Notifications/Notifications";
+import EditNotification from "./components/users/Notifications/EditNotification";
 import AddUserPage from "./components/users/AddUserPage";
-import EditUserPage from "./components/users/EditUserPage";
+import UserPage from "./components/users/UserPage";
 import UsersTools from "./components/users/UsersTools";
 import Assets from "./components/Assets";
 import Dashboard from "./components/Dashboard";
@@ -70,17 +72,12 @@ window.React = React;
 window.ReactDOM = ReactDOM;
 window.Component = React.Component;
 
+import {changeCurrentUser} from "../../front-app/src/js/store/current-user/actions";
 
 // Websockets import
-// let mix = require('laravel-mix');
-// require('dotenv').config();
-// let my_env_key = process.env.MIX_PUSHER_APP_KEY;
-
 import Echo from "laravel-echo"
-import {changeCurrentUser} from "../../front-app/src/js/store/current-user/actions";
-window.Pusher = require('pusher-js');
-
 try {
+  window.Pusher = require('pusher-js');
   window.Echo = new Echo({
     broadcaster: "pusher",
     key: 123456,
@@ -115,14 +112,12 @@ class Admin extends Component {
   async componentWillMount() {
     let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
     currentUser = currentUser.data;
-    console.log(currentUser, 1);
     window.Echo.channel("altrpchannel.user." + currentUser.id)
       .listen('.notification.user', e => {
         //если удален = {} || []
-      console.log(e.user, 2)
         store.dispatch(changeCurrentUser(e.user));
         // data {...}
-        console.log(store.getState().currentUser.data, 3);
+        // console.log(store.getState().currentUser.data, 3);
       }
     );
   }
@@ -293,8 +288,14 @@ class Admin extends Component {
               <Route path="/admin/users/new" exact>
                 <AddUserPage />
               </Route>
-              <Route path="/admin/users/user/:id">
-                <EditUserPage />
+              <Route path="/admin/users/user/:id" exact>
+                <UserPage />
+              </Route>
+              <Route path="/admin/users/user/:id" exact>
+                <Notifications />
+              </Route>
+              <Route path="/admin/users/user/:id/notification/:name" exact>
+                <EditNotification />
               </Route>
               <Route path="/admin/tools">
                 <UsersTools />
@@ -320,8 +321,7 @@ class Admin extends Component {
               <Route path="/admin/tables/edit/:id" component={EditTable} exact>
                 <EditTable />
               </Route>
-              <Route
-                path="/admin/tables/edit/:id/setting"
+              <Route path="/admin/tables/edit/:id/setting"
                 component={SettingTable}
                 exact
               />

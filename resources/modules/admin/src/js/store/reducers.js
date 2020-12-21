@@ -4,7 +4,7 @@ import {changeEnableState} from "./admin-state/reducers";
 import {adminLogoReducer} from "./admin-logo/reducers";
 import {assetsSettingsReducer} from "../../../../editor/src/js/store/assets-browser/reducers";
 import {aceEditorReducer} from "./ace-editor/reducers";
-import {currentUserReducer} from "../../../../front-app/src/js/store/current-user/reducers"; // front-app/src/js/store/current-user/reducers
+import {currentUserReducer} from "../../../../front-app/src/js/store/current-user/reducers";
 
 export default combineReducers({
   modalSettings: modalSettingsReducer,

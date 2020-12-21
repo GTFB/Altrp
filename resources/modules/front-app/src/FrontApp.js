@@ -29,7 +29,18 @@ class FrontApp extends Component {
     }).getAll();
     currentUser = currentUser.data;
     appStore.dispatch(changeCurrentUser(currentUser));
+    // Websockets
+    window.Echo.channel("altrpchannel.user." + currentUser.id)
+      .listen('.notification.user', e => {
+        //если удален = {} || []
+      // console.log(e.user, 2)
+        store.dispatch(changeCurrentUser(e.user));
+        // data {...}
+        // console.log(store.getState().currentUser.data, 3);
+      }
+    );
   }
+  
   render() {
     return (
       <Provider store={appStore}>

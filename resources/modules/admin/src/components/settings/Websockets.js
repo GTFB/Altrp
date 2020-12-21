@@ -3,10 +3,11 @@ import Resource from "../../../../editor/src/js/classes/Resource";
 class Websockets extends Component {
   constructor(props) {
     super(props);
-    this.toggle = this.toggle.bind(this);
     this.state = {
         checked: false,
     }
+
+    this.toggle = this.toggle.bind(this);
   }
 
   toggle() {
@@ -21,6 +22,7 @@ class Websockets extends Component {
     let res = await resource.getQueried({enabled:checked});
     if(res.success){
       alert(res.message || 'success');
+      // window.location.reload();
     }
   };
 
