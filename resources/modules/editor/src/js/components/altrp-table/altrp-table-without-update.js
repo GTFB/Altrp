@@ -7,7 +7,8 @@ import {
   setDataByPath,
   storeWidgetState,
   scrollbarWidth, isEditor, parseURLTemplate, mbParseJSON,
-  renderAssetIcon
+  renderAssetIcon,
+  generateButtonsArray
 } from "../../../../../front-app/src/js/helpers";
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { Link } from "react-router-dom";
@@ -607,7 +608,7 @@ function AltrpTableWithoutUpdate(
         {headerGroups.map(headerGroup => {
           const headerGroupProps = headerGroup.getHeaderGroupProps();
 
-          if (! resize_columns && ! virtualized_rows) {
+          if (!resize_columns && !virtualized_rows) {
             delete headerGroupProps.style;
           }
           return (
@@ -772,6 +773,15 @@ const TableBody =
     </div>
   };
 
+function PageButton({ index, pageIndex, gotoPage }) {
+  return <button
+    className={`altrp-pagination-pages__item ${(index === pageIndex) ? 'active' : ''}`}
+    onClick={() => gotoPage(index)}
+  >
+    {index + 1}
+  </button>
+}
+
 /**
  *
  * @param {{}}settings
@@ -812,32 +822,39 @@ export function Pagination(
     let pageText = current_page_text || 'Current Page: {{page}}';
     pageText = pageText.replace('{{page}}', pageIndex + 1).replace('{{page_count}}', pageCount);
     if (inner_page_type === 'pages') {
-      let paginatePageCount = Number(inner_page_count) || pageCount;
-      if (paginatePageCount <= 0 || paginatePageCount > pageCount) {
-        paginatePageCount = pageCount;
-      }
-      let array = [];
-      for (let i = 0; i < paginatePageCount; i++) {
-        array.push(i);
-      }
-      let startIndex = (paginatePageCount === pageCount) ? 1 : (pageIndex + 1) - Math.floor(paginatePageCount / 2);
-      if (startIndex <= 0) {
-        startIndex = 1;
-      }
-      if (startIndex + paginatePageCount > pageCount) {
-        startIndex = pageCount - paginatePageCount + 1;
-      }
-      pageText = <div className="altrp-pagination-pages">{array.map((i, idx) => {
-        idx += startIndex;
-        return <button className={`altrp-pagination-pages__item ${(idx - 1 === pageIndex) ? 'active' : ''}`}
-          key={idx}
-          onClick={() => {
-            gotoPage(idx - 1);
-          }}>
-          {idx}
-        </button>
+      // let paginatePageCount = Number(inner_page_count) || pageCount;
+      // if (paginatePageCount <= 0 || paginatePageCount > pageCount) {
+      //   paginatePageCount = pageCount;
+      // }
+      // let array = [];
+      // for (let i = 0; i < paginatePageCount; i++) {
+      //   array.push(i);
+      // }
+      // let startIndex = (paginatePageCount === pageCount) ? 1 : (pageIndex + 1) - Math.floor(paginatePageCount / 2);
+      // if (startIndex <= 0) {
+      //   startIndex = 1;
+      // }
+      // if (startIndex + paginatePageCount > pageCount) {
+      //   startIndex = pageCount - paginatePageCount + 1;
+      // }
+      // pageText = <div className="altrp-pagination-pages">{array.map((i, idx) => {
+      //   idx += startIndex;
+      //   return <button className={`altrp-pagination-pages__item ${(idx - 1 === pageIndex) ? 'active' : ''}`}
+      //     key={idx}
+      //     onClick={() => {
+      //       gotoPage(idx - 1);
+      //     }}>
+      //     {idx}
+      //   </button>
 
-      })}</div>
+      // })}</div>
+      return <div className="altrp-pagination-pages">
+        {pageCount > 7
+          ? generateButtonsArray(pageIndex, pageCount).map((item, index) => item === "ellipsis"
+            ? <div key={item + index} className="altrp-pagination__ellipsis">...</div>
+            : <PageButton key={item} index={item} pageIndex={pageIndex} gotoPage={gotoPage} />)
+          : [...Array(pageCount)].map((_, index) => <PageButton key={index} index={index} pageIndex={pageIndex} gotoPage={gotoPage} />)}
+      </div>
     }
     return pageText;
   }, [current_page_text, pageIndex, pageCount, inner_page_type, inner_page_count]);
@@ -846,7 +863,7 @@ export function Pagination(
       onClick={() => {
         previousPage();
       }}
-      disabled={pageIndex === 0}>      
+      disabled={pageIndex === 0}>
       <span>{settings.prev_text || 'Previous Page'}</span>
       {renderAssetIcon(prev_icon)}
     </button>}
