@@ -56,6 +56,7 @@ class Editor extends Component {
     };
     this.openPageSettings = this.openPageSettings.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
+    this.showHistoryPanel = this.showHistoryPanel.bind(this);
     this.showWidgetsPanel = this.showWidgetsPanel.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.onClick = this.onClick.bind(this);
@@ -107,6 +108,13 @@ class Editor extends Component {
       ...this.state,
       activePanel: "settings",
     });
+  }
+
+  showHistoryPanel() {
+    this.setState({
+      ...this.state, 
+      activePanel: "history"
+    })
   }
 
   /**
@@ -201,6 +209,7 @@ class Editor extends Component {
             <div className="left-panel-main">
               {this.state.activePanel === "widgets" && <WidgetsPanel />}
               {this.state.activePanel === "settings" && <SettingsPanel />}
+              {this.state.activePanel === "history" && <HistoryPanel />}
             </div>
             <div className="editor-bottom-panel d-flex align-content-center justify-center">
               <button
@@ -212,7 +221,10 @@ class Editor extends Component {
               <button className="btn ">
                 <Navigation className="icon" />
               </button>
-              <button className="btn ">
+              <button 
+                className="btn "
+                onClick={this.showHistoryPanel}
+              >
                 <History className="icon" />
               </button>
               <div className="btn ">
