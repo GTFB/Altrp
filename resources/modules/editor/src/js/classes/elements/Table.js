@@ -759,15 +759,6 @@ class Table extends BaseElement {
       ],
     });
 
-    this.addControl('inner_page_count', {
-      type: CONTROLLER_NUMBER,
-      default: 5,
-      nullable: true,
-      label: 'Page Count',
-    });
-
-
-
     this.addControl('store_state', {
       type: CONTROLLER_SWITCHER,
       dynamic: false,
@@ -820,6 +811,30 @@ class Table extends BaseElement {
       type: CONTROLLER_SWITCHER,
       label: 'Row Select',
       default: false,
+    });
+
+    this.addControl('checkbox_checked_icon', {
+      type: CONTROLLER_MEDIA,
+      label: 'Checked Icon',
+      conditions: {
+        row_select: true,
+      },
+    });
+
+    this.addControl('checkbox_unchecked_icon', {
+      type: CONTROLLER_MEDIA,
+      label: 'Unchecked Icon',
+      conditions: {
+        row_select: true,
+      },
+    });
+
+    this.addControl('checkbox_indeterminate_icon', {
+      type: CONTROLLER_MEDIA,
+      label: 'Indeterminate Icon',
+      conditions: {
+        row_select: true,
+      },
     });
 
     this.addControl('row_select_width', {
@@ -1499,9 +1514,9 @@ class Table extends BaseElement {
     this.startControlSection("table_style_pre_page_button", {
       tab: TAB_STYLE,
       label: "Prev Page Button",
-      // conditions: {
-      //   'hide_pre_page_button': true,
-      // },
+      conditions: {
+        'hide_pre_page_button!': true,
+      },
       
     });
 
@@ -2451,6 +2466,151 @@ class Table extends BaseElement {
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
           'padding-left: {{LEFT}}{{UNIT}};'
         ],
+      },
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("checkbox_icon_style", {
+      tab: TAB_STYLE,
+      label: "Checkbox Icons",
+      conditions: {
+        row_select: true,
+      },
+    });
+
+    this.addControl('checked_icon_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Checked Icon Margin',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .check-icon--checked svg{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('unchecked_icon_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Unchecked Icon Margin',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .check-icon--unchecked svg{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('indeterminate_icon_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Indeterminate Icon Margin',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .check-icon--indeterminate svg{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('checked_icon_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Cheked Icon color',
+      rules: {
+        '{{ELEMENT}} .check-icon--checked path{{STATE}}': 'fill: {{COLOR}};',
+      },
+    });
+
+    this.addControl('unchecked_icon_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Unchecked Icon color',
+      rules: {
+        '{{ELEMENT}} .check-icon--unchecked path{{STATE}}': 'fill: {{COLOR}};',
+      },
+    });
+
+    this.addControl('indeterminate_icon_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Indeterminate Icon color',
+      rules: {
+        '{{ELEMENT}} .check-icon--indeterminate path{{STATE}}': 'fill: {{COLOR}};',
+      },
+    });
+
+    this.addControl('checked_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Checked Icon Size',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .check-icon--checked svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      },
+    });
+
+    this.addControl('unchecked_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Unchecked Icon Size',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .check-icon--unchecked svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      },
+    });
+
+    this.addControl('indeterminate_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Indeterminate Icon Size',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .check-icon--indeterminate svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
       },
     });
 
