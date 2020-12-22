@@ -16,7 +16,6 @@ class ExportDashboardButton extends Component {
         >
           Экспорт диаграмм
         </button>
-        <input type="file" />
       </>
     );
   }

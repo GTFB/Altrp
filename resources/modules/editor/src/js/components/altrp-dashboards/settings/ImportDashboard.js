@@ -16,6 +16,11 @@ class ImportDashboard extends Component {
         >
           Импорт диаграмм
         </button>
+        <input
+          type="file"
+          onChange={e => this.props.getFile(e)}
+          accept="application/json"
+        />
       </>
     );
   }

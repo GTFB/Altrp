@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { connect } from "react-redux";
 import { editElement } from "../../store/altrp-dashboard/actions";
+import { exportDashboard } from "../../../../../front-app/src/js/store/altrp-dashboard-export/actions";
+
 import axios from "axios";
 import Drawer from "rc-drawer";
 
@@ -18,12 +20,16 @@ import ImportDashboard from "./settings/ImportDashboard";
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 const mapStateToProps = state => {
-  return { editElement: _.cloneDeep(state.editElement) };
+  return {
+    editElement: _.cloneDeep(state.editElement),
+    dashboardExport: _.cloneDeep(state.exportDashboard)
+  };
 };
 
 function mapDispatchToProps(dispatch) {
   return {
-    editElementDispatch: data => dispatch(editElement(data))
+    editElementDispatch: data => dispatch(editElement(data)),
+    exportDashboardDispatch: data => dispatch(exportDashboard(data))
   };
 }
 
@@ -47,11 +53,13 @@ class DataSourceDashboards extends Component {
       settings: props.settings,
       drawer: null,
       datasources: null,
-      delimer: props.delimer
+      delimer: props.delimer,
+      importData: []
     };
 
     this.export = this.export.bind(this);
     this.import = this.import.bind(this);
+    this.getFile = this.getFile.bind(this);
     this.onAddItem = this.onAddItem.bind(this);
     this.onAddItemCard = this.onAddItemCard.bind(this);
     this.onBreakpointChange = this.onBreakpointChange.bind(this);
@@ -115,7 +123,7 @@ class DataSourceDashboards extends Component {
           }
         )
         .then(res => {
-          // console.log(res.data);
+          console.log(res.data);
         });
     } catch (e) {
       console.log("ERROR ==>", e);
@@ -294,7 +302,10 @@ class DataSourceDashboards extends Component {
   }
 
   export() {
-    const settings = _.cloneDeep(this.state.items);
+    const settings = {
+      newCounter: _.cloneDeep(this.state.newCounter),
+      items: _.cloneDeep(this.state.items)
+    };
     const dataStr =
       "data:text/json;charset=utf-8," +
       encodeURIComponent(JSON.stringify(settings));
@@ -305,7 +316,54 @@ class DataSourceDashboards extends Component {
   }
 
   import() {
-    const file = new FileReader();
+    const file = this.state.importData;
+    const id = this.state.id;
+
+    if (_.keys(file).length <= 0) {
+      alert("Выберите файл");
+      return;
+    }
+    try {
+      const req = axios
+        .post(
+          `/ajax/dashboards/datasource/${id}/settings`,
+          {
+            settings: file
+          },
+          {
+            headers: {
+              "X-CSRF-TOKEN": document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content")
+            }
+          }
+        )
+        .then(res => {
+          try {
+            const settings = JSON?.parse(res.data.settings);
+            const { items, newCounter } = settings;
+            this.setState(s => ({
+              ...s,
+              items: items,
+              newCounter: newCounter
+            }));
+          } catch (error) {}
+        });
+    } catch (e) {
+      console.log("ERROR ==>", e);
+    }
+  }
+
+  getFile(e) {
+    const fileReader = new FileReader();
+    fileReader.readAsText(e.target.files[0], "UTF-8");
+    console.log("====================================");
+    console.log(e.target.files[0]);
+    console.log("====================================");
+    fileReader.onload = e => {
+      const file = JSON.parse(e.target.result);
+      this.setState(s => ({ ...s, importData: file }));
+    };
   }
 
   copyWidget(widget) {
@@ -335,10 +393,12 @@ class DataSourceDashboards extends Component {
         {this.props.showButton && (
           <>
             <AddItemButton onAddItem={this.onAddItem} />
-            <ExportDashboardButton onExport={this.export} />
-            <ImportDashboard onImport={this.import} />
           </>
         )}
+        {this.props.showExportButton && (
+          <ExportDashboardButton onExport={this.export} />
+        )}
+        <ImportDashboard onImport={this.import} getFile={this.getFile} />
         <ResponsiveReactGridLayout
           draggableCancel=".altrp-dashboards__cancle-drag"
           onLayoutChange={this.onLayoutChange}
