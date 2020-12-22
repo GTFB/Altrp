@@ -70,12 +70,15 @@ class AltrpAction extends AltrpModel {
     if (! formURL) {
       return formURL;
     }
-    // if (formURL.indexOf("{{") !== -1) {
-    //   formURL = replaceContentWithData(
-    //     formURL,
-    //     this.getCurrentModel().getData()
-    //   );
-    // }
+    if(this.getType() === 'form'){
+      return formURL;
+    }
+    if (formURL.indexOf("{{") !== -1) {
+      formURL = replaceContentWithData(
+        formURL,
+        this.getCurrentModel().getData()
+      );
+    }
     return formURL;
   }
 
