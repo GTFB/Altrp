@@ -7,7 +7,8 @@ import {
   setDataByPath,
   storeWidgetState,
   scrollbarWidth, isEditor, parseURLTemplate, mbParseJSON,
-  renderAssetIcon
+  renderAssetIcon,
+  generateButtonsArray
 } from "../../../../../front-app/src/js/helpers";
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { Link } from "react-router-dom";
@@ -237,7 +238,10 @@ function AltrpTableWithoutUpdate(
     virtualized_rows,
     replace_rows,
     replace_width,
-    ids_storage } = settings;
+    ids_storage,
+    checkbox_checked_icon: checkedIcon = {},
+    checkbox_unchecked_icon: uncheckedIcon = {},
+    checkbox_indeterminate_icon: indeterminateIcon = {} } = settings;
   const [cardTemplate, setCardTemplate] = React.useState(null);
   /**
    * Для перетаскивания
@@ -371,13 +375,13 @@ function AltrpTableWithoutUpdate(
             if ((!settings.inner_page_size) || (settings.inner_page_size < 0) || row_select_all) {
               return (
                 <div className="altrp-toggle-row">
-                  <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+                  <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} icons={{ checkedIcon, uncheckedIcon, indeterminateIcon }} />
                 </div>
               );
             }
             return (
               <div className="altrp-toggle-row">
-                <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
+                <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} icons={{ checkedIcon, uncheckedIcon, indeterminateIcon }} />
               </div>
             );
           },
@@ -385,7 +389,7 @@ function AltrpTableWithoutUpdate(
           // to the render a checkbox
           Cell: ({ row }) => (
             <div className="altrp-toggle-row">
-              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} icons={{ checkedIcon, uncheckedIcon, indeterminateIcon }} />
             </div>
           ),
         },
@@ -543,12 +547,12 @@ function AltrpTableWithoutUpdate(
     if (selected_storage) {
       setDataByPath(selected_storage, originalSelectedRows);
     }
-  }, [selected_storage, originalSelectedRows]);
+  }, [selectedFlatRows]);
   React.useEffect(() => {
     if (ids_storage) {
       setDataByPath(ids_storage, selectedIds);
     }
-  }, [ids_storage, selectedIds]);
+  }, [selectedFlatRows]);
 
   /**
    * Настройки пагинации
@@ -607,7 +611,7 @@ function AltrpTableWithoutUpdate(
         {headerGroups.map(headerGroup => {
           const headerGroupProps = headerGroup.getHeaderGroupProps();
 
-          if (! resize_columns && ! virtualized_rows) {
+          if (!resize_columns && !virtualized_rows) {
             delete headerGroupProps.style;
           }
           return (
@@ -623,7 +627,7 @@ function AltrpTableWithoutUpdate(
                 if (!resize_columns && !virtualized_rows) {
                   // delete columnProps.style;
                   columnProps.style = {};
-                  if (column_width) columnProps.style.width = column_width;
+                  if (column_width) columnProps.style.width = column_width + '%';
                   if (column_header_alignment) columnProps.style.textAlign = column_header_alignment;
                 }
                 return <div {...columnProps}
@@ -772,6 +776,15 @@ const TableBody =
     </div>
   };
 
+function PageButton({ index, pageIndex, gotoPage }) {
+  return <button
+    className={`altrp-pagination-pages__item ${(index === pageIndex) ? 'active' : ''}`}
+    onClick={() => gotoPage(index)}
+  >
+    {index + 1}
+  </button>
+}
+
 /**
  *
  * @param {{}}settings
@@ -812,32 +825,39 @@ export function Pagination(
     let pageText = current_page_text || 'Current Page: {{page}}';
     pageText = pageText.replace('{{page}}', pageIndex + 1).replace('{{page_count}}', pageCount);
     if (inner_page_type === 'pages') {
-      let paginatePageCount = Number(inner_page_count) || pageCount;
-      if (paginatePageCount <= 0 || paginatePageCount > pageCount) {
-        paginatePageCount = pageCount;
-      }
-      let array = [];
-      for (let i = 0; i < paginatePageCount; i++) {
-        array.push(i);
-      }
-      let startIndex = (paginatePageCount === pageCount) ? 1 : (pageIndex + 1) - Math.floor(paginatePageCount / 2);
-      if (startIndex <= 0) {
-        startIndex = 1;
-      }
-      if (startIndex + paginatePageCount > pageCount) {
-        startIndex = pageCount - paginatePageCount + 1;
-      }
-      pageText = <div className="altrp-pagination-pages">{array.map((i, idx) => {
-        idx += startIndex;
-        return <button className={`altrp-pagination-pages__item ${(idx - 1 === pageIndex) ? 'active' : ''}`}
-          key={idx}
-          onClick={() => {
-            gotoPage(idx - 1);
-          }}>
-          {idx}
-        </button>
+      // let paginatePageCount = Number(inner_page_count) || pageCount;
+      // if (paginatePageCount <= 0 || paginatePageCount > pageCount) {
+      //   paginatePageCount = pageCount;
+      // }
+      // let array = [];
+      // for (let i = 0; i < paginatePageCount; i++) {
+      //   array.push(i);
+      // }
+      // let startIndex = (paginatePageCount === pageCount) ? 1 : (pageIndex + 1) - Math.floor(paginatePageCount / 2);
+      // if (startIndex <= 0) {
+      //   startIndex = 1;
+      // }
+      // if (startIndex + paginatePageCount > pageCount) {
+      //   startIndex = pageCount - paginatePageCount + 1;
+      // }
+      // pageText = <div className="altrp-pagination-pages">{array.map((i, idx) => {
+      //   idx += startIndex;
+      //   return <button className={`altrp-pagination-pages__item ${(idx - 1 === pageIndex) ? 'active' : ''}`}
+      //     key={idx}
+      //     onClick={() => {
+      //       gotoPage(idx - 1);
+      //     }}>
+      //     {idx}
+      //   </button>
 
-      })}</div>
+      // })}</div>
+      return <div className="altrp-pagination-pages">
+        {pageCount > 7
+          ? generateButtonsArray(pageIndex, pageCount).map((item, index) => item === "ellipsis"
+            ? <div key={item + index} className="altrp-pagination__ellipsis">...</div>
+            : <PageButton key={item} index={item} pageIndex={pageIndex} gotoPage={gotoPage} />)
+          : [...Array(pageCount)].map((_, index) => <PageButton key={index} index={index} pageIndex={pageIndex} gotoPage={gotoPage} />)}
+      </div>
     }
     return pageText;
   }, [current_page_text, pageIndex, pageCount, inner_page_type, inner_page_count]);
@@ -846,7 +866,7 @@ export function Pagination(
       onClick={() => {
         previousPage();
       }}
-      disabled={pageIndex === 0}>      
+      disabled={pageIndex === 0}>
       <span>{settings.prev_text || 'Previous Page'}</span>
       {renderAssetIcon(prev_icon)}
     </button>}
@@ -1135,7 +1155,7 @@ export function settingsToColumns(settings, widgetId) {
         };
       }
       if (virtualized_rows || resize_columns) {
-        _column.width = Number(_column.column_width) || 150;
+        _column.width = (Number(_column.column_width) || 150) + '%';
       }
       columns.push(_column);
     }
@@ -1175,16 +1195,22 @@ export function settingsToColumns(settings, widgetId) {
  * @type {*|React.ForwardRefExoticComponent<React.PropsWithoutRef<{indeterminate: *, rest: *}> & React.RefAttributes<any>>}
  */
 const IndeterminateCheckbox = React.forwardRef(
-  ({ indeterminate, ...rest }, ref) => {
+  ({ indeterminate, icons, ...rest }, ref) => {
     const defaultRef = React.useRef();
     const resolvedRef = ref || defaultRef;
     React.useEffect(() => {
       resolvedRef.current.indeterminate = indeterminate
     }, [resolvedRef, indeterminate]);
+    const icon = icons.checkedIcon.name ?
+      rest.checked ?
+        icons.checkedIcon :
+        indeterminate ? icons.indeterminateIcon : icons.uncheckedIcon :
+      null;
     return (
-      <>
-        <input type="checkbox" ref={resolvedRef} {...rest} />
-      </>
+      <label className={"check-icon--" + (rest.checked ? "checked" : indeterminate ? "indeterminate" : "unchecked")}>
+        {icon && renderAssetIcon(icon)}
+        <input type="checkbox" ref={resolvedRef} {...rest} className={icon ? "hidden" : ""} />
+      </label>
     )
   }
 );

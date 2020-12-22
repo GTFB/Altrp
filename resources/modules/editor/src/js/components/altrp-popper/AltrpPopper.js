@@ -5,7 +5,6 @@ import {isEditor} from "../../../../../front-app/src/js/helpers";
 
 export default function AltrpPopper(props) {
   const object = useRef();
-  const [placement, setPlacement] = useState(props.settings.placement);
   const [updateSettings, setUpdateSettings] = useState(props.settings.updateSettings || {});
   const body = useMemo(() => {
     return isEditor() ?
@@ -13,9 +12,29 @@ export default function AltrpPopper(props) {
       :
       document.body
   });
+  let placement = props.settings.placement;
+  const variantPlace = [
+    "bottom-start",
+    "bottom",
+    "bottom-end",
+    "top-start",
+    "top",
+    "top-end",
+    "left-start",
+    "left",
+    "left-end",
+    "right-start",
+    "right",
+    "right-end"
+  ];
+
+  if(variantPlace.indexOf(placement) === -1) {
+    console.log(placement)
+    placement = variantPlace[0]
+  }
 
   const {styles, attributes, forceUpdate} = usePopper(props.target.current, object.current, {
-    placement: placement,
+    placement,
     modifiers: [
       {
         name: "offset",
@@ -27,10 +46,6 @@ export default function AltrpPopper(props) {
   });
 
   useEffect(() => {
-    if (placement !== props.settings.placement) {
-      setPlacement(props.settings.placement);
-      forceUpdate()
-    }
 
     if (Object.keys(updateSettings).length !== 0) {
       if (JSON.stringify(updateSettings) !== JSON.stringify(props.settings.updateSettings)) {
