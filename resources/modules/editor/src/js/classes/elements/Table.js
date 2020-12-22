@@ -1704,7 +1704,7 @@ class Table extends BaseElement {
       label: "Prev Page Button",
       conditions: {
         'hide_pre_page_button!': true,
-      }         
+      },
     });
 
     this.addControl('prev_page_button_margin', {
