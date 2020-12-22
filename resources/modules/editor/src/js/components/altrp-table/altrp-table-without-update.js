@@ -544,12 +544,12 @@ function AltrpTableWithoutUpdate(
     if (selected_storage) {
       setDataByPath(selected_storage, originalSelectedRows);
     }
-  }, [selected_storage, originalSelectedRows]);
+  }, [selectedFlatRows]);
   React.useEffect(() => {
     if (ids_storage) {
       setDataByPath(ids_storage, selectedIds);
     }
-  }, [ids_storage, selectedIds]);
+  }, [selectedFlatRows]);
 
   /**
    * Настройки пагинации
