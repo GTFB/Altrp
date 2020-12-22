@@ -239,9 +239,9 @@ function AltrpTableWithoutUpdate(
     replace_rows,
     replace_width,
     ids_storage,
-    checkbox_checked_icon: checkedIcon,
-    checkbox_unchecked_icon: uncheckedIcon,
-    checkbox_indeterminate_icon: indeterminateIcon } = settings;
+    checkbox_checked_icon: checkedIcon = {},
+    checkbox_unchecked_icon: uncheckedIcon = {},
+    checkbox_indeterminate_icon: indeterminateIcon = {} } = settings;
   const [cardTemplate, setCardTemplate] = React.useState(null);
   /**
    * Для перетаскивания
