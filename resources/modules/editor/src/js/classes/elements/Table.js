@@ -1219,27 +1219,40 @@ class Table extends BaseElement {
       label: "Global Filter"
     });
 
-    this.addControl("global_filter_input_color", {
-      type: CONTROLLER_COLOR,
-      label: "Input Color",
+    this.addControl('global_filter_label_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Label Padding',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
       rules: {
-        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'color: {{COLOR}}'
+        '{{ELEMENT}} .altrp-table-global-filter label{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl("global_filter_label_color", {
+      type: CONTROLLER_COLOR,
+      label: "Label Color",
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter label{{STATE}}': 'color: {{COLOR}}'
       }
     });
 
-    this.addControl("global_filter_input_background_color", {
-      type: CONTROLLER_COLOR,
-      label: "Input Background Color",
-      rules: {
-        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'background: {{COLOR}}'
-      }
-    });
-
-    this.addControl('global_filter_input_typographic', {
+    this.addControl('global_filter_label_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Input Typographic',
+      label: 'Label Typographic',
       rules: {
-        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': [
+        '{{ELEMENT}} .altrp-table-global-filter label{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -1252,6 +1265,11 @@ class Table extends BaseElement {
       },
     }
     );
+
+    this.addControl("global_filter_heading", {
+      type: CONTROLLER_HEADING,
+      label: 'Input'
+    });
 
     this.addControl("global_filter_input_width", {
       type: CONTROLLER_SLIDER,
@@ -1295,6 +1313,40 @@ class Table extends BaseElement {
         ]
       },
     });
+
+    this.addControl("global_filter_input_color", {
+      type: CONTROLLER_COLOR,
+      label: "Input Color",
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'color: {{COLOR}}'
+      }
+    });
+
+    this.addControl("global_filter_input_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Input Background Color",
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'background: {{COLOR}}'
+      }
+    });
+
+    this.addControl('global_filter_input_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Input Typographic',
+      rules: {
+        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
+    );
 
     this.addControl("global_filter_input_border_type", {
       type: CONTROLLER_SELECT,
@@ -1372,52 +1424,19 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl('global_filter_label_padding', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Label Padding',
+    this.addControl('global_filter_input_shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'Input Shadow',
       default: {
-        unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
+      presetColors: [
+        '#eaeaea',
+        '#9c18a8'
       ],
       rules: {
-        '{{ELEMENT}} .altrp-table-global-filter label{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
+        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
       },
     });
-
-    this.addControl("global_filter_label_color", {
-      type: CONTROLLER_COLOR,
-      label: "Label Color",
-      rules: {
-        '{{ELEMENT}} .altrp-table-global-filter label{{STATE}}': 'color: {{COLOR}}'
-      }
-    });
-
-    this.addControl('global_filter_label_typographic', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Label Typographic',
-      rules: {
-        '{{ELEMENT}} .altrp-table-global-filter label{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
-    }
-    );
 
     this.endControlSection();
 
