@@ -12,6 +12,8 @@ import WidgetData from "./WidgetData";
 import WidgetPreview from "./WidgetPreview";
 import WidgetSettings from "./WidgetSettings";
 import AddItemButton from "./settings/AddItemButton";
+import ExportDashboardButton from "./settings/ExportDashboardButton";
+import ImportDashboard from "./settings/ImportDashboard";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -48,6 +50,8 @@ class DataSourceDashboards extends Component {
       delimer: props.delimer
     };
 
+    this.export = this.export.bind(this);
+    this.import = this.import.bind(this);
     this.onAddItem = this.onAddItem.bind(this);
     this.onAddItemCard = this.onAddItemCard.bind(this);
     this.onBreakpointChange = this.onBreakpointChange.bind(this);
@@ -235,9 +239,6 @@ class DataSourceDashboards extends Component {
         settings: { ...widget.settings }
       };
       let index = _.findKey(this.state.items, { i: i });
-      console.log("====================================");
-      console.log(this.state.breakpoint);
-      console.log("====================================");
       this.setState(state => {
         state.items[index] = widget;
         return { ...state, items: state.items };
@@ -256,9 +257,6 @@ class DataSourceDashboards extends Component {
       w: w,
       h: h
     };
-    console.log("====================================");
-    console.log(this.state.breakpoint);
-    console.log("====================================");
     this.setState(s => ({ ...s, items: { ...s.items, [itemKey]: item } }));
     this.saveWidgetData(this.state);
   }
@@ -295,6 +293,21 @@ class DataSourceDashboards extends Component {
     this.saveWidgetData(this.state);
   }
 
+  export() {
+    const settings = _.cloneDeep(this.state.items);
+    const dataStr =
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify(settings));
+    let link = document.createElement("a");
+    link.setAttribute("href", dataStr);
+    link.setAttribute("download", `${this.state.id}.json`);
+    link.click();
+  }
+
+  import() {
+    const file = new FileReader();
+  }
+
   copyWidget(widget) {
     this.onAddItemCard(widget);
   }
@@ -319,7 +332,13 @@ class DataSourceDashboards extends Component {
   render() {
     return (
       <div>
-        {this.props.showButton && <AddItemButton onAddItem={this.onAddItem} />}
+        {this.props.showButton && (
+          <>
+            <AddItemButton onAddItem={this.onAddItem} />
+            <ExportDashboardButton onExport={this.export} />
+            <ImportDashboard onImport={this.import} />
+          </>
+        )}
         <ResponsiveReactGridLayout
           draggableCancel=".altrp-dashboards__cancle-drag"
           onLayoutChange={this.onLayoutChange}
