@@ -1514,9 +1514,9 @@ class Table extends BaseElement {
     this.startControlSection("table_style_pre_page_button", {
       tab: TAB_STYLE,
       label: "Prev Page Button",
-      // conditions: {
-      //   'hide_pre_page_button': true,
-      // },
+      conditions: {
+        'hide_pre_page_button!': true,
+      },
       
     });
 
