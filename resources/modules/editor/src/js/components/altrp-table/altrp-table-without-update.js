@@ -238,7 +238,10 @@ function AltrpTableWithoutUpdate(
     virtualized_rows,
     replace_rows,
     replace_width,
-    ids_storage } = settings;
+    ids_storage,
+    checkbox_checked_icon: checkedIcon,
+    checkbox_unchecked_icon: uncheckedIcon,
+    checkbox_indeterminate_icon: indeterminateIcon } = settings;
   const [cardTemplate, setCardTemplate] = React.useState(null);
   /**
    * Для перетаскивания
@@ -372,13 +375,13 @@ function AltrpTableWithoutUpdate(
             if ((!settings.inner_page_size) || (settings.inner_page_size < 0) || row_select_all) {
               return (
                 <div className="altrp-toggle-row">
-                  <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+                  <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} icons={{ checkedIcon, uncheckedIcon, indeterminateIcon }} />
                 </div>
               );
             }
             return (
               <div className="altrp-toggle-row">
-                <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
+                <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} icons={{ checkedIcon, uncheckedIcon, indeterminateIcon }} />
               </div>
             );
           },
@@ -386,7 +389,7 @@ function AltrpTableWithoutUpdate(
           // to the render a checkbox
           Cell: ({ row }) => (
             <div className="altrp-toggle-row">
-              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} icons={{ checkedIcon, uncheckedIcon, indeterminateIcon }} />
             </div>
           ),
         },
@@ -624,7 +627,7 @@ function AltrpTableWithoutUpdate(
                 if (!resize_columns && !virtualized_rows) {
                   // delete columnProps.style;
                   columnProps.style = {};
-                  if (column_width) columnProps.style.width = column_width;
+                  if (column_width) columnProps.style.width = column_width + '%';
                   if (column_header_alignment) columnProps.style.textAlign = column_header_alignment;
                 }
                 return <div {...columnProps}
@@ -1152,7 +1155,7 @@ export function settingsToColumns(settings, widgetId) {
         };
       }
       if (virtualized_rows || resize_columns) {
-        _column.width = Number(_column.column_width) || 150;
+        _column.width = (Number(_column.column_width) || 150) + '%';
       }
       columns.push(_column);
     }
@@ -1192,16 +1195,22 @@ export function settingsToColumns(settings, widgetId) {
  * @type {*|React.ForwardRefExoticComponent<React.PropsWithoutRef<{indeterminate: *, rest: *}> & React.RefAttributes<any>>}
  */
 const IndeterminateCheckbox = React.forwardRef(
-  ({ indeterminate, ...rest }, ref) => {
+  ({ indeterminate, icons, ...rest }, ref) => {
     const defaultRef = React.useRef();
     const resolvedRef = ref || defaultRef;
     React.useEffect(() => {
       resolvedRef.current.indeterminate = indeterminate
     }, [resolvedRef, indeterminate]);
+    const icon = icons.checkedIcon.name ?
+      rest.checked ?
+        icons.checkedIcon :
+        indeterminate ? icons.indeterminateIcon : icons.uncheckedIcon :
+      null;
     return (
-      <>
-        <input type="checkbox" ref={resolvedRef} {...rest} />
-      </>
+      <label className={"check-icon--" + (rest.checked ? "checked" : indeterminate ? "indeterminate" : "unchecked")}>
+        {icon && renderAssetIcon(icon)}
+        <input type="checkbox" ref={resolvedRef} {...rest} className={icon ? "hidden" : ""} />
+      </label>
     )
   }
 );
