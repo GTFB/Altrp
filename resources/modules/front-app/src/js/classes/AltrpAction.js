@@ -70,12 +70,12 @@ class AltrpAction extends AltrpModel {
     if (! formURL) {
       return formURL;
     }
-    if (formURL.indexOf("{{") !== -1) {
-      formURL = replaceContentWithData(
-        formURL,
-        this.getCurrentModel().getData()
-      );
-    }
+    // if (formURL.indexOf("{{") !== -1) {
+    //   formURL = replaceContentWithData(
+    //     formURL,
+    //     this.getCurrentModel().getData()
+    //   );
+    // }
     return formURL;
   }
 
@@ -372,7 +372,6 @@ class AltrpAction extends AltrpModel {
      * @type {AltrpForm}
      */
     let form = this.getProperty("_form");
-    console.log(form);
     return form.submit("", "", data);
   }
   /**
