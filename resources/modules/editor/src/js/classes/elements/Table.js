@@ -468,8 +468,8 @@ class Table extends BaseElement {
       label: 'Aggregate Template',
       responsive: false,
       dynamic: false,
-      conditions:{
-        'aggregate!' : '',
+      conditions: {
+        'aggregate!': '',
       },
       description: '{{value}} Unique Names',
     });
@@ -484,7 +484,7 @@ class Table extends BaseElement {
       label: 'Edit URL',
       description: '/ajax/models/tests/:id/title',
       default: '',
-      conditions:{
+      conditions: {
         column_is_editable: true,
       },
     });
@@ -748,7 +748,7 @@ class Table extends BaseElement {
       type: CONTROLLER_SELECT,
       nullable: true,
       label: 'Paginate Type',
-      options:[
+      options: [
         {
           label: 'Text',
           value: 'text',
@@ -897,7 +897,7 @@ class Table extends BaseElement {
     this.addControl('replace_text', {
       type: CONTROLLER_TEXTAREA,
       label: 'Text',
-      condition:{
+      condition: {
         replace_rows: true,
       },
     });
@@ -980,7 +980,7 @@ class Table extends BaseElement {
       type: CONTROLLER_NUMBER,
       label: 'Width',
       default: 100,
-      condition:{
+      condition: {
         replace_rows: true,
       },
     });
@@ -996,14 +996,14 @@ class Table extends BaseElement {
       type: CONTROLLER_NUMBER,
       label: 'Height',
       default: 400,
-      conditions:{
+      conditions: {
         virtualized_rows: true,
       },
     });
     this.addControl('item_size', {
       type: CONTROLLER_NUMBER,
       label: 'Item Size',
-      conditions:{
+      conditions: {
         virtualized_rows: true,
       },
     });
@@ -1211,7 +1211,7 @@ class Table extends BaseElement {
       },
     }
     );
-    
+
     this.endControlSection();
 
     this.startControlSection("global_filter_style_table", {
@@ -1256,20 +1256,22 @@ class Table extends BaseElement {
     this.addControl("global_filter_input_width", {
       type: CONTROLLER_SLIDER,
       label: "Input Width",
+      units: ['px', '%'],
       max: 800,
       min: 0,
       rules: {
-        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'width: {{SIZE}}px;'
+        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'width: {{SIZE}}{{UNIT}};'
       }
     });
 
     this.addControl("global_filter_margin_left", {
       type: CONTROLLER_SLIDER,
-      label: "Input Margin Left",
+      label: "Spacing",
+      units: ['px', '%'],
       max: 800,
       min: 0,
       rules: {
-        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'margin-left: {{SIZE}}px;'
+        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'margin-left: {{SIZE}}{{UNIT}};'
       }
     });
 
@@ -1881,7 +1883,7 @@ class Table extends BaseElement {
           'text-decoration: {{DECORATION}}'
         ],
       },
-    }); 
+    });
 
     this.endControlSection();
 
@@ -2309,7 +2311,7 @@ class Table extends BaseElement {
       label: "Pagination Select",
       conditions: {
         'hide_pagination_select!': true,
-      },      
+      },
     });
 
     this.addControl('pagination_select_margin', {
