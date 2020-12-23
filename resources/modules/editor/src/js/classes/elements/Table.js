@@ -2330,6 +2330,7 @@ class Table extends BaseElement {
       label: "Pagination Select",
       conditions: {
         'hide_pagination_select!': true,
+        'inner_page_count_options!': ''
       },
     });
 
