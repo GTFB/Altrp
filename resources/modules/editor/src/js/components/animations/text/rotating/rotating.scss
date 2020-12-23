@@ -105,3 +105,46 @@
     position: absolute;
     opacity: 0;
 }
+
+.altrp-animating-rotating-swirl-word {
+    position: absolute;
+    display: flex;
+}
+
+.altrp-animating-rotating-swirl-letter-hide {
+    opacity: 0;
+}
+
+.altrp-animating-rotating-swirl {
+    height: 100%;
+}
+
+.altrp-animating-rotating-swirl-letter-hiding {
+    animation: altrp-animating-rotating-swirl-letter-hiding 200ms forwards;
+}
+
+@keyframes altrp-animating-rotating-swirl-letter-hiding {
+    0% {
+        transform: rotateX(0) perspective(300px);
+        opacity: 1;
+    }
+    100% {
+        transform: rotateX(-180deg) perspective(300px);
+        opacity: 0;
+    }
+}
+
+.altrp-animating-rotating-swirl-letter-showing {
+    animation: altrp-animating-rotating-swirl-letter-showing 200ms forwards;
+}
+
+@keyframes altrp-animating-rotating-swirl-letter-showing {
+    0% {
+        transform: rotateX(-180deg);
+        opacity: 0;
+    }
+    100% {
+        transform: rotateX(0);
+        opacity: 1;
+    }
+}

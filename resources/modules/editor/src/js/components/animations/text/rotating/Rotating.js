@@ -11,6 +11,7 @@ class Rotating extends Component {
       step: 0,
       index: 0,
       width: 0,
+      widthRef: 0,
       style: {}
     };
 
@@ -21,6 +22,7 @@ class Rotating extends Component {
 
     this.clipRef = React.createRef();
     this.flipRef = React.createRef();
+    this.swirlRef = React.createRef();
   }
 
   componentDidMount() {
@@ -33,6 +35,10 @@ class Rotating extends Component {
     if(this.props.type === "flip") {
       this.getWidth();
       this.setState({ step: 1 })
+    }
+
+    if(this.props.type === "swirl") {
+      this.setState({index: -1})
     }
   }
 
@@ -52,6 +58,12 @@ class Rotating extends Component {
         style: {}
       }));
 
+      if(this.props.type === "swirl") {
+        console.log('tg')
+        this.setState({index: -1})
+      }
+
+      this.getWidth();
       this.rotating();
     };
 
@@ -65,27 +77,40 @@ class Rotating extends Component {
   }
 
   getWidth() {
-    for(let i=0; i<this.props.text.split("\n").length; i++) {
-      switch (this.props.type) {
-        case "flip":
-          if(this.flipRef.current) {
-            if(this.flipRef.current.offsetWidth > this.state.width) {
-              this.setState({ width: this.flipRef.current.offsetWidth})
+    switch (this.props.type) {
+      case "flip":
+        if (this.flipRef.current) {
+          if (this.flipRef.current.offsetWidth > this.state.width) {
+            this.setState({width: this.flipRef.current.offsetWidth})
+          }
+        }
+        break;
+      case "swirl":
+        if (this.swirlRef.current) {
+          if (this.swirlRef.current.offsetWidth > this.state.width) {
+
+            if(this.props.text.split("\n").length >= this.state.widthRef) {
+              this.setState((state) => ({
+                width: this.swirlRef.current.offsetWidth,
+                widthRef:state.widthRef + 1
+              }))
             }
           }
-          break;
-      }
+        }
+        break;
     }
   }
 
   rotating() {
+    const arrayText = this.props.text.split("\n");
+
     switch (this.props.type) {
       case "typing":
         setTimeout(() => {
-          const length = this.props.text.split("\n")[this.state.index].split("").length;
+          const length = arrayText[this.state.index].split("").length;
           this.setState((state) => ({ step: 1, active: (length >= state.active + 1) ? state.active : 0 }));
           setTimeout(() => {
-            const indexMax = this.props.text.split("\n").length--;
+            const indexMax = arrayText.length--;
             this.setState((state) => {
               return ({ step: 2, index: indexMax > state.index+1 ? state.index+1 : 0 })
             });
@@ -95,7 +120,7 @@ class Rotating extends Component {
         break;
       case "clip":
         if(this.clipRef.current) {
-          const length = this.props.text.split("\n").length;
+          const length = arrayText.length;
 
           setTimeout(() => {
             const clipWidth = setInterval(() => {
@@ -133,7 +158,7 @@ class Rotating extends Component {
         setTimeout(() => {
           this.setState({step: 0});
           setTimeout(() => {
-            const length = this.props.text.split("\n").length;
+            const length = arrayText.length;
             this.setState((state) => {
               return {
                 active: (length > state.active+1 ? state.active+1 : 0),
@@ -144,7 +169,36 @@ class Rotating extends Component {
             this.rotating()
             }, 1500);
           }, 3000);
-        break
+        break;
+      case "swirl":
+        this.getWidth();
+
+        if(_.isString(arrayText[this.state.active+1])) {
+          const wordNext = arrayText[this.state.active+1].split("").length;
+          const wordPrev = arrayText[this.state.active].split("").length;
+
+          this.setState({
+            step: wordNext > wordPrev ? wordNext : wordPrev
+          });
+        }
+
+        setTimeout(() => {
+
+          const letterChanging = setInterval(() => {
+            if(this.state.index < this.state.step) {
+              this.setState((state) => ({index: state.index+1}))
+            } else {
+              clearInterval(letterChanging);
+              setTimeout(() => {
+                const length = arrayText.length > this.state.active+1;
+                this.setState((state) => ({ active: length ? state.active+1 : 0, index: -1 }));
+                this.rotating();
+              }, 500)
+            }
+          }, 100)
+        }, 1000);
+
+        break;
     }
   }
 
@@ -272,7 +326,55 @@ class Rotating extends Component {
             }
           </div>
         );
-        break
+        break;
+      case "swirl":
+        text = (
+          <div
+            style={{
+              width: this.state.width
+            }}
+            className="altrp-animating-rotating-swirl"
+          >
+            {
+              textArray.map((word, idx) => {
+                const classNames = "altrp-animating-rotating-swirl-word";
+
+                return (
+                  <span key={idx} ref={this.state.widthRef === idx ? this.swirlRef : null} className={classNames}>
+                {
+                  word.split("").map((letter, idxL) => {
+                    let classNames = "altrp-animating-rotating-swirl-letter";
+                  // || this.state.acitve === idx && word.split("").length
+                    if(this.state.active !== idx) {
+                      classNames += " altrp-animating-rotating-swirl-letter-hide"
+                    }
+
+                    if(this.state.active + 1 === idx) {
+                      if(idxL <= this.state.index) {
+                        classNames += " altrp-animating-rotating-swirl-letter-showing"
+                      }
+                    }
+
+                    if(this.state.active === idx && idxL <= this.state.index) {
+                      classNames += " altrp-animating-rotating-swirl-letter-hiding"
+                    }
+
+                    return (
+                      <div key={idxL} className={classNames}>
+                        {
+                          letter
+                        }
+                      </div>
+                    )
+                  })
+                }
+              </span>
+                )
+              })
+            }
+          </div>
+        )
+        break;
     }
 
     let content = (
