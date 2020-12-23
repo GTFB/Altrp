@@ -22,7 +22,7 @@ class NoticeSetting extends Model
 
     public function sources()
     {
-        return $this->belongsToMany(Source::class, 'altrp_notice_setting_source', 'source_id', 'notice_setting_id');
+        return $this->belongsToMany(Source::class, 'altrp_notice_setting_source', 'notice_setting_id', 'source_id');
     }
 
     public function getParsedSettingsAttribute()
@@ -34,5 +34,15 @@ class NoticeSetting extends Model
     public function getConditionsAttribute()
     {
         return $this->parsed_settings->conditions;
+    }
+
+    public function setNoticeSettingsAttribute($item)
+    {
+        $this->attributes['notice_settings'] = json_encode($item);
+    }
+
+    public function getNoticeSettingsAttribute($item)
+    {
+        return json_decode($item);
     }
 }

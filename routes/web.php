@@ -83,6 +83,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/analytics/none', 'AnalyticsController@none');
 
     Route::get('/users/{user}/notifications', 'Admin\NoticeSettingController@index');
+    Route::get('/users/{user}/notifications/{notice}', 'Admin\NoticeSettingController@getNotice');
     Route::post('/users/{user}/notifications', 'Admin\NoticeSettingController@store');
     Route::put('/users/{user}/notifications/{notification}', 'Admin\NoticeSettingController@update');
     Route::delete('/users/{user}/notifications/{notification}', 'Admin\NoticeSettingController@destroy');

@@ -8,66 +8,20 @@ class Notifications extends Component{
     constructor(props){
         super(props);
         this.state = {
-            user_id: this.props.match.params.id ?? 1,
-            dataTest: [{
-                name: 'New Settings',
-                dataSource: [
-                    123,
-                    321,
-                ],
-                noticed_id: 123,
-                conditions:[
-                    {
-                        name: 'condition 1',
-                        type: 'any',
-                        enabled: true,
-                        compares:[
-                        {
-                            enabled: true,
-                            field_name: 'title',
-                            operator: '<>',
-                            value: 'TEST!'
-                        }
-                        ]
-                    }
-                ]
-                },
-                { name: 'New Settings 1', },
-                { name: 'New Settings 2', },
-                { name: 'New Settings 3', },
-                { name: 'New Settings 4', },
-                { name: 'New Settings 5', },
-                { name: 'New Settings 6', },
-                { name: 'New Settings 7', },
-                { name: 'New Settings 8', },
-                { name: 'New Settings 9', },
-                { name: 'New Settings 10', },
-                { name: 'New Settings 11', },
-                { name: 'New Settings 12', },
-                { name: 'New Settings 13', },
-                { name: 'New Settings 14', },
-                { name: 'New Settings 15', },
-                { name: 'New Settings 16', },
-            ],
+            user_id: this.props.match.params.id ?? '',
             data: [],
             currentPage: 1,
         };
-        this.resource = new Resource({route: '/admin/ajax/users/{user}/notifications'});
         this.itemsPerPage = 5;
+        this.notificationsAll = new Resource({route: `/admin/ajax/users/${this.state.user_id}/notifications`});
     }
 
     async componentDidMount(){
-      this.getNotificationSettings();
-    }
-    
-    getNotificationSettings = async() => {
-    //   let noticeSettingsData = await this.resource.getQueried({ s: this.state.search });
-      let noticeSettingsData = this.state.dataTest;
-
-      this.setState(state => {
-        return { ...state, data: noticeSettingsData };
-      });
-    }
+        let noticeSettingsData = await this.notificationsAll.getAll();
+        this.setState(state => {
+          return { ...state, data: noticeSettingsData };
+        });  
+    }    
         
     render(){
         const { currentPage, data, user_id} = this.state;
@@ -84,11 +38,11 @@ class Notifications extends Component{
                     </thead>
                     <tbody className="admin-table-body">
                     {                    
-                        data.slice(currentPage * this.itemsPerPage - this.itemsPerPage, currentPage * this.itemsPerPage).map((row, idx) =>                         
+                        data.slice(currentPage * this.itemsPerPage - this.itemsPerPage, currentPage * this.itemsPerPage).map((item, index) =>                         
                             
-                            <tr className="admin-table-row" key={row.name}>
+                            <tr className="admin-table-row" key={item.id}>
                                 <td className="admin-table__td admin-table__td_check ">
-                                    <Link to={`/admin/users/user/${user_id}/notification/${row.name}`}> {row.name} </Link>
+                                    <Link to={`/admin/users/user/${user_id}/notification/${item.id}`}> {item.notice_name} </Link>
                                 </td>
                             </tr>
                         

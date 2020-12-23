@@ -21,7 +21,7 @@ class BaseObserver
             foreach ($noticeSettings as $setting) {
                 foreach ($setting->conditions as $condition) {
                     if ($condition->enabled) {
-                        $type = $condition->type == 'All' ? '&&' : '||';
+                        $type = $condition->type == 'all' ? '&&' : '||';
                         $compares = [];
                         foreach ($condition->compares as $compare) {
                             if ($compare->enabled) {
