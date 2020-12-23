@@ -89,6 +89,7 @@ class DashboardsWidget extends Component {
     const settings = this.props.element.getSettings();
     const global_parameter = this.state.settings.global_parameter;
     const showButton = this.props.element.getSettings().showButton;
+    const showExportButton = this.props.element.getSettings().showExportButton;
     const currentUser = this.props.currentUser.data;
     const drawerWidth = this.calculateDrawerWidth();
     const settingsData = this.state.settingsData;
@@ -106,6 +107,7 @@ class DashboardsWidget extends Component {
           <DataSourceDashboards
             ref={this.refChild}
             showButton={showButton}
+            showExportButton={showExportButton}
             settings={this.props.element.getSettings()}
             id={this.props.element.getId()}
             containerWidth={containerWidth}
