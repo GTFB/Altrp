@@ -6,6 +6,7 @@ import ThreeDotsVertical from "react-bootstrap-icons/dist/icons/three-dots-verti
 import GearFill from "react-bootstrap-icons/dist/icons/sliders";
 import TrashFill from "react-bootstrap-icons/dist/icons/trash";
 import PrinterFill from "react-bootstrap-icons/dist/icons/printer";
+import ArrowBarUp from "react-bootstrap-icons/dist/icons/arrow-bar-up";
 import FileEarMark from "react-bootstrap-icons/dist/icons/cloud-download";
 import Files from "react-bootstrap-icons/dist/icons/files";
 
@@ -88,6 +89,16 @@ class WidgetData extends Component {
                     onClick={this.downloadWidget}
                   >
                     <FileEarMark />
+                  </button>
+                </Dropdown.Item>
+                <Dropdown.Item className="altrp-dashboard__card--settings-tooltip-background">
+                  <button
+                    type="button"
+                    title="Экспорт"
+                    className="altrp-dashboard__card--settings-tooltip-icon-background"
+                    onClick={() => this.props.exportCard(this.state.el)}
+                  >
+                    <ArrowBarUp />
                   </button>
                 </Dropdown.Item>
                 <Dropdown.Item className="altrp-dashboard__card--settings-tooltip-background">
