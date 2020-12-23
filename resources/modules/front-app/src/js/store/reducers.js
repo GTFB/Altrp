@@ -14,6 +14,7 @@ import { altrpMetaReducer } from "./altrp-meta-storage/reducers";
 import { altrpPageStateReducer } from "./altrp-page-state-storage/reducers";
 import { fontsReducer } from "./fonts-storage/reducers";
 import { changeLocalStorageReducer } from "./user-local-storage/reducers";
+import { exportDashboard } from "./altrp-dashboard-export/reducers";
 
 export default combineReducers({
   appRoutes: appRoutesReducer,
@@ -30,5 +31,6 @@ export default combineReducers({
   altrpMeta: altrpMetaReducer,
   altrpPageState: altrpPageStateReducer,
   altrpFonts: fontsReducer,
-  userLocalStorage: changeLocalStorageReducer
+  userLocalStorage: changeLocalStorageReducer,
+  exportDashboard: exportDashboard
 });

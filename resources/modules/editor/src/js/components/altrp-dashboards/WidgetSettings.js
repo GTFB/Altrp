@@ -15,6 +15,7 @@ import StiyleSettings from "./settings/StyleSettings";
 import FilterParameters from "./settings/FilterParameters";
 import DiagramTypeSettings from "./settings/DiagramTypeSettings";
 import LegendSettings from "./settings/LegendSettings";
+import TooltipSettings from "./settings/TooltipSettings";
 import AnimationSettings from "./settings/AnimationSettings";
 import SortData from "./settings/SortData";
 
@@ -592,7 +593,12 @@ class WidgetSettings extends Component {
             </div>
           </Button>
           <Collapse in={this.state.openTooltipSettings}>
-            <div></div>
+            <div>
+              <TooltipSettings
+                widgetID={this.props.widgetID}
+                setProperty={this.setProperty}
+              />
+            </div>
           </Collapse>
         </div> */}
         <div className="row">
