@@ -816,7 +816,8 @@ export function Pagination(
     inner_page_count,
     next_icon, prev_icon,
     first_last_buttons_count,
-    middle_buttons_count
+    middle_buttons_count,
+    is_with_ellipsis
   } = settings;
   let countOptions =
     React.useMemo(() => {
@@ -862,7 +863,7 @@ export function Pagination(
         {pageCount > first_last_buttons_count * 2 + middle_buttons_count
           ? generateButtonsArray(pageIndex, pageCount, first_last_buttons_count, middle_buttons_count)
             .map((item, index) => item === "ellipsis"
-              ? <div key={item + index} className="altrp-pagination__ellipsis">...</div>
+              ? is_with_ellipsis ? <div key={item + index} className="altrp-pagination__ellipsis">...</div> : <span>&nbsp;</span>
               : <PageButton key={item} index={item} pageIndex={pageIndex} gotoPage={gotoPage} />)
           : [...Array(pageCount)].map((_, index) => <PageButton key={index} index={index} pageIndex={pageIndex} gotoPage={gotoPage} />)}
       </div>

@@ -772,6 +772,12 @@ class Table extends BaseElement {
       default: 3,
     });
 
+    this.addControl('is_with_ellipsis', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Show Ellipsis',
+      default: true
+    });
+
     this.addControl('store_state', {
       type: CONTROLLER_SWITCHER,
       dynamic: false,
