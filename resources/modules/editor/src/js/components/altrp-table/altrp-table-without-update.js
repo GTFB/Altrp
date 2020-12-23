@@ -632,9 +632,8 @@ function AltrpTableWithoutUpdate(
                 }
                 return <div {...columnProps}
                   className="altrp-table-th"
-                  key={idx}>{
-                    column.render('column_name')
-                  }
+                  key={idx}>
+                  <span dangerouslySetInnerHTML={{ __html: column.render('column_name') }} />
                   {column.canGroupBy ? (
                     // If the column can be grouped, let's add a toggle
                     <span {...column.getGroupByToggleProps()} className="altrp-table-th__group-toggle">
@@ -867,7 +866,7 @@ export function Pagination(
         previousPage();
       }}
       disabled={pageIndex === 0}>
-      <span>{settings.prev_text || 'Previous Page'}</span>
+      <span dangerouslySetInnerHTML={{ __html: settings.prev_text || 'Previous Page' }} />
       {renderAssetIcon(prev_icon)}
     </button>}
     {!settings.hide_pages_buttons_button && <div className="altrp-pagination__count">
@@ -879,7 +878,7 @@ export function Pagination(
         nextPage()
       }}
       disabled={pageCount === pageIndex + 1}>
-      <span>{settings.next_text || 'Next Page'}</span>
+      <span dangerouslySetInnerHTML={{ __html: settings.next_text || 'Next Page' }} />
       {renderAssetIcon(next_icon)}
     </button>}
     {!settings.hide_page_input && <input className="altrp-pagination__goto-page"
@@ -1242,9 +1241,7 @@ function GlobalFilter({
   placeholder = placeholder.replace(/{{count}}/g, count);
   return (
     <span className="altrp-table-global-filter">
-      <label htmlFor={`altrp-table-global-filter${widgetId}`}>
-        {labelText}
-      </label>
+      <label htmlFor={`altrp-table-global-filter${widgetId}`} dangerouslySetInnerHTML={{ __html: labelText }} />
       <input
         id={`altrp-table-global-filter${widgetId}`}
         value={value || ""}

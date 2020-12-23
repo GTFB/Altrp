@@ -274,7 +274,8 @@ class RouteFileWriter
             $middleware = $this->getMiddleware($source->type, 'type');
 
         if ($source->type == 'remote') {
-            $route = 'Route::get(\'/data_sources/' . strtolower(Str::plural($this->route->getModelName())) . '/'
+            $requestType = $source->request_type ? $source->request_type : 'get';
+            $route = 'Route::' . $requestType . '(\'/data_sources/' . strtolower(Str::plural($this->route->getModelName())) . '/'
                 . Str::snake($source->name) . '\', [';
         } elseif (in_array($source->type, $actions)) {
             $route = 'Route::' . $source->request_type . '(\'' . $source->url . '\', [';
