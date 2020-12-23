@@ -50,7 +50,7 @@ function altrpZip() {
     '!./package-lock.json',
     '!./.env',
     '!./.babelrc',
-    '!./.env.example',
+    '!./.env',
     '!./.gitattributes',
     '!./.gitignore',
     '!./.editorconfig',
