@@ -43,49 +43,71 @@ body {
   &__tool {
     width: 150px;
     padding-left: 10px;
-    svg {
-      margin-right: 10px;
-      vertical-align: text-top;
-    }
 
     cursor: pointer;
+  }
+
+  &__tool-svg {
+    margin-right: 10px;
+    vertical-align: text-top;
   }
   
   &__profile {
     margin-right: 25px;
-    svg {
-      vertical-align: text-top;
-      margin-left: 10px;
-    }
+  }
+
+  &__profile-svg {
+    vertical-align: text-top;
+    margin-left: 10px;
   }
 
   &__popup-template {
     position: relative;
-    padding-left: 7px;
     width: 150px;
+    padding-bottom: 7px;
+    padding-top: 5px;
 
+    line-height: 16px;
     z-index: 999;
     background-color: #343B4C;
   }
   
   &__popup-template-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 11px;
+
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
+  &__popup-template-item:hover {
+    background: #4F5972;
+  }
+
+  &__popup-template-chevron {
+    margin-top: 3px;
+  }
+
   &__popup-popups-items {
     position: fixed;
-    left: 150px;
-    width: 100px;
-    padding-left: 7px;
-    margin-top: -25px;
+    left: 160px;
+    width: 150px;
+    padding-bottom: 7px;
+    margin-top: -4px;
 
     background-color: #343B4C;
   }
 
   &__popup-popups-item {
+    padding: 4px 11px;
+
     overflow: hidden;
-    text-overflow: ellipsis; 
+    text-overflow: ellipsis;
+  }
+
+  &__popup-popups-item:hover {
+    background: #4F5972;
   }
 
   &__search {

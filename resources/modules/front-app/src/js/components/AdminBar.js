@@ -30,6 +30,7 @@ class AdminBar extends React.Component {
   }
 
   handleInput(event) {
+    console.log(getDataByPath("altrpuser.name"));
     let value = event.target.value;
     this.setState(state => ({
       ...state,
@@ -53,7 +54,7 @@ class AdminBar extends React.Component {
         <div className="admin-bar__tools">
           <div className="admin-bar__tool">
             <span onClick={this.toggleVisiblePopupTemplate}>
-              {iconsManager.renderIcon('admin-bar1')} edit-template
+              {iconsManager.renderIcon('admin-bar1', {className: "admin-bar__tool-svg"})} edit-template
             </span>
             
             {this.state.visiblePopupTemplate && (
@@ -62,7 +63,7 @@ class AdminBar extends React.Component {
                   if(item.id === "popups") 
                     return (
                       <div className="admin-bar__popup-template-item" key={`template-${index}`}>
-                        popup:
+                          popup: {iconsManager.renderIcon('chevron-admin-bar', {className: "admin-bar__popup-template-chevron"})}
                         <div className="admin-bar__popup-popups-items">
                           {item.templates.map((item, index) => (
                             <div className="admin-bar__popup-popups-item" onClick={this.openTemplate(item.id)} key={`popup-${index}`}>
@@ -75,7 +76,7 @@ class AdminBar extends React.Component {
                   else 
                     return (
                       <div className="admin-bar__popup-template-item" key={`template-${index}`} onClick={this.openTemplate(item.template.id)}>
-                        {item.template.name}
+                        {item.template.name} 
                       </div>
                     )
                 })}
@@ -83,10 +84,10 @@ class AdminBar extends React.Component {
             )}
           </div>
           <div className="admin-bar__tool">
-            {iconsManager.renderIcon('admin-bar2')} page-settings
+            {iconsManager.renderIcon('admin-bar2', {className: "admin-bar__tool-svg"})} page-settings
           </div>
           <div className="admin-bar__tool">
-            {iconsManager.renderIcon('admin-bar3')} clear cache
+            {iconsManager.renderIcon('admin-bar3', {className: "admin-bar__tool-svg"})} clear cache
           </div>
           <div className="admin-bar__search-bar">
             <input 
@@ -98,7 +99,7 @@ class AdminBar extends React.Component {
           </div>
         </div>
         <div className="admin-bar__profile">
-          Hello, {this.props.admin.name} {iconsManager.renderIcon('admin-bar4')}
+          Hello, {this.props.admin.name} {iconsManager.renderIcon('admin-bar4', {className: "admin-bar__profile-svg"})}
         </div>
       </div>
     );
