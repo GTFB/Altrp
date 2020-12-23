@@ -760,6 +760,18 @@ class Table extends BaseElement {
       ],
     });
 
+    this.addControl('first_last_buttons_count', {
+      type: CONTROLLER_NUMBER,
+      label: 'First-Last Buttons Count',
+      default: 2
+    });
+
+    this.addControl('middle_buttons_count', {
+      type: CONTROLLER_NUMBER,
+      label: 'Middle Buttons Count',
+      default: 3,
+    });
+
     this.addControl('store_state', {
       type: CONTROLLER_SWITCHER,
       dynamic: false,
