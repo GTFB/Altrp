@@ -27,8 +27,8 @@ class WidgetData extends Component {
       }));
     }
     if (
-      JSON.stringify(prevProps.editElement.settings.params) !==
-      JSON.stringify(this.props.editElement.settings.params)
+      JSON.stringify(prevProps.editElement.settings?.params) !==
+      JSON.stringify(this.props.editElement.settings?.params)
     ) {
       this.setState(state => ({
         ...state,
@@ -141,8 +141,8 @@ class WidgetData extends Component {
           ref={this.ref}
           editElement={_.cloneDeep(this.state.el)}
           params={_.cloneDeep(this.state.el.settings?.params)}
-          type={_.cloneDeep(this.state.el.settings.type)}
-          sources={_.cloneDeep(this.state.el.settings.sources)}
+          type={_.cloneDeep(this.state.el.settings?.type)}
+          sources={_.cloneDeep(this.state.el.settings?.sources)}
         />
       </div>
     );

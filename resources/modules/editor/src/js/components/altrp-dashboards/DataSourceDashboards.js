@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { connect } from "react-redux";
+import { Scrollbars } from "react-custom-scrollbars";
 import { editElement } from "../../store/altrp-dashboard/actions";
 import { exportDashboard } from "../../../../../front-app/src/js/store/altrp-dashboard-export/actions";
 
@@ -372,7 +373,7 @@ class DataSourceDashboards extends Component {
 
   importDiagram() {
     const widget = { settings: this.state.importWidget };
-    if (_.keys(widget).length <= 0) {
+    if (_.keys(widget.settings).length <= 0) {
       alert("Выберите файл");
       return;
     }
@@ -464,19 +465,35 @@ class DataSourceDashboards extends Component {
           onClose={this.openSettings}
           handler={false}
         >
-          {this.state.settingsOpen && (
-            <WidgetSettings
-              widgetID={this.state.id}
-              addItemPreview={this.state.addItemPreview}
-              filter_datasource={this.state.settings.filter_datasource}
-              datasources={this.props.rep}
-              editHandler={this.onEditItem}
-              onCloseHandler={this.openSettings}
-              onAddItem={this.onAddItemCard}
-              setCardName={this.setCardName}
-              delimer={this.state.delimer}
-            />
-          )}
+          <Scrollbars
+            style={{ zIndex: 999999 }}
+            autoHide
+            autoHideTimeout={500}
+            autoHideDuration={200}
+            renderTrackVertical={({ style, ...props }) => {
+              return (
+                <div
+                  className="altrp-scroll__vertical-track"
+                  style={style}
+                  {...props}
+                />
+              );
+            }}
+          >
+            {this.state.settingsOpen && (
+              <WidgetSettings
+                widgetID={this.state.id}
+                addItemPreview={this.state.addItemPreview}
+                filter_datasource={this.state.settings.filter_datasource}
+                datasources={this.props.rep}
+                editHandler={this.onEditItem}
+                onCloseHandler={this.openSettings}
+                onAddItem={this.onAddItemCard}
+                setCardName={this.setCardName}
+                delimer={this.state.delimer}
+              />
+            )}
+          </Scrollbars>
         </Drawer>
         {this.state.drawer != null &&
           ReactDOM.createPortal(
