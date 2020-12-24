@@ -16,7 +16,13 @@ class TooltipSettings extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      editElement: props.editElement
+      editElement: props.editElement,
+      padding: {
+        left: 5,
+        right: 5,
+        top: 5,
+        bottom: 5
+      }
     };
     this.setTooltipEnable = this.setTooltipEnable.bind(this);
   }
