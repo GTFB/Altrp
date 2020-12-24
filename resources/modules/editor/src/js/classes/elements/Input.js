@@ -156,6 +156,9 @@ class Input extends BaseElement {
       label: "Item Width (%)",
       max: 100,
       min: 0,
+      conditions: {
+        'content_type': ['image_select']
+      },
       rules: {
         "{{ELEMENT}} .altrp-image-select>.altrp-field{{STATE}}": 'flex-basis: {{SIZE}}%;'
       }
@@ -164,6 +167,9 @@ class Input extends BaseElement {
     this.addControl('content_accept', {
       type: CONTROLLER_TEXT,
       label: 'Accept',
+      conditions: {
+        'content_type': ['file']
+      },
     });
 
     this.addControl('content_label', {
@@ -269,7 +275,11 @@ class Input extends BaseElement {
     this.addControl('content_autocomplete', {
       type: CONTROLLER_SWITCHER,
       label: 'Autocomplete',
+      conditions: {
+        'content_type': ['text', 'password', 'email']
+      },
     });
+
     this.addControl('content_timestamp', {
       type: CONTROLLER_SWITCHER,
       label: 'Timestamp',
@@ -279,7 +289,10 @@ class Input extends BaseElement {
     this.addControl('content_clearable', {
       type: CONTROLLER_SWITCHER,
       label: 'Clearable',
-      default: false
+      default: false,
+      conditions: {
+        'content_type': ['select2']
+      },
     });
 
     this.addControl('content_options_nullable', {
