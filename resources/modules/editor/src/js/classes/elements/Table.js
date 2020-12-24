@@ -760,6 +760,24 @@ class Table extends BaseElement {
       ],
     });
 
+    this.addControl('first_last_buttons_count', {
+      type: CONTROLLER_NUMBER,
+      label: 'First-Last Buttons Count',
+      default: 2
+    });
+
+    this.addControl('middle_buttons_count', {
+      type: CONTROLLER_NUMBER,
+      label: 'Middle Buttons Count',
+      min: 3, // похоже, не работает. TODO: задать минимальное значение 3      
+    });
+
+    this.addControl('is_with_ellipsis', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Show Ellipsis',
+      default: true
+    });
+
     this.addControl('store_state', {
       type: CONTROLLER_SWITCHER,
       dynamic: false,
@@ -1460,7 +1478,8 @@ class Table extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Stripe Color",
       rules: {
-        '{{ELEMENT}} .altrp-table-tbody--striped tr:nth-child(2n)': 'background-color: {{COLOR}}'
+        '{{ELEMENT}} .altrp-table-tbody--striped tr:nth-child(2n){{STATE}}': 'background-color: {{COLOR}}',
+        '{{ELEMENT}} .altrp-table-tbody--striped .altrp-table-tr:nth-child(2n){{STATE}}': 'background-color: {{COLOR}}'
       }
     });
 
@@ -2149,6 +2168,69 @@ class Table extends BaseElement {
       },
     });
 
+    this.addControl("ellipsis_heading", {
+      type: CONTROLLER_HEADING,
+      label: 'Ellipsis',
+      conditions: {
+        'is_with_ellipsis': true,
+      },
+    });
+
+    this.addControl('ellipsis_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Ellipsis Margin',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      conditions: {
+        'is_with_ellipsis': true,
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__ellipsis{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl("ellipsis_color", {
+      type: CONTROLLER_COLOR,
+      label: "Ellipsis Color",
+      conditions: {
+        'is_with_ellipsis': true,
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__ellipsis{{STATE}}': 'color: {{COLOR}}'
+      }
+    });
+
+    this.addControl('ellipsis_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Ellipsis Typographic',
+      conditions: {
+        'is_with_ellipsis': true,
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__ellipsis{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
+
     this.endControlSection();
 
     this.startControlSection("table_style_page_input", {
@@ -2330,6 +2412,7 @@ class Table extends BaseElement {
       label: "Pagination Select",
       conditions: {
         'hide_pagination_select!': true,
+        'inner_page_count_options!': ''
       },
     });
 
