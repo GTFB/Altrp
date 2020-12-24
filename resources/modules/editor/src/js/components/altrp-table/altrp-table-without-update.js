@@ -1335,6 +1335,9 @@ const Cell = ({ cell, settings }) => {
   //   cellClassNames.join( `altrp-table-td_alignment-${column.column_body_alignment}`);
   // }
   let style = cell.column.column_body_alignment ? { textAlign: cell.column.column_body_alignment } : {};
+  if (column.column_width) {
+    style = { ...style, width: column.column_width + "%" };
+  }
   return <div {...cellProps} style={style} className={cellClassNames.join(' ')}>{cellContent}</div>
 };
 /**
