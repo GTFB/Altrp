@@ -1,5 +1,6 @@
 import React from 'react';
 import { getDataByPath } from './../helpers';
+import {renderAssetIcon } from './../helpers'
 
 class AdminBar extends React.Component {
   constructor(props) {
@@ -90,6 +91,9 @@ class AdminBar extends React.Component {
             {iconsManager.renderIcon('admin-bar3', {className: "admin-bar__tool-svg"})} clear cache
           </div>
           <div className="admin-bar__search-bar">
+            <div className="admin-bar__search-result">
+                asdfsa
+            </div>
             <input 
               className="admin-bar__search"
               value={this.state.valueInput}
@@ -100,6 +104,7 @@ class AdminBar extends React.Component {
         </div>
         <div className="admin-bar__profile">
           Hello, {this.props.admin.name} {iconsManager.renderIcon('admin-bar4', {className: "admin-bar__profile-svg"})}
+         {renderAssetIcon({assetType: "icon", url: "https://www.flaticon.com/svg/static/icons/svg/3946/3946277.svg"})}
         </div>
       </div>
     );

@@ -110,6 +110,12 @@ body {
     background: #4F5972;
   }
 
+  &__search-result {
+    position: fixed;
+    margin-top: 30px;
+    background-color: #343B4C;
+  }
+
   &__search {
     width: 225px;
   }

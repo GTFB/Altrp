@@ -31,27 +31,39 @@ class AssetsBrowser extends Component {
           title: "Media Library"
         }
       ],
+      svgAssets: [],
       assets: this.getAssets("media"),
       // assets: this.getAssets('icons'),
       selectedAsset: null,
       mediaAssets: []
     };
     this.mediaResource = new Resource({ route: "/admin/ajax/media?type=image" });
+    this.svgResource  =new Resource({ route: "/admin/ajax/media?type=svg" });
   }
   async componentDidMount() {
     try {
-      let res = await this.mediaResource.getAll();
-
+      let resSvg = await this.svgResource.getAll();
       this.setState(state => {
-        state = { ...state, mediaAssets: res };
+        return { ...state, svgAssets: resSvg };
+      });
+
+      let resMedia = await this.mediaResource.getAll();
+      this.setState(state => {
+        state = { ...state, mediaAssets: resMedia };
         if (state.activeTab === "media") {
-          state.assets = res;
+          state.assets = resMedia;
         }
         return state;
       });
     } catch (error) {
       console.log("error", error);
     }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === "Escape") {
+          this.toggleBrowser();
+      }
+    });
   }
   getAssets(tab) {
     if (!tab) {
@@ -60,7 +72,8 @@ class AssetsBrowser extends Component {
 
     switch (tab) {
       case "icons": {
-        return iconsManager().getIconsList();
+        return this.state.svgAssets
+        // return [ ...iconsManager().getIconsList(), ...this.state.svgAssets];
       }
       case "media": {
         return this.state ? this.state.mediaAssets : [];
@@ -158,12 +171,19 @@ class AssetsBrowser extends Component {
                   className: "asset-choose__content"
                 };
                 if (this.state.activeTab === "icons") {
-                  AssetContent = asset.iconComponent;
+                  if(asset.iconComponent) {
+                    AssetContent = asset.iconComponent;
+                  } else {
+                    AssetContent = "img";
+                    asset.name = asset.filename;
+                    assetProps.src = asset.url;
+                  }
+                  
                   classes += " asset-choose_icon";
                   // assetProps.viewBox = '0 0 20 20';
                   // assetProps.viewport = '0 0 10 10';
-                  assetProps.width = "20";
-                  assetProps.height = "20";
+                  assetProps.width = "35";
+                  assetProps.height = "35";
                 }
                 if (this.state.activeTab === "media") {
                   AssetContent = "img";
