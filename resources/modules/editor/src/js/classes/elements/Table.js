@@ -1478,7 +1478,8 @@ class Table extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Stripe Color",
       rules: {
-        '{{ELEMENT}} .altrp-table-tbody--striped tr:nth-child(2n)': 'background-color: {{COLOR}}'
+        '{{ELEMENT}} .altrp-table-tbody--striped tr:nth-child(2n){{STATE}}': 'background-color: {{COLOR}}',
+        '{{ELEMENT}} .altrp-table-tbody--striped .altrp-table-tr:nth-child(2n){{STATE}}': 'background-color: {{COLOR}}'
       }
     });
 
