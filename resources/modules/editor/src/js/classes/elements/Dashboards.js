@@ -48,6 +48,12 @@ class Dashboards extends BaseElement {
       default: true
     });
 
+    this.addControl("showExportButton", {
+      type: CONTROLLER_SWITCHER,
+      label: "Show export button?",
+      default: true
+    });
+
     this.addControl("dataSource", {
       type: CONTROLLER_SWITCHER,
       label: "Get data by data source?",
@@ -154,7 +160,7 @@ class Dashboards extends BaseElement {
 
     this.addControl("style_background_color", {
       type: CONTROLLER_COLOR,
-      label: "Цвет фона",
+      label: "Background color",
       default: {
         color: "",
         colorPickedHex: ""

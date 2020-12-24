@@ -238,6 +238,18 @@ export function actionsControllers(element){
     },
   });
 
+  actionsRepeater.addControl('outer', {
+    label: 'Outer',
+    type: CONTROLLER_SWITCHER,
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: [
+        'redirect',
+      ],
+    },
+  });
+
   actionsRepeater.addControl('elements_ids', {
     label: 'Elements',
     responsive: false,

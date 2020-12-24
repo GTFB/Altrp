@@ -368,10 +368,11 @@ function AltrpTableWithoutUpdate(
         // Let's make a column for selection
         {
           id: 'selection',
-          width: row_select_width || 0,
+          column_width: row_select_width || 0,
           // The header can use the table's getToggleAllRowsSelectedProps method
           // to render a checkbox
           column_name: ({ getToggleAllRowsSelectedProps, getToggleAllPageRowsSelectedProps }) => {
+            // console.log(row_select_width);
             if ((!settings.inner_page_size) || (settings.inner_page_size < 0) || row_select_all) {
               return (
                 <div className="altrp-toggle-row">
@@ -619,22 +620,25 @@ function AltrpTableWithoutUpdate(
               {replace_rows && <div className="altrp-table-th" style={{ width: replace_width }} />}
               {headerGroup.headers.map((column, idx) => {
                 const { column_width, column_header_alignment } = column;
-                let columnProps = column.getHeaderProps();
-
-                columnProps = column.getHeaderProps(column.getSortByToggleProps());
-
-                const resizerProps = { ...column.getResizerProps(), onClick: e => { e.stopPropagation(); } };
-                if (!resize_columns && !virtualized_rows) {
+                let columnProps = column.getHeaderProps(column.getSortByToggleProps());
+                const resizerProps = {
+                  ...column.getResizerProps(),
+                  onClick: e => { e.stopPropagation(); }
+                };
+                if (! resize_columns && ! virtualized_rows) {
                   // delete columnProps.style;
                   columnProps.style = {};
                   if (column_width) columnProps.style.width = column_width + '%';
                   if (column_header_alignment) columnProps.style.textAlign = column_header_alignment;
                 }
+                let columnNameContent = column.render('column_name');
+                if(_.isString(columnNameContent)){
+                  columnNameContent = <span dangerouslySetInnerHTML={{ __html: column.render('column_name') }} />;
+                }
                 return <div {...columnProps}
                   className="altrp-table-th"
-                  key={idx}>{
-                    column.render('column_name')
-                  }
+                  key={idx}>
+                  {columnNameContent}
                   {column.canGroupBy ? (
                     // If the column can be grouped, let's add a toggle
                     <span {...column.getGroupByToggleProps()} className="altrp-table-th__group-toggle">
@@ -867,7 +871,7 @@ export function Pagination(
         previousPage();
       }}
       disabled={pageIndex === 0}>
-      <span>{settings.prev_text || 'Previous Page'}</span>
+      <span dangerouslySetInnerHTML={{ __html: settings.prev_text || 'Previous Page' }} />
       {renderAssetIcon(prev_icon)}
     </button>}
     {!settings.hide_pages_buttons_button && <div className="altrp-pagination__count">
@@ -879,7 +883,7 @@ export function Pagination(
         nextPage()
       }}
       disabled={pageCount === pageIndex + 1}>
-      <span>{settings.next_text || 'Next Page'}</span>
+      <span dangerouslySetInnerHTML={{ __html: settings.next_text || 'Next Page' }} />
       {renderAssetIcon(next_icon)}
     </button>}
     {!settings.hide_page_input && <input className="altrp-pagination__goto-page"
@@ -1155,7 +1159,8 @@ export function settingsToColumns(settings, widgetId) {
         };
       }
       if (virtualized_rows || resize_columns) {
-        _column.width = (Number(_column.column_width) || 150) + '%';
+        // _column.width = (Number(_column.column_width) || 150) + '%';
+        _column.width = (Number(_column.column_width) || 150) ;
       }
       columns.push(_column);
     }
@@ -1242,9 +1247,7 @@ function GlobalFilter({
   placeholder = placeholder.replace(/{{count}}/g, count);
   return (
     <span className="altrp-table-global-filter">
-      <label htmlFor={`altrp-table-global-filter${widgetId}`}>
-        {labelText}
-      </label>
+      <label htmlFor={`altrp-table-global-filter${widgetId}`} dangerouslySetInnerHTML={{ __html: labelText }} />
       <input
         id={`altrp-table-global-filter${widgetId}`}
         value={value || ""}
@@ -1327,6 +1330,7 @@ const Cell = ({ cell, settings }) => {
   //   cellClassNames.join( `altrp-table-td_alignment-${column.column_body_alignment}`);
   // }
   let style = cell.column.column_body_alignment ? { textAlign: cell.column.column_body_alignment } : {};
+  style = _.assign(style, cellProps.style || {});
   return <div {...cellProps} style={style} className={cellClassNames.join(' ')}>{cellContent}</div>
 };
 /**

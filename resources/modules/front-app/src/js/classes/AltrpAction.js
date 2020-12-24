@@ -70,12 +70,15 @@ class AltrpAction extends AltrpModel {
     if (! formURL) {
       return formURL;
     }
-    // if (formURL.indexOf("{{") !== -1) {
-    //   formURL = replaceContentWithData(
-    //     formURL,
-    //     this.getCurrentModel().getData()
-    //   );
-    // }
+    if(this.getType() === 'form'){
+      return formURL;
+    }
+    if (formURL.indexOf("{{") !== -1) {
+      formURL = replaceContentWithData(
+        formURL,
+        this.getCurrentModel().getData()
+      );
+    }
     return formURL;
   }
 
@@ -372,7 +375,16 @@ class AltrpAction extends AltrpModel {
      * @type {AltrpForm}
      */
     let form = this.getProperty("_form");
-    return form.submit("", "", data);
+    let result = {
+      success: false,
+    };
+    try{
+      result = await form.submit("", "", data);
+    } catch(error){
+      result.error = error;
+    }
+
+    return result;
   }
   /**
    * Делает редирект на страницу form_url
@@ -384,20 +396,7 @@ class AltrpAction extends AltrpModel {
       if (this.getProperty("back")) {
         frontAppRouter.history.goBack();
       } else {
-        let routes = appStore.getState().appRoutes.routes || [];
-        let innerRedirect = false;
-        if (URL === "/") {
-          innerRedirect = true;
-        } else {
-          routes.forEach(route => {
-            if (!route.path) {
-              return;
-            }
-            if (route.path === URL) {
-              innerRedirect = true;
-            }
-          });
-        }
+        let innerRedirect = ! this.getProperty('outer');
         if (innerRedirect) {
           frontAppRouter.history.push(URL);
         } else {

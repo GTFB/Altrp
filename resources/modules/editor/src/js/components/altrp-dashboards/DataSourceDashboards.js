@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { connect } from "react-redux";
+import { Scrollbars } from "react-custom-scrollbars";
 import { editElement } from "../../store/altrp-dashboard/actions";
+import { exportDashboard } from "../../../../../front-app/src/js/store/altrp-dashboard-export/actions";
+
 import axios from "axios";
 import Drawer from "rc-drawer";
 
@@ -12,16 +15,23 @@ import WidgetData from "./WidgetData";
 import WidgetPreview from "./WidgetPreview";
 import WidgetSettings from "./WidgetSettings";
 import AddItemButton from "./settings/AddItemButton";
+import ExportDashboardButton from "./settings/ExportDashboardButton";
+import ImportDashboard from "./settings/ImportDashboard";
+import ImportDiagram from "./settings/ImportDiagram";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 const mapStateToProps = state => {
-  return { editElement: _.cloneDeep(state.editElement) };
+  return {
+    editElement: _.cloneDeep(state.editElement),
+    dashboardExport: _.cloneDeep(state.exportDashboard)
+  };
 };
 
 function mapDispatchToProps(dispatch) {
   return {
-    editElementDispatch: data => dispatch(editElement(data))
+    editElementDispatch: data => dispatch(editElement(data)),
+    exportDashboardDispatch: data => dispatch(exportDashboard(data))
   };
 }
 
@@ -35,7 +45,6 @@ class DataSourceDashboards extends Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
       id: props.id,
       items: props.items || [],
@@ -46,9 +55,17 @@ class DataSourceDashboards extends Component {
       settings: props.settings,
       drawer: null,
       datasources: null,
-      delimer: props.delimer
+      delimer: props.delimer,
+      importData: [],
+      importWidget: []
     };
 
+    this.export = this.export.bind(this);
+    this.import = this.import.bind(this);
+    this.getFile = this.getFile.bind(this);
+    this.exportCard = this.exportCard.bind(this);
+    this.importDiagram = this.importDiagram.bind(this);
+    this.getWidgetFile = this.getWidgetFile.bind(this);
     this.onAddItem = this.onAddItem.bind(this);
     this.onAddItemCard = this.onAddItemCard.bind(this);
     this.onBreakpointChange = this.onBreakpointChange.bind(this);
@@ -112,7 +129,7 @@ class DataSourceDashboards extends Component {
           }
         )
         .then(res => {
-          // console.log(res.data);
+          console.log(res.data);
         });
     } catch (e) {
       console.log("ERROR ==>", e);
@@ -236,9 +253,6 @@ class DataSourceDashboards extends Component {
         settings: { ...widget.settings }
       };
       let index = _.findKey(this.state.items, { i: i });
-      console.log("====================================");
-      console.log(this.state.breakpoint);
-      console.log("====================================");
       this.setState(state => {
         state.items[index] = widget;
         return { ...state, items: state.items };
@@ -257,9 +271,6 @@ class DataSourceDashboards extends Component {
       w: w,
       h: h
     };
-    console.log("====================================");
-    console.log(this.state.breakpoint);
-    console.log("====================================");
     this.setState(s => ({ ...s, items: { ...s.items, [itemKey]: item } }));
     this.saveWidgetData(this.state);
   }
@@ -296,6 +307,102 @@ class DataSourceDashboards extends Component {
     this.saveWidgetData(this.state);
   }
 
+  export() {
+    const settings = {
+      newCounter: _.cloneDeep(this.state.newCounter),
+      items: _.cloneDeep(this.state.items)
+    };
+    const dataStr =
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify(settings));
+    let link = document.createElement("a");
+    link.setAttribute("href", dataStr);
+    link.setAttribute("download", `${this.state.id}.json`);
+    link.click();
+  }
+
+  exportCard(el) {
+    const element = el.settings;
+    const dataStr =
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify(element));
+    let link = document.createElement("a");
+    link.setAttribute("href", dataStr);
+    link.setAttribute("download", `${el.settings.name}.json`);
+    link.click();
+  }
+
+  import() {
+    const file = this.state.importData;
+    const id = this.state.id;
+
+    if (_.keys(file).length <= 0) {
+      alert("Выберите файл");
+      return;
+    }
+    try {
+      const req = axios
+        .post(
+          `/ajax/dashboards/datasource/${id}/settings`,
+          {
+            settings: file
+          },
+          {
+            headers: {
+              "X-CSRF-TOKEN": document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content")
+            }
+          }
+        )
+        .then(res => {
+          try {
+            const settings = JSON?.parse(res.data.settings);
+            const { items, newCounter } = settings;
+            this.setState(s => ({
+              ...s,
+              items: items,
+              newCounter: newCounter
+            }));
+          } catch (error) {}
+        });
+    } catch (e) {
+      console.log("ERROR ==>", e);
+    }
+  }
+
+  importDiagram() {
+    const widget = { settings: this.state.importWidget };
+    if (_.keys(widget.settings).length <= 0) {
+      alert("Выберите файл");
+      return;
+    }
+    try {
+      this.onAddItemCard(widget);
+      this.setState(s => ({ importWidget: [] }));
+    } catch (e) {
+      console.log("ERROR ==>", e);
+    }
+  }
+
+  getFile(e) {
+    const fileReader = new FileReader();
+    fileReader.readAsText(e.target.files[0], "UTF-8");
+    fileReader.onload = e => {
+      const file = JSON.parse(e.target.result);
+      this.setState(s => ({ ...s, importData: file }));
+    };
+  }
+
+  getWidgetFile(e) {
+    const fileReader = new FileReader();
+    fileReader.readAsText(e.target.files[0], "UTF-8");
+    fileReader.onload = e => {
+      const file = JSON.parse(e.target.result);
+      this.setState(s => ({ ...s, importWidget: file }));
+    };
+  }
+
   copyWidget(widget) {
     this.onAddItemCard(widget);
   }
@@ -312,6 +419,7 @@ class DataSourceDashboards extends Component {
           onRemoveItem={this.onRemoveItem}
           saveWidget={this.saveWidgetData}
           copyWidget={this.copyWidget}
+          exportCard={this.exportCard}
         />
       </div>
     );
@@ -320,7 +428,19 @@ class DataSourceDashboards extends Component {
   render() {
     return (
       <div>
-        {this.props.showButton && <AddItemButton onAddItem={this.onAddItem} />}
+        {this.props.showButton && (
+          <>
+            <AddItemButton onAddItem={this.onAddItem} />
+          </>
+        )}
+        {this.props.showExportButton && (
+          <ExportDashboardButton onExport={this.export} />
+        )}
+        <ImportDashboard onImport={this.import} getFile={this.getFile} />
+        <ImportDiagram
+          onImport={this.importDiagram}
+          getFile={this.getWidgetFile}
+        />
         <ResponsiveReactGridLayout
           draggableCancel=".altrp-dashboards__cancle-drag"
           onLayoutChange={this.onLayoutChange}
@@ -345,19 +465,35 @@ class DataSourceDashboards extends Component {
           onClose={this.openSettings}
           handler={false}
         >
-          {this.state.settingsOpen && (
-            <WidgetSettings
-              widgetID={this.state.id}
-              addItemPreview={this.state.addItemPreview}
-              filter_datasource={this.state.settings.filter_datasource}
-              datasources={this.props.rep}
-              editHandler={this.onEditItem}
-              onCloseHandler={this.openSettings}
-              onAddItem={this.onAddItemCard}
-              setCardName={this.setCardName}
-              delimer={this.state.delimer}
-            />
-          )}
+          <Scrollbars
+            style={{ zIndex: 999999 }}
+            autoHide
+            autoHideTimeout={500}
+            autoHideDuration={200}
+            renderTrackVertical={({ style, ...props }) => {
+              return (
+                <div
+                  className="altrp-scroll__vertical-track"
+                  style={style}
+                  {...props}
+                />
+              );
+            }}
+          >
+            {this.state.settingsOpen && (
+              <WidgetSettings
+                widgetID={this.state.id}
+                addItemPreview={this.state.addItemPreview}
+                filter_datasource={this.state.settings.filter_datasource}
+                datasources={this.props.rep}
+                editHandler={this.onEditItem}
+                onCloseHandler={this.openSettings}
+                onAddItem={this.onAddItemCard}
+                setCardName={this.setCardName}
+                delimer={this.state.delimer}
+              />
+            )}
+          </Scrollbars>
         </Drawer>
         {this.state.drawer != null &&
           ReactDOM.createPortal(
