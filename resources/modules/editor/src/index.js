@@ -75,6 +75,7 @@ import("./Editor.js")
 
     window.onload = () => {
       let iframe = document.getElementsByTagName("iframe")[0];
+      window.EditorFrame = iframe;
       if (!iframe) {
         return;
       }

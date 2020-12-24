@@ -16,7 +16,7 @@ import Loader from "./Loader";
 
 import MemoPaintIcon from "./Icons/PaintIcon";
 
-function noob() { }
+function noob() {}
 
 function MapDesigner({
   className,
@@ -29,21 +29,20 @@ function MapDesigner({
   interactionOptions = {},
   style = {},
   saveData = noob,
-  onTap = noob,
+  onTap = noob
 }) {
   const FG = useRef(null);
   const [selected, setSelected] = useState(null);
   const [state, setState] = useState(data);
   const [open, setOpen] = useState(false);
 
-  const handleObserver = (e) => {
+  const handleObserver = e => {
     const { leafletElement } = FG.current;
     // Обновляем дерево geojson
-    console.log('HANDLE');
-    console.log(e.type);
+
     let features = [];
     // Проходимся по каждому слою
-    leafletElement.eachLayer((layer) => {
+    leafletElement.eachLayer(layer => {
       const id = leafletElement.getLayerId(layer);
       // Вешаем обработчик клика по объекту
       layer.addEventListener("click", handleSelected);
@@ -51,8 +50,12 @@ function MapDesigner({
       let geojson = layer.toGeoJSON();
       // Задаем ID
       geojson.id = id;
-      geojson.properties.tooltip = geojson.properties.tooltip ? geojson.properties.tooltip : "";
-      geojson.properties.popup = geojson.properties.popup ? geojson.properties.popup : "";
+      geojson.properties.tooltip = geojson.properties.tooltip
+        ? geojson.properties.tooltip
+        : "";
+      geojson.properties.popup = geojson.properties.popup
+        ? geojson.properties.popup
+        : "";
       // Назначаем цвет заливки
       geojson.properties.fillColor = geojson.properties.fillColor
         ? geojson.properties.fillColor
@@ -64,14 +67,20 @@ function MapDesigner({
       // Задаем опции
       if (layer instanceof L.Circle) {
         // Цвет бордера
-        geojson.properties.color = geojson.properties.color ? geojson.properties.color : "#3388ff";
+        geojson.properties.color = geojson.properties.color
+          ? geojson.properties.color
+          : "#3388ff";
         geojson.properties.radius = layer.getRadius();
       } else if (layer instanceof L.Polygon) {
         // Цвет бордера
-        geojson.properties.color = geojson.properties.color ? geojson.properties.color : "#3388ff";
+        geojson.properties.color = geojson.properties.color
+          ? geojson.properties.color
+          : "#3388ff";
         // Polygon style properties
       } else if (layer instanceof L.Marker) {
-        geojson.properties.icon = geojson.properties.opacity ? geojson.properties.opacity : 1.0;
+        geojson.properties.icon = geojson.properties.opacity
+          ? geojson.properties.opacity
+          : 1.0;
         // geojson.properties.icon = geojson.properties.icon ? geojson.properties.icon : "GoogleMarker";
         geojson.properties.icon = "GoogleMarker";
         layer.setIcon(customIcon(geojson.properties.icon));
@@ -100,7 +109,7 @@ function MapDesigner({
   };
 
   const handleSelected = useCallback(
-    (e) => {
+    e => {
       // Отправляем событие во вне
       onTap(e, FG.current);
       // Проверяем есть ли feature у слоя
@@ -123,8 +132,10 @@ function MapDesigner({
       for (const geojson of state.features) {
         // Конвертируем geojson в слой leaflet
         L.geoJSON(geojson, {
-          coordsToLatLng: (coords) => {
-            return !isTransformLatLng ? L.latLng([coords[1], coords[0]]) : coords;
+          coordsToLatLng: coords => {
+            return !isTransformLatLng
+              ? L.latLng([coords[1], coords[0]])
+              : coords;
           },
           pointToLayer: (geojson, latlng) => {
             // Создаем точные типы слоев
@@ -142,7 +153,12 @@ function MapDesigner({
           onEachFeature: (feature, layer) => {
             layer.addEventListener("click", handleSelected);
             if (layer instanceof L.Marker) {
-              layer.setIcon(customIcon(feature.properties.icon, feature.properties.fillColor));
+              layer.setIcon(
+                customIcon(
+                  feature.properties.icon,
+                  feature.properties.fillColor
+                )
+              );
               layer.setOpacity(feature.properties.fillOpacity);
             } else {
               layer.setStyle(feature.properties);
@@ -154,7 +170,7 @@ function MapDesigner({
               layer.bindPopup(feature.properties.popup);
             }
             FG.current.leafletElement.addLayer(layer);
-          },
+          }
         });
       }
     }
@@ -181,6 +197,7 @@ function MapDesigner({
       <Map
         center={center}
         zoom={zoom}
+        animate={false}
         className={`altrp-map__container ${className}`}
         whenReady={whenReady}
         scrollWheelZoom={interactionOptions.scrollWheelZoom}
@@ -202,11 +219,11 @@ function MapDesigner({
               polyline: false,
               polygon: isEditable,
               circle: isEditable,
-              marker: isEditable,
+              marker: isEditable
             }}
             edit={{
               edit: isEditable,
-              remove: isEditable,
+              remove: isEditable
             }}
           />
         </FeatureGroup>
