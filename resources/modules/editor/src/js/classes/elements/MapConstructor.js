@@ -10,7 +10,8 @@ import {
   TAB_CONTENT,
   TAB_STYLE,
   CONTROLLER_REPEATER,
-  CONTROLLER_SELECT
+  CONTROLLER_SELECT,
+  CONTROLLER_COLOR
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 
@@ -58,6 +59,24 @@ class MapConstructor extends BaseElement {
       type: CONTROLLER_SWITCHER,
       label: "Canvas",
       default: true
+    });
+
+    this.addControl("centerByDatasource", {
+      type: CONTROLLER_SWITCHER,
+      label: "Center By Datasource",
+      default: false
+    });
+
+    this.addControl("latDs", {
+      type: CONTROLLER_TEXT,
+      label: "Latitude from datasource",
+      conditions: { centerByDatasource: true }
+    });
+
+    this.addControl("lngDs", {
+      type: CONTROLLER_TEXT,
+      label: "Longitude from datasource",
+      conditions: { centerByDatasource: true }
     });
 
     this.addControl("lat", {
@@ -132,6 +151,14 @@ class MapConstructor extends BaseElement {
       label: "Choose Icon",
       options: icons,
       dynamic: false
+    });
+
+    repeaterObjects.addControl("color", {
+      label: "Icon color",
+      type: CONTROLLER_COLOR,
+      default: {
+        colorPickedHex: "#3388ff"
+      }
     });
 
     this.addControl("objects", {

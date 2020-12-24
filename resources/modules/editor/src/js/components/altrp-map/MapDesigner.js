@@ -15,7 +15,6 @@ import ModalControl from "./ModalControl";
 import Loader from "./Loader";
 
 import MemoPaintIcon from "./Icons/PaintIcon";
-import { isEditor } from "../../../../../front-app/src/js/helpers";
 
 function noob() {}
 
@@ -36,7 +35,6 @@ function MapDesigner({
   const [selected, setSelected] = useState(null);
   const [state, setState] = useState(data);
   const [open, setOpen] = useState(false);
-  const map = useRef(null);
 
   const handleObserver = e => {
     const { leafletElement } = FG.current;

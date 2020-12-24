@@ -1,46 +1,65 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import axios from "axios";
 import MapDesigner from "./MapDesigner";
+import { useSelector } from "react-redux";
 import { getDataByPath } from "../../../../../front-app/src/js/helpers";
 
 function AltrpMapConstructor({ settings, id }) {
   const [isLoading, setIsLoading] = useState(false);
   const [geoJson, setGeoJson] = useState({});
+
   const {
     editable,
     canvas,
     zoom,
     lat,
     lng,
+    latDs,
+    lngDs,
+    centerByDatasource = false,
     style_height = {},
     style_margin = {},
     objects = {}
   } = settings;
-  const dynamicGeoObjects = objects
-    .map(r => {
-      const geoObj = getDataByPath(r.path, []);
-      const result = geoObj.map(data => ({
-        type: "Feature",
-        geometry: {
-          type: "Point",
-          coordinates: [
-            Number(_.get(data, r.latitude)),
-            Number(_.get(data, r.longitude))
-          ]
-        },
-        properties: {
-          fillOpacity: 1,
-          icon: r.icon || "GoogleMarker",
-          tooltip: r.tooltipByKeyboard
-            ? r.tooltip
-            : _.get(data, r.tooltip) || "",
-          popup: r.popupByKeyboard ? r.popup : _.get(data, r.popup) || "",
-          fillColor: "#3388ff"
-        }
-      }));
-      return result;
-    })
-    .flat();
+  let latitude = lat;
+  let longitude = lng;
+
+  const currentDataStorage = useSelector(
+    state => state.currentDataStorage.data
+  );
+  if (centerByDatasource) {
+    const latDatasource = getDataByPath(latDs, 50.7496449);
+    const lngDatasource = getDataByPath(lngDs, 86.1250068);
+    latitude = latDatasource;
+    longitude = lngDatasource;
+  }
+  const dynamicGeoObjectsRepeater = useMemo(() => {
+    return objects
+      .map(r => {
+        const geoObj = getDataByPath(r.path, []);
+        const result = geoObj.map(data => ({
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [
+              Number(_.get(data, r.latitude)),
+              Number(_.get(data, r.longitude))
+            ]
+          },
+          properties: {
+            fillOpacity: 1,
+            icon: r.icon || "GoogleMarker",
+            tooltip: r.tooltipByKeyboard
+              ? r.tooltip
+              : _.get(data, r.tooltip) || "",
+            popup: r.popupByKeyboard ? r.popup : _.get(data, r.popup) || "",
+            fillColor: r.color?.colorPickedHex || "#3388ff"
+          }
+        }));
+        return result;
+      })
+      .flat();
+  }, [objects, currentDataStorage]);
   // Сохраняем данные карты
   const handleSave = data => {
     axios.post(`/ajax/maps/${id}`, {
@@ -52,12 +71,12 @@ function AltrpMapConstructor({ settings, id }) {
   };
 
   const getData = useCallback(
-    async id => {
+    async (id, dynamicGeoObjects) => {
       try {
         setIsLoading(true);
         const req = await axios(`/ajax/maps/${id}`);
         if (req.status === 200) {
-          let responseData = req.data;
+          let responseData = _.cloneDeep(req.data);
           let data = [];
           let featuers = responseData.features;
           if (_.keys(dynamicGeoObjects).length > 0) {
@@ -70,7 +89,7 @@ function AltrpMapConstructor({ settings, id }) {
       } catch (error) {
         let data = {
           type: "FeatureCollection",
-          features: dynamicGeoObjects
+          features: dynamicGeoObjectsRepeater
         };
         setGeoJson(data);
         setIsLoading(false);
@@ -81,11 +100,9 @@ function AltrpMapConstructor({ settings, id }) {
 
   // При изменении карты подгружаем новые данные
   useEffect(() => {
-    getData(id);
-  }, [id]);
-  console.log("====================================");
-  console.log(geoJson);
-  console.log("====================================");
+    getData(id, dynamicGeoObjectsRepeater);
+  }, [id, dynamicGeoObjectsRepeater]);
+
   return (
     <MapDesigner
       data={geoJson}
@@ -101,7 +118,7 @@ function AltrpMapConstructor({ settings, id }) {
       isEditable={editable}
       preferCanvas={canvas}
       zoom={+zoom}
-      center={[lat, lng]}
+      center={[latitude || 50.7496449, longitude || 86.1250068]}
     />
   );
 }
