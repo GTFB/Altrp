@@ -181,27 +181,14 @@ export function renderAssetIcon(asset, props = null) {
       case "icon": {
         if(asset.url) {
           if (window[asset.url]) return window[asset.url];
-
-          let el = document.createElement("div");
-          
           fetch(asset.url)
-            .then(res => res.text())
-            .then(text => {
-              el.innerHTML = text;
+            .then(response => response.text())
+            .then(svg => {
+              svg = svg.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+              window[asset.url] = (<svg {...props} dangerouslySetInnerHTML={{__html: svg }}></svg>);
             })
             .catch(console.error.bind(console));
-  
-          let scripts = el.getElementsByTagName('script');
-          let i = scripts.length;
-          while (i--) {
-            scripts[i].parentNode.removeChild(scripts[i]);
-          }
-          
-          console.log(el.childNodes)
-          
-          console.log(el.innerHTML)
-          
-          window[asset.url] = (<svg {...props} dangerouslySetInnerHTML={{__html: el }}></svg>);
+
           return window[asset.url];
         }
         return iconsManager().renderIcon(asset.name);
