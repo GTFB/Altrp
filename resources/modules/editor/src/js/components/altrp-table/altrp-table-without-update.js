@@ -728,6 +728,7 @@ const TableBody =
       virtualized_rows,
       virtualized_height,
       item_size,
+      table_style_table_striple_style: isStriped
     } = settings;
     const RenderRow = React.useCallback(
       ({ index, style }) => {
@@ -763,7 +764,7 @@ const TableBody =
         </FixedSizeList>
       </div>
     }
-    return <div {...getTableBodyProps()} className="altrp-table-tbody">
+    return <div {...getTableBodyProps()} className={`altrp-table-tbody ${isStriped ? "altrp-table-tbody--striped" : ""}`}>
       {(page ? page : rows).map((row, i) => {
         prepareRow(row);
         return <Row
