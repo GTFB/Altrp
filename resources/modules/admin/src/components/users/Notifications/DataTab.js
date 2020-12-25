@@ -9,6 +9,8 @@ export default class DataTab extends Component{
     }
 
     render(){
+        const data = this.props.send ?? [];
+
         return <div>
             DataTab
         </div>

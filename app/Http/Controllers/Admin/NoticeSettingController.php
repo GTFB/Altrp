@@ -28,10 +28,10 @@ class NoticeSettingController extends Controller
     public function store($user, Request $request)
     {
         $data = $request->all();
+        dd($data);
         $data['noticed_id'] = $user;
         $data['noticed_type'] = 'App\User';
         $notification = new NoticeSetting($data);
-        dd($data);
         $res = $notification->save();
         $notification->sources()->attach($data['sources']);
         return response()->json(['success' => $res], 200, [], JSON_UNESCAPED_UNICODE);

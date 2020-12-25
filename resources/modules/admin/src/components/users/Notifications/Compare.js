@@ -7,108 +7,118 @@ export default class Compare extends Component{
     constructor(props){
         super(props);        
         this.state = {
-            compares: this.props.compares,
             activeCompare: {},
             isCompareOpened: false,
 
         };
+        this.onSave = this.onSave.bind(this);
+        this.onAction = this.onAction.bind(this);
         this.onActive = this.onActive.bind(this);
         this.onDisable = this.onDisable.bind(this);
         this.onExport = this.onExport.bind(this);
         this.onDelete = this.onDelete.bind(this);
-
-        this.onSaveCondition = this.onSaveCondition.bind(this);
         this.changeInput = this.changeInput.bind(this);
-        this.checkEdit = this.checkEdit.bind(this);
+        this.changeSelect = this.changeSelect.bind(this);
     }
 
-    // Отправка изменений родителю
-    checkEdit(){
+    componentDidUpdate() {
+        // Сворачивание формы, если удалён активный compare (activeCompare)
+        const {activeCompare, isCompareOpened} = this.state;
+        let compares = this.props.compares ?? [];
+        compares = _.filter(compares, s => s.id === activeCompare?.id);
+        if(compares.length === 0 && isCompareOpened) this.setState(s => ({ ...s, isCompareOpened: false}));
+    }    
+    
+    // Обработчик создания нового compare
+    onSave(){
+        this.props.onSaveCompare('compare');
     }
 
-    onSaveCondition(){
-    }
-
-    // Запись значения inputs в стейт (value)
-    changeInput = (e, compareType) => {
-        let item = e.target.value;       
-
-        if (compareType === 'name'){
-            this.setState(s => ({ ...s, activeCompare: {...s.activeCompare, name: item} }));
-        } else if(compareType === 'value'){
-            this.setState(s => ({ ...s, activeCompare: {...s.activeCompare, value: item} }));
-        }
-        // let compareId = this.state.activeCompare?.id;
-        // this.props.changeInputCompare(e, 'compare', compareId, compareType);
-
-        // let nameNew = e.target.value;        
-        // this.setState(s => ({ ...s, activeCondition: {...s.activeCondition, name: nameNew} }));
+    // Отправка данных от обработчиков родителю
+    onAction(e, type){
+        this.props.onActionCompare(e, type, 'compare');
     }
     
     // Обработчик нажатия на конкретный compare
     onActive(e){
         this.setState({ activeCompare: e,  isCompareOpened: true});
     }
-
+    
     // Обработчик отключения compare
     onDisable(e){
+        this.onAction(e, 'disable');
     }
-
+    
     // Обработчик экспорта compare
     onExport(e){
     }
-
+    
     // Обработчик удаления compare
     onDelete(e){
+        this.onAction(e, 'delete');
     }
 
-    // Обработчик выбранных селектов
-    changeSourceHandler = operator => {
-        this.setState(s => ({ ...s, activeCompare: {...s.activeCompare, operator: operator?.value ?? ''}}));
+    // Отправка значения inputs родителю
+    changeInput = (e, compareType) => {        
+        const compareId = this.state.activeCompare?.id ?? 0;
+        this.props.changeInputCompare(e, 'compare', compareId, compareType);        
     }
-    
-    
+
+    // Обработчик выбранного селекта родителю
+    changeSelect = (e, i) => {
+        const compareId = this.state.activeCompare?.id ?? 0;
+        this.props.changeSelectCompare(e, i, 'compare', compareId);      
+    }  
 
     render(){
+        let { isCompareOpened, activeCompare } = this.state;
+        let { id, name, operator, value, enabled } = activeCompare;
         const OptionsCompare = CONDITIONS_OPTIONS;
         const data = this.props.compares ?? [];
-        let { isCompareOpened } = this.state;
-        let { operator, name, value, enabled } = this.state.activeCompare;
 
-
+        data.map( item => {
+            if(item?.id === id){
+                name = item.name
+                operator = item.operator
+                value = item.value
+                enabled = item.enabled
+            }
+        });
 
         return <div className="admin-notice-compare-box">
-            <button className="btn btn_save" onClick={() => this.onSaveCompare()}>
-                Save and Add New Compare
-            </button>
-            <ul>
-                {data.map((item, index) =>
-                    <li className="compare-list" key={index}>
-                        <div className="compare-item" onClick={() => this.onActive(item)}>
-                            <a >{item.name ?? ''}</a>
-                            <a >{item.operator ?? ''}</a>
-                            <a >{item.value ?? ''}</a>
-                        </div> 
-                        <span className="quick-action-menu">
-                            <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onActive(item)}>Edit</button></span>
-                            <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onDisable(item)}>Disable</button></span>
-                            <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onExport(item)}>Export</button></span>
-                            <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onDelete(item)}>Trash</button></span>
-                        </span>
-                    </li>
-                )}
-            </ul>
+            <div className="compare-box">
+                <button className="btn btn_save" onClick={() => this.onSave()}>
+                    Save and Add New Compare
+                </button>
+                <ul>
+                    {data.map((item, index) =>
+                        <li className="list-box" key={index}>
+                            <div className="list-item" onClick={() => this.onActive(item)}>
+                                <a className={item.enabled ? "enabled" : "disabled"}>{item.name ?? ''}</a>
+                                <a className={item.enabled ? "enabled" : "disabled"}>{item.operator ?? ''}</a>
+                                <a className={item.enabled ? "enabled" : "disabled"}>{item.value ?? ''}</a>
+                            </div> 
+                            <span className="quick-action-menu">
+                                <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onActive(item)}>Edit</button></span>
+                                <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onDisable(item)}>{item.enabled ? "Disable" : "Enable"}</button></span>
+                                <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onExport(item)}>Export</button></span>
+                                <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item quick-action-menu__item_danger" onClick={() => this.onDelete(item)}>Trash</button></span>
+                            </span>
+                        </li>
+                    )}
+                </ul>
+            </div>
         
             {isCompareOpened && <div className="admin-notice-box-child-compare">
                 <div className="form-group">
                     <input type="text" id="compare" name="name" value={name ?? ''} onChange={(e) => { this.changeInput(e, "name")}} className="form-control" />
                 </div>
                 <AltrpSelect 
-                    onChange={this.changeSourceHandler}
+                    onChange={this.changeSelect}
                     value={_.filter(OptionsCompare, o => operator === o.value)}
                     options={OptionsCompare} />
                 <div className="form-group">
-                    <input type="text" id="value" name="value" value={value ?? ''} onChange={(e) => { this.changeInput(e, "value")}} className="form-control" />
+                    <textarea type="text" id="value" name="value" value={value ?? ''} onChange={(e) => { this.changeInput(e, "value")}} className="form-control" ></textarea>
                 </div>
             </div>}
 
