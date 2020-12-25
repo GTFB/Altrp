@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
-import { Link, Redirect, withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import ConditionsTab from "./ConditionsTab";
 import DataTab from "./DataTab";
 import SendToTab from "./SendToTab";
@@ -34,11 +34,9 @@ class EditNotification extends Component{
         const value = await this.resource.getAll();
         const dataSourcesAll = await this.dataSources.getAll();
 
-        if(value.length === 0){
-            this.getNewValue();
-        } else {
-            this.setState({ value: value[0] });
-        }
+        // Проверка на наличие полученной настройки с сервера
+        if (value.length === 0) this.getNewValue();
+        else this.setState({ value: value[0] });        
 
         this.setState({ sourcesOptions: dataSourcesAll.options ?? [] });
 
@@ -61,7 +59,7 @@ class EditNotification extends Component{
         }           
     }
 
-    // Сохранение и создание новой настройки уведомлений
+    // Сохранение и редирект для создания новой настройки
     saveNoticeSetting(){
         const {user_id} = this.state;
         this.serverUpdate(); 
@@ -70,6 +68,7 @@ class EditNotification extends Component{
         this.getNewValue();
     }
     
+    // Создание и запись новой настройки в value
     getNewValue(){
         const newValue = {
             "notice_name": "New Notification Settings",
@@ -112,11 +111,10 @@ class EditNotification extends Component{
     serverUpdate(){
         const {notice_id, value} = this.state;
         console.log(notice_id);
-        if(notice_id === "new"){
-            this.resourceEdit.post(value);      
-        } else {
-            this.resourceEdit.put(notice_id, value);       
-        }
+
+        // Проверка роута (текущая настройка или новая)
+        if (notice_id === "new") this.resourceEdit.post(value);      
+        else this.resourceEdit.put(notice_id, value);       
     }
 
     // Сохранение и создание condition или compare
@@ -327,12 +325,7 @@ class EditNotification extends Component{
 
     render(){
         let { value, sourcesOptions, user_id } = this.state;
-
         let { sources, notice_settings } = this.state.value;
-        if(value){
-
-        } else {
-        }
 
         return <div className="wrapper">
             <div className="admin-notice--heading">
