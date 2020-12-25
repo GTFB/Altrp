@@ -238,7 +238,10 @@ function AltrpTableWithoutUpdate(
     virtualized_rows,
     replace_rows,
     replace_width,
-    ids_storage } = settings;
+    ids_storage,
+    checkbox_checked_icon: checkedIcon = {},
+    checkbox_unchecked_icon: uncheckedIcon = {},
+    checkbox_indeterminate_icon: indeterminateIcon = {} } = settings;
   const [cardTemplate, setCardTemplate] = React.useState(null);
   /**
    * Для перетаскивания
@@ -372,13 +375,13 @@ function AltrpTableWithoutUpdate(
             if ((!settings.inner_page_size) || (settings.inner_page_size < 0) || row_select_all) {
               return (
                 <div className="altrp-toggle-row">
-                  <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+                  <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} icons={{ checkedIcon, uncheckedIcon, indeterminateIcon }} />
                 </div>
               );
             }
             return (
               <div className="altrp-toggle-row">
-                <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
+                <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} icons={{ checkedIcon, uncheckedIcon, indeterminateIcon }} />
               </div>
             );
           },
@@ -386,7 +389,7 @@ function AltrpTableWithoutUpdate(
           // to the render a checkbox
           Cell: ({ row }) => (
             <div className="altrp-toggle-row">
-              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} icons={{ checkedIcon, uncheckedIcon, indeterminateIcon }} />
             </div>
           ),
         },
@@ -544,12 +547,12 @@ function AltrpTableWithoutUpdate(
     if (selected_storage) {
       setDataByPath(selected_storage, originalSelectedRows);
     }
-  }, [selected_storage, originalSelectedRows]);
+  }, [selectedFlatRows]);
   React.useEffect(() => {
     if (ids_storage) {
       setDataByPath(ids_storage, selectedIds);
     }
-  }, [ids_storage, selectedIds]);
+  }, [selectedFlatRows]);
 
   /**
    * Настройки пагинации
@@ -624,14 +627,13 @@ function AltrpTableWithoutUpdate(
                 if (!resize_columns && !virtualized_rows) {
                   // delete columnProps.style;
                   columnProps.style = {};
-                  if (column_width) columnProps.style.width = column_width;
+                  if (column_width) columnProps.style.width = column_width + '%';
                   if (column_header_alignment) columnProps.style.textAlign = column_header_alignment;
                 }
                 return <div {...columnProps}
                   className="altrp-table-th"
-                  key={idx}>{
-                    column.render('column_name')
-                  }
+                  key={idx}>
+                  <span dangerouslySetInnerHTML={{ __html: column.render('column_name') }} />
                   {column.canGroupBy ? (
                     // If the column can be grouped, let's add a toggle
                     <span {...column.getGroupByToggleProps()} className="altrp-table-th__group-toggle">
@@ -721,6 +723,7 @@ const TableBody =
       virtualized_rows,
       virtualized_height,
       item_size,
+      table_style_table_striple_style: isStriped
     } = settings;
     const RenderRow = React.useCallback(
       ({ index, style }) => {
@@ -756,7 +759,7 @@ const TableBody =
         </FixedSizeList>
       </div>
     }
-    return <div {...getTableBodyProps()} className="altrp-table-tbody">
+    return <div {...getTableBodyProps()} className={`altrp-table-tbody ${isStriped ? "altrp-table-tbody--striped" : ""}`}>
       {(page ? page : rows).map((row, i) => {
         prepareRow(row);
         return <Row
@@ -807,7 +810,16 @@ export function Pagination(
     widgetId,
     gotoPage,
   }) {
-  const { inner_page_count_options, inner_page_type, current_page_text, inner_page_count, next_icon, prev_icon } = settings;
+  const {
+    inner_page_count_options,
+    inner_page_type,
+    current_page_text,
+    inner_page_count,
+    next_icon, prev_icon,
+    first_last_buttons_count,
+    middle_buttons_count,
+    is_with_ellipsis
+  } = settings;
   let countOptions =
     React.useMemo(() => {
       let countOptions = null;
@@ -849,10 +861,11 @@ export function Pagination(
 
       // })}</div>
       return <div className="altrp-pagination-pages">
-        {pageCount > 7
-          ? generateButtonsArray(pageIndex, pageCount).map((item, index) => item === "ellipsis"
-            ? <div key={item + index} className="altrp-pagination__ellipsis">...</div>
-            : <PageButton key={item} index={item} pageIndex={pageIndex} gotoPage={gotoPage} />)
+        {pageCount > first_last_buttons_count * 2 + middle_buttons_count
+          ? generateButtonsArray(pageIndex, pageCount, first_last_buttons_count, middle_buttons_count)
+            .map((item, index) => item === "ellipsis"
+              ? is_with_ellipsis ? <div key={item + index} className="altrp-pagination__ellipsis">...</div> : <span>&nbsp;</span>
+              : <PageButton key={item} index={item} pageIndex={pageIndex} gotoPage={gotoPage} />)
           : [...Array(pageCount)].map((_, index) => <PageButton key={index} index={index} pageIndex={pageIndex} gotoPage={gotoPage} />)}
       </div>
     }
@@ -864,7 +877,7 @@ export function Pagination(
         previousPage();
       }}
       disabled={pageIndex === 0}>
-      <span>{settings.prev_text || 'Previous Page'}</span>
+      <span dangerouslySetInnerHTML={{ __html: settings.prev_text || 'Previous Page' }} />
       {renderAssetIcon(prev_icon)}
     </button>}
     {!settings.hide_pages_buttons_button && <div className="altrp-pagination__count">
@@ -876,7 +889,7 @@ export function Pagination(
         nextPage()
       }}
       disabled={pageCount === pageIndex + 1}>
-      <span>{settings.next_text || 'Next Page'}</span>
+      <span dangerouslySetInnerHTML={{ __html: settings.next_text || 'Next Page' }} />
       {renderAssetIcon(next_icon)}
     </button>}
     {!settings.hide_page_input && <input className="altrp-pagination__goto-page"
@@ -1152,7 +1165,7 @@ export function settingsToColumns(settings, widgetId) {
         };
       }
       if (virtualized_rows || resize_columns) {
-        _column.width = Number(_column.column_width) || 150;
+        _column.width = (Number(_column.column_width) || 150) + '%';
       }
       columns.push(_column);
     }
@@ -1192,16 +1205,22 @@ export function settingsToColumns(settings, widgetId) {
  * @type {*|React.ForwardRefExoticComponent<React.PropsWithoutRef<{indeterminate: *, rest: *}> & React.RefAttributes<any>>}
  */
 const IndeterminateCheckbox = React.forwardRef(
-  ({ indeterminate, ...rest }, ref) => {
+  ({ indeterminate, icons, ...rest }, ref) => {
     const defaultRef = React.useRef();
     const resolvedRef = ref || defaultRef;
     React.useEffect(() => {
       resolvedRef.current.indeterminate = indeterminate
     }, [resolvedRef, indeterminate]);
+    const icon = icons.checkedIcon.name ?
+      rest.checked ?
+        icons.checkedIcon :
+        indeterminate ? icons.indeterminateIcon : icons.uncheckedIcon :
+      null;
     return (
-      <>
-        <input type="checkbox" ref={resolvedRef} {...rest} />
-      </>
+      <label className={"check-icon--" + (rest.checked ? "checked" : indeterminate ? "indeterminate" : "unchecked")}>
+        {icon && renderAssetIcon(icon)}
+        <input type="checkbox" ref={resolvedRef} {...rest} className={icon ? "hidden" : ""} />
+      </label>
     )
   }
 );
@@ -1233,9 +1252,7 @@ function GlobalFilter({
   placeholder = placeholder.replace(/{{count}}/g, count);
   return (
     <span className="altrp-table-global-filter">
-      <label htmlFor={`altrp-table-global-filter${widgetId}`}>
-        {labelText}
-      </label>
+      <label htmlFor={`altrp-table-global-filter${widgetId}`} dangerouslySetInnerHTML={{ __html: labelText }} />
       <input
         id={`altrp-table-global-filter${widgetId}`}
         value={value || ""}
@@ -1318,6 +1335,9 @@ const Cell = ({ cell, settings }) => {
   //   cellClassNames.join( `altrp-table-td_alignment-${column.column_body_alignment}`);
   // }
   let style = cell.column.column_body_alignment ? { textAlign: cell.column.column_body_alignment } : {};
+  if (column.column_width) {
+    style = { ...style, width: column.column_width + "%" };
+  }
   return <div {...cellProps} style={style} className={cellClassNames.join(' ')}>{cellContent}</div>
 };
 /**

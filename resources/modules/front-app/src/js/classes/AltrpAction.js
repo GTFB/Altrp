@@ -70,6 +70,9 @@ class AltrpAction extends AltrpModel {
     if (! formURL) {
       return formURL;
     }
+    if(this.getType() === 'form'){
+      return formURL;
+    }
     if (formURL.indexOf("{{") !== -1) {
       formURL = replaceContentWithData(
         formURL,
@@ -372,7 +375,6 @@ class AltrpAction extends AltrpModel {
      * @type {AltrpForm}
      */
     let form = this.getProperty("_form");
-    console.log(form);
     return form.submit("", "", data);
   }
   /**

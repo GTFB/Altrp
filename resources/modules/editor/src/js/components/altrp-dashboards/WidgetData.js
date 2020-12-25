@@ -129,7 +129,7 @@ class WidgetData extends Component {
         <ChooseWidget
           ref={this.ref}
           editElement={_.cloneDeep(this.state.el)}
-          params={_.cloneDeep(this.state.el.settings.params)}
+          params={_.cloneDeep(this.state.el.settings?.params)}
           type={_.cloneDeep(this.state.el.settings.type)}
           sources={_.cloneDeep(this.state.el.settings.sources)}
         />

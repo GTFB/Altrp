@@ -424,6 +424,9 @@ class InputWidget extends Component {
   onChange(e) {
     let value = "";
 
+    console.log("====================================");
+    console.log(e.target);
+    console.log("====================================");
     if (e && e.target) {
       if (this.props.element.getSettings("content_type") === "checkbox") {
         let inputs = document.getElementsByName(e.target.name);
