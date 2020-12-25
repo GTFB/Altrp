@@ -1,10 +1,9 @@
 import React, {Component} from "react";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
-import { Link } from "react-router-dom";
+import { Link, Redirect, withRouter } from "react-router-dom";
 import ConditionsTab from "./ConditionsTab";
 import DataTab from "./DataTab";
 import SendToTab from "./SendToTab";
-import {withRouter} from 'react-router-dom';
 import AltrpSelect from "../../altrp-select/AltrpSelect";
 import Resource from "../../../../../editor/src/js/classes/Resource";
 import './admin-notifications.scss';
@@ -16,8 +15,7 @@ class EditNotification extends Component{
             user_id: this.props.match.params.id ?? '',
             notice_id: this.props.match.params.name ?? '',
             activeTab: parseInt(window.location.hash[1]) || 0,
-            newActive: {},
-            value: {},
+            value: '',
             sourcesOptions: [],
         };
         this.resource = new Resource({route: `/admin/ajax/users/${this.state.user_id}/notifications/${this.state.notice_id}`});
@@ -29,13 +27,19 @@ class EditNotification extends Component{
         this.onSave = this.onSave.bind(this);
         this.onAction = this.onAction.bind(this);
         this.serverUpdate = this.serverUpdate.bind(this);
+        this.getNewValue = this.getNewValue.bind(this);
     }
 
     async componentDidMount(){
         const value = await this.resource.getAll();
         const dataSourcesAll = await this.dataSources.getAll();
-        
-        this.setState({ value: value[0] });
+
+        if(value.length === 0){
+            this.getNewValue();
+        } else {
+            this.setState({ value: value[0] });
+        }
+
         this.setState({ sourcesOptions: dataSourcesAll.options ?? [] });
 
         this.getSourceArray();
@@ -59,17 +63,66 @@ class EditNotification extends Component{
 
     // Сохранение и создание новой настройки уведомлений
     saveNoticeSetting(){
-        const newValue = {};        
+        const {user_id} = this.state;
+        this.serverUpdate(); 
+
+        this.props.history.push(`/admin/users/user/${user_id}/notification/new`);        
+        this.getNewValue();
+    }
+    
+    getNewValue(){
+        const newValue = {
+            "notice_name": "New Notification Settings",
+            "sources": [],
+            "notice_settings": {
+                "conditions": [
+                    {
+                        "id": 1,
+                        "name": "new condition",
+                        "enabled": false,
+                        "type": "all",
+                        "compares": [
+                            {
+                                "id": 1,
+                                "name": "title",
+                                "enabled": false,
+                                "operator": "==",
+                                "value": "value1"
+                            }
+                        ]
+                    }
+                ],
+                "data": [
+                ],
+                "send": {
+                    "email": {
+                        "enabled": false,
+                        "template": "template1"
+                    },
+                    "telegram": {
+                        "enabled": false
+                    }
+                }
+            }
+        };
+        this.setState(s => ({ ...s, value: newValue, notice_id: "new" }));
     }
 
     // Отправка изменений на сервер
     serverUpdate(){
         const {notice_id, value} = this.state;
-        this.resourceEdit.put(notice_id, value);       
+        console.log(notice_id);
+        if(notice_id === "new"){
+            this.resourceEdit.post(value);      
+        } else {
+            this.resourceEdit.put(notice_id, value);       
+        }
     }
 
     // Сохранение и создание condition или compare
     onSave(type, conditionId = false){
+        const {notice_id} = this.state;
+
         switch(type){
             case 'condition':
                 this.setState(state => {
@@ -115,9 +168,10 @@ class EditNotification extends Component{
                 break;
             case 'save':
                 console.log('SAVE');
-                break;
+                this.serverUpdate();
+                return;
         }
-        this.serverUpdate();
+        if(notice_id !== "new") this.serverUpdate();
     }
     
     // Обработка disable и delete у condition и compare
@@ -273,7 +327,12 @@ class EditNotification extends Component{
 
     render(){
         let { value, sourcesOptions, user_id } = this.state;
+
         let { sources, notice_settings } = this.state.value;
+        if(value){
+
+        } else {
+        }
 
         return <div className="wrapper">
             <div className="admin-notice--heading">
@@ -311,7 +370,6 @@ class EditNotification extends Component{
                 </TabList>
                 <TabPanel>
                     <ConditionsTab
-                        newActive={notice_settings?.conditions ?? {}}
                         conditions={notice_settings?.conditions ?? []}
                         onSaveCondition={this.onSave}
                         onActionCondition={this.onAction}

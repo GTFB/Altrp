@@ -28,7 +28,6 @@ class NoticeSettingController extends Controller
     public function store($user, Request $request)
     {
         $data = $request->all();
-        dd($data);
         $data['noticed_id'] = $user;
         $data['noticed_type'] = 'App\User';
         $notification = new NoticeSetting($data);
