@@ -1802,6 +1802,7 @@ class Table extends BaseElement {
       min: 0,
       rules: {
         '{{ELEMENT}} .altrp-pagination__previous{{STATE}} svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}} img': 'height: {{SIZE}}{{UNIT}};',
       },
     });
 
@@ -1895,6 +1896,7 @@ class Table extends BaseElement {
       min: 0,
       rules: {
         '{{ELEMENT}} .altrp-pagination__next{{STATE}} svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}} img': 'height: {{SIZE}}{{UNIT}};',
       },
     });
 
