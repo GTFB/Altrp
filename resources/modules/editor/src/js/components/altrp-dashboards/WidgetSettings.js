@@ -208,7 +208,7 @@ class WidgetSettings extends Component {
             name[index] = nameDatasource;
           }
         });
-        name = name.join(this.parseHtmlEntities(this.state.delimer));
+        name = name.join(this.state.delimer);
       } else {
         name = name.split(this.state.delimer);
         arrayOfDatasourceTitles.forEach((nameDatasource, index) => {
@@ -217,7 +217,7 @@ class WidgetSettings extends Component {
             name[index] = nameDatasource;
           }
         });
-        name = name.join(this.parseHtmlEntities(this.state.delimer));
+        name = name.join(this.state.delimer);
       }
     }
     return name;
