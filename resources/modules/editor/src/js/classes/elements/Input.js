@@ -117,10 +117,41 @@ class Input extends BaseElement {
           label: 'Checkbox'
         },
         {
+          value: 'textarea',
+          label: 'Textarea'
+        },
+        {
           value: 'wysiwyg',
           label: 'wysiwyg'
         },
       ]
+    });
+
+    this.addControl('textarea_resize', {
+      type: CONTROLLER_SELECT,
+      label: 'Resize',
+      options: [
+        {
+          label: 'both',
+          value: 'both',
+        },
+        {
+          label: 'none',
+          value: 'none',
+        },
+        {
+          label: 'horizontal',
+          value: 'horizontal',
+        },
+        {
+          label: 'vertical',
+          value: 'vertical',
+        }
+      ],
+      conditions: { 'content_type': ['textarea'] },
+      rules: {
+        '{{ELEMENT}} .altrp-field': 'resize: {{VALUE}};'
+      },
     });
 
     this.addControl('justify_options', {
@@ -339,45 +370,6 @@ class Input extends BaseElement {
       ],
     }
     );
-
-    // this.addControl('content_label_nowrap', {
-    //   type: CONTROLLER_SELECT,
-    //   label: 'One Line Label',
-    //   default: 'normal', 
-    //   conditions: {
-    //     'content_label_position_type': ['left']
-    //   },
-    //   options: [
-    //     {
-    //       'value': 'normal',
-    //       'label': 'Normal',
-    //     },
-    //     {
-    //       'value': 'nowrap',
-    //       'label': 'One Line',
-    //     }
-    //   ],
-    //   rules: {
-    //     "{{ELEMENT}} .altrp-field-label{{STATE}}": 'white-space: {{VALUE}};'
-    //   }
-    // }
-    // );
-
-
-    // this.addControl("input_width", {
-    //   type: CONTROLLER_SLIDER,
-    //   label: "Field Width",
-    //   default: {
-    //     unit: "px",
-    //     size: null
-    //   },
-    //   units: ["px", "%", "vh"],
-    //   max: 1000,
-    //   min: 0,
-    //   rules: {
-    //     "{{ELEMENT}} .altrp-field{{STATE}}": 'width: {{SIZE}}{{UNIT}};'
-    //   }
-    // });
 
     this.addControl('content_placeholder', {
       type: CONTROLLER_TEXT,

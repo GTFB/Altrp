@@ -633,7 +633,7 @@ class InputWidget extends Component {
         styleLabel = {
           marginBottom: this.state.settings.label_style_spacing
             ? this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit
+            this.state.settings.label_style_spacing.unit
             : 2 + "px"
         };
         classLabel = "";
@@ -642,7 +642,7 @@ class InputWidget extends Component {
         styleLabel = {
           marginTop: this.state.settings.label_style_spacing
             ? this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit
+            this.state.settings.label_style_spacing.unit
             : 2 + "px"
         };
         classLabel = "";
@@ -651,7 +651,7 @@ class InputWidget extends Component {
         styleLabel = {
           marginRight: this.state.settings.label_style_spacing
             ? this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit
+            this.state.settings.label_style_spacing.unit
             : 2 + "px"
         };
         classLabel = "altrp-field-label-container-left";
@@ -674,11 +674,10 @@ class InputWidget extends Component {
           style={styleLabel}
         >
           <label
-            className={`altrp-field-label ${
-              this.state.settings.content_required
-                ? "altrp-field-label--required"
-                : ""
-            }`}
+            className={`altrp-field-label ${this.state.settings.content_required
+              ? "altrp-field-label--required"
+              : ""
+              }`}
           >
             {this.state.settings.content_label}
           </label>
@@ -715,8 +714,8 @@ class InputWidget extends Component {
               {this.state.settings.content_options_nullable ? (
                 <option value="" />
               ) : (
-                ""
-              )}
+                  ""
+                )}
 
               {(options_sorting
                 ? sortOptions(options, options_sorting)
@@ -746,8 +745,19 @@ class InputWidget extends Component {
           input = this.renderWysiwyg();
         }
         break;
+      case "textarea":
+        input = <textarea value={value || ""}
+          readOnly={content_readonly}
+          autoComplete={autocomplete}
+          placeholder={this.state.settings.content_placeholder}
+          className={"altrp-field " + this.state.settings.position_css_classes}
+          onChange={this.onChange}
+          onBlur={this.onBlur}
+          id={this.state.settings.position_css_id}
+        />
+        break;
       case "image_select":
-        input =  (
+        input = (
           <AltrpImageSelect
             options={image_select_options}
             value={this.state.value}
@@ -858,9 +868,8 @@ class InputWidget extends Component {
                   type={inputType}
                   value={option.value}
                   name={`${formID}-${fieldName}`}
-                  className={`altrp-field-option__input ${
-                    checked ? "active" : ""
-                  }`}
+                  className={`altrp-field-option__input ${checked ? "active" : ""
+                    }`}
                   onChange={this.onChange}
                   checked={checked}
                   id={`${formID}-${fieldName}-${idx}`}
