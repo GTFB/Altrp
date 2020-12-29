@@ -26,7 +26,7 @@ class Notifications extends Component{
     render(){
         const { currentPage, data, user_id} = this.state;
         return <div className="admin-users-notice">
-            <Link className="btn" to={`/admin/users/user/${user_id}/notification/new/`}>Add New</Link>
+            <Link className="btn" to={`/admin/users/user/${user_id}/notification/new`}>Add New</Link>
             <div className="admin-notifications-table">
                 <table className="table">
                     <thead className="admin-notifications-table-head">

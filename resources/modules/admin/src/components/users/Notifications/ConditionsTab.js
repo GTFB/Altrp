@@ -7,136 +7,139 @@ export default class ConditionsTab extends Component{
     constructor(props){
         super(props);
         this.state = {
-            conditions: this.props.conditions,
             activeCondition: {},
             isConditionOpened: false,
-
         };
+        this.onSave = this.onSave.bind(this);
+        this.onAction = this.onAction.bind(this);
         this.onActive = this.onActive.bind(this);
         this.onDisable = this.onDisable.bind(this);
         this.onExport = this.onExport.bind(this);
         this.onDelete = this.onDelete.bind(this);
-        this.onSaveCondition = this.onSaveCondition.bind(this);
         this.changeInput = this.changeInput.bind(this);
-        this.checkEdit = this.checkEdit.bind(this);
+        this.changeSelect = this.changeSelect.bind(this);
     }
 
-    componentDidMount(){
-        // this.setState((state, props) => ({
-        //     conditions: props.conditions
-        //   }));
-
-        // if(this.props.conditions !== undefined){
-        //     const conditions = this.props.conditions;
-        //     this.setState({ conditions });
-        //     console.log(this.state.conditions);
-        // }
-        // let res = await this.resource.get(this.props.resourceid);
-        // this.setState(state=>{
-        //   return{...state,
-        //     value: res[this.props.resourceid] || '',
-        //     disabled: false,
-        //   }
-        // });
-    }
-
-    onSave(e){
-    }      
-
-    onSaveCondition(){
-
-    }
-
-    // Отправка изменений родителю
-    checkEdit(){
-
-    }
-
-
-    // Запись значения inputs в стейт (value)
-    changeInput = (e, type="condition", compareId=false, compareType=false) => {
-        // console.log(e.target.value);
-        let conditionId = this.state.activeCondition?.id ?? 0;
-        if (!conditionId) return;
-        if(type === "condition"){
-
-            let name = e.target.value;        
-            this.setState(s => ({ ...s, activeCondition: {...s.activeCondition, name: name} }));
-            this.props.changeInputCondition(e, 'condition', conditionId);
-
-        } else if(type === "compare"){
-            if (!compareId || !compareType) return;
-
-
-        }
+    componentDidUpdate() {
+        // Сворачивание формы, если удалён активный condition (activeCondition)
+        const {activeCondition, isConditionOpened} = this.state;
+        let condition = this.props.conditions ?? [];
+        condition = _.filter(condition, s => s.id === activeCondition?.id);
+        if(condition.length === 0 && isConditionOpened) this.setState(s => ({ ...s, isConditionOpened: false}));
+    }    
+       
+    // Обработчик создания нового condition
+    onSave(type = 'condition'){
+        const conditionId = this.state.activeCondition?.id ?? 0;
+        this.props.onSaveCondition(type, conditionId);
     }
     
+    // Отправка данных от обработчиков родителю
+    onAction(e, type, component = 'condition'){
+        const conditionId = this.state.activeCondition?.id ?? 0;
+        this.props.onActionCondition(e, type, component, conditionId);
+    }
+
     // Обработчик нажатия на конкретный condition
     onActive(e){
         this.setState({ activeCondition: e,  isConditionOpened: true});
     }
-
+    
     // Обработчик отключения condition
     onDisable(e){
+        this.onAction(e, 'disable');
     }
-
+    
     // Обработчик экспорта condition
     onExport(e){
     }
-
+    
     // Обработчик удаления condition
     onDelete(e){
+        this.onAction(e, 'delete');
+    }
+
+    // Запись значения inputs в стейт (value)
+    changeInput = (e, type="condition", compareId=false, compareType=false) => {
+        const conditionId = this.state.activeCondition?.id ?? 0;
+        if (!conditionId) return;
+        this.props.changeInputCondition(e, type, conditionId, compareId, compareType);
     }
 
     // Обработчик выбранных селектов
-    changeSourceHandler = type => {
-        this.setState(s => ({ ...s, activeCondition: {...s.activeCondition, type: type?.label ?? ''}}));
+    changeSelect = (e, i, type = 'condition', compareId=false) => {
+        const conditionId = this.state.activeCondition?.id ?? 0;
+        if (!conditionId) return;        
+        this.props.changeSelectCondition(e, i, type, conditionId, compareId);      
     }
-    
-    
 
     render(){
-        let { isConditionOpened } = this.state;
-        let { type,  name, compares } = this.state.activeCondition;        
-        const OptionsCondition = [{label:"any", value:1}, {label:"all", value:2}];
+        let { isConditionOpened, activeCondition } = this.state;
+        let { id, type, name, compares, enabled } = activeCondition;        
+        const OptionsCondition = [{label:"any", value:1}, {label:"all", value:2}];        
         const data = this.props.conditions ?? [];
 
-        return <div className="admin-notice-condition-box">
-            <button className="btn btn_save" onClick={() => this.onSaveCondition()}>
-                Save and Add New Condition
-            </button>
-            <ul>
-                {data.map((item, index) =>
-                    <li key={index}> <a onClick={() => this.onActive(item)}>{item.name ?? ''}</a>
-                        <span className="quick-action-menu">
-                            <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onActive(item)}>Edit</button></span>
-                            <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onDisable(item)}>Disable</button></span>
-                            <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onExport(item)}>Export</button></span>
-                            <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onDelete(item)}>Trash</button></span>
-                        </span>
-                    </li>
-                )}
-            </ul>
-            {isConditionOpened && <div className="admin-notice-box-child">
-                    <div className="form-group">
-                        <label htmlFor="page-name">Name</label>
-                        <input type="text" id="condition" name="name" value={name ?? ''} onChange={(e) => { this.changeInput(e)}} className="form-control" />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="condition">Type</label>
-                        <AltrpSelect id="condition"
-                            onChange={this.changeSourceHandler}
-                            value={_.filter(OptionsCondition, t => type.indexOf(t.label) >= 0)}
-                            options={OptionsCondition} />
-                    </div>
+        data.map( item => {
+            if(item?.id === id){
+                type = item.type
+                name = item.name
+                compares = item.compares
+                enabled = item.enabled
+            }
+        });
 
-                        <Compare compares={compares ?? []} onSaveCompare={this.onSave} checkEditCompare={this.checkEdit}/>
-                        <button className="btn btn_cancel">
-                            Save
-                        </button>
-                        <button className="btn btn_cancel">
-                            Cancel
-                        </button>                       
+        return <div className="admin-notice-condition-box">
+            <div className="condition-box">
+                <button className="btn btn_save" onClick={() => this.onSave()}>
+                    Save and Add New Condition
+                </button>
+                <ul>
+                    {data.map((item, index) =>
+                        <li className="list-box" key={index}>
+                            <div className="list-item">
+                                <a className={item.enabled ? "enabled" : "disabled"} onClick={() => this.onActive(item)}>{item.name ?? ''}</a>
+                            </div>
+                            <span className="quick-action-menu">
+                                <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onActive(item)}>Edit</button></span>
+                                <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onDisable(item)}>{item.enabled ? "Disable" : "Enable"}</button></span>
+                                <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onExport(item)}>Export</button></span>
+                                <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item quick-action-menu__item_danger" onClick={() => this.onDelete(item)}>Trash</button></span>
+                            </span>
+                        </li>
+                    )}
+                </ul>
+            </div>
+            {isConditionOpened && <div className="admin-notice-box-child">
+                <div className="condition-compare-box">
+                    <div className="condition-box-general">
+                        <div className="form-group">
+                            <label htmlFor="condition-input">Name</label>
+                            <input type="text" id="condition-input" name="name" value={name ?? ''} onChange={(e) => { this.changeInput(e)}} className="form-control" />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="condition-select">Type</label>
+                            <AltrpSelect id="condition-select"
+                                onChange={this.changeSelect}
+                                value={_.filter(OptionsCondition, t => type === t.label)}
+                                options={OptionsCondition} />
+                        </div>
+                    </div>
+                    <Compare
+                        compares={compares ?? []}
+                        onSaveCompare={this.onSave}
+                        onActionCompare={this.onAction}
+                        changeInputCompare={this.changeInput}
+                        changeSelectCompare={this.changeSelect}
+                    />
+                </div>
+                <div className="btn-box">
+                    <button className="btn btn_save" onClick={() => this.onSave("save")}>
+                        Save
+                    </button>
+                    <button className="btn btn_cancel" onClick={() => this.setState({ isConditionOpened: false, activeCondition: {} })}>
+                        Cancel
+                    </button>                       
+                </div>
                 </div>}
         </div>
     }
