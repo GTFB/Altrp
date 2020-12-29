@@ -1060,15 +1060,12 @@ class Input extends BaseElement {
     this.startControlSection('placeholder_style_section', {
       tab: TAB_STYLE,
       label: 'Placeholder',
+      conditions: { 'content_type!': ['image_select', 'hidden', 'radio', 'checkbox'] },
     });
 
     this.addControl("placeholder_style_font_color", {
       type: CONTROLLER_COLOR,
       label: "font color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-field::placeholder{{STATE}}": "color: {{COLOR}};",
@@ -1079,14 +1076,6 @@ class Input extends BaseElement {
     this.addControl('placeholder_style_font_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      // default:{
-      //   lineHeight: 1.5,
-      //   spacing: 0,
-      //   size: 13,
-      //   weight: "normal",
-      //   family: "Open Sans",
-      //   decoration: ""
-      // },
       rules: {
         '{{ELEMENT}} .altrp-field::placeholder{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
@@ -1122,10 +1111,6 @@ class Input extends BaseElement {
     this.addControl("required_style_font_color", {
       type: CONTROLLER_COLOR,
       label: "font color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-field-label--required::after{{STATE}}": "color: {{COLOR}};"
@@ -1175,10 +1160,6 @@ class Input extends BaseElement {
     this.addControl('background_style_background_color', {
       type: CONTROLLER_COLOR,
       label: 'Background Color',
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}': 'background-color: {{COLOR}};',
         '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'background-color: {{COLOR}};',
@@ -1249,7 +1230,6 @@ class Input extends BaseElement {
     this.addControl('border_type', {
       type: CONTROLLER_SELECT,
       label: 'Border Type',
-      // default: 'solid',
       options: [
         {
           'value': 'none',
