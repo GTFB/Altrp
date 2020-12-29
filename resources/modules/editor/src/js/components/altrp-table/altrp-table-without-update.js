@@ -885,8 +885,7 @@ export function Pagination(
       <span dangerouslySetInnerHTML={{ __html: settings.prev_text || 'Previous Page' }} />
       {renderAssetIcon(prev_icon)}
     </button>}
-    {!settings.hide_pages_buttons_button && <div className="altrp-pagination__count">
-      {pageText}
+    {!settings.hide_pages_buttons_button && <div className="altrp-pagination__count" dangerouslySetInnerHTML={{__html:pageText}}>
 
     </div>}
     {!settings.hide_next_page_button && <button className="altrp-pagination__next"
