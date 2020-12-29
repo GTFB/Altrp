@@ -747,7 +747,7 @@ class InputWidget extends Component {
         }
         break;
       case "image_select":
-        return (
+        input =  (
           <AltrpImageSelect
             options={image_select_options}
             value={this.state.value}
@@ -755,6 +755,7 @@ class InputWidget extends Component {
             isMultiple={isMultiple}
           />
         );
+        break;
       default: {
         const isClearable = this.state.settings.content_clearable;
         const isDate = this.state.settings.content_type === "date";
@@ -802,7 +803,7 @@ class InputWidget extends Component {
       }
     }
     return (
-      <div className={"altrp-field-container " + classLabel}>
+      <div className={this.state.settings.content_type !== "image_select" ? "altrp-field-container " : "" + classLabel}>
         {this.state.settings.content_label_position_type == "top" ? label : ""}
         {this.state.settings.content_label_position_type == "left" ? label : ""}
         {this.state.settings.content_label_position_type == "absolute"

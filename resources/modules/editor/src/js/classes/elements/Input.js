@@ -123,6 +123,44 @@ class Input extends BaseElement {
       ]
     });
 
+    this.addControl('justify_options', {
+      type: CONTROLLER_SELECT,
+      label: 'Options Alignment',
+      options: [
+        {
+          label: 'left',
+          value: 'flex-start',
+        },
+        {
+          label: 'center',
+          value: 'center',
+        },
+        {
+          label: 'right',
+          value: 'flex-end',
+        },
+        {
+          label: 'space-between',
+          value: 'space-between',
+        },
+        {
+          label: 'space-around',
+          value: 'space-around',
+        },
+        {
+          label: 'space-evenly',
+          value: 'space-evenly',
+        }
+
+      ],
+      conditions: {
+        'content_type': ['image_select']
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-image-select': 'justify-content: {{VALUE}};'
+      },
+    });
+
     const optionsRepeater = new Repeater();
 
     optionsRepeater.addControl('label', {
@@ -153,14 +191,114 @@ class Input extends BaseElement {
 
     this.addControl("image_select_item_width", {
       type: CONTROLLER_SLIDER,
-      label: "Item Width (%)",
-      max: 100,
+      label: "Item Width",
+      max: 500,
       min: 0,
+      units: ["px", "%", "vw"],
+      default: { unit: "px" },
       conditions: {
         'content_type': ['image_select']
       },
       rules: {
-        "{{ELEMENT}} .altrp-image-select>.altrp-field{{STATE}}": 'flex-basis: {{SIZE}}%;'
+        "{{ELEMENT}} .altrp-image-select>.altrp-field{{STATE}}": 'width: {{SIZE}}{{UNIT}};'
+      }
+    });
+
+    this.addControl('image_select_image_fit', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "unset",
+          label: "unset"
+        },
+        {
+          value: "fill",
+          label: "fill"
+        },
+        {
+          value: "cover",
+          label: "cover"
+        },
+        {
+          value: "contain",
+          label: "contain"
+        },
+        {
+          value: "scale-down",
+          label: "scale-down"
+        },
+        {
+          value: "none",
+          label: "none"
+        },
+      ],
+      label: 'Background Size',
+      conditions: {
+        'content_type': ['image_select']
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-image-select img{{STATE}}": "object-fit: {{VALUE}};"
+      }
+    });
+
+    this.addControl('image_select_image_position', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "top left",
+          label: "top left"
+        },
+        {
+          value: "top",
+          label: "top"
+        },
+        {
+          value: "top right",
+          label: "top right"
+        },
+        {
+          value: "right",
+          label: "right"
+        },
+        {
+          value: "bottom right",
+          label: "bottom right"
+        },
+        {
+          value: "bottom",
+          label: "bottom"
+        },
+        {
+          value: "bottom left",
+          label: "bottom left"
+        },
+        {
+          value: "left",
+          label: "left"
+        },
+        {
+          value: "center",
+          label: "center"
+        }
+      ],
+      label: 'Background Position',
+      rules: {
+        "{{ELEMENT}} .altrp-image-select img{{STATE}}": "object-position: {{VALUE}};"
+      }
+    });
+
+    this.addControl("image_select_item_height", {
+      type: CONTROLLER_SLIDER,
+      label: "Item Height",
+      max: 500,
+      min: 0,
+      units: ["px", "%", "vh"],
+      default: { unit: "px" },
+      conditions: {
+        'content_type': ['image_select']
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-image-select>.altrp-field{{STATE}}": 'height: {{SIZE}}{{UNIT}};'
       }
     });
 
@@ -785,8 +923,17 @@ class Input extends BaseElement {
           'text-transform: {{TRANSFORM}};',
           'font-style: {{STYLE}};',
           'text-decoration: {{DECORATION}};'
+        ],
+        '{{ELEMENT}} .altrp-image-select__label{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px;',
+          'font-weight: {{WEIGHT}};',
+          'text-transform: {{TRANSFORM}};',
+          'font-style: {{STYLE}};',
+          'text-decoration: {{DECORATION}};'
         ]
-
       },
     });
 
@@ -800,7 +947,8 @@ class Input extends BaseElement {
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         '{{ELEMENT}} .altrp-field-select2__single-value{{STATE}}': 'color : {{COLOR}};',
-        '{{ELEMENT}} .altrp-field{{STATE}}': 'color : {{COLOR}};'
+        '{{ELEMENT}} .altrp-field{{STATE}}': 'color : {{COLOR}};',
+        '{{ELEMENT}} .altrp-image-select__label{{STATE}}': 'color : {{COLOR}};'
       }
     });
 
@@ -813,8 +961,7 @@ class Input extends BaseElement {
 
     this.addControl('placeholder_and_value_alignment_position_section', {
       type: CONTROLLER_CHOOSE,
-      label: 'Alignment, value',
-      // default: 'left',
+      label: 'Alignment',
       options: [
         {
           icon: 'left',
@@ -831,7 +978,8 @@ class Input extends BaseElement {
       ],
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}': 'text-align: {{VALUE}};',
-        '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'text-align: {{VALUE}};'
+        '{{ELEMENT}} .altrp-field-select2__control{{STATE}}': 'text-align: {{VALUE}};',
+        '{{ELEMENT}} .altrp-image-select__label{{STATE}}': 'text-align: {{VALUE}};'
       },
     });
 
@@ -839,10 +987,6 @@ class Input extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
         unit: 'px'
       },
       units: [
