@@ -52,3 +52,7 @@ import("ace-builds").then(ace=>{
   store.dispatch(setAceEditor(AceEditor));
 });
 window._ = lodash;
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js');
+}

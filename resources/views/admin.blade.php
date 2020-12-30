@@ -23,7 +23,7 @@
     let altrp_version = '{!! config( 'app.altrp_version' ) !!}';
   </script>
 
-  <script src="{{ altrp_asset( '/modules/admin/admin.js', 'http://localhost:3002/' ) }}" defer></script>
+  <script src="/modules/admin/admin.js" defer></script>
 
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">
