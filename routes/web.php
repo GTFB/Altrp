@@ -78,15 +78,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     // Websockets
     Route::get('/websockets', 'Admin\WebsocketsController@index');
-
-    Route::get('/analytics', 'AnalyticsController@index');
-    Route::get('/analytics/none', 'AnalyticsController@none');
-
+    
     Route::get('/users/{user}/notifications', 'Admin\NoticeSettingController@index');
     Route::get('/users/{user}/notifications/{notice}', 'Admin\NoticeSettingController@getNotice');
     Route::post('/users/{user}/notifications', 'Admin\NoticeSettingController@store');
     Route::put('/users/{user}/notifications/{notification}', 'Admin\NoticeSettingController@update');
     Route::delete('/users/{user}/notifications/{notification}', 'Admin\NoticeSettingController@destroy');
+    
+    Route::get('/analytics', 'AnalyticsController@index');
+    Route::get('/analytics/none', 'AnalyticsController@none');
 
     Route::get('/global-elements', "Constructor\GlobalElements@getElements");
     Route::get('/global-elements/{element}', "Constructor\GlobalElements@getElement");

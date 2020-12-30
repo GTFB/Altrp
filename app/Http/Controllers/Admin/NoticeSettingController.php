@@ -65,7 +65,6 @@ class NoticeSettingController extends Controller
         $notification = NoticeSetting::find($notification);
         $notification->sources()->detach($notification->sources);
         $res = $notification->delete();
-
         return response()->json(['success' => $res], 200, [], JSON_UNESCAPED_UNICODE);
     }
 }

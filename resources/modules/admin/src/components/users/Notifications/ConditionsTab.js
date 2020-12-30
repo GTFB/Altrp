@@ -89,58 +89,58 @@ export default class ConditionsTab extends Component{
         });
 
         return <div className="admin-notice-condition-box">
-            <div className="condition-box">
-                <button className="btn btn_save" onClick={() => this.onSave()}>
-                    Save and Add New Condition
-                </button>
-                <ul>
-                    {data.map((item, index) =>
-                        <li className="list-box" key={index}>
-                            <div className="list-item">
-                                <a className={item.enabled ? "enabled" : "disabled"} onClick={() => this.onActive(item)}>{item.name ?? ''}</a>
-                            </div>
-                            <span className="quick-action-menu">
-                                <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onActive(item)}>Edit</button></span>
-                                <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onDisable(item)}>{item.enabled ? "Disable" : "Enable"}</button></span>
-                                <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onExport(item)}>Export</button></span>
-                                <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item quick-action-menu__item_danger" onClick={() => this.onDelete(item)}>Trash</button></span>
-                            </span>
-                        </li>
-                    )}
-                </ul>
-            </div>
-            {isConditionOpened && <div className="admin-notice-box-child">
-                <div className="condition-compare-box">
-                    <div className="condition-box-general">
-                        <div className="form-group">
-                            <label htmlFor="condition-input">Name</label>
-                            <input type="text" id="condition-input" name="name" value={name ?? ''} onChange={(e) => { this.changeInput(e)}} className="form-control" />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="condition-select">Type</label>
-                            <AltrpSelect id="condition-select"
-                                onChange={this.changeSelect}
-                                value={_.filter(OptionsCondition, t => type === t.label)}
-                                options={OptionsCondition} />
-                        </div>
-                    </div>
-                    <Compare
-                        compares={compares ?? []}
-                        onSaveCompare={this.onSave}
-                        onActionCompare={this.onAction}
-                        changeInputCompare={this.changeInput}
-                        changeSelectCompare={this.changeSelect}
-                    />
-                </div>
-                <div className="btn-box">
-                    <button className="btn btn_save" onClick={() => this.onSave("save")}>
-                        Save
+                <div className="condition-box">
+                    <button className="btn btn_save" onClick={() => this.onSave()}>
+                        Save and Add New Condition
                     </button>
-                    <button className="btn btn_cancel" onClick={() => this.setState({ isConditionOpened: false, activeCondition: {} })}>
-                        Cancel
-                    </button>                       
+                    <ul>
+                        {data.map((item, index) =>
+                            <li className="list-box" key={index}>
+                                <div className="list-item">
+                                    <a className={item.enabled ? "enabled" : "disabled"} onClick={() => this.onActive(item)}>{item.name ?? ''}</a>
+                                </div>
+                                <span className="quick-action-menu">
+                                    <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onActive(item)}>Edit</button></span>
+                                    <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onDisable(item)}>{item.enabled ? "Disable" : "Enable"}</button></span>
+                                    <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item" onClick={() => this.onExport(item)}>Export</button></span>
+                                    <span className="quick-action-menu__item_wrapper"><button className="quick-action-menu__item quick-action-menu__item_danger" onClick={() => this.onDelete(item)}>Trash</button></span>
+                                </span>
+                            </li>
+                        )}
+                    </ul>
                 </div>
+                {isConditionOpened && <div className="admin-notice-box-child">
+                    <div className="condition-compare-box">
+                        <div className="condition-box-general">
+                            <div className="form-group">
+                                <label htmlFor="condition-input">Name</label>
+                                <input type="text" id="condition-input" name="name" value={name ?? ''} onChange={(e) => { this.changeInput(e)}} className="form-control" />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="condition-select">Type</label>
+                                <AltrpSelect id="condition-select"
+                                    onChange={this.changeSelect}
+                                    value={_.filter(OptionsCondition, t => type === t.label)}
+                                    options={OptionsCondition} />
+                            </div>
+                        </div>
+                        <Compare
+                            compares={compares ?? []}
+                            onSaveCompare={this.onSave}
+                            onActionCompare={this.onAction}
+                            changeInputCompare={this.changeInput}
+                            changeSelectCompare={this.changeSelect}
+                        />
+                    </div>
+                    <div className="btn-box">
+                        <button className="btn btn_save" onClick={() => this.onSave("save")}>
+                            Save
+                        </button>
+                        <button className="btn btn_cancel" onClick={() => this.setState({ isConditionOpened: false, activeCondition: {} })}>
+                            Cancel
+                        </button>                       
+                    </div>
                 </div>}
-        </div>
+            </div>
     }
 }

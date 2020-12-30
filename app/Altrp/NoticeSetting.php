@@ -27,8 +27,9 @@ class NoticeSetting extends Model
 
     public function getParsedSettingsAttribute()
     {
-        $setting = json_decode($this->notice_settings);
-        return $setting;
+        // dd($this->notice_settings);
+        // $setting = json_decode($this->notice_settings);
+        return $this->notice_settings;
     }
 
     public function getConditionsAttribute()

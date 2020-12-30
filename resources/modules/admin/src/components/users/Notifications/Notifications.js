@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
+import AdminTable from "../../AdminTable";
 import Pagination from "../../Pagination";
 import {withRouter} from 'react-router-dom';
 
@@ -9,56 +10,128 @@ class Notifications extends Component{
         super(props);
         this.state = {
             user_id: this.props.match.params.id ?? '',
-            data: [],
+            notices: [],
             currentPage: 1,
+            noticeSearch: '',
+            sorting: {}
+      
         };
         this.itemsPerPage = 5;
         this.notificationsAll = new Resource({route: `/admin/ajax/users/${this.state.user_id}/notifications`});
+        this.changePage = this.changePage.bind(this);
+        this.generateNoticeJSON = this.generateNoticeJSON.bind(this);
     }
 
-    async componentDidMount(){
+    componentDidMount(){
+        this.getNotices();
+    }
+        
+    changePage(currentPage, pagination) {
+        this.setState(state => ({ ...state, [pagination]: { ...state[pagination], currentPage } }));
+    }
+        
+        
+    getNotices = async () => {
         let noticeSettingsData = await this.notificationsAll.getAll();
         this.setState(state => {
-          return { ...state, data: noticeSettingsData };
-        });  
-    }    
+            return { ...state, notices: noticeSettingsData };
+        }); 
+    };
+
+    noticesSortingHandler = (order_by, order) => {
+        this.setState({ sorting: { order_by, order } }, this.getNotices);
+    }
+
+    searchNotice = e => {
+        e.preventDefault();
+        this.getNotices();
+    }
+
+     /** @function generateTemplateJSON
+     * Генерируем контент файла template в формате JSON
+     * @param {object} response Данные, получаемые с сервера
+     * @return {string} Строка в формате JSON
+     */
+    generateNoticeJSON(response) {
+        const data = objectDeepCleaning(JSON.parse(response.data));
+        return JSON.stringify({
+        area: this.state.activeresponseArea.name,
+        data,
+        title: response.title,
+        name: response.notice_name,
+        });
+    }
+    /** @function downloadJSONFile
+     * Скачиваем файл
+     * @param {object} response Данные, получаемые с сервера
+     */
+    downloadJSONFile(response) {
+        // const element = document.createElement("a");
+        // const file = new Blob([this.generateNoticeJSON(response)], { type: 'text/plain' });
+        // element.href = URL.createObjectURL(file);
+        // element.download = `${response.name}.json`;
+        // document.body.appendChild(element); // Required for this to work in FireFox
+        // element.click();
+    }
+    
+    
         
     render(){
-        const { currentPage, data, user_id} = this.state;
+        const { currentPage, notices, user_id, noticeSearch, sorting} = this.state;
         return <div className="admin-users-notice">
             <Link className="btn" to={`/admin/users/user/${user_id}/notification/new`}>Add New</Link>
             <div className="admin-notifications-table">
-                <table className="table">
-                    <thead className="admin-notifications-table-head">
-                        <tr className="admin-table-row">
-                            <td className="admin-table__td admin-table__td_check">
-                                Notification Setting:
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody className="admin-table-body">
-                    {                    
-                        data.slice(currentPage * this.itemsPerPage - this.itemsPerPage, currentPage * this.itemsPerPage).map((item, index) =>                         
-                            
-                            <tr className="admin-table-row" key={item.id}>
-                                <td className="admin-table__td admin-table__td_check ">
-                                    <Link to={`/admin/users/user/${user_id}/notification/${item.id}`}> {item.notice_name} </Link>
-                                </td>
-                            </tr>
-                        
-                        )                        
-                    }   
-                    </tbody>
-                </table>
-                <Pagination pageCount={Math.ceil(data.length / this.itemsPerPage) || 1}
-                  currentPage={currentPage}
-                  changePage={page => {
-                    if (currentPage !== page) {
-                      this.setState({ currentPage: page })
+                <form className="admin-panel py-2" onSubmit={this.searchNotice}>
+                    <input className="input-sm mr-2" value={noticeSearch} onChange={e => this.setState({ noticeSearch: e.target.value })} />
+                    <button className="btn btn_bare admin-users-button">Search</button>
+                </form>
+                <AdminTable
+                    columns={[{
+                        name: 'notice_name',
+                        title: 'Notification Setting:',
+                        url: true,
+                        target: '_blank',
+                    }]}
+                    quickActions={[{ tag: 'a', props: {
+                        href: `/admin/users/user/${user_id}/notification/:id`,
+                        target: '_blank',
+                        // className: ''
+                        },
+                        title: 'Edit'
+                    }, {
+                        tag: 'button',
+                        route: '',
+                        method: 'delete',
+                        // className: ''
+                        title: 'Disable'
+                    }, {
+                        tag: 'button',
+                        route: `/admin/ajax/users/${user_id}/notifications/:id`,
+                        method: 'get',
+                        after: response => this.downloadJSONFile(response),
+                        title: 'Export'
+                    }, {
+                        tag: 'button',
+                        route: `/admin/ajax/users/${user_id}/notifications/:id`,
+                        method: 'delete',
+                        confirm: 'Are You Sure?',
+                        after: () => this.getNotices(),
+                        className: 'quick-action-menu__item_danger',
+                        title: 'Trash'
+                    }]}
+                        rows={notices.slice(currentPage * this.itemsPerPage - this.itemsPerPage, currentPage * this.itemsPerPage)}
+                sortingHandler={this.noticesSortingHandler}
+                sortingField={sorting.order_by}
+                />
+                <Pagination pageCount={Math.ceil(notices.length / this.itemsPerPage) || 1}
+                    currentPage={currentPage}
+                    changePage={page => {
+                        if (currentPage !== page) {
+                        this.setState({ currentPage: page })
+                        }
                     }
-                  }
-                  }
-                  itemsCount={data.length}
+                    }
+                    itemsCount={notices.length}
                 />
             </div>
         </div>

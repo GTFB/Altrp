@@ -38,7 +38,7 @@ class EditNotification extends Component{
         if (value.length === 0) this.getNewValue();
         else this.setState({ value: value[0] });        
 
-        this.setState({ sourcesOptions: dataSourcesAll.options ?? [] });
+        this.setState({ sourcesOptions: dataSourcesAll?.options ?? [] });
 
         this.getSourceArray();
     }   
@@ -72,6 +72,7 @@ class EditNotification extends Component{
     getNewValue(){
         const newValue = {
             "notice_name": "New Notification Settings",
+            "enabled": true,
             "sources": [],
             "notice_settings": {
                 "conditions": [
@@ -91,12 +92,16 @@ class EditNotification extends Component{
                         ]
                     }
                 ],
-                "data": [
+                "data": [{
+                    "field": "Message",
+                    "value": "{{altrpdata.text}} был обновлён",
+                    "type": "button"
+                }
                 ],
                 "send": {
                     "email": {
                         "enabled": false,
-                        "template": "template1"
+                        "template": "template"
                     },
                     "telegram": {
                         "enabled": false
@@ -320,7 +325,6 @@ class EditNotification extends Component{
                 });            
                 break;
         }        
-
     }
 
     render(){
@@ -353,7 +357,6 @@ class EditNotification extends Component{
                             options={sourcesOptions} />
                     </div>
                 </div>
-
             </div>
             <Tabs selectedIndex={this.state.activeTab} onSelect={this.switchTab} >
                 <TabList className="nav nav-pills admin-pills">
@@ -377,7 +380,6 @@ class EditNotification extends Component{
                     <SendToTab send={notice_settings?.send ?? []} />
                 </TabPanel>
             </Tabs>
-
         </div>
     }
 }

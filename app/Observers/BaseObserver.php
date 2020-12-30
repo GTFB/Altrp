@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Observers;
 
 use App\Notifications\CommonNotification;
@@ -55,7 +54,7 @@ class BaseObserver
     }
 
     /**
-     * Сфоримровать и получить сопоставимое условие
+     * Сформировать и получить сопоставимое условие
      * @param $model
      * @param $compare
      * @return string

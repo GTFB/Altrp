@@ -9,7 +9,6 @@ export default class Compare extends Component{
         this.state = {
             activeCompare: {},
             isCompareOpened: false,
-
         };
         this.onSave = this.onSave.bind(this);
         this.onAction = this.onAction.bind(this);
