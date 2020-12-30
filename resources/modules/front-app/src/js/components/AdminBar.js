@@ -48,7 +48,6 @@ class AdminBar extends React.Component {
   }
 
   handleInput(event) {
-    console.log(getDataByPath("altrpuser"));
     let value = event.target.value;
     this.setState(state => ({
       ...state,
@@ -57,45 +56,47 @@ class AdminBar extends React.Component {
   }
 
   renderResultSearch(resultSearch = null) {
-    if (Array.isArray(resultSearch) && resultSearch.length !== 0) {
-      return (
-        <React.Fragment>
-          {resultSearch.map(item => (
-            <div className="admin-bar__search-value">
-              {this.renderResultSearch(item)}
-            </div>
-          ))}
-        </React.Fragment>
-      )
+    console.log(JSON.stringify(getDataByPath(this.state.valueInput), null, '\t'))
+    return JSON.stringify(getDataByPath(this.state.valueInput), null, '\t');
+    // if (Array.isArray(resultSearch) && resultSearch.length !== 0) {
+    //   return (
+    //     <React.Fragment>
+    //       {resultSearch.map(item => (
+    //         <div className="admin-bar__search-value">
+    //           {this.renderResultSearch(item)}
+    //         </div>
+    //       ))}
+    //     </React.Fragment>
+    //   )
 
-    } else if (typeof resultSearch === "object" &&
-      resultSearch !== null &&
-      Object.entries(resultSearch).length !== 0 ) {
-      return (
-        <React.Fragment>
-          {Object.keys(resultSearch).map(item=> (
-            <div className="admin-bar__search-item">
-              <div className="admin-bar__search-key">
-                {item}:
-              </div>
+    // } else if (typeof resultSearch === "object" &&
+    //   resultSearch !== null &&
+    //   Object.entries(resultSearch).length !== 0 ) {
+    //   return (
+    //     <React.Fragment>
+    //       {Object.keys(resultSearch).map(item=> (
+    //         <div className="admin-bar__search-item">
+    //           <div className="admin-bar__search-key">
+    //             {item}:
+    //           </div>
               
-              {this.renderResultSearch(resultSearch[item])}
-            </div>
-          ))}
-        </React.Fragment>
-      )
+    //           {this.renderResultSearch(resultSearch[item])}
+    //         </div>
+    //       ))}
+    //     </React.Fragment>
+    //   )
 
-    } else if (typeof resultSearch === "string" ||
-      typeof resultSearch === "number") {
-      return (
-        <div className="admin-bar__search-value">
-          {resultSearch}
-        </div>
-      )
+    // } else if (typeof resultSearch === "string" ||
+    //   typeof resultSearch === "number") {
+    //   return (
+    //     <div className="admin-bar__search-value">
+    //       {resultSearch}
+    //     </div>
+    //   )
 
-    } else {
-      return "";
-    }
+    // } else {
+    //   return "";
+    // }
   }
 
   handleOutsideClick(event) {
@@ -115,13 +116,14 @@ class AdminBar extends React.Component {
   }
 
   handleClickCopy() {
-    JSON.stringify(getDataByPath(this.state.valueInput)).select();
+    JSON.stringify(getDataByPath(this.state.valueInput), null, '\t').select();
     document.execCommand("copy");
   }
 
   handleClickSearch() {
     this.setState(state => ({
-      ...state, contentResult: this.renderResultSearch(getDataByPath(this.state.valueInput)), visibleContentResult: true
+      // ...state, contentResult: this.renderResultSearch(getDataByPath(this.state.valueInput)), visibleContentResult: true
+      ...state, contentResult: this.renderResultSearch(getDataByPath()), visibleContentResult: true
     }))
   }
 
