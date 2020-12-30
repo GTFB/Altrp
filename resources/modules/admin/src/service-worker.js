@@ -9,6 +9,21 @@ workbox.routing.registerRoute(
 
 workbox.routing.registerRoute(
   new RegExp("localhost:8000/admin"),
+
+  new workbox.strategies.StaleWhileRevalidate({
+    cacheName: "altrp-ajax",
+    plugins: [
+      new workbox.expiration.Plugin({
+        maxAgeSeconds: 24 * 60
+      })
+    ]
+  }),
+  "GET"
+);
+
+workbox.routing.registerRoute(
+  new RegExp("localhost:8000/"),
+
   new workbox.strategies.StaleWhileRevalidate({
     cacheName: "altrp-ajax",
     plugins: [

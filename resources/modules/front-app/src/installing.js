@@ -1,5 +1,5 @@
 import ElementWrapper from "./js/components/ElementWrapper";
-import frontDecorate from './js/decorators/front-element-component';
+import frontDecorate from "./js/decorators/front-element-component";
 /**
  * Elements Wrapper
  * */
@@ -10,3 +10,7 @@ window.ElementWrapper = ElementWrapper;
  * */
 
 window.elementDecorator = frontDecorate;
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/service-worker.js");
+}
