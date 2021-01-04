@@ -181,8 +181,14 @@ export function renderAssetIcon(asset, props = null) {
       case "icon": {
         if(asset.url) {
           if (window[asset.url]) return window[asset.url];
-          
-          window[asset.url] = React.createElement("img", { ...props, src: asset.url });
+          fetch(asset.url)
+            .then(response => response.text())
+            .then(svg => {
+              svg = svg.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+              window[asset.url] = (<svg {...props} dangerouslySetInnerHTML={{__html: svg }}></svg>);
+            })
+            .catch(console.error.bind(console));
+
           return window[asset.url];
         }
         return iconsManager().renderIcon(asset.name);
