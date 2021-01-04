@@ -77,7 +77,7 @@ export function parseOptionsFromSettings(string) {
       value = getDataByPath(valuePath);
     }
     let label = option.split("|")[1] || value || "";
-    (! _.isString(label)) && (label = '');
+    (!_.isString(label)) && (label = '');
     label = label.trim();
     let labelPath = extractPathFromString(label);
     if (labelPath) {
@@ -507,9 +507,9 @@ export function getDataByPath(
       ? window.currentRouterMatch.getProperty("params")
       : {};
 
-  let gueryData = queryString.parseUrl(window.location.href).query;
+  let queryData = queryString.parseUrl(window.location.href).query;
 
-  urlParams = _.assign(gueryData, urlParams);
+  urlParams = _.assign(queryData, urlParams);
 
   let value = _default;
   if (!_.isString(path)) {
@@ -543,6 +543,10 @@ export function getDataByPath(
     value = urlParams[path]
       ? urlParams[path]
       : currentModel.getProperty(path, _default);
+    value = currentModel.getProperty(path) ? currentModel.getProperty(path) : urlParams[path];
+    if(! value){
+      value = _default;
+    }
   }
   return value;
 }
@@ -1104,7 +1108,7 @@ export function dataFromTable(HTMLElement) {
   const ths = table.querySelectorAll(".altrp-table-th");
   _.each(ths, th => {
     // if (th.innerText) {
-      headers.push(th.innerText || "");
+    headers.push(th.innerText || "");
     // }
   });
   const rows = table.querySelectorAll(".altrp-table-tbody .altrp-table-tr");
@@ -1112,7 +1116,7 @@ export function dataFromTable(HTMLElement) {
     const cells = row.querySelectorAll(".altrp-table-td");
     const part = {};
     headers.forEach((header, idx) => {
-      if(! header){
+      if (!header) {
         return;
       }
       part[header] = cells[idx].innerText || "";
@@ -1286,11 +1290,12 @@ export function recurseCount(object = {}, path = "") {
 
 /**
  * Вовращает AltrpModel, в котором храняться все источники данных на странице
+ * @param {{}} model
  * @return {AltrpModel}
  */
-export function getAppContext() {
+export function getAppContext( model = null ) {
   const { currentModel } = appStore.getState();
-  const currentModelData = currentModel.getData();
+  const currentModelData = model ? model : currentModel.getData();
   const urlParams = _.cloneDeep(
     window.currentRouterMatch instanceof AltrpModel
       ? window.currentRouterMatch.getProperty("params")
@@ -1449,13 +1454,17 @@ export function altrpRandomId() {
     .substr(2, 9);
 }
 
-export function generateButtonsArray(pageIndex, pageCount) {
-  if (pageIndex <= 3) {
-    return [0, 1, 2, 3, 4, "ellipsis", pageCount - 2, pageCount - 1]
+export function generateButtonsArray(pageIndex, pageCount, first_last_buttons_count, middle_buttons_count) {
+  const buttonsSum = first_last_buttons_count + middle_buttons_count;
+  const lastButtons = Array.from({ length: first_last_buttons_count }, (_, i) => pageCount - i - 1).reverse();
+  const middleButtons = Array.from({ length: middle_buttons_count }, (_, i) => pageIndex - Math.floor(middle_buttons_count / 2) + i);
+
+  if (pageIndex + 1 < buttonsSum) {
+    return [...Array(buttonsSum).keys(), "ellipsis", ...lastButtons]
   }
-  if (pageIndex >= pageCount - 4) {
-    return [0, 1, "ellipsis", pageCount - 5, pageCount - 4, pageCount - 3, pageCount - 2, pageCount - 1]
+  if (pageIndex >= pageCount - first_last_buttons_count - 1 - Math.floor(middle_buttons_count / 2)) {
+    return [...Array(first_last_buttons_count).keys(), "ellipsis", ...Array.from({ length: first_last_buttons_count + middle_buttons_count }, (_, i) => pageCount - i - 1).reverse()]
   }
 
-  return [0, 1, "ellipsis", pageIndex - 1, pageIndex, pageIndex + 1, "ellipsis", pageCount - 2, pageCount - 1];
+  return [...Array(first_last_buttons_count).keys(), "ellipsis", ...middleButtons, "ellipsis", ...lastButtons];
 }

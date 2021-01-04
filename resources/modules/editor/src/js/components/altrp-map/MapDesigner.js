@@ -206,7 +206,14 @@ function MapDesigner({
         keyboard={interactionOptions.keyboard}
         style={{ height: style.height }}
       >
-        <TileLayer url="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        <TileLayer
+          // url="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url="http://vec{s}.maps.yandex.net/tiles?l=map&v=4.55.2&z={z}&x={x}&y={y}&scale=2&lang=ru_RU"
+          subdomains={["01", "02", "03", "04"]}
+          attribution='<a http="yandex.ru" target="_blank">Яндекс</a>'
+          reuseTiles={true}
+          updateWhenIdle={false}
+        />
         <FeatureGroup ref={FG}>
           <EditControl
             position="topleft"

@@ -728,6 +728,7 @@ const TableBody =
       virtualized_rows,
       virtualized_height,
       item_size,
+      table_style_table_striple_style: isStriped
     } = settings;
     const RenderRow = React.useCallback(
       ({ index, style }) => {
@@ -763,7 +764,7 @@ const TableBody =
         </FixedSizeList>
       </div>
     }
-    return <div {...getTableBodyProps()} className="altrp-table-tbody">
+    return <div {...getTableBodyProps()} className={`altrp-table-tbody ${isStriped ? "altrp-table-tbody--striped" : ""}`}>
       {(page ? page : rows).map((row, i) => {
         prepareRow(row);
         return <Row
@@ -814,7 +815,16 @@ export function Pagination(
     widgetId,
     gotoPage,
   }) {
-  const { inner_page_count_options, inner_page_type, current_page_text, inner_page_count, next_icon, prev_icon } = settings;
+  const {
+    inner_page_count_options,
+    inner_page_type,
+    current_page_text,
+    inner_page_count,
+    next_icon, prev_icon,
+    first_last_buttons_count,
+    middle_buttons_count,
+    is_with_ellipsis
+  } = settings;
   let countOptions =
     React.useMemo(() => {
       let countOptions = null;
@@ -856,10 +866,11 @@ export function Pagination(
 
       // })}</div>
       return <div className="altrp-pagination-pages">
-        {pageCount > 7
-          ? generateButtonsArray(pageIndex, pageCount).map((item, index) => item === "ellipsis"
-            ? <div key={item + index} className="altrp-pagination__ellipsis">...</div>
-            : <PageButton key={item} index={item} pageIndex={pageIndex} gotoPage={gotoPage} />)
+        {pageCount > first_last_buttons_count * 2 + middle_buttons_count
+          ? generateButtonsArray(pageIndex, pageCount, first_last_buttons_count, middle_buttons_count)
+            .map((item, index) => item === "ellipsis"
+              ? is_with_ellipsis ? <div key={item + index} className="altrp-pagination__ellipsis">...</div> : <span>&nbsp;</span>
+              : <PageButton key={item} index={item} pageIndex={pageIndex} gotoPage={gotoPage} />)
           : [...Array(pageCount)].map((_, index) => <PageButton key={index} index={index} pageIndex={pageIndex} gotoPage={gotoPage} />)}
       </div>
     }
@@ -876,7 +887,6 @@ export function Pagination(
     </button>}
     {!settings.hide_pages_buttons_button && <div className="altrp-pagination__count">
       {pageText}
-
     </div>}
     {!settings.hide_next_page_button && <button className="altrp-pagination__next"
       onClick={() => {
