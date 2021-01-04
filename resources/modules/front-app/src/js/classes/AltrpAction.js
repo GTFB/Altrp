@@ -70,9 +70,9 @@ class AltrpAction extends AltrpModel {
     if (! formURL) {
       return formURL;
     }
-    if(this.getType() === 'form'){
-      return formURL;
-    }
+    // if(this.getType() === 'form'){
+    //   return formURL;
+    // }
     if (formURL.indexOf("{{") !== -1) {
       formURL = replaceContentWithData(
         formURL,
@@ -125,7 +125,7 @@ class AltrpAction extends AltrpModel {
   async init() {
     switch (this.getType()) {
       case "form": {
-        if (!this.getFormURL()) {
+        if (! this.getFormURL()) {
           this.setProperty("_form", null);
           return;
         }
@@ -306,12 +306,18 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionForm() {
-    if (!this.getProperty("_form")) {
+    if (! this.getProperty("_form")) {
       return {
         success: false,
         message: "Нет Формы"
       };
     }
+
+    const formsManager = (
+        await import(
+            "../../../../editor/src/js/classes/modules/FormsManager.js"
+            )
+    ).default;
     if (this.getProperty("path")) {
       let data = getDataByPath(this.getProperty("path"));
       if (!_.isEmpty(data)) {
@@ -336,11 +342,23 @@ class AltrpAction extends AltrpModel {
         _.isArray(getDataByPath(this.getProperty("bulk_path"))) &&
         _.get(getDataByPath(this.getProperty("bulk_path")), "length")
       ) {
+
         let bulk = getDataByPath(this.getProperty("bulk_path"));
         let _form = this.getProperty("_form");
         data = _.assign(_form.getData(), data);
         let bulkRequests = bulk.map(async (item, idx)=>{
           // return   ()=>{
+          if (this.getProperty("data")) {
+            data = parseParamsFromString(
+                this.getProperty("data"),
+                getAppContext(item),
+                true
+            );
+            // if (!_.isEmpty(data)) {
+            //   return form.submit("", "", data);
+            // }
+            // return { success: true };
+          }
           let url = this.getProperty("form_url");
           url = replaceContentWithData(url, item);
           const form = formsManager.registerForm(
@@ -374,7 +392,24 @@ class AltrpAction extends AltrpModel {
      *
      * @type {AltrpForm}
      */
-    let form = this.getProperty("_form");
+    // let form = this.getProperty("_form");
+    if (! this.getFormURL()) {
+      this.setProperty("_form", null);
+      return {
+        success: false,
+      };
+    }
+    const formOptions = {
+      dynamicURL: true,
+      customRoute: this.getFormURL()
+    };
+    console.log(this.getFormURL());
+    const form = formsManager.registerForm(
+        this.getFormId(),
+        "",
+        this.getProperty("form_method"),
+        formOptions
+    );
     let result = {
       success: false,
     };
