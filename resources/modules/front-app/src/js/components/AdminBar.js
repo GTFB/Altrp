@@ -11,7 +11,7 @@ class AdminBar extends React.Component {
       contentResult: <div/>,
       visibleContentResult: false,
       isHttps: false
-    }
+    };
     this.popupTemplateRef = React.createRef();
     this.searchContentResult = React.createRef();
     this.toggleVisiblePopupTemplate = this.toggleVisiblePopupTemplate.bind(this);
@@ -48,7 +48,6 @@ class AdminBar extends React.Component {
   }
 
   handleInput(event) {
-    console.log(getDataByPath("altrpuser"));
     let value = event.target.value;
     this.setState(state => ({
       ...state,
@@ -140,7 +139,7 @@ class AdminBar extends React.Component {
                   if(item.id === "popups") 
                     return (
                       <div className="admin-bar__popup-template-item" key={`template-${index}`}>
-                          popup: {iconsManager.renderIcon('chevron-admin-bar', {className: "admin-bar__popup-template-chevron"})}
+                          Popups: {iconsManager.renderIcon('chevron-admin-bar', {className: "admin-bar__popup-template-chevron"})}
                         <div className="admin-bar__popup-popups-items">
                           {item.templates.map((item, index) => (
                             <div className="admin-bar__popup-popups-item" onClick={this.openTemplate(item.id)} key={`popup-${index}`}>
