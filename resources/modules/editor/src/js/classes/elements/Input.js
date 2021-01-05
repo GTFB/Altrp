@@ -384,6 +384,16 @@ class Input extends BaseElement {
         'content_type': ['text', 'tel']
       }
     });
+
+    this.addControl('mask_dismatch_message', {
+      type: CONTROLLER_TEXT,
+      label: 'Mask Dismatch Message',
+      conditions: {
+        'content_type': ['text', 'tel'],
+        'content_mask!': [""]
+      }
+    });
+
     this.addControl('read_only', {
       type: CONTROLLER_SWITCHER,
       label: 'Read only',
