@@ -887,7 +887,6 @@ export function Pagination(
     </button>}
     {!settings.hide_pages_buttons_button && <div className="altrp-pagination__count">
       {pageText}
-
     </div>}
     {!settings.hide_next_page_button && <button className="altrp-pagination__next"
       onClick={() => {

@@ -109,6 +109,15 @@ const AltrpQueryComponent = (props)=>{
   React.useEffect(()=>{
     setAltrpIndex(data)
   }, [data]);
+  let finalData = React.useMemo(()=>{
+    if(! _.isArray){
+      if(_.isObject(data)){
+        return [data]
+      }
+      return [];
+    }
+    return data;
+  }, [data]);
   const childrenProps = {...props,
     data,
     _status,
