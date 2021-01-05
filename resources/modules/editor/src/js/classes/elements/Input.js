@@ -385,9 +385,9 @@ class Input extends BaseElement {
       }
     });
 
-    this.addControl('mask_dismatch_message', {
+    this.addControl('mask_mismatch_message', {
       type: CONTROLLER_TEXT,
-      label: 'Mask Dismatch Message',
+      label: 'Mask Mismatch Message',
       conditions: {
         'content_type': ['text', 'tel'],
         'content_mask!': [""]
@@ -1393,7 +1393,69 @@ class Input extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('mismatch_message_styles', {
+      tab: TAB_STYLE,
+      label: 'Mask Mismatch Message',
+      conditions: { 'mask_mismatch_message!': [""] }
+    });
 
+    this.addControl('mismatch_message_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      default: { unit: 'px' },
+      units: ['px', '%', 'vh', 'vw'],
+      rules: {
+        '{{ELEMENT}} .mask-mismatch-message{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('mismatch_message_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: { unit: 'px' },
+      units: ['px', '%', 'vh', 'vw'],
+      rules: {
+        '{{ELEMENT}} .mask-mismatch-message{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl("mismatch_message_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "Font Color",
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}} .mask-mismatch-message{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('mismatch_message_typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      rules: {
+        '{{ELEMENT}} .mask-mismatch-message{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
+
+    this.endControlSection();
 
     advancedTabControllers(this);
   }

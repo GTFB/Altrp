@@ -1451,3 +1451,7 @@ export function generateButtonsArray(pageIndex, pageCount, first_last_buttons_co
 
   return [...Array(first_last_buttons_count).keys(), "ellipsis", ...middleButtons, "ellipsis", ...lastButtons];
 }
+
+export function isValueMatchMask (value, mask) {
+  return value.length && value.split("").every((char, index) => char === mask[index] || char.match(mask[index]));
+}
