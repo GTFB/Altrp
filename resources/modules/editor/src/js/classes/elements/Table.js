@@ -2723,6 +2723,43 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection("table_style_resize_slider", {
+      tab: TAB_STYLE,
+      label: "Resize Slider",
+      conditions: {
+        resize_columns: true,
+      },
+    });
+
+    this.addControl('resize_slider_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Slider Width',
+      units: ['px', '%', 'vh',],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-table__resizer{{STATE}}': 'width: {{SIZE}}{{UNIT}};',
+      },
+    });
+
+    this.addControl('resize_slider_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Slider Color',
+      rules: {
+        '{{ELEMENT}} .altrp-table__resizer{{STATE}}': 'background: {{COLOR}};',
+      },
+    });
+
+    this.addControl('active_resize_slider_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Active Slider Color',
+      rules: {
+        '{{ELEMENT}} .altrp-table__resizer.altrp-table__resizer_resizing{{STATE}}': 'background: {{COLOR}};',
+      },
+    });
+
+    this.endControlSection();
+
     this.startControlSection("table_style_header", {
       tab: TAB_STYLE,
       label: "Header"
