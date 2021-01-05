@@ -15,7 +15,8 @@ import {
   CONTROLLER_SQL,
   CONTROLLER_SQL_PARAMS,
   CONTROLLER_REPEATER,
-  CONTROLLER_SELECT
+  CONTROLLER_SELECT,
+  CONTROLLER_SHADOW
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 
@@ -173,7 +174,7 @@ class Dashboards extends BaseElement {
 
     this.addControl("style_settings_tooltip_background_color", {
       type: CONTROLLER_COLOR,
-      label: "Цвет фона настройки",
+      label: "Background color in settings",
       default: {
         color: "",
         colorPickedHex: ""
@@ -186,7 +187,7 @@ class Dashboards extends BaseElement {
 
     this.addControl("style_settings_tooltip_icon_background_color", {
       type: CONTROLLER_COLOR,
-      label: "Цвет фона иконок в настройке",
+      label: "Background icon color in settings",
       default: {
         color: "",
         colorPickedHex: ""
@@ -200,7 +201,7 @@ class Dashboards extends BaseElement {
 
     this.addControl("style_border_color", {
       type: CONTROLLER_COLOR,
-      label: "Цвет рамки",
+      label: "Frame color",
       default: {
         color: "",
         colorPickedHex: ""
@@ -213,7 +214,7 @@ class Dashboards extends BaseElement {
 
     this.addControl("style_border_style", {
       type: CONTROLLER_SELECT,
-      label: "Вид рамки",
+      label: "Frame view",
       options: [
         {
           value: "none",
@@ -247,7 +248,7 @@ class Dashboards extends BaseElement {
     });
     this.addControl("style_border_width", {
       type: CONTROLLER_SLIDER,
-      label: "Ширина рамки",
+      label: "Frame width",
       default: {
         size: 2,
         unit: "px"
@@ -263,7 +264,7 @@ class Dashboards extends BaseElement {
 
     this.addControl("style_border_radius", {
       type: CONTROLLER_SLIDER,
-      label: "Закругление рамки",
+      label: "Frame border",
       default: {
         size: 2,
         unit: "px"
@@ -279,7 +280,7 @@ class Dashboards extends BaseElement {
 
     this.addControl("style_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Типографика",
+      label: "Typographic",
       rules: {
         "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}": [
           'font-family: "{{FAMILY}}", sans-serif !important;'
@@ -292,7 +293,7 @@ class Dashboards extends BaseElement {
 
     this.addControl("style_font_color", {
       type: CONTROLLER_COLOR,
-      label: "Цвет шрифта заголовка",
+      label: "Header font",
       default: {
         color: "",
         colorPickedHex: ""
@@ -305,7 +306,7 @@ class Dashboards extends BaseElement {
 
     this.addControl("style_font_size", {
       type: CONTROLLER_SLIDER,
-      label: "Размер шрифта заголовка",
+      label: "Header font size",
       default: {
         size: 14,
         unit: "px"
@@ -321,7 +322,7 @@ class Dashboards extends BaseElement {
 
     this.addControl("style_font_weight", {
       type: CONTROLLER_SLIDER,
-      label: "Толщина шрифта заголовка",
+      label: "Header weight",
       default: {
         weight: 400
       },
@@ -331,6 +332,117 @@ class Dashboards extends BaseElement {
         "{{ELEMENT}} .altrp-dashboard__card--font-weight{{STATE}}":
           "font-weight: {{WEIGHT}} !important;"
       }
+
+    });
+        // Border <--------------------------!--------------------------->
+
+    this.addControl('border_type_card', {
+      type: CONTROLLER_SELECT,
+      label: 'Border Type',
+      options: [
+        {
+          'value': 'none',
+          'label': 'None',
+        },
+        {
+          'value': 'solid',
+          'label': 'Solid',
+        },
+        {
+          'value': 'double',
+          'label': 'Double',
+        },
+        {
+          'value': 'dotted',
+          'label': 'Dotted',
+        },
+        {
+          'value': 'dashed',
+          'label': 'Dashed',
+        },
+        {
+          'value': 'groove',
+          'label': 'Groove',
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}': 'border-style: {{VALUE}};',
+      },
+    });
+
+    this.addControl(
+      'border_width_card', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Width',
+      default: {
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      },
+    }
+    );
+
+    this.addControl('border_color_card', {
+      type: CONTROLLER_COLOR,
+      label: 'Border Color',
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852",
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}': 'border-color: {{COLOR}};',
+      },
+    }
+    );
+
+    this.addControl('border_radius_card', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
+    });
+    
+    this.addControl('style_background_shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'Shadow',
+      default: {
+        // blur: 0,
+        // horizontal: 0,
+        // vertical: 0,
+        // opacity: 1,
+        // spread: 0,
+        // colorRGB: 'rgb(0, 0, 0)',
+        // color: 'rgb(0, 0, 0)',
+        // colorPickedHex: '#000000',
+        // type: ""
+      },
+      presetColors: [
+        '#eaeaea',
+        '#9c18a8'
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
     });
 
     this.endControlSection();
@@ -343,17 +455,68 @@ class Dashboards extends BaseElement {
 
     this.addControl("style_font_drawer_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Типографика",
+      label: "Typographic",
       rules: {
         ".{{ID}}.altrp-dashboard__drawer--font{{STATE}}": [
-          'font-family: "{{FAMILY}}", sans-serif !important;'
+          'font-size: {{SIZE}}px;',
+          'font-family: {{FAMILY}}',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
         ]
       }
     });
 
+    this.addControl("style_font_color_typographic", {
+      type: CONTROLLER_COLOR,
+      label: "Typographic color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        ".{{ID}}.altrp-dashboard__drawer--font{{STATE}}":
+          "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("style_background_color_typographic", {
+      type: CONTROLLER_COLOR,
+      label: "Typographic background color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        ".{{ID}}.altrp-dashboard__drawer--font{{STATE}}":
+          "background-color: {{COLOR}} !important;"
+      }
+    });
+
+    this.addControl("style_font_drawer_typographic_input", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic input",
+      rules: {
+        ".{{ID}}.altrp-dashboard__drawer--font-input{{STATE}}": [
+          'font-size: {{SIZE}}px;',
+          'font-family: {{FAMILY}}',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ]
+      }
+    });
+
+
     this.addControl("style_font_size_drawer_section", {
       type: CONTROLLER_SLIDER,
-      label: "Размер шрифта секций",
+      label: "Section font size",
       default: {
         size: 14,
         unit: "px"
@@ -370,7 +533,7 @@ class Dashboards extends BaseElement {
 
     this.addControl("style_font_size_drawer_label", {
       type: CONTROLLER_SLIDER,
-      label: "Размер шрифта подписей",
+      label: "Sign font size",
       default: {
         size: 14,
         unit: "px"
@@ -382,6 +545,44 @@ class Dashboards extends BaseElement {
         ".{{ID}}.altrp-dashboard__drawer--label-font-size{{STATE}}": [
           "font-size: {{SIZE}}{{UNIT}};"
         ]
+      }
+    });
+
+    this.addControl("style_margin_subheading", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Margin subheading",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px",
+        bind: true
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        ".{{ID}}.altrp-dashboard__drawer--font-margin{{STATE}}": [
+          "margin-top: {{TOP}}{{UNIT}};",
+          "margin-right: {{RIGHT}}{{UNIT}};",
+          "margin-bottom: {{BOTTOM}}{{UNIT}};",
+          "margin-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+   
+
+    // << ЦВЕТ ЧЕКОБОКСА 
+
+    this.addControl("style_checkbox_color", {
+      type: CONTROLLER_COLOR,
+      label: "Checkbox color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        ".{{ID}}.MuiCheckbox-colorSecondary.Mui-checked{{STATE}}":
+          "color: {{COLOR}};",
       }
     });
 
@@ -429,7 +630,7 @@ class Dashboards extends BaseElement {
 
     this.addControl("delimer", {
       type: CONTROLLER_TEXT,
-      label: "Разделитель"
+      label: "Divider"
     });
 
     this.endControlSection();

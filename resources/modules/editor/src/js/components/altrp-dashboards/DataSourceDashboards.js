@@ -430,6 +430,7 @@ class DataSourceDashboards extends Component {
               filter_datasource={this.state.settings.filter_datasource}
               datasources={this.props.rep}
               editHandler={this.onEditItem}
+              checkboxColor={this.state.settings?.checkboxColor}
               onCloseHandler={this.openSettings}
               onAddItem={this.onAddItemCard}
               setCardName={this.setCardName}

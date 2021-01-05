@@ -26,7 +26,7 @@ const mapStateToProps = state => {
 function mapDispatchToProps(dispatch) {
   return {
     editElementDispatch: data => dispatch(editElement(data))
-  };
+  }; 
 }
 
 class WidgetSettings extends Component {
@@ -475,7 +475,7 @@ class WidgetSettings extends Component {
           >
             <div className="collapse-button-content">
               <div
-                className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font`}
+                className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font altrp-dashboard__drawer--font-margin`}
               >
                 Базовые настройки
               </div>
@@ -556,7 +556,7 @@ class WidgetSettings extends Component {
           >
             <div className="collapse-button-content">
               <div
-                className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font`}
+                className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font altrp-dashboard__drawer--font-margin`}
               >
                 Настройки стилей
               </div>
@@ -570,6 +570,7 @@ class WidgetSettings extends Component {
               <StiyleSettings
                 widgetID={this.props.widgetID}
                 setProperty={this.setProperty}
+                checkboxColor={this.props?.checkboxColor}
                 setColorScheme={this.setColorScheme}
                 setTickRotation={this.setTickRotation}
               />
@@ -612,7 +613,7 @@ class WidgetSettings extends Component {
           >
             <div className="collapse-button-content">
               <div
-                className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font`}
+                className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font altrp-dashboard__drawer--font-margin`}
               >
                 Настройки легенды
               </div>
@@ -644,7 +645,7 @@ class WidgetSettings extends Component {
             >
               <div className="collapse-button-content">
                 <div
-                  className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font`}
+                  className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font altrp-dashboard__drawer--font-margin`}
                 >
                   Настройки анимации
                 </div>

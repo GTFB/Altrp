@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import Schemes from "./NivoColorSchemes";
 import MarginInput from "./MarginInput";
 import { SketchPicker } from "react-color";
+import Checkbox from '@material-ui/core/Checkbox';
 
 import {
   BAR,
@@ -108,11 +109,13 @@ class StyleSettings extends Component {
       cornerRadius: 0,
       padAngle: 0,
       borderWidth: 0,
-      borderColor: ""
+      borderColor: "",
+      checked: false
     };
     this.enableArea = this.enableArea.bind(this);
     this.enableSliceLabels = this.enableSliceLabels.bind(this);
     this.enableRadialLabels = this.enableRadialLabels.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.enablePoints = this.enablePoints.bind(this);
     this.setReverse = this.setReverse.bind(this);
     this.setColorScheme = this.setColorScheme.bind(this);
@@ -164,9 +167,20 @@ class StyleSettings extends Component {
     }
   }
 
+
+
   setColorScheme(value) {
     this.props.setColorScheme(value);
     this.setState(s => ({ ...s, currentColorScheme: value }));
+  }
+
+  handleChange (event)  {
+    console.log(event);
+    event.persist();
+    this.setState (state => ({
+      ...state,
+      checked: event.target.checked
+    }));
   }
 
   changeWidth(width) {
@@ -280,6 +294,13 @@ class StyleSettings extends Component {
   render() {
     return (
       <div className="col">
+      <Checkbox
+        className="customize-checkbox"
+        checked={this.state.checked}
+        onChange={this.handleChange}
+        inputProps={{ 'aria-label': 'primary checkbox', 'className': 'customize-checkbox', 'fill': 'green' }}
+        iconStyle={{color: 'green'}}
+      />
         <div className="mb-3">
           <div
             className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
