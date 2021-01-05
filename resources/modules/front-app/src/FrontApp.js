@@ -5,7 +5,7 @@ import appStore from "./js/store/store";
 import AppContent from "./js/components/AppContent";
 import { Provider } from "react-redux";
 import Resource from "../../editor/src/js/classes/Resource";
-import { changeCurrentUser } from "./js/store/current-user/actions";
+import { changeCurrentUser, setUserNotice } from "./js/store/current-user/actions";
 import FontsManager from "./js/components/FontsManager";
 
 class FrontApp extends Component {
@@ -29,16 +29,14 @@ class FrontApp extends Component {
     }).getAll();
     currentUser = currentUser.data;
     appStore.dispatch(changeCurrentUser(currentUser));
+    
     // Websockets
-    window.Echo.channel("altrpchannel.user." + currentUser.id)
-      .listen('.notification.user', e => {
-        //если удален = {} || []
-      // console.log(e.user, 2)
-        store.dispatch(changeCurrentUser(e.user));
-        // data {...}
-        // console.log(store.getState().currentUser.data, 3);
-      }
-    );
+    window.Echo.private("App.User." + currentUser.id)
+    .notification((notification) => {
+      console.log(notification, "new notice");
+      appStore.dispatch(setUserNotice(notification));
+      console.log(appStore.getState().currentUser.data, 'STORE NOTICE');
+    });
   }
   
   render() {

@@ -68,11 +68,12 @@ import store from "./js/store/store";
 
 import "./sass/admin-style.scss";
 
+import {changeCurrentUser} from "../../front-app/src/js/store/current-user/actions";
+
 window.React = React;
 window.ReactDOM = ReactDOM;
 window.Component = React.Component;
 
-import {changeCurrentUser} from "../../front-app/src/js/store/current-user/actions";
 
 // Websockets import
 import Echo from "laravel-echo"
@@ -107,11 +108,18 @@ class Admin extends Component {
     store.subscribe(this.updateAdminState.bind(this));
     new Resource({ route: '/admin/ajax/model_options' }).getAll()
       .then(({ options }) => this.setState({ models: options }));
-  }
 
-  async componentWillMount() {
+    this.getCurrentUser();
+  }
+  
+  // Запись Текущего пользователя в Store
+  async getCurrentUser() {
     let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
     currentUser = currentUser.data;
+    store.dispatch(changeCurrentUser(currentUser));
+
+    // console.log(store.getState().currentUser.data, 'STORE USER');
+
     window.Echo.private("App.User." + currentUser.id)
       .notification((notification) => {
         console.log(notification);

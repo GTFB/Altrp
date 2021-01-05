@@ -116,6 +116,7 @@ class CommonNotification extends Notification
      */
     public function toBroadcast($notifiable)
     {
+        
         $data = $this->parseData($this->parsedNoticeSettings->data);
         $data['action_type'] = $this->data['action_type'];
         $data['setting_name'] = $this->getNotificationSettingName();

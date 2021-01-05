@@ -28,7 +28,7 @@ class {{modelName}}Observer extends BaseObserver
             'action_type' => 'create'
         ];
 
-        $this->sendNotifications($test_post, $source->notice_settings, $data);
+        $this->sendNotifications(${{modelSingle}}, $source->notice_settings, $data);
     }
 
     /**
@@ -50,7 +50,7 @@ class {{modelName}}Observer extends BaseObserver
             'action_type' => 'update'
         ];
 
-        $this->sendNotifications($test_post, $source->notice_settings, $data);
+        $this->sendNotifications(${{modelSingle}}, $source->notice_settings, $data);
     }
 
     /**
@@ -72,7 +72,7 @@ class {{modelName}}Observer extends BaseObserver
             'action_type' => 'delete'
         ];
 
-        $this->sendNotifications($test_post, $source->notice_settings, $data);
+        $this->sendNotifications(${{modelSingle}}, $source->notice_settings, $data);
     }
 
     /**
