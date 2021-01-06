@@ -1,6 +1,5 @@
 import React from 'react';
 import { getDataByPath } from './../helpers';
-import {renderAssetIcon } from './../helpers'
 
 class AdminBar extends React.Component {
   constructor(props) {
@@ -11,7 +10,7 @@ class AdminBar extends React.Component {
       contentResult: <div/>,
       visibleContentResult: false,
       isHttps: false
-    };
+    }
     this.popupTemplateRef = React.createRef();
     this.searchContentResult = React.createRef();
     this.toggleVisiblePopupTemplate = this.toggleVisiblePopupTemplate.bind(this);
@@ -56,45 +55,47 @@ class AdminBar extends React.Component {
   }
 
   renderResultSearch(resultSearch = null) {
-    if (Array.isArray(resultSearch) && resultSearch.length !== 0) {
-      return (
-        <React.Fragment>
-          {resultSearch.map(item => (
-            <div className="admin-bar__search-value">
-              {this.renderResultSearch(item)}
-            </div>
-          ))}
-        </React.Fragment>
-      )
+    console.log(JSON.stringify(getDataByPath(this.state.valueInput), null, '\t'))
+    return JSON.stringify(getDataByPath(this.state.valueInput), null, '\t');
+    // if (Array.isArray(resultSearch) && resultSearch.length !== 0) {
+    //   return (
+    //     <React.Fragment>
+    //       {resultSearch.map(item => (
+    //         <div className="admin-bar__search-value">
+    //           {this.renderResultSearch(item)}
+    //         </div>
+    //       ))}
+    //     </React.Fragment>
+    //   )
 
-    } else if (typeof resultSearch === "object" &&
-      resultSearch !== null &&
-      Object.entries(resultSearch).length !== 0 ) {
-      return (
-        <React.Fragment>
-          {Object.keys(resultSearch).map(item=> (
-            <div className="admin-bar__search-item">
-              <div className="admin-bar__search-key">
-                {item}:
-              </div>
+    // } else if (typeof resultSearch === "object" &&
+    //   resultSearch !== null &&
+    //   Object.entries(resultSearch).length !== 0 ) {
+    //   return (
+    //     <React.Fragment>
+    //       {Object.keys(resultSearch).map(item=> (
+    //         <div className="admin-bar__search-item">
+    //           <div className="admin-bar__search-key">
+    //             {item}:
+    //           </div>
               
-              {this.renderResultSearch(resultSearch[item])}
-            </div>
-          ))}
-        </React.Fragment>
-      )
+    //           {this.renderResultSearch(resultSearch[item])}
+    //         </div>
+    //       ))}
+    //     </React.Fragment>
+    //   )
 
-    } else if (typeof resultSearch === "string" ||
-      typeof resultSearch === "number") {
-      return (
-        <div className="admin-bar__search-value">
-          {resultSearch}
-        </div>
-      )
+    // } else if (typeof resultSearch === "string" ||
+    //   typeof resultSearch === "number") {
+    //   return (
+    //     <div className="admin-bar__search-value">
+    //       {resultSearch}
+    //     </div>
+    //   )
 
-    } else {
-      return "";
-    }
+    // } else {
+    //   return "";
+    // }
   }
 
   handleOutsideClick(event) {
@@ -114,13 +115,14 @@ class AdminBar extends React.Component {
   }
 
   handleClickCopy() {
-    JSON.stringify(getDataByPath(this.state.valueInput)).select();
+    JSON.stringify(getDataByPath(this.state.valueInput), null, '\t').select();
     document.execCommand("copy");
   }
 
   handleClickSearch() {
     this.setState(state => ({
-      ...state, contentResult: this.renderResultSearch(getDataByPath(this.state.valueInput)), visibleContentResult: true
+      // ...state, contentResult: this.renderResultSearch(getDataByPath(this.state.valueInput)), visibleContentResult: true
+      ...state, contentResult: this.renderResultSearch(getDataByPath()), visibleContentResult: true
     }))
   }
 
@@ -138,8 +140,8 @@ class AdminBar extends React.Component {
                 {this.props.areas.map((item, index) => {
                   if(item.id === "popups") 
                     return (
-                      <div className="admin-bar__popup-template-item" key={`template-${index}`}>
-                          Popups: {iconsManager.renderIcon('chevron-admin-bar', {className: "admin-bar__popup-template-chevron"})}
+                      <div className="admin-bar__popup-template-item admin-bar__popup-popups" key={`template-${index}`}>
+                          popup: {iconsManager.renderIcon('chevron-admin-bar', {className: "admin-bar__popup-template-chevron"})}
                         <div className="admin-bar__popup-popups-items">
                           {item.templates.map((item, index) => (
                             <div className="admin-bar__popup-popups-item" onClick={this.openTemplate(item.id)} key={`popup-${index}`}>
