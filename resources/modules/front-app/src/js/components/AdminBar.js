@@ -130,7 +130,7 @@ class AdminBar extends React.Component {
         <div className="admin-bar__tools">
           <div className="admin-bar__tool">
             <span onClick={this.toggleVisiblePopupTemplate}>
-              {iconsManager.renderIcon('admin-bar1', {className: "admin-bar__tool-svg"})} edit-template
+              {iconsManager.renderIcon('admin-bar1', {className: "admin-bar__tool-svg"})} Edit-Template
             </span>
             
             {this.state.visiblePopupTemplate && (
@@ -160,11 +160,11 @@ class AdminBar extends React.Component {
             )}
           </div>
           <div className="admin-bar__tool" onClick={this.openPageSettings}>
-            {iconsManager.renderIcon('admin-bar2', {className: "admin-bar__tool-svg"})} page-settings
+            {iconsManager.renderIcon('admin-bar2', {className: "admin-bar__tool-svg"})} Page-Settings
           </div>
-          <div className="admin-bar__tool">
-            {iconsManager.renderIcon('admin-bar3', {className: "admin-bar__tool-svg"})} clear cache
-          </div>
+          {/*<div className="admin-bar__tool">*/}
+            {/*{iconsManager.renderIcon('admin-bar3', {className: "admin-bar__tool-svg"})} Clear Cache*/}
+          {/*</div>*/}
           <div className="admin-bar__search-bar" ref={this.searchContentResult}>
             {this.state.visibleContentResult && (
               <div className="admin-bar__search-result">

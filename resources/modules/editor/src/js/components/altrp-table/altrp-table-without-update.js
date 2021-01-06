@@ -235,6 +235,7 @@ function AltrpTableWithoutUpdate(
     row_select_all,
     hide_columns,
     resize_columns,
+    table_transpose,
     virtualized_rows,
     replace_rows,
     replace_width,
@@ -634,6 +635,10 @@ function AltrpTableWithoutUpdate(
                 let columnNameContent = column.render('column_name');
                 if(_.isString(columnNameContent)){
                   columnNameContent = <span dangerouslySetInnerHTML={{ __html: column.render('column_name') }} />;
+                }
+
+                if(table_transpose){
+                  _.unset(columnProps, 'style.width')
                 }
                 return <div {...columnProps}
                   className="altrp-table-th"
