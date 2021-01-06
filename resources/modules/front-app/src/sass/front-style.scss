@@ -90,6 +90,7 @@ body {
   }
 
   &__popup-popups-items {
+    display: none;
     position: fixed;
     left: 160px;
     width: 150px;
@@ -99,6 +100,9 @@ body {
     background-color: #343B4C;
   }
 
+  &__popup-popups:hover &__popup-popups-items {
+    display: block;
+  }
   &__popup-popups-item {
     padding: 4px 11px;
 

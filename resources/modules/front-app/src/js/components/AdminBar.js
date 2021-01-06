@@ -141,7 +141,7 @@ class AdminBar extends React.Component {
                 {this.props.areas.map((item, index) => {
                   if(item.id === "popups") 
                     return (
-                      <div className="admin-bar__popup-template-item" key={`template-${index}`}>
+                      <div className="admin-bar__popup-template-item admin-bar__popup-popups" key={`template-${index}`}>
                           popup: {iconsManager.renderIcon('chevron-admin-bar', {className: "admin-bar__popup-template-chevron"})}
                         <div className="admin-bar__popup-popups-items">
                           {item.templates.map((item, index) => (
