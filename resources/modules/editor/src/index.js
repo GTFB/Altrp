@@ -12,23 +12,6 @@ window.React = React;
 window.ReactDOM = ReactDOM;
 window.Component = Component;
 
-// Websockets import
-import Echo from "laravel-echo"
-try {
-  window.Pusher = require('pusher-js');
-  window.Echo = new Echo({
-    broadcaster: "pusher",
-    key: 123456,
-    wsHost: window.location.hostname,
-    wsPort: 6001,
-    forceTLS: false,
-    disableStats: true
-  });
-} catch (error) {
-  console.log(error);
-}
-
-
 window._ = _;
 window.iconsManager = new IconsManager();
 

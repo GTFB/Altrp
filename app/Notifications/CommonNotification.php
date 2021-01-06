@@ -156,7 +156,8 @@ class CommonNotification extends Notification
             ->to($notifiable->telegram_user_id);
 
         $data = $this->parsedNoticeSettings->data;
-        $content = '';
+        $content = 'сообщение:';
+
         foreach ($data as $item) {
             if ($item->type == 'content') {
                 $content .= $item->value . "\n";

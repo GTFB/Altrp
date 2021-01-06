@@ -5,6 +5,8 @@ import {adminLogoReducer} from "./admin-logo/reducers";
 import {assetsSettingsReducer} from "../../../../editor/src/js/store/assets-browser/reducers";
 import {aceEditorReducer} from "./ace-editor/reducers";
 import {currentUserReducer} from "../../../../front-app/src/js/store/current-user/reducers";
+import { websocketsReducer } from "./websockets-storage/reducers";
+
 
 export default combineReducers({
   modalSettings: modalSettingsReducer,
@@ -13,4 +15,5 @@ export default combineReducers({
   assetsManagerSettings: assetsSettingsReducer,
   aceEditorReducer: aceEditorReducer,
   currentUser: currentUserReducer,
+  websocketStore: websocketsReducer,
 });

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Artisan;
 use Exception;
 use Illuminate\Http\Request;
+use Jackiedo\DotenvEditor\Facades\DotenvEditor;
 
 class WebsocketsController extends Controller
 {
@@ -21,6 +22,10 @@ class WebsocketsController extends Controller
 
         if ($enadled){
             try{
+                // $value = time();
+                // DotenvEditor::setKey( "PUSHER_APP_KEY", $value );
+                // DotenvEditor::save();
+                $exit_code = Artisan::call('config:clear');              
                 $exit_code = Artisan::call('websockets:serve');
             }
             catch(Exception $e){
@@ -33,9 +38,7 @@ class WebsocketsController extends Controller
             catch(Exception $e){
                 return response()->json(['error'=> true], 500, [],JSON_UNESCAPED_UNICODE);
             }
-        }
-        
-        return response()->json(['success'=> $enadled], 200, [],JSON_UNESCAPED_UNICODE);
+        }        
+        return response()->json(['success'=> true, 'checked'=> !$enadled], 200, [],JSON_UNESCAPED_UNICODE);
     }
-
 }

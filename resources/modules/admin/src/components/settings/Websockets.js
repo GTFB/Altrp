@@ -1,42 +1,34 @@
 import Resource from "../../../../editor/src/js/classes/Resource";
+import { setWebsocketsEnabled } from "../../js/store/websockets-storage/actions";
+import store from "../../js/store/store";
 
 class Websockets extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-        checked: false,
-    }
-
     this.toggle = this.toggle.bind(this);
   }
 
+  // Изменение положения переключателя в стейте
   toggle() {
-    let checked = this.state.checked === true ? 0 : 1 ;
-    this.setState({checked: !this.state.checked});  
+    let checked = store.getState().websocketStore?.serverEnabled ? 0 : 1 ;
     this.submitHandler(checked);
-
   }
 
+  // Отправка на сервер положения переключателя
   submitHandler = async checked => {
     const resource = new Resource({ route: `/admin/ajax/websockets` });
     let res = await resource.getQueried({enabled:checked});
     if(res.success){
       alert(res.message || 'success');
-      // window.location.reload();
     }
+    store.dispatch(setWebsocketsEnabled(checked));
   };
 
-  componentDidMount() {
-    let item = this;
-      window.Echo.connector.pusher.connection.bind('connected', function() {
-        item.state.checked = true;
-    });
-  }
-  /**
-   * Отрисовываем вкладку вебсокетов админки
-   */
   render() {
-    let value = this.state.checked;
+    let value = store.getState().websocketStore?.serverEnabled ?? false;
+    console.log(store.getState().websocketStore);
+    console.log(window.Echo?.connector?.pusher);
+    console.log(value);
     let switcherClasses = `control-switcher control-switcher_${value ? 'on' : 'off'}`;
     return <div className="admin_switcher admin_switcher">
       <div className="admin__label">

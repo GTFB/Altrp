@@ -63,33 +63,18 @@ import ModelPage from "./components/models/ModelPage";
 
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 import Resource from "../../editor/src/js/classes/Resource";
+import Echo from "laravel-echo"
 
 import store from "./js/store/store";
 
 import "./sass/admin-style.scss";
 
 import {changeCurrentUser} from "../../front-app/src/js/store/current-user/actions";
+import {setWebsocketsEnabled} from "./js/store/websockets-storage/actions";
 
 window.React = React;
 window.ReactDOM = ReactDOM;
 window.Component = React.Component;
-
-
-// Websockets import
-import Echo from "laravel-echo"
-try {
-  window.Pusher = require('pusher-js');
-  window.Echo = new Echo({
-    broadcaster: "pusher",
-    key: 123456,
-    wsHost: window.location.hostname,
-    wsPort: 6001,
-    forceTLS: false,
-    disableStats: true
-  });
-} catch (error) {
-  console.log(error);
-}
 
 class Admin extends Component {
   constructor(props) {
@@ -109,21 +94,50 @@ class Admin extends Component {
     new Resource({ route: '/admin/ajax/model_options' }).getAll()
       .then(({ options }) => this.setState({ models: options }));
 
-    this.getCurrentUser();
-  }
-  
-  // Запись Текущего пользователя в Store
-  async getCurrentUser() {
-    let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
+    this.getConnect();
+  }  
+
+  async getConnect() {
+    let currentUser = await new Resource({ route: "/ajax/current-user" }).getAll();
+    let pusherKey = await new Resource({ route: "/admin/ajax/settings" }).get("PUSHER_APP_KEY");
+
     currentUser = currentUser.data;
     store.dispatch(changeCurrentUser(currentUser));
+    
+    pusherKey = pusherKey?.PUSHER_APP_KEY;
 
-    // console.log(store.getState().currentUser.data, 'STORE USER');
-
-    window.Echo.private("App.User." + currentUser.id)
+    if(pusherKey){
+      try {
+        window.Pusher = require("pusher-js");
+        window.Echo = new Echo({
+          broadcaster: "pusher",
+          key: pusherKey,
+          wsHost: window.location.hostname,
+          wsPort: 6001,
+          forceTLS: false,
+          disableStats: true
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      
+      window.Echo.private("App.User." + currentUser.id)
       .notification((notification) => {
         console.log(notification);
-      });
+      });  
+
+    } else {
+     console.log("Ошибка получения pusher_key: " + pusherKey);
+    }
+    this.getPusherConnect();
+  }
+
+  // Запись состояния подключения в Store
+  getPusherConnect() {
+    // Привязка выполянения функции записи в store к состоянию 'connected' пушера
+    window?.Echo?.connector?.pusher.connection.bind('connected', function() {
+        store.dispatch(setWebsocketsEnabled(true));
+    });
   }
 
   /**
