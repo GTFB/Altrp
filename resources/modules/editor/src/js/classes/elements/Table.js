@@ -1204,7 +1204,8 @@ class Table extends BaseElement {
 
     this.startControlSection("global_filter_style_table", {
       tab: TAB_STYLE,
-      label: "Global Filter"
+      label: "Global Filter",
+      conditions: { global_filter: true, }
     });
 
     this.addControl('global_filter_label_padding', {
