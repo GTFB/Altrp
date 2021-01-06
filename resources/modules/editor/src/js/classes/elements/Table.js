@@ -763,13 +763,15 @@ class Table extends BaseElement {
     this.addControl('first_last_buttons_count', {
       type: CONTROLLER_NUMBER,
       label: 'First-Last Buttons Count',
-      default: 2
+      default: 2,
+      conditions: { 'inner_page_type!': 'text', },
     });
 
     this.addControl('middle_buttons_count', {
       type: CONTROLLER_NUMBER,
       label: 'Middle Buttons Count',
       min: 3, // похоже, не работает. TODO: задать минимальное значение 3      
+      conditions: { 'inner_page_type!': 'text', },
     });
 
     this.addControl('is_with_ellipsis', {
