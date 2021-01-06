@@ -93,7 +93,7 @@ class BaseElement extends ControlStack {
       data.dynamicContentSettings = [...this.dynamicContentSettings];
     }
     data.cssClassStorage = {...this.cssClassStorage};
-    let children = this.getChildrenForImport();
+    let children = this.getChigldrenForImport();
     if (children) {
       data.children = children;
     }

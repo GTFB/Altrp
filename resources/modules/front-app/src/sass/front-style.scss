@@ -20,6 +20,7 @@ body {
 
 .admin-bar {
   top: 0;
+  position: absolute;
   height: 25px;
   width: 100%;
   display: flex;
@@ -35,7 +36,7 @@ body {
   font-weight: 400;
   letter-spacing: 0em;
   text-align: left;
-
+  z-index: 1000;
   &__tools {
     display: flex;
   }

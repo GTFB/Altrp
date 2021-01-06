@@ -176,6 +176,7 @@ export function getWindowWidth() {
 }
 
 export function renderAssetIcon(asset, props = null) {
+  console.error(asset.assetType);
   if (asset) {
     switch (asset.assetType) {
       case "icon": {
