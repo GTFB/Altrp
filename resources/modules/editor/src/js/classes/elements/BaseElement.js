@@ -21,6 +21,14 @@ class BaseElement extends ControlStack {
     this.controllersRegistered = false;
     this.children = [];
     this.componentClass = window.elementsManager.getComponentClass(this.getName());
+    // console.log(this)
+    // for(let key in this) {
+    //   console.log(key, this[key])
+    // }
+    // console.log('component', this.component)
+    // console.log(this)
+    // if(this.component)
+    //     console.log('added', this)
     this.initiatedDefaults = null;
 
     /**
