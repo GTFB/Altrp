@@ -3,6 +3,10 @@
 
 ## Changelog
 
+### 0.11.16
++ Аdd the Possibility to Delete Widgets with Errors
++ Аdd the Possibility to Hide Export Panel in Dashboard Widget
+
 ### 0.11.1
 + Add Action Update Elements & Bulk Form Action
 + Draggable Repeater Items

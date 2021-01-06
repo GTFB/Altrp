@@ -6,6 +6,7 @@ import ThreeDotsVertical from "react-bootstrap-icons/dist/icons/three-dots-verti
 import GearFill from "react-bootstrap-icons/dist/icons/sliders";
 import TrashFill from "react-bootstrap-icons/dist/icons/trash";
 import PrinterFill from "react-bootstrap-icons/dist/icons/printer";
+import ArrowBarUp from "react-bootstrap-icons/dist/icons/arrow-bar-up";
 import FileEarMark from "react-bootstrap-icons/dist/icons/cloud-download";
 import Files from "react-bootstrap-icons/dist/icons/files";
 
@@ -26,8 +27,8 @@ class WidgetData extends Component {
       }));
     }
     if (
-      JSON.stringify(prevProps.editElement.settings.params) !==
-      JSON.stringify(this.props.editElement.settings.params)
+      JSON.stringify(prevProps.editElement.settings?.params) !==
+      JSON.stringify(this.props.editElement.settings?.params)
     ) {
       this.setState(state => ({
         ...state,
@@ -93,6 +94,16 @@ class WidgetData extends Component {
                 <Dropdown.Item className="altrp-dashboard__card--settings-tooltip-background">
                   <button
                     type="button"
+                    title="Экспорт"
+                    className="altrp-dashboard__card--settings-tooltip-icon-background"
+                    onClick={() => this.props.exportCard(this.state.el)}
+                  >
+                    <ArrowBarUp />
+                  </button>
+                </Dropdown.Item>
+                <Dropdown.Item className="altrp-dashboard__card--settings-tooltip-background">
+                  <button
+                    type="button"
                     title="Дублировать"
                     className="altrp-dashboard__card--settings-tooltip-icon-background"
                     onClick={() => this.props.copyWidget(this.state.el)}
@@ -129,9 +140,9 @@ class WidgetData extends Component {
         <ChooseWidget
           ref={this.ref}
           editElement={_.cloneDeep(this.state.el)}
-          params={_.cloneDeep(this.state.el.settings.params)}
-          type={_.cloneDeep(this.state.el.settings.type)}
-          sources={_.cloneDeep(this.state.el.settings.sources)}
+          params={_.cloneDeep(this.state.el.settings?.params)}
+          type={_.cloneDeep(this.state.el.settings?.type)}
+          sources={_.cloneDeep(this.state.el.settings?.sources)}
         />
       </div>
     );

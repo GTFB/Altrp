@@ -1,6 +1,5 @@
 import React from 'react';
 import { getDataByPath } from './../helpers';
-import {renderAssetIcon } from './../helpers'
 
 class AdminBar extends React.Component {
   constructor(props) {

@@ -190,6 +190,9 @@ class InputWidget extends Component {
     if (url.indexOf("/") === -1) {
       return `/ajax/models/${url}_options`;
     }
+    if(url.indexOf('{{') !== -1){
+      url = replaceContentWithData();
+    }
     return url;
   }
   /**
@@ -424,6 +427,9 @@ class InputWidget extends Component {
   onChange(e) {
     let value = "";
 
+    console.log("====================================");
+    console.log(e.target);
+    console.log("====================================");
     if (e && e.target) {
       if (this.props.element.getSettings("content_type") === "checkbox") {
         let inputs = document.getElementsByName(e.target.name);
@@ -630,7 +636,7 @@ class InputWidget extends Component {
         styleLabel = {
           marginBottom: this.state.settings.label_style_spacing
             ? this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit
+            this.state.settings.label_style_spacing.unit
             : 2 + "px"
         };
         classLabel = "";
@@ -639,7 +645,7 @@ class InputWidget extends Component {
         styleLabel = {
           marginTop: this.state.settings.label_style_spacing
             ? this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit
+            this.state.settings.label_style_spacing.unit
             : 2 + "px"
         };
         classLabel = "";
@@ -648,7 +654,7 @@ class InputWidget extends Component {
         styleLabel = {
           marginRight: this.state.settings.label_style_spacing
             ? this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit
+            this.state.settings.label_style_spacing.unit
             : 2 + "px"
         };
         classLabel = "altrp-field-label-container-left";
@@ -671,11 +677,10 @@ class InputWidget extends Component {
           style={styleLabel}
         >
           <label
-            className={`altrp-field-label ${
-              this.state.settings.content_required
-                ? "altrp-field-label--required"
-                : ""
-            }`}
+            className={`altrp-field-label ${this.state.settings.content_required
+              ? "altrp-field-label--required"
+              : ""
+              }`}
           >
             {this.state.settings.content_label}
           </label>
@@ -712,8 +717,8 @@ class InputWidget extends Component {
               {this.state.settings.content_options_nullable ? (
                 <option value="" />
               ) : (
-                ""
-              )}
+                  ""
+                )}
 
               {(options_sorting
                 ? sortOptions(options, options_sorting)
@@ -743,8 +748,19 @@ class InputWidget extends Component {
           input = this.renderWysiwyg();
         }
         break;
+      case "textarea":
+        input = <textarea value={value || ""}
+          readOnly={content_readonly}
+          autoComplete={autocomplete}
+          placeholder={this.state.settings.content_placeholder}
+          className={"altrp-field " + this.state.settings.position_css_classes}
+          onChange={this.onChange}
+          onBlur={this.onBlur}
+          id={this.state.settings.position_css_id}
+        />
+        break;
       case "image_select":
-        return (
+        input = (
           <AltrpImageSelect
             options={image_select_options}
             value={this.state.value}
@@ -752,6 +768,7 @@ class InputWidget extends Component {
             isMultiple={isMultiple}
           />
         );
+        break;
       default: {
         const isClearable = this.state.settings.content_clearable;
         const isDate = this.state.settings.content_type === "date";
@@ -799,7 +816,7 @@ class InputWidget extends Component {
       }
     }
     return (
-      <div className={"altrp-field-container " + classLabel}>
+      <div className={this.state.settings.content_type !== "image_select" ? "altrp-field-container " : "" + classLabel}>
         {this.state.settings.content_label_position_type == "top" ? label : ""}
         {this.state.settings.content_label_position_type == "left" ? label : ""}
         {this.state.settings.content_label_position_type == "absolute"
@@ -854,9 +871,8 @@ class InputWidget extends Component {
                   type={inputType}
                   value={option.value}
                   name={`${formID}-${fieldName}`}
-                  className={`altrp-field-option__input ${
-                    checked ? "active" : ""
-                  }`}
+                  className={`altrp-field-option__input ${checked ? "active" : ""
+                    }`}
                   onChange={this.onChange}
                   checked={checked}
                   id={`${formID}-${fieldName}-${idx}`}
@@ -960,12 +976,6 @@ class InputWidget extends Component {
         options
       );
     }
-    console.log("====================================");
-    console.log(
-      value,
-      _.find(options, o => o.value == this.state.value)
-    );
-    console.log("====================================");
     const select2Props = {
       className: "altrp-field-select2",
       element: this.props.element,

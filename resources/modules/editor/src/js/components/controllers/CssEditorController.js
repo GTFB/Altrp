@@ -68,6 +68,9 @@ class CssEditorController extends Component {
       return '';
     }
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    if(! _.isString(value)){
+      value = '';
+    }
     return <div className="controller-container controller-container_css-editor">
       <div className="controller-container__label control-css-editor__label">
         Add your own custom CSS here
