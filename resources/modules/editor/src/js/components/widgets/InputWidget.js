@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Suspense } from "react";
 import {
   altrpCompare,
   isEditor,
@@ -13,7 +13,7 @@ import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpS
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
 import moment from "moment";
-import CKeditor from "../ckeditor/CKeditor";
+const CKeditor = React.lazy(() => import("../ckeditor/CKeditor"));
 import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 const AltrpInput = React.lazy(() => import("../altrp-input/AltrpInput"));
 
@@ -1003,12 +1003,14 @@ class InputWidget extends Component {
 
   renderWysiwyg() {
     return (
-      <CKeditor
-        changeText={this.dispatchFieldValueToStore}
-        text={this.getContent("content_default_value")}
-        name={this.props.element.getFieldId()}
-        readOnly={this.getContent("read_only")}
-      />
+      <Suspense fallback={<div>Загрузка...</div>}>
+        <CKeditor
+          changeText={this.dispatchFieldValueToStore}
+          text={this.getContent("content_default_value")}
+          name={this.props.element.getFieldId()}
+          readOnly={this.getContent("read_only")}
+        />
+      </Suspense>
     );
   }
 }
