@@ -18,6 +18,7 @@ class MediaType extends Migration
     Schema::table( 'media', function ( Blueprint $table ){
       $table->string( 'type', 50 )->nullable()->index();
     } );
+
     Media::all()->each( function( Media $media ){
       $media->type = 'image';
       $media->save();

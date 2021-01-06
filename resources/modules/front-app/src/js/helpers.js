@@ -495,9 +495,9 @@ export function getDataByPath(
       ? window.currentRouterMatch.getProperty("params")
       : {};
 
-  let gueryData = queryString.parseUrl(window.location.href).query;
+  let queryData = queryString.parseUrl(window.location.href).query;
 
-  urlParams = _.assign(gueryData, urlParams);
+  urlParams = _.assign(queryData, urlParams);
 
   let value = _default;
   if (!_.isString(path)) {
@@ -531,6 +531,10 @@ export function getDataByPath(
     value = urlParams[path]
       ? urlParams[path]
       : currentModel.getProperty(path, _default);
+    value = currentModel.getProperty(path) ? currentModel.getProperty(path) : urlParams[path];
+    if(! value){
+      value = _default;
+    }
   }
   return value;
 }
@@ -1274,11 +1278,12 @@ export function recurseCount(object = {}, path = "") {
 
 /**
  * Вовращает AltrpModel, в котором храняться все источники данных на странице
+ * @param {{}} model
  * @return {AltrpModel}
  */
-export function getAppContext() {
+export function getAppContext( model = null ) {
   const { currentModel } = appStore.getState();
-  const currentModelData = currentModel.getData();
+  const currentModelData = model ? model : currentModel.getData();
   const urlParams = _.cloneDeep(
     window.currentRouterMatch instanceof AltrpModel
       ? window.currentRouterMatch.getProperty("params")

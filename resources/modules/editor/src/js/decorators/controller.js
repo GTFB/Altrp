@@ -80,6 +80,9 @@ function getSettings(settingName){
   if(this.props.type === 'repeater'){
     return this.props.currentElement.getSettings(settingName);
   }
+  if(this.props.responsive === false){
+    return this.props.currentElement.getSettings(settingName);
+  }
   return this.props.currentElement.getSettings(settingName +
       getElementSettingsSuffix(this.props.controller))
 }

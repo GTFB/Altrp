@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { connect } from "react-redux";
+import { Scrollbars } from "react-custom-scrollbars";
 import { editElement } from "../../store/altrp-dashboard/actions";
 import { exportDashboard } from "../../../../../front-app/src/js/store/altrp-dashboard-export/actions";
 
@@ -16,6 +17,7 @@ import WidgetSettings from "./WidgetSettings";
 import AddItemButton from "./settings/AddItemButton";
 import ExportDashboardButton from "./settings/ExportDashboardButton";
 import ImportDashboard from "./settings/ImportDashboard";
+import ImportDiagram from "./settings/ImportDiagram";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -54,12 +56,16 @@ class DataSourceDashboards extends Component {
       drawer: null,
       datasources: null,
       delimer: props.delimer,
-      importData: []
+      importData: [],
+      importWidget: []
     };
 
     this.export = this.export.bind(this);
     this.import = this.import.bind(this);
     this.getFile = this.getFile.bind(this);
+    this.exportCard = this.exportCard.bind(this);
+    this.importDiagram = this.importDiagram.bind(this);
+    this.getWidgetFile = this.getWidgetFile.bind(this);
     this.onAddItem = this.onAddItem.bind(this);
     this.onAddItemCard = this.onAddItemCard.bind(this);
     this.onBreakpointChange = this.onBreakpointChange.bind(this);
@@ -315,6 +321,17 @@ class DataSourceDashboards extends Component {
     link.click();
   }
 
+  exportCard(el) {
+    const element = el.settings;
+    const dataStr =
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify(element));
+    let link = document.createElement("a");
+    link.setAttribute("href", dataStr);
+    link.setAttribute("download", `${el.settings.name}.json`);
+    link.click();
+  }
+
   import() {
     const file = this.state.importData;
     const id = this.state.id;
@@ -354,15 +371,35 @@ class DataSourceDashboards extends Component {
     }
   }
 
+  importDiagram() {
+    const widget = { settings: this.state.importWidget };
+    if (_.keys(widget.settings).length <= 0) {
+      alert("Выберите файл");
+      return;
+    }
+    try {
+      this.onAddItemCard(widget);
+      this.setState(s => ({ importWidget: [] }));
+    } catch (e) {
+      console.log("ERROR ==>", e);
+    }
+  }
+
   getFile(e) {
     const fileReader = new FileReader();
     fileReader.readAsText(e.target.files[0], "UTF-8");
-    console.log("====================================");
-    console.log(e.target.files[0]);
-    console.log("====================================");
     fileReader.onload = e => {
       const file = JSON.parse(e.target.result);
       this.setState(s => ({ ...s, importData: file }));
+    };
+  }
+
+  getWidgetFile(e) {
+    const fileReader = new FileReader();
+    fileReader.readAsText(e.target.files[0], "UTF-8");
+    fileReader.onload = e => {
+      const file = JSON.parse(e.target.result);
+      this.setState(s => ({ ...s, importWidget: file }));
     };
   }
 
@@ -382,6 +419,7 @@ class DataSourceDashboards extends Component {
           onRemoveItem={this.onRemoveItem}
           saveWidget={this.saveWidgetData}
           copyWidget={this.copyWidget}
+          exportCard={this.exportCard}
         />
       </div>
     );
@@ -399,6 +437,10 @@ class DataSourceDashboards extends Component {
           <ExportDashboardButton onExport={this.export} />
         )}
         <ImportDashboard onImport={this.import} getFile={this.getFile} />
+        <ImportDiagram
+          onImport={this.importDiagram}
+          getFile={this.getWidgetFile}
+        />
         <ResponsiveReactGridLayout
           draggableCancel=".altrp-dashboards__cancle-drag"
           onLayoutChange={this.onLayoutChange}
@@ -423,19 +465,35 @@ class DataSourceDashboards extends Component {
           onClose={this.openSettings}
           handler={false}
         >
-          {this.state.settingsOpen && (
-            <WidgetSettings
-              widgetID={this.state.id}
-              addItemPreview={this.state.addItemPreview}
-              filter_datasource={this.state.settings.filter_datasource}
-              datasources={this.props.rep}
-              editHandler={this.onEditItem}
-              onCloseHandler={this.openSettings}
-              onAddItem={this.onAddItemCard}
-              setCardName={this.setCardName}
-              delimer={this.state.delimer}
-            />
-          )}
+          <Scrollbars
+            style={{ zIndex: 999999 }}
+            autoHide
+            autoHideTimeout={500}
+            autoHideDuration={200}
+            renderTrackVertical={({ style, ...props }) => {
+              return (
+                <div
+                  className="altrp-scroll__vertical-track"
+                  style={style}
+                  {...props}
+                />
+              );
+            }}
+          >
+            {this.state.settingsOpen && (
+              <WidgetSettings
+                widgetID={this.state.id}
+                addItemPreview={this.state.addItemPreview}
+                filter_datasource={this.state.settings.filter_datasource}
+                datasources={this.props.rep}
+                editHandler={this.onEditItem}
+                onCloseHandler={this.openSettings}
+                onAddItem={this.onAddItemCard}
+                setCardName={this.setCardName}
+                delimer={this.state.delimer}
+              />
+            )}
+          </Scrollbars>
         </Drawer>
         {this.state.drawer != null &&
           ReactDOM.createPortal(

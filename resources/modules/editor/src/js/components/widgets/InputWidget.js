@@ -190,6 +190,9 @@ class InputWidget extends Component {
     if (url.indexOf("/") === -1) {
       return `/ajax/models/${url}_options`;
     }
+    if(url.indexOf('{{') !== -1){
+      url = replaceContentWithData();
+    }
     return url;
   }
   /**
@@ -973,12 +976,6 @@ class InputWidget extends Component {
         options
       );
     }
-    console.log("====================================");
-    console.log(
-      value,
-      _.find(options, o => o.value == this.state.value)
-    );
-    console.log("====================================");
     const select2Props = {
       className: "altrp-field-select2",
       element: this.props.element,

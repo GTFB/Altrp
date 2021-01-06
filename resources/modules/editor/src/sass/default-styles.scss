@@ -147,15 +147,3 @@
 .altrp-table-tbody--striped tr:nth-child(2n) {
   background-color: rgba(0, 0, 50, .05);
 }
-
-.altrp-table {
-  border-width: 1px 1px 1px 1px;
-  border-color: rgb(186,186,186);
-}
-
-.altrp-table-global-filter {
-  font-weight: 400;
-  label {
-    display: inline-block;
-  }
-}

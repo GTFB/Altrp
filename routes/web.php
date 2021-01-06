@@ -400,7 +400,7 @@ foreach ($frontend_routes as $_frontend_route) {
   $frontend_route = str_replace(':id', '{id}', $path);
 
   Route::get($frontend_route, function () use ($title, $_frontend_route) {
-    $preload_content = Page::getPreloadPageContent($_frontend_route['id']);
+    $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
     return view('front-app', [
       'title' => $title,
       '_frontend_route' => $_frontend_route,
