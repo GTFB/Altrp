@@ -25,6 +25,9 @@
 
   <script src="/modules/admin/admin.js" defer></script>
 
+  <!-- Manifest -->
+  <link rel="manifest" href="/manifest.webmanifest">
+
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">
 

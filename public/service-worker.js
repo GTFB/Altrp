@@ -10,7 +10,7 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(
-  new RegExp("localhost:8000/admin"),
+  new RegExp("/admin"),
   new workbox.strategies.StaleWhileRevalidate({
     cacheName: "altrp-ajax",
     plugins: [
