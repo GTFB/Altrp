@@ -2,9 +2,6 @@
 
 namespace App\Notifications;
 
-use App\Altrp\Model;
-use App\Altrp\Source;
-use App\AltrpModels\test_post;
 use App\Notifications\Channels\CustomDatabaseChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -16,7 +13,7 @@ use NotificationChannels\Telegram\TelegramChannel;
 use NotificationChannels\Telegram\TelegramFile;
 use NotificationChannels\Telegram\TelegramMessage;
 
-class CommonNotification extends Notification
+class CommonNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -116,7 +113,7 @@ class CommonNotification extends Notification
      */
     public function toBroadcast($notifiable)
     {
-        
+
         $data = $this->parseData($this->parsedNoticeSettings->data);
         $data['action_type'] = $this->data['action_type'];
         $data['setting_name'] = $this->getNotificationSettingName();

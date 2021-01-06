@@ -91,7 +91,9 @@
         "post-install-cmd": [
             "php artisan vendor:publish --tag=public --force",
             "php artisan make:provider AltrpRepositoryServiceProvider",
-            "php artisan make:provider AltrpProviders/AppServiceProvider"
+            "php artisan make:provider AltrpProviders/AppServiceProvider",
+            "php artisan provider:write App\\Providers\\AltrpProviders\\AppServiceProvider",
+            "php artisan provider:write App\\Providers\\AltrpRepositoryServiceProvider"
         ]
     }
 }
