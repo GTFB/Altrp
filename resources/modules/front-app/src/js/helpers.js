@@ -178,10 +178,10 @@ export function getWindowWidth() {
 
 export function renderAssetIcon(asset, props = null) {
   // console.error(asset);
-  if(asset.url && asset.type === 'svg'){
-    return <AltrpSVG {...props} url={asset.url} />;
-  }
   if (asset) {
+    if(asset.url && asset.type === 'svg'){
+      return <AltrpSVG {...props} url={asset.url} />;
+    }
     switch (asset.assetType) {
       case "icon": {
         // if(asset.url) {
