@@ -1,11 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { ResponsivePieCanvas } from "@nivo/pie";
+import { ResponsivePie } from "@nivo/pie";
 import ErrorBoundary from "./ErrorBoundary";
+import invert from "invert-color";
 import DataAdapter from "./DataAdapter";
 
+import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors.reverse();
+
 const mapStateToProps = state => {
-  return { formsStore: state.formsStore };
+  return { formsStore: _.cloneDeep(state.formsStore) };
 };
 class PieDataSource extends Component {
   constructor(props) {
@@ -79,17 +84,15 @@ class PieDataSource extends Component {
   }
 
   async getData() {
-    const {
-      data,
-      isMultiple,
-      isDate,
-      needCallAgain
-    } = await new DataAdapter().parseDataPie(
+    const adapterObject = await new DataAdapter(
+      this.props.element.settings.type,
       this.props.element.settings.sources,
-      this.props.formsStore.form_data,
+      _.cloneDeep(this.props.formsStore.form_data),
       this.state.params,
       this.state.countRequest
-    );
+    ).parseDataNotType();
+    const { isMultiple, isDate, needCallAgain } = adapterObject;
+    let data = adapterObject.data;
     if (needCallAgain) {
       setTimeout(() => {
         this.getData();
@@ -117,37 +120,103 @@ class PieDataSource extends Component {
       typeof this.state.data !== "undefined" &&
       this.state.data.length === 0
     ) {
-      if (this.state.countRequest < 5) {
+      if (this.state.countRequest < 3) {
         return <div>Загрузка...</div>;
       }
       return <div>Нет данных</div>;
+    }
+    let data = this.state.data;
+
+    if (
+      this.state.settings?.sort?.value !== null &&
+      typeof this.state.settings?.sort?.value !== "undefined" &&
+      typeof data !== "undefined"
+    ) {
+      const sort = this.state.settings?.sort?.value;
+      switch (sort) {
+        case "value":
+          data = _.sortBy(data, ["value"]);
+          break;
+        case "key":
+          data = _.sortBy(data, ["id"]);
+          break;
+        default:
+          data = data;
+          break;
+      }
     }
 
     return (
       <>
         <ErrorBoundary>
-          <ResponsivePieCanvas
-            margin={{ top: 80, right: 250, bottom: 80, left: 140 }}
-            data={this.state.data}
-            colors={this.state.settings?.colors}
+          <ResponsivePie
+            margin={{
+              top: this.state.settings?.margin?.top || 80,
+              right: this.state.settings?.margin?.right || 180,
+              bottom: this.state.settings?.margin?.bottom || 80,
+              left: this.state.settings?.margin?.left || 120
+            }}
+            sliceLabelsTextColor={datum =>
+              invert(datum.color, {
+                black: "#000000",
+                white: "#FFFFFF",
+                threshold: 0.45
+              })
+            }
+            cornerRadius={this.state.settings?.cornerRadius}
+            padAngle={this.state.settings?.padAngle}
+            borderWidth={this.state.settings?.borderWidth}
+            borderColor={this.state.settings?.borderColor}
+            data={data}
+            colors={
+              this.state.settings?.colors?.scheme === "regagro"
+                ? regagroScheme
+                : this.state.settings?.colors
+            }
+            sliceLabelsSkipAngle={this.state.settings?.sliceLabelsSkipAngle}
+            sliceLabelsRadiusOffset={
+              this.state.settings?.sliceLabelsRadiusOffset
+            }
+            radialLabelsSkipAngle={this.state.settings?.radialLabelsSkipAngle}
+            radialLabelsLinkOffset={this.state.settings?.radialLabelsLinkOffset}
+            radialLabelsLinkDiagonalLength={
+              this.state.settings?.radialLabelsLinkDiagonalLength
+            }
+            radialLabelsLinkHorizontalLength={
+              this.state.settings?.radialLabelsLinkHorizontalLength
+            }
+            radialLabelsTextXOffset={
+              this.state.settings?.radialLabelsTextXOffset
+            }
+            radialLabelsLinkStrokeWidth={
+              this.state.settings?.radialLabelsLinkStrokeWidth
+            }
             innerRadius={this.state.settings?.innerRadius}
             enableSliceLabels={this.state.settings?.enableSliceLabels}
-            legends={[
-              {
-                anchor: "right",
-                direction: "column",
-                justify: false,
-                translateX: 180,
-                translateY: 0,
-                itemsSpacing: 2,
-                itemWidth: 60,
-                itemHeight: 14,
-                itemDirection: "left-to-right",
-                itemOpacity: 1,
-                symbolSize: 14,
-                symbolShape: "circle"
-              }
-            ]}
+            enableRadialLabels={this.state.settings?.enableRadialLabels}
+            legends={
+              this.state.settings?.enableLegend
+                ? [
+                    {
+                      anchor:
+                        this.state.settings?.legendAchor || "bottom-right",
+                      direction: this.state.settings?.legendDirection || "row",
+                      justify: this.state.settings?.legendJustify || false,
+                      translateX: this.state.settings?.legendTranslateX || 0,
+                      translateY: this.state.settings?.legendTranslateY || 0,
+                      itemsSpacing:
+                        this.state.settings?.legendItemsSpacing || 10,
+                      itemWidth: this.state.settings?.legendItemWidth || 10,
+                      itemHeight: this.state.settings?.legendItemHeight || 10,
+                      itemDirection:
+                        this.state.settings?.legendItemDirection ||
+                        "left-to-right",
+                      symbolSize: this.state.settings?.legendSymbolSize || 25,
+                      symbolShape: "circle"
+                    }
+                  ]
+                : []
+            }
           />
         </ErrorBoundary>
       </>

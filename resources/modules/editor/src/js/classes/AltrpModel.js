@@ -22,6 +22,12 @@ class AltrpModel {
   }
 
   /**
+   * Пустой ли объект
+   */
+  isEmpty(){
+    return _.isEmpty(this.data);
+  }
+  /**
    * Возврашает значение свойства name
    * @params {string} name
    * @params {*} defaultValue
@@ -52,19 +58,11 @@ class AltrpModel {
     return set(this.data, name, value);
   }
   /**
-   * Возврашает значение свойства name
+   * Удаляет свойства name
    * @params {string} name
-   * @params {*} defaultValue
    * @return {*}
    */
-  unsetProperty(name, value = '') {
-    if(value){
-      const oldValue = get(this.data, name);
-      if(_.isEqual(oldValue, value)){
-        return unset(this.data, name);
-      }
-      return false;
-    }
+  unsetProperty(name) {
     return unset(this.data, name);
   }
 }

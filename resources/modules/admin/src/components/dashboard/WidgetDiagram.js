@@ -1,28 +1,60 @@
 import React from "react";
 
-import { BAR, PIE, LINE, AREA, TABLE, DONUT } from "./widgetTypes";
+import { BAR, PIE, LINE, TABLE, POINT } from "./widgetTypes";
 
 import DynamicBarChart from "./widgets/DynamicBarChart";
 import DynamicPieChart from "./widgets/DynamicPieChart";
-import DynamicAreaChart from "./widgets/DynamicAreaChart";
 import DynamicLineChart from "./widgets/DynamicLineChart";
 import DynamicTableWidget from "./widgets/DynamicTableWidget";
-import DynamicDonutChart from "./widgets/DynamicDonutChart";
+import DynamicPointChart from "./widgets/DynamicPointChart";
 
-const WidgetDiagram = ({ widget, width = 360, height = 300 }) => {
+const WidgetDiagram = ({ widget, width = 350, height = 450 }) => {
   switch (widget.type) {
     case BAR:
-      return <DynamicBarChart width={width} height={height} widget={widget} />;
+      return (
+        <DynamicBarChart
+          width={width}
+          height={height}
+          widget={widget}
+          isDashboard={true}
+        />
+      );
     case PIE:
-      return <DynamicPieChart width={width} height={height} widget={widget} />;
-    case DONUT:
-      return <DynamicDonutChart width={width} height={height} widget={widget} />;
+      return (
+        <DynamicPieChart
+          width={width}
+          height={height}
+          widget={widget}
+          isDashboard={true}
+        />
+      );
     case LINE:
-      return <DynamicLineChart width={width} height={height} widget={widget} />;
+      return (
+        <DynamicLineChart
+          width={width}
+          height={height}
+          widget={widget}
+          isDashboard={true}
+        />
+      );
     case TABLE:
-      return <DynamicTableWidget width={width} height={height} widget={widget} />;
-    case AREA:
-      return <DynamicAreaChart width={width} height={height} widget={widget} />;
+      return (
+        <DynamicTableWidget
+          width={width}
+          height={height}
+          widget={widget}
+          isDashboard={true}
+        />
+      );
+    case POINT:
+      return (
+        <DynamicPointChart
+          width={width}
+          height={height}
+          widget={widget}
+          isDashboard={true}
+        />
+      );
     default:
       return <></>;
   }

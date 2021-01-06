@@ -91,9 +91,14 @@ class AxisBaseSettings extends Component {
     const scaleType = this.state.editElement?.settings?.xScale?.type;
     return (
       <div className="col mb-1">
-        <label htmlFor="">
-          Ось X
+        <div className="mb-3">
+          <div
+            className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+          >
+            Ось X
+          </div>
           <ReactSelect
+            placeholder="Выберите отображение"
             options={xScale}
             className="select-type"
             defaultValue={this.state.editElement?.settings?.xScale?.type}
@@ -107,11 +112,16 @@ class AxisBaseSettings extends Component {
             getOptionLabel={option => option.label}
             styles={selectSettings}
           />
-        </label>
+        </div>
         {typeof scaleType !== "undefined" && scaleType === "time" && (
-          <label>
-            Масштаб времени
+          <div className="mb-3">
+            <div
+              className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+            >
+              Масштаб времени
+            </div>
             <ReactSelect
+              placeholder="Выберите масштаб времени"
               options={timeScales}
               className="select-type"
               defaultValue={this.state.editElement?.settings?.xScale?.precision}
@@ -125,7 +135,7 @@ class AxisBaseSettings extends Component {
               getOptionLabel={option => option.label}
               styles={selectSettings}
             />
-          </label>
+          </div>
         )}
       </div>
     );

@@ -201,8 +201,8 @@ class Resource {
       fileType = fileType.trim();
       for (let i = 0; i < files.length; i++) {
         if (
-          files[i].size > MAX_FILE_SIZE ||
-          files[i].type.indexOf(fileType) === -1
+          files[i].size > MAX_FILE_SIZE
+            // ||          files[i].type.indexOf(fileType) === -1
         ) {
           console.log(files[i]);
           continue;
@@ -296,7 +296,7 @@ class Resource {
   /**
    * @return {Promise}
    * */
-  delete(id = '', data = {}){
+  delete(id = "", data = {}) {
     let options = {
       method: "delete",
       headers: {
@@ -304,10 +304,10 @@ class Resource {
         "Content-Type": "application/json"
       }
     };
-    if(! _.isEmpty(data)){
+    if (!_.isEmpty(data)) {
       options.body = JSON.stringify(data);
     }
-    let url = this.getRoute() + (id ? '/' + id : '');
+    let url = this.getRoute() + (id ? "/" + id : "");
     return fetch(url, options).then(res => {
       if (res.ok === false) {
         return Promise.reject(res.text(), res.status);
@@ -339,7 +339,7 @@ class Resource {
    * @param {object} params
    * @return {Promise}
    * */
-  async getQueried(params) {
+  async getQueried(params, custom_headers = null) {
     let options = {
       method: "get",
       headers: {

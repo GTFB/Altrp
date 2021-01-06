@@ -40,6 +40,9 @@ class Page extends Model
     'guid',
     'for_guest',
     'parent_page_id',
+    'seo_description',
+    'seo_keywords',
+    'seo_title',
     'type'
   ];
 
@@ -56,12 +59,16 @@ class Page extends Model
       return $pages;
     }
     try{
-      $pages = Page::all()->map->only( [ 'path','title' ] )->map( function ( $path ) {
-        return [
-          'path'=>$path['path'],
-          'title'=>$path['title']
-        ];
-      } )->toArray();
+      $pages = Page::all()->map->only( [ 'path', 'title', 'id' ] )
+//        ->map( function ( $path ) {
+//
+//        return [
+//          'path'=>$path['path'],
+//          'title'=>$path['title'],
+//          'id'=>$path['id'],
+//        ];
+//      } )
+        ->toArray();
     } catch (Exception $e){
     }
     return $pages;
@@ -443,9 +450,6 @@ class Page extends Model
    */
   public function allowedForUser( $user_id = '' ){
 
-//    if( ( ! auth()->user() ) ) {
-//      return true;
-//    }
     if( ! $user_id ) {
       $user = auth()->user();
     } else {
@@ -454,7 +458,6 @@ class Page extends Model
     $allowed = false;
 
     /** @var User $user */
-//    $user = auth()->user();
     $page_role_table = DB::table( 'page_role' );
     $page_roles = $page_role_table->where( 'page_id', $this->id )->get();
     /**
@@ -463,10 +466,6 @@ class Page extends Model
     if( ( ! $page_roles->count() ) && ! $this->for_guest ){
       return true;
     }
-//    echo '<pre style="padding-left: 200px;">';
-//    var_dump( $this->for_guest );
-//    echo '</pre>';
-
     if( ( ! $user ) && $this->for_guest ){
       return true;
     }
@@ -524,5 +523,87 @@ class Page extends Model
         continue;
       }
     }
+  }
+
+  /**
+   * @param string $page_id
+   * @return null | array
+   */
+  static function getPreloadPageContent( $page_id )
+  {
+    $result =[
+      'content' => '',
+      'important_styles' => '',
+    ];
+    if( ! $page_id ){
+      return $result;
+    }
+    /** @var Page $page */
+    $page = Page::find( $page_id );
+    if( ! $page ){
+      return $result;
+    }
+    if( ! $page->allowedForUser() ){
+      return $result;
+    }
+    $areas = Area::all()->filter( function( Area $area ){
+      return ! in_array( $area->name,  Area::NOT_CONTENT_AREAS );
+    } )->map( function( Area $area ){
+      return $area->name;
+    })->sortBy(function( $area ){
+      if( $area === 'header'){
+        return 0;
+      }
+      if( $area === 'content'){
+        return 100;
+      }
+      if( $area === 'footer'){
+        return 200;
+      }
+      return $area;
+      view('');
+    })->toArray();
+    if( ! count( $areas ) ){
+      return $result;
+    }
+    $templates = [];
+    foreach ( $areas as $area ) {
+      $template = Template::getTemplate([
+        'page_id' => $page_id,
+        'template_type' => $area,
+      ]);
+      $template['template_type'] = $area;
+      $templates[] = $template;
+    }
+    $important_styles = [];
+    ob_start();
+    ?>
+    <div class="front-app-content ">
+      <div class="route-content" id="route-content">
+        <?php
+        foreach ( $templates as $template ) {
+
+          $styles = data_get( $template, 'styles' );
+          $styles = json_decode( $styles, true );
+
+          if( data_get( $styles, 'important_styles') ) {
+            $important_styles = array_merge( $important_styles, data_get( $styles, 'important_styles', []) );
+          }
+          ?>
+          <div class="app-area app-area_<?php echo $template['template_type']; ?>">
+          <?php
+          echo data_get( $template, 'html_content', '' );
+          ?>
+          </div>
+          <?php
+        }
+        ?>
+      </div>
+    </div>
+    <?php
+    $result['content'] = ob_get_clean();
+    $result['important_styles'] = implode( '', $important_styles );
+
+    return $result;
   }
 }

@@ -13,6 +13,13 @@ class Area extends Model
     'title',
   ];
 
+  const NOT_CONTENT_AREAS = [
+    'card',
+    'popup',
+    'reports',
+    'mails',
+  ];
+
   protected $casts = [
     'settings' => 'array',
   ];

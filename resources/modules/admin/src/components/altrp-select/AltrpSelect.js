@@ -3,8 +3,9 @@ import AsyncSelect from "react-select/async";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import Select from "react-select";
 import { Scrollbars } from "react-custom-scrollbars";
+import {parseParamsFromString, parseURLTemplate} from "../../../../front-app/src/js/helpers";
 
-const renderScrollbar = (props) => {
+export const renderScrollbar = (props) => {
   return <Scrollbars autoHeight >{props.children}</Scrollbars>;
 };
 
@@ -17,7 +18,7 @@ class AltrpSelect extends Component {
     if(props.optionsRoute){
       this.optionsResource = new Resource({route: props.optionsRoute});
     }
-    console.log(props);
+    this.selectRef = React.createRef();
   }
 
   /**
@@ -30,12 +31,6 @@ class AltrpSelect extends Component {
    * изменение значения
    */
   onChange(){
-
-  }
-  /**
-   * изменение в инпуте
-   */
-  onInputChange(){
 
   }
 
@@ -53,9 +48,6 @@ class AltrpSelect extends Component {
     }));
     return callback(options);
   };
-  /**
-   *
-   */
 
   render(){
     const customStyles = {
@@ -70,7 +62,6 @@ class AltrpSelect extends Component {
 
     let selectProps = {
       onChange: this.onChange,
-      onInputChange: this.onInputChange,
       options: this.state.options || [],
       placeholder: this.props.placeholder,
       loadOptions: this.loadOptions,
@@ -79,8 +70,11 @@ class AltrpSelect extends Component {
       menuPortalTarget: document.body,
       menuPlacement: 'auto',
       menuPosition: 'absolute',
+      onKeyDown : this.onKeyDown,
       components: { MenuList: renderScrollbar },
-      captureMenuScroll: false
+      captureMenuScroll: false,
+      isDisabled: this.state.isDisabled,
+      ref: this.selectRef,
     };
     
     _.assign(selectProps, this.props);
@@ -91,7 +85,7 @@ class AltrpSelect extends Component {
           label: '',
           value: '',
         };
-        if(_.isString(item)){
+        if(_.isString(item) || _.isNumber(item)){
           _i.value = item;
           _i.label = item;
         } else if(_.isObject(item)) {
@@ -105,6 +99,11 @@ class AltrpSelect extends Component {
           });
         }
         return _i;
+      });
+    }
+    if(selectProps.value && ! _.isObject(selectProps.value)){
+      selectProps.value = selectProps.options.find(o=>{
+        return o.value == selectProps.value;
       });
     }
     if( this.optionsResource){

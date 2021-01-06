@@ -54,6 +54,12 @@
     background-repeat: no-repeat;
     background-color: $light-light-gray;
   }
+  &__icon-background {
+    position: absolute;
+    top: 17px;
+    right: 27px;
+    transform: scale(1.5);
+  }
 }
 
 .assets-list{
@@ -62,4 +68,3 @@
     padding-top: 8.333333%;
   }
 }
-

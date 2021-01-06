@@ -5,11 +5,14 @@ import moment from "moment";
 import Resource from "../../../editor/src/js/classes/Resource";
 import appStore from "./store/store";
 import { changeCurrentUser } from "./store/current-user/actions";
+import { changeCurrentUserProperty } from "./store/current-user/actions";
 import { changeAppRoutes } from "./store/routes/actions";
 import Route from "./classes/Route";
 import { changePageState } from "./store/altrp-page-state-storage/actions";
 import { changeAltrpMeta } from "./store/altrp-meta-storage/actions";
 import { useDispatch } from "react-redux";
+import { altrpFontsSet, GOOGLE_FONT } from "./components/FontsManager";
+import queryString from "query-string";
 
 export function getRoutes() {
   return import("./classes/Routes.js");
@@ -74,6 +77,7 @@ export function parseOptionsFromSettings(string) {
       value = getDataByPath(valuePath);
     }
     let label = option.split("|")[1] || value || "";
+    (!_.isString(label)) && (label = '');
     label = label.trim();
     let labelPath = extractPathFromString(label);
     if (labelPath) {
@@ -116,6 +120,22 @@ export function getMediaSettingsByName(screenSettingName) {
   return screen;
 }
 
+/**
+ * Возвращает брейкпоинт относительно текущего размера экрана
+ */
+export function getCurrentBreakpoint() {
+  const currentWidth = getWindowWidth();
+  const breakPoints = CONSTANTS.SCREENS;
+  const breakPointsSizes = breakPoints.map(item => ({
+    name: item.name,
+    size: Number(item.width.split("px")[0])
+  }));
+  for (let breakpoint of breakPointsSizes) {
+    if (breakpoint.size < currentWidth) {
+      return breakpoint.name;
+    }
+  }
+}
 /**
  *@param {string} URLTemplate
  *@param {{}} object
@@ -360,7 +380,7 @@ export function setDataByPath(path = "", value, dispatch = null) {
   if (!path) {
     return false;
   }
-
+  path = path.replace("{{", "").replace("}}", "");
   switch (value) {
     case "true":
       value = true;
@@ -408,6 +428,25 @@ export function setDataByPath(path = "", value, dispatch = null) {
     }
     return true;
   }
+  if (path.indexOf("altrpuser.local_storage.") === 0) {
+    path = path.replace("altrpuser.", "");
+    if (!path) {
+      return false;
+    }
+    const oldValue = appStore.getState().currentUser.getProperty(path);
+    if (_.isEqual(oldValue, value)) {
+      return true;
+    }
+    console.log("====================================");
+    console.log(value);
+    console.log("====================================");
+    if (_.isFunction(dispatch)) {
+      dispatch(changeCurrentUserProperty(path, value));
+    } else {
+      appStore.dispatch(changeCurrentUserProperty(path, value));
+    }
+    return true;
+  }
   return false;
 }
 
@@ -451,10 +490,15 @@ export function getDataByPath(
     currentModel =
       context instanceof AltrpModel ? context : new AltrpModel(context);
   }
-  const urlParams =
+  let urlParams =
     window.currentRouterMatch instanceof AltrpModel
       ? window.currentRouterMatch.getProperty("params")
       : {};
+
+  let gueryData = queryString.parseUrl(window.location.href).query;
+
+  urlParams = _.assign(gueryData, urlParams);
+
   let value = _default;
   if (!_.isString(path)) {
     return value;
@@ -482,6 +526,7 @@ export function getDataByPath(
     value = getTimeValue(path.replace("altrptime.", ""));
   } else if (path.indexOf("altrpforms.") === 0) {
     value = _.get(formsStore, path.replace("altrpforms.", ""), _default);
+  } else if (path.indexOf("altrppage.") === 0) {
   } else {
     value = urlParams[path]
       ? urlParams[path]
@@ -930,7 +975,7 @@ function getPrevWeekEnd() {
 /**
  * Elfkztn gecnst cdjqcndf d j,]trnf[
  */
-export function clearEmptyProps() {}
+export function clearEmptyProps() { }
 
 /**
  * Заменяет в тексте конструкции типа {{altrpdata...}} на данные
@@ -944,7 +989,7 @@ export function replaceContentWithData(content = "", modelContext = null) {
     paths.forEach(path => {
       path = path.replace("{{", "");
       let value = getDataByPath(path, "", modelContext);
-      content = content.replace(new RegExp(`{{${path}}}`, "g"), value);
+      content = content.replace(new RegExp(`{{${path}}}`, "g"), value || "");
     });
   }
   return content;
@@ -1037,24 +1082,27 @@ export function dataFromTable(HTMLElement) {
   if (!(HTMLElement && HTMLElement.querySelectorAll)) {
     return data;
   }
-  let table = HTMLElement.querySelector("table");
-  if (!table && HTMLElement.querySelector("tr")) {
+  let table = HTMLElement.querySelector(".altrp-table");
+  if (!table && HTMLElement.querySelector(".altrp-table-tr")) {
     table = HTMLElement;
   }
   if (!table) {
     return data;
   }
-  const ths = table.querySelectorAll("th");
+  const ths = table.querySelectorAll(".altrp-table-th");
   _.each(ths, th => {
-    if (th.innerText) {
-      headers.push(th.innerText || "");
-    }
+    // if (th.innerText) {
+    headers.push(th.innerText || "");
+    // }
   });
-  const rows = table.querySelectorAll("tbody tr");
+  const rows = table.querySelectorAll(".altrp-table-tbody .altrp-table-tr");
   _.each(rows, row => {
-    const cells = row.querySelectorAll("td");
+    const cells = row.querySelectorAll(".altrp-table-td");
     const part = {};
     headers.forEach((header, idx) => {
+      if (!header) {
+        return;
+      }
       part[header] = cells[idx].innerText || "";
     });
     data.push(part);
@@ -1101,7 +1149,11 @@ export async function dataToCSV(data = {}, filename) {
         return line;
       })
       .join("\n");
-  let blob = new Blob([csvContent], { type: "text/csv", charset: "utf-8" });
+  let blob = new Blob([csvContent], {
+    type: "text/csv",
+    charset: "windows-1251",
+    // charset: "utf-8",
+  });
   let link = document.createElement("a");
   link.setAttribute("href", window.URL.createObjectURL(blob));
   link.setAttribute("download", filename + ".csv");
@@ -1193,8 +1245,8 @@ export function sortOptions(options, sortDirection) {
     a.label.toLowerCase() > b.label.toLowerCase()
       ? 1
       : b.label.toLowerCase() > a.label.toLowerCase()
-      ? -1
-      : 0
+        ? -1
+        : 0
   );
   return sortDirection === "asc" ? options : options.reverse();
 }
@@ -1352,4 +1404,50 @@ export function setAltrpIndex(array = []) {
     }
     item.altrpIndex = idx;
   });
+}
+
+/**
+ *
+ * @param {string} font
+ * @return {*}
+ */
+export function renderFontLink(font) {
+  if (altrpFontsSet[font] !== GOOGLE_FONT) {
+    return null;
+  }
+  font = font.replace(/ /g, "+");
+  font +=
+    ":100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic";
+  let fontUrl =
+    "https://fonts.googleapis.com/css?family=" + font + "&subset=cyrillic";
+  fontUrl = encodeURI(fontUrl);
+  return <link rel="stylesheet" key={fontUrl} href={fontUrl} />;
+}
+
+/**
+ * Включен ли режим тестирования
+ */
+export function isAltrpTestMode() {
+  return window.location.href.indexOf("altrp-test=true") > 0;
+}
+
+export function altrpRandomId() {
+  return Math.random()
+    .toString(36)
+    .substr(2, 9);
+}
+
+export function generateButtonsArray(pageIndex, pageCount, first_last_buttons_count, middle_buttons_count) {
+  const buttonsSum = first_last_buttons_count + middle_buttons_count;
+  const lastButtons = Array.from({ length: first_last_buttons_count }, (_, i) => pageCount - i - 1).reverse();
+  const middleButtons = Array.from({ length: middle_buttons_count }, (_, i) => pageIndex - Math.floor(middle_buttons_count / 2) + i);
+
+  if (pageIndex + 1 < buttonsSum) {
+    return [...Array(buttonsSum).keys(), "ellipsis", ...lastButtons]
+  }
+  if (pageIndex >= pageCount - first_last_buttons_count - 1 - Math.floor(middle_buttons_count / 2)) {
+    return [...Array(first_last_buttons_count).keys(), "ellipsis", ...Array.from({ length: first_last_buttons_count + middle_buttons_count }, (_, i) => pageCount - i - 1).reverse()]
+  }
+
+  return [...Array(first_last_buttons_count).keys(), "ellipsis", ...middleButtons, "ellipsis", ...lastButtons];
 }
