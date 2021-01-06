@@ -200,9 +200,9 @@ function MapDesigner({
         animate={false}
         className={`altrp-map__container ${className}`}
         whenReady={whenReady}
-        scrollWheelZoom={interactionOptions.scrollWheelZoom}
-        touchZoom={interactionOptions.touchZoom}
-        doubleClickZoom={interactionOptions.doubleClickZoom}
+        scrollWheelZoom={true}
+        touchZoom={true}
+        doubleClickZoom={true}
         keyboard={interactionOptions.keyboard}
         style={{ height: style.height }}
       >

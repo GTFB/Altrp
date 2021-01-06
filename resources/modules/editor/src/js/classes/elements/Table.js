@@ -1055,10 +1055,6 @@ class Table extends BaseElement {
     this.addControl("filter_style_table_text_color", {
       type: CONTROLLER_COLOR,
       label: "Text Color",
-      default: {
-        // color: "rgb(27,27,27)",
-        // colorPickedHex: "#1B1B1B"
-      },
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'color: {{COLOR}} !important'
       }
@@ -1067,10 +1063,6 @@ class Table extends BaseElement {
     this.addControl("filter_style_table_background_color", {
       type: CONTROLLER_COLOR,
       label: "Background Color",
-      default: {
-        // color: "rgb(186,186,186)",
-        // colorPickedHex: "#BABABA"
-      },
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'background: {{COLOR}} !important'
       }
@@ -1086,11 +1078,7 @@ class Table extends BaseElement {
         left: 0,
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': [
           'padding-top: {{TOP}}{{UNIT}};',
@@ -1100,6 +1088,7 @@ class Table extends BaseElement {
         ]
       },
     });
+
     this.addControl('label_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Label Padding',
@@ -1110,11 +1099,7 @@ class Table extends BaseElement {
         left: 0,
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-label{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
@@ -1129,14 +1114,6 @@ class Table extends BaseElement {
       'filter_style_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      default: {
-        // lineHeight: 0.8,
-        // spacing: 0,
-        // size: 14,
-        // weight: 700,
-        // family: 'Open Sans',
-        // decoration: ""
-      },
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': [
           'font-family: "{{FAMILY}}", sans-serif;',
@@ -1155,7 +1132,6 @@ class Table extends BaseElement {
     this.addControl("filter_style_table_border_type", {
       type: CONTROLLER_SELECT,
       label: "Border Type",
-      units: ["px", "%", "vh"],
       options: [
         {
           value: "none",
@@ -1191,13 +1167,9 @@ class Table extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
       default: {
-        // top: 1,
-        // right: 1,
-        // bottom: 1,
-        // left: 1,
         unit: "px"
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
       }
@@ -1206,10 +1178,6 @@ class Table extends BaseElement {
     this.addControl("filter_style_table_border_color", {
       type: CONTROLLER_COLOR,
       label: "Border Color",
-      default: {
-        // color: "rgb(186,186,186)",
-        // colorPickedHex: "#32a852"
-      },
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-color: {{COLOR}} !important'
       }
@@ -1243,11 +1211,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-table-global-filter label{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
@@ -1292,7 +1256,7 @@ class Table extends BaseElement {
     this.addControl("global_filter_input_width", {
       type: CONTROLLER_SLIDER,
       label: "Input Width",
-      units: ['px', '%'],
+      units: ['px', '%', 'vh', 'vw'],
       max: 800,
       min: 0,
       rules: {
@@ -1303,7 +1267,7 @@ class Table extends BaseElement {
     this.addControl("global_filter_margin_left", {
       type: CONTROLLER_SLIDER,
       label: "Spacing",
-      units: ['px', '%'],
+      units: ['px', '%', 'vh', 'vw'],
       max: 800,
       min: 0,
       rules: {
@@ -1317,11 +1281,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-table-global-filter input': [
           'padding-top: {{TOP}}{{UNIT}};',
@@ -1369,7 +1329,6 @@ class Table extends BaseElement {
     this.addControl("global_filter_input_border_type", {
       type: CONTROLLER_SELECT,
       label: "Input Border Type",
-      units: ["px", "%", "vh"],
       options: [
         {
           value: "none",
@@ -1407,7 +1366,7 @@ class Table extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-table-global-filter input': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}}'
       }
@@ -1419,11 +1378,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': [
           'border-top-left-radius: {{TOP}}{{UNIT}}',
@@ -1445,8 +1400,6 @@ class Table extends BaseElement {
     this.addControl('global_filter_input_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Input Shadow',
-      default: {
-      },
       presetColors: [
         '#eaeaea',
         '#9c18a8'
@@ -1486,7 +1439,6 @@ class Table extends BaseElement {
     this.addControl("table_style_table_border_type", {
       type: CONTROLLER_SELECT,
       label: "Border Type",
-      units: ["px", "%", "vh"],
       options: [
         {
           value: "none",
@@ -1524,7 +1476,7 @@ class Table extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-table{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
       }
@@ -1581,11 +1533,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
@@ -1618,11 +1566,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
@@ -1653,7 +1597,6 @@ class Table extends BaseElement {
     this.addControl("table_style_pagination_border_type", {
       type: CONTROLLER_SELECT,
       label: "Buttons Border type",
-      units: ["px", "%", "vh"],
       options: [
         {
           value: "none",
@@ -1688,7 +1631,7 @@ class Table extends BaseElement {
     this.addControl("table_style_pagination_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Buttons Border width",
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
       }
@@ -1700,11 +1643,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': [
           'border-top-left-radius: {{TOP}}{{UNIT}}',
@@ -1753,11 +1692,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
@@ -1775,11 +1710,7 @@ class Table extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__previous{{STATE}} svg': [
           'margin-top: {{TOP}}{{UNIT}};',
@@ -1793,15 +1724,12 @@ class Table extends BaseElement {
     this.addControl('prev_icon_size', {
       type: CONTROLLER_SLIDER,
       label: 'Prev Icon Size',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
       rules: {
         '{{ELEMENT}} .altrp-pagination__previous{{STATE}} svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}} img': 'height: {{SIZE}}{{UNIT}};',
       },
     });
 
@@ -1846,11 +1774,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__next{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
@@ -1868,11 +1792,7 @@ class Table extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__next{{STATE}} svg': [
           'margin-top: {{TOP}}{{UNIT}};',
@@ -1886,15 +1806,12 @@ class Table extends BaseElement {
     this.addControl('next_icon_size', {
       type: CONTROLLER_SLIDER,
       label: 'Next Icon Size',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
       rules: {
         '{{ELEMENT}} .altrp-pagination__next{{STATE}} svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}} img': 'height: {{SIZE}}{{UNIT}};',
       },
     });
 
@@ -1939,11 +1856,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__count{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
@@ -1960,11 +1873,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
@@ -2022,11 +1931,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__count{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
@@ -2043,11 +1948,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
@@ -2078,7 +1979,6 @@ class Table extends BaseElement {
     this.addControl("table_style_pagination_count_item_border_type", {
       type: CONTROLLER_SELECT,
       label: "Item Count Border type",
-      units: ["px", "%", "vh"],
       options: [
         {
           value: "none",
@@ -2113,7 +2013,7 @@ class Table extends BaseElement {
     this.addControl("table_style_pagination_count_item_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Item Count Border Width",
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
       }
@@ -2125,11 +2025,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': [
           'border-top-left-radius: {{TOP}}{{UNIT}}',
@@ -2182,11 +2078,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       conditions: {
         'is_with_ellipsis': true,
       },
@@ -2247,11 +2139,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
@@ -2268,11 +2156,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
@@ -2323,7 +2207,6 @@ class Table extends BaseElement {
     this.addControl("page_input_border_type", {
       type: CONTROLLER_SELECT,
       label: "Page Input Border type",
-      units: ["px", "%", "vh"],
       options: [
         {
           value: "none",
@@ -2358,7 +2241,7 @@ class Table extends BaseElement {
     this.addControl("page_input_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Page Input Border width",
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
       }
@@ -2370,11 +2253,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': [
           'border-top-left-radius: {{TOP}}{{UNIT}}',
@@ -2422,11 +2301,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__select-size{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
@@ -2436,6 +2311,24 @@ class Table extends BaseElement {
         ],
       },
     });
+
+    this.addControl('pagination_select_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Pagination Select Padding',
+      default: {
+        unit: 'px'
+      },
+      units: ['px', '%', 'vh', 'vw'],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
 
     this.addControl('table_style_pagination_select__pagination_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
@@ -2457,7 +2350,6 @@ class Table extends BaseElement {
     this.addControl("pagination_select_border_type", {
       type: CONTROLLER_SELECT,
       label: "Pagination Select Border type",
-      units: ["px", "%", "vh"],
       options: [
         {
           value: "none",
@@ -2492,7 +2384,7 @@ class Table extends BaseElement {
     this.addControl("pagination_select_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Pagination Select Border width",
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
       }
@@ -2504,11 +2396,7 @@ class Table extends BaseElement {
       default: {
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': [
           'border-top-left-radius: {{TOP}}{{UNIT}}',
@@ -2536,27 +2424,6 @@ class Table extends BaseElement {
       ],
       rules: {
         '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      },
-    });
-
-    this.addControl('pagination_select_padding', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Pagination Select Padding',
-      default: {
-        unit: 'px'
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
       },
     });
 
@@ -2593,11 +2460,7 @@ class Table extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .check-icon--checked svg{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
@@ -2615,11 +2478,7 @@ class Table extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .check-icon--unchecked svg{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
@@ -2637,11 +2496,7 @@ class Table extends BaseElement {
         unit: 'px',
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .check-icon--indeterminate svg{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
@@ -2679,11 +2534,7 @@ class Table extends BaseElement {
     this.addControl('checked_size', {
       type: CONTROLLER_SLIDER,
       label: 'Checked Icon Size',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
       rules: {
@@ -2694,11 +2545,7 @@ class Table extends BaseElement {
     this.addControl('unchecked_size', {
       type: CONTROLLER_SLIDER,
       label: 'Unchecked Icon Size',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
       rules: {
@@ -2709,11 +2556,7 @@ class Table extends BaseElement {
     this.addControl('indeterminate_size', {
       type: CONTROLLER_SLIDER,
       label: 'Indeterminate Icon Size',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
       rules: {
@@ -2734,7 +2577,7 @@ class Table extends BaseElement {
     this.addControl('resize_slider_size', {
       type: CONTROLLER_SLIDER,
       label: 'Slider Width',
-      units: ['px', '%', 'vh',],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
       rules: {
@@ -2817,7 +2660,6 @@ class Table extends BaseElement {
     this.addControl("table_style_header_border_type", {
       type: CONTROLLER_SELECT,
       label: "Border type",
-      units: ["px", "%", "vh"],
       options: [
         {
           value: "none",
@@ -2852,7 +2694,7 @@ class Table extends BaseElement {
     this.addControl("table_style_header_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-table-th{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         '{{ELEMENT}}.altrp-transpose_true .altrp-table-th:not(:first-child){{STATE}}': 'margin-top: -{{TOP}}{{UNIT}};',
@@ -2882,11 +2724,7 @@ class Table extends BaseElement {
         // left: 0,
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-table-th{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
@@ -2907,7 +2745,6 @@ class Table extends BaseElement {
     this.addControl("table_style_body_border_type", {
       type: CONTROLLER_SELECT,
       label: "Border type",
-      units: ["px", "%", "vh"],
       options: [
         {
           value: "none",
@@ -2942,7 +2779,7 @@ class Table extends BaseElement {
     this.addControl("table_style_body_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
-      units: ["px", "%", "vh"],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-table-td{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         '{{ELEMENT}}.altrp-transpose_true .altrp-table-td:not(:first-child){{STATE}}': 'margin-top: -{{TOP}}{{UNIT}};',
@@ -2972,11 +2809,7 @@ class Table extends BaseElement {
         // left: 0,
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-table-td{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
@@ -3068,11 +2901,7 @@ class Table extends BaseElement {
         left: 0,
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-table-td__grouping{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',
@@ -3149,11 +2978,7 @@ class Table extends BaseElement {
     this.addControl("table_style_group_icon_size", {
       type: CONTROLLER_SLIDER,
       label: "Icon Size",
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
       rules: {
@@ -3166,11 +2991,7 @@ class Table extends BaseElement {
     this.addControl("table_style_group_icon_left_space", {
       type: CONTROLLER_SLIDER,
       label: "Icon Left Spacing",
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
       rules: {
@@ -3182,11 +3003,7 @@ class Table extends BaseElement {
     this.addControl("table_style_group_icon_right_space", {
       type: CONTROLLER_SLIDER,
       label: "Icon Right Spacing",
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
       rules: {
@@ -3198,11 +3015,7 @@ class Table extends BaseElement {
     this.addControl("table_style_group_icon_top", {
       type: CONTROLLER_SLIDER,
       label: "Top Translate",
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: -100,
       rules: {
@@ -3214,11 +3027,7 @@ class Table extends BaseElement {
     this.addControl("table_style_group_icon_left", {
       type: CONTROLLER_SLIDER,
       label: "left Translate",
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: -100,
       rules: {
@@ -3264,11 +3073,7 @@ class Table extends BaseElement {
         left: 0,
         unit: 'px'
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-table-foot .altrp-table-td{{STATE}}': [
           'padding-top: {{TOP}}{{UNIT}};',

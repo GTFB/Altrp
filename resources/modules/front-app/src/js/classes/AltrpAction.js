@@ -403,7 +403,6 @@ class AltrpAction extends AltrpModel {
       dynamicURL: true,
       customRoute: this.getFormURL()
     };
-    console.log(this.getFormURL());
     const form = formsManager.registerForm(
         this.getFormId(),
         "",

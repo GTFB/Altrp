@@ -368,7 +368,7 @@ export function advancedTabControllers(element) {
   element.addControl('conditional_display_choose', {
     type: CONTROLLER_SELECT,
     label: 'Authorize Condition',
-    responsive:false,
+    responsive: false,
     options: [
       {
         label: 'all',
@@ -393,6 +393,7 @@ export function advancedTabControllers(element) {
     },
     options_resource: '/admin/ajax/role_options?value=name',
     isMulti: true,
+    responsive: false,
     prefetch_options: true,
     isClearable: true,
   });
@@ -405,18 +406,21 @@ export function advancedTabControllers(element) {
     },
     options_resource: '/admin/ajax/permissions_options?value=name',
     isMulti: true,
+    responsive: false,
     prefetch_options: true,
     isClearable: true,
   });
 
   element.addControl('conditional_other', {
     type: CONTROLLER_SWITCHER,
+    responsive: false,
     label: 'Other Conditions',
     default: false,
   });
 
   element.addControl('conditional_ignore_in_forms', {
     type: CONTROLLER_SWITCHER,
+    responsive: false,
     label: 'Ignore in Forms',
     default: false,
   });
@@ -487,7 +491,7 @@ export function advancedTabControllers(element) {
   element.addControl('conditional_disabled_choose', {
     type: CONTROLLER_SELECT,
     label: 'Authorize Condition',
-    responsive:false,
+    responsive: false,
     options: [
       {
         label: 'all',
@@ -513,6 +517,7 @@ export function advancedTabControllers(element) {
     options_resource: '/admin/ajax/role_options?value=name',
     isMulti: true,
     prefetch_options: true,
+    responsive: false,
     isClearable: true,
   });
 
@@ -525,12 +530,14 @@ export function advancedTabControllers(element) {
     options_resource: '/admin/ajax/permissions_options?value=name',
     isMulti: true,
     prefetch_options: true,
+    responsive: false,
     isClearable: true,
   });
 
   element.addControl('disabled_conditional_other', {
     type: CONTROLLER_SWITCHER,
     label: 'Other Conditions',
+    responsive: false,
     default: false,
   });
 
@@ -575,6 +582,7 @@ export function advancedTabControllers(element) {
   element.addControl('disabled_conditions', {
     label: 'Conditions',
     type: CONTROLLER_REPEATER,
+    responsive: false,
     fields: disabledModelRepeater.getControls(),
     default: [
     ],
