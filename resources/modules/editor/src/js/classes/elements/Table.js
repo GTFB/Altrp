@@ -2297,6 +2297,17 @@ class Table extends BaseElement {
       },
     });
 
+    this.addControl('pagination_select_width', {
+      type: CONTROLLER_SLIDER,
+      label: 'Pagination Select Width',
+      units: ['px', '%', 'vh', 'vw'],
+      max: 150,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'width: {{SIZE}}{{UNIT}};',
+      },
+    });
+
     this.addControl('pagination_select_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Pagination Select Margin',
@@ -2330,7 +2341,6 @@ class Table extends BaseElement {
         ]
       },
     });
-
 
     this.addControl('table_style_pagination_select__pagination_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
