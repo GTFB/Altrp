@@ -85,7 +85,6 @@ const AltrpQueryComponent = (props)=>{
      */
     const {status, data, error,} = useQuery([query.dataSourceName,query.getParams(), updateToken],
       (updateToken) => {
-        console.log(updateToken);
         return query.getResource().getQueried({...sortSetting,filters: filterSettingJSON, groupBy})
       }, useQuerySettings);
     _data = data;
@@ -110,7 +109,7 @@ const AltrpQueryComponent = (props)=>{
     setAltrpIndex(data)
   }, [data]);
   let finalData = React.useMemo(()=>{
-    if(! _.isArray){
+    if(! _.isArray(data)){
       if(_.isObject(data)){
         return [data]
       }
@@ -118,8 +117,9 @@ const AltrpQueryComponent = (props)=>{
     }
     return data;
   }, [data]);
+  console.log(finalData);
   const childrenProps = {...props,
-    data,
+    data: finalData,
     _status,
     setFilterSettings,
     setSortSettings,
