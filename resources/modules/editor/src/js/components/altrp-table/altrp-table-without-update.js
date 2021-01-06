@@ -1256,7 +1256,7 @@ function GlobalFilter({
   let placeholder = global_filter_placeholder || `${count} records...`;
   placeholder = placeholder.replace(/{{count}}/g, count);
   return (
-    <span className="altrp-table-global-filter">
+    <div className="altrp-table-global-filter">
       <label htmlFor={`altrp-table-global-filter${widgetId}`} dangerouslySetInnerHTML={{ __html: labelText }} />
       <input
         id={`altrp-table-global-filter${widgetId}`}
@@ -1268,7 +1268,7 @@ function GlobalFilter({
         placeholder={placeholder}
 
       />
-    </span>
+    </div>
   )
 }
 const DND_ITEM_TYPE = 'row';

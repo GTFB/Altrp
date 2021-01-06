@@ -1443,4 +1443,7 @@
 .altrp-pagination__previous, .altrp-pagination__next {
   display: flex;
   align-items: center;
+  img {
+    height: 60px;
+  }
 }
