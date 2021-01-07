@@ -18,28 +18,38 @@ class AltrpSVG extends Component {
 
     if(! content) {
       let resource = new Resource({route: this.props.url});
-      let svg = await resource.getAsText();
+      content = await resource.getAsText();
+      window.assetsCache[this.props.url] = content;
+    }
+    let propsString = content.match(/<svg(.*?)=\"(.*?)\">/gi)[0];
+    let regex = new RegExp('[\\s\\r\\t\\n]*([a-z0-9\\-_]+)[\\s\\r\\t\\n]*=[\\s\\r\\t\\n]*([\'"])((?:\\\\\\2|(?!\\2).)*)\\2', 'ig'); //для работы с циклом
+    let props = {};
+    let match;
+    while (match = regex.exec(propsString)) {
+      props[match[1]] = match[3];
+    }
+    this.setState(state => ({...state, props}));
 
-      let propsString = svg.match(/<svg(.*?)=\"(.*?)\">/gi)[0];
-      let regex = new RegExp('[\\s\\r\\t\\n]*([a-z0-9\\-_]+)[\\s\\r\\t\\n]*=[\\s\\r\\t\\n]*([\'"])((?:\\\\\\2|(?!\\2).)*)\\2', 'ig'); //для работы с циклом
-      let props = {};
-      let match;
-      while (match = regex.exec(propsString)) {
-        props[match[1]] = match[3];
-      }
-      this.setState(state => ({...state, props}));
+    content = content.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+    content = content.replace(/<svg(.*?)=\"(.*?)\">/gi, "").replace(/<\/svg>/gi, "");
 
-      svg = svg.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
-      svg = svg.replace(/<svg(.*?)=\"(.*?)\">/gi, "").replace(/<\/svg>/gi, "");
+    this.setState(state=>({...state, svg: content}));
+  }
 
-      window.assetsCache[this.props.url] = svg;
-      this.setState(state=>({...state, svg}));
-    } else {
-      this.setState(state=>({...state, svg: content}));
+  /**
+   * Обновиим если url в пропсах изменился
+   * @param prevProps
+   * @param prevState
+   */
+  componentDidUpdate(prevProps, prevState) {
+    if(this.props.url !== prevProps.url){
+      this.componentDidMount();
     }
   }
   render(){
     let props = _.assign(this.state.props, this.props);
+    _.unset(props, 'url');
+    console.log(this.state.svg);
     return <svg {...props}  dangerouslySetInnerHTML={{__html: this.state.svg}}/>
   }
 }
