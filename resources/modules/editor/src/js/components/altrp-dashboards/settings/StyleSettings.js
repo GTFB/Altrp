@@ -5,8 +5,8 @@ import { connect } from "react-redux";
 import Schemes from "./NivoColorSchemes";
 import MarginInput from "./MarginInput";
 import { SketchPicker } from "react-color";
-import Checkbox from '@material-ui/core/Checkbox';
-import Slider from '@material-ui/core/Slider';
+import Checkbox from "@material-ui/core/Checkbox";
+import Slider from "@material-ui/core/Slider";
 
 import {
   BAR,
@@ -168,17 +168,15 @@ class StyleSettings extends Component {
     }
   }
 
-
-
   setColorScheme(value) {
     this.props.setColorScheme(value);
     this.setState(s => ({ ...s, currentColorScheme: value }));
   }
 
-  handleChange (event)  {
+  handleChange(event) {
     console.log(event);
     event.persist();
-    this.setState (state => ({
+    this.setState(state => ({
       ...state,
       checked: event.target.checked
     }));
@@ -249,10 +247,7 @@ class StyleSettings extends Component {
     this.props.setProperty(Number(newValue), "radialLabelsLinkOffset");
   }
   setRadialLabelsLinkDiagonalLength(e, newValue) {
-    this.props.setProperty(
-      Number(newValue),
-      "radialLabelsLinkDiagonalLength"
-    );
+    this.props.setProperty(Number(newValue), "radialLabelsLinkDiagonalLength");
   }
   setRadialLabelsLinkHorizontalLength(e, newValue) {
     this.props.setProperty(
@@ -264,10 +259,7 @@ class StyleSettings extends Component {
     this.props.setProperty(Number(newValue), "radialLabelsTextXOffset");
   }
   setRadialLabelsLinkStrokeWidth(e, newValue) {
-    this.props.setProperty(
-      Number(newValue),
-      "radialLabelsLinkStrokeWidth"
-    );
+    this.props.setProperty(Number(newValue), "radialLabelsLinkStrokeWidth");
   }
   setLabelSkipHeight(e, newValue) {
     this.props.setProperty(Number(newValue), "labelSkipHeight");
@@ -605,13 +597,14 @@ class StyleSettings extends Component {
               >
                 Внешние надписи
               </div>
-              <input
-                type="checkbox"
+              <Checkbox
+                disableRipple={true}
                 defaultChecked={
                   this.state.editElement?.settings?.enableRadialLabels || true
                 }
                 checked={this.state.editElement?.settings?.enableRadialLabels}
                 onChange={this.enableRadialLabels}
+                className={`${this.props.widgetID} altrp-dashboard__checkboxcolor`}
               />
             </div>
 
