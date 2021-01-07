@@ -45,7 +45,7 @@ class ShadowController extends Component {
       //color
       active: false,
       //blur
-      blur: this.props.default.blur,
+      blur: this.props.default ? this.props.default.blur : 0,
       blurMax: this.props.blurMax || 100,
       blurMin: this.props.blurMin || 0,
       //verHor

@@ -1,7 +1,6 @@
 import React, { Component, Suspense } from "react";
 import { Link, Redirect, withRouter } from "react-router-dom";
 let Dropbar = React.lazy(() => import("../altrp-dropbar/AltrpDropbar"));
-import { connect } from "react-redux";
 import {
   getComponentByElementId,
   getHTMLElementById,
@@ -11,7 +10,6 @@ import {
   renderAssetIcon,
   scrollToElement
 } from "../../../../../front-app/src/js/helpers";
-import AltrpModel from "../../classes/AltrpModel";
 import { togglePopup } from "../../../../../front-app/src/js/store/popup-trigger/actions";
 import { toggleTrigger } from "../../../../../front-app/src/js/store/hide-triggers/actions";
 
@@ -221,8 +219,11 @@ class ButtonWidget extends Component {
         button = (
           <Suspense fallback={<div>Загрузка...</div>}>
             <Dropbar
+              elemenentId={this.props.element.getId()}
               settings={this.props.element.getSettings()}
               className="btn"
+              element={this.props.element}
+              getContent={this.getContent}
               showDelay={this.state.settings.show_delay_dropbar_options}
             >
               {buttonTemplate}

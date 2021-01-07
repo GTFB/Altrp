@@ -9,8 +9,9 @@ import { getRoutes } from "../../../../../front-app/src/js/helpers";
 class ExportPanelWindget extends Component {
   constructor(props) {
     super(props);
+    console.log(props);
     this.state = {
-      openEditor: false
+      hidePanel: props.element.getSettings().hidePanel
     };
     this.print = this.print.bind(this);
     this.code = this.code.bind(this);
@@ -57,12 +58,13 @@ class ExportPanelWindget extends Component {
   async code() {
     let documentVar = document.cloneNode(true);
     let exportPanel = documentVar.getElementById("export-panel");
-
-    exportPanel.remove();
+    if (exportPanel !== null) {
+      exportPanel.remove();
+    }
     let currentRoute = window.location.pathname;
     let routes = await (await getRoutes()).default.resource.getAll();
     let currentID = _.find(routes.pages, { path: currentRoute }).id;
-    console.log(currentID);
+
     if (documentVar.getElementById("ace-solarized-dark") !== null)
       documentVar.getElementById("ace-solarized-dark").remove();
     if (documentVar.getElementById("ace-tm") !== null)
@@ -103,7 +105,6 @@ class ExportPanelWindget extends Component {
     for (let img of imgs) {
       img.src = img.src.toString();
     }
-    console.log(this.props.reportID);
     const html = this.formatting(documentVar.documentElement.innerHTML);
     new Resource({
       route: "/reports/generate"
@@ -115,6 +116,10 @@ class ExportPanelWindget extends Component {
       })
       .then(
         res => {
+          if (typeof res.message !== "undefined") {
+            alert("ОШИБКА");
+            return;
+          }
           window.location.replace(res.path);
         },
         rej => {
@@ -130,22 +135,24 @@ class ExportPanelWindget extends Component {
   render() {
     return (
       <>
-        <div className="export-panel" id="export-panel">
-          <div className="col">
-            <div className="row justify-content-start d-flex py-3">
-              <div className="col-auto">
-                <button onClick={this.code}>
-                  <Code />
-                </button>
-              </div>
-              <div className="col-auto">
-                <button onClick={this.print}>
-                  <Frame3 />
-                </button>
+        {!this.state.hidePanel && (
+          <div className="export-panel" id="export-panel">
+            <div className="col">
+              <div className="row justify-content-start d-flex py-3">
+                <div className="col-auto">
+                  <button onClick={this.code}>
+                    <Code />
+                  </button>
+                </div>
+                <div className="col-auto">
+                  <button onClick={this.print}>
+                    <Frame3 />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </>
     );
   }

@@ -43,6 +43,12 @@ class FormsManager {
   }
 
   /**
+   * Удаляем форму по ID
+   */
+  deleteFormById(formId){
+    this.forms = this.forms.filter(form => form.formId !== formId);
+  }
+  /**
    * Добавляет поле к форме
    * сохраняет поле в fieldsStorage если форма еще не добавлена
    * @param {string} formId
@@ -87,6 +93,13 @@ class FormsManager {
       }
     });
     return _form;
+  }
+
+  /**
+   * Очищает все формы
+   */
+  clearFormsStore(){
+    this.forms = [];
   }
 }
 window.formsManager = new FormsManager();

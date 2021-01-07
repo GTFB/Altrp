@@ -36,7 +36,6 @@ class FontsManager extends Component {
   render() {
     const {fonts} = this.state;
 
-    console.log(fonts);
     return <Helmet ref={this.helmetRef}>
       {fonts.map(renderFontLink)}
     </Helmet>

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import appStore from "../store/store";
-import { altrpCompare, conditionsChecker } from "../helpers";
+import {altrpCompare, altrpRandomId, conditionsChecker} from "../helpers";
 import { addElement } from "../store/elements-storage/actions";
 
 class ElementWrapper extends Component {
@@ -94,6 +94,13 @@ class ElementWrapper extends Component {
    */
   componentDidUpdate(prevProps, prevState) {
     this.checkElementDisplay();
+  }
+
+  /**
+   * Обновить элемент изменив this.state.updateToken
+   */
+  updateElement(){
+    this.setState(state=>({...state, updateToken: altrpRandomId()}))
   }
 
   /**
@@ -255,6 +262,9 @@ class ElementWrapper extends Component {
           altrpresponses: this.props.altrpresponses,
           formsStore: this.props.formsStore,
           elementDisplay: this.state.elementDisplay,
+          altrpPageState: this.props.altrpPageState,
+          altrpMeta: this.props.altrpMeta,
+          updateToken: this.state.updateToken,
           appStore
         })}
       </div>

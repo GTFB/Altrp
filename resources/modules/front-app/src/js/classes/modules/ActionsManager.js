@@ -34,7 +34,7 @@ class ActionsManager extends AltrpModel{
    * @param {string} widgetId
    */
   unregisterWidgetActions(widgetId){
-    return this.setProperty(widgetId, {})
+    return this.unsetProperty(`actions.${widgetId}`)
   }
 
   /**
@@ -47,9 +47,6 @@ class ActionsManager extends AltrpModel{
     for (let action of actions){
       try {
         let res = await action.doAction();
-        if(! res.success){
-          break;
-        }
       } catch(error){
         errors.push(error);
         console.error(error);

@@ -15,7 +15,7 @@ window.Component = Component;
 window._ = _;
 window.iconsManager = new IconsManager();
 
-window.stylesModulePromise = new Promise(function (resolve) {
+window.stylesModulePromise = new Promise(function(resolve) {
   window.stylesModuleResolve = resolve;
 });
 
@@ -38,7 +38,7 @@ if (process.env.NODE_ENV !== "production") {
  * Импортируем компонент редактора Editor
  */
 import("./Editor.js")
-  .then((Editor) => {
+  .then(Editor => {
     Editor = Editor.default;
 
     let editorTarget = document.getElementById("editor");
@@ -48,11 +48,12 @@ import("./Editor.js")
 
     return import("./EditorContent");
   })
-  .then((EditorContent) => {
+  .then(EditorContent => {
     EditorContent = EditorContent.default;
 
     window.onload = () => {
       let iframe = document.getElementsByTagName("iframe")[0];
+      window.EditorFrame = iframe;
       if (!iframe) {
         return;
       }
@@ -71,8 +72,7 @@ import("./Editor.js")
         styleLink.rel = "stylesheet";
         styleLink.href = `/modules/editor/editor.css?${_altrpVersion}`;
         head.appendChild(styleLink);
-      } else
-        {
+      } else {
         let head = iframe.contentWindow.document.getElementsByTagName(
           "head"
         )[0];

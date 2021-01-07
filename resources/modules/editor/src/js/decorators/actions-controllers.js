@@ -96,6 +96,10 @@ export function actionsControllers(element){
         label: 'Set Data',
       },
       {
+        value: 'forms_manipulate',
+        label: 'Forms Manipulate',
+      },
+      {
         value: 'update_current_datasources',
         label: 'Update Current Datasources',
       },
@@ -105,11 +109,32 @@ export function actionsControllers(element){
   actionsRepeater.addControl('action', {
     type: CONTROLLER_TEXT,
     dynamic: false,
-    label: 'Add action name',
+    responsive: false,
+    label: 'Add Action Name',
     conditions: {
       type: [
         'trigger'
       ],
+    },
+  });
+
+  actionsRepeater.addControl('forms_change', {
+    label: 'Change',
+    type: CONTROLLER_SELECT,
+    responsive: false,
+    nullable: true,
+    options: [
+      {
+        value: 'select_all',
+        label: 'Select All',
+      },
+      {
+        value: 'clear',
+        label: 'Clear Value',
+      },
+    ],
+    conditions: {
+      type: 'forms_manipulate',
     },
   });
 
@@ -144,6 +169,7 @@ export function actionsControllers(element){
   actionsRepeater.addControl('form_id', {
     label: 'Form ID',
     dynamic: false,
+    responsive: false,
     conditions: {
       type: [
         'form',
@@ -153,8 +179,9 @@ export function actionsControllers(element){
   });
 
   actionsRepeater.addControl('name', {
-    label: 'Name',
+    label: 'File Name',
     dynamic: false,
+    responsive: false,
     conditions: {
       type: [
         'page_to_pdf',
@@ -178,8 +205,44 @@ export function actionsControllers(element){
     },
   });
 
+  actionsRepeater.addControl('forms_bulk', {
+    label: 'Bulk Requests',
+    type: CONTROLLER_SWITCHER,
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: [
+        'form',
+      ],
+    },
+  });
+
+  actionsRepeater.addControl('bulk_path', {
+    label: 'Bulk Path',
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: [
+        'form',
+      ],
+      forms_bulk: true,
+    },
+  });
+
   actionsRepeater.addControl('back', {
     label: 'Back',
+    type: CONTROLLER_SWITCHER,
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: [
+        'redirect',
+      ],
+    },
+  });
+
+  actionsRepeater.addControl('outer', {
+    label: 'Outer',
     type: CONTROLLER_SWITCHER,
     responsive: false,
     dynamic: false,
@@ -200,6 +263,7 @@ export function actionsControllers(element){
         'toggle_element',
         'print_elements',
         'elements_to_pdf',
+        'forms_manipulate',
       ],
     },
   });
@@ -236,7 +300,7 @@ export function actionsControllers(element){
 
   actionsRepeater.addControl('data', {
     type: CONTROLLER_TEXTAREA,
-    label: 'Data',
+    label: 'Data for Form',
     responsive: false,
     dynamic: false,
     description: 'param_1 | {{altrpdata.alias}}',
@@ -246,6 +310,18 @@ export function actionsControllers(element){
       ],
     },
   });
+  // actionsRepeater.addControl('custom_headers', {
+  //   type: CONTROLLER_TEXTAREA,
+  //   label: 'Data',
+  //   responsive: false,
+  //   dynamic: false,
+  //   description: 'param_1 | {{altrpdata.alias}}',
+  //   conditions: {
+  //     type: [
+  //       'form',
+  //     ],
+  //   },
+  // });
 
   actionsRepeater.addControl('set_type', {
     label: 'Set Type',
@@ -329,6 +405,7 @@ export function actionsControllers(element){
     isClearable: true,
     options_resource: '/admin/ajax/templates/options?template_type=popup&value=guid',
     nullable: true,
+    responsive: false,
     conditions: {
       type: [
         'toggle_popup',
@@ -339,24 +416,28 @@ export function actionsControllers(element){
   actionsRepeater.addControl('confirm', {
     type: CONTROLLER_TEXTAREA,
     dynamic: false,
+    responsive: false,
     label: 'Confirm Text',
   });
 
   actionsRepeater.addControl('alert', {
     type: CONTROLLER_TEXTAREA,
     dynamic: false,
+    responsive: false,
     label: 'Success',
   });
 
   actionsRepeater.addControl('reject', {
     type: CONTROLLER_TEXTAREA,
     dynamic: false,
+    responsive: false,
     label: 'Reject',
   });
 
   element.addControl('actions', {
     label: 'Actions',
     type: CONTROLLER_REPEATER,
+    responsive: false,
     fields: actionsRepeater.getControls(),
   });
 

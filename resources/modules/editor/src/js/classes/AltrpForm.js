@@ -78,12 +78,13 @@ class AltrpForm {
 
   /**
    * Проверка полей перед отправкой
-   * @param {int |  null} modelID
+   * @param {int | string | null} modelID
    * @param {string} submitText
    * @param {{} | null} data
+   * @param {{} | null} customHeaders
    * @return {boolean}
    */
-  async submit(modelID = null, submitText = '', data = null){
+  async submit(modelID = null, submitText = '', data = null, customHeaders = null){
     let success = true;
     if(submitText){
       let confirmed =  await confirm(submitText);
@@ -195,7 +196,6 @@ class AltrpForm {
       data.subject = subject;
       data.user_message = userMessage;
     } else {
-      console.log(this.formId);
       this.fields.forEach(field=>{
         if(field.getValue() !== null){
           data[field.getFieldId()] = field.getValue();

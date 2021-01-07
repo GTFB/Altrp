@@ -1,0 +1,27 @@
+.altrp-image-select {
+  display: flex;
+  flex-wrap: wrap;
+  // justify-content: space-evenly;
+  img {
+    flex-grow: 1;
+  }
+
+  .altrp-field {
+    width: 200px;
+    height: 200px;
+    overflow: hidden; 
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    &.active {
+      border-color: lightcoral;
+    }
+  }
+
+  .altrp-field-label {
+    text-align: center;
+    display: block;
+  }
+}

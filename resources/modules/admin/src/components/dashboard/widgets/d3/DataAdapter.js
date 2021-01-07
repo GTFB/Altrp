@@ -1,12 +1,17 @@
 import { getDataByPath } from "../../../../../../front-app/src/js/helpers";
+import { BAR, PIE, LINE, TABLE, POINT } from "../../widgetTypes";
 import axios from "axios";
 import moment from "moment";
 //Класс для работы с репитером
 //получает данные из источника и приводит их к указанному формату ключ->значение
 const MAX_DATA_TO_SVG = 100;
 class DataAdapter {
-  constructor() {
-    this.dataMultiple = false;
+  constructor(diagramType, sources, storeParams, widgetParams, countRequest) {
+    this.diagramType = diagramType;
+    this.sources = sources;
+    this.storeParams = storeParams;
+    this.widgetParams = widgetParams;
+    this.countRequest = countRequest;
   }
   /**
    * Вывод alias по пути датасурса
@@ -39,9 +44,9 @@ class DataAdapter {
       let result = "";
       if (index === 0) {
         if (param[key] === null || param[key] == null) {
-          result = `?`;
+          result = ``;
         } else {
-          result = `?${key}=${value}`;
+          result = `${key}=${value}`;
         }
       } else {
         if (param[key] === "" || param[key] == null) {
@@ -78,13 +83,36 @@ class DataAdapter {
     return string;
   }
 
+  selectFormatting(resultRequest, key, dataKey, keyIsDate) {
+    let returnData = [];
+    switch (this.diagramType) {
+      case LINE:
+        returnData = this.formatData(resultRequest, key, dataKey, keyIsDate);
+        break;
+      case POINT:
+        returnData = this.formatData(resultRequest, key, dataKey, keyIsDate);
+        break;
+      case TABLE:
+        returnData = this.formatData(resultRequest, key, dataKey, keyIsDate);
+        break;
+      case PIE:
+        returnData = this.formatDataPie(resultRequest, key, dataKey, keyIsDate);
+        break;
+      case BAR:
+        returnData = this.formatDataBar(resultRequest, key, dataKey, keyIsDate);
+        break;
+      default:
+        break;
+    }
+    return returnData;
+  }
   /**
    * Форматирование данных под Line,Table и Scatter
    * @param {*} array
    * @param {*} key
    * @param {*} dataKey
    */
-  formatData(array, key, dataKey) {
+  formatData(array, key, dataKey, keyIsDate = false) {
     return (
       array.map(d => {
         const currentKey = _.get(d, key);
@@ -93,7 +121,7 @@ class DataAdapter {
           : moment(currentKey).format("DD.MM.YYYY");
         return {
           y: Number(_.get(d, dataKey)),
-          x: keyFormatted
+          x: keyIsDate ? keyFormatted : currentKey
         };
       }) || []
     );
@@ -105,7 +133,7 @@ class DataAdapter {
    * @param {*} key
    * @param {*} dataKey
    */
-  formatDataPie(array, key, dataKey) {
+  formatDataPie(array, key, dataKey, keyIsDate = false) {
     return (
       array.map(d => {
         const currentKey = _.get(d, key);
@@ -114,7 +142,7 @@ class DataAdapter {
           : moment(currentKey).format("DD.MM.YYYY");
         return {
           value: Number(_.get(d, dataKey)),
-          id: keyFormatted
+          id: keyIsDate ? keyFormatted : currentKey
         };
       }) || []
     );
@@ -125,7 +153,7 @@ class DataAdapter {
    * @param {*} key
    * @param {*} dataKey
    */
-  formatDataBar(array, key, dataKey) {
+  formatDataBar(array, key, dataKey, keyIsDate = false) {
     return (
       array.map(d => {
         const currentKey = _.get(d, key);
@@ -133,7 +161,7 @@ class DataAdapter {
           ? currentKey
           : moment(currentKey).format("DD.MM.YYYY");
         return {
-          key: keyFormatted,
+          key: keyIsDate ? keyFormatted : currentKey,
           value: Number(_.get(d, dataKey)),
           [keyFormatted]: Number(_.get(d, dataKey))
         };
@@ -149,20 +177,25 @@ class DataAdapter {
    * @param {*} params
    */
   async getDataWithParams(datasource, datasourceObject, key, dataKey, params) {
-    const { path, title } = datasourceObject;
+    const { path, title, keyIsDate } = datasourceObject;
     const datasourceTitle = title || path;
     const url = datasource.getWebUrl();
     const localParams = this.parseSourceParams(datasource.params);
     let parameters = this.queryString(params) + "&" + localParams;
     parameters = Array.from(new Set(parameters.split("&"))).join("&");
-    const sendUrl = url + parameters;
+    const sendUrl = url + "?" + parameters;
     try {
       const req = await axios(sendUrl);
       const resultRequest =
         typeof req.data.data !== "undefined"
           ? _.uniqBy(req.data.data, key)
           : _.uniqBy(req.data, key);
-      let returnData = this.formatData(resultRequest, key, dataKey);
+      let returnData = this.selectFormatting(
+        resultRequest,
+        key,
+        dataKey,
+        keyIsDate
+      );
       if (datasourceObject.splitTo && datasourceObject.splitFrom) {
         returnData = returnData.slice(
           datasourceObject.splitFrom,
@@ -178,91 +211,12 @@ class DataAdapter {
     }
   }
   /**
-   * Получение данных по web url датасорса для диаграмм типа Pie
-   * @param {*} datasource
-   * @param {*} datasourceObject
-   * @param {*} key
-   * @param {*} dataKey
-   * @param {*} params
-   */
-  async getDataWithParamsForPie(
-    datasource,
-    datasourceObject,
-    key,
-    dataKey,
-    params
-  ) {
-    const { path, title } = datasourceObject;
-    const url = datasource.getWebUrl();
-    const localParams = this.parseSourceParams(datasource.params);
-    let parameters = this.queryString(params) + "&" + localParams;
-    parameters = Array.from(new Set(parameters.split("&"))).join("&");
-    const sendUrl = url + parameters;
-    try {
-      const req = await axios(sendUrl);
-      const resultRequest =
-        typeof req.data.data !== "undefined"
-          ? _.uniqBy(req.data.data, key)
-          : _.uniqBy(req.data, key);
-      let returnData = this.formatDataPie(resultRequest, key, dataKey);
-      if (datasourceObject.splitTo && datasourceObject.splitFrom) {
-        returnData = returnData.slice(
-          datasourceObject.splitFrom,
-          datasourceObject.splitTo
-        );
-      }
-      return returnData;
-    } catch (error) {
-      return [];
-    }
-  }
-  /**
-   * Получение данных по web url датасорса для диаграмм типа Bar
-   * @param {*} datasource
-   * @param {*} datasourceObject
-   * @param {*} key
-   * @param {*} dataKey
-   * @param {*} params
-   */
-  async getDataWithParamsForBar(
-    datasource,
-    datasourceObject,
-    key,
-    dataKey,
-    params
-  ) {
-    const { path, title } = datasourceObject;
-    const url = datasource.getWebUrl();
-    const localParams = this.parseSourceParams(datasource.params);
-    let parameters = this.queryString(params) + "&" + localParams;
-    parameters = Array.from(new Set(parameters.split("&"))).join("&");
-    const sendUrl = url + parameters;
-    try {
-      const req = await axios(sendUrl);
-      const resultRequest =
-        typeof req.data.data !== "undefined"
-          ? _.uniqBy(req.data.data, key)
-          : _.uniqBy(req.data, key);
-      let returnData = this.formatDataBar(resultRequest, key, dataKey);
-      if (datasourceObject.splitTo && datasourceObject.splitFrom) {
-        returnData = returnData.slice(
-          datasourceObject.splitFrom,
-          datasourceObject.splitTo
-        );
-      }
-      return returnData;
-    } catch (error) {
-      return [];
-    }
-  }
-
-  /**
    * Получение данных по пути datasource для диаграмм Line,Table,Scatter
    * @param {*} datasourceObject
    * @param {*} params
    */
   async adaptDataByPath(datasourceObject, params = {}) {
-    const { path, key, data, title } = datasourceObject;
+    const { path, key, data, title, keyIsDate } = datasourceObject;
     const datasourceTitle = title || path;
     if (_.keys(params).length > 0) {
       const datasource = this.getDatasourceByPath(path);
@@ -278,10 +232,12 @@ class DataAdapter {
     }
     try {
       let dataArray = getDataByPath(path, []);
+      //на случай если приходит просто обект
+      dataArray = Array.isArray(dataArray) ? dataArray : [dataArray];
       if (dataArray.length > 0) {
         //Исключаем дублирование ключей, т.к. это приводит к ошибкам рендера всех диаграм
         dataArray = _.uniqBy(dataArray, key);
-        dataArray = this.formatData(dataArray, key, data);
+        dataArray = this.selectFormatting(dataArray, key, data, keyIsDate);
         if (datasourceObject.splitTo && datasourceObject.splitFrom) {
           dataArray = dataArray.slice(
             datasourceObject.splitFrom,
@@ -301,100 +257,19 @@ class DataAdapter {
   }
 
   /**
-   * Получение данных по пути datasource для диаграмм Pie
-   * @param {*} datasourceObject
-   * @param {*} params
-   */
-  async adaptDataByPathForPie(datasourceObject, params = {}) {
-    const { path, key, data, title } = datasourceObject;
-    const datasourceTitle = title || path;
-    if (_.keys(params).length > 0) {
-      const datasource = this.getDatasourceByPath(path);
-      if (typeof datasource !== "undefined") {
-        return await this.getDataWithParamsForPie(
-          datasource,
-          datasourceObject,
-          key,
-          data,
-          params
-        );
-      }
-    }
-    try {
-      let dataArray = getDataByPath(path, []);
-      if (dataArray.length > 0) {
-        //Исключаем дублирование ключей, т.к. это приводит к ошибкам рендера всех диаграм
-        dataArray = _.uniqBy(dataArray, key);
-        dataArray = this.formatDataPie(dataArray, key, data);
-        if (datasourceObject.splitTo && datasourceObject.splitFrom) {
-          dataArray = dataArray.slice(
-            datasourceObject.splitFrom,
-            datasourceObject.splitTo
-          );
-        }
-      }
-      return dataArray || [];
-    } catch (error) {
-      console.log("ADAPTER ERROR =>", error);
-    }
-  }
-  /**
-   * Получение данных по пути datasource для диаграмм Bar
-   * @param {*} datasourceObject
-   * @param {*} params
-   */
-  async adaptDataByPathForBar(datasourceObject, params = {}) {
-    const { path, key, data, title } = datasourceObject;
-    const datasourceTitle = title || path;
-    if (_.keys(params).length > 0) {
-      const datasource = this.getDatasourceByPath(path);
-      if (typeof datasource !== "undefined") {
-        return await this.getDataWithParamsForBar(
-          datasource,
-          datasourceObject,
-          key,
-          data,
-          params
-        );
-      }
-    }
-    try {
-      let dataArray = getDataByPath(path, []);
-      if (dataArray.length > 0) {
-        //Исключаем дублирование ключей, т.к. это приводит к ошибкам рендера всех диаграм
-        dataArray = _.uniqBy(dataArray, key);
-        dataArray = this.formatDataBar(dataArray, key, data);
-        if (datasourceObject.splitTo && datasourceObject.splitFrom) {
-          dataArray = dataArray.slice(
-            datasourceObject.splitFrom,
-            datasourceObject.splitTo
-          );
-        }
-      }
-      return dataArray || [];
-    } catch (error) {
-      console.log("ADAPTER ERROR =>", error);
-    }
-  }
-
-  /**
    * Для Line, Table и Scatter
-   * @param Array sources
-   * @param Object storeParams
-   * @param Object widgetParams
-   * @param Number countRequest
    * @return Promise;
    * */
-  async parseData(sources, storeParams, widgetParams, countRequest) {
+  async parseData() {
     //возвращаемые значения
     let data = [];
-    const isMultiple = _.keys(sources).length > 1; //проверка данных на несколько исчтоников
+    const isMultiple = _.keys(this.sources).length > 1; //проверка данных на несколько исчтоников
     let needCallAgain = true; //проверка на повторный вызов http запроса
     let isDate = true; //проверка на формат ключа
     let isLarge = false; //проверка на большие датасеты, большим считается с более, чем 50 элементами
 
     //Обработка параметров
-    const globalParams = _.cloneDeep(storeParams, []);
+    const globalParams = _.cloneDeep(this.storeParams, []);
     const globalParamsArray = _.keys(globalParams)
       .map(param => {
         return { [param]: globalParams[param] };
@@ -403,15 +278,15 @@ class DataAdapter {
         let key = _.keys(param)[0];
         return param[key] !== "";
       });
-    const localParams = _.cloneDeep(widgetParams, []);
+    const localParams = _.cloneDeep(this.widgetParams, []);
     const paramsResult =
-      typeof localParams !== "undefined"
+      typeof localParams !== "undefined" && typeof localParams !== "number"
         ? localParams.concat(globalParamsArray)
-        : globalParamsArray;
-    if (_.keys(sources).length > 0) {
+        : [].concat(globalParamsArray);
+    if (_.keys(this.sources).length > 0) {
       //Если источник данных один, то возвращаем данные только по нему
       if (!isMultiple) {
-        let source = sources[0];
+        let source = this.sources[0];
         try {
           if (_.keys(paramsResult).length > 0) {
             data = await this.adaptDataByPath(source, paramsResult);
@@ -424,20 +299,29 @@ class DataAdapter {
         // data = [data];
       } else {
         // Если несколько истчочников данных, то делаем запросы по каждому
-        data = await this.getDataFromIterableDatasources(sources, paramsResult);
+        data = await this.getDataFromIterableDatasources(
+          this.sources,
+          paramsResult
+        );
+        data.forEach((item, index) => {
+          data[index] = item[0];
+        });
       }
-
       let dates = [];
       let resultDates = [];
-
       //Если больше одного источника, проверяем вложенные данные
       if (isMultiple) {
         let matches = data.map(obj => {
           if (_.keys(obj).length > 0) {
             if (!isLarge) {
-              isLarge = obj.data.length > MAX_DATA_TO_SVG;
+              isLarge =
+                typeof obj.data !== "undefined"
+                  ? obj.data.length > MAX_DATA_TO_SVG
+                  : false;
             }
-            return obj.data.length > 0;
+            return typeof obj.data !== "undefined"
+              ? obj.data.length > MAX_DATA_TO_SVG
+              : false;
           } //Если хотя бы в одном из источников данных больше 50, то это большой датасет
           return _.keys(obj).length > 0;
         });
@@ -458,7 +342,10 @@ class DataAdapter {
         if (!Array.isArray(data)) {
           data = [data];
         }
-        needCallAgain = _.keys(data).length === 0 && countRequest < 5;
+        needCallAgain =
+          typeof data[0] !== "undefined"
+            ? _.keys(data[0].data).length === 0 && this.countRequest < 5
+            : true;
         dates = data.map(obj => {
           if (!isLarge) {
             isLarge = obj.data.length > MAX_DATA_TO_SVG;
@@ -486,23 +373,19 @@ class DataAdapter {
     };
   }
   /**
-   * Для Pie
-   * @param Array sources
-   * @param Object storeParams
-   * @param Object widgetParams
-   * @param Number countRequest
+   * Для Pie и Bar
    * @return Promise;
    * */
-  async parseDataPie(sources, storeParams, widgetParams, countRequest) {
+  async parseDataNotType() {
     //возвращаемые значения
     let data = [];
-    const isMultiple = _.keys(sources).length > 1; //проверка данных на несколько исчтоников
+    const isMultiple = _.keys(this.sources).length > 1; //проверка данных на несколько исчтоников
     let needCallAgain = true; //проверка на повторный вызов http запроса
     let isDate = true; //проверка на формат ключа
     let isLarge = false; //проверка на большие датасеты, большим считается с более, чем 50 элементами
 
     //Обработка параметров
-    const globalParams = _.cloneDeep(storeParams, []);
+    const globalParams = _.cloneDeep(this.storeParams, []);
     const globalParamsArray = _.keys(globalParams)
       .map(param => {
         return { [param]: globalParams[param] };
@@ -511,27 +394,30 @@ class DataAdapter {
         let key = _.keys(param)[0];
         return param[key] !== "";
       });
-    const localParams = _.cloneDeep(widgetParams, []);
+    const localParams = _.cloneDeep(this.widgetParams, []);
     const paramsResult =
-      typeof localParams !== "undefined"
+      typeof localParams !== "undefined" && typeof localParams !== "number"
         ? localParams.concat(globalParamsArray)
-        : globalParamsArray;
-    if (_.keys(sources).length > 0) {
+        : [].concat(globalParamsArray);
+    if (_.keys(this.sources).length > 0) {
       //Если источник данных один, то возвращаем данные только по нему
       if (!isMultiple) {
-        let source = sources[0];
+        let source = this.sources[0];
         if (_.keys(paramsResult).length > 0) {
-          data = await this.adaptDataByPathForPie(source, paramsResult);
+          data = await this.adaptDataByPath(source, paramsResult);
         } else {
-          data = await this.adaptDataByPathForPie(source);
+          data = await this.adaptDataByPath(source);
         }
-        data = [data];
+        data = typeof data === "object" && _.keys(data) === 0 ? [] : data;
       } else {
         // Если несколько истчочников данных, то делаем запросы по каждому
-        data = await this.getDataFromIterableDatasourcesForPie(
-          sources,
+        data = await this.getDataFromIterableDatasources(
+          this.sources,
           paramsResult
         );
+        data.forEach((item, index) => {
+          data[index] = item[0];
+        });
       }
 
       let dates = [];
@@ -561,126 +447,45 @@ class DataAdapter {
           isDate = _.includes(resultDates, false) === true ? false : true;
         }
       } else {
-        let matches = data.map(obj => obj.length > 0);
+        let matches =
+          data.length > 0 ? data.map(obj => obj.length > 0) : [false];
         //Если во вложениях есть пустые данные, то вызываем запрос данных снова
-        needCallAgain = _.includes(matches, false) && countRequest < 5;
+        needCallAgain = _.includes(matches, false) && this.countRequest < 5;
         //Если один источник, проверяем данные в нём
-        dates = data.map(obj => {
-          if (!isLarge) {
-            isLarge = obj.length > MAX_DATA_TO_SVG;
-          }
-          return obj.key instanceof Date;
-        });
+        dates =
+          data.length > 0
+            ? data.map(obj => {
+                if (!isLarge) {
+                  isLarge = obj.length > MAX_DATA_TO_SVG;
+                }
+                return obj.key instanceof Date;
+              })
+            : false;
         dates = _.uniq(dates);
         isDate = _.includes(dates, false) === true ? false : true;
       }
-      data = _.uniqBy([].concat(...data), "id");
-      return {
-        data: data,
-        isMultiple: isMultiple,
-        isDate: isDate,
-        needCallAgain: needCallAgain,
-        isLarge: isLarge
-      };
-    }
-
-    return {
-      data: [],
-      isMultiple: isMultiple,
-      isDate: isDate,
-      needCallAgain: needCallAgain,
-      isLarge: isLarge
-    };
-  }
-  /**
-   * Для Bar
-   * @param Array sources
-   * @param Object storeParams
-   * @param Object widgetParams
-   * @param Number countRequest
-   * @return Promise;
-   * */
-  async parseDataBar(sources, storeParams, widgetParams, countRequest) {
-    //возвращаемые значения
-    let data = [];
-    const isMultiple = _.keys(sources).length > 1; //проверка данных на несколько исчтоников
-    let needCallAgain = true; //проверка на повторный вызов http запроса
-    let isDate = true; //проверка на формат ключа
-    let isLarge = false; //проверка на большие датасеты, большим считается с более, чем 50 элементами
-
-    //Обработка параметров
-    const globalParams = _.cloneDeep(storeParams, []);
-    const globalParamsArray = _.keys(globalParams)
-      .map(param => {
-        return { [param]: globalParams[param] };
-      })
-      .filter(param => {
-        let key = _.keys(param)[0];
-        return param[key] !== "";
-      });
-    const localParams = _.cloneDeep(widgetParams, []);
-    const paramsResult =
-      typeof localParams !== "undefined"
-        ? localParams.concat(globalParamsArray)
-        : globalParamsArray;
-    if (_.keys(sources).length > 0) {
-      //Если источник данных один, то возвращаем данные только по нему
-      if (!isMultiple) {
-        let source = sources[0];
-        if (_.keys(paramsResult).length > 0) {
-          data = await this.adaptDataByPathForBar(source, paramsResult);
+      if (this.diagramType === PIE) {
+        if (Array.isArray(data)) {
+          data = _.uniqBy([].concat(...data.map(item => item.data)), "id");
         } else {
-          data = await this.adaptDataByPathForBar(source);
-        }
-      } else {
-        // Если несколько истчочников данных, то делаем запросы по каждому
-        data = await this.getDataFromIterableDatasourcesForBar(
-          sources,
-          paramsResult
-        );
-      }
-
-      let dates = [];
-      let resultDates = [];
-
-      //Если больше одного источника, проверяем вложенные данные
-      if (isMultiple) {
-        let matches = data.map(obj => {
-          if (_.keys(obj).length > 0) {
-            if (!isLarge) {
-              isLarge = obj.length > MAX_DATA_TO_SVG;
-            }
-            return obj.length > 0;
-          } //Если хотя бы в одном из источников данных больше 50, то это большой датасет
-          return _.keys(obj).length > 0;
-        });
-        //Если во вложениях есть пустые данные, то вызываем запрос данных снова
-        needCallAgain = _.includes(matches, false);
-        if (!needCallAgain) {
-          //В противном случае проверяем ключи на формат даты
-          dates = data.map(obj => {
-            return obj.map(item => item.key instanceof Date);
-          });
-          dates.forEach(array => (resultDates = resultDates.concat(array)));
-          resultDates = _.uniq(resultDates);
-          //Если хотя бы в одном из истчоников нет ключа по дате, то возвращаем ложь
-          isDate = _.includes(resultDates, false) === true ? false : true;
-        }
-      } else {
-        //Если во вложениях есть пустые данные, то вызываем запрос данных снова
-        needCallAgain = data.length === 0 && countRequest < 5;
-        //Если один источник, проверяем данные в нём
-        dates = data.map(obj => {
-          if (!isLarge) {
-            isLarge = obj.length > MAX_DATA_TO_SVG;
+          if (data.data.length > 0) {
+            data = _.uniqBy(data.data, "id");
+          } else {
+            data = [];
           }
-          return obj.key instanceof Date;
-        });
-        dates = _.uniq(dates);
-        isDate = _.includes(dates, false) === true ? false : true;
-      }
-      if (isMultiple) {
-        data = [].concat(...data);
+        }
+      } else {
+        if (!isMultiple && this.diagramType === BAR) {
+          if (!isMultiple && this.diagramType === BAR) {
+            if (Array.isArray(data)) {
+              data = data[0].data;
+            } else {
+              data = data.data;
+            }
+          }
+        } else {
+          data = [].concat(...data.map(item => item.data));
+        }
       }
       return {
         data: data,
@@ -709,60 +514,9 @@ class DataAdapter {
       sources.map(async source => {
         let dataArray = [];
         if (_.keys(paramsResult).length > 0) {
-          dataArray = await new DataAdapter().adaptDataByPath(
-            source,
-            paramsResult
-          );
+          dataArray = await this.adaptDataByPath(source, paramsResult);
         } else {
-          dataArray = await new DataAdapter().adaptDataByPath(source);
-        }
-        if (_.keys(dataArray).length === 0) {
-          return [];
-        }
-        return dataArray;
-      })
-    );
-  }
-  /**
-   * Получение массива данных из нескольких датасурсов для диаграмм Pie
-   * @param {*} sources
-   * @param {*} paramsResult
-   */
-  async getDataFromIterableDatasourcesForPie(sources, paramsResult = {}) {
-    return Promise.all(
-      sources.map(async source => {
-        let dataArray = [];
-        if (_.keys(paramsResult).length > 0) {
-          dataArray = await new DataAdapter().adaptDataByPathForPie(
-            source,
-            paramsResult
-          );
-        } else {
-          dataArray = await new DataAdapter().adaptDataByPathForPie(source);
-        }
-        if (_.keys(dataArray).length === 0) {
-          return [];
-        }
-        return dataArray;
-      })
-    );
-  }
-  /**
-   * Получение массива данных из нескольких датасурсов для диаграмм Bar
-   * @param {*} sources
-   * @param {*} paramsResult
-   */
-  async getDataFromIterableDatasourcesForBar(sources, paramsResult = {}) {
-    return Promise.all(
-      sources.map(async source => {
-        let dataArray = [];
-        if (_.keys(paramsResult).length > 0) {
-          dataArray = await new DataAdapter().adaptDataByPathForBar(
-            source,
-            paramsResult
-          );
-        } else {
-          dataArray = await new DataAdapter().adaptDataByPathForBar(source);
+          dataArray = await this.adaptDataByPath(source);
         }
         if (_.keys(dataArray).length === 0) {
           return [];

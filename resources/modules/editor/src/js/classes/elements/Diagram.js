@@ -67,7 +67,7 @@ class Diagram extends BaseElement {
 
     this.addControl("key_name", {
       dynamic: false,
-      label: "Key Field"
+      label: "Key Field (X)"
     });
 
     this.addControl("key_is_date", {
@@ -78,7 +78,30 @@ class Diagram extends BaseElement {
 
     this.addControl("data_name", {
       dynamic: false,
-      label: "Data Field"
+      label: "Data Field (Y)"
+    });
+
+    this.addControl("sort", {
+      type: CONTROLLER_SELECT,
+      label: "Сортировка",
+      default: false,
+      options: [
+        {
+          id: 0,
+          value: "",
+          label: "По умолчанию"
+        },
+        {
+          id: 1,
+          value: "value",
+          label: "По значению"
+        },
+        {
+          id: 2,
+          value: "key",
+          label: "По ключу"
+        }
+      ]
     });
 
     this.endControlSection();
@@ -122,6 +145,7 @@ class Diagram extends BaseElement {
       default: [],
       fields: repeater.getControls()
     });
+
     this.endControlSection();
 
     this.startControlSection("style", {
@@ -154,8 +178,35 @@ class Diagram extends BaseElement {
     this.addControl("colorScheme", {
       type: CONTROLLER_SELECT,
       label: "Color Scheme",
-      default: "red_grey",
+      default: "regagro",
       options: colors
+    });
+
+    this.addControl("bottomAxis", {
+      type: CONTROLLER_SWITCHER,
+      label: "Отобразить нижнюю легенду",
+      default: true
+    });
+
+    this.addControl("enableGridX", {
+      type: CONTROLLER_SWITCHER,
+      label: "Отобразить сетку по X",
+      default: true
+    });
+
+    this.addControl("enableGridY", {
+      type: CONTROLLER_SWITCHER,
+      label: "Отобразить сетку по Y",
+      default: true
+    });
+
+    this.addControl("tickRotation", {
+      type: CONTROLLER_RANGE,
+      label: "Наклон нижней легенды",
+      default: 0,
+      min: -90,
+      max: 90,
+      step: 1
     });
 
     this.addControl("innerRadius", {
@@ -412,7 +463,7 @@ class Diagram extends BaseElement {
       default: 6,
       conditions: {
         enablePoints: true,
-        type: POINT
+        type: { POINT, LINE }
       }
     });
     this.addControl("pointColor", {

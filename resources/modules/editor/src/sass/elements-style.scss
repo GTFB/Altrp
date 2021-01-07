@@ -183,7 +183,7 @@
   border-collapse: separate;
 }
 .altrp-table-td{
-  overflow: hidden;
+  //overflow: hidden;
   &__grouping{
     font-size: 18px;
     font-weight: bold;
@@ -739,7 +739,7 @@
     top: 0;
     right: 0;
     line-height: 1;
-    padding: 0;
+    padding: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -751,7 +751,7 @@
   .popup-window {
     position: absolute;
     width: 50vw;
-    min-height: 50vh;
+    height: 50vh;
     background-color: white;
     overflow: hidden;
     display: flex;
@@ -1434,5 +1434,28 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+  }
+}
+.altrp-dropbar-container{
+  z-index: 9999;
+}
+
+.altrp-pagination__previous, .altrp-pagination__next {
+  display: flex;
+  align-items: center;
+  img {
+    height: 60px;
+  }
+}
+
+.altrp-table {
+  border-width: 1px 1px 1px 1px;
+  border-color: rgb(186,186,186);
+}
+
+.altrp-table-global-filter {
+  font-weight: 400;
+  label {
+    display: inline-block;
   }
 }

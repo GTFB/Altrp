@@ -4,8 +4,11 @@ import { ResponsiveLine } from "@nivo/line";
 import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
+import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+
 import { getWidgetData } from "../services/getWidgetData";
-import { axisBottom } from "d3";
+import moment from "moment";
 
 const format = "%d.%m.%Y";
 
@@ -35,7 +38,12 @@ const DynamicLineChart = ({
   xMarkerLabel = "",
   xMarkerWidth = 2,
   yMarkerLabelColor,
-  xMarkerLabelColor
+  xMarkerLabelColor,
+  sort = "",
+  tickRotation = 0,
+  bottomAxis = true,
+  enableGridX = true,
+  enableGridY = true
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -99,29 +107,46 @@ const DynamicLineChart = ({
             ? currentKey
             : moment(currentKey).format("DD.MM.YYYY");
           return {
-            y: Number(_.get(item, dataKey)),
+            y: Number(item.data),
             x: keyIsDate ? keyFormatted : currentKey
           };
         });
-        let data = newData;
-        switch (Number(widget.options.sort)) {
-          case 0:
-            data = charts.data.data;
-            break;
-          case 1:
-            data = _.sortBy(data, "y");
-            break;
-          case 2:
-            data = _.sortBy(data, "x");
-            break;
-          default:
-            data = charts.data.data;
-            break;
-        }
+        let data = [
+          {
+            id: "",
+            data: newData
+          }
+        ];
         setData(data || []);
         setIsLoading(false);
       }
     } else {
+      if (
+        sort !== null &&
+        sort !== "undefined" &&
+        typeof dataSource !== "undefined"
+      ) {
+        switch (sort) {
+          case "value":
+            dataSource.forEach((item, index) => {
+              if (item.data.length > 0) {
+                dataSource[index].data = _.sortBy(item.data, ["y"]);
+              }
+            });
+            break;
+          case "key":
+            data.forEach((item, index) => {
+              if (item.data.length > 0) {
+                dataSource[index].data = _.sortBy(item.data, ["x"]);
+              }
+            });
+            break;
+
+          default:
+            // data = data;
+            break;
+        }
+      }
       setData(dataSource || []);
       setIsLoading(false);
     }
@@ -144,9 +169,6 @@ const DynamicLineChart = ({
 
   isNotEmpty = matches.includes(true);
   if (!isNotEmpty) return <EmptyWidget />;
-  console.log("====================================");
-  console.log(data);
-  console.log("====================================");
   return (
     <>
       <div
@@ -166,18 +188,27 @@ const DynamicLineChart = ({
           }
           lineWidth={lineWidth}
           markers={markers()}
+          enableGridX={enableGridX}
+          enableGridY={enableGridY}
           axisBottom={
-            xScaleType === "time"
+            bottomAxis &&
+            (xScaleType === "time"
               ? {
-                  format: format
+                  format: format,
+                  tickRotation: tickRotation
                 }
-              : {}
+              : {
+                  tickRotation: tickRotation
+                })
           }
+          useMesh={true}
           enableArea={enableArea}
           enablePoints={enablePoints}
           pointSize={pointSize}
           curve={curve}
-          colors={{ scheme: colorScheme }}
+          colors={
+            colorScheme === "regagro" ? regagroScheme : { scheme: colorScheme }
+          }
           pointColor={
             typeof pointColor !== "undefined" && pointColor !== null
               ? pointColor.colorPickedHex

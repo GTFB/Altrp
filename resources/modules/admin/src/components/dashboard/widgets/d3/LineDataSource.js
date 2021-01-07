@@ -1,11 +1,17 @@
 import React, { Component } from "react";
-import { ResponsiveLineCanvas } from "@nivo/line";
+import { ResponsiveLine } from "@nivo/line";
+import { linearGradientDef } from "@nivo/core";
 import { connect } from "react-redux";
 import DataAdapter from "./DataAdapter";
 import ErrorBoundary from "./ErrorBoundary";
+import Tooltip from "./Tooltip";
+
+import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+import moment from "moment";
 
 const mapStateToProps = state => {
-  return { formsStore: state.formsStore };
+  return { formsStore: _.cloneDeep(state.formsStore) };
 };
 class LineDataSource extends Component {
   constructor(props) {
@@ -26,7 +32,10 @@ class LineDataSource extends Component {
 
   async componentDidUpdate(prevProps, prevState) {
     if (!_.isEqual(prevProps.sources, this.props.sources)) {
-      this.setState(state => ({ ...state, sources: this.props.sources }));
+      this.setState(state => ({
+        ...state,
+        sources: _.cloneDeep(this.props.sources)
+      }));
       await this.getData();
     }
     if (!_.isEqual(prevProps.element, this.props.element)) {
@@ -45,7 +54,7 @@ class LineDataSource extends Component {
     ) {
       this.setState(state => ({
         ...state,
-        params: this.props.element.settings.params
+        params: _.cloneDeep(this.props.element.settings.params)
       }));
       await this.getData();
     }
@@ -58,7 +67,7 @@ class LineDataSource extends Component {
     ) {
       this.setState(state => ({
         ...state,
-        params: this.props.element.settings.params
+        params: _.cloneDeep(this.props.element.settings.params)
       }));
       await this.getData();
     }
@@ -66,7 +75,9 @@ class LineDataSource extends Component {
       !_.isEqual(
         prevProps.formsStore.form_data,
         this.props.formsStore.form_data
-      )
+      ) ||
+      JSON.stringify(prevProps.formsStore.form_data) !==
+        JSON.stringify(this.props.formsStore.form_data)
     ) {
       this.setState(state => ({
         ...state,
@@ -81,18 +92,16 @@ class LineDataSource extends Component {
   }
 
   async getData() {
-    const {
-      data,
-      isMultiple,
-      isDate,
-      needCallAgain,
-      isLarge
-    } = await new DataAdapter().parseData(
+    const dataObject = await new DataAdapter(
+      this.props.element.settings.type,
       this.props.element.settings.sources,
-      this.props.formsStore.form_data,
+      _.cloneDeep(this.props.formsStore.form_data),
       this.state.params,
       this.state.countRequest
-    );
+    ).parseData();
+
+    const { isMultiple, isDate, needCallAgain, isLarge } = dataObject;
+    let data = dataObject.data;
     if (needCallAgain) {
       setTimeout(() => {
         this.getData();
@@ -117,16 +126,17 @@ class LineDataSource extends Component {
     if (Object.keys(this.state.sources).length === 0) {
       return <div>Нет данных </div>;
     }
-    if (
-      typeof this.state.data !== "undefined" &&
-      this.state.data.length === 0
-    ) {
-      if (this.state.countRequest < 5) {
-        return <div>Загрузка...</div>;
+    if (!this.state.sources > 1) {
+      if (
+        typeof this.state.data === "undefined" &&
+        this.state.data[0].data.length === 0
+      ) {
+        if (this.state.countRequest < 3) {
+          return <div>Загрузка...</div>;
+        }
+        return <div>Нет данных</div>;
       }
-      return <div>Нет данных</div>;
-    }
-    if (this.props.element.settings.sources.length > 1) {
+    } else {
       let matches = this.state.data.map(obj => {
         if (_.keys(obj).length > 0) {
           return obj.data.length > 0;
@@ -141,19 +151,88 @@ class LineDataSource extends Component {
         return <div>Нет данных</div>;
       }
     }
+
+    let data = [];
+    if (this.state.settings?.xScale?.type === "time") {
+      data = _.cloneDeep(this.state.data, []);
+      data = data.map(item => {
+        item.data = item.data.map(object => {
+          object.x = moment(object.x).format("DD.MM.YYYY");
+          return object;
+        });
+        return item;
+      });
+    } else {
+      data = this.state.data;
+    }
+
+    if (
+      this.state.settings?.sort?.value !== null &&
+      typeof this.state.settings?.sort?.value !== "undefined" &&
+      typeof data !== "undefined"
+    ) {
+      const sort = this.state.settings?.sort?.value;
+      switch (sort) {
+        case "value":
+          data.forEach((item, index) => {
+            if (item.data.length > 0) {
+              data[index].data = _.sortBy(item.data, ["y"]);
+            }
+          });
+          break;
+        case "key":
+          data.forEach((item, index) => {
+            if (item.data.length > 0) {
+              data[index].data = _.sortBy(item.data, ["x"]);
+            }
+          });
+          break;
+
+        default:
+          // data = data;
+          break;
+      }
+    }
+    const enabled = true;
     return (
       <>
         <ErrorBoundary>
-          <ResponsiveLineCanvas
-            data={this.state.data}
-            margin={{ top: 40, right: 120, bottom: 80, left: 100 }}
+          <ResponsiveLine
+            data={data}
+            margin={{
+              top: this.state.settings?.margin?.top || 40,
+              right: this.state.settings?.margin?.right || 120,
+              bottom: this.state.settings?.margin?.bottom || 80,
+              left: this.state.settings?.margin?.left || 100
+            }}
             curve={this.state.settings?.curve}
-            colors={this.state.settings?.colors}
-            xScale={this.state.settings?.xScale}
+            colors={
+              this.state.settings?.colors?.scheme === "regagro"
+                ? regagroScheme
+                : this.state.settings?.colors
+            }
             enableArea={this.state.settings?.enableArea}
+            defs={
+              this.state.settings?.enableArea && [
+                linearGradientDef("gradient", [
+                  { offset: 0, color: "inherit" },
+                  { offset: 100, color: "inherit", opacity: 0.25 }
+                ])
+              ]
+            }
+            fill={
+              this.state.settings?.enableArea && [
+                { match: "*", id: "gradient" }
+              ]
+            }
+            useMesh={true}
+            xScale={this.state.settings?.xScale}
             pointSize={this.state.settings?.pointSize}
             enablePoints={this.state.settings?.enablePoints}
             lineWidth={this.state.settings?.lineWidth}
+            enableCrosshair={this.state.settings?.enableCrosshair}
+            enableGridY={this.state.settings?.enableGridY}
+            enableGridX={this.state.settings?.enableGridX}
             xFormat={
               this.state.settings?.xScale?.type === "time" && "time:%d.%m.%Y"
             }
@@ -167,32 +246,39 @@ class LineDataSource extends Component {
                     ...this.state.settings?.axisBottom
                   }
             }
-            legends={[
-              {
-                anchor: "bottom-right",
-                direction: "column",
-                justify: false,
-                translateX: 100,
-                translateY: 0,
-                itemsSpacing: 0,
-                itemDirection: "left-to-right",
-                itemWidth: 80,
-                itemHeight: 20,
-                itemOpacity: 0.75,
-                symbolSize: 12,
-                symbolShape: "circle",
-                symbolBorderColor: "rgba(0, 0, 0, .5)",
-                effects: [
-                  {
-                    on: "hover",
-                    style: {
-                      itemBackground: "rgba(0, 0, 0, .03)",
-                      itemOpacity: 1
+            tooltip={datum => (
+              <Tooltip
+                datum={datum}
+                settings={{
+                  padding: this.state.settings?.tooltipPadding
+                }}
+                enable={this.state.settings?.enableCustomTooltip}
+              />
+            )}
+            animate={Boolean(this.state.settings?.enableAnimation)}
+            legends={
+              this.state.settings?.enableLegend
+                ? [
+                    {
+                      anchor:
+                        this.state.settings?.legendAchor || "bottom-right",
+                      direction: this.state.settings?.legendDirection || "row",
+                      justify: this.state.settings?.legendJustify || false,
+                      translateX: this.state.settings?.legendTranslateX || 0,
+                      translateY: this.state.settings?.legendTranslateY || 0,
+                      itemsSpacing:
+                        this.state.settings?.legendItemsSpacing || 10,
+                      itemWidth: this.state.settings?.legendItemWidth || 10,
+                      itemHeight: this.state.settings?.legendItemHeight || 10,
+                      itemDirection:
+                        this.state.settings?.legendItemDirection ||
+                        "left-to-right",
+                      symbolSize: this.state.settings?.legendSymbolSize || 25,
+                      symbolShape: "circle"
                     }
-                  }
-                ]
-              }
-            ]}
+                  ]
+                : []
+            }
           />
         </ErrorBoundary>
       </>

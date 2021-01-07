@@ -69,6 +69,42 @@ import s7 from '../../../svgs/Vector (2).svg'
 import s8 from '../../../svgs/Vector1.svg'
 import s9 from '../../../svgs/zgIUZOgUUYp3ZSLdeFaAS8Fbt6oHuqDW22YXArRO.svg'
 
+import avi from '../../../svgs/AVI.svg'
+import doc from '../../../svgs/DOC.svg'
+import docx from '../../../svgs/DOCX.svg'
+import eot from '../../../svgs/EOT.svg'
+import file from '../../../svgs/FILE.svg'
+import gif from '../../../svgs/GIF.svg'
+import jpeg from '../../../svgs/JPEG.svg'
+import jpg from '../../../svgs/JPG.svg'
+import mp3 from '../../../svgs/MP3.svg'
+import mp4 from '../../../svgs/MP4.svg'
+import odp from '../../../svgs/ODP.svg'
+import ods from '../../../svgs/ODS.svg'
+import odt from '../../../svgs/ODT.svg'
+import otf from '../../../svgs/OTF.svg'
+import pdf from '../../../svgs/PDF.svg'
+import png from '../../../svgs/PNG.svg'
+import ppt from '../../../svgs/PPT.svg'
+import pptx from '../../../svgs/PPTX.svg'
+import rar from '../../../svgs/RAR.svg'
+import svg from '../../../svgs/SVG.svg'
+import ttf from '../../../svgs/TTF.svg'
+import wav from '../../../svgs/WAV.svg'
+import webm from '../../../svgs/WEBM.svg'
+import webp from '../../../svgs/WEBP.svg'
+import woff from '../../../svgs/WOFF.svg'
+import woff2 from '../../../svgs/WOFF2.svg'
+import xls from '../../../svgs/XLS.svg'
+import xlsx from '../../../svgs/XLSX.svg'
+import zip from '../../../svgs/ZIP.svg'
+
+import adminBar1 from '../../../svgs/admin-bar1.svg';
+import adminBar2 from '../../../svgs/admin-bar2.svg';
+import adminBar3 from '../../../svgs/admin-bar3.svg';
+import adminBar4 from '../../../svgs/admin-bar4.svg';
+import copyIcon from '../../../svgs/copy-icon.svg';
+import chevronAdminBar from '../../../svgs/chevron-admin-bar.svg';
 class IconsManager {
   constructor() {
     this.icons = [];
@@ -143,6 +179,43 @@ class IconsManager {
     this.icons.push(new Icon('s7', s7));
     this.icons.push(new Icon('s8', s8));
     this.icons.push(new Icon('s9', s9));
+
+    this.icons.push(new Icon('avi', avi));
+    this.icons.push(new Icon('doc', doc));
+    this.icons.push(new Icon('docx', docx));
+    this.icons.push(new Icon('eot', eot));
+    this.icons.push(new Icon('file', file));
+    this.icons.push(new Icon('gif', gif));
+    this.icons.push(new Icon('jpeg', jpeg));
+    this.icons.push(new Icon('jpg', jpg));
+    this.icons.push(new Icon('mp3', mp3));
+    this.icons.push(new Icon('mp4', mp4));
+    this.icons.push(new Icon('odp', odp));
+    this.icons.push(new Icon('ods', ods));
+    this.icons.push(new Icon('odt', odt));
+    this.icons.push(new Icon('otf', otf));
+    this.icons.push(new Icon('pdf', pdf));
+    this.icons.push(new Icon('png', png));
+    this.icons.push(new Icon('ppt', ppt));
+    this.icons.push(new Icon('pptx', pptx));
+    this.icons.push(new Icon('rar', rar));
+    this.icons.push(new Icon('svg', svg));
+    this.icons.push(new Icon('ttf', ttf));
+    this.icons.push(new Icon('wav', wav));
+    this.icons.push(new Icon('webm', webm));
+    this.icons.push(new Icon('webp', webp));
+    this.icons.push(new Icon('woff', woff));
+    this.icons.push(new Icon('woff2', woff2));
+    this.icons.push(new Icon('xls', xls));
+    this.icons.push(new Icon('xlsx', xlsx));
+    this.icons.push(new Icon('zip', zip));
+
+    this.icons.push(new Icon('admin-bar1', adminBar1));
+    this.icons.push(new Icon('admin-bar2', adminBar2));
+    this.icons.push(new Icon('admin-bar3', adminBar3));
+    this.icons.push(new Icon('admin-bar4', adminBar4));
+    this.icons.push(new Icon('copy-icon', copyIcon));
+    this.icons.push(new Icon('chevron-admin-bar', chevronAdminBar));
   }
   /**
    * @param {string} iconName

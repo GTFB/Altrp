@@ -3,6 +3,9 @@ import React, { useState, useEffect, useCallback } from "react";
 import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
+import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+
 import { ResponsiveBar } from "@nivo/bar";
 
 import { getWidgetData } from "../services/getWidgetData";
@@ -14,13 +17,18 @@ const DynamicBarChart = ({
   dataSource = [],
   groupMode = "stacked",
   layout = "vertical",
-  colorScheme = "red_grey",
+  colorScheme = "regagro",
   reverse = false,
   enableLabel = false,
   padding = 0.1,
   innerPadding = 0,
   borderRadius = 0,
-  borderWidth = 0
+  borderWidth = 0,
+  sort = "",
+  tickRotation = 0,
+  bottomAxis = true,
+  enableGridX = true,
+  enableGridY = true
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -30,25 +38,34 @@ const DynamicBarChart = ({
     if (dataSource.length == 0) {
       const charts = await getWidgetData(widget.source, widget.filter);
       if (charts.status === 200) {
-        let data = charts.data.data;
-        switch (Number(widget.options.sort)) {
-          case 0:
-            data = charts.data.data;
-            break;
-          case 1:
-            data = _.sortBy(data, "key");
-            break;
-          case 2:
-            data = _.sortBy(data, "data");
-            break;
-          default:
-            data = charts.data.data;
-            break;
-        }
+        let data = charts.data.data.map((item, index) => {
+          return {
+            [item.key]: Number(item.data),
+            key: item.key,
+            value: Number(item.data)
+          };
+        });
         setData(data || []);
         setIsLoading(false);
       }
     } else {
+      if (
+        sort !== null &&
+        typeof sort !== "undefined" &&
+        typeof dataSource !== "undefined"
+      ) {
+        switch (sort) {
+          case "value":
+            dataSource = _.sortBy(dataSource, ["value"]);
+            break;
+          case "key":
+            dataSource = _.sortBy(dataSource, ["key"]);
+            break;
+          default:
+            dataSource = dataSource;
+            break;
+        }
+      }
       setData(dataSource || []);
       setIsLoading(false);
     }
@@ -69,9 +86,26 @@ const DynamicBarChart = ({
           data={data}
           margin={{ top: 50, right: 180, bottom: 50, left: 60 }}
           indexBy="key"
-          colors={{ scheme: colorScheme.toString() }}
+          colors={
+            colorScheme === "regagro" ? regagroScheme : { scheme: colorScheme }
+          }
           colorBy="index"
           layout={layout}
+          axisBottom={
+            bottomAxis && {
+              tickRotation: tickRotation
+            }
+          }
+          tooltip={datum => {
+            const { indexValue, value, color } = datum;
+            return (
+              <>
+                <span>{indexValue}</span>:<strong> {value}</strong>
+              </>
+            );
+          }}
+          enableGridX={enableGridX}
+          enableGridY={enableGridY}
           enableLabel={enableLabel}
           reverse={reverse}
           groupMode={groupMode}

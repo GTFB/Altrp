@@ -5,7 +5,7 @@ import { editElement } from "../../store/altrp-dashboard/actions";
 import ChooseWidget from "./ChooseWidget";
 
 const mapStateToProps = state => {
-  return { editElement: _.cloneDeep(state.editElement, {}) };
+  return { editElement: _.cloneDeep(state.editElement) };
 };
 
 function mapDispatchToProps(dispatch) {
@@ -17,27 +17,58 @@ function mapDispatchToProps(dispatch) {
 class WidgetPreview extends Component {
   constructor(props) {
     super(props);
-    const element =
-      props.editElement !== null ? _.cloneDeep(props.editElement) : {};
     this.state = {
-      editElement: element,
-      cardName: this.props.editElement?.settings?.name
+      editElement: _.cloneDeep(props.editElement),
+      cardName: this.props.editElement?.settings?.name,
+      width: props.width
     };
     this.setCardName = this.setCardName.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    if (!_.isEqual(prevProps.editElement, this.props.editElement)) {
+      if (this.props.addItemPreview) {
+        this.setState(state => ({
+          ...state,
+          editElement: _.cloneDeep(this.props.editElement)
+        }));
+      } else {
+        this.setState(state => ({
+          ...state,
+          editElement: _.cloneDeep(this.props.editElement)
+        }));
+      }
+    }
     if (
-      !_.isEqual(prevProps.editElement, this.props.editElement) ||
       JSON.stringify(prevProps.editElement?.settings?.params) !==
-        JSON.stringify(this.props.editElement?.settings?.params)
+      JSON.stringify(this.props.editElement?.settings?.params)
     ) {
-      let element = _.cloneDeep(this.props.editElement, []);
       this.setState(state => ({
         ...state,
-        editElement: element,
+        editElement: _.cloneDeep(this.props.editElement),
         cardName: this.props.editElement?.settings?.name
       }));
+    }
+
+    if (
+      !_.isEqual(
+        prevProps.editElement?.settings?.name,
+        this.props.editElement?.settings?.name
+      )
+    ) {
+      if (this.props.addItemPreview) {
+        this.setState(state => ({
+          ...state,
+          editElement: _.cloneDeep(this.props.editElement),
+          cardName: this.props.editElement?.name
+        }));
+      } else {
+        this.setState(state => ({
+          ...state,
+          editElement: _.cloneDeep(this.props.editElement),
+          cardName: this.props.editElement?.settings?.name
+        }));
+      }
     }
   }
 
@@ -51,14 +82,36 @@ class WidgetPreview extends Component {
   render() {
     if (!_.isEmpty(this.state.editElement)) {
       return (
-        <div className="drawer-preview">
+        <div
+          className="drawer-preview"
+          style={{
+            width: `calc(100% - ${this.state.width})`,
+            fallbacks: [
+              { width: `-moz-calc(100% - ${this.state.width})` },
+              { width: `-webkit-calc(100% - ${this.state.width})` },
+              { width: `-o-calc(100% - ${this.state.width})` }
+            ]
+          }}
+        >
           <div className="drawer-preview__container">
-            {!this.props.addItemPreview && (
+            {!this.props.addItemPreview ? (
               <div className="title">
                 <input
                   type="text"
                   onChange={this.setCardName}
                   value={this.state.cardName}
+                  placeholder="Введите название диаграммы"
+                />
+              </div>
+            ) : (
+              <div className="title">
+                <input
+                  type="text"
+                  // onChange={this.setCardName}
+                  value={
+                    this.props.editElement?.settings?.name ||
+                    this.state.cardName
+                  }
                   placeholder="Введите название диаграммы"
                 />
               </div>

@@ -3,6 +3,36 @@
 
 ## Changelog
 
+### 0.12.1
++ Аdd the Adminbar
++ Insert Custom SVG to Content
+
+### 0.11.16
++ Аdd the Possibility to Delete Widgets with Errors
++ Аdd the Possibility to Hide Export Panel in Dashboard Widget
+
+### 0.11.1
++ Add Action Update Elements & Bulk Form Action
++ Draggable Repeater Items
++ Add File Types:
+    Images
+    Documents 
+    Fonts 
+    SVG
+    Archive 
+    Medias
+    Others
+
+### 0.11.00
++ Select All and Clear Value Action 
++ Save Current User Storage
++ Fix Bug with "null" Content
+
+### 0.10.16
++ Fix Input Widget Bug
+
+### 0.10.15
++ Blur Actions for Input Widget
 
 ### 0.9.0
 + Add Map, Diagram, Dashboards Widgets
