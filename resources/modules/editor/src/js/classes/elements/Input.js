@@ -1002,6 +1002,10 @@ class Input extends BaseElement {
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
           'margin-left: {{LEFT}}{{UNIT}};'
+        ],
+        '{{ELEMENT}} .altrp-image-select{{STATE}}': [
+          'margin-right: -{{RIGHT}}{{UNIT}};',
+          'margin-left: -{{LEFT}}{{UNIT}};'
         ]
       },
     });
@@ -1010,10 +1014,6 @@ class Input extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default: {
-        // top: 2,
-        // right: 2,
-        // bottom: 2,
-        // left: 2,
         unit: 'px'
       },
       units: [
