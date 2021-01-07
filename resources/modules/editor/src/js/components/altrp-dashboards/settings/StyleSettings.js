@@ -6,6 +6,7 @@ import Schemes from "./NivoColorSchemes";
 import MarginInput from "./MarginInput";
 import { SketchPicker } from "react-color";
 import Checkbox from '@material-ui/core/Checkbox';
+import Slider from '@material-ui/core/Slider';
 
 import {
   BAR,
@@ -235,53 +236,53 @@ class StyleSettings extends Component {
   setReverse(e) {
     this.props.setProperty(e.target.checked, "reverse");
   }
-  setSliceLabelsSkipAngle(e) {
-    this.props.setProperty(Number(e.target.value), "sliceLabelsSkipAngle");
+  setSliceLabelsSkipAngle(e, newValue) {
+    this.props.setProperty(Number(newValue), "sliceLabelsSkipAngle");
   }
-  setRadialLabelsSkipAngle(e) {
-    this.props.setProperty(Number(e.target.value), "radialLabelsSkipAngle");
+  setRadialLabelsSkipAngle(e, newValue) {
+    this.props.setProperty(Number(newValue), "radialLabelsSkipAngle");
   }
-  setSliceLabelsRadiusOffset(e) {
-    this.props.setProperty(Number(e.target.value), "sliceLabelsRadiusOffset");
+  setSliceLabelsRadiusOffset(e, newValue) {
+    this.props.setProperty(Number(newValue), "sliceLabelsRadiusOffset");
   }
-  setRadialLabelsLinkOffset(e) {
-    this.props.setProperty(Number(e.target.value), "radialLabelsLinkOffset");
+  setRadialLabelsLinkOffset(e, newValue) {
+    this.props.setProperty(Number(newValue), "radialLabelsLinkOffset");
   }
-  setRadialLabelsLinkDiagonalLength(e) {
+  setRadialLabelsLinkDiagonalLength(e, newValue) {
     this.props.setProperty(
-      Number(e.target.value),
+      Number(newValue),
       "radialLabelsLinkDiagonalLength"
     );
   }
-  setRadialLabelsLinkHorizontalLength(e) {
+  setRadialLabelsLinkHorizontalLength(e, newValue) {
     this.props.setProperty(
-      Number(e.target.value),
+      Number(newValue),
       "radialLabelsLinkHorizontalLength"
     );
   }
-  setRadialLabelsTextXOffset(e) {
-    this.props.setProperty(Number(e.target.value), "radialLabelsTextXOffset");
+  setRadialLabelsTextXOffset(e, newValue) {
+    this.props.setProperty(Number(newValue), "radialLabelsTextXOffset");
   }
-  setRadialLabelsLinkStrokeWidth(e) {
+  setRadialLabelsLinkStrokeWidth(e, newValue) {
     this.props.setProperty(
-      Number(e.target.value),
+      Number(newValue),
       "radialLabelsLinkStrokeWidth"
     );
   }
-  setLabelSkipHeight(e) {
-    this.props.setProperty(Number(e.target.value), "labelSkipHeight");
+  setLabelSkipHeight(e, newValue) {
+    this.props.setProperty(Number(newValue), "labelSkipHeight");
   }
-  setLabelSkipWidth(e) {
-    this.props.setProperty(Number(e.target.value), "labelSkipWidth");
+  setLabelSkipWidth(e, newValue) {
+    this.props.setProperty(Number(newValue), "labelSkipWidth");
   }
-  cornerRadius(e) {
-    this.props.setProperty(Number(e.target.value), "cornerRadius");
+  cornerRadius(e, newValue) {
+    this.props.setProperty(Number(newValue), "cornerRadius");
   }
-  padAngle(e) {
-    this.props.setProperty(Number(e.target.value), "padAngle");
+  padAngle(e, newValue) {
+    this.props.setProperty(Number(newValue), "padAngle");
   }
-  borderWidth(e) {
-    this.props.setProperty(Number(e.target.value), "borderWidth");
+  borderWidth(e, newValue) {
+    this.props.setProperty(Number(newValue), "borderWidth");
   }
   borderColor(color) {
     this.props.setProperty(color.hex, "borderColor");
@@ -294,13 +295,6 @@ class StyleSettings extends Component {
   render() {
     return (
       <div className="col">
-      <Checkbox
-        className="customize-checkbox"
-        checked={this.state.checked}
-        onChange={this.handleChange}
-        inputProps={{ 'aria-label': 'primary checkbox', 'className': 'customize-checkbox', 'fill': 'green' }}
-        iconStyle={{color: 'green'}}
-      />
         <div className="mb-3">
           <div
             className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
@@ -371,17 +365,16 @@ class StyleSettings extends Component {
               >
                 Укажите ширину линии
               </div>
-              <input
+              <Slider
                 className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings?.lineWidth ||
                   this.state.lineWidth
                 }
-                onChange={e => this.changeWidth(e.target.value)}
-                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
-                type="range"
-                min="0"
-                max="20"
+                onChange={(e, newValue) => this.changeWidth(newValue)}
+                min={0}
+                max={20}
+                step={1}
               />
               (
               {this.state.editElement?.settings?.lineWidth ||
@@ -394,13 +387,14 @@ class StyleSettings extends Component {
               >
                 Отобразить участки
               </div>
-              <input
-                type="checkbox"
+              <Checkbox
+                disableRipple={true}
                 defaultChecked={
                   this.state.editElement?.settings?.enableArea || false
                 }
                 checked={this.state.editElement?.settings?.enableArea}
                 onChange={this.enableArea}
+                className={`${this.props.widgetID} altrp-dashboard__checkboxcolor`}
               />
             </div>
             <div className="mb-3">
@@ -409,13 +403,14 @@ class StyleSettings extends Component {
               >
                 Отобразить точки
               </div>
-              <input
-                type="checkbox"
+              <Checkbox
+                disableRipple={true}
                 defaultChecked={
                   this.state.editElement?.settings?.enablePoints || true
                 }
                 checked={this.state.editElement?.settings?.enablePoints}
                 onChange={this.enablePoints}
+                className={`${this.props.widgetID} altrp-dashboard__checkboxcolor`}
               />
             </div>
             <div className="mb-3">
@@ -424,13 +419,14 @@ class StyleSettings extends Component {
               >
                 Отобразить перекрестие
               </div>
-              <input
-                type="checkbox"
+              <Checkbox
+                disableRipple={true}
                 defaultChecked={
                   this.state.editElement?.settings?.enableCrosshair || true
                 }
                 checked={this.state.editElement?.settings?.enableCrosshair}
                 onChange={this.enableCrosshair}
+                className={`${this.props.widgetID} altrp-dashboard__checkboxcolor`}
               />
             </div>
             <div className="mb-3">
@@ -439,16 +435,16 @@ class StyleSettings extends Component {
               >
                 Укажите размер точки
               </div>
-              <input
+              <Slider
                 className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings?.pointSize ||
                   this.state.pointSize
                 }
-                onChange={e => this.setPointSize(e.target.value)}
-                type="range"
-                min="2"
-                max="20"
+                onChange={(e, newValue) => this.setPointSize(newValue)}
+                min={2}
+                max={20}
+                step={1}
               />
               (
               {this.state.editElement?.settings?.pointSize ||
@@ -466,16 +462,16 @@ class StyleSettings extends Component {
               >
                 Укажите наклон нижней легенды
               </div>
-              <input
+              <Slider
                 className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings?.axisBottom?.tickRotation ||
                   this.state.tickRotation
                 }
-                onChange={e => this.setTickRotation(e.target.value)}
-                type="range"
-                min="-90"
-                max="90"
+                onChange={(e, newValue) => this.setTickRotation(newValue)}
+                min={-90}
+                max={90}
+                step={1}
               />
               (
               {this.state.editElement?.settings?.axisBottom?.tickRotation ||
@@ -489,13 +485,14 @@ class StyleSettings extends Component {
               >
                 Отобразить сетку по X
               </div>
-              <input
-                type="checkbox"
+              <Checkbox
+                disableRipple={true}
                 defaultChecked={
                   this.state.editElement?.settings?.enableGridX || true
                 }
                 checked={this.state.editElement?.settings?.enableGridX}
                 onChange={this.enableGridX}
+                className={`${this.props.widgetID} altrp-dashboard__checkboxcolor`}
               />
             </div>
             <div className="mb-3">
@@ -504,13 +501,14 @@ class StyleSettings extends Component {
               >
                 Отобразить сетку по Y
               </div>
-              <input
-                type="checkbox"
+              <Checkbox
+                disableRipple={true}
                 defaultChecked={
                   this.state.editElement?.settings?.enableGridY || true
                 }
                 checked={this.state.editElement?.settings?.enableGridY}
                 onChange={this.enableGridY}
+                className={`${this.props.widgetID} altrp-dashboard__checkboxcolor`}
               />
             </div>
           </>
@@ -524,17 +522,16 @@ class StyleSettings extends Component {
               >
                 Укажите внутренний радиус
               </div>
-              <input
+              <Slider
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings?.innerRadius ||
                   this.state.innerRadius
                 }
-                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
-                onChange={e => this.setInnerRadius(e.target.value)}
-                type="range"
-                min="0"
-                max="0.95"
-                step="0.05"
+                onChange={(e, newValue) => this.setInnerRadius(newValue)}
+                min={0}
+                max={0.95}
+                step={0.05}
               />
               (
               {this.state.editElement?.settings?.innerRadius ||
@@ -547,13 +544,14 @@ class StyleSettings extends Component {
               >
                 Надписи на сегментах
               </div>
-              <input
-                type="checkbox"
+              <Checkbox
+                disableRipple={true}
                 defaultChecked={
                   this.state.editElement?.settings?.enableSliceLabels || true
                 }
                 checked={this.state.editElement?.settings?.enableSliceLabels}
                 onChange={this.enableSliceLabels}
+                className={`${this.props.widgetID} altrp-dashboard__checkboxcolor`}
               />
             </div>
 
@@ -563,17 +561,16 @@ class StyleSettings extends Component {
               >
                 Пропускать внутренние подписи при угле сектора
               </div>
-              <input
+              <Slider
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings?.sliceLabelsSkipAngle ||
                   this.state.sliceLabelsSkipAngle
                 }
                 onChange={this.setSliceLabelsSkipAngle}
-                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
-                type="range"
-                min="0"
-                max="45"
-                step="1"
+                min={0}
+                max={45}
+                step={1}
               />
               (
               {this.state.editElement?.settings?.sliceLabelsSkipAngle ||
@@ -586,17 +583,16 @@ class StyleSettings extends Component {
               >
                 Отступ внутренних подписей
               </div>
-              <input
+              <Slider
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings?.sliceLabelsRadiusOffset ||
                   this.state.sliceLabelsRadiusOffset
                 }
                 onChange={this.setSliceLabelsRadiusOffset}
-                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
-                type="range"
-                min="0"
-                max="2"
-                step="0.05"
+                min={0}
+                max={2}
+                step={0.05}
               />
               (
               {this.state.editElement?.settings?.sliceLabelsRadiusOffset ||
@@ -625,17 +621,16 @@ class StyleSettings extends Component {
               >
                 Пропускать внешние подписи при угле сектора
               </div>
-              <input
+              <Slider
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings?.radialLabelsSkipAngle ||
                   this.state.radialLabelsSkipAngle
                 }
                 onChange={this.setRadialLabelsSkipAngle}
-                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
-                type="range"
-                min="0"
-                max="45"
-                step="1"
+                min={0}
+                max={45}
+                step={1}
               />
               (
               {this.state.editElement?.settings?.radialLabelsSkipAngle ||
@@ -648,17 +643,16 @@ class StyleSettings extends Component {
               >
                 Отступы внешней подписи
               </div>
-              <input
+              <Slider
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings?.radialLabelsLinkOffset ||
                   this.state.radialLabelsLinkOffset
                 }
                 onChange={this.setRadialLabelsLinkOffset}
-                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
-                type="range"
-                min="-48"
-                max="60"
-                step="1"
+                min={-48}
+                max={60}
+                step={1}
               />
               (
               {this.state.editElement?.settings?.radialLabelsLinkOffset ||
@@ -671,18 +665,17 @@ class StyleSettings extends Component {
               >
                 Длина линии подписи по диагонали
               </div>
-              <input
+              <Slider
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings
                     ?.radialLabelsLinkDiagonalLength ||
                   this.state.radialLabelsLinkDiagonalLength
                 }
                 onChange={this.setRadialLabelsLinkDiagonalLength}
-                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
-                type="range"
-                min="0"
-                max="60"
-                step="1"
+                min={0}
+                max={60}
+                step={1}
               />{" "}
               (
               {this.state.editElement?.settings
@@ -696,18 +689,17 @@ class StyleSettings extends Component {
               >
                 Длина линии подписи по горизонтали
               </div>
-              <input
+              <Slider
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings
                     ?.radialLabelsLinkHorizontalLength ||
                   this.state.radialLabelsLinkHorizontalLength
                 }
                 onChange={this.setRadialLabelsLinkHorizontalLength}
-                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
-                type="range"
-                min="0"
-                max="60"
-                step="1"
+                min={0}
+                max={60}
+                step={1}
               />
               (
               {this.state.editElement?.settings
@@ -721,17 +713,16 @@ class StyleSettings extends Component {
               >
                 Отступ внешней подписи по горизонтали
               </div>
-              <input
+              <Slider
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings?.radialLabelsTextXOffset ||
                   this.state.radialLabelsTextXOffset
                 }
                 onChange={this.setRadialLabelsTextXOffset}
-                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
-                type="range"
-                min="0"
-                max="60"
-                step="1"
+                min={0}
+                max={60}
+                step={1}
               />
               (
               {this.state.editElement?.settings?.radialLabelsTextXOffset ||
@@ -744,7 +735,7 @@ class StyleSettings extends Component {
               >
                 Толщина линии внешней подписи
               </div>
-              <input
+              <Slider
                 className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings
@@ -752,10 +743,9 @@ class StyleSettings extends Component {
                   this.state.radialLabelsLinkStrokeWidth
                 }
                 onChange={this.setRadialLabelsLinkStrokeWidth}
-                type="range"
-                min="0"
-                max="20"
-                step="1"
+                min={0}
+                max={20}
+                step={1}
               />
               (
               {this.state.editElement?.settings?.radialLabelsLinkStrokeWidth ||
@@ -768,17 +758,16 @@ class StyleSettings extends Component {
               >
                 Скругление углов сегмента
               </div>
-              <input
+              <Slider
                 className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings?.cornerRadius ||
                   this.state.cornerRadius
                 }
                 onChange={this.cornerRadius}
-                type="range"
-                min="0"
-                max="45"
-                step="1"
+                min={0}
+                max={45}
+                step={1}
               />
               (
               {this.state.editElement?.settings?.cornerRadius ||
@@ -791,17 +780,16 @@ class StyleSettings extends Component {
               >
                 Угол между сегментами
               </div>
-              <input
+              <Slider
                 className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings?.padAngle ||
                   this.state.padAngle
                 }
                 onChange={this.padAngle}
-                type="range"
-                min="0"
-                max="45"
-                step="1"
+                min={0}
+                max={45}
+                step={1}
               />
               (
               {this.state.editElement?.settings?.padAngle ||
@@ -814,17 +802,16 @@ class StyleSettings extends Component {
               >
                 Толщина рамки сегментов
               </div>
-              <input
+              <Slider
                 className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings?.borderWidth ||
                   this.state.borderWidth
                 }
                 onChange={this.borderWidth}
-                type="range"
-                min="0"
-                max="20"
-                step="1"
+                min={0}
+                max={20}
+                step={1}
               />
               (
               {this.state.editElement?.settings?.borderWidth ||
@@ -855,13 +842,14 @@ class StyleSettings extends Component {
               >
                 Надписи на сегментах
               </div>
-              <input
-                type="checkbox"
+              <Checkbox
+                disableRipple={true}
                 defaultChecked={
                   this.state.editElement?.settings?.enableSliceLabels || true
                 }
                 checked={this.state.editElement?.settings?.enableSliceLabels}
                 onChange={this.enableSliceLabels}
+                className={`${this.props.widgetID} altrp-dashboard__checkboxcolor`}
               />
             </div>
             <div className="mb-3">
@@ -870,17 +858,16 @@ class StyleSettings extends Component {
               >
                 Внешние отступы
               </div>
-              <input
+              <Slider
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings?.padding ||
                   this.state.padding
                 }
-                onChange={e => this.setPadding(e.target.value)}
-                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
-                type="range"
-                min="0"
-                max="0.9"
-                step="0.05"
+                onChange={(e, newValue) => this.setPadding(newValue)}
+                min={0}
+                max={0.9}
+                step={0.05}
               />
               ({this.state.editElement?.settings?.padding || this.state.padding}
               )
@@ -891,17 +878,16 @@ class StyleSettings extends Component {
               >
                 Внутренние отступы
               </div>
-              <input
+              <Slider
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings?.innerPadding ||
                   this.state.innerPadding
                 }
-                onChange={e => this.setInnerPadding(e.target.value)}
-                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
-                type="range"
-                min="0"
-                max="10"
-                step="1"
+                onChange={(e, newValue) => this.setInnerPadding(newValue)}
+                min={0}
+                max={10}
+                step={1}
               />
               (
               {this.state.editElement?.settings?.innerPadding ||
@@ -914,17 +900,16 @@ class StyleSettings extends Component {
               >
                 Пропускать подписи при высоте столбца
               </div>
-              <input
+              <Slider
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings?.labelSkipHeight ||
                   this.state.labelSkipHeight
                 }
                 onChange={this.setLabelSkipHeight}
-                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
-                type="range"
-                min="0"
-                max="36"
-                step="1"
+                min={0}
+                max={36}
+                step={1}
               />
               (
               {this.state.editElement?.settings?.labelSkipHeight ||
@@ -937,17 +922,16 @@ class StyleSettings extends Component {
               >
                 Пропускать подписи при ширине столбца
               </div>
-              <input
+              <Slider
+                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                 defaultValue={
                   this.state.editElement?.settings?.labelSkipWidth ||
                   this.state.labelSkipWidth
                 }
                 onChange={this.setLabelSkipWidth}
-                className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
-                type="range"
-                min="0"
-                max="36"
-                step="1"
+                min={0}
+                max={36}
+                step={1}
               />
               (
               {this.state.editElement?.settings?.labelSkipWidth ||
@@ -960,13 +944,14 @@ class StyleSettings extends Component {
               >
                 Отразить
               </div>
-              <input
-                type="checkbox"
+              <Checkbox
+                disableRipple={true}
                 defaultChecked={
                   this.state.editElement?.settings?.reverse || false
                 }
                 checked={this.state.editElement?.settings?.reverse}
                 onChange={this.setReverse}
+                className={`${this.props.widgetID} altrp-dashboard__checkboxcolor`}
               />
             </div>
             <div className="mb-3">

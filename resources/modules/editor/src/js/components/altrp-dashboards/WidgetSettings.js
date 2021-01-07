@@ -672,6 +672,7 @@ class WidgetSettings extends Component {
           <div className="row justify-content-beetwen mt-3">
             <div className="col">
               <button
+                className={`${this.props.widgetID} altrp-btn-draw`}
                 style={{ width: "100%" }}
                 onClick={e => this.props.onAddItem(this.state.editElement)}
               >
@@ -680,6 +681,7 @@ class WidgetSettings extends Component {
             </div>
             <div className="col">
               <button
+                className={`${this.props.widgetID} altrp-btn-draw`}
                 style={{ width: "100%" }}
                 onClick={e => this.props.onCloseHandler(null, false)}
               >
@@ -691,6 +693,7 @@ class WidgetSettings extends Component {
           <div className="row justify-content-beetwen mt-3">
             <div className="col">
               <button
+                className={`${this.props.widgetID} altrp-btn-draw`}
                 style={{ width: "100%" }}
                 onClick={e => this.props.onCloseHandler(null)}
               >

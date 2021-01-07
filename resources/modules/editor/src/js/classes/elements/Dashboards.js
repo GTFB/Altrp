@@ -573,18 +573,87 @@ class Dashboards extends BaseElement {
 
     // << ЦВЕТ ЧЕКОБОКСА 
 
-    this.addControl("style_checkbox_color", {
+    this.addControl("checkbox_color", {
       type: CONTROLLER_COLOR,
       label: "Checkbox color",
       default: {
-        color: "",
+        color: "black",
         colorPickedHex: ""
       },
       rules: {
-        ".{{ID}}.MuiCheckbox-colorSecondary.Mui-checked{{STATE}}":
+        ".{{ID}}.altrp-dashboard__checkboxcolor.MuiCheckbox-colorSecondary.Mui-checked{{STATE}}":[
+          "color: {{COLOR}};",
+          "background-color: transparent !important"]
+      }
+    });
+
+
+    this.addControl("slider_range_color", {
+      type: CONTROLLER_COLOR,
+      label: "Slider color",
+      default: {
+        color: "black",
+        colorPickedHex: ""
+      },
+      rules: {
+        ".{{ID}}.altrp-dashboard__drawer--range-drawer-color.MuiSlider-root{{STATE}}":
           "color: {{COLOR}};",
       }
     });
+
+
+    this.addControl('background_color_btn', {
+      type: CONTROLLER_COLOR,
+      label: 'Background color button',
+      // default: {
+      //   color: "rgb(52,59,76)",
+      //   colorPickedHex: "#343B4C",
+      // },
+      rules: {
+        '.{{ID}}.altrp-btn-draw{{STATE}}': 'background-color: {{COLOR}};',
+      },
+    });
+
+    this.addControl('font_typographic_btn', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic button',
+      // default:{
+      //   lineHeight: 1,
+      //   spacing: 0,
+      //   size: 16,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
+      rules: {
+        '.{{ID}}.altrp-btn-draw{{STATE}}': [
+          'font-size: {{SIZE}}px;',
+          'font-family: {{FAMILY}}',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    }
+  );
+
+  this.addControl('font_color_btn', {
+      type: CONTROLLER_COLOR,
+      label: 'Color font button',
+      // default: {
+      //   color: "rgb(255,255,255)",
+      //   colorPickedHex: "#FFF",
+      // },
+      rules: {
+        '.{{ID}}.altrp-btn-draw{{STATE}}': 'color: {{COLOR}};',
+      },
+    }
+  );
+
+
 
     // this.addControl("style_range_drawer_color", {
     //   type: CONTROLLER_COLOR,
