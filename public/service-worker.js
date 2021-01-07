@@ -1,4 +1,4 @@
-importScripts("/modules/admin/precache-manifest.b2f9d011e4b7b0ff0df879b9d782d3c4.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+importScripts("/modules/admin/precache-manifest.9cda30e7e3dd3fbfe50583e968c14e41.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 workbox.precaching.precacheAndRoute(self.__precacheManifest);
 
@@ -11,6 +11,21 @@ workbox.routing.registerRoute(
 
 workbox.routing.registerRoute(
   new RegExp("/admin"),
+
+  new workbox.strategies.StaleWhileRevalidate({
+    cacheName: "altrp-ajax",
+    plugins: [
+      new workbox.expiration.Plugin({
+        maxAgeSeconds: 24 * 60
+      })
+    ]
+  }),
+  "GET"
+);
+
+workbox.routing.registerRoute(
+  new RegExp("/"),
+
   new workbox.strategies.StaleWhileRevalidate({
     cacheName: "altrp-ajax",
     plugins: [

@@ -51,6 +51,9 @@
   @if( isset( $preload_content[ 'important_styles'] ) )
     {!! $preload_content[ 'important_styles'] !!}
   @endif
+
+  <!-- Manifest -->
+  <link rel="manifest" href="/manifest.webmanifest">
 </head>
 <body>
 <div id="front-app" class="front-app">

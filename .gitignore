@@ -45,6 +45,15 @@ public/modules/
 #bundles
 public/modules/admin
 public/favicon.ico
+#pwa
+public/favicon.png
+public/favicon-32.png
+public/favicon-64.png
+public/favicon-96.png
+public/favicon-128.png
+public/favicon-192.png
+public/manifest.webmanifest
+#end pwa
 public/modules/front-app
 public/modules/editor
 public/modules/reports

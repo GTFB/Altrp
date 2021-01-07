@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-
+use App\Helpers\Classes\Manifest;
 use App\Http\Controllers\Controller;
 use App\Services\AltrpSettingsService;
 use App\Services\AltrpUpdateService;
@@ -40,9 +40,9 @@ class SettingsController extends Controller
    * @param  \Illuminate\Http\Request $request
    * @return \Illuminate\Http\Response
    */
-  public function store( Request $request )
+  public function store(Request $request)
   {
-    return response()->json( [], 500 );
+    return response()->json([], 500);
   }
 
   /**
@@ -54,10 +54,10 @@ class SettingsController extends Controller
    * @return \Illuminate\Http\Response
    * @throws \Jackiedo\DotenvEditor\Exceptions\KeyNotFoundException
    */
-  public function show( $setting_name, AltrpSettingsService $settings_service, Request $request)
+  public function show($setting_name, AltrpSettingsService $settings_service, Request $request)
   {
-    $res[$setting_name] = $settings_service->get_setting_value( $setting_name, '', $request->get( 'decrypt', false ) );
-    return response()->json( $res );
+    $res[$setting_name] = $settings_service->get_setting_value($setting_name, '', $request->get('decrypt', false));
+    return response()->json($res);
   }
 
   /**
@@ -65,7 +65,7 @@ class SettingsController extends Controller
    *
    * @param  string $setting_name
    */
-  public function edit( $setting_name )
+  public function edit($setting_name)
   {
   }
 
@@ -77,13 +77,21 @@ class SettingsController extends Controller
    * @param AltrpSettingsService $settings_service
    * @return \Illuminate\Http\Response
    */
-  public function update( $setting_name, Request $request, AltrpSettingsService $settings_service )
+  public function update($setting_name, Request $request, AltrpSettingsService $settings_service)
   {
 
-    if( ! $settings_service->set_setting_value( $setting_name, $request->value, $request->get( 'encrypt', false ) ) ){
-      return response()->json( ['result' => false, 'message' => 'Неудалось записать настройку ' . $setting_name], 500 );
+    if (!$settings_service->set_setting_value($setting_name, $request->value, $request->get('encrypt', false))) {
+      return response()->json(['result' => false, 'message' => 'Неудалось записать настройку ' . $setting_name], 500);
     }
-    return response()->json( ['result' => true] );
+    if ($setting_name == 'site_name') {
+      try {
+        $manifest = new Manifest();
+        $manifest->update($setting_name, $request->value);
+      } catch (\Throwable $th) {
+        print($th);
+      }
+    }
+    return response()->json(['result' => true]);
   }
 
   /**
@@ -93,7 +101,7 @@ class SettingsController extends Controller
    * @return \Illuminate\Http\Response
    * @throws \Exception
    */
-  public function destroy( $id )
+  public function destroy($id)
   {
     //
   }

@@ -189,8 +189,9 @@ return [
         App\Providers\CrudGeneratorServiceProvider::class,
 
         App\Providers\RepositoryServiceProvider::class,
-//        App\Providers\AltrpRepositoryServiceProvider::class,
+        //        App\Providers\AltrpRepositoryServiceProvider::class,
         App\Providers\PluginServiceProvider::class,
+        App\Providers\ManifestServiceProvider::class,
         App\Providers\AltrpRepositoryServiceProvider::class,
     ],
 
