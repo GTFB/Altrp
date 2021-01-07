@@ -177,11 +177,7 @@ export function getWindowWidth() {
 }
 
 export function renderAssetIcon(asset, props = null) {
-  // console.error(asset);
   if (asset) {
-    if(asset.url && asset.type === 'svg'){
-      return <AltrpSVG {...props} url={asset.url} />;
-    }
     switch (asset.assetType) {
       case "icon": {
         // if(asset.url) {
@@ -218,8 +214,9 @@ export function renderAssetIcon(asset, props = null) {
  * @throws Исключение если иконка не найдена
  * */
 export function renderAsset(asset, props = null) {
-  // console.error(asset);
-
+  if(asset.url && asset.type === 'svg') {
+    return <AltrpSVG {...props} url={asset.url} />;
+  }
   if (asset instanceof File) {
     let refImg = React.createRef();
     let fr = new FileReader();
