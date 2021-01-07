@@ -235,6 +235,21 @@ class Input extends BaseElement {
       }
     });
 
+    this.addControl("image_select_item_height", {
+      type: CONTROLLER_SLIDER,
+      label: "Item Height",
+      max: 500,
+      min: 0,
+      units: ["px", "%", "vh"],
+      default: { unit: "px" },
+      conditions: {
+        'content_type': ['image_select']
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-image-select>.altrp-field{{STATE}}": 'height: {{SIZE}}{{UNIT}};'
+      }
+    });
+
     this.addControl('image_select_image_fit', {
       type: CONTROLLER_SELECT,
       options: [
@@ -315,21 +330,6 @@ class Input extends BaseElement {
       label: 'Background Position',
       rules: {
         "{{ELEMENT}} .altrp-image-select img{{STATE}}": "object-position: {{VALUE}};"
-      }
-    });
-
-    this.addControl("image_select_item_height", {
-      type: CONTROLLER_SLIDER,
-      label: "Item Height",
-      max: 500,
-      min: 0,
-      units: ["px", "%", "vh"],
-      default: { unit: "px" },
-      conditions: {
-        'content_type': ['image_select']
-      },
-      rules: {
-        "{{ELEMENT}} .altrp-image-select>.altrp-field{{STATE}}": 'height: {{SIZE}}{{UNIT}};'
       }
     });
 
