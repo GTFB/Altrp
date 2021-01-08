@@ -34,54 +34,58 @@ function AltrpMapConstructor({ settings, id }) {
     longitude = lngDatasource;
   }
   const dynamicGeoObjectsRepeater = useMemo(() => {
-    return objects
-      .map(r => {
-        const geoObj = getDataByPath(r.path, []);
+    if (_.keys(objects).length > 0) {
+      return objects
+        .map(r => {
+          const geoObj = getDataByPath(r.path, []);
 
-        const result = Array.isArray(geoObj)
-          ? geoObj.map(data => ({
-              type: "Feature",
-              geometry: {
-                type: "Point",
-                coordinates: [
-                  Number(_.get(data, r.latitude)),
-                  Number(_.get(data, r.longitude))
-                ]
-              },
-              properties: {
-                fillOpacity: 1,
-                icon: r.icon || "GoogleMarker",
-                tooltip: r.tooltipByKeyboard
-                  ? r.tooltip
-                  : _.get(data, r.tooltip) || "",
-                popup: r.popupByKeyboard ? r.popup : _.get(data, r.popup) || "",
-                fillColor: r.color?.colorPickedHex || "#3388ff"
-              }
-            }))
-          : {
-              type: "Feature",
-              geometry: {
-                type: "Point",
-                coordinates: [
-                  Number(_.get(geoObj, r.latitude)),
-                  Number(_.get(geoObj, r.longitude))
-                ]
-              },
-              properties: {
-                fillOpacity: 1,
-                icon: r.icon || "GoogleMarker",
-                tooltip: r.tooltipByKeyboard
-                  ? r.tooltip
-                  : _.get(geoObj, r.tooltip) || "",
-                popup: r.popupByKeyboard
-                  ? r.popup
-                  : _.get(geoObj, r.popup) || "",
-                fillColor: r.color?.colorPickedHex || "#3388ff"
-              }
-            };
-        return result;
-      })
-      .flat();
+          const result = Array.isArray(geoObj)
+            ? geoObj.map(data => ({
+                type: "Feature",
+                geometry: {
+                  type: "Point",
+                  coordinates: [
+                    Number(_.get(data, r.latitude)),
+                    Number(_.get(data, r.longitude))
+                  ]
+                },
+                properties: {
+                  fillOpacity: 1,
+                  icon: r.icon || "GoogleMarker",
+                  tooltip: r.tooltipByKeyboard
+                    ? r.tooltip
+                    : _.get(data, r.tooltip) || "",
+                  popup: r.popupByKeyboard
+                    ? r.popup
+                    : _.get(data, r.popup) || "",
+                  fillColor: r.color?.colorPickedHex || "#3388ff"
+                }
+              }))
+            : {
+                type: "Feature",
+                geometry: {
+                  type: "Point",
+                  coordinates: [
+                    Number(_.get(geoObj, r.latitude)),
+                    Number(_.get(geoObj, r.longitude))
+                  ]
+                },
+                properties: {
+                  fillOpacity: 1,
+                  icon: r.icon || "GoogleMarker",
+                  tooltip: r.tooltipByKeyboard
+                    ? r.tooltip
+                    : _.get(geoObj, r.tooltip) || "",
+                  popup: r.popupByKeyboard
+                    ? r.popup
+                    : _.get(geoObj, r.popup) || "",
+                  fillColor: r.color?.colorPickedHex || "#3388ff"
+                }
+              };
+          return result;
+        })
+        .flat();
+    }
   }, [objects, currentDataStorage]);
   // Сохраняем данные карты
   const handleSave = data => {
