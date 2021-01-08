@@ -31,7 +31,7 @@ return [
     ],
 
     'telegram-bot-api' => [
-        'token' => env('TELEGRAM_BOT_TOKEN', '')
+        'token' => env('ALTRP_SETTING_TELEGRAM_BOT_TOKEN', '')
     ],
 
 ];

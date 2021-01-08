@@ -29,8 +29,6 @@ class AltrpSettingsService{
       return $value;
     }
     $settings_key = $this->get_setting_key( $setting_name );
-
-    if( $setting_name === "TELEGRAM_BOT_TOKEN" || $setting_name === "PUSHER_APP_KEY") $settings_key = $setting_name;
   
     if( DotenvEditor::keyExists( $settings_key ) ){
       $value = DotenvEditor::getValue( $settings_key );
@@ -67,8 +65,6 @@ class AltrpSettingsService{
     if( ! $setting_name ) return false;
 
     if( $encrypt ) $value = encrypt( $value );
-
-    if( $setting_name === "TELEGRAM_BOT_TOKEN" ) $settings_key = $setting_name;
 
     try{
       DotenvEditor::setKey( $settings_key, $value );

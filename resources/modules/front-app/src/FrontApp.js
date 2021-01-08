@@ -26,39 +26,45 @@ class FrontApp extends Component {
    * Обновляем текущего пользователя
    */
   async componentDidMount() {
+    // get current user
     let currentUser = await new Resource({ route: "/ajax/current-user" }).getAll();
-    let pusherKey = await new Resource({ route: "/admin/ajax/settings" }).get("PUSHER_APP_KEY");
-
     currentUser = currentUser.data;
     appStore.dispatch(changeCurrentUser(currentUser));
-    
-    pusherKey = pusherKey?.PUSHER_APP_KEY;
 
-    if(pusherKey){
-      console.log(pusherKey);
+
+    let pusherKey = await new Resource({ route: "/admin/ajax/settings" }).get("pusher_app_key");
+    let websocketsPort = await new Resource({ route: "/admin/ajax/settings" }).get("websockets_port");
+    
+    pusherKey = pusherKey?.pusher_app_key;
+    websocketsPort = websocketsPort?.websockets_port;
+
+    // Проверка наличия ключа и порта
+    if(pusherKey && websocketsPort){
       try {
         window.Pusher = require("pusher-js");
         window.Echo = new Echo({
           broadcaster: "pusher",
           key: pusherKey,
           wsHost: window.location.hostname,
-          wsPort: 6001,
+          wsPort: websocketsPort,
           forceTLS: false,
           disableStats: true
         });
       } catch (error) {
         console.log(error);
       }
-      
+
+      // Подключение слушателя канала
       window.Echo.private("App.User." + currentUser.id)
       .notification((notification) => {
+        // Запись пришедших по каналу уведомлений в appStore
         appStore.dispatch(setUserNotice(notification));
         console.log(appStore.getState().currentUser.data, 'STORE NOTICE');
       });  
 
     } else {
-     console.log("Ошибка получения pusher_key: " + pusherKey);
-    }     
+     console.log("Вебсокеты выключены");
+    }
   }
   
   render() {
