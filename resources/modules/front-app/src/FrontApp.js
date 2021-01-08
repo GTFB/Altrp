@@ -50,6 +50,8 @@ class FrontApp extends Component {
           forceTLS: false,
           disableStats: true
         });
+        console.log("Вебсокеты включены");
+        
       } catch (error) {
         console.log(error);
       }
