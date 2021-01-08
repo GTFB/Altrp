@@ -99,17 +99,32 @@ class MapConstructor extends BaseElement {
       default: 6
     });
 
-    this.addControl("query", {
-      type: CONTROLLER_QUERY,
-    });
-
     this.addControl("handler", {
       type: CONTROLLER_EVENT_HANDLER,
       label: "Event handler",
       default: {
         evt: "",
-        params: "",
-      },
+        params: ""
+      }
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("model_to_save", {
+      tab: TAB_CONTENT,
+      label: "Model to save data"
+    });
+
+    this.addControl("url", {
+      label: "URL",
+      responsive: false,
+      dynamic: false,
+      description: "/ajax/models/tests/{{id}}"
+    });
+
+    this.addControl("field_id", {
+      type: CONTROLLER_TEXT,
+      label: "Field ID (Column Name)"
     });
 
     this.endControlSection();

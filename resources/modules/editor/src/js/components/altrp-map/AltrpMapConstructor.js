@@ -19,11 +19,15 @@ function AltrpMapConstructor({ settings, id }) {
     centerByDatasource = false,
     style_height = {},
     style_margin = {},
-    objects = {}
+    objects = {},
+    url,
+    field_id
   } = settings;
   let latitude = lat;
   let longitude = lng;
-
+  console.log("====================================");
+  console.log(url, field_id);
+  console.log("====================================");
   const currentDataStorage = useSelector(
     state => state.currentDataStorage.data
   );
@@ -141,6 +145,8 @@ function AltrpMapConstructor({ settings, id }) {
       isEditable={editable}
       preferCanvas={canvas}
       zoom={+zoom}
+      url={url}
+      field_id={field_id}
       center={[latitude || 50.7496449, longitude || 86.1250068]}
     />
   );

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import L from "leaflet";
+import axios from "axios";
 
 import { Map, FeatureGroup, TileLayer } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
@@ -35,6 +36,66 @@ function MapDesigner({
   const [selected, setSelected] = useState(null);
   const [state, setState] = useState(data);
   const [open, setOpen] = useState(false);
+
+  /**
+   *
+   * @param {LeafletEvent} object
+   */
+  const saveGeoObjectToModel = layer => {
+    let geojson = layer.toGeoJSON();
+
+    const { leafletElement } = FG.current;
+
+    const id = leafletElement.getLayerId(layer);
+
+    geojson.id = id;
+    geojson.properties.tooltip = geojson.properties.tooltip
+      ? geojson.properties.tooltip
+      : "";
+    geojson.properties.popup = geojson.properties.popup
+      ? geojson.properties.popup
+      : "";
+    // Назначаем цвет заливки
+    geojson.properties.fillColor = geojson.properties.fillColor
+      ? geojson.properties.fillColor
+      : "#3388ff";
+    // Назначаем прозрачность заливки
+    geojson.properties.fillOpacity = geojson.properties.fillOpacity
+      ? geojson.properties.fillOpacity
+      : 0.5;
+    // Задаем опции
+    if (layer instanceof L.Circle) {
+      // Цвет бордера
+      geojson.properties.color = geojson.properties.color
+        ? geojson.properties.color
+        : "#3388ff";
+      geojson.properties.radius = layer.getRadius();
+    } else if (layer instanceof L.Polygon) {
+      // Цвет бордера
+      geojson.properties.color = geojson.properties.color
+        ? geojson.properties.color
+        : "#3388ff";
+      // Polygon style properties
+    } else if (layer instanceof L.Marker) {
+      geojson.properties.icon = geojson.properties.opacity
+        ? geojson.properties.opacity
+        : 1.0;
+      // geojson.properties.icon = geojson.properties.icon ? geojson.properties.icon : "GoogleMarker";
+      geojson.properties.icon = "GoogleMarker";
+      layer.setIcon(customIcon(geojson.properties.icon));
+    }
+
+    axios
+      .post(url, {
+        altrp_ajax: true,
+        [field_id]: geojson
+      })
+      .then(res => {
+        console.log("====================================");
+        console.log(res);
+        console.log("====================================");
+      });
+  };
 
   const handleObserver = e => {
     const { leafletElement } = FG.current;
@@ -102,6 +163,7 @@ function MapDesigner({
       // Если добавили новый, то делаем его активным
       const id = leafletElement.getLayerId(e.layer);
       setSelected(id);
+      saveGeoObjectToModel(e.layer);
     } else if (e.type === "draw:deleted") {
       // Если удалили, то сбрасываем активный элемент
       setSelected(null);
