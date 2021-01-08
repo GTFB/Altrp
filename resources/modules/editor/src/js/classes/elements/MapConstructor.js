@@ -11,7 +11,9 @@ import {
   TAB_STYLE,
   CONTROLLER_REPEATER,
   CONTROLLER_SELECT,
-  CONTROLLER_COLOR
+  CONTROLLER_COLOR,
+  CONTROLLER_QUERY,
+  CONTROLLER_EVENT_HANDLER
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 
@@ -95,6 +97,19 @@ class MapConstructor extends BaseElement {
       type: CONTROLLER_NUMBER,
       label: "Zoom",
       default: 6
+    });
+
+    this.addControl("query", {
+      type: CONTROLLER_QUERY,
+    });
+
+    this.addControl("handler", {
+      type: CONTROLLER_EVENT_HANDLER,
+      label: "Event handler",
+      default: {
+        evt: "",
+        params: "",
+      },
     });
 
     this.endControlSection();
