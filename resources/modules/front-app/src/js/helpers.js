@@ -13,6 +13,7 @@ import { changeAltrpMeta } from "./store/altrp-meta-storage/actions";
 import { useDispatch } from "react-redux";
 import { altrpFontsSet, GOOGLE_FONT } from "./components/FontsManager";
 import queryString from "query-string";
+import AltrpSVG from "../../../editor/src/js/components/altrp-svg/AltrpSVG";
 
 export function getRoutes() {
   return import("./classes/Routes.js");
@@ -177,8 +178,25 @@ export function getWindowWidth() {
 
 export function renderAssetIcon(asset, props = null) {
   if (asset) {
+    if(asset.url && asset.type === 'svg') {
+      return <AltrpSVG {...props} url={asset.url} />;
+    }
     switch (asset.assetType) {
       case "icon": {
+        // if(asset.url) {
+        //   return <AltrpSVG {...props} url={asset.url} />;
+        //   window.assetsCache = window.assetsCache || {};
+        //   if (window.assetsCache[asset.url]) return window[asset.url];
+        //   fetch(asset.url)
+        //     .then(response => response.text())
+        //     .then(svg => {
+        //       svg = svg.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+        //       window[asset.url] = (<svg {...props} dangerouslySetInnerHTML={{__html: svg }}></svg>);
+        //     })
+        //     .catch(console.error.bind(console));
+        //
+        //   return window[asset.url];
+        // }
         return iconsManager().renderIcon(asset.name);
       }
       case "image": {
@@ -189,7 +207,7 @@ export function renderAssetIcon(asset, props = null) {
       }
     }
   }
-  return "";
+  return  '';
 }
 
 /**
@@ -199,6 +217,9 @@ export function renderAssetIcon(asset, props = null) {
  * @throws Исключение если иконка не найдена
  * */
 export function renderAsset(asset, props = null) {
+  if(asset.url && asset.type === 'svg') {
+    return <AltrpSVG {...props} url={asset.url} />;
+  }
   if (asset instanceof File) {
     let refImg = React.createRef();
     let fr = new FileReader();
@@ -495,9 +516,9 @@ export function getDataByPath(
       ? window.currentRouterMatch.getProperty("params")
       : {};
 
-  let gueryData = queryString.parseUrl(window.location.href).query;
+  let queryData = queryString.parseUrl(window.location.href).query;
 
-  urlParams = _.assign(gueryData, urlParams);
+  urlParams = _.assign(queryData, urlParams);
 
   let value = _default;
   if (!_.isString(path)) {
@@ -531,6 +552,10 @@ export function getDataByPath(
     value = urlParams[path]
       ? urlParams[path]
       : currentModel.getProperty(path, _default);
+    value = currentModel.getProperty(path) ? currentModel.getProperty(path) : urlParams[path];
+    if(! value){
+      value = _default;
+    }
   }
   return value;
 }
@@ -1274,11 +1299,12 @@ export function recurseCount(object = {}, path = "") {
 
 /**
  * Вовращает AltrpModel, в котором храняться все источники данных на странице
+ * @param {{}} model
  * @return {AltrpModel}
  */
-export function getAppContext() {
+export function getAppContext( model = null ) {
   const { currentModel } = appStore.getState();
-  const currentModelData = currentModel.getData();
+  const currentModelData = model ? model : currentModel.getData();
   const urlParams = _.cloneDeep(
     window.currentRouterMatch instanceof AltrpModel
       ? window.currentRouterMatch.getProperty("params")
@@ -1450,4 +1476,8 @@ export function generateButtonsArray(pageIndex, pageCount, first_last_buttons_co
   }
 
   return [...Array(first_last_buttons_count).keys(), "ellipsis", ...middleButtons, "ellipsis", ...lastButtons];
+}
+
+export function isValueMatchMask (value, mask) {
+  return value.length && value.split("").every((char, index) => char === mask[index] || char.match(mask[index]));
 }

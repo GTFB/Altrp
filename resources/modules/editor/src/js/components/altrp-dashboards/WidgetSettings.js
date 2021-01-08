@@ -577,7 +577,7 @@ class WidgetSettings extends Component {
             </div>
           </Collapse>
         </div>
-        {/* <div className="row">
+        <div className="row">
           <Button
             className="collapse-button"
             onClick={() =>
@@ -601,7 +601,7 @@ class WidgetSettings extends Component {
               />
             </div>
           </Collapse>
-        </div> */}
+        </div>
         <div className="row">
           <Button
             className="collapse-button"

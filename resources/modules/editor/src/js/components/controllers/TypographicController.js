@@ -1,11 +1,8 @@
 import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { SketchPicker } from "react-color"
-import DynamicIcon from '../../../svgs/dynamic.svg'
 import ContentIcon from '../../../svgs/content.svg'
 import Select from "react-select";
-import HistoryIcon from '../../../svgs/history.svg'
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
 import {addFont, removeFont} from "../../../../../front-app/src/js/store/fonts-storage/actions";
@@ -80,7 +77,9 @@ class TypographicController extends Component {
       shadowContentIcon.setAttribute("fill", "#8E94AA");
     }
   }
-  //начало select2
+  /**
+   * Меняем шрифт
+   */
   changeFamily(value) {
     const {currentElement} = this.props;
     let _value = this.getSettings(this.props.controlId) || this.getDefaultValue();

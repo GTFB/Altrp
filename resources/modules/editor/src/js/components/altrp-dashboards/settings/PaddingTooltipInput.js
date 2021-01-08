@@ -20,14 +20,9 @@ class PaddingTooltipInput extends Component {
     this.setProperty = this.setProperty.bind(this);
   }
 
-  componentDidUpdate(prevState, prevProps) {
-    if (!_.isEqual(prevState.padding, this.state.padding)) {
-      //   this.props.setProperty(this.state.padding, "tooltip.padding");
-    }
-  }
+  componentDidUpdate(prevState, prevProps) {}
 
   setProperty(value, property) {
-    this.props.setProperty(this.state.padding, "tooltipPadding");
     this.setState(s => ({
       ...s,
       padding: { ...s.padding, [property]: Number(value) }
@@ -54,7 +49,6 @@ class PaddingTooltipInput extends Component {
                 type="number"
                 min="0"
                 defaultValue={this.state.padding.left}
-                param="left"
                 onChange={e => this.setProperty(e.target.value, "left")}
               />
             </div>
@@ -73,7 +67,6 @@ class PaddingTooltipInput extends Component {
                 type="number"
                 min="0"
                 defaultValue={this.state.padding.right}
-                param="right"
                 onChange={e => this.setProperty(e.target.value, "right")}
               />
             </div>
@@ -94,7 +87,6 @@ class PaddingTooltipInput extends Component {
                 type="number"
                 min="0"
                 defaultValue={this.state.padding.top}
-                param="top"
                 onChange={e => this.setProperty(e.target.value, "top")}
               />
             </div>
@@ -113,7 +105,6 @@ class PaddingTooltipInput extends Component {
                 type="number"
                 min="0"
                 defaultValue={this.state.padding.bottom}
-                param="bottom"
                 onChange={e => this.setProperty(e.target.value, "bottom")}
               />
             </div>

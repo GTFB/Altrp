@@ -107,6 +107,26 @@ class Resource {
       return res.json();
     });
   }
+  /**
+   * простой запрос
+   * @return {Promise}
+   * */
+  getAsText() {
+    let options = {
+      method: "get",
+      headers: {
+        "Content-Type": "text/plain"
+      }
+    };
+
+    let url = this.getRoute();
+    return fetch(url, options).then(res => {
+      if (res.ok === false) {
+        return Promise.reject(res.text(), res.status);
+      }
+      return res.text();
+    });
+  }
 
   /**
    * Запрос со строкой для поиска вхождений
@@ -178,7 +198,8 @@ class Resource {
         return res.json();
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
+        return Promise.reject(err.then(), err.status);
         return err.then();
       });
   }

@@ -21,17 +21,25 @@ export const iconTypes = {
   Home: MemoHomeIcon,
   Horse: MemoHorseIcon,
   Pig: MemoPigIcon,
-  Sheep: MemoSheepIcon,
+  Sheep: MemoSheepIcon
 };
 
-export const customIcon = (name = "GoogleMarker", color = "#3388ff", size = [36, 36]) => {
+export const customIcon = (
+  name = "GoogleMarker",
+  color = "#3388ff",
+  size = [36, 36]
+) => {
   // Получаем svg
   let html;
   let Icon = iconTypes[name];
   if (Icon) {
-    html = renderToStaticMarkup(<Icon fill={color} width={size[0]} height={size[1]} />);
+    html = renderToStaticMarkup(
+      <Icon fill={color} width={size[0]} height={size[1]} />
+    );
   } else {
-    html = renderToStaticMarkup(<MemoGoogleMarkerIcon fill={color} width={size[0]} height={size[1]} />);
+    html = renderToStaticMarkup(
+      <MemoGoogleMarkerIcon fill={color} width={size[0]} height={size[1]} />
+    );
   }
   // Возвращаем html-svg иконку
   return new divIcon({ html });

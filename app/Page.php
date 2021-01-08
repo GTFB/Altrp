@@ -551,17 +551,16 @@ class Page extends Model
     } )->map( function( Area $area ){
       return $area->name;
     })->sortBy(function( $area ){
-      if( $area === 'header'){
+      if( $area === 'header' ){
         return 0;
       }
-      if( $area === 'content'){
+      if( $area === 'content' ){
         return 100;
       }
-      if( $area === 'footer'){
+      if( $area === 'footer' ){
         return 200;
       }
       return $area;
-      view('');
     })->toArray();
     if( ! count( $areas ) ){
       return $result;
