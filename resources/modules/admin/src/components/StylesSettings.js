@@ -105,7 +105,7 @@ class StylesSettings extends Component {
             </div>
           )}
         </form>
-        <table>
+        {/* <table>
           <tbody className="admin-settings-table-row">
             <tr className="admin-settings-table-row">
               <td
@@ -123,7 +123,7 @@ class StylesSettings extends Component {
               </td>
             </tr>
           </tbody>
-        </table>
+        </table> */}
       </div>
     );
   }
