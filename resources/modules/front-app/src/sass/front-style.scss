@@ -20,6 +20,7 @@ body {
 
 .admin-bar {
   top: 0;
+  position: absolute;
   height: 25px;
   width: 100%;
   display: flex;
@@ -35,7 +36,7 @@ body {
   font-weight: 400;
   letter-spacing: 0em;
   text-align: left;
-
+  z-index: 1000;
   &__tools {
     display: flex;
   }
@@ -90,6 +91,7 @@ body {
   }
 
   &__popup-popups-items {
+    display: none;
     position: fixed;
     left: 160px;
     width: 150px;
@@ -99,6 +101,9 @@ body {
     background-color: #343B4C;
   }
 
+  &__popup-popups:hover &__popup-popups-items {
+    display: block;
+  }
   &__popup-popups-item {
     padding: 4px 11px;
 
@@ -131,6 +136,7 @@ body {
     height: 100%;
     overflow: auto;
 
+    white-space:pre;
   }
 
   &__search-value {

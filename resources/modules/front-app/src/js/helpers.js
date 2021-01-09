@@ -13,6 +13,7 @@ import { changeAltrpMeta } from "./store/altrp-meta-storage/actions";
 import { useDispatch } from "react-redux";
 import { altrpFontsSet, GOOGLE_FONT } from "./components/FontsManager";
 import queryString from "query-string";
+import AltrpSVG from "../../../editor/src/js/components/altrp-svg/AltrpSVG";
 
 export function getRoutes() {
   return import("./classes/Routes.js");
@@ -177,20 +178,25 @@ export function getWindowWidth() {
 
 export function renderAssetIcon(asset, props = null) {
   if (asset) {
+    if(asset.url && asset.type === 'svg') {
+      return <AltrpSVG {...props} url={asset.url} />;
+    }
     switch (asset.assetType) {
       case "icon": {
-        if(asset.url) {
-          if (window[asset.url]) return window[asset.url];
-          fetch(asset.url)
-            .then(response => response.text())
-            .then(svg => {
-              svg = svg.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
-              window[asset.url] = (<svg {...props} dangerouslySetInnerHTML={{__html: svg }}></svg>);
-            })
-            .catch(console.error.bind(console));
-
-          return window[asset.url];
-        }
+        // if(asset.url) {
+        //   return <AltrpSVG {...props} url={asset.url} />;
+        //   window.assetsCache = window.assetsCache || {};
+        //   if (window.assetsCache[asset.url]) return window[asset.url];
+        //   fetch(asset.url)
+        //     .then(response => response.text())
+        //     .then(svg => {
+        //       svg = svg.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+        //       window[asset.url] = (<svg {...props} dangerouslySetInnerHTML={{__html: svg }}></svg>);
+        //     })
+        //     .catch(console.error.bind(console));
+        //
+        //   return window[asset.url];
+        // }
         return iconsManager().renderIcon(asset.name);
       }
       case "image": {
@@ -201,7 +207,7 @@ export function renderAssetIcon(asset, props = null) {
       }
     }
   }
-  return "";
+  return  '';
 }
 
 /**
@@ -211,6 +217,9 @@ export function renderAssetIcon(asset, props = null) {
  * @throws Исключение если иконка не найдена
  * */
 export function renderAsset(asset, props = null) {
+  if(asset.url && asset.type === 'svg') {
+    return <AltrpSVG {...props} url={asset.url} />;
+  }
   if (asset instanceof File) {
     let refImg = React.createRef();
     let fr = new FileReader();
