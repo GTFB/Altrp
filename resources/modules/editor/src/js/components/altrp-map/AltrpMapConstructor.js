@@ -19,7 +19,9 @@ function AltrpMapConstructor({ settings, id }) {
     centerByDatasource = false,
     style_height = {},
     style_margin = {},
-    objects = {}
+    objects = {},
+    url,
+    field_id
   } = settings;
   let latitude = lat;
   let longitude = lng;
@@ -33,6 +35,19 @@ function AltrpMapConstructor({ settings, id }) {
     latitude = latDatasource;
     longitude = lngDatasource;
   }
+
+  const featuredObjectsFromModel = useMemo(async () => {
+    const response = await axios.get(url);
+    const data = response.data.data.map(item => {
+      const dbID = _.get(item, "id");
+      const responseItem = JSON.parse(_.get(item, field_id));
+      const result = responseItem;
+      result["dbID"] = dbID;
+      return result;
+    });
+    return data;
+  }, [url, field_id]);
+
   const dynamicGeoObjectsRepeater = useMemo(() => {
     if (_.keys(objects).length > 0) {
       return objects
@@ -89,12 +104,14 @@ function AltrpMapConstructor({ settings, id }) {
   }, [objects, currentDataStorage]);
   // Сохраняем данные карты
   const handleSave = data => {
-    axios.post(`/ajax/maps/${id}`, {
-      data: JSON.stringify({
-        type: "FeatureCollection",
-        features: data.features.filter(item => typeof item.id !== "undefined")
-      })
-    });
+    if (typeof url === "undefined" || url === null) {
+      axios.post(`/ajax/maps/${id}`, {
+        data: JSON.stringify({
+          type: "FeatureCollection",
+          features: data.features.filter(item => typeof item.id !== "undefined")
+        })
+      });
+    }
   };
 
   const getData = useCallback(
@@ -125,9 +142,34 @@ function AltrpMapConstructor({ settings, id }) {
     [id]
   );
 
+  const getDataFromModel = useCallback(
+    async (featuredFromModel, dynamicGeoObjects) => {
+      if (url !== null) {
+        try {
+          setIsLoading(true);
+          const dataFromModel = await featuredFromModel;
+          const repeaterObjects = dynamicGeoObjects;
+          let result = dataFromModel;
+          result = result.concat(repeaterObjects);
+          setGeoJson({
+            type: "FeatureCollection",
+            features: result
+          });
+          setIsLoading(false);
+        } catch (error) {}
+      } else {
+        return false;
+      }
+    },
+    [url]
+  );
   // При изменении карты подгружаем новые данные
   useEffect(() => {
-    getData(id, dynamicGeoObjectsRepeater);
+    if (typeof url !== "undefined" && url != "" && url !== null) {
+      getDataFromModel(featuredObjectsFromModel, dynamicGeoObjectsRepeater);
+    } else {
+      getData(id, dynamicGeoObjectsRepeater);
+    }
   }, [id, dynamicGeoObjectsRepeater]);
 
   return (
@@ -145,6 +187,8 @@ function AltrpMapConstructor({ settings, id }) {
       isEditable={editable}
       preferCanvas={canvas}
       zoom={+zoom}
+      url={url}
+      field_id={field_id}
       center={[latitude || 50.7496449, longitude || 86.1250068]}
     />
   );
