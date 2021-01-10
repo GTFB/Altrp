@@ -17,14 +17,14 @@ class PageLoader {
    * @return {Promise}
    */
   async loadPage(pageId) {
-    if (_.isObject(this.pagesStorage[pageId])) {
+    if (_.isObject(window.pageStorage[pageId])) {
       // return new Promise((resolve, reject)=>{
       //   resolve(this.pagesStorage[pageId]);
       // });
-      return this.pagesStorage[pageId];
+      return window.pageStorage[pageId];
     }
-    let page = await this.resource.get(pageId);
-    this.pagesStorage[pageId] = page;
+    let page = await window.resource.get(pageId);
+    window.pageStorage[pageId] = page;
     return page;
   }
 }
