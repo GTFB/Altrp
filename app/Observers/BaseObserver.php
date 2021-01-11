@@ -20,7 +20,7 @@ class BaseObserver
             foreach ($noticeSettings as $setting) {
 
                 foreach ($setting->conditions as $condition) {
-                  //todo: сообщение отправляется если ВСЕ активные conditions выполяются, а какое-то одно
+                  //todo: сообщение отправляется если ВСЕ активные conditions выполяются, а не одно
                   // если активных conditions нет, то сообщение отправляется
 
                     if ($condition->enabled) {
@@ -36,7 +36,9 @@ class BaseObserver
                         }
                         $str = "return " . implode(" $type ", $compares) . ";";
 
+
                         $cond = eval($str);
+
                         if ($cond) {
                             $this->send($setting->noticed, $model, $setting, $otherData);
                         }

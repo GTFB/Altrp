@@ -73,7 +73,6 @@ class CommonNotification extends Notification implements ShouldQueue
         if ($this->parsedNoticeSettings->send->email->enabled) {
             $via[] = 'mail';
         }
-
         return $via;
     }
 
