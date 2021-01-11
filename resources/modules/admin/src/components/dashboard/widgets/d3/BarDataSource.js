@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ResponsiveBar } from "@nivo/bar";
+import { ResponsiveBarCanvas } from "@nivo/bar";
 import { connect } from "react-redux";
 import ErrorBoundary from "./ErrorBoundary";
 import DataAdapter from "./DataAdapter";
@@ -80,7 +80,7 @@ class BarDataSource extends Component {
     }
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     await this.getData();
   }
 
@@ -140,7 +140,7 @@ class BarDataSource extends Component {
       return (
         <>
           <ErrorBoundary>
-            <ResponsiveBar
+            <ResponsiveBarCanvas
               data={data}
               indexBy="key"
               enableLabel={this.state.settings?.enableSliceLabels}
@@ -212,7 +212,7 @@ class BarDataSource extends Component {
                     }
                   : null
               }
-              animate={Boolean(this.state.settings?.enableAnimation) || false}
+              animate={false}
               motionDamping={this.state.settings?.animationMotionDamping}
               motionStiffness={this.state.settings?.animationMotionStiffness}
               legends={

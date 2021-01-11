@@ -1,5 +1,5 @@
 import modelManager from "../../../../editor/src/js/classes/modules/ModelsManager";
-import {conditionsChecker, getDataByPath, isEditor, replaceContentWithData} from "../helpers";
+import {conditionsChecker, getConverter, getDataByPath, isEditor, replaceContentWithData} from "../helpers";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 
 /**
@@ -9,7 +9,7 @@ function componentWillUnmount(){
   // if(this.model){
   //   this.model.uns
   // }
-  actionsManager.unregisterWidgetActions(this.props.element.getIdForAction());
+  window.actionsManager && actionsManager.unregisterWidgetActions(this.props.element.getIdForAction());
   if(! this.props.element.dynamicContentSettings){
     return
   }
@@ -130,17 +130,14 @@ function subscribeToModels(id){
  * только учти, что пока данные не обновились с сервера, он вернет пустую строку,
  * так что лучше его использовать, если в данной настройке хранится строка
  * @param {string} settingName
+ * @param {boolean} returnRaw - возврщать ли объект в том виде, в котором он хранится (если false, возвращаем строку)
  * @return {*}
  */
-function getContent(settingName) {
+function getContent(settingName, returnRaw = false) {
   /**
    * @member {FrontElement} element
    */
   const element = this.props.element;
-  /**
-   * @property this.props.element
-   * @type {FrontElement}
-   */
  // return this.props.element.getContent(settingName);
 
   let content = this.props.element.getSettings(settingName);
@@ -152,7 +149,12 @@ function getContent(settingName) {
   }
   if((! isEditor())){//todo: сделать подгрузку данных и в редакторе
     let model = element.hasCardModel() ? element.getCardModel() : this.props.currentModel;
-    content = replaceContentWithData(content, model);
+    if(returnRaw){
+      content = content.trim().replace('{{', '').replace('}}', '');
+      content = getDataByPath(content, content, model);
+    } else {
+      content = replaceContentWithData(content, model);
+    }
     // let paths = _.isString(content) ? content.match(/{{([\s\S]+?)(?=}})/g) : null;
     // if(_.isArray(paths)){
     //   paths.forEach(path => {
@@ -161,11 +163,17 @@ function getContent(settingName) {
     //     content = content.replace(new RegExp(`{{${path}}}`, 'g'), value)
     //   });
     // }
+
+    const contentDynamicSetting = this.props.element.getDynamicSetting('content_default_value');
+
+    if(contentDynamicSetting){
+      const converter = getConverter(contentDynamicSetting);
+      content = converter.convertData(content);
+    }
   }
   if(content && content.dynamic){
     content = '';
   }
-  
   return content === 'null' ? '' : content;
 }
 /**

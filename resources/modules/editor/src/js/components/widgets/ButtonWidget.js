@@ -53,7 +53,9 @@ class ButtonWidget extends Component {
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
         )
       ).default;
-      await actionsManager.callAllWidgetActions(this.props.element.getIdForAction());
+      await actionsManager.callAllWidgetActions(
+        this.props.element.getIdForAction()
+      );
     } else if (this.props.element.getForms().length) {
       this.setState(state => ({ ...state, pending: true }));
       this.props.element.getForms().forEach(

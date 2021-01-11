@@ -31,7 +31,7 @@ class DashboardsWidget extends Component {
     }
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     try {
       const id = this.props.element.getId();
       const req = await axios.get(`/ajax/dashboards/datasource/${id}/data`, {
