@@ -38,6 +38,8 @@ class FrontApp extends Component {
     pusherKey = pusherKey?.pusher_app_key;
     websocketsPort = websocketsPort?.websockets_port;
 
+    console.log(websocketsPort);
+
     // Проверка наличия ключа и порта
     if(pusherKey && websocketsPort){
       try {
@@ -51,7 +53,7 @@ class FrontApp extends Component {
           disableStats: true
         });
         console.log("Вебсокеты включены");
-        
+
       } catch (error) {
         console.log(error);
       }

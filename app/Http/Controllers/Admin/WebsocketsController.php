@@ -22,14 +22,16 @@ class WebsocketsController extends Controller
         $reset = $request->get('reset');
 
         // сброс соединения (на всякий случай)
-        $exit_code = Artisan::call('websockets:restart');
+        $exit_code = Artisan::call('websockets:restart');        
 
-        if($reset) $this->resetCount();           
+        if($reset) $this->resetCount(); 
 
         if ($enadled){
             try{
+                $checkPusher = $this->checkPusher();
                 $checkKey = $this->checkKey();
 
+                if(!$checkPusher) return response()->json(['error'=> "Ошибка записи данных пушера в env"], 500, [],JSON_UNESCAPED_UNICODE);
                 if(!$checkKey) return response()->json(['error'=> "Ошибка проверки ключа"], 500, [],JSON_UNESCAPED_UNICODE);
                 
                 // очистка кэша
@@ -49,12 +51,13 @@ class WebsocketsController extends Controller
                         $exit_code = Artisan::call('config:clear');
                   
                     } catch (Exception $e){
-                        return response()->json(['error'=> `Ошибка записи ${$item_port}`], 500, [],JSON_UNESCAPED_UNICODE);
+                        return response()->json(['error'=> "Ошибка записи $item_port"], 500, [],JSON_UNESCAPED_UNICODE);
                     }
                     
-                    $exit_code = Artisan::call( 'websockets:serve' );
+                    $exit_code1 = Artisan::call( 'websockets:serve' );
+
                 } else {
-                    $exit_code = Artisan::call( 'websockets:serve --port=' . $port );
+                    $exit_code1 = Artisan::call( 'websockets:serve --port=' . $port );
                 }
 
             }
@@ -63,7 +66,7 @@ class WebsocketsController extends Controller
             }    
         } else {
             try{
-                $exit_code = Artisan::call('websockets:restart');
+                $exit_code1 = Artisan::call('websockets:restart');
             }
             catch(Exception $e){
                 return response()->json(['error'=> "Ошибка остановки вебсокет-сервера"], 500, [],JSON_UNESCAPED_UNICODE);
@@ -98,13 +101,45 @@ class WebsocketsController extends Controller
         if(empty($key)) {
             try{
                 DotenvEditor::setKey( $item_key, "12345678" );
-                DotenvEditor::save();
-          
+                DotenvEditor::save();          
+            } catch (Exception $e){
+                return false;
+            }          
+        }
+        return true;
+    }
+
+    // Проверка наличия id и secret пушера
+    public function checkPusher(){
+
+        $app_id = 'PUSHER_APP_ID';
+        $app_secret = 'PUSHER_APP_SECRET';
+        $app_cluster = 'PUSHER_APP_CLUSTER';
+     
+        if( !DotenvEditor::keyExists( $app_id ) ){
+            try{
+                DotenvEditor::setKey( $app_id, time() );
+                DotenvEditor::save();          
             } catch (Exception $e){
                 return false;
             }
-          
         }
+        if( !DotenvEditor::keyExists( $app_secret ) ){
+            try{
+                DotenvEditor::setKey( $app_secret, time() );
+                DotenvEditor::save();          
+            } catch (Exception $e){
+                return false;
+            }
+        }
+        if( !DotenvEditor::keyExists( $app_cluster ) ){
+            try{
+                DotenvEditor::setKey( $app_cluster, 'mt1' );
+                DotenvEditor::save();          
+            } catch (Exception $e){
+                return false;
+            }
+        }        
         return true;
     }
 
