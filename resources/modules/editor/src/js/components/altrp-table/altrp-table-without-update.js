@@ -373,7 +373,6 @@ function AltrpTableWithoutUpdate(
           // The header can use the table's getToggleAllRowsSelectedProps method
           // to render a checkbox
           column_name: ({ getToggleAllRowsSelectedProps, getToggleAllPageRowsSelectedProps }) => {
-            // console.log(row_select_width);
             if ((!settings.inner_page_size) || (settings.inner_page_size < 0) || row_select_all) {
               return (
                 <div className="altrp-toggle-row">
@@ -477,7 +476,6 @@ function AltrpTableWithoutUpdate(
   /**
    * END настройки таблицы, свызов хука таблицы
    */
-  // console.log(ReactTable);
   const {
     getTableProps,
     getTableBodyProps,
@@ -1467,7 +1465,6 @@ const Row = ({ row,
   //       })}
   //     </tr>
   // );
-  // console.log(style);
   const rowStyles = React.useMemo(() => {
     if (!resize_columns && !virtualized_rows) {
       return {};

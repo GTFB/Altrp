@@ -507,7 +507,9 @@ button {
     width: 100%;
     margin-bottom: 5px;
 }
-
+.controller-media__asset_svg{
+  height: 100%;
+}
 .controller-media {
     &-choose {
         position: relative;
@@ -521,7 +523,7 @@ button {
         background-color: $light-gray;
         cursor: pointer;
         overflow: hidden;
-        & .asset_media {
+        & .controller-media__asset_media {
             object-position: center;
             object-fit: contain;
         }

@@ -117,7 +117,6 @@ const AltrpQueryComponent = (props)=>{
     }
     return data;
   }, [data]);
-  console.log(finalData);
   const childrenProps = {...props,
     data: finalData,
     _status,

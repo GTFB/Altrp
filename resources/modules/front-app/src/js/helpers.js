@@ -13,6 +13,8 @@ import { changeAltrpMeta } from "./store/altrp-meta-storage/actions";
 import { useDispatch } from "react-redux";
 import { altrpFontsSet, GOOGLE_FONT } from "./components/FontsManager";
 import queryString from "query-string";
+import AltrpSVG from "../../../editor/src/js/components/altrp-svg/AltrpSVG";
+import ArrayConverter from "./classes/converters/ArrayConverter";
 
 export function getRoutes() {
   return import("./classes/Routes.js");
@@ -177,20 +179,25 @@ export function getWindowWidth() {
 
 export function renderAssetIcon(asset, props = null) {
   if (asset) {
+    if(asset.url && asset.type === 'svg') {
+      return <AltrpSVG {...props} url={asset.url} />;
+    }
     switch (asset.assetType) {
       case "icon": {
-        if(asset.url) {
-          if (window[asset.url]) return window[asset.url];
-          fetch(asset.url)
-            .then(response => response.text())
-            .then(svg => {
-              svg = svg.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
-              window[asset.url] = (<svg {...props} dangerouslySetInnerHTML={{__html: svg }}></svg>);
-            })
-            .catch(console.error.bind(console));
-
-          return window[asset.url];
-        }
+        // if(asset.url) {
+        //   return <AltrpSVG {...props} url={asset.url} />;
+        //   window.assetsCache = window.assetsCache || {};
+        //   if (window.assetsCache[asset.url]) return window[asset.url];
+        //   fetch(asset.url)
+        //     .then(response => response.text())
+        //     .then(svg => {
+        //       svg = svg.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+        //       window[asset.url] = (<svg {...props} dangerouslySetInnerHTML={{__html: svg }}></svg>);
+        //     })
+        //     .catch(console.error.bind(console));
+        //
+        //   return window[asset.url];
+        // }
         return iconsManager().renderIcon(asset.name);
       }
       case "image": {
@@ -201,7 +208,7 @@ export function renderAssetIcon(asset, props = null) {
       }
     }
   }
-  return "";
+  return  '';
 }
 
 /**
@@ -211,6 +218,9 @@ export function renderAssetIcon(asset, props = null) {
  * @throws Исключение если иконка не найдена
  * */
 export function renderAsset(asset, props = null) {
+  if(asset.url && asset.type === 'svg') {
+    return <AltrpSVG {...props} url={asset.url} />;
+  }
   if (asset instanceof File) {
     let refImg = React.createRef();
     let fr = new FileReader();
@@ -266,13 +276,16 @@ export function parseParamsFromString(
   context = {},
   allowObject = false
 ) {
+  if(! (context instanceof AltrpModel)){
+    context = new AltrpModel(context);
+  }
   const params = {};
   const urlParams =
     window.currentRouterMatch instanceof AltrpModel
       ? window.currentRouterMatch.getProperty("params")
       : {};
 
-  if (!string) {
+  if (! string) {
     return params;
   }
   const lines = string.split("\n");
@@ -466,7 +479,7 @@ export function setDataByPath(path = "", value, dispatch = null) {
  * Получить данные из окружения
  * @param {string} path
  * @param {*} _default
- * @param {AltrpModel} context
+ * @param {{} | AltrpModel | null} context
  * @param {boolean} altrpCheck - проверять ли altrp
  * @return {*}
  */
@@ -567,7 +580,6 @@ export function extractPathFromString(string = "") {
   }
   return path;
 }
-
 /**
  * Возвращает новый объект из свояств объекта, в именах которых присутствует префикс prefix
  * @param {string} prefix - строка для поиска (например 'test')
@@ -1448,12 +1460,24 @@ export function isAltrpTestMode() {
   return window.location.href.indexOf("altrp-test=true") > 0;
 }
 
+/**
+ * лучайная строка
+ * @return {string}
+ */
 export function altrpRandomId() {
   return Math.random()
     .toString(36)
     .substr(2, 9);
 }
 
+/**
+ * Кнопки для пагинации
+ * @param pageIndex
+ * @param pageCount
+ * @param first_last_buttons_count
+ * @param middle_buttons_count
+ * @return {*[]}
+ */
 export function generateButtonsArray(pageIndex, pageCount, first_last_buttons_count, middle_buttons_count) {
   const buttonsSum = first_last_buttons_count + middle_buttons_count;
   const lastButtons = Array.from({ length: first_last_buttons_count }, (_, i) => pageCount - i - 1).reverse();
@@ -1471,4 +1495,32 @@ export function generateButtonsArray(pageIndex, pageCount, first_last_buttons_co
 
 export function isValueMatchMask (value, mask) {
   return value.length && value.split("").every((char, index) => char === mask[index] || char.match(mask[index]));
+}
+
+/**
+ * Преобразование данных
+ * @param {*} data
+ * @param {{} | []} settings
+ * @return {*}
+ */
+export function convertData(data, settings) {
+  if(! _.isArray(settings)) {
+    for(let item of settings){
+      if(_.isEmpty(item)){
+        continue;
+      }
+      data = convertData(data, item)
+    }
+  }
+
+  return data;
+}
+
+/**
+ * Вернуть экземпляр конвертера необходимого типа (array - ArrayConverter и т. д.)
+ */
+export function getConverter(data){
+  switch(data.data_type){
+      case 'array': return new ArrayConverter(data);
+  }
 }
