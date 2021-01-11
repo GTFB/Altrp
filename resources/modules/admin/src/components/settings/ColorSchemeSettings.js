@@ -1,11 +1,10 @@
 import { Component } from "react";
-import { SketchPicker } from "react-color";
-
+import ColorPallet from "./ColorPallet";
 class ColorSchemeSettings extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      colorCount: 0,
+      counter: 0,
       colorsObjects: [],
       colorSchemeName: ""
     };
@@ -22,9 +21,6 @@ class ColorSchemeSettings extends Component {
   submitHandler(e) {
     e.preventDefault();
     e.stopPropagation();
-    console.log("====================================");
-    console.log(e.target);
-    console.log("====================================");
   }
 
   /**
@@ -33,43 +29,56 @@ class ColorSchemeSettings extends Component {
   addButton = e => {
     e.preventDefault();
     e.stopPropagation();
-    let count = this.state.colorCount;
-    count += 1;
-    this.setState({ colorCount: count });
+    const length = this.state.counter + 1;
+    const defaultColorSettings = {
+      color: "#fff",
+      id: Number(length)
+    };
+    let colors = _.cloneDeep(this.state.colorsObjects, []);
+    colors.push(defaultColorSettings);
+    this.setState(s => ({ ...s, colorsObjects: colors, counter: length }));
   };
 
   /**
    * @param {Event} e
-   */
-  deleteButton(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    let count = this.state.colorCount;
-    count -= 1;
-    this.setState({ colorCount: count });
-  }
-
-  /**
-   * @param {import("react-color").ColorResult} color
    * @param {Number} i
    */
-  colorChangeHander(color, i) {
-    const hex = color.hex;
-    const colorObject = {
-      color: hex,
-      id: i
-    };
+  deleteButton(e, i) {
+    console.log("====================================");
+    console.log(i);
+    console.log("====================================");
+    e.preventDefault();
+    e.stopPropagation();
     let objects = this.state.colorsObjects;
     let match = _.findIndex(objects, item => item.id === i) !== -1;
     if (!match) {
-      objects.push(colorObject);
+      return;
     } else {
-      objects[i] = colorObject;
+      objects.splice(i, 1);
     }
-    console.log("====================================");
-    console.log(match);
-    console.log(objects);
-    console.log("====================================");
+    this.setState(s => ({
+      ...s,
+      colorsObjects: objects
+    }));
+  }
+
+  /**
+   * @param {String} color
+   * @param {Number} i
+   */
+  colorChangeHander(color, i) {
+    const hex = color;
+    let objects = _.cloneDeep(this.state.colorsObjects, []);
+    let match = _.findIndex(objects, item => item.id === i) !== -1;
+    if (!match) {
+      return;
+    } else {
+      // _.get(objects, { id: i }).color = hex;
+      this.setState(s => ({
+        ...s,
+        colorsObjects: objects
+      }));
+    }
   }
 
   /**
@@ -78,6 +87,9 @@ class ColorSchemeSettings extends Component {
   inputHandler = e => this.setState({ colorSchemeName: e.target?.value });
 
   render() {
+    console.log("====================================");
+    console.log(this.state.colorsObjects);
+    console.log("====================================");
     return (
       <>
         <form onSubmit={this.submitHandler} method="post">
@@ -97,22 +109,14 @@ class ColorSchemeSettings extends Component {
           </button>
           <input type="hidden" name="colors" value={this.state.colors} />
           <div className="row mb-5">
-            {_.times(this.state.colorCount, i => (
-              <React.Fragment key={i}>
-                <div className="col mb-2">
-                  <span
-                    style={{
-                      cursor: "pointer"
-                    }}
-                    onClick={this.deleteButton}
-                  >
-                    X
-                  </span>
-                  <SketchPicker
-                    onChange={color => this.colorChangeHander(color, i)}
-                    color={this.state.colorsObjects?.color}
-                  />
-                </div>
+            {this.state.colorsObjects.map((item, index) => (
+              <React.Fragment key={index}>
+                <ColorPallet
+                  id={item.id}
+                  color={item.color || "#fff"}
+                  colorChangeHander={this.colorChangeHander}
+                  deleteButton={this.deleteButton}
+                />
               </React.Fragment>
             ))}
           </div>
