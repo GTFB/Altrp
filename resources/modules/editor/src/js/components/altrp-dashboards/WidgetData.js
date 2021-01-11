@@ -143,6 +143,7 @@ class WidgetData extends Component {
           params={_.cloneDeep(this.state.el.settings?.params)}
           type={_.cloneDeep(this.state.el.settings?.type)}
           sources={_.cloneDeep(this.state.el.settings?.sources)}
+          widgetID={this.props.widgetID}
         />
       </div>
     );

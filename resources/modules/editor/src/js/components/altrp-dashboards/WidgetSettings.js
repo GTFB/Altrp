@@ -587,7 +587,11 @@ class WidgetSettings extends Component {
             aria-expanded={this.state.openTooltipSettings}
           >
             <div className="collapse-button-content">
-              <div>Настройки подсказок</div>
+              <div 
+                className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font altrp-dashboard__drawer--font-margin`}
+              >
+              Настройки подсказок
+              </div>
               <div>
                 {!this.state.openTooltipSettings ? <ArrowDown /> : <ArrowUp />}
               </div>
