@@ -371,6 +371,38 @@ class Input extends BaseElement {
     }
     );
 
+    this.addControl('label_icon', {
+      type: CONTROLLER_MEDIA,
+      label: 'Choose Icon',
+    });
+
+    this.addControl('label_icon_position', {
+      type: CONTROLLER_SELECT,
+      label: 'Icon Position',
+      default: 'default',
+      options: [
+        {
+          value: 'row',
+          label: 'Right'
+        },
+        {
+          value: 'row-reverse',
+          label: 'Left'
+        },
+        {
+          value: 'column',
+          label: 'Bottom'
+        },
+        {
+          value: 'column-reverse',
+          label: 'Top'
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-field-label-container{{STATE}}': 'flex-direction: {{VALUE}};'
+      },
+    });
+
     this.addControl('content_placeholder', {
       type: CONTROLLER_TEXT,
       label: 'Placeholder',
@@ -852,6 +884,50 @@ class Input extends BaseElement {
       rules: {
         "{{ELEMENT}} .altrp-field-label-container{{STATE}}": 'width: {{SIZE}}%; flex-shrink: 0;'
       }
+    });
+
+    this.addControl('icon_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Icon Padding',
+      units: ['px', '%', 'vh', 'vw'],
+      rules: {
+        '{{ELEMENT}} .altrp-label-icon{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('icon_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Icon color',
+      rules: {
+        '{{ELEMENT}} .altrp-label-icon path{{STATE}}': 'fill: {{COLOR}};',
+      },
+    });
+
+    this.addControl('icon_color_background', {
+      type: CONTROLLER_COLOR,
+      label: 'Background Color',
+      rules: {
+        '{{ELEMENT}} .altrp-label-icon svg{{STATE}}': 'background: {{COLOR}};',
+      },
+    }
+    );
+
+    this.addControl('icon_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Icon Size',
+      units: ['px', '%', 'vh', 'vw'],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-label-icon{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-label-icon svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-label-icon img{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      },
     });
 
     this.addControl('cross_color', {
