@@ -23,7 +23,7 @@ class PageLoader {
       // });
       return window.pageStorage[pageId];
     }
-    let page = await window.resource.get(pageId);
+    let page = await this.resource.get(pageId);
     window.pageStorage[pageId] = page;
     return page;
   }
