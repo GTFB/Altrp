@@ -95,7 +95,7 @@ class MarginInput extends Component {
                 Слева:
               </div>
               <input
-                className="form-control"
+               className={`${this.props.widgetID} altrp-dashboard__drawer--font-input`}
                 style={{
                   width: "100%"
                 }}
@@ -114,7 +114,7 @@ class MarginInput extends Component {
                 Справа:
               </div>
               <input
-                className="form-control"
+                className={`${this.props.widgetID} altrp-dashboard__drawer--font-input`}
                 style={{
                   width: "100%"
                 }}
@@ -135,7 +135,7 @@ class MarginInput extends Component {
                 Сверху:
               </div>
               <input
-                className="form-control"
+                 className={`${this.props.widgetID} altrp-dashboard__drawer--font-input`}
                 style={{
                   width: "100%"
                 }}
@@ -154,7 +154,7 @@ class MarginInput extends Component {
                 Снизу:
               </div>
               <input
-                className="form-control"
+                className={`${this.props.widgetID} altrp-dashboard__drawer--font-input`}
                 style={{
                   width: "100%"
                 }}

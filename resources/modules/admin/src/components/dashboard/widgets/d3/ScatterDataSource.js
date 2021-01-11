@@ -79,7 +79,7 @@ class ScatterDataSource extends Component {
     }
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     await this.getData();
   }
 
