@@ -5,6 +5,8 @@ import {
   POINT,
   BAR
 } from "../../../../../../admin/src/components/dashboard/widgetTypes";
+import Checkbox from '@material-ui/core/Checkbox';
+import Slider from '@material-ui/core/Slider';
 
 const mapStateToProps = state => {
   return { editElement: _.cloneDeep(state.editElement) };
@@ -49,13 +51,14 @@ class AnimationSettings extends Component {
               >
                 Включить анимацию
               </div>
-              <input
-                type="checkbox"
-                defaultChecked={
+              <Checkbox
+              disableRipple={true}
+              className={`${this.props.widgetID} altrp-dashboard__checkboxcolor`}
+              defaultChecked={
                   this.props.editElement?.settings?.enableAnimation
                 }
-                checked={this.props.editElement?.settings?.enableAnimation}
-                onChange={this.setAnimationEnable}
+              checked={this.props.editElement?.settings?.enableAnimation}
+              onChange={this.setAnimationEnable}
               />
             </div>
           )}
@@ -68,22 +71,19 @@ class AnimationSettings extends Component {
                 >
                   Жесткость движения
                 </div>
-                <input
+                <Slider
+                  className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                   defaultValue={
                     this.state.editElement?.settings
                       ?.animationMotionStiffness ||
                     this.state.animationMotionStiffness
                   }
-                  onChange={e =>
-                    this.setProperty(
-                      Number(e.target.value),
-                      "animationMotionStiffness"
-                    )
+                  onChange={(e, newValue) =>
+                    this.setProperty(Number(newValue), "animationMotionStiffness")
                   }
-                  type="range"
-                  min="0"
-                  max="90"
-                  step="1"
+                  min={0}
+                  max={90}
+                  step={1}
                 />
                 (
                 {this.state.editElement?.settings?.animationMotionStiffness ||
@@ -96,21 +96,18 @@ class AnimationSettings extends Component {
                 >
                   Затухаение движения
                 </div>
-                <input
+                <Slider
+                  className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
                   defaultValue={
                     this.state.editElement?.settings?.animationMotionDamping ||
                     this.state.animationMotionDamping
                   }
-                  onChange={e =>
-                    this.setProperty(
-                      Number(e.target.value),
-                      "animationMotionDamping"
-                    )
+                  onChange={(e, newValue) =>
+                    this.setProperty(Number(newValue), "animationMotionDamping")
                   }
-                  type="range"
-                  min="0"
-                  max="40"
-                  step="1"
+                  min={0}
+                  max={40}
+                  step={1}
                 />
                 (
                 {this.state.editElement?.settings?.animationMotionDamping ||

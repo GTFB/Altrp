@@ -8,6 +8,7 @@ class AddItemButton extends Component {
   render() {
     return (
       <button
+        className={`altrp-btn-draw`}
         style={{
           margin: "5px 5px 5px 5px"
         }}
