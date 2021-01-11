@@ -4,21 +4,29 @@ import L from "leaflet";
 import { iconTypes, customIcon } from "./DivIcon";
 import tooltipOptions from "./helpers/tooltipOptions";
 
-const ModalControl = ({ selected, state, open, onClose, setState, fg }) => {
+const ModalControl = ({
+  selected,
+  state,
+  open,
+  onClose,
+  setState,
+  fg,
+  updateGeoObjectToModel
+}) => {
   const colors = ["#3388ff", "#dc3545", "#28a745", "#ffc107", "#6c757d"];
   const icons = Object.keys(iconTypes);
   const [properties, setProperties] = useState({});
 
   useLayoutEffect(() => {
     if (selected) {
-      const feature = state.features.filter((item) => item.id === selected);
+      const feature = state.features.filter(item => item.id === selected);
       if (feature.length > 0) {
         setProperties(feature[0].properties);
       }
     }
   }, [selected, state.features]);
 
-  const getId = (layer) => {
+  const getId = layer => {
     if (layer.feature?.id) {
       return layer.feature.id;
     } else {
@@ -28,7 +36,7 @@ const ModalControl = ({ selected, state, open, onClose, setState, fg }) => {
 
   const getLayer = () => {
     let layer;
-    fg.leafletElement.eachLayer((item) => {
+    fg.leafletElement.eachLayer(item => {
       if (selected === getId(item)) {
         layer = item;
       }
@@ -38,9 +46,12 @@ const ModalControl = ({ selected, state, open, onClose, setState, fg }) => {
 
   // Сохраняем все настройки
   const saveSettings = () => {
-    const features = state.features.map((item) => {
+    const features = state.features.map(item => {
       if (item.id === selected) {
         item.properties = properties;
+        if (typeof item.dbID !== "undefined" && item.dbID !== null) {
+          updateGeoObjectToModel(item);
+        }
       }
       return item;
     });
@@ -49,7 +60,7 @@ const ModalControl = ({ selected, state, open, onClose, setState, fg }) => {
   };
 
   //Меняем цвет заливки
-  const handleFillColor = (hex) => {
+  const handleFillColor = hex => {
     setProperties({ ...properties, fillColor: hex });
     const layer = getLayer();
     if (layer instanceof L.Marker) {
@@ -60,7 +71,7 @@ const ModalControl = ({ selected, state, open, onClose, setState, fg }) => {
   };
 
   //Меняем цвет границы
-  const handleColor = (hex) => {
+  const handleColor = hex => {
     setProperties({ ...properties, color: hex });
     const layer = getLayer();
     if (layer instanceof L.Marker) {
@@ -70,13 +81,13 @@ const ModalControl = ({ selected, state, open, onClose, setState, fg }) => {
     }
   };
 
-  const handleIcon = (name) => {
+  const handleIcon = name => {
     setProperties({ ...properties, icon: name });
     const layer = getLayer();
     layer.setIcon(customIcon(name, properties.fillColor));
   };
 
-  const handleTooltip = (event) => {
+  const handleTooltip = event => {
     setProperties({ ...properties, tooltip: event.target.value });
     const layer = getLayer();
     if (layer.getTooltip()) {
@@ -86,7 +97,7 @@ const ModalControl = ({ selected, state, open, onClose, setState, fg }) => {
     }
   };
 
-  const handlePopup = (event) => {
+  const handlePopup = event => {
     setProperties({ ...properties, popup: event.target.value });
     const layer = getLayer();
     if (layer.getTooltip()) {
@@ -96,7 +107,7 @@ const ModalControl = ({ selected, state, open, onClose, setState, fg }) => {
     }
   };
 
-  const handleFillOpacity = (event) => {
+  const handleFillOpacity = event => {
     setProperties({ ...properties, fillOpacity: event.target.value });
     const layer = getLayer();
     if (layer instanceof L.Marker) {
@@ -106,7 +117,7 @@ const ModalControl = ({ selected, state, open, onClose, setState, fg }) => {
     }
   };
 
-  const renderOption = (name) => {
+  const renderOption = name => {
     let Icon = iconTypes[name];
     return (
       <button
@@ -130,7 +141,11 @@ const ModalControl = ({ selected, state, open, onClose, setState, fg }) => {
         <div className="modal__body-text">
           <label>
             Подпись
-            <input type="text" value={properties.tooltip} onChange={handleTooltip} />
+            <input
+              type="text"
+              value={properties.tooltip}
+              onChange={handleTooltip}
+            />
           </label>
         </div>
         <div className="modal__body-text">
@@ -147,9 +162,11 @@ const ModalControl = ({ selected, state, open, onClose, setState, fg }) => {
                 key={key}
                 type="button"
                 style={{
-                  backgroundColor: item,
+                  backgroundColor: item
                 }}
-                className={`color ${item === properties.fillColor ? "active" : ""}`}
+                className={`color ${
+                  item === properties.fillColor ? "active" : ""
+                }`}
                 onClick={() => handleFillColor(item)}
               />
             ))}
@@ -163,7 +180,7 @@ const ModalControl = ({ selected, state, open, onClose, setState, fg }) => {
                 key={key}
                 type="button"
                 style={{
-                  backgroundColor: item,
+                  backgroundColor: item
                 }}
                 className={`color ${item === properties.color ? "active" : ""}`}
                 onClick={() => handleColor(item)}
@@ -187,9 +204,15 @@ const ModalControl = ({ selected, state, open, onClose, setState, fg }) => {
           </div>
         )}
         {properties.icon && (
-          <div className="modal__body-icon">{icons.map((name) => renderOption(name))}</div>
+          <div className="modal__body-icon">
+            {icons.map(name => renderOption(name))}
+          </div>
         )}
-        <button type="button" className="modal__body-save" onClick={saveSettings}>
+        <button
+          type="button"
+          className="modal__body-save"
+          onClick={saveSettings}
+        >
           Сохранить
         </button>
       </div>

@@ -25,9 +25,7 @@ function AltrpMapConstructor({ settings, id }) {
   } = settings;
   let latitude = lat;
   let longitude = lng;
-  console.log("====================================");
-  console.log(url, field_id);
-  console.log("====================================");
+
   const currentDataStorage = useSelector(
     state => state.currentDataStorage.data
   );
@@ -37,6 +35,19 @@ function AltrpMapConstructor({ settings, id }) {
     latitude = latDatasource;
     longitude = lngDatasource;
   }
+
+  const featuredObjectsFromModel = useMemo(async () => {
+    const response = await axios.get(url);
+    const data = response.data.data.map(item => {
+      const dbID = _.get(item, "id");
+      const responseItem = JSON.parse(_.get(item, field_id));
+      const result = responseItem;
+      result["dbID"] = dbID;
+      return result;
+    });
+    return data;
+  }, [url, field_id]);
+
   const dynamicGeoObjectsRepeater = useMemo(() => {
     return objects
       .map(r => {
@@ -89,12 +100,14 @@ function AltrpMapConstructor({ settings, id }) {
   }, [objects, currentDataStorage]);
   // Сохраняем данные карты
   const handleSave = data => {
-    axios.post(`/ajax/maps/${id}`, {
-      data: JSON.stringify({
-        type: "FeatureCollection",
-        features: data.features.filter(item => typeof item.id !== "undefined")
-      })
-    });
+    if (typeof url === "undefined" || url === null) {
+      axios.post(`/ajax/maps/${id}`, {
+        data: JSON.stringify({
+          type: "FeatureCollection",
+          features: data.features.filter(item => typeof item.id !== "undefined")
+        })
+      });
+    }
   };
 
   const getData = useCallback(
@@ -125,9 +138,34 @@ function AltrpMapConstructor({ settings, id }) {
     [id]
   );
 
+  const getDataFromModel = useCallback(
+    async (featuredFromModel, dynamicGeoObjects) => {
+      if (url !== null) {
+        try {
+          setIsLoading(true);
+          const dataFromModel = await featuredFromModel;
+          const repeaterObjects = dynamicGeoObjects;
+          let result = dataFromModel;
+          result = result.concat(repeaterObjects);
+          setGeoJson({
+            type: "FeatureCollection",
+            features: result
+          });
+          setIsLoading(false);
+        } catch (error) {}
+      } else {
+        return false;
+      }
+    },
+    [url]
+  );
   // При изменении карты подгружаем новые данные
   useEffect(() => {
-    getData(id, dynamicGeoObjectsRepeater);
+    if (typeof url !== "undefined" && url != "" && url !== null) {
+      getDataFromModel(featuredObjectsFromModel, dynamicGeoObjectsRepeater);
+    } else {
+      getData(id, dynamicGeoObjectsRepeater);
+    }
   }, [id, dynamicGeoObjectsRepeater]);
 
   return (

@@ -30,12 +30,39 @@ function MapDesigner({
   interactionOptions = {},
   style = {},
   saveData = noob,
-  onTap = noob
+  onTap = noob,
+  url,
+  field_id
 }) {
   const FG = useRef(null);
   const [selected, setSelected] = useState(null);
   const [state, setState] = useState(data);
   const [open, setOpen] = useState(false);
+
+  const updateGeoObjectToModel = geoObject => {
+    const { dbID } = geoObject;
+    let data = geoObject;
+    delete data["dbID"];
+    axios
+      .put(`${url}/${dbID}`, {
+        altrp_ajax: true,
+        [field_id]: JSON.stringify(data)
+      })
+      .then(res => {
+        console.log("====================================");
+        console.log(res);
+        console.log("====================================");
+      });
+  };
+
+  const deleteGeoObjectToModel = geoObject => {
+    const { dbID } = geoObject;
+    axios.delete(`${url}/${dbID}`).then(res => {
+      console.log("====================================");
+      console.log(res);
+      console.log("====================================");
+    });
+  };
 
   /**
    *
@@ -43,7 +70,6 @@ function MapDesigner({
    */
   const saveGeoObjectToModel = layer => {
     let geojson = layer.toGeoJSON();
-
     const { leafletElement } = FG.current;
 
     const id = leafletElement.getLayerId(layer);
@@ -84,11 +110,10 @@ function MapDesigner({
       geojson.properties.icon = "GoogleMarker";
       layer.setIcon(customIcon(geojson.properties.icon));
     }
-
     axios
       .post(url, {
         altrp_ajax: true,
-        [field_id]: geojson
+        [field_id]: JSON.stringify(geojson)
       })
       .then(res => {
         console.log("====================================");
@@ -142,8 +167,10 @@ function MapDesigner({
         geojson.properties.icon = geojson.properties.opacity
           ? geojson.properties.opacity
           : 1.0;
-        // geojson.properties.icon = geojson.properties.icon ? geojson.properties.icon : "GoogleMarker";
-        geojson.properties.icon = "GoogleMarker";
+        geojson.properties.icon = geojson.properties.icon
+          ? geojson.properties.icon
+          : "GoogleMarker";
+        // geojson.properties.icon = "GoogleMarker";
         layer.setIcon(customIcon(geojson.properties.icon));
       }
       // Назначаем подпись
@@ -163,8 +190,27 @@ function MapDesigner({
       // Если добавили новый, то делаем его активным
       const id = leafletElement.getLayerId(e.layer);
       setSelected(id);
-      saveGeoObjectToModel(e.layer);
+      if (typeof url !== "undefined" && url !== null) {
+        saveGeoObjectToModel(e.layer);
+      }
+    } else if (e.type === "draw:edited") {
+      if (typeof url !== "undefined" && url !== null) {
+        const layers = e.layers._layers;
+        const layersKeys = _.keys(layers);
+        for (let k of layersKeys) {
+          const json = layers[k].toGeoJSON();
+          updateGeoObjectToModel(json);
+        }
+      }
     } else if (e.type === "draw:deleted") {
+      if (typeof url !== "undefined" && url !== null) {
+        const layers = e.layers._layers;
+        const layersKeys = _.keys(layers);
+        for (let k of layersKeys) {
+          const json = layers[k].toGeoJSON();
+          deleteGeoObjectToModel(json);
+        }
+      }
       // Если удалили, то сбрасываем активный элемент
       setSelected(null);
     }
@@ -280,7 +326,9 @@ function MapDesigner({
           <EditControl
             position="topleft"
             onCreated={handleObserver}
+            onDeleted={handleObserver}
             onEdited={handleObserver}
+            onEditStop={handleObserver}
             onDrawStart={handleObserver}
             draw={{
               circlemarker: false,
@@ -306,6 +354,7 @@ function MapDesigner({
       </Map>
       {isEditable && selected && (
         <ModalControl
+          updateGeoObjectToModel={updateGeoObjectToModel}
           open={open}
           selected={selected}
           onClose={() => setOpen(false)}
