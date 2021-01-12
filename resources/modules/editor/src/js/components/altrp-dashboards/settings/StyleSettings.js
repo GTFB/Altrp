@@ -311,7 +311,7 @@ class StyleSettings extends Component {
               <ReactSelect
                 placeholder="Выберите тип кривой"
                 options={curvieTypes}
-                className="select-type"
+                className={`${this.props.widgetID} altrp-dashboard__drawer--select`}
                 defaultValue={this.state.editElement?.settings?.curve}
                 defaultInputValue={this.state.editElement?.settings?.curve}
                 onChange={option =>
@@ -334,7 +334,7 @@ class StyleSettings extends Component {
           <ReactSelect
             options={Schemes}
             placeholder="Выберите цветовую схему"
-            className="select-type"
+            className={`${this.props.widgetID} altrp-dashboard__drawer--select`}
             defaultValue={
               this.props.editElement?.settings?.colors?.scheme ||
               this.state.currentColorScheme
@@ -956,7 +956,7 @@ class StyleSettings extends Component {
               <ReactSelect
                 options={barLayout}
                 placeholder="Выберите тип макета"
-                className="select-type"
+                className={`${this.props.widgetID} altrp-dashboard__drawer--select select-type`}
                 defaultValue={this.state.editElement?.settings?.layout}
                 defaultInputValue={this.state.editElement?.settings?.layout}
                 onChange={option =>

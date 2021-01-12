@@ -653,6 +653,71 @@ class Dashboards extends BaseElement {
     }
   );
 
+  this.addControl('border_type_select', {
+    type: CONTROLLER_SELECT,
+    label: 'Border Type Select',
+    options: [
+      {
+        'value': 'none',
+        'label': 'None',
+      },
+      {
+        'value': 'solid',
+        'label': 'Solid',
+      },
+      {
+        'value': 'double',
+        'label': 'Double',
+      },
+      {
+        'value': 'dotted',
+        'label': 'Dotted',
+      },
+      {
+        'value': 'dashed',
+        'label': 'Dashed',
+      },
+      {
+        'value': 'groove',
+        'label': 'Groove',
+      },
+    ],
+    rules: {
+      '.{{ID}}.altrp-dashboard__drawer--select{{STATE}}': 'border-style: {{VALUE}};',
+    },
+  });
+
+  this.addControl(
+    'border_width_select', {
+    type: CONTROLLER_DIMENSIONS,
+    label: 'Border Width Select',
+    default: {
+      bind: true
+    },
+    units: [
+      'px',
+      '%',
+      'vh',
+    ],
+    rules: {
+      '.{{ID}}.altrp-dashboard__drawer--select{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+    },
+  }
+  );
+
+  this.addControl('border_color_select', {
+    type: CONTROLLER_COLOR,
+    label: 'Border Color Select',
+    // default: {
+    //   color: "rgb(50,168,82)",
+    //   colorPickedHex: "#32a852",
+    // },
+    rules: {
+      '.{{ID}}.altrp-dashboard__drawer--select{{STATE}}': 'border-color: {{COLOR}};',
+    },
+  }
+  );
+
 
 
     // this.addControl("style_range_drawer_color", {

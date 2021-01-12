@@ -100,7 +100,7 @@ class AxisBaseSettings extends Component {
           <ReactSelect
             placeholder="Выберите отображение"
             options={xScale}
-            className="select-type"
+            className={`${this.props.widgetID} altrp-dashboard__drawer--select select-type`}
             defaultValue={this.state.editElement?.settings?.xScale?.type}
             defaultInputValue={
               _.find(xScale, {
