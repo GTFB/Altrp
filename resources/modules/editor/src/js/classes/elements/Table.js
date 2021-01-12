@@ -1049,6 +1049,204 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection("group_icons", {
+      label: "Group Column, Expanded Row Icons"
+    });
+
+    // Grouped Column Icon
+
+    this.addControl('hide_grouped_column_icon', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hide Grouped Column Icon',
+      default: false,
+    });
+
+    this.addControl('grouped_column_icon', {
+      type: CONTROLLER_MEDIA,
+      label: 'Grouped Column Icon',
+    });
+
+    this.addControl('grouped_column_icon_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Grouped Icon Padding',
+      units: ['px', '%', 'vh', 'vw'],
+      rules: {
+        '{{ELEMENT}} .grouped-column{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('grouped_column_icon_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Grouped Column Icon Color',
+      rules: {
+        '{{ELEMENT}} .grouped-column path{{STATE}}': 'fill: {{COLOR}};',
+      },
+    });
+
+    this.addControl('grouped_column_icon_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Grouped Column Icon Size',
+      units: ['px', '%', 'vh', 'vw'],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .grouped-column{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .grouped-column svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .grouped-column img{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      },
+    });
+
+    // Not Grouped Column Icon
+
+    this.addControl('hide_not_grouped_column_icon', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hide Not Grouped Column Icon',
+      default: false,
+    });
+
+    this.addControl('not_grouped_column_icon', {
+      type: CONTROLLER_MEDIA,
+      label: 'Not Grouped Column Icon',
+    });
+
+    this.addControl('not_grouped_column_icon_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Not Grouped Icon Padding',
+      units: ['px', '%', 'vh', 'vw'],
+      rules: {
+        '{{ELEMENT}} .not-grouped-column{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('not_grouped_column_icon_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Not Grouped Column Icon Color',
+      rules: {
+        '{{ELEMENT}} .not-grouped-column path{{STATE}}': 'fill: {{COLOR}};',
+      },
+    });
+
+    this.addControl('not_grouped_column_icon_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Not Grouped Column Icon Size',
+      units: ['px', '%', 'vh', 'vw'],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .not-grouped-column{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .not-grouped-column svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .not-grouped-column img{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      },
+    });
+
+    // Expanded Row Icon
+
+    this.addControl('hide_expanded_row_icon', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hide Expanded Row Icon',
+      default: false,
+    });
+
+    this.addControl('expanded_row_icon', {
+      type: CONTROLLER_MEDIA,
+      label: 'Expanded Row Icon',
+    });
+
+    this.addControl('expanded_row_icon_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Expanded Row Icon Padding',
+      units: ['px', '%', 'vh', 'vw'],
+      rules: {
+        '{{ELEMENT}} .expanded-row{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('expanded_row_icon_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Expanded Row Icon Color',
+      rules: {
+        '{{ELEMENT}} .expanded-row path{{STATE}}': 'fill: {{COLOR}};',
+      },
+    });
+
+    this.addControl('expanded_row_icon_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Expanded Row Icon Size',
+      units: ['px', '%', 'vh', 'vw'],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .expanded-row{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .expanded-row svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .expanded-row img{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      },
+    });
+
+    // Not Expanded Row Icon
+
+    this.addControl('hide_not_expanded_row_icon', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hide Not Expanded Row Icon',
+      default: false,
+    });
+
+    this.addControl('not_expanded_row_icon', {
+      type: CONTROLLER_MEDIA,
+      label: 'Not Expanded Row Icon',
+    });
+
+    this.addControl('not_expanded_row_icon_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Not Expanded Row Icon Padding',
+      units: ['px', '%', 'vh', 'vw'],
+      rules: {
+        '{{ELEMENT}} .not-expanded-row{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('not_expanded_row_icon_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Not Expanded Row Icon Color',
+      rules: {
+        '{{ELEMENT}} .not-expanded-row path{{STATE}}': 'fill: {{COLOR}};',
+      },
+    });
+
+    this.addControl('not_expanded_row_icon_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Not Expanded Row Icon Size',
+      units: ['px', '%', 'vh', 'vw'],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .not-expanded-row{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .not-expanded-row svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .not-expanded-row img{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      },
+    });
+
+    this.endControlSection();
+
     this.startControlSection("filter_style_table", {
       tab: TAB_STYLE,
       label: "Filter"

@@ -1460,3 +1460,9 @@ export function generateButtonsArray(pageIndex, pageCount, first_last_buttons_co
 export function isValueMatchMask (value, mask) {
   return value.length && value.split("").every((char, index) => char === mask[index] || char.match(mask[index]));
 }
+
+export function renderIcon(isHidden, icon, defaultIcon, className) {
+  if (isHidden) return null;
+  
+  return <span className={className}>{icon && icon.assetType ? renderAssetIcon(icon) : defaultIcon}</span>
+}
