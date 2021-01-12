@@ -60,9 +60,9 @@ class BaseElement extends ControlStack {
    * @param value
    */
 
- setCssClass(settingName, value) {
+  setCssClass(settingName, value) {
     this.cssClassStorage[settingName] = value;
- }
+  }
 
   getName(){
     return this.constructor.getName();
@@ -541,6 +541,19 @@ class BaseElement extends ControlStack {
       return;
     }
     _.unset(this.settings, `__altrpFonts__.${settingName}`);
+  }
+
+  /**
+   * Получить данные динамических настроек
+   * @param {string} dynamicSettingName
+   * @param {{} | null} settings
+   */
+  setDynamicSetting(dynamicSettingName, settings){
+    if(! _.isEmpty(settings)){
+      _.set(this.settings, `altrpDynamicSetting.${dynamicSettingName}`, settings);
+    } else {
+      _.unset(this.settings, `altrpDynamicSetting.${dynamicSettingName}`);
+    }
   }
 }
 
