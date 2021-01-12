@@ -15,6 +15,7 @@ import { altrpFontsSet, GOOGLE_FONT } from "./components/FontsManager";
 import queryString from "query-string";
 import AltrpSVG from "../../../editor/src/js/components/altrp-svg/AltrpSVG";
 import ArrayConverter from "./classes/converters/ArrayConverter";
+import DataConverter from "./classes/converters/DataConverter";
 
 export function getRoutes() {
   return import("./classes/Routes.js");
@@ -1518,9 +1519,11 @@ export function convertData(data, settings) {
 
 /**
  * Вернуть экземпляр конвертера необходимого типа (array - ArrayConverter и т. д.)
+ * @return {DataConverter}
  */
 export function getConverter(data){
   switch(data.data_type){
       case 'array': return new ArrayConverter(data);
   }
+  return new DataConverter();
 }
