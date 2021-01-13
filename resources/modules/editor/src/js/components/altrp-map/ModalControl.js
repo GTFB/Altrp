@@ -134,9 +134,6 @@ const ModalControl = ({
   return (
     <div className="altrp-map__modal modal">
       <div className={!open ? "modal__body" : "modal__body open"}>
-        <button type="button" className="close" onClick={onClose}>
-          X
-        </button>
         <h3>Настройки</h3>
         <div className="modal__body-text">
           <label>
@@ -208,13 +205,32 @@ const ModalControl = ({
             {icons.map(name => renderOption(name))}
           </div>
         )}
-        <button
-          type="button"
-          className="modal__body-save"
-          onClick={saveSettings}
-        >
-          Сохранить
-        </button>
+        <div className="row">
+          <div className="col">
+            <button
+              type="button"
+              className="modal__body-save"
+              style={{
+                width: "100%"
+              }}
+              onClick={saveSettings}
+            >
+              Сохранить
+            </button>
+          </div>
+          <div className="col">
+            <button
+              type="button"
+              className="modal__body-save"
+              style={{
+                width: "100%"
+              }}
+              onClick={onClose}
+            >
+              Отмена
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

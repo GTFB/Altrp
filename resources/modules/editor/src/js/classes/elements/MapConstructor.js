@@ -153,6 +153,12 @@ class MapConstructor extends BaseElement {
       dynamic: false
     });
 
+    repeaterObjects.addControl("useCluster", {
+      label: "Unite in cluster?",
+      type: CONTROLLER_SWITCHER,
+      dynamic: false
+    });
+
     repeaterObjects.addControl("tooltipByKeyboard", {
       label: "Enter tooltip value by keyboard?",
       type: CONTROLLER_SWITCHER,
