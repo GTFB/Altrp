@@ -27,7 +27,7 @@ class EditorContent extends Component {
     window.altrpEditorContent = this;
   }
 
-  currentElementListener(data){
+  currentElementListener(){
     let currentElement = store.getState().currentElement.currentElement;
     if(currentElement instanceof RootElement && currentElement !== this.state.rootElement){
       this.setState({
@@ -35,22 +35,6 @@ class EditorContent extends Component {
       })
     }
   }
-
-  // log(e){
-  //   e.preventDefault();
-  //   console.log(e);
-  // }
-  //
-  // onDragOver (e) {
-  //   let event = e ;
-  //   event.stopPropagation();
-  // }
-  //
-  // onDragEnter  (e) {
-  //   let event = e ;
-  //   event.stopPropagation();
-  // }
-
 
   /**
    * Компонент окна редактора загрузился

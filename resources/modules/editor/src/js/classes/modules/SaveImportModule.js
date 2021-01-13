@@ -38,12 +38,12 @@ class SaveImportModule extends BaseModule {
           setTitle(templateData.title);
           let data = JSON.parse(templateData.data);
           store.dispatch(setTemplateData(templateData));
-          let parsedData = this.modules.elementsFactory.parseData(data);
           let templateDataStorage = getEditor().modules.templateDataStorage;
+          templateDataStorage.setType(templateData.template_type);
+          let parsedData = this.modules.elementsFactory.parseData(data);
           templateDataStorage.replaceAll(parsedData);
           templateDataStorage.setTitle(templateData.title);
           templateDataStorage.setName(templateData.name);
-          templateDataStorage.setType(templateData.template_type);
           getEditor().endLoading();
           store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_UPDATED));
         })

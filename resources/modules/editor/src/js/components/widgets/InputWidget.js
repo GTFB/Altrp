@@ -1,6 +1,6 @@
 import React, { Component, Suspense } from "react";
 import {
-  altrpCompare, getConverter,
+  altrpCompare, convertData, getConverter,
   isEditor,
   parseOptionsFromSettings,
   parseParamsFromString,
@@ -253,8 +253,10 @@ class InputWidget extends Component {
     ) {
       this.updateOptions();
     }
-    if (content_options && !model_for_options) {
+    if (content_options && ! model_for_options) {
       let options = parseOptionsFromSettings(content_options);
+      // console.log(options);
+      // console.log(this.state.options);
       if (!_.isEqual(options, this.state.options)) {
         this.setState(state => ({ ...state, options }));
       }
@@ -370,7 +372,7 @@ class InputWidget extends Component {
         }
       );
     } catch (e) {
-      console.error(e);
+      console.error(e, this.props.element.getId());
     }
   }
 
@@ -389,7 +391,7 @@ class InputWidget extends Component {
       /**
        * Сохраняем параметры запроса, и если надо обновляем опции
        */
-      let options = this.state.options;
+      let options = [...this.state.options];
       if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
         if (!_.isEmpty(paramsForUpdate)) {
           if (this.props.element.getSettings("params_as_filters", false)) {
@@ -493,11 +495,10 @@ class InputWidget extends Component {
    * получить опции
    */
   getOptions(){
-    let options = this.state.options;
+    let options = [...this.state.options];
     const optionsDynamicSetting = this.props.element.getDynamicSetting('content_options');
     if(optionsDynamicSetting){
-      const converter = getConverter(optionsDynamicSetting);
-      options = converter.convertData(options);
+      options = convertData(optionsDynamicSetting, options);
     }
     return options;
   }
@@ -934,7 +935,7 @@ class InputWidget extends Component {
         }
         if (_.isArray(option.options)) {
           option.options.forEach(option => {
-            if (option.value === value) {
+            if (option.value == value) {
               value = { ...option };
             }
           });
@@ -998,7 +999,7 @@ class InputWidget extends Component {
       settings: this.props.element.getSettings(),
       onChange: this.onChange,
       onBlur: this.onBlur,
-      value: value || _.find(options, o => o && o.value === this.state.value),
+      value: value || _.find(options, o => o && o.value == this.state.value),
       isOptionSelected: option => {
         if (_.isNumber(this.state.value) || _.isString(this.state.value)) {
           return this.state.value == option.value;
