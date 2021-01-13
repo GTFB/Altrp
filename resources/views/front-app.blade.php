@@ -4,18 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <script>
+  @if(isset($page_id) && isset($page_areas))
+    <script>
+      window.pageStorage = {};
+      
+      var page_id = {{$page_id}};
+      var page_areas = {!! $page_areas !!};
 
-    window.pageStorage = {};
-
-    var page_id = {{$page_id}};
-    var page_areas = {!! $page_areas !!};
-
-    if (typeof page_id !== 'undefined' && typeof page_areas !== 'undefined') {
-      window.pageStorage[page_id] = {areas:page_areas};
-    }
-
-  </script>
+      if (typeof page_id !== 'undefined' && typeof page_areas !== 'undefined') {
+        window.pageStorage[page_id] = {areas:page_areas};
+      }
+    </script>
+  @endif
+  
   <script>
     /**
      * Функция для вывода ошибок в HTML
