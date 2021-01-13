@@ -54,7 +54,7 @@ class SortData extends Component {
             <ReactSelect
               placeholder="Выберите фильтр"
               onChange={value => this.props.setProperty(value, "sort")}
-              className="select-type"
+              className={`${this.props.widgetID} altrp-dashboard__drawer--select select-type`}
               defaultValue={
                 this.state.editElement?.settings?.sort || options[0].value
               }

@@ -115,7 +115,7 @@ class LegendSettings extends Component {
             <ReactSelect
               placeholder="Выберите расположение легенды"
               options={anchors}
-              className="select-type"
+              className={`${this.props.widgetID} altrp-dashboard__drawer--select`}
               defaultValue={this.state.editElement?.settings?.legendAchor}
               defaultInputValue={this.state.editElement?.settings?.legendAchor}
               onChange={option =>
@@ -135,7 +135,7 @@ class LegendSettings extends Component {
             <ReactSelect
               placeholder="Выберите расположение легенды"
               options={directions}
-              className="select-type"
+              className={`${this.props.widgetID} altrp-dashboard__drawer--select`}
               defaultValue={this.state.editElement?.settings?.legendDirection}
               defaultInputValue={
                 this.state.editElement?.settings?.legendDirection
@@ -317,7 +317,7 @@ class LegendSettings extends Component {
             <ReactSelect
               placeholder="Выберите направление элементов"
               options={itemDirections}
-              className="select-type"
+              className={`${this.props.widgetID} altrp-dashboard__drawer--select`}
               defaultValue={
                 this.state.editElement?.settings?.legendItemDirection
               }
