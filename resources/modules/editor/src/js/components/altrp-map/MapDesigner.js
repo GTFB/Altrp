@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import L from "leaflet";
 import axios from "axios";
+import Drawer from "rc-drawer";
+import MarkerCluster from "./MarkerCluster";
 
 import { Map, FeatureGroup, TileLayer } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
@@ -38,6 +40,7 @@ function MapDesigner({
   const [selected, setSelected] = useState(null);
   const [state, setState] = useState(data);
   const [open, setOpen] = useState(false);
+  const [markers, setMarkers] = useState(null);
 
   const updateGeoObjectToModel = geoObject => {
     const { dbID } = geoObject;
@@ -71,7 +74,7 @@ function MapDesigner({
   const saveGeoObjectToModel = layer => {
     let geojson = layer.toGeoJSON();
     const { leafletElement } = FG.current;
-
+    let currentFeatures = _.cloneDeep(state.features, []);
     const id = leafletElement.getLayerId(layer);
 
     geojson.id = id;
@@ -116,9 +119,12 @@ function MapDesigner({
         [field_id]: JSON.stringify(geojson)
       })
       .then(res => {
-        console.log("====================================");
-        console.log(res);
-        console.log("====================================");
+        const newObject = {
+          ...JSON.parse(res.data.data[field_id]),
+          dbID: res.data.data.id
+        };
+        currentFeatures.push(newObject);
+        setState({ ...state, features: currentFeatures });
       });
   };
 
@@ -235,6 +241,7 @@ function MapDesigner({
     if (!FG.current) return;
     // Очищаем старые слои
     FG.current.leafletElement.clearLayers();
+    let markers = [];
     // Добавляем новые слои
     if (state.features?.length > 0) {
       for (const geojson of state.features) {
@@ -268,6 +275,9 @@ function MapDesigner({
                 )
               );
               layer.setOpacity(feature.properties.fillOpacity);
+              if (feature.inCluster) {
+                markers.push(feature);
+              }
             } else {
               layer.setStyle(feature.properties);
             }
@@ -277,10 +287,16 @@ function MapDesigner({
             if (feature.properties.popup) {
               layer.bindPopup(feature.properties.popup);
             }
-            FG.current.leafletElement.addLayer(layer);
+            if (!feature.inCluster) {
+              FG.current.leafletElement.addLayer(layer);
+            }
           }
         });
       }
+    }
+    console.log(markers);
+    if (markers.length > 0) {
+      setMarkers(markers);
     }
   }, [handleSelected, isTransformLatLng, state]);
 
@@ -315,13 +331,15 @@ function MapDesigner({
         style={{ height: style.height }}
       >
         <TileLayer
-          // url="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          // url="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" НЕ УДАЛЯТЬ, НУЖНО ДЛЯ ИНТЕГРАЦИИ
           url="http://vec{s}.maps.yandex.net/tiles?l=map&v=4.55.2&z={z}&x={x}&y={y}&scale=2&lang=ru_RU"
           subdomains={["01", "02", "03", "04"]}
           attribution='<a http="yandex.ru" target="_blank">Яндекс</a>'
           reuseTiles={true}
           updateWhenIdle={false}
         />
+        {markers !== null && <MarkerCluster markers={markers} />}
+
         <FeatureGroup ref={FG}>
           <EditControl
             position="topleft"
@@ -352,17 +370,29 @@ function MapDesigner({
           </Control>
         )}
       </Map>
-      {isEditable && selected && (
-        <ModalControl
-          updateGeoObjectToModel={updateGeoObjectToModel}
-          open={open}
-          selected={selected}
-          onClose={() => setOpen(false)}
-          setState={setState}
-          state={state}
-          fg={FG.current}
-        />
-      )}
+
+      <Drawer
+        getContainer={document.body}
+        placement="right"
+        defaultOpen={true}
+        maskClosable={true}
+        width={"400px"}
+        open={open}
+        onClose={() => setOpen(false)}
+        handler={false}
+      >
+        {isEditable && selected && (
+          <ModalControl
+            updateGeoObjectToModel={updateGeoObjectToModel}
+            open={open}
+            selected={selected}
+            onClose={() => setOpen(false)}
+            setState={setState}
+            state={state}
+            fg={FG.current}
+          />
+        )}
+      </Drawer>
     </div>
   );
 }

@@ -64,6 +64,7 @@ function AltrpMapConstructor({ settings, id }) {
                     Number(_.get(data, r.longitude))
                   ]
                 },
+                inCluster: r?.useCluster || false,
                 properties: {
                   fillOpacity: 1,
                   icon: r.icon || "GoogleMarker",
@@ -85,6 +86,7 @@ function AltrpMapConstructor({ settings, id }) {
                     Number(_.get(geoObj, r.longitude))
                   ]
                 },
+                inCluster: r?.useCluster || false,
                 properties: {
                   fillOpacity: 1,
                   icon: r.icon || "GoogleMarker",

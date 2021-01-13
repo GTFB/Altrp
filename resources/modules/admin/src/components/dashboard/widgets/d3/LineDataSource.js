@@ -253,6 +253,7 @@ class LineDataSource extends Component {
                   padding: this.state.settings?.tooltipPadding
                 }}
                 enable={this.state.settings?.enableCustomTooltip}
+                widgetID={this.props.widgetID}
               />
             )}
             animate={Boolean(this.state.settings?.enableAnimation)}
