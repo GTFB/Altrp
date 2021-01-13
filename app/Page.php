@@ -567,10 +567,10 @@ class Page extends Model
     }
     $templates = [];
     foreach ( $areas as $area ) {
-      $template = Template::getTemplate([
+      $template = Template::getTemplate( [
         'page_id' => $page_id,
         'template_type' => $area,
-      ]);
+      ] );
       $template['template_type'] = $area;
       $templates[] = $template;
     }

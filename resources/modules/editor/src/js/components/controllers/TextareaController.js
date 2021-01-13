@@ -52,7 +52,7 @@ class TextareaController extends Component {
 
       {
         (this.props.dynamic !== false) && (this.state.dynamicValue ? '' : <div className="controller-container__dynamic" ref={this.dynamicButton} onClick={this.openDynamicContent}>
-          Dynamic
+          Convert Data
             <DynamicIcon />
         </div>)
       }

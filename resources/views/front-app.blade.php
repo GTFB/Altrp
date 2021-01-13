@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <script>
+
+    window.pageStorage = {};
+
+    var page_id = {{$page_id}};
+    var page_areas = {!! $page_areas !!};
+
+    if (typeof page_id !== 'undefined' && typeof page_areas !== 'undefined') {
+      window.pageStorage[page_id] = {areas:page_areas};
+    }
+
+  </script>
+  <script>
     /**
      * Функция для вывода ошибок в HTML
      * @param msg

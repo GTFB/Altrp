@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React, { Component, Suspense } from "react";
 import {
-  altrpCompare,
+  altrpCompare, getConverter,
   isEditor,
   parseOptionsFromSettings,
   parseParamsFromString,
@@ -13,7 +13,7 @@ import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpS
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
 import moment from "moment";
-import CKeditor from "../ckeditor/CKeditor";
+const CKeditor = React.lazy(() => import("../ckeditor/CKeditor"));
 import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 const AltrpInput = React.lazy(() => import("../altrp-input/AltrpInput"));
 
@@ -205,7 +205,7 @@ class InputWidget extends Component {
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
-      let value = this.getContent("content_default_value");
+      let value = this.getContent("content_default_value", this.props.element.getSettings('select2_multiple'));
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
         () => {
@@ -427,9 +427,6 @@ class InputWidget extends Component {
   onChange(e) {
     let value = "";
 
-    console.log("====================================");
-    console.log(e.target);
-    console.log("====================================");
     if (e && e.target) {
       if (this.props.element.getSettings("content_type") === "checkbox") {
         let inputs = document.getElementsByName(e.target.name);
@@ -492,6 +489,18 @@ class InputWidget extends Component {
     );
   }
 
+  /**
+   * получить опции
+   */
+  getOptions(){
+    let options = this.state.options;
+    const optionsDynamicSetting = this.props.element.getDynamicSetting('content_options');
+    if(optionsDynamicSetting){
+      const converter = getConverter(optionsDynamicSetting);
+      options = converter.convertData(options);
+    }
+    return options;
+  }
   /**
    * Потеря фокуса для оптимизации
    */
@@ -901,13 +910,13 @@ class InputWidget extends Component {
       content_placeholder
     } = this.props.element.getSettings();
 
-    let options = this.state.options;
+    let options = this.getOptions();
     let value = this.state.value;
     if (
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getContent("content_default_value", true);
     }
     /**
      * Пока динамический контент загружается, нужно вывести пустую строку
@@ -917,6 +926,9 @@ class InputWidget extends Component {
     }
     if (!this.props.element.getSettings("select2_multiple", false)) {
       options.forEach(option => {
+        if(! option){
+          return;
+        }
         if (option.value === value) {
           value = { ...option };
         }
@@ -965,7 +977,7 @@ class InputWidget extends Component {
      * Сортируем опции
      * @type {Array|*}
      */
-    options = _.sortBy(options, o => (o.label ? o.label.toString() : o));
+    options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
     if (
       content_options_nullable &&
       (this.props.element.getSettings("content_type") !== "select2" ||
@@ -986,7 +998,7 @@ class InputWidget extends Component {
       settings: this.props.element.getSettings(),
       onChange: this.onChange,
       onBlur: this.onBlur,
-      value: value || _.find(options, o => o.value === this.state.value),
+      value: value || _.find(options, o => o && o.value === this.state.value),
       isOptionSelected: option => {
         if (_.isNumber(this.state.value) || _.isString(this.state.value)) {
           return this.state.value == option.value;
@@ -1003,12 +1015,14 @@ class InputWidget extends Component {
 
   renderWysiwyg() {
     return (
-      <CKeditor
-        changeText={this.dispatchFieldValueToStore}
-        text={this.getContent("content_default_value")}
-        name={this.props.element.getFieldId()}
-        readOnly={this.getContent("read_only")}
-      />
+      <Suspense fallback={<div>Загрузка...</div>}>
+        <CKeditor
+          changeText={this.dispatchFieldValueToStore}
+          text={this.getContent("content_default_value")}
+          name={this.props.element.getFieldId()}
+          readOnly={this.getContent("read_only")}
+        />
+      </Suspense>
     );
   }
 }
