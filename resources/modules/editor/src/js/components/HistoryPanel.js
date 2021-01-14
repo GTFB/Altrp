@@ -7,6 +7,8 @@ class HistoryPanel extends Component {
       activeTab: "actions"
     }
   }
+  componentDidMount() {
+  }
   render() {
     let actionsTabClasses =
       "panel-tab d-flex " +

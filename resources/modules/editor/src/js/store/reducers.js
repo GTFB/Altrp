@@ -10,6 +10,7 @@ import { settingSectionMenuReducer } from "./setting-section/reducers";
 import { currentTabReducer } from "./active-settings-tab/reducers";
 import { currentStateReducer } from "./state-section/reducers";
 import { currentScreenReducer } from "./responsive-switcher/reducers";
+import { historyStoreReducer } from './history-store/reducers';
 import { currentModelReducer } from "../../../../front-app/src/js/store/current-model/reducers";
 import { templateDataReducer } from "./template-data/reducers";
 import { currentUserReducer } from "../../../../front-app/src/js/store/current-user/reducers";
@@ -43,4 +44,5 @@ export default combineReducers({
   altrpMeta: altrpMetaReducer,
   altrpPageState: altrpPageStateReducer,
   altrpFonts: fontsReducer,
+  historyStore: historyStoreReducer,
 });

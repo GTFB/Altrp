@@ -6,6 +6,7 @@ import { changeTemplateStatus } from "../../store/template-status/actions";
 import store, {getCurrentScreen, getElementState} from "../../store/store";
 import ControlStack from "./ControlStack";
 import { isEditor } from "../../../../../front-app/src/js/helpers";
+import { addHistoryStoreItem } from "../../store/history-store/actions";
 
 /**
  * Базовый класс для методов элемента для редактора
@@ -44,6 +45,7 @@ class BaseElement extends ControlStack {
    * @param settings
    */
   setSettings(settings) {
+    console.log('set Settings', this, settings)
     this.settings = settings || this.settings;
   }
 
@@ -137,6 +139,8 @@ class BaseElement extends ControlStack {
       this.component.setChildren(this.children);
     }
     this.templateNeedUpdate();
+
+    store.dispatch(addHistoryStoreItem('ADD', child));
   }
 
   insertSiblingAfter(newSibling) {
@@ -255,6 +259,7 @@ class BaseElement extends ControlStack {
     if (typeof child === 'string') {
       childId = child;
     } else if (child instanceof BaseElement) {
+      store.dispatch(addHistoryStoreItem('DELETE', child));
       childId = child.getId();
     } else {
       throw 'Delete Child can only by id or Instance';

@@ -35,6 +35,7 @@ import {renderAsset} from "../../front-app/src/js/helpers";
 import {changeCurrentUser} from "../../front-app/src/js/store/current-user/actions";
 import Resource from "./js/classes/Resource";
 import appStore from "../../front-app/src/js/store/store";
+import ControllerHistory from "./js/classes/ControllerHistory";
 /**
  * Главный класс редактора.<br/>
  * Реакт-Компонент.<br/>
@@ -154,6 +155,14 @@ class Editor extends Component {
     let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
     currentUser = currentUser.data;
     appStore.dispatch(changeCurrentUser(currentUser));
+
+    const controllerHistory = new ControllerHistory;
+    document.addEventListener('keydown', (event) => {
+      if (event.ctrlKey && event.code === 'KeyZ') {
+        console.log('ControllerHistory');   
+        controllerHistory.restore()
+      }
+    });
   }
 
   /**
