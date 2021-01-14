@@ -65,7 +65,6 @@ export function parseOptionsFromSettings(string) {
   if (!string) {
     return [];
   }
-  console.error(string);
   let options = string.split("\n");
   let path = extractPathFromString(string);
   let _optionsFromData = getDataByPath(path);

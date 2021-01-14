@@ -577,7 +577,7 @@ class Page extends Model
     $important_styles = [];
     ob_start();
     ?>
-    <div class="front-app-content ">
+    <div class="front-app-content front-app-content_preloaded">
       <div class="route-content" id="route-content">
         <?php
         foreach ( $templates as $template ) {
