@@ -1,6 +1,6 @@
 import React, { Component, Suspense } from "react";
 import {
-  altrpCompare, convertData,
+  altrpCompare,
   isEditor,
   parseOptionsFromSettings,
   parseParamsFromString,
@@ -60,6 +60,7 @@ class InputWidget extends Component {
       value = [];
     }
     this.onChange(value);
+    this.dispatchFieldValueToStore(value, true);
   }
   /**
    * Метод устанавливает все опции как выбранные
@@ -510,6 +511,7 @@ class InputWidget extends Component {
   }
   /**
    * Потеря фокуса для оптимизации
+   * @param  e
    * @param  editor для получения изменений из CKEditor
    */
   onBlur = async (e, editor = null) => {
@@ -543,7 +545,6 @@ class InputWidget extends Component {
   dispatchFieldValueToStore = (value, userInput = false) => {
     let formId = this.props.element.getFormId();
     let fieldName = this.props.element.getFieldId();
-
     if (fieldName.indexOf("{{") !== -1) {
       fieldName = replaceContentWithData(fieldName);
     }
