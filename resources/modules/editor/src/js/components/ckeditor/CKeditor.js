@@ -1,9 +1,28 @@
 import React, { Component } from "react";
-import Alignments from "../../../../../altrp-reports/src/components/painter/widgets/Alignments";
-
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import BalloonEditor from "@ckeditor/ckeditor5-build-balloon";
+import UploadAdapterPlugin from "./Plugins/UploadAdapterPlugin";
 
+const defaultToolbar = [
+  "heading",
+  "undo",
+  "redo",
+  "bold",
+  "italic",
+  "blockQuote",
+  "indent",
+  "outdent",
+  "link",
+  "numberedList",
+  "bulletedList",
+  "imageTextAlternative",
+  "imageUpload",
+  "mediaEmbed",
+  "insertTable",
+  "tableColumn",
+  "tableRow",
+  "mergeTableCells"
+];
 class CKeditor extends Component {
   constructor(props) {
     super(props);
@@ -14,6 +33,10 @@ class CKeditor extends Component {
       return (
         <>
           <CKEditor
+            config={{
+              extraPlugins: [UploadAdapterPlugin],
+              toolbar: defaultToolbar
+            }}
             editor={BalloonEditor}
             disabled={!this.props.readOnly}
             data={this.props.text || "Type text here"}
@@ -30,11 +53,14 @@ class CKeditor extends Component {
     }
     return (
       <CKEditor
+        config={{
+          extraPlugins: [UploadAdapterPlugin],
+          toolbar: defaultToolbar
+        }}
         editor={BalloonEditor}
         data={this.props.text || "Type text here"}
         disabled={this.props.readOnly}
         onReady={editor => {
-          // You can store the "editor" and use when it is needed.
           console.log("Editor is ready to use!", editor);
         }}
         onChange={(event, editor) => this.props.onChange(event, editor)}
