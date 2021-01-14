@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import AdminTable from "../../AdminTable";
 import Pagination from "../../Pagination";
 import {withRouter} from 'react-router-dom';
+import './admin-notifications.scss';
 
 import Resource from "../../../../../editor/src/js/classes/Resource";
 class Notifications extends Component{
@@ -50,9 +51,9 @@ class Notifications extends Component{
     getArrayForRows = (notices, currentPage, itemsPerPage) => {
 
         let arrayNew = notices.slice(currentPage * this.itemsPerPage - this.itemsPerPage, currentPage * this.itemsPerPage).map(item =>{
-            item.url = `/admin/users/user/${item.noticed_id}/notification/${item.id}`;            
-            return item;
-        });
+                            item.url = `/admin/users/user/${item.noticed_id}/notification/${item.id}`;            
+                            return item;
+                        });
 
         return arrayNew;
     }
@@ -89,6 +90,13 @@ class Notifications extends Component{
     render(){
         const { currentPage, notices, user_id, noticeSearch, sorting} = this.state;
         return <div className="admin-users-notice">
+            <div className="admin-breadcrumbs">
+                <Link to={`/admin/users`}>Users</Link>
+                <span className="admin-breadcrumbs__separator">/</span>
+                <span className="admin-breadcrumbs__current">{user_id}</span>
+                <span className="admin-breadcrumbs__separator">/</span>
+                <span className="admin-breadcrumbs__current">Settings Notifications</span>
+            </div>
             <Link className="btn" to={`/admin/users/user/${user_id}/notification/new`}>Add New</Link>
             <div className="admin-notifications-table">
                 <form className="admin-panel py-2" onSubmit={this.searchNotice}>
@@ -100,19 +108,15 @@ class Notifications extends Component{
                         name: 'notice_name',
                         title: 'Notification Setting:',
                         url: true,
-                        target: '_blank',
                     }]}
                     quickActions={[{ tag: 'a', props: {
                         href: `/admin/users/user/${user_id}/notification/:id`,
-                        target: '_blank',
-                        // className: ''
                         },
                         title: 'Edit'
                     }, {
                         tag: 'button',
                         route: '',
                         method: 'delete',
-                        // className: ''
                         title: 'Disable'
                     }, {
                         tag: 'button',

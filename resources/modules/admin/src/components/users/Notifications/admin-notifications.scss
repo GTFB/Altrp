@@ -187,3 +187,19 @@
     }
 
 }
+.admin-users-notice{
+    .admin-breadcrumbs{
+        margin: 25px 10px;
+
+        a {
+            text-decoration: none;
+            color: grey;
+        }
+
+        a:hover {
+            color: #315EFB;
+            text-decoration: underline;
+        }
+
+    }
+}

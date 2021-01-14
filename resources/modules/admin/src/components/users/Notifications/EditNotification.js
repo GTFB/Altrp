@@ -334,7 +334,11 @@ class EditNotification extends Component{
         return <div className="wrapper">
             <div className="admin-notice--heading">
                 <div className="admin-breadcrumbs">
-                    <Link to={`/admin/users/user/${user_id}#1`}>Notification Setting</Link>
+                    <Link to={`/admin/users`}>Users</Link>
+                    <span className="admin-breadcrumbs__separator">/</span>
+                    <Link to={`/admin/users/user/${user_id}`}>{user_id}</Link>
+                    <span className="admin-breadcrumbs__separator">/</span>
+                    <Link to={`/admin/users/user/${user_id}#1`}>Settings</Link>
                     <span className="admin-breadcrumbs__separator">/</span>
                     <span className="admin-breadcrumbs__current">{value?.notice_name ?? ''}</span>
                 </div>
