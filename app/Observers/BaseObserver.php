@@ -14,36 +14,45 @@ class BaseObserver
      * @param $noticeSettings
      * @param $otherData
      */
-    protected function sendNotifications(Model $model, $noticeSettings, $otherData)
-    {
-        if ($noticeSettings) {
+    protected function sendNotifications(Model $model, $noticeSettings, $otherData){
+
+        if (is_object($noticeSettings)) {
+            
             foreach ($noticeSettings as $setting) {
 
-                foreach ($setting->conditions as $condition) {
-                  //todo: сообщение отправляется если ВСЕ активные conditions выполяются, а не одно
-                  // если активных conditions нет, то сообщение отправляется
+                if (is_array($setting->conditions)) {
+                    
+                    $array_enabled_conditions = [];
+                    
+                    foreach ($setting->conditions as $condition) {
+                        
+                        if ($condition->enabled) {
+                            
+                            $type = $condition->type == 'all' ? '&&' : '||';
+                            $compares = [];
 
-                    if ($condition->enabled) {
-                        $type = $condition->type == 'all' ? '&&' : '||';
-                        $compares = [];
-                        foreach ($condition->compares as $compare) {
-                            if ($compare->enabled) {
-                                if (! in_array($compare->name, $otherData['columns'])) {
-                                    continue;
-                                }
-                                $compares[] = $this->getCompared($model, $compare);
+                            foreach ($condition->compares as $compare) {
+                                if ($compare->enabled && in_array($compare->name, $otherData['columns'])) $compares[] = $this->getCompared($model, $compare);
                             }
-                        }
-                        $str = "return " . implode(" $type ", $compares) . ";";
+                            if (!empty($compares)) $array_enabled_conditions[] = implode(" $type ", $compares);
+                        }                     
+                    }
 
+                    // если conditions нет или активных conditions нет, то сообщение отправляется
+                    if (count($setting->conditions) === 0 || count($array_enabled_conditions) === 0) {
+                        $this->send($model, $setting, $otherData);
+                    } else {
 
+                        $str = "return (" . implode(" ) && ( ", $array_enabled_conditions) . ");";
                         $cond = eval($str);
 
                         if ($cond) {
-                            $this->send($setting->noticed, $model, $setting, $otherData);
+                            $this->send($model, $setting, $otherData);
                         }
+
                     }
-                }
+    
+                }                
             }
         }
     }
@@ -52,12 +61,11 @@ class BaseObserver
      * Отправить уведомление
      * @param $noticed
      * @param $model
-     * @param $settings
+     * @param $setting
      * @param $otherData
      */
-    protected function send($noticed, $model, $settings, $otherData)
-    {
-        Notification::send($noticed, new CommonNotification($model, $settings, $otherData));
+    protected function send($model, $setting, $otherData){
+        Notification::send($setting->noticed, new CommonNotification($model, $setting, $otherData));
     }
 
     /**
@@ -66,8 +74,7 @@ class BaseObserver
      * @param $compare
      * @return string
      */
-    protected function getCompared($model, $compare)
-    {
+    protected function getCompared($model, $compare){
         $name = $compare->name;
         $operator = $compare->operator;
         $value = is_numeric($compare->value) ? $compare->value : "'{$compare->value}'";
@@ -90,7 +97,7 @@ class BaseObserver
                 break;
             case 'in':
             case 'not_in':
-                $operatorBegin = $operator == 'in' ? '\Str::contains(' : '!' . '!\Str::contains(';
+                $operatorBegin = $operator == 'in' ? '\Str::contains(' : '!\Str::contains(';
                 $operatorEnd = ')';
                 $result = $operatorBegin . '$model->' . $name . ', ' . $value . $operatorEnd;
                 break;
@@ -100,7 +107,6 @@ class BaseObserver
                 $result = '$model->' . $name . ' ' . $operator . ' null';
                 break;
         }
-
         return $result;
     }
 }
