@@ -42,16 +42,10 @@ class BaseObserver
                     if (count($setting->conditions) === 0 || count($array_enabled_conditions) === 0) {
                         $this->send($model, $setting, $otherData);
                     } else {
-
                         $str = "return (" . implode(" ) && ( ", $array_enabled_conditions) . ");";
-                        $cond = eval($str);
 
-                        if ($cond) {
-                            $this->send($model, $setting, $otherData);
-                        }
-
-                    }
-    
+                        if (eval($str)) $this->send($model, $setting, $otherData);                       
+                    }    
                 }                
             }
         }

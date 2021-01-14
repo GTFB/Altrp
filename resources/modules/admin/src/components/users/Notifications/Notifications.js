@@ -16,7 +16,7 @@ class Notifications extends Component{
             sorting: {}
       
         };
-        this.itemsPerPage = 5;
+        this.itemsPerPage = 3;
         this.notificationsAll = new Resource({route: `/admin/ajax/users/${this.state.user_id}/notifications`});
         this.changePage = this.changePage.bind(this);
         this.generateNoticeJSON = this.generateNoticeJSON.bind(this);
@@ -45,6 +45,16 @@ class Notifications extends Component{
     searchNotice = e => {
         e.preventDefault();
         this.getNotices();
+    }
+
+    getArrayForRows = (notices, currentPage, itemsPerPage) => {
+
+        let arrayNew = notices.slice(currentPage * this.itemsPerPage - this.itemsPerPage, currentPage * this.itemsPerPage).map(item =>{
+            item.url = `/admin/users/user/${item.noticed_id}/notification/${item.id}`;            
+            return item;
+        });
+
+        return arrayNew;
     }
 
      /** @function generateTemplateJSON
@@ -119,9 +129,9 @@ class Notifications extends Component{
                         className: 'quick-action-menu__item_danger',
                         title: 'Trash'
                     }]}
-                        rows={notices.slice(currentPage * this.itemsPerPage - this.itemsPerPage, currentPage * this.itemsPerPage)}
-                sortingHandler={this.noticesSortingHandler}
-                sortingField={sorting.order_by}
+                    rows={this.getArrayForRows(notices, currentPage, this.itemsPerPage)}
+                    sortingHandler={this.noticesSortingHandler}
+                    sortingField={sorting.order_by}
                 />
                 <Pagination pageCount={Math.ceil(notices.length / this.itemsPerPage) || 1}
                     currentPage={currentPage}
