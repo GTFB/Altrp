@@ -9,10 +9,16 @@ export default class DataTab extends Component{
     }
 
     render(){
-        const data = this.props.send ?? [];
+        const data = this.props.data ?? [];
+        console.log(data);
+
 
         return <div>
-            DataTab
+            <div className="btn-box">
+                <button className="btn btn_save" onClick={() => this.props.onSaveData('save')}>
+                    Save
+                </button>
+            </div>
         </div>
     }
 }

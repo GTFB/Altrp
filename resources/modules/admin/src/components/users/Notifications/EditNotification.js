@@ -94,12 +94,11 @@ class EditNotification extends Component{
                         ]
                     }
                 ],
-                "data": [{
+                "data": {
                     "field": "message",
                     "value": "{{altrpdata.text}} added or updated or deleted",
                     "type": "content"
-                }
-                ],
+                },
                 "send": {
                     "front": {
                         "enabled": true
@@ -240,6 +239,14 @@ class EditNotification extends Component{
         }
     }
 
+    changeBox = (e, key) => {
+        e.persist();        
+        this.setState(state => {
+            state.value.notice_settings.send[key].enabled = e.target.checked;
+            return state
+        });
+    }
+
     // Запись значения inputs в стейт (value)
     changeInput = (e, type='parent', conditionId=false, compareId=false, compareType=false) => {
 
@@ -338,7 +345,6 @@ class EditNotification extends Component{
 
     render(){
         let { value, sourcesOptions, user_id } = this.state;
-        console.log(value);
         let { sources, notice_settings } = this.state.value;
 
         return <div className="wrapper">
@@ -392,10 +398,18 @@ class EditNotification extends Component{
                     />
                 </TabPanel>
                 <TabPanel>
-                    <DataTab data={notice_settings?.data ?? []}/>
+                    <DataTab 
+                        data={notice_settings?.data ?? []}
+                        onSaveData={this.onSave}
+                        changeInputData={this.changeInput}
+                    />
                 </TabPanel>
                 <TabPanel>
-                    <SendToTab send={notice_settings?.send ?? []} />
+                    <SendToTab
+                        send={notice_settings?.send ?? []}
+                        onSaveSend={this.onSave}
+                        changeBox={this.changeBox}
+                    />
                 </TabPanel>
             </Tabs>
         </div>
