@@ -42,8 +42,8 @@ export function currentUserReducer(user, action) {
       break;
     case SET_NOTICE_FOR_USER:
       {
-        console.log(user);
-        user = { ...user, noticeData: [...user.data?.noticeData || [], action.notice] };
+        let newNotice = action.notice;
+        user = { ...user, notice: [...user.data?.notice || [], newNotice] };
       }
       break;
   }

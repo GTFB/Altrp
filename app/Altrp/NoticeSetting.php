@@ -9,7 +9,7 @@ class NoticeSetting extends Model
     protected $table = 'altrp_notice_settings';
 
     protected $fillable = [
-        'notice_name',
+        'name',
         'noticed_id',
         'noticed_type',
         'notice_settings'

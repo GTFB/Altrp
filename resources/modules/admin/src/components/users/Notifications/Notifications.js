@@ -105,7 +105,7 @@ class Notifications extends Component{
                 </form>
                 <AdminTable
                     columns={[{
-                        name: 'notice_name',
+                        name: 'name',
                         title: 'Notification Setting:',
                         url: true,
                     }]}

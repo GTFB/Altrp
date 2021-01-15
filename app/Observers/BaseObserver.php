@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Notifications\CommonNotification;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Notification;
 
@@ -44,7 +45,10 @@ class BaseObserver
                     } else {
                         $str = "return (" . implode(" ) && ( ", $array_enabled_conditions) . ");";
 
-                        if (eval($str)) $this->send($model, $setting, $otherData);                       
+                        try { $result = eval($str); }
+                        catch( Exception $e){ response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
+
+                        if ($result) $this->send($model, $setting, $otherData);                       
                     }    
                 }                
             }

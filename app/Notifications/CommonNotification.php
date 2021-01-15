@@ -64,15 +64,14 @@ class CommonNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        $via = ['broadcast', CustomDatabaseChannel::class];
+        $via = [CustomDatabaseChannel::class];
 
-        if ($notifiable->telegram_user_id && $this->parsedNoticeSettings->send->telegram->enabled) {
-            $via[] = TelegramChannel::class;
-        }
+        if ($this->parsedNoticeSettings->send->front->enabled) $via[] = 'broadcast';
 
-        if ($this->parsedNoticeSettings->send->email->enabled) {
-            $via[] = 'mail';
-        }
+        if ($notifiable->telegram_user_id && $this->parsedNoticeSettings->send->telegram->enabled) $via[] = TelegramChannel::class;
+
+        if ($this->parsedNoticeSettings->send->email->enabled) $via[] = 'mail';
+
         return $via;
     }
 
@@ -112,10 +111,13 @@ class CommonNotification extends Notification implements ShouldQueue
      */
     public function toBroadcast($notifiable)
     {
-
         $data = $this->parseData($this->parsedNoticeSettings->data);
         $data['action_type'] = $this->data['action_type'];
-        $data['setting_name'] = $this->getNotificationSettingName();
+        $data['delete_url'] = "/notifications/delete/{$this->id}";
+        $data['make_as_read_url'] = "/unread_notifications/{$this->id}/mark_as_read";
+        $data['name'] = $this->getNotificationSettingName();
+        $data['notice_name'] = $this->getNoticeName();
+
         return new BroadcastMessage($data);
     }
 
@@ -152,7 +154,7 @@ class CommonNotification extends Notification implements ShouldQueue
             ->to($notifiable->telegram_user_id);
 
         $data = $this->parsedNoticeSettings->data;
-        $content = 'сообщение:';
+        $content = 'notice: ';
 
         foreach ($data as $item) {
             if ($item->type == 'content') {
@@ -233,7 +235,7 @@ class CommonNotification extends Notification implements ShouldQueue
      */
     public function getNotificationSettingName()
     {
-        return $this->noticeSettings->notice_name;
+        return $this->noticeSettings->name;
     }
 
     /**
@@ -243,6 +245,11 @@ class CommonNotification extends Notification implements ShouldQueue
     public function getActionType()
     {
         return $this->data['action_type'];
+    }
+
+    public function getNoticeName()
+    {
+        return $this->parsedNoticeSettings->notice_name;
     }
 
 }

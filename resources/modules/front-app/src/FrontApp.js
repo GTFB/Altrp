@@ -63,7 +63,7 @@ class FrontApp extends Component {
       .notification((notification) => {
         // Запись пришедших по каналу уведомлений в appStore
         appStore.dispatch(setUserNotice(notification));
-        console.log(appStore.getState().currentUser.data, 'STORE NOTICE');
+        console.log(appStore.getState().currentUser, 'STORE NOTICE');
       });  
 
     } else {

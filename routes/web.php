@@ -64,7 +64,9 @@ Route::post('/reports/generate', "ReportsController@setHtml");
  */
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/notifications', 'NotificationsController@getAllNotifications');
+    Route::get('/notifications/{notification_id}', 'NotificationsController@getNotification');
     Route::get('/notifications/delete_all', 'NotificationsController@deleteAllNotifications');
+    Route::get('/notifications/delete/{notification_id}', 'NotificationsController@deleteNotification');
     Route::get('/unread_notifications', 'NotificationsController@getAllUnreadNotifications');
     Route::get('/unread_notifications/mark_as_read_all', 'NotificationsController@markAsReadAll');
     Route::get('/unread_notifications/{notification_id}/mark_as_read', 'NotificationsController@markAsRead');

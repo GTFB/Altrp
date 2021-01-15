@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import { Link, withRouter } from "react-router-dom";
+import { titleToName }from "../../../js/helpers";
 import ConditionsTab from "./ConditionsTab";
 import DataTab from "./DataTab";
 import SendToTab from "./SendToTab";
@@ -71,10 +72,11 @@ class EditNotification extends Component{
     // Создание и запись новой настройки в value
     getNewValue(){
         const newValue = {
-            "notice_name": "New Notification Settings",
+            "name": "New Notice Settings",
             "enabled": true,
             "sources": [],
             "notice_settings": {
+                "notice_name": "new_notice_settings",
                 "conditions": [
                     {
                         "id": 1,
@@ -93,12 +95,16 @@ class EditNotification extends Component{
                     }
                 ],
                 "data": [{
-                    "field": "Message",
-                    "value": "{{altrpdata.text}} был обновлён",
-                    "type": "button"
+                    "field": "message",
+                    "value": "{{altrpdata.text}} added or updated or deleted",
+                    "type": "content"
                 }
                 ],
                 "send": {
+                    "front": {
+                        "enabled": true
+                    },
+
                     "email": {
                         "enabled": false,
                         "template": "template"
@@ -241,7 +247,10 @@ class EditNotification extends Component{
 
         switch(type){
             case 'parent':
-                this.setState(s => ({ ...s, value: {...s.value, notice_name: name} }));
+                this.setState(s => ({ ...s, value: {...s.value, name: name, notice_settings: {...s.value.notice_settings, notice_name: titleToName(name)}} }));
+                break;
+            case 'notice':
+                this.setState(s => ({ ...s, value: {...s.value, notice_settings: {...s.value.notice_settings, notice_name: titleToName(name)}} }));
                 break;
             case 'condition':
                 if (!conditionId) return;
@@ -329,6 +338,7 @@ class EditNotification extends Component{
 
     render(){
         let { value, sourcesOptions, user_id } = this.state;
+        console.log(value);
         let { sources, notice_settings } = this.state.value;
 
         return <div className="wrapper">
@@ -350,7 +360,11 @@ class EditNotification extends Component{
                 <div className="admin-notice-general">
                     <div className="form-group">
                         <label htmlFor="page-name">Name</label>
-                        <input type="text" id="name" name="name" value={value?.notice_name ?? ''} onChange={(e) => { this.changeInput(e) }} className="form-control" />
+                        <input type="text" id="name" name="name" value={value?.name ?? ''} onChange={(e) => { this.changeInput(e) }} className="form-control" />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="page-name">Notice Name</label>
+                        <input type="text" id="name" name="name" value={notice_settings?.notice_name ?? ''} onChange={(e) => { this.changeInput(e, 'notice') }} className="form-control" />
                     </div>
                     <div className="form-group">
                         <label htmlFor="source">Data source</label>

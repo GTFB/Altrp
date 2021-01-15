@@ -55,6 +55,7 @@ class CustomDatabaseChannel
             'data' => $this->getData($notifiable, $notification),
             'setting_name' => $notification->getNotificationSettingName(),
             'action_type' => $notification->getActionType(),
+            'notice_name' => $notification->getNoticeName(),
             'read_at' => null,
         ];
     }
