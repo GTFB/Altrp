@@ -114,7 +114,6 @@ class Admin extends Component {
     new Resource({ route: "/ajax/current-user" })
       .getAll()
       .then(({ data }) => {
-        console.log(data)
         this.props.setUserData(data)
       });
   }
