@@ -75,4 +75,9 @@ class SQLEditor extends Model
     {
         return $this->belongsTo(\App\Altrp\Model::class);
     }
+
+    public function remote_data()
+    {
+        return $this->morphMany('App\Altrp\RemoteData', 'remotable');
+    }
 }

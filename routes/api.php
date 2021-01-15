@@ -150,6 +150,12 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::post( '/custom_models/{model_id}', 'Admin\ModelsController@storeCustomModelRecord');
         Route::put( '/custom_models/{model_id}/edit/{record_id}', 'Admin\ModelsController@editCustomModelRecord');
         Route::delete( '/custom_models/{model_id}/delete/{record_id}', 'Admin\ModelsController@destroyCustomModelRecord');
+
+        // Remote data
+        Route::get( '/remote_data', 'Admin\RemoteDataController@index');
+        Route::post( '/remote_data', 'Admin\RemoteDataController@store');
+        Route::put( '/remote_data/{id}', 'Admin\RemoteDataController@update');
+        Route::delete( '/remote_data/{id}', 'Admin\RemoteDataController@destroy');
     });
 
 });

@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiRequest;
 use App\Media;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -100,7 +101,93 @@ class ApiController extends Controller
           $res['modelsCount'] = $modelsCount;
         }
 
+        $res['data'] = $this->getRemoteData($model, $res);
+
         return $res;
+    }
+
+    /**
+     * Получить удаленные данные
+     * @param $entity
+     * @param $result
+     * @param bool $is_object
+     * @return array|\Illuminate\Database\Eloquent\Model|Collection
+     */
+    protected function getRemoteData($entity, $result, $is_object = false)
+    {
+        $records = $result['data'] ?? $result;
+        $countOfRemoteData = $entity->remote_data->count();
+        if ($countOfRemoteData) {
+            foreach ($entity->remote_data as $remote) {
+                $url = $is_object ? $remote->single_source->url : $remote->list_source->url;
+                $requestMethod = $remote->list_source->request_type;
+                $response = $this->sendCurlRequest($url, $requestMethod);
+                $arrIds = [];
+                $res = $response->data ?? $response;
+                if ($res) {
+                    $col = $remote->remote_find_column;
+                    foreach ($res as $item) {
+                        $arrIds[] = $item->$col;
+                    }
+                    $resCollection = collect($res);
+                    if (is_object($records) && !$records instanceof Collection) {
+                        $newRec = $this->addRemoteColumns($remote, $records, $arrIds, $resCollection);
+                        $records = $newRec;
+                    } else {
+                        foreach ($records as $index => $record) {
+                            $newRec = $this->addRemoteColumns($remote, $record, $arrIds, $resCollection);
+                            $records[$index] = $newRec;
+                        }
+                    }
+                }
+            }
+        }
+        return $records;
+    }
+
+    /**
+     * Отправить Curl запрос для получения удалённых данных
+     * @param $url
+     * @param $method
+     * @return mixed
+     */
+    protected function sendCurlRequest($url, $method)
+    {
+        return \Curl::to($url)
+            ->asJson()
+            ->$method();
+    }
+
+    /**
+     * Добавить удаленные колонки в результирующую выборку
+     * @param $remote
+     * @param $record
+     * @param $arrIds
+     * @param $collection
+     * @return object
+     */
+    protected function addRemoteColumns($remote, $record, array $arrIds, Collection $collection)
+    {
+        $column = isset($remote->column) ? $remote->column->name : $remote->column_name;
+        $col = $remote->remote_find_column;
+        $needColumn = $remote->remote_need_column;
+        $name = $remote->name;
+        if (in_array($record->$column, $arrIds)) {
+            $value = $collection->where($col, $record->$column)->first();
+            if (!$remote->as_object) {
+                $value = $value->$needColumn;
+            }
+            if ($remote->enabled) {
+                if ($record instanceof \Illuminate\Database\Eloquent\Model) {
+                    $record->setAttribute($name, $value);
+                } else {
+                    $record->$name = $value;
+                }
+            }
+        } else {
+            $record->$name = null;
+        }
+        return $record;
     }
 
     /**
