@@ -11,8 +11,6 @@ const mcg = L.markerClusterGroup();
 
 const MarkerCluster = ({ markers }) => {
   const { map } = useLeaflet();
-  console.log("markers");
-  console.log(markers);
 
   let markersData = markers.map(item => {
     return {

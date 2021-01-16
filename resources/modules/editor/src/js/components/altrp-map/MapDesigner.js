@@ -237,6 +237,29 @@ function MapDesigner({
     [onTap]
   );
 
+  const handleMapClick = (e, layer) => {
+    // e.DomEvent.stopPropagation();
+    // console.log(e);
+    // e.DomEvent.preventDefault();
+    L.DomEvent.stopPropagation(e);
+    L.DomEvent.preventDefault(e);
+    // e.originalEvent.view.L.DomEvent.stopPropagation(e);
+    setSelected(null);
+    // console.log(layer);
+  };
+
+  const handleMarkerClick = (e, layer) => {
+    e.originalEvent.view.L.DomEvent.stopPropagation(e);
+  };
+
+  const handlePolygonClick = (e, layer) => {
+    e.originalEvent.view.L.DomEvent.stopPropagation(e);
+  };
+
+  const handleCircleClick = (e, layer) => {
+    e.originalEvent.view.L.DomEvent.stopPropagation(e);
+  };
+
   const whenReady = useCallback(() => {
     if (!FG.current) return;
     // Очищаем старые слои
@@ -268,6 +291,7 @@ function MapDesigner({
           onEachFeature: (feature, layer) => {
             layer.addEventListener("click", handleSelected);
             if (layer instanceof L.Marker) {
+              layer.addEventListener("click", e => handleMarkerClick(e, layer));
               layer.setIcon(
                 customIcon(
                   feature.properties.icon,
@@ -278,6 +302,14 @@ function MapDesigner({
               if (feature.inCluster) {
                 markers.push(feature);
               }
+            } else if (layer instanceof L.Polygon) {
+              layer.addEventListener("click", e =>
+                handlePolygonClick(e, layer)
+              );
+              layer.setStyle(feature.properties);
+            } else if (layer instanceof L.Circle) {
+              layer.addEventListener("click", e => handleCircleClick(e, layer));
+              layer.setStyle(feature.properties);
             } else {
               layer.setStyle(feature.properties);
             }
@@ -294,7 +326,6 @@ function MapDesigner({
         });
       }
     }
-    console.log(markers);
     if (markers.length > 0) {
       setMarkers(markers);
     }
@@ -321,7 +352,7 @@ function MapDesigner({
       <Map
         center={center}
         zoom={zoom}
-        animate={false}
+        onclick={handleMapClick}
         className={`altrp-map__container ${className}`}
         whenReady={whenReady}
         scrollWheelZoom={true}
