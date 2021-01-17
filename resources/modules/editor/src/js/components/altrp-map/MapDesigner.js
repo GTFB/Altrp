@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import L from "leaflet";
+import L, { CRS } from "leaflet";
 import axios from "axios";
 import Drawer from "rc-drawer";
 import MarkerCluster from "./MarkerCluster";
@@ -357,6 +357,7 @@ function MapDesigner({
         whenReady={whenReady}
         scrollWheelZoom={true}
         touchZoom={true}
+        crs={CRS.EPSG3395}
         doubleClickZoom={true}
         keyboard={interactionOptions.keyboard}
         style={{ height: style.height }}
