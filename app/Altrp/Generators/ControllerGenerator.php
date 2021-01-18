@@ -20,6 +20,7 @@ use App\SQLEditor;
 use Artisan;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ControllerGenerator extends AppGenerator
@@ -234,15 +235,22 @@ class ControllerGenerator extends AppGenerator
                 $url = $modelName . "/{{$singleResource}}";
                 $name = ucfirst($action) . ' ' . Str::studly($singleResource);
             }
-            $sources[] = [
+
+            $requestType = $this->createRequestType($action);
+
+            $sourceData = [
                 "model_id" => $this->getModelId(),
                 "controller_id" => $this->controllerModel->id,
                 "url" => '/' . $url,
                 "api_url" => '/' . $url,
                 "type" => $action,
                 "name" => $name,
+                "title" => $name,
+                'request_type' => $requestType,
                 "created_at" => $nowTime,
             ];
+
+            $sources[] = $sourceData;
         }
 
         try {
@@ -263,10 +271,41 @@ class ControllerGenerator extends AppGenerator
                 }
             }
         } catch (\Exception $e) {
+            Log::info($e->getMessage());
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * Сгенерировать тип запроса источника данных
+     * @param $action
+     * @return string
+     */
+    protected function createRequestType($action)
+    {
+        switch ($action) {
+            case 'get':
+            case 'show':
+            case 'options':
+            case 'filters':
+                $requestType = 'get';
+                break;
+            case 'add':
+                $requestType = 'post';
+                break;
+            case 'update':
+            case 'update_column':
+                $requestType = 'put';
+                break;
+            case 'delete':
+                $requestType = 'delete';
+                break;
+            default:
+                $requestType = 'get';
+        }
+        return $requestType;
     }
 
 //    protected function getSources($actions, $tableName, $nowTime)
