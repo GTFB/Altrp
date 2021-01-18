@@ -121,28 +121,55 @@ class ApiController extends Controller
             foreach ($entity->remote_data as $remote) {
                 $url = $is_object ? $remote->single_source->url : $remote->list_source->url;
                 $requestMethod = $remote->list_source->request_type;
+                $column = isset($remote->column) ? $remote->column->name : $remote->column_name;
+
+                if (is_object($records) && !$records instanceof Collection) {
+                    $url = $this->replaceUrlDynamicParams($url, ['id' => $records->$column]);
+                }
+
                 $response = $this->sendCurlRequest($url, $requestMethod);
+
+                $response = $response->status != 404 && $response->status != 500 ? $response->content : null;
+
                 $arrIds = [];
                 $res = $response->data ?? $response;
-                if ($res) {
-                    $col = $remote->remote_find_column;
+                $col = $remote->remote_find_column;
+
+                if (is_array($res)) {
                     foreach ($res as $item) {
                         $arrIds[] = $item->$col;
                     }
-                    $resCollection = collect($res);
-                    if (is_object($records) && !$records instanceof Collection) {
-                        $newRec = $this->addRemoteColumns($remote, $records, $arrIds, $resCollection);
-                        $records = $newRec;
-                    } else {
-                        foreach ($records as $index => $record) {
-                            $newRec = $this->addRemoteColumns($remote, $record, $arrIds, $resCollection);
-                            $records[$index] = $newRec;
-                        }
+                } else {
+                    $res = [$res];
+                    $arrIds[] = $records->$column;
+                }
+
+                $resCollection = collect($res);
+                if (is_object($records) && !$records instanceof Collection) {
+                    $newRec = $this->addRemoteColumns($remote, $records, $arrIds, $resCollection);
+                    $records = $newRec;
+                } else {
+                    foreach ($records as $index => $record) {
+                        $newRec = $this->addRemoteColumns($remote, $record, $arrIds, $resCollection);
+                        $records[$index] = $newRec;
                     }
                 }
             }
         }
         return $records;
+    }
+
+    /**
+     *
+     * @param $url
+     * @param $params
+     * @return string|string[]|null
+     */
+    protected function replaceUrlDynamicParams($url, $params)
+    {
+        return preg_replace_callback('/\{(.*?)\}/', function ($matches) use ($params) {
+            return $params[trim($matches[0], '{}')];
+        }, $url);
     }
 
     /**
@@ -155,6 +182,7 @@ class ApiController extends Controller
     {
         return \Curl::to($url)
             ->asJson()
+            ->returnResponseObject()
             ->$method();
     }
 
@@ -175,7 +203,7 @@ class ApiController extends Controller
         if (in_array($record->$column, $arrIds)) {
             $value = $collection->where($col, $record->$column)->first();
             if (!$remote->as_object) {
-                $value = $value->$needColumn;
+                $value = $value ? $value->$needColumn : $value;
             }
             if ($remote->enabled) {
                 if ($record instanceof \Illuminate\Database\Eloquent\Model) {
