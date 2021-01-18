@@ -94,11 +94,11 @@ class EditNotification extends Component{
                         ]
                     }
                 ],
-                "data": {
+                "data": [{
                     "field": "message",
                     "value": "{{altrpdata.text}} added or updated or deleted",
                     "type": "content"
-                },
+                }],
                 "send": {
                     "front": {
                         "enabled": true
@@ -253,6 +253,22 @@ class EditNotification extends Component{
         let name = e.target.value;
 
         switch(type){
+            case 'field':
+                this.setState(state => {
+                    state.value.notice_settings.data[0].field = name;
+                    return state
+                });
+        
+                // this.setState(s => ({ ...s, value: {...s.value, name: name, notice_settings: {...s.value.notice_settings, data: {...s.value.notice_settings.data, field: name }}} }));
+                break;
+            case 'value':
+                this.setState(state => {
+                    state.value.notice_settings.data[0].value = name;
+                    return state
+                });
+
+                // this.setState(s => ({ ...s, value: {...s.value, name: name, notice_settings: {...s.value.notice_settings, data: {...s.value.notice_settings.data, value: name }}} }));
+                break;
             case 'parent':
                 this.setState(s => ({ ...s, value: {...s.value, name: name, notice_settings: {...s.value.notice_settings, notice_name: titleToName(name)}} }));
                 break;

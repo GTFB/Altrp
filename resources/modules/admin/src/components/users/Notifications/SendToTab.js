@@ -11,7 +11,6 @@ export default class SendToTab extends Component{
 
     render(){
         const send = this.props.send ?? [];
-        console.log(send);
 
         return <div>
             <div className="send-checkbox-box">
