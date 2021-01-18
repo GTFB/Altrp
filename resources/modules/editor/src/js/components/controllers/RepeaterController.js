@@ -109,6 +109,7 @@ class RepeaterController extends Component {
     this.setState(state => {
       return { ...state, items }
     });
+    console.log(items)
     this._changeValue(items);
   }
   /**
@@ -138,7 +139,8 @@ class RepeaterController extends Component {
    */
   addItem() {
     let items = [...this.state.items];
-    items.push({ id: this.state.items.length });
+    let id = '_' + Math.random().toString(36).substr(2, 9);
+    items.push({ id });
     this.setState(state => {
       return {
         ...state,
@@ -163,7 +165,6 @@ class RepeaterController extends Component {
       this.setState(state => ({...state, items}))
     }
   }
-
   render() {
     if (this.state.show === false) {
       return '';
@@ -186,7 +187,7 @@ class RepeaterController extends Component {
                 thisController={this}
                 itemController={item} 
                 idx={idx}   
-                key={idx} 
+                key={item.id} 
               />
             })
           }
