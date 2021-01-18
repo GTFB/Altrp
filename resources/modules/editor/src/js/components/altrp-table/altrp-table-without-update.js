@@ -1,6 +1,5 @@
 import '../altrp-posts/altrp-posts.scss'
 import update from 'immutability-helper'
-import { HTML5Backend } from 'react-dnd-html5-backend'
 import '../../../sass/altrp-pagination.scss';
 import {
   recurseCount,
@@ -10,7 +9,7 @@ import {
   renderAssetIcon,
   generateButtonsArray
 } from "../../../../../front-app/src/js/helpers";
-import { DndProvider, useDrag, useDrop } from 'react-dnd'
+import { useDrag, useDrop } from 'react-dnd'
 import { Link } from "react-router-dom";
 import { renderAdditionalRows, renderCellActions, } from "./altrp-table";
 import {
@@ -577,15 +576,8 @@ function AltrpTableWithoutUpdate(
       }
       return paginationProps;
     }, [inner_page_size, pageSize, pageCount, pageIndex, settings]);
-  const { WrapperComponent, wrapperProps } = React.useMemo(() => {
-    return {
-      WrapperComponent: replace_rows ? DndProvider : DndProvider/*React.Fragment*/,
-      // wrapperProps: replace_rows ? {backend:HTML5Backend} : {backend:HTML5Backend},
-      wrapperProps: { backend: HTML5Backend },
-    };
-  }, [replace_rows]);
 
-  return <WrapperComponent {...wrapperProps}>
+  return <React.Fragment>
     {hide_columns && <div className="altrp-table-hidden">
       <div className="altrp-table-hidden__all">
         <IndeterminateCheckbox {...getToggleHideAllColumnsProps()} /> Toggle
@@ -714,7 +706,7 @@ function AltrpTableWithoutUpdate(
         </div></div></div>}
     </div>
     {paginationProps && <Pagination {...paginationProps} />}
-  </WrapperComponent>
+  </React.Fragment>
 }
 const TableBody =
   ({
