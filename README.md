@@ -3,8 +3,9 @@
 
 ## Changelog
 
-### 0.11.16
+### 0.12.1
 + Аdd the Adminbar
++ Insert Custom SVG to Content
 
 ### 0.11.16
 + Аdd the Possibility to Delete Widgets with Errors
