@@ -75,6 +75,7 @@ class ChooseWidget extends Component {
       <BarDataSource
         element={_.cloneDeep(this.props.editElement)}
         sources={_.cloneDeep(this.state.sources)}
+        widgetID={this.props.widgetID}
       />
     );
   }
@@ -84,6 +85,7 @@ class ChooseWidget extends Component {
       <PieDataSource
         element={_.cloneDeep(this.props.editElement)}
         sources={_.cloneDeep(this.state.sources)}
+        widgetID={this.props.widgetID}
       />
     );
   }
@@ -93,6 +95,7 @@ class ChooseWidget extends Component {
       <LineDataSource
         element={_.cloneDeep(this.props.editElement)}
         sources={_.cloneDeep(this.state.sources)}
+        widgetID={this.props.widgetID}
       />
     );
   }
@@ -111,6 +114,7 @@ class ChooseWidget extends Component {
       <ScatterDataSource
         element={_.cloneDeep(this.props.editElement)}
         sources={_.cloneDeep(this.state.sources)}
+        widgetID={this.props.widgetID}
       />
     );
   }

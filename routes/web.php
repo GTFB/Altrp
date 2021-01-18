@@ -413,6 +413,7 @@ Route::get('/', function () {
     'title' => 'Main',
     '_frontend_route' => [],
     'preload_content' => [],
+    'is_admin' => isAdmin(),
   ]);
 })->middleware(['web', 'installation.checker']);
 
@@ -431,6 +432,7 @@ foreach ($frontend_routes as $_frontend_route) {
       'title' => $title,
       '_frontend_route' => $_frontend_route,
       'preload_content' => $preload_content,
+      'is_admin' => isAdmin(),
     ]);
   })->middleware(['web', 'installation.checker']);
 }

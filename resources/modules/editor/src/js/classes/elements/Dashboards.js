@@ -332,99 +332,90 @@ class Dashboards extends BaseElement {
         "{{ELEMENT}} .altrp-dashboard__card--font-weight{{STATE}}":
           "font-weight: {{WEIGHT}} !important;"
       }
-
     });
-        // Border <--------------------------!--------------------------->
+    // Border <--------------------------!--------------------------->
 
-    this.addControl('border_type_card', {
+    this.addControl("border_type_card", {
       type: CONTROLLER_SELECT,
-      label: 'Border Type',
+      label: "Border Type",
       options: [
         {
-          'value': 'none',
-          'label': 'None',
+          value: "none",
+          label: "None"
         },
         {
-          'value': 'solid',
-          'label': 'Solid',
+          value: "solid",
+          label: "Solid"
         },
         {
-          'value': 'double',
-          'label': 'Double',
+          value: "double",
+          label: "Double"
         },
         {
-          'value': 'dotted',
-          'label': 'Dotted',
+          value: "dotted",
+          label: "Dotted"
         },
         {
-          'value': 'dashed',
-          'label': 'Dashed',
+          value: "dashed",
+          label: "Dashed"
         },
         {
-          'value': 'groove',
-          'label': 'Groove',
-        },
+          value: "groove",
+          label: "Groove"
+        }
       ],
       rules: {
-        '{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}': 'border-style: {{VALUE}};',
-      },
+        "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}":
+          "border-style: {{VALUE}};"
+      }
     });
 
-    this.addControl(
-      'border_width_card', {
+    this.addControl("border_width_card", {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Border Width',
+      label: "Border Width",
       default: {
         bind: true
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ["px", "%", "vh"],
       rules: {
-        '{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-      },
-    }
-    );
+        "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}":
+          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      }
+    });
 
-    this.addControl('border_color_card', {
+    this.addControl("border_color_card", {
       type: CONTROLLER_COLOR,
-      label: 'Border Color',
+      label: "Border Color",
       // default: {
       //   color: "rgb(50,168,82)",
       //   colorPickedHex: "#32a852",
       // },
       rules: {
-        '{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}': 'border-color: {{COLOR}};',
-      },
-    }
-    );
+        "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}":
+          "border-color: {{COLOR}};"
+      }
+    });
 
-    this.addControl('border_radius_card', {
+    this.addControl("border_radius_card", {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Border Radius',
+      label: "Border Radius",
       default: {
-        unit: 'px'
+        unit: "px"
       },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ["px", "%", "vh"],
       rules: {
-        '{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}': [
-          'border-top-left-radius: {{TOP}}{{UNIT}}',
-          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}": [
+          "border-top-left-radius: {{TOP}}{{UNIT}}",
+          "border-top-right-radius: {{RIGHT}}{{UNIT}}",
+          "border-bottom-right-radius: {{BOTTOM}}{{UNIT}}",
+          "border-bottom-left-radius:  {{LEFT}}{{UNIT}}"
         ]
       }
     });
-    
-    this.addControl('style_background_shadow', {
+
+    this.addControl("style_background_shadow", {
       type: CONTROLLER_SHADOW,
-      label: 'Shadow',
+      label: "Shadow",
       default: {
         // blur: 0,
         // horizontal: 0,
@@ -436,13 +427,11 @@ class Dashboards extends BaseElement {
         // colorPickedHex: '#000000',
         // type: ""
       },
-      presetColors: [
-        '#eaeaea',
-        '#9c18a8'
-      ],
+      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        '{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      },
+        "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}":
+          "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};"
+      }
     });
 
     this.endControlSection();
@@ -458,14 +447,14 @@ class Dashboards extends BaseElement {
       label: "Typographic",
       rules: {
         ".{{ID}}.altrp-dashboard__drawer--font{{STATE}}": [
-          'font-size: {{SIZE}}px;',
-          'font-family: {{FAMILY}}',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
+          "font-size: {{SIZE}}px;",
+          "font-family: {{FAMILY}}",
+          "line-height: {{LINEHEIGHT}};",
+          "letter-spacing: {{SPACING}}px",
+          "font-weight: {{WEIGHT}}",
+          "text-transform: {{TRANSFORM}}",
+          "font-style: {{STYLE}}",
+          "text-decoration: {{DECORATION}}"
         ]
       }
     });
@@ -478,8 +467,7 @@ class Dashboards extends BaseElement {
         colorPickedHex: ""
       },
       rules: {
-        ".{{ID}}.altrp-dashboard__drawer--font{{STATE}}":
-          "color: {{COLOR}};"
+        ".{{ID}}.altrp-dashboard__drawer--font{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -501,18 +489,17 @@ class Dashboards extends BaseElement {
       label: "Typographic input",
       rules: {
         ".{{ID}}.altrp-dashboard__drawer--font-input{{STATE}}": [
-          'font-size: {{SIZE}}px;',
-          'font-family: {{FAMILY}}',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
+          "font-size: {{SIZE}}px;",
+          "font-family: {{FAMILY}}",
+          "line-height: {{LINEHEIGHT}};",
+          "letter-spacing: {{SPACING}}px",
+          "font-weight: {{WEIGHT}}",
+          "text-transform: {{TRANSFORM}}",
+          "font-style: {{STYLE}}",
+          "text-decoration: {{DECORATION}}"
         ]
       }
     });
-
 
     this.addControl("style_font_size_drawer_section", {
       type: CONTROLLER_SLIDER,
@@ -569,9 +556,8 @@ class Dashboards extends BaseElement {
         ]
       }
     });
-   
 
-    // << ЦВЕТ ЧЕКОБОКСА 
+    // << ЦВЕТ ЧЕКОБОКСА
 
     this.addControl("checkbox_color", {
       type: CONTROLLER_COLOR,
@@ -581,12 +567,12 @@ class Dashboards extends BaseElement {
         colorPickedHex: ""
       },
       rules: {
-        ".{{ID}}.altrp-dashboard__checkboxcolor.MuiCheckbox-colorSecondary.Mui-checked{{STATE}}":[
+        ".{{ID}}.altrp-dashboard__checkboxcolor.MuiCheckbox-colorSecondary.Mui-checked{{STATE}}": [
           "color: {{COLOR}};",
-          "background-color: transparent !important"]
+          "background-color: transparent !important"
+        ]
       }
     });
-
 
     this.addControl("slider_range_color", {
       type: CONTROLLER_COLOR,
@@ -597,26 +583,25 @@ class Dashboards extends BaseElement {
       },
       rules: {
         ".{{ID}}.altrp-dashboard__drawer--range-drawer-color.MuiSlider-root{{STATE}}":
-          "color: {{COLOR}};",
+          "color: {{COLOR}};"
       }
     });
 
-
-    this.addControl('background_color_btn', {
+    this.addControl("background_color_btn", {
       type: CONTROLLER_COLOR,
-      label: 'Background color button',
+      label: "Background color button",
       // default: {
       //   color: "rgb(52,59,76)",
       //   colorPickedHex: "#343B4C",
       // },
       rules: {
-        '.{{ID}}.altrp-btn-draw{{STATE}}': 'background-color: {{COLOR}};',
-      },
+        ".{{ID}}.altrp-btn-draw{{STATE}}": "background-color: {{COLOR}};"
+      }
     });
 
-    this.addControl('font_typographic_btn', {
+    this.addControl("font_typographic_btn", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Typographic button',
+      label: "Typographic button",
       // default:{
       //   lineHeight: 1,
       //   spacing: 0,
@@ -626,34 +611,91 @@ class Dashboards extends BaseElement {
       //   decoration: ""
       // },
       rules: {
-        '.{{ID}}.altrp-btn-draw{{STATE}}': [
-          'font-size: {{SIZE}}px;',
-          'font-family: {{FAMILY}}',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
-    }
-  );
+        ".{{ID}}.altrp-btn-draw{{STATE}}": [
+          "font-size: {{SIZE}}px;",
+          "font-family: {{FAMILY}}",
+          "line-height: {{LINEHEIGHT}};",
+          "letter-spacing: {{SPACING}}px",
+          "font-weight: {{WEIGHT}}",
+          "text-transform: {{TRANSFORM}}",
+          "font-style: {{STYLE}}",
+          "text-decoration: {{DECORATION}}"
+        ]
+      }
+    });
 
-  this.addControl('font_color_btn', {
+    this.addControl("font_color_btn", {
       type: CONTROLLER_COLOR,
-      label: 'Color font button',
+      label: "Color font button",
       // default: {
       //   color: "rgb(255,255,255)",
       //   colorPickedHex: "#FFF",
       // },
       rules: {
-        '.{{ID}}.altrp-btn-draw{{STATE}}': 'color: {{COLOR}};',
+        ".{{ID}}.altrp-btn-draw{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("border_type_select", {
+      type: CONTROLLER_SELECT,
+      label: "Border Type Select",
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        ".{{ID}}.altrp-dashboard__drawer--select{{STATE}}":
+          "border-style: {{VALUE}};"
+      }
+    });
+
+    this.addControl("border_width_select", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border Width Select",
+      default: {
+        bind: true
       },
-    }
-  );
+      units: ["px", "%", "vh"],
+      rules: {
+        ".{{ID}}.altrp-dashboard__drawer--select{{STATE}}":
+          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      }
+    });
 
-
+    this.addControl("border_color_select", {
+      type: CONTROLLER_COLOR,
+      label: "Border Color Select",
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852",
+      // },
+      rules: {
+        ".{{ID}}.altrp-dashboard__drawer--select{{STATE}}":
+          "border-color: {{COLOR}};"
+      }
+    });
 
     // this.addControl("style_range_drawer_color", {
     //   type: CONTROLLER_COLOR,
@@ -688,6 +730,182 @@ class Dashboards extends BaseElement {
     //     ]
     //   }
     // });
+
+    this.endControlSection();
+
+    this.startControlSection("Tooltip", {
+      tab: TAB_STYLE,
+      label: "Tooltip style",
+      default: "|"
+    });
+
+    this.addControl("style_margin_tooltip", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Margin",
+      default: {
+        top: 10,
+        right: 10,
+        bottom: 10,
+        left: 10,
+        unit: "px",
+        bind: true
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}}.altrp-dashboard__tooltip--label-background{{STATE}}": [
+          "margin-top: {{TOP}}{{UNIT}};",
+          "margin-right: {{RIGHT}}{{UNIT}};",
+          "margin-bottom: {{BOTTOM}}{{UNIT}};",
+          "margin-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+
+    this.addControl("style_padding_tooltip", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 10,
+        right: 10,
+        bottom: 10,
+        left: 10,
+        unit: "px",
+        bind: true
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}}.altrp-dashboard__tooltip--font{{STATE}}": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+
+    this.addControl("style_font_tooltip", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic",
+      rules: {
+        ".{{ID}}.altrp-dashboard__tooltip--font{{STATE}}": [
+          "font-size: {{SIZE}}px;",
+          "font-family: {{FAMILY}}",
+          "line-height: {{LINEHEIGHT}};",
+          "letter-spacing: {{SPACING}}px",
+          "font-weight: {{WEIGHT}}",
+          "text-transform: {{TRANSFORM}}",
+          "font-style: {{STYLE}}",
+          "text-decoration: {{DECORATION}}"
+        ]
+      }
+    });
+
+    this.addControl("style_font_color_tooltip", {
+      type: CONTROLLER_COLOR,
+      label: "Typographic color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        ".{{ID}}.altrp-dashboard__tooltip--font{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("style_background_color_tooltip", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        ".{{ID}}.altrp-dashboard__tooltip--label-background{{STATE}}":
+          "background-color: {{COLOR}} !important;"
+      }
+    });
+
+    this.addControl("style_background_tooltip_shadow", {
+      type: CONTROLLER_SHADOW,
+      label: "Shadow",
+      default: {
+        // blur: 0,
+        // horizontal: 0,
+        // vertical: 0,
+        // opacity: 1,
+        // spread: 0,
+        // colorRGB: 'rgb(0, 0, 0)',
+        // color: 'rgb(0, 0, 0)',
+        // colorPickedHex: '#000000',
+        // type: ""
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}}.altrp-dashboard__tooltip--label-background{{STATE}}":
+          "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};"
+      }
+    });
+
+    this.addControl("border_type_tooltip", {
+      type: CONTROLLER_SELECT,
+      label: "Border Type",
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+      rules: {
+        "{{ELEMENT}}.altrp-dashboard__tooltip--label-background{{STATE}}":
+          "border-style: {{VALUE}};"
+      }
+    });
+
+    this.addControl("border_width_tooltip", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border Width",
+      default: {
+        bind: true
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}}.altrp-dashboard__tooltip--label-background{{STATE}}":
+          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      }
+    });
+
+    this.addControl("border_color_tooltip", {
+      type: CONTROLLER_COLOR,
+      label: "Border Color",
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852",
+      // },
+      rules: {
+        "{{ELEMENT}}.altrp-dashboard__tooltip--label-background{{STATE}}":
+          "border-color: {{COLOR}};"
+      }
+    });
 
     this.endControlSection();
 

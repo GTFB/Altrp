@@ -156,6 +156,9 @@ button {
             border-radius: 0 2px 2px 0;
         }
     }
+    &.control-group_single .btn:nth-child(n){
+        border-radius: 2px;
+    }
 }
 .control-button-container {
     justify-content: flex-end;

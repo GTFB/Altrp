@@ -164,7 +164,7 @@ function getContent(settingName, returnRaw = false) {
     //   });
     // }
 
-    const contentDynamicSetting = this.props.element.getDynamicSetting('content_default_value');
+    const contentDynamicSetting = this.props.element.getDynamicSetting(settingName);
 
     if(contentDynamicSetting){
       const converter = getConverter(contentDynamicSetting);

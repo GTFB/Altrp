@@ -420,6 +420,7 @@ class DataSourceDashboards extends Component {
           saveWidget={this.saveWidgetData}
           copyWidget={this.copyWidget}
           exportCard={this.exportCard}
+          widgetID={this.state.id}
         />
       </div>
     );

@@ -130,7 +130,7 @@ function AltrpTableWithoutUpdate(
     const [value, setValue] = React.useState(initialValue);
     React.useEffect(() => {
       setValue(initialValue);
-    }, [initialValue]);
+    }, [initialValue, cell]);
     const { column_template, column_is_editable, column_edit_url, _accessor } = column;
     const [columnTemplate, setColumnTemplate] = React.useState(null);
     const columnEditUrl =
@@ -139,7 +139,7 @@ function AltrpTableWithoutUpdate(
           return null;
         }
         return parseURLTemplate(column_edit_url, row.original);
-      }, [column_edit_url, column_is_editable]);
+      }, [column_edit_url, column_is_editable, row, ]);
 
     React.useEffect(() => {
       if (column_template) {
@@ -199,6 +199,8 @@ function AltrpTableWithoutUpdate(
      * Отоборажаем инпут для редактирования данных
      */
     if (columnEditUrl) {
+      // console.log(value);
+      console.log(columnEditUrl);
       return <AutoUpdateInput className="altrp-inherit"
         route={columnEditUrl}
         resourceid={''}

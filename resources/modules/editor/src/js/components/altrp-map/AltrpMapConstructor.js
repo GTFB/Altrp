@@ -64,6 +64,7 @@ function AltrpMapConstructor({ settings, id }) {
                     Number(_.get(data, r.longitude))
                   ]
                 },
+                inCluster: r?.useCluster || false,
                 properties: {
                   fillOpacity: 1,
                   icon: r.icon || "GoogleMarker",
@@ -85,6 +86,7 @@ function AltrpMapConstructor({ settings, id }) {
                     Number(_.get(geoObj, r.longitude))
                   ]
                 },
+                inCluster: r?.useCluster || false,
                 properties: {
                   fillOpacity: 1,
                   icon: r.icon || "GoogleMarker",
@@ -150,7 +152,9 @@ function AltrpMapConstructor({ settings, id }) {
           const dataFromModel = await featuredFromModel;
           const repeaterObjects = dynamicGeoObjects;
           let result = dataFromModel;
-          result = result.concat(repeaterObjects);
+          result = result
+            .concat(repeaterObjects)
+            .filter(item => typeof item !== "undefined");
           setGeoJson({
             type: "FeatureCollection",
             features: result

@@ -567,17 +567,17 @@ class Page extends Model
     }
     $templates = [];
     foreach ( $areas as $area ) {
-      $template = Template::getTemplate([
+      $template = Template::getTemplate( [
         'page_id' => $page_id,
         'template_type' => $area,
-      ]);
+      ] );
       $template['template_type'] = $area;
       $templates[] = $template;
     }
     $important_styles = [];
     ob_start();
     ?>
-    <div class="front-app-content ">
+    <div class="front-app-content front-app-content_preloaded">
       <div class="route-content" id="route-content">
         <?php
         foreach ( $templates as $template ) {
