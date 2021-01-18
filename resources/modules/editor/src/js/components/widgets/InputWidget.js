@@ -1,6 +1,6 @@
 import React, { Component, Suspense } from "react";
 import {
-  altrpCompare,
+  altrpCompare, convertData,
   isEditor,
   parseOptionsFromSettings,
   parseParamsFromString,
@@ -450,7 +450,7 @@ class InputWidget extends Component {
     if (e && e.value) {
       value = e.value;
     }
-    if (editor !== null) {
+    if (_.get(editor, 'getData')) {
       value = editor.getData();
     }
     if (_.isArray(e)) {
@@ -522,7 +522,7 @@ class InputWidget extends Component {
     ) {
       this.dispatchFieldValueToStore(e.target.value, true);
     }
-    if (editor !== null) {
+    if (_.get(editor, 'getData')) {
       this.dispatchFieldValueToStore(editor.getData(), true);
     }
     if (this.props.element.getSettings("actions", []) && !isEditor()) {

@@ -79,7 +79,7 @@ class Section extends BaseElement{
           }
         ],
         rules: {
-          "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "flex-wrap: {{VALUE}} !important",
+          "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": "flex-wrap: {{VALUE}} !important",
         },
       }
     );
@@ -126,7 +126,7 @@ class Section extends BaseElement{
         },
       ],
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": [
+        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": [
           "align-content: {{VALUE}}",
           "align-items: {{VALUE}}"
         ],
@@ -172,7 +172,7 @@ class Section extends BaseElement{
           },
         ],
         rules: {
-          "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "justify-content: {{VALUE}}",
+          "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": "justify-content: {{VALUE}}",
         },
       }
     );
@@ -203,7 +203,7 @@ class Section extends BaseElement{
           },
         ],
         rules: {
-          "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "flex-direction: {{VALUE}}"
+          "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": "flex-direction: {{VALUE}}"
         },
       }
     );
@@ -233,9 +233,8 @@ class Section extends BaseElement{
       max: 2000,
       min: 0,
       rules: {
-        // "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "width: {{SIZE}}{{UNIT}}"
-        "{{ELEMENT}} .altrp-section_boxed{{STATE}}": "width: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-section_section-boxed{{STATE}}": "padding-left: calc((100vw - {{SIZE}}{{UNIT}}) / 2);padding-right: calc((100vw - {{SIZE}}{{UNIT}}) / 2); width: 100vw;",
+        "{{ELEMENT}} > .altrp-section_boxed{{STATE}}": "width: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}} > .altrp-section_section-boxed{{STATE}}": "padding-left: calc((100vw - {{SIZE}}{{UNIT}}) / 2);padding-right: calc((100vw - {{SIZE}}{{UNIT}}) / 2); width: 100vw;",
       }
     });
 
@@ -270,7 +269,7 @@ class Section extends BaseElement{
         }
       ],
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}} .altrp-column{{STATE}}": "padding: {{VALUE}}px"
+        "{{ELEMENT}} > .altrp-section{{STATE}} .altrp-column{{STATE}}": "padding: {{VALUE}}px"
       }
     });
 
@@ -305,7 +304,7 @@ class Section extends BaseElement{
       max: 1440,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "min-height: {{SIZE}}{{UNIT}} "
+        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": "min-height: {{SIZE}}{{UNIT}} "
       }
     });
 
@@ -336,7 +335,7 @@ class Section extends BaseElement{
     //     }
     //   ],
     //   rules: {
-    //     '{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}': 'align-items: {{VALUE}};',
+    //     '{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}': 'align-items: {{VALUE}};',
     //   }
     // });
 
@@ -374,7 +373,7 @@ class Section extends BaseElement{
     //       }
     //     ],
     //     rules: {
-    //       '{{ELEMENT}} .altrp-section': ['align-content: {{VALUE}};',
+    //       '{{ELEMENT}} > .altrp-section': ['align-content: {{VALUE}};',
     //                                       'align-items: {{VALUE}};',]
     //     },
     //   }
@@ -395,7 +394,7 @@ class Section extends BaseElement{
         }
       ],
       rules: {
-        '{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}': 'overflow: {{VALUE}};',
+        '{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}': 'overflow: {{VALUE}};',
       }
     });
 
@@ -489,7 +488,7 @@ class Section extends BaseElement{
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "background-color: {{COLOR}};"
+        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
@@ -506,7 +505,7 @@ class Section extends BaseElement{
         value: ""
       },
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}}": "background-image: {{VALUE}}"
+        "{{ELEMENT}} > .altrp-section{{STATE}}": "background-image: {{VALUE}}"
       }
     });
 
@@ -515,7 +514,7 @@ class Section extends BaseElement{
       label: 'Background Image',
       default: {url: ""},
       rules: {
-        "{{ELEMENT}} .altrp-section.altrp-background-image{{STATE}}": "background-image: url({{URL}});"
+        "{{ELEMENT}} > .altrp-section.altrp-background-image{{STATE}}": "background-image: url({{URL}});"
       }
     });
 
@@ -562,7 +561,7 @@ class Section extends BaseElement{
       label: 'Background Position',
       default: 'top left',
       rules: {
-        "{{ELEMENT}} .altrp-section.altrp-background-image{{STATE}}": "background-position: {{VALUE}};"
+        "{{ELEMENT}} > .altrp-section.altrp-background-image{{STATE}}": "background-position: {{VALUE}};"
       }
     });
 
@@ -585,7 +584,7 @@ class Section extends BaseElement{
       label: 'Background Attachment',
       default: 'scroll',
       rules: {
-        "{{ELEMENT}} .altrp-section.altrp-background-image{{STATE}}": "background-attachment: {{VALUE}};"
+        "{{ELEMENT}} > .altrp-section.altrp-background-image{{STATE}}": "background-attachment: {{VALUE}};"
       }
     });
 
@@ -620,7 +619,7 @@ class Section extends BaseElement{
       label: 'Background Repeat',
       default: 'repeat',
       rules: {
-        "{{ELEMENT}} .altrp-section.altrp-background-image{{STATE}}": "background-repeat: {{VALUE}};"
+        "{{ELEMENT}} > .altrp-section.altrp-background-image{{STATE}}": "background-repeat: {{VALUE}};"
       }
     });
 
@@ -642,7 +641,7 @@ class Section extends BaseElement{
       max: 1000,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-section.altrp-background-image{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
+        "{{ELEMENT}} > .altrp-section.altrp-background-image{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
       }
     });
 
@@ -669,7 +668,7 @@ class Section extends BaseElement{
       label: 'Background Size',
       default: 'unset',
       rules: {
-        "{{ELEMENT}} .altrp-section.altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
+        "{{ELEMENT}} > .altrp-section.altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
       }
     });
 
@@ -715,7 +714,7 @@ class Section extends BaseElement{
         }
       ],
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "border-style: {{VALUE}};"
+        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": "border-style: {{VALUE}};"
       }
     });
 
@@ -724,7 +723,7 @@ class Section extends BaseElement{
       label: "Border width",
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}":
+        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}":
           "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
       }
     });
@@ -737,7 +736,7 @@ class Section extends BaseElement{
         colorPickedHex: "#32a852"
       },
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "border-color: {{COLOR}};"
+        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": "border-color: {{COLOR}};"
       }
     });
 
@@ -756,7 +755,7 @@ class Section extends BaseElement{
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -779,7 +778,7 @@ class Section extends BaseElement{
           '#9c18a8'
         ],
         rules: {
-          '{{ELEMENT}} .altrp-section{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+          '{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
         },
       }
     );
@@ -807,7 +806,7 @@ class Section extends BaseElement{
         'vh',
       ],
       rules: {
-        '{{ELEMENT}}{{STATE}},{{ELEMENT}} .altrp-section-full-fill{{STATE}}': [
+        '{{ELEMENT}}{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -828,7 +827,7 @@ class Section extends BaseElement{
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-section{{STATE}}": [
+        "{{ELEMENT}} > .altrp-section{{STATE}}": [
           "padding-top: {{TOP}}{{UNIT}};",
           "padding-right: {{RIGHT}}{{UNIT}};",
           "padding-bottom: {{BOTTOM}}{{UNIT}};",
@@ -842,7 +841,7 @@ class Section extends BaseElement{
       label: "Z-index",
       default: 0,
       rules: {
-        "{{ELEMENT}} .altrp-section": "z-index: {{VALUE}}"
+        "{{ELEMENT}} > .altrp-section": "z-index: {{VALUE}}"
       }
     });
 
@@ -876,7 +875,7 @@ class Section extends BaseElement{
         'isFixed': [true],
       },
       rules: {
-          '{{ELEMENT}} .altrp-section{{STATE}}': 'top: {{VALUE}}',
+          '{{ELEMENT}} > .altrp-section{{STATE}}': 'top: {{VALUE}}',
         },
     });
 
@@ -888,7 +887,7 @@ class Section extends BaseElement{
         'isFixed': [true],
       },
       rules: {
-        '{{ELEMENT}} .altrp-section{{STATE}}': 'right: {{VALUE}}',
+        '{{ELEMENT}} > .altrp-section{{STATE}}': 'right: {{VALUE}}',
       },
     });
 
@@ -900,7 +899,7 @@ class Section extends BaseElement{
         'isFixed': [true],
       },
       rules: {
-        '{{ELEMENT}} .altrp-section{{STATE}}': 'left: {{VALUE}}',
+        '{{ELEMENT}} > .altrp-section{{STATE}}': 'left: {{VALUE}}',
       },
     });
 
@@ -912,7 +911,7 @@ class Section extends BaseElement{
         'isFixed': [true],
       },
       rules: {
-        '{{ELEMENT}} .altrp-section{{STATE}}': 'bottom: {{VALUE}}',
+        '{{ELEMENT}} > .altrp-section{{STATE}}': 'bottom: {{VALUE}}',
       },
     });
 
@@ -924,7 +923,7 @@ class Section extends BaseElement{
         'isFixed': [true],
       },
       rules: {
-        '{{ELEMENT}}.fixed-section .altrp-section{{STATE}}': 'width: {{VALUE}}',
+        '{{ELEMENT}}.fixed-section > .altrp-section{{STATE}}': 'width: {{VALUE}}',
       },
     });
 

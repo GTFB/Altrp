@@ -1838,3 +1838,9 @@ button {
 .editor-content .altrp-element {
     min-height: 1px;
 }
+
+.editor-content{
+  & .altrp-posts{
+    min-height: 20px;
+  }
+}

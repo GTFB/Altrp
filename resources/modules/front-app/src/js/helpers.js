@@ -1505,12 +1505,10 @@ export function convertData(settings, data){
       data = converter.convertData(data);
     });
   }
-  if(! settings.data_type){
+  if(settings.data_type){
     const converter = getConverter(settings);
     data = converter.convertData(data);
   }
-  console.log(data);
-  console.log(settings);
   return data;
   // if()
 }

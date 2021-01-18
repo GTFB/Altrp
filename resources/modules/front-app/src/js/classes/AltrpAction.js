@@ -1,5 +1,4 @@
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
-import { isString } from "lodash";
 import React, { Component } from "react";
 import {
   altrpLogin,
@@ -16,11 +15,9 @@ import {
   replaceContentWithData,
   scrollToElement,
   setDataByPath,
-  altrpRandomId
+
 } from "../helpers";
 import { togglePopup } from "../store/popup-trigger/actions";
-import reactDom from "react-dom";
-import Resource from "../../../../editor/src/js/classes/Resource";
 
 // let  history = require('history');
 // // import {history} from 'history';
@@ -297,6 +294,7 @@ class AltrpAction extends AltrpModel {
       alertText = this.getProperty("reject");
     }
     if (alertText) {
+      alertText = replaceContentWithData(alertText);
       alert(alertText);
     }
     return result;

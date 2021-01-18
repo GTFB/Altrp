@@ -6,13 +6,15 @@ import templateLoader from "../../classes/modules/TemplateLoader"
 import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric"
 import AltrpModel from "../../classes/AltrpModel";
 import ElementWrapper from "../../../../../front-app/src/js/components/ElementWrapper";
+import {isEditor} from "../../../../../front-app/src/js/helpers";
 
 class AltrpPosts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       simpleTemplate: '',
-      simpleTemplateId : null
+      simpleTemplateId : null,
+      currentPage: 1,
     }
   }
 
@@ -47,6 +49,9 @@ class AltrpPosts extends React.Component {
     }
     // if(this.props.data !== nextProps.data){
     if(! _.isEqual(this.props.data, nextProps.data)){
+      return true;
+    }
+    if(this.state.currentPage !== nextState.currentPage){
       return true;
     }
     return false;
@@ -101,7 +106,69 @@ class AltrpPosts extends React.Component {
     </React.Fragment>
   };
 
+  /**
+   * Получаем количество страниц
+   * @return {int}
+   */
+
+  getPageCount(){
+    let {data: posts} = this.props;
+    const {posts_per_page} = this.props.settings;
+    if(! posts_per_page || ! _.get(posts, 'length')){
+      return 1;
+    }
+    return Math.ceil(posts.length / posts_per_page);
+  }
+
+  /**
+   * поменяем страницу
+   * @param {number} page
+   */
+  setPage(page){
+    page = Number(page);
+    if(! page){
+      page = 1;
+    }
+    if(page > this.getPageCount()){
+      page = this.getPageCount();
+    }
+    if(this.state.currentPage === page){
+      return;
+    }
+    this.setState(state =>({...state, currentPage: page}))
+  }
+  /**
+   * Выводим пагинацию
+   * @return {*}
+   */
+  renderPagination(){
+    const {settings} = this.props;
+    let {data: posts} = this.props;
+    if(! posts.length && ! isEditor()){
+      return null;
+    }
+    if(_.get(settings, 'posts_pagination_type')){
+      const {currentPage} = this.state;
+      const pageCount = this.getPageCount();
+      return <div className="altrp-pagination-pages">
+        <button className={"altrp-pagination__previous " + (currentPage <= 1 ? 'state-disabled' : '')}
+                disabled={currentPage <= 1}
+                onClick={()=>{this.setPage(currentPage - 1)}}>
+          <span>{settings.posts_prev_text || ''}</span>
+          </button>
+        <button className={"altrp-pagination__next " + (currentPage === pageCount ? 'state-disabled' : '')}
+                disabled={currentPage === pageCount}
+                onClick={()=>{this.setPage(currentPage + 1)}}>
+          <span>{settings.posts_next_text || ''}</span>
+          </button>
+      </div>
+    }
+    return null;
+  }
+
   render() {
+    const {currentPage} = this.state;
+    const {posts_per_page} = this.props.settings;
     let {data: posts} = this.props;
     if((! _.isArray(posts)) && _.isObject(posts)){
       posts = [posts];
@@ -109,11 +176,20 @@ class AltrpPosts extends React.Component {
     if(! _.isArray(posts)){
       posts = [];
     }
-    return<div className="altrp-posts">
+    let postsStart = 0;
+    if(posts_per_page && Number(posts_per_page)){
+      if(currentPage > 1){
+        postsStart = (currentPage - 1) * posts_per_page
+      }
+      posts = posts.slice(postsStart, postsStart + posts_per_page);
+    }
+    return<React.Fragment><div className="altrp-posts">
       {posts.map((p, idx)=>{
-        return this.renderPost(idx);
+        return this.renderPost(postsStart + idx);
       })}
     </div>
+      {this.renderPagination()}
+    </React.Fragment>
   }
 }
 
