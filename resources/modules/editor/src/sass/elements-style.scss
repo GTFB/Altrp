@@ -1444,7 +1444,7 @@
   display: flex;
   align-items: center;
   img {
-    height: 60px;
+    width: 60px;
   }
 }
 
@@ -1458,4 +1458,8 @@
   label {
     display: inline-block;
   }
+}
+
+.altrp-label-icon, .altrp-label-icon svg, .altrp-label-icon img {
+  width : 20px;
 }

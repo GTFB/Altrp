@@ -123,9 +123,18 @@ class EditModel extends Component {
    */
   onSubmit = async (model) => {
     let res;
+    const isNameTaken = await fetch(`/admin/ajax/model_name_is_free/?name=${model.name}`)
+      .then(res => res.json())
+      .then(res => !res.taken);
+      
+    if (isNameTaken) {
+      return alert(`Name ${model.name} is already taken. Use another one.`)
+    }
+    
     if (this.state.id) {
       res = await this.modelsResource.put(this.state.id, model);
     } else {
+
       res = await this.modelsResource.post(model);
     }
     this.props.history.push("/admin/tables/models");
@@ -144,51 +153,53 @@ class EditModel extends Component {
       </div>
       <div className="admin-content">
         <EditModelForm model={model}
-                       submitText={model.id ? 'Save' : 'Add'}
-                       edit={model.id}
-                       onSubmit={this.onSubmit}/>
+          submitText={model.id ? 'Save' : 'Add'}
+          edit={model.id}
+          onSubmit={this.onSubmit} />
 
 
-        {fields ?  <><h2 className="sub-header">Fields</h2>
-        <AdminTable
-          columns={columns}
-          quickActions={[{ tag: 'Link', props: {
-              href: `/admin/tables/models/${id}/fields/edit/:id`,
-            },
-            title: 'Edit'
-          } , {
-            tag: 'button',
-            route: `/admin/ajax/models/${id}/fields/:id`,
-            method: 'delete',
-            confirm: 'Are You Sure?',
-            after: () => this.updateFields(),
-            className: 'quick-action-menu__item_danger',
-            title: 'Trash'
-          }]}
-          rows={fields.map(field => ({ ...field, editUrl: `/admin/tables/models/${model.id}/fields/edit/${field.id}` }))}
-        />
-        <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/fields/add`}>Add Field</Link>
+        {fields ? <><h2 className="sub-header">Fields</h2>
+          <AdminTable
+            columns={columns}
+            quickActions={[{
+              tag: 'Link', props: {
+                href: `/admin/tables/models/${id}/fields/edit/:id`,
+              },
+              title: 'Edit'
+            }, {
+              tag: 'button',
+              route: `/admin/ajax/models/${id}/fields/:id`,
+              method: 'delete',
+              confirm: 'Are You Sure?',
+              after: () => this.updateFields(),
+              className: 'quick-action-menu__item_danger',
+              title: 'Trash'
+            }]}
+            rows={fields.map(field => ({ ...field, editUrl: `/admin/tables/models/${model.id}/fields/edit/${field.id}` }))}
+          />
+          <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/fields/add`}>Add Field</Link>
         </> : ''}
         {relations ? <>
           <h2 className="sub-header">Relations</h2>
           <AdminTable
             columns={columns}
-          quickActions={[{ tag: 'Link', props: {
-              href: `/admin/tables/models/${id}/relations/edit/:id`,
-            },
-            title: 'Edit'
-          } , {
-            tag: 'button',
-            route: `/admin/ajax/models/${id}/relations/:id`,
-            method: 'delete',
-            confirm: 'Are You Sure?',
-            after: () => this.updateRelations(),
-            className: 'quick-action-menu__item_danger',
-            title: 'Trash'
-          }]}
-          rows={relations.map(relation => ({ ...relation, editUrl: `/admin/tables/models/${model.id}/relations/edit/${relation.id}` }))}
-        />
-        <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/relations/add`}>Add Relation</Link>
+            quickActions={[{
+              tag: 'Link', props: {
+                href: `/admin/tables/models/${id}/relations/edit/:id`,
+              },
+              title: 'Edit'
+            }, {
+              tag: 'button',
+              route: `/admin/ajax/models/${id}/relations/:id`,
+              method: 'delete',
+              confirm: 'Are You Sure?',
+              after: () => this.updateRelations(),
+              className: 'quick-action-menu__item_danger',
+              title: 'Trash'
+            }]}
+            rows={relations.map(relation => ({ ...relation, editUrl: `/admin/tables/models/${model.id}/relations/edit/${relation.id}` }))}
+          />
+          <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/relations/add`}>Add Relation</Link>
         </> : ''}
         {accessors ? <>
           <h2 className="sub-header">Accessors</h2>
@@ -213,39 +224,39 @@ class EditModel extends Component {
           <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/accessors/add`}>Add Accessor</Link>
         </> : ''}
         {queries ? <>
-        <h2 className="sub-header">Queries</h2>
-        <AdminTable
-          columns={columns}
-          rows={queries.map(query => ({ ...query, editUrl: `/admin/tables/models/${model.id}/queries/edit/${query.id}` }))}
-          quickActions={[{
-            tag: 'Link', props: {
-              href: `/admin/tables/models/${model.id}/queries/edit/:id`,
-            },
-            title: 'Edit'
-          }, {
-            tag: 'button',
-            route: `/admin/ajax/models/${model.id}/queries/:id`,
-            method: 'delete',
-            confirm: 'Are You Sure?',
-            after: () => this.updateQueries(),
-            className: 'quick-action-menu__item_danger',
-            title: 'Trash'
-          }]}
-        />
-        <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/queries/add`}>Add Query</Link>
+          <h2 className="sub-header">Queries</h2>
+          <AdminTable
+            columns={columns}
+            rows={queries.map(query => ({ ...query, editUrl: `/admin/tables/models/${model.id}/queries/edit/${query.id}` }))}
+            quickActions={[{
+              tag: 'Link', props: {
+                href: `/admin/tables/models/${model.id}/queries/edit/:id`,
+              },
+              title: 'Edit'
+            }, {
+              tag: 'button',
+              route: `/admin/ajax/models/${model.id}/queries/:id`,
+              method: 'delete',
+              confirm: 'Are You Sure?',
+              after: () => this.updateQueries(),
+              className: 'quick-action-menu__item_danger',
+              title: 'Trash'
+            }]}
+          />
+          <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/queries/add`}>Add Query</Link>
         </> : ''}
         {sql_editors ? <>
-        <h2 className="sub-header">SQL Editors</h2>
-        <AdminTable
-          columns={columns}
-          rows={sql_editors.map(query => ({ ...query, editUrl: `/admin/tables/models/${model.id}/sql_editors/edit/${query.id}` }))}
-        />
-        <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/sql_editors/add`}>Add Editor</Link>
+          <h2 className="sub-header">SQL Editors</h2>
+          <AdminTable
+            columns={columns}
+            rows={sql_editors.map(query => ({ ...query, editUrl: `/admin/tables/models/${model.id}/sql_editors/edit/${query.id}` }))}
+          />
+          <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/sql_editors/add`}>Add Editor</Link>
         </> : ''}
         <h2 className="sub-header">Validation</h2>
         {id && <>
-          <ValidationTable 
-            validations={validations} 
+          <ValidationTable
+            validations={validations}
             updateValidations={this.updateValidations}
             fieldsOptions={fields}
             validationsResource={this.validationsResource}
@@ -260,7 +271,7 @@ class EditModel extends Component {
             fieldsOptions={fields}
             validationsResource={this.validationsResource}
             data_source_options={data_source_options}
-            updateValidations={this.updateValidations} 
+            updateValidations={this.updateValidations}
           />
         </AdminModal2>}
       </div>

@@ -213,7 +213,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/model_name_is_free', 'Admin\ModelsController@modelNameIsFree');
     Route::get('/models/{model_id}/field_name_is_free', 'Admin\ModelsController@fieldNameIsFree');
     Route::get('/models/{model_id}/relation_name_is_free', 'Admin\ModelsController@relationNameIsFree');
-    Route::get('/models/{model_id}/query_name_is_free', 'Admin\ModelsController@queryNameIsFree');
+    Route::get('/models/{model_id}/sql_builder_name_is_free', 'Admin\ModelsController@queryNameIsFree');
 
     /**
      * Модели

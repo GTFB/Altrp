@@ -6,7 +6,8 @@ import {
   parseParamsFromString,
   parseURLTemplate,
   replaceContentWithData,
-  sortOptions
+  sortOptions,
+  renderAssetIcon
 } from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
@@ -632,7 +633,8 @@ class InputWidget extends Component {
       options_sorting,
       content_readonly,
       image_select_options,
-      select2_multiple: isMultiple
+      select2_multiple: isMultiple,
+      label_icon
     } = this.props.element.getSettings();
 
     let value = this.state.value;
@@ -706,6 +708,9 @@ class InputWidget extends Component {
           >
             {this.state.settings.content_label}
           </label>
+          {label_icon && label_icon.assetType && <span className="altrp-label-icon">
+            {renderAssetIcon(label_icon)}
+          </span>}
         </div>
       );
     } else {

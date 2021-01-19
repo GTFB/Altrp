@@ -1510,5 +1510,9 @@ export function convertData(settings, data){
     data = converter.convertData(data);
   }
   return data;
-  // if()
+}
+export function renderIcon(isHidden, icon, defaultIcon, className) {
+  if (isHidden) return null;
+  
+  return <span className={className}>{icon && icon.assetType ? renderAssetIcon(icon) : defaultIcon}</span>
 }
