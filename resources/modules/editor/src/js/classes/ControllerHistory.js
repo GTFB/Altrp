@@ -16,10 +16,10 @@ class ControllerHistory extends AltrpModel {
 
       switch(restoreElement.type) {
         case 'ADD':
-          this.restoreAdd(restoreElement.element);
+          this.restoreAdd(restoreElement.data.element);
           break;
         case 'DELETE':
-          this.restoreDelete(restoreElement.element, 2);
+          this.restoreDelete(restoreElement.data.element, restoreElement.data.parent, 2);
           break;
         case 'EDIT':
           this.restoreEdit(); 
@@ -28,16 +28,11 @@ class ControllerHistory extends AltrpModel {
     }
   }
 
-  restoreDelete(element, elementIndex) {
-    console.log('restoreDelete', element)
-    const parent = element.parent;
+  restoreDelete(element, parent, elementIndex) {
     console.log(parent)
-    console.log(parent.appendChild)
-    console.log(parent.appendWidget)
     parent.appendChild(element);
-
+    console.log('restoreDelete')
     store.dispatch(deleteLastHistoryStoreItems(2))
-    console.log('restoreDeleteEnd')
   }
 
   restoreEdit(element, oldValue) {

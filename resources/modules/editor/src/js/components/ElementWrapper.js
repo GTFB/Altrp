@@ -131,7 +131,7 @@ class ElementWrapper extends Component {
             }
             break;
         }
-        store.dispatch(addHistoryStoreItem('ADD', newElement));
+        store.dispatch(addHistoryStoreItem('ADD', {element: newElement}));
       }
       if (this.props.element.getType() === "column") {
         this.props.element.appendChild(newElement);

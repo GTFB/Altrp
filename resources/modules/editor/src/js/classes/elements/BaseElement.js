@@ -140,7 +140,7 @@ class BaseElement extends ControlStack {
     }
     this.templateNeedUpdate();
 
-    store.dispatch(addHistoryStoreItem('ADD', child));
+    store.dispatch(addHistoryStoreItem('ADD', {element: child}));
   }
 
   insertSiblingAfter(newSibling) {
@@ -259,7 +259,7 @@ class BaseElement extends ControlStack {
     if (typeof child === 'string') {
       childId = child;
     } else if (child instanceof BaseElement) {
-      store.dispatch(addHistoryStoreItem('DELETE', child));
+      store.dispatch(addHistoryStoreItem('DELETE', {element: child, parent: this}));
       childId = child.getId();
     } else {
       throw 'Delete Child can only by id or Instance';
