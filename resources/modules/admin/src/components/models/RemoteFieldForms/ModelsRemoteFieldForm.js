@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { withRouter } from 'react-router-dom';
 
-import Resource from "../../../../editor/src/js/classes/Resource";
-import AltrpSelect from "../altrp-select/AltrpSelect";
-class RemoteFieldForm extends Component {
+import Resource from "../../../../../editor/src/js/classes/Resource";
+import AltrpSelect from "../../altrp-select/AltrpSelect";
+
+class ModelsRemoteFieldForm extends Component {
   state = {
     name: '',
     column_id: '',
@@ -27,12 +28,12 @@ class RemoteFieldForm extends Component {
     this.setState({ dataSourceOptions: options });
   }
 
-  submitHandler = e => {
+  submitHandler = async (e) => {
     e.preventDefault();
     const model_id = this.props.match.params.id
     this.props.field ?
-      this.props.remoteFieldsResource.put(this.props.field.id, { ...this.state, model_id }) :
-      this.props.remoteFieldsResource.post({ ...this.state, model_id });
+      await this.props.remoteFieldsResource.put(this.props.field.id, { ...this.state, model_id }) :
+      await this.props.remoteFieldsResource.post({ ...this.state, model_id });
     this.props.updateRemoteFields();
   };
 
@@ -128,4 +129,4 @@ class RemoteFieldForm extends Component {
   }
 }
 
-export default withRouter(RemoteFieldForm);
+export default withRouter(ModelsRemoteFieldForm);

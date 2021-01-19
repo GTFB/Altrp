@@ -6,7 +6,7 @@ import AdminModal2 from "../AdminModal2";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import ValidatedFieldForm from "./ValidationSection/ValidatedFieldForm";
 import ValidationTable from "./ValidationSection/ValidationTable";
-import RemoteFieldForm from "./RemoteFieldForm";
+import ModelsRemoteFieldForm from "./RemoteFieldForms/ModelsRemoteFieldForm";
 
 const columns = [
   {
@@ -39,7 +39,7 @@ const remoteFieldsColumns = [
     name: 'remote_need_column',
     title: 'Remote Need Column'
   }
-]
+];
 
 class EditModel extends Component {
   constructor(props) {
@@ -220,10 +220,9 @@ class EditModel extends Component {
           Add Remote Field
         </button>
         {isFieldRemoteModalOpened && <AdminModal2 closeHandler={() => this.setState({ isFieldRemoteModalOpened: false, editingRemoteField: null })}>
-          <RemoteFieldForm
+          <ModelsRemoteFieldForm
             fieldsOptions={fields}
             remoteFieldsResource={this.remoteFieldsResource}
-            data_source_options={data_source_options}
             updateRemoteFields={this.updateRemoteFields}
             field={editingRemoteField}
           />
