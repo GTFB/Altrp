@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { withRouter } from 'react-router-dom';
 
+import Resource from "../../../../editor/src/js/classes/Resource";
+import AltrpSelect from "../altrp-select/AltrpSelect";
 class RemoteFieldForm extends Component {
   state = {
     name: '',
@@ -11,13 +13,19 @@ class RemoteFieldForm extends Component {
     single_source_id: '',
     list_source_id: '',
     enabled: true,
-
+    dataSourceOptions: [],
     ...this.props.field
   };
 
   changeHandler = ({ target: { value, name } }) => {
     this.setState({ [name]: value });
   };
+
+  async componentDidMount() {
+    const resource = new Resource({ route: '/admin/ajax/data_source_options' });
+    const { options } = await resource.getAll();
+    this.setState({ dataSourceOptions: options });
+  }
 
   submitHandler = e => {
     e.preventDefault();
@@ -30,8 +38,8 @@ class RemoteFieldForm extends Component {
 
   render() {
     const { name, column_id, remote_find_column, remote_need_column, as_object, single_source_id,
-      list_source_id, enabled } = this.state;
-    const { fieldsOptions, data_source_options } = this.props;
+      list_source_id, enabled, dataSourceOptions } = this.state;
+    const { fieldsOptions } = this.props;
 
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="form-group">
@@ -59,7 +67,7 @@ class RemoteFieldForm extends Component {
 
       <div className="form-group">
         <label htmlFor="remote_find_column">Remote Find Column</label>
-        <input type="text" id="remote_find_column" 
+        <input type="text" id="remote_find_column"
           required
           name="remote_find_column"
           value={remote_find_column}
@@ -89,28 +97,20 @@ class RemoteFieldForm extends Component {
 
       <div className="form-group">
         <label htmlFor="single_source_id">Single Source</label>
-        <select id="single_source_id" required
-          name="single_source_id"
-          value={single_source_id}
-          onChange={this.changeHandler}
-          className="form-control"
-        >
-          <option value="" />
-          {data_source_options.map(({ value, label }) => <option value={value} key={value}>{label}</option>)}
-        </select>
+        <AltrpSelect options={dataSourceOptions}
+          onChange={({ value }) => {
+            this.setState(state => ({ ...state, single_source_id: value }));
+          }}
+          value={dataSourceOptions.find(({ value }) => value === single_source_id)} />
       </div>
 
       <div className="form-group">
         <label htmlFor="list_source_id">List Source</label>
-        <select id="list_source_id" required
-          name="list_source_id"
-          value={list_source_id}
-          onChange={this.changeHandler}
-          className="form-control"
-        >
-          <option value="" />
-          {data_source_options.map(({ value, label }) => <option value={value} key={value}>{label}</option>)}
-        </select>
+        <AltrpSelect options={dataSourceOptions}
+          onChange={({ value }) => {
+            this.setState(state => ({ ...state, list_source_id: value }));
+          }}
+          value={dataSourceOptions.find(({ value }) => value === list_source_id)} />
       </div>
 
       <div className="form-group">
